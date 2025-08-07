@@ -60,28 +60,7 @@ export function Dashboard() {
             </div>
             
             {/* Main Content Layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-              {/* Left column - Stock list */}
-              <div className="lg:col-span-1 space-y-4 animate-slide-up" style={{
-              '--delay': '200ms'
-            } as React.CSSProperties}>
-                <h2 className="text-xl font-semibold">Watchlist</h2>
-                <div className="space-y-4">
-                  {stocksWithHistory.slice(0, 5).map(stock => <StockCard key={stock.symbol} stock={stock} priceHistory={stock.priceHistory} onClick={() => setSelectedStock(stock)} className={selectedStock.symbol === stock.symbol ? "ring-2 ring-primary" : ""} />)}
-                </div>
-              </div>
-              
-              {/* Middle column - Chart and news */}
-              <div className="lg:col-span-2 space-y-4 animate-slide-up" style={{
-              '--delay': '300ms'
-            } as React.CSSProperties}>
-                <StockChart symbol={selectedStock.symbol} name={selectedStock.name} currentPrice={selectedStock.price} volatility={2.5} />
-                <NewsCard news={mockNews} className="mt-6" />
-              </div>
-              
-              {/* Right column - Markets and currencies */}
-              
-            </div>
+            
           </div>
         </main>
       </div>
