@@ -46,7 +46,7 @@ export function Dashboard() {
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
         
         <main className="flex-1 transition-all duration-300">
-          <div className="container max-w-full p-4 lg:p-6">
+          <div className="container max-w-full p-4 lg:p-6 bg-white/30">
             {/* Header */}
             <div className="flex justify-between items-center mb-8">
               <h1 className="text-4xl font-bold text-muted-foreground">Central Hub</h1>
@@ -65,9 +65,9 @@ export function Dashboard() {
                   <div className="text-5xl font-bold mb-6">$12,475.50</div>
                   
                   {/* Upcoming Payments */}
-                  <div className="bg-muted/30 rounded-lg p-4">
+                  <div className="rounded-lg p-4 bg-white/30">
                     <div className="flex items-center gap-2 mb-4">
-                      <div className="w-5 h-5 bg-muted-foreground rounded-sm"></div>
+                      
                       <span className="text-sm font-medium text-muted-foreground">UPCOMING PAYMENTS</span>
                     </div>
                     <div className="space-y-2">
