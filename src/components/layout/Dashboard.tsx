@@ -46,7 +46,58 @@ export function Dashboard() {
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
         
         <main className="flex-1 transition-all duration-300">
-          
+          <div className="container max-w-full p-4 lg:p-6">
+            {/* Header */}
+            <div className="flex justify-between items-center mb-8">
+              <h1 className="text-4xl font-bold text-muted-foreground">Central Hub</h1>
+              <div className="text-right">
+                <div className="text-sm text-muted-foreground">Last sync: 9:38:37 PM</div>
+                <div className="text-sm text-primary font-medium">All systems operational</div>
+              </div>
+            </div>
+
+            {/* Main Content Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Left Section - Total Capital Guaranteed */}
+              <div className="lg:col-span-2 space-y-6">
+                <div>
+                  <h2 className="text-sm text-muted-foreground mb-2">Total Capital Guaranteed</h2>
+                  <div className="text-5xl font-bold mb-6">$12,475.50</div>
+                  
+                  {/* Upcoming Payments */}
+                  <div className="bg-muted/30 rounded-lg p-4">
+                    <div className="flex items-center gap-2 mb-4">
+                      <div className="w-5 h-5 bg-muted-foreground rounded-sm"></div>
+                      <span className="text-sm font-medium text-muted-foreground">UPCOMING PAYMENTS</span>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-muted-foreground">Expected Next Payment: July 2, 2025:</span>
+                        <span className="font-semibold">$3,150.00</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-muted-foreground">Following Payment: August 3, 2025:</span>
+                        <span className="font-semibold">$2,890.00</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Section - Stats */}
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-sm text-muted-foreground mb-2">Protected Asset Value</h3>
+                  <div className="text-3xl font-bold">$215,000.00</div>
+                </div>
+                
+                <div>
+                  <h3 className="text-sm text-muted-foreground mb-2">Total Issues Resolved</h3>
+                  <div className="text-3xl font-bold">42</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </main>
       </div>
     </div>;
