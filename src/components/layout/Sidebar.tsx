@@ -59,6 +59,11 @@ export function Sidebar({ isCollapsed, onToggle, className }: SidebarProps) {
       title: 'Smart Inventory Sync',
       icon: Zap,
       href: '/smart-inventory',
+    },
+    {
+      title: 'Integrations Hub',
+      icon: Settings,
+      href: '/integrations-hub',
     }
   ];
 
