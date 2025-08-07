@@ -1,12 +1,14 @@
 
 import React from 'react';
 import { 
-  BarChart, PieChart, BarChart3, Wallet, LineChart, Globe, 
-  DollarSign, Settings, ChevronRight, ChevronLeft, Home
+  Home, BarChart3, TrendingUp, Shield, FileText, Truck, 
+  Zap, Settings, ChevronRight, ChevronLeft, Bell, User, Search
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import { Link, useLocation } from 'react-router-dom';
 
 interface SidebarProps {
@@ -26,49 +28,37 @@ export function Sidebar({ isCollapsed, onToggle, className }: SidebarProps) {
   
   const navItems = [
     {
-      title: 'Dashboard',
+      title: 'Overview',
       icon: Home,
       href: '/',
     },
     {
-      title: 'Stocks',
-      icon: BarChart,
-      href: '/stocks',
+      title: 'Analytics',
+      icon: TrendingUp,
+      href: '/analytics',
+    }
+  ];
+
+  const coreFeatures = [
+    {
+      title: 'FBA Auto-Claim',
+      icon: Shield,
+      href: '/fba-auto-claim',
     },
     {
-      title: 'Markets',
-      icon: BarChart3,
-      href: '/markets',
+      title: 'Amazon Fee Dispute',
+      icon: FileText,
+      href: '/amazon-fee-dispute',
     },
     {
-      title: 'Currencies',
-      icon: DollarSign,
-      href: '/currencies',
+      title: 'Manufacturing Cost En...',
+      icon: Truck,
+      href: '/manufacturing-cost',
     },
     {
-      title: 'Global',
-      icon: Globe,
-      href: '/global',
-    },
-    {
-      title: 'Portfolio',
-      icon: Wallet,
-      href: '/portfolio',
-    },
-    {
-      title: 'Performance',
-      icon: LineChart,
-      href: '/performance',
-    },
-    {
-      title: 'Analysis',
-      icon: PieChart,
-      href: '/analysis',
-    },
-    {
-      title: 'Settings',
-      icon: Settings,
-      href: '/settings',
+      title: 'Smart Inventory Sync',
+      icon: Zap,
+      href: '/smart-inventory',
     }
   ];
 
@@ -78,64 +68,106 @@ export function Sidebar({ isCollapsed, onToggle, className }: SidebarProps) {
       isCollapsed ? "w-16" : "w-64",
       className
     )}>
-      <div className="flex h-16 items-center justify-center border-b border-sidebar-border">
-        <h2 className={cn(
-          "font-semibold tracking-tight transition-opacity duration-200",
-          isCollapsed ? "opacity-0" : "opacity-100"
-        )}>
-          MarketPulse
-        </h2>
-        
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onToggle}
-          className={cn(
-            "absolute right-2 text-sidebar-foreground h-8 w-8",
-            isCollapsed ? "right-2" : "right-4"
+      <div className="flex h-16 items-center px-4 border-b border-sidebar-border">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center">
+            <span className="text-primary-foreground font-bold text-sm">Op</span>
+          </div>
+          {!isCollapsed && (
+            <div>
+              <h2 className="font-bold text-lg text-primary">OpSide</h2>
+              <p className="text-xs text-muted-foreground">Certainty Guaranteed</p>
+            </div>
           )}
-        >
-          {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-        </Button>
-      </div>
-      
-      <ScrollArea className="flex-1 py-4">
-        <nav className="grid gap-1 px-2">
-          {navItems.map((item, index) => {
-            const isActive = location.pathname === item.href;
-            return (
-              <Link
-                key={index}
-                to={item.href}
-                className={cn(
-                  "flex items-center gap-3 rounded-md px-3 py-2 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-                  isActive ? "bg-sidebar-accent text-sidebar-accent-foreground" : "text-sidebar-foreground",
-                  isCollapsed && "justify-center px-0"
-                )}
-              >
-                <item.icon className={cn("h-5 w-5 shrink-0")} />
-                <span className={cn(
-                  "text-sm font-medium transition-opacity duration-200",
-                  isCollapsed ? "opacity-0 w-0" : "opacity-100"
-                )}>
-                  {item.title}
-                </span>
-              </Link>
-            );
-          })}
-        </nav>
-      </ScrollArea>
-      
-      <div className="p-4 border-t border-sidebar-border">
-        <div className={cn(
-          "transition-opacity duration-200 rounded-md bg-sidebar-accent/50 p-2 text-xs text-sidebar-accent-foreground",
-          isCollapsed ? "opacity-0" : "opacity-100"
-        )}>
-          <p className="font-medium">Market Status</p>
-          <p>Markets are open</p>
-          <p className="text-[10px]">Closes in 3h 45m</p>
         </div>
       </div>
+
+      {!isCollapsed && (
+        <div className="p-4 border-b border-sidebar-border">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
+              <User className="h-4 w-4" />
+            </div>
+            <div className="flex-1">
+              <p className="font-medium">John Smith</p>
+              <p className="text-xs text-muted-foreground">Premium Plan</p>
+            </div>
+          </div>
+          <div className="mt-3 relative">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input placeholder="Search..." className="pl-8 h-9" />
+          </div>
+        </div>
+      )}
+
+      {!isCollapsed && (
+        <div className="px-4 py-2">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium">Notifications</span>
+            <Badge variant="destructive" className="h-5 w-5 p-0 flex items-center justify-center text-xs">3</Badge>
+          </div>
+        </div>
+      )}
+      
+      <ScrollArea className="flex-1 py-4">
+        <nav className="space-y-6 px-4">
+          <div>
+            <h3 className={cn("text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2", isCollapsed && "hidden")}>
+              Dashboard
+            </h3>
+            <div className="space-y-1">
+              {navItems.map((item, index) => {
+                const isActive = location.pathname === item.href;
+                return (
+                  <Link
+                    key={index}
+                    to={item.href}
+                    className={cn(
+                      "flex items-center gap-3 rounded-md px-3 py-2 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                      isActive ? "bg-sidebar-accent text-sidebar-accent-foreground" : "text-sidebar-foreground",
+                      isCollapsed && "justify-center px-0"
+                    )}
+                  >
+                    <item.icon className={cn("h-4 w-4 shrink-0")} />
+                    <span className={cn(
+                      "text-sm transition-opacity duration-200",
+                      isCollapsed ? "opacity-0 w-0" : "opacity-100"
+                    )}>
+                      {item.title}
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+
+          <div>
+            <h3 className={cn("text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2", isCollapsed && "hidden")}>
+              Core Features
+            </h3>
+            <div className="space-y-1">
+              {coreFeatures.map((item, index) => (
+                <Link
+                  key={index}
+                  to={item.href}
+                  className={cn(
+                    "flex items-center gap-3 rounded-md px-3 py-2 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sidebar-foreground",
+                    isCollapsed && "justify-center px-0"
+                  )}
+                >
+                  <item.icon className={cn("h-4 w-4 shrink-0")} />
+                  <span className={cn(
+                    "text-sm transition-opacity duration-200",
+                    isCollapsed ? "opacity-0 w-0" : "opacity-100"
+                  )}>
+                    {item.title}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </nav>
+      </ScrollArea>
     </aside>
   );
 }
