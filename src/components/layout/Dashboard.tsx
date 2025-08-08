@@ -57,13 +57,13 @@ export function Dashboard() {
   const toggleSidebar = () => {
     setIsSidebarCollapsed(prev => !prev);
   };
-  return <div className="min-h-screen flex flex-col">
+  return <div className="min-h-screen flex flex-col h-screen overflow-hidden">
       <Navbar />
       
-      <div className="flex-1 flex">
+      <div className="flex-1 flex h-full overflow-hidden">
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
         
-        <main className="flex-1 transition-all duration-300">
+        <main className="flex-1 transition-all duration-300 overflow-y-auto">
           <div className="container max-w-full p-4 lg:p-6 bg-white/30">
             {/* Header */}
             <div className="flex justify-between items-center mb-8">
