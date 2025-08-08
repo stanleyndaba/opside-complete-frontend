@@ -15,6 +15,8 @@ import Performance from "./pages/Performance";
 import Analysis from "./pages/Analysis";
 import Settings from "./pages/Settings";
 import IntegrationsHub from "./pages/IntegrationsHub";
+import Recoveries from "./pages/Recoveries";
+import CaseDetail from "./pages/CaseDetail";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +37,8 @@ const App = () => (
           <Route path="/analysis" element={<Analysis />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/integrations-hub" element={<IntegrationsHub />} />
+          <Route path="/recoveries" element={<Recoveries />} />
+          <Route path="/recoveries/:caseId" element={<CaseDetail />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

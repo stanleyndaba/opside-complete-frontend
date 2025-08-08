@@ -47,7 +47,7 @@ export function Sidebar({
     {
       title: 'Core Features',
       items: [
-        { title: 'FBA Auto-Claim', icon: Shield, href: '/fba-auto-claim' },
+        { title: 'Recoveries', icon: Shield, href: '/recoveries' },
         { title: 'Amazon Fee Dispute', icon: FileText, href: '/amazon-fee-dispute' },
         { title: 'Manufacturing Cost Document Engine', icon: Factory, href: '/manufacturing-cost' },
         { title: 'Smart Inventory Sync', icon: Zap, href: '/smart-inventory' },
