@@ -124,7 +124,7 @@ export function Dashboard() {
               {/* Right Section - Stats */}
               <div className="space-y-6">
                 <div className="bg-white/50 rounded-lg p-4">
-                  <h3 className="text-sm text-muted-foreground mb-2 font-montserrat">Protected Asset Value</h3>
+                  <h3 className="text-sm text-muted-foreground mb-2 font-montserrat">Protected Asset Value - PAV</h3>
                   <div className="text-3xl font-bold font-montserrat">$215,000.00</div>
                 </div>
                 
