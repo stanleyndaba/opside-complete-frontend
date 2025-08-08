@@ -49,7 +49,7 @@ export function Dashboard() {
           <div className="container max-w-full p-4 lg:p-6 bg-white/30">
             {/* Header */}
             <div className="flex justify-between items-center mb-8">
-              <h1 className="text-4xl font-bold text-muted-foreground">Central Hub</h1>
+              <h1 className="text-4xl font-bold text-blue-500">Central Hub</h1>
               <div className="text-right">
                 <div className="text-sm text-muted-foreground">Last sync: 9:38:37 PM</div>
                 <div className="text-sm text-primary font-medium">All systems operational</div>
