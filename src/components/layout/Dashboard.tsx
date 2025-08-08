@@ -65,7 +65,7 @@ export function Dashboard() {
           <div className="container max-w-full p-4 lg:p-6 bg-white/30">
             {/* Header */}
             <div className="flex justify-between items-center mb-8">
-              <h1 className="text-4xl font-bold text-blue-500 font-montserrat">Central Hub</h1>
+              <h1 className="text-4xl font-bold font-montserrat text-lime-500">Central Hub</h1>
               <div className="text-right">
                 <div className="text-sm text-muted-foreground font-montserrat">Last sync: {formatTime(currentTime)}</div>
                 <div className="text-sm text-primary font-medium font-montserrat">All systems operational</div>
