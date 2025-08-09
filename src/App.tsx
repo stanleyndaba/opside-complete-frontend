@@ -18,6 +18,8 @@ import IntegrationsHub from "./pages/IntegrationsHub";
 import Recoveries from "./pages/Recoveries";
 import CaseDetail from "./pages/CaseDetail";
 import SmartInventorySync from "./pages/SmartInventorySync";
+import EvidenceLocker from "./pages/EvidenceLocker";
+import DocumentDetail from "./pages/DocumentDetail";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +43,8 @@ const App = () => (
           <Route path="/recoveries" element={<Recoveries />} />
           <Route path="/recoveries/:caseId" element={<CaseDetail />} />
           <Route path="/smart-inventory-sync" element={<SmartInventorySync />} />
+          <Route path="/evidence-locker" element={<EvidenceLocker />} />
+          <Route path="/evidence-locker/document/:documentId" element={<DocumentDetail />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
