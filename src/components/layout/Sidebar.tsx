@@ -50,7 +50,7 @@ export function Sidebar({
         { title: 'Recoveries', icon: Shield, href: '/recoveries' },
         { title: 'Amazon Fee Dispute', icon: FileText, href: '/amazon-fee-dispute' },
         { title: 'Manufacturing Cost Document Engine', icon: Factory, href: '/manufacturing-cost' },
-        { title: 'Smart Inventory Sync', icon: Zap, href: '/smart-inventory' },
+        { title: 'Smart Inventory Sync', icon: Zap, href: '/smart-inventory-sync' },
         { title: 'Integrations Hub', icon: Settings, href: '/integrations-hub' }
       ]
     },

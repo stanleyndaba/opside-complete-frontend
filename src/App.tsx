@@ -17,6 +17,7 @@ import Settings from "./pages/Settings";
 import IntegrationsHub from "./pages/IntegrationsHub";
 import Recoveries from "./pages/Recoveries";
 import CaseDetail from "./pages/CaseDetail";
+import SmartInventorySync from "./pages/SmartInventorySync";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +40,7 @@ const App = () => (
           <Route path="/integrations-hub" element={<IntegrationsHub />} />
           <Route path="/recoveries" element={<Recoveries />} />
           <Route path="/recoveries/:caseId" element={<CaseDetail />} />
+          <Route path="/smart-inventory-sync" element={<SmartInventorySync />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
