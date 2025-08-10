@@ -75,23 +75,7 @@ export default function Billing() {
   return <PageLayout title="Billing & Value Report">
       <div className="space-y-8">
         {/* ROI Hero Section */}
-        <Card className="bg-gradient-to-br from-emerald-50 to-green-100 border-emerald-200">
-          <CardContent className="p-8 bg-gray-100">
-            <div className="text-center space-y-4">
-              <div className="space-y-2">
-                <h2 className="text-sm font-medium text-emerald-700 uppercase tracking-wide">
-                  Your Opside ROI
-                </h2>
-                <div className="text-6xl font-bold text-emerald-900">
-                  {roiMultiplier.toFixed(1)}x
-                </div>
-                <p className="text-emerald-700 text-lg">
-                  Every dollar paid to Opside has returned ${roiMultiplier.toFixed(1)} in recovered value
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        
 
         {/* Supporting KPIs */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
