@@ -8,7 +8,6 @@ import { Badge } from '@/components/ui/badge';
 import { Download, DollarSign, TrendingUp, Calendar, CheckCircle, Shield, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-
 interface Invoice {
   id: string;
   dateIssued: string;
@@ -19,49 +18,42 @@ interface Invoice {
 }
 
 // Mock data for invoices
-const mockInvoices: Invoice[] = [
-  {
-    id: 'INV-2025-001',
-    dateIssued: '2025-01-15',
-    status: 'Paid',
-    feeAmount: 119.78,
-    basedOnRecoveries: ['OPS-12347'],
-    description: 'Success fee for Smart Home Security System recovery'
-  },
-  {
-    id: 'INV-2024-012',
-    dateIssued: '2024-12-30',
-    status: 'Paid',
-    feeAmount: 97.60,
-    basedOnRecoveries: ['OPS-12301', 'OPS-12302'],
-    description: 'Success fees for Coffee Beans & Fitness Equipment recoveries'
-  },
-  {
-    id: 'INV-2024-011',
-    dateIssued: '2024-12-15',
-    status: 'Paid',
-    feeAmount: 156.32,
-    basedOnRecoveries: ['OPS-12289', 'OPS-12290', 'OPS-12291'],
-    description: 'Success fees for Kitchen Appliances recoveries'
-  },
-  {
-    id: 'INV-2024-010',
-    dateIssued: '2024-11-28',
-    status: 'Paid',
-    feeAmount: 203.45,
-    basedOnRecoveries: ['OPS-12276', 'OPS-12277'],
-    description: 'Success fees for Electronics & Home Goods recoveries'
-  },
-  {
-    id: 'INV-2024-009',
-    dateIssued: '2024-11-15',
-    status: 'Paid',
-    feeAmount: 89.67,
-    basedOnRecoveries: ['OPS-12265'],
-    description: 'Success fee for Outdoor Equipment recovery'
-  }
-];
-
+const mockInvoices: Invoice[] = [{
+  id: 'INV-2025-001',
+  dateIssued: '2025-01-15',
+  status: 'Paid',
+  feeAmount: 119.78,
+  basedOnRecoveries: ['OPS-12347'],
+  description: 'Success fee for Smart Home Security System recovery'
+}, {
+  id: 'INV-2024-012',
+  dateIssued: '2024-12-30',
+  status: 'Paid',
+  feeAmount: 97.60,
+  basedOnRecoveries: ['OPS-12301', 'OPS-12302'],
+  description: 'Success fees for Coffee Beans & Fitness Equipment recoveries'
+}, {
+  id: 'INV-2024-011',
+  dateIssued: '2024-12-15',
+  status: 'Paid',
+  feeAmount: 156.32,
+  basedOnRecoveries: ['OPS-12289', 'OPS-12290', 'OPS-12291'],
+  description: 'Success fees for Kitchen Appliances recoveries'
+}, {
+  id: 'INV-2024-010',
+  dateIssued: '2024-11-28',
+  status: 'Paid',
+  feeAmount: 203.45,
+  basedOnRecoveries: ['OPS-12276', 'OPS-12277'],
+  description: 'Success fees for Electronics & Home Goods recoveries'
+}, {
+  id: 'INV-2024-009',
+  dateIssued: '2024-11-15',
+  status: 'Paid',
+  feeAmount: 89.67,
+  basedOnRecoveries: ['OPS-12265'],
+  description: 'Success fee for Outdoor Equipment recovery'
+}];
 const getInvoiceStatusColor = (status: Invoice['status']) => {
   switch (status) {
     case 'Paid':
@@ -74,20 +66,17 @@ const getInvoiceStatusColor = (status: Invoice['status']) => {
       return 'bg-gray-100 text-gray-800 border-gray-200';
   }
 };
-
 export default function Billing() {
   // Calculate KPIs
   const totalValueDelivered = 46789.42; // Total recovered amount
   const totalOpsideFees = mockInvoices.reduce((sum, inv) => sum + inv.feeAmount, 0);
   const roiMultiplier = totalValueDelivered / totalOpsideFees;
   const nextInvoiceDate = '2025-02-15';
-
-  return (
-    <PageLayout title="Billing & Value Report">
+  return <PageLayout title="Billing & Value Report">
       <div className="space-y-8">
         {/* ROI Hero Section */}
         <Card className="bg-gradient-to-br from-emerald-50 to-green-100 border-emerald-200">
-          <CardContent className="p-8">
+          <CardContent className="p-8 bg-gray-100">
             <div className="text-center space-y-4">
               <div className="space-y-2">
                 <h2 className="text-sm font-medium text-emerald-700 uppercase tracking-wide">
@@ -106,33 +95,19 @@ export default function Billing() {
 
         {/* Supporting KPIs */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <StatsCard
-            title="Total Value Delivered (All-Time)"
-            value={`$${totalValueDelivered.toLocaleString('en-US', { minimumFractionDigits: 2 })}`}
-            description="Successfully recovered for your business"
-            icon={<TrendingUp className="h-4 w-4" />}
-            className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200"
-          />
+          <StatsCard title="Total Value Delivered (All-Time)" value={`$${totalValueDelivered.toLocaleString('en-US', {
+          minimumFractionDigits: 2
+        })}`} description="Successfully recovered for your business" icon={<TrendingUp className="h-4 w-4" />} className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200" />
           
-          <StatsCard
-            title="Total Opside Fees (All-Time)"
-            value={`$${totalOpsideFees.toLocaleString('en-US', { minimumFractionDigits: 2 })}`}
-            description="Success-based fees paid"
-            icon={<DollarSign className="h-4 w-4" />}
-            className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200"
-          />
+          <StatsCard title="Total Opside Fees (All-Time)" value={`$${totalOpsideFees.toLocaleString('en-US', {
+          minimumFractionDigits: 2
+        })}`} description="Success-based fees paid" icon={<DollarSign className="h-4 w-4" />} className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200" />
           
-          <StatsCard
-            title="Next Invoice Date"
-            value={new Date(nextInvoiceDate).toLocaleDateString('en-US', {
-              month: 'short',
-              day: 'numeric',
-              year: 'numeric'
-            })}
-            description="Estimated based on active cases"
-            icon={<Calendar className="h-4 w-4" />}
-            className="bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200"
-          />
+          <StatsCard title="Next Invoice Date" value={new Date(nextInvoiceDate).toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric'
+        })} description="Estimated based on active cases" icon={<Calendar className="h-4 w-4" />} className="bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200" />
         </div>
 
         {/* Invoice History Ledger */}
@@ -166,15 +141,14 @@ export default function Billing() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {mockInvoices.map((invoice) => (
-                    <TableRow key={invoice.id} className="hover:bg-muted/50">
+                  {mockInvoices.map(invoice => <TableRow key={invoice.id} className="hover:bg-muted/50">
                       <TableCell className="font-mono text-sm">{invoice.id}</TableCell>
                       <TableCell>
                         {new Date(invoice.dateIssued).toLocaleDateString('en-US', {
-                          month: 'short',
-                          day: 'numeric',
-                          year: 'numeric'
-                        })}
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric'
+                    })}
                       </TableCell>
                       <TableCell>
                         <Badge className={cn("font-medium", getInvoiceStatusColor(invoice.status))}>
@@ -190,19 +164,11 @@ export default function Billing() {
                             {invoice.description}
                           </div>
                           <div className="flex gap-1 flex-wrap">
-                            {invoice.basedOnRecoveries.map((caseId) => (
-                              <Button
-                                key={caseId}
-                                variant="ghost"
-                                size="sm"
-                                className="h-6 px-2 text-xs font-mono text-blue-600 hover:text-blue-800"
-                                asChild
-                              >
+                            {invoice.basedOnRecoveries.map(caseId => <Button key={caseId} variant="ghost" size="sm" className="h-6 px-2 text-xs font-mono text-blue-600 hover:text-blue-800" asChild>
                                 <Link to={`/recoveries/${caseId}`}>
                                   {caseId}
                                 </Link>
-                              </Button>
-                            ))}
+                              </Button>)}
                           </div>
                         </div>
                       </TableCell>
@@ -212,8 +178,7 @@ export default function Billing() {
                           PDF
                         </Button>
                       </TableCell>
-                    </TableRow>
-                  ))}
+                    </TableRow>)}
                 </TableBody>
               </Table>
             </div>
@@ -315,6 +280,5 @@ export default function Billing() {
           </CardContent>
         </Card>
       </div>
-    </PageLayout>
-  );
+    </PageLayout>;
 }
