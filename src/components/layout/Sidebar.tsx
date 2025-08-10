@@ -58,7 +58,7 @@ export function Sidebar({
       title: 'Account',
       items: [
         { title: 'Settings', icon: Settings, href: '/settings' },
-        { title: 'Billing', icon: CreditCard, href: '/billing' },
+        { title: 'Billing & Value Report', icon: CreditCard, href: '/billing' },
         { title: 'Team', icon: Users, href: '/team' }
       ]
     },
