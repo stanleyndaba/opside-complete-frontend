@@ -61,13 +61,11 @@ export function Dashboard() {
       <div className="flex-1 flex h-full overflow-hidden">
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
         
-        <main className={`flex-1 transition-all duration-300 overflow-y-auto ${
-          isSidebarCollapsed ? 'ml-16' : 'ml-56'
-        }`}>
+        <main className={`flex-1 transition-all duration-300 overflow-y-auto ${isSidebarCollapsed ? 'ml-16' : 'ml-56'}`}>
           <div className="container max-w-full p-4 lg:p-6 bg-white/30">
             {/* Header */}
             <div className="flex justify-between items-center mb-8">
-              <h1 className="font-montserrat text-zinc-500 text-2xl font-extrabold">Central Hub</h1>
+              <h1 className="font-montserrat text-zinc-500 text-2xl font-extrabold">Control Centre</h1>
               <div className="text-right">
                 <div className="text-sm text-muted-foreground font-montserrat">Last sync: {formatTime(currentTime)}</div>
                 <div className="text-sm text-primary font-medium font-montserrat">All systems operational</div>
