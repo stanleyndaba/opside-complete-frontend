@@ -127,7 +127,7 @@ export function Sidebar({
   return (
     <aside className={cn(
       "bg-white fixed left-0 top-0 transition-all duration-300 ease-in-out flex flex-col border-r border-gray-200 h-screen z-40",
-      isCollapsed ? "w-16" : "w-64",
+      isCollapsed ? "w-16" : "w-56",
       className
     )}>
       {/* Toggle Button */}
