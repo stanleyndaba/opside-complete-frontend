@@ -22,6 +22,7 @@ import EvidenceLocker from "./pages/EvidenceLocker";
 import DocumentDetail from "./pages/DocumentDetail";
 import Billing from "./pages/Billing";
 import TeamManagement from "./pages/TeamManagement";
+import ExportCenter from "./pages/ExportCenter";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +50,7 @@ const App = () => (
           <Route path="/evidence-locker/document/:documentId" element={<DocumentDetail />} />
           <Route path="/billing" element={<Billing />} />
           <Route path="/team-management" element={<TeamManagement />} />
+          <Route path="/export" element={<ExportCenter />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
