@@ -98,7 +98,7 @@ export function Dashboard() {
                   </div>
 
                   {/* Upcoming Claim Disputes */}
-                  <div className="rounded-lg p-4 border border-blue-200 bg-zinc-100">
+                  <div className="rounded-lg p-4 border border-blue-200 bg-slate-50">
                     <div className="flex justify-between items-center mb-4">
                       <span className="text-sm font-medium text-blue-700 font-montserrat"> UPCOMING CLAIM DISPUTES</span>
                       <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-montserrat">3 Active</span>
