@@ -61,7 +61,9 @@ export function Dashboard() {
       <div className="flex-1 flex h-full overflow-hidden">
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
         
-        <main className="flex-1 transition-all duration-300 overflow-y-auto">
+        <main className={`flex-1 transition-all duration-300 overflow-y-auto ${
+          isSidebarCollapsed ? 'ml-16' : 'ml-64'
+        }`}>
           <div className="container max-w-full p-4 lg:p-6 bg-white/30">
             {/* Header */}
             <div className="flex justify-between items-center mb-8">

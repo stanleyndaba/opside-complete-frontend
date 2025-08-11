@@ -59,7 +59,7 @@ export function Sidebar({
       items: [
         { title: 'Settings', icon: Settings, href: '/settings' },
         { title: 'Billing & Value Report', icon: CreditCard, href: '/billing' },
-        { title: 'Team', icon: Users, href: '/team' }
+        { title: 'Team Management', icon: Users, href: '/team-management' }
       ]
     },
     {
@@ -126,7 +126,7 @@ export function Sidebar({
 
   return (
     <aside className={cn(
-      "bg-white relative transition-all duration-300 ease-in-out flex flex-col border-r border-gray-200 h-screen",
+      "bg-white fixed left-0 top-0 transition-all duration-300 ease-in-out flex flex-col border-r border-gray-200 h-screen z-40",
       isCollapsed ? "w-16" : "w-64",
       className
     )}>
