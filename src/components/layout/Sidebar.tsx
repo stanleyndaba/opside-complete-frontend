@@ -41,16 +41,16 @@ export function Sidebar({
       title: 'Dashboard',
       items: [
         { title: 'Overview', icon: Home, href: '/' },
-        { title: 'Analytics', icon: BarChart3, href: '/analytics' }
+        { title: 'Reports', icon: BarChart3, href: '/analytics' }
       ]
     },
     {
       title: 'Core Features',
       items: [
         { title: 'Recoveries', icon: Shield, href: '/recoveries' },
-        { title: 'Amazon Fee Dispute', icon: FileText, href: '/amazon-fee-dispute' },
-        { title: 'Evidence Locker & Value Engine', icon: Factory, href: '/evidence-locker' },
-        { title: 'Smart Inventory Sync', icon: Zap, href: '/smart-inventory-sync' },
+        { title: 'FBA Fee Disputes', icon: FileText, href: '/amazon-fee-dispute' },
+        { title: 'Cost Documents', icon: Factory, href: '/evidence-locker' },
+        { title: 'Inventory Sync', icon: Zap, href: '/smart-inventory-sync' },
         { title: 'Integrations Hub', icon: Settings, href: '/integrations-hub' }
       ]
     },
@@ -58,7 +58,7 @@ export function Sidebar({
       title: 'Account',
       items: [
         { title: 'Settings', icon: Settings, href: '/settings' },
-        { title: 'Billing & Value Report', icon: CreditCard, href: '/billing' },
+        { title: 'Billing', icon: CreditCard, href: '/billing' },
         { title: 'Team Management', icon: Users, href: '/team-management' }
       ]
     },
