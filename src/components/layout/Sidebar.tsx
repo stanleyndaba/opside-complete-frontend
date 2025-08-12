@@ -2,7 +2,8 @@ import React from 'react';
 import { 
   Home, BarChart3, Shield, FileText, Factory, Zap, Settings, 
   CreditCard, Users, HelpCircle, MessageSquare, Sparkles, 
-  Palette, Download, Key, ChevronLeft, ChevronRight, User, Search 
+  Palette, Download, Key, ChevronLeft, ChevronRight, User, Search,
+  LogOut, Building2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -11,6 +12,14 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Link, useLocation } from 'react-router-dom';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -149,17 +158,94 @@ export function Sidebar({
       {/* Profile Section */}
       {!isCollapsed ? (
         <div className="p-4 border-b border-gray-200">
-          <div className="flex items-center gap-3 mb-4">
-            <Avatar className="h-8 w-8">
-              <AvatarFallback className="bg-black text-white text-xs">
-                <User className="h-4 w-4" />
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-black truncate">John Smith</p>
-              <p className="text-xs text-gray-600 truncate">Premium Plan</p>
-            </div>
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <div className="flex items-center gap-3 mb-4 cursor-pointer hover:bg-gray-50 p-2 rounded-md transition-colors">
+                <Avatar className="h-8 w-8">
+                  <AvatarFallback className="bg-black text-white text-xs">
+                    <User className="h-4 w-4" />
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-black truncate">John Smith</p>
+                  <p className="text-xs text-gray-600 truncate">Premium Plan</p>
+                </div>
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent 
+              side="right" 
+              align="start" 
+              className="w-64 bg-white border border-gray-200 shadow-lg"
+            >
+              {/* Section 1: Identity */}
+              <DropdownMenuLabel className="pb-2">
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-black">John Smith</p>
+                  <p className="text-xs text-gray-600">john.smith@example.com</p>
+                  <div className="flex items-center gap-1 pt-1">
+                    <Building2 className="h-3 w-3 text-gray-500" />
+                    <p className="text-xs text-gray-500">Viewing: John's Amazon Store</p>
+                  </div>
+                </div>
+              </DropdownMenuLabel>
+              
+              <DropdownMenuSeparator />
+              
+              {/* Section 2: Account Management */}
+              <DropdownMenuItem asChild>
+                <Link to="/settings" className="flex items-center gap-2 cursor-pointer">
+                  <Settings className="h-4 w-4" />
+                  <span>Settings</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/team-management" className="flex items-center gap-2 cursor-pointer">
+                  <Users className="h-4 w-4" />
+                  <span>Team Management</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/billing" className="flex items-center gap-2 cursor-pointer">
+                  <CreditCard className="h-4 w-4" />
+                  <span>Billing & Value</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/integrations-hub" className="flex items-center gap-2 cursor-pointer">
+                  <Zap className="h-4 w-4" />
+                  <span>Integrations Hub</span>
+                </Link>
+              </DropdownMenuItem>
+              
+              <DropdownMenuSeparator />
+              
+              {/* Section 3: Resources & Support */}
+              <DropdownMenuItem asChild>
+                <Link to="/help" className="flex items-center gap-2 cursor-pointer">
+                  <HelpCircle className="h-4 w-4" />
+                  <span>Help Center</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/whats-new" className="flex items-center gap-2 cursor-pointer">
+                  <Sparkles className="h-4 w-4" />
+                  <span>What's New</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
+                <MessageSquare className="h-4 w-4" />
+                <span>Contact Support</span>
+              </DropdownMenuItem>
+              
+              <DropdownMenuSeparator />
+              
+              {/* Section 4: Session Control */}
+              <DropdownMenuItem className="flex items-center gap-2 cursor-pointer text-red-600 focus:text-red-600">
+                <LogOut className="h-4 w-4" />
+                <span>Log Out</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input 
@@ -173,13 +259,90 @@ export function Sidebar({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <div className="flex items-center justify-center w-12 h-12 rounded-md">
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback className="bg-black text-white text-xs">
-                      <User className="h-4 w-4" />
-                    </AvatarFallback>
-                  </Avatar>
-                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <div className="flex items-center justify-center w-12 h-12 rounded-md cursor-pointer hover:bg-gray-50 transition-colors">
+                      <Avatar className="h-8 w-8">
+                        <AvatarFallback className="bg-black text-white text-xs">
+                          <User className="h-4 w-4" />
+                        </AvatarFallback>
+                      </Avatar>
+                    </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent 
+                    side="right" 
+                    align="start" 
+                    className="w-64 bg-white border border-gray-200 shadow-lg"
+                  >
+                    {/* Section 1: Identity */}
+                    <DropdownMenuLabel className="pb-2">
+                      <div className="space-y-1">
+                        <p className="text-sm font-medium text-black">John Smith</p>
+                        <p className="text-xs text-gray-600">john.smith@example.com</p>
+                        <div className="flex items-center gap-1 pt-1">
+                          <Building2 className="h-3 w-3 text-gray-500" />
+                          <p className="text-xs text-gray-500">Viewing: John's Amazon Store</p>
+                        </div>
+                      </div>
+                    </DropdownMenuLabel>
+                    
+                    <DropdownMenuSeparator />
+                    
+                    {/* Section 2: Account Management */}
+                    <DropdownMenuItem asChild>
+                      <Link to="/settings" className="flex items-center gap-2 cursor-pointer">
+                        <Settings className="h-4 w-4" />
+                        <span>Settings</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/team-management" className="flex items-center gap-2 cursor-pointer">
+                        <Users className="h-4 w-4" />
+                        <span>Team Management</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/billing" className="flex items-center gap-2 cursor-pointer">
+                        <CreditCard className="h-4 w-4" />
+                        <span>Billing & Value</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/integrations-hub" className="flex items-center gap-2 cursor-pointer">
+                        <Zap className="h-4 w-4" />
+                        <span>Integrations Hub</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    
+                    <DropdownMenuSeparator />
+                    
+                    {/* Section 3: Resources & Support */}
+                    <DropdownMenuItem asChild>
+                      <Link to="/help" className="flex items-center gap-2 cursor-pointer">
+                        <HelpCircle className="h-4 w-4" />
+                        <span>Help Center</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/whats-new" className="flex items-center gap-2 cursor-pointer">
+                        <Sparkles className="h-4 w-4" />
+                        <span>What's New</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
+                      <MessageSquare className="h-4 w-4" />
+                      <span>Contact Support</span>
+                    </DropdownMenuItem>
+                    
+                    <DropdownMenuSeparator />
+                    
+                    {/* Section 4: Session Control */}
+                    <DropdownMenuItem className="flex items-center gap-2 cursor-pointer text-red-600 focus:text-red-600">
+                      <LogOut className="h-4 w-4" />
+                      <span>Log Out</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </TooltipTrigger>
               <TooltipContent side="right" className="bg-black text-white">
                 <div className="text-xs">
