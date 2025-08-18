@@ -129,7 +129,7 @@ export function Dashboard() {
                 </div>
                 
                 <div className="bg-white/50 rounded-lg p-4">
-                  <h3 className="text-sm text-muted-foreground mb-2 font-montserrat">Total Issues Resolved</h3>
+                  <h3 className="text-sm text-muted-foreground mb-2 font-montserrat">Complete Issues Resolved: 2025</h3>
                   <div className="text-3xl font-bold font-montserrat">42</div>
                 </div>
 
