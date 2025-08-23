@@ -83,7 +83,7 @@ export function Dashboard() {
                   {/* Upcoming Payments */}
                   <div className="rounded-lg p-4 mb-6 bg-indigo-50">
                     <div className="flex items-center gap-2 mb-4">
-                      <span className="text-sm font-medium text-muted-foreground font-montserrat"> UPCOMING PAYMENTS</span>
+                      <span className="text-sm font-medium font-montserrat text-black"> UPCOMING PAYMENTS</span>
                     </div>
                     <div className="space-y-2">
                       <div className="flex justify-between items-center">
@@ -124,12 +124,12 @@ export function Dashboard() {
               {/* Right Section - Stats */}
               <div className="space-y-6">
                 <div className="bg-white/50 rounded-lg p-4">
-                  <h3 className="text-sm text-muted-foreground mb-2 font-montserrat">Protected Asset Value - PAV</h3>
+                  <h3 className="text-sm mb-2 font-montserrat font-bold text-black">Protected Asset Value - PAV</h3>
                   <div className="text-3xl font-bold font-montserrat">$215,000.00</div>
                 </div>
                 
                 <div className="bg-white/50 rounded-lg p-4">
-                  <h3 className="text-sm text-muted-foreground mb-2 font-montserrat">Complete Issues Resolved: 2025</h3>
+                  <h3 className="text-sm mb-2 font-montserrat font-bold text-black">Complete Issues Resolved: 2025</h3>
                   <div className="text-3xl font-bold font-montserrat">42</div>
                 </div>
 
