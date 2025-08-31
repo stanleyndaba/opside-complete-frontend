@@ -122,29 +122,7 @@ export function Dashboard() {
               </div>
 
               {/* Right Section - Stats */}
-              <div className="space-y-6">
-                <div className="bg-white/50 rounded-lg p-4">
-                  <h3 className="text-sm mb-2 font-montserrat font-bold text-black">Protected Asset Value - PAV</h3>
-                  <div className="text-3xl font-bold font-montserrat">$215,000.00</div>
-                </div>
-                
-                <div className="bg-white/50 rounded-lg p-4">
-                  <h3 className="text-sm mb-2 font-montserrat font-bold text-black">Complete Issues Resolved: 2025</h3>
-                  <div className="text-3xl font-bold font-montserrat">42</div>
-                </div>
-
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <h3 className="text-sm text-green-700 mb-2 font-montserrat font-bold">Capital Recovered This Month</h3>
-                  <div className="text-2xl font-bold text-green-800 font-montserrat">$8,425.30</div>
-                  <div className="text-xs text-green-600 mt-1 font-montserrat">↑ 23% from last month</div>
-                </div>
-
-                <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-                  <h3 className="text-sm text-orange-700 mb-2 font-montserrat font-bold">Pending Claims</h3>
-                  <div className="text-2xl font-bold text-orange-800 font-montserrat">$2,185.45</div>
-                  <div className="text-xs text-orange-600 mt-1 font-montserrat">Est. 5-7 days resolution</div>
-                </div>
-              </div>
+              
             </div>
           </div>
         </main>
