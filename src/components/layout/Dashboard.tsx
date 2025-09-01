@@ -81,7 +81,7 @@ export function Dashboard() {
                   <div className="text-5xl font-bold mb-6 font-montserrat">$12,475.50</div>
                   
                   {/* Upcoming Payments */}
-                  <div className="rounded-lg p-4 mb-6 bg-indigo-50">
+                  <div className="rounded-lg p-4 mb-6 bg-white">
                     <div className="flex items-center gap-2 mb-4">
                       <span className="text-sm font-montserrat text-black font-bold">Upcoming Payments</span>
                     </div>
