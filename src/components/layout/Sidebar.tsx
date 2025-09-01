@@ -82,7 +82,6 @@ export function Sidebar({
     {
       title: 'System',
       items: [
-        { title: 'Theme', icon: Palette, href: '/theme' },
         { title: 'Export Data', icon: Download, href: '/export' },
         { title: 'API Access', icon: Key, href: '/api' }
       ]
