@@ -18,14 +18,6 @@ import {
   Calculator,
   Truck
 } from 'lucide-react';
-import amazonLogo from '@/assets/amazon-logo.png';
-import shopifyLogo from '@/assets/shopify-logo.png';
-import walmartLogo from '@/assets/walmart-logo.png';
-import ebayLogo from '@/assets/ebay-logo.png';
-import shipbobLogo from '@/assets/shipbob-logo.png';
-import deliverrLogo from '@/assets/deliverr-logo.png';
-import quickbooksLogo from '@/assets/quickbooks-logo.png';
-import xeroLogo from '@/assets/xero-logo.png';
 
 interface ActiveConnection {
   id: string;
@@ -51,7 +43,7 @@ const activeConnections: ActiveConnection[] = [
     storeName: "Thandi's FBA Store",
     status: 'connected',
     lastSync: 'Just now',
-    logo: amazonLogo
+    logo: '/lovable-uploads/14f98d63-9a1a-4128-8021-1d840d778ea5.png'
   }
 ];
 
@@ -61,21 +53,21 @@ const availableIntegrations: AvailableIntegration[] = [
     id: 'shopify',
     name: 'Shopify',
     category: 'marketplaces',
-    logo: shopifyLogo,
+    logo: '/lovable-uploads/8efb84ba-e777-4413-ae5a-f7f54bfa6cab.png',
     description: 'Connect your Shopify store for unified inventory and sales management'
   },
   {
     id: 'walmart',
     name: 'Walmart Marketplace',
     category: 'marketplaces',
-    logo: walmartLogo,
+    logo: '/lovable-uploads/cef56367-b57b-46cc-b0cb-a2ffad47fb03.png',
     description: 'Integrate your Walmart Marketplace for seamless order processing'
   },
   {
     id: 'ebay',
     name: 'eBay',
     category: 'marketplaces',
-    logo: ebayLogo,
+    logo: '/lovable-uploads/f894a44c-fd04-4ec2-8af3-a7235951d82d.png',
     description: 'Sync your eBay listings and manage orders from one dashboard'
   },
   // 3PLs
@@ -83,14 +75,14 @@ const availableIntegrations: AvailableIntegration[] = [
     id: 'shipbob',
     name: 'ShipBob',
     category: '3pl',
-    logo: shipbobLogo,
+    logo: '/lovable-uploads/3a7436b5-1e89-477e-b2bd-128ec05c5c49.png',
     description: 'Connect your ShipBob fulfillment for inventory and shipping sync'
   },
   {
     id: 'deliverr',
     name: 'Deliverr',
     category: '3pl',
-    logo: deliverrLogo,
+    logo: '/lovable-uploads/e2b07527-f2ad-4997-b9b1-963377193c0e.png',
     description: 'Integrate Deliverr for fast fulfillment across channels'
   },
   // Accounting
@@ -98,14 +90,14 @@ const availableIntegrations: AvailableIntegration[] = [
     id: 'quickbooks',
     name: 'QuickBooks',
     category: 'accounting',
-    logo: quickbooksLogo,
+    logo: '/lovable-uploads/02ff2e6e-9e67-4481-99a8-4b9caead4540.png',
     description: 'Sync financial data with QuickBooks for automated bookkeeping'
   },
   {
     id: 'xero',
     name: 'Xero',
     category: 'accounting',
-    logo: xeroLogo,
+    logo: '/lovable-uploads/ac3dc504-c896-4f73-9e7e-aefc77dd6e9f.png',
     description: 'Connect Xero for seamless financial reporting and tax preparation'
   }
 ];
