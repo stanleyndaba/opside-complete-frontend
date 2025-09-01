@@ -18,6 +18,14 @@ import {
   Calculator,
   Truck
 } from 'lucide-react';
+import amazonLogo from '@/assets/amazon-logo.png';
+import shopifyLogo from '@/assets/shopify-logo.png';
+import walmartLogo from '@/assets/walmart-logo.png';
+import ebayLogo from '@/assets/ebay-logo.png';
+import shipbobLogo from '@/assets/shipbob-logo.png';
+import deliverrLogo from '@/assets/deliverr-logo.png';
+import quickbooksLogo from '@/assets/quickbooks-logo.png';
+import xeroLogo from '@/assets/xero-logo.png';
 
 interface ActiveConnection {
   id: string;
@@ -43,7 +51,7 @@ const activeConnections: ActiveConnection[] = [
     storeName: "Thandi's FBA Store",
     status: 'connected',
     lastSync: 'Just now',
-    logo: '🛒'
+    logo: amazonLogo
   }
 ];
 
@@ -53,21 +61,21 @@ const availableIntegrations: AvailableIntegration[] = [
     id: 'shopify',
     name: 'Shopify',
     category: 'marketplaces',
-    logo: '🏪',
+    logo: shopifyLogo,
     description: 'Connect your Shopify store for unified inventory and sales management'
   },
   {
     id: 'walmart',
     name: 'Walmart Marketplace',
     category: 'marketplaces',
-    logo: '🛒',
+    logo: walmartLogo,
     description: 'Integrate your Walmart Marketplace for seamless order processing'
   },
   {
     id: 'ebay',
     name: 'eBay',
     category: 'marketplaces',
-    logo: '🏷️',
+    logo: ebayLogo,
     description: 'Sync your eBay listings and manage orders from one dashboard'
   },
   // 3PLs
@@ -75,14 +83,14 @@ const availableIntegrations: AvailableIntegration[] = [
     id: 'shipbob',
     name: 'ShipBob',
     category: '3pl',
-    logo: '📦',
+    logo: shipbobLogo,
     description: 'Connect your ShipBob fulfillment for inventory and shipping sync'
   },
   {
     id: 'deliverr',
     name: 'Deliverr',
     category: '3pl',
-    logo: '🚚',
+    logo: deliverrLogo,
     description: 'Integrate Deliverr for fast fulfillment across channels'
   },
   // Accounting
@@ -90,14 +98,14 @@ const availableIntegrations: AvailableIntegration[] = [
     id: 'quickbooks',
     name: 'QuickBooks',
     category: 'accounting',
-    logo: '💰',
+    logo: quickbooksLogo,
     description: 'Sync financial data with QuickBooks for automated bookkeeping'
   },
   {
     id: 'xero',
     name: 'Xero',
     category: 'accounting',
-    logo: '📊',
+    logo: xeroLogo,
     description: 'Connect Xero for seamless financial reporting and tax preparation'
   }
 ];
@@ -168,7 +176,11 @@ export default function IntegrationsHub() {
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="text-2xl">{connection.logo}</div>
+                      <img 
+                        src={connection.logo} 
+                        alt={`${connection.name} logo`}
+                        className="w-8 h-8 object-contain"
+                      />
                       <div>
                         <CardTitle className="text-lg">{connection.name}</CardTitle>
                         <p className="text-sm text-muted-foreground">
@@ -230,7 +242,11 @@ export default function IntegrationsHub() {
                     <Card key={integration.id} className="border-muted/50 hover:border-primary/50 transition-colors">
                       <CardHeader className="pb-3">
                         <div className="flex items-center gap-3">
-                          <div className="text-2xl opacity-60">{integration.logo}</div>
+                          <img 
+                            src={integration.logo} 
+                            alt={`${integration.name} logo`}
+                            className="w-8 h-8 object-contain"
+                          />
                           <div>
                             <CardTitle className="text-lg">{integration.name}</CardTitle>
                           </div>
