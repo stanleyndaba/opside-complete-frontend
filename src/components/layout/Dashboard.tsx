@@ -117,38 +117,40 @@ export function Dashboard() {
                 
                 {/* Module 1: Promise of Time - Your Next Payout (Hero) */}
                 <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-background">
-                  <CardContent className="p-8">
-                    <div className="text-center space-y-4">
+                  <CardContent className="p-6">
+                    <div className="text-center space-y-3">
                       <h2 className="text-lg font-semibold text-muted-foreground font-montserrat">Your Next Payout</h2>
                       
                       {/* Hero Amount */}
-                      <div className="text-6xl font-bold text-primary font-montserrat">
+                      <div className="text-5xl font-bold text-primary font-montserrat">
                         {formatCurrency(nextPayout.amount)}
                       </div>
                       
                       {/* Expected Date */}
-                      <div className="flex items-center justify-center gap-2 text-2xl font-medium text-foreground">
-                        <Calendar className="h-6 w-6" />
+                      <div className="flex items-center justify-center gap-2 text-lg font-medium text-foreground">
+                        <Calendar className="h-5 w-5" />
                         <span className="font-montserrat">Expected by: {nextPayout.expectedDate}</span>
                       </div>
                       
-                      {/* Payout Timeline */}
-                      <div className="mt-8 pt-6 border-t">
-                        <h3 className="text-sm font-medium text-muted-foreground mb-4 font-montserrat">Upcoming Payouts</h3>
-                        <div className="space-y-3">
-                          {upcomingPayouts.map((payout, index) => (
-                            <div key={index} className="flex justify-between items-center py-2">
-                              <span className="text-sm text-muted-foreground font-montserrat">{payout.date}</span>
-                              <div className="flex items-center gap-2">
-                                <span className="font-semibold font-montserrat">{formatCurrency(payout.amount)}</span>
-                                <div className={`w-3 h-3 rounded-full ${
-                                  payout.status === 'confirmed' ? 'bg-success' : 
-                                  payout.status === 'pending' ? 'bg-warning' : 'bg-muted'
-                                }`} />
-                              </div>
+                      {/* Separator */}
+                      <div className="pt-4">
+                        <div className="h-px bg-border/50 w-full" />
+                      </div>
+                      
+                      {/* Payout Timeline - Compact Table Style */}
+                      <div className="pt-4 space-y-2">
+                        {upcomingPayouts.map((payout, index) => (
+                          <div key={index} className="flex justify-between items-center py-1">
+                            <span className="text-sm text-muted-foreground font-montserrat">{payout.date}</span>
+                            <div className="flex items-center gap-2">
+                              <span className="font-semibold text-sm font-montserrat">{formatCurrency(payout.amount)}</span>
+                              <div className={`w-2.5 h-2.5 rounded-full ${
+                                payout.status === 'confirmed' ? 'bg-success' : 
+                                payout.status === 'pending' ? 'bg-warning' : 'bg-muted'
+                              }`} />
                             </div>
-                          ))}
-                        </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </CardContent>
