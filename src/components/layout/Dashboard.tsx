@@ -144,10 +144,7 @@ export function Dashboard() {
                     <span className="font-montserrat">View All Claims</span>
                   </Button>
                   
-                  <Button variant="outline" className="h-20 flex-col gap-2 hover:bg-accent/50 transition-colors">
-                    <BarChart3 className="h-6 w-6" />
-                    <span className="font-montserrat">Recovery Reports</span>
-                  </Button>
+                  
                   
                   <Button variant="outline" className="h-20 flex-col gap-2 hover:bg-accent/50 transition-colors">
                     <FolderOpen className="h-6 w-6" />
