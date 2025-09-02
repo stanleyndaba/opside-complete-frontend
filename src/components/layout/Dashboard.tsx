@@ -105,7 +105,7 @@ export function Dashboard() {
                       <h2 className="text-lg font-semibold text-muted-foreground font-montserrat">Your Next Payout</h2>
                       
                       {/* Hero Amount */}
-                      <div className="text-5xl font-bold text-primary font-montserrat">
+                      <div className="text-3xl font-semibold text-sidebar-primary font-montserrat">
                         {formatCurrency(nextPayout.amount)}
                       </div>
                       
