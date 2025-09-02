@@ -135,37 +135,7 @@ export function Dashboard() {
                 </Card>
 
                 {/* Module 2: Promise of Value - Your Financial Health */}
-                <Card>
-                  <CardContent className="p-6">
-                    <h2 className="text-lg font-semibold mb-6 font-montserrat">Your Recovered Value</h2>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      {/* Total Recovered */}
-                      <div className="text-center">
-                        <div className="text-4xl font-bold text-success mb-2 font-montserrat">
-                          {formatCurrency(recoveredValue.total)}
-                        </div>
-                        <p className="text-sm text-muted-foreground font-montserrat">Total Recovered Since Joining</p>
-                      </div>
-                      
-                      {/* Pending Recovery */}
-                      <div className="text-center">
-                        <div className="text-2xl font-bold text-warning mb-2 font-montserrat">
-                          {formatCurrency(recoveredValue.pending)}
-                        </div>
-                        <p className="text-sm text-muted-foreground font-montserrat">Pending Recovery</p>
-                      </div>
-                      
-                      {/* Last 30 Days */}
-                      <div className="text-center">
-                        <div className="text-2xl font-bold text-primary mb-2 font-montserrat">
-                          {formatCurrency(recoveredValue.lastMonth)}
-                        </div>
-                        <p className="text-sm text-muted-foreground font-montserrat">Last 30 Days</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                
 
                 {/* Module 3: Primary Navigation Links */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
