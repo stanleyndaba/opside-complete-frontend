@@ -56,7 +56,7 @@ export function Dashboard() {
     setIsSidebarCollapsed(prev => !prev);
   };
   return <div className="min-h-screen flex flex-col h-screen overflow-hidden">
-      <Navbar />
+      <Navbar sidebarCollapsed={isSidebarCollapsed} />
       
       <div className="flex-1 flex h-full overflow-hidden">
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />

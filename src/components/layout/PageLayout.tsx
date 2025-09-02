@@ -17,7 +17,7 @@ export function PageLayout({ children, title }: PageLayoutProps) {
   
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+      <Navbar sidebarCollapsed={isSidebarCollapsed} />
       
       <div className="flex-1 flex">
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
