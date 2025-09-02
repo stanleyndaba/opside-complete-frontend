@@ -146,10 +146,7 @@ export function Dashboard() {
                   
                   
                   
-                  <Button variant="outline" className="h-20 flex-col gap-2 hover:bg-accent/50 transition-colors">
-                    <FolderOpen className="h-6 w-6" />
-                    <span className="font-montserrat">Evidence Locker</span>
-                  </Button>
+                  
                 </div>
               </div>
 
