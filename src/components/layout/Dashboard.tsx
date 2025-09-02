@@ -112,7 +112,7 @@ export function Dashboard() {
                       {/* Expected Date */}
                       <div className="flex items-center justify-center gap-2 text-lg font-medium text-foreground">
                         <Calendar className="h-5 w-5" />
-                        <span className="font-montserrat text-left">Expected by: {nextPayout.expectedDate}</span>
+                        <span className="font-montserrat text-left text-zinc-400 text-sm font-normal">Expected by: {nextPayout.expectedDate}</span>
                       </div>
                       
                       {/* Separator */}
