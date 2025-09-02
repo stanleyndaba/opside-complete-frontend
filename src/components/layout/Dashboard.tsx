@@ -102,7 +102,7 @@ export function Dashboard() {
                 <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-background">
                   <CardContent className="p-6 bg-white rounded-none">
                     <div className="text-center space-y-3">
-                      <h2 className="text-lg font-semibold text-muted-foreground font-montserrat">Your Next Payout</h2>
+                      <h2 className="text-lg text-muted-foreground font-montserrat text-left font-extrabold">Next Payout</h2>
                       
                       {/* Hero Amount */}
                       <div className="text-3xl font-semibold text-sidebar-primary font-montserrat">
@@ -112,7 +112,7 @@ export function Dashboard() {
                       {/* Expected Date */}
                       <div className="flex items-center justify-center gap-2 text-lg font-medium text-foreground">
                         <Calendar className="h-5 w-5" />
-                        <span className="font-montserrat">Expected by: {nextPayout.expectedDate}</span>
+                        <span className="font-montserrat text-left">Expected by: {nextPayout.expectedDate}</span>
                       </div>
                       
                       {/* Separator */}
