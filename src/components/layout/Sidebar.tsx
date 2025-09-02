@@ -47,19 +47,43 @@ export function Sidebar({
 
   const sections: NavSection[] = [
     {
-      title: 'Core Workflow',
+      title: 'Dashboard',
       items: [
-        { title: 'Command Center', icon: Home, href: '/' },
-        { title: 'Recoveries', icon: Shield, href: '/recoveries' },
+        { title: 'Overview', icon: Home, href: '/' },
         { title: 'Reports', icon: BarChart3, href: '/analytics' }
       ]
     },
     {
-      title: 'Configuration',
+      title: 'Core Features',
+      items: [
+        { title: 'Recoveries', icon: Shield, href: '/recoveries' },
+        { title: 'FBA Fee Disputes', icon: FileText, href: '/amazon-fee-dispute' },
+        { title: 'Cost Documents', icon: Factory, href: '/evidence-locker' },
+        { title: 'Inventory Sync', icon: Zap, href: '/smart-inventory-sync' },
+        { title: 'Integrations Hub', icon: Settings, href: '/integrations-hub' }
+      ]
+    },
+    {
+      title: 'Account',
       items: [
         { title: 'Settings', icon: Settings, href: '/settings' },
-        { title: 'Help & Support', icon: HelpCircle, href: '/help' },
-        { title: 'What\'s New', icon: Sparkles, href: '/whats-new' }
+        { title: 'Billing', icon: CreditCard, href: '/billing' },
+        { title: 'Team Management', icon: Users, href: '/team-management' }
+      ]
+    },
+    {
+      title: 'Support',
+      items: [
+        { title: 'Help Centre', icon: HelpCircle, href: '/help' },
+        { title: 'Contact Support', icon: MessageSquare, href: '/contact' },
+        { title: 'What\'s new', icon: Sparkles, href: '/whats-new' }
+      ]
+    },
+    {
+      title: 'System',
+      items: [
+        { title: 'Export Data', icon: Download, href: '/export' },
+        { title: 'API Access', icon: Key, href: '/api' }
       ]
     }
   ];
