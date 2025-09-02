@@ -102,7 +102,7 @@ export function Dashboard() {
                 <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-background">
                   <CardContent className="p-6 bg-white rounded-none">
                     <div className="text-center space-y-3">
-                      <h2 className="text-lg text-muted-foreground font-montserrat text-left font-extrabold">Next Payout</h2>
+                      <h2 className="text-lg text-muted-foreground font-montserrat text-left font-extrabold">Scheduled Payout</h2>
                       
                       {/* Hero Amount */}
                       <div className="text-3xl font-semibold text-sidebar-primary font-montserrat">
