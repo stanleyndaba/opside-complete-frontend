@@ -125,7 +125,7 @@ export function Sidebar({
         </TooltipProvider>;
     }
     return <Link to={item.href} className={cn("flex items-center gap-3 px-3 py-2 rounded-md transition-colors", isActive ? "bg-black text-white" : "text-gray-600 hover:bg-gray-100")}>
-        <item.icon className="h-5 w-5 shrink-0" strokeWidth={1.5} />
+        <item.icon strokeWidth={1.5} className="h-5 w-5 shrink-0 text-sm font-extralight" />
         <span className="text-sm font-normal">{item.title}</span>
       </Link>;
   };
