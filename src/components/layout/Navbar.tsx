@@ -27,9 +27,7 @@ export function Navbar({
           <NotificationBell />
           
           <Avatar className="h-9 w-9 transition-transform duration-200 hover:scale-105">
-            <AvatarFallback className="bg-primary/10 text-primary">
-              <User className="h-5 w-5" />
-            </AvatarFallback>
+            
           </Avatar>
         </div>
       </div>
