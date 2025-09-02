@@ -100,7 +100,7 @@ export function Dashboard() {
                 
                 {/* Module 1: Promise of Time - Your Next Payout (Hero) */}
                 <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-background">
-                  <CardContent className="p-6">
+                  <CardContent className="p-6 bg-white rounded-none">
                     <div className="text-center space-y-3">
                       <h2 className="text-lg font-semibold text-muted-foreground font-montserrat">Your Next Payout</h2>
                       
