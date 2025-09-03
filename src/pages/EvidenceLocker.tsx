@@ -9,7 +9,6 @@ import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Upload, FileText, Search, Mail, Check, AlertTriangle, Clock, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
 export default function EvidenceLocker() {
   const [dragActive, setDragActive] = useState(false);
 
@@ -20,42 +19,35 @@ export default function EvidenceLocker() {
     coveragePercentage: 85,
     totalDocuments: 23
   };
-
-  const documents = [
-    {
-      id: 'doc-001',
-      name: 'July_Supplier_Invoice.pdf',
-      uploadDate: '2025-01-15',
-      status: 'verified' as const,
-      linkedSKUs: 15,
-      processingTime: '2.3s'
-    },
-    {
-      id: 'doc-002', 
-      name: 'Q3_Purchase_Orders.pdf',
-      uploadDate: '2025-01-14',
-      status: 'verified' as const,
-      linkedSKUs: 28,
-      processingTime: '4.1s'
-    },
-    {
-      id: 'doc-003',
-      name: 'Manufacturer_Invoice_Aug.jpg',
-      uploadDate: '2025-01-13',
-      status: 'processing' as const,
-      linkedSKUs: 0,
-      processingTime: null
-    },
-    {
-      id: 'doc-004',
-      name: 'Blurry_Receipt.jpg',
-      uploadDate: '2025-01-12',
-      status: 'action-required' as const,
-      linkedSKUs: 0,
-      processingTime: null
-    }
-  ];
-
+  const documents = [{
+    id: 'doc-001',
+    name: 'July_Supplier_Invoice.pdf',
+    uploadDate: '2025-01-15',
+    status: 'verified' as const,
+    linkedSKUs: 15,
+    processingTime: '2.3s'
+  }, {
+    id: 'doc-002',
+    name: 'Q3_Purchase_Orders.pdf',
+    uploadDate: '2025-01-14',
+    status: 'verified' as const,
+    linkedSKUs: 28,
+    processingTime: '4.1s'
+  }, {
+    id: 'doc-003',
+    name: 'Manufacturer_Invoice_Aug.jpg',
+    uploadDate: '2025-01-13',
+    status: 'processing' as const,
+    linkedSKUs: 0,
+    processingTime: null
+  }, {
+    id: 'doc-004',
+    name: 'Blurry_Receipt.jpg',
+    uploadDate: '2025-01-12',
+    status: 'action-required' as const,
+    linkedSKUs: 0,
+    processingTime: null
+  }];
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'verified':
@@ -77,7 +69,6 @@ export default function EvidenceLocker() {
         return null;
     }
   };
-
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -87,52 +78,24 @@ export default function EvidenceLocker() {
       setDragActive(false);
     }
   };
-
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       // Handle file upload logic here
       console.log('Files dropped:', e.dataTransfer.files);
     }
   };
-
-  return (
-    <PageLayout title="Evidence Locker & Value Engine">
+  return <PageLayout title="Evidence Locker & Value Engine">
       <div className="space-y-8">
         {/* Status Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Card className="col-span-1 md:col-span-2 lg:col-span-1">
-            <CardHeader>
-              <CardTitle className="text-lg">Documentation Coverage</CardTitle>
-              <CardDescription>SKUs with verified cost data</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-2xl font-bold">{coverageData.coveragePercentage}%</span>
-                  <span className="text-sm text-muted-foreground">
-                    {coverageData.protectedSKUs} of {coverageData.totalSKUs} SKUs Protected
-                  </span>
-                </div>
-                <Progress value={coverageData.coveragePercentage} className="h-3" />
-              </div>
-            </CardContent>
-          </Card>
           
-          <StatsCard
-            title="Total Documents"
-            value={coverageData.totalDocuments}
-            description="Successfully processed"
-          />
           
-          <StatsCard
-            title="Processing Power"
-            value="2.3s"
-            description="Average extraction time"
-          />
+          <StatsCard title="Total Documents" value={coverageData.totalDocuments} description="Successfully processed" />
+          
+          <StatsCard title="Processing Power" value="2.3s" description="Average extraction time" />
         </div>
 
         {/* Upload Section */}
@@ -144,17 +107,7 @@ export default function EvidenceLocker() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div
-              className={`border-2 border-dashed rounded-lg p-8 text-center transition-all ${
-                dragActive 
-                  ? 'border-primary bg-primary/5' 
-                  : 'border-muted-foreground/25 hover:border-primary/50'
-              }`}
-              onDragEnter={handleDrag}
-              onDragLeave={handleDrag}
-              onDragOver={handleDrag}
-              onDrop={handleDrop}
-            >
+            <div className={`border-2 border-dashed rounded-lg p-8 text-center transition-all ${dragActive ? 'border-primary bg-primary/5' : 'border-muted-foreground/25 hover:border-primary/50'}`} onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}>
               <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
               <h3 className="text-lg font-semibold mb-2">Drag & Drop Your Invoices or Purchase Orders Here</h3>
               <p className="text-muted-foreground mb-4">
@@ -190,10 +143,7 @@ export default function EvidenceLocker() {
               <div className="flex items-center gap-2">
                 <div className="relative">
                   <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search documents..."
-                    className="pl-8 w-64"
-                  />
+                  <Input placeholder="Search documents..." className="pl-8 w-64" />
                 </div>
               </div>
             </div>
@@ -210,8 +160,7 @@ export default function EvidenceLocker() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {documents.map((doc) => (
-                  <TableRow key={doc.id}>
+                {documents.map(doc => <TableRow key={doc.id}>
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <FileText className="h-4 w-4 text-muted-foreground" />
@@ -226,32 +175,24 @@ export default function EvidenceLocker() {
                     </TableCell>
                     <TableCell>
                       <span className="font-medium">{doc.linkedSKUs}</span>
-                      {doc.linkedSKUs > 0 && (
-                        <span className="text-sm text-muted-foreground ml-1">SKUs</span>
-                      )}
+                      {doc.linkedSKUs > 0 && <span className="text-sm text-muted-foreground ml-1">SKUs</span>}
                     </TableCell>
                     <TableCell>
-                      {doc.status === 'verified' ? (
-                        <Link to={`/evidence-locker/document/${doc.id}`}>
+                      {doc.status === 'verified' ? <Link to={`/evidence-locker/document/${doc.id}`}>
                           <Button variant="ghost" size="sm">
                             <Eye className="w-4 h-4 mr-1" />
                             View Details
                           </Button>
-                        </Link>
-                      ) : (
-                        <Button variant="ghost" size="sm" disabled>
+                        </Link> : <Button variant="ghost" size="sm" disabled>
                           <Eye className="w-4 h-4 mr-1" />
                           View Details
-                        </Button>
-                      )}
+                        </Button>}
                     </TableCell>
-                  </TableRow>
-                ))}
+                  </TableRow>)}
               </TableBody>
             </Table>
           </CardContent>
         </Card>
       </div>
-    </PageLayout>
-  );
+    </PageLayout>;
 }

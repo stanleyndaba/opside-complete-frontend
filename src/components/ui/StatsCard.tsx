@@ -28,23 +28,6 @@ export function StatsCard({
   const isTrendPositive = trend !== undefined ? trend > 0 : null;
   return <Card className={cn("transition-all duration-300 hover:shadow-md overflow-hidden", onClick ? "cursor-pointer" : "", className)} onClick={onClick}>
       
-      <CardContent>
-        <div className="text-2xl font-bold tracking-tight truncate" style={{
-        lineHeight: '1.5'
-      }}>
-          <span className={valueClassName}>{value}</span>
-        </div>
-        
-        {(description || trend !== undefined) && <div className="flex items-center text-xs mt-1">
-            {trend !== undefined && <span className={cn("inline-flex items-center mr-1", isTrendPositive ? "text-success" : "text-danger")}>
-                {isTrendPositive ? <ArrowUpIcon className="h-3 w-3 mr-1" /> : <ArrowDownIcon className="h-3 w-3 mr-1" />}
-                {formattedTrend}
-              </span>}
-            {trendLabel && <span className="text-muted-foreground ml-1">{trendLabel}</span>}
-            {description && <p className={cn("text-muted-foreground", trend !== undefined ? "ml-2" : "")}>
-                {description}
-              </p>}
-          </div>}
-      </CardContent>
+      
     </Card>;
 }
