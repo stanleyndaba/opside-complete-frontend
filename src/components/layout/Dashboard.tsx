@@ -99,36 +99,38 @@ export function Dashboard() {
               <div className="lg:col-span-2 space-y-8">
                 
                 {/* Module 1: Promise of Time - Your Next Payout (Hero) */}
-                <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-background">
-                  <CardContent className="p-6 bg-white rounded-none">
-                    <div className="text-center space-y-3">
-                      <h2 className="font-montserrat text-left text-lg text-gray-700 font-semibold">Scheduled Payments</h2>
+                <Card className="border border-border">
+                  <CardContent className="p-4">
+                    <div className="text-left space-y-2">
+                      <h2 className="font-montserrat text-lg text-gray-700 font-semibold">Scheduled Payments</h2>
                       
                       {/* Hero Amount */}
-                      <div className="text-3xl font-semibold text-sidebar-primary font-montserrat">
+                      <div className="text-2xl font-semibold text-sidebar-primary font-montserrat">
                         {formatCurrency(nextPayout.amount)}
                       </div>
                       
                       {/* Expected Date */}
-                      <div className="flex items-center justify-center gap-2 text-lg font-medium text-foreground">
-                        <Calendar className="h-5 w-5" />
-                        <span className="font-montserrat text-left text-zinc-400 text-sm font-normal">Expected by: {nextPayout.expectedDate}</span>
+                      <div className="flex items-center gap-2 text-base font-medium text-foreground">
+                        <Calendar className="h-4 w-4" />
+                        <span className="font-montserrat text-zinc-400 text-sm font-normal">Expected by: {nextPayout.expectedDate}</span>
                       </div>
                       
                       {/* Separator */}
-                      <div className="pt-4">
+                      <div className="pt-2">
                         <div className="h-px bg-border/50 w-full" />
                       </div>
                       
-                      {/* Payout Timeline - Compact Table Style */}
-                      <div className="pt-4 space-y-2">
-                        {upcomingPayouts.map((payout, index) => <div key={index} className="flex justify-between items-center py-1">
-                            <span className="text-sm text-muted-foreground font-montserrat">{payout.date}</span>
-                            <div className="flex items-center gap-2">
-                              <span className="font-semibold text-sm font-montserrat">{formatCurrency(payout.amount)}</span>
-                              
-                            </div>
-                          </div>)}
+                      {/* Upcoming Payments */}
+                      <div className="pt-2">
+                        <h3 className="font-montserrat text-sm font-medium text-gray-600 mb-2">Upcoming Payments</h3>
+                        <div className="space-y-1">
+                          {upcomingPayouts.map((payout, index) => <div key={index} className="flex justify-between items-center py-1">
+                              <span className="text-sm text-muted-foreground font-montserrat">{payout.date}</span>
+                              <div className="flex items-center gap-2">
+                                <span className="font-semibold text-sm font-montserrat">{formatCurrency(payout.amount)}</span>
+                              </div>
+                            </div>)}
+                        </div>
                       </div>
                     </div>
                   </CardContent>
