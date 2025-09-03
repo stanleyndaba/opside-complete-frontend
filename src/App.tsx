@@ -13,6 +13,7 @@ import Global from "./pages/Global";
 import Portfolio from "./pages/Portfolio";
 import Performance from "./pages/Performance";
 import Analysis from "./pages/Analysis";
+import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
 import IntegrationsHub from "./pages/IntegrationsHub";
 import Recoveries from "./pages/Recoveries";
@@ -36,6 +37,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/analytics" element={<Reports />} />
           <Route path="/stocks" element={<Stocks />} />
           <Route path="/markets" element={<Markets />} />
           <Route path="/currencies" element={<Currencies />} />
