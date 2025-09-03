@@ -31,7 +31,7 @@ export function Sidebar({
   const sections: NavSection[] = [{
     title: 'Dashboard',
     items: [{
-      title: 'Overview',
+      title: 'Command Center',
       icon: Home,
       href: '/'
     }, {
@@ -40,30 +40,26 @@ export function Sidebar({
       href: '/analytics'
     }]
   }, {
-    title: 'Core Features',
+    title: 'Seller Tools',
     items: [{
-      title: 'Recoveries',
+      title: 'Recovery Timeline',
       icon: Shield,
       href: '/recoveries'
     }, {
-      title: 'FBA Fee Disputes',
+      title: 'Fee Audits',
       icon: FileText,
       href: '/amazon-fee-dispute'
     }, {
-      title: 'Cost Documents',
+      title: 'Claim Documents',
       icon: Factory,
       href: '/evidence-locker'
     }, {
-      title: 'Inventory Sync',
-      icon: Zap,
-      href: '/smart-inventory-sync'
-    }, {
-      title: 'Integrations Hub',
+      title: 'Connections',
       icon: Settings,
       href: '/integrations-hub'
     }]
   }, {
-    title: 'Account',
+    title: 'My Account',
     items: [{
       title: 'Settings',
       icon: Settings,
@@ -72,25 +68,6 @@ export function Sidebar({
       title: 'Billing',
       icon: CreditCard,
       href: '/billing'
-    }, {
-      title: 'Team Management',
-      icon: Users,
-      href: '/team-management'
-    }]
-  }, {
-    title: 'Support',
-    items: [{
-      title: 'Help Centre',
-      icon: HelpCircle,
-      href: '/help'
-    }, {
-      title: 'Contact Support',
-      icon: MessageSquare,
-      href: '/contact'
-    }, {
-      title: 'What\'s new',
-      icon: Sparkles,
-      href: '/whats-new'
     }]
   }, {
     title: 'System',
@@ -102,6 +79,17 @@ export function Sidebar({
       title: 'API Access',
       icon: Key,
       href: '/api'
+    }]
+  }, {
+    title: 'Support',
+    items: [{
+      title: 'Help Centre',
+      icon: HelpCircle,
+      href: '/help'
+    }, {
+      title: 'What\'s new',
+      icon: Sparkles,
+      href: '/whats-new'
     }]
   }];
   const NavItemComponent = ({
@@ -333,6 +321,15 @@ export function Sidebar({
               </div>
             </div>)}
         </nav>
+        
+        {/* Version Number */}
+        {!isCollapsed && (
+          <div className="px-4 pb-6">
+            <div className="text-xs text-gray-400 font-mono">
+              v1.0
+            </div>
+          </div>
+        )}
       </ScrollArea>
     </aside>;
 }
