@@ -99,7 +99,7 @@ const ApiAccess = () => {
             <div className="flex items-start gap-3">
               <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
               <div>
-                <h3 className="font-semibold text-yellow-800 mb-2">⚠️ Security Notice</h3>
+                <h3 className="font-semibold text-yellow-800 mb-2"> Security Notice</h3>
                 <p className="text-yellow-700 text-sm leading-relaxed">
                   Your API keys grant full programmatic access to your Opside data. Treat them exactly like a password. 
                   Never share them publicly or commit them to version control systems like GitHub.
