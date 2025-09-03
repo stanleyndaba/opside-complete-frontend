@@ -102,7 +102,7 @@ export function Dashboard() {
                 <Card className="border">
                   <CardContent className="p-4">
                     <div className="space-y-2">
-                      <h2 className="font-montserrat text-lg text-gray-700 font-semibold">Scheduled Payments</h2>
+                      <h2 className="font-montserrat text-lg text-gray-700 font-semibold">Scheduled Payment</h2>
                       
                       {/* Hero Amount */}
                       <div className="text-2xl font-semibold text-sidebar-primary font-montserrat">
