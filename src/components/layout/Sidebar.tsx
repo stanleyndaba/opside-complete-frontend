@@ -37,7 +37,7 @@ export function Sidebar({
     }, {
       title: 'Reports',
       icon: BarChart3,
-      href: '/analytics'
+      href: '/reports'
     }]
   }, {
     title: 'Seller Tools',
