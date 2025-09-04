@@ -138,7 +138,7 @@ export function Dashboard() {
 
                 {/* Module 3: Primary Navigation Links */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Button variant="outline" className="h-8 flex items-center gap-2 transition-colors text-white bg-gray-500 hover:bg-gray-400">
+                  <Button variant="outline" className="h-8 flex items-center gap-2 transition-colors bg-gray-200 hover:bg-gray-100 text-black">
                     <FileText className="h-4 w-4" />
                     <span className="font-montserrat">All Claims</span>
                   </Button>
