@@ -6,19 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { 
-  Shield, 
-  CheckCircle, 
-  Settings,
-  RefreshCw,
-  ArrowRight,
-  ExternalLink,
-  Package,
-  ShoppingBag,
-  Calculator,
-  Truck
-} from 'lucide-react';
-
+import { Shield, CheckCircle, Settings, RefreshCw, ArrowRight, ExternalLink, Package, ShoppingBag, Calculator, Truck } from 'lucide-react';
 interface ActiveConnection {
   id: string;
   name: string;
@@ -27,7 +15,6 @@ interface ActiveConnection {
   lastSync: string;
   logo: string;
 }
-
 interface AvailableIntegration {
   id: string;
   name: string;
@@ -35,94 +22,86 @@ interface AvailableIntegration {
   logo: string;
   description: string;
 }
-
-const activeConnections: ActiveConnection[] = [
-  {
-    id: 'amazon',
-    name: 'Amazon Seller Central',
-    storeName: "Thandi's FBA Store",
-    status: 'connected',
-    lastSync: 'Just now',
-    logo: '/lovable-uploads/14f98d63-9a1a-4128-8021-1d840d778ea5.png'
-  }
-];
-
+const activeConnections: ActiveConnection[] = [{
+  id: 'amazon',
+  name: 'Amazon Seller Central',
+  storeName: "Thandi's FBA Store",
+  status: 'connected',
+  lastSync: 'Just now',
+  logo: '/lovable-uploads/14f98d63-9a1a-4128-8021-1d840d778ea5.png'
+}];
 const availableIntegrations: AvailableIntegration[] = [
-  // Marketplaces
-  {
-    id: 'shopify',
-    name: 'Shopify',
-    category: 'marketplaces',
-    logo: '/lovable-uploads/8efb84ba-e777-4413-ae5a-f7f54bfa6cab.png',
-    description: 'Connect your Shopify store for unified inventory and sales management'
-  },
-  {
-    id: 'walmart',
-    name: 'Walmart Marketplace',
-    category: 'marketplaces',
-    logo: '/lovable-uploads/cef56367-b57b-46cc-b0cb-a2ffad47fb03.png',
-    description: 'Integrate your Walmart Marketplace for seamless order processing'
-  },
-  {
-    id: 'ebay',
-    name: 'eBay',
-    category: 'marketplaces',
-    logo: '/lovable-uploads/f894a44c-fd04-4ec2-8af3-a7235951d82d.png',
-    description: 'Sync your eBay listings and manage orders from one dashboard'
-  },
-  // 3PLs
-  {
-    id: 'shipbob',
-    name: 'ShipBob',
-    category: '3pl',
-    logo: '/lovable-uploads/3a7436b5-1e89-477e-b2bd-128ec05c5c49.png',
-    description: 'Connect your ShipBob fulfillment for inventory and shipping sync'
-  },
-  {
-    id: 'deliverr',
-    name: 'Deliverr',
-    category: '3pl',
-    logo: '/lovable-uploads/e2b07527-f2ad-4997-b9b1-963377193c0e.png',
-    description: 'Integrate Deliverr for fast fulfillment across channels'
-  },
-  // Accounting
-  {
-    id: 'quickbooks',
-    name: 'QuickBooks',
-    category: 'accounting',
-    logo: '/lovable-uploads/02ff2e6e-9e67-4481-99a8-4b9caead4540.png',
-    description: 'Sync financial data with QuickBooks for automated bookkeeping'
-  },
-  {
-    id: 'xero',
-    name: 'Xero',
-    category: 'accounting',
-    logo: '/lovable-uploads/ac3dc504-c896-4f73-9e7e-aefc77dd6e9f.png',
-    description: 'Connect Xero for seamless financial reporting and tax preparation'
-  }
-];
-
+// Marketplaces
+{
+  id: 'shopify',
+  name: 'Shopify',
+  category: 'marketplaces',
+  logo: '/lovable-uploads/8efb84ba-e777-4413-ae5a-f7f54bfa6cab.png',
+  description: 'Connect your Shopify store for unified inventory and sales management'
+}, {
+  id: 'walmart',
+  name: 'Walmart Marketplace',
+  category: 'marketplaces',
+  logo: '/lovable-uploads/cef56367-b57b-46cc-b0cb-a2ffad47fb03.png',
+  description: 'Integrate your Walmart Marketplace for seamless order processing'
+}, {
+  id: 'ebay',
+  name: 'eBay',
+  category: 'marketplaces',
+  logo: '/lovable-uploads/f894a44c-fd04-4ec2-8af3-a7235951d82d.png',
+  description: 'Sync your eBay listings and manage orders from one dashboard'
+},
+// 3PLs
+{
+  id: 'shipbob',
+  name: 'ShipBob',
+  category: '3pl',
+  logo: '/lovable-uploads/3a7436b5-1e89-477e-b2bd-128ec05c5c49.png',
+  description: 'Connect your ShipBob fulfillment for inventory and shipping sync'
+}, {
+  id: 'deliverr',
+  name: 'Deliverr',
+  category: '3pl',
+  logo: '/lovable-uploads/e2b07527-f2ad-4997-b9b1-963377193c0e.png',
+  description: 'Integrate Deliverr for fast fulfillment across channels'
+},
+// Accounting
+{
+  id: 'quickbooks',
+  name: 'QuickBooks',
+  category: 'accounting',
+  logo: '/lovable-uploads/02ff2e6e-9e67-4481-99a8-4b9caead4540.png',
+  description: 'Sync financial data with QuickBooks for automated bookkeeping'
+}, {
+  id: 'xero',
+  name: 'Xero',
+  category: 'accounting',
+  logo: '/lovable-uploads/ac3dc504-c896-4f73-9e7e-aefc77dd6e9f.png',
+  description: 'Connect Xero for seamless financial reporting and tax preparation'
+}];
 const categoryConfig = {
-  marketplaces: { 
-    name: 'Marketplaces', 
+  marketplaces: {
+    name: 'Marketplaces',
     icon: ShoppingBag,
     description: 'Sell across multiple channels'
   },
-  '3pl': { 
-    name: '3rd Party Logistics (3PLs)', 
+  '3pl': {
+    name: '3rd Party Logistics (3PLs)',
     icon: Truck,
     description: 'Streamline your fulfillment operations'
   },
-  accounting: { 
-    name: 'Accounting', 
+  accounting: {
+    name: 'Accounting',
     icon: Calculator,
     description: 'Automate your financial management'
   }
 };
-
 export default function IntegrationsHub() {
   const [lastSyncTime, setLastSyncTime] = useState('Just now');
-  const [requestFormData, setRequestFormData] = useState({ platform: '', description: '' });
+  const [requestFormData, setRequestFormData] = useState({
+    platform: '',
+    description: ''
+  });
   const [showRequestForm, setShowRequestForm] = useState(false);
 
   // Real-time sync simulation
@@ -132,20 +111,19 @@ export default function IntegrationsHub() {
       const seconds = now.getSeconds();
       setLastSyncTime(seconds % 10 === 0 ? 'Just now' : `${seconds % 10} seconds ago`);
     }, 1000);
-
     return () => clearInterval(interval);
   }, []);
-
   const handleRequestSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle request submission
     console.log('Integration request:', requestFormData);
-    setRequestFormData({ platform: '', description: '' });
+    setRequestFormData({
+      platform: '',
+      description: ''
+    });
     setShowRequestForm(false);
   };
-
-  return (
-    <PageLayout title="Opside Integrations Hub">
+  return <PageLayout title="Opside Integrations Hub">
       <div className="space-y-8">
         {/* Header */}
         <div className="text-center">
@@ -163,16 +141,11 @@ export default function IntegrationsHub() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {activeConnections.map((connection) => (
-              <Card key={connection.id} className="border-green-200 bg-green-50/50">
+            {activeConnections.map(connection => <Card key={connection.id} className="border-green-200 bg-green-50/50">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <img 
-                        src={connection.logo} 
-                        alt={`${connection.name} logo`}
-                        className="w-8 h-8 object-contain"
-                      />
+                      <img src={connection.logo} alt={`${connection.name} logo`} className="w-14 h-14 object-contain" />
                       <div>
                         <CardTitle className="text-lg">{connection.name}</CardTitle>
                         <p className="text-sm text-muted-foreground">
@@ -201,8 +174,7 @@ export default function IntegrationsHub() {
                     </Button>
                   </div>
                 </CardContent>
-              </Card>
-            ))}
+              </Card>)}
           </div>
         </div>
 
@@ -211,13 +183,9 @@ export default function IntegrationsHub() {
           <h2 className="text-2xl font-semibold">Available Integrations</h2>
           
           {Object.entries(categoryConfig).map(([categoryKey, categoryInfo]) => {
-            const CategoryIcon = categoryInfo.icon;
-            const categoryIntegrations = availableIntegrations.filter(
-              integration => integration.category === categoryKey
-            );
-            
-            return (
-              <div key={categoryKey} className="space-y-4">
+          const CategoryIcon = categoryInfo.icon;
+          const categoryIntegrations = availableIntegrations.filter(integration => integration.category === categoryKey);
+          return <div key={categoryKey} className="space-y-4">
                 <div className="flex items-center gap-3">
                   <CategoryIcon className="h-5 w-5 text-primary" />
                   <h3 className="text-xl font-semibold">{categoryInfo.name}</h3>
@@ -230,15 +198,10 @@ export default function IntegrationsHub() {
                 </p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {categoryIntegrations.map((integration) => (
-                    <Card key={integration.id} className="border-muted/50 hover:border-primary/50 transition-colors">
+                  {categoryIntegrations.map(integration => <Card key={integration.id} className="border-muted/50 hover:border-primary/50 transition-colors">
                       <CardHeader className="pb-3">
                         <div className="flex items-center gap-3">
-                          <img 
-                            src={integration.logo} 
-                            alt={`${integration.name} logo`}
-                            className="w-8 h-8 object-contain"
-                          />
+                          <img src={integration.logo} alt={`${integration.name} logo`} className="w-14 h-18 object-contain" />
                           <div>
                             <CardTitle className="text-lg">{integration.name}</CardTitle>
                           </div>
@@ -253,12 +216,10 @@ export default function IntegrationsHub() {
                           Connect
                         </Button>
                       </CardContent>
-                    </Card>
-                  ))}
+                    </Card>)}
                 </div>
-              </div>
-            );
-          })}
+              </div>;
+        })}
         </div>
 
         {/* Section 3: Request an Integration */}
@@ -273,55 +234,39 @@ export default function IntegrationsHub() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {!showRequestForm ? (
-              <Button 
-                onClick={() => setShowRequestForm(true)}
-                className="gap-2"
-              >
+            {!showRequestForm ? <Button onClick={() => setShowRequestForm(true)} className="gap-2">
                 <ExternalLink className="h-4 w-4" />
                 Request an Integration
-              </Button>
-            ) : (
-              <form onSubmit={handleRequestSubmit} className="space-y-4">
+              </Button> : <form onSubmit={handleRequestSubmit} className="space-y-4">
                 <div>
                   <label className="text-sm font-medium mb-2 block">
                     Platform Name
                   </label>
-                  <Input
-                    placeholder="e.g., Etsy, BigCommerce, NetSuite..."
-                    value={requestFormData.platform}
-                    onChange={(e) => setRequestFormData(prev => ({ ...prev, platform: e.target.value }))}
-                    required
-                  />
+                  <Input placeholder="e.g., Etsy, BigCommerce, NetSuite..." value={requestFormData.platform} onChange={e => setRequestFormData(prev => ({
+                ...prev,
+                platform: e.target.value
+              }))} required />
                 </div>
                 <div>
                   <label className="text-sm font-medium mb-2 block">
                     How would this integration help your business? (Optional)
                   </label>
-                  <Input
-                    placeholder="Brief description of your use case..."
-                    value={requestFormData.description}
-                    onChange={(e) => setRequestFormData(prev => ({ ...prev, description: e.target.value }))}
-                  />
+                  <Input placeholder="Brief description of your use case..." value={requestFormData.description} onChange={e => setRequestFormData(prev => ({
+                ...prev,
+                description: e.target.value
+              }))} />
                 </div>
                 <div className="flex gap-2">
                   <Button type="submit" size="sm">
                     Submit Request
                   </Button>
-                  <Button 
-                    type="button" 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => setShowRequestForm(false)}
-                  >
+                  <Button type="button" variant="outline" size="sm" onClick={() => setShowRequestForm(false)}>
                     Cancel
                   </Button>
                 </div>
-              </form>
-            )}
+              </form>}
           </CardContent>
         </Card>
       </div>
-    </PageLayout>
-  );
+    </PageLayout>;
 }
