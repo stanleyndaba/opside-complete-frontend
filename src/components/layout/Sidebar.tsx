@@ -42,7 +42,7 @@ export function Sidebar({
   }, {
     title: 'Seller Tools',
     items: [{
-      title: 'Recovery Timeline',
+      title: 'Recoveries',
       icon: Shield,
       href: '/recoveries'
     }, {
