@@ -37,7 +37,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/analytics" element={<Reports />} />
+          <Route path="/reports" element={<Reports />} />
           <Route path="/stocks" element={<Stocks />} />
           <Route path="/markets" element={<Markets />} />
           <Route path="/currencies" element={<Currencies />} />
