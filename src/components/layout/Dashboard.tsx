@@ -155,7 +155,7 @@ export function Dashboard() {
                   <CardContent className="p-6">
                     <div className="flex items-center gap-2 mb-6">
                       
-                      <h2 className="text-lg font-semibold font-montserrat">Claim Notifications</h2>
+                      <h2 className="text-lg font-semibold font-montserrat">Notifications</h2>
                     </div>
                     
                     <div className="space-y-4 max-h-[600px] overflow-y-auto">
