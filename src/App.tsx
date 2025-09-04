@@ -26,6 +26,7 @@ import TeamManagement from "./pages/TeamManagement";
 import ExportCenter from "./pages/ExportCenter";
 import NotificationHub from "./pages/NotificationHub";
 import ApiAccess from "./pages/ApiAccess";
+import Help from "./pages/Help";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +58,7 @@ const App = () => (
           <Route path="/export" element={<ExportCenter />} />
           <Route path="/notifications" element={<NotificationHub />} />
           <Route path="/api" element={<ApiAccess />} />
+          <Route path="/help" element={<Help />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
