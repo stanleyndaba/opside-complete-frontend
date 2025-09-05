@@ -111,7 +111,7 @@ export function Dashboard() {
                       
                       {/* Expected Date */}
                       <div className="flex items-center gap-2 text-lg font-medium text-foreground">
-                        <Calendar className="h-5 w-5" />
+                        <Calendar className="h-4 w-4" />
                         <span className="font-montserrat text-zinc-400 text-sm font-normal">Expected by: {nextPayout.expectedDate}</span>
                       </div>
                       
@@ -162,9 +162,7 @@ export function Dashboard() {
                       {activityFeed.map(item => {
                       const IconComponent = item.icon;
                       return <div key={item.id} className="flex gap-3 p-3 transition-colors bg-stone-50 rounded-3xl">
-                            <div className="flex-shrink-0">
-                              <IconComponent className={`h-5 w-5 ${item.color}`} />
-                            </div>
+                            
                             <div className="flex-1 min-w-0">
                               <p className="text-sm font-medium text-foreground mb-1 font-montserrat">
                                 {item.description}
