@@ -8,90 +8,109 @@ import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Link, useLocation } from 'react-router-dom';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+
 interface SidebarProps {
   isCollapsed: boolean;
   onToggle: () => void;
   className?: string;
 }
+
 interface NavItem {
   title: string;
   icon: React.ElementType;
   href: string;
 }
+
 interface NavSection {
   title: string;
   items: NavItem[];
 }
+
 export function Sidebar({
   isCollapsed,
   onToggle,
   className
 }: SidebarProps) {
   const location = useLocation();
-  const sections: NavSection[] = [{
-    title: 'Dashboard',
-    items: [{
-      title: 'Command Center',
-      icon: Home,
-      href: '/'
-    }, {
-      title: 'Reports',
-      icon: BarChart3,
-      href: '/reports'
-    }]
-  }, {
-    title: 'Seller Tools',
-    items: [{
-      title: 'Recoveries',
-      icon: Shield,
-      href: '/recoveries'
-    }, {
-      title: 'Fee Audits',
-      icon: FileText,
-      href: '/amazon-fee-dispute'
-    }, {
-      title: 'Claim Documents',
-      icon: Factory,
-      href: '/evidence-locker'
-    }, {
-      title: 'Connections',
-      icon: Settings,
-      href: '/integrations-hub'
-    }]
-  }, {
-    title: 'My Account',
-    items: [{
-      title: 'Settings',
-      icon: Settings,
-      href: '/settings'
-    }, {
-      title: 'Billing',
-      icon: CreditCard,
-      href: '/billing'
-    }]
-  }, {
-    title: 'System',
-    items: [{
-      title: 'Export Data',
-      icon: Download,
-      href: '/export'
-    }, {
-      title: 'API Access',
-      icon: Key,
-      href: '/api'
-    }]
-  }, {
-    title: 'Support',
-    items: [{
-      title: 'Help Centre',
-      icon: HelpCircle,
-      href: '/help'
-    }, {
-      title: 'What\'s new',
-      icon: Sparkles,
-      href: '/whats-new'
-    }]
-  }];
+  
+  const sections: NavSection[] = [
+    {
+      title: 'Seller Tools',
+      items: [
+        {
+          title: 'Command Center',
+          icon: Home,
+          href: '/'
+        },
+        {
+          title: 'Recoveries',
+          icon: Shield,
+          href: '/recoveries'
+        },
+        {
+          title: 'Reports',
+          icon: BarChart3,
+          href: '/reports'
+        },
+        {
+          title: 'Claim Documents',
+          icon: Factory,
+          href: '/evidence-locker'
+        },
+        {
+          title: 'Connections',
+          icon: Settings,
+          href: '/integrations-hub'
+        }
+      ]
+    },
+    {
+      title: 'My Account',
+      items: [
+        {
+          title: 'Settings',
+          icon: Settings,
+          href: '/settings'
+        },
+        {
+          title: 'Billing',
+          icon: CreditCard,
+          href: '/billing'
+        }
+      ]
+    },
+    {
+      title: 'System',
+      items: [
+        {
+          title: 'Export Data',
+          icon: Download,
+          href: '/export'
+        },
+        {
+          title: 'API Access',
+          icon: Key,
+          href: '/api'
+        }
+      ]
+    },
+    {
+      title: 'Support',
+      items: [
+        {
+          title: 'Help Centre',
+          icon: HelpCircle,
+          href: '/help'
+        },
+        {
+          title: 'What\'s new',
+          icon: Sparkles,
+          href: '/whats-new'
+        }
+      ]
+    }
+  ];
+
   const NavItemComponent = ({
     item
   }: {
@@ -117,6 +136,7 @@ export function Sidebar({
         <span className="text-sm font-normal">{item.title}</span>
       </Link>;
   };
+
   return <aside className={cn("bg-white fixed left-0 top-0 transition-all duration-300 ease-in-out flex flex-col border-r border-gray-200 h-screen z-40", isCollapsed ? "w-16" : "w-56", className)}>
       {/* Toggle Button */}
       <div className="absolute -right-3 top-6 z-10">
