@@ -161,7 +161,7 @@ export function Dashboard() {
                     <div className="space-y-4 max-h-[600px] overflow-y-auto">
                       {activityFeed.map(item => {
                       const IconComponent = item.icon;
-                      return <div key={item.id} className="flex gap-3 p-3 transition-colors bg-stone-50 rounded-3xl">
+                      return <div key={item.id} className="flex gap-3 p-3 transition-colors bg-stone-50 rounded-none">
                             
                             <div className="flex-1 min-w-0">
                               <p className="text-sm font-medium text-foreground mb-1 font-montserrat">
