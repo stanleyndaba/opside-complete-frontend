@@ -8,109 +8,83 @@ import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Link, useLocation } from 'react-router-dom';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-
 interface SidebarProps {
   isCollapsed: boolean;
   onToggle: () => void;
   className?: string;
 }
-
 interface NavItem {
   title: string;
   icon: React.ElementType;
   href: string;
 }
-
 interface NavSection {
   title: string;
   items: NavItem[];
 }
-
 export function Sidebar({
   isCollapsed,
   onToggle,
   className
 }: SidebarProps) {
   const location = useLocation();
-  
-  const sections: NavSection[] = [
-    {
-      title: 'Seller Tools',
-      items: [
-        {
-          title: 'Command Center',
-          icon: Home,
-          href: '/'
-        },
-        {
-          title: 'Recoveries',
-          icon: Shield,
-          href: '/recoveries'
-        },
-        {
-          title: 'Reports',
-          icon: BarChart3,
-          href: '/reports'
-        },
-        {
-          title: 'Claim Documents',
-          icon: Factory,
-          href: '/evidence-locker'
-        },
-        {
-          title: 'Connections',
-          icon: Settings,
-          href: '/integrations-hub'
-        }
-      ]
-    },
-    {
-      title: 'My Account',
-      items: [
-        {
-          title: 'Settings',
-          icon: Settings,
-          href: '/settings'
-        },
-        {
-          title: 'Billing',
-          icon: CreditCard,
-          href: '/billing'
-        }
-      ]
-    },
-    {
-      title: 'System',
-      items: [
-        {
-          title: 'Export Data',
-          icon: Download,
-          href: '/export'
-        },
-        {
-          title: 'API Access',
-          icon: Key,
-          href: '/api'
-        }
-      ]
-    },
-    {
-      title: 'Support',
-      items: [
-        {
-          title: 'Help Centre',
-          icon: HelpCircle,
-          href: '/help'
-        },
-        {
-          title: 'What\'s new',
-          icon: Sparkles,
-          href: '/whats-new'
-        }
-      ]
-    }
-  ];
-
+  const sections: NavSection[] = [{
+    title: 'Seller Tools',
+    items: [{
+      title: 'Command Center',
+      icon: Home,
+      href: '/'
+    }, {
+      title: 'Recoveries',
+      icon: Shield,
+      href: '/recoveries'
+    }, {
+      title: 'Reports',
+      icon: BarChart3,
+      href: '/reports'
+    }, {
+      title: 'Claim Documents',
+      icon: Factory,
+      href: '/evidence-locker'
+    }, {
+      title: 'Connections',
+      icon: Settings,
+      href: '/integrations-hub'
+    }]
+  }, {
+    title: 'My Account',
+    items: [{
+      title: 'Settings',
+      icon: Settings,
+      href: '/settings'
+    }, {
+      title: 'Billing',
+      icon: CreditCard,
+      href: '/billing'
+    }]
+  }, {
+    title: 'System',
+    items: [{
+      title: 'Export Data',
+      icon: Download,
+      href: '/export'
+    }, {
+      title: 'API Access',
+      icon: Key,
+      href: '/api'
+    }]
+  }, {
+    title: 'Support',
+    items: [{
+      title: 'Help Centre',
+      icon: HelpCircle,
+      href: '/help'
+    }, {
+      title: 'What\'s new',
+      icon: Sparkles,
+      href: '/whats-new'
+    }]
+  }];
   const NavItemComponent = ({
     item
   }: {
@@ -136,7 +110,6 @@ export function Sidebar({
         <span className="text-sm font-normal">{item.title}</span>
       </Link>;
   };
-
   return <aside className={cn("bg-white fixed left-0 top-0 transition-all duration-300 ease-in-out flex flex-col border-r border-gray-200 h-screen z-40", isCollapsed ? "w-16" : "w-56", className)}>
       {/* Toggle Button */}
       <div className="absolute -right-3 top-6 z-10">
@@ -231,10 +204,7 @@ export function Sidebar({
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <Input placeholder="Search..." className="pl-9 h-8 text-sm bg-gray-50 border-gray-200 focus:bg-white" />
-          </div>
+          
         </div> : <div className="p-2 border-b border-gray-200">
           <TooltipProvider>
             <Tooltip>
@@ -343,13 +313,11 @@ export function Sidebar({
         </nav>
         
         {/* Version Number */}
-        {!isCollapsed && (
-          <div className="px-4 pb-6">
+        {!isCollapsed && <div className="px-4 pb-6">
             <div className="text-xs text-gray-400 font-mono">
               v1.0
             </div>
-          </div>
-        )}
+          </div>}
       </ScrollArea>
     </aside>;
 }
