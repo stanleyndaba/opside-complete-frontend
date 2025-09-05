@@ -27,6 +27,7 @@ import ExportCenter from "./pages/ExportCenter";
 import NotificationHub from "./pages/NotificationHub";
 import ApiAccess from "./pages/ApiAccess";
 import Help from "./pages/Help";
+import WhatsNew from "./pages/WhatsNew";
 
 const queryClient = new QueryClient();
 
@@ -59,6 +60,7 @@ const App = () => (
           <Route path="/notifications" element={<NotificationHub />} />
           <Route path="/api" element={<ApiAccess />} />
           <Route path="/help" element={<Help />} />
+          <Route path="/whats-new" element={<WhatsNew />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
