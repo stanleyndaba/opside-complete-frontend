@@ -99,45 +99,13 @@ export function Dashboard() {
               <div className="lg:col-span-2 space-y-8">
                 
                 {/* Module 1: Promise of Time - Your Next Payout (Hero) */}
-                <Card className="border">
-                  <CardContent className="p-4">
-                    <div className="space-y-2">
-                      <h2 className="font-montserrat text-lg text-gray-700 font-semibold">Your Next Payout</h2>
-                      
-                      {/* Hero Amount */}
-                      <div className="text-xl font-semibold text-sidebar-primary font-montserrat">
-                        {formatCurrency(nextPayout.amount)}
-                      </div>
-                      
-                      {/* Expected Date */}
-                      <div className="flex items-center gap-2 text-lg font-medium text-foreground">
-                        <Calendar className="h-4 w-4" />
-                        <span className="font-montserrat text-zinc-400 text-sm font-normal">Expected by: {nextPayout.expectedDate}</span>
-                      </div>
-                      
-                      {/* Upcoming Payments Statement */}
-                      <div className="pt-2">
-                        <span className="font-montserrat text-sm font-medium text-gray-600">Upcoming payment lists</span>
-                      </div>
-                      
-                      {/* Payout Timeline - Compact Table Style */}
-                      <div className="space-y-1">
-                        {upcomingPayouts.map((payout, index) => <div key={index} className="flex justify-between items-center py-1">
-                            <span className="text-sm text-muted-foreground font-montserrat">{payout.date}</span>
-                            <div className="flex items-center gap-2">
-                              <span className="font-semibold text-sm font-montserrat">{formatCurrency(payout.amount)}</span>
-                            </div>
-                          </div>)}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                
 
                 {/* Module 2: Your Recovered Value */}
                 <Card className="border">
                   <CardContent className="p-4">
                     <div className="space-y-2">
-                      <h2 className="font-montserrat text-lg text-gray-700 font-semibold">Your Recovered Value</h2>
+                      <h2 className="font-montserrat text-lg text-gray-700 font-semibold">Your Next Payout</h2>
                       
                       {/* Total Recovered Hero Amount */}
                       <div className="text-xl font-semibold text-sidebar-primary font-montserrat">
