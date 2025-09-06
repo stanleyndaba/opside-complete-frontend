@@ -145,7 +145,7 @@ export default function IntegrationsHub() {
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <img src={connection.logo} alt={`${connection.name} logo`} className="w-14 h-14 object-contain" />
+                      <img src={connection.logo} alt={`${connection.name} logo`} className="w-20 h-18 object-contain" />
                       <div>
                         <CardTitle className="text-lg">{connection.name}</CardTitle>
                         <p className="text-sm text-muted-foreground">
@@ -201,7 +201,7 @@ export default function IntegrationsHub() {
                   {categoryIntegrations.map(integration => <Card key={integration.id} className="border-muted/50 hover:border-primary/50 transition-colors">
                       <CardHeader className="pb-3">
                         <div className="flex items-center gap-3">
-                          <img src={integration.logo} alt={`${integration.name} logo`} className="w-14 h-18 object-contain" />
+                          <img src={integration.logo} alt={`${integration.name} logo`} className="w-20 h-18 object-contain" />
                           <div>
                             <CardTitle className="text-lg">{integration.name}</CardTitle>
                           </div>
