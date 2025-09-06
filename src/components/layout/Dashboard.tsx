@@ -133,8 +133,36 @@ export function Dashboard() {
                   </CardContent>
                 </Card>
 
-                {/* Module 2: Promise of Value - Your Financial Health */}
-                
+                {/* Module 2: Your Recovered Value */}
+                <Card className="border">
+                  <CardContent className="p-4">
+                    <div className="space-y-2">
+                      <h2 className="font-montserrat text-lg text-gray-700 font-semibold">Your Recovered Value</h2>
+                      
+                      {/* Total Recovered Hero Amount */}
+                      <div className="text-xl font-semibold text-sidebar-primary font-montserrat">
+                        {formatCurrency(recoveredValue.total)}
+                      </div>
+                      
+                      {/* Subtitle */}
+                      <div className="text-sm text-muted-foreground font-montserrat">
+                        Total recovered since joining
+                      </div>
+                      
+                      {/* Recovery Metrics */}
+                      <div className="pt-2 space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600 font-montserrat">Pending Recovery</span>
+                          <span className="font-semibold text-sm font-montserrat">{formatCurrency(recoveredValue.pending)}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600 font-montserrat">30-Day Recovery</span>
+                          <span className="font-semibold text-sm font-montserrat">{formatCurrency(recoveredValue.lastMonth)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
 
                 {/* Module 3: Primary Navigation Links */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
