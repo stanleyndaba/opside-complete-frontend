@@ -5,78 +5,56 @@ import { Calendar, Star, Zap, Bug } from 'lucide-react';
 import { PageLayout } from '@/components/layout/PageLayout';
 
 // Mock data for updates - this would typically come from a CMS or API
-const updates = [
-  {
-    id: 1,
-    title: "New: Filter Your Reports to Find Insights Faster",
-    date: "September 4, 2025",
-    tag: "NEW FEATURE",
-    tagColor: "bg-emerald-500 text-white",
-    icon: Star,
-    image: "/lovable-uploads/ac3dc504-c896-4f73-9e7e-aefc77dd6e9f.png",
-    description: "We heard from many of you that you wanted an easier way to analyze quarterly performance, so we've added a powerful new Date Range Picker to the Reports page.",
-    content: [
-      "Filter reports by custom date ranges",
-      "Compare performance across different time periods", 
-      "Export filtered data for deeper analysis"
-    ],
-    cta: "You can try it out now on your Reports page."
-  },
-  {
-    id: 2,
-    title: "Improved: Faster Recovery Detection System",
-    date: "August 28, 2025", 
-    tag: "IMPROVEMENT",
-    tagColor: "bg-blue-500 text-white",
-    icon: Zap,
-    image: "/lovable-uploads/14f98d63-9a1a-4128-8021-1d840d778ea5.png",
-    description: "Our AI-powered recovery detection system is now 3x faster at identifying potential claims, getting your money back sooner.",
-    content: [
-      "50% reduction in detection time",
-      "More accurate claim categorization",
-      "Improved false positive filtering"
-    ],
-    cta: "Check your Recoveries page to see the improvements in action."
-  },
-  {
-    id: 3,
-    title: "Fixed: Dashboard Loading Issues on Mobile",
-    date: "August 22, 2025",
-    tag: "BUG FIX", 
-    tagColor: "bg-amber-500 text-white",
-    icon: Bug,
-    image: "/lovable-uploads/8efb84ba-e777-4413-ae5a-f7f54bfa6cab.png",
-    description: "We've resolved the slow loading times some users experienced on mobile devices when accessing the Command Center.",
-    content: [
-      "75% faster mobile load times",
-      "Improved responsive design",
-      "Better touch interactions"
-    ],
-    cta: "Your mobile experience should now be lightning fast."
-  },
-  {
-    id: 4,
-    title: "New: Enhanced Evidence Locker with Document Preview",
-    date: "August 15, 2025",
-    tag: "NEW FEATURE",
-    tagColor: "bg-emerald-500 text-white", 
-    icon: Star,
-    image: "/lovable-uploads/cef56367-b57b-46cc-b0cb-a2ffad47fb03.png",
-    description: "You can now preview documents directly in the Evidence Locker without downloading them, making case review faster and more efficient.",
-    content: [
-      "In-browser PDF preview",
-      "Image thumbnail gallery",
-      "Quick document search and filtering"
-    ],
-    cta: "Visit the Evidence Locker to see your documents in a whole new way."
-  }
-];
-
+const updates = [{
+  id: 1,
+  title: "New: Filter Your Reports to Find Insights Faster",
+  date: "September 4, 2025",
+  tag: "NEW FEATURE",
+  tagColor: "bg-emerald-500 text-white",
+  icon: Star,
+  image: "/lovable-uploads/ac3dc504-c896-4f73-9e7e-aefc77dd6e9f.png",
+  description: "We heard from many of you that you wanted an easier way to analyze quarterly performance, so we've added a powerful new Date Range Picker to the Reports page.",
+  content: ["Filter reports by custom date ranges", "Compare performance across different time periods", "Export filtered data for deeper analysis"],
+  cta: "You can try it out now on your Reports page."
+}, {
+  id: 2,
+  title: "Improved: Faster Recovery Detection System",
+  date: "August 28, 2025",
+  tag: "IMPROVEMENT",
+  tagColor: "bg-blue-500 text-white",
+  icon: Zap,
+  image: "/lovable-uploads/14f98d63-9a1a-4128-8021-1d840d778ea5.png",
+  description: "Our AI-powered recovery detection system is now 3x faster at identifying potential claims, getting your money back sooner.",
+  content: ["50% reduction in detection time", "More accurate claim categorization", "Improved false positive filtering"],
+  cta: "Check your Recoveries page to see the improvements in action."
+}, {
+  id: 3,
+  title: "Fixed: Dashboard Loading Issues on Mobile",
+  date: "August 22, 2025",
+  tag: "BUG FIX",
+  tagColor: "bg-amber-500 text-white",
+  icon: Bug,
+  image: "/lovable-uploads/8efb84ba-e777-4413-ae5a-f7f54bfa6cab.png",
+  description: "We've resolved the slow loading times some users experienced on mobile devices when accessing the Command Center.",
+  content: ["75% faster mobile load times", "Improved responsive design", "Better touch interactions"],
+  cta: "Your mobile experience should now be lightning fast."
+}, {
+  id: 4,
+  title: "New: Enhanced Evidence Locker with Document Preview",
+  date: "August 15, 2025",
+  tag: "NEW FEATURE",
+  tagColor: "bg-emerald-500 text-white",
+  icon: Star,
+  image: "/lovable-uploads/cef56367-b57b-46cc-b0cb-a2ffad47fb03.png",
+  description: "You can now preview documents directly in the Evidence Locker without downloading them, making case review faster and more efficient.",
+  content: ["In-browser PDF preview", "Image thumbnail gallery", "Quick document search and filtering"],
+  cta: "Visit the Evidence Locker to see your documents in a whole new way."
+}];
 const getTagIcon = (tag: string) => {
   switch (tag) {
     case 'NEW FEATURE':
       return Star;
-    case 'IMPROVEMENT': 
+    case 'IMPROVEMENT':
       return Zap;
     case 'BUG FIX':
       return Bug;
@@ -84,10 +62,8 @@ const getTagIcon = (tag: string) => {
       return Star;
   }
 };
-
 export default function WhatsNew() {
-  return (
-    <PageLayout title="What's New at Opside">
+  return <PageLayout title="What's New at Opside">
       <div className="space-y-8">
         {/* Header */}
         <div>
@@ -99,11 +75,9 @@ export default function WhatsNew() {
 
         {/* Updates Feed */}
         <div className="space-y-6">
-          {updates.map((update) => {
-            const TagIcon = getTagIcon(update.tag);
-            
-            return (
-              <Card key={update.id} className="overflow-hidden">
+          {updates.map(update => {
+          const TagIcon = getTagIcon(update.tag);
+          return <Card key={update.id} className="overflow-hidden">
                 <CardHeader className="space-y-4">
                   {/* Date and Tag */}
                   <div className="flex items-center justify-between">
@@ -126,11 +100,7 @@ export default function WhatsNew() {
                 <CardContent className="space-y-4">
                   {/* Featured Image */}
                   <div className="rounded-lg overflow-hidden bg-muted">
-                    <img 
-                      src={update.image} 
-                      alt={update.title}
-                      className="w-full h-48 object-cover"
-                    />
+                    <img src={update.image} alt={update.title} className="w-21 h-30 object-cover" />
                   </div>
 
                   {/* Description */}
@@ -142,12 +112,10 @@ export default function WhatsNew() {
                   <div className="space-y-2">
                     <h3 className="font-medium text-foreground">What's included:</h3>
                     <ul className="space-y-1 text-sm text-muted-foreground">
-                      {update.content.map((item, index) => (
-                        <li key={index} className="flex items-start gap-2">
+                      {update.content.map((item, index) => <li key={index} className="flex items-start gap-2">
                           <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2 shrink-0" />
                           {item}
-                        </li>
-                      ))}
+                        </li>)}
                     </ul>
                   </div>
 
@@ -158,9 +126,8 @@ export default function WhatsNew() {
                     </p>
                   </div>
                 </CardContent>
-              </Card>
-            );
-          })}
+              </Card>;
+        })}
         </div>
 
         {/* Footer Note */}
@@ -173,6 +140,5 @@ export default function WhatsNew() {
           </p>
         </div>
       </div>
-    </PageLayout>
-  );
+    </PageLayout>;
 }
