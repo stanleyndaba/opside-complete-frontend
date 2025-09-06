@@ -136,7 +136,7 @@ export default function IntegrationsHub() {
         {/* Section 1: Your Active Connections */}
         <div className="space-y-4">
           <div className="flex items-center gap-2">
-            <h2 className="text-2xl font-semibold">Your Active Connections</h2>
+            <h2 className="text-2xl font-semibold">Active Integrations</h2>
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
           </div>
           
