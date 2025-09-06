@@ -15,12 +15,9 @@ export function Navbar({
   sidebarCollapsed = false
 }: NavbarProps) {
   return <header className={cn("bg-background/95 backdrop-blur-sm sticky top-0 z-30 border-b transition-all duration-300", sidebarCollapsed ? "ml-16" : "ml-56", className)}>
-      <div className="container flex items-center justify-between h-16 px-4">
-        {/* Logo */}
-        
-        
+      <div className="container flex items-center justify-end h-16 px-4">
         {/* Right side - Notification Bell and Profile Icon */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 ml-auto">
           <NotificationBell />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
