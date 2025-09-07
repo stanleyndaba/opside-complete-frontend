@@ -51,16 +51,24 @@ export async function apiRequest<T>(
     });
   }
 
+  let pendingRefresh: Promise<string> | null = (window as any).__pending_token_refresh__ || null;
   const request = (async () => {
     let res = await doFetch();
     if (res.status === 401) {
       try {
-        const { refreshToken } = await import("@/lib/auth");
-        const newToken = await refreshToken();
+        if (!pendingRefresh) {
+          const { refreshToken } = await import("@/lib/auth");
+          pendingRefresh = refreshToken();
+          (window as any).__pending_token_refresh__ = pendingRefresh;
+        }
+        const newToken = await pendingRefresh;
         headers.set("Authorization", `Bearer ${newToken}`);
         res = await doFetch();
+        // clear refresh after success
+        (window as any).__pending_token_refresh__ = null;
       } catch (_) {
-        // ignore; will be handled below
+        // clear and let below handle persistent 401
+        (window as any).__pending_token_refresh__ = null;
       }
     }
     return res;
@@ -70,6 +78,12 @@ export async function apiRequest<T>(
     const body = isJson ? await res.json().catch(() => ({})) : await res.text();
 
     if (!res.ok) {
+      if (res.status === 401) {
+        try {
+          const { logout } = await import("@/lib/auth");
+          logout();
+        } catch {}
+      }
       const apiErr: ApiErrorShape = {
         message: (isJson && body && (body.message || body.error)) || res.statusText || "Request failed",
         status: res.status,

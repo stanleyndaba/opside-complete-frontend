@@ -6,11 +6,13 @@ import { StockCard } from '@/components/stocks/StockCard';
 import { StockChart } from '@/components/stocks/StockChart';
 import { useQuery } from '@tanstack/react-query';
 import { fetchStocks } from '@/services/stocks';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const Stocks = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['stocks'],
     queryFn: fetchStocks,
+    retry: 2,
   });
 
   const stocks = (isError || !data || data.length === 0) ? mockStocks : data;
@@ -37,7 +39,11 @@ const Stocks = () => {
         <div className="lg:col-span-1 space-y-4">
           <h2 className="text-xl font-semibold">All Stocks</h2>
           {isLoading ? (
-            <div className="text-sm text-muted-foreground">Loading stocks...</div>
+            <div className="space-y-3">
+              <Skeleton className="h-20 w-full" />
+              <Skeleton className="h-20 w-full" />
+              <Skeleton className="h-20 w-full" />
+            </div>
           ) : (
             <div className="space-y-4">
               {stocksWithHistory.map((stock) => (

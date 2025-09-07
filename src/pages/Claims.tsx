@@ -5,6 +5,7 @@ import { EmptyState } from '@/components/ui/empty-state';
 import { ErrorState } from '@/components/ui/error-state';
 import { Button } from '@/components/ui/button';
 import { apiRequest } from '@/lib/api';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface ClaimDto { id: string; title: string; status: string; createdAt: string; }
 interface Claim { id: string; title: string; status: string; createdAt: Date; }
@@ -21,7 +22,13 @@ export default function Claims() {
 
   return (
     <PageLayout title="Claims">
-      {isLoading && <div className="text-sm text-muted-foreground">Loading claims...</div>}
+      {isLoading && (
+        <div className="space-y-2">
+          <Skeleton className="h-16 w-full" />
+          <Skeleton className="h-16 w-full" />
+          <Skeleton className="h-16 w-full" />
+        </div>
+      )}
       {!isLoading && isError && <ErrorState message="Failed to load claims" onRetry={() => refetch()} />}
       {!isLoading && !isError && (data?.length ? (
         <div className="grid grid-cols-1 gap-3">

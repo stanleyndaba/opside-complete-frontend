@@ -34,6 +34,7 @@ import Validation from "./pages/Validation";
 import Monitoring from "./pages/Monitoring";
 import { ProtectedRoute } from "@/components/routing/ProtectedRoute";
 import { AuthProvider } from "@/providers/AuthProvider";
+import { ErrorBoundary } from "@/components/errors/ErrorBoundary";
 
 const queryClient = new QueryClient();
 
@@ -44,7 +45,8 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
-          <Routes>
+          <ErrorBoundary>
+            <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
             <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
@@ -72,8 +74,9 @@ const App = () => (
             <Route path="/validation" element={<ProtectedRoute><Validation /></ProtectedRoute>} />
             <Route path="/monitoring" element={<ProtectedRoute><Monitoring /></ProtectedRoute>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </ErrorBoundary>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>

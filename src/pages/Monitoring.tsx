@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/api';
 import { ErrorState } from '@/components/ui/error-state';
 import { EmptyState } from '@/components/ui/empty-state';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface MetricDto { id: string; name: string; value: number; updatedAt: string; }
 interface Metric { id: string; name: string; value: number; updatedAt: Date; }
@@ -17,7 +18,13 @@ export default function Monitoring() {
   });
   return (
     <PageLayout title="Monitoring">
-      {isLoading && <div className="text-sm text-muted-foreground">Fetching metrics...</div>}
+      {isLoading && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Skeleton className="h-24 w-full" />
+          <Skeleton className="h-24 w-full" />
+          <Skeleton className="h-24 w-full" />
+        </div>
+      )}
       {!isLoading && isError && <ErrorState message="Failed to load metrics" onRetry={() => refetch()} />}
       {!isLoading && !isError && (data?.length ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
