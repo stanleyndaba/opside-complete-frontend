@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { FileText, CheckCircle, DollarSign, Search, RefreshCw, Calendar } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
+import { apiClient } from '@/lib/api';
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -14,30 +15,26 @@ export function Dashboard() {
   const [detectOpen, setDetectOpen] = useState(false);
   const [detecting, setDetecting] = useState(false);
   const [detectResults, setDetectResults] = useState<Array<{ id: string; amount: number; reason: string; sku: string; asin: string }>>([]);
+  const [metrics, setMetrics] = useState<{ total_recovered: number; expected_approved: number; upcoming_payouts: Array<{ amount: number; date: string }> } | null>(null);
+  const [loadingMetrics, setLoadingMetrics] = useState<boolean>(false);
 
   // Mock data for the dashboard
-  const nextPayout = {
-    amount: 1850.00,
-    expectedDate: "Sept 15, 2025"
-  };
-  const recoveredValue = {
-    total: 11200.50,
-    pending: 1850.00,
-    lastMonth: 2100.00
-  };
-  const upcomingPayouts = [{
-    amount: 1850.00,
-    date: "Sept 15, 2025",
-    status: "confirmed"
-  }, {
-    amount: 2100.00,
-    date: "Oct 12, 2025",
-    status: "pending"
-  }, {
-    amount: 950.00,
-    date: "Nov 8, 2025",
-    status: "estimated"
-  }];
+  useEffect(() => {
+    const fetchMetrics = async () => {
+      try {
+        setLoadingMetrics(true);
+        const data = await apiClient.get<{ total_recovered: number; expected_approved: number; upcoming_payouts: Array<{ amount: number; date: string }> }>(
+          '/api/metrics/recoveries'
+        );
+        setMetrics(data);
+      } catch (e) {
+        // keep null on error
+      } finally {
+        setLoadingMetrics(false);
+      }
+    };
+    fetchMetrics();
+  }, []);
   const activityFeed = [{
     id: 1,
     type: 'claim_submitted',
@@ -109,19 +106,19 @@ export function Dashboard() {
                   <Card>
                     <CardContent className="p-4">
                       <div className="text-sm text-muted-foreground">Recovered to date</div>
-                      <div className="text-2xl font-semibold">{formatCurrency(recoveredValue.total)}</div>
+                      <div className="text-2xl font-semibold">{formatCurrency(metrics?.total_recovered ?? 0)}</div>
                     </CardContent>
                   </Card>
                   <Card>
                     <CardContent className="p-4">
                       <div className="text-sm text-muted-foreground">Expected (approved)</div>
-                      <div className="text-2xl font-semibold">{formatCurrency(recoveredValue.pending)}</div>
+                      <div className="text-2xl font-semibold">{formatCurrency(metrics?.expected_approved ?? 0)}</div>
                     </CardContent>
                   </Card>
                   <Card>
                     <CardContent className="p-4">
                       <div className="text-sm text-muted-foreground">Next payout</div>
-                      <div className="text-2xl font-semibold">{formatCurrency(upcomingPayouts[0].amount)} <span className="text-base text-muted-foreground">on {upcomingPayouts[0].date}</span></div>
+                      <div className="text-2xl font-semibold">{formatCurrency(metrics?.upcoming_payouts?.[0]?.amount ?? 0)} <span className="text-base text-muted-foreground">on {metrics?.upcoming_payouts?.[0]?.date ?? '-'}</span></div>
                     </CardContent>
                   </Card>
                 </div>
@@ -168,15 +165,19 @@ export function Dashboard() {
                         <Button variant="outline" onClick={() => setDetectOpen(false)}>Close</Button>
                         <Button
                           onClick={async () => {
-                            setDetecting(true);
-                            // demo-only preview of results
-                            setTimeout(() => {
-                              setDetectResults([
-                                { id: 'CLM-NEW-1001', amount: 245.8, reason: 'Lost units at FTW1', sku: 'WH-PREM-001', asin: 'B08K2XR456' },
-                                { id: 'CLM-NEW-1002', amount: 125.5, reason: 'Fee overcharge', sku: 'COF-ORG-500', asin: 'B07G3XN789' },
-                              ]);
+                            try {
+                              setDetecting(true);
+                              const result = await apiClient.post<{ detection_id: string; claims: Array<{ id: string; amount: number; reason: string; sku: string; asin: string }> }>(
+                                '/api/detections/run'
+                              );
+                              setDetectResults(result.claims ?? []);
+                              // Optionally begin polling detection status by id
+                              // const statusId = result.detection_id; (store if needed)
+                            } catch (e) {
+                              setDetectResults([]);
+                            } finally {
                               setDetecting(false);
-                            }, 1200);
+                            }
                           }}
                           disabled={detecting}
                         >

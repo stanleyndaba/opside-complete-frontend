@@ -5,7 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, AlertCircle, Calendar } from 'lucide-react';
+import { ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, AlertCircle, Calendar, Send } from 'lucide-react';
+import { apiClient } from '@/lib/api';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 
@@ -125,6 +126,8 @@ const getEventColor = (type: CaseEvent['type']) => {
 export default function CaseDetail() {
   const { caseId } = useParams<{ caseId: string }>();
   const [autoSubmitOpen, setAutoSubmitOpen] = React.useState(false);
+  const [statusEvents, setStatusEvents] = React.useState<CaseEvent[] | null>(null);
+  const [polling, setPolling] = React.useState<boolean>(true);
   
   if (!caseId || !mockCaseData[caseId as keyof typeof mockCaseData]) {
     return (
@@ -143,6 +146,26 @@ export default function CaseDetail() {
   }
 
   const caseData = mockCaseData[caseId as keyof typeof mockCaseData];
+
+  React.useEffect(() => {
+    let timer: number | undefined;
+    const poll = async () => {
+      try {
+        // Replace with real status polling
+        // const data = await apiClient.get<{ events: CaseEvent[] }>(`/api/recoveries/${caseId}/status`);
+        // setStatusEvents(data.events);
+        setStatusEvents(caseData.events);
+      } catch {
+        // ignore
+      } finally {
+        timer = window.setTimeout(poll, 8000);
+      }
+    };
+    if (polling) poll();
+    return () => {
+      if (timer) window.clearTimeout(timer);
+    };
+  }, [caseId, polling]);
 
   return (
     <PageLayout title={`Case ${caseData.id}`}>
@@ -274,8 +297,19 @@ export default function CaseDetail() {
                 <Separator />
 
                 {caseData.status === 'Guaranteed' && (
-                  <Button className="w-full bg-emerald-600 hover:bg-emerald-700">
-                    <CheckCircle className="h-4 w-4 mr-2" />
+                  <Button
+                    className="w-full bg-emerald-600 hover:bg-emerald-700"
+                    onClick={async () => {
+                      try {
+                        // Example EV gating: require confidence >= 80
+                        if (caseData.confidence < 80) {
+                          return;
+                        }
+                        // await apiClient.post(`/api/claims/${caseData.id}/submit`);
+                      } catch {}
+                    }}
+                  >
+                    <Send className="h-4 w-4 mr-2" />
                     Auto-Submit Claim
                   </Button>
                 )}
@@ -297,7 +331,7 @@ export default function CaseDetail() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {caseData.events.map((event, index) => (
+                  {(statusEvents ?? caseData.events).map((event, index) => (
                     <div key={index} className="flex gap-4">
                       <div className={cn("flex-shrink-0 mt-1", getEventColor(event.type))}>
                         {getEventIcon(event.type)}

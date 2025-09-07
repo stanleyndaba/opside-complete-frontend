@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,77 +13,22 @@ import { cn } from '@/lib/utils';
 import { format, subDays, startOfYear, startOfQuarter } from 'date-fns';
 import { CalendarIcon, Search, MoreHorizontal, FileText, Eye, Send } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { apiClient } from '@/lib/api';
 import type { DateRange } from 'react-day-picker';
 
-// Mock data for claims
-const mockClaims = [
-  {
-    id: 'CLM-001',
-    created: '2024-01-15',
-    type: 'Lost Inventory',
-    details: '5 units of Premium Wireless Headphones lost at FTW1',
-    status: 'New',
-    guaranteedAmount: 450.00,
-    predictedPayout: '2024-02-15',
-    sku: 'WH-PREM-001',
-    asin: 'B08K2XR456'
-  },
-  {
-    id: 'CLM-002',
-    created: '2024-01-22',
-    type: 'Fee Dispute',
-    details: 'Incorrect FBA fulfillment fee charged',
-    status: 'Pending',
-    guaranteedAmount: 125.50,
-    predictedPayout: '2024-02-22',
-    sku: 'COF-ORG-500',
-    asin: 'B07G3XN789'
-  },
-  {
-    id: 'CLM-003',
-    created: '2024-02-01',
-    type: 'Damaged Goods',
-    details: '12 units of Organic Coffee Beans damaged at LAX7',
-    status: 'Submitted',
-    guaranteedAmount: 850.75,
-    predictedPayout: '2024-03-01',
-    sku: 'SH-SEC-PRO',
-    asin: 'B09M1ST234'
-  },
-  {
-    id: 'CLM-004',
-    created: '2024-02-10',
-    type: 'Lost Inventory',
-    details: '3 units of Smart Home Security System lost at ATL2',
-    status: 'Paid',
-    guaranteedAmount: 320.00,
-    predictedPayout: '2024-03-10',
-    sku: 'FIT-TRK-001',
-    asin: 'B06H4RT567'
-  },
-  {
-    id: 'CLM-005',
-    created: '2024-02-15',
-    type: 'Fee Dispute',
-    details: 'Storage fee overcharge detected',
-    status: 'Denied',
-    guaranteedAmount: 75.25,
-    predictedPayout: null,
-    sku: 'KIT-BAM-SET',
-    asin: 'B05K7YU890'
-  },
-  {
-    id: 'CLM-006',
-    created: '2024-03-01',
-    type: 'Damaged Goods',
-    details: '8 units of Fitness Tracker Band damaged at PHX3',
-    status: 'Submitted',
-    guaranteedAmount: 1200.25,
-    predictedPayout: '2024-03-25',
-    sku: 'WH-PREM-002',
-    asin: 'B08L3XR789'
-  }
-];
+interface RecoveryRow {
+  id: string;
+  created: string;
+  type: string;
+  details: string;
+  status: string;
+  guaranteedAmount: number;
+  approvedAmount?: number;
+  predictedPayout?: string | null;
+  expected_payout_date?: string | null;
+  sku: string;
+  asin: string;
+}
 
 const claimTypes = ['Lost Inventory', 'Fee Dispute', 'Damaged Goods', 'Overcharge'];
 const statusOptions = ['New', 'Pending', 'Submitted', 'Paid', 'Denied'];
@@ -97,9 +42,22 @@ export default function Recoveries() {
     to: new Date(),
   });
 
+  const [recoveries, setRecoveries] = useState<RecoveryRow[]>([]);
+  useEffect(() => {
+    const fetchRecoveries = async () => {
+      try {
+        const data = await apiClient.get<RecoveryRow[]>('/api/recoveries');
+        setRecoveries(data);
+      } catch (e) {
+        setRecoveries([]);
+      }
+    };
+    fetchRecoveries();
+  }, []);
+
   // Filter data based on search and filters
   const filteredClaims = useMemo(() => {
-    let filtered = mockClaims.filter(claim => {
+    let filtered = recoveries.filter(claim => {
       // Search filter
       const searchMatch = !searchTerm || 
         claim.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -136,7 +94,7 @@ export default function Recoveries() {
     
     // Calculate 30-day success rate from all claims
     const thirtyDaysAgo = subDays(new Date(), 30);
-    const recentClaims = mockClaims.filter(claim => 
+    const recentClaims = recoveries.filter(claim => 
       new Date(claim.created) >= thirtyDaysAgo
     );
     const successfulClaims = recentClaims.filter(claim => claim.status === 'Paid');
@@ -373,9 +331,9 @@ export default function Recoveries() {
                       </Badge>
                     </TableCell>
                     <TableCell className="font-medium">{formatCurrency(claim.guaranteedAmount)}</TableCell>
-                    <TableCell className="font-medium">{formatCurrency(claim.guaranteedAmount)}</TableCell>
+                    <TableCell className="font-medium">{formatCurrency(claim.approvedAmount ?? claim.guaranteedAmount)}</TableCell>
                     <TableCell>
-                      {claim.predictedPayout ? format(new Date(claim.predictedPayout), 'MMM dd, yyyy') : '-'}
+                      {claim.expected_payout_date ? format(new Date(claim.expected_payout_date), 'MMM dd, yyyy') : (claim.predictedPayout ? format(new Date(claim.predictedPayout), 'MMM dd, yyyy') : '-')}
                     </TableCell>
                     <TableCell>
                       <DropdownMenu>
