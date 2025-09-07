@@ -105,6 +105,7 @@ export default function IntegrationsHub() {
   const [showRequestForm, setShowRequestForm] = useState(false);
   const [connecting, setConnecting] = useState(false);
   const [syncing, setSyncing] = useState(false);
+  const [syncStatus, setSyncStatus] = useState<string>('Healthy');
 
   // Real-time sync simulation
   useEffect(() => {
@@ -114,6 +115,21 @@ export default function IntegrationsHub() {
       setLastSyncTime(seconds % 10 === 0 ? 'Just now' : `${seconds % 10} seconds ago`);
     }, 1000);
     return () => clearInterval(interval);
+  }, []);
+  useEffect(() => {
+    let timer: number | undefined;
+    const poll = async () => {
+      try {
+        // const data = await apiClient.get<{ status: string }>("/api/sync/status");
+        // setSyncStatus(data.status);
+        setSyncStatus('Healthy');
+      } catch {}
+      finally {
+        timer = window.setTimeout(poll, 10000);
+      }
+    };
+    poll();
+    return () => { if (timer) window.clearTimeout(timer); };
   }, []);
   const handleRequestSubmit = (e: React.FormEvent) => {
     e.preventDefault();
