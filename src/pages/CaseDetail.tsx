@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, AlertCircle, Calendar } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 
 interface CaseEvent {
@@ -123,6 +124,7 @@ const getEventColor = (type: CaseEvent['type']) => {
 
 export default function CaseDetail() {
   const { caseId } = useParams<{ caseId: string }>();
+  const [autoSubmitOpen, setAutoSubmitOpen] = React.useState(false);
   
   if (!caseId || !mockCaseData[caseId as keyof typeof mockCaseData]) {
     return (
@@ -153,6 +155,37 @@ export default function CaseDetail() {
               Back to Cases
             </Link>
           </Button>
+          <div className="ml-auto flex items-center gap-3">
+            <div className="hidden md:flex items-center gap-2 text-xs text-muted-foreground">
+              <span className="px-2 py-1 rounded bg-emerald-50 text-emerald-700">Detected</span>
+              <span>→</span>
+              <span className="px-2 py-1 rounded bg-emerald-50 text-emerald-700">Prepared</span>
+              <span>→</span>
+              <span className="px-2 py-1 rounded bg-gray-100">Submitted</span>
+              <span>→</span>
+              <span className="px-2 py-1 rounded bg-gray-100">Paid</span>
+            </div>
+            <Dialog open={autoSubmitOpen} onOpenChange={setAutoSubmitOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-emerald-600 hover:bg-emerald-700">Auto-Submit Claim</Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Auto-Submit Claim</DialogTitle>
+                  <DialogDescription>
+                    Files automatically on your behalf via Amazon SP-API. We will track submission and updates.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="text-sm text-muted-foreground">
+                  You only pay from recovered funds (20% cap).
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setAutoSubmitOpen(false)}>Cancel</Button>
+                  <Button onClick={() => setAutoSubmitOpen(false)}>Submit Now</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -243,7 +276,7 @@ export default function CaseDetail() {
                 {caseData.status === 'Guaranteed' && (
                   <Button className="w-full bg-emerald-600 hover:bg-emerald-700">
                     <CheckCircle className="h-4 w-4 mr-2" />
-                    Approve & File Claim
+                    Auto-Submit Claim
                   </Button>
                 )}
               </CardContent>
@@ -314,6 +347,11 @@ export default function CaseDetail() {
                       </div>
                     </div>
                   )}
+                </div>
+                <Separator className="my-4" />
+                <div>
+                  <h3 className="text-sm font-semibold mb-2">Evidence & Docs</h3>
+                  <div className="text-sm text-muted-foreground">Linked documents, reasoning, and timestamps will appear here. Provide transparency for approvals or rejections.</div>
                 </div>
               </CardContent>
             </Card>

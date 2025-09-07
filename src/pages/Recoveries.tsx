@@ -11,7 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { format, subDays, startOfYear, startOfQuarter } from 'date-fns';
-import { CalendarIcon, Search, MoreHorizontal, FileText, Eye } from 'lucide-react';
+import { CalendarIcon, Search, MoreHorizontal, FileText, Eye, Send } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import type { DateRange } from 'react-day-picker';
 
@@ -329,6 +329,12 @@ export default function Recoveries() {
         {/* Data Table */}
         <Card>
           <CardContent className="p-0">
+            <div className="p-3 flex items-center gap-2">
+              <Button variant="outline" size="sm" className="gap-2">
+                <Send className="h-4 w-4" />
+                Auto-Submit Selected
+              </Button>
+            </div>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -338,7 +344,8 @@ export default function Recoveries() {
                   <TableHead>Details</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Guaranteed Amount</TableHead>
-                  <TableHead>Predicted Payout</TableHead>
+                  <TableHead>Approved Amount</TableHead>
+                  <TableHead>Expected Payout</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -365,6 +372,7 @@ export default function Recoveries() {
                         {claim.status}
                       </Badge>
                     </TableCell>
+                    <TableCell className="font-medium">{formatCurrency(claim.guaranteedAmount)}</TableCell>
                     <TableCell className="font-medium">{formatCurrency(claim.guaranteedAmount)}</TableCell>
                     <TableCell>
                       {claim.predictedPayout ? format(new Date(claim.predictedPayout), 'MMM dd, yyyy') : '-'}

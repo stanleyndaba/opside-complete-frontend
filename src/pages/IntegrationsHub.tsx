@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { Shield, CheckCircle, Settings, RefreshCw, ArrowRight, ExternalLink, Package, ShoppingBag, Calculator, Truck } from 'lucide-react';
+import { Shield, CheckCircle, Settings, RefreshCw, ArrowRight, ExternalLink, Package, ShoppingBag, Calculator, Truck, Plug } from 'lucide-react';
 interface ActiveConnection {
   id: string;
   name: string;
@@ -70,7 +70,7 @@ const availableIntegrations: AvailableIntegration[] = [
   id: 'quickbooks',
   name: 'QuickBooks',
   category: 'accounting',
-  logo: '/lovable-uploads/02ff2e6e-9e67-4481-99a8-4b9caead4540.png',
+  logo: '/lovable-uploads/02ff2e6e-9e7e-4481-99a8-4b9caead4540.png',
   description: 'Sync financial data with QuickBooks for automated bookkeeping'
 }, {
   id: 'xero',
@@ -103,6 +103,8 @@ export default function IntegrationsHub() {
     description: ''
   });
   const [showRequestForm, setShowRequestForm] = useState(false);
+  const [connecting, setConnecting] = useState(false);
+  const [syncing, setSyncing] = useState(false);
 
   // Real-time sync simulation
   useEffect(() => {
@@ -115,7 +117,6 @@ export default function IntegrationsHub() {
   }, []);
   const handleRequestSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle request submission
     console.log('Integration request:', requestFormData);
     setRequestFormData({
       platform: '',
@@ -168,10 +169,16 @@ export default function IntegrationsHub() {
                     
                     <Separator />
                     
-                    <Button size="sm" variant="outline" className="w-full gap-2">
-                      <Settings className="h-3 w-3" />
-                      Manage
-                    </Button>
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button size="sm" variant="outline" className="w-full gap-2" onClick={() => { setSyncing(true); setTimeout(() => setSyncing(false), 1500); }}>
+                        <RefreshCw className="h-3 w-3" />
+                        {syncing ? 'Syncing…' : 'Start Inventory Sync'}
+                      </Button>
+                      <Button size="sm" variant="outline" className="w-full gap-2">
+                        <Settings className="h-3 w-3" />
+                        Manage
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>)}
@@ -211,9 +218,9 @@ export default function IntegrationsHub() {
                         <p className="text-sm text-muted-foreground mb-4">
                           {integration.description}
                         </p>
-                        
-                        <Button size="sm" variant="outline" className="w-full" disabled>
-                          Connect
+                        <Button size="sm" variant="outline" className="w-full gap-2" onClick={() => { setConnecting(true); setTimeout(() => setConnecting(false), 1000); }}>
+                          <Plug className="h-3 w-3" />
+                          {connecting ? 'Connecting…' : 'Connect'}
                         </Button>
                       </CardContent>
                     </Card>)}
