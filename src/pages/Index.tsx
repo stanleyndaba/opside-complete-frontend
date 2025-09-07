@@ -12,10 +12,9 @@ const Index = () => {
       <div className="min-h-[60vh] flex items-center justify-center">
         <div className="text-center space-y-6">
           <h1 className="text-3xl font-bold">Recover lost FBA revenue automatically</h1>
-          <p className="text-muted-foreground max-w-xl mx-auto">
-            Connect your Amazon Seller account. We detect and file reimbursement claims. Pay only from recovered funds.
-          </p>
+          <p className="text-muted-foreground max-w-xl mx-auto">We find, file, and track Amazon reimbursements for you. No win, no fee (20% cap).</p>
           <Button onClick={signInWithAmazon} size="lg">Sign in with Amazon</Button>
+          <div className="text-xs text-muted-foreground">Secure • Encrypted • No engineering required</div>
         </div>
       </div>
     );

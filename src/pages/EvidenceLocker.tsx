@@ -7,7 +7,7 @@ import { StatsCard } from '@/components/ui/StatsCard';
 import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Upload, FileText, Search, Mail, Check, AlertTriangle, Clock, Eye } from 'lucide-react';
+import { Upload, FileText, Search, Mail, Check, AlertTriangle, Clock, Eye, Link as LinkIcon, Download } from 'lucide-react';
 import { Link } from 'react-router-dom';
 export default function EvidenceLocker() {
   const [dragActive, setDragActive] = useState(false);
@@ -156,6 +156,7 @@ export default function EvidenceLocker() {
                   <TableHead>Upload Date</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Linked SKUs</TableHead>
+                  <TableHead>Linked Claims</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -178,15 +179,28 @@ export default function EvidenceLocker() {
                       {doc.linkedSKUs > 0 && <span className="text-sm text-muted-foreground ml-1">SKUs</span>}
                     </TableCell>
                     <TableCell>
-                      {doc.status === 'verified' ? <Link to={`/evidence-locker/document/${doc.id}`}>
-                          <Button variant="ghost" size="sm">
+                      <div className="flex items-center gap-2 text-blue-600">
+                        <Link to={`/recoveries/CLM-001`} className="flex items-center gap-1">
+                          <LinkIcon className="h-3 w-3" /> CLM-001
+                        </Link>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-2">
+                        {doc.status === 'verified' ? <Link to={`/evidence-locker/document/${doc.id}`}>
+                            <Button variant="ghost" size="sm">
+                              <Eye className="w-4 h-4 mr-1" />
+                              View
+                            </Button>
+                          </Link> : <Button variant="ghost" size="sm" disabled>
                             <Eye className="w-4 h-4 mr-1" />
-                            View Details
-                          </Button>
-                        </Link> : <Button variant="ghost" size="sm" disabled>
-                          <Eye className="w-4 h-4 mr-1" />
-                          View Details
-                        </Button>}
+                            View
+                          </Button>}
+                        <Button variant="ghost" size="sm">
+                          <Download className="w-4 h-4 mr-1" />
+                          Download
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>)}
               </TableBody>
