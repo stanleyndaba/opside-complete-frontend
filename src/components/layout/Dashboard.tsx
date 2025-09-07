@@ -4,11 +4,16 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, BarChart3, FolderOpen, CheckCircle, DollarSign, Search, RefreshCw, Calendar, TrendingUp } from 'lucide-react';
+import { FileText, CheckCircle, DollarSign, Search, RefreshCw, Calendar } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Separator } from '@/components/ui/separator';
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const navigate = useNavigate();
+  const [detectOpen, setDetectOpen] = useState(false);
+  const [detecting, setDetecting] = useState(false);
+  const [detectResults, setDetectResults] = useState<Array<{ id: string; amount: number; reason: string; sku: string; asin: string }>>([]);
 
   // Mock data for the dashboard
   const nextPayout = {
@@ -99,11 +104,102 @@ export function Dashboard() {
               
               {/* Left Column - Main Content (65-70% width) */}
               <div className="lg:col-span-2 space-y-8">
-                
-                {/* Module 1: Promise of Time - Your Next Payout (Hero) */}
-                
+                {/* Hero Metrics & CTAs */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="text-sm text-muted-foreground">Recovered to date</div>
+                      <div className="text-2xl font-semibold">{formatCurrency(recoveredValue.total)}</div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="text-sm text-muted-foreground">Expected (approved)</div>
+                      <div className="text-2xl font-semibold">{formatCurrency(recoveredValue.pending)}</div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="text-sm text-muted-foreground">Next payout</div>
+                      <div className="text-2xl font-semibold">{formatCurrency(upcomingPayouts[0].amount)} <span className="text-base text-muted-foreground">on {upcomingPayouts[0].date}</span></div>
+                    </CardContent>
+                  </Card>
+                </div>
 
-                {/* Module 2: Your Recovered Value */}
+                <div className="flex flex-wrap gap-3">
+                  <Dialog open={detectOpen} onOpenChange={setDetectOpen}>
+                    <DialogTrigger asChild>
+                      <Button className="gap-2">
+                        <Search className="h-4 w-4" />
+                        Detect Missed Claims
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Detect Missed Claims</DialogTitle>
+                        <DialogDescription>
+                          We will analyze your FBA data to find missed reimbursements.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-3">
+                        {!detectResults.length ? (
+                          <div className="text-sm text-muted-foreground">
+                            {detecting ? 'Scanning… this may take up to 1 minute.' : 'Click Run Detection to start.'}
+                          </div>
+                        ) : (
+                          <>
+                            <div className="text-sm font-medium">Potential Value: {formatCurrency(detectResults.reduce((s, r) => s + r.amount, 0))}</div>
+                            <Separator />
+                            <div className="max-h-64 overflow-auto space-y-2">
+                              {detectResults.map(r => (
+                                <div key={r.id} className="flex items-center justify-between text-sm border rounded p-2">
+                                  <div>
+                                    <div className="font-medium">{r.id} • {r.sku} / {r.asin}</div>
+                                    <div className="text-muted-foreground">{r.reason}</div>
+                                  </div>
+                                  <div className="font-semibold">{formatCurrency(r.amount)}</div>
+                                </div>
+                              ))}
+                            </div>
+                          </>
+                        )}
+                      </div>
+                      <DialogFooter>
+                        <Button variant="outline" onClick={() => setDetectOpen(false)}>Close</Button>
+                        <Button
+                          onClick={async () => {
+                            setDetecting(true);
+                            // demo-only preview of results
+                            setTimeout(() => {
+                              setDetectResults([
+                                { id: 'CLM-NEW-1001', amount: 245.8, reason: 'Lost units at FTW1', sku: 'WH-PREM-001', asin: 'B08K2XR456' },
+                                { id: 'CLM-NEW-1002', amount: 125.5, reason: 'Fee overcharge', sku: 'COF-ORG-500', asin: 'B07G3XN789' },
+                              ]);
+                              setDetecting(false);
+                            }, 1200);
+                          }}
+                          disabled={detecting}
+                        >
+                          {detecting ? 'Running…' : 'Run Detection'}
+                        </Button>
+                        <Button
+                          disabled={!detectResults.length}
+                          onClick={() => {
+                            setDetectOpen(false);
+                            navigate('/recoveries');
+                          }}
+                        >
+                          Auto-Submit All
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                  <Button variant="outline" className="gap-2" onClick={() => navigate('/smart-inventory-sync')}>
+                    <RefreshCw className="h-4 w-4" />
+                    Reconcile & Sync
+                  </Button>
+                </div>
+                {/* Your Recovered Value */}
                 <Card className="border">
                   <CardContent className="p-4">
                     <div className="space-y-2">
@@ -134,7 +230,7 @@ export function Dashboard() {
                   </CardContent>
                 </Card>
 
-                {/* Module 3: Primary Navigation Links */}
+                {/* Primary Navigation Links */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Button 
                     variant="outline" 
