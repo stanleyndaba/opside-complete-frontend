@@ -3,6 +3,7 @@ import { PageLayout } from '@/components/layout/PageLayout';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/api';
 import { notify } from '@/lib/notify';
+import { RoleGate } from '@/components/permissions/RoleGate';
 import { EmptyState } from '@/components/ui/empty-state';
 import { ErrorState } from '@/components/ui/error-state';
 
@@ -76,10 +77,12 @@ export default function Validation() {
               <div className="font-medium">{v.type}</div>
               <div className="text-xs text-muted-foreground">{v.status} • {v.createdAt.toLocaleString()}</div>
               {v.details && <div className="text-sm mt-2">{v.details}</div>}
-              <div className="mt-3 flex gap-2">
-                <button className="px-3 py-1 text-xs border rounded" onClick={() => evMutation.mutate({ id: v.id })} disabled={evMutation.isPending}>Run EV</button>
-                <button className="px-3 py-1 text-xs border rounded" onClick={() => acgMutation.mutate({ id: v.id })} disabled={acgMutation.isPending}>Run ACG</button>
-              </div>
+              <RoleGate allow={['admin', 'operator']}>
+                <div className="mt-3 flex gap-2">
+                  <button className="px-3 py-1 text-xs border rounded" onClick={() => evMutation.mutate({ id: v.id })} disabled={evMutation.isPending}>Run EV</button>
+                  <button className="px-3 py-1 text-xs border rounded" onClick={() => acgMutation.mutate({ id: v.id })} disabled={acgMutation.isPending}>Run ACG</button>
+                </div>
+              </RoleGate>
             </div>
           ))}
         </div>

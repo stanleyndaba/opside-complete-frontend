@@ -15,6 +15,9 @@ export default function Monitoring() {
     queryKey: ['monitoring'],
     queryFn: async () => (await apiRequest<MetricDto[]>('/monitoring/metrics')).map(transform),
     refetchInterval: 30_000,
+    refetchIntervalInBackground: false,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
   });
   return (
     <PageLayout title="Monitoring">

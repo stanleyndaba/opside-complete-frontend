@@ -13,8 +13,11 @@ export class ErrorBoundary extends React.Component<React.PropsWithChildren, Erro
   }
 
   componentDidCatch(error: any, errorInfo: any) {
-    // TODO: hook to logging/monitoring if desired
+    // eslint-disable-next-line no-console
     console.error('Unhandled UI Error:', error, errorInfo);
+    if ((window as any).SENTRY_DSN && (window as any).Sentry?.captureException) {
+      (window as any).Sentry.captureException(error);
+    }
   }
 
   render() {

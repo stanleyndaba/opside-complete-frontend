@@ -30,10 +30,12 @@ function withTimeout<T>(promise: Promise<T>, timeoutMs: number, abortController:
 export async function apiRequest<T>(
   path: string,
   init: RequestInit = {},
-  options?: { timeoutMs?: number }
+  options?: { timeoutMs?: number; retries?: number; backoffMs?: number }
 ): Promise<T> {
   const controller = new AbortController();
   const timeoutMs = options?.timeoutMs ?? DEFAULT_TIMEOUT_MS;
+  const maxRetries = options?.retries ?? 0;
+  const backoffMs = options?.backoffMs ?? 400;
 
   const headers = new Headers(init.headers || {});
   const token = localStorage.getItem("auth_token");
@@ -42,18 +44,28 @@ export async function apiRequest<T>(
     headers.set("Content-Type", "application/json");
   }
 
-  async function doFetch(): Promise<Response> {
-    return fetch(`${API_BASE_URL}${path}`, {
-      ...init,
-      headers,
-      signal: controller.signal,
-      credentials: "include",
-    });
+  async function doFetchWithRetry(): Promise<Response> {
+    let attempt = 0;
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      try {
+        return await fetch(`${API_BASE_URL}${path}`, {
+          ...init,
+          headers,
+          signal: controller.signal,
+          credentials: "include",
+        });
+      } catch (err) {
+        if (attempt >= maxRetries) throw err;
+        await new Promise(r => setTimeout(r, backoffMs * Math.pow(2, attempt)));
+        attempt++;
+      }
+    }
   }
 
   let pendingRefresh: Promise<string> | null = (window as any).__pending_token_refresh__ || null;
   const request = (async () => {
-    let res = await doFetch();
+    let res = await doFetchWithRetry();
     if (res.status === 401) {
       try {
         if (!pendingRefresh) {
@@ -63,7 +75,7 @@ export async function apiRequest<T>(
         }
         const newToken = await pendingRefresh;
         headers.set("Authorization", `Bearer ${newToken}`);
-        res = await doFetch();
+        res = await doFetchWithRetry();
         // clear refresh after success
         (window as any).__pending_token_refresh__ = null;
       } catch (_) {
