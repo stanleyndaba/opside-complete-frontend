@@ -67,3 +67,41 @@ Simply open [Lovable](https://lovable.dev/projects/a8baea9a-97ae-4008-b023-5de63
 ## I want to use a custom domain - is that possible?
 
 We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+
+## Backend integration setup (versioned API)
+
+1. Create a `.env.local` (not committed) based on `.env.example`:
+
+```
+VITE_API_URL=/api/v1
+VITE_API_PROXY_TARGET=http://localhost:3000
+```
+
+2. Dev proxy: requests to `/api` are forwarded to `VITE_API_PROXY_TARGET` (see `vite.config.ts`). This avoids CORS in development.
+
+3. API client: use `apiRequest` from `src/lib/api.ts` for all HTTP calls. It automatically adds `Authorization: Bearer <token>` from `localStorage` key `auth_token` and supports timeouts and JSON error handling.
+
+4. Health check: `useApiHealth` in `src/hooks/use-api-health.ts` queries `/health`.
+
+5. Example page using backend: `src/pages/Stocks.tsx` fetches from `/stocks` with React Query. It shows loading and gracefully falls back to mock data on error.
+
+6. Production: set `VITE_API_URL` to your public API origin or keep `/api/v1` and have your reverse proxy route it to the backend. Ensure your server CORS allows your frontend origin if served cross-origin.
+
+7. Auth: store short-lived access tokens in memory or `localStorage` (demo). Prefer httpOnly cookies in production when possible. Use `setAuthToken` from `src/lib/api.ts` for token updates.
+
+## Production reverse-proxy and observability
+
+- Reverse proxy
+  - In production, keep client requests under `/api` and configure your reverse proxy (NGINX, Cloudflare, etc.) to route `/api` to your API origin (e.g., `https://api.yourdomain.com`).
+  - Alternatively, set `VITE_API_URL=https://api.yourdomain.com` and serve without a path proxy.
+
+- Sentry (optional)
+  - Add your DSN to a runtime script or env and expose it on `window.SENTRY_DSN`.
+  - If you load Sentry in your HTML (e.g., via CDN), `ErrorBoundary` will call `Sentry.captureException` automatically.
+  - Example (index.html):
+```
+<script>
+  window.SENTRY_DSN = "https://<key>@o<org>.ingest.sentry.io/<project>";
+</script>
+<script src="https://browser.sentry-cdn.com/7.118.0/bundle.min.js" crossorigin="anonymous"></script>
+```
