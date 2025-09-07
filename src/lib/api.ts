@@ -1,5 +1,5 @@
 const DEFAULT_TIMEOUT_MS = Number((import.meta as any).env?.VITE_API_TIMEOUT_MS || 15000);
-const API_BASE_URL = (import.meta as any).env?.VITE_API_URL || "/api";
+const API_BASE_URL = (import.meta as any).env?.VITE_API_URL || "/api/v1";
 
 export type ApiErrorShape = {
   message: string;
@@ -99,7 +99,7 @@ export async function apiRequest<T>(
       const apiErr: ApiErrorShape = {
         message: (isJson && body && (body.message || body.error)) || res.statusText || "Request failed",
         status: res.status,
-        code: isJson ? body.code : undefined,
+        code: isJson ? (body.code ?? res.status) : res.status,
         details: isJson ? body : undefined,
       };
       throw new ApiError(apiErr);

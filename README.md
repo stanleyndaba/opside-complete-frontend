@@ -68,12 +68,12 @@ Simply open [Lovable](https://lovable.dev/projects/a8baea9a-97ae-4008-b023-5de63
 
 We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
 
-## Backend integration setup
+## Backend integration setup (versioned API)
 
 1. Create a `.env.local` (not committed) based on `.env.example`:
 
 ```
-VITE_API_URL=/api
+VITE_API_URL=/api/v1
 VITE_API_PROXY_TARGET=http://localhost:3000
 ```
 
@@ -85,7 +85,7 @@ VITE_API_PROXY_TARGET=http://localhost:3000
 
 5. Example page using backend: `src/pages/Stocks.tsx` fetches from `/stocks` with React Query. It shows loading and gracefully falls back to mock data on error.
 
-6. Production: set `VITE_API_URL` to your public API origin or keep `/api` and have your reverse proxy route it to the backend. Ensure your server CORS allows your frontend origin if served cross-origin.
+6. Production: set `VITE_API_URL` to your public API origin or keep `/api/v1` and have your reverse proxy route it to the backend. Ensure your server CORS allows your frontend origin if served cross-origin.
 
 7. Auth: store short-lived access tokens in memory or `localStorage` (demo). Prefer httpOnly cookies in production when possible. Use `setAuthToken` from `src/lib/api.ts` for token updates.
 
