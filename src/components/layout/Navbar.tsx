@@ -1,11 +1,13 @@
 import React from 'react';
-import { Search, User, Settings, Users, CreditCard, Zap, HelpCircle, Sparkles, MessageSquare, LogOut, Building2 } from 'lucide-react';
+import { Search, User, Settings, Users, CreditCard, Zap, HelpCircle, Sparkles, MessageSquare, LogOut, Building2, Activity } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Link } from 'react-router-dom';
 import { NotificationBell } from './NotificationBell';
+import { useApiHealth } from '@/hooks/use-api-health';
+import { useAuth } from '@/providers/AuthProvider';
 interface NavbarProps {
   className?: string;
   sidebarCollapsed?: boolean;
@@ -14,10 +16,18 @@ export function Navbar({
   className,
   sidebarCollapsed = false
 }: NavbarProps) {
+  const { data: health, isLoading } = useApiHealth();
+  const { logout } = useAuth();
   return <header className={cn("bg-background/95 backdrop-blur-sm sticky top-0 z-30 border-b transition-all duration-300", sidebarCollapsed ? "ml-16" : "ml-56", className)}>
       <div className="container flex items-center justify-end h-16 px-4">
         {/* Right side - Notification Bell and Profile Icon */}
         <div className="flex items-center gap-4 ml-auto">
+          <div className="flex items-center gap-1 text-xs">
+            <Activity className={`h-4 w-4 ${isLoading ? 'text-yellow-500' : (health?.status === 'ok' ? 'text-green-600' : 'text-red-600')}`} />
+            <span className="text-muted-foreground hidden md:inline">
+              {isLoading ? 'Checking' : (health?.status === 'ok' ? 'All systems' : 'Degraded')}
+            </span>
+          </div>
           <NotificationBell />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -91,7 +101,7 @@ export function Navbar({
               <DropdownMenuSeparator />
               
               {/* Section 4: Session Control */}
-              <DropdownMenuItem className="flex items-center gap-2 cursor-pointer text-red-600 focus:text-red-600">
+              <DropdownMenuItem onClick={logout} className="flex items-center gap-2 cursor-pointer text-red-600 focus:text-red-600">
                 <LogOut className="h-4 w-4" />
                 <span>Log Out</span>
               </DropdownMenuItem>

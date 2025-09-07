@@ -35,6 +35,18 @@ export function Sidebar({
       icon: Home,
       href: '/'
     }, {
+      title: 'Claims',
+      icon: FileText,
+      href: '/claims'
+    }, {
+      title: 'Validation',
+      icon: Shield,
+      href: '/validation'
+    }, {
+      title: 'Monitoring',
+      icon: BarChart3,
+      href: '/monitoring'
+    }, {
       title: 'Recoveries',
       icon: Shield,
       href: '/recoveries'

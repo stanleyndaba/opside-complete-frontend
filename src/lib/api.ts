@@ -42,12 +42,29 @@ export async function apiRequest<T>(
     headers.set("Content-Type", "application/json");
   }
 
-  const request = fetch(`${API_BASE_URL}${path}`, {
-    ...init,
-    headers,
-    signal: controller.signal,
-    credentials: "include",
-  }).then(async (res) => {
+  async function doFetch(): Promise<Response> {
+    return fetch(`${API_BASE_URL}${path}`, {
+      ...init,
+      headers,
+      signal: controller.signal,
+      credentials: "include",
+    });
+  }
+
+  const request = (async () => {
+    let res = await doFetch();
+    if (res.status === 401) {
+      try {
+        const { refreshToken } = await import("@/lib/auth");
+        const newToken = await refreshToken();
+        headers.set("Authorization", `Bearer ${newToken}`);
+        res = await doFetch();
+      } catch (_) {
+        // ignore; will be handled below
+      }
+    }
+    return res;
+  })().then(async (res) => {
     const contentType = res.headers.get("content-type") || "";
     const isJson = contentType.includes("application/json");
     const body = isJson ? await res.json().catch(() => ({})) : await res.text();
