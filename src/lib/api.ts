@@ -29,6 +29,7 @@ export class ApiClient {
 			method,
 			headers: this.defaultHeaders,
 			body: body != null ? JSON.stringify(body) : undefined,
+			credentials: "include",
 			...init,
 		});
 		if (!response.ok) {
