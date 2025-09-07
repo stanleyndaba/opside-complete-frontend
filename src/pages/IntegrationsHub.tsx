@@ -7,6 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { Shield, CheckCircle, Settings, RefreshCw, ArrowRight, ExternalLink, Package, ShoppingBag, Calculator, Truck, Plug } from 'lucide-react';
+import { apiClient } from '@/lib/api';
+import { toast } from 'sonner';
 interface ActiveConnection {
   id: string;
   name: string;
@@ -186,7 +188,7 @@ export default function IntegrationsHub() {
                     <Separator />
                     
                     <div className="grid grid-cols-2 gap-2">
-                      <Button size="sm" variant="outline" className="w-full gap-2" onClick={() => { setSyncing(true); setTimeout(() => setSyncing(false), 1500); }}>
+                      <Button size="sm" variant="outline" className="w-full gap-2" onClick={async () => { try { setSyncing(true); await apiClient.post('/api/sync/start'); toast.success('Inventory sync started'); } catch (e) { toast.error('Failed to start sync'); } finally { setSyncing(false); } }}>
                         <RefreshCw className="h-3 w-3" />
                         {syncing ? 'Syncing…' : 'Start Inventory Sync'}
                       </Button>
@@ -234,7 +236,7 @@ export default function IntegrationsHub() {
                         <p className="text-sm text-muted-foreground mb-4">
                           {integration.description}
                         </p>
-                        <Button size="sm" variant="outline" className="w-full gap-2" onClick={() => { setConnecting(true); setTimeout(() => setConnecting(false), 1000); }}>
+                        <Button size="sm" variant="outline" className="w-full gap-2" onClick={async () => { try { setConnecting(true); await apiClient.post('/api/integrations/connect', { provider: 'amazon' }); toast.success('Connected successfully'); } catch (e) { toast.error('Failed to connect'); } finally { setConnecting(false); } }}>
                           <Plug className="h-3 w-3" />
                           {connecting ? 'Connecting…' : 'Connect'}
                         </Button>
