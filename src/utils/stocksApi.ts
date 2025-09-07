@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { apiClient } from '@/lib/api';
 
 export interface Stock {
   symbol: string;
@@ -450,119 +451,122 @@ export function formatDate(date: Date): string {
   }
 }
 
-export function useStockData(initialData: Stock[], updateInterval = 5000) {
+export function useStockData(initialData: Stock[] = mockStocks, updateInterval = 15000) {
   const [stocks, setStocks] = useState<Stock[]>(initialData);
-  
+
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setStocks(prevStocks => 
-        prevStocks.map(stock => {
-          const changeAmount = (Math.random() - 0.5) * (stock.price * 0.01);
-          const newPrice = Math.max(stock.price + changeAmount, 0.01);
-          const newChange = stock.change + changeAmount;
-          const newChangePercent = (newChange / (newPrice - newChange)) * 100;
-          
-          return {
-            ...stock,
-            price: parseFloat(newPrice.toFixed(2)),
-            change: parseFloat(newChange.toFixed(2)),
-            changePercent: parseFloat(newChangePercent.toFixed(2)),
-            lastUpdated: new Date()
-          };
-        })
-      );
-    }, updateInterval);
-    
-    return () => clearInterval(intervalId);
-  }, [initialData, updateInterval]);
-  
+    let isMounted = true;
+
+    const fetchStocks = async () => {
+      try {
+        const data = await apiClient.get<Stock[]>("/api/stocks");
+        if (isMounted && Array.isArray(data) && data.length > 0) {
+          setStocks(
+            data.map((s) => ({
+              ...s,
+              lastUpdated: s.lastUpdated ? new Date(s.lastUpdated as unknown as string) : new Date(),
+            }))
+          );
+        }
+      } catch (error) {
+        // Keep mock data on failure
+      }
+    };
+
+    fetchStocks();
+    const intervalId = setInterval(fetchStocks, updateInterval);
+    return () => {
+      isMounted = false;
+      clearInterval(intervalId);
+    };
+  }, [updateInterval]);
+
   return stocks;
 }
 
-export function useMarketIndices(initialData: MarketIndex[], updateInterval = 8000) {
+export function useMarketIndices(initialData: MarketIndex[] = mockIndices, updateInterval = 20000) {
   const [indices, setIndices] = useState<MarketIndex[]>(initialData);
-  
+
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setIndices(prevIndices => 
-        prevIndices.map(index => {
-          const changeAmount = (Math.random() - 0.5) * (index.value * 0.0015);
-          const newValue = Math.max(index.value + changeAmount, 0.01);
-          const newChange = index.change + changeAmount;
-          const newChangePercent = (newChange / (newValue - newChange)) * 100;
-          
-          return {
-            ...index,
-            value: parseFloat(newValue.toFixed(2)),
-            change: parseFloat(newChange.toFixed(2)),
-            changePercent: parseFloat(newChangePercent.toFixed(2)),
-            lastUpdated: new Date()
-          };
-        })
-      );
-    }, updateInterval);
-    
-    return () => clearInterval(intervalId);
-  }, [initialData, updateInterval]);
-  
+    let isMounted = true;
+    const fetchIndices = async () => {
+      try {
+        const data = await apiClient.get<MarketIndex[]>("/api/indices");
+        if (isMounted && Array.isArray(data) && data.length > 0) {
+          setIndices(
+            data.map((i) => ({
+              ...i,
+              lastUpdated: i.lastUpdated ? new Date(i.lastUpdated as unknown as string) : new Date(),
+            }))
+          );
+        }
+      } catch {}
+    };
+    fetchIndices();
+    const id = setInterval(fetchIndices, updateInterval);
+    return () => {
+      isMounted = false;
+      clearInterval(id);
+    };
+  }, [updateInterval]);
+
   return indices;
 }
 
-export function useCurrencyPairs(initialData: CurrencyPair[], updateInterval = 10000) {
+export function useCurrencyPairs(initialData: CurrencyPair[] = mockCurrencies, updateInterval = 20000) {
   const [currencies, setCurrencies] = useState<CurrencyPair[]>(initialData);
-  
+
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setCurrencies(prevCurrencies => 
-        prevCurrencies.map(currency => {
-          const changeAmount = (Math.random() - 0.5) * (currency.rate * 0.0008);
-          const newRate = Math.max(currency.rate + changeAmount, 0.0001);
-          const newChange = currency.change + changeAmount;
-          const newChangePercent = (newChange / (newRate - newChange)) * 100;
-          
-          return {
-            ...currency,
-            rate: parseFloat(newRate.toFixed(4)),
-            change: parseFloat(newChange.toFixed(4)),
-            changePercent: parseFloat(newChangePercent.toFixed(2)),
-            lastUpdated: new Date()
-          };
-        })
-      );
-    }, updateInterval);
-    
-    return () => clearInterval(intervalId);
-  }, [initialData, updateInterval]);
-  
+    let isMounted = true;
+    const fetchCurrencies = async () => {
+      try {
+        const data = await apiClient.get<CurrencyPair[]>("/api/currencies");
+        if (isMounted && Array.isArray(data) && data.length > 0) {
+          setCurrencies(
+            data.map((c) => ({
+              ...c,
+              lastUpdated: c.lastUpdated ? new Date(c.lastUpdated as unknown as string) : new Date(),
+            }))
+          );
+        }
+      } catch {}
+    };
+    fetchCurrencies();
+    const id = setInterval(fetchCurrencies, updateInterval);
+    return () => {
+      isMounted = false;
+      clearInterval(id);
+    };
+  }, [updateInterval]);
+
   return currencies;
 }
 
-export function useCryptoData(initialData: Cryptocurrency[], updateInterval = 7000) {
+export function useCryptoData(initialData: Cryptocurrency[] = mockCryptos, updateInterval = 20000) {
   const [cryptos, setCryptos] = useState<Cryptocurrency[]>(initialData);
-  
+
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setCryptos(prevCryptos => 
-        prevCryptos.map(crypto => {
-          const volatilityFactor = crypto.symbol === 'BTC' || crypto.symbol === 'ETH' ? 0.005 : 0.012;
-          const changeAmount = (Math.random() - 0.5) * (crypto.price * volatilityFactor);
-          const newPrice = Math.max(crypto.price + changeAmount, 0.000001);
-          const newChange = crypto.change + changeAmount;
-          const newChangePercent = (newChange / (newPrice - newChange)) * 100;
-          
-          return {
-            ...crypto,
-            price: parseFloat(newPrice.toFixed(crypto.price < 1 ? 4 : 2)),
-            change: parseFloat(newChange.toFixed(crypto.price < 1 ? 4 : 2)),
-            changePercent: parseFloat(newChangePercent.toFixed(2)),
-            lastUpdated: new Date()
-          };
-        })
-      );
-    }, updateInterval);
-    
-    return () => clearInterval(intervalId);
-  }, [initialData, updateInterval]);
-  
+    let isMounted = true;
+    const fetchCryptos = async () => {
+      try {
+        const data = await apiClient.get<Cryptocurrency[]>("/api/cryptos");
+        if (isMounted && Array.isArray(data) && data.length > 0) {
+          setCryptos(
+            data.map((c) => ({
+              ...c,
+              lastUpdated: c.lastUpdated ? new Date(c.lastUpdated as unknown as string) : new Date(),
+            }))
+          );
+        }
+      } catch {}
+    };
+    fetchCryptos();
+    const id = setInterval(fetchCryptos, updateInterval);
+    return () => {
+      isMounted = false;
+      clearInterval(id);
+    };
+  }, [updateInterval]);
+
   return cryptos;
 }

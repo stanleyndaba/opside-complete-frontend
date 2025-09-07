@@ -1,12 +1,12 @@
 
 import React from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
-import { useStockData, mockStocks, generatePriceHistory } from '@/utils/stocksApi';
+import { useStockData, generatePriceHistory } from '@/utils/stocksApi';
 import { StockCard } from '@/components/stocks/StockCard';
 import { StockChart } from '@/components/stocks/StockChart';
 
 const Stocks = () => {
-  const stocks = useStockData(mockStocks);
+  const stocks = useStockData();
   const [selectedStock, setSelectedStock] = React.useState(stocks[0]);
   
   const stocksWithHistory = stocks.map(stock => {
