@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Card, CardContent } from '@/components/ui/card';
@@ -7,6 +8,7 @@ import { FileText, BarChart3, FolderOpen, CheckCircle, DollarSign, Search, Refre
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const navigate = useNavigate();
 
   // Mock data for the dashboard
   const nextPayout = {
@@ -134,7 +136,11 @@ export function Dashboard() {
 
                 {/* Module 3: Primary Navigation Links */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Button variant="outline" className="h-8 flex items-center gap-2 transition-colors bg-gray-200 hover:bg-gray-100 text-black">
+                  <Button 
+                    variant="outline" 
+                    className="h-8 flex items-center gap-2 transition-colors bg-gray-200 hover:bg-gray-100 text-black"
+                    onClick={() => navigate('/recoveries')}
+                  >
                     <FileText className="h-4 w-4" />
                     <span className="font-montserrat">View All Claims</span>
                   </Button>
