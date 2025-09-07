@@ -17,6 +17,7 @@ export function Dashboard() {
   const [detectResults, setDetectResults] = useState<Array<{ id: string; amount: number; reason: string; sku: string; asin: string }>>([]);
   const [metrics, setMetrics] = useState<{ total_recovered: number; expected_approved: number; upcoming_payouts: Array<{ amount: number; date: string }> } | null>(null);
   const [loadingMetrics, setLoadingMetrics] = useState<boolean>(false);
+  const [detectionId, setDetectionId] = useState<string | null>(null);
 
   // Mock data for the dashboard
   useEffect(() => {
@@ -35,6 +36,21 @@ export function Dashboard() {
     };
     fetchMetrics();
   }, []);
+
+  useEffect(() => {
+    let timer: number | undefined;
+    const poll = async () => {
+      try {
+        if (!detectionId) return;
+        await apiClient.get(`/api/detections/status/${detectionId}`);
+      } catch {}
+      finally {
+        timer = window.setTimeout(poll, 8000);
+      }
+    };
+    poll();
+    return () => { if (timer) window.clearTimeout(timer); };
+  }, [detectionId]);
   const activityFeed = [{
     id: 1,
     type: 'claim_submitted',
@@ -171,6 +187,7 @@ export function Dashboard() {
                                 '/api/detections/run'
                               );
                               setDetectResults(result.claims ?? []);
+                              if (result.detection_id) setDetectionId(result.detection_id);
                               // Optionally begin polling detection status by id
                               // const statusId = result.detection_id; (store if needed)
                             } catch (e) {
@@ -208,7 +225,7 @@ export function Dashboard() {
                       
                       {/* Total Recovered Hero Amount */}
                       <div className="text-xl font-semibold text-sidebar-primary font-montserrat">
-                        {formatCurrency(recoveredValue.total)}
+                        {formatCurrency(metrics?.total_recovered ?? 0)}
                       </div>
                       
                       {/* Subtitle */}
@@ -220,11 +237,11 @@ export function Dashboard() {
                       <div className="pt-2 space-y-2">
                         <div className="flex justify-between items-center">
                           <span className="text-sm text-gray-600 font-montserrat">Pending Recovery</span>
-                          <span className="font-semibold text-sm font-montserrat">{formatCurrency(recoveredValue.pending)}</span>
+                          <span className="font-semibold text-sm font-montserrat">{formatCurrency(metrics?.expected_approved ?? 0)}</span>
                         </div>
                         <div className="flex justify-between items-center">
                           <span className="text-sm text-gray-600 font-montserrat">30-Day Recovery</span>
-                          <span className="font-semibold text-sm font-montserrat">{formatCurrency(recoveredValue.lastMonth)}</span>
+                          <span className="font-semibold text-sm font-montserrat">{formatCurrency(0)}</span>
                         </div>
                       </div>
                     </div>
