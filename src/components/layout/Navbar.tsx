@@ -6,14 +6,18 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Link } from 'react-router-dom';
 import { NotificationBell } from './NotificationBell';
+import { useAuth } from '@/hooks/useAuth';
+
 interface NavbarProps {
   className?: string;
   sidebarCollapsed?: boolean;
 }
+
 export function Navbar({
   className,
   sidebarCollapsed = false
 }: NavbarProps) {
+  const { user, signInWithAmazon, signOut } = useAuth();
   return <header className={cn("bg-background/95 backdrop-blur-sm sticky top-0 z-30 border-b transition-all duration-300", sidebarCollapsed ? "ml-16" : "ml-56", className)}>
       <div className="container flex items-center justify-end h-16 px-4">
         {/* Right side - Notification Bell and Profile Icon */}
@@ -31,11 +35,11 @@ export function Navbar({
               {/* Section 1: Identity */}
               <DropdownMenuLabel className="pb-2">
                 <div className="space-y-1">
-                  <p className="text-sm font-medium text-black">John Smith</p>
-                  <p className="text-xs text-gray-600">john.smith@example.com</p>
+                  <p className="text-sm font-medium text-black">{user?.name ?? 'Guest'}</p>
+                  <p className="text-xs text-gray-600">{user?.email ?? ''}</p>
                   <div className="flex items-center gap-1 pt-1">
                     <Building2 className="h-3 w-3 text-gray-500" />
-                    <p className="text-xs text-gray-500">Viewing: John's Amazon Store</p>
+                    <p className="text-xs text-gray-500">Viewing: {user ? "Your Amazon Store" : "Demo Store"}</p>
                   </div>
                 </div>
               </DropdownMenuLabel>
@@ -91,10 +95,17 @@ export function Navbar({
               <DropdownMenuSeparator />
               
               {/* Section 4: Session Control */}
-              <DropdownMenuItem className="flex items-center gap-2 cursor-pointer text-red-600 focus:text-red-600">
-                <LogOut className="h-4 w-4" />
-                <span>Log Out</span>
-              </DropdownMenuItem>
+              {user ? (
+                <DropdownMenuItem onClick={signOut} className="flex items-center gap-2 cursor-pointer text-red-600 focus:text-red-600">
+                  <LogOut className="h-4 w-4" />
+                  <span>Log Out</span>
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem onClick={signInWithAmazon} className="flex items-center gap-2 cursor-pointer">
+                  <Zap className="h-4 w-4" />
+                  <span>Sign in with Amazon</span>
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
