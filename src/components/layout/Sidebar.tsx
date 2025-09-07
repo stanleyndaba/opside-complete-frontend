@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, BarChart3, Shield, FileText, Factory, Zap, Settings, CreditCard, Users, HelpCircle, MessageSquare, Sparkles, Palette, Download, Key, ChevronLeft, ChevronRight, User, Search, LogOut, Building2 } from 'lucide-react';
+import { Home, Shield, FileText, Factory, Zap, Settings, CreditCard, Users, HelpCircle, MessageSquare, Sparkles, Download, Key, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -38,10 +38,6 @@ export function Sidebar({
       title: 'Recoveries',
       icon: Shield,
       href: '/recoveries'
-    }, {
-      title: 'Reports',
-      icon: BarChart3,
-      href: '/reports'
     }, {
       title: 'Claim Documents',
       icon: Factory,
