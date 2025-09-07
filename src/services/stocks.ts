@@ -6,3 +6,13 @@ export async function fetchStocks(): Promise<Stock[]> {
   return data.map(transformStock);
 }
 
+export async function adjustStock(symbol: string, delta: number): Promise<Stock> {
+  const dto = await apiRequest<StockDto>(`/stocks/${symbol}/adjust`, { method: 'POST', body: JSON.stringify({ delta }) });
+  return transformStock(dto);
+}
+
+export async function reconcileStock(symbol: string, price: number): Promise<Stock> {
+  const dto = await apiRequest<StockDto>(`/stocks/${symbol}/reconcile`, { method: 'POST', body: JSON.stringify({ price }) });
+  return transformStock(dto);
+}
+

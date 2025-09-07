@@ -88,3 +88,20 @@ VITE_API_PROXY_TARGET=http://localhost:3000
 6. Production: set `VITE_API_URL` to your public API origin or keep `/api` and have your reverse proxy route it to the backend. Ensure your server CORS allows your frontend origin if served cross-origin.
 
 7. Auth: store short-lived access tokens in memory or `localStorage` (demo). Prefer httpOnly cookies in production when possible. Use `setAuthToken` from `src/lib/api.ts` for token updates.
+
+## Production reverse-proxy and observability
+
+- Reverse proxy
+  - In production, keep client requests under `/api` and configure your reverse proxy (NGINX, Cloudflare, etc.) to route `/api` to your API origin (e.g., `https://api.yourdomain.com`).
+  - Alternatively, set `VITE_API_URL=https://api.yourdomain.com` and serve without a path proxy.
+
+- Sentry (optional)
+  - Add your DSN to a runtime script or env and expose it on `window.SENTRY_DSN`.
+  - If you load Sentry in your HTML (e.g., via CDN), `ErrorBoundary` will call `Sentry.captureException` automatically.
+  - Example (index.html):
+```
+<script>
+  window.SENTRY_DSN = "https://<key>@o<org>.ingest.sentry.io/<project>";
+</script>
+<script src="https://browser.sentry-cdn.com/7.118.0/bundle.min.js" crossorigin="anonymous"></script>
+```

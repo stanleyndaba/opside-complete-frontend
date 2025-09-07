@@ -66,6 +66,50 @@ export default function Validation() {
       queryClient.invalidateQueries({ queryKey: ['validations'] });
     }
   });
+
+  const approveMutation = useMutation<ValidationDto, unknown, { id: string }, { previous?: Validation[] }>({
+    mutationFn: async ({ id }) => apiRequest<ValidationDto>(`/validations/${id}/approve`, { method: 'POST' }),
+    onMutate: async ({ id }) => {
+      await queryClient.cancelQueries({ queryKey: ['validations'] });
+      const previous = queryClient.getQueryData<Validation[]>(['validations']);
+      if (previous) {
+        queryClient.setQueryData<Validation[]>(['validations'], previous.map(v => v.id === id ? { ...v, status: 'approved' } : v));
+      }
+      return { previous };
+    },
+    onError: (_e, _v, ctx) => {
+      if (ctx?.previous) queryClient.setQueryData(['validations'], ctx.previous);
+      notify.error('Approval failed');
+    },
+    onSuccess: (dto) => {
+      const updated = transform(dto);
+      queryClient.setQueryData<Validation[]>(['validations'], (prev) => (prev || []).map(v => v.id === updated.id ? updated : v));
+      notify.success('Validation approved');
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ['validations'] })
+  });
+
+  const rejectMutation = useMutation<ValidationDto, unknown, { id: string }, { previous?: Validation[] }>({
+    mutationFn: async ({ id }) => apiRequest<ValidationDto>(`/validations/${id}/reject`, { method: 'POST' }),
+    onMutate: async ({ id }) => {
+      await queryClient.cancelQueries({ queryKey: ['validations'] });
+      const previous = queryClient.getQueryData<Validation[]>(['validations']);
+      if (previous) {
+        queryClient.setQueryData<Validation[]>(['validations'], previous.map(v => v.id === id ? { ...v, status: 'rejected' } : v));
+      }
+      return { previous };
+    },
+    onError: (_e, _v, ctx) => {
+      if (ctx?.previous) queryClient.setQueryData(['validations'], ctx.previous);
+      notify.error('Rejection failed');
+    },
+    onSuccess: (dto) => {
+      const updated = transform(dto);
+      queryClient.setQueryData<Validation[]>(['validations'], (prev) => (prev || []).map(v => v.id === updated.id ? updated : v));
+      notify.success('Validation rejected');
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ['validations'] })
+  });
   return (
     <PageLayout title="Validation (EV / ACG)">
       {isLoading && <div className="text-sm text-muted-foreground">Loading validations...</div>}
@@ -78,9 +122,11 @@ export default function Validation() {
               <div className="text-xs text-muted-foreground">{v.status} • {v.createdAt.toLocaleString()}</div>
               {v.details && <div className="text-sm mt-2">{v.details}</div>}
               <RoleGate allow={['admin', 'operator']}>
-                <div className="mt-3 flex gap-2">
+                <div className="mt-3 flex flex-wrap gap-2">
                   <button className="px-3 py-1 text-xs border rounded" onClick={() => evMutation.mutate({ id: v.id })} disabled={evMutation.isPending}>Run EV</button>
                   <button className="px-3 py-1 text-xs border rounded" onClick={() => acgMutation.mutate({ id: v.id })} disabled={acgMutation.isPending}>Run ACG</button>
+                  <button className="px-3 py-1 text-xs border rounded" onClick={() => approveMutation.mutate({ id: v.id })} disabled={approveMutation.isPending}>Approve</button>
+                  <button className="px-3 py-1 text-xs border rounded" onClick={() => rejectMutation.mutate({ id: v.id })} disabled={rejectMutation.isPending}>Reject</button>
                 </div>
               </RoleGate>
             </div>
