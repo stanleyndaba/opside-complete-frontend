@@ -212,8 +212,8 @@ const Settings = () => {
               <CardContent>
                 <div className="flex items-center justify-between p-4 border rounded-lg">
                   <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-lg bg-orange-100 flex items-center justify-center">
-                      <Globe className="h-5 w-5 text-orange-600" />
+                    <div className="h-10 w-10 rounded-lg bg-gray-50 flex items-center justify-center border">
+                      <img src="/lovable-uploads/14f98d63-9a1a-4128-8021-1d840d778ea5.png" alt="Amazon Seller Central logo" className="h-7 w-7 object-contain" />
                     </div>
                     <div>
                       <p className="font-medium">Amazon Seller Central</p>
