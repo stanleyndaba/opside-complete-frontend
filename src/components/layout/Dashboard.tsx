@@ -272,26 +272,34 @@ export function Dashboard() {
               <div className="lg:col-span-1">
                 <Card className="h-full">
                   <CardContent className="p-6">
-                    <div className="flex items-center gap-2 mb-6">
-                      
-                      <h2 className="text-lg font-semibold font-montserrat">Notifications</h2>
+                    <div className="mb-4">
+                      <h2 className="text-base font-semibold text-foreground">Notifications</h2>
+                      <p className="text-xs text-muted-foreground">Recent activity across claims, payouts and sync</p>
                     </div>
-                    
-                    <div className="space-y-4 max-h-[600px] overflow-y-auto">
+                    <div className="space-y-3 max-h-[600px] overflow-y-auto">
                       {activityFeed.map(item => {
-                      const IconComponent = item.icon;
-                      return <div key={item.id} className="flex gap-3 p-3 transition-colors bg-stone-50 rounded-none">
-                            
+                        const IconComponent = item.icon;
+                        return (
+                          <div
+                            key={item.id}
+                            className="flex items-start gap-4 p-4 rounded-lg border bg-background hover:bg-muted/30 transition-colors"
+                          >
+                            <div className="flex-shrink-0 mt-0.5">
+                              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                                <IconComponent className="w-4 h-4 text-primary" />
+                              </div>
+                            </div>
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-foreground mb-1 font-montserrat">
+                              <p className="text-sm font-medium text-foreground mb-1">
                                 {item.description}
                               </p>
-                              <p className="text-xs text-muted-foreground font-montserrat">
-                                {item.timestamp}
-                              </p>
+                              <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                                <span>{item.timestamp}</span>
+                              </div>
                             </div>
-                          </div>;
-                    })}
+                          </div>
+                        );
+                      })}
                     </div>
                   </CardContent>
                 </Card>
