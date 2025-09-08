@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Separator } from '@/components/ui/separator';
 import { apiClient } from '@/lib/api';
 import { toast } from 'sonner';
+import { useStatusStream } from '@/hooks/useStatusStream';
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -20,6 +21,16 @@ export function Dashboard() {
   const [loadingMetrics, setLoadingMetrics] = useState<boolean>(false);
   const [detectionId, setDetectionId] = useState<string | null>(null);
   const [detectionNotified, setDetectionNotified] = useState<boolean>(false);
+  // Real-time stream: update detection status and show toasts; disable polling via status stream
+  useStatusStream({
+    onDetection: (e) => {
+      // If this detection matches current detectionId, reset so we don't poll or duplicate toasts
+      if (detectionId && e.id === detectionId) {
+        setDetectionId(null);
+        setDetectionNotified(true);
+      }
+    }
+  });
 
   // Mock data for the dashboard
   useEffect(() => {
@@ -39,34 +50,7 @@ export function Dashboard() {
     fetchMetrics();
   }, []);
 
-  useEffect(() => {
-    let timer: number | undefined;
-    const poll = async () => {
-      try {
-        if (!detectionId) return;
-        const status = await apiClient.get<any>(`/api/detections/status/${detectionId}`);
-        const state = (status && (status.state || status.status)) as string | undefined;
-        const isCompleted = state ? state.toLowerCase() === 'completed' : (status?.completed === true);
-        const isFailed = state ? state.toLowerCase() === 'failed' : (status?.failed === true);
-        if (!detectionNotified && (isCompleted || isFailed)) {
-          if (isCompleted) {
-            toast.success('Detection completed successfully');
-          } else if (isFailed) {
-            toast.error('Detection failed. Please try again.');
-          }
-          setDetectionNotified(true);
-          // stop polling for this run
-          setDetectionId(null);
-          return;
-        }
-      } catch {}
-      finally {
-        timer = window.setTimeout(poll, 8000);
-      }
-    };
-    poll();
-    return () => { if (timer) window.clearTimeout(timer); };
-  }, [detectionId, detectionNotified]);
+  // Removed detection polling in favor of WebSocket/SSE stream
   const activityFeed = [{
     id: 1,
     type: 'claim_submitted',
