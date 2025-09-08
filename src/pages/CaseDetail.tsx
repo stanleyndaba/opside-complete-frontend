@@ -5,7 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, AlertCircle, Calendar } from 'lucide-react';
+import { ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, AlertCircle, Calendar, Send } from 'lucide-react';
+import { apiClient } from '@/lib/api';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 
 interface CaseEvent {
@@ -15,56 +17,23 @@ interface CaseEvent {
   type: 'detection' | 'analysis' | 'generation' | 'submission' | 'update' | 'completion';
 }
 
-// Mock case data
-const mockCaseData = {
-  'OPS-12345': {
-    id: 'OPS-12345',
-    title: '5 units of Premium Wireless Headphones lost at FTW1',
-    status: 'Guaranteed' as const,
-    guaranteedAmount: 324.50,
-    payoutDate: '2025-01-15',
-    createdDate: '2025-01-08',
-    amazonCaseId: undefined,
-    sku: 'WH-PREM-001',
-    productName: 'Premium Wireless Headphones - Noise Cancelling',
-    facility: 'FTW1 - Fort Worth, TX',
-    confidence: 95,
-    unitsLost: 5,
-    unitCost: 64.90,
-    events: [
-      {
-        timestamp: '2025-01-08T12:05:00Z',
-        title: 'Discrepancy Detected',
-        description: 'Smart Inventory Sync detected 5 missing units of SKU WH-PREM-001 at FTW1 warehouse',
-        type: 'detection'
-      },
-      {
-        timestamp: '2025-01-08T12:05:30Z',
-        title: 'Evidence Located',
-        description: 'Evidence Engine found matching cost documentation (Invoice #INV-2024-582)',
-        type: 'analysis'
-      },
-      {
-        timestamp: '2025-01-08T12:06:15Z',
-        title: 'True Value Calculated',
-        description: 'True value calculated and verified: $324.50 (5 units × $64.90 per unit)',
-        type: 'analysis'
-      },
-      {
-        timestamp: '2025-01-08T12:07:22Z',
-        title: 'Claim Draft Generated',
-        description: 'Opside AI Agent generated comprehensive claim documentation with supporting evidence',
-        type: 'generation'
-      },
-      {
-        timestamp: '2025-01-08T12:10:45Z',
-        title: 'Ready for Submission',
-        description: 'Case marked as guaranteed and ready for Amazon submission pending user approval',
-        type: 'update'
-      }
-    ] as CaseEvent[]
-  }
-};
+interface CaseDetailResponse {
+  id: string;
+  title: string;
+  status: string;
+  guaranteedAmount: number;
+  approvedAmount?: number;
+  payoutDate?: string | null;
+  expected_payout_date?: string | null;
+  createdDate: string;
+  amazonCaseId?: string | null;
+  sku: string;
+  productName: string;
+  facility: string;
+  confidence: number;
+  unitsLost: number;
+  unitCost: number;
+}
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -123,8 +92,50 @@ const getEventColor = (type: CaseEvent['type']) => {
 
 export default function CaseDetail() {
   const { caseId } = useParams<{ caseId: string }>();
+  const [autoSubmitOpen, setAutoSubmitOpen] = React.useState(false);
+  const [statusEvents, setStatusEvents] = React.useState<CaseEvent[] | null>(null);
+  const [polling, setPolling] = React.useState<boolean>(true);
+  const [detail, setDetail] = React.useState<CaseDetailResponse | null>(null);
+  const [loading, setLoading] = React.useState<boolean>(true);
+  const [error, setError] = React.useState<string | null>(null);
   
-  if (!caseId || !mockCaseData[caseId as keyof typeof mockCaseData]) {
+  React.useEffect(() => {
+    const fetchDetail = async () => {
+      if (!caseId) return;
+      try {
+        setLoading(true);
+        const data = await apiClient.get<CaseDetailResponse>(`/api/recoveries/${caseId}`);
+        setDetail(data);
+        setError(null);
+      } catch (e) {
+        setError('not_found');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDetail();
+  }, [caseId]);
+
+  React.useEffect(() => {
+    let timer: number | undefined;
+    const poll = async () => {
+      try {
+        if (!caseId) return;
+        const data = await apiClient.get<{ events: CaseEvent[] }>(`/api/recoveries/${caseId}/status`);
+        setStatusEvents(data.events);
+      } catch {
+        // ignore
+      } finally {
+        timer = window.setTimeout(poll, 8000);
+      }
+    };
+    if (polling) poll();
+    return () => {
+      if (timer) window.clearTimeout(timer);
+    };
+  }, [caseId, polling]);
+
+  if (!caseId) {
     return (
       <PageLayout title="Case Not Found">
         <div className="text-center py-12">
@@ -140,10 +151,24 @@ export default function CaseDetail() {
     );
   }
 
-  const caseData = mockCaseData[caseId as keyof typeof mockCaseData];
+  if (error === 'not_found') {
+    return (
+      <PageLayout title="Case Not Found">
+        <div className="text-center py-12">
+          <h2 className="text-xl font-semibold mb-4">Case not found</h2>
+          <Button asChild>
+            <Link to="/recoveries">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Cases
+            </Link>
+          </Button>
+        </div>
+      </PageLayout>
+    );
+  }
 
   return (
-    <PageLayout title={`Case ${caseData.id}`}>
+    <PageLayout title={`Case ${detail?.id ?? caseId}`}>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center gap-4">
@@ -153,6 +178,37 @@ export default function CaseDetail() {
               Back to Cases
             </Link>
           </Button>
+          <div className="ml-auto flex items-center gap-3">
+            <div className="hidden md:flex items-center gap-2 text-xs text-muted-foreground">
+              <span className="px-2 py-1 rounded bg-emerald-50 text-emerald-700">Detected</span>
+              <span>→</span>
+              <span className="px-2 py-1 rounded bg-emerald-50 text-emerald-700">Prepared</span>
+              <span>→</span>
+              <span className="px-2 py-1 rounded bg-gray-100">Submitted</span>
+              <span>→</span>
+              <span className="px-2 py-1 rounded bg-gray-100">Paid</span>
+            </div>
+            <Dialog open={autoSubmitOpen} onOpenChange={setAutoSubmitOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-emerald-600 hover:bg-emerald-700">Auto-Submit Claim</Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Auto-Submit Claim</DialogTitle>
+                  <DialogDescription>
+                    Files automatically on your behalf via Amazon SP-API. We will track submission and updates.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="text-sm text-muted-foreground">
+                  You only pay from recovered funds (20% cap).
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setAutoSubmitOpen(false)}>Cancel</Button>
+                  <Button onClick={() => setAutoSubmitOpen(false)}>Submit Now</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -168,14 +224,14 @@ export default function CaseDetail() {
               <CardContent className="space-y-4">
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Case ID</label>
-                  <p className="font-mono text-sm mt-1">{caseData.id}</p>
+                  <p className="font-mono text-sm mt-1">{detail?.id ?? '—'}</p>
                 </div>
 
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Current Status</label>
                   <div className="mt-1">
-                    <Badge className={cn("font-medium", getStatusColor(caseData.status))}>
-                      {caseData.status}
+                    <Badge className={cn("font-medium", getStatusColor(detail?.status ?? ''))}>
+                      {detail?.status ?? '—'}
                     </Badge>
                   </div>
                 </div>
@@ -183,7 +239,7 @@ export default function CaseDetail() {
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Guaranteed Value</label>
                   <p className="text-lg font-semibold text-emerald-600 mt-1">
-                    ${caseData.guaranteedAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                    ${(detail?.approvedAmount ?? detail?.guaranteedAmount ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                   </p>
                 </div>
 
@@ -191,21 +247,17 @@ export default function CaseDetail() {
                   <label className="text-sm font-medium text-muted-foreground">Predicted Payout Date</label>
                   <p className="mt-1 flex items-center gap-2">
                     <Calendar className="h-4 w-4 text-muted-foreground" />
-                    {new Date(caseData.payoutDate).toLocaleDateString('en-US', {
-                      month: 'long',
-                      day: 'numeric',
-                      year: 'numeric'
-                    })}
+                    {detail?.expected_payout_date ? new Date(detail.expected_payout_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '—'}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">
-                    {caseData.confidence}% Confidence
+                    {detail?.confidence ?? 0}% Confidence
                   </p>
                 </div>
 
-                {caseData.amazonCaseId && (
+                {detail?.amazonCaseId && (
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">Amazon Case ID</label>
-                    <p className="font-mono text-sm mt-1">{caseData.amazonCaseId}</p>
+                    <p className="font-mono text-sm mt-1">{detail.amazonCaseId}</p>
                   </div>
                 )}
 
@@ -213,37 +265,48 @@ export default function CaseDetail() {
 
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Affected Product</label>
-                  <p className="font-medium mt-1">{caseData.productName}</p>
-                  <p className="text-sm text-muted-foreground">SKU: {caseData.sku}</p>
+                  <p className="font-medium mt-1">{detail?.productName ?? '—'}</p>
+                  <p className="text-sm text-muted-foreground">SKU: {detail?.sku ?? '—'}</p>
                 </div>
 
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Warehouse Location</label>
                   <p className="mt-1 flex items-center gap-2">
                     <MapPin className="h-4 w-4 text-muted-foreground" />
-                    {caseData.facility}
+                    {detail?.facility ?? '—'}
                   </p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">Units Lost</label>
-                    <p className="font-semibold mt-1">{caseData.unitsLost}</p>
+                    <p className="font-semibold mt-1">{detail?.unitsLost ?? 0}</p>
                   </div>
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">Unit Cost</label>
                     <p className="font-semibold mt-1">
-                      ${caseData.unitCost.toFixed(2)}
+                      ${((detail?.unitCost ?? 0).toFixed(2))}
                     </p>
                   </div>
                 </div>
 
                 <Separator />
 
-                {caseData.status === 'Guaranteed' && (
-                  <Button className="w-full bg-emerald-600 hover:bg-emerald-700">
-                    <CheckCircle className="h-4 w-4 mr-2" />
-                    Approve & File Claim
+                {detail?.status === 'Guaranteed' && (
+                  <Button
+                    className="w-full bg-emerald-600 hover:bg-emerald-700"
+                    onClick={async () => {
+                      try {
+                        // Example EV gating: require confidence >= 80
+                        if ((detail?.confidence ?? 0) < 80) {
+                          return;
+                        }
+                        await apiClient.post(`/api/claims/${detail?.id}/submit`);
+                      } catch {}
+                    }}
+                  >
+                    <Send className="h-4 w-4 mr-2" />
+                    Auto-Submit Claim
                   </Button>
                 )}
               </CardContent>
@@ -264,7 +327,7 @@ export default function CaseDetail() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {caseData.events.map((event, index) => (
+                  {(statusEvents ?? []).map((event, index) => (
                     <div key={index} className="flex gap-4">
                       <div className={cn("flex-shrink-0 mt-1", getEventColor(event.type))}>
                         {getEventIcon(event.type)}
@@ -286,7 +349,7 @@ export default function CaseDetail() {
                             })}
                           </div>
                         </div>
-                        {index < caseData.events.length - 1 && (
+                        {index < ((statusEvents ?? []).length - 1) && (
                           <div className="border-l border-muted ml-2 h-6 mt-3" />
                         )}
                       </div>
@@ -294,7 +357,7 @@ export default function CaseDetail() {
                   ))}
                   
                   {/* Future events placeholder */}
-                  {caseData.status === 'Guaranteed' && (
+                  {detail?.status === 'Guaranteed' && (
                     <div className="flex gap-4 opacity-50">
                       <div className="flex-shrink-0 mt-1 text-gray-400">
                         <Package className="h-4 w-4" />
@@ -314,6 +377,11 @@ export default function CaseDetail() {
                       </div>
                     </div>
                   )}
+                </div>
+                <Separator className="my-4" />
+                <div>
+                  <h3 className="text-sm font-semibold mb-2">Evidence & Docs</h3>
+                  <div className="text-sm text-muted-foreground">Linked documents, reasoning, and timestamps will appear here. Provide transparency for approvals or rejections.</div>
                 </div>
               </CardContent>
             </Card>

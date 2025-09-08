@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, BarChart3, Shield, FileText, Factory, Zap, Settings, CreditCard, Users, HelpCircle, MessageSquare, Sparkles, Palette, Download, Key, ChevronLeft, ChevronRight, User, Search, LogOut, Building2 } from 'lucide-react';
+import { Home, Shield, FileText, Factory, Zap, Settings, CreditCard, Users, HelpCircle, MessageSquare, Sparkles, Download, Key, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -38,14 +38,6 @@ export function Sidebar({
       title: 'Recoveries',
       icon: Shield,
       href: '/recoveries'
-    }, {
-      title: 'Reports',
-      icon: BarChart3,
-      href: '/reports'
-    }, {
-      title: 'Claim Documents',
-      icon: Factory,
-      href: '/evidence-locker'
     }, {
       title: 'Connections',
       icon: Settings,
@@ -95,7 +87,7 @@ export function Sidebar({
       return <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Link to={item.href} className={cn("flex items-center justify-center w-12 h-12 rounded-md transition-colors", isActive ? "bg-black text-white" : "text-gray-600 hover:bg-gray-100")}>
+              <Link to={item.href} className={cn("flex items-center justify-center w-12 h-12 rounded-md transition-colors", isActive ? "bg-black text-white" : "text-gray-600 hover:bg-gray-100")}> 
                 <item.icon className="h-5 w-5" strokeWidth={1.5} />
               </Link>
             </TooltipTrigger>
@@ -105,7 +97,7 @@ export function Sidebar({
           </Tooltip>
         </TooltipProvider>;
     }
-    return <Link to={item.href} className={cn("flex items-center gap-3 px-3 py-2 rounded-md transition-colors", isActive ? "bg-black text-white" : "text-gray-600 hover:bg-gray-100")}>
+    return <Link to={item.href} className={cn("flex items-center gap-3 px-3 py-2 rounded-md transition-colors", isActive ? "bg-black text-white" : "text-gray-600 hover:bg-gray-100")}> 
         <item.icon strokeWidth={1.5} className="h-5 w-5 shrink-0 text-sm font-extralight" />
         <span className="text-sm font-normal">{item.title}</span>
       </Link>;
@@ -118,15 +110,10 @@ export function Sidebar({
         </Button>
       </div>
 
-      {/* Logo Section */}
-      {!isCollapsed ? <div className="p-4 border-b border-gray-200 flex justify-center">
-          <img src="/lovable-uploads/15af441d-81d1-4a51-932f-382e12379bca.png" alt="Opside Logo" className="h-14 w-18" />
-        </div> : <div className="p-2 border-b border-gray-200 flex justify-center">
-          <img src="/lovable-uploads/15af441d-81d1-4a51-932f-382e12379bca.png" alt="Opside Logo" className="h-6 w-auto" />
-        </div>}
+      {/* Logo removed intentionally */}
 
       <ScrollArea className="flex-1">
-        <nav className={cn("space-y-6 py-6", isCollapsed ? "px-2" : "px-4")}>
+        <nav className={cn("space-y-6 py-6", isCollapsed ? "px-2" : "px-4")}> 
           {sections.map((section, sectionIndex) => <div key={sectionIndex}>
               {!isCollapsed && <h3 className="text-s text-black lowercase tracking-wider mb-3 text-sm font-semibold">
                   {section.title}

@@ -212,8 +212,8 @@ const Settings = () => {
               <CardContent>
                 <div className="flex items-center justify-between p-4 border rounded-lg">
                   <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-lg bg-orange-100 flex items-center justify-center">
-                      <Globe className="h-5 w-5 text-orange-600" />
+                    <div className="h-10 w-10 rounded-lg bg-gray-50 flex items-center justify-center border">
+                      <img src="/lovable-uploads/14f98d63-9a1a-4128-8021-1d840d778ea5.png" alt="Amazon Seller Central logo" className="h-7 w-7 object-contain" />
                     </div>
                     <div>
                       <p className="font-medium">Amazon Seller Central</p>
@@ -227,18 +227,24 @@ const Settings = () => {
             
             <Card>
               <CardHeader>
-                <CardTitle>Available Integrations</CardTitle>
-                <CardDescription>Coming soon to expand your recovery capabilities</CardDescription>
+                <CardTitle>Integrations Coming Soon</CardTitle>
+                <CardDescription>Aligned with your Connections — more platforms on the way</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
-                {['Shopify', 'Walmart Marketplace', '3PL Partners', 'QuickBooks'].map((platform) => (
-                  <div key={platform} className="flex items-center justify-between p-4 border rounded-lg opacity-60">
+                {[
+                  { name: 'Shopify', logo: '/lovable-uploads/8efb84ba-e777-4413-ae5a-f7f54bfa6cab.png' },
+                  { name: 'Walmart Marketplace', logo: '/lovable-uploads/cef56367-b57b-46cc-b0cb-a2ffad47fb03.png' },
+                  { name: 'eBay', logo: '/lovable-uploads/f894a44c-fd04-4ec2-8af3-a7235951d82d.png' },
+                  { name: 'QuickBooks', logo: '/lovable-uploads/02ff2e6e-9e67-4481-99a8-4b9caead4540.png' },
+                  { name: 'Xero', logo: '/lovable-uploads/ac3dc504-c896-4f73-9e7e-aefc77dd6e9f.png' },
+                ].map((platform) => (
+                  <div key={platform.name} className="flex items-center justify-between p-4 border rounded-lg opacity-90 bg-background">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center">
-                        <Zap className="h-5 w-5 text-gray-400" />
+                      <div className="h-10 w-10 rounded-lg bg-gray-50 flex items-center justify-center border">
+                        <img src={platform.logo} alt={`${platform.name} logo`} className="h-7 w-7 object-contain" />
                       </div>
                       <div>
-                        <p className="font-medium">{platform}</p>
+                        <p className="font-medium">{platform.name}</p>
                         <p className="text-sm text-muted-foreground">Coming Soon</p>
                       </div>
                     </div>

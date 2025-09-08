@@ -2,10 +2,10 @@
 import React from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { MarketOverview } from '@/components/markets/MarketOverview';
-import { useMarketIndices, mockIndices } from '@/utils/stocksApi';
+import { useMarketIndices } from '@/utils/stocksApi';
 
 const Markets = () => {
-  const indices = useMarketIndices(mockIndices);
+  const indices = useMarketIndices();
   
   return (
     <PageLayout title="Markets Overview">

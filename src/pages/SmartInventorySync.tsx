@@ -4,79 +4,45 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { StatsCard } from '@/components/ui/StatsCard';
 import { CheckCircle, AlertTriangle, Truck, Warehouse, ShoppingCart, RotateCcw } from 'lucide-react';
+import { apiClient } from '@/lib/api';
+import { useStatusStream } from '@/hooks/useStatusStream';
+import { toast } from 'sonner';
 
 export default function SmartInventorySync() {
-  // Mock data - in real implementation, this would come from API
-  const syncStatus = {
-    healthy: true,
-    lastReconciliation: 'August 9, 2025 - 12:05 AM',
-    skusMonitored: 1547,
-    discrepanciesFound: 23,
-    dataPointsAnalyzed: 1254830
-  };
+  const [syncStatus, setSyncStatus] = React.useState<{ healthy: boolean; lastReconciliation?: string; skusMonitored?: number; discrepanciesFound?: number; dataPointsAnalyzed?: number }>({ healthy: true });
+  const [dataSources, setDataSources] = React.useState<Array<{ name: string; icon: any; status: string; lastPulled: string; description: string; isHealthy: boolean }>>([]);
+  const [activityLog, setActivityLog] = React.useState<Array<{ timestamp: string; message: string; type: 'success' | 'info' | 'warning' }>>([]);
 
-  const dataSources = [
-    {
-      name: 'Shipment Data',
-      icon: Truck,
-      status: 'Connected & Syncing',
-      lastPulled: '2 minutes ago',
-      description: 'Tracks all inventory sent to Amazon fulfillment centers.',
-      isHealthy: true
-    },
-    {
-      name: 'Fulfillment Center Data',
-      icon: Warehouse,
-      status: 'Connected & Syncing',
-      lastPulled: '5 minutes ago',
-      description: 'Monitors inventory received, transferred, and held at FBA warehouses.',
-      isHealthy: true
-    },
-    {
-      name: 'Sales & Order Data',
-      icon: ShoppingCart,
-      status: 'Connected & Syncing',
-      lastPulled: '1 minute ago',
-      description: 'Reconciles units sold against physical inventory removals.',
-      isHealthy: true
-    },
-    {
-      name: 'Returns Data',
-      icon: RotateCcw,
-      status: 'Connected & Syncing',
-      lastPulled: '3 minutes ago',
-      description: 'Tracks all customer returns to ensure they are correctly processed back into your inventory.',
-      isHealthy: true
-    }
-  ];
+  React.useEffect(() => {
+    const load = async () => {
+      try {
+        const status = await apiClient.get<{ healthy: boolean; lastReconciliation?: string; skusMonitored?: number; discrepanciesFound?: number; dataPointsAnalyzed?: number; sources?: Array<{ name: string; status: string; lastPulled: string; description: string; isHealthy: boolean }> }>(
+          '/api/sync/status'
+        );
+        setSyncStatus(status);
+        const sources = (status.sources ?? []).map((s) => ({ ...s, icon: Truck }));
+        setDataSources(sources);
+        const act = await apiClient.get<Array<{ timestamp: string; message: string; type: 'success' | 'info' | 'warning' }>>('/api/sync/activity');
+        setActivityLog(act);
+      } catch {}
+    };
+    load();
+  }, []);
 
-  const activityLog = [
-    {
-      timestamp: 'August 9, 12:05 AM',
-      message: 'Successfully completed full reconciliation. 3 new discrepancies detected and sent to Value Engine.',
-      type: 'success'
-    },
-    {
-      timestamp: 'August 9, 12:01 AM',
-      message: 'Successfully synced FBA Returns Report.',
-      type: 'success'
-    },
-    {
-      timestamp: 'August 9, 12:00 AM',
-      message: 'Initiated scheduled daily data reconciliation.',
-      type: 'info'
-    },
-    {
-      timestamp: 'August 8, 11:58 PM',
-      message: 'Successfully synced Sales & Order Data.',
-      type: 'success'
-    },
-    {
-      timestamp: 'August 8, 11:55 PM',
-      message: 'Successfully synced Fulfillment Center Data.',
-      type: 'success'
+  // Real-time sync updates via WS/SSE
+  useStatusStream({
+    onSync: (e) => {
+      setSyncStatus(prev => ({
+        ...prev,
+        healthy: e.status?.toLowerCase?.() !== 'failed',
+        // If backend provides progress value, reflect it
+        dataPointsAnalyzed: prev.dataPointsAnalyzed,
+      }));
+      const s = e.status.toLowerCase();
+      if (s === 'completed') toast.success('Sync completed');
+      else if (s === 'failed') toast.error('Sync failed');
     }
-  ];
+  });
 
   return (
     <PageLayout title="Smart Inventory Sync">

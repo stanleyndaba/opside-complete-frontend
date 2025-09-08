@@ -4,35 +4,53 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, BarChart3, FolderOpen, CheckCircle, DollarSign, Search, RefreshCw, Calendar, TrendingUp } from 'lucide-react';
+import { FileText, CheckCircle, DollarSign, Search, RefreshCw, Calendar } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Separator } from '@/components/ui/separator';
+import { apiClient } from '@/lib/api';
+import { toast } from 'sonner';
+import { useStatusStream } from '@/hooks/useStatusStream';
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const navigate = useNavigate();
+  const [detectOpen, setDetectOpen] = useState(false);
+  const [detecting, setDetecting] = useState(false);
+  const [detectResults, setDetectResults] = useState<Array<{ id: string; amount: number; reason: string; sku: string; asin: string }>>([]);
+  const [metrics, setMetrics] = useState<{ total_recovered: number; expected_approved: number; upcoming_payouts: Array<{ amount: number; date: string }> } | null>(null);
+  const [loadingMetrics, setLoadingMetrics] = useState<boolean>(false);
+  const [detectionId, setDetectionId] = useState<string | null>(null);
+  const [detectionNotified, setDetectionNotified] = useState<boolean>(false);
+  // Real-time stream: update detection status and show toasts; disable polling via status stream
+  useStatusStream({
+    onDetection: (e) => {
+      // If this detection matches current detectionId, reset so we don't poll or duplicate toasts
+      if (detectionId && e.id === detectionId) {
+        setDetectionId(null);
+        setDetectionNotified(true);
+      }
+    }
+  });
 
   // Mock data for the dashboard
-  const nextPayout = {
-    amount: 1850.00,
-    expectedDate: "Sept 15, 2025"
-  };
-  const recoveredValue = {
-    total: 11200.50,
-    pending: 1850.00,
-    lastMonth: 2100.00
-  };
-  const upcomingPayouts = [{
-    amount: 1850.00,
-    date: "Sept 15, 2025",
-    status: "confirmed"
-  }, {
-    amount: 2100.00,
-    date: "Oct 12, 2025",
-    status: "pending"
-  }, {
-    amount: 950.00,
-    date: "Nov 8, 2025",
-    status: "estimated"
-  }];
+  useEffect(() => {
+    const fetchMetrics = async () => {
+      try {
+        setLoadingMetrics(true);
+        const data = await apiClient.get<{ total_recovered: number; expected_approved: number; upcoming_payouts: Array<{ amount: number; date: string }> }>(
+          '/api/metrics/recoveries'
+        );
+        setMetrics(data);
+      } catch (e) {
+        // keep null on error
+      } finally {
+        setLoadingMetrics(false);
+      }
+    };
+    fetchMetrics();
+  }, []);
+
+  // Removed detection polling in favor of WebSocket/SSE stream
   const activityFeed = [{
     id: 1,
     type: 'claim_submitted',
@@ -99,11 +117,110 @@ export function Dashboard() {
               
               {/* Left Column - Main Content (65-70% width) */}
               <div className="lg:col-span-2 space-y-8">
-                
-                {/* Module 1: Promise of Time - Your Next Payout (Hero) */}
-                
+                {/* Hero Metrics & CTAs */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="text-sm text-muted-foreground">Recovered to date</div>
+                      <div className="text-2xl font-semibold">{formatCurrency(metrics?.total_recovered ?? 0)}</div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="text-sm text-muted-foreground">Expected (approved)</div>
+                      <div className="text-2xl font-semibold">{formatCurrency(metrics?.expected_approved ?? 0)}</div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="text-sm text-muted-foreground">Next payout</div>
+                      <div className="text-2xl font-semibold">{formatCurrency(metrics?.upcoming_payouts?.[0]?.amount ?? 0)} <span className="text-base text-muted-foreground">on {metrics?.upcoming_payouts?.[0]?.date ?? '-'}</span></div>
+                    </CardContent>
+                  </Card>
+                </div>
 
-                {/* Module 2: Your Recovered Value */}
+                <div className="flex flex-wrap gap-3">
+                  <Dialog open={detectOpen} onOpenChange={setDetectOpen}>
+                    <DialogTrigger asChild>
+                      <Button className="gap-2">
+                        <Search className="h-4 w-4" />
+                        Detect Missed Claims
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Detect Missed Claims</DialogTitle>
+                        <DialogDescription>
+                          We will analyze your FBA data to find missed reimbursements.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-3">
+                        {!detectResults.length ? (
+                          <div className="text-sm text-muted-foreground">
+                            {detecting ? 'Scanning… this may take up to 1 minute.' : 'Click Run Detection to start.'}
+                          </div>
+                        ) : (
+                          <>
+                            <div className="text-sm font-medium">Potential Value: {formatCurrency(detectResults.reduce((s, r) => s + r.amount, 0))}</div>
+                            <Separator />
+                            <div className="max-h-64 overflow-auto space-y-2">
+                              {detectResults.map(r => (
+                                <div key={r.id} className="flex items-center justify-between text-sm border rounded p-2">
+                                  <div>
+                                    <div className="font-medium">{r.id} • {r.sku} / {r.asin}</div>
+                                    <div className="text-muted-foreground">{r.reason}</div>
+                                  </div>
+                                  <div className="font-semibold">{formatCurrency(r.amount)}</div>
+                                </div>
+                              ))}
+                            </div>
+                          </>
+                        )}
+                      </div>
+                      <DialogFooter>
+                        <Button variant="outline" onClick={() => setDetectOpen(false)}>Close</Button>
+                        <Button
+                          onClick={async () => {
+                            try {
+                              setDetecting(true);
+                              const result = await apiClient.post<{ detection_id: string; claims: Array<{ id: string; amount: number; reason: string; sku: string; asin: string }> }>(
+                                '/api/detections/run'
+                              );
+                              setDetectResults(result.claims ?? []);
+                              if (result.detection_id) setDetectionId(result.detection_id);
+                              setDetectionNotified(false);
+                              toast.info('Detection started');
+                              // Optionally begin polling detection status by id
+                              // const statusId = result.detection_id; (store if needed)
+                            } catch (e) {
+                              setDetectResults([]);
+                              toast.error('Detection failed. Please try again.');
+                            } finally {
+                              setDetecting(false);
+                            }
+                          }}
+                          disabled={detecting}
+                        >
+                          {detecting ? 'Running…' : 'Run Detection'}
+                        </Button>
+                        <Button
+                          disabled={!detectResults.length}
+                          onClick={() => {
+                            setDetectOpen(false);
+                            navigate('/recoveries');
+                          }}
+                        >
+                          Auto-Submit All
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                  <Button variant="outline" className="gap-2" onClick={() => navigate('/smart-inventory-sync')}>
+                    <RefreshCw className="h-4 w-4" />
+                    Reconcile & Sync
+                  </Button>
+                </div>
+                {/* Your Recovered Value */}
                 <Card className="border">
                   <CardContent className="p-4">
                     <div className="space-y-2">
@@ -111,7 +228,7 @@ export function Dashboard() {
                       
                       {/* Total Recovered Hero Amount */}
                       <div className="text-xl font-semibold text-sidebar-primary font-montserrat">
-                        {formatCurrency(recoveredValue.total)}
+                        {formatCurrency(metrics?.total_recovered ?? 0)}
                       </div>
                       
                       {/* Subtitle */}
@@ -123,18 +240,18 @@ export function Dashboard() {
                       <div className="pt-2 space-y-2">
                         <div className="flex justify-between items-center">
                           <span className="text-sm text-gray-600 font-montserrat">Pending Recovery</span>
-                          <span className="font-semibold text-sm font-montserrat">{formatCurrency(recoveredValue.pending)}</span>
+                          <span className="font-semibold text-sm font-montserrat">{formatCurrency(metrics?.expected_approved ?? 0)}</span>
                         </div>
                         <div className="flex justify-between items-center">
                           <span className="text-sm text-gray-600 font-montserrat">30-Day Recovery</span>
-                          <span className="font-semibold text-sm font-montserrat">{formatCurrency(recoveredValue.lastMonth)}</span>
+                          <span className="font-semibold text-sm font-montserrat">{formatCurrency(0)}</span>
                         </div>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
 
-                {/* Module 3: Primary Navigation Links */}
+                {/* Primary Navigation Links */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Button 
                     variant="outline" 
@@ -155,26 +272,34 @@ export function Dashboard() {
               <div className="lg:col-span-1">
                 <Card className="h-full">
                   <CardContent className="p-6">
-                    <div className="flex items-center gap-2 mb-6">
-                      
-                      <h2 className="text-lg font-semibold font-montserrat">Notifications</h2>
+                    <div className="mb-4">
+                      <h2 className="text-base font-semibold text-foreground">Notifications</h2>
+                      <p className="text-xs text-muted-foreground">Recent activity across claims, payouts and sync</p>
                     </div>
-                    
-                    <div className="space-y-4 max-h-[600px] overflow-y-auto">
+                    <div className="space-y-3 max-h-[600px] overflow-y-auto">
                       {activityFeed.map(item => {
-                      const IconComponent = item.icon;
-                      return <div key={item.id} className="flex gap-3 p-3 transition-colors bg-stone-50 rounded-none">
-                            
+                        const IconComponent = item.icon;
+                        return (
+                          <div
+                            key={item.id}
+                            className="flex items-start gap-4 p-4 rounded-lg border bg-background hover:bg-muted/30 transition-colors"
+                          >
+                            <div className="flex-shrink-0 mt-0.5">
+                              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                                <IconComponent className="w-4 h-4 text-primary" />
+                              </div>
+                            </div>
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-foreground mb-1 font-montserrat">
+                              <p className="text-sm font-medium text-foreground mb-1">
                                 {item.description}
                               </p>
-                              <p className="text-xs text-muted-foreground font-montserrat">
-                                {item.timestamp}
-                              </p>
+                              <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                                <span>{item.timestamp}</span>
+                              </div>
                             </div>
-                          </div>;
-                    })}
+                          </div>
+                        );
+                      })}
                     </div>
                   </CardContent>
                 </Card>

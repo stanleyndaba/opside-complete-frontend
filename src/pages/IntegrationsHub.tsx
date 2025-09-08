@@ -6,7 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { Shield, CheckCircle, Settings, RefreshCw, ArrowRight, ExternalLink, Package, ShoppingBag, Calculator, Truck } from 'lucide-react';
+import { Shield, CheckCircle, Settings, RefreshCw, ArrowRight, ExternalLink, Package, ShoppingBag, Calculator, Truck, Plug } from 'lucide-react';
+import { apiClient } from '@/lib/api';
+import { toast } from 'sonner';
 interface ActiveConnection {
   id: string;
   name: string;
@@ -103,6 +105,9 @@ export default function IntegrationsHub() {
     description: ''
   });
   const [showRequestForm, setShowRequestForm] = useState(false);
+  const [connecting, setConnecting] = useState(false);
+  const [syncing, setSyncing] = useState(false);
+  const [syncStatus, setSyncStatus] = useState<string>('Healthy');
 
   // Real-time sync simulation
   useEffect(() => {
@@ -113,9 +118,23 @@ export default function IntegrationsHub() {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+  useEffect(() => {
+    let timer: number | undefined;
+    const poll = async () => {
+      try {
+        // const data = await apiClient.get<{ status: string }>("/api/sync/status");
+        // setSyncStatus(data.status);
+        setSyncStatus('Healthy');
+      } catch {}
+      finally {
+        timer = window.setTimeout(poll, 10000);
+      }
+    };
+    poll();
+    return () => { if (timer) window.clearTimeout(timer); };
+  }, []);
   const handleRequestSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle request submission
     console.log('Integration request:', requestFormData);
     setRequestFormData({
       platform: '',
@@ -160,7 +179,7 @@ export default function IntegrationsHub() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     <div className="flex justify-between items-center text-sm">
                       <span className="text-muted-foreground">Last Sync:</span>
                       <span className="font-medium text-green-600">{lastSyncTime}</span>
@@ -168,10 +187,17 @@ export default function IntegrationsHub() {
                     
                     <Separator />
                     
-                    <Button size="sm" variant="outline" className="w-full gap-2">
-                      <Settings className="h-3 w-3" />
-                      Manage
-                    </Button>
+                    {/* Use responsive grid with enough space for two buttons */}
+                    <div className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-4">
+                      <Button size="sm" variant="outline" className="w-full gap-2 whitespace-nowrap justify-center px-5 text-sm" onClick={async () => { try { setSyncing(true); await apiClient.post('/api/sync/start'); toast.success('Inventory sync started'); } catch (e) { toast.error('Failed to start sync'); } finally { setSyncing(false); } }}>
+                        <RefreshCw className="h-3 w-3" />
+                        {syncing ? 'Syncing…' : 'Start Inventory Sync'}
+                      </Button>
+                      <Button size="sm" variant="outline" className="w-full gap-2 whitespace-nowrap justify-center px-5 text-sm">
+                        <Settings className="h-3 w-3" />
+                        Manage
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>)}
@@ -211,9 +237,9 @@ export default function IntegrationsHub() {
                         <p className="text-sm text-muted-foreground mb-4">
                           {integration.description}
                         </p>
-                        
-                        <Button size="sm" variant="outline" className="w-full" disabled>
-                          Connect
+                        <Button size="sm" variant="outline" className="w-full gap-2" onClick={async () => { try { setConnecting(true); await apiClient.post('/api/integrations/connect', { provider: 'amazon' }); toast.success('Connected successfully'); } catch (e) { toast.error('Failed to connect'); } finally { setConnecting(false); } }}>
+                          <Plug className="h-3 w-3" />
+                          {connecting ? 'Connecting…' : 'Connect'}
                         </Button>
                       </CardContent>
                     </Card>)}

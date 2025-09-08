@@ -2,10 +2,10 @@
 import React from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { CurrencyExchange } from '@/components/currencies/CurrencyExchange';
-import { useCurrencyPairs, mockCurrencies } from '@/utils/stocksApi';
+import { useCurrencyPairs } from '@/utils/stocksApi';
 
 const Currencies = () => {
-  const currencies = useCurrencyPairs(mockCurrencies);
+  const currencies = useCurrencyPairs();
   
   return (
     <PageLayout title="Currency Exchange">

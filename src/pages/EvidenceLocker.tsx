@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,8 +7,9 @@ import { StatsCard } from '@/components/ui/StatsCard';
 import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Upload, FileText, Search, Mail, Check, AlertTriangle, Clock, Eye } from 'lucide-react';
+import { Upload, FileText, Search, Mail, Check, AlertTriangle, Clock, Eye, Link as LinkIcon, Download } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { apiClient } from '@/lib/api';
 export default function EvidenceLocker() {
   const [dragActive, setDragActive] = useState(false);
 
@@ -19,35 +20,18 @@ export default function EvidenceLocker() {
     coveragePercentage: 85,
     totalDocuments: 23
   };
-  const documents = [{
-    id: 'doc-001',
-    name: 'July_Supplier_Invoice.pdf',
-    uploadDate: '2025-01-15',
-    status: 'verified' as const,
-    linkedSKUs: 15,
-    processingTime: '2.3s'
-  }, {
-    id: 'doc-002',
-    name: 'Q3_Purchase_Orders.pdf',
-    uploadDate: '2025-01-14',
-    status: 'verified' as const,
-    linkedSKUs: 28,
-    processingTime: '4.1s'
-  }, {
-    id: 'doc-003',
-    name: 'Manufacturer_Invoice_Aug.jpg',
-    uploadDate: '2025-01-13',
-    status: 'processing' as const,
-    linkedSKUs: 0,
-    processingTime: null
-  }, {
-    id: 'doc-004',
-    name: 'Blurry_Receipt.jpg',
-    uploadDate: '2025-01-12',
-    status: 'action-required' as const,
-    linkedSKUs: 0,
-    processingTime: null
-  }];
+  const [documents, setDocuments] = useState<Array<{ id: string; name: string; uploadDate: string; status: string; linkedSKUs: number; downloadUrl?: string }>>([]);
+  useEffect(() => {
+    const fetchDocs = async () => {
+      try {
+        const data = await apiClient.get<Array<{ id: string; name: string; uploadDate: string; status: string; linkedSKUs: number; downloadUrl?: string }>>('/api/documents');
+        setDocuments(data);
+      } catch (e) {
+        setDocuments([]);
+      }
+    };
+    fetchDocs();
+  }, []);
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'verified':
@@ -156,6 +140,7 @@ export default function EvidenceLocker() {
                   <TableHead>Upload Date</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Linked SKUs</TableHead>
+                  <TableHead>Linked Claims</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -178,15 +163,30 @@ export default function EvidenceLocker() {
                       {doc.linkedSKUs > 0 && <span className="text-sm text-muted-foreground ml-1">SKUs</span>}
                     </TableCell>
                     <TableCell>
-                      {doc.status === 'verified' ? <Link to={`/evidence-locker/document/${doc.id}`}>
-                          <Button variant="ghost" size="sm">
+                      <div className="flex items-center gap-2 text-blue-600">
+                        <Link to={`/recoveries/CLM-001`} className="flex items-center gap-1">
+                          <LinkIcon className="h-3 w-3" /> CLM-001
+                        </Link>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-2">
+                        {doc.status === 'verified' ? <Link to={`/evidence-locker/document/${doc.id}`}>
+                            <Button variant="ghost" size="sm">
+                              <Eye className="w-4 h-4 mr-1" />
+                              View
+                            </Button>
+                          </Link> : <Button variant="ghost" size="sm" disabled>
                             <Eye className="w-4 h-4 mr-1" />
-                            View Details
-                          </Button>
-                        </Link> : <Button variant="ghost" size="sm" disabled>
-                          <Eye className="w-4 h-4 mr-1" />
-                          View Details
-                        </Button>}
+                            View
+                          </Button>}
+                        <Button variant="ghost" size="sm" asChild>
+                          <a href={doc.downloadUrl ?? '#'} target="_blank" rel="noreferrer">
+                          <Download className="w-4 h-4 mr-1" />
+                          Download
+                          </a>
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>)}
               </TableBody>
