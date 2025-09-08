@@ -188,12 +188,12 @@ export default function IntegrationsHub() {
                     <Separator />
                     
                     {/* Use responsive grid with enough space for two buttons */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <Button size="sm" variant="outline" className="w-full gap-2" onClick={async () => { try { setSyncing(true); await apiClient.post('/api/sync/start'); toast.success('Inventory sync started'); } catch (e) { toast.error('Failed to start sync'); } finally { setSyncing(false); } }}>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Button size="sm" variant="outline" className="w-full gap-2 whitespace-nowrap justify-center px-4" onClick={async () => { try { setSyncing(true); await apiClient.post('/api/sync/start'); toast.success('Inventory sync started'); } catch (e) { toast.error('Failed to start sync'); } finally { setSyncing(false); } }}>
                         <RefreshCw className="h-3 w-3" />
                         {syncing ? 'Syncing…' : 'Start Inventory Sync'}
                       </Button>
-                      <Button size="sm" variant="outline" className="w-full gap-2">
+                      <Button size="sm" variant="outline" className="w-full gap-2 whitespace-nowrap justify-center px-4">
                         <Settings className="h-3 w-3" />
                         Manage
                       </Button>
