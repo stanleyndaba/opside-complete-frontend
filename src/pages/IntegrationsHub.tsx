@@ -123,11 +123,11 @@ export default function IntegrationsHub() {
     });
     setShowRequestForm(false);
   };
-  return <PageLayout title="Opside Integrations Hub">
+  return <PageLayout title="Platform Integrations">
       <div className="space-y-8">
         {/* Header */}
         <div className="text-center">
-          <h1 className="text-3xl font-bold mb-2">Opside Integrations Hub</h1>
+          <h1 className="text-3xl font-bold mb-2">Platform Integrations</h1>
           <p className="text-muted-foreground">
             Your central command center for all platform connections
           </p>
@@ -180,7 +180,7 @@ export default function IntegrationsHub() {
 
         {/* Section 2: Available Integrations */}
         <div className="space-y-6">
-          <h2 className="text-2xl font-semibold">Available Integrations</h2>
+          <h2 className="text-2xl font-semibold">Platform Integrations Coming Soon</h2>
           
           {Object.entries(categoryConfig).map(([categoryKey, categoryInfo]) => {
           const CategoryIcon = categoryInfo.icon;
