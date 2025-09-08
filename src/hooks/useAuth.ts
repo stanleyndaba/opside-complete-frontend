@@ -31,6 +31,25 @@ export function useAuth() {
 		fetchMe();
 	}, [fetchMe]);
 
+	// Stripe onboarding hook: run once per session right after login succeeds
+	useEffect(() => {
+		const runStripePostLogin = async () => {
+			try {
+				const alreadyChecked = sessionStorage.getItem('stripe_post_login_checked');
+				if (!user || alreadyChecked) return;
+				sessionStorage.setItem('stripe_post_login_checked', '1');
+				const result = await apiClient.post<any>('/api/auth/post-login/stripe');
+				const url = (result as any)?.redirectUrl || (result as any)?.onboardingUrl;
+				if (typeof url === 'string' && url.startsWith('http')) {
+					window.location.href = url;
+				}
+			} catch {
+				// Swallow errors to avoid blocking dashboard access
+			}
+		};
+		runStripePostLogin();
+	}, [user]);
+
 	const signInWithAmazon = useCallback(() => {
 		// Redirect flow; backend should start OAuth and set cookie
 		window.location.href = '/api/auth/amazon/login';
