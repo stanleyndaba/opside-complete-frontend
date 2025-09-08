@@ -13,6 +13,10 @@ export function useAuth() {
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
 
+	// Frontend-only: demo mode helpers
+	const isDemoEnv = (import.meta.env.VITE_DEMO_MODE as string | undefined) === 'true';
+	const getIsDemo = () => isDemoEnv || localStorage.getItem('demo_mode') === '1' || new URLSearchParams(window.location.search).get('demo') === '1';
+
 	const fetchMe = useCallback(async () => {
 		try {
 			setLoading(true);
@@ -20,8 +24,14 @@ export function useAuth() {
 			setUser(data);
 			setError(null);
 		} catch (err) {
-			setUser(null);
-			setError(null);
+			// Frontend-only demo fallback: show a stub user when backend auth isn't available
+			if (getIsDemo()) {
+				setUser({ id: 'demo-user', name: 'Demo User', email: 'demo@example.com' });
+				setError(null);
+			} else {
+				setUser(null);
+				setError(null);
+			}
 		} finally {
 			setLoading(false);
 		}
@@ -36,7 +46,8 @@ export function useAuth() {
 		const runStripePostLogin = async () => {
 			try {
 				const alreadyChecked = sessionStorage.getItem('stripe_post_login_checked');
-				if (!user || alreadyChecked) return;
+				// Skip Stripe in demo mode
+				if (!user || alreadyChecked || getIsDemo()) return;
 				sessionStorage.setItem('stripe_post_login_checked', '1');
 				const result = await apiClient.post<any>('/api/auth/post-login/stripe');
 				const url = (result as any)?.redirectUrl || (result as any)?.onboardingUrl;
@@ -56,7 +67,8 @@ export function useAuth() {
 	}, []);
 
 	const signOut = useCallback(async () => {
-		await apiClient.post('/api/auth/logout');
+		try { await apiClient.post('/api/auth/logout'); } catch {}
+		localStorage.removeItem('demo_mode');
 		setUser(null);
 	}, []);
 
