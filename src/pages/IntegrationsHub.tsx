@@ -72,7 +72,7 @@ const availableIntegrations: AvailableIntegration[] = [
   id: 'quickbooks',
   name: 'QuickBooks',
   category: 'accounting',
-  logo: '/lovable-uploads/02ff2e6e-9e7e-4481-99a8-4b9caead4540.png',
+  logo: '/lovable-uploads/02ff2e6e-9e67-4481-99a8-4b9caead4540.png',
   description: 'Sync financial data with QuickBooks for automated bookkeeping'
 }, {
   id: 'xero',
@@ -179,7 +179,7 @@ export default function IntegrationsHub() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     <div className="flex justify-between items-center text-sm">
                       <span className="text-muted-foreground">Last Sync:</span>
                       <span className="font-medium text-green-600">{lastSyncTime}</span>
@@ -187,7 +187,8 @@ export default function IntegrationsHub() {
                     
                     <Separator />
                     
-                    <div className="grid grid-cols-2 gap-2">
+                    {/* Use responsive grid with enough space for two buttons */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <Button size="sm" variant="outline" className="w-full gap-2" onClick={async () => { try { setSyncing(true); await apiClient.post('/api/sync/start'); toast.success('Inventory sync started'); } catch (e) { toast.error('Failed to start sync'); } finally { setSyncing(false); } }}>
                         <RefreshCw className="h-3 w-3" />
                         {syncing ? 'Syncing…' : 'Start Inventory Sync'}
