@@ -5,6 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { StatsCard } from '@/components/ui/StatsCard';
 import { CheckCircle, AlertTriangle, Truck, Warehouse, ShoppingCart, RotateCcw } from 'lucide-react';
 import { apiClient } from '@/lib/api';
+import { useStatusStream } from '@/hooks/useStatusStream';
+import { toast } from 'sonner';
 
 export default function SmartInventorySync() {
   const [syncStatus, setSyncStatus] = React.useState<{ healthy: boolean; lastReconciliation?: string; skusMonitored?: number; discrepanciesFound?: number; dataPointsAnalyzed?: number }>({ healthy: true });
@@ -26,6 +28,21 @@ export default function SmartInventorySync() {
     };
     load();
   }, []);
+
+  // Real-time sync updates via WS/SSE
+  useStatusStream({
+    onSync: (e) => {
+      setSyncStatus(prev => ({
+        ...prev,
+        healthy: e.status?.toLowerCase?.() !== 'failed',
+        // If backend provides progress value, reflect it
+        dataPointsAnalyzed: prev.dataPointsAnalyzed,
+      }));
+      const s = e.status.toLowerCase();
+      if (s === 'completed') toast.success('Sync completed');
+      else if (s === 'failed') toast.error('Sync failed');
+    }
+  });
 
   return (
     <PageLayout title="Smart Inventory Sync">

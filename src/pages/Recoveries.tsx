@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,6 +15,9 @@ import { CalendarIcon, Search, MoreHorizontal, FileText, Eye, Send } from 'lucid
 import { Link } from 'react-router-dom';
 import { apiClient } from '@/lib/api';
 import type { DateRange } from 'react-day-picker';
+import { Checkbox } from '@/components/ui/checkbox';
+import { useStatusStream } from '@/hooks/useStatusStream';
+import { toast } from 'sonner';
 
 interface RecoveryRow {
   id: string;
@@ -43,17 +46,25 @@ export default function Recoveries() {
   });
 
   const [recoveries, setRecoveries] = useState<RecoveryRow[]>([]);
-  useEffect(() => {
-    const fetchRecoveries = async () => {
-      try {
-        const data = await apiClient.get<RecoveryRow[]>('/api/recoveries');
-        setRecoveries(data);
-      } catch (e) {
-        setRecoveries([]);
-      }
-    };
-    fetchRecoveries();
+  const [loadingList, setLoadingList] = useState<boolean>(false);
+  const [submittingIds, setSubmittingIds] = useState<Set<string>>(new Set());
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+
+  const fetchRecoveries = useCallback(async () => {
+    try {
+      setLoadingList(true);
+      const data = await apiClient.get<RecoveryRow[]>('/api/recoveries');
+      setRecoveries(data);
+    } catch (e) {
+      toast.error('Failed to load recoveries');
+    } finally {
+      setLoadingList(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchRecoveries();
+  }, [fetchRecoveries]);
 
   // Filter data based on search and filters
   const filteredClaims = useMemo(() => {
@@ -81,6 +92,17 @@ export default function Recoveries() {
 
     return filtered;
   }, [searchTerm, dateRange, selectedClaimTypes, selectedStatuses]);
+
+  // Real-time recovery updates via WS/SSE; updates row statuses instantly
+  useStatusStream({
+    onRecovery: (e) => {
+      setRecoveries(prev => prev.map(r => r.id === e.id ? { ...r, status: e.status } : r));
+      const s = e.status.toLowerCase();
+      if (s === 'submitted') toast.success(`Claim ${e.id} submitted`);
+      else if (s === 'paid' || s === 'paid_out') toast.success(`Claim ${e.id} paid`);
+      else if (s === 'denied' || s === 'failed') toast.error(`Claim ${e.id} ${s}`);
+    }
+  });
 
   // Calculate key metrics
   const keyMetrics = useMemo(() => {
@@ -144,6 +166,50 @@ export default function Recoveries() {
         setDateRange({ from: undefined, to: undefined });
         break;
     }
+  };
+
+  // Selection logic
+  const toggleSelect = (id: string, checked: boolean | string) => {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      checked ? next.add(id) : next.delete(id);
+      return next;
+    });
+  };
+  const toggleSelectAll = (checked: boolean | string) => {
+    setSelectedIds(prev => {
+      if (checked) return new Set(filteredClaims.map(c => c.id));
+      return new Set();
+    });
+  };
+  const allSelected = filteredClaims.length > 0 && filteredClaims.every(c => selectedIds.has(c.id));
+
+  const updateRowStatus = (id: string, status: string) => {
+    setRecoveries(prev => prev.map(r => r.id === id ? { ...r, status } : r));
+  };
+  const submitSingleClaim = async (id: string) => {
+    try {
+      setSubmittingIds(prev => new Set(prev).add(id));
+      await apiClient.post(`/api/claims/${id}/submit`);
+      updateRowStatus(id, 'Submitted');
+      toast.success(`Claim ${id} submitted`);
+    } catch {
+      toast.error(`Failed to submit ${id}`);
+    } finally {
+      setSubmittingIds(prev => { const next = new Set(prev); next.delete(id); return next; });
+    }
+  };
+  const bulkSubmit = async () => {
+    if (selectedIds.size === 0) {
+      toast.message('Please select at least one claim');
+      return;
+    }
+    toast.info(`Submitting ${selectedIds.size} claim(s)…`);
+    for (const id of Array.from(selectedIds)) {
+      // eslint-disable-next-line no-await-in-loop
+      await submitSingleClaim(id);
+    }
+    toast.success('Bulk submit completed');
   };
 
   return (
@@ -288,7 +354,7 @@ export default function Recoveries() {
         <Card>
           <CardContent className="p-0">
             <div className="p-3 flex items-center gap-2">
-              <Button variant="outline" size="sm" className="gap-2">
+              <Button variant="outline" size="sm" className="gap-2" onClick={bulkSubmit}>
                 <Send className="h-4 w-4" />
                 Auto-Submit Selected
               </Button>
@@ -296,6 +362,9 @@ export default function Recoveries() {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-[40px]">
+                    <Checkbox checked={allSelected} onCheckedChange={toggleSelectAll} aria-label="Select all" />
+                  </TableHead>
                   <TableHead>Claim ID</TableHead>
                   <TableHead>Created</TableHead>
                   <TableHead>Type</TableHead>
@@ -310,6 +379,9 @@ export default function Recoveries() {
               <TableBody>
                 {filteredClaims.map((claim) => (
                   <TableRow key={claim.id} className="cursor-pointer hover:bg-muted/50">
+                    <TableCell className="w-[40px]">
+                      <Checkbox checked={selectedIds.has(claim.id)} onCheckedChange={(c) => toggleSelect(claim.id, c)} aria-label={`Select ${claim.id}`} />
+                    </TableCell>
                     <TableCell>
                       <Button variant="link" className="p-0 h-auto text-blue-600 hover:text-blue-800 font-mono">
                         {claim.id}
@@ -338,7 +410,7 @@ export default function Recoveries() {
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm">
+                          <Button variant="ghost" size="sm" disabled={submittingIds.has(claim.id)}>
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
@@ -349,9 +421,14 @@ export default function Recoveries() {
                               View Details
                             </Link>
                           </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <FileText className="h-4 w-4 mr-2" />
-                            Evidence Locker
+                          <DropdownMenuItem onClick={() => submitSingleClaim(claim.id)} disabled={submittingIds.has(claim.id)}>
+                            <Send className="h-4 w-4 mr-2" />
+                            {submittingIds.has(claim.id) ? 'Submitting…' : 'Submit Claim'}
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link to={`/evidence-locker`} className="flex items-center gap-2">
+                              <FileText className="h-4 w-4" /> Evidence Locker
+                            </Link>
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
