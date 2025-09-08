@@ -8,6 +8,7 @@ import { FileText, CheckCircle, DollarSign, Search, RefreshCw, Calendar } from '
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
 import { apiClient } from '@/lib/api';
+import { toast } from 'sonner';
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -18,6 +19,7 @@ export function Dashboard() {
   const [metrics, setMetrics] = useState<{ total_recovered: number; expected_approved: number; upcoming_payouts: Array<{ amount: number; date: string }> } | null>(null);
   const [loadingMetrics, setLoadingMetrics] = useState<boolean>(false);
   const [detectionId, setDetectionId] = useState<string | null>(null);
+  const [detectionNotified, setDetectionNotified] = useState<boolean>(false);
 
   // Mock data for the dashboard
   useEffect(() => {
@@ -42,7 +44,21 @@ export function Dashboard() {
     const poll = async () => {
       try {
         if (!detectionId) return;
-        await apiClient.get(`/api/detections/status/${detectionId}`);
+        const status = await apiClient.get<any>(`/api/detections/status/${detectionId}`);
+        const state = (status && (status.state || status.status)) as string | undefined;
+        const isCompleted = state ? state.toLowerCase() === 'completed' : (status?.completed === true);
+        const isFailed = state ? state.toLowerCase() === 'failed' : (status?.failed === true);
+        if (!detectionNotified && (isCompleted || isFailed)) {
+          if (isCompleted) {
+            toast.success('Detection completed successfully');
+          } else if (isFailed) {
+            toast.error('Detection failed. Please try again.');
+          }
+          setDetectionNotified(true);
+          // stop polling for this run
+          setDetectionId(null);
+          return;
+        }
       } catch {}
       finally {
         timer = window.setTimeout(poll, 8000);
@@ -50,7 +66,7 @@ export function Dashboard() {
     };
     poll();
     return () => { if (timer) window.clearTimeout(timer); };
-  }, [detectionId]);
+  }, [detectionId, detectionNotified]);
   const activityFeed = [{
     id: 1,
     type: 'claim_submitted',
@@ -188,10 +204,13 @@ export function Dashboard() {
                               );
                               setDetectResults(result.claims ?? []);
                               if (result.detection_id) setDetectionId(result.detection_id);
+                              setDetectionNotified(false);
+                              toast.info('Detection started');
                               // Optionally begin polling detection status by id
                               // const statusId = result.detection_id; (store if needed)
                             } catch (e) {
                               setDetectResults([]);
+                              toast.error('Detection failed. Please try again.');
                             } finally {
                               setDetecting(false);
                             }
