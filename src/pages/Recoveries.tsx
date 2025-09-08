@@ -425,11 +425,7 @@ export default function Recoveries() {
                             <Send className="h-4 w-4 mr-2" />
                             {submittingIds.has(claim.id) ? 'Submitting…' : 'Submit Claim'}
                           </DropdownMenuItem>
-                          <DropdownMenuItem asChild>
-                            <Link to={`/evidence-locker`} className="flex items-center gap-2">
-                              <FileText className="h-4 w-4" /> Evidence Locker
-                            </Link>
-                          </DropdownMenuItem>
+                          {/* Evidence Locker link hidden for now */}
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>
