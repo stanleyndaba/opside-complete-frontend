@@ -90,7 +90,7 @@ export default function Recoveries() {
   };
 
   const queryClient = useQueryClient();
-  const [liveOnly, setLiveOnly] = useState(false);
+  const [liveOnly, setLiveOnly] = useState(true);
   const [liveEventsTs, setLiveEventsTs] = useState<Record<string, number>>({});
   const submitClaim = async (id: string) => {
     try {

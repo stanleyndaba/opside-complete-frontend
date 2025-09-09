@@ -101,22 +101,7 @@ export function Navbar({
               <DropdownMenuSeparator />
               
               {/* Section 3: Resources & Support */}
-              <DropdownMenuItem asChild>
-                <Link to="/help" className="flex items-center gap-2 cursor-pointer">
-                  <HelpCircle className="h-4 w-4" />
-                  <span>Help Center</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to="/whats-new" className="flex items-center gap-2 cursor-pointer">
-                  <Sparkles className="h-4 w-4" />
-                  <span>What's New</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
-                <MessageSquare className="h-4 w-4" />
-                <span>Contact Support</span>
-              </DropdownMenuItem>
+              {/* Trim non-essential menu items for MVP focus */}
               
               <DropdownMenuSeparator />
               
