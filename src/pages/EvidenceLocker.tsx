@@ -7,47 +7,17 @@ import { StatsCard } from '@/components/ui/StatsCard';
 import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Upload, FileText, Search, Mail, Check, AlertTriangle, Clock, Eye } from 'lucide-react';
+import { Upload, FileText, Search, Mail, Check, AlertTriangle, Clock, Eye, Download } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { apiFetch } from '@/lib/api';
 export default function EvidenceLocker() {
   const [dragActive, setDragActive] = useState(false);
 
-  // Mock data - in real implementation, this would come from API
-  const coverageData = {
-    protectedSKUs: 127,
-    totalSKUs: 150,
-    coveragePercentage: 85,
-    totalDocuments: 23
-  };
-  const documents = [{
-    id: 'doc-001',
-    name: 'July_Supplier_Invoice.pdf',
-    uploadDate: '2025-01-15',
-    status: 'verified' as const,
-    linkedSKUs: 15,
-    processingTime: '2.3s'
-  }, {
-    id: 'doc-002',
-    name: 'Q3_Purchase_Orders.pdf',
-    uploadDate: '2025-01-14',
-    status: 'verified' as const,
-    linkedSKUs: 28,
-    processingTime: '4.1s'
-  }, {
-    id: 'doc-003',
-    name: 'Manufacturer_Invoice_Aug.jpg',
-    uploadDate: '2025-01-13',
-    status: 'processing' as const,
-    linkedSKUs: 0,
-    processingTime: null
-  }, {
-    id: 'doc-004',
-    name: 'Blurry_Receipt.jpg',
-    uploadDate: '2025-01-12',
-    status: 'action-required' as const,
-    linkedSKUs: 0,
-    processingTime: null
-  }];
+  const { data: documents = [] } = useQuery<any[]>({
+    queryKey: ['documents'],
+    queryFn: () => apiFetch('/api/documents'),
+  });
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'verified':
@@ -168,25 +138,38 @@ export default function EvidenceLocker() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      {new Date(doc.uploadDate).toLocaleDateString()}
+                      {new Date(doc.uploadDate || doc.created_at || Date.now()).toLocaleDateString()}
                     </TableCell>
                     <TableCell>
                       {getStatusBadge(doc.status)}
                     </TableCell>
                     <TableCell>
-                      <span className="font-medium">{doc.linkedSKUs}</span>
-                      {doc.linkedSKUs > 0 && <span className="text-sm text-muted-foreground ml-1">SKUs</span>}
+                      <span className="font-medium">{doc.linkedSKUs ?? 0}</span>
+                      {(doc.linkedSKUs ?? 0) > 0 && <span className="text-sm text-muted-foreground ml-1">SKUs</span>}
                     </TableCell>
                     <TableCell>
-                      {doc.status === 'verified' ? <Link to={`/evidence-locker/document/${doc.id}`}>
-                          <Button variant="ghost" size="sm">
+                      <div className="flex gap-2">
+                        {doc.status === 'verified' ? <Link to={`/evidence-locker/document/${doc.id}`}>
+                            <Button variant="ghost" size="sm">
+                              <Eye className="w-4 h-4 mr-1" />
+                              View Details
+                            </Button>
+                          </Link> : <Button variant="ghost" size="sm" disabled>
                             <Eye className="w-4 h-4 mr-1" />
                             View Details
-                          </Button>
-                        </Link> : <Button variant="ghost" size="sm" disabled>
-                          <Eye className="w-4 h-4 mr-1" />
-                          View Details
-                        </Button>}
+                          </Button>}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={async () => {
+                            const res = await apiFetch<{ url: string }>(`/api/documents/${doc.id}/download`);
+                            window.open(res.url, '_blank');
+                          }}
+                        >
+                          <Download className="w-4 h-4 mr-1" />
+                          Download
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>)}
               </TableBody>

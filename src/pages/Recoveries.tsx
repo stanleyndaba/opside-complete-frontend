@@ -12,78 +12,27 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { cn } from '@/lib/utils';
 import { format, subDays, startOfYear, startOfQuarter } from 'date-fns';
 import { CalendarIcon, Search, MoreHorizontal, FileText, Eye } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
 import { Link } from 'react-router-dom';
 import type { DateRange } from 'react-day-picker';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { apiFetch, buildQuery } from '@/lib/api';
+import { Checkbox } from '@/components/ui/checkbox';
+import { toast } from 'sonner';
+import { useEffect, useMemo as useReactMemo } from 'react';
+import { subscribeRealtime, type RealtimeEvent } from '@/lib/realtime';
 
-// Mock data for claims
-const mockClaims = [
-  {
-    id: 'CLM-001',
-    created: '2024-01-15',
-    type: 'Lost Inventory',
-    details: '5 units of Premium Wireless Headphones lost at FTW1',
-    status: 'New',
-    guaranteedAmount: 450.00,
-    predictedPayout: '2024-02-15',
-    sku: 'WH-PREM-001',
-    asin: 'B08K2XR456'
-  },
-  {
-    id: 'CLM-002',
-    created: '2024-01-22',
-    type: 'Fee Dispute',
-    details: 'Incorrect FBA fulfillment fee charged',
-    status: 'Pending',
-    guaranteedAmount: 125.50,
-    predictedPayout: '2024-02-22',
-    sku: 'COF-ORG-500',
-    asin: 'B07G3XN789'
-  },
-  {
-    id: 'CLM-003',
-    created: '2024-02-01',
-    type: 'Damaged Goods',
-    details: '12 units of Organic Coffee Beans damaged at LAX7',
-    status: 'Submitted',
-    guaranteedAmount: 850.75,
-    predictedPayout: '2024-03-01',
-    sku: 'SH-SEC-PRO',
-    asin: 'B09M1ST234'
-  },
-  {
-    id: 'CLM-004',
-    created: '2024-02-10',
-    type: 'Lost Inventory',
-    details: '3 units of Smart Home Security System lost at ATL2',
-    status: 'Paid',
-    guaranteedAmount: 320.00,
-    predictedPayout: '2024-03-10',
-    sku: 'FIT-TRK-001',
-    asin: 'B06H4RT567'
-  },
-  {
-    id: 'CLM-005',
-    created: '2024-02-15',
-    type: 'Fee Dispute',
-    details: 'Storage fee overcharge detected',
-    status: 'Denied',
-    guaranteedAmount: 75.25,
-    predictedPayout: null,
-    sku: 'KIT-BAM-SET',
-    asin: 'B05K7YU890'
-  },
-  {
-    id: 'CLM-006',
-    created: '2024-03-01',
-    type: 'Damaged Goods',
-    details: '8 units of Fitness Tracker Band damaged at PHX3',
-    status: 'Submitted',
-    guaranteedAmount: 1200.25,
-    predictedPayout: '2024-03-25',
-    sku: 'WH-PREM-002',
-    asin: 'B08L3XR789'
-  }
-];
+type Recovery = {
+  id: string;
+  created: string;
+  type: string;
+  details: string;
+  status: string;
+  guaranteedAmount: number;
+  expected_payout_date?: string | null;
+  sku?: string;
+  asin?: string;
+};
 
 const claimTypes = ['Lost Inventory', 'Fee Dispute', 'Damaged Goods', 'Overcharge'];
 const statusOptions = ['New', 'Pending', 'Submitted', 'Paid', 'Denied'];
@@ -97,9 +46,79 @@ export default function Recoveries() {
     to: new Date(),
   });
 
+  const { data: recoveries = [] } = useQuery<Recovery[]>({
+    queryKey: ['recoveries', { searchTerm, selectedClaimTypes, selectedStatuses, dateRange }],
+    queryFn: async () => {
+      const qs = buildQuery({
+        q: searchTerm,
+        type: selectedClaimTypes.join(','),
+        status: selectedStatuses.join(','),
+        from: dateRange?.from ? dateRange.from.toISOString() : undefined,
+        to: dateRange?.to ? dateRange.to.toISOString() : undefined,
+      });
+      return apiFetch<Recovery[]>(`/api/recoveries${qs}`);
+    },
+    refetchInterval: false,
+  });
+
+  // Realtime updates: listen for recovery status changes and refresh list
+  useEffect(() => {
+    const unsub = subscribeRealtime((evt: RealtimeEvent) => {
+      if (evt.type === 'recovery') {
+        setLiveEventsTs(prev => ({ ...prev, [evt.id]: Date.now() }));
+        queryClient.invalidateQueries({ queryKey: ['recoveries'] });
+      }
+    });
+    return () => unsub();
+  }, [queryClient]);
+
+  // Selection state for bulk actions
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const allSelected = filteredClaims.length > 0 && filteredClaims.every(c => selectedIds.has(c.id));
+  const toggleAll = (checked: boolean) => {
+    setSelectedIds(prev => {
+      if (checked) return new Set(filteredClaims.map(c => c.id));
+      return new Set();
+    });
+  };
+  const toggleOne = (id: string, checked: boolean) => {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      if (checked) next.add(id); else next.delete(id);
+      return next;
+    });
+  };
+
+  const queryClient = useQueryClient();
+  const [liveOnly, setLiveOnly] = useState(true);
+  const [liveEventsTs, setLiveEventsTs] = useState<Record<string, number>>({});
+  const submitClaim = async (id: string) => {
+    try {
+      await apiFetch(`/api/claims/${id}/submit`, { method: 'POST', body: JSON.stringify({}) });
+      toast.success(`Submitted claim ${id}`);
+      // refresh recoveries list to reflect latest status
+      queryClient.invalidateQueries({ queryKey: ['recoveries'] });
+    } catch (e: any) {
+      toast.error(`Failed to submit ${id}: ${e?.message || 'Error'}`);
+    }
+  };
+  const [bulkLoading, setBulkLoading] = useState(false);
+  const onBulkSubmit = async () => {
+    if (selectedIds.size === 0) return;
+    setBulkLoading(true);
+    const ids = Array.from(selectedIds);
+    // Process sequentially to reduce backend spikes; show toast per result
+    for (const id of ids) {
+      // eslint-disable-next-line no-await-in-loop
+      await submitClaim(id);
+      setSelectedIds(prev => { const n = new Set(prev); n.delete(id); return n; });
+    }
+    setBulkLoading(false);
+  };
+
   // Filter data based on search and filters
   const filteredClaims = useMemo(() => {
-    let filtered = mockClaims.filter(claim => {
+    let filtered = recoveries.filter(claim => {
       // Search filter
       const searchMatch = !searchTerm || 
         claim.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -136,7 +155,7 @@ export default function Recoveries() {
     
     // Calculate 30-day success rate from all claims
     const thirtyDaysAgo = subDays(new Date(), 30);
-    const recentClaims = mockClaims.filter(claim => 
+    const recentClaims = recoveries.filter(claim => 
       new Date(claim.created) >= thirtyDaysAgo
     );
     const successfulClaims = recentClaims.filter(claim => claim.status === 'Paid');
@@ -151,6 +170,17 @@ export default function Recoveries() {
       successRate
     };
   }, [filteredClaims]);
+
+  // Live filter projection of table rows
+  const nowTs = Date.now();
+  const liveFilteredClaims = useReactMemo(() => {
+    if (!liveOnly) return filteredClaims;
+    const windowMs = 5 * 60 * 1000;
+    return filteredClaims.filter(c => {
+      const ts = liveEventsTs[c.id];
+      return ts && (nowTs - ts) <= windowMs;
+    });
+  }, [filteredClaims, liveOnly, liveEventsTs, nowTs]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -267,6 +297,12 @@ export default function Recoveries() {
                 <Button variant="outline" size="sm" onClick={() => setQuickDateRange('all')}>All Time</Button>
               </div>
 
+              {/* Live Only Toggle */}
+              <div className="flex items-center gap-2 ml-2">
+                <Switch checked={liveOnly} onCheckedChange={(v) => setLiveOnly(Boolean(v))} />
+                <span className="text-sm text-muted-foreground">Live updates only (last 5 min)</span>
+              </div>
+
               {/* Custom Date Range */}
               <Popover>
                 <PopoverTrigger asChild>
@@ -322,6 +358,13 @@ export default function Recoveries() {
                   ))}
                 </SelectContent>
               </Select>
+
+              {/* Bulk Actions */}
+              <div className="ml-auto flex gap-2">
+                <Button onClick={onBulkSubmit} disabled={selectedIds.size === 0 || bulkLoading} title="Submit selected claims automatically">
+                  {bulkLoading ? 'Submitting…' : `Auto-Claim Selected (${selectedIds.size})`}
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -332,19 +375,25 @@ export default function Recoveries() {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-8">
+                    <Checkbox checked={allSelected} onCheckedChange={(v) => toggleAll(Boolean(v))} aria-label="Select all" />
+                  </TableHead>
                   <TableHead>Claim ID</TableHead>
                   <TableHead>Created</TableHead>
                   <TableHead>Type</TableHead>
                   <TableHead>Details</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Guaranteed Amount</TableHead>
-                  <TableHead>Predicted Payout</TableHead>
+                  <TableHead>Expected Payout</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredClaims.map((claim) => (
+                {(liveOnly ? liveFilteredClaims : filteredClaims).map((claim) => (
                   <TableRow key={claim.id} className="cursor-pointer hover:bg-muted/50">
+                    <TableCell className="w-8" onClick={(e) => e.stopPropagation()}>
+                      <Checkbox checked={selectedIds.has(claim.id)} onCheckedChange={(v) => toggleOne(claim.id, Boolean(v))} aria-label={`Select ${claim.id}`} />
+                    </TableCell>
                     <TableCell>
                       <Button variant="link" className="p-0 h-auto text-blue-600 hover:text-blue-800 font-mono">
                         {claim.id}
@@ -367,7 +416,7 @@ export default function Recoveries() {
                     </TableCell>
                     <TableCell className="font-medium">{formatCurrency(claim.guaranteedAmount)}</TableCell>
                     <TableCell>
-                      {claim.predictedPayout ? format(new Date(claim.predictedPayout), 'MMM dd, yyyy') : '-'}
+                      {claim.expected_payout_date ? format(new Date(claim.expected_payout_date), 'MMM dd, yyyy') : '-'}
                     </TableCell>
                     <TableCell>
                       <DropdownMenu>
@@ -377,6 +426,9 @@ export default function Recoveries() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => submitClaim(claim.id)}>
+                            Auto-Claim
+                          </DropdownMenuItem>
                           <DropdownMenuItem asChild>
                             <Link to={`/recoveries/${claim.id}`} className="flex items-center gap-2">
                               <Eye className="h-4 w-4" />

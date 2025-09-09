@@ -4,7 +4,14 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, BarChart3, FolderOpen, CheckCircle, DollarSign, Search, RefreshCw, Calendar, TrendingUp } from 'lucide-react';
+import { FileText, CheckCircle, DollarSign, RefreshCw, Search } from 'lucide-react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { apiFetch } from '@/lib/api';
+import { toast } from 'sonner';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { type RealtimeEvent } from '@/lib/realtime';
+import { useStatusStream } from '@/hooks/use-status-stream';
+import { toast } from 'sonner';
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -15,60 +22,73 @@ export function Dashboard() {
     amount: 1850.00,
     expectedDate: "Sept 15, 2025"
   };
-  const recoveredValue = {
-    total: 11200.50,
-    pending: 1850.00,
-    lastMonth: 2100.00
-  };
-  const upcomingPayouts = [{
-    amount: 1850.00,
-    date: "Sept 15, 2025",
-    status: "confirmed"
-  }, {
-    amount: 2100.00,
-    date: "Oct 12, 2025",
-    status: "pending"
-  }, {
-    amount: 950.00,
-    date: "Nov 8, 2025",
-    status: "estimated"
-  }];
-  const activityFeed = [{
-    id: 1,
-    type: 'claim_submitted',
-    icon: CheckCircle,
-    description: 'NEW: Claim #1234 ($250) for Lost Inventory Submitted.',
-    timestamp: '2 minutes ago',
-    color: 'text-success'
-  }, {
-    id: 2,
-    type: 'payout_completed',
-    icon: DollarSign,
-    description: 'PAID: Claim #1198 ($150) has been successfully paid out.',
-    timestamp: '8 hours ago',
-    color: 'text-success'
-  }, {
-    id: 3,
-    type: 'evidence_added',
-    icon: Search,
-    description: 'EVIDENCE ADDED: Invoice #INV-5678 linked to Claim #1235.',
-    timestamp: 'Yesterday',
-    color: 'text-primary'
-  }, {
-    id: 4,
-    type: 'sync_complete',
-    icon: RefreshCw,
-    description: 'SYNC COMPLETE: Your account was successfully synced.',
-    timestamp: 'Yesterday',
-    color: 'text-muted-foreground'
-  }, {
-    id: 5,
-    type: 'claim_approved',
-    icon: CheckCircle,
-    description: 'APPROVED: Claim #1199 ($380) has been approved by Amazon.',
-    timestamp: '2 days ago',
-    color: 'text-success'
-  }];
+  const { data: metrics } = useQuery<{ totalRecovered:number; expectedPayouts:number; pendingSubmissions:number; last30Days:number }>({
+    queryKey: ['metrics','recoveries'],
+    queryFn: () => apiFetch('/api/metrics/recoveries')
+  });
+  const upcomingPayouts = [] as Array<{ amount:number; date:string; status:string }>;
+  type FeedItem = { id: string; icon: React.ElementType; description: string; timestamp: string; color?: string };
+  const [activityFeed, setActivityFeed] = useState<FeedItem[]>([]);
+
+  const queryClient = useQueryClient();
+  const [detectOpen, setDetectOpen] = useState(false);
+  const [detectionId, setDetectionId] = useState<string | null>(null);
+  const [pollTick, setPollTick] = useState(0);
+  const [detectionState, setDetectionState] = useState<string | null>(null);
+  const [detectionProgress, setDetectionProgress] = useState<number | null>(null);
+  const runDetection = useMutation({
+    mutationFn: async () => apiFetch<{ detection_id: string }>(`/api/detections/run`, { method: 'POST', body: JSON.stringify({}) }),
+    onSuccess: (res) => {
+      setDetectionId(res.detection_id);
+      setDetectOpen(true);
+    }
+  });
+
+  // Start Sync action (quick access)
+  const startSync = useMutation({
+    mutationFn: async () => apiFetch('/api/sync/start', { method: 'POST', body: JSON.stringify({}) }),
+    onSuccess: () => {
+      toast.success('Sync started');
+      queryClient.invalidateQueries({ queryKey: ['sync-status'] });
+      queryClient.invalidateQueries({ queryKey: ['sync-activity'] });
+    },
+    onError: (e: any) => {
+      toast.error(e?.message || 'Failed to start sync');
+    },
+  });
+
+  useStatusStream((evt: RealtimeEvent) => {
+    if (evt.type === 'detection') {
+      if (detectionId && evt.id === detectionId) {
+        setDetectionState(evt.status);
+        if ('progress' in evt && typeof evt.progress === 'number') setDetectionProgress(evt.progress);
+      }
+      if (evt.status === 'completed') {
+        toast.success('Detection completed');
+        queryClient.invalidateQueries({ queryKey: ['metrics','recoveries'] });
+        setActivityFeed((prev) => [{ id: `det-${evt.id}-${Date.now()}`, icon: CheckCircle, description: `Detection ${evt.id} completed`, timestamp: new Date().toLocaleString(), color: 'text-success' }, ...prev].slice(0, 50));
+      } else if (evt.status === 'failed') {
+        toast.error('Detection failed');
+        setActivityFeed((prev) => [{ id: `det-${evt.id}-${Date.now()}`, icon: RefreshCw, description: `Detection ${evt.id} failed`, timestamp: new Date().toLocaleString(), color: 'text-red-600' }, ...prev].slice(0, 50));
+      }
+    }
+    if (evt.type === 'sync') {
+      if (evt.status === 'completed') {
+        toast.success('Sync completed');
+        queryClient.invalidateQueries({ queryKey: ['metrics','recoveries'] });
+        queryClient.invalidateQueries({ queryKey: ['sync-status'] });
+        queryClient.invalidateQueries({ queryKey: ['sync-activity'] });
+        setActivityFeed((prev) => [{ id: `sync-${evt.id}-${Date.now()}`, icon: RefreshCw, description: `Sync job ${evt.id} completed`, timestamp: new Date().toLocaleString(), color: 'text-muted-foreground' }, ...prev].slice(0, 50));
+      } else if (evt.status === 'failed') {
+        toast.error('Sync failed');
+        setActivityFeed((prev) => [{ id: `sync-${evt.id}-${Date.now()}`, icon: RefreshCw, description: `Sync job ${evt.id} failed`, timestamp: new Date().toLocaleString(), color: 'text-red-600' }, ...prev].slice(0, 50));
+      }
+    }
+    if (evt.type === 'recovery') {
+      queryClient.invalidateQueries({ queryKey: ['recoveries'] });
+      setActivityFeed((prev) => [{ id: `rec-${evt.id}-${Date.now()}`, icon: CheckCircle, description: `Recovery ${evt.id} status: ${evt.status}`, timestamp: new Date().toLocaleString(), color: evt.status === 'paid' ? 'text-success' : 'text-primary' }, ...prev].slice(0, 50));
+    }
+  });
 
   // Real-time clock
   useEffect(() => {
@@ -103,53 +123,81 @@ export function Dashboard() {
                 {/* Module 1: Promise of Time - Your Next Payout (Hero) */}
                 
 
-                {/* Module 2: Your Recovered Value */}
-                <Card className="border">
-                  <CardContent className="p-4">
-                    <div className="space-y-2">
-                      <h2 className="font-montserrat text-lg text-gray-700 font-semibold">Your Next Payout</h2>
-                      
-                      {/* Total Recovered Hero Amount */}
-                      <div className="text-xl font-semibold text-sidebar-primary font-montserrat">
-                        {formatCurrency(recoveredValue.total)}
-                      </div>
-                      
-                      {/* Subtitle */}
-                      <div className="text-sm text-muted-foreground font-montserrat">
-                        Total recovered since joining
-                      </div>
-                      
-                      {/* Recovery Metrics */}
-                      <div className="pt-2 space-y-2">
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600 font-montserrat">Pending Recovery</span>
-                          <span className="font-semibold text-sm font-montserrat">{formatCurrency(recoveredValue.pending)}</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600 font-montserrat">30-Day Recovery</span>
-                          <span className="font-semibold text-sm font-montserrat">{formatCurrency(recoveredValue.lastMonth)}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                {/* Module 2: ROI & Cash Visibility */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="text-sm text-muted-foreground">Total Recovered</div>
+                      <div className="text-2xl font-semibold">{formatCurrency(metrics?.totalRecovered ?? 0)}</div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="text-sm text-muted-foreground">Expected Payouts</div>
+                      <div className="text-2xl font-semibold text-emerald-700">{formatCurrency(metrics?.expectedPayouts ?? 0)}</div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="text-sm text-muted-foreground">Pending Submissions</div>
+                      <div className="text-2xl font-semibold">{metrics?.pendingSubmissions ?? 0}</div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="text-sm text-muted-foreground">Last 30 Days</div>
+                      <div className="text-2xl font-semibold">{formatCurrency(metrics?.last30Days ?? 0)}</div>
+                    </CardContent>
+                  </Card>
+                </div>
 
-                {/* Module 3: Primary Navigation Links */}
+                {/* Module 3: Actions */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Button 
                     variant="outline" 
-                    className="h-8 flex items-center gap-2 transition-colors bg-gray-200 hover:bg-gray-100 text-black"
+                    className="h-9 flex items-center gap-2 transition-colors bg-gray-200 hover:bg-gray-100 text-black"
                     onClick={() => navigate('/recoveries')}
+                    title="View all current and historical claims"
                   >
                     <FileText className="h-4 w-4" />
                     <span className="font-montserrat">View All Claims</span>
                   </Button>
-                  
-                  
-                  
-                  
+                  <Button 
+                    className="h-9 flex items-center gap-2"
+                    title="Run detection and surface potential missed claims"
+                    onClick={() => runDetection.mutate()}
+                  >
+                    Detect Missed Claims
+                  </Button>
+                  <Button 
+                    className="h-9 flex items-center gap-2"
+                    title="Start inventory sync now"
+                    onClick={() => startSync.mutate()}
+                    disabled={startSync.isPending}
+                  >
+                    {startSync.isPending ? 'Starting…' : 'Start Sync'}
+                  </Button>
                 </div>
               </div>
+              <Dialog open={detectOpen} onOpenChange={setDetectOpen}>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Detecting Missed Claims</DialogTitle>
+                    <DialogDescription>
+                      We’re scanning your account for potential reimbursements. This may take up to 1–2 minutes.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="text-sm">
+                    Status: <span className="font-medium">{detectionState || (runDetection.isPending ? 'starting' : 'queued')}</span>
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {typeof detectionProgress === 'number' ? `${detectionProgress}% complete` : 'Preparing datasets...'}
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setDetectOpen(false)}>Close</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
 
               {/* Right Column - Live Activity Feed (30-35% width) */}
               <div className="lg:col-span-1">
@@ -161,10 +209,18 @@ export function Dashboard() {
                     </div>
                     
                     <div className="space-y-4 max-h-[600px] overflow-y-auto">
+                      {activityFeed.length === 0 && (
+                        <div className="text-sm text-muted-foreground">No recent activity yet</div>
+                      )}
                       {activityFeed.map(item => {
-                      const IconComponent = item.icon;
-                      return <div key={item.id} className="flex gap-3 p-3 transition-colors bg-stone-50 rounded-none">
-                            
+                        const IconComponent = item.icon;
+                        return (
+                          <div key={item.id} className="flex gap-3 p-3 transition-colors bg-stone-50 rounded-none">
+                            <div className="flex-shrink-0 mt-0.5">
+                              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                                <IconComponent className="w-4 h-4 text-primary" />
+                              </div>
+                            </div>
                             <div className="flex-1 min-w-0">
                               <p className="text-sm font-medium text-foreground mb-1 font-montserrat">
                                 {item.description}
@@ -173,8 +229,9 @@ export function Dashboard() {
                                 {item.timestamp}
                               </p>
                             </div>
-                          </div>;
-                    })}
+                          </div>
+                        );
+                      })}
                     </div>
                   </CardContent>
                 </Card>

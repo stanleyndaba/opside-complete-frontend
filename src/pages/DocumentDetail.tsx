@@ -5,49 +5,23 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, FileText, Check, Edit2, Download } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { apiFetch } from '@/lib/api';
 
 export default function DocumentDetail() {
   const { documentId } = useParams();
   const [hoveredSKU, setHoveredSKU] = useState<string | null>(null);
 
-  // Mock data - in real implementation, this would come from API
-  const documentData = {
-    id: documentId,
-    name: 'July_Supplier_Invoice.pdf',
-    uploadDate: '2025-01-15',
-    status: 'verified',
-    processingTime: '2.3s',
-    extractedData: [
-      {
-        sku: 'SKU-ABC-001',
-        productName: 'Wireless Bluetooth Headphones',
-        unitCost: 15.72,
-        quantity: 50,
-        coordinates: { x: 320, y: 180, width: 200, height: 20 }
-      },
-      {
-        sku: 'SKU-DEF-002', 
-        productName: 'USB-C Charging Cable',
-        unitCost: 3.25,
-        quantity: 100,
-        coordinates: { x: 320, y: 210, width: 180, height: 20 }
-      },
-      {
-        sku: 'SKU-GHI-003',
-        productName: 'Phone Case - Clear',
-        unitCost: 8.50,
-        quantity: 75,
-        coordinates: { x: 320, y: 240, width: 160, height: 20 }
-      },
-      {
-        sku: 'SKU-JKL-004',
-        productName: 'Screen Protector Pack',
-        unitCost: 12.99,
-        quantity: 30,
-        coordinates: { x: 320, y: 270, width: 190, height: 20 }
-      }
-    ]
-  };
+  const { data: documentData } = useQuery<any>({
+    queryKey: ['document', documentId],
+    queryFn: () => apiFetch(`/api/documents/${documentId}`),
+    enabled: !!documentId,
+  });
+  if (!documentData) return (
+    <PageLayout title="Document Details">
+      <div className="p-6 text-sm text-muted-foreground">Loading...</div>
+    </PageLayout>
+  );
 
   const totalValue = documentData.extractedData.reduce(
     (sum, item) => sum + (item.unitCost * item.quantity), 
@@ -82,7 +56,14 @@ export default function DocumentDetail() {
               <Check className="w-3 h-3 mr-1" />
               Verified
             </Badge>
-            <Button variant="outline" size="sm">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={async () => {
+                const res = await apiFetch<{ url: string }>(`/api/documents/${documentId}/download`);
+                window.open(res.url, '_blank');
+              }}
+            >
               <Download className="w-4 h-4 mr-2" />
               Download
             </Button>
