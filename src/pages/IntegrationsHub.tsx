@@ -145,7 +145,7 @@ export default function IntegrationsHub() {
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <img src={connection.logo} alt={`${connection.name} logo`} className="w-20 h-18 object-contain" />
+                      <img src={connection.logo} alt={`${connection.name} logo`} className="w-20 h-12 object-contain" />
                       <div>
                         <CardTitle className="text-lg">{connection.name}</CardTitle>
                         <p className="text-sm text-muted-foreground">
@@ -167,11 +167,17 @@ export default function IntegrationsHub() {
                     </div>
                     
                     <Separator />
-                    
-                    <Button size="sm" variant="outline" className="w-full gap-2">
-                      <Settings className="h-3 w-3" />
-                      Manage
-                    </Button>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button size="sm" variant="outline" className="w-full gap-2">
+                        <Settings className="h-3 w-3" />
+                        Manage
+                      </Button>
+                      <Button size="sm" className="w-full gap-2">
+                        <RefreshCw className="h-3 w-3" />
+                        Inventory Sync
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>)}
@@ -201,7 +207,7 @@ export default function IntegrationsHub() {
                   {categoryIntegrations.map(integration => <Card key={integration.id} className="border-muted/50 hover:border-primary/50 transition-colors">
                       <CardHeader className="pb-3">
                         <div className="flex items-center gap-3">
-                          <img src={integration.logo} alt={`${integration.name} logo`} className="w-20 h-18 object-contain" />
+                          <img src={integration.logo} alt={`${integration.name} logo`} className="w-20 h-12 object-contain" />
                           <div>
                             <CardTitle className="text-lg">{integration.name}</CardTitle>
                           </div>
