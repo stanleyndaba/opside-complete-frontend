@@ -4,21 +4,12 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
-import Stocks from "./pages/Stocks";
-import Markets from "./pages/Markets";
-import Currencies from "./pages/Currencies";
-import Global from "./pages/Global";
-import Portfolio from "./pages/Portfolio";
-import Performance from "./pages/Performance";
-import Analysis from "./pages/Analysis";
 import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
 import IntegrationsHub from "./pages/IntegrationsHub";
 import Recoveries from "./pages/Recoveries";
 import CaseDetail from "./pages/CaseDetail";
-import SmartInventorySync from "./pages/SmartInventorySync";
 import EvidenceLocker from "./pages/EvidenceLocker";
 import DocumentDetail from "./pages/DocumentDetail";
 import Billing from "./pages/Billing";
@@ -28,6 +19,9 @@ import NotificationHub from "./pages/NotificationHub";
 import ApiAccess from "./pages/ApiAccess";
 import Help from "./pages/Help";
 import WhatsNew from "./pages/WhatsNew";
+import Landing from "./pages/Landing";
+import Sync from "./pages/Sync";
+import { AuthProvider, RequireAuth } from "@/hooks/useAuth";
 
 const queryClient = new QueryClient();
 
@@ -37,33 +31,29 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/reports" element={<Reports />} />
-          <Route path="/stocks" element={<Stocks />} />
-          <Route path="/markets" element={<Markets />} />
-          <Route path="/currencies" element={<Currencies />} />
-          <Route path="/global" element={<Global />} />
-          <Route path="/portfolio" element={<Portfolio />} />
-          <Route path="/performance" element={<Performance />} />
-          <Route path="/analysis" element={<Analysis />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/integrations-hub" element={<IntegrationsHub />} />
-          <Route path="/recoveries" element={<Recoveries />} />
-          <Route path="/recoveries/:caseId" element={<CaseDetail />} />
-          <Route path="/smart-inventory-sync" element={<SmartInventorySync />} />
-          <Route path="/evidence-locker" element={<EvidenceLocker />} />
-          <Route path="/evidence-locker/document/:documentId" element={<DocumentDetail />} />
-          <Route path="/billing" element={<Billing />} />
-          <Route path="/team-management" element={<TeamManagement />} />
-          <Route path="/export" element={<ExportCenter />} />
-          <Route path="/notifications" element={<NotificationHub />} />
-          <Route path="/api" element={<ApiAccess />} />
-          <Route path="/help" element={<Help />} />
-          <Route path="/whats-new" element={<WhatsNew />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <AuthProvider>
+          <Routes>
+            {/* Public */}
+            <Route path="/" element={<Landing />} />
+            {/* Authenticated */}
+            <Route path="/integrations-hub" element={<RequireAuth><IntegrationsHub /></RequireAuth>} />
+            <Route path="/sync" element={<RequireAuth><Sync /></RequireAuth>} />
+            <Route path="/reports" element={<RequireAuth><Reports /></RequireAuth>} />
+            <Route path="/settings" element={<RequireAuth><Settings /></RequireAuth>} />
+            <Route path="/recoveries" element={<RequireAuth><Recoveries /></RequireAuth>} />
+            <Route path="/recoveries/:caseId" element={<RequireAuth><CaseDetail /></RequireAuth>} />
+            <Route path="/evidence-locker" element={<RequireAuth><EvidenceLocker /></RequireAuth>} />
+            <Route path="/evidence-locker/document/:documentId" element={<RequireAuth><DocumentDetail /></RequireAuth>} />
+            <Route path="/billing" element={<RequireAuth><Billing /></RequireAuth>} />
+            <Route path="/team-management" element={<RequireAuth><TeamManagement /></RequireAuth>} />
+            <Route path="/export" element={<RequireAuth><ExportCenter /></RequireAuth>} />
+            <Route path="/notifications" element={<RequireAuth><NotificationHub /></RequireAuth>} />
+            <Route path="/api" element={<RequireAuth><ApiAccess /></RequireAuth>} />
+            <Route path="/help" element={<RequireAuth><Help /></RequireAuth>} />
+            <Route path="/whats-new" element={<RequireAuth><WhatsNew /></RequireAuth>} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
