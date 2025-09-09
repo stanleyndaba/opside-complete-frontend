@@ -6,7 +6,8 @@ import { useAuth } from '@/hooks/use-auth';
 
 const Index = () => {
   const { isAuthenticated, isLoading } = useAuth();
-  if (isLoading) return null;
+  // Show Landing (with Access Demo) while loading to avoid blank screen
+  if (isLoading) return <Landing />;
   return isAuthenticated ? <Dashboard /> : <Landing />;
 };
 

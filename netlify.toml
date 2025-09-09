@@ -4,6 +4,7 @@
 
 [build.environment]
   NODE_VERSION = "22"
+  NPM_FLAGS = "--no-audit --no-fund"
 
 # Single Page App routing: serve index.html for all routes
 [[redirects]]
