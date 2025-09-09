@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { Shield, CheckCircle, Settings, RefreshCw, ArrowRight, ExternalLink, Package, ShoppingBag, Calculator, Truck } from 'lucide-react';
+import { useAuth } from '@/hooks/use-auth';
 interface ActiveConnection {
   id: string;
   name: string;
@@ -97,6 +98,7 @@ const categoryConfig = {
   }
 };
 export default function IntegrationsHub() {
+  const { isAuthenticated, loginWithAmazon } = useAuth();
   const [lastSyncTime, setLastSyncTime] = useState('Just now');
   const [requestFormData, setRequestFormData] = useState({
     platform: '',
@@ -132,6 +134,22 @@ export default function IntegrationsHub() {
             Your central command center for all platform connections
           </p>
         </div>
+
+        {/* Section 1a: Connect CTA if not authenticated */}
+        {!isAuthenticated && (
+          <Card className="border-yellow-200 bg-yellow-50">
+            <CardContent className="p-6 flex items-center justify-between gap-4">
+              <div>
+                <h3 className="text-lg font-semibold">Connect your Amazon Seller Central</h3>
+                <p className="text-sm text-muted-foreground">Secure OAuth flow. We only read the data needed to find reimbursements.</p>
+              </div>
+              <Button onClick={loginWithAmazon} className="gap-2">
+                <Shield className="h-4 w-4" />
+                Sign in with Amazon
+              </Button>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Section 1: Your Active Connections */}
         <div className="space-y-4">
