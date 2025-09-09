@@ -89,11 +89,13 @@ export function useAuth(): AuthState {
     try { window.localStorage.setItem('DEMO_MODE', '1'); } catch { /* ignore */ }
     setUser({ id: 'demo-user', name: 'Demo User', email: 'demo@local' });
     setIsLoading(false);
+    try { window.location.reload(); } catch { /* ignore */ }
   }, []);
 
   const exitDemo = useCallback(() => {
     try { window.localStorage.removeItem('DEMO_MODE'); } catch { /* ignore */ }
     setUser(null);
+    try { window.location.reload(); } catch { /* ignore */ }
   }, []);
 
   const loginWithAmazon = useCallback(() => {
