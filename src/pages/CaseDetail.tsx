@@ -10,8 +10,9 @@ import { cn } from '@/lib/utils';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api';
+import { toast } from 'sonner';
 
 interface CaseEvent {
   timestamp: string;
@@ -130,6 +131,7 @@ export default function CaseDetail() {
   const { caseId } = useParams<{ caseId: string }>();
   const [autoClaimOpen, setAutoClaimOpen] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState<'idle'|'pending'|'submitted'|'failed'|'paid'>('idle');
+  const queryClient = useQueryClient();
   
   if (!caseId || !mockCaseData[caseId as keyof typeof mockCaseData]) {
     return (
@@ -179,6 +181,27 @@ export default function CaseDetail() {
 
   const expectedPayoutAmount = caseData.guaranteedAmount;
   const expectedPayoutDate = caseData.expected_payout_date || caseData.payoutDate;
+  const isEvidenceValidated = Boolean((caseData as any)?.evidence_validated ?? (caseData as any)?.ev_validated ?? (caseData as any)?.evidence?.validated);
+
+  const submitClaim = useMutation({
+    mutationFn: async () => {
+      if (!caseId) throw new Error('Missing case ID');
+      return apiFetch(`/api/claims/${caseId}/submit`, { method: 'POST', body: JSON.stringify({}) });
+    },
+    onMutate: () => {
+      setSubmissionStatus('pending');
+    },
+    onSuccess: () => {
+      setSubmissionStatus('submitted');
+      toast.success('Claim submitted to Amazon');
+      queryClient.invalidateQueries({ queryKey: ['recovery', caseId] });
+      queryClient.invalidateQueries({ queryKey: ['metrics','recoveries'] });
+    },
+    onError: (e: any) => {
+      setSubmissionStatus('failed');
+      toast.error(e?.message || 'Submission failed');
+    }
+  });
 
   return (
     <PageLayout title={`Case ${caseData.id}`}>
@@ -320,7 +343,9 @@ export default function CaseDetail() {
                             </div>
                             <DialogFooter>
                               <Button variant="outline" onClick={() => setAutoClaimOpen(false)}>Cancel</Button>
-                              <Button onClick={() => { setSubmissionStatus('submitted'); setAutoClaimOpen(false); }}>Confirm & Submit</Button>
+                              <Button disabled={!isEvidenceValidated || submitClaim.isPending} onClick={() => { submitClaim.mutate(); setAutoClaimOpen(false); }}>
+                                {submitClaim.isPending ? 'Submitting...' : 'Confirm & Submit'}
+                              </Button>
                             </DialogFooter>
                           </DialogContent>
                         </Dialog>
