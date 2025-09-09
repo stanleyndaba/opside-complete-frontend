@@ -5,6 +5,7 @@ import { Sidebar } from '@/components/layout/Sidebar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FileText, BarChart3, FolderOpen, CheckCircle, DollarSign, Search, RefreshCw, Calendar, TrendingUp } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -37,35 +38,35 @@ export function Dashboard() {
     id: 1,
     type: 'claim_submitted',
     icon: CheckCircle,
-    description: 'NEW: Claim #1234 ($250) for Lost Inventory Submitted.',
+    description: 'New: Claim #1234 ($250) for lost inventory submitted.',
     timestamp: '2 minutes ago',
     color: 'text-success'
   }, {
     id: 2,
     type: 'payout_completed',
     icon: DollarSign,
-    description: 'PAID: Claim #1198 ($150) has been successfully paid out.',
+    description: 'Paid: Claim #1198 ($150) has been successfully paid out.',
     timestamp: '8 hours ago',
     color: 'text-success'
   }, {
     id: 3,
     type: 'evidence_added',
     icon: Search,
-    description: 'EVIDENCE ADDED: Invoice #INV-5678 linked to Claim #1235.',
+    description: 'Evidence added: Invoice #INV-5678 linked to Claim #1235.',
     timestamp: 'Yesterday',
     color: 'text-primary'
   }, {
     id: 4,
     type: 'sync_complete',
     icon: RefreshCw,
-    description: 'SYNC COMPLETE: Your account was successfully synced.',
+    description: 'Sync complete: Your account was successfully synced.',
     timestamp: 'Yesterday',
     color: 'text-muted-foreground'
   }, {
     id: 5,
     type: 'claim_approved',
     icon: CheckCircle,
-    description: 'APPROVED: Claim #1199 ($380) has been approved by Amazon.',
+    description: 'Approved: Claim #1199 ($380) has been approved by Amazon.',
     timestamp: '2 days ago',
     color: 'text-success'
   }];
@@ -155,26 +156,40 @@ export function Dashboard() {
               <div className="lg:col-span-1">
                 <Card className="h-full">
                   <CardContent className="p-6">
-                    <div className="flex items-center gap-2 mb-6">
-                      
+                    <div className="mb-6">
                       <h2 className="text-lg font-semibold font-montserrat">Notifications</h2>
                     </div>
-                    
+
                     <div className="space-y-4 max-h-[600px] overflow-y-auto">
                       {activityFeed.map(item => {
-                      const IconComponent = item.icon;
-                      return <div key={item.id} className="flex gap-3 p-3 transition-colors bg-stone-50 rounded-none">
-                            
+                        const IconComponent = item.icon;
+                        return (
+                          <div
+                            key={item.id}
+                            className="flex items-start gap-4 p-4 rounded-lg border bg-background hover:bg-muted/30 transition-colors"
+                          >
+                            <div className="flex-shrink-0 mt-0.5">
+                              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                                <IconComponent className="w-4 h-4 text-primary" />
+                              </div>
+                            </div>
+
                             <div className="flex-1 min-w-0">
                               <p className="text-sm font-medium text-foreground mb-1 font-montserrat">
                                 {item.description}
                               </p>
-                              <p className="text-xs text-muted-foreground font-montserrat">
-                                {item.timestamp}
-                              </p>
+                              <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                                <span>{item.timestamp}</span>
+                                <div className="flex gap-1">
+                                  <Badge variant="secondary" className="text-[10px] capitalize">
+                                    {item.type.replace('_', ' ')}
+                                  </Badge>
+                                </div>
+                              </div>
                             </div>
-                          </div>;
-                    })}
+                          </div>
+                        );
+                      })}
                     </div>
                   </CardContent>
                 </Card>
