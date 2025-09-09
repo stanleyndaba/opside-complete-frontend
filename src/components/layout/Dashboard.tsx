@@ -9,6 +9,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api';
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { subscribeRealtime, type RealtimeEvent } from '@/lib/realtime';
+import { toast } from 'sonner';
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -99,24 +101,34 @@ export function Dashboard() {
   });
 
   useEffect(() => {
-    if (!detectOpen || !detectionId) return;
-    const t = setInterval(() => setPollTick((n) => n + 1), 2000);
-    return () => clearInterval(t);
-  }, [detectOpen, detectionId]);
-
-  const { data: detectionStatus } = useQuery<any>({
-    queryKey: ['detection-status', detectionId, pollTick],
-    queryFn: () => apiFetch(`/api/detections/status/${detectionId}`),
-    enabled: detectOpen && !!detectionId,
-    refetchInterval: 0,
-  });
-
-  useEffect(() => {
-    if (!detectionStatus) return;
-    if (detectionStatus.state === 'completed' || detectionStatus.state === 'failed') {
-      queryClient.invalidateQueries({ queryKey: ['metrics','recoveries'] });
-    }
-  }, [detectionStatus, queryClient]);
+    // Realtime status updates (WS/SSE). Remove polling.
+    const unsub = subscribeRealtime((evt: RealtimeEvent) => {
+      if (evt.type === 'detection') {
+        if (evt.status === 'completed') {
+          toast.success('Detection completed');
+          queryClient.invalidateQueries({ queryKey: ['metrics','recoveries'] });
+        } else if (evt.status === 'failed') {
+          toast.error('Detection failed');
+        }
+      }
+      if (evt.type === 'sync') {
+        if (evt.status === 'in_progress') {
+          // optional: show subtle info
+        } else if (evt.status === 'completed') {
+          toast.success('Sync completed');
+          queryClient.invalidateQueries({ queryKey: ['metrics','recoveries'] });
+          queryClient.invalidateQueries({ queryKey: ['sync-status'] });
+          queryClient.invalidateQueries({ queryKey: ['sync-activity'] });
+        } else if (evt.status === 'failed') {
+          toast.error('Sync failed');
+        }
+      }
+      if (evt.type === 'recovery') {
+        queryClient.invalidateQueries({ queryKey: ['recoveries'] });
+      }
+    });
+    return () => unsub();
+  }, [queryClient]);
 
   // Real-time clock
   useEffect(() => {

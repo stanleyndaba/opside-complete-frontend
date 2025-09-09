@@ -18,6 +18,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, buildQuery } from '@/lib/api';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
+import { useEffect } from 'react';
+import { subscribeRealtime, type RealtimeEvent } from '@/lib/realtime';
 
 type Recovery = {
   id: string;
@@ -55,8 +57,18 @@ export default function Recoveries() {
       });
       return apiFetch<Recovery[]>(`/api/recoveries${qs}`);
     },
-    refetchInterval: 10000,
+    refetchInterval: false,
   });
+
+  // Realtime updates: listen for recovery status changes and refresh list
+  useEffect(() => {
+    const unsub = subscribeRealtime((evt: RealtimeEvent) => {
+      if (evt.type === 'recovery') {
+        queryClient.invalidateQueries({ queryKey: ['recoveries'] });
+      }
+    });
+    return () => unsub();
+  }, [queryClient]);
 
   // Selection state for bulk actions
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());

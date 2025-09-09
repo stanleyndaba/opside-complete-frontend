@@ -1,19 +1,32 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { StatsCard } from '@/components/ui/StatsCard';
 import { CheckCircle, AlertTriangle, Truck, Warehouse, ShoppingCart, RotateCcw } from 'lucide-react';
+import { subscribeRealtime, type RealtimeEvent } from '@/lib/realtime';
+import { toast } from 'sonner';
 
 export default function SmartInventorySync() {
-  // Mock data - in real implementation, this would come from API
-  const syncStatus = {
+  const [syncStatus, setSyncStatus] = useState({
     healthy: true,
-    lastReconciliation: 'August 9, 2025 - 12:05 AM',
-    skusMonitored: 1547,
-    discrepanciesFound: 23,
-    dataPointsAnalyzed: 1254830
-  };
+    lastReconciliation: '—',
+    skusMonitored: 0,
+    discrepanciesFound: 0,
+    dataPointsAnalyzed: 0
+  });
+  useEffect(() => {
+    const unsub = subscribeRealtime((evt: RealtimeEvent) => {
+      if (evt.type === 'sync') {
+        if (evt.status === 'completed') {
+          toast.success('Sync completed');
+        } else if (evt.status === 'failed') {
+          toast.error('Sync failed');
+        }
+      }
+    });
+    return () => unsub();
+  }, []);
 
   const dataSources = [
     {
