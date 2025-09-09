@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { useAuth } from '@/hooks/use-auth';
 
 export default function Landing() {
-  const { loginWithAmazon } = useAuth();
+  const { loginWithAmazon, enterDemo } = useAuth();
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-white">
@@ -28,6 +28,9 @@ export default function Landing() {
               </Button>
               <Button size="lg" variant="outline" onClick={loginWithAmazon}>
                 Connect & Start Sync
+              </Button>
+              <Button size="lg" variant="secondary" onClick={enterDemo}>
+                Access Demo (no login)
               </Button>
             </div>
             <div className="mt-4 text-xs text-muted-foreground">By signing in, you grant permissions to read necessary Seller Central data to detect reimbursement opportunities. You can revoke access anytime.</div>

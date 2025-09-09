@@ -14,6 +14,9 @@ type AuthState = {
   isAuthenticated: boolean;
   loginWithAmazon: () => void;
   logout: () => Promise<void>;
+  enterDemo: () => void;
+  exitDemo: () => void;
+  isDemo: boolean;
 };
 
 const apiBase = (import.meta as any)?.env?.VITE_API_BASE_URL || (import.meta as any)?.env?.VITE_API_URL || "";
@@ -21,11 +24,18 @@ const apiBase = (import.meta as any)?.env?.VITE_API_BASE_URL || (import.meta as 
 export function useAuth(): AuthState {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const isDemo = typeof window !== 'undefined' && window.localStorage.getItem('DEMO_MODE') === '1';
 
   const didStripeHook = useRef(false);
 
   useEffect(() => {
     let isMounted = true;
+    // Demo mode short-circuit
+    if (isDemo) {
+      setUser({ id: 'demo-user', name: 'Demo User', email: 'demo@local' });
+      setIsLoading(false);
+      return;
+    }
     const fetchMe = async () => {
       setIsLoading(true);
       try {
@@ -41,12 +51,12 @@ export function useAuth(): AuthState {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [isDemo]);
 
   // Post-login Stripe onboarding hook
   useEffect(() => {
     const runStripeHook = async () => {
-      if (!user || didStripeHook.current) return;
+      if (!user || didStripeHook.current || isDemo) return;
       didStripeHook.current = true;
       try {
         const res = await apiFetch<any>(`/api/auth/post-login/stripe`, {
@@ -75,6 +85,17 @@ export function useAuth(): AuthState {
     runStripeHook();
   }, [user]);
 
+  const enterDemo = useCallback(() => {
+    try { window.localStorage.setItem('DEMO_MODE', '1'); } catch { /* ignore */ }
+    setUser({ id: 'demo-user', name: 'Demo User', email: 'demo@local' });
+    setIsLoading(false);
+  }, []);
+
+  const exitDemo = useCallback(() => {
+    try { window.localStorage.removeItem('DEMO_MODE'); } catch { /* ignore */ }
+    setUser(null);
+  }, []);
+
   const loginWithAmazon = useCallback(() => {
     window.location.href = `${apiBase}/auth/amazon`;
   }, []);
@@ -99,8 +120,11 @@ export function useAuth(): AuthState {
       isAuthenticated: !!user,
       loginWithAmazon,
       logout,
+      enterDemo,
+      exitDemo,
+      isDemo,
     }),
-    [user, isLoading, loginWithAmazon, logout]
+    [user, isLoading, loginWithAmazon, logout, enterDemo, exitDemo, isDemo]
   );
 }
 
