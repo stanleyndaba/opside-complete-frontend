@@ -40,35 +40,40 @@ export function Dashboard() {
     icon: CheckCircle,
     description: 'New: Claim #1234 ($250) for lost inventory submitted.',
     timestamp: '2 minutes ago',
-    color: 'text-success'
+    color: 'text-success',
+    read: false
   }, {
     id: 2,
     type: 'payout_completed',
     icon: DollarSign,
     description: 'Paid: Claim #1198 ($150) has been successfully paid out.',
     timestamp: '8 hours ago',
-    color: 'text-success'
+    color: 'text-success',
+    read: true
   }, {
     id: 3,
     type: 'evidence_added',
     icon: Search,
     description: 'Evidence added: Invoice #INV-5678 linked to Claim #1235.',
     timestamp: 'Yesterday',
-    color: 'text-primary'
+    color: 'text-primary',
+    read: true
   }, {
     id: 4,
     type: 'sync_complete',
     icon: RefreshCw,
     description: 'Sync complete: Your account was successfully synced.',
     timestamp: 'Yesterday',
-    color: 'text-muted-foreground'
+    color: 'text-muted-foreground',
+    read: true
   }, {
     id: 5,
     type: 'claim_approved',
     icon: CheckCircle,
     description: 'Approved: Claim #1199 ($380) has been approved by Amazon.',
     timestamp: '2 days ago',
-    color: 'text-success'
+    color: 'text-success',
+    read: true
   }];
 
   // Real-time clock
@@ -166,7 +171,7 @@ export function Dashboard() {
                         return (
                           <div
                             key={item.id}
-                            className="flex items-start gap-4 p-4 rounded-lg border bg-background hover:bg-muted/30 transition-colors"
+                            className={`flex items-start gap-4 p-4 rounded-lg border transition-colors ${!item.read ? 'bg-muted/50 border-primary/20' : 'bg-background hover:bg-muted/30'}`}
                           >
                             <div className="flex-shrink-0 mt-0.5">
                               <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
@@ -187,6 +192,10 @@ export function Dashboard() {
                                 </div>
                               </div>
                             </div>
+
+                            {!item.read && (
+                              <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0 mt-2"></div>
+                            )}
                           </div>
                         );
                       })}
