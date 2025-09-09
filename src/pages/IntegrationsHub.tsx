@@ -8,6 +8,8 @@ import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { Shield, CheckCircle, Settings, RefreshCw, ArrowRight, ExternalLink, Package, ShoppingBag, Calculator, Truck } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
+import { useQuery } from '@tanstack/react-query';
+import { apiFetch } from '@/lib/api';
 interface ActiveConnection {
   id: string;
   name: string;
@@ -100,6 +102,12 @@ const categoryConfig = {
 export default function IntegrationsHub() {
   const { isAuthenticated, loginWithAmazon } = useAuth();
   const [lastSyncTime, setLastSyncTime] = useState('Just now');
+  const { data: syncStatus } = useQuery<any>({
+    queryKey: ['sync-status'],
+    queryFn: () => apiFetch('/api/sync/status'),
+    enabled: isAuthenticated,
+    staleTime: 5_000,
+  });
   const [requestFormData, setRequestFormData] = useState({
     platform: '',
     description: ''
@@ -181,7 +189,7 @@ export default function IntegrationsHub() {
                   <div className="space-y-3">
                     <div className="flex justify-between items-center text-sm">
                       <span className="text-muted-foreground">Last Sync:</span>
-                      <span className="font-medium text-green-600">{lastSyncTime}</span>
+                      <span className="font-medium text-green-600">{syncStatus?.last_success || lastSyncTime}</span>
                     </div>
                     
                     <Separator />

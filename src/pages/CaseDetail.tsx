@@ -9,7 +9,9 @@ import { ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, A
 import { cn } from '@/lib/utils';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { apiFetch } from '@/lib/api';
 
 interface CaseEvent {
   timestamp: string;
@@ -145,9 +147,38 @@ export default function CaseDetail() {
     );
   }
 
-  const caseData = mockCaseData[caseId as keyof typeof mockCaseData];
+  const { data: caseData } = useQuery<any>({
+    queryKey: ['recovery', caseId],
+    queryFn: () => apiFetch(`/api/recoveries/${caseId}`),
+    enabled: !!caseId,
+    staleTime: 5_000,
+  });
+
+  const [statusPollCount, setStatusPollCount] = useState(0);
+  useEffect(() => {
+    let timer: any;
+    if (caseId) {
+      timer = setInterval(() => {
+        setStatusPollCount((n) => n + 1);
+      }, 5000);
+    }
+    return () => clearInterval(timer);
+  }, [caseId]);
+
+  useQuery({
+    queryKey: ['recovery-status', caseId, statusPollCount],
+    queryFn: () => apiFetch(`/api/recoveries/${caseId}/status`),
+    enabled: !!caseId,
+  });
+
+  if (!caseData) return (
+    <PageLayout title="Loading case">
+      <div className="p-6 text-sm text-muted-foreground">Loading...</div>
+    </PageLayout>
+  );
+
   const expectedPayoutAmount = caseData.guaranteedAmount;
-  const expectedPayoutDate = caseData.payoutDate;
+  const expectedPayoutDate = caseData.expected_payout_date || caseData.payoutDate;
 
   return (
     <PageLayout title={`Case ${caseData.id}`}>

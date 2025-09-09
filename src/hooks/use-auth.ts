@@ -14,7 +14,7 @@ type AuthState = {
   logout: () => Promise<void>;
 };
 
-const apiBase = (import.meta as any)?.env?.VITE_API_URL || "";
+const apiBase = (import.meta as any)?.env?.VITE_API_BASE_URL || (import.meta as any)?.env?.VITE_API_URL || "";
 
 export function useAuth(): AuthState {
   const [user, setUser] = useState<AuthUser | null>(null);

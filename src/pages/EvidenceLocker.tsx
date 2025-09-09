@@ -9,45 +9,15 @@ import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Upload, FileText, Search, Mail, Check, AlertTriangle, Clock, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { apiFetch } from '@/lib/api';
 export default function EvidenceLocker() {
   const [dragActive, setDragActive] = useState(false);
 
-  // Mock data - in real implementation, this would come from API
-  const coverageData = {
-    protectedSKUs: 127,
-    totalSKUs: 150,
-    coveragePercentage: 85,
-    totalDocuments: 23
-  };
-  const documents = [{
-    id: 'doc-001',
-    name: 'July_Supplier_Invoice.pdf',
-    uploadDate: '2025-01-15',
-    status: 'verified' as const,
-    linkedSKUs: 15,
-    processingTime: '2.3s'
-  }, {
-    id: 'doc-002',
-    name: 'Q3_Purchase_Orders.pdf',
-    uploadDate: '2025-01-14',
-    status: 'verified' as const,
-    linkedSKUs: 28,
-    processingTime: '4.1s'
-  }, {
-    id: 'doc-003',
-    name: 'Manufacturer_Invoice_Aug.jpg',
-    uploadDate: '2025-01-13',
-    status: 'processing' as const,
-    linkedSKUs: 0,
-    processingTime: null
-  }, {
-    id: 'doc-004',
-    name: 'Blurry_Receipt.jpg',
-    uploadDate: '2025-01-12',
-    status: 'action-required' as const,
-    linkedSKUs: 0,
-    processingTime: null
-  }];
+  const { data: documents = [] } = useQuery<any[]>({
+    queryKey: ['documents'],
+    queryFn: () => apiFetch('/api/documents'),
+  });
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'verified':

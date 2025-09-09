@@ -5,6 +5,8 @@ import { Sidebar } from '@/components/layout/Sidebar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FileText, CheckCircle, DollarSign, RefreshCw } from 'lucide-react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { apiFetch } from '@/lib/api';
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -15,12 +17,10 @@ export function Dashboard() {
     amount: 1850.00,
     expectedDate: "Sept 15, 2025"
   };
-  const recoveredValue = {
-    totalRecovered: 11200.50,
-    expectedPayouts: 1850.00,
-    pendingSubmissions: 3,
-    last30Days: 2100.00
-  };
+  const { data: metrics } = useQuery<{ totalRecovered:number; expectedPayouts:number; pendingSubmissions:number; last30Days:number }>({
+    queryKey: ['metrics','recoveries'],
+    queryFn: () => apiFetch('/api/metrics/recoveries')
+  });
   const upcomingPayouts = [{
     amount: 1850.00,
     date: "Sept 15, 2025",
@@ -71,6 +71,15 @@ export function Dashboard() {
     color: 'text-success'
   }];
 
+  const queryClient = useQueryClient();
+  const runDetection = useMutation({
+    mutationFn: async () => apiFetch<{ detection_id: string }>(`/api/detections/run`, { method: 'POST', body: JSON.stringify({}) }),
+    onSuccess: () => {
+      // refresh metrics/recoveries soon after detection starts
+      queryClient.invalidateQueries({ queryKey: ['metrics','recoveries'] });
+    }
+  });
+
   // Real-time clock
   useEffect(() => {
     const interval = setInterval(() => {
@@ -109,25 +118,25 @@ export function Dashboard() {
                   <Card>
                     <CardContent className="p-4">
                       <div className="text-sm text-muted-foreground">Total Recovered</div>
-                      <div className="text-2xl font-semibold">{formatCurrency(recoveredValue.totalRecovered)}</div>
+                      <div className="text-2xl font-semibold">{formatCurrency(metrics?.totalRecovered ?? 0)}</div>
                     </CardContent>
                   </Card>
                   <Card>
                     <CardContent className="p-4">
                       <div className="text-sm text-muted-foreground">Expected Payouts</div>
-                      <div className="text-2xl font-semibold text-emerald-700">{formatCurrency(recoveredValue.expectedPayouts)}</div>
+                      <div className="text-2xl font-semibold text-emerald-700">{formatCurrency(metrics?.expectedPayouts ?? 0)}</div>
                     </CardContent>
                   </Card>
                   <Card>
                     <CardContent className="p-4">
                       <div className="text-sm text-muted-foreground">Pending Submissions</div>
-                      <div className="text-2xl font-semibold">{recoveredValue.pendingSubmissions}</div>
+                      <div className="text-2xl font-semibold">{metrics?.pendingSubmissions ?? 0}</div>
                     </CardContent>
                   </Card>
                   <Card>
                     <CardContent className="p-4">
                       <div className="text-sm text-muted-foreground">Last 30 Days</div>
-                      <div className="text-2xl font-semibold">{formatCurrency(recoveredValue.last30Days)}</div>
+                      <div className="text-2xl font-semibold">{formatCurrency(metrics?.last30Days ?? 0)}</div>
                     </CardContent>
                   </Card>
                 </div>
@@ -146,6 +155,7 @@ export function Dashboard() {
                   <Button 
                     className="h-9 flex items-center gap-2"
                     title="Run detection and surface potential missed claims"
+                    onClick={() => runDetection.mutate()}
                   >
                     Detect Missed Claims
                   </Button>
