@@ -99,8 +99,8 @@ export default function WhatsNew() {
 
                 <CardContent className="space-y-4">
                   {/* Featured Image */}
-                  <div className="rounded-lg overflow-hidden bg-muted">
-                    <img src={update.image} alt={update.title} className="w-21 h-30 object-cover" />
+                  <div className="rounded-lg overflow-hidden bg-muted h-40 md:h-48">
+                    <img src={update.image} alt={update.title} className="w-full h-full object-cover" />
                   </div>
 
                   {/* Description */}
