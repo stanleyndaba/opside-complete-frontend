@@ -43,10 +43,6 @@ export function Sidebar({
       icon: BarChart3,
       href: '/reports'
     }, {
-      title: 'Claim Documents',
-      icon: Factory,
-      href: '/evidence-locker'
-    }, {
       title: 'Connections',
       icon: Settings,
       href: '/integrations-hub'
@@ -118,12 +114,7 @@ export function Sidebar({
         </Button>
       </div>
 
-      {/* Logo Section */}
-      {!isCollapsed ? <div className="p-4 border-b border-gray-200 flex justify-center">
-          <img src="/lovable-uploads/15af441d-81d1-4a51-932f-382e12379bca.png" alt="Opside Logo" className="h-14 w-18" />
-        </div> : <div className="p-2 border-b border-gray-200 flex justify-center">
-          <img src="/lovable-uploads/15af441d-81d1-4a51-932f-382e12379bca.png" alt="Opside Logo" className="h-6 w-auto" />
-        </div>}
+      {/* Removed logo section per request */}
 
       <ScrollArea className="flex-1">
         <nav className={cn("space-y-6 py-6", isCollapsed ? "px-2" : "px-4")}>

@@ -308,51 +308,7 @@ export default function IntegrationsHub() {
           </div>
         )}
 
-        {/* Section 3: Request an Integration */}
-        <Card className="border-primary/20">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Package className="h-5 w-5" />
-              Don't see your platform?
-            </CardTitle>
-            <CardDescription>
-              Request an integration and help guide our development roadmap
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {!showRequestForm ? <Button onClick={() => setShowRequestForm(true)} className="gap-2">
-                <ExternalLink className="h-4 w-4" />
-                Request an Integration
-              </Button> : <form onSubmit={handleRequestSubmit} className="space-y-4">
-                <div>
-                  <label className="text-sm font-medium mb-2 block">
-                    Platform Name
-                  </label>
-                  <Input placeholder="e.g., Etsy, BigCommerce, NetSuite..." value={requestFormData.platform} onChange={e => setRequestFormData(prev => ({
-                ...prev,
-                platform: e.target.value
-              }))} required />
-                </div>
-                <div>
-                  <label className="text-sm font-medium mb-2 block">
-                    How would this integration help your business? (Optional)
-                  </label>
-                  <Input placeholder="Brief description of your use case..." value={requestFormData.description} onChange={e => setRequestFormData(prev => ({
-                ...prev,
-                description: e.target.value
-              }))} />
-                </div>
-                <div className="flex gap-2">
-                  <Button type="submit" size="sm">
-                    Submit Request
-                  </Button>
-                  <Button type="button" variant="outline" size="sm" onClick={() => setShowRequestForm(false)}>
-                    Cancel
-                  </Button>
-                </div>
-              </form>}
-          </CardContent>
-        </Card>
+        {/* Request an Integration removed per focus on Amazon FBA */}
       </div>
     </PageLayout>;
 }
