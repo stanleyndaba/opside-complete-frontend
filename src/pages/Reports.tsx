@@ -11,6 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { cn } from '@/lib/utils';
 import { format, subDays, startOfYear, startOfQuarter } from 'date-fns';
 import { CalendarIcon, Download, FileText, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { EVIDENCE_LOCKER_ENABLED } from '@/lib/featureFlags';
 import type { DateRange } from 'react-day-picker';
 
 // Mock data for claims
@@ -370,7 +371,7 @@ export default function Reports() {
                       <SortIcon field="payoutDate" />
                     </div>
                   </TableHead>
-                  <TableHead>Evidence</TableHead>
+                  {EVIDENCE_LOCKER_ENABLED ? <TableHead>Evidence</TableHead> : null}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -391,13 +392,15 @@ export default function Reports() {
                     <TableCell>
                       {claim.payoutDate ? format(new Date(claim.payoutDate), 'MMM dd, yyyy') : '-'}
                     </TableCell>
-                    <TableCell>
-                      <Button variant="ghost" size="sm" asChild>
-                        <a href={`/evidence-locker/document/${claim.evidenceId}`}>
-                          <FileText className="h-4 w-4" />
-                        </a>
-                      </Button>
-                    </TableCell>
+                    {EVIDENCE_LOCKER_ENABLED ? (
+                      <TableCell>
+                        <Button variant="ghost" size="sm" asChild>
+                          <a href={`/evidence-locker/document/${claim.evidenceId}`}>
+                            <FileText className="h-4 w-4" />
+                          </a>
+                        </Button>
+                      </TableCell>
+                    ) : null}
                   </TableRow>)}
               </TableBody>
             </Table>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Home, BarChart3, Shield, FileText, Factory, Zap, Settings, CreditCard, Users, HelpCircle, MessageSquare, Sparkles, Palette, Download, Key, ChevronLeft, ChevronRight, User, Search, LogOut, Building2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { EVIDENCE_LOCKER_ENABLED } from '@/lib/featureFlags';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -42,11 +43,11 @@ export function Sidebar({
       title: 'Reports',
       icon: BarChart3,
       href: '/reports'
-    }, {
+    }, ...(EVIDENCE_LOCKER_ENABLED ? [{
       title: 'Claim Documents',
       icon: Factory,
       href: '/evidence-locker'
-    }, {
+    }] : []), {
       title: 'Connections',
       icon: Settings,
       href: '/integrations-hub'
