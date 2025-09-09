@@ -28,6 +28,7 @@ import NotificationHub from "./pages/NotificationHub";
 import ApiAccess from "./pages/ApiAccess";
 import Help from "./pages/Help";
 import WhatsNew from "./pages/WhatsNew";
+import { EVIDENCE_LOCKER_ENABLED } from "@/lib/featureFlags";
 
 const queryClient = new QueryClient();
 
@@ -52,8 +53,12 @@ const App = () => (
           <Route path="/recoveries" element={<Recoveries />} />
           <Route path="/recoveries/:caseId" element={<CaseDetail />} />
           <Route path="/smart-inventory-sync" element={<SmartInventorySync />} />
-          <Route path="/evidence-locker" element={<EvidenceLocker />} />
-          <Route path="/evidence-locker/document/:documentId" element={<DocumentDetail />} />
+          {EVIDENCE_LOCKER_ENABLED ? (
+            <>
+              <Route path="/evidence-locker" element={<EvidenceLocker />} />
+              <Route path="/evidence-locker/document/:documentId" element={<DocumentDetail />} />
+            </>
+          ) : null}
           <Route path="/billing" element={<Billing />} />
           <Route path="/team-management" element={<TeamManagement />} />
           <Route path="/export" element={<ExportCenter />} />

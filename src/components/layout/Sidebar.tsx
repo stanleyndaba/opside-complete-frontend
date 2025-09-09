@@ -1,6 +1,7 @@
 import React from 'react';
 import { Home, BarChart3, Shield, FileText, Factory, Zap, Settings, CreditCard, Users, HelpCircle, MessageSquare, Sparkles, Palette, Download, Key, ChevronLeft, ChevronRight, User, Search, LogOut, Building2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { EVIDENCE_LOCKER_ENABLED } from '@/lib/featureFlags';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -42,11 +43,11 @@ export function Sidebar({
       title: 'Reports',
       icon: BarChart3,
       href: '/reports'
-    }, {
+    }, ...(EVIDENCE_LOCKER_ENABLED ? [{
       title: 'Claim Documents',
       icon: Factory,
       href: '/evidence-locker'
-    }, {
+    }] : []), {
       title: 'Connections',
       icon: Settings,
       href: '/integrations-hub'
@@ -118,12 +119,7 @@ export function Sidebar({
         </Button>
       </div>
 
-      {/* Logo Section */}
-      {!isCollapsed ? <div className="p-4 border-b border-gray-200 flex justify-center">
-          <img src="/lovable-uploads/15af441d-81d1-4a51-932f-382e12379bca.png" alt="Opside Logo" className="h-14 w-18" />
-        </div> : <div className="p-2 border-b border-gray-200 flex justify-center">
-          <img src="/lovable-uploads/15af441d-81d1-4a51-932f-382e12379bca.png" alt="Opside Logo" className="h-6 w-auto" />
-        </div>}
+      
 
       <ScrollArea className="flex-1">
         <nav className={cn("space-y-6 py-6", isCollapsed ? "px-2" : "px-4")}>

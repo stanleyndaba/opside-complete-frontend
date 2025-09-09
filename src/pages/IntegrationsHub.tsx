@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { Shield, CheckCircle, Settings, RefreshCw, ArrowRight, ExternalLink, Package, ShoppingBag, Calculator, Truck } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
 interface ActiveConnection {
   id: string;
   name: string;
@@ -98,6 +99,8 @@ const categoryConfig = {
 };
 export default function IntegrationsHub() {
   const [lastSyncTime, setLastSyncTime] = useState('Just now');
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncProgress, setSyncProgress] = useState(0);
   const [requestFormData, setRequestFormData] = useState({
     platform: '',
     description: ''
@@ -113,6 +116,25 @@ export default function IntegrationsHub() {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+  useEffect(() => {
+    if (!isSyncing) return;
+    setSyncProgress(0);
+    const start = Date.now();
+    const durationMs = 75 * 1000; // ~1.25 min demo
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - start;
+      const pct = Math.min(99, Math.floor((elapsed / durationMs) * 100));
+      setSyncProgress(pct);
+      if (pct >= 99) {
+        clearInterval(interval);
+        setTimeout(() => {
+          setIsSyncing(false);
+          setSyncProgress(100);
+        }, 1000);
+      }
+    }, 500);
+    return () => clearInterval(interval);
+  }, [isSyncing]);
   const handleRequestSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle request submission
@@ -145,12 +167,22 @@ export default function IntegrationsHub() {
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <img src={connection.logo} alt={`${connection.name} logo`} className="w-20 h-18 object-contain" />
+                      <img src={connection.logo} alt={`${connection.name} logo`} className="w-20 h-12 object-contain" />
                       <div>
                         <CardTitle className="text-lg">{connection.name}</CardTitle>
                         <p className="text-sm text-muted-foreground">
                           Store Name: <span className="font-medium">{connection.storeName}</span>
                         </p>
+                        <div className="pt-1">
+                          {syncProgress >= 100 && (
+                            <div className="flex items-center justify-between p-2 border rounded-md bg-green-50">
+                              <span className="text-sm text-green-700">Sync complete. Detection running…</span>
+                              <Button size="sm" onClick={() => (window.location.href = '/recoveries')}>
+                                View Cases
+                              </Button>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
@@ -167,11 +199,25 @@ export default function IntegrationsHub() {
                     </div>
                     
                     <Separator />
-                    
-                    <Button size="sm" variant="outline" className="w-full gap-2">
-                      <Settings className="h-3 w-3" />
-                      Manage
-                    </Button>
+
+                    {!isSyncing ? (
+                      <div className="grid grid-cols-1 gap-2">
+                      <Button size="sm" variant="outline" className="w-full gap-2 px-6 whitespace-nowrap justify-center">
+                        <Settings className="h-3 w-3" />
+                        Manage
+                      </Button>
+                      <Button size="sm" className="w-full gap-2 px-6 whitespace-nowrap justify-center" onClick={() => setIsSyncing(true)}>
+                        <RefreshCw className="h-3 w-3" />
+                        Start Inventory Sync
+                      </Button>
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        <div className="text-sm font-medium">Inventory Sync in Progress…</div>
+                        <Progress value={syncProgress} />
+                        <p className="text-xs text-muted-foreground">This can take 1–2 minutes. You can navigate away.</p>
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>)}
@@ -201,7 +247,16 @@ export default function IntegrationsHub() {
                   {categoryIntegrations.map(integration => <Card key={integration.id} className="border-muted/50 hover:border-primary/50 transition-colors">
                       <CardHeader className="pb-3">
                         <div className="flex items-center gap-3">
-                          <img src={integration.logo} alt={`${integration.name} logo`} className="w-20 h-18 object-contain" />
+                          <img
+                            src={integration.logo}
+                            alt={`${integration.name} logo`}
+                            className="w-20 h-12 object-contain"
+                            onError={(e) => {
+                              if (integration.id === 'quickbooks') {
+                                (e.currentTarget as HTMLImageElement).src = 'https://seeklogo.com/images/Q/quickbooks-logo-29E558F1CE-seeklogo.com.png';
+                              }
+                            }}
+                          />
                           <div>
                             <CardTitle className="text-lg">{integration.name}</CardTitle>
                           </div>
