@@ -197,6 +197,14 @@ export default function IntegrationsHub() {
                       <span className="text-muted-foreground">Last Sync:</span>
                       <span className="font-medium text-green-600">{syncStatus?.last_success || lastSyncTime}</span>
                     </div>
+                    {syncStatus?.state && (
+                      <div className="mt-2">
+                        <div className="w-full h-2 bg-muted rounded">
+                          <div className="h-2 bg-primary rounded transition-all" style={{ width: `${Math.min(100, syncStatus?.progress || 0)}%` }} />
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-1">{syncStatus.state} {syncStatus.progress ? `• ${syncStatus.progress}%` : ''}</div>
+                      </div>
+                    )}
                     
                     <Separator />
                     

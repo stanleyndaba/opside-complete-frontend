@@ -16,6 +16,8 @@ import { Link } from 'react-router-dom';
 import type { DateRange } from 'react-day-picker';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, buildQuery } from '@/lib/api';
+import { Checkbox } from '@/components/ui/checkbox';
+import { toast } from 'sonner';
 
 type Recovery = {
   id: string;
@@ -53,7 +55,50 @@ export default function Recoveries() {
       });
       return apiFetch<Recovery[]>(`/api/recoveries${qs}`);
     },
+    refetchInterval: 10000,
   });
+
+  // Selection state for bulk actions
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const allSelected = filteredClaims.length > 0 && filteredClaims.every(c => selectedIds.has(c.id));
+  const toggleAll = (checked: boolean) => {
+    setSelectedIds(prev => {
+      if (checked) return new Set(filteredClaims.map(c => c.id));
+      return new Set();
+    });
+  };
+  const toggleOne = (id: string, checked: boolean) => {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      if (checked) next.add(id); else next.delete(id);
+      return next;
+    });
+  };
+
+  const queryClient = useQueryClient();
+  const submitClaim = async (id: string) => {
+    try {
+      await apiFetch(`/api/claims/${id}/submit`, { method: 'POST', body: JSON.stringify({}) });
+      toast.success(`Submitted claim ${id}`);
+      // refresh recoveries list to reflect latest status
+      queryClient.invalidateQueries({ queryKey: ['recoveries'] });
+    } catch (e: any) {
+      toast.error(`Failed to submit ${id}: ${e?.message || 'Error'}`);
+    }
+  };
+  const [bulkLoading, setBulkLoading] = useState(false);
+  const onBulkSubmit = async () => {
+    if (selectedIds.size === 0) return;
+    setBulkLoading(true);
+    const ids = Array.from(selectedIds);
+    // Process sequentially to reduce backend spikes; show toast per result
+    for (const id of ids) {
+      // eslint-disable-next-line no-await-in-loop
+      await submitClaim(id);
+      setSelectedIds(prev => { const n = new Set(prev); n.delete(id); return n; });
+    }
+    setBulkLoading(false);
+  };
 
   // Filter data based on search and filters
   const filteredClaims = useMemo(() => {
@@ -280,6 +325,13 @@ export default function Recoveries() {
                   ))}
                 </SelectContent>
               </Select>
+
+              {/* Bulk Actions */}
+              <div className="ml-auto flex gap-2">
+                <Button onClick={onBulkSubmit} disabled={selectedIds.size === 0 || bulkLoading} title="Submit selected claims automatically">
+                  {bulkLoading ? 'Submitting…' : `Auto-Claim Selected (${selectedIds.size})`}
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -290,6 +342,9 @@ export default function Recoveries() {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-8">
+                    <Checkbox checked={allSelected} onCheckedChange={(v) => toggleAll(Boolean(v))} aria-label="Select all" />
+                  </TableHead>
                   <TableHead>Claim ID</TableHead>
                   <TableHead>Created</TableHead>
                   <TableHead>Type</TableHead>
@@ -303,6 +358,9 @@ export default function Recoveries() {
               <TableBody>
                 {filteredClaims.map((claim) => (
                   <TableRow key={claim.id} className="cursor-pointer hover:bg-muted/50">
+                    <TableCell className="w-8" onClick={(e) => e.stopPropagation()}>
+                      <Checkbox checked={selectedIds.has(claim.id)} onCheckedChange={(v) => toggleOne(claim.id, Boolean(v))} aria-label={`Select ${claim.id}`} />
+                    </TableCell>
                     <TableCell>
                       <Button variant="link" className="p-0 h-auto text-blue-600 hover:text-blue-800 font-mono">
                         {claim.id}
@@ -335,7 +393,7 @@ export default function Recoveries() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => submitClaim(claim.id)}>
                             Auto-Claim
                           </DropdownMenuItem>
                           <DropdownMenuItem asChild>

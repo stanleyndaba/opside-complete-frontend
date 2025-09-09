@@ -402,21 +402,46 @@ export default function CaseDetail() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="text-sm text-muted-foreground">Linked Documents</div>
-                <div className="flex items-center justify-between text-sm">
-                  <div>
-                    <div className="font-medium">July_Supplier_Invoice.pdf</div>
-                    <div className="text-xs text-muted-foreground">Verified • Jan 15, 2025</div>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm">View</Button>
-                    <Button variant="outline" size="sm">Download</Button>
-                  </div>
-                </div>
+                {!caseData?.evidence || caseData.evidence.length === 0 ? (
+                  <div className="text-sm text-muted-foreground">No documents linked to this case.</div>
+                ) : (
+                  caseData.evidence.map((doc: any) => (
+                    <div key={doc.id} className="flex items-center justify-between text-sm">
+                      <div>
+                        <div className="font-medium">{doc.name}</div>
+                        <div className="text-xs text-muted-foreground">{new Date(doc.uploaded_at || doc.created_at).toLocaleString()}</div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm" onClick={async () => { const res = await apiFetch<{ url: string }>(`/api/documents/${doc.id}/view`); window.open(res.url, '_blank'); }}>View</Button>
+                        <Button variant="outline" size="sm" onClick={async () => { const res = await apiFetch<{ url: string }>(`/api/documents/${doc.id}/download`); window.open(res.url, '_blank'); }}>Download</Button>
+                      </div>
+                    </div>
+                  ))
+                )}
                 <Separator />
                 <div className="text-sm">
                   <div className="font-medium mb-1">Approval / Rejection Reason</div>
-                  <div className="text-muted-foreground">Matched shipment discrepancy logs and verified unit costs. Ready for submission.</div>
+                  <div className="text-muted-foreground">{caseData?.decision_reason || 'No decision reason provided yet.'}</div>
                 </div>
+
+                {/* Extracted Data Preview */}
+                <Separator />
+                <div className="text-sm text-muted-foreground">Extracted Data</div>
+                {!caseData?.extractedData || caseData.extractedData.length === 0 ? (
+                  <div className="text-sm text-muted-foreground">No extracted data.</div>
+                ) : (
+                  <div className="space-y-2">
+                    {caseData.extractedData.map((item: any) => (
+                      <div key={item.sku} className="p-3 border rounded">
+                        <div className="flex items-center justify-between">
+                          <div className="font-medium">{item.sku}</div>
+                          <div className="text-xs text-muted-foreground">Qty: {item.quantity} • Unit: ${item.unitCost}</div>
+                        </div>
+                        <div className="text-xs text-muted-foreground">{item.productName}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>
