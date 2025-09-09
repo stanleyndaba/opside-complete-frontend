@@ -162,7 +162,7 @@ export function Dashboard() {
                 <Card className="h-full">
                   <CardContent className="p-6">
                     <div className="mb-6">
-                      <h2 className="text-lg font-semibold font-montserrat">Notifications</h2>
+                      <h2 className="text-base font-semibold font-montserrat">Notifications</h2>
                     </div>
 
                     <div className="space-y-4 max-h-[600px] overflow-y-auto">
@@ -180,10 +180,10 @@ export function Dashboard() {
                             </div>
 
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-foreground mb-1 font-montserrat">
+                              <p className="text-xs font-medium text-foreground mb-1 font-montserrat">
                                 {item.description}
                               </p>
-                              <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                              <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
                                 <span>{item.timestamp}</span>
                                 <div className="flex gap-1">
                                   <Badge variant="secondary" className="text-[10px] capitalize">
