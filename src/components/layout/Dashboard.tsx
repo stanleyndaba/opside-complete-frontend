@@ -80,6 +80,8 @@ export function Dashboard() {
   const [detectOpen, setDetectOpen] = useState(false);
   const [detectionId, setDetectionId] = useState<string | null>(null);
   const [pollTick, setPollTick] = useState(0);
+  const [detectionState, setDetectionState] = useState<string | null>(null);
+  const [detectionProgress, setDetectionProgress] = useState<number | null>(null);
   const runDetection = useMutation({
     mutationFn: async () => apiFetch<{ detection_id: string }>(`/api/detections/run`, { method: 'POST', body: JSON.stringify({}) }),
     onSuccess: (res) => {
@@ -103,6 +105,10 @@ export function Dashboard() {
 
   useStatusStream((evt: RealtimeEvent) => {
     if (evt.type === 'detection') {
+      if (detectionId && evt.id === detectionId) {
+        setDetectionState(evt.status);
+        if ('progress' in evt && typeof evt.progress === 'number') setDetectionProgress(evt.progress);
+      }
       if (evt.status === 'completed') {
         toast.success('Detection completed');
         queryClient.invalidateQueries({ queryKey: ['metrics','recoveries'] });
@@ -223,10 +229,10 @@ export function Dashboard() {
                     </DialogDescription>
                   </DialogHeader>
                   <div className="text-sm">
-                    Status: <span className="font-medium">{detectionStatus?.state || (runDetection.isPending ? 'starting' : 'queued')}</span>
+                    Status: <span className="font-medium">{detectionState || (runDetection.isPending ? 'starting' : 'queued')}</span>
                   </div>
                   <div className="text-xs text-muted-foreground">
-                    {detectionStatus?.progress ? `${detectionStatus.progress}% complete` : 'Preparing datasets...'}
+                    {typeof detectionProgress === 'number' ? `${detectionProgress}% complete` : 'Preparing datasets...'}
                   </div>
                   <DialogFooter>
                     <Button variant="outline" onClick={() => setDetectOpen(false)}>Close</Button>
