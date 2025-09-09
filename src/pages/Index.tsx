@@ -1,9 +1,5 @@
 
-import React from 'react';
-import { Dashboard } from '@/components/layout/Dashboard';
-
-const Index = () => {
-  return <Dashboard />;
-};
-
-export default Index;
+// Deprecated: Replaced by Landing at "/"
+export default function Index() {
+  return null;
+}
