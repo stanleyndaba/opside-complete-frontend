@@ -227,7 +227,7 @@ const Settings = () => {
             
             <Card>
               <CardHeader>
-                <CardTitle>Platform Integrations Coming Soon</CardTitle>
+                <CardTitle>Integrations Coming Soon</CardTitle>
                 <CardDescription>Coming soon to expand your recovery capabilities</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
