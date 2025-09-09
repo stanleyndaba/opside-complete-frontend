@@ -12,13 +12,14 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { cn } from '@/lib/utils';
 import { format, subDays, startOfYear, startOfQuarter } from 'date-fns';
 import { CalendarIcon, Search, MoreHorizontal, FileText, Eye } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
 import { Link } from 'react-router-dom';
 import type { DateRange } from 'react-day-picker';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, buildQuery } from '@/lib/api';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
-import { useEffect } from 'react';
+import { useEffect, useMemo as useReactMemo } from 'react';
 import { subscribeRealtime, type RealtimeEvent } from '@/lib/realtime';
 
 type Recovery = {
@@ -64,6 +65,7 @@ export default function Recoveries() {
   useEffect(() => {
     const unsub = subscribeRealtime((evt: RealtimeEvent) => {
       if (evt.type === 'recovery') {
+        setLiveEventsTs(prev => ({ ...prev, [evt.id]: Date.now() }));
         queryClient.invalidateQueries({ queryKey: ['recoveries'] });
       }
     });
@@ -88,6 +90,8 @@ export default function Recoveries() {
   };
 
   const queryClient = useQueryClient();
+  const [liveOnly, setLiveOnly] = useState(false);
+  const [liveEventsTs, setLiveEventsTs] = useState<Record<string, number>>({});
   const submitClaim = async (id: string) => {
     try {
       await apiFetch(`/api/claims/${id}/submit`, { method: 'POST', body: JSON.stringify({}) });
@@ -166,6 +170,17 @@ export default function Recoveries() {
       successRate
     };
   }, [filteredClaims]);
+
+  // Live filter projection of table rows
+  const nowTs = Date.now();
+  const liveFilteredClaims = useReactMemo(() => {
+    if (!liveOnly) return filteredClaims;
+    const windowMs = 5 * 60 * 1000;
+    return filteredClaims.filter(c => {
+      const ts = liveEventsTs[c.id];
+      return ts && (nowTs - ts) <= windowMs;
+    });
+  }, [filteredClaims, liveOnly, liveEventsTs, nowTs]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -282,6 +297,12 @@ export default function Recoveries() {
                 <Button variant="outline" size="sm" onClick={() => setQuickDateRange('all')}>All Time</Button>
               </div>
 
+              {/* Live Only Toggle */}
+              <div className="flex items-center gap-2 ml-2">
+                <Switch checked={liveOnly} onCheckedChange={(v) => setLiveOnly(Boolean(v))} />
+                <span className="text-sm text-muted-foreground">Live updates only (last 5 min)</span>
+              </div>
+
               {/* Custom Date Range */}
               <Popover>
                 <PopoverTrigger asChild>
@@ -368,7 +389,7 @@ export default function Recoveries() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredClaims.map((claim) => (
+                {(liveOnly ? liveFilteredClaims : filteredClaims).map((claim) => (
                   <TableRow key={claim.id} className="cursor-pointer hover:bg-muted/50">
                     <TableCell className="w-8" onClick={(e) => e.stopPropagation()}>
                       <Checkbox checked={selectedIds.has(claim.id)} onCheckedChange={(v) => toggleOne(claim.id, Boolean(v))} aria-label={`Select ${claim.id}`} />
