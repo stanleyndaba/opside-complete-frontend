@@ -151,17 +151,24 @@ export default function CaseDetail() {
         {submissionStatus !== 'idle' && (
           <Card>
             <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                {submissionStatus === 'submitted' && <CheckCircle className="h-5 w-5 text-emerald-600" />}
-                {submissionStatus === 'pending' && <Clock className="h-5 w-5 text-primary" />}
-                {submissionStatus === 'failed' && <AlertCircle className="h-5 w-5 text-red-600" />}
-                {submissionStatus === 'paid' && <DollarSign className="h-5 w-5 text-emerald-700" />}
-                <div className="text-sm">
-                  {submissionStatus === 'pending' && 'Auto-claim queued. Submitting to Amazon...'}
-                  {submissionStatus === 'submitted' && 'Claim submitted to Amazon. Tracking status automatically.'}
-                  {submissionStatus === 'failed' && 'Submission failed. Please retry or contact support.'}
-                  {submissionStatus === 'paid' && 'Paid. Funds confirmed by Amazon transactions.'}
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  {submissionStatus === 'submitted' && <CheckCircle className="h-5 w-5 text-emerald-600" />}
+                  {submissionStatus === 'pending' && <Clock className="h-5 w-5 text-primary" />}
+                  {submissionStatus === 'failed' && <AlertCircle className="h-5 w-5 text-red-600" />}
+                  {submissionStatus === 'paid' && <DollarSign className="h-5 w-5 text-emerald-700" />}
+                  <div className="text-sm">
+                    {submissionStatus === 'pending' && 'Auto-claim queued. Submitting to Amazon...'}
+                    {submissionStatus === 'submitted' && 'Claim submitted to Amazon. Tracking status automatically.'}
+                    {submissionStatus === 'failed' && 'Submission failed. Please retry or contact support.'}
+                    {submissionStatus === 'paid' && 'Paid. Funds confirmed by Amazon transactions.'}
+                  </div>
                 </div>
+                {submissionStatus === 'pending' && (
+                  <div className="w-full h-2 bg-muted rounded">
+                    <div className="h-2 bg-primary rounded animate-pulse" style={{ width: '60%' }} />
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>

@@ -108,6 +108,12 @@ export default function IntegrationsHub() {
     enabled: isAuthenticated,
     staleTime: 5_000,
   });
+  const { data: syncActivity = [] } = useQuery<any[]>({
+    queryKey: ['sync-activity'],
+    queryFn: () => apiFetch('/api/sync/activity'),
+    enabled: isAuthenticated,
+    staleTime: 5_000,
+  });
   const [requestFormData, setRequestFormData] = useState({
     platform: '',
     description: ''
@@ -247,6 +253,31 @@ export default function IntegrationsHub() {
               </div>;
         })}
         </div>
+
+        {/* Section 2.5: Recent Sync Activity */}
+        {isAuthenticated && (
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold">Recent Sync Activity</h2>
+            <Card>
+              <CardContent className="p-0">
+                <div className="divide-y">
+                  {syncActivity.length === 0 && (
+                    <div className="p-4 text-sm text-muted-foreground">No recent sync activity.</div>
+                  )}
+                  {syncActivity.map((evt, idx) => (
+                    <div key={idx} className="p-4 text-sm flex items-center justify-between">
+                      <div>
+                        <div className="font-medium">{evt.message}</div>
+                        <div className="text-xs text-muted-foreground">{new Date(evt.timestamp).toLocaleString()}</div>
+                      </div>
+                      <Badge variant="outline">{evt.level || 'info'}</Badge>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         {/* Section 3: Request an Integration */}
         <Card className="border-primary/20">
