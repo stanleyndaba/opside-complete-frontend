@@ -168,14 +168,14 @@ export default function IntegrationsHub() {
                     
                     <Separator />
 
-                    <div className="grid grid-cols-2 gap-2">
-                      <Button size="sm" variant="outline" className="w-full gap-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                      <Button size="sm" variant="outline" className="w-full gap-2 px-4 whitespace-nowrap justify-center">
                         <Settings className="h-3 w-3" />
                         Manage
                       </Button>
-                      <Button size="sm" className="w-full gap-2">
+                      <Button size="sm" className="w-full gap-2 px-4 whitespace-nowrap justify-center">
                         <RefreshCw className="h-3 w-3" />
-                        Inventory Sync
+                        Start Inventory Sync
                       </Button>
                     </div>
                   </div>
