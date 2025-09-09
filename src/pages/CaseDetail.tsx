@@ -21,57 +21,6 @@ interface CaseEvent {
   type: 'detection' | 'analysis' | 'generation' | 'submission' | 'update' | 'completion';
 }
 
-// Mock case data
-const mockCaseData = {
-  'OPS-12345': {
-    id: 'OPS-12345',
-    title: '5 units of Premium Wireless Headphones lost at FTW1',
-    status: 'Guaranteed' as const,
-    guaranteedAmount: 324.50,
-    payoutDate: '2025-01-15',
-    createdDate: '2025-01-08',
-    amazonCaseId: undefined,
-    sku: 'WH-PREM-001',
-    productName: 'Premium Wireless Headphones - Noise Cancelling',
-    facility: 'FTW1 - Fort Worth, TX',
-    confidence: 95,
-    unitsLost: 5,
-    unitCost: 64.90,
-    events: [
-      {
-        timestamp: '2025-01-08T12:05:00Z',
-        title: 'Discrepancy Detected',
-        description: 'Smart Inventory Sync detected 5 missing units of SKU WH-PREM-001 at FTW1 warehouse',
-        type: 'detection'
-      },
-      {
-        timestamp: '2025-01-08T12:05:30Z',
-        title: 'Evidence Located',
-        description: 'Evidence Engine found matching cost documentation (Invoice #INV-2024-582)',
-        type: 'analysis'
-      },
-      {
-        timestamp: '2025-01-08T12:06:15Z',
-        title: 'True Value Calculated',
-        description: 'True value calculated and verified: $324.50 (5 units × $64.90 per unit)',
-        type: 'analysis'
-      },
-      {
-        timestamp: '2025-01-08T12:07:22Z',
-        title: 'Claim Draft Generated',
-        description: 'Opside AI Agent generated comprehensive claim documentation with supporting evidence',
-        type: 'generation'
-      },
-      {
-        timestamp: '2025-01-08T12:10:45Z',
-        title: 'Ready for Submission',
-        description: 'Case marked as guaranteed and ready for Amazon submission pending user approval',
-        type: 'update'
-      }
-    ] as CaseEvent[]
-  }
-};
-
 const getStatusColor = (status: string) => {
   switch (status) {
     case 'Guaranteed':
@@ -133,23 +82,8 @@ export default function CaseDetail() {
   const [submissionStatus, setSubmissionStatus] = useState<'idle'|'pending'|'submitted'|'failed'|'paid'>('idle');
   const queryClient = useQueryClient();
   
-  if (!caseId || !mockCaseData[caseId as keyof typeof mockCaseData]) {
-    return (
-      <PageLayout title="Case Not Found">
-        <div className="text-center py-12">
-          <h2 className="text-xl font-semibold mb-4">Case not found</h2>
-          <Button asChild>
-            <Link to="/recoveries">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Cases
-            </Link>
-          </Button>
-        </div>
-      </PageLayout>
-    );
-  }
 
-  const { data: caseData } = useQuery<any>({
+  const { data: caseData, error } = useQuery<any>({
     queryKey: ['recovery', caseId],
     queryFn: () => apiFetch(`/api/recoveries/${caseId}`),
     enabled: !!caseId,
@@ -172,6 +106,13 @@ export default function CaseDetail() {
     queryFn: () => apiFetch(`/api/recoveries/${caseId}/status`),
     enabled: !!caseId,
   });
+
+  if (error) return (
+    <PageLayout title="Error loading case">
+      <div className="p-6 text-sm text-red-600">{(error as any)?.message || 'Failed to load case.'}</div>
+      <div className="px-6 pb-6"><Button asChild><Link to="/recoveries">Return to Recoveries</Link></Button></div>
+    </PageLayout>
+  );
 
   if (!caseData) return (
     <PageLayout title="Loading case">
