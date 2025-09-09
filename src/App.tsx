@@ -21,6 +21,7 @@ import NotificationHub from "./pages/NotificationHub";
 import ApiAccess from "./pages/ApiAccess";
 import Help from "./pages/Help";
 import WhatsNew from "./pages/WhatsNew";
+import Landing from "./pages/Landing";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/landing" element={<Landing />} />
           <Route path="/reports" element={<Reports />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/integrations-hub" element={<IntegrationsHub />} />

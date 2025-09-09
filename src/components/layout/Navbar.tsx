@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/hooks/use-auth';
 import { NotificationBell } from './NotificationBell';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api';
@@ -18,6 +19,7 @@ export function Navbar({
   sidebarCollapsed = false
 }: NavbarProps) {
   const queryClient = useQueryClient();
+  const { isDemo, exitDemo } = useAuth();
   const startSync = useMutation({
     mutationFn: async () => apiFetch('/api/sync/start', { method: 'POST', body: JSON.stringify({}) }),
     onSuccess: () => {
@@ -43,6 +45,15 @@ export function Navbar({
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent side="bottom" align="end" className="w-64 bg-white border border-gray-200 shadow-lg">
+              {isDemo && (
+                <>
+                  <DropdownMenuItem onClick={exitDemo} className="flex items-center gap-2 cursor-pointer">
+                    <Sparkles className="h-4 w-4" />
+                    <span>Exit Demo Mode</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                </>
+              )}
               {/* Section 1: Identity */}
               <DropdownMenuLabel className="pb-2">
                 <div className="space-y-1">
