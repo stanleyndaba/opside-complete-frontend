@@ -1,11 +1,14 @@
 import React from 'react';
-import { Search, User, Settings, Users, CreditCard, Zap, HelpCircle, Sparkles, MessageSquare, LogOut, Building2 } from 'lucide-react';
+import { Search, User, Settings, Users, CreditCard, Zap, HelpCircle, Sparkles, MessageSquare, LogOut, Building2, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Link } from 'react-router-dom';
 import { NotificationBell } from './NotificationBell';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { apiFetch } from '@/lib/api';
+import { toast } from 'sonner';
 interface NavbarProps {
   className?: string;
   sidebarCollapsed?: boolean;
@@ -14,6 +17,18 @@ export function Navbar({
   className,
   sidebarCollapsed = false
 }: NavbarProps) {
+  const queryClient = useQueryClient();
+  const startSync = useMutation({
+    mutationFn: async () => apiFetch('/api/sync/start', { method: 'POST', body: JSON.stringify({}) }),
+    onSuccess: () => {
+      toast.success('Sync started');
+      queryClient.invalidateQueries({ queryKey: ['sync-status'] });
+      queryClient.invalidateQueries({ queryKey: ['sync-activity'] });
+    },
+    onError: (e: any) => {
+      toast.error(e?.message || 'Failed to start sync');
+    },
+  });
   return <header className={cn("bg-background/95 backdrop-blur-sm sticky top-0 z-30 border-b transition-all duration-300", sidebarCollapsed ? "ml-16" : "ml-56", className)}>
       <div className="container flex items-center justify-end h-16 px-4">
         {/* Right side - Notification Bell and Profile Icon */}
@@ -66,6 +81,10 @@ export function Navbar({
                   <Zap className="h-4 w-4" />
                   <span>Integrations Hub</span>
                 </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => startSync.mutate()} className="flex items-center gap-2 cursor-pointer">
+                <RefreshCw className="h-4 w-4" />
+                <span>{startSync.isPending ? 'Starting…' : 'Start Sync'}</span>
               </DropdownMenuItem>
               
               <DropdownMenuSeparator />

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { FileText, CheckCircle, DollarSign, RefreshCw } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api';
+import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -82,6 +83,19 @@ export function Dashboard() {
       setDetectionId(res.detection_id);
       setDetectOpen(true);
     }
+  });
+
+  // Start Sync action (quick access)
+  const startSync = useMutation({
+    mutationFn: async () => apiFetch('/api/sync/start', { method: 'POST', body: JSON.stringify({}) }),
+    onSuccess: () => {
+      toast.success('Sync started');
+      queryClient.invalidateQueries({ queryKey: ['sync-status'] });
+      queryClient.invalidateQueries({ queryKey: ['sync-activity'] });
+    },
+    onError: (e: any) => {
+      toast.error(e?.message || 'Failed to start sync');
+    },
   });
 
   useEffect(() => {
@@ -184,12 +198,12 @@ export function Dashboard() {
                     Detect Missed Claims
                   </Button>
                   <Button 
-                    variant="outline"
-                    className="h-9"
-                    title="Auto-claim selected opportunities"
-                    disabled
+                    className="h-9 flex items-center gap-2"
+                    title="Start inventory sync now"
+                    onClick={() => startSync.mutate()}
+                    disabled={startSync.isPending}
                   >
-                    Auto-Claim Selected
+                    {startSync.isPending ? 'Starting…' : 'Start Sync'}
                   </Button>
                 </div>
               </div>
