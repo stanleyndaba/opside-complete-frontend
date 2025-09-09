@@ -5,8 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, AlertCircle, Calendar } from 'lucide-react';
+import { ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, AlertCircle, Calendar, Shield } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useState } from 'react';
 
 interface CaseEvent {
   timestamp: string;
@@ -123,6 +126,8 @@ const getEventColor = (type: CaseEvent['type']) => {
 
 export default function CaseDetail() {
   const { caseId } = useParams<{ caseId: string }>();
+  const [autoClaimOpen, setAutoClaimOpen] = useState(false);
+  const [submissionStatus, setSubmissionStatus] = useState<'idle'|'pending'|'submitted'|'failed'|'paid'>('idle');
   
   if (!caseId || !mockCaseData[caseId as keyof typeof mockCaseData]) {
     return (
@@ -141,10 +146,31 @@ export default function CaseDetail() {
   }
 
   const caseData = mockCaseData[caseId as keyof typeof mockCaseData];
+  const expectedPayoutAmount = caseData.guaranteedAmount;
+  const expectedPayoutDate = caseData.payoutDate;
 
   return (
     <PageLayout title={`Case ${caseData.id}`}>
       <div className="space-y-6">
+        {/* Submission Status Banner */}
+        {submissionStatus !== 'idle' && (
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                {submissionStatus === 'submitted' && <CheckCircle className="h-5 w-5 text-emerald-600" />}
+                {submissionStatus === 'pending' && <Clock className="h-5 w-5 text-primary" />}
+                {submissionStatus === 'failed' && <AlertCircle className="h-5 w-5 text-red-600" />}
+                {submissionStatus === 'paid' && <DollarSign className="h-5 w-5 text-emerald-700" />}
+                <div className="text-sm">
+                  {submissionStatus === 'pending' && 'Auto-claim queued. Submitting to Amazon...'}
+                  {submissionStatus === 'submitted' && 'Claim submitted to Amazon. Tracking status automatically.'}
+                  {submissionStatus === 'failed' && 'Submission failed. Please retry or contact support.'}
+                  {submissionStatus === 'paid' && 'Paid. Funds confirmed by Amazon transactions.'}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
         {/* Header */}
         <div className="flex items-center gap-4">
           <Button asChild variant="ghost" size="sm">
@@ -181,17 +207,17 @@ export default function CaseDetail() {
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Guaranteed Value</label>
+                  <label className="text-sm font-medium text-muted-foreground">Expected Payout</label>
                   <p className="text-lg font-semibold text-emerald-600 mt-1">
-                    ${caseData.guaranteedAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                    ${expectedPayoutAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                   </p>
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Predicted Payout Date</label>
+                  <label className="text-sm font-medium text-muted-foreground">Expected Payout Date</label>
                   <p className="mt-1 flex items-center gap-2">
                     <Calendar className="h-4 w-4 text-muted-foreground" />
-                    {new Date(caseData.payoutDate).toLocaleDateString('en-US', {
+                    {new Date(expectedPayoutDate).toLocaleDateString('en-US', {
                       month: 'long',
                       day: 'numeric',
                       year: 'numeric'
@@ -241,16 +267,45 @@ export default function CaseDetail() {
                 <Separator />
 
                 {caseData.status === 'Guaranteed' && (
-                  <Button className="w-full bg-emerald-600 hover:bg-emerald-700">
-                    <CheckCircle className="h-4 w-4 mr-2" />
-                    Approve & File Claim
-                  </Button>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Dialog open={autoClaimOpen} onOpenChange={setAutoClaimOpen}>
+                          <DialogTrigger asChild>
+                            <Button className="w-full bg-emerald-600 hover:bg-emerald-700">
+                              <Shield className="h-4 w-4 mr-2" />
+                              Auto-Claim with Amazon
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>Submit claim automatically</DialogTitle>
+                              <DialogDescription>
+                                We will file this claim on your behalf via Amazon. You will see real-time status updates here. No recovery, no fee (20% cap).
+                              </DialogDescription>
+                            </DialogHeader>
+                            <div className="text-sm text-muted-foreground">
+                              Submitting will move this to Expected Payouts. You can download proof once available.
+                            </div>
+                            <DialogFooter>
+                              <Button variant="outline" onClick={() => setAutoClaimOpen(false)}>Cancel</Button>
+                              <Button onClick={() => { setSubmissionStatus('submitted'); setAutoClaimOpen(false); }}>Confirm & Submit</Button>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        Files claim automatically and tracks status
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 )}
               </CardContent>
             </Card>
           </div>
 
-          {/* Right Column - Chronological Ledger */}
+          {/* Right Column - Chronological Ledger */
+          }
           <div className="lg:col-span-2">
             <Card>
               <CardHeader>
@@ -264,6 +319,21 @@ export default function CaseDetail() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
+                  {/* High-level steps */}
+                  <div className="grid grid-cols-4 gap-2 text-xs mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-amber-500" /> Detected
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-blue-500" /> Evidence Prepared
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-purple-500" /> Submitted
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-green-600" /> Paid
+                    </div>
+                  </div>
                   {caseData.events.map((event, index) => (
                     <div key={index} className="flex gap-4">
                       <div className={cn("flex-shrink-0 mt-1", getEventColor(event.type))}>
@@ -314,6 +384,34 @@ export default function CaseDetail() {
                       </div>
                     </div>
                   )}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Evidence & Decisions */}
+            <Card className="mt-6">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="h-5 w-5" />
+                  Evidence & Decisions
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="text-sm text-muted-foreground">Linked Documents</div>
+                <div className="flex items-center justify-between text-sm">
+                  <div>
+                    <div className="font-medium">July_Supplier_Invoice.pdf</div>
+                    <div className="text-xs text-muted-foreground">Verified • Jan 15, 2025</div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm">View</Button>
+                    <Button variant="outline" size="sm">Download</Button>
+                  </div>
+                </div>
+                <Separator />
+                <div className="text-sm">
+                  <div className="font-medium mb-1">Approval / Rejection Reason</div>
+                  <div className="text-muted-foreground">Matched shipment discrepancy logs and verified unit costs. Ready for submission.</div>
                 </div>
               </CardContent>
             </Card>

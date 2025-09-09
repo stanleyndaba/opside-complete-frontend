@@ -338,7 +338,7 @@ export default function Recoveries() {
                   <TableHead>Details</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Guaranteed Amount</TableHead>
-                  <TableHead>Predicted Payout</TableHead>
+                  <TableHead>Expected Payout</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -377,6 +377,9 @@ export default function Recoveries() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
+                          <DropdownMenuItem>
+                            Auto-Claim
+                          </DropdownMenuItem>
                           <DropdownMenuItem asChild>
                             <Link to={`/recoveries/${claim.id}`} className="flex items-center gap-2">
                               <Eye className="h-4 w-4" />

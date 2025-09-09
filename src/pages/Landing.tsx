@@ -15,7 +15,7 @@ export default function Landing() {
               <img src="/lovable-uploads/15af441d-81d1-4a51-932f-382e12379bca.png" alt="Opside" className="h-10" />
             </div>
             <h1 className="text-4xl font-bold tracking-tight">Amazon FBA Automated Reimbursements</h1>
-            <p className="mt-4 text-muted-foreground text-lg">We find and recover lost value from FBA fees, shipments, returns, and damaged stock. No recovery, no fee.</p>
+            <p className="mt-4 text-muted-foreground text-lg">Recover money Amazon owes you. We detect missed reimbursements and file claims automatically—no recovery, no fee.</p>
             <Card className="mt-6 border-primary/30">
               <CardContent className="p-4">
                 <div className="text-2xl font-semibold">20% Performance Fee Cap</div>
@@ -46,10 +46,10 @@ export default function Landing() {
                     <span className="font-medium">Detection</span> – we flag lost inventory, overcharges, damaged stock.
                   </li>
                   <li>
-                    <span className="font-medium">Dispute Automation</span> – generate and submit claims on your behalf.
+                    <span className="font-medium">Auto‑Claim</span> – generate and submit claims on your behalf.
                   </li>
                   <li>
-                    <span className="font-medium">Proof & Payout</span> – download claim docs, see real recovered amounts.
+                    <span className="font-medium">Proof & Payout</span> – download claim docs; see expected and recovered amounts.
                   </li>
                 </ol>
               </CardContent>

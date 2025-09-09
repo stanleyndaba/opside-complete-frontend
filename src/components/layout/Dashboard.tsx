@@ -4,7 +4,7 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, BarChart3, FolderOpen, CheckCircle, DollarSign, Search, RefreshCw, Calendar, TrendingUp } from 'lucide-react';
+import { FileText, CheckCircle, DollarSign, RefreshCw } from 'lucide-react';
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -16,9 +16,10 @@ export function Dashboard() {
     expectedDate: "Sept 15, 2025"
   };
   const recoveredValue = {
-    total: 11200.50,
-    pending: 1850.00,
-    lastMonth: 2100.00
+    totalRecovered: 11200.50,
+    expectedPayouts: 1850.00,
+    pendingSubmissions: 3,
+    last30Days: 2100.00
   };
   const upcomingPayouts = [{
     amount: 1850.00,
@@ -103,51 +104,59 @@ export function Dashboard() {
                 {/* Module 1: Promise of Time - Your Next Payout (Hero) */}
                 
 
-                {/* Module 2: Your Recovered Value */}
-                <Card className="border">
-                  <CardContent className="p-4">
-                    <div className="space-y-2">
-                      <h2 className="font-montserrat text-lg text-gray-700 font-semibold">Your Next Payout</h2>
-                      
-                      {/* Total Recovered Hero Amount */}
-                      <div className="text-xl font-semibold text-sidebar-primary font-montserrat">
-                        {formatCurrency(recoveredValue.total)}
-                      </div>
-                      
-                      {/* Subtitle */}
-                      <div className="text-sm text-muted-foreground font-montserrat">
-                        Total recovered since joining
-                      </div>
-                      
-                      {/* Recovery Metrics */}
-                      <div className="pt-2 space-y-2">
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600 font-montserrat">Pending Recovery</span>
-                          <span className="font-semibold text-sm font-montserrat">{formatCurrency(recoveredValue.pending)}</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600 font-montserrat">30-Day Recovery</span>
-                          <span className="font-semibold text-sm font-montserrat">{formatCurrency(recoveredValue.lastMonth)}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                {/* Module 2: ROI & Cash Visibility */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="text-sm text-muted-foreground">Total Recovered</div>
+                      <div className="text-2xl font-semibold">{formatCurrency(recoveredValue.totalRecovered)}</div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="text-sm text-muted-foreground">Expected Payouts</div>
+                      <div className="text-2xl font-semibold text-emerald-700">{formatCurrency(recoveredValue.expectedPayouts)}</div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="text-sm text-muted-foreground">Pending Submissions</div>
+                      <div className="text-2xl font-semibold">{recoveredValue.pendingSubmissions}</div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="text-sm text-muted-foreground">Last 30 Days</div>
+                      <div className="text-2xl font-semibold">{formatCurrency(recoveredValue.last30Days)}</div>
+                    </CardContent>
+                  </Card>
+                </div>
 
-                {/* Module 3: Primary Navigation Links */}
+                {/* Module 3: Actions */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Button 
                     variant="outline" 
-                    className="h-8 flex items-center gap-2 transition-colors bg-gray-200 hover:bg-gray-100 text-black"
+                    className="h-9 flex items-center gap-2 transition-colors bg-gray-200 hover:bg-gray-100 text-black"
                     onClick={() => navigate('/recoveries')}
+                    title="View all current and historical claims"
                   >
                     <FileText className="h-4 w-4" />
                     <span className="font-montserrat">View All Claims</span>
                   </Button>
-                  
-                  
-                  
-                  
+                  <Button 
+                    className="h-9 flex items-center gap-2"
+                    title="Run detection and surface potential missed claims"
+                  >
+                    Detect Missed Claims
+                  </Button>
+                  <Button 
+                    variant="outline"
+                    className="h-9"
+                    title="Auto-claim selected opportunities"
+                    disabled
+                  >
+                    Auto-Claim Selected
+                  </Button>
                 </div>
               </div>
 
