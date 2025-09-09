@@ -26,55 +26,9 @@ export function Dashboard() {
     queryKey: ['metrics','recoveries'],
     queryFn: () => apiFetch('/api/metrics/recoveries')
   });
-  const upcomingPayouts = [{
-    amount: 1850.00,
-    date: "Sept 15, 2025",
-    status: "confirmed"
-  }, {
-    amount: 2100.00,
-    date: "Oct 12, 2025",
-    status: "pending"
-  }, {
-    amount: 950.00,
-    date: "Nov 8, 2025",
-    status: "estimated"
-  }];
-  const activityFeed = [{
-    id: 1,
-    type: 'claim_submitted',
-    icon: CheckCircle,
-    description: 'NEW: Claim #1234 ($250) for Lost Inventory Submitted.',
-    timestamp: '2 minutes ago',
-    color: 'text-success'
-  }, {
-    id: 2,
-    type: 'payout_completed',
-    icon: DollarSign,
-    description: 'PAID: Claim #1198 ($150) has been successfully paid out.',
-    timestamp: '8 hours ago',
-    color: 'text-success'
-  }, {
-    id: 3,
-    type: 'evidence_added',
-    icon: Search,
-    description: 'EVIDENCE ADDED: Invoice #INV-5678 linked to Claim #1235.',
-    timestamp: 'Yesterday',
-    color: 'text-primary'
-  }, {
-    id: 4,
-    type: 'sync_complete',
-    icon: RefreshCw,
-    description: 'SYNC COMPLETE: Your account was successfully synced.',
-    timestamp: 'Yesterday',
-    color: 'text-muted-foreground'
-  }, {
-    id: 5,
-    type: 'claim_approved',
-    icon: CheckCircle,
-    description: 'APPROVED: Claim #1199 ($380) has been approved by Amazon.',
-    timestamp: '2 days ago',
-    color: 'text-success'
-  }];
+  const upcomingPayouts = [] as Array<{ amount:number; date:string; status:string }>;
+  type FeedItem = { id: string; icon: React.ElementType; description: string; timestamp: string; color?: string };
+  const [activityFeed, setActivityFeed] = useState<FeedItem[]>([]);
 
   const queryClient = useQueryClient();
   const [detectOpen, setDetectOpen] = useState(false);
@@ -112,8 +66,10 @@ export function Dashboard() {
       if (evt.status === 'completed') {
         toast.success('Detection completed');
         queryClient.invalidateQueries({ queryKey: ['metrics','recoveries'] });
+        setActivityFeed((prev) => [{ id: `det-${evt.id}-${Date.now()}`, icon: CheckCircle, description: `Detection ${evt.id} completed`, timestamp: new Date().toLocaleString(), color: 'text-success' }, ...prev].slice(0, 50));
       } else if (evt.status === 'failed') {
         toast.error('Detection failed');
+        setActivityFeed((prev) => [{ id: `det-${evt.id}-${Date.now()}`, icon: RefreshCw, description: `Detection ${evt.id} failed`, timestamp: new Date().toLocaleString(), color: 'text-red-600' }, ...prev].slice(0, 50));
       }
     }
     if (evt.type === 'sync') {
@@ -122,12 +78,15 @@ export function Dashboard() {
         queryClient.invalidateQueries({ queryKey: ['metrics','recoveries'] });
         queryClient.invalidateQueries({ queryKey: ['sync-status'] });
         queryClient.invalidateQueries({ queryKey: ['sync-activity'] });
+        setActivityFeed((prev) => [{ id: `sync-${evt.id}-${Date.now()}`, icon: RefreshCw, description: `Sync job ${evt.id} completed`, timestamp: new Date().toLocaleString(), color: 'text-muted-foreground' }, ...prev].slice(0, 50));
       } else if (evt.status === 'failed') {
         toast.error('Sync failed');
+        setActivityFeed((prev) => [{ id: `sync-${evt.id}-${Date.now()}`, icon: RefreshCw, description: `Sync job ${evt.id} failed`, timestamp: new Date().toLocaleString(), color: 'text-red-600' }, ...prev].slice(0, 50));
       }
     }
     if (evt.type === 'recovery') {
       queryClient.invalidateQueries({ queryKey: ['recoveries'] });
+      setActivityFeed((prev) => [{ id: `rec-${evt.id}-${Date.now()}`, icon: CheckCircle, description: `Recovery ${evt.id} status: ${evt.status}`, timestamp: new Date().toLocaleString(), color: evt.status === 'paid' ? 'text-success' : 'text-primary' }, ...prev].slice(0, 50));
     }
   });
 
@@ -250,10 +209,18 @@ export function Dashboard() {
                     </div>
                     
                     <div className="space-y-4 max-h-[600px] overflow-y-auto">
+                      {activityFeed.length === 0 && (
+                        <div className="text-sm text-muted-foreground">No recent activity yet</div>
+                      )}
                       {activityFeed.map(item => {
-                      const IconComponent = item.icon;
-                      return <div key={item.id} className="flex gap-3 p-3 transition-colors bg-stone-50 rounded-none">
-                            
+                        const IconComponent = item.icon;
+                        return (
+                          <div key={item.id} className="flex gap-3 p-3 transition-colors bg-stone-50 rounded-none">
+                            <div className="flex-shrink-0 mt-0.5">
+                              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                                <IconComponent className="w-4 h-4 text-primary" />
+                              </div>
+                            </div>
                             <div className="flex-1 min-w-0">
                               <p className="text-sm font-medium text-foreground mb-1 font-montserrat">
                                 {item.description}
@@ -262,8 +229,9 @@ export function Dashboard() {
                                 {item.timestamp}
                               </p>
                             </div>
-                          </div>;
-                    })}
+                          </div>
+                        );
+                      })}
                     </div>
                   </CardContent>
                 </Card>
