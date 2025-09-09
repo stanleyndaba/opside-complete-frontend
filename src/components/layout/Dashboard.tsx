@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { FileText, CheckCircle, DollarSign, RefreshCw } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -72,13 +73,36 @@ export function Dashboard() {
   }];
 
   const queryClient = useQueryClient();
+  const [detectOpen, setDetectOpen] = useState(false);
+  const [detectionId, setDetectionId] = useState<string | null>(null);
+  const [pollTick, setPollTick] = useState(0);
   const runDetection = useMutation({
     mutationFn: async () => apiFetch<{ detection_id: string }>(`/api/detections/run`, { method: 'POST', body: JSON.stringify({}) }),
-    onSuccess: () => {
-      // refresh metrics/recoveries soon after detection starts
-      queryClient.invalidateQueries({ queryKey: ['metrics','recoveries'] });
+    onSuccess: (res) => {
+      setDetectionId(res.detection_id);
+      setDetectOpen(true);
     }
   });
+
+  useEffect(() => {
+    if (!detectOpen || !detectionId) return;
+    const t = setInterval(() => setPollTick((n) => n + 1), 2000);
+    return () => clearInterval(t);
+  }, [detectOpen, detectionId]);
+
+  const { data: detectionStatus } = useQuery<any>({
+    queryKey: ['detection-status', detectionId, pollTick],
+    queryFn: () => apiFetch(`/api/detections/status/${detectionId}`),
+    enabled: detectOpen && !!detectionId,
+    refetchInterval: 0,
+  });
+
+  useEffect(() => {
+    if (!detectionStatus) return;
+    if (detectionStatus.state === 'completed' || detectionStatus.state === 'failed') {
+      queryClient.invalidateQueries({ queryKey: ['metrics','recoveries'] });
+    }
+  }, [detectionStatus, queryClient]);
 
   // Real-time clock
   useEffect(() => {
@@ -169,6 +193,25 @@ export function Dashboard() {
                   </Button>
                 </div>
               </div>
+              <Dialog open={detectOpen} onOpenChange={setDetectOpen}>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Detecting Missed Claims</DialogTitle>
+                    <DialogDescription>
+                      We’re scanning your account for potential reimbursements. This may take up to 1–2 minutes.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="text-sm">
+                    Status: <span className="font-medium">{detectionStatus?.state || (runDetection.isPending ? 'starting' : 'queued')}</span>
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {detectionStatus?.progress ? `${detectionStatus.progress}% complete` : 'Preparing datasets...'}
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setDetectOpen(false)}>Close</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
 
               {/* Right Column - Live Activity Feed (30-35% width) */}
               <div className="lg:col-span-1">

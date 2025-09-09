@@ -56,7 +56,14 @@ export default function DocumentDetail() {
               <Check className="w-3 h-3 mr-1" />
               Verified
             </Badge>
-            <Button variant="outline" size="sm">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={async () => {
+                const res = await apiFetch<{ url: string }>(`/api/documents/${documentId}/download`);
+                window.open(res.url, '_blank');
+              }}
+            >
               <Download className="w-4 h-4 mr-2" />
               Download
             </Button>
