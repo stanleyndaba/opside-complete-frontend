@@ -8,8 +8,9 @@ import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { Shield, CheckCircle, Settings, RefreshCw, ArrowRight, ExternalLink, Package, ShoppingBag, Calculator, Truck } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api';
+import { toast } from 'sonner';
 interface ActiveConnection {
   id: string;
   name: string;
@@ -102,17 +103,30 @@ const categoryConfig = {
 export default function IntegrationsHub() {
   const { isAuthenticated, loginWithAmazon } = useAuth();
   const [lastSyncTime, setLastSyncTime] = useState('Just now');
+  const queryClient = useQueryClient();
   const { data: syncStatus } = useQuery<any>({
     queryKey: ['sync-status'],
     queryFn: () => apiFetch('/api/sync/status'),
     enabled: isAuthenticated,
     staleTime: 5_000,
+    refetchInterval: 3000,
   });
   const { data: syncActivity = [] } = useQuery<any[]>({
     queryKey: ['sync-activity'],
     queryFn: () => apiFetch('/api/sync/activity'),
     enabled: isAuthenticated,
     staleTime: 5_000,
+  });
+  const startSync = useMutation({
+    mutationFn: async () => apiFetch('/api/sync/start', { method: 'POST', body: JSON.stringify({}) }),
+    onSuccess: () => {
+      toast.success('Sync started');
+      queryClient.invalidateQueries({ queryKey: ['sync-status'] });
+      queryClient.invalidateQueries({ queryKey: ['sync-activity'] });
+    },
+    onError: (e: any) => {
+      toast.error(e?.message || 'Failed to start sync');
+    },
   });
   const [requestFormData, setRequestFormData] = useState({
     platform: '',
@@ -207,11 +221,18 @@ export default function IntegrationsHub() {
                     )}
                     
                     <Separator />
-                    
-                    <Button size="sm" variant="outline" className="w-full gap-2">
-                      <Settings className="h-3 w-3" />
-                      Manage
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button size="sm" variant="outline" className="w-full gap-2">
+                        <Settings className="h-3 w-3" />
+                        Manage
+                      </Button>
+                      {isAuthenticated && (
+                        <Button size="sm" className="w-full gap-2" onClick={() => startSync.mutate()} disabled={startSync.isPending}>
+                          <RefreshCw className="h-3 w-3" />
+                          {startSync.isPending ? 'Starting…' : 'Start Sync'}
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </CardContent>
               </Card>)}
