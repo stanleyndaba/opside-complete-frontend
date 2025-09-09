@@ -168,7 +168,7 @@ export default function IntegrationsHub() {
                     
                     <Separator />
 
-                    <div className="grid grid-cols-1 md:grid-cols-[minmax(200px,1fr)_minmax(200px,1fr)] gap-2">
+                    <div className="grid grid-cols-1 gap-2">
                       <Button size="sm" variant="outline" className="w-full gap-2 px-6 whitespace-nowrap justify-center">
                         <Settings className="h-3 w-3" />
                         Manage
@@ -207,7 +207,16 @@ export default function IntegrationsHub() {
                   {categoryIntegrations.map(integration => <Card key={integration.id} className="border-muted/50 hover:border-primary/50 transition-colors">
                       <CardHeader className="pb-3">
                         <div className="flex items-center gap-3">
-                          <img src={integration.logo} alt={`${integration.name} logo`} className="w-20 h-12 object-contain" />
+                          <img
+                            src={integration.logo}
+                            alt={`${integration.name} logo`}
+                            className="w-20 h-12 object-contain"
+                            onError={(e) => {
+                              if (integration.id === 'quickbooks') {
+                                (e.currentTarget as HTMLImageElement).src = 'https://seeklogo.com/images/Q/quickbooks-logo-29E558F1CE-seeklogo.com.png';
+                              }
+                            }}
+                          />
                           <div>
                             <CardTitle className="text-lg">{integration.name}</CardTitle>
                           </div>
