@@ -1,4 +1,6 @@
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { useEffect, useMemo, useState, useCallback, useRef } from "react";
+import { apiFetch } from "@/lib/api";
+import { toast } from "sonner";
 
 type AuthUser = {
   id: string;
@@ -20,22 +22,15 @@ export function useAuth(): AuthState {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  const didStripeHook = useRef(false);
+
   useEffect(() => {
     let isMounted = true;
     const fetchMe = async () => {
       setIsLoading(true);
       try {
-        const res = await fetch(`${apiBase}/auth/me`, {
-          method: "GET",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-        });
-        if (res.ok) {
-          const data = await res.json();
-          if (isMounted) setUser(data?.user ?? null);
-        } else {
-          if (isMounted) setUser(null);
-        }
+        const data = await apiFetch<any>(`/api/auth/me`);
+        if (isMounted) setUser(data?.user ?? null);
       } catch (_err) {
         if (isMounted) setUser(null);
       } finally {
@@ -47,6 +42,38 @@ export function useAuth(): AuthState {
       isMounted = false;
     };
   }, []);
+
+  // Post-login Stripe onboarding hook
+  useEffect(() => {
+    const runStripeHook = async () => {
+      if (!user || didStripeHook.current) return;
+      didStripeHook.current = true;
+      try {
+        const res = await apiFetch<any>(`/api/auth/post-login/stripe`, {
+          method: "POST",
+          body: JSON.stringify({}),
+        });
+        const onboardingUrl = res?.onboarding_url || res?.url;
+        const manageUrl = res?.manage_billing_url || res?.billing_portal_url;
+        if (onboardingUrl) {
+          window.location.href = onboardingUrl;
+          return;
+        }
+        if (manageUrl) {
+          toast.success("Billing ready. Manage your payment method.", {
+            action: {
+              label: "Manage Billing",
+              onClick: () => window.open(manageUrl, "_blank"),
+            },
+          });
+        }
+      } catch (_e) {
+        // Don’t block dashboard; show gentle notice
+        toast.message("Billing setup deferred", { description: "You can complete Stripe onboarding later from Billing." });
+      }
+    };
+    runStripeHook();
+  }, [user]);
 
   const loginWithAmazon = useCallback(() => {
     window.location.href = `${apiBase}/auth/amazon`;
