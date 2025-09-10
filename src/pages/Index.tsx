@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 const Index = () => {
   return <div className="min-h-screen flex flex-col">
@@ -31,6 +32,9 @@ const Index = () => {
               <Button size="lg" className="bg-[#FF9900] hover:bg-[#e68900] text-black font-montserrat">
                 <img src="/lovable-uploads/14f98d63-9a1a-4128-8021-1d840d778ea5.png" alt="Amazon" className="h-5 w-5 mr-2" />
                 Sign in with Amazon
+              </Button>
+              <Button variant="outline" size="lg" asChild>
+                <Link to="/app">View Demo</Link>
               </Button>
               <span className="text-xs text-muted-foreground">No credit card required</span>
             </div>
