@@ -6,6 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, AlertCircle, Calendar } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { api } from '@/lib/api';
 
@@ -127,6 +129,7 @@ export default function CaseDetail() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [caseData, setCaseData] = useState<any | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     let cancelled = false;
@@ -310,8 +313,10 @@ export default function CaseDetail() {
                   <Button className="w-full bg-emerald-600 hover:bg-emerald-700" disabled={!effectiveCase.isEvidenceComplete} onClick={async () => {
                     const res = await api.resolveRecovery(effectiveCase.id);
                     if (res.ok) {
-                      // optimistic update
                       setCaseData((prev: any) => ({ ...(prev || {}), status: 'Submitted', submissionStatus: 'submitted' }));
+                      toast({ title: 'Claim submitted to Amazon', description: 'We will update you with the Amazon Case ID shortly.' });
+                    } else {
+                      toast({ title: 'Submission failed', description: res.error || 'Please try again.' });
                     }
                   }}>
                     <CheckCircle className="h-4 w-4 mr-2" />
@@ -325,6 +330,10 @@ export default function CaseDetail() {
                   <FileText className="h-4 w-4 mr-2" />
                   Download Proof Document
                 </Button>
+
+                <Button variant="ghost" className="w-full" asChild>
+                  <Link to="/evidence-locker">Open Evidence Locker</Link>
+                </Button>
               </CardContent>
             </Card>
           </div>
@@ -335,7 +344,7 @@ export default function CaseDetail() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Clock className="h-5 w-5" />
-                  Chronological Ledger
+                  Claim Timeline
                   <Badge variant="outline" className="ml-auto">
                     Real-time transparency
                   </Badge>
@@ -343,6 +352,24 @@ export default function CaseDetail() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
+                  {/* Visual Stepper */}
+                  <div className="flex items-center gap-3 mb-2 text-sm">
+                    {['Detected','Prepared','Submitted','Paid'].map((step, idx) => {
+                      const active = (
+                        (step === 'Detected') ||
+                        (step === 'Prepared' && ['Guaranteed','Submitted','Under Review','Paid Out'].includes(effectiveCase.status)) ||
+                        (step === 'Submitted' && ['Submitted','Under Review','Paid Out'].includes(effectiveCase.status)) ||
+                        (step === 'Paid' && ['Paid Out'].includes(effectiveCase.status))
+                      );
+                      return (
+                        <div key={step} className="flex items-center gap-3">
+                          <div className={`h-6 w-6 rounded-full flex items-center justify-center border ${active ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-muted-foreground'}`}>{idx+1}</div>
+                          <span className={`${active ? 'text-foreground font-medium' : 'text-muted-foreground'}`}>{step}</span>
+                          {idx < 3 && <div className={`w-10 h-px ${active ? 'bg-emerald-600' : 'bg-muted'}`} />}
+                        </div>
+                      );
+                    })}
+                  </div>
                   {(effectiveCase.events || []).map((event: any, index: number) => (
                     <div key={index} className="flex gap-4">
                       <div className={cn("flex-shrink-0 mt-1", getEventColor(event.type))}>
@@ -372,7 +399,7 @@ export default function CaseDetail() {
                     </div>
                   ))}
                   
-                  {/* Future events placeholder */}
+                  {/* Future events placeholder */
                   {effectiveCase.status === 'Guaranteed' && (
                     <div className="flex gap-4 opacity-50">
                       <div className="flex-shrink-0 mt-1 text-gray-400">

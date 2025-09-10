@@ -193,6 +193,25 @@ const Settings = () => {
                 </div>
               </CardContent>
             </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Auto-Claim (ACG)</CardTitle>
+                <CardDescription>Automatically submit approved claims once evidence is verified</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium">Enable Auto-Claim</p>
+                    <p className="text-sm text-muted-foreground">Claims are auto-filed to Amazon when evidence is complete</p>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  Note: You can always review individual cases in Recoveries and pause Auto-Claim from here.
+                </div>
+              </CardContent>
+            </Card>
           </div>
         );
 

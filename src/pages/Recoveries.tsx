@@ -374,8 +374,8 @@ export default function Recoveries() {
                 {filteredClaims.map((claim) => (
                   <TableRow key={claim.id} className="cursor-pointer hover:bg-muted/50">
                     <TableCell>
-                      <Button variant="link" className="p-0 h-auto text-blue-600 hover:text-blue-800 font-mono">
-                        {claim.id}
+                      <Button asChild variant="link" className="p-0 h-auto text-blue-600 hover:text-blue-800 font-mono">
+                        <Link to={`/recoveries/${claim.id}`}>{claim.id}</Link>
                       </Button>
                     </TableCell>
                     <TableCell>{format(new Date(claim.created), 'MMM dd, yyyy')}</TableCell>

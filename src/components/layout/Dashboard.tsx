@@ -144,8 +144,25 @@ export function Dashboard() {
                   )}
                 </div>
                 
-                {/* Module 1: Promise of Time - Your Next Payout (Hero) */}
-                
+                {/* Module 1: Next Expected Payout (Hero) */}
+                <Card className="border bg-gradient-to-br from-emerald-50 to-white">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between gap-4">
+                      <div>
+                        <h2 className="font-montserrat text-lg text-gray-700 font-semibold">Next Expected Payout</h2>
+                        <div className="text-3xl font-extrabold mt-2">
+                          {aggregates ? formatCurrency(aggregates.totalExpected) : '—'}
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">Estimated from approved and pending claims</p>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-xs uppercase text-muted-foreground">Auto-Claim</span>
+                        <div className="text-sm">Enabled</div>
+                        <div className="text-xs text-muted-foreground">Claims auto-submitted once evidence is verified</div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
 
                 {/* Module 2: Your Recovered Value */}
                 <Card className="border">
