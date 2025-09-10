@@ -7,8 +7,8 @@ const Index = () => {
       <header className="border-b">
         <div className="container mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src="/favicon.ico" alt="Opside" className="h-6 w-6" />
-            <span className="font-montserrat font-semibold">Opside</span>
+            <img src="/clario-logo.svg" alt="Clario" className="h-6 w-6" />
+            <span className="font-montserrat font-semibold">Clario</span>
           </div>
           <nav className="flex items-center gap-4 text-sm text-muted-foreground">
             <a href="#how-it-works" className="hover:text-foreground">How it works</a>
@@ -25,7 +25,7 @@ const Index = () => {
               Your FBA Reimbursements, Fully Automated.
             </h1>
             <p className="font-montserrat text-base md:text-lg text-muted-foreground">
-              Opside AI automatically finds, files, and tracks every eligible claim with full transparency. No Upfront Costs — Our Success is Tied to Yours.
+              Clario automatically finds, files, and tracks every eligible claim with full transparency. No Upfront Costs — Our Success is Tied to Yours.
             </p>
             <div className="pt-2 flex items-center gap-3">
               <Button size="lg" className="bg-[#FF9900] hover:bg-[#e68900] text-black font-montserrat">
@@ -40,7 +40,7 @@ const Index = () => {
 
       <footer className="border-t">
         <div className="container mx-auto px-6 py-6 text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Opside, Inc. All rights reserved.
+          © {new Date().getFullYear()} Clario, Inc. All rights reserved.
         </div>
       </footer>
     </div>;
