@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,46 +8,32 @@ import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Upload, FileText, Search, Mail, Check, AlertTriangle, Clock, Eye } from 'lucide-react';
+import { api } from '@/lib/api';
 import { Link } from 'react-router-dom';
 export default function EvidenceLocker() {
   const [dragActive, setDragActive] = useState(false);
 
-  // Mock data - in real implementation, this would come from API
-  const coverageData = {
-    protectedSKUs: 127,
-    totalSKUs: 150,
-    coveragePercentage: 85,
-    totalDocuments: 23
-  };
-  const documents = [{
-    id: 'doc-001',
-    name: 'July_Supplier_Invoice.pdf',
-    uploadDate: '2025-01-15',
-    status: 'verified' as const,
-    linkedSKUs: 15,
-    processingTime: '2.3s'
-  }, {
-    id: 'doc-002',
-    name: 'Q3_Purchase_Orders.pdf',
-    uploadDate: '2025-01-14',
-    status: 'verified' as const,
-    linkedSKUs: 28,
-    processingTime: '4.1s'
-  }, {
-    id: 'doc-003',
-    name: 'Manufacturer_Invoice_Aug.jpg',
-    uploadDate: '2025-01-13',
-    status: 'processing' as const,
-    linkedSKUs: 0,
-    processingTime: null
-  }, {
-    id: 'doc-004',
-    name: 'Blurry_Receipt.jpg',
-    uploadDate: '2025-01-12',
-    status: 'action-required' as const,
-    linkedSKUs: 0,
-    processingTime: null
-  }];
+  const [documents, setDocuments] = useState<Array<{ id: string; name: string; uploadDate: string; status: string; linkedSKUs?: number }>>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      setLoading(true);
+      const res = await api.getDocuments();
+      if (!cancelled) {
+        if (res.ok && Array.isArray(res.data)) {
+          setDocuments(res.data);
+          setError(null);
+        } else {
+          setError(res.error || 'Failed to load documents');
+        }
+        setLoading(false);
+      }
+    })();
+    return () => { cancelled = true };
+  }, []);
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'verified':
@@ -93,7 +79,7 @@ export default function EvidenceLocker() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           
           
-          <StatsCard title="Total Documents" value={coverageData.totalDocuments} description="Successfully processed" />
+          <StatsCard title="Total Documents" value={documents.length} description="Successfully processed" />
           
           <StatsCard title="Processing Power" value="2.3s" description="Average extraction time" />
         </div>
@@ -149,6 +135,8 @@ export default function EvidenceLocker() {
             </div>
           </CardHeader>
           <CardContent>
+            {loading && <div className="text-sm text-muted-foreground">Loading documents…</div>}
+            {error && <div className="text-sm text-red-600">{error}</div>}
             <Table>
               <TableHeader>
                 <TableRow>

@@ -23,7 +23,7 @@ const mockCaseData = {
     title: '5 units of Premium Wireless Headphones lost at FTW1',
     status: 'Guaranteed' as const,
     guaranteedAmount: 324.50,
-    payoutDate: '2025-01-15',
+    expectedPayoutDate: '2025-01-15',
     createdDate: '2025-01-08',
     amazonCaseId: undefined,
     sku: 'WH-PREM-001',
@@ -145,6 +145,20 @@ export default function CaseDetail() {
         setLoading(false);
       }
     })();
+    // Poll for status updates
+    const interval = setInterval(async () => {
+      if (!caseId) return;
+      const statusRes = await api.getRecoveryStatus(caseId);
+      if (statusRes.ok && statusRes.data) {
+        setCaseData((prev: any) => ({
+          ...(prev || {}),
+          status: (statusRes.data as any).status ?? prev?.status,
+          expectedPayoutDate: (statusRes.data as any).expected_payout_date ?? prev?.expectedPayoutDate,
+          amazonCaseId: (statusRes.data as any).amazonCaseId ?? prev?.amazonCaseId,
+          events: (statusRes.data as any).events ?? prev?.events,
+        }));
+      }
+    }, 10000);
     return () => { cancelled = true; };
   }, [caseId]);
   
@@ -208,6 +222,21 @@ export default function CaseDetail() {
                   </div>
                 </div>
 
+                {effectiveCase.submissionStatus && (
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Submission Status</label>
+                    <div className="mt-1">
+                      <Badge variant="outline" className="font-medium">
+                        {effectiveCase.submissionStatus === 'draft' && 'Draft'}
+                        {effectiveCase.submissionStatus === 'submitted' && 'Submitted'}
+                        {effectiveCase.submissionStatus === 'approved' && 'Approved'}
+                        {effectiveCase.submissionStatus === 'paid' && 'Paid'}
+                        {effectiveCase.submissionStatus === 'denied' && 'Denied'}
+                      </Badge>
+                    </div>
+                  </div>
+                )}
+
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Guaranteed Value</label>
                   <p className="text-lg font-semibold text-emerald-600 mt-1">
@@ -216,10 +245,10 @@ export default function CaseDetail() {
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Predicted Payout Date</label>
+                  <label className="text-sm font-medium text-muted-foreground">Expected Payout Date</label>
                   <p className="mt-1 flex items-center gap-2">
                     <Calendar className="h-4 w-4 text-muted-foreground" />
-                    {effectiveCase.payoutDate ? new Date(effectiveCase.payoutDate).toLocaleDateString('en-US', {
+                    {effectiveCase.expectedPayoutDate ? new Date(effectiveCase.expectedPayoutDate).toLocaleDateString('en-US', {
                       month: 'long',
                       day: 'numeric',
                       year: 'numeric'
@@ -234,6 +263,15 @@ export default function CaseDetail() {
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">Amazon Case ID</label>
                     <p className="font-mono text-sm mt-1">{effectiveCase.amazonCaseId}</p>
+                  </div>
+                )}
+
+                {(effectiveCase.approvalReason || effectiveCase.rejectionReason) && (
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Decision Reason</label>
+                    <p className="text-sm mt-1">
+                      {effectiveCase.approvalReason || effectiveCase.rejectionReason}
+                    </p>
                   </div>
                 )}
 
@@ -269,12 +307,15 @@ export default function CaseDetail() {
                 <Separator />
 
                 {effectiveCase.status === 'Guaranteed' && (
-                  <Button className="w-full bg-emerald-600 hover:bg-emerald-700" onClick={async () => {
-                    await api.resolveRecovery(effectiveCase.id);
-                    window.location.reload();
+                  <Button className="w-full bg-emerald-600 hover:bg-emerald-700" disabled={!effectiveCase.isEvidenceComplete} onClick={async () => {
+                    const res = await api.resolveRecovery(effectiveCase.id);
+                    if (res.ok) {
+                      // optimistic update
+                      setCaseData((prev: any) => ({ ...(prev || {}), status: 'Submitted', submissionStatus: 'submitted' }));
+                    }
                   }}>
                     <CheckCircle className="h-4 w-4 mr-2" />
-                    Approve & File Claim
+                    {effectiveCase.isEvidenceComplete ? 'Approve & File Claim' : 'Waiting for Evidence Validation'}
                   </Button>
                 )}
 
@@ -324,7 +365,7 @@ export default function CaseDetail() {
                             })}
                           </div>
                         </div>
-                        {index < caseData.events.length - 1 && (
+                        {Array.isArray(effectiveCase.events) && index < effectiveCase.events.length - 1 && (
                           <div className="border-l border-muted ml-2 h-6 mt-3" />
                         )}
                       </div>
@@ -332,7 +373,7 @@ export default function CaseDetail() {
                   ))}
                   
                   {/* Future events placeholder */}
-                  {caseData.status === 'Guaranteed' && (
+                  {effectiveCase.status === 'Guaranteed' && (
                     <div className="flex gap-4 opacity-50">
                       <div className="flex-shrink-0 mt-1 text-gray-400">
                         <Package className="h-4 w-4" />

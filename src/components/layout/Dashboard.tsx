@@ -4,22 +4,32 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, BarChart3, FolderOpen, CheckCircle, DollarSign, Search, RefreshCw, Calendar, TrendingUp } from 'lucide-react';
+import { FileText, BarChart3, FolderOpen, CheckCircle, DollarSign, Search, RefreshCw, Calendar, TrendingUp, Radar } from 'lucide-react';
+import { api } from '@/lib/api';
+import { useToast } from '@/hooks/use-toast';
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const [detecting, setDetecting] = useState(false);
+  const [lastDetection, setLastDetection] = useState<{ newCases: number; totalPotential: number } | null>(null);
 
-  // Mock data for the dashboard
-  const nextPayout = {
-    amount: 1850.00,
-    expectedDate: "Sept 15, 2025"
-  };
-  const recoveredValue = {
-    total: 11200.50,
-    pending: 1850.00,
-    lastMonth: 2100.00
-  };
+  // Aggregates state
+  const [windowSel, setWindowSel] = useState<'7d' | '30d' | '90d'>('30d');
+  const [aggregates, setAggregates] = useState<{ totalRecovered: number; totalApproved: number; totalExpected: number } | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const res = await api.getDashboardAggregates(windowSel);
+      if (!cancelled) {
+        if (res.ok && res.data) {
+          setAggregates({ totalRecovered: res.data.totalRecovered, totalApproved: res.data.totalApproved, totalExpected: res.data.totalExpected });
+        }
+      }
+    })();
+    return () => { cancelled = true };
+  }, [windowSel]);
   const upcomingPayouts = [{
     amount: 1850.00,
     date: "Sept 15, 2025",
@@ -106,8 +116,32 @@ export function Dashboard() {
                       <p className="text-sm text-amber-800 font-montserrat">Potential lost reimbursements detected</p>
                       <p className="text-amber-900 font-semibold font-montserrat">View cases and approve submissions</p>
                     </div>
-                    <button onClick={() => navigate('/recoveries')} className="text-sm px-3 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded font-montserrat">View Recoveries</button>
+                    <div className="flex items-center gap-2">
+                      <button onClick={async () => {
+                        setDetecting(true);
+                        const res = await api.runDetections();
+                        setDetecting(false);
+                        if (res.ok && res.data) {
+                          setLastDetection(res.data);
+                          toast({
+                            title: `Detected ${res.data.newCases} new claims`,
+                            description: `Estimated value ${new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(res.data.totalPotential)}`,
+                          });
+                        } else {
+                          toast({ title: 'Detection failed', description: res.error || 'Please try again shortly.' });
+                        }
+                      }} className={`text-sm px-3 py-2 ${detecting ? 'bg-amber-400' : 'bg-amber-600 hover:bg-amber-700'} text-white rounded font-montserrat flex items-center gap-2`} disabled={detecting}>
+                        <Radar className="h-4 w-4" />
+                        {detecting ? 'Detecting…' : 'Detect Missed Claims'}
+                      </button>
+                      <button onClick={() => navigate('/recoveries')} className="text-sm px-3 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded font-montserrat">View Recoveries</button>
+                    </div>
                   </div>
+                  {lastDetection && (
+                    <div className="mt-3 text-xs text-amber-900">
+                      New actionable claims: <span className="font-semibold">{lastDetection.newCases}</span> • Estimated value: <span className="font-semibold">{new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(lastDetection.totalPotential)}</span>
+                    </div>
+                  )}
                 </div>
                 
                 {/* Module 1: Promise of Time - Your Next Payout (Hero) */}
@@ -121,7 +155,7 @@ export function Dashboard() {
                       
                       {/* Total Recovered Hero Amount */}
                       <div className="text-xl font-semibold text-sidebar-primary font-montserrat">
-                        {formatCurrency(recoveredValue.total)}
+                        {aggregates ? formatCurrency(aggregates.totalRecovered) : '—'}
                       </div>
                       
                       {/* Subtitle */}
@@ -133,11 +167,19 @@ export function Dashboard() {
                       <div className="pt-2 space-y-2">
                         <div className="flex justify-between items-center">
                           <span className="text-sm text-gray-600 font-montserrat">Pending Recovery</span>
-                          <span className="font-semibold text-sm font-montserrat">{formatCurrency(recoveredValue.pending)}</span>
+                          <span className="font-semibold text-sm font-montserrat">{aggregates ? formatCurrency(aggregates.totalExpected) : '—'}</span>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600 font-montserrat">30-Day Recovery</span>
-                          <span className="font-semibold text-sm font-montserrat">{formatCurrency(recoveredValue.lastMonth)}</span>
+                          <span className="text-sm text-gray-600 font-montserrat">Approved</span>
+                          <span className="font-semibold text-sm font-montserrat">{aggregates ? formatCurrency(aggregates.totalApproved) : '—'}</span>
+                        </div>
+                        <div className="flex items-center gap-2 pt-2">
+                          <span className="text-xs text-muted-foreground">Window:</span>
+                          <select className="text-xs border rounded px-2 py-1" value={windowSel} onChange={(e) => setWindowSel(e.target.value as any)}>
+                            <option value="7d">7d</option>
+                            <option value="30d">30d</option>
+                            <option value="90d">90d</option>
+                          </select>
                         </div>
                       </div>
                     </div>

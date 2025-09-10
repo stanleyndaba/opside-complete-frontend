@@ -1,55 +1,40 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, FileText, Check, Edit2, Download } from 'lucide-react';
+import { api } from '@/lib/api';
 
 export default function DocumentDetail() {
   const { documentId } = useParams();
   const [hoveredSKU, setHoveredSKU] = useState<string | null>(null);
 
-  // Mock data - in real implementation, this would come from API
-  const documentData = {
-    id: documentId,
-    name: 'July_Supplier_Invoice.pdf',
-    uploadDate: '2025-01-15',
-    status: 'verified',
-    processingTime: '2.3s',
-    extractedData: [
-      {
-        sku: 'SKU-ABC-001',
-        productName: 'Wireless Bluetooth Headphones',
-        unitCost: 15.72,
-        quantity: 50,
-        coordinates: { x: 320, y: 180, width: 200, height: 20 }
-      },
-      {
-        sku: 'SKU-DEF-002', 
-        productName: 'USB-C Charging Cable',
-        unitCost: 3.25,
-        quantity: 100,
-        coordinates: { x: 320, y: 210, width: 180, height: 20 }
-      },
-      {
-        sku: 'SKU-GHI-003',
-        productName: 'Phone Case - Clear',
-        unitCost: 8.50,
-        quantity: 75,
-        coordinates: { x: 320, y: 240, width: 160, height: 20 }
-      },
-      {
-        sku: 'SKU-JKL-004',
-        productName: 'Screen Protector Pack',
-        unitCost: 12.99,
-        quantity: 30,
-        coordinates: { x: 320, y: 270, width: 190, height: 20 }
-      }
-    ]
-  };
+  const [documentData, setDocumentData] = useState<any | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const totalValue = documentData.extractedData.reduce(
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      if (!documentId) return;
+      setLoading(true);
+      const res = await api.getDocument(documentId);
+      if (!cancelled) {
+        if (res.ok) {
+          setDocumentData(res.data as any);
+          setError(null);
+        } else {
+          setError(res.error || 'Failed to load document');
+        }
+        setLoading(false);
+      }
+    })();
+    return () => { cancelled = true };
+  }, [documentId]);
+
+  const totalValue = (documentData?.extractedData || []).reduce(
     (sum, item) => sum + (item.unitCost * item.quantity), 
     0
   );
@@ -69,11 +54,11 @@ export default function DocumentDetail() {
             <div>
               <h1 className="text-2xl font-bold flex items-center gap-2">
                 <FileText className="w-6 h-6" />
-                {documentData.name}
+                {documentData?.name || 'Document'}
               </h1>
               <p className="text-muted-foreground">
-                Uploaded on {new Date(documentData.uploadDate).toLocaleDateString()} • 
-                Processed in {documentData.processingTime}
+                {documentData?.uploadDate ? `Uploaded on ${new Date(documentData.uploadDate).toLocaleDateString()} • ` : ''}
+                {documentData?.processingTime ? `Processed in ${documentData.processingTime}` : ''}
               </p>
             </div>
           </div>
@@ -82,7 +67,7 @@ export default function DocumentDetail() {
               <Check className="w-3 h-3 mr-1" />
               Verified
             </Badge>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" onClick={() => { if (documentId) window.open(api.getDocumentDownloadUrl(documentId), '_blank'); }}>
               <Download className="w-4 h-4 mr-2" />
               Download
             </Button>
@@ -144,7 +129,7 @@ export default function DocumentDetail() {
                         <span>Total</span>
                       </div>
                       
-                      {documentData.extractedData.map((item, index) => (
+                      {(documentData?.extractedData || []).map((item: any, index: number) => (
                         <div
                           key={item.sku}
                           className={`grid grid-cols-4 gap-2 text-sm py-1 transition-all ${
@@ -181,7 +166,7 @@ export default function DocumentDetail() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {documentData.extractedData.map((item, index) => (
+                {(documentData?.extractedData || []).map((item: any, index: number) => (
                   <div
                     key={item.sku}
                     className={`p-4 rounded-lg border transition-all cursor-pointer ${
