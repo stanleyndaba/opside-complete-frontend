@@ -25,7 +25,7 @@ const mockClaims = [
     details: '5 units of Premium Wireless Headphones lost at FTW1',
     status: 'New',
     guaranteedAmount: 450.00,
-    predictedPayout: '2024-02-15',
+    expectedPayoutDate: '2024-02-15',
     sku: 'WH-PREM-001',
     asin: 'B08K2XR456'
   },
@@ -36,7 +36,7 @@ const mockClaims = [
     details: 'Incorrect FBA fulfillment fee charged',
     status: 'Pending',
     guaranteedAmount: 125.50,
-    predictedPayout: '2024-02-22',
+    expectedPayoutDate: '2024-02-22',
     sku: 'COF-ORG-500',
     asin: 'B07G3XN789'
   },
@@ -47,7 +47,7 @@ const mockClaims = [
     details: '12 units of Organic Coffee Beans damaged at LAX7',
     status: 'Submitted',
     guaranteedAmount: 850.75,
-    predictedPayout: '2024-03-01',
+    expectedPayoutDate: '2024-03-01',
     sku: 'SH-SEC-PRO',
     asin: 'B09M1ST234'
   },
@@ -58,7 +58,7 @@ const mockClaims = [
     details: '3 units of Smart Home Security System lost at ATL2',
     status: 'Paid',
     guaranteedAmount: 320.00,
-    predictedPayout: '2024-03-10',
+    expectedPayoutDate: '2024-03-10',
     sku: 'FIT-TRK-001',
     asin: 'B06H4RT567'
   },
@@ -69,7 +69,7 @@ const mockClaims = [
     details: 'Storage fee overcharge detected',
     status: 'Denied',
     guaranteedAmount: 75.25,
-    predictedPayout: null,
+    expectedPayoutDate: null,
     sku: 'KIT-BAM-SET',
     asin: 'B05K7YU890'
   },
@@ -80,7 +80,7 @@ const mockClaims = [
     details: '8 units of Fitness Tracker Band damaged at PHX3',
     status: 'Submitted',
     guaranteedAmount: 1200.25,
-    predictedPayout: '2024-03-25',
+    expectedPayoutDate: '2024-03-25',
     sku: 'WH-PREM-002',
     asin: 'B08L3XR789'
   }
@@ -366,7 +366,7 @@ export default function Recoveries() {
                   <TableHead>Details</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Guaranteed Amount</TableHead>
-                  <TableHead>Predicted Payout</TableHead>
+                  <TableHead>Expected Payout</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -395,7 +395,7 @@ export default function Recoveries() {
                     </TableCell>
                     <TableCell className="font-medium">{formatCurrency(claim.guaranteedAmount)}</TableCell>
                     <TableCell>
-                      {claim.predictedPayout ? format(new Date(claim.predictedPayout), 'MMM dd, yyyy') : '-'}
+                      {claim.expectedPayoutDate ? format(new Date(claim.expectedPayoutDate), 'MMM dd, yyyy') : '-'}
                     </TableCell>
                     <TableCell>
                       <DropdownMenu>
