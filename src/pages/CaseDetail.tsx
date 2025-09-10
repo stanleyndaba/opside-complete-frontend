@@ -311,7 +311,7 @@ export default function CaseDetail() {
 
                 {effectiveCase.status === 'Guaranteed' && (
                   <Button className="w-full bg-emerald-600 hover:bg-emerald-700" disabled={!effectiveCase.isEvidenceComplete} onClick={async () => {
-                    const res = await api.resolveRecovery(effectiveCase.id);
+                    const res = await api.submitClaim(effectiveCase.id);
                     if (res.ok) {
                       setCaseData((prev: any) => ({ ...(prev || {}), status: 'Submitted', submissionStatus: 'submitted' }));
                       toast({ title: 'Claim submitted to Amazon', description: 'We will update you with the Amazon Case ID shortly.' });
@@ -399,7 +399,7 @@ export default function CaseDetail() {
                     </div>
                   ))}
                   
-                  {/* Future events placeholder */
+                  {/* Future events placeholder */}
                   {effectiveCase.status === 'Guaranteed' && (
                     <div className="flex gap-4 opacity-50">
                       <div className="flex-shrink-0 mt-1 text-gray-400">

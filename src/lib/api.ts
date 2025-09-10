@@ -56,11 +56,12 @@ export const api = {
   },
 
   // Integrations / Sync
-  startAmazonSync: () => requestJson<{ syncId: string }>(`/integrations/amazon/sync/start`, { method: 'POST' }),
-  getSyncStatus: (syncId?: string) => requestJson<{ status: 'in_progress' | 'complete' | 'failed'; progress?: number; message?: string }>(`/sync/status${syncId ? `?id=${encodeURIComponent(syncId)}` : ''}`),
+  startAmazonSync: () => requestJson<{ syncId: string }>(`/api/sync/start`, { method: 'POST' }),
+  getSyncStatus: (syncId?: string) => requestJson<{ status: 'in_progress' | 'complete' | 'failed'; progress?: number; message?: string }>(`/api/sync/status${syncId ? `?id=${encodeURIComponent(syncId)}` : ''}`),
+  getSyncActivity: () => requestJson<Array<{ timestamp: string; message: string; type: 'success' | 'warning' | 'info' }>>(`/api/sync/activity`),
 
   // Detections / Dashboard
-  getDetectionsSummary: () => requestJson<{ totalPotential: number; newCases: number; valueEstimated: number }>(`/detections/summary`),
+  getDetectionsSummary: () => requestJson<{ totalPotential: number; newCases: number; valueEstimated: number }>(`/api/metrics/dashboard`),
 
   // Recoveries
   getRecoveries: async () => {
@@ -75,7 +76,7 @@ export const api = {
       sku: string;
       asin?: string;
     };
-    const res = await requestJson<Array<any>>(`/recoveries`);
+    const res = await requestJson<Array<any>>(`/api/recoveries`);
     if (!res.ok) return res as unknown as ApiResponse<Array<RecoveryListItem>>;
     const mapped = (res.data || []).map((item: any): RecoveryListItem => ({
       id: item.id,
@@ -91,8 +92,8 @@ export const api = {
     }));
     return { ok: true, status: res.status, data: mapped } as ApiResponse<Array<RecoveryListItem>>;
   },
-  resolveRecovery: (id: string) => requestJson<{ id: string; status: string }>(`/recoveries/${encodeURIComponent(id)}/resolve`, { method: 'POST' }),
-  getRecoveryStatus: (id: string) => requestJson<{ status: string; expected_payout_date?: string | null; amazonCaseId?: string; events?: Array<{ timestamp: string; title: string; description: string; type: string }> }>(`/recoveries/${encodeURIComponent(id)}/status`),
+  submitClaim: (id: string) => requestJson<{ id: string; status: string }>(`/api/claims/${encodeURIComponent(id)}/submit`, { method: 'POST' }),
+  getRecoveryStatus: (id: string) => requestJson<{ status: string; expected_payout_date?: string | null; amazonCaseId?: string; events?: Array<{ timestamp: string; title: string; description: string; type: string }> }>(`/api/recoveries/${encodeURIComponent(id)}/status`),
   getRecoveryDetail: async (id: string) => {
     type RecoveryDetail = {
       id: string;
@@ -114,7 +115,7 @@ export const api = {
       submissionStatus?: 'draft' | 'submitted' | 'approved' | 'paid' | 'denied';
       events?: Array<{ timestamp: string; title: string; description: string; type: string }>
     };
-    const res = await requestJson<any>(`/recoveries/${encodeURIComponent(id)}`);
+    const res = await requestJson<any>(`/api/recoveries/${encodeURIComponent(id)}`);
     if (!res.ok) return res as unknown as ApiResponse<RecoveryDetail>;
     const d = res.data as any;
     const mapped: RecoveryDetail = {
@@ -139,17 +140,20 @@ export const api = {
     };
     return { ok: true, status: res.status, data: mapped } as ApiResponse<RecoveryDetail>;
   },
-  getRecoveryDocumentUrl: (id: string) => buildApiUrl(`/recoveries/${encodeURIComponent(id)}/document`),
+  getRecoveryDocumentUrl: (id: string) => buildApiUrl(`/api/recoveries/${encodeURIComponent(id)}/document`),
 
   // Detections
-  runDetections: () => requestJson<{ newCases: number; totalPotential: number }>(`/detections/run`, { method: 'POST' }),
+  runDetections: () => requestJson<{ detection_id: string }>(`/api/detections/run`, { method: 'POST' }),
+  getDetectionStatus: (detectionId: string) => requestJson<{ status: 'in_progress' | 'complete' | 'failed'; newCases?: number; totalPotential?: number }>(`/api/detections/status/${encodeURIComponent(detectionId)}`),
 
-  // Dashboard aggregates
-  getDashboardAggregates: (window?: '7d' | '30d' | '90d') => requestJson<{ totalRecovered: number; totalApproved: number; totalExpected: number; window?: '7d' | '30d' | '90d' }>(`/dashboard/aggregates${window ? `?window=${encodeURIComponent(window)}` : ''}`),
+  // Dashboard & Recoveries metrics
+  getDashboardAggregates: (window?: '7d' | '30d' | '90d') => requestJson<{ totalRecovered: number; totalApproved: number; totalExpected: number; window?: '7d' | '30d' | '90d' }>(`/api/metrics/dashboard${window ? `?window=${encodeURIComponent(window)}` : ''}`),
+  getRecoveriesMetrics: () => requestJson<{ totalClaimsFound: number; inProgress: number; valueInProgress: number; successRate30d: number }>(`/api/metrics/recoveries`),
 
   // Documents
   getDocuments: () => requestJson<Array<{ id: string; name: string; uploadDate: string; status: string; linkedSKUs?: number }>>(`/api/documents`),
   getDocument: (id: string) => requestJson<{ id: string; name: string; uploadDate: string; status: string; processingTime?: string; extractedData?: Array<{ sku: string; productName: string; unitCost: number; quantity: number; coordinates?: { x: number; y: number; width: number; height: number } }> }>(`/api/documents/${encodeURIComponent(id)}`),
+  getDocumentViewUrl: (id: string) => buildApiUrl(`/api/documents/${encodeURIComponent(id)}/view`),
   getDocumentDownloadUrl: (id: string) => buildApiUrl(`/api/documents/${encodeURIComponent(id)}/download`),
 };
 

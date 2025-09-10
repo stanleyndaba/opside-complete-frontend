@@ -13,6 +13,7 @@ export function Dashboard() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [detecting, setDetecting] = useState(false);
+  const [detectionId, setDetectionId] = useState<string | null>(null);
   const [lastDetection, setLastDetection] = useState<{ newCases: number; totalPotential: number } | null>(null);
 
   // Aggregates state
@@ -120,14 +121,37 @@ export function Dashboard() {
                       <button onClick={async () => {
                         setDetecting(true);
                         const res = await api.runDetections();
-                        setDetecting(false);
-                        if (res.ok && res.data) {
-                          setLastDetection(res.data);
-                          toast({
-                            title: `Detected ${res.data.newCases} new claims`,
-                            description: `Estimated value ${new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(res.data.totalPotential)}`,
-                          });
+                        if (res.ok && res.data && (res.data as any).detection_id) {
+                          const id = (res.data as any).detection_id as string;
+                          setDetectionId(id);
+                          toast({ title: 'Detecting missed claims…', description: 'We will show results shortly.' });
+                          // poll for status
+                          const start = Date.now();
+                          const poll = async () => {
+                            const status = await api.getDetectionStatus(id);
+                            if (status.ok && status.data) {
+                              if ((status.data as any).status === 'complete') {
+                                setDetecting(false);
+                                setLastDetection({ newCases: (status.data as any).newCases || 0, totalPotential: (status.data as any).totalPotential || 0 });
+                                toast({ title: `Detected ${(status.data as any).newCases || 0} new claims`, description: `Estimated value ${new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format((status.data as any).totalPotential || 0)}` });
+                                return;
+                              }
+                              if ((status.data as any).status === 'failed') {
+                                setDetecting(false);
+                                toast({ title: 'Detection failed', description: 'Please try again.' });
+                                return;
+                              }
+                            }
+                            if (Date.now() - start < 60000) {
+                              setTimeout(poll, 3000);
+                            } else {
+                              setDetecting(false);
+                              toast({ title: 'Detection timed out', description: 'Please try again later.' });
+                            }
+                          };
+                          setTimeout(poll, 2000);
                         } else {
+                          setDetecting(false);
                           toast({ title: 'Detection failed', description: res.error || 'Please try again shortly.' });
                         }
                       }} className={`text-sm px-3 py-2 ${detecting ? 'bg-amber-400' : 'bg-amber-600 hover:bg-amber-700'} text-white rounded font-montserrat flex items-center gap-2`} disabled={detecting}>

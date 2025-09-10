@@ -1,19 +1,47 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { StatsCard } from '@/components/ui/StatsCard';
 import { CheckCircle, AlertTriangle, Truck, Warehouse, ShoppingCart, RotateCcw } from 'lucide-react';
+import { api } from '@/lib/api';
 
 export default function SmartInventorySync() {
-  // Mock data - in real implementation, this would come from API
-  const syncStatus = {
-    healthy: true,
-    lastReconciliation: 'August 9, 2025 - 12:05 AM',
-    skusMonitored: 1547,
-    discrepanciesFound: 23,
-    dataPointsAnalyzed: 1254830
-  };
+  const [syncStatus, setSyncStatus] = useState<{ healthy: boolean; lastReconciliation?: string; skusMonitored?: number; discrepanciesFound?: number; dataPointsAnalyzed?: number }>({ healthy: true });
+  const [activityLog, setActivityLog] = useState<Array<{ timestamp: string; message: string; type: 'success' | 'warning' | 'info' }>>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      setLoading(true);
+      const [statusRes, activityRes] = await Promise.all([
+        api.getSyncStatus(),
+        api.getSyncActivity(),
+      ]);
+      if (!cancelled) {
+        if (statusRes.ok && statusRes.data) {
+          // Map generic to UI fields if needed
+          setSyncStatus({
+            healthy: (statusRes.data as any).status !== 'failed',
+            lastReconciliation: (statusRes.data as any).lastReconciliation,
+            skusMonitored: (statusRes.data as any).skusMonitored,
+            discrepanciesFound: (statusRes.data as any).discrepanciesFound,
+            dataPointsAnalyzed: (statusRes.data as any).dataPointsAnalyzed,
+          });
+          setError(null);
+        } else {
+          setError(statusRes.error || 'Failed to load sync status');
+        }
+        if (activityRes.ok && Array.isArray(activityRes.data)) {
+          setActivityLog(activityRes.data as any);
+        }
+        setLoading(false);
+      }
+    })();
+    return () => { cancelled = true };
+  }, []);
 
   const dataSources = [
     {
@@ -50,33 +78,7 @@ export default function SmartInventorySync() {
     }
   ];
 
-  const activityLog = [
-    {
-      timestamp: 'August 9, 12:05 AM',
-      message: 'Successfully completed full reconciliation. 3 new discrepancies detected and sent to Value Engine.',
-      type: 'success'
-    },
-    {
-      timestamp: 'August 9, 12:01 AM',
-      message: 'Successfully synced FBA Returns Report.',
-      type: 'success'
-    },
-    {
-      timestamp: 'August 9, 12:00 AM',
-      message: 'Initiated scheduled daily data reconciliation.',
-      type: 'info'
-    },
-    {
-      timestamp: 'August 8, 11:58 PM',
-      message: 'Successfully synced Sales & Order Data.',
-      type: 'success'
-    },
-    {
-      timestamp: 'August 8, 11:55 PM',
-      message: 'Successfully synced Fulfillment Center Data.',
-      type: 'success'
-    }
-  ];
+  
 
   return (
     <PageLayout title="Smart Inventory Sync">

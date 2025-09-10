@@ -98,6 +98,9 @@ export default function Recoveries() {
     to: new Date(),
   });
   const [claims, setClaims] = useState<typeof mockClaims>(mockClaims);
+  const [metricsLoaded, setMetricsLoaded] = useState(false);
+  const [metricsError, setMetricsError] = useState<string | null>(null);
+  const [metrics, setMetrics] = useState<{ totalClaimsFound: number; inProgress: number; valueInProgress: number; successRate30d: number } | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -105,13 +108,24 @@ export default function Recoveries() {
     let cancelled = false;
     (async () => {
       setLoading(true);
-      const res = await api.getRecoveries();
+      const [res, metricsRes] = await Promise.all([
+        api.getRecoveries(),
+        api.getRecoveriesMetrics(),
+      ]);
       if (!cancelled) {
         if (res.ok && Array.isArray(res.data)) {
           setClaims(res.data as any);
           setError(null);
         } else {
           setError(res.error || null);
+        }
+        if (metricsRes.ok && metricsRes.data) {
+          setMetrics(metricsRes.data);
+          setMetricsError(null);
+          setMetricsLoaded(true);
+        } else {
+          setMetricsError(metricsRes.error || null);
+          setMetricsLoaded(true);
         }
         setLoading(false);
       }
@@ -226,7 +240,7 @@ export default function Recoveries() {
               <div className="flex items-center">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">Total Claims Found</p>
-                  <p className="text-2xl font-bold text-foreground">{keyMetrics.totalClaimsFound}</p>
+                  <p className="text-2xl font-bold text-foreground">{metrics ? metrics.totalClaimsFound : keyMetrics.totalClaimsFound}</p>
                 </div>
               </div>
             </CardContent>
@@ -237,7 +251,7 @@ export default function Recoveries() {
               <div className="flex items-center">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">Currently in Progress</p>
-                  <p className="text-2xl font-bold text-blue-600">{keyMetrics.currentlyInProgress}</p>
+                  <p className="text-2xl font-bold text-blue-600">{metrics ? metrics.inProgress : keyMetrics.currentlyInProgress}</p>
                 </div>
               </div>
             </CardContent>
@@ -248,7 +262,7 @@ export default function Recoveries() {
               <div className="flex items-center">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">Value in Progress</p>
-                  <p className="text-2xl font-bold text-purple-600">{formatCurrency(keyMetrics.valueInProgress)}</p>
+                  <p className="text-2xl font-bold text-purple-600">{formatCurrency(metrics ? metrics.valueInProgress : keyMetrics.valueInProgress)}</p>
                 </div>
               </div>
             </CardContent>
@@ -259,7 +273,7 @@ export default function Recoveries() {
               <div className="flex items-center">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">30-Day Success Rate</p>
-                  <p className="text-2xl font-bold text-green-600">{keyMetrics.successRate.toFixed(0)}%</p>
+                  <p className="text-2xl font-bold text-green-600">{metrics ? Math.round(metrics.successRate30d) : keyMetrics.successRate.toFixed(0)}%</p>
                 </div>
               </div>
             </CardContent>
