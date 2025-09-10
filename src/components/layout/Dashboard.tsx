@@ -99,6 +99,16 @@ export function Dashboard() {
               
               {/* Left Column - Main Content (65-70% width) */}
               <div className="lg:col-span-2 space-y-8">
+                {/* Detection Summary Banner */}
+                <div className="border border-amber-200 bg-amber-50 rounded p-4">
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <p className="text-sm text-amber-800 font-montserrat">Potential lost reimbursements detected</p>
+                      <p className="text-amber-900 font-semibold font-montserrat">View cases and approve submissions</p>
+                    </div>
+                    <button onClick={() => navigate('/recoveries')} className="text-sm px-3 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded font-montserrat">View Recoveries</button>
+                  </div>
+                </div>
                 
                 {/* Module 1: Promise of Time - Your Next Payout (Hero) */}
                 

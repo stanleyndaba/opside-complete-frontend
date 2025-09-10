@@ -7,6 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { Shield, CheckCircle, Settings, RefreshCw, ArrowRight, ExternalLink, Package, ShoppingBag, Calculator, Truck } from 'lucide-react';
+import { api } from '@/lib/api';
+import { useNavigate } from 'react-router-dom';
 interface ActiveConnection {
   id: string;
   name: string;
@@ -97,6 +99,7 @@ const categoryConfig = {
   }
 };
 export default function IntegrationsHub() {
+  const navigate = useNavigate();
   const [lastSyncTime, setLastSyncTime] = useState('Just now');
   const [requestFormData, setRequestFormData] = useState({
     platform: '',
@@ -168,7 +171,14 @@ export default function IntegrationsHub() {
                     
                     <Separator />
                     
-                    <Button size="sm" variant="outline" className="w-full gap-2">
+                    <Button size="sm" variant="outline" className="w-full gap-2" onClick={async () => {
+                      const res = await api.startAmazonSync();
+                      if (res.ok) {
+                        navigate(`/sync?id=${encodeURIComponent(res.data!.syncId)}`);
+                      } else {
+                        alert(res.error || 'Failed to start sync');
+                      }
+                    }}>
                       <Settings className="h-3 w-3" />
                       Manage
                     </Button>

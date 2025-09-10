@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import { Dashboard } from "@/components/layout/Dashboard";
 import NotFound from "./pages/NotFound";
+import Sync from "./pages/Sync";
 import Stocks from "./pages/Stocks";
 import Markets from "./pages/Markets";
 import Currencies from "./pages/Currencies";
@@ -41,6 +42,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/app" element={<Dashboard />} />
+          <Route path="/sync" element={<Sync />} />
           <Route path="/reports" element={<Reports />} />
           <Route path="/stocks" element={<Stocks />} />
           <Route path="/markets" element={<Markets />} />

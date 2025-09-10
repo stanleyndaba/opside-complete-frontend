@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,9 +13,10 @@ import { cn } from '@/lib/utils';
 import { format, subDays, startOfYear, startOfQuarter } from 'date-fns';
 import { CalendarIcon, Search, MoreHorizontal, FileText, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { api } from '@/lib/api';
 import type { DateRange } from 'react-day-picker';
 
-// Mock data for claims
+// Fallback mock data when API is unavailable
 const mockClaims = [
   {
     id: 'CLM-001',
@@ -96,10 +97,31 @@ export default function Recoveries() {
     from: subDays(new Date(), 30),
     to: new Date(),
   });
+  const [claims, setClaims] = useState<typeof mockClaims>(mockClaims);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      setLoading(true);
+      const res = await api.getRecoveries();
+      if (!cancelled) {
+        if (res.ok && Array.isArray(res.data)) {
+          setClaims(res.data as any);
+          setError(null);
+        } else {
+          setError(res.error || null);
+        }
+        setLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   // Filter data based on search and filters
   const filteredClaims = useMemo(() => {
-    let filtered = mockClaims.filter(claim => {
+    let filtered = claims.filter(claim => {
       // Search filter
       const searchMatch = !searchTerm || 
         claim.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -122,7 +144,7 @@ export default function Recoveries() {
     });
 
     return filtered;
-  }, [searchTerm, dateRange, selectedClaimTypes, selectedStatuses]);
+  }, [claims, searchTerm, dateRange, selectedClaimTypes, selectedStatuses]);
 
   // Calculate key metrics
   const keyMetrics = useMemo(() => {
@@ -136,7 +158,7 @@ export default function Recoveries() {
     
     // Calculate 30-day success rate from all claims
     const thirtyDaysAgo = subDays(new Date(), 30);
-    const recentClaims = mockClaims.filter(claim => 
+    const recentClaims = claims.filter(claim => 
       new Date(claim.created) >= thirtyDaysAgo
     );
     const successfulClaims = recentClaims.filter(claim => claim.status === 'Paid');
@@ -150,7 +172,7 @@ export default function Recoveries() {
       valueInProgress,
       successRate
     };
-  }, [filteredClaims]);
+  }, [filteredClaims, claims]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -329,6 +351,12 @@ export default function Recoveries() {
         {/* Data Table */}
         <Card>
           <CardContent className="p-0">
+            {loading && (
+              <div className="p-4 text-sm text-muted-foreground">Loading recoveries...</div>
+            )}
+            {error && (
+              <div className="p-4 text-sm text-red-600">{error}</div>
+            )}
             <Table>
               <TableHeader>
                 <TableRow>
@@ -383,9 +411,14 @@ export default function Recoveries() {
                               View Details
                             </Link>
                           </DropdownMenuItem>
-                          <DropdownMenuItem>
+                          <DropdownMenuItem onClick={async () => {
+                            const res = await api.resolveRecovery(claim.id);
+                            if (!res.ok) return alert(res.error || 'Failed to resolve');
+                            // Optimistic update
+                            setClaims(prev => prev.map(c => c.id === claim.id ? { ...c, status: 'Submitted' } : c));
+                          }}>
                             <FileText className="h-4 w-4 mr-2" />
-                            Evidence Locker
+                            Resolve Case
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
