@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { StatsCard } from '@/components/ui/StatsCard';
 import { CheckCircle, AlertTriangle, Truck, Warehouse, ShoppingCart, RotateCcw } from 'lucide-react';
 import { api } from '@/lib/api';
+import { useStatusStream } from '@/hooks/use-status-stream';
 
 export default function SmartInventorySync() {
   const [syncStatus, setSyncStatus] = useState<{ healthy: boolean; lastReconciliation?: string; skusMonitored?: number; discrepanciesFound?: number; dataPointsAnalyzed?: number }>({ healthy: true });
@@ -42,6 +43,13 @@ export default function SmartInventorySync() {
     })();
     return () => { cancelled = true };
   }, []);
+
+  // Real-time sync updates
+  useStatusStream((evt) => {
+    if (evt.type === 'sync') {
+      setSyncStatus(prev => ({ ...prev, healthy: evt.status !== 'failed' }));
+    }
+  });
 
   const dataSources = [
     {

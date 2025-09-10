@@ -17,6 +17,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { api } from '@/lib/api';
 import type { DateRange } from 'react-day-picker';
+import { useStatusStream } from '@/hooks/use-status-stream';
 
 // Fallback mock data when API is unavailable
 const mockClaims = [
@@ -137,6 +138,13 @@ export default function Recoveries() {
     })();
     return () => { cancelled = true; };
   }, []);
+
+  // Real-time recovery status updates; update table rows on the fly
+  useStatusStream((evt) => {
+    if (evt.type === 'recovery') {
+      setClaims(prev => prev.map(c => c.id === evt.id ? { ...c, status: evt.status } as any : c));
+    }
+  });
 
   // Filter data based on search and filters
   const filteredClaims = useMemo(() => {

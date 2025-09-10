@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { FileText, BarChart3, FolderOpen, CheckCircle, DollarSign, Search, RefreshCw, Calendar, TrendingUp, Radar } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
+import { useStatusStream } from '@/hooks/use-status-stream';
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -105,6 +106,21 @@ export function Dashboard() {
       }
     })();
   }, []);
+
+  // Real-time updates via WS/SSE
+  useStatusStream((evt) => {
+    if (evt.type === 'sync') {
+      // Could set a local sync status indicator
+    }
+    if (evt.type === 'detection') {
+      if (evt.status === 'complete') {
+        // prompt user that results are ready
+      }
+    }
+    if (evt.type === 'recovery') {
+      // update anything dashboard cares about in future
+    }
+  });
   const toggleSidebar = () => {
     setIsSidebarCollapsed(prev => !prev);
   };
