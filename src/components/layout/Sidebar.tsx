@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, BarChart3, Shield, FileText, Factory, Zap, Settings, CreditCard, Users, HelpCircle, MessageSquare, Sparkles, Palette, Download, Key, ChevronLeft, ChevronRight, User, Search, LogOut, Building2 } from 'lucide-react';
+import { Home, Shield, Factory, Settings, CreditCard, HelpCircle, Sparkles, Download, Key, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -31,25 +31,25 @@ export function Sidebar({
   const sections: NavSection[] = [{
     title: 'Seller Tools',
     items: [{
-      title: 'Command Center',
+      title: 'Dashboard',
       icon: Home,
-      href: '/'
+      href: '/app'
+    }, {
+      title: 'Integrations Hub',
+      icon: Settings,
+      href: '/integrations-hub'
+    }, {
+      title: 'Sync',
+      icon: Factory,
+      href: '/sync'
     }, {
       title: 'Recoveries',
       icon: Shield,
       href: '/recoveries'
     }, {
-      title: 'Reports',
-      icon: BarChart3,
-      href: '/reports'
-    }, {
-      title: 'Claim Documents',
+      title: 'Evidence Locker',
       icon: Factory,
       href: '/evidence-locker'
-    }, {
-      title: 'Connections',
-      icon: Settings,
-      href: '/integrations-hub'
     }]
   }, {
     title: 'My Account',
@@ -120,9 +120,9 @@ export function Sidebar({
 
       {/* Logo Section */}
       {!isCollapsed ? <div className="p-4 border-b border-gray-200 flex justify-center">
-          <img src="/lovable-uploads/15af441d-81d1-4a51-932f-382e12379bca.png" alt="Opside Logo" className="h-14 w-18" />
+          <img src="/clario-logo.svg" alt="Clario Logo" className="h-8 w-auto" />
         </div> : <div className="p-2 border-b border-gray-200 flex justify-center">
-          <img src="/lovable-uploads/15af441d-81d1-4a51-932f-382e12379bca.png" alt="Opside Logo" className="h-6 w-auto" />
+          <img src="/clario-logo.svg" alt="Clario Logo" className="h-6 w-auto" />
         </div>}
 
       <ScrollArea className="flex-1">

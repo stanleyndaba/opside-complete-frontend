@@ -13,9 +13,9 @@ const Index = () => {
             <span className="font-montserrat font-semibold">Clario</span>
           </div>
           <nav className="flex items-center gap-4 text-sm text-muted-foreground">
-            <a href="#how-it-works" className="hover:text-foreground">How it works</a>
-            <a href="#pricing" className="hover:text-foreground">Pricing</a>
-            <a href="#faq" className="hover:text-foreground">FAQ</a>
+            <Link to="/app" className="hover:text-foreground">Dashboard</Link>
+            <Link to="/integrations-hub" className="hover:text-foreground">Integrations</Link>
+            <Link to="/recoveries" className="hover:text-foreground">Recoveries</Link>
           </nav>
         </div>
       </header>

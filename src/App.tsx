@@ -8,13 +8,7 @@ import Index from "./pages/Index";
 import { Dashboard } from "@/components/layout/Dashboard";
 import NotFound from "./pages/NotFound";
 import Sync from "./pages/Sync";
-import Stocks from "./pages/Stocks";
-import Markets from "./pages/Markets";
-import Currencies from "./pages/Currencies";
-import Global from "./pages/Global";
-import Portfolio from "./pages/Portfolio";
-import Performance from "./pages/Performance";
-import Analysis from "./pages/Analysis";
+// pruned market data pages
 import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
 import IntegrationsHub from "./pages/IntegrationsHub";
@@ -43,14 +37,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/app" element={<Dashboard />} />
           <Route path="/sync" element={<Sync />} />
-          <Route path="/reports" element={<Reports />} />
-          <Route path="/stocks" element={<Stocks />} />
-          <Route path="/markets" element={<Markets />} />
-          <Route path="/currencies" element={<Currencies />} />
-          <Route path="/global" element={<Global />} />
-          <Route path="/portfolio" element={<Portfolio />} />
-          <Route path="/performance" element={<Performance />} />
-          <Route path="/analysis" element={<Analysis />} />
+          {/* Market/Stocks pages removed for FBA MVP focus */}
           <Route path="/settings" element={<Settings />} />
           <Route path="/integrations-hub" element={<IntegrationsHub />} />
           <Route path="/recoveries" element={<Recoveries />} />
