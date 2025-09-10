@@ -88,6 +88,23 @@ export function Dashboard() {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  // On mount, attempt Stripe post-login hook
+  useEffect(() => {
+    (async () => {
+      const res = await api.postLoginStripe();
+      if (res.ok && res.data) {
+        if ((res.data as any).onboarding_url) {
+          window.location.href = (res.data as any).onboarding_url as string;
+          return;
+        }
+        if ((res.data as any).manage_billing_url) {
+          // Optionally, surface manage billing CTA
+          // For now, keep it silent but could add a banner/button
+        }
+      }
+    })();
+  }, []);
   const toggleSidebar = () => {
     setIsSidebarCollapsed(prev => !prev);
   };

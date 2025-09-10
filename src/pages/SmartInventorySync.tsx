@@ -99,6 +99,11 @@ export default function SmartInventorySync() {
                 <p className="text-muted-foreground">
                   Your inventory data is being continuously monitored and reconciled
                 </p>
+                {loading && (
+                  <div className="mt-3 h-2 w-48 bg-muted rounded">
+                    <div className="h-2 bg-primary rounded animate-pulse" style={{ width: '60%' }} />
+                  </div>
+                )}
               </div>
             </div>
           </CardContent>
@@ -113,8 +118,8 @@ export default function SmartInventorySync() {
           />
           <StatsCard
             title="Last Full Reconciliation"
-            value="12:05 AM"
-            description="August 9, 2025"
+            value={(syncStatus.lastReconciliation || '').split(' - ')[1] || '—'}
+            description={(syncStatus.lastReconciliation || '').split(' - ')[0] || ''}
           />
           <StatsCard
             title="Discrepancies Found"

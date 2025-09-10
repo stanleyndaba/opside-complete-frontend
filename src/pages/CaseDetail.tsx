@@ -324,12 +324,30 @@ export default function CaseDetail() {
                   </Button>
                 )}
 
-                <Button variant="outline" className="w-full" onClick={() => {
-                  window.open(api.getRecoveryDocumentUrl(effectiveCase.id), '_blank');
-                }}>
-                  <FileText className="h-4 w-4 mr-2" />
-                  Download Proof Document
-                </Button>
+                {/* Evidence & Docs */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-muted-foreground">Evidence & Docs</label>
+                  <div className="space-y-2">
+                    <Button variant="outline" className="w-full" onClick={() => {
+                      window.open(api.getRecoveryDocumentUrl(effectiveCase.id), '_blank');
+                    }}>
+                      <FileText className="h-4 w-4 mr-2" />
+                      Download Proof Document
+                    </Button>
+                    {Array.isArray(effectiveCase.documents) && effectiveCase.documents.length > 0 ? (
+                      <div className="space-y-1 text-sm">
+                        {effectiveCase.documents.map((doc: any) => (
+                          <div key={doc.id} className="flex items-center justify-between">
+                            <span className="truncate">{doc.name}</span>
+                            <Button variant="ghost" size="sm" onClick={() => window.open(doc.url || api.getDocumentViewUrl(doc.id), '_blank')}>View</Button>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-xs text-muted-foreground">No additional documents linked.</p>
+                    )}
+                  </div>
+                </div>
 
                 <Button variant="ghost" className="w-full" asChild>
                   <Link to="/evidence-locker">Open Evidence Locker</Link>

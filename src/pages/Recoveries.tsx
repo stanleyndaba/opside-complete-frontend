@@ -13,6 +13,8 @@ import { cn } from '@/lib/utils';
 import { format, subDays, startOfYear, startOfQuarter } from 'date-fns';
 import { CalendarIcon, Search, MoreHorizontal, FileText, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Checkbox } from '@/components/ui/checkbox';
+import { useToast } from '@/hooks/use-toast';
 import { api } from '@/lib/api';
 import type { DateRange } from 'react-day-picker';
 
@@ -103,6 +105,9 @@ export default function Recoveries() {
   const [metrics, setMetrics] = useState<{ totalClaimsFound: number; inProgress: number; valueInProgress: number; successRate30d: number } | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [submittingBulk, setSubmittingBulk] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     let cancelled = false;
@@ -231,6 +236,25 @@ export default function Recoveries() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">All Recoveries</h1>
           <p className="text-muted-foreground">Comprehensive view of all recovery claims and their current status</p>
+          <div className="mt-4 flex items-center gap-2">
+            <Button size="sm" disabled={selectedIds.size === 0 || submittingBulk} onClick={async () => {
+              setSubmittingBulk(true);
+              const ids = Array.from(selectedIds);
+              for (const id of ids) {
+                const res = await api.submitClaim(id);
+                if (res.ok) {
+                  toast({ title: `Submitted ${id}`, description: 'Claim submitted successfully.' });
+                  setClaims(prev => prev.map(c => c.id === id ? { ...c, status: 'Submitted' } : c));
+                } else {
+                  toast({ title: `Failed to submit ${id}`, description: res.error || 'Please try again.' });
+                }
+              }
+              setSubmittingBulk(false);
+            }}>Auto-Submit Selected</Button>
+            {selectedIds.size > 0 && (
+              <span className="text-xs text-muted-foreground">{selectedIds.size} selected</span>
+            )}
+          </div>
         </div>
 
         {/* Key Metrics Bar */}
@@ -374,6 +398,12 @@ export default function Recoveries() {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead>
+                    <Checkbox checked={selectedIds.size > 0 && selectedIds.size === filteredClaims.length} onCheckedChange={(checked) => {
+                      if (checked) setSelectedIds(new Set(filteredClaims.map(c => c.id)));
+                      else setSelectedIds(new Set());
+                    }} />
+                  </TableHead>
                   <TableHead>Claim ID</TableHead>
                   <TableHead>Created</TableHead>
                   <TableHead>Type</TableHead>
@@ -387,6 +417,15 @@ export default function Recoveries() {
               <TableBody>
                 {filteredClaims.map((claim) => (
                   <TableRow key={claim.id} className="cursor-pointer hover:bg-muted/50">
+                    <TableCell>
+                      <Checkbox checked={selectedIds.has(claim.id)} onCheckedChange={(checked) => {
+                        setSelectedIds(prev => {
+                          const next = new Set(prev);
+                          if (checked) next.add(claim.id); else next.delete(claim.id);
+                          return next;
+                        });
+                      }} />
+                    </TableCell>
                     <TableCell>
                       <Button asChild variant="link" className="p-0 h-auto text-blue-600 hover:text-blue-800 font-mono">
                         <Link to={`/recoveries/${claim.id}`}>{claim.id}</Link>

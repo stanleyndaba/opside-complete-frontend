@@ -54,6 +54,7 @@ export const api = {
     url.searchParams.set('redirect_uri', redirectUri);
     return url.toString();
   },
+  postLoginStripe: () => requestJson<{ onboarding_url?: string; manage_billing_url?: string }>(`/api/auth/post-login/stripe`),
 
   // Integrations / Sync
   startAmazonSync: () => requestJson<{ syncId: string }>(`/api/sync/start`, { method: 'POST' }),
