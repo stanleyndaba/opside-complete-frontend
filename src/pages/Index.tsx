@@ -1,9 +1,49 @@
 
 import React from 'react';
-import { Dashboard } from '@/components/layout/Dashboard';
+import { Button } from '@/components/ui/button';
 
 const Index = () => {
-  return <Dashboard />;
+  return <div className="min-h-screen flex flex-col">
+      <header className="border-b">
+        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <img src="/favicon.ico" alt="Opside" className="h-6 w-6" />
+            <span className="font-montserrat font-semibold">Opside</span>
+          </div>
+          <nav className="flex items-center gap-4 text-sm text-muted-foreground">
+            <a href="#how-it-works" className="hover:text-foreground">How it works</a>
+            <a href="#pricing" className="hover:text-foreground">Pricing</a>
+            <a href="#faq" className="hover:text-foreground">FAQ</a>
+          </nav>
+        </div>
+      </header>
+
+      <main className="flex-1">
+        <section className="container mx-auto px-6 py-16 md:py-24">
+          <div className="max-w-3xl space-y-4">
+            <h1 className="font-montserrat text-3xl md:text-5xl font-extrabold tracking-tight text-gray-900">
+              Your FBA Reimbursements, Fully Automated.
+            </h1>
+            <p className="font-montserrat text-base md:text-lg text-muted-foreground">
+              Opside AI automatically finds, files, and tracks every eligible claim with full transparency. No Upfront Costs — Our Success is Tied to Yours.
+            </p>
+            <div className="pt-2 flex items-center gap-3">
+              <Button size="lg" className="bg-[#FF9900] hover:bg-[#e68900] text-black font-montserrat">
+                <img src="/lovable-uploads/14f98d63-9a1a-4128-8021-1d840d778ea5.png" alt="Amazon" className="h-5 w-5 mr-2" />
+                Sign in with Amazon
+              </Button>
+              <span className="text-xs text-muted-foreground">No credit card required</span>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer className="border-t">
+        <div className="container mx-auto px-6 py-6 text-xs text-muted-foreground">
+          © {new Date().getFullYear()} Opside, Inc. All rights reserved.
+        </div>
+      </footer>
+    </div>;
 };
 
 export default Index;

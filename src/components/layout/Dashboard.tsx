@@ -101,18 +101,6 @@ export function Dashboard() {
               <div className="lg:col-span-2 space-y-8">
                 
                 {/* Module 1: Promise of Time - Your Next Payout (Hero) */}
-                <Card className="border">
-                  <CardContent className="p-6">
-                    <div className="space-y-3">
-                      <h1 className="font-montserrat text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">
-                        Your FBA Reimbursements, Fully Automated.
-                      </h1>
-                      <p className="font-montserrat text-sm md:text-base text-muted-foreground">
-                        Opside AI automatically finds, files, and tracks every eligible claim with full transparency. No Upfront Costs — Our Success is Tied to Yours.
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
                 
 
                 {/* Module 2: Your Recovered Value */}
