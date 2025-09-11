@@ -126,11 +126,11 @@ export default function IntegrationsHub() {
     });
     setShowRequestForm(false);
   };
-  return <PageLayout title="Platform Integrations">
+  return <PageLayout title="Clario Platform Integrations">
       <div className="space-y-8">
         {/* Header */}
         <div className="text-center">
-          <h1 className="text-3xl font-bold mb-2">Platform Integrations</h1>
+          <h1 className="text-3xl font-bold mb-2">Clario Platform Integrations</h1>
           <p className="text-muted-foreground">
             Your central command center for all platform connections
           </p>

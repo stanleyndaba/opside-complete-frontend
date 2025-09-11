@@ -35,7 +35,7 @@ export function Sidebar({
       icon: Home,
       href: '/app'
     }, {
-      title: 'Integrations Hub',
+      title: 'Integrations',
       icon: Settings,
       href: '/integrations-hub'
     }, {
