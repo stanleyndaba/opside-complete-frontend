@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { Shield, CheckCircle, Settings, RefreshCw, ArrowRight, ExternalLink, Package, ShoppingBag, Calculator, Truck } from 'lucide-react';
+import { Shield, CheckCircle, Settings, RefreshCw, ArrowRight, ExternalLink, Package, ShoppingBag, Calculator, Truck, Info } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useNavigate } from 'react-router-dom';
 interface ActiveConnection {
@@ -130,6 +130,16 @@ export default function IntegrationsHub() {
     })();
     return () => { cancelled = true };
   }, []);
+  useEffect(() => {
+    // Track load and connection funnel metrics
+    api.trackEvent('integrations_hub_view');
+    if (status?.amazon_connected) api.trackEvent('provider_connected', { provider: 'amazon' });
+    if (status?.providers) {
+      Object.entries(status.providers).forEach(([p, connected]) => {
+        if (connected) api.trackEvent('provider_connected', { provider: p });
+      });
+    }
+  }, [status?.amazon_connected, JSON.stringify(status?.providers)]);
   const handleRequestSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle request submission
@@ -271,6 +281,12 @@ export default function IntegrationsHub() {
                   Scopes: read-only email headers and attachments for invoice parsing; read-only file access for receipts. We never send email or modify files.
                 </div>
               )}
+              <div className="mt-4 text-xs text-muted-foreground flex items-start gap-2">
+                <Info className="h-4 w-4 mt-0.5" />
+                <span>
+                  Storage & privacy: Documents are stored in encrypted storage. Access is limited to ingestion and claims workflows. You can disconnect and purge at any time from here.
+                </span>
+              </div>
             </CardContent>
           </Card>
         </div>

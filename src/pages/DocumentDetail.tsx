@@ -14,6 +14,7 @@ export default function DocumentDetail() {
   const [documentData, setDocumentData] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [validationIssues, setValidationIssues] = useState<Array<{ field: string; message: string }>>([]);
 
   useEffect(() => {
     let cancelled = false;
@@ -25,6 +26,15 @@ export default function DocumentDetail() {
         if (res.ok) {
           setDocumentData(res.data as any);
           setError(null);
+          const d = res.data as any;
+          const issues: Array<{ field: string; message: string }> = [];
+          (d?.extractedData || []).forEach((it: any) => {
+            if (!it.sku) issues.push({ field: 'sku', message: 'Missing SKU for a line item' });
+            if (!it.productName) issues.push({ field: 'productName', message: 'Missing product name' });
+            if (typeof it.unitCost !== 'number') issues.push({ field: 'unitCost', message: 'Missing unit cost' });
+            if (typeof it.quantity !== 'number') issues.push({ field: 'quantity', message: 'Missing quantity' });
+          });
+          setValidationIssues(issues);
         } else {
           setError(res.error || 'Failed to load document');
         }
@@ -73,6 +83,22 @@ export default function DocumentDetail() {
             </Button>
           </div>
         </div>
+
+        {validationIssues.length > 0 && (
+          <Card>
+            <CardContent className="p-4">
+              <div className="text-sm font-semibold mb-2">Validation Issues</div>
+              <ul className="list-disc pl-5 text-sm text-amber-700">
+                {validationIssues.map((v, i) => (
+                  <li key={i}>{v.message}</li>
+                ))}
+              </ul>
+              <div className="text-xs text-muted-foreground mt-2">
+                You can ignore minor missing fields, but filling them improves matching and recovery accuracy.
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Summary Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

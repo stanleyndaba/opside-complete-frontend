@@ -27,10 +27,12 @@ export default function OAuthCallback() {
     if (error) {
       setErrorMessage(decodeURIComponent(error));
       setStatusMessage('Connection failed');
+      api.trackEvent('oauth_callback_failure', { provider: p, error });
       return;
     }
     if (success) {
       setStatusMessage('Connection successful. Updating status...');
+      api.trackEvent('oauth_callback_success', { provider: p });
     }
   }, [query]);
 

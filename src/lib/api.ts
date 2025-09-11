@@ -156,6 +156,9 @@ export const api = {
   getDashboardAggregates: (window?: '7d' | '30d' | '90d') => requestJson<{ totalRecovered: number; totalApproved: number; totalExpected: number; evidenceHealth?: number; window?: '7d' | '30d' | '90d' }>(`/api/metrics/dashboard${window ? `?window=${encodeURIComponent(window)}` : ''}`),
   getRecoveriesMetrics: () => requestJson<{ totalClaimsFound: number; inProgress: number; valueInProgress: number; successRate30d: number }>(`/api/metrics/recoveries`),
 
+  // Metrics hooks (frontend only fire-and-forget)
+  trackEvent: (name: string, payload?: Record<string, any>) => requestJson<{ ok: true }>(`/api/metrics/track`, { method: 'POST', body: JSON.stringify({ name, payload, ts: Date.now() }) }),
+
   // Documents
   getDocuments: () => requestJson<Array<{ id: string; name: string; uploadDate: string; status: string; linkedSKUs?: number }>>(`/api/documents`),
   getDocument: (id: string) => requestJson<{ id: string; name: string; uploadDate: string; status: string; processingTime?: string; extractedData?: Array<{ sku: string; productName: string; unitCost: number; quantity: number; coordinates?: { x: number; y: number; width: number; height: number } }> }>(`/api/documents/${encodeURIComponent(id)}`),

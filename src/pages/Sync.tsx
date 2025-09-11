@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { api } from '@/lib/api';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -65,6 +65,9 @@ export default function Sync() {
         <Card>
           <CardHeader>
             <CardTitle>Inventory Sync</CardTitle>
+            <CardDescription>
+              First run window: last 12 months • Schedule: daily at 02:00 UTC
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
