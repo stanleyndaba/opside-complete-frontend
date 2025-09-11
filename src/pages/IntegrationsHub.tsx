@@ -230,7 +230,7 @@ export default function IntegrationsHub() {
                 </div>
                 <div className="flex items-center gap-2">
                   <div className={`w-2 h-2 rounded-full ${status?.docs_connected ? 'bg-green-500' : 'bg-gray-300'}`} />
-                  <span className={`text-sm font-medium ${status?.docs_connected ? 'text-green-600' : 'text-gray-600'}`}>{status?.docs_connected ? 'Activated' : 'Not Activated'}</span>
+                  <span className={`text-sm font-medium ${status?.docs_connected ? 'text-green-600' : 'text-gray-600'}`}>{status?.docs_connected ? 'Connected' : 'Not Connected'}</span>
                 </div>
               </div>
             </CardHeader>
@@ -243,6 +243,33 @@ export default function IntegrationsHub() {
                   I'll upload documents manually later
                 </button>
               </div>
+              {/* Direct provider connects (peace of mind) */}
+              <div className="grid grid-cols-2 gap-2 mt-3">
+                {(['gmail','outlook','gdrive','dropbox'] as const).map((provider) => {
+                  const connected = !!status?.providers?.[provider];
+                  return (
+                    <div key={provider} className="flex items-center gap-2">
+                      <Button
+                        variant={connected ? 'secondary' : 'outline'}
+                        size="sm"
+                        disabled={loading || !status?.amazon_connected}
+                        onClick={async () => {
+                          setLoading(true);
+                          const res = await api.connectDocs(provider);
+                          setLoading(false);
+                          if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url;
+                        }}
+                      >
+                        {provider === 'gmail' && (connected ? 'Gmail Connected' : 'Connect Gmail')}
+                        {provider === 'outlook' && (connected ? 'Outlook Connected' : 'Connect Outlook')}
+                        {provider === 'gdrive' && (connected ? 'Drive Connected' : 'Connect Google Drive')}
+                        {provider === 'dropbox' && (connected ? 'Dropbox Connected' : 'Connect Dropbox')}
+                      </Button>
+                    </div>
+                  );
+                })}
+              </div>
+              <p className="mt-3 text-xs text-muted-foreground">We’ll securely collect and organize your invoices so you never have to dig for them later.</p>
               <div className="mt-3 rounded-md border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">
                 Recommended → Sellers who connect docs now resolve 90% of claims automatically.
               </div>
