@@ -103,6 +103,7 @@ export default function IntegrationsHub() {
   const [lastSyncTime, setLastSyncTime] = useState('Just now');
   const [status, setStatus] = useState<{ amazon_connected: boolean; docs_connected: boolean; providers?: Record<string, boolean> } | null>(null);
   const [loading, setLoading] = useState(false);
+  const [disconnecting, setDisconnecting] = useState<string | null>(null);
   const [requestFormData, setRequestFormData] = useState({
     platform: '',
     description: ''
@@ -181,6 +182,21 @@ export default function IntegrationsHub() {
                 }}>
                   Connect Amazon Account
                 </Button>
+                {status?.amazon_connected && (
+                  <Button
+                    variant="outline"
+                    disabled={!!disconnecting}
+                    onClick={async () => {
+                      setDisconnecting('amazon');
+                      await api.disconnectIntegration('amazon', true);
+                      const s = await api.getIntegrationsStatus();
+                      if (s.ok) setStatus(s.data!);
+                      setDisconnecting(null);
+                    }}
+                  >
+                    Disconnect & purge data
+                  </Button>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -204,25 +220,56 @@ export default function IntegrationsHub() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-2">
-                {(['gmail','outlook','gdrive','dropbox'] as const).map((provider) => (
-                  <Button key={provider} variant="outline" size="sm" disabled={loading} onClick={async () => {
-                    setLoading(true);
-                    const res = await api.connectDocs(provider);
-                    setLoading(false);
-                    if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url;
-                  }}>
-                    {provider === 'gmail' && 'Connect Gmail'}
-                    {provider === 'outlook' && 'Connect Outlook'}
-                    {provider === 'gdrive' && 'Connect Google Drive'}
-                    {provider === 'dropbox' && 'Connect Dropbox'}
-                  </Button>
-                ))}
+                {(['gmail','outlook','gdrive','dropbox'] as const).map((provider) => {
+                  const connected = !!status?.providers?.[provider];
+                  return (
+                    <div key={provider} className="flex items-center gap-2">
+                      <Button
+                        variant={connected ? 'secondary' : 'outline'}
+                        size="sm"
+                        disabled={loading}
+                        onClick={async () => {
+                          setLoading(true);
+                          const res = await api.connectDocs(provider);
+                          setLoading(false);
+                          if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url;
+                        }}
+                      >
+                        {provider === 'gmail' && (connected ? 'Gmail Connected' : 'Connect Gmail')}
+                        {provider === 'outlook' && (connected ? 'Outlook Connected' : 'Connect Outlook')}
+                        {provider === 'gdrive' && (connected ? 'Drive Connected' : 'Connect Google Drive')}
+                        {provider === 'dropbox' && (connected ? 'Dropbox Connected' : 'Connect Dropbox')}
+                      </Button>
+                      {connected && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          disabled={!!disconnecting}
+                          onClick={async () => {
+                            setDisconnecting(provider);
+                            await api.disconnectIntegration(provider, true);
+                            const s = await api.getIntegrationsStatus();
+                            if (s.ok) setStatus(s.data!);
+                            setDisconnecting(null);
+                          }}
+                        >
+                          Disconnect
+                        </Button>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
               <div className="mt-3 rounded-md border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">
                 Recommended → Sellers who connect docs now resolve 90% of claims automatically.
               </div>
               {!status?.docs_connected && (
                 <div className="mt-2 text-xs text-amber-700">Docs not connected: claims may require extra steps.</div>
+              )}
+              {status?.providers && (
+                <div className="mt-3 text-xs text-muted-foreground">
+                  Scopes: read-only email headers and attachments for invoice parsing; read-only file access for receipts. We never send email or modify files.
+                </div>
               )}
             </CardContent>
           </Card>

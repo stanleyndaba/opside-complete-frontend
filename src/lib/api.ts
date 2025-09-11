@@ -64,6 +64,7 @@ export const api = {
   getIntegrationsStatus: () => requestJson<{ amazon_connected: boolean; docs_connected: boolean; providers?: Record<string, boolean> }>(`/api/v1/integrations/status`),
   connectAmazon: () => requestJson<{ redirect_url?: string }>(`/api/v1/integrations/connect-amazon`),
   connectDocs: (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox') => requestJson<{ redirect_url?: string }>(`/api/v1/integrations/connect-docs?provider=${encodeURIComponent(provider)}`),
+  disconnectIntegration: (provider: 'amazon' | 'gmail' | 'outlook' | 'gdrive' | 'dropbox', purge: boolean = false) => requestJson<{ ok: boolean }>(`/api/v1/integrations/disconnect?provider=${encodeURIComponent(provider)}&purge=${purge ? '1' : '0'}`, { method: 'POST' }),
 
   // Detections / Dashboard
   getDetectionsSummary: () => requestJson<{ totalPotential: number; newCases: number; valueEstimated: number }>(`/api/metrics/dashboard`),
