@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Shield, Factory, Settings, CreditCard, HelpCircle, Sparkles, Download, Key, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Home, Shield, Settings, CreditCard, HelpCircle, Sparkles, Download, Key, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -42,10 +42,6 @@ export function Sidebar({
       title: 'Recoveries',
       icon: Shield,
       href: '/recoveries'
-    }, {
-      title: 'Evidence Locker',
-      icon: Factory,
-      href: '/evidence-locker'
     }]
   }, {
     title: 'My Account',
