@@ -20,7 +20,11 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				sans: ['Montserrat', 'sans-serif'],
+				// Body text defaults to Inter with robust fallbacks
+				body: ['Inter', 'system-ui', 'Arial', 'sans-serif'],
+				// Headings default to IBM Plex Sans with Sora fallback, then Inter/sans
+				heading: ['"IBM Plex Sans"', 'Sora', 'Inter', 'sans-serif'],
+				sans: ['Inter', 'system-ui', 'Arial', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
