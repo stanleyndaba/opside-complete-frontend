@@ -201,7 +201,7 @@ export function Dashboard() {
                   )}
                 </div>
                 
-                {/* Module 1: Next Expected Payout (Hero) */}
+                {/* Module 1: Next Expected Payout (Hero) with metrics */}
                 <Card className="border bg-gradient-to-br from-emerald-50 to-white">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between gap-4">
@@ -218,26 +218,12 @@ export function Dashboard() {
                         <div className="text-xs text-muted-foreground">Claims auto-submitted once evidence is verified</div>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
-
-                {/* Module 2: Your Recovered Value */}
-                <Card className="border">
-                  <CardContent className="p-4">
-                    <div className="space-y-2">
-                      <h2 className="font-montserrat text-lg text-gray-700 font-semibold">Your Next Payout</h2>
-                      
-                      {/* Total Recovered Hero Amount */}
+                    {/* Moved metrics and window controls from "Your Next Payout" */}
+                    <div className="mt-4 space-y-2">
+                      <div className="text-sm text-muted-foreground font-montserrat">Total recovered since joining</div>
                       <div className="text-xl font-semibold text-sidebar-primary font-montserrat">
                         {aggregates ? formatCurrency(aggregates.totalRecovered) : '—'}
                       </div>
-                      
-                      {/* Subtitle */}
-                      <div className="text-sm text-muted-foreground font-montserrat">
-                        Total recovered since joining
-                      </div>
-                      
-                      {/* Recovery Metrics */}
                       <div className="pt-2 space-y-2">
                         <div className="flex justify-between items-center">
                           <span className="text-sm text-gray-600 font-montserrat">Pending Recovery</span>
