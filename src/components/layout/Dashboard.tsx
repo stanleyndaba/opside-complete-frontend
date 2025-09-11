@@ -20,6 +20,7 @@ export function Dashboard() {
   // Aggregates state
   const [windowSel, setWindowSel] = useState<'7d' | '30d' | '90d'>('30d');
   const [aggregates, setAggregates] = useState<{ totalRecovered: number; totalApproved: number; totalExpected: number; evidenceHealth?: number } | null>(null);
+  const [recoveriesMetrics, setRecoveriesMetrics] = useState<{ totalClaimsFound: number; inProgress: number; valueInProgress: number; successRate30d: number } | null>(null);
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -34,15 +35,15 @@ export function Dashboard() {
   }, [windowSel]);
   const upcomingPayouts = [{
     amount: 1850.00,
-    date: "Sept 15, 2025",
+    date: "Oct 28, 2025",
     status: "confirmed"
   }, {
     amount: 2100.00,
-    date: "Oct 12, 2025",
+    date: "Nov 12, 2025",
     status: "pending"
   }, {
     amount: 950.00,
-    date: "Nov 8, 2025",
+    date: "Dec 8, 2025",
     status: "estimated"
   }];
   const activityFeed = [{
@@ -107,6 +108,16 @@ export function Dashboard() {
     })();
   }, []);
 
+  // Fetch recoveries metrics for dashboard second module
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const res = await api.getRecoveriesMetrics();
+      if (!cancelled && res.ok && res.data) setRecoveriesMetrics(res.data);
+    })();
+    return () => { cancelled = true };
+  }, []);
+
   // Real-time updates via WS/SSE
   useStatusStream((evt) => {
     if (evt.type === 'sync') {
@@ -143,116 +154,61 @@ export function Dashboard() {
               
               {/* Left Column - Main Content (65-70% width) */}
               <div className="lg:col-span-2 space-y-8">
-                {/* Detection Summary Banner */}
-                <div className="border border-amber-200 bg-amber-50 rounded p-4">
-                  <div className="flex items-center justify-between gap-4">
-                    <div>
-                      <p className="text-sm text-amber-800 font-montserrat">We found potential lost reimbursements</p>
-                      <p className="text-amber-900 font-semibold font-montserrat">Review cases and approve submissions</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <button onClick={async () => {
-                        setDetecting(true);
-                        const res = await api.runDetections();
-                        if (res.ok && res.data && (res.data as any).detection_id) {
-                          const id = (res.data as any).detection_id as string;
-                          setDetectionId(id);
-                          toast({ title: 'Detecting missed claims…', description: 'We will show results shortly.' });
-                          // poll for status
-                          const start = Date.now();
-                          const poll = async () => {
-                            const status = await api.getDetectionStatus(id);
-                            if (status.ok && status.data) {
-                              if ((status.data as any).status === 'complete') {
-                                setDetecting(false);
-                                setLastDetection({ newCases: (status.data as any).newCases || 0, totalPotential: (status.data as any).totalPotential || 0 });
-                                toast({ title: `Detected ${(status.data as any).newCases || 0} new claims`, description: `Estimated value ${new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format((status.data as any).totalPotential || 0)}` });
-                                return;
-                              }
-                              if ((status.data as any).status === 'failed') {
-                                setDetecting(false);
-                                toast({ title: 'Detection failed', description: 'Please try again.' });
-                                return;
-                              }
-                            }
-                            if (Date.now() - start < 60000) {
-                              setTimeout(poll, 3000);
-                            } else {
-                              setDetecting(false);
-                              toast({ title: 'Detection timed out', description: 'Please try again later.' });
-                            }
-                          };
-                          setTimeout(poll, 2000);
-                        } else {
-                          setDetecting(false);
-                          toast({ title: 'Detection failed', description: res.error || 'Please try again shortly.' });
-                        }
-                      }} className={`text-sm px-3 py-2 ${detecting ? 'bg-amber-400' : 'bg-amber-600 hover:bg-amber-700'} text-white rounded font-montserrat flex items-center gap-2`} disabled={detecting}>
-                        <Radar className="h-4 w-4" />
-                        {detecting ? 'Detecting…' : 'Detect Missed Claims'}
-                      </button>
-                      <button onClick={() => navigate('/recoveries')} className="text-sm px-3 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded font-montserrat">View Recoveries</button>
-                      <button onClick={() => navigate('/evidence-locker')} className="text-sm px-3 py-2 bg-white hover:bg-amber-100 text-amber-900 rounded border border-amber-300 font-montserrat">Open Evidence Locker</button>
-                    </div>
-                  </div>
-                  {lastDetection && (
-                    <div className="mt-3 text-xs text-amber-900">
-                      New actionable claims: <span className="font-semibold">{lastDetection.newCases}</span> • Estimated value: <span className="font-semibold">{new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(lastDetection.totalPotential)}</span>
-                    </div>
-                  )}
-                </div>
-                
-                {/* Module 1: Next Expected Payout (Hero) with metrics */}
-                <Card className="border bg-gradient-to-br from-emerald-50 to-white">
+                {/* Empty State Card (appears only if no recoveries yet) */}
+                {recoveriesMetrics?.totalClaimsFound === 0 && (
+                  <Card className="border border-amber-200 bg-amber-50">
+                    <CardContent className="p-6">
+                      <h2 className="font-montserrat text-lg text-amber-900 font-semibold">Welcome to Clario</h2>
+                      <p className="text-sm text-amber-900 mt-1">Your first sync is complete. We are now scanning for potential recoveries.</p>
+                      <div className="mt-3">
+                        <Button onClick={() => navigate('/integrations-hub')}>View Sync Status</Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {/* Module 1: Your Next Payout */}
+                <Card>
                   <CardContent className="p-6">
-                    <div className="flex items-center justify-between gap-4">
-                      <div>
-                        <h2 className="font-montserrat text-lg text-gray-700 font-semibold">Next Expected Payout</h2>
-                        <div className="text-3xl font-extrabold mt-2">
-                          {aggregates ? formatCurrency(aggregates.totalExpected) : '—'}
-                        </div>
-                        <p className="text-sm text-muted-foreground mt-1">Estimated from approved and pending claims</p>
-                      </div>
-                      <div className="text-right">
-                        <span className="text-xs uppercase text-muted-foreground">Auto-Claim</span>
-                        <div className="text-sm">Enabled</div>
-                        <div className="text-xs text-muted-foreground">Claims auto-submitted once evidence is verified</div>
-                      </div>
+                    <h2 className="font-montserrat text-lg text-gray-700 font-semibold">Your Next Payout</h2>
+                    <div className="text-3xl font-extrabold mt-2">
+                      {aggregates ? formatCurrency(aggregates.totalExpected) : '—'}
                     </div>
-                    {/* Moved metrics and window controls from "Your Next Payout" */}
+                    <p className="text-sm text-muted-foreground mt-1">Expected by: {upcomingPayouts[0]?.date}</p>
                     <div className="mt-4 space-y-2">
-                      <div className="text-sm text-muted-foreground font-montserrat">Total recovered since joining</div>
-                      <div className="text-xl font-semibold text-sidebar-primary font-montserrat">
-                        {aggregates ? formatCurrency(aggregates.totalRecovered) : '—'}
-                      </div>
-                      <div className="pt-2 space-y-2">
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600 font-montserrat">Pending Recovery</span>
-                          <span className="font-semibold text-sm font-montserrat">{aggregates ? formatCurrency(aggregates.totalExpected) : '—'}</span>
+                      {(upcomingPayouts.slice(0,3)).map((p, idx) => (
+                        <div key={idx} className="flex items-center justify-between text-sm">
+                          <span className="text-muted-foreground">{p.status === 'confirmed' ? 'Confirmed' : p.status === 'pending' ? 'Pending' : 'Estimated'}</span>
+                          <span className="font-medium">{formatCurrency(p.amount)}</span>
+                          <span className="text-muted-foreground">{p.date}</span>
                         </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600 font-montserrat">Approved</span>
-                          <span className="font-semibold text-sm font-montserrat">{aggregates ? formatCurrency(aggregates.totalApproved) : '—'}</span>
-                        </div>
-                        <div className="flex items-center gap-2 pt-2">
-                          <span className="text-xs text-muted-foreground">Window:</span>
-                          <select className="text-xs border rounded px-2 py-1" value={windowSel} onChange={(e) => setWindowSel(e.target.value as any)}>
-                            <option value="7d">7d</option>
-                            <option value="30d">30d</option>
-                            <option value="90d">90d</option>
-                          </select>
-                        </div>
-                        {/* Evidence Health Score */}
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600 font-montserrat">Evidence Health</span>
-                          <span className="font-semibold text-sm font-montserrat">{aggregates?.evidenceHealth != null ? `${Math.round(aggregates.evidenceHealth)}%` : '—'}</span>
-                        </div>
-                      </div>
+                      ))}
                     </div>
                   </CardContent>
                 </Card>
 
-                {/* Module 3 removed: View All Claims button */}
+                {/* Module 2: Your Recovered Value */}
+                <Card>
+                  <CardContent className="p-6">
+                    <h2 className="font-montserrat text-lg text-gray-700 font-semibold">Your Recovered Value</h2>
+                    <div className="text-3xl font-extrabold mt-2">
+                      {aggregates ? formatCurrency(aggregates.totalRecovered) : '—'}
+                    </div>
+                    <div className="mt-4 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Pending Recovery</span>
+                        <span className="text-sm font-semibold">{recoveriesMetrics ? formatCurrency(recoveriesMetrics.valueInProgress) : (aggregates ? formatCurrency(aggregates.totalExpected) : '—')}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">30-Day Recovery</span>
+                        <span className="text-sm font-semibold">{recoveriesMetrics ? `${Math.round(recoveriesMetrics.successRate30d)}%` : '—'}</span>
+                      </div>
+                    </div>
+                    <div className="mt-4">
+                      <Button onClick={() => navigate('/recoveries')}>View All Claims</Button>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
 
               {/* Right Column - Notifications (match bell dropdown style) */}
