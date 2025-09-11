@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, User, Settings, Users, CreditCard, Zap, HelpCircle, Sparkles, MessageSquare, LogOut, Building2 } from 'lucide-react';
+import { Search, User, Settings, Users, CreditCard, Zap, HelpCircle, Sparkles, MessageSquare, LogOut, Building2, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -16,8 +16,15 @@ export function Navbar({
 }: NavbarProps) {
   return <header className={cn("bg-background/95 backdrop-blur-sm sticky top-0 z-30 border-b transition-all duration-300", sidebarCollapsed ? "ml-16" : "ml-56", className)}>
       <div className="container flex items-center justify-end h-16 px-4">
-        {/* Right side - Notification Bell and Profile Icon */}
+        {/* Right side - Sync action, Notification Bell and Profile Icon */}
         <div className="flex items-center gap-4 ml-auto">
+          {/* Subtle sync button with tooltip-like title */}
+          <button title="Last synced: 2 hours ago. Click to refresh." className="h-8 w-8 rounded-full flex items-center justify-center border border-gray-200 text-gray-600 hover:bg-gray-100" onClick={() => {
+            // Fire a background sync start; non-blocking
+            fetch('/api/sync/start', { method: 'POST', credentials: 'include' }).catch(() => {});
+          }}>
+            <RefreshCw className="h-4 w-4" />
+          </button>
           <NotificationBell />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

@@ -31,17 +31,13 @@ export function Sidebar({
   const sections: NavSection[] = [{
     title: 'Seller Tools',
     items: [{
-      title: 'Dashboard',
+      title: 'Command Center',
       icon: Home,
       href: '/app'
     }, {
       title: 'Integrations Hub',
       icon: Settings,
       href: '/integrations-hub'
-    }, {
-      title: 'Sync',
-      icon: Factory,
-      href: '/sync'
     }, {
       title: 'Recoveries',
       icon: Shield,
