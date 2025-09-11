@@ -8,6 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { Shield, CheckCircle, Settings, RefreshCw, ArrowRight, ExternalLink, Package, ShoppingBag, Calculator, Truck, Info } from 'lucide-react';
 import { api } from '@/lib/api';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useNavigate } from 'react-router-dom';
 interface ActiveConnection {
   id: string;
@@ -109,6 +110,8 @@ export default function IntegrationsHub() {
     description: ''
   });
   const [showRequestForm, setShowRequestForm] = useState(false);
+  const [showProviderDialog, setShowProviderDialog] = useState(false);
+  const [showManualModal, setShowManualModal] = useState(false);
 
   // Real-time sync simulation
   useEffect(() => {
@@ -163,16 +166,19 @@ export default function IntegrationsHub() {
           </div>
         </div>
 
-        {/* Section 1: Amazon + Evidence Locker two-card layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Amazon Seller Central Card (Mandatory) */}
+        {/* Single Path to Power: Step 1 then Step 2 */}
+        <div className="space-y-6">
+          {/* Step 1: Connect Amazon */}
           <Card className={status?.amazon_connected ? 'border-green-200 bg-green-50/50' : ''}>
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <img src={activeConnections[0].logo} alt={activeConnections[0].name + ' logo'} className="w-20 h-18 object-contain" />
                   <div>
-                    <CardTitle className="text-lg">Amazon Seller Central</CardTitle>
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <span>Step 1 • Connect Amazon Account</span>
+                      {status?.amazon_connected && <CheckCircle className="h-4 w-4 text-green-600" />}
+                    </CardTitle>
                     <p className="text-sm text-muted-foreground">We only read your Seller Central data. We never change listings or touch payouts.</p>
                   </div>
                 </div>
@@ -211,64 +217,31 @@ export default function IntegrationsHub() {
             </CardContent>
           </Card>
 
-          {/* Document Locker (Evidence Locker) Card */}
-          <Card className={status?.docs_connected ? 'border-green-200 bg-green-50/50' : ''}>
+          {/* Step 2: Activate Your Evidence Engine */}
+          <Card className={`${status?.amazon_connected ? '' : 'opacity-60'} ${status?.docs_connected ? 'border-green-200 bg-green-50/50' : ''}`}>
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <Shield className="h-6 w-6 text-primary" />
                   <div>
-                    <CardTitle className="text-lg">Evidence Locker</CardTitle>
-                    <p className="text-sm text-muted-foreground">We’ll securely collect and organize your invoices so you never have to dig for them later.</p>
+                    <CardTitle className="text-lg">Activate Your Evidence Engine</CardTitle>
+                    <p className="text-sm text-muted-foreground">Give Clario the proof we need to recover your maximum refund automatically. This is the key to our 'Glass Box' advantage.</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className={`w-2 h-2 rounded-full ${status?.docs_connected ? 'bg-green-500' : 'bg-gray-300'}`} />
-                  <span className={`text-sm font-medium ${status?.docs_connected ? 'text-green-600' : 'text-gray-600'}`}>{status?.docs_connected ? 'Connected' : 'Not Connected'}</span>
+                  <span className={`text-sm font-medium ${status?.docs_connected ? 'text-green-600' : 'text-gray-600'}`}>{status?.docs_connected ? 'Activated' : 'Not Activated'}</span>
                 </div>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 gap-2">
-                {(['gmail','outlook','gdrive','dropbox'] as const).map((provider) => {
-                  const connected = !!status?.providers?.[provider];
-                  return (
-                    <div key={provider} className="flex items-center gap-2">
-                      <Button
-                        variant={connected ? 'secondary' : 'outline'}
-                        size="sm"
-                        disabled={loading}
-                        onClick={async () => {
-                          setLoading(true);
-                          const res = await api.connectDocs(provider);
-                          setLoading(false);
-                          if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url;
-                        }}
-                      >
-                        {provider === 'gmail' && (connected ? 'Gmail Connected' : 'Connect Gmail')}
-                        {provider === 'outlook' && (connected ? 'Outlook Connected' : 'Connect Outlook')}
-                        {provider === 'gdrive' && (connected ? 'Drive Connected' : 'Connect Google Drive')}
-                        {provider === 'dropbox' && (connected ? 'Dropbox Connected' : 'Connect Dropbox')}
-                      </Button>
-                      {connected && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          disabled={!!disconnecting}
-                          onClick={async () => {
-                            setDisconnecting(provider);
-                            await api.disconnectIntegration(provider, true);
-                            const s = await api.getIntegrationsStatus();
-                            if (s.ok) setStatus(s.data!);
-                            setDisconnecting(null);
-                          }}
-                        >
-                          Disconnect
-                        </Button>
-                      )}
-                    </div>
-                  );
-                })}
+              <div className="space-y-3">
+                <Button disabled={!status?.amazon_connected || loading} className="bg-emerald-600 hover:bg-emerald-700" onClick={() => setShowProviderDialog(true)}>
+                  Activate Evidence Engine
+                </Button>
+                <button disabled={!status?.amazon_connected} className="text-xs text-muted-foreground underline" onClick={(e) => { e.preventDefault(); setShowManualModal(true); }}>
+                  I'll upload documents manually later
+                </button>
               </div>
               <div className="mt-3 rounded-md border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">
                 Recommended → Sellers who connect docs now resolve 90% of claims automatically.
@@ -320,6 +293,48 @@ export default function IntegrationsHub() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Provider Selection Dialog */}
+        <Dialog open={showProviderDialog} onOpenChange={setShowProviderDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Choose sources to activate</DialogTitle>
+              <DialogDescription>Select at least one source. You can add more later.</DialogDescription>
+            </DialogHeader>
+            <div className="grid grid-cols-2 gap-2 mt-2">
+              {(['gmail','outlook','gdrive','dropbox'] as const).map((provider) => (
+                <Button key={provider} variant="outline" size="sm" disabled={loading} onClick={async () => {
+                  const res = await api.connectDocs(provider);
+                  if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url;
+                }}>
+                  {provider === 'gmail' && 'Connect Gmail'}
+                  {provider === 'outlook' && 'Connect Outlook'}
+                  {provider === 'gdrive' && 'Connect Google Drive'}
+                  {provider === 'dropbox' && 'Connect Dropbox'}
+                </Button>
+              ))}
+            </div>
+            <DialogFooter>
+              <Button variant="secondary" onClick={() => setShowProviderDialog(false)}>Close</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Manual Path Confirmation Modal */}
+        <Dialog open={showManualModal} onOpenChange={setShowManualModal}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Proceed without Evidence Engine?</DialogTitle>
+              <DialogDescription>
+                Without the Evidence Engine, you will need to manually find and upload invoices for many of your claims.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button variant="ghost" onClick={() => { setShowManualModal(false); setShowProviderDialog(true); }}>Activate Now</Button>
+              <Button variant="destructive" onClick={() => setShowManualModal(false)}>Proceed Manually</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
         {/* Section 2: Available Integrations */}
         <div className="space-y-6">
