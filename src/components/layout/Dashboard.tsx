@@ -249,30 +249,41 @@ export function Dashboard() {
                 {/* Module 3 removed: View All Claims button */}
               </div>
 
-              {/* Right Column - Live Activity Feed (30-35% width) */}
+              {/* Right Column - Notifications (match bell dropdown style) */}
               <div className="lg:col-span-1">
                 <Card className="h-full">
-                  <CardContent className="p-6">
-                    <div className="flex items-center gap-2 mb-6">
-                      
-                      <h2 className="text-lg font-semibold font-montserrat">Notifications</h2>
+                  <CardContent className="p-0">
+                    <div className="p-3 border-b border-border">
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-semibold text-sm text-foreground">Notifications</h3>
+                      </div>
                     </div>
-                    
-                    <div className="space-y-4 max-h-[600px] overflow-y-auto">
-                      {activityFeed.map(item => {
-                      const IconComponent = item.icon;
-                      return <div key={item.id} className="flex gap-3 p-3 transition-colors bg-stone-50 rounded-none">
-                            
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-foreground mb-1 font-montserrat">
-                                {item.description}
-                              </p>
-                              <p className="text-xs text-muted-foreground font-montserrat">
-                                {item.timestamp}
-                              </p>
+                    <div className="py-1 max-h-[600px] overflow-y-auto">
+                      {activityFeed.concat([
+                        { id: 6, type: 'info', icon: CheckCircle, description: '2 new recoveries ready for approval', timestamp: '5m ago', color: 'text-primary', unread: true },
+                        { id: 7, type: 'info', icon: DollarSign, description: 'Expected payout updated', timestamp: '10m ago', color: 'text-primary', unread: true },
+                      ] as any).map((notification: any, index: number, arr: any[]) => {
+                        const IconComponent = notification.icon;
+                        return (
+                          <React.Fragment key={notification.id}>
+                            <div 
+                              className={`flex items-start gap-3 p-3 hover:bg-muted/50 transition-colors ${notification.unread ? 'bg-muted/30' : ''}`}
+                            >
+                              <div className={`flex-shrink-0 mt-0.5 w-6 h-6 rounded-full flex items-center justify-center ${notification.unread ? 'bg-primary/10' : 'bg-muted'}`}>
+                                <IconComponent className={`w-3 h-3 ${notification.unread ? 'text-primary' : 'text-muted-foreground'}`} />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className={`text-xs leading-relaxed ${notification.unread ? 'font-medium text-foreground' : 'text-muted-foreground'}`}>
+                                  {notification.description}
+                                </p>
+                                <p className="text-xs text-muted-foreground mt-1">{notification.timestamp}</p>
+                              </div>
+                              {notification.unread && <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0 mt-1.5"></div>}
                             </div>
-                          </div>;
-                    })}
+                            {index < arr.length - 1 && <div className="-mx-1 my-1 h-px bg-muted" />}
+                          </React.Fragment>
+                        );
+                      })}
                     </div>
                   </CardContent>
                 </Card>
