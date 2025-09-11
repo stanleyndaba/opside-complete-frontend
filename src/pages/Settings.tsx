@@ -21,7 +21,7 @@ const Settings = () => {
   const [activeSection, setActiveSection] = useState<SettingsSection>('profile');
 
   const menuItems = [
-    { id: 'profile' as SettingsSection, label: 'Your Profile', icon: User },
+    { id: 'profile' as SettingsSection, label: 'Clario Profile', icon: User },
     { id: 'business' as SettingsSection, label: 'Business Profile', icon: Building2 },
     { id: 'team' as SettingsSection, label: 'Team Management', icon: Users },
     { id: 'billing' as SettingsSection, label: 'Billing & Value', icon: CreditCard },
@@ -49,7 +49,7 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold">Your Profile</h2>
+              <h2 className="text-2xl font-bold">Clario Profile</h2>
               <p className="text-muted-foreground">Manage your personal account information</p>
             </div>
             
