@@ -260,21 +260,7 @@ export function Dashboard() {
                   </CardContent>
                 </Card>
 
-                {/* Module 3: Primary Navigation Links */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Button 
-                    variant="outline" 
-                    className="h-8 flex items-center gap-2 transition-colors bg-gray-200 hover:bg-gray-100 text-black"
-                    onClick={() => navigate('/recoveries')}
-                  >
-                    <FileText className="h-4 w-4" />
-                    <span className="font-montserrat">View All Claims</span>
-                  </Button>
-                  
-                  
-                  
-                  
-                </div>
+                {/* Module 3 removed: View All Claims button */}
               </div>
 
               {/* Right Column - Live Activity Feed (30-35% width) */}
