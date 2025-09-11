@@ -473,13 +473,16 @@ export default function Recoveries() {
                             </Link>
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={async () => {
-                            const res = await api.resolveRecovery(claim.id);
+                            const res = await api.submitClaim(claim.id);
                             if (!res.ok) return alert(res.error || 'Failed to resolve');
-                            // Optimistic update
                             setClaims(prev => prev.map(c => c.id === claim.id ? { ...c, status: 'Submitted' } : c));
                           }}>
                             <FileText className="h-4 w-4 mr-2" />
                             Resolve Case
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => window.open(api.getRecoveryDocumentUrl(claim.id), '_blank')}>
+                            <FileText className="h-4 w-4 mr-2" />
+                            Proof Document
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>

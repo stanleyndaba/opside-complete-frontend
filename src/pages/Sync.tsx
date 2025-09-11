@@ -42,9 +42,10 @@ export default function Sync() {
       if (typeof s.progress === 'number') setProgress(s.progress);
       if (s.message) setMessage(s.message);
       if (s.status === 'complete') {
+        setMessage('Sync Complete');
         setStatus('complete');
         clearInterval(interval);
-        setTimeout(() => navigate('/app'), 1000);
+        setTimeout(() => navigate('/app'), 1500);
       } else if (s.status === 'failed') {
         setStatus('failed');
         clearInterval(interval);
@@ -78,6 +79,9 @@ export default function Sync() {
               <div className="flex items-center justify-between text-sm text-muted-foreground">
                 <span>{progress}%</span>
                 <span>{status === 'complete' ? 'Completed' : status === 'failed' ? 'Failed' : 'In Progress'}</span>
+              </div>
+              <div className="mt-4 p-3 rounded border border-blue-200 bg-blue-50 text-xs text-blue-900">
+                Evidence ingestion is running in parallel. We’re collecting supplier docs and linking proofs to detected claims.
               </div>
               {status === 'failed' && (
                 <Button onClick={() => window.location.reload()}>Retry</Button>

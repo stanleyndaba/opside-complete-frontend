@@ -147,8 +147,8 @@ export function Dashboard() {
                 <div className="border border-amber-200 bg-amber-50 rounded p-4">
                   <div className="flex items-center justify-between gap-4">
                     <div>
-                      <p className="text-sm text-amber-800 font-montserrat">Potential lost reimbursements detected</p>
-                      <p className="text-amber-900 font-semibold font-montserrat">View cases and approve submissions</p>
+                      <p className="text-sm text-amber-800 font-montserrat">We found potential lost reimbursements</p>
+                      <p className="text-amber-900 font-semibold font-montserrat">Review cases and approve submissions</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <button onClick={async () => {
@@ -192,6 +192,7 @@ export function Dashboard() {
                         {detecting ? 'Detecting…' : 'Detect Missed Claims'}
                       </button>
                       <button onClick={() => navigate('/recoveries')} className="text-sm px-3 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded font-montserrat">View Recoveries</button>
+                      <button onClick={() => navigate('/evidence-locker')} className="text-sm px-3 py-2 bg-white hover:bg-amber-100 text-amber-900 rounded border border-amber-300 font-montserrat">Open Evidence Locker</button>
                     </div>
                   </div>
                   {lastDetection && (

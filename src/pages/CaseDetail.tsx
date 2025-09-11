@@ -6,10 +6,10 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, AlertCircle, Calendar } from 'lucide-react';
-import { Link } from 'react-router-dom';
+// duplicate Link import removed
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { api } from '@/lib/api';
+import { api, buildApiUrl } from '@/lib/api';
 
 interface CaseEvent {
   timestamp: string;
@@ -270,8 +270,7 @@ export default function CaseDetail() {
                       <div className="flex flex-wrap gap-2">
                         {effectiveCase.missingDocumentOptions.map((opt: string) => (
                           <Button key={opt} size="sm" variant="outline" onClick={() => {
-                            // Submit answer to backend (placeholder path)
-                            fetch(`/api/recoveries/${encodeURIComponent(effectiveCase.id)}/answer`, {
+                            fetch(buildApiUrl(`/api/recoveries/${encodeURIComponent(effectiveCase.id)}/answer`), {
                               method: 'POST',
                               headers: { 'Content-Type': 'application/json' },
                               credentials: 'include',
@@ -281,6 +280,40 @@ export default function CaseDetail() {
                         ))}
                       </div>
                     )}
+                    <div
+                      className="mt-2 p-4 border border-dashed border-amber-300 rounded bg-white/60 text-amber-900"
+                      onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                      onDrop={async (e) => {
+                        e.preventDefault();
+                        const files = Array.from(e.dataTransfer.files || []);
+                        if (!files.length) return;
+                        const form = new FormData();
+                        files.forEach(f => form.append('files', f));
+                        await fetch(buildApiUrl(`/api/recoveries/${encodeURIComponent(effectiveCase.id)}/documents/upload`), {
+                          method: 'POST',
+                          body: form,
+                          credentials: 'include',
+                        }).catch(() => {});
+                      }}
+                    >
+                      <div className="text-xs">Drag and drop supplier invoice here, or click to select.</div>
+                      <input
+                        type="file"
+                        multiple
+                        className="hidden"
+                        onChange={async (e) => {
+                          const files = Array.from((e.target as HTMLInputElement).files || []);
+                          if (!files.length) return;
+                          const form = new FormData();
+                          files.forEach(f => form.append('files', f));
+                          await fetch(buildApiUrl(`/api/recoveries/${encodeURIComponent(effectiveCase.id)}/documents/upload`), {
+                            method: 'POST',
+                            body: form,
+                            credentials: 'include',
+                          }).catch(() => {});
+                        }}
+                      />
+                    </div>
                   </div>
                 )}
 
@@ -331,20 +364,18 @@ export default function CaseDetail() {
 
                 <Separator />
 
-                {effectiveCase.status === 'Guaranteed' && (
-                  <Button className="w-full bg-emerald-600 hover:bg-emerald-700" disabled={!effectiveCase.isEvidenceComplete} onClick={async () => {
-                    const res = await api.submitClaim(effectiveCase.id);
-                    if (res.ok) {
-                      setCaseData((prev: any) => ({ ...(prev || {}), status: 'Submitted', submissionStatus: 'submitted' }));
-                      toast({ title: 'Claim submitted to Amazon', description: 'We will update you with the Amazon Case ID shortly.' });
-                    } else {
-                      toast({ title: 'Submission failed', description: res.error || 'Please try again.' });
-                    }
-                  }}>
-                    <CheckCircle className="h-4 w-4 mr-2" />
-                    {effectiveCase.isEvidenceComplete ? 'Approve & File Claim' : 'Waiting for Evidence Validation'}
-                  </Button>
-                )}
+                <Button className="w-full bg-emerald-600 hover:bg-emerald-700" disabled={effectiveCase.status === 'Paid Out'} onClick={async () => {
+                  const res = await api.submitClaim(effectiveCase.id);
+                  if (res.ok) {
+                    setCaseData((prev: any) => ({ ...(prev || {}), status: 'Submitted', submissionStatus: 'submitted' }));
+                    toast({ title: 'Claim submitted to Amazon', description: 'We will update you with the Amazon Case ID shortly.' });
+                  } else {
+                    toast({ title: 'Submission failed', description: res.error || 'Please try again.' });
+                  }
+                }}>
+                  <CheckCircle className="h-4 w-4 mr-2" />
+                  Resolve Case
+                </Button>
 
                 {/* Evidence & Docs */}
                 <div className="space-y-2">
