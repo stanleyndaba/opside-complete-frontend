@@ -98,11 +98,6 @@ export default function WhatsNew() {
                 </CardHeader>
 
                 <CardContent className="space-y-4">
-                  {/* Featured Image */}
-                  <div className="rounded-lg overflow-hidden bg-muted">
-                    <img src={update.image} alt={update.title} className="w-21 h-30 object-cover" />
-                  </div>
-
                   {/* Description */}
                   <p className="text-muted-foreground leading-relaxed">
                     {update.description}
@@ -130,14 +125,16 @@ export default function WhatsNew() {
         })}
         </div>
 
-        {/* Footer Note */}
-        <div className="text-center py-8">
-          <p className="text-sm text-muted-foreground">
-            Have suggestions for new features? We'd love to hear from you!{' '}
-            <a href="/help" className="text-primary hover:underline font-medium">
-              Contact our support team
-            </a>
-          </p>
+        {/* Suggestions Banner */}
+        <div className="py-6">
+          <div className="rounded-md border border-blue-200 bg-blue-50 p-4 text-center">
+            <p className="text-sm text-blue-900">
+              Have suggestions for new features? We'd love to hear from you!{' '}
+              <a href="/help" className="text-blue-700 hover:underline font-medium">
+                Contact our support team
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </PageLayout>;
