@@ -63,11 +63,11 @@ const getTagIcon = (tag: string) => {
   }
 };
 export default function WhatsNew() {
-  return <PageLayout title="What's New at Opside">
+  return <PageLayout title="What's New at Clario">
       <div className="space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">What's New at Opside</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-2">What's New at Clario</h1>
           <p className="text-muted-foreground">
             Stay up to date with the latest features, improvements, and fixes to help you recover more money faster.
           </p>

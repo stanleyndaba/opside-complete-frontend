@@ -93,10 +93,10 @@ export default function ExportCenter() {
   const isFormValid = reportType && dateRange.from && dateRange.to && fileFormat;
 
   return (
-    <PageLayout title="Export Your Opside Data">
+    <PageLayout title="Export Your Clario Data">
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="text-center space-y-2">
-          <h1 className="text-3xl font-bold text-foreground">Export Your Opside Data</h1>
+          <h1 className="text-3xl font-bold text-foreground">Export Your Clario Data</h1>
           <p className="text-muted-foreground">
             This is your data. Export it in the format you need, whenever you need it.
           </p>
