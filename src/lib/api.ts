@@ -60,6 +60,10 @@ export const api = {
   startAmazonSync: () => requestJson<{ syncId: string }>(`/api/sync/start`, { method: 'POST' }),
   getSyncStatus: (syncId?: string) => requestJson<{ status: 'in_progress' | 'complete' | 'failed'; progress?: number; message?: string }>(`/api/sync/status${syncId ? `?id=${encodeURIComponent(syncId)}` : ''}`),
   getSyncActivity: () => requestJson<Array<{ timestamp: string; message: string; type: 'success' | 'warning' | 'info' }>>(`/api/sync/activity`),
+  // Integrations Hub status & connect flows
+  getIntegrationsStatus: () => requestJson<{ amazon_connected: boolean; docs_connected: boolean; providers?: Record<string, boolean> }>(`/api/v1/integrations/status`),
+  connectAmazon: () => requestJson<{ redirect_url?: string }>(`/api/v1/integrations/connect-amazon`),
+  connectDocs: (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox') => requestJson<{ redirect_url?: string }>(`/api/v1/integrations/connect-docs?provider=${encodeURIComponent(provider)}`),
 
   // Detections / Dashboard
   getDetectionsSummary: () => requestJson<{ totalPotential: number; newCases: number; valueEstimated: number }>(`/api/metrics/dashboard`),

@@ -101,6 +101,8 @@ const categoryConfig = {
 export default function IntegrationsHub() {
   const navigate = useNavigate();
   const [lastSyncTime, setLastSyncTime] = useState('Just now');
+  const [status, setStatus] = useState<{ amazon_connected: boolean; docs_connected: boolean; providers?: Record<string, boolean> } | null>(null);
+  const [loading, setLoading] = useState(false);
   const [requestFormData, setRequestFormData] = useState({
     platform: '',
     description: ''
@@ -115,6 +117,17 @@ export default function IntegrationsHub() {
       setLastSyncTime(seconds % 10 === 0 ? 'Just now' : `${seconds % 10} seconds ago`);
     }, 1000);
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const res = await api.getIntegrationsStatus();
+      if (!cancelled) {
+        if (res.ok && res.data) setStatus(res.data);
+      }
+    })();
+    return () => { cancelled = true };
   }, []);
   const handleRequestSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -139,57 +152,111 @@ export default function IntegrationsHub() {
           </div>
         </div>
 
-        {/* Section 1: Your Active Connections */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <h2 className="text-2xl font-semibold">Active Integrations</h2>
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {activeConnections.map(connection => <Card key={connection.id} className="border-green-200 bg-green-50/50">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <img src={connection.logo} alt={`${connection.name} logo`} className="w-20 h-18 object-contain" />
-                      <div>
-                        <CardTitle className="text-lg">{connection.name}</CardTitle>
-                        <p className="text-sm text-muted-foreground">
-                          Store Name: <span className="font-medium">{connection.storeName}</span>
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-green-500 rounded-full" />
-                      <span className="text-sm text-green-600 font-medium">Connected</span>
-                    </div>
+        {/* Section 1: Amazon + Evidence Locker two-card layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Amazon Seller Central Card (Mandatory) */}
+          <Card className={status?.amazon_connected ? 'border-green-200 bg-green-50/50' : ''}>
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <img src={activeConnections[0].logo} alt={activeConnections[0].name + ' logo'} className="w-20 h-18 object-contain" />
+                  <div>
+                    <CardTitle className="text-lg">Amazon Seller Central</CardTitle>
+                    <p className="text-sm text-muted-foreground">We only read your Seller Central data. We never change listings or touch payouts.</p>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center text-sm">
-                      <span className="text-muted-foreground">Last Sync:</span>
-                      <span className="font-medium text-green-600">{lastSyncTime}</span>
-                    </div>
-                    
-                    <Separator />
-                    
-                    <Button size="sm" variant="outline" className="w-full gap-2" onClick={async () => {
-                      const res = await api.startAmazonSync();
-                      if (res.ok) {
-                        navigate(`/sync?id=${encodeURIComponent(res.data!.syncId)}`);
-                      } else {
-                        alert(res.error || 'Failed to start sync');
-                      }
-                    }}>
-                      <Settings className="h-3 w-3" />
-                      Manage
-                    </Button>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className={`w-2 h-2 rounded-full ${status?.amazon_connected ? 'bg-green-500' : 'bg-gray-300'}`} />
+                  <span className={`text-sm font-medium ${status?.amazon_connected ? 'text-green-600' : 'text-gray-600'}`}>{status?.amazon_connected ? 'Connected' : 'Not Connected'}</span>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <Button disabled={loading} onClick={async () => {
+                  setLoading(true);
+                  const res = await api.connectAmazon();
+                  setLoading(false);
+                  if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url;
+                }}>
+                  Connect Amazon Account
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Document Locker (Evidence Locker) Card */}
+          <Card className={status?.docs_connected ? 'border-green-200 bg-green-50/50' : ''}>
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Shield className="h-6 w-6 text-primary" />
+                  <div>
+                    <CardTitle className="text-lg">Evidence Locker</CardTitle>
+                    <p className="text-sm text-muted-foreground">We’ll securely collect and organize your invoices so you never have to dig for them later.</p>
                   </div>
-                </CardContent>
-              </Card>)}
-          </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className={`w-2 h-2 rounded-full ${status?.docs_connected ? 'bg-green-500' : 'bg-gray-300'}`} />
+                  <span className={`text-sm font-medium ${status?.docs_connected ? 'text-green-600' : 'text-gray-600'}`}>{status?.docs_connected ? 'Connected' : 'Not Connected'}</span>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-2">
+                {(['gmail','outlook','gdrive','dropbox'] as const).map((provider) => (
+                  <Button key={provider} variant="outline" size="sm" disabled={loading} onClick={async () => {
+                    setLoading(true);
+                    const res = await api.connectDocs(provider);
+                    setLoading(false);
+                    if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url;
+                  }}>
+                    {provider === 'gmail' && 'Connect Gmail'}
+                    {provider === 'outlook' && 'Connect Outlook'}
+                    {provider === 'gdrive' && 'Connect Google Drive'}
+                    {provider === 'dropbox' && 'Connect Dropbox'}
+                  </Button>
+                ))}
+              </div>
+              <div className="mt-3 rounded-md border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">
+                Recommended → Sellers who connect docs now resolve 90% of claims automatically.
+              </div>
+              {!status?.docs_connected && (
+                <div className="mt-2 text-xs text-amber-700">Docs not connected: claims may require extra steps.</div>
+              )}
+            </CardContent>
+          </Card>
         </div>
+
+        {/* Progress Indicator */}
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center gap-4 text-sm">
+              <div className="flex items-center gap-2">
+                <div className={`w-2 h-2 rounded-full ${status?.amazon_connected ? 'bg-green-500' : 'bg-gray-300'}`} />
+                <span>Amazon Connected</span>
+              </div>
+              <div className="w-8 h-px bg-muted" />
+              <div className="flex items-center gap-2">
+                <div className={`w-2 h-2 rounded-full ${status?.docs_connected ? 'bg-green-500' : 'bg-gray-300'}`} />
+                <span>Docs Connected (Optional)</span>
+              </div>
+              <div className="w-8 h-px bg-muted" />
+              <div className="flex items-center gap-2">
+                <div className={`w-2 h-2 rounded-full ${status?.amazon_connected ? 'bg-green-500' : 'bg-gray-300'}`} />
+                <span>Ready to Sync</span>
+              </div>
+              <div className="ml-auto">
+                <Button disabled={!status?.amazon_connected} onClick={async () => {
+                  const res = await api.startAmazonSync();
+                  if (res.ok) navigate(`/sync?id=${encodeURIComponent(res.data!.syncId)}`);
+                }}>
+                  Start First Sync
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Section 2: Available Integrations */}
         <div className="space-y-6">
