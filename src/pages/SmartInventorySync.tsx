@@ -108,8 +108,8 @@ export default function SmartInventorySync() {
                   Your inventory data is being continuously monitored and reconciled
                 </p>
                 {loading && (
-                  <div className="mt-3 h-2 w-48 bg-muted rounded">
-                    <div className="h-2 bg-primary rounded animate-pulse" style={{ width: '60%' }} />
+                  <div className="mt-3 h-2 w-full bg-muted rounded">
+                    <div className="h-2 bg-primary rounded animate-pulse" style={{ width: '50%' }} />
                   </div>
                 )}
               </div>

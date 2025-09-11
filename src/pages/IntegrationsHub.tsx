@@ -134,6 +134,9 @@ export default function IntegrationsHub() {
           <p className="text-muted-foreground">
             Your central command center for all platform connections
           </p>
+          <div className="mt-3 rounded-md border border-blue-200 bg-blue-50 inline-block px-3 py-2 text-sm text-blue-900">
+            Want us to auto-collect invoices & docs for you? Connect Gmail / Outlook / Drive / Dropbox.
+          </div>
         </div>
 
         {/* Section 1: Your Active Connections */}

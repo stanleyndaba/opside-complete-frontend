@@ -19,14 +19,14 @@ export function Dashboard() {
 
   // Aggregates state
   const [windowSel, setWindowSel] = useState<'7d' | '30d' | '90d'>('30d');
-  const [aggregates, setAggregates] = useState<{ totalRecovered: number; totalApproved: number; totalExpected: number } | null>(null);
+  const [aggregates, setAggregates] = useState<{ totalRecovered: number; totalApproved: number; totalExpected: number; evidenceHealth?: number } | null>(null);
   useEffect(() => {
     let cancelled = false;
     (async () => {
       const res = await api.getDashboardAggregates(windowSel);
       if (!cancelled) {
         if (res.ok && res.data) {
-          setAggregates({ totalRecovered: res.data.totalRecovered, totalApproved: res.data.totalApproved, totalExpected: res.data.totalExpected });
+          setAggregates({ totalRecovered: res.data.totalRecovered, totalApproved: res.data.totalApproved, totalExpected: res.data.totalExpected, evidenceHealth: (res.data as any).evidenceHealth });
         }
       }
     })();
@@ -240,6 +240,11 @@ export function Dashboard() {
                             <option value="30d">30d</option>
                             <option value="90d">90d</option>
                           </select>
+                        </div>
+                        {/* Evidence Health Score */}
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600 font-montserrat">Evidence Health</span>
+                          <span className="font-semibold text-sm font-montserrat">{aggregates?.evidenceHealth != null ? `${Math.round(aggregates.evidenceHealth)}%` : '—'}</span>
                         </div>
                       </div>
                     </div>

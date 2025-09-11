@@ -24,11 +24,14 @@ const Index = () => {
         <section className="container mx-auto px-6 py-16 md:py-24">
           <div className="max-w-3xl space-y-4">
             <h1 className="font-montserrat text-3xl md:text-5xl font-extrabold tracking-tight text-gray-900">
-              Your FBA Reimbursements, Fully Automated.
+              Recover more, with zero effort.
             </h1>
             <p className="font-montserrat text-base md:text-lg text-muted-foreground">
-              Clario automatically finds, files, and tracks every eligible claim with full transparency. No Upfront Costs — Our Success is Tied to Yours.
+              We automatically find, file, and prove every eligible claim. Transparent 20% performance cap. No upfront costs.
             </p>
+            <div className="rounded-md border border-blue-200 bg-blue-50 p-3 text-sm text-blue-900">
+              Optional: Supercharge automation — connect Gmail or Drive to auto-collect invoices and receipts.
+            </div>
             <div className="pt-2 flex items-center gap-3">
               <Button size="lg" className="bg-[#FF9900] hover:bg-[#e68900] text-black font-montserrat" onClick={() => {
                 window.location.href = api.getAmazonOAuthStartUrl('/app');

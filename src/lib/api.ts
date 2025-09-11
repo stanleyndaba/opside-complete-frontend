@@ -148,7 +148,7 @@ export const api = {
   getDetectionStatus: (detectionId: string) => requestJson<{ status: 'in_progress' | 'complete' | 'failed'; newCases?: number; totalPotential?: number }>(`/api/detections/status/${encodeURIComponent(detectionId)}`),
 
   // Dashboard & Recoveries metrics
-  getDashboardAggregates: (window?: '7d' | '30d' | '90d') => requestJson<{ totalRecovered: number; totalApproved: number; totalExpected: number; window?: '7d' | '30d' | '90d' }>(`/api/metrics/dashboard${window ? `?window=${encodeURIComponent(window)}` : ''}`),
+  getDashboardAggregates: (window?: '7d' | '30d' | '90d') => requestJson<{ totalRecovered: number; totalApproved: number; totalExpected: number; evidenceHealth?: number; window?: '7d' | '30d' | '90d' }>(`/api/metrics/dashboard${window ? `?window=${encodeURIComponent(window)}` : ''}`),
   getRecoveriesMetrics: () => requestJson<{ totalClaimsFound: number; inProgress: number; valueInProgress: number; successRate30d: number }>(`/api/metrics/recoveries`),
 
   // Documents

@@ -262,6 +262,28 @@ export default function CaseDetail() {
                   </p>
                 </div>
 
+                {/* Missing-docs Smart Prompt (if backend flags a gap) */}
+                {effectiveCase?.missingDocumentPrompt && (
+                  <div className="rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900 space-y-2">
+                    <div>{effectiveCase.missingDocumentPrompt}</div>
+                    {Array.isArray(effectiveCase.missingDocumentOptions) && (
+                      <div className="flex flex-wrap gap-2">
+                        {effectiveCase.missingDocumentOptions.map((opt: string) => (
+                          <Button key={opt} size="sm" variant="outline" onClick={() => {
+                            // Submit answer to backend (placeholder path)
+                            fetch(`/api/recoveries/${encodeURIComponent(effectiveCase.id)}/answer`, {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              credentials: 'include',
+                              body: JSON.stringify({ answer: opt })
+                            }).catch(() => {});
+                          }}>{opt}</Button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {effectiveCase.amazonCaseId && (
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">Amazon Case ID</label>
