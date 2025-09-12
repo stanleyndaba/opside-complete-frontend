@@ -73,6 +73,52 @@ export default function WhatsNew() {
           </p>
         </div>
 
+        {/* Coming Soon: Zero-Effort Evidence Engine (Top Card) */}
+        <Card className="overflow-hidden border-primary/30">
+          <CardHeader className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Calendar className="h-4 w-4" />
+                September 12, 2025
+              </div>
+              <div className="flex items-center gap-2">
+                <Badge className="bg-amber-600 text-white">BETA</Badge>
+                <Badge className="bg-emerald-600 text-white">NEW FEATURE</Badge>
+              </div>
+            </div>
+            <h2 className="text-xl font-semibold text-foreground">COMING SOON: The Zero-Effort Evidence Engine</h2>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-3 text-sm leading-relaxed text-foreground">
+              <p>To our founding users,</p>
+              <p>
+                Thank you for being a part of the Clario journey. You're already experiencing our "Glass Box" approach to recoveries—finding claims and linking them directly to the proof.
+              </p>
+              <p>But we're just getting started.</p>
+              <p>
+                We are currently building the next evolution of Clario: a proactive, intelligent engine designed to eliminate the single most annoying part of the reimbursement process—digging for documents.
+              </p>
+              <p className="font-medium">What's Coming:</p>
+              <p>
+                Imagine a world where you never have to search for an old supplier invoice again. The Clario Evidence Engine will securely connect to your email (Gmail/Outlook) and cloud storage to automatically build a complete, private library of your financial proof.
+              </p>
+              <p>
+                When we find a claim, our system will instantly find and match the correct invoice from your library, ensuring you get the maximum possible refund with zero work from you. No more email requests. No more digging through folders. Just faster, larger recoveries.
+              </p>
+              <p>This is more than a recovery tool. This is your automated forensic accountant.</p>
+              <p className="font-medium">Get Early Access:</p>
+              <p>
+                This feature is currently in a closed beta. As a founding member, you have the first opportunity to join the waitlist.
+              </p>
+            </div>
+            <div>
+              <a href="/integrations-hub" className="inline-flex items-center justify-center rounded-md border border-primary px-4 py-2 text-sm font-medium text-primary hover:bg-primary/5">
+                Join the Evidence Engine Beta Waitlist →
+              </a>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Updates Feed */}
         <div className="space-y-6">
           {updates.map(update => {
