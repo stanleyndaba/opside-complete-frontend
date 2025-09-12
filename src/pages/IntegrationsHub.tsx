@@ -235,18 +235,19 @@ export default function IntegrationsHub() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className="space-y-5">
                 <Button disabled={!status?.amazon_connected || loading} className="bg-emerald-600 hover:bg-emerald-700" onClick={() => setShowProviderDialog(true)}>
                   Activate Evidence Engine
                 </Button>
-                <button
+                <Button
+                  variant="outline"
+                  size="sm"
                   disabled={!status?.amazon_connected}
-                  className="mt-1 inline-block text-xs text-slate-600 hover:text-slate-800 underline focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-300 disabled:text-slate-300"
                   aria-label="Proceed with manual document uploads later"
                   onClick={(e) => { e.preventDefault(); setShowManualModal(true); }}
                 >
                   I'll upload documents manually later
-                </button>
+                </Button>
               </div>
               {/* Direct provider connects (peace of mind) */}
               <div className="grid grid-cols-2 gap-2 mt-3">
