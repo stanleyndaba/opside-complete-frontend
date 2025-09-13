@@ -25,6 +25,7 @@ export default {
 				// Headings default to IBM Plex Sans with Sora fallback, then Inter/sans
 				heading: ['"IBM Plex Sans"', 'Sora', 'Inter', 'sans-serif'],
 				sans: ['Inter', 'system-ui', 'Arial', 'sans-serif'],
+				brand: ['Montserrat', 'Inter', 'system-ui', 'Arial', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
