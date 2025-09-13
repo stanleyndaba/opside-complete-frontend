@@ -2,15 +2,15 @@ import React, { useState, useMemo } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { format, subDays, startOfYear, startOfQuarter } from 'date-fns';
-import { CalendarIcon, Download, FileText, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { CalendarIcon, Download, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import type { DateRange } from 'react-day-picker';
 
 // Mock data for claims
@@ -76,6 +76,8 @@ export default function Reports() {
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
   const [sortField, setSortField] = useState<SortField>('dateCreated');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
+  const [exportOpen, setExportOpen] = useState(false);
+  const [exportFormat, setExportFormat] = useState<'csv' | 'pdf'>('csv');
 
   // Filter and sort data
   const filteredClaims = useMemo(() => {
@@ -206,6 +208,11 @@ export default function Reports() {
     a.click();
     document.body.removeChild(a);
   };
+  const exportAction = () => {
+    if (exportFormat === 'csv') exportToCSV();
+    if (exportFormat === 'pdf') window.print();
+    setExportOpen(false);
+  };
   const SortIcon = ({
     field
   }: {
@@ -214,12 +221,36 @@ export default function Reports() {
     if (sortField !== field) return <ArrowUpDown className="h-4 w-4" />;
     return sortDirection === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />;
   };
-  return <PageLayout title="Recovery Reports">
+  return <PageLayout title="Reports">
       <div className="container max-w-full p-6">
-        {/* Page Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Recovery Reports</h1>
-          <p className="text-muted-foreground">Comprehensive analysis of your recovery claims and performance metrics</p>
+        {/* Page Header & Controls */}
+        <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground mb-1">Reports</h1>
+            <p className="text-muted-foreground">Historical clarity and financial reconciliation</p>
+          </div>
+          <div className="flex flex-wrap gap-2 items-center">
+            <Button variant="outline" size="sm" onClick={() => setQuickDateRange('30days')}>Last 30 Days</Button>
+            <Button variant="outline" size="sm" onClick={() => setQuickDateRange('quarter')}>This Quarter</Button>
+            <Button variant="outline" size="sm" onClick={() => setQuickDateRange('year')}>Year to Date</Button>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className={cn("w-[280px] justify-start text-left font-normal", !dateRange && "text-muted-foreground")}>
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {dateRange?.from ? dateRange.to ? <>
+                        {format(dateRange.from, "LLL dd, y")} -{" "}
+                        {format(dateRange.to, "LLL dd, y")}
+                      </> : format(dateRange.from, "LLL dd, y") : <span>Pick a date range</span>}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar initialFocus mode="range" defaultMonth={dateRange?.from} selected={dateRange} onSelect={setDateRange} numberOfMonths={2} className="pointer-events-auto" />
+              </PopoverContent>
+            </Popover>
+            <Button onClick={() => setExportOpen(true)} className="gap-2">
+              <Download className="h-4 w-4" /> Export Data
+            </Button>
+          </div>
         </div>
 
         {/* Key Metrics Bar */}
@@ -269,140 +300,85 @@ export default function Reports() {
           </Card>
         </div>
 
-        {/* Filters */}
+        {/* Key Metrics Summary already shown above */}
+
+        {/* Visual Breakdown: Recoveries Over Time */}
         <Card className="mb-8">
           <CardContent className="p-6">
-            <div className="flex flex-wrap gap-4 items-center justify-between">
-              <div className="flex flex-wrap gap-4 items-center">
-                {/* Quick Date Range Buttons */}
-                <div className="flex gap-2">
-                  <Button variant="outline" size="sm" onClick={() => setQuickDateRange('30days')}>Last 30 Days</Button>
-                  <Button variant="outline" size="sm" onClick={() => setQuickDateRange('quarter')}>Last Quarter</Button>
-                  <Button variant="outline" size="sm" onClick={() => setQuickDateRange('year')}>This Year</Button>
-                  <Button variant="outline" size="sm" onClick={() => setQuickDateRange('all')}>All Time</Button>
-                </div>
-
-                {/* Custom Date Range */}
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className={cn("w-[280px] justify-start text-left font-normal", !dateRange && "text-muted-foreground")}>
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {dateRange?.from ? dateRange.to ? <>
-                            {format(dateRange.from, "LLL dd, y")} -{" "}
-                            {format(dateRange.to, "LLL dd, y")}
-                          </> : format(dateRange.from, "LLL dd, y") : <span>Pick a date range</span>}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar initialFocus mode="range" defaultMonth={dateRange?.from} selected={dateRange} onSelect={setDateRange} numberOfMonths={2} className="pointer-events-auto" />
-                  </PopoverContent>
-                </Popover>
-
-                {/* Claim Type Filter */}
-                <Select>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Filter by Claim Type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {claimTypes.map(type => <SelectItem key={type} value={type}>{type}</SelectItem>)}
-                  </SelectContent>
-                </Select>
-
-                {/* Status Filter */}
-                <Select>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Filter by Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {statusOptions.map(status => <SelectItem key={status} value={status}>{status}</SelectItem>)}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Export Button */}
-              <Button onClick={exportToCSV} className="flex items-center gap-2">
-                <Download className="h-4 w-4" />
-                Export to CSV
-              </Button>
+            <h3 className="text-sm font-semibold text-muted-foreground mb-4">Recoveries Over Time</h3>
+            <div className="w-full h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={filteredClaims.map(c => ({ date: format(new Date(c.dateCreated), 'MMM dd'), value: c.amountRecovered }))}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+                  <XAxis dataKey="date" tick={{ fontSize: 12 }} stroke="#9CA3AF" />
+                  <YAxis tick={{ fontSize: 12 }} stroke="#9CA3AF" />
+                  <Tooltip formatter={(v: number) => formatCurrency(v)} />
+                  <Bar dataKey="value" fill="#6366F1" radius={[4,4,0,0]} />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>
 
-        {/* Data Table */}
+        {/* Detailed Breakdown: Recoveries by Claim Type */}
         <Card>
-          <CardContent className="p-0">
+          <CardContent className="p-6">
+            <h3 className="text-sm font-semibold text-muted-foreground mb-4">Recoveries by Claim Type</h3>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="cursor-pointer" onClick={() => handleSort('dateCreated')}>
-                    <div className="flex items-center gap-2">
-                      Claim ID
-                      <SortIcon field="dateCreated" />
-                    </div>
-                  </TableHead>
-                  <TableHead className="cursor-pointer" onClick={() => handleSort('dateCreated')}>
-                    <div className="flex items-center gap-2">
-                      Date Created
-                      <SortIcon field="dateCreated" />
-                    </div>
-                  </TableHead>
-                  <TableHead className="cursor-pointer" onClick={() => handleSort('claimType')}>
-                    <div className="flex items-center gap-2">
-                      Claim Type
-                      <SortIcon field="claimType" />
-                    </div>
-                  </TableHead>
-                  <TableHead className="cursor-pointer" onClick={() => handleSort('status')}>
-                    <div className="flex items-center gap-2">
-                      Status
-                      <SortIcon field="status" />
-                    </div>
-                  </TableHead>
-                  <TableHead className="cursor-pointer" onClick={() => handleSort('amountRecovered')}>
-                    <div className="flex items-center gap-2">
-                      Amount Recovered
-                      <SortIcon field="amountRecovered" />
-                    </div>
-                  </TableHead>
-                  <TableHead className="cursor-pointer" onClick={() => handleSort('payoutDate')}>
-                    <div className="flex items-center gap-2">
-                      Payout Date
-                      <SortIcon field="payoutDate" />
-                    </div>
-                  </TableHead>
-                  <TableHead>Evidence</TableHead>
+                  <TableHead>Claim Type</TableHead>
+                  <TableHead>Claims Filed</TableHead>
+                  <TableHead>Amount Recovered</TableHead>
+                  <TableHead>% of Total</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredClaims.map(claim => <TableRow key={claim.id}>
-                    <TableCell>
-                      <Button variant="link" className="p-0 h-auto text-blue-600 hover:text-blue-800">
-                        {claim.id}
-                      </Button>
-                    </TableCell>
-                    <TableCell>{format(new Date(claim.dateCreated), 'MMM dd, yyyy')}</TableCell>
-                    <TableCell>{claim.claimType}</TableCell>
-                    <TableCell>
-                      <Badge className={getStatusColor(claim.status)}>
-                        {claim.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="font-medium">{formatCurrency(claim.amountRecovered)}</TableCell>
-                    <TableCell>
-                      {claim.payoutDate ? format(new Date(claim.payoutDate), 'MMM dd, yyyy') : '-'}
-                    </TableCell>
-                    <TableCell>
-                      <Button variant="ghost" size="sm" asChild>
-                        <a href={`/evidence-locker/document/${claim.evidenceId}`}>
-                          <FileText className="h-4 w-4" />
-                        </a>
-                      </Button>
-                    </TableCell>
-                  </TableRow>)}
+                {(() => {
+                  const totalsByType: Record<string, { count: number; amount: number }> = {};
+                  filteredClaims.forEach(c => {
+                    totalsByType[c.claimType] = totalsByType[c.claimType] || { count: 0, amount: 0 };
+                    totalsByType[c.claimType].count += 1;
+                    totalsByType[c.claimType].amount += c.amountRecovered;
+                  });
+                  const grandTotal = Object.values(totalsByType).reduce((s, t) => s + t.amount, 0);
+                  return Object.entries(totalsByType).map(([type, t]) => (
+                    <TableRow key={type}>
+                      <TableCell>{type}</TableCell>
+                      <TableCell>{t.count}</TableCell>
+                      <TableCell className="font-medium">{formatCurrency(t.amount)}</TableCell>
+                      <TableCell>{grandTotal > 0 ? ((t.amount / grandTotal) * 100).toFixed(1) : '0.0'}%</TableCell>
+                    </TableRow>
+                  ));
+                })()}
               </TableBody>
             </Table>
           </CardContent>
         </Card>
       </div>
+      {/* Export Modal */}
+      <Dialog open={exportOpen} onOpenChange={setExportOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Export Data</DialogTitle>
+            <DialogDescription>Select what format you want to export.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <Select value={exportFormat} onValueChange={(v) => setExportFormat(v as 'csv' | 'pdf')}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select format" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="csv">Detailed CSV</SelectItem>
+                <SelectItem value="pdf">PDF Summary</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setExportOpen(false)}>Cancel</Button>
+            <Button onClick={exportAction}>Export</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </PageLayout>;
 }

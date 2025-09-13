@@ -41,6 +41,7 @@ const App = () => (
           {/* Market/Stocks pages removed for FBA MVP focus */}
           <Route path="/settings" element={<Settings />} />
           <Route path="/integrations-hub" element={<IntegrationsHub />} />
+          <Route path="/reports" element={<Reports />} />
           <Route path="/recoveries" element={<Recoveries />} />
           <Route path="/recoveries/:caseId" element={<CaseDetail />} />
           <Route path="/smart-inventory-sync" element={<SmartInventorySync />} />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Shield, Settings, CreditCard, HelpCircle, Sparkles, Download, Key, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Home, Shield, Settings, CreditCard, HelpCircle, Sparkles, Download, Key, ChevronLeft, ChevronRight, BarChart3 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -38,6 +38,10 @@ export function Sidebar({
       title: 'Integrations',
       icon: Settings,
       href: '/integrations-hub'
+    }, {
+      title: 'Reports',
+      icon: BarChart3,
+      href: '/reports'
     }, {
       title: 'Recoveries',
       icon: Shield,
