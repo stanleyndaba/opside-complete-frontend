@@ -61,10 +61,6 @@ export function Sidebar({
   }, {
     title: 'System',
     items: [{
-      title: 'Export Data',
-      icon: Download,
-      href: '/export'
-    }, {
       title: 'API Access',
       icon: Key,
       href: '/api'
