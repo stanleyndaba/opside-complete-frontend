@@ -11,11 +11,11 @@ import { Separator } from '@/components/ui/separator';
 import { 
   User, Building2, Users, CreditCard, Zap, Bell, Shield, 
   Upload, MapPin, Clock, Monitor, Smartphone, AlertTriangle,
-  CheckCircle, Calendar, Globe, Camera
+  CheckCircle, Calendar, Globe, Camera, Key
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-type SettingsSection = 'profile' | 'business' | 'team' | 'billing' | 'integrations' | 'notifications' | 'security';
+type SettingsSection = 'profile' | 'business' | 'team' | 'billing' | 'integrations' | 'notifications' | 'security' | 'api';
 
 const Settings = () => {
   const [activeSection, setActiveSection] = useState<SettingsSection>('profile');
@@ -25,6 +25,7 @@ const Settings = () => {
     { id: 'business' as SettingsSection, label: 'Business Profile', icon: Building2 },
     { id: 'team' as SettingsSection, label: 'Team Management', icon: Users },
     { id: 'billing' as SettingsSection, label: 'Billing & Value', icon: CreditCard },
+    { id: 'api' as SettingsSection, label: 'API Access', icon: Key },
     { id: 'integrations' as SettingsSection, label: 'Integrations Hub', icon: Zap },
     { id: 'notifications' as SettingsSection, label: 'Notifications', icon: Bell },
     { id: 'security' as SettingsSection, label: 'Security', icon: Shield }
@@ -209,6 +210,37 @@ const Settings = () => {
                 </div>
                 <div className="text-xs text-muted-foreground">
                   Note: You can always review individual cases in Recoveries and pause Auto-Claim from here.
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        );
+
+      case 'api':
+        return (
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold">API Access</h2>
+              <p className="text-muted-foreground">Programmatic access to your Clario data for automation and integrations</p>
+            </div>
+
+            <Card>
+              <CardContent className="p-6">
+                <div className="space-y-3">
+                  <p className="text-sm text-muted-foreground">
+                    Use Clario APIs to pull recovery data, sync evidence statuses, and reconcile payouts in your own systems.
+                    Access tokens are scoped and can be rotated at any time. SDKs and examples are available.
+                  </p>
+                  <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-1">
+                    <li>Recoveries, claims, and payout endpoints</li>
+                    <li>Webhooks for status changes</li>
+                    <li>Fine-grained API keys and scopes</li>
+                  </ul>
+                </div>
+                <div className="mt-6">
+                  <Button className="bg-blue-600 hover:bg-blue-700" onClick={() => (window.location.href = '/api')}>
+                    Clario APIs
+                  </Button>
                 </div>
               </CardContent>
             </Card>
