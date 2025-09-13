@@ -107,23 +107,18 @@ export function Sidebar({
         </div>}
 
       <ScrollArea className="flex-1">
-        <nav className={cn("space-y-6 py-6", isCollapsed ? "px-2" : "px-4")}>
-          {sections.map((section, sectionIndex) => <div key={sectionIndex}>
-              {!isCollapsed && <h3 className="text-s text-black lowercase tracking-wider mb-3 text-sm font-semibold">
-                  {section.title}
-                </h3>}
-              <div className="space-y-1">
-                {section.items.map((item, itemIndex) => <NavItemComponent key={itemIndex} item={item} />)}
-              </div>
-            </div>)}
-        </nav>
-        
-        {/* Version Number */}
-        {!isCollapsed && <div className="px-4 pb-6">
-            <div className="text-xs text-gray-400 font-mono">
-              v1.0
-            </div>
-          </div>}
+        <div className={cn("h-full flex", isCollapsed ? "px-2" : "px-4")}>
+          <nav className="space-y-6 my-auto w-full">
+            {sections.map((section, sectionIndex) => <div key={sectionIndex}>
+                {!isCollapsed && <h3 className="text-s text-black lowercase tracking-wider mb-3 text-sm font-semibold">
+                    {section.title}
+                  </h3>}
+                <div className="space-y-1">
+                  {section.items.map((item, itemIndex) => <NavItemComponent key={itemIndex} item={item} />)}
+                </div>
+              </div>)}
+          </nav>
+        </div>
       </ScrollArea>
     </aside>;
 }
