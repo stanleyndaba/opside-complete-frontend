@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Shield, Settings, HelpCircle, Sparkles, ChevronLeft, ChevronRight, BarChart3 } from 'lucide-react';
+import { Home, Shield, Settings, HelpCircle, Sparkles, ChevronLeft, ChevronRight, BarChart3, Plug } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -36,7 +36,7 @@ export function Sidebar({
       href: '/app'
     }, {
       title: 'Integrations',
-      icon: Settings,
+      icon: Plug,
       href: '/integrations-hub'
     }, {
       title: 'Reports',
