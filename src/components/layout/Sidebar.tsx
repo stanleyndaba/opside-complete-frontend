@@ -50,7 +50,7 @@ export function Sidebar({
   }, {
     title: 'My Account',
     items: [{
-      title: 'Settings',
+      title: 'Configure',
       icon: Settings,
       href: '/settings'
     }, {
