@@ -78,6 +78,7 @@ export default function Reports() {
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
   const [exportOpen, setExportOpen] = useState(false);
   const [exportFormat, setExportFormat] = useState<'csv' | 'pdf'>('csv');
+  const [reportType, setReportType] = useState<'' | 'recovery_payout' | 'fee_dispute' | 'evidence_log'>('');
 
   // Filter and sort data
   const filteredClaims = useMemo(() => {
@@ -203,7 +204,8 @@ export default function Reports() {
     const a = document.createElement('a');
     a.setAttribute('hidden', '');
     a.setAttribute('href', url);
-    a.setAttribute('download', 'recovery-reports.csv');
+    const filename = reportType === 'fee_dispute' ? 'fee-dispute-history.csv' : reportType === 'evidence_log' ? 'evidence-locker-log.csv' : 'recovery-payout-history.csv';
+    a.setAttribute('download', filename);
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -364,6 +366,19 @@ export default function Reports() {
             <DialogDescription>Select what format you want to export.</DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
+            <div>
+              <p className="text-sm font-medium mb-2">Select Report Type</p>
+              <Select value={reportType} onValueChange={(v) => setReportType(v as any)}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Choose a report to export" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="recovery_payout">Recovery and Payout History — Master report for all financial reconciliation</SelectItem>
+                  <SelectItem value="fee_dispute">Fee Dispute History — Value recovered from fee overcharges</SelectItem>
+                  <SelectItem value="evidence_log">Evidence Locker Log — Inventory of all uploaded</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             <Select value={exportFormat} onValueChange={(v) => setExportFormat(v as 'csv' | 'pdf')}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select format" />
@@ -376,7 +391,7 @@ export default function Reports() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setExportOpen(false)}>Cancel</Button>
-            <Button onClick={exportAction}>Export</Button>
+            <Button onClick={exportAction} disabled={!reportType}>Generate & Download</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
