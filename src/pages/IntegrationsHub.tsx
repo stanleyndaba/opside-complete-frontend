@@ -235,7 +235,7 @@ export default function IntegrationsHub() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="space-y-5">
+              <div className="flex flex-wrap gap-4">
                 <Button disabled={!status?.amazon_connected || loading} className="bg-emerald-600 hover:bg-emerald-700" onClick={() => setShowProviderDialog(true)}>
                   Activate Evidence Engine
                 </Button>
