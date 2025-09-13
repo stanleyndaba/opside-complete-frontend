@@ -76,7 +76,7 @@ export function Sidebar({
       return <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Link to={item.href} className={cn("flex items-center justify-center w-12 h-12 rounded-md transition-colors", isActive ? "bg-black text-white" : "text-gray-600 hover:bg-gray-100")}>
+              <Link to={item.href} className={cn("flex items-center justify-center w-12 h-12 rounded-md transition-colors", isActive ? "bg-blue-600 text-white" : "text-gray-600 hover:bg-gray-100")}>
                 <item.icon className="h-5 w-5" strokeWidth={1.5} />
               </Link>
             </TooltipTrigger>
@@ -86,7 +86,7 @@ export function Sidebar({
           </Tooltip>
         </TooltipProvider>;
     }
-    return <Link to={item.href} className={cn("flex items-center gap-3 px-3 py-2 rounded-md transition-colors", isActive ? "bg-black text-white" : "text-gray-600 hover:bg-gray-100")}>
+    return <Link to={item.href} className={cn("flex items-center gap-3 px-3 py-2 rounded-md transition-colors", isActive ? "bg-blue-600 text-white" : "text-gray-600 hover:bg-gray-100")}>
         <item.icon strokeWidth={1.5} className="h-5 w-5 shrink-0 text-sm font-extralight" />
         <span className="text-sm font-normal">{item.title}</span>
       </Link>;
