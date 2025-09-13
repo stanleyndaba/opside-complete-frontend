@@ -29,7 +29,7 @@ export function Navbar({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Avatar className="h-9 w-9 transition-transform duration-200 hover:scale-105 cursor-pointer">
-                <AvatarFallback className="bg-black text-white">
+                <AvatarFallback className="bg-transparent text-black">
                   <User className="h-4 w-4" />
                 </AvatarFallback>
               </Avatar>
