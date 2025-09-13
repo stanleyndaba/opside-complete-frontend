@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Shield, Settings, CreditCard, HelpCircle, Sparkles, Download, Key, ChevronLeft, ChevronRight, BarChart3 } from 'lucide-react';
+import { Home, Shield, Settings, CreditCard, HelpCircle, Sparkles, ChevronLeft, ChevronRight, BarChart3 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -57,13 +57,6 @@ export function Sidebar({
       title: 'Billing',
       icon: CreditCard,
       href: '/billing'
-    }]
-  }, {
-    title: 'System',
-    items: [{
-      title: 'API Access',
-      icon: Key,
-      href: '/api'
     }]
   }, {
     title: 'Support',
