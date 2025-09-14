@@ -23,7 +23,6 @@ const Settings = () => {
   const menuItems = [
     { id: 'profile' as SettingsSection, label: 'Clario Profile', icon: User },
     { id: 'business' as SettingsSection, label: 'Business Profile', icon: Building2 },
-    { id: 'team' as SettingsSection, label: 'Team Management', icon: Users },
     { id: 'billing' as SettingsSection, label: 'Billing & Value', icon: CreditCard },
     { id: 'api' as SettingsSection, label: 'API Access', icon: Key },
     { id: 'integrations' as SettingsSection, label: 'Integrations Hub', icon: Zap },
@@ -145,31 +144,7 @@ const Settings = () => {
           </div>
         );
 
-      case 'team':
-        return (
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-2xl font-bold">Team Management</h2>
-              <p className="text-muted-foreground">Manage team members and their access permissions</p>
-            </div>
-            
-            <Card>
-              <CardContent className="p-6">
-                <div className="text-center py-8">
-                  <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">Full Team Management</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Access the complete team management interface with role-based permissions, 
-                    member invitations, and access control.
-                  </p>
-                  <Button onClick={() => window.location.href = '/team-management'}>
-                    Go to Team Management
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        );
+      
 
       case 'billing':
         return (
