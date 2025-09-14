@@ -75,9 +75,11 @@ export function Sidebar({
 
       {/* Logo Section */}
       {!isCollapsed ? <div className="p-4 border-b border-gray-200 flex justify-center">
-          <img src="/clario-logo.svg" alt="Clario" className="h-8 w-8" />
+          <img src="/clario-logo.svg" alt="Clario" className="h-10 w-10 dark:hidden" />
+          <img src="/clario-logo-dark.svg" alt="Clario" className="h-10 w-10 hidden dark:block" />
         </div> : <div className="p-2 border-b border-gray-200 flex justify-center">
-          <img src="/clario-logo.svg" alt="Clario" className="h-6 w-6" />
+          <img src="/clario-logo.svg" alt="Clario" className="h-8 w-8 dark:hidden" />
+          <img src="/clario-logo-dark.svg" alt="Clario" className="h-8 w-8 hidden dark:block" />
         </div>}
 
       <ScrollArea className="flex-1">
