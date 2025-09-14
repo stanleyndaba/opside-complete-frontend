@@ -34,17 +34,21 @@ const Index = () => {
               <li>✅ Automatically find proof for higher claims by connecting your email.</li>
               <li>✅ Track your recoveries and predictable payouts in a simple Command Center.</li>
             </ul>
-            <div className="pt-2 flex items-center gap-3">
-              <Button size="lg" className="bg-[#FF9900] hover:bg-[#e68900] text-black font-montserrat" onClick={() => {
-                window.location.href = api.getAmazonOAuthStartUrl('/oauth/success');
-              }}>
-                <img src="/lovable-uploads/14f98d63-9a1a-4128-8021-1d840d778ea5.png" alt="Amazon" className="h-5 w-5 mr-2" />
-                Connect Amazon & Start Audit
-              </Button>
-              <Button variant="outline" size="lg" asChild>
-                <Link to="/app">Watch a 2-Min Demo</Link>
-              </Button>
-              <span className="text-xs text-muted-foreground">Free to start. No credit card required.</span>
+            <div className="pt-2">
+              <div className="flex items-center gap-3">
+                <Button size="lg" className="bg-[#FF9900] hover:bg-[#e68900] text-black font-montserrat" onClick={() => {
+                  window.location.href = api.getAmazonOAuthStartUrl('/oauth/success');
+                }}>
+                  <img src="/lovable-uploads/14f98d63-9a1a-4128-8021-1d840d778ea5.png" alt="Amazon" className="h-5 w-5 mr-2" />
+                  Connect Amazon & Start Audit
+                </Button>
+                <Button variant="outline" size="lg" asChild>
+                  <Link to="/app">Watch a 2-Min Demo</Link>
+                </Button>
+              </div>
+              <div className="mt-2 text-center">
+                <span className="text-xs text-muted-foreground">Free to start. No credit card required.</span>
+              </div>
             </div>
           </div>
         </section>
