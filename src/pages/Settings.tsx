@@ -11,7 +11,7 @@ import { Separator } from '@/components/ui/separator';
 import { 
   User, Building2, Users, CreditCard, Zap, Bell, Shield, 
   Upload, MapPin, Clock, Monitor, Smartphone, AlertTriangle,
-  CheckCircle, Calendar, Globe, Camera, Key
+  CheckCircle, Calendar, Globe, Camera, Key, Plug
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -253,6 +253,12 @@ const Settings = () => {
             <div>
               <h2 className="text-2xl font-bold">Platform Integrations</h2>
               <p className="text-muted-foreground">Manage your platform connections and data sources</p>
+            </div>
+            <div>
+              <Button className="bg-blue-600 hover:bg-blue-700 gap-2" onClick={() => (window.location.href = '/integrations-hub')}>
+                <Plug className="h-4 w-4" />
+                Clario Integrations
+              </Button>
             </div>
             
             <Card>

@@ -35,10 +35,6 @@ export function Sidebar({
       icon: Home,
       href: '/app'
     }, {
-      title: 'Integrations',
-      icon: Plug,
-      href: '/integrations-hub'
-    }, {
       title: 'Reports',
       icon: BarChart3,
       href: '/reports'
