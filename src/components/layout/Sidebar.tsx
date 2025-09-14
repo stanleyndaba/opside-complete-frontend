@@ -81,36 +81,38 @@ export function Sidebar({
         </div>}
 
       <ScrollArea className="flex-1">
-        <div className={cn("h-full", isCollapsed ? "px-2" : "px-4")}> 
-          {!isCollapsed && (
-            <div className="pt-3 pb-2">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-sm font-semibold">Martin Links</div>
-                  <div className="text-xs text-muted-foreground">martin@example.com</div>
-                  <div className="text-[11px] text-green-700 flex items-center gap-1 mt-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-green-500" /> Connected
+        <div className={cn("h-full flex", isCollapsed ? "px-2" : "px-4")}> 
+          <div className="my-auto w-full">
+            {!isCollapsed && (
+              <div className="pt-3 pb-2">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-sm font-semibold">Martin Links</div>
+                    <div className="text-xs text-muted-foreground">martin@example.com</div>
+                    <div className="text-[11px] text-green-700 flex items-center gap-1 mt-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-500" /> Connected
+                    </div>
                   </div>
+                  <button className="text-muted-foreground hover:text-foreground" title="Edit profile" onClick={() => (window.location.href = '/settings')}>
+                    <Edit3 className="h-4 w-4" />
+                  </button>
                 </div>
-                <button className="text-muted-foreground hover:text-foreground" title="Edit profile" onClick={() => (window.location.href = '/settings')}>
-                  <Edit3 className="h-4 w-4" />
-                </button>
               </div>
-            </div>
-          )}
-          <nav className="space-y-4 py-2 w-full">
-            <div className="space-y-1">
-              {primaryItems.map((item, idx) => <NavItemComponent key={`p-${idx}`} item={item} />)}
-            </div>
-            {!isCollapsed && <div className="h-px bg-muted" />}
-            <div className="space-y-1">
-              {accountItems.map((item, idx) => <NavItemComponent key={`a-${idx}`} item={item} />)}
-            </div>
-            {!isCollapsed && <div className="h-px bg-muted" />}
-            <div className="space-y-1 pb-4">
-              {supportItems.map((item, idx) => <NavItemComponent key={`s-${idx}`} item={item} />)}
-            </div>
-          </nav>
+            )}
+            <nav className="space-y-4 py-2 w-full">
+              <div className="space-y-1">
+                {primaryItems.map((item, idx) => <NavItemComponent key={`p-${idx}`} item={item} />)}
+              </div>
+              {!isCollapsed && <div className="h-px bg-muted" />}
+              <div className="space-y-1">
+                {accountItems.map((item, idx) => <NavItemComponent key={`a-${idx}`} item={item} />)}
+              </div>
+              {!isCollapsed && <div className="h-px bg-muted" />}
+              <div className="space-y-1 pb-4">
+                {supportItems.map((item, idx) => <NavItemComponent key={`s-${idx}`} item={item} />)}
+              </div>
+            </nav>
+          </div>
         </div>
       </ScrollArea>
     </aside>;
