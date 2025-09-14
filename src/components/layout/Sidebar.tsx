@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Shield, Settings, HelpCircle, Sparkles, ChevronLeft, ChevronRight, BarChart3, Plug } from 'lucide-react';
+import { Home, Shield, Settings, HelpCircle, Sparkles, ChevronLeft, ChevronRight, BarChart3, Plug, Edit3 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -28,40 +28,18 @@ export function Sidebar({
   className
 }: SidebarProps) {
   const location = useLocation();
-  const sections: NavSection[] = [{
-    title: 'Seller Tools',
-    items: [{
-      title: 'Command Center',
-      icon: Home,
-      href: '/app'
-    }, {
-      title: 'Reports',
-      icon: BarChart3,
-      href: '/reports'
-    }, {
-      title: 'Recoveries',
-      icon: Shield,
-      href: '/recoveries'
-    }]
-  }, {
-    title: 'My Account',
-    items: [{
-      title: 'Configure',
-      icon: Settings,
-      href: '/settings'
-    }]
-  }, {
-    title: 'Support',
-    items: [{
-      title: 'Help Centre',
-      icon: HelpCircle,
-      href: '/help'
-    }, {
-      title: 'What\'s new',
-      icon: Sparkles,
-      href: '/whats-new'
-    }]
-  }];
+  const primaryItems: NavItem[] = [
+    { title: 'Command Center', icon: Home, href: '/app' },
+    { title: 'Reports', icon: BarChart3, href: '/reports' },
+    { title: 'Recoveries', icon: Shield, href: '/recoveries' },
+  ];
+  const accountItems: NavItem[] = [
+    { title: 'Configure', icon: Settings, href: '/settings' },
+  ];
+  const supportItems: NavItem[] = [
+    { title: 'Help Centre', icon: HelpCircle, href: '/help' },
+    { title: 'What\'s new', icon: Sparkles, href: '/whats-new' },
+  ];
   const NavItemComponent = ({
     item
   }: {
@@ -103,16 +81,35 @@ export function Sidebar({
         </div>}
 
       <ScrollArea className="flex-1">
-        <div className={cn("h-full flex", isCollapsed ? "px-2" : "px-4")}>
-          <nav className="space-y-6 my-auto w-full">
-            {sections.map((section, sectionIndex) => <div key={sectionIndex}>
-                {!isCollapsed && <h3 className="text-s text-black lowercase tracking-wider mb-3 text-sm font-semibold">
-                    {section.title}
-                  </h3>}
-                <div className="space-y-1">
-                  {section.items.map((item, itemIndex) => <NavItemComponent key={itemIndex} item={item} />)}
+        <div className={cn("h-full", isCollapsed ? "px-2" : "px-4")}> 
+          {!isCollapsed && (
+            <div className="pt-3 pb-2">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-sm font-semibold">Martin Links</div>
+                  <div className="text-xs text-muted-foreground">martin@example.com</div>
+                  <div className="text-[11px] text-green-700 flex items-center gap-1 mt-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-500" /> Connected
+                  </div>
                 </div>
-              </div>)}
+                <button className="text-muted-foreground hover:text-foreground" title="Edit profile" onClick={() => (window.location.href = '/settings')}>
+                  <Edit3 className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          )}
+          <nav className="space-y-4 py-2 w-full">
+            <div className="space-y-1">
+              {primaryItems.map((item, idx) => <NavItemComponent key={`p-${idx}`} item={item} />)}
+            </div>
+            {!isCollapsed && <div className="h-px bg-muted" />}
+            <div className="space-y-1">
+              {accountItems.map((item, idx) => <NavItemComponent key={`a-${idx}`} item={item} />)}
+            </div>
+            {!isCollapsed && <div className="h-px bg-muted" />}
+            <div className="space-y-1 pb-4">
+              {supportItems.map((item, idx) => <NavItemComponent key={`s-${idx}`} item={item} />)}
+            </div>
           </nav>
         </div>
       </ScrollArea>
