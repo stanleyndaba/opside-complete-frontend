@@ -49,11 +49,21 @@ export default function OAuthSuccess() {
     (async () => {
       const res = await api.getIntegrationsStatus();
       if (res.ok) setStatusData(res.data);
+      // Auto-start first sync on success
+      if (status === 'ok') {
+        api.trackEvent('first_sync_started', { provider });
+        const syncRes = await api.startAmazonSync();
+        if (syncRes.ok) {
+          api.trackEvent('first_sync_redirect', { provider });
+          navigate(`/sync?id=${encodeURIComponent(syncRes.data!.syncId)}`);
+        }
+      }
     })();
   }, [provider, status]);
 
   const handleStartSync = async () => {
     setLoading(true);
+    api.trackEvent('first_sync_clicked', { provider });
     const res = await api.startAmazonSync();
     setLoading(false);
     if (res.ok) navigate(`/sync?id=${encodeURIComponent(res.data!.syncId)}`);
@@ -61,6 +71,7 @@ export default function OAuthSuccess() {
 
   const handleReconnect = async () => {
     setLoading(true);
+    api.trackEvent('oauth_reconnect_clicked', { provider });
     const res = await api.connectAmazon();
     setLoading(false);
     if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url;
@@ -68,6 +79,7 @@ export default function OAuthSuccess() {
 
   const handleDisconnect = async (purge: boolean) => {
     setLoading(true);
+    api.trackEvent('disconnect_clicked', { provider, purge });
     await api.disconnectIntegration(provider, purge);
     const s = await api.getIntegrationsStatus();
     if (s.ok) setStatusData(s.data);

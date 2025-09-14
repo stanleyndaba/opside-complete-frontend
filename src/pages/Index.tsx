@@ -34,7 +34,7 @@ const Index = () => {
             </div>
             <div className="pt-2 flex items-center gap-3">
               <Button size="lg" className="bg-[#FF9900] hover:bg-[#e68900] text-black font-montserrat" onClick={() => {
-                window.location.href = api.getAmazonOAuthStartUrl('/app');
+                window.location.href = api.getAmazonOAuthStartUrl('/oauth/success');
               }}>
                 <img src="/lovable-uploads/14f98d63-9a1a-4128-8021-1d840d778ea5.png" alt="Amazon" className="h-5 w-5 mr-2" />
                 Sign in with Amazon
