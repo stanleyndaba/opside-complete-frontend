@@ -9,13 +9,13 @@ const Index = () => {
       <header className="border-b">
         <div className="container mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src="/clario-logo.svg" alt="Clario" className="h-6 w-6" />
-            <span className="font-montserrat font-semibold">Clario</span>
+            <span className="font-brand italic font-black tracking-wide text-xl">Clario</span>
           </div>
           <nav className="flex items-center gap-4 text-sm text-muted-foreground">
-            <Link to="/app" className="hover:text-foreground">Dashboard</Link>
-            <Link to="/integrations-hub" className="hover:text-foreground">Integrations</Link>
-            <Link to="/recoveries" className="hover:text-foreground">Recoveries</Link>
+            <button className="hover:text-foreground" onClick={() => { window.location.href = api.getAmazonOAuthStartUrl('/oauth/success'); }}>Login</button>
+            <Link to="/integrations-hub" className="hover:text-foreground">Connect</Link>
+            <Link to="/api" className="hover:text-foreground">APIs</Link>
+            <Link to="/app" className="hover:text-foreground">Demo</Link>
           </nav>
         </div>
       </header>
