@@ -25,6 +25,7 @@ import ApiAccess from "./pages/ApiAccess";
 import Help from "./pages/Help";
 import WhatsNew from "./pages/WhatsNew";
 import OAuthCallback from "./pages/OAuthCallback";
+import OAuthSuccess from "./pages/OAuthSuccess";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +56,7 @@ const App = () => (
           <Route path="/help" element={<Help />} />
           <Route path="/whats-new" element={<WhatsNew />} />
           <Route path="/oauth/callback" element={<OAuthCallback />} />
+          <Route path="/oauth/success" element={<OAuthSuccess />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
