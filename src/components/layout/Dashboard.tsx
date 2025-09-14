@@ -200,6 +200,7 @@ export function Dashboard() {
                     <div className="p-3 border-b border-border">
                       <div className="flex items-center justify-between">
                         <h3 className="font-semibold text-sm text-foreground">Notifications</h3>
+                        <span className="text-xs bg-gray-100 text-black rounded px-2 py-0.5">10 new</span>
                       </div>
                     </div>
                     <div className="py-1 max-h-[600px] overflow-y-auto">
