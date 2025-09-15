@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
@@ -19,20 +20,15 @@ export function Dashboard() {
 
   // Aggregates state
   const [windowSel, setWindowSel] = useState<'7d' | '30d' | '90d'>('30d');
-  const [aggregates, setAggregates] = useState<{ totalRecovered: number; totalApproved: number; totalExpected: number; evidenceHealth?: number } | null>(null);
-  const [recoveriesMetrics, setRecoveriesMetrics] = useState<{ totalClaimsFound: number; inProgress: number; valueInProgress: number; successRate30d: number } | null>(null);
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
+  const { data: aggregates } = useQuery({
+    queryKey: ['dashboard-aggregates', windowSel],
+    queryFn: async () => {
       const res = await api.getDashboardAggregates(windowSel);
-      if (!cancelled) {
-        if (res.ok && res.data) {
-          setAggregates({ totalRecovered: res.data.totalRecovered, totalApproved: res.data.totalApproved, totalExpected: res.data.totalExpected, evidenceHealth: (res.data as any).evidenceHealth });
-        }
-      }
-    })();
-    return () => { cancelled = true };
-  }, [windowSel]);
+      if (!res.ok || !res.data) throw new Error(res.error || 'Failed to load aggregates');
+      return { totalRecovered: res.data.totalRecovered, totalApproved: res.data.totalApproved, totalExpected: res.data.totalExpected, evidenceHealth: (res.data as any).evidenceHealth } as { totalRecovered: number; totalApproved: number; totalExpected: number; evidenceHealth?: number };
+    },
+    placeholderData: (prev) => prev,
+  });
   const upcomingPayouts = [{
     amount: 1850.00,
     date: "Oct 28, 2025",
@@ -109,14 +105,15 @@ export function Dashboard() {
   }, []);
 
   // Fetch recoveries metrics for dashboard second module
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
+  const { data: recoveriesMetrics } = useQuery({
+    queryKey: ['recoveries-metrics'],
+    queryFn: async () => {
       const res = await api.getRecoveriesMetrics();
-      if (!cancelled && res.ok && res.data) setRecoveriesMetrics(res.data);
-    })();
-    return () => { cancelled = true };
-  }, []);
+      if (!res.ok || !res.data) throw new Error(res.error || 'Failed to load recoveries metrics');
+      return res.data as { totalClaimsFound: number; inProgress: number; valueInProgress: number; successRate30d: number };
+    },
+    placeholderData: (prev) => prev,
+  });
 
   // Real-time updates via WS/SSE
   useStatusStream((evt) => {
