@@ -9,13 +9,15 @@ const Index = () => {
       <header className="border-b">
         <div className="container mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src="/clario-logo.svg" alt="Clario" className="h-6 w-6" />
-            <span className="font-montserrat font-semibold">Clario</span>
+            <img src="/clario-logo.svg" alt="Clario" className="h-7 w-7 dark:hidden" />
+            <img src="/clario-logo-dark.svg" alt="Clario" className="h-7 w-7 hidden dark:block" />
+            <span className="font-brand italic font-black tracking-wide text-xl">Clario</span>
           </div>
-          <nav className="flex items-center gap-4 text-sm text-muted-foreground">
-            <Link to="/app" className="hover:text-foreground">Dashboard</Link>
-            <Link to="/integrations-hub" className="hover:text-foreground">Integrations</Link>
-            <Link to="/recoveries" className="hover:text-foreground">Recoveries</Link>
+          <nav className="flex items-center gap-4 text-sm">
+            <button className="text-muted-foreground hover:text-foreground" onClick={() => { window.location.href = api.getAmazonOAuthStartUrl('/oauth/success'); }}>Login</button>
+            <Button className="bg-[#FF9900] hover:bg-[#e68900] text-black" onClick={() => { window.location.href = api.getAmazonOAuthStartUrl('/oauth/success'); }}>
+              Get Started Free
+            </Button>
           </nav>
         </div>
       </header>
@@ -27,22 +29,28 @@ const Index = () => {
               Recover more, with zero effort.
             </h1>
             <p className="font-montserrat text-base md:text-lg text-muted-foreground">
-              We automatically find, file, and prove every eligible claim. Transparent 20% performance cap. No upfront costs.
+              Clario is your automated forensic accountant. We find, file, and prove every FBA claim you're owed. No upfront fees. We only win when you win.
             </p>
-            <div className="rounded-md border border-blue-200 bg-blue-50 p-3 text-sm text-blue-900">
-              Optional: Supercharge automation — connect Gmail or Drive to auto-collect invoices and receipts.
-            </div>
-            <div className="pt-2 flex items-center gap-3">
-              <Button size="lg" className="bg-[#FF9900] hover:bg-[#e68900] text-black font-montserrat" onClick={() => {
-                window.location.href = api.getAmazonOAuthStartUrl('/app');
-              }}>
-                <img src="/lovable-uploads/14f98d63-9a1a-4128-8021-1d840d778ea5.png" alt="Amazon" className="h-5 w-5 mr-2" />
-                Sign in with Amazon
-              </Button>
-              <Button variant="outline" size="lg" asChild>
-                <Link to="/app">View Demo</Link>
-              </Button>
-              <span className="text-xs text-muted-foreground">No credit card required</span>
+            <ul className="mt-2 space-y-2 text-sm md:text-base text-foreground">
+              <li>✅ Instantly discover what you're owed with our 60-second Value Audit.</li>
+              <li>✅ Automatically find proof for higher claims by connecting your email.</li>
+              <li>✅ Track your recoveries and predictable payouts in a simple Command Center.</li>
+            </ul>
+            <div className="pt-2">
+              <div className="flex items-center gap-3">
+                <Button size="lg" className="bg-[#FF9900] hover:bg-[#e68900] text-black font-montserrat" onClick={() => {
+                  window.location.href = api.getAmazonOAuthStartUrl('/oauth/success');
+                }}>
+                  <img src="/lovable-uploads/14f98d63-9a1a-4128-8021-1d840d778ea5.png" alt="Amazon" className="h-5 w-5 mr-2" />
+                  Connect Amazon & Start Audit
+                </Button>
+                <Button variant="outline" size="lg" asChild>
+                  <Link to="/app">Watch a 2-Min Demo</Link>
+                </Button>
+              </div>
+              <div className="mt-2 text-center">
+                <span className="text-xs text-muted-foreground">Free to start. No credit card required.</span>
+              </div>
             </div>
           </div>
         </section>

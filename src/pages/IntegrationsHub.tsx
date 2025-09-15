@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { Shield, CheckCircle, Settings, RefreshCw, ArrowRight, ExternalLink, Package, ShoppingBag, Calculator, Truck, Info } from 'lucide-react';
+import { Shield, CheckCircle, Settings, RefreshCw, ArrowRight, ExternalLink, Package, ShoppingBag, Calculator, Truck, Info, Search as SearchIcon, Plug, Mail, Cloud } from 'lucide-react';
 import { api } from '@/lib/api';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useNavigate } from 'react-router-dom';
@@ -112,6 +112,10 @@ export default function IntegrationsHub() {
   const [showRequestForm, setShowRequestForm] = useState(false);
   const [showProviderDialog, setShowProviderDialog] = useState(false);
   const [showManualModal, setShowManualModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
+  const [waitlistIntegration, setWaitlistIntegration] = useState<string | null>(null);
+  const [waitlistEmail, setWaitlistEmail] = useState('');
 
   // Real-time sync simulation
   useEffect(() => {
@@ -163,6 +167,15 @@ export default function IntegrationsHub() {
           </p>
           <div className="mt-3 rounded-md border border-blue-200 bg-blue-50 inline-block px-3 py-2 text-sm text-blue-900">
             Want us to auto-collect invoices & docs for you? Connect Gmail / Outlook / Drive / Dropbox.
+          </div>
+          <div className="mt-4 max-w-xl mx-auto relative">
+            <SearchIcon className="h-4 w-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2" />
+            <Input
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search integrations (Amazon, Shopify, Gmail…)"
+              className="pl-9"
+            />
           </div>
         </div>
 
@@ -235,7 +248,7 @@ export default function IntegrationsHub() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="space-y-5">
+              <div className="flex flex-wrap gap-4">
                 <Button disabled={!status?.amazon_connected || loading} className="bg-emerald-600 hover:bg-emerald-700" onClick={() => setShowProviderDialog(true)}>
                   Activate Evidence Engine
                 </Button>
@@ -369,49 +382,129 @@ export default function IntegrationsHub() {
           </DialogContent>
         </Dialog>
 
-        {/* Section 2: Available Integrations */}
-        <div className="space-y-6">
-          <h2 className="text-2xl font-semibold">Platform Integrations Coming Soon</h2>
-          
-          {Object.entries(categoryConfig).map(([categoryKey, categoryInfo]) => {
-          const CategoryIcon = categoryInfo.icon;
-          const categoryIntegrations = availableIntegrations.filter(integration => integration.category === categoryKey);
-          return <div key={categoryKey} className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <CategoryIcon className="h-5 w-5 text-primary" />
-                  <h3 className="text-xl font-semibold">{categoryInfo.name}</h3>
-                  <Badge variant="secondary" className="text-xs">
-                    {categoryIntegrations.length} platforms
-                  </Badge>
-                </div>
-                <p className="text-sm text-muted-foreground mb-4">
-                  {categoryInfo.description}
-                </p>
-                
+        {/* Section 2: Search Results or Available Integrations */}
+        {(() => {
+          const allIntegrations = [
+            // Active
+            { id: 'amazon', name: 'Amazon Seller Central', status: 'active' as const, tagline: 'Inventory & reimbursement automation', icon: null as any, onConnect: async () => { setLoading(true); const res = await api.connectAmazon(); setLoading(false); if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url; } },
+            { id: 'gmail', name: 'Gmail', status: 'active' as const, tagline: 'Auto-collect receipts and invoices', icon: Mail, onConnect: async () => { setLoading(true); const res = await api.connectDocs('gmail'); setLoading(false); if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url; } },
+            { id: 'outlook', name: 'Outlook / Office 365', status: 'active' as const, tagline: 'Auto-collect receipts and invoices', icon: Mail, onConnect: async () => { setLoading(true); const res = await api.connectDocs('outlook'); setLoading(false); if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url; } },
+            { id: 'gdrive', name: 'Google Drive', status: 'active' as const, tagline: 'Read-only files for receipts', icon: Cloud, onConnect: async () => { setLoading(true); const res = await api.connectDocs('gdrive'); setLoading(false); if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url; } },
+            { id: 'dropbox', name: 'Dropbox', status: 'active' as const, tagline: 'Read-only files for receipts', icon: Cloud, onConnect: async () => { setLoading(true); const res = await api.connectDocs('dropbox'); setLoading(false); if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url; } },
+            // Coming soon (near-term)
+            { id: 'shopify', name: 'Shopify', status: 'soon' as const, tagline: 'Unified inventory & sales', icon: Plug },
+            { id: 'ebay', name: 'eBay', status: 'soon' as const, tagline: 'Listings & orders', icon: Plug },
+            { id: 'walmart', name: 'Walmart Marketplace', status: 'soon' as const, tagline: 'Marketplace operations', icon: Plug },
+            { id: 'etsy', name: 'Etsy', status: 'soon' as const, tagline: 'Craft marketplace', icon: Plug },
+            { id: 'onedrive', name: 'OneDrive', status: 'soon' as const, tagline: 'Files for receipts', icon: Cloud },
+            // Future signal
+            { id: 'stripe', name: 'Stripe', status: 'future' as const, tagline: 'Payments reconciliation', icon: Plug },
+            { id: 'quickbooks', name: 'QuickBooks', status: 'future' as const, tagline: 'Accounting sync', icon: Plug },
+            { id: 'xero', name: 'Xero', status: 'future' as const, tagline: 'Accounting sync', icon: Plug },
+            { id: 'paypal', name: 'PayPal', status: 'future' as const, tagline: 'Payments', icon: Plug },
+            { id: 'square', name: 'Square', status: 'future' as const, tagline: 'POS & payments', icon: Plug },
+            { id: 'notion', name: 'Notion', status: 'future' as const, tagline: 'Docs & evidence (bonus)', icon: Plug },
+          ];
+          const term = searchTerm.trim().toLowerCase();
+          if (term.length > 0) {
+            const results = allIntegrations.filter(i => i.name.toLowerCase().includes(term) || i.tagline.toLowerCase().includes(term));
+            return (
+              <div className="space-y-4">
+                <h2 className="text-2xl font-semibold">Search Results</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {categoryIntegrations.map(integration => <Card key={integration.id} className="border-muted/50 hover:border-primary/50 transition-colors">
+                  {results.map((i) => (
+                    <Card key={i.id} className="border-muted/50 hover:border-primary/50 transition-colors">
                       <CardHeader className="pb-3">
                         <div className="flex items-center gap-3">
-                          <img src={integration.logo} alt={`${integration.name} logo`} className="w-20 h-18 object-contain" />
+                          {i.id === 'amazon' ? (
+                            <img src={activeConnections[0].logo} alt="Amazon" className="w-10 h-10 object-contain" />
+                          ) : i.icon ? (
+                            <i.icon className="h-6 w-6 text-primary" />
+                          ) : (
+                            <Plug className="h-6 w-6 text-primary" />
+                          )}
                           <div>
-                            <CardTitle className="text-lg">{integration.name}</CardTitle>
+                            <CardTitle className="text-lg flex items-center gap-2">
+                              <span>{i.name}</span>
+                              {i.status === 'active' ? (
+                                <Badge className="bg-green-100 text-green-800">Active</Badge>
+                              ) : (
+                                <Badge variant="secondary">Coming Soon</Badge>
+                              )}
+                            </CardTitle>
+                            <CardDescription>{i.tagline}</CardDescription>
                           </div>
                         </div>
                       </CardHeader>
                       <CardContent>
-                        <p className="text-sm text-muted-foreground mb-4">
-                          {integration.description}
-                        </p>
-                        
-                        <Button size="sm" variant="outline" className="w-full" disabled>
-                          Connect
-                        </Button>
+                        {i.status === 'active' ? (
+                          <Button size="sm" className="w-full" disabled={loading || (i.id !== 'amazon' && !status?.amazon_connected)} onClick={() => i.onConnect?.()}>
+                            Connect
+                          </Button>
+                        ) : (
+                          <Button size="sm" variant="outline" className="w-full" onClick={() => { setWaitlistIntegration(i.name); setWaitlistOpen(true); }}>
+                            Join Waitlist
+                          </Button>
+                        )}
                       </CardContent>
-                    </Card>)}
+                    </Card>
+                  ))}
+                  {results.length === 0 && (
+                    <div className="text-sm text-muted-foreground">No results found. Try a different search.</div>
+                  )}
                 </div>
-              </div>;
-        })}
-        </div>
+              </div>
+            );
+          }
+          return (
+            <div className="space-y-6">
+              <h2 className="text-2xl font-semibold">Platform Integrations Coming Soon</h2>
+              {Object.entries(categoryConfig).map(([categoryKey, categoryInfo]) => {
+                const CategoryIcon = categoryInfo.icon;
+                const categoryIntegrations = availableIntegrations.filter(integration => integration.category === categoryKey);
+                return (
+                  <div key={categoryKey} className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <CategoryIcon className="h-5 w-5 text-primary" />
+                      <h3 className="text-xl font-semibold">{categoryInfo.name}</h3>
+                      <Badge variant="secondary" className="text-xs">
+                        {categoryIntegrations.length} platforms
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      {categoryInfo.description}
+                    </p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {categoryIntegrations.map(integration => (
+                        <Card key={integration.id} className="border-muted/50 hover:border-primary/50 transition-colors">
+                          <CardHeader className="pb-3">
+                            <div className="flex items-center gap-3">
+                              <img src={integration.logo} alt={`${integration.name} logo`} className="w-20 h-18 object-contain" />
+                              <div>
+                                <CardTitle className="text-lg flex items-center gap-2">
+                                  <span>{integration.name}</span>
+                                  <Badge variant="secondary">Coming Soon</Badge>
+                                </CardTitle>
+                              </div>
+                            </div>
+                          </CardHeader>
+                          <CardContent>
+                            <p className="text-sm text-muted-foreground mb-4">
+                              {integration.description}
+                            </p>
+                            <Button size="sm" variant="outline" className="w-full" onClick={() => { setWaitlistIntegration(integration.name); setWaitlistOpen(true); }}>
+                              Join Waitlist
+                            </Button>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })()}
 
         {/* Section 3: Request an Integration */}
         <Card className="border-primary/20">
@@ -458,6 +551,26 @@ export default function IntegrationsHub() {
               </form>}
           </CardContent>
         </Card>
+
+        {/* Coming Soon Waitlist Modal */}
+        <Dialog open={waitlistOpen} onOpenChange={setWaitlistOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Join the waitlist</DialogTitle>
+              <DialogDescription>
+                {waitlistIntegration ? `Get notified when ${waitlistIntegration} is available.` : 'Get notified when this integration is available.'}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-3">
+              <label className="text-sm font-medium">Email</label>
+              <Input value={waitlistEmail} onChange={(e) => setWaitlistEmail(e.target.value)} placeholder="you@example.com" />
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setWaitlistOpen(false)}>Cancel</Button>
+              <Button onClick={() => { api.trackEvent('waitlist_join', { integration: waitlistIntegration, email: waitlistEmail }); setWaitlistOpen(false); setWaitlistEmail(''); }}>Join Waitlist</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </PageLayout>;
 }

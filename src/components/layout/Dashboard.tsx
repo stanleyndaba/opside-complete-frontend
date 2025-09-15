@@ -167,25 +167,7 @@ export function Dashboard() {
                   </Card>
                 )}
 
-                {/* Module 1: Your Next Payout */}
-                <Card>
-                  <CardContent className="p-6">
-                    <h2 className="font-montserrat text-lg text-gray-700 font-semibold">Your Next Payout</h2>
-                    <div className="text-3xl font-extrabold mt-2">
-                      {aggregates ? formatCurrency(aggregates.totalExpected) : '—'}
-                    </div>
-                    <p className="text-sm text-muted-foreground mt-1">Expected by: {upcomingPayouts[0]?.date}</p>
-                    <div className="mt-4 space-y-2">
-                      {(upcomingPayouts.slice(0,3)).map((p, idx) => (
-                        <div key={idx} className="flex items-center justify-between text-sm">
-                          <span className="text-muted-foreground">{p.status === 'confirmed' ? 'Confirmed' : p.status === 'pending' ? 'Pending' : 'Estimated'}</span>
-                          <span className="font-medium">{formatCurrency(p.amount)}</span>
-                          <span className="text-muted-foreground">{p.date}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
+                
 
                 {/* Module 2: Your Recovered Value */}
                 <Card>
@@ -218,6 +200,7 @@ export function Dashboard() {
                     <div className="p-3 border-b border-border">
                       <div className="flex items-center justify-between">
                         <h3 className="font-semibold text-sm text-foreground">Notifications</h3>
+                        <span className="text-xs bg-gray-100 text-black rounded px-2 py-0.5">10 new</span>
                       </div>
                     </div>
                     <div className="py-1 max-h-[600px] overflow-y-auto">

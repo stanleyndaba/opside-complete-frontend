@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Shield, Settings, CreditCard, HelpCircle, Sparkles, Download, Key, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Home, Shield, Settings, HelpCircle, Sparkles, ChevronLeft, ChevronRight, BarChart3, Plug, Edit3 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -28,55 +28,18 @@ export function Sidebar({
   className
 }: SidebarProps) {
   const location = useLocation();
-  const sections: NavSection[] = [{
-    title: 'Seller Tools',
-    items: [{
-      title: 'Command Center',
-      icon: Home,
-      href: '/app'
-    }, {
-      title: 'Integrations',
-      icon: Settings,
-      href: '/integrations-hub'
-    }, {
-      title: 'Recoveries',
-      icon: Shield,
-      href: '/recoveries'
-    }]
-  }, {
-    title: 'My Account',
-    items: [{
-      title: 'Settings',
-      icon: Settings,
-      href: '/settings'
-    }, {
-      title: 'Billing',
-      icon: CreditCard,
-      href: '/billing'
-    }]
-  }, {
-    title: 'System',
-    items: [{
-      title: 'Export Data',
-      icon: Download,
-      href: '/export'
-    }, {
-      title: 'API Access',
-      icon: Key,
-      href: '/api'
-    }]
-  }, {
-    title: 'Support',
-    items: [{
-      title: 'Help Centre',
-      icon: HelpCircle,
-      href: '/help'
-    }, {
-      title: 'What\'s new',
-      icon: Sparkles,
-      href: '/whats-new'
-    }]
-  }];
+  const primaryItems: NavItem[] = [
+    { title: 'Command Center', icon: Home, href: '/app' },
+    { title: 'Reports', icon: BarChart3, href: '/reports' },
+    { title: 'Recoveries', icon: Shield, href: '/recoveries' },
+  ];
+  const accountItems: NavItem[] = [
+    { title: 'Configure', icon: Settings, href: '/settings' },
+  ];
+  const supportItems: NavItem[] = [
+    { title: 'Help Centre', icon: HelpCircle, href: '/help' },
+    { title: 'What\'s new', icon: Sparkles, href: '/whats-new' },
+  ];
   const NavItemComponent = ({
     item
   }: {
@@ -87,7 +50,7 @@ export function Sidebar({
       return <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Link to={item.href} className={cn("flex items-center justify-center w-12 h-12 rounded-md transition-colors", isActive ? "bg-black text-white" : "text-gray-600 hover:bg-gray-100")}>
+              <Link to={item.href} className={cn("flex items-center justify-center w-12 h-12 rounded-md transition-colors", isActive ? "bg-blue-600 text-white" : "text-gray-600 hover:bg-gray-100")}>
                 <item.icon className="h-5 w-5" strokeWidth={1.5} />
               </Link>
             </TooltipTrigger>
@@ -97,7 +60,7 @@ export function Sidebar({
           </Tooltip>
         </TooltipProvider>;
     }
-    return <Link to={item.href} className={cn("flex items-center gap-3 px-3 py-2 rounded-md transition-colors", isActive ? "bg-black text-white" : "text-gray-600 hover:bg-gray-100")}>
+    return <Link to={item.href} className={cn("flex items-center gap-3 px-3 py-2 rounded-md transition-colors", isActive ? "bg-blue-600 text-white" : "text-gray-600 hover:bg-gray-100")}>
         <item.icon strokeWidth={1.5} className="h-5 w-5 shrink-0 text-sm font-extralight" />
         <span className="text-sm font-normal">{item.title}</span>
       </Link>;
@@ -112,29 +75,47 @@ export function Sidebar({
 
       {/* Logo Section */}
       {!isCollapsed ? <div className="p-4 border-b border-gray-200 flex justify-center">
-          <img src="/clario-logo.svg" alt="Clario Logo" className="h-8 w-auto" />
+          <img src="/clario-logo.svg" alt="Clario" className="h-10 w-10 dark:hidden" />
+          <img src="/clario-logo-dark.svg" alt="Clario" className="h-10 w-10 hidden dark:block" />
         </div> : <div className="p-2 border-b border-gray-200 flex justify-center">
-          <img src="/clario-logo.svg" alt="Clario Logo" className="h-6 w-auto" />
+          <img src="/clario-logo.svg" alt="Clario" className="h-8 w-8 dark:hidden" />
+          <img src="/clario-logo-dark.svg" alt="Clario" className="h-8 w-8 hidden dark:block" />
         </div>}
 
       <ScrollArea className="flex-1">
-        <nav className={cn("space-y-6 py-6", isCollapsed ? "px-2" : "px-4")}>
-          {sections.map((section, sectionIndex) => <div key={sectionIndex}>
-              {!isCollapsed && <h3 className="text-s text-black lowercase tracking-wider mb-3 text-sm font-semibold">
-                  {section.title}
-                </h3>}
-              <div className="space-y-1">
-                {section.items.map((item, itemIndex) => <NavItemComponent key={itemIndex} item={item} />)}
+        <div className={cn("h-full flex", isCollapsed ? "px-2" : "px-4")}> 
+          <div className="my-auto w-full">
+            {!isCollapsed && (
+              <div className="pt-3 pb-2">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-sm font-semibold">Martin Links</div>
+                    <div className="text-xs text-muted-foreground">martin@example.com</div>
+                    <div className="text-[11px] text-green-700 flex items-center gap-1 mt-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-500" /> Connected
+                    </div>
+                  </div>
+                  <button className="text-muted-foreground hover:text-foreground" title="Edit profile" onClick={() => (window.location.href = '/settings')}>
+                    <Edit3 className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
-            </div>)}
-        </nav>
-        
-        {/* Version Number */}
-        {!isCollapsed && <div className="px-4 pb-6">
-            <div className="text-xs text-gray-400 font-mono">
-              v1.0
-            </div>
-          </div>}
+            )}
+            <nav className="space-y-4 py-2 w-full">
+              <div className="space-y-1">
+                {primaryItems.map((item, idx) => <NavItemComponent key={`p-${idx}`} item={item} />)}
+              </div>
+              {!isCollapsed && <div className="h-px bg-muted" />}
+              <div className="space-y-1">
+                {accountItems.map((item, idx) => <NavItemComponent key={`a-${idx}`} item={item} />)}
+              </div>
+              {!isCollapsed && <div className="h-px bg-muted" />}
+              <div className="space-y-1 pb-4">
+                {supportItems.map((item, idx) => <NavItemComponent key={`s-${idx}`} item={item} />)}
+              </div>
+            </nav>
+          </div>
+        </div>
       </ScrollArea>
     </aside>;
 }

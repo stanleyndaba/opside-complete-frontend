@@ -159,6 +159,9 @@ export const api = {
   // Metrics hooks (frontend only fire-and-forget)
   trackEvent: (name: string, payload?: Record<string, any>) => requestJson<{ ok: true }>(`/api/metrics/track`, { method: 'POST', body: JSON.stringify({ name, payload, ts: Date.now() }) }),
 
+  // Auth
+  logout: () => requestJson<{ ok: true }>(`/api/auth/logout`, { method: 'POST' }),
+
   // Documents
   getDocuments: () => requestJson<Array<{ id: string; name: string; uploadDate: string; status: string; linkedSKUs?: number }>>(`/api/documents`),
   getDocument: (id: string) => requestJson<{ id: string; name: string; uploadDate: string; status: string; processingTime?: string; extractedData?: Array<{ sku: string; productName: string; unitCost: number; quantity: number; coordinates?: { x: number; y: number; width: number; height: number } }> }>(`/api/documents/${encodeURIComponent(id)}`),

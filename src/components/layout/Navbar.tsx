@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, User, Settings, Users, CreditCard, Zap, HelpCircle, Sparkles, MessageSquare, LogOut, Building2, RefreshCw } from 'lucide-react';
+import { User, LogOut, Building2, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -29,13 +29,12 @@ export function Navbar({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Avatar className="h-9 w-9 transition-transform duration-200 hover:scale-105 cursor-pointer">
-                <AvatarFallback className="bg-black text-white">
+                <AvatarFallback className="bg-transparent text-black">
                   <User className="h-4 w-4" />
                 </AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent side="bottom" align="end" className="w-64 bg-white border border-gray-200 shadow-lg">
-              {/* Section 1: Identity */}
               <DropdownMenuLabel className="pb-2">
                 <div className="space-y-1">
                   <p className="text-sm font-medium text-black">John Smith</p>
@@ -46,59 +45,8 @@ export function Navbar({
                   </div>
                 </div>
               </DropdownMenuLabel>
-              
               <DropdownMenuSeparator />
-              
-              {/* Section 2: Account Management */}
-              <DropdownMenuItem asChild>
-                <Link to="/settings" className="flex items-center gap-2 cursor-pointer">
-                  <Settings className="h-4 w-4" />
-                  <span>Settings</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to="/team-management" className="flex items-center gap-2 cursor-pointer">
-                  <Users className="h-4 w-4" />
-                  <span>Team Management</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to="/billing" className="flex items-center gap-2 cursor-pointer">
-                  <CreditCard className="h-4 w-4" />
-                  <span>Billing & Value</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to="/integrations-hub" className="flex items-center gap-2 cursor-pointer">
-                  <Zap className="h-4 w-4" />
-                  <span>Integrations Hub</span>
-                </Link>
-              </DropdownMenuItem>
-              
-              <DropdownMenuSeparator />
-              
-              {/* Section 3: Resources & Support */}
-              <DropdownMenuItem asChild>
-                <Link to="/help" className="flex items-center gap-2 cursor-pointer">
-                  <HelpCircle className="h-4 w-4" />
-                  <span>Help Center</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to="/whats-new" className="flex items-center gap-2 cursor-pointer">
-                  <Sparkles className="h-4 w-4" />
-                  <span>What's New</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
-                <MessageSquare className="h-4 w-4" />
-                <span>Contact Support</span>
-              </DropdownMenuItem>
-              
-              <DropdownMenuSeparator />
-              
-              {/* Section 4: Session Control */}
-              <DropdownMenuItem className="flex items-center gap-2 cursor-pointer text-red-600 focus:text-red-600">
+              <DropdownMenuItem className="flex items-center gap-2 cursor-pointer text-red-600 focus:text-red-600" onClick={async () => { try { await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' }); } catch (_) {} window.location.href = '/'; }}>
                 <LogOut className="h-4 w-4" />
                 <span>Log Out</span>
               </DropdownMenuItem>

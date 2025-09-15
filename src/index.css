@@ -1,14 +1,15 @@
 
-/* Import Inter (body) and IBM Plex Sans + Sora (headings) */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=IBM+Plex+Sans:wght@400;500;600;700&family=Sora:wght@400;600;700&display=swap');
+/* Import Inter (UI default) and Montserrat (brand logo) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:ital,wght@0,700;0,800;0,900;1,700;1,800;1,900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer utilities {
-  .font-heading { font-family: 'IBM Plex Sans', Sora, Inter, sans-serif; }
+  .font-heading { font-family: Inter, system-ui, Arial, sans-serif; }
   .font-body { font-family: Inter, system-ui, Arial, sans-serif; }
+  .font-brand { font-family: 'Montserrat', Inter, system-ui, Arial, sans-serif; }
 }
 
 @layer base {

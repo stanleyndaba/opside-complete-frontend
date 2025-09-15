@@ -25,6 +25,7 @@ import ApiAccess from "./pages/ApiAccess";
 import Help from "./pages/Help";
 import WhatsNew from "./pages/WhatsNew";
 import OAuthCallback from "./pages/OAuthCallback";
+import OAuthSuccess from "./pages/OAuthSuccess";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,7 @@ const App = () => (
           {/* Market/Stocks pages removed for FBA MVP focus */}
           <Route path="/settings" element={<Settings />} />
           <Route path="/integrations-hub" element={<IntegrationsHub />} />
+          <Route path="/reports" element={<Reports />} />
           <Route path="/recoveries" element={<Recoveries />} />
           <Route path="/recoveries/:caseId" element={<CaseDetail />} />
           <Route path="/smart-inventory-sync" element={<SmartInventorySync />} />
@@ -54,6 +56,7 @@ const App = () => (
           <Route path="/help" element={<Help />} />
           <Route path="/whats-new" element={<WhatsNew />} />
           <Route path="/oauth/callback" element={<OAuthCallback />} />
+          <Route path="/oauth/success" element={<OAuthSuccess />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
