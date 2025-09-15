@@ -1,0 +1,11 @@
+# Cache static assets for a year
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Cache fonts aggressively
+/*.woff2
+  Cache-Control: public, max-age=31536000, immutable
+
+# HTML should not be cached long
+/
+  Cache-Control: public, max-age=60

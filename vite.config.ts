@@ -15,13 +15,19 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('recharts')) return 'recharts';
-            if (id.includes('@tanstack')) return 'react-query';
-            if (id.includes('react-router')) return 'react-router';
-            if (id.includes('lucide-react')) return 'icons';
-            return 'vendor';
-          }
+          if (!id.includes('node_modules')) return undefined;
+          if (id.includes('/react-dom')) return 'react-dom';
+          if (id.match(/[\\/]node_modules[\\/](react|react-is)[\\/]/)) return 'react-core';
+          if (id.includes('react-router')) return 'react-router';
+          if (id.includes('@tanstack')) return 'tanstack';
+          if (id.includes('@radix-ui')) return 'radix';
+          if (id.includes('lucide-react')) return 'icons';
+          if (id.includes('recharts')) return 'recharts';
+          if (id.includes('date-fns')) return 'date-fns';
+          if (id.includes('zod')) return 'zod';
+          if (id.includes('cmdk')) return 'cmdk';
+          // leave the rest to be split per entry to avoid a monolithic vendor
+          return undefined;
         },
       },
     },
