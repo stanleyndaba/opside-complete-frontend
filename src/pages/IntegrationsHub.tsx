@@ -43,10 +43,10 @@ const availableIntegrations: AvailableIntegration[] = [
   description: 'Connect your Shopify store for unified inventory and sales management'
 }, {
   id: 'walmart',
-  name: 'Walmart Marketplace',
+  name: 'Walmart',
   category: 'marketplaces',
   logo: '/lovable-uploads/cef56367-b57b-46cc-b0cb-a2ffad47fb03.png',
-  description: 'Integrate your Walmart Marketplace for seamless order processing'
+  description: 'Integrate your Walmart account for seamless order processing'
 }, {
   id: 'ebay',
   name: 'eBay',
