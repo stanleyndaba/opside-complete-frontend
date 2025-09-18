@@ -43,10 +43,10 @@ const availableIntegrations: AvailableIntegration[] = [
   description: 'Connect your Shopify store for unified inventory and sales management'
 }, {
   id: 'walmart',
-  name: 'Walmart Marketplace',
+  name: 'Walmart Inc',
   category: 'marketplaces',
   logo: '/lovable-uploads/cef56367-b57b-46cc-b0cb-a2ffad47fb03.png',
-  description: 'Integrate your Walmart Marketplace for seamless order processing'
+  description: 'Integrate your Walmart Inc for seamless order processing'
 }, {
   id: 'ebay',
   name: 'eBay',
@@ -394,7 +394,7 @@ export default function IntegrationsHub() {
             // Coming soon (near-term)
             { id: 'shopify', name: 'Shopify', status: 'soon' as const, tagline: 'Unified inventory & sales', icon: Plug },
             { id: 'ebay', name: 'eBay', status: 'soon' as const, tagline: 'Listings & orders', icon: Plug },
-            { id: 'walmart', name: 'Walmart Marketplace', status: 'soon' as const, tagline: 'Marketplace operations', icon: Plug },
+            { id: 'walmart', name: 'Walmart Inc', status: 'soon' as const, tagline: 'Marketplace operations', icon: Plug },
             { id: 'etsy', name: 'Etsy', status: 'soon' as const, tagline: 'Craft marketplace', icon: Plug },
             { id: 'onedrive', name: 'OneDrive', status: 'soon' as const, tagline: 'Files for receipts', icon: Cloud },
             // Future signal
