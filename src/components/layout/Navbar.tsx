@@ -15,14 +15,7 @@ export function Navbar({
   sidebarCollapsed = false
 }: NavbarProps) {
   return <header className={cn("bg-background/95 backdrop-blur-sm sticky top-0 z-30 border-b transition-all duration-300", sidebarCollapsed ? "ml-16" : "ml-56", className)}>
-      <div className="container flex items-center justify-between h-16 px-4">
-        {/* Left side - Brand */}
-        <div className="flex items-center">
-          <Link to="/app" className="flex items-center" aria-label="Clario Home">
-            <img src="/clario-logo.svg" alt="Clario" className="h-7 w-auto dark:hidden" />
-            <img src="/clario-logo-dark.svg" alt="Clario" className="h-7 w-auto hidden dark:block" />
-          </Link>
-        </div>
+      <div className="container flex items-center justify-end h-16 px-4">
         {/* Right side - Sync action, Notification Bell and Profile Icon */}
         <div className="flex items-center gap-4 ml-auto">
           {/* Subtle sync button with tooltip-like title */}
