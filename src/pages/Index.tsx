@@ -8,10 +8,9 @@ const Index = () => {
   return <div className="min-h-screen flex flex-col">
       <header className="border-b">
         <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <img src="/clario-logo.svg" alt="Clario" className="h-7 w-7 dark:hidden" width="28" height="28" decoding="async" fetchpriority="high" />
-            <img src="/clario-logo-dark.svg" alt="Clario" className="h-7 w-7 hidden dark:block" width="28" height="28" decoding="async" fetchpriority="high" />
-            <span className="font-brand italic font-black tracking-wide text-xl">Clario</span>
+          <div className="flex items-center">
+            <img src="/clario-logo.svg" alt="Clario" className="h-8 sm:h-9 w-auto dark:hidden" decoding="async" fetchpriority="high" />
+            <img src="/clario-logo-dark.svg" alt="Clario" className="h-8 sm:h-9 w-auto hidden dark:block" decoding="async" fetchpriority="high" />
           </div>
           <nav className="flex items-center gap-4 text-sm">
             <button className="text-muted-foreground hover:text-foreground" onClick={() => { window.location.href = api.getAmazonOAuthStartUrl('/oauth/success'); }}>Login</button>
