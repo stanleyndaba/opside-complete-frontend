@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Shield, Settings, HelpCircle, Sparkles, ChevronLeft, ChevronRight, BarChart3, Plug, Edit3 } from 'lucide-react';
+import { Home, Shield, Settings, HelpCircle, Sparkles, PanelLeftClose, PanelLeftOpen, BarChart3, Plug, Edit3 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -125,19 +125,12 @@ export function Sidebar({
 		isCollapsed ? "w-16" : "w-56",
 		"bg-[hsl(220,14%,10%)] text-[hsl(220,14%,96%)] border-r border-[hsl(220,14%,18%)]",
 		className)}>
-			{/* Toggle Button */}
-			<div className="absolute -right-3 top-6 z-10">
-				<Button onClick={onToggle} variant="outline" size="icon" className="h-6 w-6 rounded-full bg-white border border-gray-200 shadow-sm hover:bg-gray-50">
-					{isCollapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
+			{/* Internal Header with Collapse Control */}
+			<div className={cn("border-b border-[hsl(220,14%,18%)] flex items-center", isCollapsed ? "p-2 justify-center" : "p-3 justify-end") }>
+				<Button onClick={onToggle} variant="outline" size="icon" className="h-8 w-8 rounded-md bg-transparent border border-[hsl(220,14%,18%)] hover:bg-[hsl(220,14%,18%)] text-[hsl(220,14%,96%)]">
+					{isCollapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
 				</Button>
 			</div>
-
-			{/* Logo Section */}
-			{!isCollapsed ? <div className="p-4 border-b border-[hsl(220,14%,18%)] flex justify-center">
-					<img src="/clario-logo.svg" alt="Clario" className="h-10 w-auto" />
-				</div> : <div className="p-2 border-b border-[hsl(220,14%,18%)] flex justify-center">
-					<img src="/clario-logo.svg" alt="Clario" className="h-8 w-auto" />
-				</div>}
 
 			<ScrollArea className="flex-1">
 				<div className={cn("h-full flex", isCollapsed ? "px-2" : "px-4")}> 
