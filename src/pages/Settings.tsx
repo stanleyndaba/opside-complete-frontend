@@ -14,10 +14,12 @@ import {
   CheckCircle, Calendar, Globe, Camera, Key, Plug
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useNavigate } from 'react-router-dom';
 
 type SettingsSection = 'profile' | 'business' | 'team' | 'billing' | 'integrations' | 'notifications' | 'security' | 'api';
 
 const Settings = () => {
+  const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState<SettingsSection>('profile');
 
   const menuItems = [
@@ -163,7 +165,7 @@ const Settings = () => {
                     Access your comprehensive billing & value report with ROI calculations, 
                     invoice history, and plan management.
                   </p>
-                  <Button onClick={() => window.location.href = '/billing'}>
+                  <Button onClick={() => navigate('/billing')}>
                     View Billing & Value Report
                   </Button>
                 </div>
@@ -230,7 +232,7 @@ const Settings = () => {
               <p className="text-muted-foreground">Manage your platform connections and data sources</p>
             </div>
             <div>
-              <Button className="bg-blue-600 hover:bg-blue-700 gap-2" onClick={() => (window.location.href = '/integrations-hub')}>
+              <Button className="bg-blue-600 hover:bg-blue-700 gap-2" onClick={() => navigate('/integrations-hub')}>
                 <Plug className="h-4 w-4" />
                 Clario Integrations
               </Button>

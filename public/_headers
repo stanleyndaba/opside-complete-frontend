@@ -9,3 +9,7 @@
 # HTML should not be cached long
 /
   Cache-Control: public, max-age=60
+
+# Allow service worker at root; helps SPA routing on some hosts
+/*
+  Service-Worker-Allowed: /
