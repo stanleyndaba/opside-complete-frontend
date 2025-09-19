@@ -10,6 +10,9 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# Cloudflared logs
+cloudflared*.log
+
 # Env
 .env
 .env.*

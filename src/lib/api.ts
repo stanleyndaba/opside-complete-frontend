@@ -8,7 +8,7 @@ export interface ApiResponse<T> {
 }
 
 export const getApiBaseUrl = (): string => {
-  const base = (import.meta as any).env?.VITE_API_BASE_URL as string | undefined;
+  const base = ((import.meta as any).env?.VITE_API_URL as string | undefined) || ((import.meta as any).env?.VITE_API_BASE_URL as string | undefined);
   if (!base) {
     return '';
   }
@@ -21,6 +21,8 @@ export const buildApiUrl = (path: string): string => {
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
   return `${base}${normalizedPath}`;
 };
+
+export const API_URL = getApiBaseUrl();
 
 async function requestJson<T>(path: string, options?: RequestInit): Promise<ApiResponse<T>> {
   try {
@@ -42,6 +44,12 @@ async function requestJson<T>(path: string, options?: RequestInit): Promise<ApiR
   } catch (error: any) {
     return { ok: false, status: 0, error: error?.message || 'Network error' };
   }
+}
+
+export async function getStatus() {
+  const res = await fetch(`${API_URL}/api/status`);
+  if (!res.ok) throw new Error('Failed to fetch status');
+  return res.json();
 }
 
 export const api = {

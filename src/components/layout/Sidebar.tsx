@@ -113,12 +113,18 @@ export function Sidebar({
 					</Tooltip>
 				</TooltipProvider>;
 		}
-		return <Link to={item.href} onMouseEnter={handlePrefetch} className={cn("flex items-center gap-3 px-3 py-2 rounded-md transition-colors", isActive ? "bg-blue-600 text-white" : "text-gray-600 hover:bg-gray-100")}>
-				<item.icon strokeWidth={1.5} className="h-5 w-5 shrink-0 text-sm font-extralight" />
-				<span className="text-sm font-normal">{item.title}</span>
+		return <Link to={item.href} onMouseEnter={handlePrefetch} className={cn(
+			"flex items-center gap-3 px-3 py-2 rounded-md transition-colors",
+			isActive ? "bg-[hsl(220,14%,18%)] text-[hsl(142,72%,52%)]" : "text-[hsl(220,14%,96%)] hover:bg-[hsl(220,14%,18%)] hover:text-white"
+		)}>
+				<item.icon strokeWidth={1.5} className="h-5 w-5 shrink-0" />
+				<span className="text-sm font-medium">{item.title}</span>
 			</Link>;
 	};
-	return <aside className={cn("bg-white fixed left-0 top-0 transition-all duration-300 ease-in-out flex flex-col border-r border-gray-200 h-screen z-40", isCollapsed ? "w-16" : "w-56", className)}>
+	return <aside className={cn("fixed left-0 top-0 transition-all duration-300 ease-in-out flex flex-col h-screen z-40",
+		isCollapsed ? "w-16" : "w-56",
+		"bg-[hsl(220,14%,10%)] text-[hsl(220,14%,96%)] border-r border-[hsl(220,14%,18%)]",
+		className)}>
 			{/* Toggle Button */}
 			<div className="absolute -right-3 top-6 z-10">
 				<Button onClick={onToggle} variant="outline" size="icon" className="h-6 w-6 rounded-full bg-white border border-gray-200 shadow-sm hover:bg-gray-50">
@@ -127,10 +133,10 @@ export function Sidebar({
 			</div>
 
 			{/* Logo Section */}
-			{!isCollapsed ? <div className="p-4 border-b border-gray-200 flex justify-center">
-					<img src="/lovable-uploads/8efb84ba-e777-4413-ae5a-f7f54bfa6cab.png" alt="Clario" className="h-10 w-auto" />
-				</div> : <div className="p-2 border-b border-gray-200 flex justify-center">
-					<img src="/lovable-uploads/8efb84ba-e777-4413-ae5a-f7f54bfa6cab.png" alt="Clario" className="h-8 w-auto" />
+			{!isCollapsed ? <div className="p-4 border-b border-[hsl(220,14%,18%)] flex justify-center">
+					<img src="/clario-logo.svg" alt="Clario" className="h-10 w-auto" />
+				</div> : <div className="p-2 border-b border-[hsl(220,14%,18%)] flex justify-center">
+					<img src="/clario-logo.svg" alt="Clario" className="h-8 w-auto" />
 				</div>}
 
 			<ScrollArea className="flex-1">

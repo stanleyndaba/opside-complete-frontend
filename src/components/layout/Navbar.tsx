@@ -14,8 +14,8 @@ export function Navbar({
   className,
   sidebarCollapsed = false
 }: NavbarProps) {
-  return <header className={cn("bg-background/95 backdrop-blur-sm sticky top-0 z-30 border-b transition-all duration-300", sidebarCollapsed ? "ml-16" : "ml-56", className)}>
-      <div className="container flex items-center justify-end h-16 px-4">
+  return <header className={cn("bg-background/90 backdrop-blur-sm sticky top-0 z-30 border-b transition-all duration-300", sidebarCollapsed ? "ml-16" : "ml-56", className)}>
+      <div className="container flex items-center justify-end h-16 px-4 font-body">
         {/* Right side - Sync action, Notification Bell and Profile Icon */}
         <div className="flex items-center gap-4 ml-auto">
           {/* Subtle sync button with tooltip-like title */}
