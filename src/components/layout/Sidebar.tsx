@@ -126,12 +126,7 @@ export function Sidebar({
 				</Button>
 			</div>
 
-			{/* Logo Section */}
-			{!isCollapsed ? <div className="p-4 border-b border-slate-800 flex justify-center">
-					<img src="/clario-logo-dark.svg" alt="Clario" className="h-10 w-10" />
-				</div> : <div className="p-2 border-b border-slate-800 flex justify-center">
-					<img src="/clario-logo-dark.svg" alt="Clario" className="h-8 w-8" />
-				</div>}
+			
 
 			<ScrollArea className="flex-1">
 				<div className={cn("h-full flex", isCollapsed ? "px-2" : "px-4")}> 
