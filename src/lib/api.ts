@@ -38,6 +38,16 @@ async function requestJson<T>(path: string, options?: RequestInit): Promise<ApiR
     const isJson = contentType.includes('application/json');
     const payload = isJson ? await res.json() : undefined;
     if (!res.ok) {
+      if (res.status === 401) {
+        try {
+          // Attempt to log out server-side to clear any session remnants, then redirect
+          await fetch(buildApiUrl('/api/auth/logout'), { method: 'POST', credentials: 'include' });
+        } catch (_) {}
+        // Redirect to home for re-auth
+        if (typeof window !== 'undefined') {
+          window.location.href = '/';
+        }
+      }
       return { ok: false, status: res.status, error: (payload as any)?.message || res.statusText };
     }
     return { ok: true, status: res.status, data: payload as T };
