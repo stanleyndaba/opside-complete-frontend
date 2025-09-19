@@ -7,10 +7,7 @@ import { api } from '@/lib/api';
 const Index = () => {
   return <div className="min-h-screen flex flex-col">
       <header className="border-b">
-        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center">
-            <img src="/clario-logo.svg" alt="Clario" className="h-8 sm:h-9 w-auto" decoding="async" fetchPriority="high" />
-          </div>
+        <div className="container mx-auto px-6 py-4 flex items-center justify-end">
           <nav className="flex items-center gap-4 text-sm">
             <button className="text-muted-foreground hover:text-foreground" onClick={() => { window.location.href = api.getAmazonOAuthStartUrl('/oauth/success'); }}>Login</button>
             <Button className="bg-[#FF9900] hover:bg-[#e68900] text-black" onClick={() => { window.location.href = api.getAmazonOAuthStartUrl('/oauth/success'); }}>
