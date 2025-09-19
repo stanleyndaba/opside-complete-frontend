@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Shield, Settings, HelpCircle, Sparkles, ChevronLeft, ChevronRight, BarChart3, Plug, Edit3 } from 'lucide-react';
+import { Home, Shield, Settings, HelpCircle, Sparkles, BarChart3, Plug, Edit3, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -119,10 +119,10 @@ export function Sidebar({
 			</Link>;
 	};
 	return <aside className={cn("bg-slate-950 fixed left-0 top-0 transition-all duration-300 ease-in-out flex flex-col border-r border-slate-800 h-screen z-40", isCollapsed ? "w-16" : "w-56", className)}>
-			{/* Toggle Button */}
-			<div className="absolute -right-3 top-6 z-10">
-				<Button onClick={onToggle} variant="outline" size="icon" className="h-6 w-6 rounded-full bg-slate-900 border border-slate-700 shadow-sm hover:bg-slate-800 text-slate-200">
-					{isCollapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
+			{/* Internal Toggle Button */}
+			<div className="p-2 border-b border-slate-800 flex justify-end">
+				<Button onClick={onToggle} variant="outline" size="icon" className="h-8 w-8 rounded-md bg-slate-900 border border-slate-700 hover:bg-slate-800 text-slate-200">
+					{isCollapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
 				</Button>
 			</div>
 
