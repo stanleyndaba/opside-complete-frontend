@@ -6,7 +6,7 @@ import { Sidebar } from '@/components/layout/Sidebar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FileText, BarChart3, FolderOpen, CheckCircle, DollarSign, Search, RefreshCw, Calendar, TrendingUp, Radar } from 'lucide-react';
-import { api } from '@/lib/api';
+import { api, getStatus } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 import { useStatusStream } from '@/hooks/use-status-stream';
 export function Dashboard() {
@@ -42,6 +42,10 @@ export function Dashboard() {
     date: "Dec 8, 2025",
     status: "estimated"
   }];
+  const { data: backendStatus, isLoading: statusLoading, error: statusError } = useQuery({
+    queryKey: ['status'],
+    queryFn: getStatus,
+  });
   const activityFeed = [{
     id: 1,
     type: 'claim_submitted',
@@ -188,6 +192,20 @@ export function Dashboard() {
                     </div>
                   </CardContent>
                 </Card>
+
+              {/* Backend Status */}
+              <Card>
+                <CardContent className="p-6">
+                  <h2 className="font-montserrat text-lg text-gray-700 font-semibold">Backend Status</h2>
+                  {statusLoading && <p className="text-sm text-muted-foreground mt-2">Loading...</p>}
+                  {statusError && <p className="text-sm text-red-600 mt-2">Error fetching status</p>}
+                  {!statusLoading && !statusError && (
+                    <pre className="mt-4 bg-gray-900 text-white p-4 rounded overflow-auto text-xs">
+{`${JSON.stringify(backendStatus, null, 2)}`}
+                    </pre>
+                  )}
+                </CardContent>
+              </Card>
               </div>
 
               {/* Right Column - Notifications (match bell dropdown style) */}
