@@ -1,0 +1,275 @@
+openapi: 3.1.0
+info:
+  title: Clario Orchestrator API
+  version: "1.0.0"
+  description: |
+    Public API surface exposed by the Orchestrator (FastAPI) used by the frontend.
+    Base URL is environment-specific. Example: http://localhost:3000
+servers:
+  - url: "http://localhost:3000"
+    description: Local
+paths:
+  /api/services/status:
+    get:
+      summary: Service status
+      responses:
+        '200':
+          description: OK
+  /api/auth/me:
+    get:
+      summary: Current user profile
+      responses:
+        '200': { description: OK }
+  /auth/amazon/start:
+    get:
+      summary: Start Amazon OAuth
+      responses:
+        '302': { description: Redirect to Amazon OAuth }
+  /api/auth/logout:
+    post:
+      summary: Logout and clear session
+      responses:
+        '200': { description: OK }
+  /api/auth/post-login/stripe:
+    post:
+      summary: Post-login Stripe onboarding helpers
+      responses:
+        '200': { description: OK }
+  /api/v1/integrations/status:
+    get:
+      summary: Integrations status summary
+      responses:
+        '200': { description: OK }
+  /api/v1/integrations/connect-amazon:
+    get:
+      summary: Connect Amazon
+      responses:
+        '200': { description: OK }
+  /api/v1/integrations/connect-docs:
+    get:
+      summary: Connect documents provider
+      parameters:
+        - in: query
+          name: provider
+          schema: { type: string, enum: [gmail, outlook, gdrive, dropbox] }
+          required: true
+      responses:
+        '200': { description: OK }
+  /api/v1/integrations/disconnect:
+    post:
+      summary: Disconnect integration
+      parameters:
+        - in: query
+          name: provider
+          schema: { type: string }
+          required: true
+        - in: query
+          name: purge
+          schema: { type: integer, enum: [0,1] }
+      responses:
+        '200': { description: OK }
+  /api/sync/start:
+    post:
+      summary: Start sync job
+      responses:
+        '200': { description: OK }
+  /api/sync/status:
+    get:
+      summary: Get sync status (by id)
+      parameters:
+        - in: query
+          name: id
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+  /api/sync/activity:
+    get:
+      summary: Activity feed
+      responses:
+        '200': { description: OK }
+  /api/sync/cancel:
+    post:
+      summary: Cancel sync
+      responses:
+        '200': { description: OK }
+  /api/recoveries:
+    get:
+      summary: List recoveries
+      responses:
+        '200': { description: OK }
+  /api/recoveries/{id}:
+    get:
+      summary: Recovery detail
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+  /api/recoveries/{id}/status:
+    get:
+      summary: Recovery status
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+  /api/claims/{id}/submit:
+    post:
+      summary: Submit claim
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+  /api/recoveries/{id}/document:
+    get:
+      summary: Recovery document download URL
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+  /api/recoveries/{id}/answer:
+    post:
+      summary: Answer smart prompt
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                answer: { type: string }
+      responses:
+        '200': { description: OK }
+  /api/recoveries/{id}/documents/upload:
+    post:
+      summary: Upload evidence files
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        '200': { description: OK }
+  /api/detections/run:
+    post:
+      summary: Run detections
+      responses:
+        '200': { description: OK }
+  /api/detections/status/{detectionId}:
+    get:
+      summary: Detection status
+      parameters:
+        - in: path
+          name: detectionId
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+  /api/detections/history:
+    get:
+      summary: Detections history
+      responses:
+        '200': { description: OK }
+  /api/documents:
+    get:
+      summary: List documents
+      responses:
+        '200': { description: OK }
+  /api/documents/{id}:
+    get:
+      summary: Document detail
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+  /api/documents/{id}/view:
+    get:
+      summary: View document
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+  /api/documents/{id}/download:
+    get:
+      summary: Download document
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+  /api/documents/upload:
+    post:
+      summary: Upload document (ingestion)
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200': { description: OK }
+  /api/metrics/dashboard:
+    get:
+      summary: Dashboard metrics
+      parameters:
+        - in: query
+          name: window
+          schema: { type: string, enum: [7d, 30d, 90d] }
+      responses:
+        '200': { description: OK }
+  /api/metrics/recoveries:
+    get:
+      summary: Recoveries metrics
+      responses:
+        '200': { description: OK }
+  /api/metrics/track:
+    post:
+      summary: Track event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                payload: { type: object }
+      responses:
+        '200': { description: OK }

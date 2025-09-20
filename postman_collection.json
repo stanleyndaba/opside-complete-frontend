@@ -1,0 +1,112 @@
+{
+  "info": {
+    "name": "Clario Backend API",
+    "_postman_id": "b8e8a5c5-8f01-4a1a-9d0a-collection",
+    "description": "Full API collection for Clario Orchestrator (FastAPI) and related routes. Set API_BASE_URL (e.g. http://localhost:3000).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Services",
+      "item": [
+        {
+          "name": "GET /api/services/status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{API_BASE_URL}}/api/services/status", "host": ["{{API_BASE_URL}}"], "path": ["api","services","status"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "GET /api/auth/me",
+          "request": { "method": "GET", "url": { "raw": "{{API_BASE_URL}}/api/auth/me", "host": ["{{API_BASE_URL}}"], "path": ["api","auth","me"] } }
+        },
+        {
+          "name": "POST /api/auth/logout",
+          "request": { "method": "POST", "url": { "raw": "{{API_BASE_URL}}/api/auth/logout", "host": ["{{API_BASE_URL}}"], "path": ["api","auth","logout"] } }
+        },
+        {
+          "name": "POST /api/auth/post-login/stripe",
+          "request": { "method": "POST", "url": { "raw": "{{API_BASE_URL}}/api/auth/post-login/stripe", "host": ["{{API_BASE_URL}}"], "path": ["api","auth","post-login","stripe"] } }
+        },
+        {
+          "name": "GET /auth/amazon/start",
+          "request": { "method": "GET", "url": { "raw": "{{API_BASE_URL}}/auth/amazon/start", "host": ["{{API_BASE_URL}}"], "path": ["auth","amazon","start"] } }
+        }
+      ]
+    },
+    {
+      "name": "Integrations",
+      "item": [
+        { "name": "GET /api/v1/integrations/status", "request": { "method": "GET", "url": { "raw": "{{API_BASE_URL}}/api/v1/integrations/status", "host": ["{{API_BASE_URL}}"], "path": ["api","v1","integrations","status"] } } },
+        { "name": "GET /api/v1/integrations/connect-amazon", "request": { "method": "GET", "url": { "raw": "{{API_BASE_URL}}/api/v1/integrations/connect-amazon", "host": ["{{API_BASE_URL}}"], "path": ["api","v1","integrations","connect-amazon"] } } },
+        { "name": "GET /api/v1/integrations/connect-docs?provider=gmail", "request": { "method": "GET", "url": { "raw": "{{API_BASE_URL}}/api/v1/integrations/connect-docs?provider=gmail", "host": ["{{API_BASE_URL}}"], "path": ["api","v1","integrations","connect-docs"], "query": [{"key":"provider","value":"gmail"}] } } },
+        { "name": "POST /api/v1/integrations/disconnect", "request": { "method": "POST", "url": { "raw": "{{API_BASE_URL}}/api/v1/integrations/disconnect?provider=gmail&purge=0", "host": ["{{API_BASE_URL}}"], "path": ["api","v1","integrations","disconnect"], "query": [{"key":"provider","value":"gmail"},{"key":"purge","value":"0"}] } } },
+        { "name": "POST /api/v1/integrations/evidence/sources", "request": { "method": "POST", "header": [{"key":"Content-Type","value":"application/json"}], "body": {"mode":"raw","raw":"{\n  \"provider\": \"gdrive\",\n  \"displayName\": \"Google Drive\",\n  \"metadata\": {\n    \"folderId\": \"abc123\"\n  }\n}"}, "url": { "raw": "{{API_BASE_URL}}/api/v1/integrations/evidence/sources", "host": ["{{API_BASE_URL}}"], "path": ["api","v1","integrations","evidence","sources"] } } },
+        { "name": "POST /api/v1/integrations/evidence/documents", "request": { "method": "POST", "header": [{"key":"Content-Type","value":"application/json"}], "body": {"mode":"raw","raw":"{\n  \"sourceId\": \"src_123\",\n  \"document\": {\n    \"doc_type\": \"invoice\",\n    \"name\": \"invoice-001.pdf\"\n  }\n}"}, "url": { "raw": "{{API_BASE_URL}}/api/v1/integrations/evidence/documents", "host": ["{{API_BASE_URL}}"], "path": ["api","v1","integrations","evidence","documents"] } } }
+      ]
+    },
+    {
+      "name": "Sync",
+      "item": [
+        { "name": "POST /api/sync/start", "request": { "method": "POST", "url": { "raw": "{{API_BASE_URL}}/api/sync/start", "host": ["{{API_BASE_URL}}"], "path": ["api","sync","start"] } } },
+        { "name": "GET /api/sync/status?id={{syncId}}", "request": { "method": "GET", "url": { "raw": "{{API_BASE_URL}}/api/sync/status?id={{syncId}}", "host": ["{{API_BASE_URL}}"], "path": ["api","sync","status"], "query": [{"key":"id","value":"{{syncId}}"}] } } },
+        { "name": "GET /api/sync/activity", "request": { "method": "GET", "url": { "raw": "{{API_BASE_URL}}/api/sync/activity", "host": ["{{API_BASE_URL}}"], "path": ["api","sync","activity"] } } },
+        { "name": "POST /api/sync/cancel", "request": { "method": "POST", "url": { "raw": "{{API_BASE_URL}}/api/sync/cancel", "host": ["{{API_BASE_URL}}"], "path": ["api","sync","cancel"] } } }
+      ]
+    },
+    {
+      "name": "Recoveries",
+      "item": [
+        { "name": "GET /api/recoveries", "request": { "method": "GET", "url": { "raw": "{{API_BASE_URL}}/api/recoveries", "host": ["{{API_BASE_URL}}"], "path": ["api","recoveries"] } } },
+        { "name": "GET /api/recoveries/:id", "request": { "method": "GET", "url": { "raw": "{{API_BASE_URL}}/api/recoveries/{{recoveryId}}", "host": ["{{API_BASE_URL}}"], "path": ["api","recoveries","{{recoveryId}}"] } } },
+        { "name": "GET /api/recoveries/:id/status", "request": { "method": "GET", "url": { "raw": "{{API_BASE_URL}}/api/recoveries/{{recoveryId}}/status", "host": ["{{API_BASE_URL}}"], "path": ["api","recoveries","{{recoveryId}}","status"] } } },
+        { "name": "POST /api/claims/:id/submit", "request": { "method": "POST", "url": { "raw": "{{API_BASE_URL}}/api/claims/{{recoveryId}}/submit", "host": ["{{API_BASE_URL}}"], "path": ["api","claims","{{recoveryId}}","submit"] } } },
+        { "name": "GET /api/recoveries/:id/document", "request": { "method": "GET", "url": { "raw": "{{API_BASE_URL}}/api/recoveries/{{recoveryId}}/document", "host": ["{{API_BASE_URL}}"], "path": ["api","recoveries","{{recoveryId}}","document"] } } },
+        { "name": "POST /api/recoveries/:id/answer", "request": { "method": "POST", "header": [{"key":"Content-Type","value":"application/json"}], "body": {"mode":"raw","raw":"{\n  \"answer\": \"Yes, proceed\"\n}"}, "url": { "raw": "{{API_BASE_URL}}/api/recoveries/{{recoveryId}}/answer", "host": ["{{API_BASE_URL}}"], "path": ["api","recoveries","{{recoveryId}}","answer"] } } },
+        { "name": "POST /api/recoveries/:id/documents/upload (multipart)", "request": { "method": "POST", "header": [], "body": {"mode":"formdata","formdata":[{"key":"files","type":"file","src":""}]}, "url": { "raw": "{{API_BASE_URL}}/api/recoveries/{{recoveryId}}/documents/upload", "host": ["{{API_BASE_URL}}"], "path": ["api","recoveries","{{recoveryId}}","documents","upload"] } } }
+      ]
+    },
+    {
+      "name": "Detections",
+      "item": [
+        { "name": "POST /api/detections/run", "request": { "method": "POST", "url": { "raw": "{{API_BASE_URL}}/api/detections/run", "host": ["{{API_BASE_URL}}"], "path": ["api","detections","run"] } } },
+        { "name": "GET /api/detections/status/:detectionId", "request": { "method": "GET", "url": { "raw": "{{API_BASE_URL}}/api/detections/status/{{detectionId}}", "host": ["{{API_BASE_URL}}"], "path": ["api","detections","status","{{detectionId}}"] } } },
+        { "name": "GET /api/detections/history", "request": { "method": "GET", "url": { "raw": "{{API_BASE_URL}}/api/detections/history", "host": ["{{API_BASE_URL}}"], "path": ["api","detections","history"] } } }
+      ]
+    },
+    {
+      "name": "Documents",
+      "item": [
+        { "name": "GET /api/documents", "request": { "method": "GET", "url": { "raw": "{{API_BASE_URL}}/api/documents", "host": ["{{API_BASE_URL}}"], "path": ["api","documents"] } } },
+        { "name": "GET /api/documents/:id", "request": { "method": "GET", "url": { "raw": "{{API_BASE_URL}}/api/documents/{{documentId}}", "host": ["{{API_BASE_URL}}"], "path": ["api","documents","{{documentId}}"] } } },
+        { "name": "GET /api/documents/:id/view", "request": { "method": "GET", "url": { "raw": "{{API_BASE_URL}}/api/documents/{{documentId}}/view", "host": ["{{API_BASE_URL}}"], "path": ["api","documents","{{documentId}}","view"] } } },
+        { "name": "GET /api/documents/:id/download", "request": { "method": "GET", "url": { "raw": "{{API_BASE_URL}}/api/documents/{{documentId}}/download", "host": ["{{API_BASE_URL}}"], "path": ["api","documents","{{documentId}}","download"] } } },
+        { "name": "POST /api/documents/upload (multipart)", "request": { "method": "POST", "body": {"mode":"formdata","formdata":[{"key":"file","type":"file","src":""}]}, "url": { "raw": "{{API_BASE_URL}}/api/documents/upload", "host": ["{{API_BASE_URL}}"], "path": ["api","documents","upload"] } } }
+      ]
+    },
+    {
+      "name": "Metrics",
+      "item": [
+        { "name": "GET /api/metrics/dashboard?window=30d", "request": { "method": "GET", "url": { "raw": "{{API_BASE_URL}}/api/metrics/dashboard?window=30d", "host": ["{{API_BASE_URL}}"], "path": ["api","metrics","dashboard"], "query": [{"key":"window","value":"30d"}] } } },
+        { "name": "GET /api/metrics/recoveries", "request": { "method": "GET", "url": { "raw": "{{API_BASE_URL}}/api/metrics/recoveries", "host": ["{{API_BASE_URL}}"], "path": ["api","metrics","recoveries"] } } },
+        { "name": "GET /api/metrics/payments", "request": { "method": "GET", "url": { "raw": "{{API_BASE_URL}}/api/metrics/payments", "host": ["{{API_BASE_URL}}"], "path": ["api","metrics","payments"] } } },
+        { "name": "POST /api/metrics/track", "request": { "method": "POST", "header": [{"key":"Content-Type","value":"application/json"}], "body": {"mode":"raw","raw":"{\n  \"name\": \"cta_clicked\",\n  \"payload\": {\n    \"location\": \"sidebar_cta\"\n  }\n}"}, "url": { "raw": "{{API_BASE_URL}}/api/metrics/track", "host": ["{{API_BASE_URL}}"], "path": ["api","metrics","track"] } } }
+      ]
+    }
+  ],
+  "event": [],
+  "variable": [
+    { "key": "API_BASE_URL", "value": "http://localhost:3000" },
+    { "key": "syncId", "value": "demo-sync-id" },
+    { "key": "recoveryId", "value": "demo-recovery-id" },
+    { "key": "detectionId", "value": "demo-detection-id" },
+    { "key": "documentId", "value": "demo-document-id" }
+  ]
+}
+
