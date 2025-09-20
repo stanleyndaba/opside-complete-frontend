@@ -15,6 +15,8 @@ export const automationApi = {
   // Automation Rules
   createRule: async (body: any) => json('/api/automation-rules', { method: 'POST', body: JSON.stringify(body) }),
   listRules: async () => json('/api/automation-rules'),
+  updateRule: async (id: string, body: any) => json(`/api/automation-rules/${encodeURIComponent(id)}`, { method: 'PUT', body: JSON.stringify(body) }),
+  deleteRule: async (id: string) => json(`/api/automation-rules/${encodeURIComponent(id)}`, { method: 'DELETE' }),
 
   // Thresholds
   getThresholds: async () => json('/api/thresholds'),
