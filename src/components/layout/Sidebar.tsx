@@ -71,10 +71,8 @@ export function Sidebar({
 		{ title: 'Help Centre', icon: HelpCircle, href: '/help' },
 		{ title: 'What\'s new', icon: Sparkles, href: '/whats-new' },
 	];
-	const NavItemComponent = ({
+	const NavItemComponent: React.FC<{ item: NavItem }> = ({
 		item
-	}: {
-		item: NavItem;
 	}) => {
 		const isActive = location.pathname === item.href;
     const handlePrefetch = () => {
@@ -103,7 +101,7 @@ export function Sidebar({
 			return <TooltipProvider>
 					<Tooltip>
 						<TooltipTrigger asChild>
-							<Link to={item.href} onMouseEnter={handlePrefetch} className={cn("flex items-center justify-center w-12 h-12 rounded-md transition-colors", isActive ? "bg-blue-600 text-white" : "text-gray-600 hover:bg-gray-100")}>
+									<Link to={item.href} onMouseEnter={handlePrefetch} className={cn("flex items-center justify-center w-12 h-12 rounded-md transition-colors", isActive ? "bg-gray-100 text-black" : "text-black hover:text-gray-600")}>
 								<item.icon className="h-5 w-5" strokeWidth={1.5} />
 							</Link>
 						</TooltipTrigger>
@@ -113,21 +111,24 @@ export function Sidebar({
 					</Tooltip>
 				</TooltipProvider>;
 		}
-		return <Link to={item.href} onMouseEnter={handlePrefetch} className={cn(
-			"flex items-center gap-3 px-3 py-2 rounded-md transition-colors",
-			isActive ? "bg-[hsl(220,14%,18%)] text-[hsl(142,72%,52%)]" : "text-[hsl(220,14%,96%)] hover:bg-[hsl(220,14%,18%)] hover:text-white"
-		)}>
+					return <Link to={item.href} onMouseEnter={handlePrefetch} className={cn(
+						"flex items-center gap-3 px-3 py-2 rounded-md transition-colors",
+						isActive ? "bg-gray-100 text-black" : "text-black hover:text-gray-600"
+					)}>
 				<item.icon strokeWidth={1.5} className="h-5 w-5 shrink-0" />
 				<span className="text-sm font-medium">{item.title}</span>
 			</Link>;
 	};
 	return <aside className={cn("fixed left-0 top-0 transition-all duration-300 ease-in-out flex flex-col h-screen z-40",
 		isCollapsed ? "w-16" : "w-56",
-		"bg-[hsl(220,14%,10%)] text-[hsl(220,14%,96%)] border-r border-[hsl(220,14%,18%)]",
+		"bg-white text-black border-r border-gray-200",
 		className)}>
 			{/* Internal Header with Collapse Control */}
-			<div className={cn("border-b border-[hsl(220,14%,18%)] flex items-center", isCollapsed ? "p-2 justify-center" : "p-3 justify-end") }>
-				<Button onClick={onToggle} variant="outline" size="icon" className="h-8 w-8 rounded-md bg-transparent border border-[hsl(220,14%,18%)] hover:bg-[hsl(220,14%,18%)] text-[hsl(220,14%,96%)]">
+			<div className={cn("border-b border-gray-200 flex items-center", isCollapsed ? "p-2 justify-center" : "p-3 justify-between") }>
+				{!isCollapsed && (
+					<div className="font-brand font-black text-black text-xl tracking-tight">Clario</div>
+				)}
+				<Button onClick={onToggle} variant="outline" size="icon" className="h-8 w-8 rounded-md bg-transparent border border-gray-200 hover:bg-gray-100 text-black">
 					{isCollapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
 				</Button>
 			</div>
@@ -155,11 +156,11 @@ export function Sidebar({
 							<div className="space-y-1">
 								{primaryItems.map((item, idx) => <NavItemComponent key={`p-${idx}`} item={item} />)}
 							</div>
-							{!isCollapsed && <div className="h-px bg-muted" />}
+							{!isCollapsed && <div className="h-px bg-gray-100" />}
 							<div className="space-y-1">
 								{accountItems.map((item, idx) => <NavItemComponent key={`a-${idx}`} item={item} />)}
 							</div>
-							{!isCollapsed && <div className="h-px bg-muted" />}
+							{!isCollapsed && <div className="h-px bg-gray-100" />}
 							<div className="space-y-1 pb-4">
 								{supportItems.map((item, idx) => <NavItemComponent key={`s-${idx}`} item={item} />)}
 							</div>
