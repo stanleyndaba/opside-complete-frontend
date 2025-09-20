@@ -1,5 +1,5 @@
 self.addEventListener('install', (event) => {
-	self.skipWaiting();
+    self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
@@ -8,6 +8,11 @@ self.addEventListener('activate', (event) => {
         const allow = new Set([ASSET_CACHE]);
         await Promise.all(keys.filter(k => !allow.has(k)).map(k => caches.delete(k)));
         await self.clients.claim();
+        // Notify clients to refresh to get the newest assets immediately
+        const clientsList = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+        for (const client of clientsList) {
+            client.postMessage({ type: 'SW_ACTIVATED' });
+        }
     })());
 });
 
