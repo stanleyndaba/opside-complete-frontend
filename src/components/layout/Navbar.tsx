@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Link } from 'react-router-dom';
+import { api } from '@/lib/api';
 import { NotificationBell } from './NotificationBell';
 interface NavbarProps {
   className?: string;
@@ -46,7 +47,7 @@ export function Navbar({
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="flex items-center gap-2 cursor-pointer text-red-600 focus:text-red-600" onClick={async () => { try { await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' }); } catch (_) {} window.location.href = '/'; }}>
+              <DropdownMenuItem className="flex items-center gap-2 cursor-pointer text-red-600 focus:text-red-600" onClick={async () => { try { await api.logout(); } catch (_) {} window.location.href = '/'; }}>
                 <LogOut className="h-4 w-4" />
                 <span>Log Out</span>
               </DropdownMenuItem>
