@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Shield, Settings, HelpCircle, Sparkles, PanelLeftClose, PanelLeftOpen, BarChart3, Plug, Edit3 } from 'lucide-react';
+import { Home, Shield, Settings, HelpCircle, Sparkles, PanelLeftClose, PanelLeftOpen, BarChart3, Plug, Edit3, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -59,6 +59,19 @@ export function Sidebar({
 }: SidebarProps) {
 	const location = useLocation();
   const queryClient = useQueryClient();
+    const [ctaDismissed, setCtaDismissed] = React.useState<boolean>(() => {
+        try {
+            return localStorage.getItem('cta:inbox-supercharged:dismissed') === 'true';
+        } catch {
+            return false;
+        }
+    });
+    const handleDismissCta = () => {
+        try {
+            localStorage.setItem('cta:inbox-supercharged:dismissed', 'true');
+        } catch {}
+        setCtaDismissed(true);
+    };
 	const primaryItems: NavItem[] = [
 		{ title: 'Command Center', icon: Home, href: '/app' },
 		{ title: 'Reports', icon: BarChart3, href: '/reports' },
@@ -163,6 +176,36 @@ export function Sidebar({
 							<div className="space-y-1 pb-4">
 								{supportItems.map((item, idx) => <NavItemComponent key={`s-${idx}`} item={item} />)}
 							</div>
+                            {/* CTA card at the bottom */}
+                            {!isCollapsed && !ctaDismissed && (
+                                <div className="pb-4">
+                                    <div className="relative rounded-xl bg-white text-black shadow-sm ring-1 ring-black/5 p-3">
+                                        <button
+                                            aria-label="Dismiss"
+                                            onClick={handleDismissCta}
+                                            className="absolute right-2 top-2 inline-flex h-6 w-6 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                                        >
+                                            <X className="h-4 w-4" />
+                                        </button>
+                                        <div className="text-sm font-semibold pr-6">Your Inbox, Supercharged.</div>
+                                        <p className="mt-1 text-xs text-gray-700">
+                                            Go beyond generic emails. Clario.ai automates personalized feedback for every candidate by seamlessly connecting to your email and cloud storage. The best part? It takes almost no time to set up.
+                                        </p>
+                                        <div className="mt-3 flex gap-2">
+                                            <Link to="/settings" className="flex-1">
+                                                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white" size="sm">
+                                                    Connect & Automate
+                                                </Button>
+                                            </Link>
+                                            <Link to="/help" className="flex-1">
+                                                <Button variant="outline" className="w-full bg-gray-100 hover:bg-gray-200 text-black border-0" size="sm">
+                                                    See How
+                                                </Button>
+                                            </Link>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
 						</nav>
 					</div>
 				</div>
