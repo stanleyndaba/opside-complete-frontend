@@ -183,7 +183,7 @@ export function Sidebar({
                             {/* CTA card at the bottom */}
 								{!isCollapsed && !ctaDismissed && (
                                 <div className="pb-4">
-										<div className="relative rounded-xl bg-white text-black shadow-sm ring-1 ring-gray-200 p-3">
+										<div className="relative rounded-2xl border border-gray-200 bg-white text-black p-4 shadow-sm">
                                         <button
                                             aria-label="Dismiss"
                                             onClick={handleDismissCta}
@@ -192,9 +192,9 @@ export function Sidebar({
                                             <X className="h-4 w-4" />
                                         </button>
                                         <div className="text-sm font-semibold pr-6">Your Inbox, Supercharged.</div>
-                                        <p className="mt-1 text-xs text-gray-700">
-                                            Go beyond generic emails. Clario.ai automates personalized feedback for every candidate by seamlessly connecting to your email and cloud storage. The best part? It takes almost no time to set up.
-                                        </p>
+											<p className="mt-1 text-xs text-gray-700">
+												Automate personalized candidate feedback instantly. Just connect your email and go.
+											</p>
                                         <div className="mt-3 flex gap-2">
                                             <Link to="/settings" className="flex-1">
                                                 <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white" size="sm">
