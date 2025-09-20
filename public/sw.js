@@ -3,11 +3,16 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-	event.waitUntil(self.clients.claim());
+    event.waitUntil((async () => {
+        const keys = await caches.keys();
+        const allow = new Set([ASSET_CACHE]);
+        await Promise.all(keys.filter(k => !allow.has(k)).map(k => caches.delete(k)));
+        await self.clients.claim();
+    })());
 });
 
 // Simple network-first for HTML, cache-first for assets
-const ASSET_CACHE = 'assets-v1';
+const ASSET_CACHE = 'assets-v3';
 const isAsset = (url) => /\.(css|js|woff2?|ttf|png|svg|jpg|jpeg|gif|webp|avif)$/.test(url);
 
 self.addEventListener('fetch', (event) => {
