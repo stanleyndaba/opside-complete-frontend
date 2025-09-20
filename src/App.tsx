@@ -29,6 +29,9 @@ const WhatsNew = lazy(() => import("./pages/WhatsNew"));
 const OAuthCallback = lazy(() => import("./pages/OAuthCallback"));
 const OAuthSuccess = lazy(() => import("./pages/OAuthSuccess"));
 const StripeCallback = lazy(() => import("./pages/StripeCallback"));
+const AutomationRules = lazy(() => import("./pages/AutomationRules"));
+const Thresholds = lazy(() => import("./pages/Thresholds"));
+const Whitelist = lazy(() => import("./pages/Whitelist"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -82,6 +85,9 @@ const App = () => (
             <Route path="/api" element={<ApiAccess />} />
             <Route path="/help" element={<Help />} />
             <Route path="/whats-new" element={<WhatsNew />} />
+            <Route path="/automation/rules" element={<AutomationRules />} />
+            <Route path="/automation/thresholds" element={<Thresholds />} />
+            <Route path="/automation/whitelist" element={<Whitelist />} />
             <Route path="/oauth/callback" element={<OAuthCallback />} />
             <Route path="/oauth/success" element={<OAuthSuccess />} />
             <Route path="/oauth/stripe/callback" element={<StripeCallback />} />

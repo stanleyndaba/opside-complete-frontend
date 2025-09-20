@@ -10,17 +10,20 @@ async function json<T>(path: string, init?: RequestInit): Promise<T> {
   return res.json() as Promise<T>;
 }
 
+
 export const automationApi = {
   // Automation Rules
-  createRule: (body: any) => json('/api/automation-rules', { method: 'POST', body: JSON.stringify(body) }),
-  listRules: () => json('/api/automation-rules'),
+  createRule: async (body: any) => json('/api/automation-rules', { method: 'POST', body: JSON.stringify(body) }),
+  listRules: async () => json('/api/automation-rules'),
+  updateRule: async (id: string, body: any) => json(`/api/automation-rules/${encodeURIComponent(id)}`, { method: 'PUT', body: JSON.stringify(body) }),
+  deleteRule: async (id: string) => json(`/api/automation-rules/${encodeURIComponent(id)}`, { method: 'DELETE' }),
 
   // Thresholds
-  getThresholds: () => json('/api/thresholds'),
-  setThresholds: (body: any) => json('/api/thresholds', { method: 'POST', body: JSON.stringify(body) }),
+  getThresholds: async () => json('/api/thresholds'),
+  setThresholds: async (body: any) => json('/api/thresholds', { method: 'POST', body: JSON.stringify(body) }),
 
   // Whitelist
-  getWhitelist: () => json('/api/whitelist'),
-  updateWhitelist: (body: any) => json('/api/whitelist', { method: 'POST', body: JSON.stringify(body) }),
+  getWhitelist: async () => json('/api/whitelist'),
+  updateWhitelist: async (body: any) => json('/api/whitelist', { method: 'POST', body: JSON.stringify(body) }),
 };
 
