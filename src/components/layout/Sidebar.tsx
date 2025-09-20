@@ -77,9 +77,14 @@ export function Sidebar({
 		{ title: 'Reports', icon: BarChart3, href: '/reports' },
 		{ title: 'Recoveries', icon: Shield, href: '/recoveries' },
 	];
-	const accountItems: NavItem[] = [
-		{ title: 'Configure', icon: Settings, href: '/settings' },
-	];
+  const accountItems: NavItem[] = [
+    { title: 'Configure', icon: Settings, href: '/settings' },
+  ];
+  const automationItems: NavItem[] = [
+    { title: 'Rules', icon: Plug, href: '/automation/rules' },
+    { title: 'Thresholds', icon: BarChart3, href: '/automation/thresholds' },
+    { title: 'Whitelist', icon: Shield, href: '/automation/whitelist' },
+  ];
 	const supportItems: NavItem[] = [
 		{ title: 'Help Centre', icon: HelpCircle, href: '/help' },
 		{ title: 'What\'s new', icon: Sparkles, href: '/whats-new' },
@@ -177,9 +182,14 @@ export function Sidebar({
 									{accountItems.map((item, idx) => <React.Fragment key={`a-${idx}`}><NavItemComponent item={item} /></React.Fragment>)}
 								</div>
 								{!isCollapsed && <div className="h-px bg-gray-100" />}
-								<div className="space-y-1 pb-4">
+        <div className="space-y-1 pb-4">
 									{supportItems.map((item, idx) => <React.Fragment key={`s-${idx}`}><NavItemComponent item={item} /></React.Fragment>)}
 								</div>
+        {!isCollapsed && <div className="h-px bg-gray-100" />}
+        <div className="space-y-1 pb-4">
+          {!isCollapsed && <div className="text-xs font-semibold text-gray-700 px-1">Automation</div>}
+          {automationItems.map((item, idx) => <React.Fragment key={`auto-${idx}`}><NavItemComponent item={item} /></React.Fragment>)}
+        </div>
                             {/* CTA card at the bottom */}
 								{!isCollapsed && !ctaDismissed && (
                                 <div className="pb-4">
