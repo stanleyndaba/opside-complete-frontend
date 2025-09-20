@@ -20,9 +20,11 @@ export function Navbar({
         {/* Right side - Sync action, Notification Bell and Profile Icon */}
         <div className="flex items-center gap-4 ml-auto">
           {/* Subtle sync button with tooltip-like title */}
-          <button title="Last synced: 2 hours ago. Click to refresh." className="h-8 w-8 rounded-full flex items-center justify-center border border-gray-200 text-gray-600 hover:bg-gray-100" onClick={() => {
-            // Fire a background sync start; non-blocking
-            fetch('/api/sync/start', { method: 'POST', credentials: 'include' }).catch(() => {});
+          <button title="Start sync now" className="h-8 w-8 rounded-full flex items-center justify-center border border-gray-200 text-gray-600 hover:bg-gray-100" onClick={async () => {
+            try {
+              const { startSync } = await import('@/lib/inventoryApi');
+              await startSync();
+            } catch {}
           }}>
             <RefreshCw className="h-4 w-4" />
           </button>
