@@ -116,7 +116,7 @@ export function Sidebar({
 			return <TooltipProvider>
 					<Tooltip>
 						<TooltipTrigger asChild>
-							<Link to={item.href} onMouseEnter={handlePrefetch} className={cn("flex items-center justify-center w-12 h-12 rounded-md transition-colors", isActive ? "bg-blue-600 text-white" : "text-gray-600 hover:bg-gray-100")}>
+							<Link to={item.href} onMouseEnter={handlePrefetch} className={cn("flex items-center justify-center w-12 h-12 rounded-md transition-colors", isActive ? "bg-gray-100 text-black" : "text-gray-900 hover:bg-gray-100 hover:text-gray-700")}>
 								<item.icon className="h-5 w-5" strokeWidth={1.5} />
 							</Link>
 						</TooltipTrigger>
@@ -128,7 +128,7 @@ export function Sidebar({
 		}
 		return <Link to={item.href} onMouseEnter={handlePrefetch} className={cn(
 			"flex items-center gap-3 px-3 py-2 rounded-md transition-colors",
-			isActive ? "bg-[hsl(220,14%,18%)] text-[hsl(142,72%,52%)]" : "text-[hsl(220,14%,96%)] hover:bg-[hsl(220,14%,18%)] hover:text-white"
+			isActive ? "bg-gray-100 text-black" : "text-black hover:bg-gray-100 hover:text-gray-700"
 		)}>
 				<item.icon strokeWidth={1.5} className="h-5 w-5 shrink-0" />
 				<span className="text-sm font-medium">{item.title}</span>
@@ -136,54 +136,58 @@ export function Sidebar({
 	};
 	return <aside className={cn("fixed left-0 top-0 transition-all duration-300 ease-in-out flex flex-col h-screen z-40",
 		isCollapsed ? "w-16" : "w-56",
-		"bg-[hsl(220,14%,10%)] text-[hsl(220,14%,96%)] border-r border-[hsl(220,14%,18%)]",
+		"bg-white text-gray-900 border-r border-gray-200",
 		className)}>
 			{/* Internal Header with Collapse Control */}
-			<div className={cn("border-b border-[hsl(220,14%,18%)] flex items-center", isCollapsed ? "p-2 justify-center" : "p-3 justify-end") }>
-				<Button onClick={onToggle} variant="outline" size="icon" className="h-8 w-8 rounded-md bg-transparent border border-[hsl(220,14%,18%)] hover:bg-[hsl(220,14%,18%)] text-[hsl(220,14%,96%)]">
+			<div className={cn("border-b border-gray-200 flex items-center", isCollapsed ? "p-2 justify-between" : "p-3 justify-between") }>
+				<div className={cn("select-none", isCollapsed ? "text-base" : "text-xl")}
+					style={{ fontFamily: 'Montserrat, sans-serif' }}>
+					<span className="font-black text-black">{isCollapsed ? 'C' : 'Clario'}</span>
+				</div>
+				<Button onClick={onToggle} variant="outline" size="icon" className="h-8 w-8 rounded-md bg-transparent border border-gray-200 hover:bg-gray-100 text-gray-700">
 					{isCollapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
 				</Button>
 			</div>
 
 			<ScrollArea className="flex-1">
 				<div className={cn("h-full flex", isCollapsed ? "px-2" : "px-4")}> 
-					<div className="my-auto w-full">
+						<div className="my-auto w-full">
 						{!isCollapsed && (
 							<div className="pt-3 pb-2">
 								<div className="flex items-center justify-between">
 									<div>
-										<div className="text-sm font-semibold">Martin Links</div>
-										<div className="text-xs text-muted-foreground">martin@example.com</div>
-										<div className="text-[11px] text-green-700 flex items-center gap-1 mt-1">
+											<div className="text-sm font-semibold text-black">Martin Links</div>
+											<div className="text-xs text-gray-500">martin@example.com</div>
+											<div className="text-[11px] text-green-700 flex items-center gap-1 mt-1">
 											<span className="w-1.5 h-1.5 rounded-full bg-green-500" /> Connected
 										</div>
 									</div>
-									<button className="text-muted-foreground hover:text-foreground" title="Edit profile" onClick={() => (window.location.href = '/settings')}>
+										<button className="text-gray-500 hover:text-gray-700" title="Edit profile" onClick={() => (window.location.href = '/settings')}>
 										<Edit3 className="h-4 w-4" />
 									</button>
 								</div>
 							</div>
 						)}
-						<nav className="space-y-4 py-2 w-full">
-							<div className="space-y-1">
-								{primaryItems.map((item, idx) => <NavItemComponent key={`p-${idx}`} item={item} />)}
-							</div>
-							{!isCollapsed && <div className="h-px bg-muted" />}
-							<div className="space-y-1">
-								{accountItems.map((item, idx) => <NavItemComponent key={`a-${idx}`} item={item} />)}
-							</div>
-							{!isCollapsed && <div className="h-px bg-muted" />}
-							<div className="space-y-1 pb-4">
-								{supportItems.map((item, idx) => <NavItemComponent key={`s-${idx}`} item={item} />)}
-							</div>
+							<nav className="space-y-4 py-2 w-full">
+								<div className="space-y-1">
+									{primaryItems.map((item, idx) => <React.Fragment key={`p-${idx}`}><NavItemComponent item={item} /></React.Fragment>)}
+								</div>
+								{!isCollapsed && <div className="h-px bg-gray-100" />}
+								<div className="space-y-1">
+									{accountItems.map((item, idx) => <React.Fragment key={`a-${idx}`}><NavItemComponent item={item} /></React.Fragment>)}
+								</div>
+								{!isCollapsed && <div className="h-px bg-gray-100" />}
+								<div className="space-y-1 pb-4">
+									{supportItems.map((item, idx) => <React.Fragment key={`s-${idx}`}><NavItemComponent item={item} /></React.Fragment>)}
+								</div>
                             {/* CTA card at the bottom */}
-                            {!isCollapsed && !ctaDismissed && (
+								{!isCollapsed && !ctaDismissed && (
                                 <div className="pb-4">
-                                    <div className="relative rounded-xl bg-white text-black shadow-sm ring-1 ring-black/5 p-3">
+										<div className="relative rounded-xl bg-white text-black shadow-sm ring-1 ring-gray-200 p-3">
                                         <button
                                             aria-label="Dismiss"
                                             onClick={handleDismissCta}
-                                            className="absolute right-2 top-2 inline-flex h-6 w-6 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+												className="absolute right-2 top-2 inline-flex h-6 w-6 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                                         >
                                             <X className="h-4 w-4" />
                                         </button>
@@ -198,7 +202,7 @@ export function Sidebar({
                                                 </Button>
                                             </Link>
                                             <Link to="/help" className="flex-1">
-                                                <Button variant="outline" className="w-full bg-gray-100 hover:bg-gray-200 text-black border-0" size="sm">
+													<Button variant="outline" className="w-full bg-gray-100 hover:bg-gray-200 text-black border-0" size="sm">
                                                     See How
                                                 </Button>
                                             </Link>
