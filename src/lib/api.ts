@@ -57,7 +57,7 @@ async function requestJson<T>(path: string, options?: RequestInit): Promise<ApiR
 }
 
 export async function getStatus() {
-  const res = await fetch(buildApiUrl(`/api/status`), { credentials: 'include' });
+  const res = await fetch(buildApiUrl(`/api/services/status`), { credentials: 'include' });
   if (!res.ok) throw new Error('Failed to fetch status');
   return res.json();
 }
