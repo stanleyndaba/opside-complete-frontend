@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { Plug, Link as LinkIcon, Mail, Twitter } from 'lucide-react';
+import { Plug, Link as LinkIcon, Mail, ArrowRight } from 'lucide-react';
 import { api } from '@/lib/api';
 
 const Index = () => {
@@ -74,7 +74,7 @@ const Index = () => {
                   Connect Amazon
                 </Button>
                 <Button size="lg" variant="outline" className="bg-white text-black border-gray-200 hover:bg-gray-50" asChild>
-                  <Link to="/app">45s Demo</Link>
+                  <Link to="/app" className="inline-flex items-center gap-2">45s Demo <ArrowRight className="h-4 w-4" strokeWidth={1.75} /></Link>
                 </Button>
               </div>
             </div>
@@ -96,9 +96,6 @@ const Index = () => {
         <div className="container mx-auto px-6 py-6 flex items-center justify-center gap-4 text-xs text-muted-foreground">
           <a href="mailto:hello@getclario.com" aria-label="Email" className="hover:text-foreground">
             <Mail className="h-5 w-5" strokeWidth={1.75} />
-          </a>
-          <a href="https://twitter.com" target="_blank" rel="noreferrer" aria-label="Twitter" className="hover:text-foreground">
-            <Twitter className="h-5 w-5" strokeWidth={1.75} />
           </a>
           <span>© {new Date().getFullYear()} Clario, Inc. All rights reserved.</span>
         </div>
