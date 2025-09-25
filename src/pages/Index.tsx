@@ -61,13 +61,7 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Footer removed per request; center separator above remains */}
-
-      <footer className="border-t">
-        <div className="container mx-auto px-6 py-6 text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Clario, Inc. All rights reserved.
-        </div>
-      </footer>
+      {/* Only the center separator remains per request */}
     </div>;
 };
 
