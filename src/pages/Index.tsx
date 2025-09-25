@@ -2,19 +2,23 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import { Plug, Link as LinkIcon, Mail, Twitter, Linkedin } from 'lucide-react';
 import { api } from '@/lib/api';
 
 const Index = () => {
   return <div className="min-h-screen flex flex-col bg-[hsl(var(--background))]">
-      <header className="border-b bg-[hsl(var(--card))]/60 backdrop-blur-sm">
+      <header className="sticky top-0 z-40 border-b bg-white/70 backdrop-blur-md">
         <div className="container mx-auto px-6 py-5 flex items-center justify-between">
           <div className="font-logo text-xl tracking-tight text-foreground">Clario</div>
           <nav className="flex items-center gap-4 text-sm">
             <Button variant="ghost" onClick={async () => { const res = await api.connectAmazon(); if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url; }}>
               Login
             </Button>
-            <Button className="bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg" onClick={async () => { const res = await api.connectAmazon(); if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url; }}>
-              Connect Amazon
+            <Button className="bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg" asChild>
+              <Link to="/integrations-hub">
+                <Plug className="h-5 w-5 mr-2" strokeWidth={1.75} />
+                Integrations
+              </Link>
             </Button>
           </nav>
         </div>
@@ -35,6 +39,7 @@ const Index = () => {
                   const res = await api.connectAmazon();
                   if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url;
                 }}>
+                  <LinkIcon className="h-5 w-5 mr-2" strokeWidth={1.75} />
                   Connect Amazon
                 </Button>
                 <Button size="lg" variant="outline" className="bg-white text-black border-gray-200 hover:bg-gray-50">
@@ -45,6 +50,33 @@ const Index = () => {
           </div>
         </section>
       </main>
+
+      <div className="border-t">
+        <div className="container mx-auto px-6 py-4 flex items-center justify-between text-sm">
+          <div className="font-logo text-base text-foreground">Clario</div>
+          <div className="flex items-center gap-6 text-muted-foreground">
+            <Link to="/terms" className="hover:text-foreground">Terms of use</Link>
+            <Link to="/privacy" className="hover:text-foreground">Privacy Policy</Link>
+          </div>
+        </div>
+      </div>
+
+      <footer className="border-t">
+        <div className="container mx-auto px-6 py-6 flex items-center justify-between text-xs text-muted-foreground">
+          <span>© {new Date().getFullYear()} Clario, Inc. All rights reserved.</span>
+          <div className="flex items-center gap-4">
+            <a href="mailto:hello@getclario.com" aria-label="Email" className="hover:text-foreground">
+              <Mail className="h-5 w-5" strokeWidth={1.75} />
+            </a>
+            <a href="https://twitter.com" target="_blank" rel="noreferrer" aria-label="Twitter" className="hover:text-foreground">
+              <Twitter className="h-5 w-5" strokeWidth={1.75} />
+            </a>
+            <a href="https://www.linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn" className="hover:text-foreground">
+              <Linkedin className="h-5 w-5" strokeWidth={1.75} />
+            </a>
+          </div>
+        </div>
+      </footer>
 
       <footer className="border-t">
         <div className="container mx-auto px-6 py-6 text-xs text-muted-foreground">
