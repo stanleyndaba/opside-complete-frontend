@@ -1,13 +1,42 @@
 
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { Plug, Link as LinkIcon, Mail, Twitter } from 'lucide-react';
 import { api } from '@/lib/api';
 
 const Index = () => {
+  const [showBanner, setShowBanner] = useState(true);
+  const lastYRef = useRef(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY || 0;
+      if (y > lastYRef.current + 5) {
+        setShowBanner(true);
+      } else if (y < lastYRef.current - 5) {
+        setShowBanner(false);
+      }
+      lastYRef.current = y;
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   return <div className="min-h-screen flex flex-col bg-[hsl(var(--background))]">
-      <header className="sticky top-0 z-40 border-b bg-white/70 backdrop-blur-md">
+      {/* Top announcement banner */}
+      <div className={`fixed top-0 left-0 right-0 z-50 transform transition-transform duration-300 ${showBanner ? 'translate-y-0' : '-translate-y-full'}`}>
+        <div className="bg-gray-100/95 backdrop-blur-sm">
+          <div className="container mx-auto px-6 py-2 flex items-center justify-center gap-3 text-sm">
+            <span className="text-foreground">An Invitation to Our Founder's Council. Get Your First 90 Days Free</span>
+            <Button size="sm" className="bg-black text-white hover:bg-black/90">
+              Claim Your Spot
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <header className={`sticky top-0 z-40 border-b bg-white/70 backdrop-blur-md transition-[margin] duration-300 ${showBanner ? 'mt-12' : 'mt-0'}`}>
         <div className="container mx-auto px-6 py-5 flex items-center justify-between">
           <div className="font-logo text-xl tracking-tight text-foreground">Clario</div>
           <nav className="flex items-center gap-4 text-sm">
