@@ -30,7 +30,7 @@ const EvidenceSearch: React.FC = () => {
     
     setLoading(true);
     try {
-      const response = await fetch(\/api/v1/integrations/evidence/search?q=\\);
+        const response = await fetch(`/api/v1/integrations/evidence/search?q=${encodeURIComponent(query)}`);
       const data = await response.json();
       setResults(data.results || []);
     } catch (error) {
