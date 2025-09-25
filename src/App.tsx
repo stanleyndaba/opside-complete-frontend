@@ -29,6 +29,10 @@ const WhatsNew = lazy(() => import("./pages/WhatsNew"));
 const OAuthCallback = lazy(() => import("./pages/OAuthCallback"));
 const OAuthSuccess = lazy(() => import("./pages/OAuthSuccess"));
 
+// New Evidence Pages
+const EvidenceOnboarding = lazy(() => import("./pages/EvidenceOnboarding"));
+const EvidenceSearch = lazy(() => import("./pages/EvidenceSearch"));
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -74,6 +78,11 @@ const App = () => (
             <Route path="/smart-inventory-sync" element={<SmartInventorySync />} />
             <Route path="/evidence-locker" element={<EvidenceLocker />} />
             <Route path="/evidence-locker/document/:documentId" element={<DocumentDetail />} />
+            
+            {/* New Evidence Routes */}
+            <Route path="/evidence-onboarding" element={<EvidenceOnboarding />} />
+            <Route path="/evidence" element={<EvidenceSearch />} />
+            
             <Route path="/billing" element={<Billing />} />
             <Route path="/team-management" element={<TeamManagement />} />
             <Route path="/export" element={<ExportCenter />} />
