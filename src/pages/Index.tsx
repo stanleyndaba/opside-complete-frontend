@@ -7,28 +7,28 @@ import { api } from '@/lib/api';
 
 const Index = () => {
   const [showBanner, setShowBanner] = useState(true);
-  const lastYRef = useRef(0);
+  const footerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY || 0;
-      if (y > lastYRef.current + 5) {
-        // Scrolling down -> show banner
-        setShowBanner(true);
-      } else if (y < lastYRef.current - 5) {
-        // Scrolling up -> hide banner
-        setShowBanner(false);
-      }
-      lastYRef.current = y;
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    const el = document.getElementById('core-footer');
+    footerRef.current = el as HTMLElement | null;
+    if (!footerRef.current) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        // Hide banner when footer is visible in viewport
+        setShowBanner(!entry.isIntersecting);
+      },
+      { root: null, threshold: 0.01 }
+    );
+    observer.observe(footerRef.current);
+    return () => observer.disconnect();
   }, []);
 
   return <div className="min-h-screen flex flex-col bg-[hsl(var(--background))]">
-      {/* Top announcement banner */}
-      <div className={`fixed top-0 left-0 right-0 z-50 transform transition-transform duration-300 ${showBanner ? 'translate-y-0' : '-translate-y-full'}`}>
-        <div className="bg-gray-100/95 backdrop-blur-sm">
+      {/* Bottom announcement banner (hides when footer is visible) */}
+      <div className={`fixed bottom-0 left-0 right-0 z-40 transform transition-transform duration-300 ${showBanner ? 'translate-y-0' : 'translate-y-full'}`}>
+        <div className="bg-gray-100/95 backdrop-blur-sm border-t">
           <div className="container mx-auto px-6 py-2 flex items-center justify-center gap-3 text-sm">
             <span className="text-foreground">An Invitation to Our Founder's Council. Get Your First 90 Days Free</span>
             <Button size="sm" className="bg-black text-white hover:bg-black/90">
@@ -92,7 +92,7 @@ const Index = () => {
         </div>
       </div>
 
-      <footer>
+      <footer id="core-footer">
         <div className="container mx-auto px-6 py-6 flex items-center justify-center gap-4 text-xs text-muted-foreground">
           <a href="mailto:hello@getclario.com" aria-label="Email" className="hover:text-foreground">
             <Mail className="h-5 w-5" strokeWidth={1.75} />
