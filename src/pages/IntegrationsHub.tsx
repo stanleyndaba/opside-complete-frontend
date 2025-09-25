@@ -263,84 +263,7 @@ export default function IntegrationsHub() {
           </CardContent>
         </Card>
 
-        {/* Step 2: Activate Your Evidence Engine (moved below request box) */}
-        <Card className={`${status?.amazon_connected ? '' : 'opacity-60'} ${status?.docs_connected ? 'border-green-200 bg-green-50/50' : ''}`}>
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Shield className="h-6 w-6 text-primary" />
-                <div>
-                  <CardTitle className="text-lg">Activate Your Evidence Engine</CardTitle>
-                  <p className="text-sm text-muted-foreground">Give Clario the proof we need to recover your maximum refund automatically. This is the key to our 'Glass Box' advantage.</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className={`w-2 h-2 rounded-full ${status?.docs_connected ? 'bg-green-500' : 'bg-gray-300'}`} />
-                <span className={`text-sm font-medium ${status?.docs_connected ? 'text-green-600' : 'text-gray-600'}`}>{status?.docs_connected ? 'Connected' : 'Not Connected'}</span>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-wrap gap-4">
-              <Button disabled={!status?.amazon_connected || loading} className="bg-emerald-600 hover:bg-emerald-700" onClick={() => setShowProviderDialog(true)}>
-                Activate Evidence Engine
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={!status?.amazon_connected}
-                aria-label="Proceed with manual document uploads later"
-                onClick={(e) => { e.preventDefault(); setShowManualModal(true); }}
-              >
-                I'll upload documents manually later
-              </Button>
-            </div>
-            {/* Direct provider connects (peace of mind) */}
-            <div className="grid grid-cols-2 gap-2 mt-3">
-              {(['gmail','outlook','gdrive','dropbox'] as const).map((provider) => {
-                const connected = !!status?.providers?.[provider];
-                return (
-                  <div key={provider} className="flex items-center gap-2">
-                    <Button
-                      variant={connected ? 'secondary' : 'outline'}
-                      size="sm"
-                      disabled={loading || !status?.amazon_connected}
-                      onClick={async () => {
-                        setLoading(true);
-                        const res = await api.connectDocs(provider);
-                        setLoading(false);
-                        if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url;
-                      }}
-                    >
-                      {provider === 'gmail' && (connected ? 'Gmail Connected' : 'Connect Gmail')}
-                      {provider === 'outlook' && (connected ? 'Outlook Connected' : 'Connect Outlook')}
-                      {provider === 'gdrive' && (connected ? 'Drive Connected' : 'Connect Google Drive')}
-                      {provider === 'dropbox' && (connected ? 'Dropbox Connected' : 'Connect Dropbox')}
-                    </Button>
-                  </div>
-                );
-              })}
-            </div>
-            <p className="mt-3 text-xs text-muted-foreground">We’ll securely collect and organize your invoices so you never have to dig for them later.</p>
-            <div className="mt-3 rounded-md border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">
-              Recommended → Sellers who connect docs now resolve 90% of claims automatically.
-            </div>
-            {!status?.docs_connected && (
-              <div className="mt-2 text-xs text-amber-700">Docs not connected: claims may require extra steps.</div>
-            )}
-            {status?.providers && (
-              <div className="mt-3 text-xs text-muted-foreground">
-                Scopes: read-only email headers and attachments for invoice parsing; read-only file access for receipts. We never send email or modify files.
-              </div>
-            )}
-            <div className="mt-4 text-xs text-muted-foreground flex items-start gap-2">
-              <Info className="h-4 w-4 mt-0.5" />
-              <span>
-                Storage & privacy: Documents are stored in encrypted storage. Access is limited to ingestion and claims workflows. You can disconnect and purge at any time from here.
-              </span>
-            </div>
-          </CardContent>
-        </Card>
+        
 
         {/* Provider Selection Dialog */}
         <Dialog open={showProviderDialog} onOpenChange={setShowProviderDialog}>
@@ -551,6 +474,85 @@ export default function IntegrationsHub() {
                   </Button>
                 </div>
               </form>}
+          </CardContent>
+        </Card>
+
+        {/* Step 2: Activate Your Evidence Engine (placed after request box) */}
+        <Card className={`${status?.amazon_connected ? '' : 'opacity-60'} ${status?.docs_connected ? 'border-green-200 bg-green-50/50' : ''}`}>
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Shield className="h-6 w-6 text-primary" />
+                <div>
+                  <CardTitle className="text-lg">Activate Your Evidence Engine</CardTitle>
+                  <p className="text-sm text-muted-foreground">Give Clario the proof we need to recover your maximum refund automatically. This is the key to our 'Glass Box' advantage.</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className={`w-2 h-2 rounded-full ${status?.docs_connected ? 'bg-green-500' : 'bg-gray-300'}`} />
+                <span className={`text-sm font-medium ${status?.docs_connected ? 'text-green-600' : 'text-gray-600'}`}>{status?.docs_connected ? 'Connected' : 'Not Connected'}</span>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-4">
+              <Button disabled={!status?.amazon_connected || loading} className="bg-emerald-600 hover:bg-emerald-700" onClick={() => setShowProviderDialog(true)}>
+                Activate Evidence Engine
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={!status?.amazon_connected}
+                aria-label="Proceed with manual document uploads later"
+                onClick={(e) => { e.preventDefault(); setShowManualModal(true); }}
+              >
+                I'll upload documents manually later
+              </Button>
+            </div>
+            {/* Direct provider connects (peace of mind) */}
+            <div className="grid grid-cols-2 gap-2 mt-3">
+              {(['gmail','outlook','gdrive','dropbox'] as const).map((provider) => {
+                const connected = !!status?.providers?.[provider];
+                return (
+                  <div key={provider} className="flex items-center gap-2">
+                    <Button
+                      variant={connected ? 'secondary' : 'outline'}
+                      size="sm"
+                      disabled={loading || !status?.amazon_connected}
+                      onClick={async () => {
+                        setLoading(true);
+                        const res = await api.connectDocs(provider);
+                        setLoading(false);
+                        if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url;
+                      }}
+                    >
+                      {provider === 'gmail' && (connected ? 'Gmail Connected' : 'Connect Gmail')}
+                      {provider === 'outlook' && (connected ? 'Outlook Connected' : 'Connect Outlook')}
+                      {provider === 'gdrive' && (connected ? 'Drive Connected' : 'Connect Google Drive')}
+                      {provider === 'dropbox' && (connected ? 'Dropbox Connected' : 'Connect Dropbox')}
+                    </Button>
+                  </div>
+                );
+              })}
+            </div>
+            <p className="mt-3 text-xs text-muted-foreground">We’ll securely collect and organize your invoices so you never have to dig for them later.</p>
+            <div className="mt-3 rounded-md border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">
+              Recommended → Sellers who connect docs now resolve 90% of claims automatically.
+            </div>
+            {!status?.docs_connected && (
+              <div className="mt-2 text-xs text-amber-700">Docs not connected: claims may require extra steps.</div>
+            )}
+            {status?.providers && (
+              <div className="mt-3 text-xs text-muted-foreground">
+                Scopes: read-only email headers and attachments for invoice parsing; read-only file access for receipts. We never send email or modify files.
+              </div>
+            )}
+            <div className="mt-4 text-xs text-muted-foreground flex items-start gap-2">
+              <Info className="h-4 w-4 mt-0.5" />
+              <span>
+                Storage & privacy: Documents are stored in encrypted storage. Access is limited to ingestion and claims workflows. You can disconnect and purge at any time from here.
+              </span>
+            </div>
           </CardContent>
         </Card>
 
