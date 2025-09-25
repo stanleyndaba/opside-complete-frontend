@@ -42,8 +42,8 @@ const Index = () => {
                   <LinkIcon className="h-5 w-5 mr-2" strokeWidth={1.75} />
                   Connect Amazon
                 </Button>
-                <Button size="lg" variant="outline" className="bg-white text-black border-gray-200 hover:bg-gray-50">
-                  45s Demo
+                <Button size="lg" variant="outline" className="bg-white text-black border-gray-200 hover:bg-gray-50" asChild>
+                  <Link to="/app">45s Demo</Link>
                 </Button>
               </div>
             </div>
@@ -61,22 +61,7 @@ const Index = () => {
         </div>
       </div>
 
-      <footer className="border-t">
-        <div className="container mx-auto px-6 py-6 flex items-center justify-between text-xs text-muted-foreground">
-          <span>© {new Date().getFullYear()} Clario, Inc. All rights reserved.</span>
-          <div className="flex items-center gap-4">
-            <a href="mailto:hello@getclario.com" aria-label="Email" className="hover:text-foreground">
-              <Mail className="h-5 w-5" strokeWidth={1.75} />
-            </a>
-            <a href="https://twitter.com" target="_blank" rel="noreferrer" aria-label="Twitter" className="hover:text-foreground">
-              <Twitter className="h-5 w-5" strokeWidth={1.75} />
-            </a>
-            <a href="https://www.linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn" className="hover:text-foreground">
-              <Linkedin className="h-5 w-5" strokeWidth={1.75} />
-            </a>
-          </div>
-        </div>
-      </footer>
+      {/* Footer removed per request; center separator above remains */}
 
       <footer className="border-t">
         <div className="container mx-auto px-6 py-6 text-xs text-muted-foreground">
