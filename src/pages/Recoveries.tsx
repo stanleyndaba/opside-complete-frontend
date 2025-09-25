@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { api } from '@/lib/api';
+import { recoveryApi } from '@/lib/recoveryApi';
 import type { DateRange } from 'react-day-picker';
 import { useStatusStream } from '@/hooks/use-status-stream';
 
@@ -114,16 +115,16 @@ export default function Recoveries() {
     let cancelled = false;
     (async () => {
       setLoading(true);
-      const [res, metricsRes] = await Promise.all([
-        api.getRecoveries(),
+      const [resData, metricsRes] = await Promise.all([
+        recoveryApi.getRecoveries().catch(() => null),
         api.getRecoveriesMetrics(),
       ]);
       if (!cancelled) {
-        if (res.ok && Array.isArray(res.data)) {
-          setClaims(res.data as any);
+        if (resData && Array.isArray(resData)) {
+          setClaims(resData as any);
           setError(null);
         } else {
-          setError(res.error || null);
+          setError(null);
         }
         if (metricsRes.ok && metricsRes.data) {
           setMetrics(metricsRes.data);
@@ -249,12 +250,12 @@ export default function Recoveries() {
               setSubmittingBulk(true);
               const ids = Array.from(selectedIds);
               for (const id of ids) {
-                const res = await api.submitClaim(id);
-                if (res.ok) {
+                try {
+                  await recoveryApi.submitClaim(id);
                   toast({ title: `Submitted ${id}`, description: 'Claim submitted successfully.' });
                   setClaims(prev => prev.map(c => c.id === id ? { ...c, status: 'Submitted' } : c));
-                } else {
-                  toast({ title: `Failed to submit ${id}`, description: res.error || 'Please try again.' });
+                } catch (e: any) {
+                  toast({ title: `Failed to submit ${id}`, description: e?.message || 'Please try again.' });
                 }
               }
               setSubmittingBulk(false);
@@ -473,9 +474,12 @@ export default function Recoveries() {
                             </Link>
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={async () => {
-                            const res = await api.submitClaim(claim.id);
-                            if (!res.ok) return alert(res.error || 'Failed to resolve');
-                            setClaims(prev => prev.map(c => c.id === claim.id ? { ...c, status: 'Submitted' } : c));
+                            try {
+                              await recoveryApi.submitClaim(claim.id);
+                              setClaims(prev => prev.map(c => c.id === claim.id ? { ...c, status: 'Submitted' } : c));
+                            } catch (e: any) {
+                              alert(e?.message || 'Failed to resolve');
+                            }
                           }}>
                             <FileText className="h-4 w-4 mr-2" />
                             Resolve Case

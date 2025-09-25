@@ -7,9 +7,9 @@
 @tailwind utilities;
 
 @layer utilities {
-  .font-heading { font-family: 'Montserrat', Inter, system-ui, Arial, sans-serif; }
-  .font-body { font-family: 'Montserrat', Inter, system-ui, Arial, sans-serif; }
-  .font-brand { font-family: 'Montserrat', Inter, system-ui, Arial, sans-serif; }
+  .font-heading { font-family: 'Inter', system-ui, Arial, sans-serif; }
+  .font-body { font-family: 'Inter', system-ui, Arial, sans-serif; }
+  .font-brand { font-family: 'Montserrat', 'Inter', system-ui, Arial, sans-serif; }
 }
 
 @layer base {

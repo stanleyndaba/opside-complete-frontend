@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FileText, BarChart3, FolderOpen, CheckCircle, DollarSign, Search, RefreshCw, Calendar, TrendingUp, Radar } from 'lucide-react';
 import { api, getStatus } from '@/lib/api';
+import { metricsApi } from '@/lib/metricsApi';
 import { useToast } from '@/hooks/use-toast';
 import { useStatusStream } from '@/hooks/use-status-stream';
 export function Dashboard() {
@@ -23,9 +24,8 @@ export function Dashboard() {
   const { data: aggregates } = useQuery({
     queryKey: ['dashboard-aggregates', windowSel],
     queryFn: async () => {
-      const res = await api.getDashboardAggregates(windowSel);
-      if (!res.ok || !res.data) throw new Error(res.error || 'Failed to load aggregates');
-      return { totalRecovered: res.data.totalRecovered, totalApproved: res.data.totalApproved, totalExpected: res.data.totalExpected, evidenceHealth: (res.data as any).evidenceHealth } as { totalRecovered: number; totalApproved: number; totalExpected: number; evidenceHealth?: number };
+      const res = await metricsApi.fetchDashboardMetrics(windowSel);
+      return { totalRecovered: res.totalRecovered, totalApproved: res.totalApproved, totalExpected: res.totalExpected, evidenceHealth: (res as any).evidenceHealth } as { totalRecovered: number; totalApproved: number; totalExpected: number; evidenceHealth?: number };
     },
     placeholderData: (prev) => prev,
   });
@@ -112,9 +112,8 @@ export function Dashboard() {
   const { data: recoveriesMetrics } = useQuery({
     queryKey: ['recoveries-metrics'],
     queryFn: async () => {
-      const res = await api.getRecoveriesMetrics();
-      if (!res.ok || !res.data) throw new Error(res.error || 'Failed to load recoveries metrics');
-      return res.data as { totalClaimsFound: number; inProgress: number; valueInProgress: number; successRate30d: number };
+      const res = await metricsApi.fetchRecoveryMetrics();
+      return res as { totalClaimsFound: number; inProgress: number; valueInProgress: number; successRate30d: number };
     },
     placeholderData: (prev) => prev,
   });

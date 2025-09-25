@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Link } from 'react-router-dom';
+import { api } from '@/lib/api';
 import { NotificationBell } from './NotificationBell';
 interface NavbarProps {
   className?: string;
@@ -19,9 +20,11 @@ export function Navbar({
         {/* Right side - Sync action, Notification Bell and Profile Icon */}
         <div className="flex items-center gap-4 ml-auto">
           {/* Subtle sync button with tooltip-like title */}
-          <button title="Last synced: 2 hours ago. Click to refresh." className="h-8 w-8 rounded-full flex items-center justify-center border border-gray-200 text-gray-600 hover:bg-gray-100" onClick={() => {
-            // Fire a background sync start; non-blocking
-            fetch('/api/sync/start', { method: 'POST', credentials: 'include' }).catch(() => {});
+          <button title="Start sync now" className="h-8 w-8 rounded-full flex items-center justify-center border border-gray-200 text-gray-600 hover:bg-gray-100" onClick={async () => {
+            try {
+              const { startSync } = await import('@/lib/inventoryApi');
+              await startSync();
+            } catch {}
           }}>
             <RefreshCw className="h-4 w-4" />
           </button>
@@ -46,7 +49,7 @@ export function Navbar({
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="flex items-center gap-2 cursor-pointer text-red-600 focus:text-red-600" onClick={async () => { try { await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' }); } catch (_) {} window.location.href = '/'; }}>
+              <DropdownMenuItem className="flex items-center gap-2 cursor-pointer text-red-600 focus:text-red-600" onClick={async () => { try { await api.logout(); } catch (_) {} window.location.href = '/'; }}>
                 <LogOut className="h-4 w-4" />
                 <span>Log Out</span>
               </DropdownMenuItem>

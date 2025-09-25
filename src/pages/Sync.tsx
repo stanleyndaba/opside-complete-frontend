@@ -3,6 +3,7 @@ import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { api } from '@/lib/api';
+import { startSync, getSyncStatus as getInvStatus, cancelSync as cancelInvSync, getSyncHistory as fetchSyncHistory, subscribeSyncProgress } from '@/lib/inventoryApi';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 export default function Sync() {
@@ -19,13 +20,14 @@ export default function Sync() {
 
     async function ensureSync() {
       if (!syncId) {
-        const start = await api.startAmazonSync();
-        if (!start.ok) {
+        try {
+          const start = await startSync();
+          setSyncId(start.syncId);
+        } catch (e: any) {
           setStatus('failed');
-          setMessage(start.error || 'Failed to start sync');
+          setMessage(e?.message || 'Failed to start sync');
           return;
         }
-        setSyncId(start.data!.syncId);
       }
       setStatus('in_progress');
       setMessage('Inventory Sync in progress...');
@@ -33,30 +35,52 @@ export default function Sync() {
 
     ensureSync();
 
+    // Prefer SSE realtime; fall back to polling if EventSource fails
+    let unsubscribe: (() => void) | null = null;
+    if (syncId) {
+      try {
+        unsubscribe = subscribeSyncProgress(syncId, (s: any) => {
+          if (cancelled) return;
+          if (typeof s.progress === 'number') setProgress(s.progress);
+          if (s.message) setMessage(s.message);
+          if (s.status === 'complete') {
+            setMessage('Sync Complete');
+            setStatus('complete');
+            setTimeout(() => navigate('/app'), 1500);
+          } else if (s.status === 'failed') {
+            setStatus('failed');
+          } else {
+            setStatus('in_progress');
+          }
+        });
+      } catch {}
+    }
+
     const interval = setInterval(async () => {
       if (!syncId) return;
-      const res = await api.getSyncStatus(syncId);
-      if (!res.ok) return;
-      if (cancelled) return;
-      const s = res.data!;
-      if (typeof s.progress === 'number') setProgress(s.progress);
-      if (s.message) setMessage(s.message);
-      if (s.status === 'complete') {
-        setMessage('Sync Complete');
-        setStatus('complete');
-        clearInterval(interval);
-        setTimeout(() => navigate('/app'), 1500);
-      } else if (s.status === 'failed') {
-        setStatus('failed');
-        clearInterval(interval);
-      } else {
-        setStatus('in_progress');
-      }
-    }, 1500);
+      try {
+        const s = await getInvStatus(syncId);
+        if (cancelled || !s) return;
+        if (typeof s.progress === 'number') setProgress(s.progress);
+        if (s.message) setMessage(s.message);
+        if (s.status === 'complete') {
+          setMessage('Sync Complete');
+          setStatus('complete');
+          clearInterval(interval);
+          setTimeout(() => navigate('/app'), 1500);
+        } else if (s.status === 'failed') {
+          setStatus('failed');
+          clearInterval(interval);
+        } else {
+          setStatus('in_progress');
+        }
+      } catch {}
+    }, 3000);
 
     return () => {
       cancelled = true;
       clearInterval(interval);
+      if (unsubscribe) try { unsubscribe(); } catch {}
     };
   }, [syncId, navigate]);
 

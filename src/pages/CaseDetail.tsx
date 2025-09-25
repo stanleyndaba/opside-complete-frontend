@@ -10,6 +10,7 @@ import { ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, A
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { api, buildApiUrl } from '@/lib/api';
+import { recoveryApi } from '@/lib/recoveryApi';
 
 interface CaseEvent {
   timestamp: string;
@@ -270,12 +271,7 @@ export default function CaseDetail() {
                       <div className="flex flex-wrap gap-2">
                         {effectiveCase.missingDocumentOptions.map((opt: string) => (
                           <Button key={opt} size="sm" variant="outline" onClick={() => {
-                            fetch(buildApiUrl(`/api/recoveries/${encodeURIComponent(effectiveCase.id)}/answer`), {
-                              method: 'POST',
-                              headers: { 'Content-Type': 'application/json' },
-                              credentials: 'include',
-                              body: JSON.stringify({ answer: opt })
-                            }).catch(() => {});
+                            recoveryApi.submitRecoveryAnswer(effectiveCase.id, { answer: opt }).catch(() => {});
                           }}>{opt}</Button>
                         ))}
                       </div>
@@ -287,13 +283,7 @@ export default function CaseDetail() {
                         e.preventDefault();
                         const files = Array.from(e.dataTransfer.files || []);
                         if (!files.length) return;
-                        const form = new FormData();
-                        files.forEach(f => form.append('files', f));
-                        await fetch(buildApiUrl(`/api/recoveries/${encodeURIComponent(effectiveCase.id)}/documents/upload`), {
-                          method: 'POST',
-                          body: form,
-                          credentials: 'include',
-                        }).catch(() => {});
+                        await recoveryApi.uploadRecoveryDocuments(effectiveCase.id, files as any).catch(() => {});
                       }}
                     >
                       <div className="text-xs">Drag and drop supplier invoice here, or click to select.</div>
@@ -304,13 +294,7 @@ export default function CaseDetail() {
                         onChange={async (e) => {
                           const files = Array.from((e.target as HTMLInputElement).files || []);
                           if (!files.length) return;
-                          const form = new FormData();
-                          files.forEach(f => form.append('files', f));
-                          await fetch(buildApiUrl(`/api/recoveries/${encodeURIComponent(effectiveCase.id)}/documents/upload`), {
-                            method: 'POST',
-                            body: form,
-                            credentials: 'include',
-                          }).catch(() => {});
+                          await recoveryApi.uploadRecoveryDocuments(effectiveCase.id, files as any).catch(() => {});
                         }}
                       />
                     </div>

@@ -9,8 +9,10 @@ const Index = () => {
       <header className="border-b">
         <div className="container mx-auto px-6 py-4 flex items-center justify-end">
           <nav className="flex items-center gap-4 text-sm">
-            <button className="text-muted-foreground hover:text-foreground" onClick={() => { window.location.href = api.getAmazonOAuthStartUrl('/oauth/success'); }}>Login</button>
-            <Button className="bg-[#FF9900] hover:bg-[#e68900] text-black" onClick={() => { window.location.href = api.getAmazonOAuthStartUrl('/oauth/success'); }}>
+            <button className="text-muted-foreground hover:text-foreground" onClick={async () => { const res = await api.connectAmazon(); if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url; }}>
+              Login
+            </button>
+            <Button className="bg-[#FF9900] hover:bg-[#e68900] text-black" onClick={async () => { const res = await api.connectAmazon(); if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url; }}>
               Get Started Free
             </Button>
           </nav>
@@ -33,8 +35,9 @@ const Index = () => {
             </ul>
             <div className="pt-2">
               <div className="flex items-center gap-3">
-                <Button size="lg" className="bg-[#FF9900] hover:bg-[#e68900] text-black font-montserrat" onClick={() => {
-                  window.location.href = api.getAmazonOAuthStartUrl('/oauth/success');
+                <Button size="lg" className="bg-[#FF9900] hover:bg-[#e68900] text-black font-montserrat" onClick={async () => {
+                  const res = await api.connectAmazon();
+                  if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url;
                 }}>
                   <img src="/lovable-uploads/14f98d63-9a1a-4128-8021-1d840d778ea5.png" alt="Amazon" className="h-5 w-5 mr-2" width="20" height="20" decoding="async" loading="lazy" />
                   Connect Amazon & Start Audit

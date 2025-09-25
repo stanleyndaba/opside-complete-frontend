@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, FileText, Check, Edit2, Download } from 'lucide-react';
 import { api } from '@/lib/api';
+import { recoveryApi } from '@/lib/recoveryApi';
 
 export default function DocumentDetail() {
   const { documentId } = useParams();
@@ -21,12 +22,12 @@ export default function DocumentDetail() {
     (async () => {
       if (!documentId) return;
       setLoading(true);
-      const res = await api.getDocument(documentId);
-      if (!cancelled) {
-        if (res.ok) {
-          setDocumentData(res.data as any);
+      try {
+        const data = await recoveryApi.getDocument(documentId);
+        if (!cancelled) {
+          setDocumentData(data as any);
           setError(null);
-          const d = res.data as any;
+          const d = data as any;
           const issues: Array<{ field: string; message: string }> = [];
           (d?.extractedData || []).forEach((it: any) => {
             if (!it.sku) issues.push({ field: 'sku', message: 'Missing SKU for a line item' });
@@ -35,10 +36,11 @@ export default function DocumentDetail() {
             if (typeof it.quantity !== 'number') issues.push({ field: 'quantity', message: 'Missing quantity' });
           });
           setValidationIssues(issues);
-        } else {
-          setError(res.error || 'Failed to load document');
         }
-        setLoading(false);
+      } catch (e: any) {
+        if (!cancelled) setError(e?.message || 'Failed to load document');
+      } finally {
+        if (!cancelled) setLoading(false);
       }
     })();
     return () => { cancelled = true };
