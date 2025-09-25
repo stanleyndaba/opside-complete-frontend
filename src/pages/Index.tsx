@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { Plug, Link as LinkIcon, Mail, Twitter, Linkedin } from 'lucide-react';
+import { Plug, Link as LinkIcon, Mail, Twitter } from 'lucide-react';
 import { api } from '@/lib/api';
 
 const Index = () => {
@@ -51,7 +51,7 @@ const Index = () => {
         </section>
       </main>
 
-      <div className="border-t">
+      <div>
         <div className="container mx-auto px-6 py-4 flex items-center justify-between text-sm">
           <div className="font-logo text-base text-foreground">Clario</div>
           <div className="flex items-center gap-6 text-muted-foreground">
@@ -61,7 +61,17 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Only the center separator remains per request */}
+      <footer>
+        <div className="container mx-auto px-6 py-6 flex items-center justify-center gap-4 text-xs text-muted-foreground">
+          <a href="mailto:hello@getclario.com" aria-label="Email" className="hover:text-foreground">
+            <Mail className="h-5 w-5" strokeWidth={1.75} />
+          </a>
+          <a href="https://twitter.com" target="_blank" rel="noreferrer" aria-label="Twitter" className="hover:text-foreground">
+            <Twitter className="h-5 w-5" strokeWidth={1.75} />
+          </a>
+          <span>© {new Date().getFullYear()} Clario, Inc. All rights reserved.</span>
+        </div>
+      </footer>
     </div>;
 };
 
