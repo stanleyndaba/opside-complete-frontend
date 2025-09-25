@@ -9,11 +9,11 @@ const Index = () => {
       <header className="border-b">
         <div className="container mx-auto px-6 py-4 flex items-center justify-end">
           <nav className="flex items-center gap-4 text-sm">
-            <button className="text-muted-foreground hover:text-foreground" onClick={async () => { const res = await api.connectAmazon(); if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url; }}>
+            <Button variant="ghost" onClick={async () => { const res = await api.connectAmazon(); if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url; }}>
               Login
-            </button>
-            <Button className="bg-[#FF9900] hover:bg-[#e68900] text-black" onClick={async () => { const res = await api.connectAmazon(); if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url; }}>
-              Get Started Free
+            </Button>
+            <Button className="bg-emerald-500 hover:bg-emerald-600 text-white shadow" onClick={async () => { const res = await api.connectAmazon(); if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url; }}>
+              Connect Amazon & Start Free Audit
             </Button>
           </nav>
         </div>
