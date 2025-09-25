@@ -13,8 +13,10 @@ const Index = () => {
     const onScroll = () => {
       const y = window.scrollY || 0;
       if (y > lastYRef.current + 5) {
+        // Scrolling down -> show banner
         setShowBanner(true);
       } else if (y < lastYRef.current - 5) {
+        // Scrolling up -> hide banner
         setShowBanner(false);
       }
       lastYRef.current = y;
@@ -36,7 +38,7 @@ const Index = () => {
         </div>
       </div>
 
-      <header className={`sticky top-0 z-40 border-b bg-white/70 backdrop-blur-md transition-[margin] duration-300 ${showBanner ? 'mt-12' : 'mt-0'}`}>
+      <header className="sticky top-0 z-40 border-b bg-white/70 backdrop-blur-md">
         <div className="container mx-auto px-6 py-5 flex items-center justify-between">
           <div className="font-logo text-xl tracking-tight text-foreground">Clario</div>
           <nav className="flex items-center gap-4 text-sm">
