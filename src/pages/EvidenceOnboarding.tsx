@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Container, Typography, Box, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import EvidenceProgressPanel from '../components/evidence/EvidenceProgressPanel';
 import ConnectDocsCard from '../components/evidence/ConnectDocsCard';
 
@@ -19,37 +20,36 @@ const EvidenceOnboarding: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        Evidence Onboarding
-      </Typography>
-      <Typography variant="body1" sx={{ mb: 4 }}>
+    <div className=\"container max-w-6xl py-8\">
+      <h1 className=\"text-4xl font-bold mb-4\">Evidence Onboarding</h1>
+      <p className=\"text-lg text-muted-foreground mb-8\">
         Zero-upload evidence collection setup
-      </Typography>
+      </p>
       
       <EvidenceProgressPanel activeStep={activeStep} />
       
-      <Box sx={{ mt: 4 }}>
+      <div className=\"mt-8\">
         {activeStep === 0 ? (
           <ConnectDocsCard />
         ) : (
-          <Box sx={{ textAlign: 'center', p: 4 }}>
-            <Typography variant="h6" gutterBottom>
-              {activeStep === 1 && 'Connecting to your document sources...'}
-              {activeStep === 2 && 'Extracting evidence patterns...'}
-              {activeStep === 3 && 'Setup complete! Redirecting...'}
-            </Typography>
-            <Button 
-              variant="outlined" 
-              onClick={() => navigate('/evidence')}
-              sx={{ mt: 2 }}
-            >
-              Go to Evidence Search
-            </Button>
-          </Box>
+          <Card className=\"text-center p-8\">
+            <CardContent className=\"space-y-4\">
+              <h3 className=\"text-xl font-semibold\">
+                {activeStep === 1 && 'Connecting to your document sources...'}
+                {activeStep === 2 && 'Extracting evidence patterns...'}
+                {activeStep === 3 && 'Setup complete! Redirecting...'}
+              </h3>
+              <Button 
+                variant=\"outline\" 
+                onClick={() => navigate('/evidence')}
+              >
+                Go to Evidence Search
+              </Button>
+            </CardContent>
+          </Card>
         )}
-      </Box>
-    </Container>
+      </div>
+    </div>
   );
 };
 
