@@ -17,7 +17,7 @@ const EvidenceProgressPanel: React.FC<EvidenceProgressPanelProps> = ({ activeSte
         <div className="flex justify-between mb-4">
           {steps.map((step, index) => (
             <div key={step} className="flex flex-col items-center">
-              <div className={w-8 h-8 rounded-full flex items-center justify-center }>
+                <div className="w-8 h-8 rounded-full flex items-center justify-center">
                 {index + 1}
               </div>
               <span className={	ext-xs mt-2 text-center }>
