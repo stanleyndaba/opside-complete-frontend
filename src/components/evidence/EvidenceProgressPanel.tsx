@@ -9,14 +9,14 @@ interface EvidenceProgressPanelProps {
 
 const EvidenceProgressPanel: React.FC<EvidenceProgressPanelProps> = ({ activeStep }) => {
   return (
-    <Card className="p-6">
+    <Card className=\"p-6\">
       <CardHeader>
         <CardTitle>Onboarding Progress</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="flex justify-between mb-4">
+        <div className=\"flex justify-between mb-4\">
           {steps.map((step, index) => (
-            <div key={step} className="flex flex-col items-center">
+            <div key={step} className=\"flex flex-col items-center\">
               <div className={w-8 h-8 rounded-full flex items-center justify-center }>
                 {index + 1}
               </div>
@@ -27,7 +27,7 @@ const EvidenceProgressPanel: React.FC<EvidenceProgressPanelProps> = ({ activeSte
           ))}
         </div>
         
-        <div className="text-sm text-muted-foreground text-center">
+        <div className=\"text-sm text-muted-foreground text-center\">
           Current step: {steps[activeStep]}
         </div>
       </CardContent>
