@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Clario — FBA Reimbursements, Fully Automated</title>
+    <title>Clario</title>
     <meta name="description" content="Clario automatically finds, files, and tracks every eligible FBA claim with full transparency. No upfront costs — our success is tied to yours." />
     <meta name="author" content="Clario" />
     <meta property="og:image" content="/og-image.png" />
@@ -21,30 +21,15 @@
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
     <script type="module" src="/src/main.tsx"></script>
+    
     <script>
-       if ('serviceWorker' in navigator) {
-           navigator.serviceWorker.getRegistrations().then(function(registrations) {
-         for (let registration of registrations) {
-         registration.unregister();
-          }
-         });
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(function(registrations) {
+    for (let registration of registrations) {
+      registration.unregister();
     }
+  });
+}
 </script>
-    <script>
-      if ('serviceWorker' in navigator) {
-        // Register immediately and check for updates on each visit
-        navigator.serviceWorker.register('/sw.js').then((reg) => {
-          try { reg.update && reg.update(); } catch (_) {}
-        }).catch(() => {});
-
-        // When a new SW takes control, reload to use the fresh assets
-        let refreshing = false;
-        navigator.serviceWorker.addEventListener('controllerchange', () => {
-          if (refreshing) return;
-          refreshing = true;
-          try { window.location.reload(); } catch (_) {}
-        });
-      }
-    </script>
   </body>
 </html>
