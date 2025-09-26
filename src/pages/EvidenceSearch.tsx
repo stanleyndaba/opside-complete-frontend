@@ -34,24 +34,24 @@ const EvidenceSearch: React.FC = () => {
   };
 
   return (
-    <div className=\"container max-w-6xl py-8\">
-      <h1 className=\"text-4xl font-bold mb-4\">Evidence Search</h1>
+    <div className="container max-w-6xl py-8">
+      <h1 className="text-4xl font-bold mb-4">Evidence Search</h1>
       
-      <Card className=\"p-6 mb-6\">
-        <CardContent className=\"p-0\">
-          <div className=\"flex gap-4\">
+      <Card className="p-6 mb-6">
+        <CardContent className="p-0">
+          <div className="flex gap-4">
             <Input
-              placeholder=\"Search evidence across connected documents...\"
+              placeholder="Search evidence across connected documents..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-              className=\"flex-1\"
+              className="flex-1"
             />
             <Button
               onClick={handleSearch}
               disabled={loading}
             >
-              <Search className=\"mr-2 h-4 w-4\" />
+              <Search className="mr-2 h-4 w-4" />
               {loading ? 'Searching...' : 'Search'}
             </Button>
           </div>
@@ -64,12 +64,12 @@ const EvidenceSearch: React.FC = () => {
             <CardTitle>Search Results ({results.length})</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className=\"space-y-4\">
+            <div className="space-y-4">
               {results.map((result) => (
-                <div key={result.id} className=\"border-b pb-4 last:border-0\">
-                  <h4 className=\"font-semibold mb-2\">{result.title}</h4>
-                  <p className=\"text-sm text-muted-foreground mb-2\">{result.snippet}</p>
-                  <div className=\"flex justify-between text-xs text-muted-foreground\">
+                <div key={result.id} className="border-b pb-4 last:border-0">
+                  <h4 className="font-semibold mb-2">{result.title}</h4>
+                  <p className="text-sm text-muted-foreground mb-2">{result.snippet}</p>
+                  <div className="flex justify-between text-xs text-muted-foreground">
                     <span>Source: {result.source}</span>
                     <span>Confidence: {(result.confidence * 100).toFixed(1)}%</span>
                   </div>
@@ -81,8 +81,8 @@ const EvidenceSearch: React.FC = () => {
       )}
 
       {results.length === 0 && query && !loading && (
-        <div className=\"text-center text-muted-foreground py-8\">
-          No results found for \"{query}\"
+        <div className="text-center text-muted-foreground py-8">
+          No results found for "{query}"
         </div>
       )}
     </div>
