@@ -53,9 +53,9 @@ interface NavSection {
 	items: NavItem[];
 }
 export function Sidebar({
-	isCollapsed,
-	onToggle,
-	className
+    isCollapsed,
+    onToggle,
+    className
 }: SidebarProps) {
 	const location = useLocation();
   const queryClient = useQueryClient();
@@ -114,7 +114,7 @@ export function Sidebar({
 					</Tooltip>
 				</TooltipProvider>;
 		}
-		return <Link to={item.href} onMouseEnter={handlePrefetch} className={cn(
+    return <Link to={item.href} onMouseEnter={handlePrefetch} className={cn(
 			"flex items-center gap-3 px-3 py-2 rounded-md transition-colors",
 			isActive ? "bg-gray-100 text-black" : "text-black hover:bg-gray-100 hover:text-gray-700"
 		)}>
