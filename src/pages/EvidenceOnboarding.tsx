@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import EvidenceProgressPanel from '../components/evidence/EvidenceProgressPanel';
+
 import ConnectDocsCard from '../components/evidence/ConnectDocsCard';
 
 const EvidenceOnboarding: React.FC = () => {
@@ -26,7 +26,7 @@ const EvidenceOnboarding: React.FC = () => {
         Zero-upload evidence collection setup
       </p>
       
-      <EvidenceProgressPanel activeStep={activeStep} />
+      <div>Progress: Step {activeStep + 1} of 3</div>
       
       <div className="mt-8">
         {activeStep === 0 ? (
