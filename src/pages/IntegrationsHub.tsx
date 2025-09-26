@@ -43,7 +43,7 @@ const availableIntegrations: AvailableIntegration[] = [
   description: 'Connect your Shopify store for unified inventory and sales management'
 }, {
   id: 'walmart',
-  name: 'Walmart Marketplace',
+  name: 'Walmart',
   category: 'marketplaces',
   logo: '/lovable-uploads/cef56367-b57b-46cc-b0cb-a2ffad47fb03.png',
   description: 'Integrate your Walmart Marketplace for seamless order processing'
@@ -189,7 +189,7 @@ export default function IntegrationsHub() {
                   <img src={activeConnections[0].logo} alt={activeConnections[0].name + ' logo'} className="w-20 h-18 object-contain" />
                   <div>
                     <CardTitle className="text-lg flex items-center gap-2">
-                      <span>Step 1 • Connect Amazon Account</span>
+                      <span>Connect Amazon Account</span>
                       {status?.amazon_connected && <CheckCircle className="h-4 w-4 text-green-600" />}
                     </CardTitle>
                     <p className="text-sm text-muted-foreground">We only read your Seller Central data. We never change listings or touch payouts.</p>
@@ -319,7 +319,7 @@ export default function IntegrationsHub() {
             // Coming soon (near-term)
             { id: 'shopify', name: 'Shopify', status: 'soon' as const, tagline: 'Unified inventory & sales', icon: Plug },
             { id: 'ebay', name: 'eBay', status: 'soon' as const, tagline: 'Listings & orders', icon: Plug },
-            { id: 'walmart', name: 'Walmart Marketplace', status: 'soon' as const, tagline: 'Marketplace operations', icon: Plug },
+            { id: 'walmart', name: 'Walmart', status: 'soon' as const, tagline: 'Marketplace operations', icon: Plug },
             { id: 'etsy', name: 'Etsy', status: 'soon' as const, tagline: 'Craft marketplace', icon: Plug },
             { id: 'onedrive', name: 'OneDrive', status: 'soon' as const, tagline: 'Files for receipts', icon: Cloud },
             // Future signal
