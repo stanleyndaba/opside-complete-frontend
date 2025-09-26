@@ -64,50 +64,15 @@ export default function EvidenceLocker() {
       setDragActive(false);
     }
   };
-  const handleDrop = async (e: React.DragEvent) => {
-  e.preventDefault();
-  e.stopPropagation();
-  setDragActive(false);
-  if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-    try {
-      const file = e.dataTransfer.files[0];
-      const res = await api.uploadDocument(file);
-      if (res.ok) {
-        // Refresh documents list
-        const documentsRes = await api.getDocuments();
-        if (documentsRes.ok) {
-          setDocuments(documentsRes.data);
-        }
-      } else {
-        setError('Upload failed: ' + res.error);
-      }
-    } catch (err) {
-      setError('Upload error: ' + (err as Error).message);
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      // Handle file upload logic here
+      console.log('Files dropped:', e.dataTransfer.files);
     }
-  }
-};
   };
-  const handleFileSelect = () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.pdf,.jpg,.png';
-    input.onchange = async (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (file) {
-        try {
-          const res = await api.uploadDocument(file);
-          if (res.ok) {
-            const documentsRes = await api.getDocuments();
-            if (documentsRes.ok) setDocuments(documentsRes.data);
-          }
-        } catch (err) {
-          setError('Upload failed');
-        }
-      }
-    };
-    input.click();
-  };
-
   return <PageLayout title="Evidence Locker & Value Engine">
       <div className="space-y-8">
         {/* Status Overview */}
@@ -136,7 +101,7 @@ export default function EvidenceLocker() {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Button onClick={handleFileSelect}>
+                <Button>
                   <Upload className="w-4 h-4 mr-2" />
                   Browse Files
                 </Button>
