@@ -40,7 +40,7 @@ const Index = () => {
 
       <header className="sticky top-0 z-40 border-b bg-white/70 backdrop-blur-md">
         <div className="container mx-auto px-6 py-5 flex items-center justify-between">
-          <div className="font-logo text-xl tracking-tight text-foreground">Clario</div>
+          <div className="font-logo text-xl tracking-tight text-foreground">Clario<span className="text-emerald-500">.</span></div>
           <nav className="flex items-center gap-4 text-sm">
             <Button variant="ghost" onClick={async () => { const res = await api.connectAmazon(); if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url; }}>
               Login
@@ -62,7 +62,7 @@ const Index = () => {
               </a>
             </div>
             <h1 className="font-heading text-4xl md:text-6xl font-bold tracking-tight text-foreground">
-              The end of FBA reimbursement work.
+              The <span className="text-emerald-500">end</span> of FBA reimbursement work.
             </h1>
             <p className="font-body text-base md:text-xl text-muted-foreground max-w-2xl mx-auto">
               Clario automates FBA workflows end-to-end silently in the background. It finds, proves, and files every claim for you. Free to start. No credit card required.
@@ -87,7 +87,7 @@ const Index = () => {
 
       <div>
         <div className="container mx-auto px-6 py-4 flex items-center justify-between text-sm">
-          <div className="font-logo text-base text-foreground">Clario</div>
+          <div className="font-logo text-base text-foreground">Clario<span className="text-emerald-500">.</span></div>
           <div className="flex items-center gap-6 text-muted-foreground">
             <Link to="/terms" className="hover:text-foreground">Terms of use</Link>
             <Link to="/privacy" className="hover:text-foreground">Privacy Policy</Link>
