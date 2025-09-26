@@ -22,21 +22,21 @@ const EvidenceStatusCard: React.FC<EvidenceStatusCardProps> = ({
   };
 
   return (
-    <Card className=\"p-4\">
-      <CardHeader className=\"flex flex-row items-center justify-between space-y-0 pb-2\">
-        <CardTitle className=\"text-sm font-medium\">Evidence Status</CardTitle>
+    <Card className="p-4">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium">Evidence Status</CardTitle>
         <Badge variant={statusColors[status] as any}>
           {status.toUpperCase()}
         </Badge>
       </CardHeader>
       <CardContent>
-        <div className=\"text-2xl font-bold\">{documentCount}</div>
-        <p className=\"text-xs text-muted-foreground\">Documents Processed</p>
+        <div className="text-2xl font-bold">{documentCount}</div>
+        <p className="text-xs text-muted-foreground">Documents Processed</p>
         
         {status === 'processing' && (
-          <div className=\"mt-4 space-y-2\">
-            <Progress value={progress} className=\"w-full\" />
-            <p className=\"text-xs text-muted-foreground\">{progress}% complete</p>
+          <div className="mt-4 space-y-2">
+            <Progress value={progress} className="w-full" />
+            <p className="text-xs text-muted-foreground">{progress}% complete</p>
           </div>
         )}
       </CardContent>
