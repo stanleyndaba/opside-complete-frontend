@@ -58,6 +58,12 @@ const Index = () => {
       <main className="flex-1">
         <section className="container mx-auto px-6 py-24 md:py-32">
           <div className="max-w-4xl mx-auto text-center space-y-6">
+            <div className="flex justify-center">
+              <a href="#" className="inline-flex items-center gap-2 bg-white border border-gray-200 rounded-[25px] px-3 py-1 text-xs md:text-sm text-foreground shadow-sm">
+                <span>Announcing our $0.5M (R9.1M) Seed Fundraising</span>
+                <span className="text-black/70 underline">Read more</span>
+              </a>
+            </div>
             <h1 className="font-heading text-4xl md:text-6xl font-bold tracking-tight text-foreground">
               The end of FBA reimbursement work.
             </h1>
