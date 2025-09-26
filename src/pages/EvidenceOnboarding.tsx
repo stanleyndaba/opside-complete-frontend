@@ -20,27 +20,27 @@ const EvidenceOnboarding: React.FC = () => {
   };
 
   return (
-    <div className=\"container max-w-6xl py-8\">
-      <h1 className=\"text-4xl font-bold mb-4\">Evidence Onboarding</h1>
-      <p className=\"text-lg text-muted-foreground mb-8\">
+    <div className="container max-w-6xl py-8">
+      <h1 className="text-4xl font-bold mb-4">Evidence Onboarding</h1>
+      <p className="text-lg text-muted-foreground mb-8">
         Zero-upload evidence collection setup
       </p>
       
       <EvidenceProgressPanel activeStep={activeStep} />
       
-      <div className=\"mt-8\">
+      <div className="mt-8">
         {activeStep === 0 ? (
           <ConnectDocsCard />
         ) : (
-          <Card className=\"text-center p-8\">
-            <CardContent className=\"space-y-4\">
-              <h3 className=\"text-xl font-semibold\">
+          <Card className="text-center p-8">
+            <CardContent className="space-y-4">
+              <h3 className="text-xl font-semibold">
                 {activeStep === 1 && 'Connecting to your document sources...'}
                 {activeStep === 2 && 'Extracting evidence patterns...'}
                 {activeStep === 3 && 'Setup complete! Redirecting...'}
               </h3>
               <Button 
-                variant=\"outline\" 
+                variant="outline" 
                 onClick={() => navigate('/evidence')}
               >
                 Go to Evidence Search
