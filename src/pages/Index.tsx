@@ -80,7 +80,7 @@ const Index = () => {
                   Connect Amazon
                 </Button>
                 <Button size="lg" variant="outline" className="bg-white text-black border-gray-200 hover:bg-gray-50" asChild>
-                  <Link to="/app" className="inline-flex items-center gap-2">45s Demo <ArrowRight className="h-4 w-4" strokeWidth={1.75} /></Link>
+                  <Link to="/app" className="inline-flex items-center gap-2">Demo <ArrowRight className="h-4 w-4" strokeWidth={1.75} /></Link>
                 </Button>
               </div>
             </div>
