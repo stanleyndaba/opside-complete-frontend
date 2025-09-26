@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { Plug, Link as LinkIcon, Mail, ArrowRight } from 'lucide-react';
+import { Link as LinkIcon, Mail, ArrowRight } from 'lucide-react';
 import { api } from '@/lib/api';
 
 const Index = () => {
@@ -46,10 +46,7 @@ const Index = () => {
               Login
             </Button>
             <Button className="bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg" asChild>
-              <Link to="/integrations-hub">
-                <Plug className="h-5 w-5 mr-2" strokeWidth={1.75} />
-                Integrations
-              </Link>
+              <Link to="/integrations-hub">Integrations</Link>
             </Button>
           </nav>
         </div>
