@@ -68,7 +68,7 @@ const Index = () => {
               The end of FBA reimbursement work.
             </h1>
             <p className="font-body text-base md:text-xl text-muted-foreground max-w-2xl mx-auto">
-              Clario automates and works silently in the background to find, prove, and file every claim.  Free to start. No credit card required.
+              Clario automates FBA workflows end-to-end silently in the background. It finds, proves, and files every claim for you. Free to start. No credit card required.
             </p>
             <div className="pt-2">
               <div className="flex items-center justify-center gap-3">
