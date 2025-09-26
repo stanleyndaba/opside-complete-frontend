@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, LogOut, Building2, RefreshCw } from 'lucide-react';
+import { User, LogOut, Building2, RefreshCw, PanelLeftOpen } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -10,13 +10,21 @@ import { NotificationBell } from './NotificationBell';
 interface NavbarProps {
   className?: string;
   sidebarCollapsed?: boolean;
+  onToggleSidebar?: () => void;
 }
 export function Navbar({
   className,
-  sidebarCollapsed = false
+  sidebarCollapsed = false,
+  onToggleSidebar
 }: NavbarProps) {
   return <header className={cn("bg-background/90 backdrop-blur-sm sticky top-0 z-30 border-b transition-all duration-300", sidebarCollapsed ? "ml-16" : "ml-56", className)}>
-      <div className="container flex items-center justify-end h-16 px-4 font-body">
+      <div className="container flex items-center h-16 px-4 font-body">
+        {/* Left: Toggle + Spacer */}
+        <div className="flex items-center gap-3">
+          <button title="Toggle sidebar" className="h-8 w-8 rounded-md flex items-center justify-center border border-gray-200 text-gray-700 hover:bg-gray-100" onClick={onToggleSidebar}>
+            <PanelLeftOpen className="h-4 w-4" />
+          </button>
+        </div>
         {/* Right side - Sync action, Notification Bell and Profile Icon */}
         <div className="flex items-center gap-4 ml-auto">
           {/* Subtle sync button with tooltip-like title */}

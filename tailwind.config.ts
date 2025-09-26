@@ -20,11 +20,11 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				// Use Montserrat as primary brand typeface across the app
-				body: ['Montserrat', 'Inter', 'system-ui', 'Arial', 'sans-serif'],
-				heading: ['Montserrat', 'Inter', 'system-ui', 'Arial', 'sans-serif'],
-				sans: ['Montserrat', 'Inter', 'system-ui', 'Arial', 'sans-serif'],
-				brand: ['Montserrat', 'Inter', 'system-ui', 'Arial', 'sans-serif'],
+				// Brand fonts: Satoshi for headings, Inter for body
+				body: ['Inter', 'system-ui', 'Arial', 'sans-serif'],
+				heading: ['Satoshi', 'Inter', 'system-ui', 'Arial', 'sans-serif'],
+				sans: ['Inter', 'system-ui', 'Arial', 'sans-serif'],
+				brand: ['Satoshi', 'Inter', 'system-ui', 'Arial', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',

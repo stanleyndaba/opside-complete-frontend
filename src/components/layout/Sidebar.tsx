@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Shield, Settings, HelpCircle, Sparkles, PanelLeftClose, PanelLeftOpen, BarChart3, Plug, Edit3, X } from 'lucide-react';
+import { Home, Shield, Settings, HelpCircle, Sparkles, PanelLeftClose, PanelLeftOpen, BarChart3, Plug, Edit3 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -53,25 +53,13 @@ interface NavSection {
 	items: NavItem[];
 }
 export function Sidebar({
-	isCollapsed,
-	onToggle,
-	className
+    isCollapsed,
+    onToggle,
+    className
 }: SidebarProps) {
 	const location = useLocation();
   const queryClient = useQueryClient();
-    const [ctaDismissed, setCtaDismissed] = React.useState<boolean>(() => {
-        try {
-            return localStorage.getItem('cta:inbox-supercharged:dismissed') === 'true';
-        } catch {
-            return false;
-        }
-    });
-    const handleDismissCta = () => {
-        try {
-            localStorage.setItem('cta:inbox-supercharged:dismissed', 'true');
-        } catch {}
-        setCtaDismissed(true);
-    };
+    
 	const primaryItems: NavItem[] = [
 		{ title: 'Command Center', icon: Home, href: '/app' },
 		{ title: 'Reports', icon: BarChart3, href: '/reports' },
@@ -126,7 +114,7 @@ export function Sidebar({
 					</Tooltip>
 				</TooltipProvider>;
 		}
-		return <Link to={item.href} onMouseEnter={handlePrefetch} className={cn(
+    return <Link to={item.href} onMouseEnter={handlePrefetch} className={cn(
 			"flex items-center gap-3 px-3 py-2 rounded-md transition-colors",
 			isActive ? "bg-gray-100 text-black" : "text-black hover:bg-gray-100 hover:text-gray-700"
 		)}>
@@ -180,36 +168,7 @@ export function Sidebar({
 								<div className="space-y-1 pb-4">
 									{supportItems.map((item, idx) => <React.Fragment key={`s-${idx}`}><NavItemComponent item={item} /></React.Fragment>)}
 								</div>
-                            {/* CTA card at the bottom */}
-								{!isCollapsed && !ctaDismissed && (
-                                <div className="pb-4">
-										<div className="relative rounded-2xl border border-gray-200 bg-white text-black p-4 shadow-sm">
-                                        <button
-                                            aria-label="Dismiss"
-                                            onClick={handleDismissCta}
-												className="absolute right-2 top-2 inline-flex h-6 w-6 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                                        >
-                                            <X className="h-4 w-4" />
-                                        </button>
-                                        <div className="text-sm font-semibold pr-6">Your Inbox, Supercharged.</div>
-											<p className="mt-1 text-xs text-gray-700">
-												Automate personalized candidate feedback instantly. Just connect your email and go.
-											</p>
-                                        <div className="mt-3 flex gap-2">
-                                            <Link to="/settings" className="flex-1">
-                                                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white" size="sm">
-                                                    Connect & Automate
-                                                </Button>
-                                            </Link>
-                                            <Link to="/help" className="flex-1">
-													<Button variant="outline" className="w-full bg-gray-100 hover:bg-gray-200 text-black border-0" size="sm">
-                                                    See How
-                                                </Button>
-                                            </Link>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
+                                
 						</nav>
 					</div>
 				</div>
