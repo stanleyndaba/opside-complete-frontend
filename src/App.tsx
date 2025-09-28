@@ -29,6 +29,8 @@ const WhatsNew = lazy(() => import("./pages/WhatsNew"));
 const OAuthCallback = lazy(() => import("./pages/OAuthCallback"));
 const OAuthSuccess = lazy(() => import("./pages/OAuthSuccess"));
 const StripeCallback = lazy(() => import("./pages/StripeCallback"));
+const About = lazy(() => import("./pages/About"));
+const Careers = lazy(() => import("./pages/Careers"));
 
 // New Evidence Pages
 const EvidenceOnboarding = lazy(() => import("./pages/EvidenceOnboarding"));
@@ -91,6 +93,8 @@ const App = () => (
             <Route path="/api" element={<ApiAccess />} />
             <Route path="/help" element={<Help />} />
             <Route path="/whats-new" element={<WhatsNew />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/careers" element={<Careers />} />
             <Route path="/oauth/callback" element={<OAuthCallback />} />
             <Route path="/oauth/success" element={<OAuthSuccess />} />
             <Route path="/oauth/stripe/callback" element={<StripeCallback />} />
