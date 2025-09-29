@@ -19,13 +19,12 @@ export function Navbar({
 }: NavbarProps) {
   return <header className={cn("bg-background/90 backdrop-blur-sm sticky top-0 z-30 border-b transition-all duration-300", sidebarCollapsed ? "ml-16" : "ml-56", className)}>
       <div className="container flex items-center h-16 px-4 font-body">
-        {/* Left: Toggle + About/Careers */}
+        {/* Left: Toggle + Careers */}
         <div className="flex items-center gap-3">
           <button title="Toggle sidebar" className="h-8 w-8 rounded-md flex items-center justify-center border border-gray-200 text-gray-700 hover:bg-gray-100" onClick={onToggleSidebar}>
             <PanelLeftOpen className="h-4 w-4" />
           </button>
           <div className="hidden md:flex items-center gap-4 ml-2">
-            <Link to="/about" className="text-sm text-foreground hover:text-foreground/80">About</Link>
             <Link to="/careers" className="text-sm text-foreground hover:text-foreground/80">Careers</Link>
           </div>
         </div>

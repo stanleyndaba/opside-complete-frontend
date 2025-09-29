@@ -132,9 +132,6 @@ export function Sidebar({
 					style={{ fontFamily: 'Montserrat, sans-serif' }}>
 					<span className="font-black text-black">{isCollapsed ? 'C' : 'Clario'}</span>
 				</div>
-				<Button onClick={onToggle} variant="outline" size="icon" className="h-8 w-8 rounded-md bg-transparent border border-gray-200 hover:bg-gray-100 text-gray-700">
-					{isCollapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
-				</Button>
 			</div>
 
 			<ScrollArea className="flex-1">
