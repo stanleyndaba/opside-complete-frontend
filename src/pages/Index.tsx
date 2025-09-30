@@ -42,7 +42,12 @@ const Index = () => {
         <div className="container mx-auto px-6 py-5 flex items-center justify-between">
           <div className="font-logo text-xl tracking-tight text-foreground">Clario<span className="text-emerald-500">.</span></div>
           <nav className="flex items-center gap-4 text-sm">
+<<<<<<< HEAD
             <Button variant="ghost" onClick={async () => { const res = await api.connectAmazon(); if (res.ok && res.data?.auth_url) window.location.href = res.data.auth_url; }}>
+=======
+            <Link to="/careers" className="text-foreground hover:text-foreground/80">Careers</Link>
+            <Button variant="ghost" onClick={async () => { const res = await api.connectAmazon(); if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url; }}>
+>>>>>>> 57eeaf261cf456cd3f7af160464a66dd1976e220
               Login
             </Button>
             <Button className="bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg" asChild>
@@ -86,8 +91,7 @@ const Index = () => {
       </main>
 
       <div>
-        <div className="container mx-auto px-6 py-4 flex items-center justify-between text-sm">
-          <div className="font-logo text-base text-foreground">Clario<span className="text-emerald-500">.</span></div>
+        <div className="container mx-auto px-6 py-4 flex items-center justify-center text-sm">
           <div className="flex items-center gap-6 text-muted-foreground">
             <Link to="/terms" className="hover:text-foreground">Terms of use</Link>
             <Link to="/privacy" className="hover:text-foreground">Privacy Policy</Link>

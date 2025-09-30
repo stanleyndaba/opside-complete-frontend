@@ -47,6 +47,8 @@ export default function OAuthSuccess() {
   useEffect(() => {
     api.trackEvent('oauth_success_view', { provider, status });
     (async () => {
+      // Allow cookie persistence before auth-required calls
+      await new Promise(r => setTimeout(r, 1000));
       const res = await api.getIntegrationsStatus();
       if (res.ok) setStatusData(res.data);
       // Auto-start first sync on success
