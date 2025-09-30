@@ -63,7 +63,7 @@ export async function getStatus() {
 }
 
 export const api = {
-  // Auth / OAuth
+  // Auth / OAuth - UPDATED ENDPOINTS
   getAmazonOAuthStartUrl: (redirectPath: string = '/app'): string => {
     const startPath = ((import.meta as any).env?.VITE_OAUTH_START_PATH as string) || '/auth/amazon/start';
     const appOrigin = window.location.origin;
@@ -72,15 +72,31 @@ export const api = {
     url.searchParams.set('redirect_uri', redirectUri);
     return url.toString();
   },
+  
+  // NEW: Basic login and registration endpoints
+  login: (email: string, password: string) => requestJson<{ user: any; access_token: string; message: string }>(`/auth/login`, { 
+    method: 'POST', 
+    body: JSON.stringify({ email, password }) 
+  }),
+  
+  register: (email: string, password: string, name: string) => requestJson<{ user: any; access_token: string; message: string }>(`/auth/register`, { 
+    method: 'POST', 
+    body: JSON.stringify({ email, password, name }) 
+  }),
+
   postLoginStripe: () => requestJson<{ onboarding_url?: string; manage_billing_url?: string }>(`/api/auth/post-login/stripe`),
 
   // Integrations / Sync
   startAmazonSync: () => requestJson<{ syncId: string }>(`/api/sync/start`, { method: 'POST' }),
   getSyncStatus: (syncId?: string) => requestJson<{ status: 'in_progress' | 'complete' | 'failed'; progress?: number; message?: string }>(`/api/sync/status${syncId ? `?id=${encodeURIComponent(syncId)}` : ''}`),
   getSyncActivity: () => requestJson<Array<{ timestamp: string; message: string; type: 'success' | 'warning' | 'info' }>>(`/api/sync/activity`),
-  // Integrations Hub status & connect flows
+  
+  // Integrations Hub status & connect flows - UPDATED
   getIntegrationsStatus: () => requestJson<{ amazon_connected: boolean; docs_connected: boolean; providers?: Record<string, boolean> }>(`/api/v1/integrations/status`),
-  connectAmazon: () => requestJson<{ redirect_url?: string }>(`/api/v1/integrations/connect-amazon`),
+  
+  // CHANGED: connectAmazon now uses the new sandbox auth
+  connectAmazon: () => requestJson<{ auth_url: string; state: string; message: string }>(`/auth/amazon/start`),
+  
   connectDocs: (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox') => requestJson<{ redirect_url?: string }>(`/api/v1/integrations/connect-docs?provider=${encodeURIComponent(provider)}`),
   disconnectIntegration: (provider: 'amazon' | 'gmail' | 'outlook' | 'gdrive' | 'dropbox', purge: boolean = false) => requestJson<{ ok: boolean }>(`/api/v1/integrations/disconnect?provider=${encodeURIComponent(provider)}&purge=${purge ? '1' : '0'}`, { method: 'POST' }),
 
@@ -186,4 +202,3 @@ export const api = {
   getDocumentViewUrl: (id: string) => buildApiUrl(`/api/documents/${encodeURIComponent(id)}/view`),
   getDocumentDownloadUrl: (id: string) => buildApiUrl(`/api/documents/${encodeURIComponent(id)}/download`),
 };
-

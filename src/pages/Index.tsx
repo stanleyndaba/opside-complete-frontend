@@ -42,7 +42,7 @@ const Index = () => {
         <div className="container mx-auto px-6 py-5 flex items-center justify-between">
           <div className="font-logo text-xl tracking-tight text-foreground">Clario<span className="text-emerald-500">.</span></div>
           <nav className="flex items-center gap-4 text-sm">
-            <Button variant="ghost" onClick={async () => { const res = await api.connectAmazon(); if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url; }}>
+            <Button variant="ghost" onClick={async () => { const res = await api.connectAmazon(); if (res.ok && res.data?.auth_url) window.location.href = res.data.auth_url; }}>
               Login
             </Button>
             <Button className="bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg" asChild>
@@ -71,7 +71,7 @@ const Index = () => {
               <div className="flex items-center justify-center gap-3">
                 <Button size="lg" className="bg-emerald-500/90 hover:bg-emerald-600 text-white font-body shadow-lg" onClick={async () => {
                   const res = await api.connectAmazon();
-                  if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url;
+                  if (res.ok && res.data?.auth_url) window.location.href = res.data.auth_url;
                 }}>
                   <LinkIcon className="h-5 w-5 mr-2" strokeWidth={1.75} />
                   Connect Amazon
@@ -107,3 +107,4 @@ const Index = () => {
 };
 
 export default Index;
+

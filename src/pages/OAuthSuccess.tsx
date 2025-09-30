@@ -74,7 +74,7 @@ export default function OAuthSuccess() {
     api.trackEvent('oauth_reconnect_clicked', { provider });
     const res = await api.connectAmazon();
     setLoading(false);
-    if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url;
+    if (res.ok && res.data?.auth_url) window.location.href = res.data.auth_url;
   };
 
   const handleDisconnect = async (purge: boolean) => {
@@ -187,4 +187,5 @@ export default function OAuthSuccess() {
     </PageLayout>
   );
 }
+
 

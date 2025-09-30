@@ -207,7 +207,7 @@ export default function IntegrationsHub() {
                   setLoading(true);
                   const res = await api.connectAmazon();
                   setLoading(false);
-                  if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url;
+                  if (res.ok && res.data?.auth_url) window.location.href = res.data.auth_url;
                 }}>
                   Connect Amazon Account
                 </Button>
@@ -276,7 +276,7 @@ export default function IntegrationsHub() {
               {(['gmail','outlook','gdrive','dropbox'] as const).map((provider) => (
                 <Button key={provider} variant="outline" size="sm" disabled={loading} onClick={async () => {
                   const res = await api.connectDocs(provider);
-                  if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url;
+                  if (res.ok && res.data?.auth_url) window.location.href = res.data.auth_url;
                 }}>
                   {provider === 'gmail' && 'Connect Gmail'}
                   {provider === 'outlook' && 'Connect Outlook'}
@@ -311,11 +311,11 @@ export default function IntegrationsHub() {
         {(() => {
           const allIntegrations = [
             // Active
-            { id: 'amazon', name: 'Amazon Seller Central', status: 'active' as const, tagline: 'Inventory & reimbursement automation', icon: null as any, onConnect: async () => { setLoading(true); const res = await api.connectAmazon(); setLoading(false); if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url; } },
-            { id: 'gmail', name: 'Gmail', status: 'active' as const, tagline: 'Auto-collect receipts and invoices', icon: Mail, onConnect: async () => { setLoading(true); const res = await api.connectDocs('gmail'); setLoading(false); if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url; } },
-            { id: 'outlook', name: 'Outlook / Office 365', status: 'active' as const, tagline: 'Auto-collect receipts and invoices', icon: Mail, onConnect: async () => { setLoading(true); const res = await api.connectDocs('outlook'); setLoading(false); if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url; } },
-            { id: 'gdrive', name: 'Google Drive', status: 'active' as const, tagline: 'Read-only files for receipts', icon: Cloud, onConnect: async () => { setLoading(true); const res = await api.connectDocs('gdrive'); setLoading(false); if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url; } },
-            { id: 'dropbox', name: 'Dropbox', status: 'active' as const, tagline: 'Read-only files for receipts', icon: Cloud, onConnect: async () => { setLoading(true); const res = await api.connectDocs('dropbox'); setLoading(false); if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url; } },
+            { id: 'amazon', name: 'Amazon Seller Central', status: 'active' as const, tagline: 'Inventory & reimbursement automation', icon: null as any, onConnect: async () => { setLoading(true); const res = await api.connectAmazon(); setLoading(false); if (res.ok && res.data?.auth_url) window.location.href = res.data.auth_url; } },
+            { id: 'gmail', name: 'Gmail', status: 'active' as const, tagline: 'Auto-collect receipts and invoices', icon: Mail, onConnect: async () => { setLoading(true); const res = await api.connectDocs('gmail'); setLoading(false); if (res.ok && res.data?.auth_url) window.location.href = res.data.auth_url; } },
+            { id: 'outlook', name: 'Outlook / Office 365', status: 'active' as const, tagline: 'Auto-collect receipts and invoices', icon: Mail, onConnect: async () => { setLoading(true); const res = await api.connectDocs('outlook'); setLoading(false); if (res.ok && res.data?.auth_url) window.location.href = res.data.auth_url; } },
+            { id: 'gdrive', name: 'Google Drive', status: 'active' as const, tagline: 'Read-only files for receipts', icon: Cloud, onConnect: async () => { setLoading(true); const res = await api.connectDocs('gdrive'); setLoading(false); if (res.ok && res.data?.auth_url) window.location.href = res.data.auth_url; } },
+            { id: 'dropbox', name: 'Dropbox', status: 'active' as const, tagline: 'Read-only files for receipts', icon: Cloud, onConnect: async () => { setLoading(true); const res = await api.connectDocs('dropbox'); setLoading(false); if (res.ok && res.data?.auth_url) window.location.href = res.data.auth_url; } },
             // Coming soon (near-term)
             { id: 'shopify', name: 'Shopify', status: 'soon' as const, tagline: 'Unified inventory & sales', icon: Plug },
             { id: 'ebay', name: 'eBay', status: 'soon' as const, tagline: 'Listings & orders', icon: Plug },
@@ -523,7 +523,7 @@ export default function IntegrationsHub() {
                         setLoading(true);
                         const res = await api.connectDocs(provider);
                         setLoading(false);
-                        if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url;
+                        if (res.ok && res.data?.auth_url) window.location.href = res.data.auth_url;
                       }}
                     >
                       {provider === 'gmail' && (connected ? 'Gmail Connected' : 'Connect Gmail')}
