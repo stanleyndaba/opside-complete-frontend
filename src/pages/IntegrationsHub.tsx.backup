@@ -63,7 +63,7 @@ export default function IntegrationsHub() {
     const interval = setInterval(() => {
       const now = new Date();
       const seconds = now.getSeconds();
-      setLastSyncTime('Just now'); // Simplified
+      setLastSyncTime(seconds % 10 === 0 ? 'Just now' : \\ seconds ago\);
     }, 1000);
     return () => clearInterval(interval);
   }, []);

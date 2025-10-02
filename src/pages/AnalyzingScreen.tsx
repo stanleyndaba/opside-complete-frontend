@@ -55,7 +55,7 @@ export default function AnalyzingScreen() {
 
         // Auto-redirect to command center after showing results
         setTimeout(() => {
-          navigate('/command-center');
+          navigate('/app');
         }, 3000);
       }
     }, 90); // 90ms * 100 = 9 seconds total
