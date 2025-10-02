@@ -1,12 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { Link as LinkIcon, Mail, ArrowRight } from 'lucide-react';
 import { api } from '@/lib/api';
 
 const Index = () => {
-  const navigate = useNavigate();
   const [showBanner, setShowBanner] = useState(true);
   const footerRef = useRef<HTMLElement | null>(null);
 
@@ -81,7 +79,7 @@ const Index = () => {
                   <LinkIcon className="h-5 w-5 mr-2" strokeWidth={1.75} />
                   Connect Amazon
                 </Button>
-                <Button size="lg" variant="outline" className="bg-white text-black border-gray-200 hover:bg-gray-50" onClick={() => navigate('/auth/amazon-sandbox')}>
+                <Button size="lg" variant="outline" className="bg-white text-black border-gray-200 hover:bg-gray-50" asChild>
                   <Link to="/app" className="inline-flex items-center gap-2">Demo <ArrowRight className="h-4 w-4" strokeWidth={1.75} /></Link>
                 </Button>
               </div>

@@ -36,10 +36,6 @@ const Careers = lazy(() => import("./pages/Careers"));
 const EvidenceOnboarding = lazy(() => import("./pages/EvidenceOnboarding"));
 const EvidenceSearch = lazy(() => import("./pages/EvidenceSearch"));
 
-// Shock & Awe Flow Pages
-const AmazonSandbox = lazy(() => import("./pages/AmazonSandbox"));
-const AnalyzingScreen = lazy(() => import("./pages/AnalyzingScreen"));
-
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -84,29 +80,25 @@ const App = () => (
             <Route path="/recoveries/:caseId" element={<CaseDetail />} />
             <Route path="/smart-inventory-sync" element={<SmartInventorySync />} />
             <Route path="/evidence-locker" element={<EvidenceLocker />} />
-            <Route path="/documents/:id" element={<DocumentDetail />} />
+            <Route path="/evidence-locker/document/:documentId" element={<DocumentDetail />} />
+            
+            {/* New Evidence Routes */}
+            <Route path="/evidence-onboarding" element={<EvidenceOnboarding />} />
+            <Route path="/evidence" element={<EvidenceSearch />} />
+            
             <Route path="/billing" element={<Billing />} />
-            <Route path="/team" element={<TeamManagement />} />
-            <Route path="/export-center" element={<ExportCenter />} />
+            <Route path="/team-management" element={<TeamManagement />} />
+            <Route path="/export" element={<ExportCenter />} />
             <Route path="/notifications" element={<NotificationHub />} />
-            <Route path="/api-access" element={<ApiAccess />} />
+            <Route path="/api" element={<ApiAccess />} />
             <Route path="/help" element={<Help />} />
             <Route path="/whats-new" element={<WhatsNew />} />
             <Route path="/about" element={<About />} />
             <Route path="/careers" element={<Careers />} />
-            <Route path="/evidence-onboarding" element={<EvidenceOnboarding />} />
-            <Route path="/evidence-search" element={<EvidenceSearch />} />
-            
-            {/* Auth & OAuth Routes */}
-            <Route path="/auth/callback" element={<OAuthCallback />} />
-            <Route path="/auth/success" element={<OAuthSuccess />} />
-            <Route path="/stripe/callback" element={<StripeCallback />} />
-            
-            {/* Shock & Awe Flow Routes */}
-            <Route path="/auth/amazon-sandbox" element={<AmazonSandbox />} />
-            <Route path="/auth/analyzing" element={<AnalyzingScreen />} />
-            
-            {/* 404 Catch All */}
+            <Route path="/oauth/callback" element={<OAuthCallback />} />
+            <Route path="/oauth/success" element={<OAuthSuccess />} />
+            <Route path="/oauth/stripe/callback" element={<StripeCallback />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

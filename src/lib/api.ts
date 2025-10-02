@@ -179,7 +179,12 @@ export const api = {
       events: d.events,
     };
     return { ok: true, status: res.status, data: mapped } as ApiResponse<RecoveryDetail>;
-  },
+  // Amazon Sandbox OAuth
+  completeAmazonSandboxAuth: (state: string) => requestJson<any>('/api/v1/integrations/amazon/sandbox/callback', { method: 'POST', body: JSON.stringify({ state }) }),
+
+  // Get potential recoveries for the big reveal
+  getAmazonRecoveries: () => requestJson<{ totalAmount: number; currency: string; claimCount: number }>('/api/v1/integrations/amazon/recoveries'),
+    },
   getRecoveryDocumentUrl: (id: string) => buildApiUrl(`/api/recoveries/${encodeURIComponent(id)}/document`),
 
   // Detections
@@ -202,3 +207,13 @@ export const api = {
   getDocumentViewUrl: (id: string) => buildApiUrl(`/api/documents/${encodeURIComponent(id)}/view`),
   getDocumentDownloadUrl: (id: string) => buildApiUrl(`/api/documents/${encodeURIComponent(id)}/download`),
 };
+
+  // Amazon Sandbox OAuth
+  async completeAmazonSandboxAuth(state: string): Promise<ApiResponse<any>> {
+    return this.post('/api/v1/integrations/amazon/sandbox/callback', { state });
+  }
+
+  // Get potential recoveries for the big reveal
+  async getAmazonRecoveries(): Promise<ApiResponse<{ totalAmount: number; currency: string; claimCount: number }>> {
+    return this.get('/api/v1/integrations/amazon/recoveries');
+  }
