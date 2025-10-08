@@ -101,7 +101,7 @@ export function Dashboard() {
                               {/* Icon with edge status dot */}
                               <div className="relative h-8 w-8 rounded-full border bg-white flex items-center justify-center text-gray-700">
                                 <span className={"absolute h-2 w-2 rounded-full " + (evt.unread ? 'bg-blue-500' : 'bg-gray-300')}
-                                  style={{ left: '2px', top: '2px' }} />
+                                  style={{ left: '1px', top: '1px' }} />
                                 <evt.icon className="h-4 w-4" />
                               </div>
                               {/* Content */}

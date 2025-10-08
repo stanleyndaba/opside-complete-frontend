@@ -23,7 +23,7 @@ export function Navbar({
         {/* Right side - Sync action and Notification Bell */}
         <div className="flex items-center gap-4 ml-auto">
           {/* Labeled sync button */}
-          <button title="Start sync now" className="inline-flex items-center gap-2 h-9 px-3 rounded-md border border-gray-200 text-gray-700 hover:bg-gray-100" onClick={async () => {
+          <button title="Start sync now" className="inline-flex items-center gap-2 h-9 px-3 rounded-md border border-blue-600 text-blue-600 hover:bg-blue-50" onClick={async () => {
             try {
               const { startSync } = await import('@/lib/inventoryApi');
               await startSync();
