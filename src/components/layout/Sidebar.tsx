@@ -144,7 +144,23 @@ export function Sidebar({
 
 			<ScrollArea className="flex-1">
 				<div className={cn("h-full flex", isCollapsed ? "px-2" : "px-4")}> 
-						<div className="my-auto w-full">
+						<div className="w-full">
+							{!isCollapsed && (
+								<div className="pt-3 pb-2">
+									<div className="flex items-center justify-between">
+										<div>
+											<div className="text-sm font-semibold text-black">Martin Links</div>
+											<div className="text-xs text-gray-500">martin@example.com</div>
+											<div className="text-[11px] text-green-700 flex items-center gap-1 mt-1">
+												<span className="w-1.5 h-1.5 rounded-full bg-green-500" /> Connected
+											</div>
+										</div>
+										<button className="text-gray-500 hover:text-gray-700" title="Edit profile" onClick={() => (window.location.href = '/settings')}>
+											<Edit3 className="h-4 w-4" />
+										</button>
+									</div>
+								</div>
+							)}
 							<nav className="space-y-4 py-2 w-full">
 								<div className="space-y-1">
 									{primaryItems.map((item, idx) => <React.Fragment key={`p-${idx}`}><NavItemComponent item={item} /></React.Fragment>)}
@@ -157,25 +173,6 @@ export function Sidebar({
 								<div className="space-y-1 pb-4">
 									{supportItems.map((item, idx) => <React.Fragment key={`s-${idx}`}><NavItemComponent item={item} /></React.Fragment>)}
 								</div>
-								{!isCollapsed && (
-									<>
-										<div className="h-px bg-gray-100" />
-										<div className="pt-3 pb-3">
-											<div className="flex items-center justify-between">
-												<div>
-													<div className="text-sm font-semibold text-black">Martin Links</div>
-													<div className="text-xs text-gray-500">martin@example.com</div>
-													<div className="text-[11px] text-green-700 flex items-center gap-1 mt-1">
-														<span className="w-1.5 h-1.5 rounded-full bg-green-500" /> Connected
-													</div>
-												</div>
-												<button className="text-gray-500 hover:text-gray-700" title="Edit profile" onClick={() => (window.location.href = '/settings')}>
-													<Edit3 className="h-4 w-4" />
-												</button>
-											</div>
-										</div>
-									</>
-								)}
 							</nav>
 					</div>
 				</div>

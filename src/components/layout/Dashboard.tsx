@@ -89,7 +89,6 @@ export function Dashboard() {
                     </div>
                     <div className="py-2 max-h-[600px] overflow-y-auto">
                       <div className="relative pl-12 pr-3 max-w-[360px] mx-auto text-[13px]">
-                        <div className="absolute left-4 top-3 bottom-3 w-px bg-gray-200" />
                         {(() => {
                           const events = [
                             { id: 'evt-1', unread: true, icon: Link2, title: 'Connection Established', details: 'Amazon connection established', time: 'Just now' },
@@ -99,9 +98,10 @@ export function Dashboard() {
                           ];
                           return events.map((evt, idx) => (
                             <div key={evt.id} className={"group relative flex items-start gap-3 " + (idx > 0 ? 'pt-3' : 'pt-2') + " pb-3 overflow-hidden"}>
-                              {/* Icon + status dot */}
-                              <div className="relative h-8 w-8 rounded-full border bg-white flex items-center justify-center text-gray-700 z-10">
-                                <span className={"absolute -left-2 top-1/2 -translate-y-1/2 h-2 w-2 rounded-full " + (evt.unread ? 'bg-blue-500' : 'bg-gray-300')} />
+                              {/* Status dot */}
+                              <span className={"mt-3 h-2 w-2 rounded-full " + (evt.unread ? 'bg-blue-500' : 'bg-gray-300')} />
+                              {/* Icon */}
+                              <div className="h-8 w-8 rounded-full border bg-white flex items-center justify-center text-gray-700">
                                 <evt.icon className="h-4 w-4" />
                               </div>
                               {/* Content */}
