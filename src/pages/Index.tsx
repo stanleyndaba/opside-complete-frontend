@@ -27,7 +27,7 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[hsl(var(--background))]">
+    <div className="min-h-screen flex flex-col bg-[hsl(var(--background))] landing">
       {/* Bottom announcement banner (hides when footer is visible) */}
       <div className={`fixed bottom-0 left-0 right-0 z-40 transform transition-transform duration-300 ${showBanner ? 'translate-y-0' : 'translate-y-full'}`}>
         <div className="bg-gray-100/95 backdrop-blur-sm border-t">
