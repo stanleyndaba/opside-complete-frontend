@@ -1,0 +1,12 @@
+import { gmailApi } from '@/lib/gmailApi';
+
+// Add this connection logic to the ConnectDocsCard component
+const handleConnectGmail = async () => {
+  try {
+    const result = await gmailApi.connectGmail();
+    // Redirect to Gmail OAuth
+    window.location.href = result.authUrl;
+  } catch (error) {
+    console.error('Failed to connect Gmail:', error);
+  }
+};

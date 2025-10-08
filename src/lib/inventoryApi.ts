@@ -1,45 +1,51 @@
-import { buildApiUrl } from '@/lib/api';
+import { api } from './api';
 
+// Individual exports for Sync.tsx
 export const startSync = async (): Promise<{ syncId: string }> => {
-  const res = await fetch(buildApiUrl('/api/v1/integrations/sync/start'), {
-    method: 'POST',
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
-  });
-  if (!res.ok) throw new Error('Failed to start sync');
-  return res.json();
+  const response = await api.post('/api/sync/start');
+  if (!response.ok) {
+    throw new Error(response.error || 'Failed to start sync');
+  }
+  return response.data;
 };
 
-export const getSyncStatus = async (syncId: string) => {
-  const res = await fetch(buildApiUrl(`/api/v1/integrations/sync/status/${syncId}`), {
-    credentials: 'include',
-  });
-  if (!res.ok) throw new Error('Failed to fetch sync status');
-  return res.json();
+export const getSyncStatus = async (syncId: string): Promise<{ status: string; progress?: number }> => {
+  const response = await api.get(`/api/sync/status/${syncId}`);
+  if (!response.ok) {
+    throw new Error(response.error || 'Failed to get sync status');
+  }
+  return response.data;
 };
 
-export const cancelSync = async (syncId: string) => {
-  const res = await fetch(buildApiUrl(`/api/v1/integrations/sync/cancel/${syncId}`), {
-    method: 'DELETE',
-    credentials: 'include',
-  });
-  if (!res.ok) throw new Error('Failed to cancel sync');
-  return res.json();
+export const cancelSync = async (syncId: string): Promise<void> => {
+  const response = await api.post(`/api/sync/cancel/${syncId}`);
+  if (!response.ok) {
+    throw new Error(response.error || 'Failed to cancel sync');
+  }
 };
 
 export const getSyncHistory = async () => {
-  const res = await fetch(buildApiUrl('/api/v1/integrations/sync/history'), {
-    credentials: 'include',
-  });
-  if (!res.ok) throw new Error('Failed to fetch sync history');
-  return res.json();
+  const response = await api.get('/api/sync/history');
+  if (!response.ok) {
+    throw new Error(response.error || 'Failed to fetch sync history');
+  }
+  return response.data;
 };
 
-export function subscribeSyncProgress(syncId: string, onUpdate: (data: any) => void) {
-  const url = buildApiUrl(`/api/sse/sync-progress/${syncId}`);
+export const subscribeSyncProgress = (syncId: string, onUpdate: (data: any) => void) => {
+  const url = `/api/sse/sync-progress/${syncId}`;
   const eventSource = new EventSource(url);
   eventSource.onmessage = (e) => {
     try { onUpdate(JSON.parse(e.data)); } catch { /* noop */ }
   };
   return () => eventSource.close();
-}
+};
+
+// Also export as object for convenience
+export const inventoryApi = {
+  startSync,
+  getSyncStatus,
+  cancelSync,
+  getSyncHistory,
+  subscribeSyncProgress
+};
