@@ -100,7 +100,8 @@ export function Dashboard() {
                             <div key={evt.id} className={"group relative flex items-start gap-3 " + (idx > 0 ? 'pt-3' : 'pt-2') + " pb-3 overflow-hidden"}>
                               {/* Icon with edge status dot */}
                               <div className="relative h-8 w-8 rounded-full border bg-white flex items-center justify-center text-gray-700">
-                                <span className={"absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 h-2 w-2 rounded-full " + (evt.unread ? 'bg-blue-500' : 'bg-gray-300')} />
+                                <span className={"absolute h-2 w-2 rounded-full " + (evt.unread ? 'bg-blue-500' : 'bg-gray-300')}
+                                  style={{ left: '2px', top: '2px' }} />
                                 <evt.icon className="h-4 w-4" />
                               </div>
                               {/* Content */}
