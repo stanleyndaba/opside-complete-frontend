@@ -42,7 +42,7 @@ export function Dashboard() {
                 <Card>
                   <CardContent className="p-6">
                     <h2 className="font-montserrat text-lg text-gray-700 font-semibold">Your Recovered Value</h2>
-                    <div className="text-4xl font-extrabold mt-2 text-green-600">
+                    <div className="text-[22px] font-extrabold mt-2 text-[#0d0d0d]">
                       {formatCurrency(14228)}
                     </div>
                     <div className="mt-4 space-y-2">
@@ -52,7 +52,7 @@ export function Dashboard() {
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-muted-foreground">Success Rate</span>
-                        <span className="text-sm font-semibold">94%</span>
+                        <span className="text-sm font-semibold text-[#33cc33]">94%</span>
                       </div>
                     </div>
                     <div className="mt-4">
