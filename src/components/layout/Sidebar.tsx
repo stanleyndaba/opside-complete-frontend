@@ -135,10 +135,10 @@ export function Sidebar({
 				</div>
 				<button
 					title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-					className={cn("h-8 w-8 rounded-md flex items-center justify-center border border-gray-200 text-gray-700 hover:bg-gray-100")}
+					className={cn("h-8 w-8 flex items-center justify-center text-gray-700 hover:text-black")}
 					onClick={onToggle}
 				>
-					{isCollapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
+					{isCollapsed ? <PanelLeftOpen className="h-5 w-5" /> : <PanelLeftClose className="h-5 w-5" />}
 				</button>
 			</div>
 
