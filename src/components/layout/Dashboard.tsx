@@ -88,8 +88,8 @@ export function Dashboard() {
                       </div>
                     </div>
                     <div className="py-2 max-h-[600px] overflow-y-auto">
-                      <div className="relative pl-6">
-                        <div className="absolute left-2 top-0 bottom-0 w-px bg-gray-200" />
+                      <div className="relative pl-12 pr-3 max-w-[360px] mx-auto text-[13px]">
+                        <div className="absolute left-4 top-3 bottom-3 w-px bg-gray-200" />
                         {(() => {
                           const events = [
                             { id: 'evt-1', unread: true, icon: Link2, title: 'Connection Established', details: 'Amazon connection established', time: 'Just now' },
@@ -98,20 +98,19 @@ export function Dashboard() {
                             { id: 'evt-4', unread: false, icon: CircleDollarSign, title: 'Funds Recovered', details: `Payout confirmed: ${formatCurrency(850.75)}`, time: '2 days ago' },
                           ];
                           return events.map((evt, idx) => (
-                            <div key={evt.id} className={"group relative flex items-start gap-3 " + (idx > 0 ? 'pt-4' : 'pt-2') + " pb-4"}>
-                              {/* Status dot (blue for unread) */}
-                              <span className={"absolute -left-[3px] mt-2 h-2 w-2 rounded-full " + (evt.unread ? 'bg-blue-500' : 'bg-gray-300')} />
-                              {/* Icon badge */}
-                              <div className="h-8 w-8 rounded-full border bg-white flex items-center justify-center text-gray-700">
+                            <div key={evt.id} className={"group relative flex items-start gap-3 " + (idx > 0 ? 'pt-3' : 'pt-2') + " pb-3 overflow-hidden"}>
+                              {/* Icon + status dot */}
+                              <div className="relative h-8 w-8 rounded-full border bg-white flex items-center justify-center text-gray-700 z-10">
+                                <span className={"absolute -left-2 top-1/2 -translate-y-1/2 h-2 w-2 rounded-full " + (evt.unread ? 'bg-blue-500' : 'bg-gray-300')} />
                                 <evt.icon className="h-4 w-4" />
                               </div>
                               {/* Content */}
                               <div className="min-w-0 flex-1">
                                 <div className="flex items-center justify-between">
-                                  <p className="text-sm font-medium text-foreground truncate">{evt.title}</p>
-                                  <span className="ml-3 shrink-0 text-xs text-muted-foreground">{evt.time}</span>
+                                  <p className="text-[13px] font-medium text-foreground truncate">{evt.title}</p>
+                                  <span className="ml-3 shrink-0 text-[11px] text-muted-foreground">{evt.time}</span>
                                 </div>
-                                <p className="text-sm text-muted-foreground mt-0.5 truncate">{evt.details}</p>
+                                <p className="text-xs text-muted-foreground mt-0.5 truncate">{evt.details}</p>
                               </div>
                             </div>
                           ));
