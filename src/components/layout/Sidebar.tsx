@@ -144,7 +144,7 @@ export function Sidebar({
 
 			<ScrollArea className="flex-1">
 				<div className={cn("h-full flex", isCollapsed ? "px-2" : "px-4")}> 
-						<div className="w-full">
+						<div className="w-full flex flex-col">
 							{!isCollapsed && (
 								<div className="pt-3 pb-2">
 									<div className="flex items-center justify-between">
@@ -161,7 +161,7 @@ export function Sidebar({
 									</div>
 								</div>
 							)}
-							<nav className="space-y-4 py-2 w-full">
+							<nav className="space-y-4 py-2 w-full flex-1 flex flex-col justify-center">
 								<div className="space-y-1">
 									{primaryItems.map((item, idx) => <React.Fragment key={`p-${idx}`}><NavItemComponent item={item} /></React.Fragment>)}
 								</div>
