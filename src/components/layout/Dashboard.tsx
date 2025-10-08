@@ -4,7 +4,7 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, BarChart3, CheckCircle, DollarSign } from 'lucide-react';
+import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign } from 'lucide-react';
 
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -87,20 +87,35 @@ export function Dashboard() {
                         <span className="text-xs bg-gray-100 text-black rounded px-2 py-0.5">3 new</span>
                       </div>
                     </div>
-                    <div className="py-1 max-h-[600px] overflow-y-auto">
-                      <div className="p-3 border-b border-border/10">
-                        <div className="flex items-center gap-2">
-                          <CheckCircle className="h-4 w-4 text-green-600" />
-                          <span className="text-sm">Amazon connection established</span>
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-1">Just now</p>
-                      </div>
-                      <div className="p-3 border-b border-border/10">
-                        <div className="flex items-center gap-2">
-                          <DollarSign className="h-4 w-4 text-blue-600" />
-                          <span className="text-sm">23 potential claims identified</span>
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-1">2 minutes ago</p>
+                    <div className="py-2 max-h-[600px] overflow-y-auto">
+                      <div className="relative pl-6">
+                        <div className="absolute left-2 top-0 bottom-0 w-px bg-gray-200" />
+                        {(() => {
+                          const events = [
+                            { id: 'evt-1', unread: true, icon: Link2, title: 'Connection Established', details: 'Amazon connection established', time: 'Just now' },
+                            { id: 'evt-2', unread: true, icon: Search, title: 'Claims Identified', details: `23 potential claims identified, valued at ~${formatCurrency(14228)}` , time: '2 minutes ago' },
+                            { id: 'evt-3', unread: false, icon: Send, title: 'Claim Submitted', details: 'Auto-submitted 5 verified claims', time: 'Yesterday' },
+                            { id: 'evt-4', unread: false, icon: CircleDollarSign, title: 'Funds Recovered', details: `Payout confirmed: ${formatCurrency(850.75)}`, time: '2 days ago' },
+                          ];
+                          return events.map((evt, idx) => (
+                            <div key={evt.id} className={"group relative flex items-start gap-3 " + (idx > 0 ? 'pt-4' : 'pt-2') + " pb-4"}>
+                              {/* Status dot (blue for unread) */}
+                              <span className={"absolute -left-[3px] mt-2 h-2 w-2 rounded-full " + (evt.unread ? 'bg-blue-500' : 'bg-gray-300')} />
+                              {/* Icon badge */}
+                              <div className="h-8 w-8 rounded-full border bg-white flex items-center justify-center text-gray-700">
+                                <evt.icon className="h-4 w-4" />
+                              </div>
+                              {/* Content */}
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center justify-between">
+                                  <p className="text-sm font-medium text-foreground truncate">{evt.title}</p>
+                                  <span className="ml-3 shrink-0 text-xs text-muted-foreground">{evt.time}</span>
+                                </div>
+                                <p className="text-sm text-muted-foreground mt-0.5 truncate">{evt.details}</p>
+                              </div>
+                            </div>
+                          ));
+                        })()}
                       </div>
                     </div>
                   </CardContent>
