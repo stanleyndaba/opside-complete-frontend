@@ -21,9 +21,6 @@ export function Navbar({
       <div className="container flex items-center h-16 px-4 font-body">
         {/* Left: Toggle + Careers */}
         <div className="flex items-center gap-3">
-          <button title="Toggle sidebar" className="h-8 w-8 rounded-md flex items-center justify-center border border-gray-200 text-gray-700 hover:bg-gray-100" onClick={onToggleSidebar}>
-            <PanelLeftOpen className="h-4 w-4" />
-          </button>
           <div className="hidden md:flex items-center gap-4 ml-2">
             <Link to="/careers" className="text-sm text-foreground hover:text-foreground/80">Careers</Link>
           </div>
