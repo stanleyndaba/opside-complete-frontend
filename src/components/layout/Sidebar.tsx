@@ -1,5 +1,5 @@
-import React from 'react';
-import { Home, Shield, Settings, HelpCircle, Sparkles, PanelLeftClose, PanelLeftOpen, BarChart3, Plug, Edit3 } from 'lucide-react';
+import React, { useState } from 'react';
+import { Home, Shield, Settings, HelpCircle, Sparkles, PanelLeftClose, PanelLeftOpen, BarChart3, Plug, Edit3, LogOut, User, Building2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -59,6 +59,7 @@ export function Sidebar({
 }: SidebarProps) {
 	const location = useLocation();
   const queryClient = useQueryClient();
+  const [showLogout, setShowLogout] = useState(false);
     
 	const primaryItems: NavItem[] = [
 		{ title: 'Command Center', icon: Home, href: '/app' },
@@ -179,5 +180,39 @@ export function Sidebar({
 					</div>
 				</div>
 			</ScrollArea>
+			{/* Bottom Logout control */}
+			{!isCollapsed && (
+				<div className="mt-auto p-3 border-t border-gray-200">
+					<button
+						className="w-full flex items-center gap-2 text-left text-gray-700 hover:text-red-600 hover:bg-gray-50 px-3 py-2 rounded-md"
+						onClick={() => setShowLogout(prev => !prev)}
+					>
+						<LogOut className="h-4 w-4" />
+						<span className="text-sm">Logout</span>
+					</button>
+					{showLogout && (
+						<div className="mt-2 rounded-md border border-red-200 bg-red-50 p-3">
+							<div className="flex items-center gap-2">
+								<div className="h-8 w-8 rounded-full bg-white flex items-center justify-center border border-red-200">
+									<User className="h-4 w-4 text-red-600" />
+								</div>
+								<div className="min-w-0">
+									<p className="text-sm font-medium text-red-700 truncate">Martin Links</p>
+									<p className="text-xs text-red-600 truncate flex items-center gap-1">
+										<Building2 className="h-3 w-3" /> John's Amazon Store
+									</p>
+								</div>
+							</div>
+							<button
+								className="mt-3 w-full inline-flex items-center justify-center gap-2 text-sm text-white bg-red-600 hover:bg-red-700 px-3 py-2 rounded"
+								onClick={async () => { try { await api.logout(); } catch (_) {} window.location.href = '/'; }}
+							>
+								<LogOut className="h-4 w-4" />
+								<span>Log out</span>
+							</button>
+						</div>
+					)}
+				</div>
+			)}
 		</aside>;
 }
