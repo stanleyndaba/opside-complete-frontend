@@ -16,11 +16,9 @@ export function Navbar({
 }: NavbarProps) {
   return <header className={cn("bg-background/90 backdrop-blur-sm sticky top-0 z-30 border-b transition-all duration-300", sidebarCollapsed ? "ml-16" : "ml-56", className)}>
       <div className="container flex items-center h-16 px-4 font-body">
-        {/* Left: Toggle + Careers */}
+        {/* Left */}
         <div className="flex items-center gap-3">
-          <div className="hidden md:flex items-center gap-4 ml-2">
-            <Link to="/careers" className="text-sm text-foreground hover:text-foreground/80">Careers</Link>
-          </div>
+          <div className="hidden md:flex items-center gap-4 ml-2" />
         </div>
         {/* Right side - Sync action and Notification Bell */}
         <div className="flex items-center gap-4 ml-auto">
