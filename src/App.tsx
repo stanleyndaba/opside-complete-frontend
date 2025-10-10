@@ -24,6 +24,7 @@ const TeamManagement = lazy(() => import("./pages/TeamManagement"));
 const ExportCenter = lazy(() => import("./pages/ExportCenter"));
 const NotificationHub = lazy(() => import("./pages/NotificationHub"));
 const ApiAccess = lazy(() => import("./pages/ApiAccess"));
+const ApiLanding = lazy(() => import("./pages/ApiLanding"));
 const Help = lazy(() => import("./pages/Help"));
 const WhatsNew = lazy(() => import("./pages/WhatsNew"));
 const OAuthCallback = lazy(() => import("./pages/OAuthCallback"));
@@ -89,6 +90,7 @@ const App = () => (
             <Route path="/team" element={<TeamManagement />} />
             <Route path="/export-center" element={<ExportCenter />} />
             <Route path="/notifications" element={<NotificationHub />} />
+            <Route path="/api" element={<ApiLanding />} />
             <Route path="/api-access" element={<ApiAccess />} />
             <Route path="/help" element={<Help />} />
             <Route path="/whats-new" element={<WhatsNew />} />
