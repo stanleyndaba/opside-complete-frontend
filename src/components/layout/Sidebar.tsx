@@ -53,79 +53,108 @@ export function Sidebar({
     onToggle: _onToggle,
     className
 }: SidebarProps) {
-	const location = useLocation();
-  const queryClient = useQueryClient();
-  const [showLogout, setShowLogout] = useState(false);
-    
-	const primaryItems: NavItem[] = [
-		{ title: 'Command Center', icon: Home, href: '/app' },
-		{ title: 'Reports', icon: BarChart3, href: '/reports' },
-		{ title: 'Recoveries', icon: Shield, href: '/recoveries' },
-	];
-  const accountItems: NavItem[] = [
-    { title: 'Configure', icon: Settings, href: '/settings' },
-  ];
-  const automationItems: NavItem[] = [
-    { title: 'Rules', icon: Plug, href: '/automation/rules' },
-    { title: 'Thresholds', icon: BarChart3, href: '/automation/thresholds' },
-    { title: 'Whitelist', icon: Shield, href: '/automation/whitelist' },
-  ];
-	const supportItems: NavItem[] = [
-		{ title: 'Help Centre', icon: HelpCircle, href: '/help' },
-		{ title: 'What\'s new', icon: Sparkles, href: '/whats-new' },
-	];
-	const NavItemComponent: React.FC<{ item: NavItem }> = ({
-		item
-	}) => {
-		const isActive = location.pathname === item.href;
-    const handlePrefetch = () => {
-      prefetchRoute(item.href);
-      if (item.href === '/app') {
-        queryClient.prefetchQuery({ queryKey: ['dashboard-aggregates', '30d'], queryFn: async () => {
-          const r = await api.getDashboardAggregates('30d');
-          if (!r.ok || !r.data) throw new Error('aggregate prefetch');
-          return r.data;
-        }});
-        queryClient.prefetchQuery({ queryKey: ['recoveries-metrics'], queryFn: async () => {
-          const r = await api.getRecoveriesMetrics();
-          if (!r.ok || !r.data) throw new Error('metrics prefetch');
-          return r.data;
-        }});
-      }
-      if (item.href === '/recoveries') {
-        queryClient.prefetchQuery({ queryKey: ['recoveries-metrics'], queryFn: async () => {
-          const r = await api.getRecoveriesMetrics();
-          if (!r.ok || !r.data) throw new Error('metrics prefetch');
-          return r.data;
-        }});
-      }
-    };
-		if (isCollapsed) {
-			return <TooltipProvider>
-					<Tooltip>
-						<TooltipTrigger asChild>
-							<Link to={item.href} onMouseEnter={handlePrefetch} className={cn("flex items-center justify-center w-12 h-12 rounded-md transition-colors", isActive ? "bg-slate-800 text-emerald-400" : "text-slate-200 hover:bg-slate-800") }>
-								<item.icon className="h-5 w-5" strokeWidth={1.5} />
-							</Link>
-						</TooltipTrigger>
-						<TooltipContent side="right" className="bg-black text-white">
-							{item.title}
-						</TooltipContent>
-					</Tooltip>
-				</TooltipProvider>;
-		}
-		return <Link to={item.href} onMouseEnter={handlePrefetch} className={cn("flex items-center gap-3 px-3 py-2 rounded-md transition-colors", isActive ? "bg-slate-800 text-emerald-400" : "text-slate-200 hover:bg-slate-800")}>
-				<item.icon strokeWidth={1.5} className="h-5 w-5 shrink-0 text-sm font-extralight" />
-				<span className="text-sm font-normal">{item.title}</span>
-			</Link>;
-	};
-	return <aside className={cn("bg-slate-950 fixed left-0 top-0 transition-all duration-300 ease-in-out flex flex-col border-r border-slate-800 h-screen z-40", isCollapsed ? "w-16" : "w-56", className)}>
-			{/* Internal Toggle Button */}
-			<div className="p-2 border-b border-slate-800 flex justify-end">
-				<Button onClick={onToggle} variant="outline" size="icon" className="h-8 w-8 rounded-md bg-slate-900 border border-slate-700 hover:bg-slate-800 text-slate-200">
-					{isCollapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
-				</Button>
-			</div>
+  const location = useLocation();
+  const sections: NavSection[] = [{
+    title: 'Seller Tools',
+    items: [{
+      title: 'Command Center',
+      icon: Home,
+      href: '/'
+    }, {
+      title: 'Claims',
+      icon: FileText,
+      href: '/claims'
+    }, {
+      title: 'Validation',
+      icon: Shield,
+      href: '/validation'
+    }, {
+      title: 'Monitoring',
+      icon: BarChart3,
+      href: '/monitoring'
+    }, {
+      title: 'Recoveries',
+      icon: Shield,
+      href: '/recoveries'
+    }, {
+      title: 'Reports',
+      icon: BarChart3,
+      href: '/reports'
+    }, {
+      title: 'Claim Documents',
+      icon: Factory,
+      href: '/evidence-locker'
+    }, {
+      title: 'Connections',
+      icon: Settings,
+      href: '/integrations-hub'
+    }]
+  }, {
+    title: 'My Account',
+    items: [{
+      title: 'Settings',
+      icon: Settings,
+      href: '/settings'
+    }, {
+      title: 'Billing',
+      icon: CreditCard,
+      href: '/billing'
+    }]
+  }, {
+    title: 'System',
+    items: [{
+      title: 'Export Data',
+      icon: Download,
+      href: '/export'
+    }, {
+      title: 'API Access',
+      icon: Key,
+      href: '/api'
+    }]
+  }, {
+    title: 'Support',
+    items: [{
+      title: 'Help Centre',
+      icon: HelpCircle,
+      href: '/help'
+    }, {
+      title: 'What\'s new',
+      icon: Sparkles,
+      href: '/whats-new'
+    }]
+  }];
+  const NavItemComponent = ({
+    item
+  }: {
+    item: NavItem;
+  }) => {
+    const isActive = location.pathname === item.href;
+    if (isCollapsed) {
+      return <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link to={item.href} className={cn("flex items-center justify-center w-12 h-12 rounded-md transition-colors", isActive ? "bg-black text-white" : "text-gray-600 hover:bg-gray-100")}>
+                <item.icon className="h-5 w-5" strokeWidth={1.5} />
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent side="right" className="bg-black text-white">
+              {item.title}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>;
+    }
+    return <Link to={item.href} className={cn("flex items-center gap-3 px-3 py-2 rounded-md transition-colors", isActive ? "bg-black text-white" : "text-gray-600 hover:bg-gray-100")}>
+        <item.icon strokeWidth={1.5} className="h-5 w-5 shrink-0 text-sm font-extralight" />
+        <span className="text-sm font-normal">{item.title}</span>
+      </Link>;
+  };
+  return <aside className={cn("bg-white fixed left-0 top-0 transition-all duration-300 ease-in-out flex flex-col border-r border-gray-200 h-screen z-40", isCollapsed ? "w-16" : "w-56", className)}>
+      {/* Toggle Button */}
+      <div className="absolute -right-3 top-6 z-10">
+        <Button onClick={onToggle} variant="outline" size="icon" className="h-6 w-6 rounded-full bg-white border border-gray-200 shadow-sm hover:bg-gray-50">
+          {isCollapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
+        </Button>
+      </div>
 
 			
 
