@@ -62,9 +62,14 @@ export function Sidebar({
 		{ title: 'Reports', icon: BarChart3, href: '/reports' },
 		{ title: 'Recoveries', icon: Shield, href: '/recoveries' },
 	];
-	const accountItems: NavItem[] = [
-		{ title: 'Configure', icon: Settings, href: '/settings' },
-	];
+  const accountItems: NavItem[] = [
+    { title: 'Configure', icon: Settings, href: '/settings' },
+  ];
+  const automationItems: NavItem[] = [
+    { title: 'Rules', icon: Plug, href: '/automation/rules' },
+    { title: 'Thresholds', icon: BarChart3, href: '/automation/thresholds' },
+    { title: 'Whitelist', icon: Shield, href: '/automation/whitelist' },
+  ];
 	const supportItems: NavItem[] = [
 		{ title: 'Help Centre', icon: HelpCircle, href: '/help' },
 		{ title: 'What\'s new', icon: Sparkles, href: '/whats-new' },
@@ -146,18 +151,53 @@ export function Sidebar({
 								</div>
 							</div>
 						)}
-						<nav className="space-y-4 py-2 w-full text-slate-200">
-							<div className="space-y-1">
-								{primaryItems.map((item, idx) => <NavItemComponent key={`p-${idx}`} item={item} />)}
-							</div>
-							{!isCollapsed && <div className="h-px bg-slate-800" />}
-							<div className="space-y-1">
-								{accountItems.map((item, idx) => <NavItemComponent key={`a-${idx}`} item={item} />)}
-							</div>
-							{!isCollapsed && <div className="h-px bg-slate-800" />}
-							<div className="space-y-1 pb-4">
-								{supportItems.map((item, idx) => <NavItemComponent key={`s-${idx}`} item={item} />)}
-							</div>
+							<nav className="space-y-4 py-2 w-full">
+								<div className="space-y-1">
+									{primaryItems.map((item, idx) => <React.Fragment key={`p-${idx}`}><NavItemComponent item={item} /></React.Fragment>)}
+								</div>
+								{!isCollapsed && <div className="h-px bg-gray-100" />}
+								<div className="space-y-1">
+									{accountItems.map((item, idx) => <React.Fragment key={`a-${idx}`}><NavItemComponent item={item} /></React.Fragment>)}
+								</div>
+								{!isCollapsed && <div className="h-px bg-gray-100" />}
+        <div className="space-y-1 pb-4">
+									{supportItems.map((item, idx) => <React.Fragment key={`s-${idx}`}><NavItemComponent item={item} /></React.Fragment>)}
+								</div>
+        {!isCollapsed && <div className="h-px bg-gray-100" />}
+        <div className="space-y-1 pb-4">
+          {!isCollapsed && <div className="text-xs font-semibold text-gray-700 px-1">Automation</div>}
+          {automationItems.map((item, idx) => <React.Fragment key={`auto-${idx}`}><NavItemComponent item={item} /></React.Fragment>)}
+        </div>
+                            {/* CTA card at the bottom */}
+								{!isCollapsed && !ctaDismissed && (
+                                <div className="pb-4">
+										<div className="relative rounded-2xl border border-gray-200 bg-white text-black p-4 shadow-sm">
+                                        <button
+                                            aria-label="Dismiss"
+                                            onClick={handleDismissCta}
+												className="absolute right-2 top-2 inline-flex h-6 w-6 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                                        >
+                                            <X className="h-4 w-4" />
+                                        </button>
+                                        <div className="text-sm font-semibold pr-6">Your Inbox, Supercharged.</div>
+											<p className="mt-1 text-xs text-gray-700">
+												Automate personalized candidate feedback instantly. Just connect your email and go.
+											</p>
+                                        <div className="mt-3 flex gap-2">
+                                            <Link to="/settings" className="flex-1">
+                                                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white" size="sm">
+                                                    Connect & Automate
+                                                </Button>
+                                            </Link>
+                                            <Link to="/help" className="flex-1">
+													<Button variant="outline" className="w-full bg-gray-100 hover:bg-gray-200 text-black border-0" size="sm">
+                                                    See How
+                                                </Button>
+                                            </Link>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
 						</nav>
 					</div>
 				</div>

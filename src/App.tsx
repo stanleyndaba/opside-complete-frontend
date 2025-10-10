@@ -48,16 +48,9 @@ const WhatsNew = lazy(() => import("./pages/WhatsNew"));
 const OAuthCallback = lazy(() => import("./pages/OAuthCallback"));
 const OAuthSuccess = lazy(() => import("./pages/OAuthSuccess"));
 const StripeCallback = lazy(() => import("./pages/StripeCallback"));
-const About = lazy(() => import("./pages/About"));
-const Careers = lazy(() => import("./pages/Careers"));
-
-// New Evidence Pages
-const EvidenceOnboarding = lazy(() => import("./pages/EvidenceOnboarding"));
-const EvidenceSearch = lazy(() => import("./pages/EvidenceSearch"));
-
-// Shock & Awe Flow Pages
-const AmazonSandbox = lazy(() => import("./pages/AmazonSandbox"));
-const AnalyzingScreen = lazy(() => import("./pages/AnalyzingScreen"));
+const AutomationRules = lazy(() => import("./pages/AutomationRules"));
+const Thresholds = lazy(() => import("./pages/Thresholds"));
+const Whitelist = lazy(() => import("./pages/Whitelist"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -92,24 +85,32 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-            {/* Public */}
-            <Route path="/" element={<Landing />} />
-            {/* Authenticated */}
-            <Route path="/integrations-hub" element={<RequireAuth><IntegrationsHub /></RequireAuth>} />
-            <Route path="/sync" element={<RequireAuth><Sync /></RequireAuth>} />
-            <Route path="/reports" element={<RequireAuth><Reports /></RequireAuth>} />
-            <Route path="/settings" element={<RequireAuth><Settings /></RequireAuth>} />
-            <Route path="/recoveries" element={<RequireAuth><Recoveries /></RequireAuth>} />
-            <Route path="/recoveries/:caseId" element={<RequireAuth><CaseDetail /></RequireAuth>} />
-            <Route path="/evidence-locker" element={<RequireAuth><EvidenceLocker /></RequireAuth>} />
-            <Route path="/evidence-locker/document/:documentId" element={<RequireAuth><DocumentDetail /></RequireAuth>} />
-            <Route path="/billing" element={<RequireAuth><Billing /></RequireAuth>} />
-            <Route path="/team-management" element={<RequireAuth><TeamManagement /></RequireAuth>} />
-            <Route path="/export" element={<RequireAuth><ExportCenter /></RequireAuth>} />
-            <Route path="/notifications" element={<RequireAuth><NotificationHub /></RequireAuth>} />
-            <Route path="/api" element={<RequireAuth><ApiAccess /></RequireAuth>} />
-            <Route path="/help" element={<RequireAuth><Help /></RequireAuth>} />
-            <Route path="/whats-new" element={<RequireAuth><WhatsNew /></RequireAuth>} />
+            <Route path="/" element={<Index />} />
+            <Route path="/app" element={<Dashboard />} />
+            <Route path="/sync" element={<Sync />} />
+            {/* Market/Stocks pages removed for FBA MVP focus */}
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/integrations-hub" element={<IntegrationsHub />} />
+            <Route path="/reports" element={<Reports />} />
+            <Route path="/recoveries" element={<Recoveries />} />
+            <Route path="/recoveries/:caseId" element={<CaseDetail />} />
+            <Route path="/smart-inventory-sync" element={<SmartInventorySync />} />
+            <Route path="/evidence-locker" element={<EvidenceLocker />} />
+            <Route path="/evidence-locker/document/:documentId" element={<DocumentDetail />} />
+            <Route path="/billing" element={<Billing />} />
+            <Route path="/team-management" element={<TeamManagement />} />
+            <Route path="/export" element={<ExportCenter />} />
+            <Route path="/notifications" element={<NotificationHub />} />
+            <Route path="/api" element={<ApiAccess />} />
+            <Route path="/help" element={<Help />} />
+            <Route path="/whats-new" element={<WhatsNew />} />
+            <Route path="/automation/rules" element={<AutomationRules />} />
+            <Route path="/automation/thresholds" element={<Thresholds />} />
+            <Route path="/automation/whitelist" element={<Whitelist />} />
+            <Route path="/oauth/callback" element={<OAuthCallback />} />
+            <Route path="/oauth/success" element={<OAuthSuccess />} />
+            <Route path="/oauth/stripe/callback" element={<StripeCallback />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
