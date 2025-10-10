@@ -4,89 +4,45 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { StatsCard } from '@/components/ui/StatsCard';
 import { CheckCircle, AlertTriangle, Truck, Warehouse, ShoppingCart, RotateCcw } from 'lucide-react';
-import { api } from '@/lib/api';
-import { useStatusStream } from '@/hooks/use-status-stream';
+import { apiClient } from '@/lib/api';
+import { useStatusStream } from '@/hooks/useStatusStream';
+import { toast } from 'sonner';
 
 export default function SmartInventorySync() {
-  const [syncStatus, setSyncStatus] = useState<{ healthy: boolean; lastReconciliation?: string; skusMonitored?: number; discrepanciesFound?: number; dataPointsAnalyzed?: number }>({ healthy: true });
-  const [activityLog, setActivityLog] = useState<Array<{ timestamp: string; message: string; type: 'success' | 'warning' | 'info' }>>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [syncStatus, setSyncStatus] = React.useState<{ healthy: boolean; lastReconciliation?: string; skusMonitored?: number; discrepanciesFound?: number; dataPointsAnalyzed?: number }>({ healthy: true });
+  const [dataSources, setDataSources] = React.useState<Array<{ name: string; icon: any; status: string; lastPulled: string; description: string; isHealthy: boolean }>>([]);
+  const [activityLog, setActivityLog] = React.useState<Array<{ timestamp: string; message: string; type: 'success' | 'info' | 'warning' }>>([]);
 
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      setLoading(true);
-      const [statusRes, activityRes] = await Promise.all([
-        api.getSyncStatus(),
-        api.getSyncActivity(),
-      ]);
-      if (!cancelled) {
-        if (statusRes.ok && statusRes.data) {
-          // Map generic to UI fields if needed
-          setSyncStatus({
-            healthy: (statusRes.data as any).status !== 'failed',
-            lastReconciliation: (statusRes.data as any).lastReconciliation,
-            skusMonitored: (statusRes.data as any).skusMonitored,
-            discrepanciesFound: (statusRes.data as any).discrepanciesFound,
-            dataPointsAnalyzed: (statusRes.data as any).dataPointsAnalyzed,
-          });
-          setError(null);
-        } else {
-          setError(statusRes.error || 'Failed to load sync status');
-        }
-        if (activityRes.ok && Array.isArray(activityRes.data)) {
-          setActivityLog(activityRes.data as any);
-        }
-        setLoading(false);
-      }
-    })();
-    return () => { cancelled = true };
+  React.useEffect(() => {
+    const load = async () => {
+      try {
+        const status = await apiClient.get<{ healthy: boolean; lastReconciliation?: string; skusMonitored?: number; discrepanciesFound?: number; dataPointsAnalyzed?: number; sources?: Array<{ name: string; status: string; lastPulled: string; description: string; isHealthy: boolean }> }>(
+          '/api/sync/status'
+        );
+        setSyncStatus(status);
+        const sources = (status.sources ?? []).map((s) => ({ ...s, icon: Truck }));
+        setDataSources(sources);
+        const act = await apiClient.get<Array<{ timestamp: string; message: string; type: 'success' | 'info' | 'warning' }>>('/api/sync/activity');
+        setActivityLog(act);
+      } catch {}
+    };
+    load();
   }, []);
 
-  // Real-time sync updates
-  useStatusStream((evt) => {
-    if (evt.type === 'sync') {
-      setSyncStatus(prev => ({ ...prev, healthy: evt.status !== 'failed' }));
+  // Real-time sync updates via WS/SSE
+  useStatusStream({
+    onSync: (e) => {
+      setSyncStatus(prev => ({
+        ...prev,
+        healthy: e.status?.toLowerCase?.() !== 'failed',
+        // If backend provides progress value, reflect it
+        dataPointsAnalyzed: prev.dataPointsAnalyzed,
+      }));
+      const s = e.status.toLowerCase();
+      if (s === 'completed') toast.success('Sync completed');
+      else if (s === 'failed') toast.error('Sync failed');
     }
   });
-
-  const dataSources = [
-    {
-      name: 'Shipment Data',
-      icon: Truck,
-      status: 'Connected & Syncing',
-      lastPulled: '2 minutes ago',
-      description: 'Tracks all inventory sent to Amazon fulfillment centers.',
-      isHealthy: true
-    },
-    {
-      name: 'Fulfillment Center Data',
-      icon: Warehouse,
-      status: 'Connected & Syncing',
-      lastPulled: '5 minutes ago',
-      description: 'Monitors inventory received, transferred, and held at FBA warehouses.',
-      isHealthy: true
-    },
-    {
-      name: 'Sales & Order Data',
-      icon: ShoppingCart,
-      status: 'Connected & Syncing',
-      lastPulled: '1 minute ago',
-      description: 'Reconciles units sold against physical inventory removals.',
-      isHealthy: true
-    },
-    {
-      name: 'Returns Data',
-      icon: RotateCcw,
-      status: 'Connected & Syncing',
-      lastPulled: '3 minutes ago',
-      description: 'Tracks all customer returns to ensure they are correctly processed back into your inventory.',
-      isHealthy: true
-    }
-  ];
-
-  
 
   return (
     <PageLayout title="Smart Inventory Sync">

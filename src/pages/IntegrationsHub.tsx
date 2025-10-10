@@ -6,10 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { Shield, CheckCircle, Settings, RefreshCw, ArrowRight, ExternalLink, Package, ShoppingBag, Calculator, Truck, Info, Search as SearchIcon, Plug, Mail, Cloud, DollarSign, Zap, FileText } from 'lucide-react';
-import { api } from '@/lib/api';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { useNavigate } from 'react-router-dom';
+import { Shield, CheckCircle, Settings, RefreshCw, ArrowRight, ExternalLink, Package, ShoppingBag, Calculator, Truck, Plug } from 'lucide-react';
+import { apiClient } from '@/lib/api';
+import { toast } from 'sonner';
 interface ActiveConnection {
   id: string;
   name: string;
@@ -111,38 +110,9 @@ export default function IntegrationsHub() {
     description: ''
   });
   const [showRequestForm, setShowRequestForm] = useState(false);
-  const [showProviderDialog, setShowProviderDialog] = useState(false);
-  const [showManualModal, setShowManualModal] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [waitlistOpen, setWaitlistOpen] = useState(false);
-  const [waitlistIntegration, setWaitlistIntegration] = useState<string | null>(null);
-  const [waitlistEmail, setWaitlistEmail] = useState('');
-  
-  // NEW: Shock and Awe state
-  const [showRecoveryReveal, setShowRecoveryReveal] = useState(false);
-  const [recoveryData, setRecoveryData] = useState<{ totalAmount: number; currency: string; claimCount: number } | null>(null);
-  const [showEvidenceModal, setShowEvidenceModal] = useState(false);
-
-  // Check if we just connected Amazon and should show the reveal
-  useEffect(() => {
-    const amazonConnected = searchParams.get('amazon_connected');
-    const recoveryAmount = searchParams.get('recovery_amount');
-    
-    if (amazonConnected === 'true' && !showRecoveryReveal) {
-      // Fetch the actual recovery data
-      api.getAmazonRecoveries().then(response => {
-        if (response.ok) {
-          setRecoveryData(response.data);
-          setShowRecoveryReveal(true);
-          
-          // Auto-show evidence modal after 3 seconds
-          setTimeout(() => {
-            setShowEvidenceModal(true);
-          }, 3000);
-        }
-      });
-    }
-  }, [searchParams, showRecoveryReveal]);
+  const [connecting, setConnecting] = useState(false);
+  const [syncing, setSyncing] = useState(false);
+  const [syncStatus, setSyncStatus] = useState<string>('Healthy');
 
   // Real-time sync simulation
   useEffect(() => {
@@ -153,25 +123,29 @@ export default function IntegrationsHub() {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
-
   useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      const res = await api.getIntegrationsStatus();
-      if (!cancelled) {
-        if (res.ok && res.data) setStatus(res.data);
+    let timer: number | undefined;
+    const poll = async () => {
+      try {
+        // const data = await apiClient.get<{ status: string }>("/api/sync/status");
+        // setSyncStatus(data.status);
+        setSyncStatus('Healthy');
+      } catch {}
+      finally {
+        timer = window.setTimeout(poll, 10000);
       }
-    })();
-    return () => { cancelled = true };
+    };
+    poll();
+    return () => { if (timer) window.clearTimeout(timer); };
   }, []);
-
-  // ... (keep all the existing useEffect and handler functions)
-
-  const formatCurrency = (amount: number, currency: string) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currency
-    }).format(amount);
+  const handleRequestSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('Integration request:', requestFormData);
+    setRequestFormData({
+      platform: '',
+      description: ''
+    });
+    setShowRequestForm(false);
   };
 
   return (
@@ -314,14 +288,49 @@ export default function IntegrationsHub() {
           <div className="mt-3 rounded-md border border-blue-200 bg-blue-50 inline-block px-3 py-2 text-sm text-blue-900">
             Want us to auto-collect invoices & docs for you? Connect Gmail / Outlook / Drive / Dropbox.
           </div>
-          <div className="mt-4 max-w-xl mx-auto relative">
-            <SearchIcon className="h-4 w-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2" />
-            <Input
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search integrations (Amazon, Shopify, Gmail…)"
-              className="pl-9"
-            />
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {activeConnections.map(connection => <Card key={connection.id} className="border-green-200 bg-green-50/50">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <img src={connection.logo} alt={`${connection.name} logo`} className="w-20 h-18 object-contain" />
+                      <div>
+                        <CardTitle className="text-lg">{connection.name}</CardTitle>
+                        <p className="text-sm text-muted-foreground">
+                          Store Name: <span className="font-medium">{connection.storeName}</span>
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full" />
+                      <span className="text-sm text-green-600 font-medium">Connected</span>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-muted-foreground">Last Sync:</span>
+                      <span className="font-medium text-green-600">{lastSyncTime}</span>
+                    </div>
+                    
+                    <Separator />
+                    
+                    {/* Use responsive grid with enough space for two buttons */}
+                    <div className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-4">
+                      <Button size="sm" variant="outline" className="w-full gap-2 whitespace-nowrap justify-center px-5 text-sm" onClick={async () => { try { setSyncing(true); await apiClient.post('/api/sync/start'); toast.success('Inventory sync started'); } catch (e) { toast.error('Failed to start sync'); } finally { setSyncing(false); } }}>
+                        <RefreshCw className="h-3 w-3" />
+                        {syncing ? 'Syncing…' : 'Start Inventory Sync'}
+                      </Button>
+                      <Button size="sm" variant="outline" className="w-full gap-2 whitespace-nowrap justify-center px-5 text-sm">
+                        <Settings className="h-3 w-3" />
+                        Manage
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>)}
           </div>
         </div>
 
@@ -583,15 +592,13 @@ export default function IntegrationsHub() {
                         </div>
                       </CardHeader>
                       <CardContent>
-                        {i.status === 'active' ? (
-                          <Button size="sm" className="w-full" disabled={loading || (i.id !== 'amazon' && !status?.amazon_connected)} onClick={() => i.onConnect?.()}>
-                            Connect
-                          </Button>
-                        ) : (
-                          <Button size="sm" variant="outline" className="w-full" onClick={() => { setWaitlistIntegration(i.name); setWaitlistOpen(true); }}>
-                            Join Waitlist
-                          </Button>
-                        )}
+                        <p className="text-sm text-muted-foreground mb-4">
+                          {integration.description}
+                        </p>
+                        <Button size="sm" variant="outline" className="w-full gap-2" onClick={async () => { try { setConnecting(true); await apiClient.post('/api/integrations/connect', { provider: 'amazon' }); toast.success('Connected successfully'); } catch (e) { toast.error('Failed to connect'); } finally { setConnecting(false); } }}>
+                          <Plug className="h-3 w-3" />
+                          {connecting ? 'Connecting…' : 'Connect'}
+                        </Button>
                       </CardContent>
                     </Card>
                   ))}

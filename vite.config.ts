@@ -11,32 +11,12 @@ export default defineConfig(({ mode }: { mode: string }) => ({
     host: "::",
     port: 8080,
     proxy: {
-      "/api": {
-        target: process.env.VITE_API_PROXY_TARGET || "http://localhost:3000",
-        changeOrigin: true,
-        secure: false,
-      },
-    },
-  },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (!id.includes('node_modules')) return undefined;
-          if (id.includes('/react-dom')) return 'react-dom';
-          if (id.match(/[\\/]node_modules[\\/](react|react-is)[\\/]/)) return 'react-core';
-          if (id.includes('react-router')) return 'react-router';
-          if (id.includes('@tanstack')) return 'tanstack';
-          if (id.includes('@radix-ui')) return 'radix';
-          if (id.includes('lucide-react')) return 'icons';
-          if (id.includes('recharts')) return 'recharts';
-          if (id.includes('date-fns')) return 'date-fns';
-          if (id.includes('zod')) return 'zod';
-          if (id.includes('cmdk')) return 'cmdk';
-          // leave the rest to be split per entry to avoid a monolithic vendor
-          return undefined;
-        },
-      },
+      	"/api": {
+      		target: process.env.VITE_API_BASE_URL || "http://localhost:3000",
+      		changeOrigin: true,
+      		secure: false,
+      		rewrite: (path) => path.replace(/^\/api/, "/api"),
+      	},
     },
   },
   plugins: [

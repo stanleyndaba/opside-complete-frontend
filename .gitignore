@@ -31,9 +31,16 @@ dist/
 .vscode/
 .idea/
 .DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
-# Netlify
-.netlify/
-
-# Others
-bun.lockb
+# Environment files
+.env
+.env.*
+.env.local
+.env.development.local
+.env.production.local
+.env.test.local

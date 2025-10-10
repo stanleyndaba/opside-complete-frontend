@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
-import { mockStocks, generatePriceHistory } from '@/utils/stocksApi';
+import { useStockData, generatePriceHistory } from '@/utils/stocksApi';
 import { StockCard } from '@/components/stocks/StockCard';
 import { StockChart } from '@/components/stocks/StockChart';
 import { useQuery } from '@tanstack/react-query';
@@ -11,12 +11,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { notify } from '@/lib/notify';
 
 const Stocks = () => {
-  const queryClient = useQueryClient();
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['stocks'],
-    queryFn: fetchStocks,
-    retry: 2,
-  });
+  const stocks = useStockData();
+  const [selectedStock, setSelectedStock] = React.useState(stocks[0]);
   
   const adjust = useMutation({
     mutationFn: ({ symbol, delta }: { symbol: string; delta: number }) => adjustStock(symbol, delta),

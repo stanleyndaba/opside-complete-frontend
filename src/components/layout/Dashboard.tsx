@@ -4,12 +4,96 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign } from 'lucide-react';
-
+import { FileText, CheckCircle, DollarSign, Search, RefreshCw, Calendar } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Separator } from '@/components/ui/separator';
+import { apiClient } from '@/lib/api';
+import { toast } from 'sonner';
+import { useStatusStream } from '@/hooks/useStatusStream';
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
+  const [detectOpen, setDetectOpen] = useState(false);
+  const [detecting, setDetecting] = useState(false);
+  const [detectResults, setDetectResults] = useState<Array<{ id: string; amount: number; reason: string; sku: string; asin: string }>>([]);
+  const [metrics, setMetrics] = useState<{ total_recovered: number; expected_approved: number; upcoming_payouts: Array<{ amount: number; date: string }> } | null>(null);
+  const [loadingMetrics, setLoadingMetrics] = useState<boolean>(false);
+  const [detectionId, setDetectionId] = useState<string | null>(null);
+  const [detectionNotified, setDetectionNotified] = useState<boolean>(false);
+  // Real-time stream: update detection status and show toasts; disable polling via status stream
+  useStatusStream({
+    onDetection: (e) => {
+      // If this detection matches current detectionId, reset so we don't poll or duplicate toasts
+      if (detectionId && e.id === detectionId) {
+        setDetectionId(null);
+        setDetectionNotified(true);
+      }
+    }
+  });
 
+  // Mock data for the dashboard
+  useEffect(() => {
+    const fetchMetrics = async () => {
+      try {
+        setLoadingMetrics(true);
+        const data = await apiClient.get<{ total_recovered: number; expected_approved: number; upcoming_payouts: Array<{ amount: number; date: string }> }>(
+          '/api/metrics/recoveries'
+        );
+        setMetrics(data);
+      } catch (e) {
+        // keep null on error
+      } finally {
+        setLoadingMetrics(false);
+      }
+    };
+    fetchMetrics();
+  }, []);
+
+  // Removed detection polling in favor of WebSocket/SSE stream
+  const activityFeed = [{
+    id: 1,
+    type: 'claim_submitted',
+    icon: CheckCircle,
+    description: 'NEW: Claim #1234 ($250) for Lost Inventory Submitted.',
+    timestamp: '2 minutes ago',
+    color: 'text-success'
+  }, {
+    id: 2,
+    type: 'payout_completed',
+    icon: DollarSign,
+    description: 'PAID: Claim #1198 ($150) has been successfully paid out.',
+    timestamp: '8 hours ago',
+    color: 'text-success'
+  }, {
+    id: 3,
+    type: 'evidence_added',
+    icon: Search,
+    description: 'EVIDENCE ADDED: Invoice #INV-5678 linked to Claim #1235.',
+    timestamp: 'Yesterday',
+    color: 'text-primary'
+  }, {
+    id: 4,
+    type: 'sync_complete',
+    icon: RefreshCw,
+    description: 'SYNC COMPLETE: Your account was successfully synced.',
+    timestamp: 'Yesterday',
+    color: 'text-muted-foreground'
+  }, {
+    id: 5,
+    type: 'claim_approved',
+    icon: CheckCircle,
+    description: 'APPROVED: Claim #1199 ($380) has been approved by Amazon.',
+    timestamp: '2 days ago',
+    color: 'text-success'
+  }];
+
+  // Real-time clock
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
@@ -32,27 +116,135 @@ export function Dashboard() {
           <div className="container max-w-full p-6 bg-white/[0.31]">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-full">
               <div className="lg:col-span-2 space-y-8">
-                <Card className="border border-green-200 bg-green-50">
-                  <CardContent className="p-6">
-                    <h2 className="font-montserrat text-lg text-green-900 font-semibold">Welcome to Clario!</h2>
-                    <p className="text-sm text-green-900 mt-1">Your Amazon account has been connected successfully.</p>
-                  </CardContent>
-                </Card>
+                {/* Hero Metrics & CTAs */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="text-sm text-muted-foreground">Recovered to date</div>
+                      <div className="text-2xl font-semibold">{formatCurrency(metrics?.total_recovered ?? 0)}</div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="text-sm text-muted-foreground">Expected (approved)</div>
+                      <div className="text-2xl font-semibold">{formatCurrency(metrics?.expected_approved ?? 0)}</div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="text-sm text-muted-foreground">Next payout</div>
+                      <div className="text-2xl font-semibold">{formatCurrency(metrics?.upcoming_payouts?.[0]?.amount ?? 0)} <span className="text-base text-muted-foreground">on {metrics?.upcoming_payouts?.[0]?.date ?? '-'}</span></div>
+                    </CardContent>
+                  </Card>
+                </div>
 
-                <Card>
-                  <CardContent className="p-6">
-                    <h2 className="font-montserrat text-lg text-gray-700 font-semibold">Your Recovered Value</h2>
-                    <div className="text-[22px] font-extrabold mt-2 text-[#0d0d0d]">
-                      {formatCurrency(14228)}
-                    </div>
-                    <div className="mt-4 space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Pending Recovery</span>
-                        <span className="text-sm font-semibold">{formatCurrency(8560)}</span>
+                <div className="flex flex-wrap gap-3">
+                  <Dialog open={detectOpen} onOpenChange={setDetectOpen}>
+                    <DialogTrigger asChild>
+                      <Button className="gap-2">
+                        <Search className="h-4 w-4" />
+                        Detect Missed Claims
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Detect Missed Claims</DialogTitle>
+                        <DialogDescription>
+                          We will analyze your FBA data to find missed reimbursements.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-3">
+                        {!detectResults.length ? (
+                          <div className="text-sm text-muted-foreground">
+                            {detecting ? 'Scanning… this may take up to 1 minute.' : 'Click Run Detection to start.'}
+                          </div>
+                        ) : (
+                          <>
+                            <div className="text-sm font-medium">Potential Value: {formatCurrency(detectResults.reduce((s, r) => s + r.amount, 0))}</div>
+                            <Separator />
+                            <div className="max-h-64 overflow-auto space-y-2">
+                              {detectResults.map(r => (
+                                <div key={r.id} className="flex items-center justify-between text-sm border rounded p-2">
+                                  <div>
+                                    <div className="font-medium">{r.id} • {r.sku} / {r.asin}</div>
+                                    <div className="text-muted-foreground">{r.reason}</div>
+                                  </div>
+                                  <div className="font-semibold">{formatCurrency(r.amount)}</div>
+                                </div>
+                              ))}
+                            </div>
+                          </>
+                        )}
                       </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Success Rate</span>
-                        <span className="text-sm font-semibold text-[#33cc33]">94%</span>
+                      <DialogFooter>
+                        <Button variant="outline" onClick={() => setDetectOpen(false)}>Close</Button>
+                        <Button
+                          onClick={async () => {
+                            try {
+                              setDetecting(true);
+                              const result = await apiClient.post<{ detection_id: string; claims: Array<{ id: string; amount: number; reason: string; sku: string; asin: string }> }>(
+                                '/api/detections/run'
+                              );
+                              setDetectResults(result.claims ?? []);
+                              if (result.detection_id) setDetectionId(result.detection_id);
+                              setDetectionNotified(false);
+                              toast.info('Detection started');
+                              // Optionally begin polling detection status by id
+                              // const statusId = result.detection_id; (store if needed)
+                            } catch (e) {
+                              setDetectResults([]);
+                              toast.error('Detection failed. Please try again.');
+                            } finally {
+                              setDetecting(false);
+                            }
+                          }}
+                          disabled={detecting}
+                        >
+                          {detecting ? 'Running…' : 'Run Detection'}
+                        </Button>
+                        <Button
+                          disabled={!detectResults.length}
+                          onClick={() => {
+                            setDetectOpen(false);
+                            navigate('/recoveries');
+                          }}
+                        >
+                          Auto-Submit All
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                  <Button variant="outline" className="gap-2" onClick={() => navigate('/smart-inventory-sync')}>
+                    <RefreshCw className="h-4 w-4" />
+                    Reconcile & Sync
+                  </Button>
+                </div>
+                {/* Your Recovered Value */}
+                <Card className="border">
+                  <CardContent className="p-4">
+                    <div className="space-y-2">
+                      <h2 className="font-montserrat text-lg text-gray-700 font-semibold">Your Next Payout</h2>
+                      
+                      {/* Total Recovered Hero Amount */}
+                      <div className="text-xl font-semibold text-sidebar-primary font-montserrat">
+                        {formatCurrency(metrics?.total_recovered ?? 0)}
+                      </div>
+                      
+                      {/* Subtitle */}
+                      <div className="text-sm text-muted-foreground font-montserrat">
+                        Total recovered since joining
+                      </div>
+                      
+                      {/* Recovery Metrics */}
+                      <div className="pt-2 space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600 font-montserrat">Pending Recovery</span>
+                          <span className="font-semibold text-sm font-montserrat">{formatCurrency(metrics?.expected_approved ?? 0)}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600 font-montserrat">30-Day Recovery</span>
+                          <span className="font-semibold text-sm font-montserrat">{formatCurrency(0)}</span>
+                        </div>
                       </div>
                     </div>
                     <div className="mt-4">
@@ -61,61 +253,54 @@ export function Dashboard() {
                   </CardContent>
                 </Card>
 
-                <Card>
-                  <CardContent className="p-6">
-                    <h2 className="font-montserrat text-lg text-gray-700 font-semibold">Quick Actions</h2>
-                    <div className="grid grid-cols-2 gap-4 mt-4">
-                      <Button variant="outline" className="flex items-center gap-2">
-                        <FileText className="h-4 w-4" />
-                        View Reports
-                      </Button>
-                      <Button variant="outline" className="flex items-center gap-2">
-                        <BarChart3 className="h-4 w-4" />
-                        Analytics
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                {/* Primary Navigation Links */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Button 
+                    variant="outline" 
+                    className="h-8 flex items-center gap-2 transition-colors bg-gray-200 hover:bg-gray-100 text-black"
+                    onClick={() => navigate('/recoveries')}
+                  >
+                    <FileText className="h-4 w-4" />
+                    <span className="font-montserrat">View All Claims</span>
+                  </Button>
+                  
+                  
+                  
+                  
+                </div>
               </div>
 
               <div className="lg:col-span-1">
                 <Card className="h-full">
-                  <CardContent className="p-0">
-                    <div className="p-3 border-b border-border">
-                      <div className="flex items-center justify-between">
-                        <h3 className="font-semibold text-sm text-foreground">Recent Activity</h3>
-                        <span className="text-xs bg-gray-100 text-black rounded px-2 py-0.5">3 new</span>
-                      </div>
+                  <CardContent className="p-6">
+                    <div className="mb-4">
+                      <h2 className="text-base font-semibold text-foreground">Notifications</h2>
+                      <p className="text-xs text-muted-foreground">Recent activity across claims, payouts and sync</p>
                     </div>
-                    <div className="py-2 max-h-[600px] overflow-y-auto">
-                      <div className="relative px-2 max-w-[340px] mx-auto text-[12px]">
-                        {(() => {
-                          const events = [
-                            { id: 'evt-1', unread: true, icon: Link2, title: 'Connection Established', details: 'Amazon connection established', time: 'Just now' },
-                            { id: 'evt-2', unread: true, icon: Search, title: 'Claims Identified', details: `23 potential claims identified, valued at ~${formatCurrency(14228)}` , time: '2 minutes ago' },
-                            { id: 'evt-3', unread: false, icon: Send, title: 'Claim Submitted', details: 'Auto-submitted 5 verified claims', time: 'Yesterday' },
-                            { id: 'evt-4', unread: false, icon: CircleDollarSign, title: 'Funds Recovered', details: `Payout confirmed: ${formatCurrency(850.75)}`, time: '2 days ago' },
-                          ];
-                          return events.map((evt, idx) => (
-                            <div key={evt.id} className={"group relative flex items-start gap-3 " + (idx > 0 ? 'pt-3' : 'pt-2') + " pb-3 overflow-hidden"}>
-                              {/* Icon with edge status dot */}
-                              <div className="relative h-8 w-8 rounded-full border bg-white flex items-center justify-center text-gray-700">
-                                <span className={"absolute h-2 w-2 rounded-full " + (evt.unread ? 'bg-blue-500' : 'bg-gray-300')}
-                                  style={{ left: '1px', top: '1px' }} />
-                                <evt.icon className="h-4 w-4" />
-                              </div>
-                              {/* Content */}
-                              <div className="min-w-0 flex-1">
-                                <div className="flex items-center justify-between">
-                                  <p className="text-[12px] font-medium text-foreground truncate">{evt.title}</p>
-                                  <span className="ml-3 shrink-0 text-[11px] text-muted-foreground">{evt.time}</span>
-                                </div>
-                                <p className="text-[11px] text-muted-foreground mt-0.5 truncate">{evt.details}</p>
+                    <div className="space-y-3 max-h-[600px] overflow-y-auto">
+                      {activityFeed.map(item => {
+                        const IconComponent = item.icon;
+                        return (
+                          <div
+                            key={item.id}
+                            className="flex items-start gap-4 p-4 rounded-lg border bg-background hover:bg-muted/30 transition-colors"
+                          >
+                            <div className="flex-shrink-0 mt-0.5">
+                              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                                <IconComponent className="w-4 h-4 text-primary" />
                               </div>
                             </div>
-                          ));
-                        })()}
-                      </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-foreground mb-1">
+                                {item.description}
+                              </p>
+                              <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                                <span>{item.timestamp}</span>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   </CardContent>
                 </Card>

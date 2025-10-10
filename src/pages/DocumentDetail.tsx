@@ -1,21 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, FileText, Check, Edit2, Download } from 'lucide-react';
-import { api } from '@/lib/api';
-import { recoveryApi } from '@/lib/recoveryApi';
+import { apiClient, buildApiUrl } from '@/lib/api';
 
 export default function DocumentDetail() {
   const { documentId } = useParams();
   const [hoveredSKU, setHoveredSKU] = useState<string | null>(null);
-
   const [documentData, setDocumentData] = useState<any | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [validationIssues, setValidationIssues] = useState<Array<{ field: string; message: string }>>([]);
+  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const load = async () => {
+      if (!documentId) return;
+      const data = await apiClient.get(`/api/documents/${documentId}`);
+      setDocumentData(data);
+      const dl = buildApiUrl(`/api/documents/${documentId}/download`);
+      setDownloadUrl(dl);
+    };
+    load();
+  }, [documentId]);
 
   useEffect(() => {
     let cancelled = false;
@@ -66,11 +73,11 @@ export default function DocumentDetail() {
             <div>
               <h1 className="text-2xl font-bold flex items-center gap-2">
                 <FileText className="w-6 h-6" />
-                {documentData?.name || 'Document'}
+                {documentData?.name ?? documentId}
               </h1>
               <p className="text-muted-foreground">
-                {documentData?.uploadDate ? `Uploaded on ${new Date(documentData.uploadDate).toLocaleDateString()} • ` : ''}
-                {documentData?.processingTime ? `Processed in ${documentData.processingTime}` : ''}
+                Uploaded on {documentData?.uploadDate ? new Date(documentData.uploadDate).toLocaleDateString() : '—'} • 
+                Processed in {documentData?.processingTime ?? '—'}
               </p>
             </div>
           </div>
@@ -79,9 +86,11 @@ export default function DocumentDetail() {
               <Check className="w-3 h-3 mr-1" />
               Verified
             </Badge>
-            <Button variant="outline" size="sm" onClick={() => { if (documentId) window.open(api.getDocumentDownloadUrl(documentId), '_blank'); }}>
-              <Download className="w-4 h-4 mr-2" />
-              Download
+            <Button asChild variant="outline" size="sm">
+              <a href={downloadUrl ?? '#'} target="_blank" rel="noreferrer">
+                <Download className="w-4 h-4 mr-2" />
+                Download
+              </a>
             </Button>
           </div>
         </div>
@@ -106,13 +115,13 @@ export default function DocumentDetail() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card>
             <CardContent className="p-4">
-              <div className="text-2xl font-bold">{documentData.extractedData.length}</div>
+              <div className="text-2xl font-bold">{documentData?.extractedData?.length ?? 0}</div>
               <div className="text-sm text-muted-foreground">SKUs Identified</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4">
-              <div className="text-2xl font-bold">${totalValue.toLocaleString()}</div>
+              <div className="text-2xl font-bold">${(documentData?.extractedData ? documentData.extractedData.reduce((s: number, i: any) => s + (i.unitCost * i.quantity), 0) : 0).toLocaleString()}</div>
               <div className="text-sm text-muted-foreground">Total Document Value</div>
             </CardContent>
           </Card>
@@ -157,7 +166,7 @@ export default function DocumentDetail() {
                         <span>Total</span>
                       </div>
                       
-                      {(documentData?.extractedData || []).map((item: any, index: number) => (
+                      {(documentData?.extractedData ?? []).map((item: any, index: number) => (
                         <div
                           key={item.sku}
                           className={`grid grid-cols-4 gap-2 text-sm py-1 transition-all ${

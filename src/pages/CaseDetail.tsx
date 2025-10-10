@@ -5,9 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, AlertCircle, Calendar } from 'lucide-react';
-// duplicate Link import removed
-import { useToast } from '@/hooks/use-toast';
+import { ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, AlertCircle, Calendar, Send } from 'lucide-react';
+import { apiClient } from '@/lib/api';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { api, buildApiUrl } from '@/lib/api';
 import { recoveryApi } from '@/lib/recoveryApi';
@@ -19,56 +19,23 @@ interface CaseEvent {
   type: 'detection' | 'analysis' | 'generation' | 'submission' | 'update' | 'completion';
 }
 
-// Mock case data (fallback)
-const mockCaseData = {
-  'OPS-12345': {
-    id: 'OPS-12345',
-    title: '5 units of Premium Wireless Headphones lost at FTW1',
-    status: 'Guaranteed' as const,
-    guaranteedAmount: 324.50,
-    expectedPayoutDate: '2025-01-15',
-    createdDate: '2025-01-08',
-    amazonCaseId: undefined,
-    sku: 'WH-PREM-001',
-    productName: 'Premium Wireless Headphones - Noise Cancelling',
-    facility: 'FTW1 - Fort Worth, TX',
-    confidence: 95,
-    unitsLost: 5,
-    unitCost: 64.90,
-    events: [
-      {
-        timestamp: '2025-01-08T12:05:00Z',
-        title: 'Discrepancy Detected',
-        description: 'Smart Inventory Sync detected 5 missing units of SKU WH-PREM-001 at FTW1 warehouse',
-        type: 'detection'
-      },
-      {
-        timestamp: '2025-01-08T12:05:30Z',
-        title: 'Evidence Located',
-        description: 'Evidence Engine found matching cost documentation (Invoice #INV-2024-582)',
-        type: 'analysis'
-      },
-      {
-        timestamp: '2025-01-08T12:06:15Z',
-        title: 'True Value Calculated',
-        description: 'True value calculated and verified: $324.50 (5 units × $64.90 per unit)',
-        type: 'analysis'
-      },
-      {
-        timestamp: '2025-01-08T12:07:22Z',
-        title: 'Claim Draft Generated',
-        description: 'Opside AI Agent generated comprehensive claim documentation with supporting evidence',
-        type: 'generation'
-      },
-      {
-        timestamp: '2025-01-08T12:10:45Z',
-        title: 'Ready for Submission',
-        description: 'Case marked as guaranteed and ready for Amazon submission pending user approval',
-        type: 'update'
-      }
-    ] as CaseEvent[]
-  }
-};
+interface CaseDetailResponse {
+  id: string;
+  title: string;
+  status: string;
+  guaranteedAmount: number;
+  approvedAmount?: number;
+  payoutDate?: string | null;
+  expected_payout_date?: string | null;
+  createdDate: string;
+  amazonCaseId?: string | null;
+  sku: string;
+  productName: string;
+  facility: string;
+  confidence: number;
+  unitsLost: number;
+  unitCost: number;
+}
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -127,46 +94,50 @@ const getEventColor = (type: CaseEvent['type']) => {
 
 export default function CaseDetail() {
   const { caseId } = useParams<{ caseId: string }>();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [caseData, setCaseData] = useState<any | null>(null);
-  const { toast } = useToast();
-
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
+  const [autoSubmitOpen, setAutoSubmitOpen] = React.useState(false);
+  const [statusEvents, setStatusEvents] = React.useState<CaseEvent[] | null>(null);
+  const [polling, setPolling] = React.useState<boolean>(true);
+  const [detail, setDetail] = React.useState<CaseDetailResponse | null>(null);
+  const [loading, setLoading] = React.useState<boolean>(true);
+  const [error, setError] = React.useState<string | null>(null);
+  
+  React.useEffect(() => {
+    const fetchDetail = async () => {
       if (!caseId) return;
-      setLoading(true);
-      const res = await api.getRecoveryDetail(caseId);
-      if (!cancelled) {
-        if (res.ok) {
-          setCaseData(res.data as any);
-          setError(null);
-        } else {
-          setCaseData((mockCaseData as any)[caseId]);
-          setError(res.error || null);
-        }
+      try {
+        setLoading(true);
+        const data = await apiClient.get<CaseDetailResponse>(`/api/recoveries/${caseId}`);
+        setDetail(data);
+        setError(null);
+      } catch (e) {
+        setError('not_found');
+      } finally {
         setLoading(false);
       }
-    })();
-    // Poll for status updates
-    const interval = setInterval(async () => {
-      if (!caseId) return;
-      const statusRes = await api.getRecoveryStatus(caseId);
-      if (statusRes.ok && statusRes.data) {
-        setCaseData((prev: any) => ({
-          ...(prev || {}),
-          status: (statusRes.data as any).status ?? prev?.status,
-          expectedPayoutDate: (statusRes.data as any).expected_payout_date ?? prev?.expectedPayoutDate,
-          amazonCaseId: (statusRes.data as any).amazonCaseId ?? prev?.amazonCaseId,
-          events: (statusRes.data as any).events ?? prev?.events,
-        }));
-      }
-    }, 10000);
-    return () => { cancelled = true; };
+    };
+    fetchDetail();
   }, [caseId]);
-  
-  if (!caseId || (!caseData && !(mockCaseData as any)[caseId])) {
+
+  React.useEffect(() => {
+    let timer: number | undefined;
+    const poll = async () => {
+      try {
+        if (!caseId) return;
+        const data = await apiClient.get<{ events: CaseEvent[] }>(`/api/recoveries/${caseId}/status`);
+        setStatusEvents(data.events);
+      } catch {
+        // ignore
+      } finally {
+        timer = window.setTimeout(poll, 8000);
+      }
+    };
+    if (polling) poll();
+    return () => {
+      if (timer) window.clearTimeout(timer);
+    };
+  }, [caseId, polling]);
+
+  if (!caseId) {
     return (
       <PageLayout title="Case Not Found">
         <div className="text-center py-12">
@@ -182,10 +153,24 @@ export default function CaseDetail() {
     );
   }
 
-  const effectiveCase = caseData || (mockCaseData as any)[caseId];
+  if (error === 'not_found') {
+    return (
+      <PageLayout title="Case Not Found">
+        <div className="text-center py-12">
+          <h2 className="text-xl font-semibold mb-4">Case not found</h2>
+          <Button asChild>
+            <Link to="/recoveries">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Cases
+            </Link>
+          </Button>
+        </div>
+      </PageLayout>
+    );
+  }
 
   return (
-    <PageLayout title={`Case ${effectiveCase.id}`}>
+    <PageLayout title={`Case ${detail?.id ?? caseId}`}>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center gap-4">
@@ -195,6 +180,37 @@ export default function CaseDetail() {
               Back to Cases
             </Link>
           </Button>
+          <div className="ml-auto flex items-center gap-3">
+            <div className="hidden md:flex items-center gap-2 text-xs text-muted-foreground">
+              <span className="px-2 py-1 rounded bg-emerald-50 text-emerald-700">Detected</span>
+              <span>→</span>
+              <span className="px-2 py-1 rounded bg-emerald-50 text-emerald-700">Prepared</span>
+              <span>→</span>
+              <span className="px-2 py-1 rounded bg-gray-100">Submitted</span>
+              <span>→</span>
+              <span className="px-2 py-1 rounded bg-gray-100">Paid</span>
+            </div>
+            <Dialog open={autoSubmitOpen} onOpenChange={setAutoSubmitOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-emerald-600 hover:bg-emerald-700">Auto-Submit Claim</Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Auto-Submit Claim</DialogTitle>
+                  <DialogDescription>
+                    Files automatically on your behalf via Amazon SP-API. We will track submission and updates.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="text-sm text-muted-foreground">
+                  You only pay from recovered funds (20% cap).
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setAutoSubmitOpen(false)}>Cancel</Button>
+                  <Button onClick={() => setAutoSubmitOpen(false)}>Submit Now</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -214,14 +230,14 @@ export default function CaseDetail() {
 
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Case ID</label>
-                  <p className="font-mono text-sm mt-1">{effectiveCase.id}</p>
+                  <p className="font-mono text-sm mt-1">{detail?.id ?? '—'}</p>
                 </div>
 
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Current Status</label>
                   <div className="mt-1">
-                    <Badge className={cn("font-medium", getStatusColor(effectiveCase.status))}>
-                      {effectiveCase.status}
+                    <Badge className={cn("font-medium", getStatusColor(detail?.status ?? ''))}>
+                      {detail?.status ?? '—'}
                     </Badge>
                   </div>
                 </div>
@@ -244,7 +260,7 @@ export default function CaseDetail() {
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Guaranteed Value</label>
                   <p className="text-lg font-semibold text-emerald-600 mt-1">
-                    ${effectiveCase.guaranteedAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                    ${(detail?.approvedAmount ?? detail?.guaranteedAmount ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                   </p>
                 </div>
 
@@ -252,68 +268,17 @@ export default function CaseDetail() {
                   <label className="text-sm font-medium text-muted-foreground">Expected Payout Date</label>
                   <p className="mt-1 flex items-center gap-2">
                     <Calendar className="h-4 w-4 text-muted-foreground" />
-                    {effectiveCase.expectedPayoutDate ? new Date(effectiveCase.expectedPayoutDate).toLocaleDateString('en-US', {
-                      month: 'long',
-                      day: 'numeric',
-                      year: 'numeric'
-                    }) : '—'}
+                    {detail?.expected_payout_date ? new Date(detail.expected_payout_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '—'}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">
-                    {effectiveCase.confidence ?? 95}% Confidence
+                    {detail?.confidence ?? 0}% Confidence
                   </p>
                 </div>
 
-                {/* Missing-docs Smart Prompt (if backend flags a gap) */}
-                {effectiveCase?.missingDocumentPrompt && (
-                  <div className="rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900 space-y-2">
-                    <div>{effectiveCase.missingDocumentPrompt}</div>
-                    {Array.isArray(effectiveCase.missingDocumentOptions) && (
-                      <div className="flex flex-wrap gap-2">
-                        {effectiveCase.missingDocumentOptions.map((opt: string) => (
-                          <Button key={opt} size="sm" variant="outline" onClick={() => {
-                            recoveryApi.submitRecoveryAnswer(effectiveCase.id, { answer: opt }).catch(() => {});
-                          }}>{opt}</Button>
-                        ))}
-                      </div>
-                    )}
-                    <div
-                      className="mt-2 p-4 border border-dashed border-amber-300 rounded bg-white/60 text-amber-900"
-                      onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
-                      onDrop={async (e) => {
-                        e.preventDefault();
-                        const files = Array.from(e.dataTransfer.files || []);
-                        if (!files.length) return;
-                        await recoveryApi.uploadRecoveryDocuments(effectiveCase.id, files as any).catch(() => {});
-                      }}
-                    >
-                      <div className="text-xs">Drag and drop supplier invoice here, or click to select.</div>
-                      <input
-                        type="file"
-                        multiple
-                        className="hidden"
-                        onChange={async (e) => {
-                          const files = Array.from((e.target as HTMLInputElement).files || []);
-                          if (!files.length) return;
-                          await recoveryApi.uploadRecoveryDocuments(effectiveCase.id, files as any).catch(() => {});
-                        }}
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {effectiveCase.amazonCaseId && (
+                {detail?.amazonCaseId && (
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">Amazon Case ID</label>
-                    <p className="font-mono text-sm mt-1">{effectiveCase.amazonCaseId}</p>
-                  </div>
-                )}
-
-                {(effectiveCase.approvalReason || effectiveCase.rejectionReason) && (
-                  <div>
-                    <label className="text-sm font-medium text-muted-foreground">Decision Reason</label>
-                    <p className="text-sm mt-1">
-                      {effectiveCase.approvalReason || effectiveCase.rejectionReason}
-                    </p>
+                    <p className="font-mono text-sm mt-1">{detail.amazonCaseId}</p>
                   </div>
                 )}
 
@@ -321,74 +286,50 @@ export default function CaseDetail() {
 
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Affected Product</label>
-                  <p className="font-medium mt-1">{effectiveCase.productName}</p>
-                  <p className="text-sm text-muted-foreground">SKU: {effectiveCase.sku}</p>
+                  <p className="font-medium mt-1">{detail?.productName ?? '—'}</p>
+                  <p className="text-sm text-muted-foreground">SKU: {detail?.sku ?? '—'}</p>
                 </div>
 
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Warehouse Location</label>
                   <p className="mt-1 flex items-center gap-2">
                     <MapPin className="h-4 w-4 text-muted-foreground" />
-                    {effectiveCase.facility ?? '—'}
+                    {detail?.facility ?? '—'}
                   </p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">Units Lost</label>
-                    <p className="font-semibold mt-1">{effectiveCase.unitsLost ?? '—'}</p>
+                    <p className="font-semibold mt-1">{detail?.unitsLost ?? 0}</p>
                   </div>
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">Unit Cost</label>
                     <p className="font-semibold mt-1">
-                      {typeof effectiveCase.unitCost === 'number' ? `$${effectiveCase.unitCost.toFixed(2)}` : '—'}
+                      ${((detail?.unitCost ?? 0).toFixed(2))}
                     </p>
                   </div>
                 </div>
 
                 <Separator />
 
-                <Button className="w-full bg-emerald-600 hover:bg-emerald-700" disabled={effectiveCase.status === 'Paid Out'} onClick={async () => {
-                  const res = await api.submitClaim(effectiveCase.id);
-                  if (res.ok) {
-                    setCaseData((prev: any) => ({ ...(prev || {}), status: 'Submitted', submissionStatus: 'submitted' }));
-                    toast({ title: 'Claim submitted to Amazon', description: 'We will update you with the Amazon Case ID shortly.' });
-                  } else {
-                    toast({ title: 'Submission failed', description: res.error || 'Please try again.' });
-                  }
-                }}>
-                  <CheckCircle className="h-4 w-4 mr-2" />
-                  Resolve Case
-                </Button>
-
-                {/* Evidence & Docs */}
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-muted-foreground">Evidence & Docs</label>
-                  <div className="space-y-2">
-                    <Button variant="outline" className="w-full" onClick={() => {
-                      window.open(api.getRecoveryDocumentUrl(effectiveCase.id), '_blank');
-                    }}>
-                      <FileText className="h-4 w-4 mr-2" />
-                      Download Proof Document
-                    </Button>
-                    {Array.isArray(effectiveCase.documents) && effectiveCase.documents.length > 0 ? (
-                      <div className="space-y-1 text-sm">
-                        {effectiveCase.documents.map((doc: any) => (
-                          <div key={doc.id} className="flex items-center justify-between">
-                            <span className="truncate">{doc.name}</span>
-                            <Button variant="ghost" size="sm" onClick={() => window.open(doc.url || api.getDocumentViewUrl(doc.id), '_blank')}>View</Button>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-xs text-muted-foreground">No additional documents linked.</p>
-                    )}
-                  </div>
-                </div>
-
-                <Button variant="ghost" className="w-full" asChild>
-                  <Link to="/evidence-locker">Open Evidence Locker</Link>
-                </Button>
+                {detail?.status === 'Guaranteed' && (
+                  <Button
+                    className="w-full bg-emerald-600 hover:bg-emerald-700"
+                    onClick={async () => {
+                      try {
+                        // Example EV gating: require confidence >= 80
+                        if ((detail?.confidence ?? 0) < 80) {
+                          return;
+                        }
+                        await apiClient.post(`/api/claims/${detail?.id}/submit`);
+                      } catch {}
+                    }}
+                  >
+                    <Send className="h-4 w-4 mr-2" />
+                    Auto-Submit Claim
+                  </Button>
+                )}
               </CardContent>
             </Card>
           </div>
@@ -407,25 +348,7 @@ export default function CaseDetail() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {/* Visual Stepper */}
-                  <div className="flex items-center gap-3 mb-2 text-sm">
-                    {['Detected','Prepared','Submitted','Paid'].map((step, idx) => {
-                      const active = (
-                        (step === 'Detected') ||
-                        (step === 'Prepared' && ['Guaranteed','Submitted','Under Review','Paid Out'].includes(effectiveCase.status)) ||
-                        (step === 'Submitted' && ['Submitted','Under Review','Paid Out'].includes(effectiveCase.status)) ||
-                        (step === 'Paid' && ['Paid Out'].includes(effectiveCase.status))
-                      );
-                      return (
-                        <div key={step} className="flex items-center gap-3">
-                          <div className={`h-6 w-6 rounded-full flex items-center justify-center border ${active ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-muted-foreground'}`}>{idx+1}</div>
-                          <span className={`${active ? 'text-foreground font-medium' : 'text-muted-foreground'}`}>{step}</span>
-                          {idx < 3 && <div className={`w-10 h-px ${active ? 'bg-emerald-600' : 'bg-muted'}`} />}
-                        </div>
-                      );
-                    })}
-                  </div>
-                  {(effectiveCase.events || []).map((event: any, index: number) => (
+                  {(statusEvents ?? []).map((event, index) => (
                     <div key={index} className="flex gap-4">
                       <div className={cn("flex-shrink-0 mt-1", getEventColor(event.type))}>
                         {getEventIcon(event.type)}
@@ -447,7 +370,7 @@ export default function CaseDetail() {
                             })}
                           </div>
                         </div>
-                        {Array.isArray(effectiveCase.events) && index < effectiveCase.events.length - 1 && (
+                        {index < ((statusEvents ?? []).length - 1) && (
                           <div className="border-l border-muted ml-2 h-6 mt-3" />
                         )}
                       </div>
@@ -455,7 +378,7 @@ export default function CaseDetail() {
                   ))}
                   
                   {/* Future events placeholder */}
-                  {effectiveCase.status === 'Guaranteed' && (
+                  {detail?.status === 'Guaranteed' && (
                     <div className="flex gap-4 opacity-50">
                       <div className="flex-shrink-0 mt-1 text-gray-400">
                         <Package className="h-4 w-4" />
@@ -475,6 +398,11 @@ export default function CaseDetail() {
                       </div>
                     </div>
                   )}
+                </div>
+                <Separator className="my-4" />
+                <div>
+                  <h3 className="text-sm font-semibold mb-2">Evidence & Docs</h3>
+                  <div className="text-sm text-muted-foreground">Linked documents, reasoning, and timestamps will appear here. Provide transparency for approvals or rejections.</div>
                 </div>
               </CardContent>
             </Card>

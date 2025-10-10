@@ -144,6 +144,13 @@ export default function WhatsNew() {
                 </CardHeader>
 
                 <CardContent className="space-y-4">
+                  {/* Featured Image - reduced height for a more professional look */}
+                  <div className="rounded-lg overflow-hidden bg-muted border border-border/60">
+                    <div className="w-full h-40 md:h-48">
+                      <img src={update.image} alt={update.title} className="w-full h-full object-cover" />
+                    </div>
+                  </div>
+
                   {/* Description */}
                   <p className="text-muted-foreground leading-relaxed">
                     {update.description}

@@ -20,11 +20,7 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				// Brand fonts: Satoshi for headings, Inter for body
-				body: ['Inter', 'system-ui', 'Arial', 'sans-serif'],
-				heading: ['Satoshi', 'Inter', 'system-ui', 'Arial', 'sans-serif'],
-				sans: ['Inter', 'system-ui', 'Arial', 'sans-serif'],
-				brand: ['Satoshi', 'Inter', 'system-ui', 'Arial', 'sans-serif'],
+				sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
