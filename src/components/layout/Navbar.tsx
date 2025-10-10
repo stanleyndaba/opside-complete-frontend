@@ -5,7 +5,6 @@ import { Input } from '@/components/ui/input';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/use-auth';
 import { NotificationBell } from './NotificationBell';
-import { useAuth } from '@/hooks/useAuth';
 
 interface NavbarProps {
   className?: string;
