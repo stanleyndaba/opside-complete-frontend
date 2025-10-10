@@ -1,11 +1,8 @@
-import React, { useState } from 'react';
-import { Home, Shield, Settings, HelpCircle, Sparkles, PanelLeftClose, PanelLeftOpen, BarChart3, Plug, Edit3, LogOut, User, Building2 } from 'lucide-react';
+import React from 'react';
+import { Home, Shield, Settings, HelpCircle, Sparkles, BarChart3, Edit3 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Input } from '@/components/ui/input';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Link, useLocation } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api';
@@ -37,7 +34,6 @@ const prefetchRoute = (path: string) => {
 		}
 	} catch {}
 };
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 interface SidebarProps {
 	isCollapsed: boolean;
 	onToggle: () => void;
@@ -54,7 +50,7 @@ interface NavSection {
 }
 export function Sidebar({
     isCollapsed,
-    onToggle,
+    onToggle: _onToggle,
     className
 }: SidebarProps) {
 	const location = useLocation();
@@ -125,16 +121,12 @@ export function Sidebar({
 		isCollapsed ? "w-16" : "w-56",
 		"bg-white text-gray-900 border-r border-gray-200",
 		className)}>
-			{/* Internal Header with Collapse Control */}
-			<div className={cn("border-b border-gray-200 flex items-center", isCollapsed ? "p-2 justify-between" : "p-3 justify-between") }>
-				<div className={cn("select-none", isCollapsed ? "text-base" : "text-xl")} />
-				<button
-					title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-					className={cn("h-8 w-8 flex items-center justify-center text-gray-700 hover:text-black")}
-					onClick={onToggle}
-				>
-					{isCollapsed ? <PanelLeftOpen className="h-5 w-5" /> : <PanelLeftClose className="h-5 w-5" />}
-				</button>
+            {/* Internal Header */}
+            <div className={cn("border-b border-gray-200 flex items-center", isCollapsed ? "p-2 justify-start" : "p-3 justify-start") }>
+				<div className={cn("select-none", isCollapsed ? "text-base" : "text-xl")}
+					style={{ fontFamily: 'Montserrat, sans-serif' }}>
+					<span className="font-black text-black">{isCollapsed ? 'C' : 'Clario'}</span>
+				</div>
 			</div>
 
 			<ScrollArea className="flex-1">
