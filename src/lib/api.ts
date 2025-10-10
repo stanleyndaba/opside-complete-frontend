@@ -1,67 +1,64 @@
+export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+
 export interface ApiResponse<T> {
   ok: boolean;
   status: number;
   data?: T;
-  error?: string;
+  error?: unknown;
 }
 
-function buildApiUrl(path: string): string {
-  const base = 'http://localhost:3001';
-  return base + (path.startsWith('/') ? path : '/' + path);
-}
+const API_BASE_URL: string = (import.meta as any).env?.VITE_API_BASE_URL || '/api';
 
-async function requestJson<T>(path: string, options?: RequestInit): Promise<ApiResponse<T>> {
+export async function apiRequest<T = unknown>(
+  path: string,
+  options: {
+    method?: HttpMethod;
+    headers?: Record<string, string>;
+    body?: unknown;
+    signal?: AbortSignal;
+    credentials?: RequestCredentials;
+  } = {}
+): Promise<ApiResponse<T>> {
+  const url = path.startsWith('http') ? path : `${API_BASE_URL}${path}`;
   try {
-    const res = await fetch(buildApiUrl(path), {
-      credentials: 'include',
+    const res = await fetch(url, {
+      method: options.method || 'GET',
       headers: {
         'Content-Type': 'application/json',
-        ...options?.headers,
+        ...(options.headers || {})
       },
-      ...options,
+      body: options.body !== undefined ? JSON.stringify(options.body) : undefined,
+      signal: options.signal,
+      credentials: options.credentials || 'include'
     });
 
-    let data;
-    const text = await res.text();
-    if (text) {
-      try {
-        data = JSON.parse(text);
-      } catch {
-        data = text;
-      }
-    }
+    const isJson = res.headers.get('content-type')?.includes('application/json');
+    const payload = isJson ? await res.json() : undefined;
 
     if (!res.ok) {
-      return {
-        ok: false,
-        status: res.status,
-        error: data?.error || data?.message || res.statusText || 'Request failed',
-      };
+      return { ok: false, status: res.status, error: payload };
     }
-
-    return {
-      ok: true,
-      status: res.status,
-      data,
-    };
+    return { ok: true, status: res.status, data: payload as T };
   } catch (error) {
-    return {
-      ok: false,
-      status: 0,
-      error: error instanceof Error ? error.message : 'Network error',
-    };
+    return { ok: false, status: 0, error };
   }
 }
 
-export const api = {
-  completeAmazonSandboxAuth: (state: string) => requestJson<any>('/api/v1/integrations/amazon/sandbox/callback', { 
-    method: 'POST', 
-    body: JSON.stringify({ state }) 
-  }),
+// Auth endpoints
+export async function fetchCurrentUser<T = unknown>() {
+  return apiRequest<T>('/auth/me');
+}
 
-  getAmazonRecoveries: () => requestJson<{ totalAmount: number; currency: string; claimCount: number }>('/api/v1/integrations/amazon/recoveries'),
+export function getAmazonLoginUrl(): string {
+  return `${API_BASE_URL}/auth/amazon`;
+}
 
-  getDashboardAggregates: () => requestJson<any>('/api/metrics/dashboard'),
-  getRecoveriesMetrics: () => requestJson<any>('/api/metrics/recoveries'),
-  logout: () => requestJson<{ ok: true }>('/api/auth/logout', { method: 'POST' }),
-};
+// Sync endpoints
+export async function startInventorySync<T = unknown>() {
+  return apiRequest<T>('/sync/start', { method: 'POST' });
+}
+
+export async function fetchSyncStatus<T = { status: string; progress?: number; message?: string }>() {
+  return apiRequest<T>('/sync/status');
+}
+
