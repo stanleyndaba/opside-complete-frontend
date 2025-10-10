@@ -4,14 +4,8 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, CheckCircle, DollarSign, RefreshCw, Search } from 'lucide-react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiFetch } from '@/lib/api';
-import { toast } from 'sonner';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { type RealtimeEvent } from '@/lib/realtime';
-import { useStatusStream } from '@/hooks/use-status-stream';
-import { toast } from 'sonner';
+import { FileText, BarChart3, FolderOpen, CheckCircle, DollarSign, Search, RefreshCw, Calendar, TrendingUp } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
@@ -38,73 +32,65 @@ export function Dashboard() {
     amount: 1850.00,
     expectedDate: "Sept 15, 2025"
   };
-  const { data: metrics } = useQuery<{ totalRecovered:number; expectedPayouts:number; pendingSubmissions:number; last30Days:number }>({
-    queryKey: ['metrics','recoveries'],
-    queryFn: () => apiFetch('/api/metrics/recoveries')
-  });
-  const upcomingPayouts = [] as Array<{ amount:number; date:string; status:string }>;
-  type FeedItem = { id: string; icon: React.ElementType; description: string; timestamp: string; color?: string };
-  const [activityFeed, setActivityFeed] = useState<FeedItem[]>([]);
-
-  const queryClient = useQueryClient();
-  const [detectOpen, setDetectOpen] = useState(false);
-  const [detectionId, setDetectionId] = useState<string | null>(null);
-  const [pollTick, setPollTick] = useState(0);
-  const [detectionState, setDetectionState] = useState<string | null>(null);
-  const [detectionProgress, setDetectionProgress] = useState<number | null>(null);
-  const runDetection = useMutation({
-    mutationFn: async () => apiFetch<{ detection_id: string }>(`/api/detections/run`, { method: 'POST', body: JSON.stringify({}) }),
-    onSuccess: (res) => {
-      setDetectionId(res.detection_id);
-      setDetectOpen(true);
-    }
-  });
-
-  // Start Sync action (quick access)
-  const startSync = useMutation({
-    mutationFn: async () => apiFetch('/api/sync/start', { method: 'POST', body: JSON.stringify({}) }),
-    onSuccess: () => {
-      toast.success('Sync started');
-      queryClient.invalidateQueries({ queryKey: ['sync-status'] });
-      queryClient.invalidateQueries({ queryKey: ['sync-activity'] });
-    },
-    onError: (e: any) => {
-      toast.error(e?.message || 'Failed to start sync');
-    },
-  });
-
-  useStatusStream((evt: RealtimeEvent) => {
-    if (evt.type === 'detection') {
-      if (detectionId && evt.id === detectionId) {
-        setDetectionState(evt.status);
-        if ('progress' in evt && typeof evt.progress === 'number') setDetectionProgress(evt.progress);
-      }
-      if (evt.status === 'completed') {
-        toast.success('Detection completed');
-        queryClient.invalidateQueries({ queryKey: ['metrics','recoveries'] });
-        setActivityFeed((prev) => [{ id: `det-${evt.id}-${Date.now()}`, icon: CheckCircle, description: `Detection ${evt.id} completed`, timestamp: new Date().toLocaleString(), color: 'text-success' }, ...prev].slice(0, 50));
-      } else if (evt.status === 'failed') {
-        toast.error('Detection failed');
-        setActivityFeed((prev) => [{ id: `det-${evt.id}-${Date.now()}`, icon: RefreshCw, description: `Detection ${evt.id} failed`, timestamp: new Date().toLocaleString(), color: 'text-red-600' }, ...prev].slice(0, 50));
-      }
-    }
-    if (evt.type === 'sync') {
-      if (evt.status === 'completed') {
-        toast.success('Sync completed');
-        queryClient.invalidateQueries({ queryKey: ['metrics','recoveries'] });
-        queryClient.invalidateQueries({ queryKey: ['sync-status'] });
-        queryClient.invalidateQueries({ queryKey: ['sync-activity'] });
-        setActivityFeed((prev) => [{ id: `sync-${evt.id}-${Date.now()}`, icon: RefreshCw, description: `Sync job ${evt.id} completed`, timestamp: new Date().toLocaleString(), color: 'text-muted-foreground' }, ...prev].slice(0, 50));
-      } else if (evt.status === 'failed') {
-        toast.error('Sync failed');
-        setActivityFeed((prev) => [{ id: `sync-${evt.id}-${Date.now()}`, icon: RefreshCw, description: `Sync job ${evt.id} failed`, timestamp: new Date().toLocaleString(), color: 'text-red-600' }, ...prev].slice(0, 50));
-      }
-    }
-    if (evt.type === 'recovery') {
-      queryClient.invalidateQueries({ queryKey: ['recoveries'] });
-      setActivityFeed((prev) => [{ id: `rec-${evt.id}-${Date.now()}`, icon: CheckCircle, description: `Recovery ${evt.id} status: ${evt.status}`, timestamp: new Date().toLocaleString(), color: evt.status === 'paid' ? 'text-success' : 'text-primary' }, ...prev].slice(0, 50));
-    }
-  });
+  const recoveredValue = {
+    total: 11200.50,
+    pending: 1850.00,
+    lastMonth: 2100.00
+  };
+  const upcomingPayouts = [{
+    amount: 1850.00,
+    date: "Sept 15, 2025",
+    status: "confirmed"
+  }, {
+    amount: 2100.00,
+    date: "Oct 12, 2025",
+    status: "pending"
+  }, {
+    amount: 950.00,
+    date: "Nov 8, 2025",
+    status: "estimated"
+  }];
+  const activityFeed = [{
+    id: 1,
+    type: 'claim_submitted',
+    icon: CheckCircle,
+    description: 'New: Claim #1234 ($250) for lost inventory submitted.',
+    timestamp: '2 minutes ago',
+    color: 'text-success',
+    read: false
+  }, {
+    id: 2,
+    type: 'payout_completed',
+    icon: DollarSign,
+    description: 'Paid: Claim #1198 ($150) has been successfully paid out.',
+    timestamp: '8 hours ago',
+    color: 'text-success',
+    read: true
+  }, {
+    id: 3,
+    type: 'evidence_added',
+    icon: Search,
+    description: 'Evidence added: Invoice #INV-5678 linked to Claim #1235.',
+    timestamp: 'Yesterday',
+    color: 'text-primary',
+    read: true
+  }, {
+    id: 4,
+    type: 'sync_complete',
+    icon: RefreshCw,
+    description: 'Sync complete: Your account was successfully synced.',
+    timestamp: 'Yesterday',
+    color: 'text-muted-foreground',
+    read: true
+  }, {
+    id: 5,
+    type: 'claim_approved',
+    icon: CheckCircle,
+    description: 'Approved: Claim #1199 ($380) has been approved by Amazon.',
+    timestamp: '2 days ago',
+    color: 'text-success',
+    read: true
+  }];
 
   // Real-time clock
   useEffect(() => {
@@ -236,11 +222,10 @@ export function Dashboard() {
               <div className="lg:col-span-1">
                 <Card className="h-full">
                   <CardContent className="p-6">
-                    <div className="mb-4">
-                      <h2 className="text-base font-semibold text-foreground">Notifications</h2>
-                      <p className="text-xs text-muted-foreground">Recent activity across claims, payouts and sync</p>
+                    <div className="mb-6">
+                      <h2 className="text-base font-semibold font-montserrat">Notifications</h2>
                     </div>
-                    
+
                     <div className="space-y-4 max-h-[600px] overflow-y-auto">
                       {activityFeed.length === 0 && (
                         <div className="text-sm text-muted-foreground">No recent activity yet</div>
@@ -248,20 +233,33 @@ export function Dashboard() {
                       {activityFeed.map(item => {
                         const IconComponent = item.icon;
                         return (
-                          <div key={item.id} className="flex gap-3 p-3 transition-colors bg-stone-50 rounded-none">
+                          <div
+                            key={item.id}
+                            className={`flex items-start gap-4 p-4 rounded-lg border transition-colors ${!item.read ? 'bg-muted/50 border-primary/20' : 'bg-background hover:bg-muted/30'}`}
+                          >
                             <div className="flex-shrink-0 mt-0.5">
                               <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
                                 <IconComponent className="w-4 h-4 text-primary" />
                               </div>
                             </div>
+
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-foreground mb-1">
+                              <p className="text-xs font-medium text-foreground mb-1 font-montserrat">
                                 {item.description}
                               </p>
-                              <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                              <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
                                 <span>{item.timestamp}</span>
+                                <div className="flex gap-1">
+                                  <Badge variant="secondary" className="text-[10px] capitalize">
+                                    {item.type.replace('_', ' ')}
+                                  </Badge>
+                                </div>
                               </div>
                             </div>
+
+                            {!item.read && (
+                              <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0 mt-2"></div>
+                            )}
                           </div>
                         );
                       })}

@@ -1,6 +1,8 @@
 import React from 'react';
 import { Home, Shield, FileText, Factory, Zap, Settings, CreditCard, Users, HelpCircle, MessageSquare, Sparkles, Download, Key, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { EVIDENCE_LOCKER_ENABLED } from '@/lib/featureFlags';
+import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Link, useLocation } from 'react-router-dom';
@@ -80,7 +82,11 @@ export function Sidebar({
       title: 'Reports',
       icon: BarChart3,
       href: '/reports'
-    }, {
+    }, ...(EVIDENCE_LOCKER_ENABLED ? [{
+      title: 'Claim Documents',
+      icon: Factory,
+      href: '/evidence-locker'
+    }] : []), {
       title: 'Connections',
       icon: Settings,
       href: '/integrations-hub'
@@ -152,7 +158,7 @@ export function Sidebar({
         </Button>
       </div>
 
-      {/* Removed logo section per request */}
+      
 
       <ScrollArea className="flex-1">
         <nav className={cn("space-y-6 py-6", isCollapsed ? "px-2" : "px-4")}> 

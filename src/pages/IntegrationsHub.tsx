@@ -7,10 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { Shield, CheckCircle, Settings, RefreshCw, ArrowRight, ExternalLink, Package, ShoppingBag, Calculator, Truck } from 'lucide-react';
-import { useAuth } from '@/hooks/use-auth';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiFetch } from '@/lib/api';
-import { toast } from 'sonner';
+import { Progress } from '@/components/ui/progress';
 interface ActiveConnection {
   id: string;
   name: string;
@@ -103,31 +100,8 @@ const categoryConfig = {
 export default function IntegrationsHub() {
   const { isAuthenticated, loginWithAmazon } = useAuth();
   const [lastSyncTime, setLastSyncTime] = useState('Just now');
-  const queryClient = useQueryClient();
-  const { data: syncStatus } = useQuery<any>({
-    queryKey: ['sync-status'],
-    queryFn: () => apiFetch('/api/sync/status'),
-    enabled: isAuthenticated,
-    staleTime: 5_000,
-    refetchInterval: 3000,
-  });
-  const { data: syncActivity = [] } = useQuery<any[]>({
-    queryKey: ['sync-activity'],
-    queryFn: () => apiFetch('/api/sync/activity'),
-    enabled: isAuthenticated,
-    staleTime: 5_000,
-  });
-  const startSync = useMutation({
-    mutationFn: async () => apiFetch('/api/sync/start', { method: 'POST', body: JSON.stringify({}) }),
-    onSuccess: () => {
-      toast.success('Sync started');
-      queryClient.invalidateQueries({ queryKey: ['sync-status'] });
-      queryClient.invalidateQueries({ queryKey: ['sync-activity'] });
-    },
-    onError: (e: any) => {
-      toast.error(e?.message || 'Failed to start sync');
-    },
-  });
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncProgress, setSyncProgress] = useState(0);
   const [requestFormData, setRequestFormData] = useState({
     platform: '',
     description: ''
@@ -147,20 +121,24 @@ export default function IntegrationsHub() {
     return () => clearInterval(interval);
   }, []);
   useEffect(() => {
-    let timer: number | undefined;
-    const poll = async () => {
-      try {
-        // const data = await apiClient.get<{ status: string }>("/api/sync/status");
-        // setSyncStatus(data.status);
-        setSyncStatus('Healthy');
-      } catch {}
-      finally {
-        timer = window.setTimeout(poll, 10000);
+    if (!isSyncing) return;
+    setSyncProgress(0);
+    const start = Date.now();
+    const durationMs = 75 * 1000; // ~1.25 min demo
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - start;
+      const pct = Math.min(99, Math.floor((elapsed / durationMs) * 100));
+      setSyncProgress(pct);
+      if (pct >= 99) {
+        clearInterval(interval);
+        setTimeout(() => {
+          setIsSyncing(false);
+          setSyncProgress(100);
+        }, 1000);
       }
-    };
-    poll();
-    return () => { if (timer) window.clearTimeout(timer); };
-  }, []);
+    }, 500);
+    return () => clearInterval(interval);
+  }, [isSyncing]);
   const handleRequestSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Integration request:', requestFormData);
@@ -328,12 +306,22 @@ export default function IntegrationsHub() {
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <img src={connection.logo} alt={`${connection.name} logo`} className="w-20 h-18 object-contain" />
+                      <img src={connection.logo} alt={`${connection.name} logo`} className="w-20 h-12 object-contain" />
                       <div>
                         <CardTitle className="text-lg">{connection.name}</CardTitle>
                         <p className="text-sm text-muted-foreground">
                           Store Name: <span className="font-medium">{connection.storeName}</span>
                         </p>
+                        <div className="pt-1">
+                          {syncProgress >= 100 && (
+                            <div className="flex items-center justify-between p-2 border rounded-md bg-green-50">
+                              <span className="text-sm text-green-700">Sync complete. Detection running…</span>
+                              <Button size="sm" onClick={() => (window.location.href = '/recoveries')}>
+                                View Cases
+                              </Button>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
@@ -358,18 +346,25 @@ export default function IntegrationsHub() {
                     )}
                     
                     <Separator />
-                    <div className="flex gap-2">
-                      <Button size="sm" variant="outline" className="w-full gap-2">
+
+                    {!isSyncing ? (
+                      <div className="grid grid-cols-1 gap-2">
+                      <Button size="sm" variant="outline" className="w-full gap-2 px-6 whitespace-nowrap justify-center">
                         <Settings className="h-3 w-3" />
                         Manage
                       </Button>
-                      {isAuthenticated && (
-                        <Button size="sm" className="w-full gap-2" onClick={() => startSync.mutate()} disabled={startSync.isPending}>
-                          <RefreshCw className="h-3 w-3" />
-                          {startSync.isPending ? 'Starting…' : 'Start Sync'}
-                        </Button>
-                      )}
-                    </div>
+                      <Button size="sm" className="w-full gap-2 px-6 whitespace-nowrap justify-center" onClick={() => setIsSyncing(true)}>
+                        <RefreshCw className="h-3 w-3" />
+                        Start Inventory Sync
+                      </Button>
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        <div className="text-sm font-medium">Inventory Sync in Progress…</div>
+                        <Progress value={syncProgress} />
+                        <p className="text-xs text-muted-foreground">This can take 1–2 minutes. You can navigate away.</p>
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>)}
@@ -613,13 +608,16 @@ export default function IntegrationsHub() {
                     <Card key={i.id} className="border-muted/50 hover:border-primary/50 transition-colors">
                       <CardHeader className="pb-3">
                         <div className="flex items-center gap-3">
-                          {i.id === 'amazon' ? (
-                            <img src={activeConnections[0].logo} alt="Amazon" className="w-10 h-10 object-contain" />
-                          ) : i.icon ? (
-                            <i.icon className="h-6 w-6 text-primary" />
-                          ) : (
-                            <Plug className="h-6 w-6 text-primary" />
-                          )}
+                          <img
+                            src={integration.logo}
+                            alt={`${integration.name} logo`}
+                            className="w-20 h-12 object-contain"
+                            onError={(e) => {
+                              if (integration.id === 'quickbooks') {
+                                (e.currentTarget as HTMLImageElement).src = 'https://seeklogo.com/images/Q/quickbooks-logo-29E558F1CE-seeklogo.com.png';
+                              }
+                            }}
+                          />
                           <div>
                             <CardTitle className="text-lg flex items-center gap-2">
                               <span>{i.name}</span>
