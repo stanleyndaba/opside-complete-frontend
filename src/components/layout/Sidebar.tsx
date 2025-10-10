@@ -79,14 +79,6 @@ export function Sidebar({
       icon: Shield,
       href: '/recoveries'
     }, {
-      title: 'Reports',
-      icon: BarChart3,
-      href: '/reports'
-    }, ...(EVIDENCE_LOCKER_ENABLED ? [{
-      title: 'Claim Documents',
-      icon: Factory,
-      href: '/evidence-locker'
-    }] : []), {
       title: 'Connections',
       icon: Settings,
       href: '/integrations-hub'
@@ -158,7 +150,7 @@ export function Sidebar({
         </Button>
       </div>
 
-      
+      {/* Logo removed intentionally */}
 
       <ScrollArea className="flex-1">
         <nav className={cn("space-y-6 py-6", isCollapsed ? "px-2" : "px-4")}> 

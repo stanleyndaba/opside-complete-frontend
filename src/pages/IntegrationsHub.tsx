@@ -6,8 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { Shield, CheckCircle, Settings, RefreshCw, ArrowRight, ExternalLink, Package, ShoppingBag, Calculator, Truck } from 'lucide-react';
-import { Progress } from '@/components/ui/progress';
+import { Shield, CheckCircle, Settings, RefreshCw, ArrowRight, ExternalLink, Package, ShoppingBag, Calculator, Truck, Plug } from 'lucide-react';
+import { apiClient } from '@/lib/api';
+import { toast } from 'sonner';
 interface ActiveConnection {
   id: string;
   name: string;
@@ -121,24 +122,20 @@ export default function IntegrationsHub() {
     return () => clearInterval(interval);
   }, []);
   useEffect(() => {
-    if (!isSyncing) return;
-    setSyncProgress(0);
-    const start = Date.now();
-    const durationMs = 75 * 1000; // ~1.25 min demo
-    const interval = setInterval(() => {
-      const elapsed = Date.now() - start;
-      const pct = Math.min(99, Math.floor((elapsed / durationMs) * 100));
-      setSyncProgress(pct);
-      if (pct >= 99) {
-        clearInterval(interval);
-        setTimeout(() => {
-          setIsSyncing(false);
-          setSyncProgress(100);
-        }, 1000);
+    let timer: number | undefined;
+    const poll = async () => {
+      try {
+        // const data = await apiClient.get<{ status: string }>("/api/sync/status");
+        // setSyncStatus(data.status);
+        setSyncStatus('Healthy');
+      } catch {}
+      finally {
+        timer = window.setTimeout(poll, 10000);
       }
-    }, 500);
-    return () => clearInterval(interval);
-  }, [isSyncing]);
+    };
+    poll();
+    return () => { if (timer) window.clearTimeout(timer); };
+  }, []);
   const handleRequestSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Integration request:', requestFormData);
@@ -346,25 +343,18 @@ export default function IntegrationsHub() {
                     )}
                     
                     <Separator />
-
-                    {!isSyncing ? (
-                      <div className="grid grid-cols-1 gap-2">
-                      <Button size="sm" variant="outline" className="w-full gap-2 px-6 whitespace-nowrap justify-center">
+                    
+                    {/* Use responsive grid with enough space for two buttons */}
+                    <div className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-4">
+                      <Button size="sm" variant="outline" className="w-full gap-2 whitespace-nowrap justify-center px-5 text-sm" onClick={async () => { try { setSyncing(true); await apiClient.post('/api/sync/start'); toast.success('Inventory sync started'); } catch (e) { toast.error('Failed to start sync'); } finally { setSyncing(false); } }}>
+                        <RefreshCw className="h-3 w-3" />
+                        {syncing ? 'Syncing…' : 'Start Inventory Sync'}
+                      </Button>
+                      <Button size="sm" variant="outline" className="w-full gap-2 whitespace-nowrap justify-center px-5 text-sm">
                         <Settings className="h-3 w-3" />
                         Manage
                       </Button>
-                      <Button size="sm" className="w-full gap-2 px-6 whitespace-nowrap justify-center" onClick={() => setIsSyncing(true)}>
-                        <RefreshCw className="h-3 w-3" />
-                        Start Inventory Sync
-                      </Button>
-                      </div>
-                    ) : (
-                      <div className="space-y-2">
-                        <div className="text-sm font-medium">Inventory Sync in Progress…</div>
-                        <Progress value={syncProgress} />
-                        <p className="text-xs text-muted-foreground">This can take 1–2 minutes. You can navigate away.</p>
-                      </div>
-                    )}
+                    </div>
                   </div>
                 </CardContent>
               </Card>)}

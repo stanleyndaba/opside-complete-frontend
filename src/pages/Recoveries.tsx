@@ -11,29 +11,27 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { format, subDays, startOfYear, startOfQuarter } from 'date-fns';
-import { CalendarIcon, Search, MoreHorizontal, FileText, Eye } from 'lucide-react';
-import { Switch } from '@/components/ui/switch';
+import { CalendarIcon, Search, MoreHorizontal, FileText, Eye, Send } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { apiClient } from '@/lib/api';
 import type { DateRange } from 'react-day-picker';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, buildQuery } from '@/lib/api';
 import { Checkbox } from '@/components/ui/checkbox';
+import { useStatusStream } from '@/hooks/useStatusStream';
 import { toast } from 'sonner';
-import { useEffect, useMemo as useReactMemo } from 'react';
-import { subscribeRealtime, type RealtimeEvent } from '@/lib/realtime';
 
-type Recovery = {
+interface RecoveryRow {
   id: string;
   created: string;
   type: string;
   details: string;
   status: string;
   guaranteedAmount: number;
+  approvedAmount?: number;
+  predictedPayout?: string | null;
   expected_payout_date?: string | null;
-  sku?: string;
-  asin?: string;
-};
+  sku: string;
+  asin: string;
+}
 
 const claimTypes = ['Lost Inventory', 'Fee Dispute', 'Damaged Goods', 'Overcharge'];
 const statusOptions = ['New', 'Pending', 'Submitted', 'Paid', 'Denied'];
@@ -183,6 +181,27 @@ export default function Recoveries() {
     setBulkLoading(false);
   };
 
+  const [recoveries, setRecoveries] = useState<RecoveryRow[]>([]);
+  const [loadingList, setLoadingList] = useState<boolean>(false);
+  const [submittingIds, setSubmittingIds] = useState<Set<string>>(new Set());
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+
+  const fetchRecoveries = useCallback(async () => {
+    try {
+      setLoadingList(true);
+      const data = await apiClient.get<RecoveryRow[]>('/api/recoveries');
+      setRecoveries(data);
+    } catch (e) {
+      toast.error('Failed to load recoveries');
+    } finally {
+      setLoadingList(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchRecoveries();
+  }, [fetchRecoveries]);
+
   // Filter data based on search and filters
   const filteredClaims = useMemo(() => {
     let filtered = recoveries.filter(claim => {
@@ -209,6 +228,17 @@ export default function Recoveries() {
 
     return filtered;
   }, [claims, searchTerm, dateRange, selectedClaimTypes, selectedStatuses]);
+
+  // Real-time recovery updates via WS/SSE; updates row statuses instantly
+  useStatusStream({
+    onRecovery: (e) => {
+      setRecoveries(prev => prev.map(r => r.id === e.id ? { ...r, status: e.status } : r));
+      const s = e.status.toLowerCase();
+      if (s === 'submitted') toast.success(`Claim ${e.id} submitted`);
+      else if (s === 'paid' || s === 'paid_out') toast.success(`Claim ${e.id} paid`);
+      else if (s === 'denied' || s === 'failed') toast.error(`Claim ${e.id} ${s}`);
+    }
+  });
 
   // Real-time recovery updates via WS/SSE; updates row statuses instantly
   useStatusStream({
@@ -522,8 +552,8 @@ export default function Recoveries() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-8">
-                    <Checkbox checked={allSelected} onCheckedChange={(v) => toggleAll(Boolean(v))} aria-label="Select all" />
+                  <TableHead className="w-[40px]">
+                    <Checkbox checked={allSelected} onCheckedChange={toggleSelectAll} aria-label="Select all" />
                   </TableHead>
                   <TableHead>Claim ID</TableHead>
                   <TableHead>Created</TableHead>
@@ -531,6 +561,7 @@ export default function Recoveries() {
                   <TableHead>Details</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Guaranteed Amount</TableHead>
+                  <TableHead>Approved Amount</TableHead>
                   <TableHead>Expected Payout</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
@@ -538,8 +569,8 @@ export default function Recoveries() {
               <TableBody>
                 {(liveOnly ? liveFilteredClaims : filteredClaims).map((claim) => (
                   <TableRow key={claim.id} className="cursor-pointer hover:bg-muted/50">
-                    <TableCell className="w-8" onClick={(e) => e.stopPropagation()}>
-                      <Checkbox checked={selectedIds.has(claim.id)} onCheckedChange={(v) => toggleOne(claim.id, Boolean(v))} aria-label={`Select ${claim.id}`} />
+                    <TableCell className="w-[40px]">
+                      <Checkbox checked={selectedIds.has(claim.id)} onCheckedChange={(c) => toggleSelect(claim.id, c)} aria-label={`Select ${claim.id}`} />
                     </TableCell>
                     <TableCell>
                       <Checkbox checked={selectedIds.has(claim.id)} onCheckedChange={(checked) => {
@@ -573,7 +604,7 @@ export default function Recoveries() {
                     <TableCell className="font-medium">{formatCurrency(claim.guaranteedAmount)}</TableCell>
                     <TableCell className="font-medium">{formatCurrency(claim.approvedAmount ?? claim.guaranteedAmount)}</TableCell>
                     <TableCell>
-                      {claim.expected_payout_date ? format(new Date(claim.expected_payout_date), 'MMM dd, yyyy') : '-'}
+                      {claim.expected_payout_date ? format(new Date(claim.expected_payout_date), 'MMM dd, yyyy') : (claim.predictedPayout ? format(new Date(claim.predictedPayout), 'MMM dd, yyyy') : '-')}
                     </TableCell>
                     <TableCell>
                       <DropdownMenu>

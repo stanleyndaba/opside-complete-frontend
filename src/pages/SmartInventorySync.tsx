@@ -4,29 +4,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { StatsCard } from '@/components/ui/StatsCard';
 import { CheckCircle, AlertTriangle, Truck, Warehouse, ShoppingCart, RotateCcw } from 'lucide-react';
-import { subscribeRealtime, type RealtimeEvent } from '@/lib/realtime';
+import { apiClient } from '@/lib/api';
+import { useStatusStream } from '@/hooks/useStatusStream';
 import { toast } from 'sonner';
 
 export default function SmartInventorySync() {
-  const [syncStatus, setSyncStatus] = useState({
-    healthy: true,
-    lastReconciliation: '—',
-    skusMonitored: 0,
-    discrepanciesFound: 0,
-    dataPointsAnalyzed: 0
-  });
-  useEffect(() => {
-    const unsub = subscribeRealtime((evt: RealtimeEvent) => {
-      if (evt.type === 'sync') {
-        if (evt.status === 'completed') {
-          toast.success('Sync completed');
-        } else if (evt.status === 'failed') {
-          toast.error('Sync failed');
-        }
-      }
-    });
-    return () => unsub();
-  }, []);
+  const [syncStatus, setSyncStatus] = React.useState<{ healthy: boolean; lastReconciliation?: string; skusMonitored?: number; discrepanciesFound?: number; dataPointsAnalyzed?: number }>({ healthy: true });
+  const [dataSources, setDataSources] = React.useState<Array<{ name: string; icon: any; status: string; lastPulled: string; description: string; isHealthy: boolean }>>([]);
+  const [activityLog, setActivityLog] = React.useState<Array<{ timestamp: string; message: string; type: 'success' | 'info' | 'warning' }>>([]);
 
   React.useEffect(() => {
     const load = async () => {

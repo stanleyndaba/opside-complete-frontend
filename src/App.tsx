@@ -11,8 +11,7 @@ import Settings from "./pages/Settings";
 import IntegrationsHub from "./pages/IntegrationsHub";
 import Recoveries from "./pages/Recoveries";
 import CaseDetail from "./pages/CaseDetail";
-import EvidenceLocker from "./pages/EvidenceLocker";
-import DocumentDetail from "./pages/DocumentDetail";
+import SmartInventorySync from "./pages/SmartInventorySync";
 import Billing from "./pages/Billing";
 import TeamManagement from "./pages/TeamManagement";
 import ExportCenter from "./pages/ExportCenter";
@@ -90,12 +89,6 @@ const App = () => (
           <Route path="/recoveries" element={<Recoveries />} />
           <Route path="/recoveries/:caseId" element={<CaseDetail />} />
           <Route path="/smart-inventory-sync" element={<SmartInventorySync />} />
-          {EVIDENCE_LOCKER_ENABLED ? (
-            <>
-              <Route path="/evidence-locker" element={<EvidenceLocker />} />
-              <Route path="/evidence-locker/document/:documentId" element={<DocumentDetail />} />
-            </>
-          ) : null}
           <Route path="/billing" element={<Billing />} />
           <Route path="/team-management" element={<TeamManagement />} />
           <Route path="/export" element={<ExportCenter />} />

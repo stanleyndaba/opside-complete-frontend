@@ -4,8 +4,12 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, BarChart3, FolderOpen, CheckCircle, DollarSign, Search, RefreshCw, Calendar, TrendingUp } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { FileText, CheckCircle, DollarSign, Search, RefreshCw, Calendar } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Separator } from '@/components/ui/separator';
+import { apiClient } from '@/lib/api';
+import { toast } from 'sonner';
+import { useStatusStream } from '@/hooks/useStatusStream';
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
@@ -28,28 +32,24 @@ export function Dashboard() {
   });
 
   // Mock data for the dashboard
-  const nextPayout = {
-    amount: 1850.00,
-    expectedDate: "Sept 15, 2025"
-  };
-  const recoveredValue = {
-    total: 11200.50,
-    pending: 1850.00,
-    lastMonth: 2100.00
-  };
-  const upcomingPayouts = [{
-    amount: 1850.00,
-    date: "Sept 15, 2025",
-    status: "confirmed"
-  }, {
-    amount: 2100.00,
-    date: "Oct 12, 2025",
-    status: "pending"
-  }, {
-    amount: 950.00,
-    date: "Nov 8, 2025",
-    status: "estimated"
-  }];
+  useEffect(() => {
+    const fetchMetrics = async () => {
+      try {
+        setLoadingMetrics(true);
+        const data = await apiClient.get<{ total_recovered: number; expected_approved: number; upcoming_payouts: Array<{ amount: number; date: string }> }>(
+          '/api/metrics/recoveries'
+        );
+        setMetrics(data);
+      } catch (e) {
+        // keep null on error
+      } finally {
+        setLoadingMetrics(false);
+      }
+    };
+    fetchMetrics();
+  }, []);
+
+  // Removed detection polling in favor of WebSocket/SSE stream
   const activityFeed = [{
     id: 1,
     type: 'claim_submitted',
@@ -143,35 +143,119 @@ export function Dashboard() {
                   </Card>
                 </div>
 
-                {/* Module 2: ROI & Cash Visibility */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Card>
-                    <CardContent className="p-4">
-                      <div className="text-sm text-muted-foreground">Total Recovered</div>
-                      <div className="text-2xl font-semibold">{formatCurrency(metrics?.totalRecovered ?? 0)}</div>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="p-4">
-                      <div className="text-sm text-muted-foreground">Expected Payouts</div>
-                      <div className="text-2xl font-semibold text-emerald-700">{formatCurrency(metrics?.expectedPayouts ?? 0)}</div>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="p-4">
-                      <div className="text-sm text-muted-foreground">Pending Submissions</div>
-                      <div className="text-2xl font-semibold">{metrics?.pendingSubmissions ?? 0}</div>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="p-4">
-                      <div className="text-sm text-muted-foreground">Last 30 Days</div>
-                      <div className="text-2xl font-semibold">{formatCurrency(metrics?.last30Days ?? 0)}</div>
-                    </CardContent>
-                  </Card>
+                <div className="flex flex-wrap gap-3">
+                  <Dialog open={detectOpen} onOpenChange={setDetectOpen}>
+                    <DialogTrigger asChild>
+                      <Button className="gap-2">
+                        <Search className="h-4 w-4" />
+                        Detect Missed Claims
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Detect Missed Claims</DialogTitle>
+                        <DialogDescription>
+                          We will analyze your FBA data to find missed reimbursements.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-3">
+                        {!detectResults.length ? (
+                          <div className="text-sm text-muted-foreground">
+                            {detecting ? 'Scanning… this may take up to 1 minute.' : 'Click Run Detection to start.'}
+                          </div>
+                        ) : (
+                          <>
+                            <div className="text-sm font-medium">Potential Value: {formatCurrency(detectResults.reduce((s, r) => s + r.amount, 0))}</div>
+                            <Separator />
+                            <div className="max-h-64 overflow-auto space-y-2">
+                              {detectResults.map(r => (
+                                <div key={r.id} className="flex items-center justify-between text-sm border rounded p-2">
+                                  <div>
+                                    <div className="font-medium">{r.id} • {r.sku} / {r.asin}</div>
+                                    <div className="text-muted-foreground">{r.reason}</div>
+                                  </div>
+                                  <div className="font-semibold">{formatCurrency(r.amount)}</div>
+                                </div>
+                              ))}
+                            </div>
+                          </>
+                        )}
+                      </div>
+                      <DialogFooter>
+                        <Button variant="outline" onClick={() => setDetectOpen(false)}>Close</Button>
+                        <Button
+                          onClick={async () => {
+                            try {
+                              setDetecting(true);
+                              const result = await apiClient.post<{ detection_id: string; claims: Array<{ id: string; amount: number; reason: string; sku: string; asin: string }> }>(
+                                '/api/detections/run'
+                              );
+                              setDetectResults(result.claims ?? []);
+                              if (result.detection_id) setDetectionId(result.detection_id);
+                              setDetectionNotified(false);
+                              toast.info('Detection started');
+                              // Optionally begin polling detection status by id
+                              // const statusId = result.detection_id; (store if needed)
+                            } catch (e) {
+                              setDetectResults([]);
+                              toast.error('Detection failed. Please try again.');
+                            } finally {
+                              setDetecting(false);
+                            }
+                          }}
+                          disabled={detecting}
+                        >
+                          {detecting ? 'Running…' : 'Run Detection'}
+                        </Button>
+                        <Button
+                          disabled={!detectResults.length}
+                          onClick={() => {
+                            setDetectOpen(false);
+                            navigate('/recoveries');
+                          }}
+                        >
+                          Auto-Submit All
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                  <Button variant="outline" className="gap-2" onClick={() => navigate('/smart-inventory-sync')}>
+                    <RefreshCw className="h-4 w-4" />
+                    Reconcile & Sync
+                  </Button>
                 </div>
+                {/* Your Recovered Value */}
+                <Card className="border">
+                  <CardContent className="p-4">
+                    <div className="space-y-2">
+                      <h2 className="font-montserrat text-lg text-gray-700 font-semibold">Your Next Payout</h2>
+                      
+                      {/* Total Recovered Hero Amount */}
+                      <div className="text-xl font-semibold text-sidebar-primary font-montserrat">
+                        {formatCurrency(metrics?.total_recovered ?? 0)}
+                      </div>
+                      
+                      {/* Subtitle */}
+                      <div className="text-sm text-muted-foreground font-montserrat">
+                        Total recovered since joining
+                      </div>
+                      
+                      {/* Recovery Metrics */}
+                      <div className="pt-2 space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600 font-montserrat">Pending Recovery</span>
+                          <span className="font-semibold text-sm font-montserrat">{formatCurrency(metrics?.expected_approved ?? 0)}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600 font-montserrat">30-Day Recovery</span>
+                          <span className="font-semibold text-sm font-montserrat">{formatCurrency(0)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
 
-                {/* Module 3: Actions */}
+                {/* Primary Navigation Links */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Button 
                     variant="outline" 
@@ -222,44 +306,31 @@ export function Dashboard() {
               <div className="lg:col-span-1">
                 <Card className="h-full">
                   <CardContent className="p-6">
-                    <div className="mb-6">
-                      <h2 className="text-base font-semibold font-montserrat">Notifications</h2>
+                    <div className="mb-4">
+                      <h2 className="text-base font-semibold text-foreground">Notifications</h2>
+                      <p className="text-xs text-muted-foreground">Recent activity across claims, payouts and sync</p>
                     </div>
-
-                    <div className="space-y-4 max-h-[600px] overflow-y-auto">
-                      {activityFeed.length === 0 && (
-                        <div className="text-sm text-muted-foreground">No recent activity yet</div>
-                      )}
+                    <div className="space-y-3 max-h-[600px] overflow-y-auto">
                       {activityFeed.map(item => {
                         const IconComponent = item.icon;
                         return (
                           <div
                             key={item.id}
-                            className={`flex items-start gap-4 p-4 rounded-lg border transition-colors ${!item.read ? 'bg-muted/50 border-primary/20' : 'bg-background hover:bg-muted/30'}`}
+                            className="flex items-start gap-4 p-4 rounded-lg border bg-background hover:bg-muted/30 transition-colors"
                           >
                             <div className="flex-shrink-0 mt-0.5">
                               <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
                                 <IconComponent className="w-4 h-4 text-primary" />
                               </div>
                             </div>
-
                             <div className="flex-1 min-w-0">
-                              <p className="text-xs font-medium text-foreground mb-1 font-montserrat">
+                              <p className="text-sm font-medium text-foreground mb-1">
                                 {item.description}
                               </p>
-                              <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
+                              <div className="flex items-center gap-3 text-xs text-muted-foreground">
                                 <span>{item.timestamp}</span>
-                                <div className="flex gap-1">
-                                  <Badge variant="secondary" className="text-[10px] capitalize">
-                                    {item.type.replace('_', ' ')}
-                                  </Badge>
-                                </div>
                               </div>
                             </div>
-
-                            {!item.read && (
-                              <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0 mt-2"></div>
-                            )}
                           </div>
                         );
                       })}

@@ -5,9 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/use-auth';
 import { NotificationBell } from './NotificationBell';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiFetch } from '@/lib/api';
-import { toast } from 'sonner';
+import { useAuth } from '@/hooks/useAuth';
+
 interface NavbarProps {
   className?: string;
   sidebarCollapsed?: boolean;
@@ -19,19 +18,7 @@ export function Navbar({
   sidebarCollapsed = false,
   onToggleSidebar
 }: NavbarProps) {
-  const queryClient = useQueryClient();
-  const { isDemo, exitDemo } = useAuth();
-  const startSync = useMutation({
-    mutationFn: async () => apiFetch('/api/sync/start', { method: 'POST', body: JSON.stringify({}) }),
-    onSuccess: () => {
-      toast.success('Sync started');
-      queryClient.invalidateQueries({ queryKey: ['sync-status'] });
-      queryClient.invalidateQueries({ queryKey: ['sync-activity'] });
-    },
-    onError: (e: any) => {
-      toast.error(e?.message || 'Failed to start sync');
-    },
-  });
+  const { user, signInWithAmazon, signOut } = useAuth();
   return <header className={cn("bg-background/95 backdrop-blur-sm sticky top-0 z-30 border-b transition-all duration-300", sidebarCollapsed ? "ml-16" : "ml-56", className)}>
       <div className="container flex items-center justify-end h-16 px-4">
         {/* Right side - Notification Bell and Profile Icon */}
