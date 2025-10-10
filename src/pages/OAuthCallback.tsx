@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, AlertTriangle, RefreshCw, ExternalLink } from 'lucide-react';
-import { api } from '@/lib/api';
+import { apiClient } from '@/lib/api';
 
 function useQueryParams() {
   const { search } = useLocation();

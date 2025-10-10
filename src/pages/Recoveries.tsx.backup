@@ -90,6 +90,102 @@ export default function Recoveries() {
     }
   });
 
+  const [recoveries, setRecoveries] = useState<RecoveryRow[]>([]);
+  const [loadingList, setLoadingList] = useState<boolean>(false);
+  const [submittingIds, setSubmittingIds] = useState<Set<string>>(new Set());
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+
+  const fetchRecoveries = useCallback(async () => {
+    try {
+      setLoadingList(true);
+      const data = await apiClient.get<RecoveryRow[]>('/api/recoveries');
+      setRecoveries(data);
+    } catch (e) {
+      toast.error('Failed to load recoveries');
+    } finally {
+      setLoadingList(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchRecoveries();
+  }, [fetchRecoveries]);
+
+  const { data: recoveries = [] } = useQuery<Recovery[]>({
+    queryKey: ['recoveries', { searchTerm, selectedClaimTypes, selectedStatuses, dateRange }],
+    queryFn: async () => {
+      const qs = buildQuery({
+        q: searchTerm,
+        type: selectedClaimTypes.join(','),
+        status: selectedStatuses.join(','),
+        from: dateRange?.from ? dateRange.from.toISOString() : undefined,
+        to: dateRange?.to ? dateRange.to.toISOString() : undefined,
+      });
+      return apiFetch<Recovery[]>(`/api/recoveries${qs}`);
+    },
+    refetchInterval: false,
+  });
+
+  // Realtime updates: listen for recovery status changes and refresh list
+  useEffect(() => {
+    const unsub = subscribeRealtime((evt: RealtimeEvent) => {
+      if (evt.type === 'recovery') {
+        setLiveEventsTs(prev => ({ ...prev, [evt.id]: Date.now() }));
+        queryClient.invalidateQueries({ queryKey: ['recoveries'] });
+      }
+    });
+    return () => unsub();
+  }, [queryClient]);
+
+  // Selection state for bulk actions
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const allSelected = filteredClaims.length > 0 && filteredClaims.every(c => selectedIds.has(c.id));
+  const toggleAll = (checked: boolean) => {
+    setSelectedIds(prev => {
+      if (checked) return new Set(filteredClaims.map(c => c.id));
+      return new Set();
+    });
+  };
+  const toggleOne = (id: string, checked: boolean) => {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      if (checked) next.add(id); else next.delete(id);
+      return next;
+    });
+  };
+
+  const queryClient = useQueryClient();
+  const [liveOnly, setLiveOnly] = useState(true);
+  const [liveEventsTs, setLiveEventsTs] = useState<Record<string, number>>({});
+  const submitClaim = async (id: string) => {
+    try {
+      await apiFetch(`/api/claims/${id}/submit`, { method: 'POST', body: JSON.stringify({}) });
+      toast.success(`Submitted claim ${id}`);
+      // refresh recoveries list to reflect latest status
+      queryClient.invalidateQueries({ queryKey: ['recoveries'] });
+    } catch (e: any) {
+      toast.error(`Failed to submit ${id}: ${e?.message || 'Error'}`);
+    }
+  };
+  const [bulkLoading, setBulkLoading] = useState(false);
+  const onBulkSubmit = async () => {
+    if (selectedIds.size === 0) return;
+    setBulkLoading(true);
+    const ids = Array.from(selectedIds);
+    // Process sequentially to reduce backend spikes; show toast per result
+    for (const id of ids) {
+      // eslint-disable-next-line no-await-in-loop
+      await submitClaim(id);
+      setSelectedIds(prev => { const n = new Set(prev); n.delete(id); return n; });
+    }
+    setBulkLoading(false);
+  };
+
+  const [recoveries, setRecoveries] = useState<RecoveryRow[]>([]);
+  const [loadingList, setLoadingList] = useState<boolean>(false);
+  const [submittingIds, setSubmittingIds] = useState<Set<string>>(new Set());
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+
   const fetchRecoveries = useCallback(async () => {
     try {
       setLoadingList(true);

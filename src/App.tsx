@@ -5,20 +5,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Skeleton } from "@/components/ui/skeleton";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import NotFound from "./pages/NotFound";
-import Reports from "./pages/Reports";
-import Settings from "./pages/Settings";
-import IntegrationsHub from "./pages/IntegrationsHub";
-import Recoveries from "./pages/Recoveries";
-import CaseDetail from "./pages/CaseDetail";
-import SmartInventorySync from "./pages/SmartInventorySync";
-import Billing from "./pages/Billing";
-import TeamManagement from "./pages/TeamManagement";
-import ExportCenter from "./pages/ExportCenter";
-import NotificationHub from "./pages/NotificationHub";
-import ApiAccess from "./pages/ApiAccess";
-import Help from "./pages/Help";
-import WhatsNew from "./pages/WhatsNew";
 import { EVIDENCE_LOCKER_ENABLED } from "@/lib/featureFlags";
 
 // Route-level code splitting
@@ -82,7 +68,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/landing" element={<Landing />} />
+          <Route path="/Index" element={<Index />} />
           <Route path="/reports" element={<Reports />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/integrations-hub" element={<IntegrationsHub />} />

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { CheckCircle, AlertTriangle, Shield, ArrowRight, RefreshCw, Power } from 'lucide-react';
-import { api } from '@/lib/api';
+import { apiClient } from '@/lib/api';
 
 const SCOPE_COPY: Record<string, { label: string; why: string }> = {
   'orders.read': {

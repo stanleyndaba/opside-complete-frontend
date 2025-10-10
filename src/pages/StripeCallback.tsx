@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api } from '@/lib/api';
+import { apiClient } from '@/lib/api';
 import { PageLayout } from '@/components/layout/PageLayout';
 
 export default function StripeCallback() {

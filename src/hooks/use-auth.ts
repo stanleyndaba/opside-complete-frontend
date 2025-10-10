@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, useCallback, useRef } from "react";
-import { apiFetch } from "@/lib/api";
+import { apiClient } from "@/lib/api";
 import { toast } from "sonner";
 
 type AuthUser = {
