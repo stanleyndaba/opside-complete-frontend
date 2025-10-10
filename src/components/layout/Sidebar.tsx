@@ -73,10 +73,8 @@ export function Sidebar({
 		{ title: 'Help Centre', icon: HelpCircle, href: '/help' },
 		{ title: 'What\'s new', icon: Sparkles, href: '/whats-new' },
 	];
-	const NavItemComponent = ({
+	const NavItemComponent: React.FC<{ item: NavItem }> = ({
 		item
-	}: {
-		item: NavItem;
 	}) => {
 		const isActive = location.pathname === item.href;
     const handlePrefetch = () => {
