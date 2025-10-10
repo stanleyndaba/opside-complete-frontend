@@ -1,5 +1,5 @@
-import React from 'react';
-import { Home, Shield, Settings, HelpCircle, Sparkles, PanelLeftClose, PanelLeftOpen, BarChart3, Plug, Edit3 } from 'lucide-react';
+import React, { useState } from 'react';
+import { Home, Shield, Settings, HelpCircle, Sparkles, PanelLeftClose, PanelLeftOpen, BarChart3, Plug, Edit3, LogOut, User, Building2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -59,6 +59,7 @@ export function Sidebar({
 }: SidebarProps) {
 	const location = useLocation();
   const queryClient = useQueryClient();
+  const [showLogout, setShowLogout] = useState(false);
     
 	const primaryItems: NavItem[] = [
 		{ title: 'Command Center', icon: Home, href: '/app' },
@@ -128,32 +129,37 @@ export function Sidebar({
 		className)}>
 			{/* Internal Header with Collapse Control */}
 			<div className={cn("border-b border-gray-200 flex items-center", isCollapsed ? "p-2 justify-between" : "p-3 justify-between") }>
-				<div className={cn("select-none", isCollapsed ? "text-base" : "text-xl")}
-					style={{ fontFamily: 'Montserrat, sans-serif' }}>
-					<span className="font-black text-black">{isCollapsed ? 'C' : 'Clario'}</span>
-				</div>
+				<div className={cn("select-none", isCollapsed ? "text-base" : "text-xl")} />
+				<button
+					title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+					className={cn("h-8 w-8 flex items-center justify-center text-gray-700 hover:text-black")}
+					onClick={onToggle}
+				>
+					{isCollapsed ? <PanelLeftOpen className="h-5 w-5" /> : <PanelLeftClose className="h-5 w-5" />}
+				</button>
 			</div>
 
 			<ScrollArea className="flex-1">
 				<div className={cn("h-full flex", isCollapsed ? "px-2" : "px-4")}> 
-						<div className="my-auto w-full">
-						{!isCollapsed && (
-							<div className="pt-3 pb-2">
-								<div className="flex items-center justify-between">
-									<div>
+						<div className="w-full flex flex-col">
+						<nav className="space-y-4 py-2 w-full flex-1 flex flex-col justify-center">
+							{!isCollapsed && (
+								<div className="px-3">
+									<div className="flex items-center justify-between">
+										<div>
 											<div className="text-sm font-semibold text-black">Martin Links</div>
 											<div className="text-xs text-gray-500">martin@example.com</div>
 											<div className="text-[11px] text-green-700 flex items-center gap-1 mt-1">
-											<span className="w-1.5 h-1.5 rounded-full bg-green-500" /> Connected
+												<span className="w-1.5 h-1.5 rounded-full bg-green-500" /> Connected
+											</div>
 										</div>
-									</div>
 										<button className="text-gray-500 hover:text-gray-700" title="Edit profile" onClick={() => (window.location.href = '/settings')}>
-										<Edit3 className="h-4 w-4" />
-									</button>
+											<Edit3 className="h-4 w-4" />
+										</button>
+									</div>
 								</div>
-							</div>
-						)}
-							<nav className="space-y-4 py-2 w-full">
+							)}
+							{!isCollapsed && <div className="h-px bg-gray-100" />}
 								<div className="space-y-1">
 									{primaryItems.map((item, idx) => <React.Fragment key={`p-${idx}`}><NavItemComponent item={item} /></React.Fragment>)}
 								</div>
@@ -165,10 +171,43 @@ export function Sidebar({
 								<div className="space-y-1 pb-4">
 									{supportItems.map((item, idx) => <React.Fragment key={`s-${idx}`}><NavItemComponent item={item} /></React.Fragment>)}
 								</div>
-                                
-						</nav>
+							</nav>
 					</div>
 				</div>
 			</ScrollArea>
+			{/* Bottom Logout control */}
+			{!isCollapsed && (
+				<div className="mt-auto p-3 border-t border-gray-200">
+					<button
+						className="w-full flex items-center gap-2 text-left text-gray-700 hover:text-red-600 hover:bg-gray-50 px-3 py-2 rounded-md"
+						onClick={() => setShowLogout(prev => !prev)}
+					>
+						<LogOut className="h-4 w-4" />
+						<span className="text-sm">Logout</span>
+					</button>
+					{showLogout && (
+						<div className="mt-2 rounded-md border border-red-200 bg-red-50 p-3">
+							<div className="flex items-center gap-2">
+								<div className="h-8 w-8 rounded-full bg-white flex items-center justify-center border border-red-200">
+									<User className="h-4 w-4 text-red-600" />
+								</div>
+								<div className="min-w-0">
+									<p className="text-sm font-medium text-red-700 truncate">Martin Links</p>
+									<p className="text-xs text-red-600 truncate flex items-center gap-1">
+										<Building2 className="h-3 w-3" /> John's Amazon Store
+									</p>
+								</div>
+							</div>
+							<button
+								className="mt-3 w-full inline-flex items-center justify-center gap-2 text-sm text-white bg-red-600 hover:bg-red-700 px-3 py-2 rounded"
+								onClick={async () => { try { await api.logout(); } catch (_) {} window.location.href = '/'; }}
+							>
+								<LogOut className="h-4 w-4" />
+								<span>Log out</span>
+							</button>
+						</div>
+					)}
+				</div>
+			)}
 		</aside>;
 }

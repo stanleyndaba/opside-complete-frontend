@@ -4,7 +4,7 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, BarChart3, CheckCircle, DollarSign } from 'lucide-react';
+import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign } from 'lucide-react';
 
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -24,7 +24,7 @@ export function Dashboard() {
   const mainClass = isSidebarCollapsed ? 'ml-16' : 'ml-56';
 
   return (
-    <div className="min-h-screen flex flex-col h-screen overflow-hidden">
+    <div className="min-h-screen flex flex-col h-screen overflow-hidden platform">
       <Navbar sidebarCollapsed={isSidebarCollapsed} />
       <div className="flex-1 flex h-full overflow-hidden">
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
@@ -42,7 +42,7 @@ export function Dashboard() {
                 <Card>
                   <CardContent className="p-6">
                     <h2 className="font-montserrat text-lg text-gray-700 font-semibold">Your Recovered Value</h2>
-                    <div className="text-4xl font-extrabold mt-2 text-green-600">
+                    <div className="text-[22px] font-extrabold mt-2 text-[#0d0d0d]">
                       {formatCurrency(14228)}
                     </div>
                     <div className="mt-4 space-y-2">
@@ -52,7 +52,7 @@ export function Dashboard() {
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-muted-foreground">Success Rate</span>
-                        <span className="text-sm font-semibold">94%</span>
+                        <span className="text-sm font-semibold text-[#33cc33]">94%</span>
                       </div>
                     </div>
                     <div className="mt-4">
@@ -87,20 +87,34 @@ export function Dashboard() {
                         <span className="text-xs bg-gray-100 text-black rounded px-2 py-0.5">3 new</span>
                       </div>
                     </div>
-                    <div className="py-1 max-h-[600px] overflow-y-auto">
-                      <div className="p-3 border-b border-border/10">
-                        <div className="flex items-center gap-2">
-                          <CheckCircle className="h-4 w-4 text-green-600" />
-                          <span className="text-sm">Amazon connection established</span>
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-1">Just now</p>
-                      </div>
-                      <div className="p-3 border-b border-border/10">
-                        <div className="flex items-center gap-2">
-                          <DollarSign className="h-4 w-4 text-blue-600" />
-                          <span className="text-sm">23 potential claims identified</span>
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-1">2 minutes ago</p>
+                    <div className="py-2 max-h-[600px] overflow-y-auto">
+                      <div className="relative px-2 max-w-[340px] mx-auto text-[12px]">
+                        {(() => {
+                          const events = [
+                            { id: 'evt-1', unread: true, icon: Link2, title: 'Connection Established', details: 'Amazon connection established', time: 'Just now' },
+                            { id: 'evt-2', unread: true, icon: Search, title: 'Claims Identified', details: `23 potential claims identified, valued at ~${formatCurrency(14228)}` , time: '2 minutes ago' },
+                            { id: 'evt-3', unread: false, icon: Send, title: 'Claim Submitted', details: 'Auto-submitted 5 verified claims', time: 'Yesterday' },
+                            { id: 'evt-4', unread: false, icon: CircleDollarSign, title: 'Funds Recovered', details: `Payout confirmed: ${formatCurrency(850.75)}`, time: '2 days ago' },
+                          ];
+                          return events.map((evt, idx) => (
+                            <div key={evt.id} className={"group relative flex items-start gap-3 " + (idx > 0 ? 'pt-3' : 'pt-2') + " pb-3 overflow-hidden"}>
+                              {/* Icon with edge status dot */}
+                              <div className="relative h-8 w-8 rounded-full border bg-white flex items-center justify-center text-gray-700">
+                                <span className={"absolute h-2 w-2 rounded-full " + (evt.unread ? 'bg-blue-500' : 'bg-gray-300')}
+                                  style={{ left: '1px', top: '1px' }} />
+                                <evt.icon className="h-4 w-4" />
+                              </div>
+                              {/* Content */}
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center justify-between">
+                                  <p className="text-[12px] font-medium text-foreground truncate">{evt.title}</p>
+                                  <span className="ml-3 shrink-0 text-[11px] text-muted-foreground">{evt.time}</span>
+                                </div>
+                                <p className="text-[11px] text-muted-foreground mt-0.5 truncate">{evt.details}</p>
+                              </div>
+                            </div>
+                          ));
+                        })()}
                       </div>
                     </div>
                   </CardContent>

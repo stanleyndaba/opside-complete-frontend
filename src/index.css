@@ -181,3 +181,20 @@
     @apply animate-pulse-gentle;
   }
 }
+
+/* Lighter typography across the platform (excludes landing page) */
+@layer base {
+  .platform :where(h1, h2, h3, h4, h5, h6) { font-weight: 500; }
+  .platform :where(p, span, li, label, input, textarea, select, button, small, strong, em) { font-weight: 300; }
+  .platform .font-black { font-weight: 700 !important; }
+  .platform .font-extrabold { font-weight: 600 !important; }
+  .platform .font-bold { font-weight: 500 !important; }
+  .platform .font-semibold { font-weight: 400 !important; }
+  .platform .font-medium { font-weight: 300 !important; }
+}
+
+/* Slightly lighter typography on landing page */
+@layer base {
+  .landing :where(h1, h2, h3, h4, h5, h6) { font-weight: 600; }
+  .landing :where(p, span, li, label, input, textarea, select, button, small, strong, em) { font-weight: 400; }
+}

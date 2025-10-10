@@ -11,12 +11,12 @@ import { Separator } from '@/components/ui/separator';
 import { 
   User, Building2, Users, CreditCard, Zap, Bell, Shield, 
   Upload, MapPin, Clock, Monitor, Smartphone, AlertTriangle,
-  CheckCircle, Calendar, Globe, Camera, Key, Plug
+  CheckCircle, Calendar, Globe, Camera, Key, Plug, Briefcase
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 
-type SettingsSection = 'profile' | 'business' | 'team' | 'billing' | 'integrations' | 'notifications' | 'security' | 'api';
+type SettingsSection = 'profile' | 'business' | 'team' | 'billing' | 'integrations' | 'notifications' | 'security' | 'api' | 'careers';
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -29,7 +29,8 @@ const Settings = () => {
     { id: 'api' as SettingsSection, label: 'API Access', icon: Key },
     { id: 'integrations' as SettingsSection, label: 'Integrations Hub', icon: Zap },
     { id: 'notifications' as SettingsSection, label: 'Notifications', icon: Bell },
-    { id: 'security' as SettingsSection, label: 'Security', icon: Shield }
+    { id: 'security' as SettingsSection, label: 'Security', icon: Shield },
+    { id: 'careers' as SettingsSection, label: 'Careers', icon: Briefcase }
   ];
 
   const notificationSettings = [
@@ -406,7 +407,7 @@ const Settings = () => {
                 {menuItems.map((item) => (
                   <button
                     key={item.id}
-                    onClick={() => setActiveSection(item.id)}
+                    onClick={() => item.id === 'careers' ? navigate('/careers') : setActiveSection(item.id)}
                     className={cn(
                       "w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md transition-colors text-left",
                       activeSection === item.id

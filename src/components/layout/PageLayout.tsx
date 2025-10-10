@@ -13,7 +13,7 @@ export function PageLayout({
   const toggleSidebar = () => {
     setIsSidebarCollapsed(prev => !prev);
   };
-  return <div className="min-h-screen flex flex-col">
+  return <div className="min-h-screen flex flex-col platform">
       <Navbar sidebarCollapsed={isSidebarCollapsed} onToggleSidebar={toggleSidebar} />
       
       <div className="flex-1 flex">
