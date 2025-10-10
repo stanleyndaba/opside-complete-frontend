@@ -5,36 +5,20 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, AlertCircle, Calendar, Send } from 'lucide-react';
-import { apiClient } from '@/lib/api';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, AlertCircle, Calendar, Shield } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { api, buildApiUrl } from '@/lib/api';
-import { recoveryApi } from '@/lib/recoveryApi';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useEffect, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { apiFetch } from '@/lib/api';
+import { toast } from 'sonner';
 
 interface CaseEvent {
   timestamp: string;
   title: string;
   description: string;
   type: 'detection' | 'analysis' | 'generation' | 'submission' | 'update' | 'completion';
-}
-
-interface CaseDetailResponse {
-  id: string;
-  title: string;
-  status: string;
-  guaranteedAmount: number;
-  approvedAmount?: number;
-  payoutDate?: string | null;
-  expected_payout_date?: string | null;
-  createdDate: string;
-  amazonCaseId?: string | null;
-  sku: string;
-  productName: string;
-  facility: string;
-  confidence: number;
-  unitsLost: number;
-  unitCost: number;
 }
 
 const getStatusColor = (status: string) => {
@@ -94,84 +78,101 @@ const getEventColor = (type: CaseEvent['type']) => {
 
 export default function CaseDetail() {
   const { caseId } = useParams<{ caseId: string }>();
-  const [autoSubmitOpen, setAutoSubmitOpen] = React.useState(false);
-  const [statusEvents, setStatusEvents] = React.useState<CaseEvent[] | null>(null);
-  const [polling, setPolling] = React.useState<boolean>(true);
-  const [detail, setDetail] = React.useState<CaseDetailResponse | null>(null);
-  const [loading, setLoading] = React.useState<boolean>(true);
-  const [error, setError] = React.useState<string | null>(null);
+  const [autoClaimOpen, setAutoClaimOpen] = useState(false);
+  const [submissionStatus, setSubmissionStatus] = useState<'idle'|'pending'|'submitted'|'failed'|'paid'>('idle');
+  const queryClient = useQueryClient();
   
-  React.useEffect(() => {
-    const fetchDetail = async () => {
-      if (!caseId) return;
-      try {
-        setLoading(true);
-        const data = await apiClient.get<CaseDetailResponse>(`/api/recoveries/${caseId}`);
-        setDetail(data);
-        setError(null);
-      } catch (e) {
-        setError('not_found');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchDetail();
+
+  const { data: caseData, error } = useQuery<any>({
+    queryKey: ['recovery', caseId],
+    queryFn: () => apiFetch(`/api/recoveries/${caseId}`),
+    enabled: !!caseId,
+    staleTime: 5_000,
+  });
+
+  const [statusPollCount, setStatusPollCount] = useState(0);
+  useEffect(() => {
+    let timer: any;
+    if (caseId) {
+      timer = setInterval(() => {
+        setStatusPollCount((n) => n + 1);
+      }, 5000);
+    }
+    return () => clearInterval(timer);
   }, [caseId]);
 
-  React.useEffect(() => {
-    let timer: number | undefined;
-    const poll = async () => {
-      try {
-        if (!caseId) return;
-        const data = await apiClient.get<{ events: CaseEvent[] }>(`/api/recoveries/${caseId}/status`);
-        setStatusEvents(data.events);
-      } catch {
-        // ignore
-      } finally {
-        timer = window.setTimeout(poll, 8000);
-      }
-    };
-    if (polling) poll();
-    return () => {
-      if (timer) window.clearTimeout(timer);
-    };
-  }, [caseId, polling]);
+  useQuery({
+    queryKey: ['recovery-status', caseId, statusPollCount],
+    queryFn: () => apiFetch(`/api/recoveries/${caseId}/status`),
+    enabled: !!caseId,
+  });
 
-  if (!caseId) {
-    return (
-      <PageLayout title="Case Not Found">
-        <div className="text-center py-12">
-          <h2 className="text-xl font-semibold mb-4">Case not found</h2>
-          <Button asChild>
-            <Link to="/recoveries">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Cases
-            </Link>
-          </Button>
-        </div>
-      </PageLayout>
-    );
-  }
+  if (error) return (
+    <PageLayout title="Error loading case">
+      <div className="p-6 text-sm text-red-600">{(error as any)?.message || 'Failed to load case.'}</div>
+      <div className="px-6 pb-6"><Button asChild><Link to="/recoveries">Return to Recoveries</Link></Button></div>
+    </PageLayout>
+  );
 
-  if (error === 'not_found') {
-    return (
-      <PageLayout title="Case Not Found">
-        <div className="text-center py-12">
-          <h2 className="text-xl font-semibold mb-4">Case not found</h2>
-          <Button asChild>
-            <Link to="/recoveries">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Cases
-            </Link>
-          </Button>
-        </div>
-      </PageLayout>
-    );
-  }
+  if (!caseData) return (
+    <PageLayout title="Loading case">
+      <div className="p-6 text-sm text-muted-foreground">Loading...</div>
+    </PageLayout>
+  );
+
+  const expectedPayoutAmount = caseData.guaranteedAmount;
+  const expectedPayoutDate = caseData.expected_payout_date || caseData.payoutDate;
+  const isEvidenceValidated = Boolean((caseData as any)?.evidence_validated ?? (caseData as any)?.ev_validated ?? (caseData as any)?.evidence?.validated);
+
+  const submitClaim = useMutation({
+    mutationFn: async () => {
+      if (!caseId) throw new Error('Missing case ID');
+      return apiFetch(`/api/claims/${caseId}/submit`, { method: 'POST', body: JSON.stringify({}) });
+    },
+    onMutate: () => {
+      setSubmissionStatus('pending');
+    },
+    onSuccess: () => {
+      setSubmissionStatus('submitted');
+      toast.success('Claim submitted to Amazon');
+      queryClient.invalidateQueries({ queryKey: ['recovery', caseId] });
+      queryClient.invalidateQueries({ queryKey: ['metrics','recoveries'] });
+    },
+    onError: (e: any) => {
+      setSubmissionStatus('failed');
+      toast.error(e?.message || 'Submission failed');
+    }
+  });
 
   return (
     <PageLayout title={`Case ${detail?.id ?? caseId}`}>
       <div className="space-y-6">
+        {/* Submission Status Banner */}
+        {submissionStatus !== 'idle' && (
+          <Card>
+            <CardContent className="p-4">
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  {submissionStatus === 'submitted' && <CheckCircle className="h-5 w-5 text-emerald-600" />}
+                  {submissionStatus === 'pending' && <Clock className="h-5 w-5 text-primary" />}
+                  {submissionStatus === 'failed' && <AlertCircle className="h-5 w-5 text-red-600" />}
+                  {submissionStatus === 'paid' && <DollarSign className="h-5 w-5 text-emerald-700" />}
+                  <div className="text-sm">
+                    {submissionStatus === 'pending' && 'Auto-claim queued. Submitting to Amazon...'}
+                    {submissionStatus === 'submitted' && 'Claim submitted to Amazon. Tracking status automatically.'}
+                    {submissionStatus === 'failed' && 'Submission failed. Please retry or contact support.'}
+                    {submissionStatus === 'paid' && 'Paid. Funds confirmed by Amazon transactions.'}
+                  </div>
+                </div>
+                {submissionStatus === 'pending' && (
+                  <div className="w-full h-2 bg-muted rounded">
+                    <div className="h-2 bg-primary rounded animate-pulse" style={{ width: '60%' }} />
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
         {/* Header */}
         <div className="flex items-center gap-4">
           <Button asChild variant="ghost" size="sm">
@@ -258,9 +259,9 @@ export default function CaseDetail() {
                 )}
 
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Guaranteed Value</label>
+                  <label className="text-sm font-medium text-muted-foreground">Expected Payout</label>
                   <p className="text-lg font-semibold text-emerald-600 mt-1">
-                    ${(detail?.approvedAmount ?? detail?.guaranteedAmount ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                    ${expectedPayoutAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                   </p>
                 </div>
 
@@ -268,7 +269,11 @@ export default function CaseDetail() {
                   <label className="text-sm font-medium text-muted-foreground">Expected Payout Date</label>
                   <p className="mt-1 flex items-center gap-2">
                     <Calendar className="h-4 w-4 text-muted-foreground" />
-                    {detail?.expected_payout_date ? new Date(detail.expected_payout_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '—'}
+                    {new Date(expectedPayoutDate).toLocaleDateString('en-US', {
+                      month: 'long',
+                      day: 'numeric',
+                      year: 'numeric'
+                    })}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">
                     {detail?.confidence ?? 0}% Confidence
@@ -313,28 +318,48 @@ export default function CaseDetail() {
 
                 <Separator />
 
-                {detail?.status === 'Guaranteed' && (
-                  <Button
-                    className="w-full bg-emerald-600 hover:bg-emerald-700"
-                    onClick={async () => {
-                      try {
-                        // Example EV gating: require confidence >= 80
-                        if ((detail?.confidence ?? 0) < 80) {
-                          return;
-                        }
-                        await apiClient.post(`/api/claims/${detail?.id}/submit`);
-                      } catch {}
-                    }}
-                  >
-                    <Send className="h-4 w-4 mr-2" />
-                    Auto-Submit Claim
-                  </Button>
+                {caseData.status === 'Guaranteed' && (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Dialog open={autoClaimOpen} onOpenChange={setAutoClaimOpen}>
+                          <DialogTrigger asChild>
+                            <Button className="w-full bg-emerald-600 hover:bg-emerald-700">
+                              <Shield className="h-4 w-4 mr-2" />
+                              Auto-Claim with Amazon
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>Submit claim automatically</DialogTitle>
+                              <DialogDescription>
+                                We will file this claim on your behalf via Amazon. You will see real-time status updates here. No recovery, no fee (20% cap).
+                              </DialogDescription>
+                            </DialogHeader>
+                            <div className="text-sm text-muted-foreground">
+                              Submitting will move this to Expected Payouts. You can download proof once available.
+                            </div>
+                            <DialogFooter>
+                              <Button variant="outline" onClick={() => setAutoClaimOpen(false)}>Cancel</Button>
+                              <Button disabled={!isEvidenceValidated || submitClaim.isPending} onClick={() => { submitClaim.mutate(); setAutoClaimOpen(false); }}>
+                                {submitClaim.isPending ? 'Submitting...' : 'Confirm & Submit'}
+                              </Button>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        Files claim automatically and tracks status
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 )}
               </CardContent>
             </Card>
           </div>
 
-          {/* Right Column - Chronological Ledger */}
+          {/* Right Column - Chronological Ledger */
+          }
           <div className="lg:col-span-2">
             <Card>
               <CardHeader>
@@ -348,7 +373,22 @@ export default function CaseDetail() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {(statusEvents ?? []).map((event, index) => (
+                  {/* High-level steps */}
+                  <div className="grid grid-cols-4 gap-2 text-xs mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-amber-500" /> Detected
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-blue-500" /> Evidence Prepared
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-purple-500" /> Submitted
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-green-600" /> Paid
+                    </div>
+                  </div>
+                  {caseData.events.map((event, index) => (
                     <div key={index} className="flex gap-4">
                       <div className={cn("flex-shrink-0 mt-1", getEventColor(event.type))}>
                         {getEventIcon(event.type)}
@@ -404,6 +444,59 @@ export default function CaseDetail() {
                   <h3 className="text-sm font-semibold mb-2">Evidence & Docs</h3>
                   <div className="text-sm text-muted-foreground">Linked documents, reasoning, and timestamps will appear here. Provide transparency for approvals or rejections.</div>
                 </div>
+              </CardContent>
+            </Card>
+
+            {/* Evidence & Decisions */}
+            <Card className="mt-6">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="h-5 w-5" />
+                  Evidence & Decisions
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="text-sm text-muted-foreground">Linked Documents</div>
+                {!caseData?.evidence || caseData.evidence.length === 0 ? (
+                  <div className="text-sm text-muted-foreground">No documents linked to this case.</div>
+                ) : (
+                  caseData.evidence.map((doc: any) => (
+                    <div key={doc.id} className="flex items-center justify-between text-sm">
+                      <div>
+                        <div className="font-medium">{doc.name}</div>
+                        <div className="text-xs text-muted-foreground">{new Date(doc.uploaded_at || doc.created_at).toLocaleString()}</div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm" onClick={async () => { const res = await apiFetch<{ url: string }>(`/api/documents/${doc.id}/view`); window.open(res.url, '_blank'); }}>View</Button>
+                        <Button variant="outline" size="sm" onClick={async () => { const res = await apiFetch<{ url: string }>(`/api/documents/${doc.id}/download`); window.open(res.url, '_blank'); }}>Download</Button>
+                      </div>
+                    </div>
+                  ))
+                )}
+                <Separator />
+                <div className="text-sm">
+                  <div className="font-medium mb-1">Approval / Rejection Reason</div>
+                  <div className="text-muted-foreground">{caseData?.decision_reason || 'No decision reason provided yet.'}</div>
+                </div>
+
+                {/* Extracted Data Preview */}
+                <Separator />
+                <div className="text-sm text-muted-foreground">Extracted Data</div>
+                {!caseData?.extractedData || caseData.extractedData.length === 0 ? (
+                  <div className="text-sm text-muted-foreground">No extracted data.</div>
+                ) : (
+                  <div className="space-y-2">
+                    {caseData.extractedData.map((item: any) => (
+                      <div key={item.sku} className="p-3 border rounded">
+                        <div className="flex items-center justify-between">
+                          <div className="font-medium">{item.sku}</div>
+                          <div className="text-xs text-muted-foreground">Qty: {item.quantity} • Unit: ${item.unitCost}</div>
+                        </div>
+                        <div className="text-xs text-muted-foreground">{item.productName}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>

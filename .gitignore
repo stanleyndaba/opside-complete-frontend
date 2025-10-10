@@ -18,18 +18,17 @@ dist-ssr
 .env.*
 !.env.example
 
-# Env
+# Env files
 .env
-.env.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# Build output
-dist/
-.vite/
-.cache/
-
-# Editors
-.vscode/
-.idea/
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
 .DS_Store
 *.suo
 *.ntvs*

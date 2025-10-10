@@ -1,59 +1,64 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/use-auth';
 
 export default function Landing() {
-  const { loginWithAmazon } = useAuth();
+  const { loginWithAmazon, enterDemo } = useAuth();
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <div className="container max-w-4xl mx-auto px-4 py-16">
-        <header className="flex items-center justify-between mb-12">
-          <div className="flex items-center gap-2">
-            <img src="/lovable-uploads/15af441d-81d1-4a51-932f-382e12379bca.png" className="h-8 w-auto" alt="Opside" />
-            <span className="font-semibold">Opside</span>
-          </div>
-          <Button variant="outline" onClick={loginWithAmazon}>Sign in with Amazon</Button>
-        </header>
-
-        <main className="space-y-10">
-          <div className="text-center space-y-4">
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
-              Automated Amazon FBA Reimbursements
-            </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Recover money you’re owed for lost, damaged, and overcharged FBA inventory. Only pay when we recover for you.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card>
-              <CardContent className="p-6 space-y-2">
-                <h3 className="font-semibold">Guaranteed Detection</h3>
-                <p className="text-sm text-muted-foreground">We continuously scan shipments, fees, and returns to find missed reimbursements.</p>
+    <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="container max-w-5xl p-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          <div>
+            <div className="mb-4">
+              <img src="/lovable-uploads/15af441d-81d1-4a51-932f-382e12379bca.png" alt="Opside" className="h-10" />
+            </div>
+            <h1 className="text-4xl font-bold tracking-tight">Amazon FBA Automated Reimbursements</h1>
+            <p className="mt-4 text-muted-foreground text-lg">Recover money Amazon owes you. We detect missed reimbursements and file claims automatically—no recovery, no fee.</p>
+            <Card className="mt-6 border-primary/30">
+              <CardContent className="p-4">
+                <div className="text-2xl font-semibold">20% Performance Fee Cap</div>
+                <p className="text-sm text-muted-foreground">Only on amounts actually recovered. Transparent, aligned incentives.</p>
               </CardContent>
             </Card>
+            <div className="mt-6 flex gap-3">
+              <Button size="lg" onClick={loginWithAmazon}>
+                Sign in with Amazon
+              </Button>
+              <Button size="lg" variant="outline" onClick={loginWithAmazon}>
+                Connect & Start Sync
+              </Button>
+              <Button size="lg" variant="secondary" onClick={enterDemo}>
+                Access Demo (no login)
+              </Button>
+            </div>
+            <div className="mt-4 text-xs text-muted-foreground">By signing in, you grant permissions to read necessary Seller Central data to detect reimbursement opportunities. You can revoke access anytime.</div>
+          </div>
+          <div>
             <Card>
-              <CardContent className="p-6 space-y-2">
-                <h3 className="font-semibold">Hands‑Off Disputes</h3>
-                <p className="text-sm text-muted-foreground">We assemble evidence and file claims automatically with full transparency.</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-6 space-y-2">
-                <h3 className="font-semibold">20% Performance Cap</h3>
-                <p className="text-sm text-muted-foreground">You keep 80%. We cap at 20% of recovered value, no surprises.</p>
+              <CardContent className="p-6">
+                <ol className="space-y-4 list-decimal list-inside">
+                  <li>
+                    <span className="font-medium">Connect Amazon</span> – secure OAuth, no passwords.
+                  </li>
+                  <li>
+                    <span className="font-medium">Smart Inventory Sync</span> – 1–2 min initial reconciliation.
+                  </li>
+                  <li>
+                    <span className="font-medium">Detection</span> – we flag lost inventory, overcharges, damaged stock.
+                  </li>
+                  <li>
+                    <span className="font-medium">Auto‑Claim</span> – generate and submit claims on your behalf.
+                  </li>
+                  <li>
+                    <span className="font-medium">Proof & Payout</span> – download claim docs; see expected and recovered amounts.
+                  </li>
+                </ol>
               </CardContent>
             </Card>
           </div>
-
-          <div className="flex items-center justify-center">
-            <Button size="lg" onClick={loginWithAmazon}>
-              Sign in with Amazon
-            </Button>
-          </div>
-        </main>
+        </div>
       </div>
     </div>
   );

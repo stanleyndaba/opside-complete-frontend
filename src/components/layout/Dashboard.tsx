@@ -4,12 +4,14 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, CheckCircle, DollarSign, Search, RefreshCw, Calendar } from 'lucide-react';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Separator } from '@/components/ui/separator';
-import { apiClient } from '@/lib/api';
+import { FileText, CheckCircle, DollarSign, RefreshCw, Search } from 'lucide-react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { apiFetch } from '@/lib/api';
 import { toast } from 'sonner';
-import { useStatusStream } from '@/hooks/useStatusStream';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { type RealtimeEvent } from '@/lib/realtime';
+import { useStatusStream } from '@/hooks/use-status-stream';
+import { toast } from 'sonner';
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
@@ -32,60 +34,77 @@ export function Dashboard() {
   });
 
   // Mock data for the dashboard
-  useEffect(() => {
-    const fetchMetrics = async () => {
-      try {
-        setLoadingMetrics(true);
-        const data = await apiClient.get<{ total_recovered: number; expected_approved: number; upcoming_payouts: Array<{ amount: number; date: string }> }>(
-          '/api/metrics/recoveries'
-        );
-        setMetrics(data);
-      } catch (e) {
-        // keep null on error
-      } finally {
-        setLoadingMetrics(false);
-      }
-    };
-    fetchMetrics();
-  }, []);
+  const nextPayout = {
+    amount: 1850.00,
+    expectedDate: "Sept 15, 2025"
+  };
+  const { data: metrics } = useQuery<{ totalRecovered:number; expectedPayouts:number; pendingSubmissions:number; last30Days:number }>({
+    queryKey: ['metrics','recoveries'],
+    queryFn: () => apiFetch('/api/metrics/recoveries')
+  });
+  const upcomingPayouts = [] as Array<{ amount:number; date:string; status:string }>;
+  type FeedItem = { id: string; icon: React.ElementType; description: string; timestamp: string; color?: string };
+  const [activityFeed, setActivityFeed] = useState<FeedItem[]>([]);
 
-  // Removed detection polling in favor of WebSocket/SSE stream
-  const activityFeed = [{
-    id: 1,
-    type: 'claim_submitted',
-    icon: CheckCircle,
-    description: 'NEW: Claim #1234 ($250) for Lost Inventory Submitted.',
-    timestamp: '2 minutes ago',
-    color: 'text-success'
-  }, {
-    id: 2,
-    type: 'payout_completed',
-    icon: DollarSign,
-    description: 'PAID: Claim #1198 ($150) has been successfully paid out.',
-    timestamp: '8 hours ago',
-    color: 'text-success'
-  }, {
-    id: 3,
-    type: 'evidence_added',
-    icon: Search,
-    description: 'EVIDENCE ADDED: Invoice #INV-5678 linked to Claim #1235.',
-    timestamp: 'Yesterday',
-    color: 'text-primary'
-  }, {
-    id: 4,
-    type: 'sync_complete',
-    icon: RefreshCw,
-    description: 'SYNC COMPLETE: Your account was successfully synced.',
-    timestamp: 'Yesterday',
-    color: 'text-muted-foreground'
-  }, {
-    id: 5,
-    type: 'claim_approved',
-    icon: CheckCircle,
-    description: 'APPROVED: Claim #1199 ($380) has been approved by Amazon.',
-    timestamp: '2 days ago',
-    color: 'text-success'
-  }];
+  const queryClient = useQueryClient();
+  const [detectOpen, setDetectOpen] = useState(false);
+  const [detectionId, setDetectionId] = useState<string | null>(null);
+  const [pollTick, setPollTick] = useState(0);
+  const [detectionState, setDetectionState] = useState<string | null>(null);
+  const [detectionProgress, setDetectionProgress] = useState<number | null>(null);
+  const runDetection = useMutation({
+    mutationFn: async () => apiFetch<{ detection_id: string }>(`/api/detections/run`, { method: 'POST', body: JSON.stringify({}) }),
+    onSuccess: (res) => {
+      setDetectionId(res.detection_id);
+      setDetectOpen(true);
+    }
+  });
+
+  // Start Sync action (quick access)
+  const startSync = useMutation({
+    mutationFn: async () => apiFetch('/api/sync/start', { method: 'POST', body: JSON.stringify({}) }),
+    onSuccess: () => {
+      toast.success('Sync started');
+      queryClient.invalidateQueries({ queryKey: ['sync-status'] });
+      queryClient.invalidateQueries({ queryKey: ['sync-activity'] });
+    },
+    onError: (e: any) => {
+      toast.error(e?.message || 'Failed to start sync');
+    },
+  });
+
+  useStatusStream((evt: RealtimeEvent) => {
+    if (evt.type === 'detection') {
+      if (detectionId && evt.id === detectionId) {
+        setDetectionState(evt.status);
+        if ('progress' in evt && typeof evt.progress === 'number') setDetectionProgress(evt.progress);
+      }
+      if (evt.status === 'completed') {
+        toast.success('Detection completed');
+        queryClient.invalidateQueries({ queryKey: ['metrics','recoveries'] });
+        setActivityFeed((prev) => [{ id: `det-${evt.id}-${Date.now()}`, icon: CheckCircle, description: `Detection ${evt.id} completed`, timestamp: new Date().toLocaleString(), color: 'text-success' }, ...prev].slice(0, 50));
+      } else if (evt.status === 'failed') {
+        toast.error('Detection failed');
+        setActivityFeed((prev) => [{ id: `det-${evt.id}-${Date.now()}`, icon: RefreshCw, description: `Detection ${evt.id} failed`, timestamp: new Date().toLocaleString(), color: 'text-red-600' }, ...prev].slice(0, 50));
+      }
+    }
+    if (evt.type === 'sync') {
+      if (evt.status === 'completed') {
+        toast.success('Sync completed');
+        queryClient.invalidateQueries({ queryKey: ['metrics','recoveries'] });
+        queryClient.invalidateQueries({ queryKey: ['sync-status'] });
+        queryClient.invalidateQueries({ queryKey: ['sync-activity'] });
+        setActivityFeed((prev) => [{ id: `sync-${evt.id}-${Date.now()}`, icon: RefreshCw, description: `Sync job ${evt.id} completed`, timestamp: new Date().toLocaleString(), color: 'text-muted-foreground' }, ...prev].slice(0, 50));
+      } else if (evt.status === 'failed') {
+        toast.error('Sync failed');
+        setActivityFeed((prev) => [{ id: `sync-${evt.id}-${Date.now()}`, icon: RefreshCw, description: `Sync job ${evt.id} failed`, timestamp: new Date().toLocaleString(), color: 'text-red-600' }, ...prev].slice(0, 50));
+      }
+    }
+    if (evt.type === 'recovery') {
+      queryClient.invalidateQueries({ queryKey: ['recoveries'] });
+      setActivityFeed((prev) => [{ id: `rec-${evt.id}-${Date.now()}`, icon: CheckCircle, description: `Recovery ${evt.id} status: ${evt.status}`, timestamp: new Date().toLocaleString(), color: evt.status === 'paid' ? 'text-success' : 'text-primary' }, ...prev].slice(0, 50));
+    }
+  });
 
   // Real-time clock
   useEffect(() => {
@@ -138,137 +157,81 @@ export function Dashboard() {
                   </Card>
                 </div>
 
-                <div className="flex flex-wrap gap-3">
-                  <Dialog open={detectOpen} onOpenChange={setDetectOpen}>
-                    <DialogTrigger asChild>
-                      <Button className="gap-2">
-                        <Search className="h-4 w-4" />
-                        Detect Missed Claims
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>Detect Missed Claims</DialogTitle>
-                        <DialogDescription>
-                          We will analyze your FBA data to find missed reimbursements.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="space-y-3">
-                        {!detectResults.length ? (
-                          <div className="text-sm text-muted-foreground">
-                            {detecting ? 'Scanning… this may take up to 1 minute.' : 'Click Run Detection to start.'}
-                          </div>
-                        ) : (
-                          <>
-                            <div className="text-sm font-medium">Potential Value: {formatCurrency(detectResults.reduce((s, r) => s + r.amount, 0))}</div>
-                            <Separator />
-                            <div className="max-h-64 overflow-auto space-y-2">
-                              {detectResults.map(r => (
-                                <div key={r.id} className="flex items-center justify-between text-sm border rounded p-2">
-                                  <div>
-                                    <div className="font-medium">{r.id} • {r.sku} / {r.asin}</div>
-                                    <div className="text-muted-foreground">{r.reason}</div>
-                                  </div>
-                                  <div className="font-semibold">{formatCurrency(r.amount)}</div>
-                                </div>
-                              ))}
-                            </div>
-                          </>
-                        )}
-                      </div>
-                      <DialogFooter>
-                        <Button variant="outline" onClick={() => setDetectOpen(false)}>Close</Button>
-                        <Button
-                          onClick={async () => {
-                            try {
-                              setDetecting(true);
-                              const result = await apiClient.post<{ detection_id: string; claims: Array<{ id: string; amount: number; reason: string; sku: string; asin: string }> }>(
-                                '/api/detections/run'
-                              );
-                              setDetectResults(result.claims ?? []);
-                              if (result.detection_id) setDetectionId(result.detection_id);
-                              setDetectionNotified(false);
-                              toast.info('Detection started');
-                              // Optionally begin polling detection status by id
-                              // const statusId = result.detection_id; (store if needed)
-                            } catch (e) {
-                              setDetectResults([]);
-                              toast.error('Detection failed. Please try again.');
-                            } finally {
-                              setDetecting(false);
-                            }
-                          }}
-                          disabled={detecting}
-                        >
-                          {detecting ? 'Running…' : 'Run Detection'}
-                        </Button>
-                        <Button
-                          disabled={!detectResults.length}
-                          onClick={() => {
-                            setDetectOpen(false);
-                            navigate('/recoveries');
-                          }}
-                        >
-                          Auto-Submit All
-                        </Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
-                  <Button variant="outline" className="gap-2" onClick={() => navigate('/smart-inventory-sync')}>
-                    <RefreshCw className="h-4 w-4" />
-                    Reconcile & Sync
-                  </Button>
+                {/* Module 2: ROI & Cash Visibility */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="text-sm text-muted-foreground">Total Recovered</div>
+                      <div className="text-2xl font-semibold">{formatCurrency(metrics?.totalRecovered ?? 0)}</div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="text-sm text-muted-foreground">Expected Payouts</div>
+                      <div className="text-2xl font-semibold text-emerald-700">{formatCurrency(metrics?.expectedPayouts ?? 0)}</div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="text-sm text-muted-foreground">Pending Submissions</div>
+                      <div className="text-2xl font-semibold">{metrics?.pendingSubmissions ?? 0}</div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="text-sm text-muted-foreground">Last 30 Days</div>
+                      <div className="text-2xl font-semibold">{formatCurrency(metrics?.last30Days ?? 0)}</div>
+                    </CardContent>
+                  </Card>
                 </div>
-                {/* Your Recovered Value */}
-                <Card className="border">
-                  <CardContent className="p-4">
-                    <div className="space-y-2">
-                      <h2 className="font-montserrat text-lg text-gray-700 font-semibold">Your Next Payout</h2>
-                      
-                      {/* Total Recovered Hero Amount */}
-                      <div className="text-xl font-semibold text-sidebar-primary font-montserrat">
-                        {formatCurrency(metrics?.total_recovered ?? 0)}
-                      </div>
-                      
-                      {/* Subtitle */}
-                      <div className="text-sm text-muted-foreground font-montserrat">
-                        Total recovered since joining
-                      </div>
-                      
-                      {/* Recovery Metrics */}
-                      <div className="pt-2 space-y-2">
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600 font-montserrat">Pending Recovery</span>
-                          <span className="font-semibold text-sm font-montserrat">{formatCurrency(metrics?.expected_approved ?? 0)}</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600 font-montserrat">30-Day Recovery</span>
-                          <span className="font-semibold text-sm font-montserrat">{formatCurrency(0)}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="mt-4">
-                      <Button onClick={() => navigate('/recoveries')}>View All Claims</Button>
-                    </div>
-                  </CardContent>
-                </Card>
 
-                {/* Primary Navigation Links */}
+                {/* Module 3: Actions */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Button 
                     variant="outline" 
-                    className="h-8 flex items-center gap-2 transition-colors bg-gray-200 hover:bg-gray-100 text-black"
+                    className="h-9 flex items-center gap-2 transition-colors bg-gray-200 hover:bg-gray-100 text-black"
                     onClick={() => navigate('/recoveries')}
+                    title="View all current and historical claims"
                   >
                     <FileText className="h-4 w-4" />
                     <span className="font-montserrat">View All Claims</span>
                   </Button>
-                  
-                  
-                  
-                  
+                  <Button 
+                    className="h-9 flex items-center gap-2"
+                    title="Run detection and surface potential missed claims"
+                    onClick={() => runDetection.mutate()}
+                  >
+                    Detect Missed Claims
+                  </Button>
+                  <Button 
+                    className="h-9 flex items-center gap-2"
+                    title="Start inventory sync now"
+                    onClick={() => startSync.mutate()}
+                    disabled={startSync.isPending}
+                  >
+                    {startSync.isPending ? 'Starting…' : 'Start Sync'}
+                  </Button>
                 </div>
               </div>
+              <Dialog open={detectOpen} onOpenChange={setDetectOpen}>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Detecting Missed Claims</DialogTitle>
+                    <DialogDescription>
+                      We’re scanning your account for potential reimbursements. This may take up to 1–2 minutes.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="text-sm">
+                    Status: <span className="font-medium">{detectionState || (runDetection.isPending ? 'starting' : 'queued')}</span>
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {typeof detectionProgress === 'number' ? `${detectionProgress}% complete` : 'Preparing datasets...'}
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setDetectOpen(false)}>Close</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
 
               <div className="lg:col-span-1">
                 <Card className="h-full">
@@ -277,14 +240,15 @@ export function Dashboard() {
                       <h2 className="text-base font-semibold text-foreground">Notifications</h2>
                       <p className="text-xs text-muted-foreground">Recent activity across claims, payouts and sync</p>
                     </div>
-                    <div className="space-y-3 max-h-[600px] overflow-y-auto">
+                    
+                    <div className="space-y-4 max-h-[600px] overflow-y-auto">
+                      {activityFeed.length === 0 && (
+                        <div className="text-sm text-muted-foreground">No recent activity yet</div>
+                      )}
                       {activityFeed.map(item => {
                         const IconComponent = item.icon;
                         return (
-                          <div
-                            key={item.id}
-                            className="flex items-start gap-4 p-4 rounded-lg border bg-background hover:bg-muted/30 transition-colors"
-                          >
+                          <div key={item.id} className="flex gap-3 p-3 transition-colors bg-stone-50 rounded-none">
                             <div className="flex-shrink-0 mt-0.5">
                               <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
                                 <IconComponent className="w-4 h-4 text-primary" />

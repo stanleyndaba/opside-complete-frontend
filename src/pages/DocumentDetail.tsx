@@ -5,7 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, FileText, Check, Edit2, Download } from 'lucide-react';
-import { apiClient, buildApiUrl } from '@/lib/api';
+import { useQuery } from '@tanstack/react-query';
+import { apiFetch } from '@/lib/api';
 
 export default function DocumentDetail() {
   const { documentId } = useParams();
@@ -13,45 +14,16 @@ export default function DocumentDetail() {
   const [documentData, setDocumentData] = useState<any | null>(null);
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
 
-  useEffect(() => {
-    const load = async () => {
-      if (!documentId) return;
-      const data = await apiClient.get(`/api/documents/${documentId}`);
-      setDocumentData(data);
-      const dl = buildApiUrl(`/api/documents/${documentId}/download`);
-      setDownloadUrl(dl);
-    };
-    load();
-  }, [documentId]);
-
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      if (!documentId) return;
-      setLoading(true);
-      try {
-        const data = await recoveryApi.getDocument(documentId);
-        if (!cancelled) {
-          setDocumentData(data as any);
-          setError(null);
-          const d = data as any;
-          const issues: Array<{ field: string; message: string }> = [];
-          (d?.extractedData || []).forEach((it: any) => {
-            if (!it.sku) issues.push({ field: 'sku', message: 'Missing SKU for a line item' });
-            if (!it.productName) issues.push({ field: 'productName', message: 'Missing product name' });
-            if (typeof it.unitCost !== 'number') issues.push({ field: 'unitCost', message: 'Missing unit cost' });
-            if (typeof it.quantity !== 'number') issues.push({ field: 'quantity', message: 'Missing quantity' });
-          });
-          setValidationIssues(issues);
-        }
-      } catch (e: any) {
-        if (!cancelled) setError(e?.message || 'Failed to load document');
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    })();
-    return () => { cancelled = true };
-  }, [documentId]);
+  const { data: documentData } = useQuery<any>({
+    queryKey: ['document', documentId],
+    queryFn: () => apiFetch(`/api/documents/${documentId}`),
+    enabled: !!documentId,
+  });
+  if (!documentData) return (
+    <PageLayout title="Document Details">
+      <div className="p-6 text-sm text-muted-foreground">Loading...</div>
+    </PageLayout>
+  );
 
   const totalValue = (documentData?.extractedData || []).reduce(
     (sum, item) => sum + (item.unitCost * item.quantity), 
@@ -86,11 +58,16 @@ export default function DocumentDetail() {
               <Check className="w-3 h-3 mr-1" />
               Verified
             </Badge>
-            <Button asChild variant="outline" size="sm">
-              <a href={downloadUrl ?? '#'} target="_blank" rel="noreferrer">
-                <Download className="w-4 h-4 mr-2" />
-                Download
-              </a>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={async () => {
+                const res = await apiFetch<{ url: string }>(`/api/documents/${documentId}/download`);
+                window.open(res.url, '_blank');
+              }}
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Download
             </Button>
           </div>
         </div>

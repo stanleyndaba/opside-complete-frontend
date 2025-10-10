@@ -2,12 +2,19 @@
   command = "npm run build"
   publish = "dist"
 
-[dev]
-  command = "npm run dev"
-  publish = "dist"
+[build.environment]
+  NODE_VERSION = "22"
+  NPM_FLAGS = "--no-audit --no-fund"
 
+# Single Page App routing: serve index.html for all routes
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-  force = true
+
+# Optional: branch-specific context for this feature branch
+# Set VITE_API_BASE_URL in Netlify UI to your backend URL; this block can be used
+# to hardcode per-branch env if desired.
+# [context."cursor/analyze-frontend-project-setup-and-health-a2b2".environment]
+#   VITE_API_BASE_URL = "http://<backend-url>:8000"
+

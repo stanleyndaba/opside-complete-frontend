@@ -20,13 +20,7 @@ import NotificationHub from "./pages/NotificationHub";
 import ApiAccess from "./pages/ApiAccess";
 import Help from "./pages/Help";
 import WhatsNew from "./pages/WhatsNew";
-import Login from "./pages/Login";
-import Claims from "./pages/Claims";
-import Validation from "./pages/Validation";
-import Monitoring from "./pages/Monitoring";
-import { ProtectedRoute } from "@/components/routing/ProtectedRoute";
-import { AuthProvider } from "@/providers/AuthProvider";
-import { ErrorBoundary } from "@/components/errors/ErrorBoundary";
+import Landing from "./pages/Landing";
 
 // Route-level code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -89,6 +83,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/landing" element={<Landing />} />
           <Route path="/reports" element={<Reports />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/integrations-hub" element={<IntegrationsHub />} />
