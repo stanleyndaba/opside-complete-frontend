@@ -3,6 +3,7 @@ import { PageLayout } from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
@@ -70,7 +71,7 @@ const Settings = () => {
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <Button variant="outline" size="sm">
+                    <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">
                       <Camera className="h-4 w-4 mr-2" />
                       Upload Photo
                     </Button>
@@ -125,10 +126,7 @@ const Settings = () => {
                 
                 <div>
                   <Label htmlFor="businessAddress">Business Address</Label>
-                  <textarea 
-                    id="businessAddress"
-                    className="w-full"
-                  />
+                  <Textarea variant="dark" id="businessAddress" className="w-full" />
                 </div>
                 
                 <div>
@@ -359,7 +357,7 @@ const Settings = () => {
                 <CardDescription className="text-gray-400">Manage your account security</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Button variant="outline" className="w-full">
+                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
                   <Shield className="h-4 w-4 mr-2" />
                   Log Out of All Other Devices
                 </Button>
