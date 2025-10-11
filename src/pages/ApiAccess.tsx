@@ -32,22 +32,22 @@ const ApiAccess = () => {
                 </div>
                 <pre className="p-6 overflow-x-auto text-sm md:text-base leading-relaxed font-mono text-gray-200">
 <code>
-<span class="text-gray-400"># Get the latest recovered claims</span>
+<span className="text-gray-400"># Get the latest recovered claims</span>
 <br />
-<span class="text-emerald-400">from</span> clario <span class="text-emerald-400">import</span> <span class="text-sky-300">Clario</span>
-<br />
-<br />
-clario <span class="text-emerald-400">=</span> <span class="text-sky-300">Clario</span>(api_key=<span class="text-amber-300">"YOUR_API_KEY"</span>)
+<span className="text-emerald-400">from</span> clario <span className="text-emerald-400">import</span> <span className="text-sky-300">Clario</span>
 <br />
 <br />
-recovered_claims <span class="text-emerald-400">=</span> clario.claims.list(
-  status=<span class="text-amber-300">"recovered"</span>,
-  limit=<span class="text-rose-300">10</span>
+clario <span className="text-emerald-400">=</span> <span className="text-sky-300">Clario</span>(api_key=<span className="text-amber-300">"YOUR_API_KEY"</span>)
+<br />
+<br />
+recovered_claims <span className="text-emerald-400">=</span> clario.claims.list(
+  status=<span className="text-amber-300">"recovered"</span>,
+  limit=<span className="text-rose-300">10</span>
 )
 <br />
 <br />
-<span class="text-emerald-400">for</span> claim <span class="text-emerald-400">in</span> recovered_claims:
-  print(f<span class="text-amber-300">"Recovered {claim.amount} for claim ID: {claim.id}"</span>)
+<span className="text-emerald-400">for</span> claim <span className="text-emerald-400">in</span> recovered_claims:
+  print(f<span className="text-amber-300">"Recovered {claim.amount} for claim ID: {claim.id}"</span>)
 </code>
                 </pre>
               </div>
