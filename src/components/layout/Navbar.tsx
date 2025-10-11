@@ -15,11 +15,11 @@ export function Navbar({
   onToggleSidebar
 }: NavbarProps) {
   const location = useLocation();
-  const isSettings = location.pathname.startsWith('/settings');
+  const isTransparent = location.pathname.startsWith('/settings') || location.pathname.startsWith('/careers');
   return <header className={cn(
     "sticky top-0 z-30 transition-all duration-300",
     sidebarCollapsed ? "ml-16" : "ml-64",
-    isSettings ? "bg-transparent border-transparent" : "bg-background/90 backdrop-blur-sm border-b",
+    isTransparent ? "bg-transparent border-transparent" : "bg-background/90 backdrop-blur-sm border-b",
     className
   )}>
       <div className="container flex items-center h-16 px-4 font-body">
