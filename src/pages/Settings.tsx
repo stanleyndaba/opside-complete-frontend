@@ -120,7 +120,7 @@ const Settings = () => {
               <CardContent className="space-y-4">
                 <div>
                   <Label htmlFor="businessName">Business Name</Label>
-                  <Input variant="dark" id="businessName" defaultValue="Thandi's Trading Co." />
+                  <Input variant="dark" id="businessName" />
                 </div>
                 
                 <div>
@@ -128,7 +128,6 @@ const Settings = () => {
                   <textarea 
                     id="businessAddress"
                     className="w-full"
-                    defaultValue="123 Business Ave&#10;Johannesburg, 2001&#10;South Africa"
                   />
                 </div>
                 
@@ -198,18 +197,18 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold">API Access</h2>
-              <p className="text-muted-foreground">Programmatic access to your Clario data for automation and integrations</p>
+              <h2 className="text-2xl font-bold text-gray-200">API Access</h2>
+              <p className="text-gray-400">Programmatic access to your Clario data for automation and integrations</p>
             </div>
 
-            <Card>
+            <Card className="bg-white/5 border-white/10 text-gray-300">
               <CardContent className="p-6">
                 <div className="space-y-3">
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-gray-400">
                     Use Clario APIs to pull recovery data, sync evidence statuses, and reconcile payouts in your own systems.
                     Access tokens are scoped and can be rotated at any time. SDKs and examples are available.
                   </p>
-                  <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-1">
+                  <ul className="list-disc pl-5 text-sm text-gray-400 space-y-1">
                     <li>Recoveries, claims, and payout endpoints</li>
                     <li>Webhooks for status changes</li>
                     <li>Fine-grained API keys and scopes</li>
