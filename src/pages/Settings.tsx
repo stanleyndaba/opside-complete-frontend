@@ -216,7 +216,7 @@ const Settings = () => {
                   </ul>
                 </div>
                 <div className="mt-6">
-                  <Button className="bg-blue-600 hover:bg-blue-700" onClick={() => (window.location.href = '/api')}>
+                  <Button className="bg-blue-600 hover:bg-blue-700" onClick={() => navigate('/api-access')}>
                     Clario APIs
                   </Button>
                 </div>
