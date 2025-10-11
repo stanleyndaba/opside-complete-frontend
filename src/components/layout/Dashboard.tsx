@@ -106,7 +106,7 @@ export function Dashboard() {
                               <div className="min-w-0 flex-1">
                                 <div className="flex items-center justify-between">
                                   <p className="text-[12px] font-medium text-foreground truncate">{evt.title}</p>
-                                  <span className="ml-3 shrink-0 text-[11px] text-muted-foreground">{evt.time}</span>
+                                  <span className={"ml-3 shrink-0 text-[11px] " + (evt.unread ? 'text-foreground font-semibold' : 'text-muted-foreground')}>{evt.time}</span>
                                 </div>
                                 <p className="text-[11px] text-muted-foreground mt-0.5 truncate">{evt.details}</p>
                               </div>
