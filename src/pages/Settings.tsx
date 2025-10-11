@@ -83,15 +83,15 @@ const Settings = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="firstName">First Name</Label>
-                    <Input id="firstName" defaultValue="Thandi" />
+                    <Input variant="dark" id="firstName" defaultValue="Thandi" />
                   </div>
                   <div>
                     <Label htmlFor="lastName">Last Name</Label>
-                    <Input id="lastName" defaultValue="Mthembu" />
+                    <Input variant="dark" id="lastName" defaultValue="Mthembu" />
                   </div>
                   <div className="md:col-span-2">
                     <Label htmlFor="email">Email Address</Label>
-                    <Input id="email" defaultValue="thandi@example.com" disabled />
+                    <Input variant="dark" id="email" defaultValue="thandi@example.com" disabled />
                     <p className="text-sm text-gray-400 mt-1">
                       Email is linked to your Amazon account and cannot be changed
                     </p>
@@ -120,14 +120,14 @@ const Settings = () => {
               <CardContent className="space-y-4">
                 <div>
                   <Label htmlFor="businessName">Business Name</Label>
-                  <Input id="businessName" defaultValue="Thandi's Trading Co." />
+                  <Input variant="dark" id="businessName" defaultValue="Thandi's Trading Co." />
                 </div>
                 
                 <div>
                   <Label htmlFor="businessAddress">Business Address</Label>
                   <textarea 
                     id="businessAddress"
-                    className="w-full px-3 py-2 border rounded-md min-h-[80px] bg-white/5 border-white/10 text-gray-100 placeholder:text-gray-500"
+                    className="w-full"
                     defaultValue="123 Business Ave&#10;Johannesburg, 2001&#10;South Africa"
                   />
                 </div>
@@ -396,9 +396,9 @@ const Settings = () => {
   return (
     <PageLayout title="Account Control Center">
       <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-[#0B1220]">
+        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh-64px)]">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
-          <div className="relative container mx-auto px-6 py-10 text-gray-300">
+          <div className="relative container mx-auto px-6 pt-10 pb-0 text-gray-300">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
               {/* Navigation Menu */}
               <div className="lg:col-span-1">
