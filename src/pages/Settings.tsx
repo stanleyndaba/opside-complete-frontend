@@ -395,39 +395,49 @@ const Settings = () => {
 
   return (
     <PageLayout title="Account Control Center">
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-[calc(100vh-200px)]">
-        {/* Navigation Menu */}
-        <div className="lg:col-span-1">
-          <Card className="h-fit">
-            <CardHeader>
-              <CardTitle className="text-lg">Settings</CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
-              <nav className="space-y-1 p-2">
-                {menuItems.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => item.id === 'careers' ? navigate('/careers') : setActiveSection(item.id)}
-                    className={cn(
-                      "w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md transition-colors text-left",
-                      activeSection === item.id
-                        ? "bg-primary text-primary-foreground"
-                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                    )}
-                  >
-                    <item.icon className="h-4 w-4 shrink-0" />
-                    {item.label}
-                  </button>
-                ))}
-              </nav>
-            </CardContent>
-          </Card>
-        </div>
-        
-        {/* Main Content */}
-        <div className="lg:col-span-3">
-          <div className="h-full overflow-y-auto">
-            {renderContent()}
+      <div className="relative -m-4 lg:-m-6">
+        <div className="relative w-full bg-[#0B1220]">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+          <div className="relative container mx-auto px-6 py-10 text-gray-300">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+              {/* Navigation Menu */}
+              <div className="lg:col-span-1">
+                <Card className="h-fit bg-white/5 border-white/10 text-gray-300">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-gray-200">Settings</CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-0">
+                    <nav className="space-y-1 p-2">
+                      {menuItems.map((item) => (
+                        <button
+                          key={item.id}
+                          onClick={() => item.id === 'careers' ? navigate('/careers') : setActiveSection(item.id)}
+                          className={cn(
+                            "relative w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md transition-colors text-left",
+                            activeSection === item.id
+                              ? "bg-white/10 text-gray-100"
+                              : "text-gray-400 hover:bg-white/5 hover:text-gray-100"
+                          )}
+                        >
+                          {activeSection === item.id && (
+                            <span className="absolute left-0 h-5 w-[3px] rounded-r bg-emerald-400" />
+                          )}
+                          <item.icon className="h-4 w-4 shrink-0" />
+                          {item.label}
+                        </button>
+                      ))}
+                    </nav>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Main Content */}
+              <div className="lg:col-span-3">
+                <div className="h-full overflow-y-auto">
+                  {renderContent()}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
