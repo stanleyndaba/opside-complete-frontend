@@ -52,14 +52,14 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold">Clario Profile</h2>
-              <p className="text-muted-foreground">Manage your personal account information</p>
+              <h2 className="text-2xl font-bold text-gray-200">Clario Profile</h2>
+              <p className="text-gray-400">Manage your personal account information</p>
             </div>
             
-            <Card>
+            <Card className="bg-white/5 border-white/10 text-gray-300">
               <CardHeader>
-                <CardTitle>Personal Information</CardTitle>
-                <CardDescription>Update your personal details and profile picture</CardDescription>
+                <CardTitle className="text-gray-200">Personal Information</CardTitle>
+                <CardDescription className="text-gray-400">Update your personal details and profile picture</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="flex items-center gap-6">
@@ -74,7 +74,7 @@ const Settings = () => {
                       <Camera className="h-4 w-4 mr-2" />
                       Upload Photo
                     </Button>
-                    <p className="text-sm text-muted-foreground mt-1">
+                    <p className="text-sm text-gray-400 mt-1">
                       JPG, PNG or GIF. Max size 5MB.
                     </p>
                   </div>
@@ -92,7 +92,7 @@ const Settings = () => {
                   <div className="md:col-span-2">
                     <Label htmlFor="email">Email Address</Label>
                     <Input id="email" defaultValue="thandi@example.com" disabled />
-                    <p className="text-sm text-muted-foreground mt-1">
+                    <p className="text-sm text-gray-400 mt-1">
                       Email is linked to your Amazon account and cannot be changed
                     </p>
                   </div>
@@ -108,14 +108,14 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold">Business Profile</h2>
-              <p className="text-muted-foreground">Manage your company information and preferences</p>
+              <h2 className="text-2xl font-bold text-gray-200">Business Profile</h2>
+              <p className="text-gray-400">Manage your company information and preferences</p>
             </div>
             
-            <Card>
+            <Card className="bg-white/5 border-white/10 text-gray-300">
               <CardHeader>
-                <CardTitle>Company Details</CardTitle>
-                <CardDescription>Information used for invoicing and records</CardDescription>
+                <CardTitle className="text-gray-200">Company Details</CardTitle>
+                <CardDescription className="text-gray-400">Information used for invoicing and records</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
@@ -127,14 +127,14 @@ const Settings = () => {
                   <Label htmlFor="businessAddress">Business Address</Label>
                   <textarea 
                     id="businessAddress"
-                    className="w-full px-3 py-2 border rounded-md min-h-[80px]"
+                    className="w-full px-3 py-2 border rounded-md min-h-[80px] bg-white/5 border-white/10 text-gray-100 placeholder:text-gray-500"
                     defaultValue="123 Business Ave&#10;Johannesburg, 2001&#10;South Africa"
                   />
                 </div>
                 
                 <div>
                   <Label htmlFor="timezone">Timezone</Label>
-                  <select id="timezone" className="w-full px-3 py-2 border rounded-md">
+                  <select id="timezone" className="w-full px-3 py-2 border rounded-md bg-white/5 border-white/10 text-gray-100">
                     <option>South Africa Standard Time (GMT+2)</option>
                     <option>Eastern Standard Time (GMT-5)</option>
                     <option>Pacific Standard Time (GMT-8)</option>
@@ -153,16 +153,16 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold">Billing & Value</h2>
-              <p className="text-muted-foreground">View your ROI and manage billing preferences</p>
+              <h2 className="text-2xl font-bold text-gray-200">Billing & Value</h2>
+              <p className="text-gray-400">View your ROI and manage billing preferences</p>
             </div>
             
-            <Card>
+            <Card className="bg-white/5 border-white/10 text-gray-300">
               <CardContent className="p-6">
                 <div className="text-center py-8">
-                  <CreditCard className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">Complete Billing Dashboard</h3>
-                  <p className="text-muted-foreground mb-4">
+                  <CreditCard className="h-12 w-12 mx-auto text-gray-300 mb-4" />
+                  <h3 className="text-lg font-semibold mb-2 text-gray-200">Complete Billing Dashboard</h3>
+                  <p className="text-gray-400 mb-4">
                     Access your comprehensive billing & value report with ROI calculations, 
                     invoice history, and plan management.
                   </p>
@@ -173,20 +173,20 @@ const Settings = () => {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-white/5 border-white/10 text-gray-300">
               <CardHeader>
-                <CardTitle>Auto-Claim (ACG)</CardTitle>
-                <CardDescription>Automatically submit approved claims once evidence is verified</CardDescription>
+                <CardTitle className="text-gray-200">Auto-Claim (ACG)</CardTitle>
+                <CardDescription className="text-gray-400">Automatically submit approved claims once evidence is verified</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium">Enable Auto-Claim</p>
-                    <p className="text-sm text-muted-foreground">Claims are auto-filed to Amazon when evidence is complete</p>
+                    <p className="font-medium text-gray-200">Enable Auto-Claim</p>
+                    <p className="text-sm text-gray-400">Claims are auto-filed to Amazon when evidence is complete</p>
                   </div>
                   <Switch defaultChecked />
                 </div>
-                <div className="text-xs text-muted-foreground">
+                <div className="text-xs text-gray-400">
                   Note: You can always review individual cases in Recoveries and pause Auto-Claim from here.
                 </div>
               </CardContent>
@@ -229,8 +229,8 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold">Platform Integrations</h2>
-              <p className="text-muted-foreground">Manage your platform connections and data sources</p>
+              <h2 className="text-2xl font-bold text-gray-200">Platform Integrations</h2>
+              <p className="text-gray-400">Manage your platform connections and data sources</p>
             </div>
             <div>
               <Button className="bg-blue-600 hover:bg-blue-700 gap-2" onClick={() => navigate('/integrations-hub')}>
@@ -239,20 +239,20 @@ const Settings = () => {
               </Button>
             </div>
             
-            <Card>
+            <Card className="bg-white/5 border-white/10 text-gray-300">
               <CardHeader>
-                <CardTitle>Active Connections</CardTitle>
-                <CardDescription>Your currently connected platforms</CardDescription>
+                <CardTitle className="text-gray-200">Active Connections</CardTitle>
+                <CardDescription className="text-gray-400">Your currently connected platforms</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border border-white/10 rounded-lg bg-white/5">
                   <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-lg bg-gray-50 flex items-center justify-center border">
+                    <div className="h-10 w-10 rounded-lg bg-white/10 flex items-center justify-center border border-white/10">
                       <img src="/lovable-uploads/14f98d63-9a1a-4128-8021-1d840d778ea5.png" alt="Amazon Seller Central logo" className="h-7 w-7 object-contain" />
                     </div>
                     <div>
-                      <p className="font-medium">Amazon Seller Central</p>
-                      <p className="text-sm text-muted-foreground">Connected • Last sync: 5 mins ago</p>
+                      <p className="font-medium text-gray-200">Amazon Seller Central</p>
+                      <p className="text-sm text-gray-400">Connected • Last sync: 5 mins ago</p>
                     </div>
                   </div>
                   <Badge className="bg-green-100 text-green-800">Active</Badge>
@@ -260,16 +260,16 @@ const Settings = () => {
               </CardContent>
             </Card>
             
-            <Card>
+            <Card className="bg-white/5 border-white/10 text-gray-300">
               <CardHeader>
-                <CardTitle>Platform Integrations Coming Soon</CardTitle>
-                <CardDescription>Coming soon to expand your recovery capabilities</CardDescription>
+                <CardTitle className="text-gray-200">Platform Integrations Coming Soon</CardTitle>
+                <CardDescription className="text-gray-400">Coming soon to expand your recovery capabilities</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
                 {['Shopify', 'Walmart Marketplace', 'QuickBooks', 'Xero', 'eBay'].map((platform) => (
-                  <div key={platform} className="flex items-center justify-between p-4 border rounded-lg opacity-90 bg-background">
+                  <div key={platform} className="flex items-center justify-between p-4 border border-white/10 rounded-lg bg-white/5">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-lg bg-gray-50 flex items-center justify-center border">
+                      <div className="h-10 w-10 rounded-lg bg-white/10 flex items-center justify-center border border-white/10">
                         {platform === 'Shopify' && <img src="/lovable-uploads/8efb84ba-e777-4413-ae5a-f7f54bfa6cab.png" alt="Shopify logo" className="h-7 w-7 object-contain" />}
                         {platform === 'Walmart Marketplace' && <img src="/lovable-uploads/cef56367-b57b-46cc-b0cb-a2ffad47fb03.png" alt="Walmart logo" className="h-7 w-7 object-contain" />}
                         {platform === 'QuickBooks' && <img src="/lovable-uploads/02ff2e6e-9e67-4481-99a8-4b9caead4540.png" alt="QuickBooks logo" className="h-7 w-7 object-contain" />}
@@ -277,8 +277,8 @@ const Settings = () => {
                         {platform === 'eBay' && <img src="/lovable-uploads/f894a44c-fd04-4ec2-8af3-a7235951d82d.png" alt="eBay logo" className="h-7 w-7 object-contain" />}
                       </div>
                       <div>
-                        <p className="font-medium">{platform}</p>
-                        <p className="text-sm text-muted-foreground">Coming Soon</p>
+                        <p className="font-medium text-gray-200">{platform}</p>
+                        <p className="text-sm text-gray-400">Coming Soon</p>
                       </div>
                     </div>
                     <Badge variant="secondary">Roadmap</Badge>
@@ -293,21 +293,21 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold">Notifications</h2>
-              <p className="text-muted-foreground">Control how and when we communicate with you</p>
+              <h2 className="text-2xl font-bold text-gray-200">Notifications</h2>
+              <p className="text-gray-400">Control how and when we communicate with you</p>
             </div>
             
-            <Card>
+            <Card className="bg-white/5 border-white/10 text-gray-300">
               <CardHeader>
-                <CardTitle>Email Notifications</CardTitle>
-                <CardDescription>Choose which notifications you'd like to receive</CardDescription>
+                <CardTitle className="text-gray-200">Email Notifications</CardTitle>
+                <CardDescription className="text-gray-400">Choose which notifications you'd like to receive</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 {notificationSettings.map((setting) => (
                   <div key={setting.id} className="flex items-center justify-between">
                     <div className="space-y-1">
-                      <p className="font-medium">{setting.label}</p>
-                      <p className="text-sm text-muted-foreground">{setting.description}</p>
+                      <p className="font-medium text-gray-200">{setting.label}</p>
+                      <p className="text-sm text-gray-400">{setting.description}</p>
                     </div>
                     <Switch defaultChecked={setting.enabled} />
                   </div>
@@ -321,26 +321,26 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold">Security</h2>
-              <p className="text-muted-foreground">Manage your account security and access</p>
+              <h2 className="text-2xl font-bold text-gray-200">Security</h2>
+              <p className="text-gray-400">Manage your account security and access</p>
             </div>
             
-            <Card>
+            <Card className="bg-white/5 border-white/10 text-gray-300">
               <CardHeader>
-                <CardTitle>Login History</CardTitle>
-                <CardDescription>Recent account access activity</CardDescription>
+                <CardTitle className="text-gray-200">Login History</CardTitle>
+                <CardDescription className="text-gray-400">Recent account access activity</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {loginHistory.map((login, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div key={index} className="flex items-center justify-between p-3 border border-white/10 rounded-lg bg-white/5">
                     <div className="flex items-center gap-3">
                       {login.device.includes('iPhone') ? 
-                        <Smartphone className="h-5 w-5 text-muted-foreground" /> : 
-                        <Monitor className="h-5 w-5 text-muted-foreground" />
+                        <Smartphone className="h-5 w-5 text-gray-400" /> : 
+                        <Monitor className="h-5 w-5 text-gray-400" />
                       }
                       <div>
-                        <p className="font-medium">{login.device}</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="font-medium text-gray-200">{login.device}</p>
+                        <p className="text-sm text-gray-400">
                           <MapPin className="h-3 w-3 inline mr-1" />
                           {login.location} • {login.time}
                         </p>
@@ -354,10 +354,10 @@ const Settings = () => {
               </CardContent>
             </Card>
             
-            <Card>
+            <Card className="bg-white/5 border-white/10 text-gray-300">
               <CardHeader>
-                <CardTitle>Security Actions</CardTitle>
-                <CardDescription>Manage your account security</CardDescription>
+                <CardTitle className="text-gray-200">Security Actions</CardTitle>
+                <CardDescription className="text-gray-400">Manage your account security</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <Button variant="outline" className="w-full">
@@ -367,16 +367,16 @@ const Settings = () => {
               </CardContent>
             </Card>
             
-            <Card className="border-red-200">
+            <Card className="bg-red-500/5 border-red-200/20 text-gray-300">
               <CardHeader>
-                <CardTitle className="text-red-600 flex items-center gap-2">
+                <CardTitle className="text-red-300 flex items-center gap-2">
                   <AlertTriangle className="h-5 w-5" />
                   Danger Zone
                 </CardTitle>
-                <CardDescription>Permanent actions that cannot be undone</CardDescription>
+                <CardDescription className="text-gray-400">Permanent actions that cannot be undone</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
+                <p className="text-sm text-gray-400 mb-4">
                   Deleting your account will permanently remove all data, including recovery history, 
                   team members, and integrations. This action cannot be reversed.
                 </p>
