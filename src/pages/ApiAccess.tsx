@@ -5,6 +5,7 @@ import { CheckCircle, Code, Zap, Shield, Globe, ArrowRight } from 'lucide-react'
 
 const ApiAccess = () => {
   return (
+<<<<<<< HEAD
     <div className="min-h-screen bg-[#0B1426] text-white">
       {/* Main Content Container */}
       <div className="max-w-4xl mx-auto px-6 py-16">
@@ -58,6 +59,33 @@ const ApiAccess = () => {
                   <div className="ml-4 text-gray-300">
                     <span className="text-yellow-400">print</span>(<span className="text-green-400">f"Recovered {claim.amount} for claim ID: {claim.id}"</span>)
                   </div>
+=======
+    <PageLayout title="API Access">
+      <div className="relative -m-4 lg:-m-6">
+        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh-64px)]">
+          {/* Subtle blueprint glow */}
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+
+          <div className="relative mx-auto max-w-3xl px-6 pt-16 md:pt-24 pb-0 text-gray-300">
+            {/* Headline */}
+            <header>
+              <h1 className="font-brand text-4xl md:text-5xl leading-tight text-gray-100">
+                The Clario API: The Financial Engine for Modern Commerce
+              </h1>
+              <p className="mt-5 text-lg md:text-xl text-gray-400 font-body">
+                At Clario, we are building more than a dashboard. We are building the intelligent financial recovery layer for e-commerce. Our future-facing API will allow developers, agencies, and enterprise brands to programmatically access the full power of our platform, integrating automated reimbursement data and workflows directly into their own systems.
+              </p>
+            </header>
+
+            {/* Visual Anchor: Code Snippet */}
+            <section className="mt-10">
+              <div className="rounded-xl border border-white/10 bg-[#0F172A] shadow-2xl">
+                <div className="flex items-center gap-2 px-4 py-3 border-b border-white/10">
+                  <span className="h-2.5 w-2.5 rounded-full bg-red-500/70" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-yellow-500/70" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-green-500/70" />
+                  <span className="ml-3 text-xs uppercase tracking-wider text-gray-400">example.py</span>
+>>>>>>> eb00370 (feat(ui): add dark variant for Input/Textarea and apply blueprint layout fixes)
                 </div>
               </div>
             </CardContent>

@@ -121,12 +121,24 @@ const Settings = () => {
               <CardContent className="space-y-4">
                 <div>
                   <Label htmlFor="businessName">Business Name</Label>
+<<<<<<< HEAD
                   <Input variant="dark" id="businessName" />
+=======
+                  <Input variant="dark" id="businessName" defaultValue="Thandi's Trading Co." />
+>>>>>>> eb00370 (feat(ui): add dark variant for Input/Textarea and apply blueprint layout fixes)
                 </div>
                 
                 <div>
                   <Label htmlFor="businessAddress">Business Address</Label>
+<<<<<<< HEAD
                   <Textarea variant="dark" id="businessAddress" className="w-full" />
+=======
+                  <textarea 
+                    id="businessAddress"
+                    className="w-full"
+                    defaultValue="123 Business Ave&#10;Johannesburg, 2001&#10;South Africa"
+                  />
+>>>>>>> eb00370 (feat(ui): add dark variant for Input/Textarea and apply blueprint layout fixes)
                 </div>
                 
                 <div>
@@ -393,9 +405,15 @@ const Settings = () => {
   return (
     <PageLayout title="Account Control Center">
       <div className="relative -m-4 lg:-m-6">
+<<<<<<< HEAD
         <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
           <div className="relative container mx-auto px-6 pt-6 pb-0 text-gray-300">
+=======
+        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh-64px)]">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+          <div className="relative container mx-auto px-6 pt-10 pb-0 text-gray-300">
+>>>>>>> eb00370 (feat(ui): add dark variant for Input/Textarea and apply blueprint layout fixes)
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
               {/* Navigation Menu */}
               <div className="lg:col-span-1">
