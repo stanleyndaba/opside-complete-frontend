@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Calendar, Star, Zap, Bug } from 'lucide-react';
 import { PageLayout } from '@/components/layout/PageLayout';
 
-// Mock data for updates - this would typically come from a CMS or API
+// Updates (reverse-chronological)
 const updates = [{
   id: 1,
   title: "New: Filter Your Reports to Find Insights Faster",
@@ -63,112 +63,75 @@ const getTagIcon = (tag: string) => {
   }
 };
 export default function WhatsNew() {
-  return <PageLayout title="What's New at Clario">
+  // Group by month label
+  const groups = updates.reduce<Record<string, typeof updates>>((acc, u) => {
+    const month = new Date(u.date + ' UTC').toLocaleString('en-US', { month: 'long', year: 'numeric' });
+    acc[month] = acc[month] || [];
+    acc[month].push(u);
+    return acc;
+  }, {});
+  const orderedMonths = Object.keys(groups);
+  return (
+    <PageLayout title="What's New at Clario">
       <div className="space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">What's New at Clario</h1>
-          <p className="text-muted-foreground">
-            Stay up to date with the latest features, improvements, and fixes to help you recover more money faster.
+          <h1 className="text-3xl font-bold text-foreground mb-2 font-brand">What's New at Clario</h1>
+          <p className="text-muted-foreground font-body">
+            We're relentlessly improving our platform to find and recover more for you. Here's a log of our latest updates.
           </p>
         </div>
 
-        {/* Coming Soon: Zero-Effort Evidence Engine (Top Card) */}
-        <Card className="overflow-hidden border-primary/30">
-          <CardHeader className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Calendar className="h-4 w-4" />
-                September 12, 2025
+        {/* Momentum Feed */}
+        <div className="space-y-10">
+          {orderedMonths.map((month) => (
+            <div key={month} className="space-y-4">
+              <h3 className="text-sm uppercase tracking-wider text-muted-foreground">{month}</h3>
+              <div className="space-y-6">
+                {groups[month].map((update) => {
+                  const TagIcon = getTagIcon(update.tag);
+                  return (
+                    <Card key={update.id} className="overflow-hidden border border-white/10 bg-white/5">
+                      <CardHeader className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <Calendar className="h-4 w-4" />
+                            {update.date}
+                          </div>
+                          <Badge className={`${update.tagColor}`}>
+                            <TagIcon className="h-3 w-3 mr-1" />
+                            {update.tag}
+                          </Badge>
+                        </div>
+                        <h2 className="text-xl font-semibold text-foreground font-brand">
+                          {update.title}
+                        </h2>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <p className="text-muted-foreground leading-relaxed font-body">
+                          {update.description}
+                        </p>
+                        <div className="space-y-2">
+                          <h3 className="font-medium text-foreground">What's included:</h3>
+                          <ul className="space-y-1 text-sm text-muted-foreground">
+                            {update.content.map((item, index) => (
+                              <li key={index} className="flex items-start gap-2">
+                                <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2 shrink-0" />
+                                {item}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div className="pt-2 border-t border-border">
+                          <p className="text-sm font-medium text-primary">{update.cta}</p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
               </div>
-              <div className="flex items-center gap-2">
-                <Badge className="bg-amber-600 text-white">BETA</Badge>
-                <Badge className="bg-emerald-600 text-white">NEW FEATURE</Badge>
-              </div>
             </div>
-            <h2 className="text-xl font-semibold text-foreground">COMING SOON: The Zero-Effort Evidence Engine</h2>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-3 text-sm leading-relaxed text-foreground">
-              <p>To our founding users,</p>
-              <p>
-                Thank you for being a part of the Clario journey. You're already experiencing our "Glass Box" approach to recoveries—finding claims and linking them directly to the proof.
-              </p>
-              <p>But we're just getting started.</p>
-              <p>
-                We are currently building the next evolution of Clario: a proactive, intelligent engine designed to eliminate the single most annoying part of the reimbursement process—digging for documents.
-              </p>
-              <p className="font-medium">What's Coming:</p>
-              <p>
-                Imagine a world where you never have to search for an old supplier invoice again. The Clario Evidence Engine will securely connect to your email (Gmail/Outlook) and cloud storage to automatically build a complete, private library of your financial proof.
-              </p>
-              <p>
-                When we find a claim, our system will instantly find and match the correct invoice from your library, ensuring you get the maximum possible refund with zero work from you. No more email requests. No more digging through folders. Just faster, larger recoveries.
-              </p>
-              <p>This is more than a recovery tool. This is your automated forensic accountant.</p>
-              <p className="font-medium">Get Early Access:</p>
-              <p>
-                This feature is currently in a closed beta. As a founding member, you have the first opportunity to join the waitlist.
-              </p>
-            </div>
-            <div>
-              <a href="/integrations-hub" className="inline-flex items-center justify-center rounded-md border border-primary px-4 py-2 text-sm font-medium text-primary hover:bg-primary/5">
-                Join the Evidence Engine Beta Waitlist →
-              </a>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Updates Feed */}
-        <div className="space-y-6">
-          {updates.map(update => {
-          const TagIcon = getTagIcon(update.tag);
-          return <Card key={update.id} className="overflow-hidden">
-                <CardHeader className="space-y-4">
-                  {/* Date and Tag */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Calendar className="h-4 w-4" />
-                      {update.date}
-                    </div>
-                    <Badge className={`${update.tagColor} hover:${update.tagColor}/80`}>
-                      <TagIcon className="h-3 w-3 mr-1" />
-                      {update.tag}
-                    </Badge>
-                  </div>
-
-                  {/* Title */}
-                  <h2 className="text-xl font-semibold text-foreground">
-                    {update.title}
-                  </h2>
-                </CardHeader>
-
-                <CardContent className="space-y-4">
-                  {/* Description */}
-                  <p className="text-muted-foreground leading-relaxed">
-                    {update.description}
-                  </p>
-
-                  {/* Content Bullets */}
-                  <div className="space-y-2">
-                    <h3 className="font-medium text-foreground">What's included:</h3>
-                    <ul className="space-y-1 text-sm text-muted-foreground">
-                      {update.content.map((item, index) => <li key={index} className="flex items-start gap-2">
-                          <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2 shrink-0" />
-                          {item}
-                        </li>)}
-                    </ul>
-                  </div>
-
-                  {/* Call to Action */}
-                  <div className="pt-2 border-t border-border">
-                    <p className="text-sm font-medium text-primary">
-                      {update.cta}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>;
-        })}
+          ))}
         </div>
 
         {/* Suggestions Banner */}
@@ -183,5 +146,6 @@ export default function WhatsNew() {
           </div>
         </div>
       </div>
-    </PageLayout>;
+    </PageLayout>
+  );
 }
