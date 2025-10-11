@@ -14,7 +14,7 @@ export function Navbar({
   sidebarCollapsed = false,
   onToggleSidebar
 }: NavbarProps) {
-  return <header className={cn("bg-background/90 backdrop-blur-sm sticky top-0 z-30 border-b transition-all duration-300", sidebarCollapsed ? "ml-16" : "ml-56", className)}>
+  return <header className={cn("bg-background/90 backdrop-blur-sm sticky top-0 z-30 border-b transition-all duration-300", sidebarCollapsed ? "ml-16" : "ml-64", className)}>
       <div className="container flex items-center h-16 px-4 font-body">
         {/* Left */}
         <div className="flex items-center gap-3">
