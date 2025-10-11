@@ -91,18 +91,16 @@ export function Dashboard() {
                       <div className="relative px-2 max-w-[340px] mx-auto text-[12px]">
                         {(() => {
                           const events = [
-                            { id: 'evt-1', unread: true, icon: Link2, title: 'Connection Established', details: 'Amazon connection established', time: 'Just now' },
-                            { id: 'evt-2', unread: true, icon: Search, title: 'Claims Identified', details: `23 potential claims identified, valued at ~${formatCurrency(14228)}` , time: '2 minutes ago' },
-                            { id: 'evt-3', unread: false, icon: Send, title: 'Claim Submitted', details: 'Auto-submitted 5 verified claims', time: 'Yesterday' },
-                            { id: 'evt-4', unread: false, icon: CircleDollarSign, title: 'Funds Recovered', details: `Payout confirmed: ${formatCurrency(850.75)}`, time: '2 days ago' },
+                            { id: 'evt-1', unread: true, title: 'Connection Established', details: 'Amazon connection established', time: 'Just now' },
+                            { id: 'evt-2', unread: true, title: 'Claims Identified', details: `23 potential claims identified, valued at ~${formatCurrency(14228)}` , time: '2 minutes ago' },
+                            { id: 'evt-3', unread: false, title: 'Claim Submitted', details: 'Auto-submitted 5 verified claims', time: 'Yesterday' },
+                            { id: 'evt-4', unread: false, title: 'Funds Recovered', details: `Payout confirmed: ${formatCurrency(850.75)}`, time: '2 days ago' },
                           ];
                           return events.map((evt, idx) => (
                             <div key={evt.id} className={"group relative flex items-start gap-3 " + (idx > 0 ? 'pt-3' : 'pt-2') + " pb-3 overflow-hidden"}>
-                              {/* Icon with edge status dot */}
-                              <div className="relative h-8 w-8 rounded-full border bg-white flex items-center justify-center text-gray-700">
-                                <span className={"absolute h-2 w-2 rounded-full " + (evt.unread ? 'bg-blue-500' : 'bg-gray-300')}
-                                  style={{ left: '1px', top: '1px' }} />
-                                <evt.icon className="h-4 w-4" />
+                              {/* Read/Unread dot only */}
+                              <div className="pt-1">
+                                <span className={"inline-block h-2 w-2 rounded-full " + (evt.unread ? 'bg-blue-500' : 'bg-gray-300')} />
                               </div>
                               {/* Content */}
                               <div className="min-w-0 flex-1">
