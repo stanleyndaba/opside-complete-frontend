@@ -179,8 +179,8 @@ export function Sidebar({
 
       <ScrollArea className="flex-1">
         <div className={cn("h-full flex", isCollapsed ? "px-2" : "px-3")}> 
-          <div className="w-full flex flex-col">
-            <nav className="space-y-4 py-4 w-full flex-1">
+          <div className="w-full h-full flex items-center">
+            <nav className="space-y-4 w-full">
               <div className="space-y-1">
                 {primaryItems.map((item, idx) => (
                   <React.Fragment key={`p-${idx}`}>
