@@ -2,7 +2,7 @@ import React from 'react';
 import { ArrowUpDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { NotificationBell } from './NotificationBell';
 interface NavbarProps {
   className?: string;
@@ -14,7 +14,14 @@ export function Navbar({
   sidebarCollapsed = false,
   onToggleSidebar
 }: NavbarProps) {
-  return <header className={cn("bg-background/90 backdrop-blur-sm sticky top-0 z-30 border-b transition-all duration-300", sidebarCollapsed ? "ml-16" : "ml-64", className)}>
+  const location = useLocation();
+  const isSettings = location.pathname.startsWith('/settings');
+  return <header className={cn(
+    "sticky top-0 z-30 transition-all duration-300",
+    sidebarCollapsed ? "ml-16" : "ml-64",
+    isSettings ? "bg-transparent border-transparent" : "bg-background/90 backdrop-blur-sm border-b",
+    className
+  )}>
       <div className="container flex items-center h-16 px-4 font-body">
         {/* Left */}
         <div className="flex items-center gap-3">
