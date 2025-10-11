@@ -47,7 +47,7 @@ recovered_claims <span className="text-emerald-400">=</span> clario.claims.list(
 <br />
 <br />
 <span className="text-emerald-400">for</span> claim <span className="text-emerald-400">in</span> recovered_claims:
-  print(f<span className="text-amber-300">"Recovered {claim.amount} for claim ID: {claim.id}"</span>)
+  print(f<span className="text-amber-300">{"\"Recovered {claim.amount} for claim ID: {claim.id}\""}</span>)
 </code>
                 </pre>
               </div>
