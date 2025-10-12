@@ -103,58 +103,58 @@ export default function Billing() {
         {/* Current Plan & Payment Method */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Your Plan Card */}
-          <Card>
+          <Card className="bg-white/5 border-white/10 text-gray-300">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Shield className="h-5 w-5 text-primary" />
+              <CardTitle className="flex items-center gap-2 text-gray-200">
+                <Shield className="h-5 w-5 text-emerald-400" />
                 Your Plan
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <h3 className="text-lg font-semibold text-foreground">
+                <h3 className="text-lg font-semibold text-gray-100">
                   Opside Performance Plan
                 </h3>
-                <div className="mt-3 p-4 bg-muted/50 rounded-lg border-l-4 border-primary">
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    We charge a <span className="font-semibold text-foreground">20% commission only</span> on the funds we successfully recover for you. 
-                    <span className="font-medium text-primary"> No recovery, no fee.</span>
+                <div className="mt-3 p-4 rounded-lg border border-white/10 bg-white/5">
+                  <p className="text-sm text-gray-400 leading-relaxed">
+                    We charge a <span className="font-semibold text-gray-200">20% commission only</span> on the funds we successfully recover for you. 
+                    <span className="font-medium text-emerald-400"> No recovery, no fee.</span>
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-2 text-sm text-emerald-600">
+              <div className="flex items-center gap-2 text-sm text-emerald-400">
                 <Check className="h-4 w-4" />
-                <span>Active and monitoring your account 24/7</span>
+                <span className="text-gray-300">Active and monitoring your account 24/7</span>
               </div>
             </CardContent>
           </Card>
 
           {/* Payment Method Card */}
-          <Card>
+          <Card className="bg-white/5 border-white/10 text-gray-300">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <CreditCard className="h-5 w-5 text-primary" />
+              <CardTitle className="flex items-center gap-2 text-gray-200">
+                <CreditCard className="h-5 w-5 text-emerald-400" />
                 Primary Payment Method
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
+              <div className="flex items-center justify-between p-4 rounded-lg border border-white/10 bg-white/5">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-background rounded border">
-                    <CreditCard className="h-4 w-4 text-muted-foreground" />
+                  <div className="p-2 bg-black/20 rounded border border-white/10">
+                    <CreditCard className="h-4 w-4 text-gray-400" />
                   </div>
                   <div>
-                    <p className="font-medium text-foreground">Visa ending in 4242</p>
-                    <p className="text-sm text-muted-foreground">Expires 12/2027</p>
+                    <p className="font-medium text-gray-200">Visa ending in 4242</p>
+                    <p className="text-sm text-gray-400">Expires 12/2027</p>
                   </div>
                 </div>
-                <Badge variant="outline" className="text-emerald-600 border-emerald-200">
+                <Badge variant="outline" className="border-emerald-300/30 text-emerald-300">
                   Active
                 </Badge>
               </div>
               <Button 
                 variant="outline" 
-                className="w-full"
+                className="w-full border-white/20 text-gray-200 hover:bg-white/10"
                 onClick={handleStripePaymentUpdate}
               >
                 Update Payment Method
