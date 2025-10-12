@@ -50,7 +50,6 @@ const updates = [{
   content: ["In-browser PDF preview", "Image thumbnail gallery", "Quick document search and filtering"],
   cta: "Visit the Evidence Locker to see your documents in a whole new way."
 }];
-
 const getTagIcon = (tag: string) => {
   switch (tag) {
     case 'NEW FEATURE':
@@ -63,7 +62,6 @@ const getTagIcon = (tag: string) => {
       return Star;
   }
 };
-
 export default function WhatsNew() {
   // Group by month label
   const groups = updates.reduce<Record<string, typeof updates>>((acc, u) => {
@@ -72,16 +70,14 @@ export default function WhatsNew() {
     acc[month].push(u);
     return acc;
   }, {});
-
   const orderedMonths = Object.keys(groups);
-
   return (
     <PageLayout title="What's New at Clario">
       <div className="space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">What's New at Clario</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-3xl font-bold text-foreground mb-2 font-brand">What's New at Clario</h1>
+          <p className="text-muted-foreground font-body">
             We're relentlessly improving our platform to find and recover more for you. Here's a log of our latest updates.
           </p>
         </div>
@@ -107,12 +103,12 @@ export default function WhatsNew() {
                             {update.tag}
                           </Badge>
                         </div>
-                        <h2 className="text-xl font-semibold text-foreground">
+                        <h2 className="text-xl font-semibold text-foreground font-brand">
                           {update.title}
                         </h2>
                       </CardHeader>
                       <CardContent className="space-y-4">
-                        <p className="text-muted-foreground leading-relaxed">
+                        <p className="text-muted-foreground leading-relaxed font-body">
                           {update.description}
                         </p>
                         <div className="space-y-2">
@@ -135,12 +131,6 @@ export default function WhatsNew() {
                 })}
               </div>
             </div>
-          ))}
-        </div>
-
-        {/* Coming Soon Section */}
-        <Card className="overflow-hidden border border-white/10 bg-white/5">
-          <CardHeader className="space-y-4">
             <h2 className="text-xl font-semibold text-foreground">COMING SOON: The Zero-Effort Evidence Engine</h2>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -173,6 +163,65 @@ export default function WhatsNew() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Updates Feed */}
+        <div className="space-y-6">
+          {updates.map(update => {
+          const TagIcon = getTagIcon(update.tag);
+          return <Card key={update.id} className="overflow-hidden">
+                <CardHeader className="space-y-4">
+                  {/* Date and Tag */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Calendar className="h-4 w-4" />
+                      {update.date}
+                    </div>
+                    <Badge className={`${update.tagColor} hover:${update.tagColor}/80`}>
+                      <TagIcon className="h-3 w-3 mr-1" />
+                      {update.tag}
+                    </Badge>
+                  </div>
+
+                  {/* Title */}
+                  <h2 className="text-xl font-semibold text-foreground">
+                    {update.title}
+                  </h2>
+                </CardHeader>
+
+                <CardContent className="space-y-4">
+                  {/* Featured Image - reduced height for a more professional look */}
+                  <div className="rounded-lg overflow-hidden bg-muted border border-border/60">
+                    <div className="w-full h-40 md:h-48">
+                      <img src={update.image} alt={update.title} className="w-full h-full object-cover" />
+                    </div>
+                  </div>
+
+                  {/* Description */}
+                  <p className="text-muted-foreground leading-relaxed">
+                    {update.description}
+                  </p>
+
+                  {/* Content Bullets */}
+                  <div className="space-y-2">
+                    <h3 className="font-medium text-foreground">What's included:</h3>
+                    <ul className="space-y-1 text-sm text-muted-foreground">
+                      {update.content.map((item, index) => <li key={index} className="flex items-start gap-2">
+                          <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2 shrink-0" />
+                          {item}
+                        </li>)}
+                    </ul>
+                  </div>
+
+                  {/* Call to Action */}
+                  <div className="pt-2 border-t border-border">
+                    <p className="text-sm font-medium text-primary">
+                      {update.cta}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>;
+        })}
+        </div>
 
         {/* Suggestions Banner */}
         <div className="py-6">
