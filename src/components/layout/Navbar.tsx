@@ -1,6 +1,6 @@
 import React from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { Search, User, Settings, Users, CreditCard, Zap, HelpCircle, Sparkles, MessageSquare, LogOut, Building2, RefreshCw } from 'lucide-react';
+import { Search, User, Settings, Users, CreditCard, Zap, HelpCircle, Sparkles, MessageSquare, LogOut, Building2, RefreshCw, Activity } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Link } from 'react-router-dom';
