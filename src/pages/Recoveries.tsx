@@ -90,7 +90,7 @@ export default function Recoveries() {
     }
   });
 
-  const [recoveries, setRecoveries] = useState<RecoveryRow[]>([]);
+  // Deprecated local recoveries state; use claims above
   const [loadingList, setLoadingList] = useState<boolean>(false);
   const [submittingIds, setSubmittingIds] = useState<Set<string>>(new Set());
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -138,7 +138,6 @@ export default function Recoveries() {
   }, [queryClient]);
 
   // Selection state for bulk actions
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const allSelected = filteredClaims.length > 0 && filteredClaims.every(c => selectedIds.has(c.id));
   const toggleAll = (checked: boolean) => {
     setSelectedIds(prev => {
@@ -180,11 +179,6 @@ export default function Recoveries() {
     }
     setBulkLoading(false);
   };
-
-  const [recoveries, setRecoveries] = useState<RecoveryRow[]>([]);
-  const [loadingList, setLoadingList] = useState<boolean>(false);
-  const [submittingIds, setSubmittingIds] = useState<Set<string>>(new Set());
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
   const fetchRecoveries = useCallback(async () => {
     try {
