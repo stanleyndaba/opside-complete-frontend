@@ -115,14 +115,14 @@
   }
 
   body {
-    /* Default body font */
-    @apply bg-background text-foreground font-body;
+  /* Default body font */
+  @apply bg-background text-foreground font-inter;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
   /* Default heading fonts */
-  h1, h2, h3, h4, h5, h6 { @apply font-heading; }
-  p, label, input, textarea, select, button { @apply font-body; }
+  h1, h2, h3, h4, h5, h6 { @apply font-inter; }
+  p, label, input, textarea, select, button { @apply font-inter; }
 
   /* Glass morphism */
   .glass {
@@ -196,3 +196,4 @@
   .landing :where(h1, h2, h3, h4, h5, h6) { font-weight: 600; }
   .landing :where(p, span, li, label, input, textarea, select, button, small, strong, em) { font-weight: 400; }
 }
+
