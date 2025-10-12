@@ -29,7 +29,7 @@ export function Dashboard() {
       <div className="flex-1 flex h-full overflow-hidden">
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
         <main className={'flex-1 transition-all duration-300 overflow-y-auto ' + mainClass}>
-          <div className="container max-w-full p-6 bg-white/[0.31]">
+          <div className="container max-w-full p-6" style={{ backgroundColor: '#F8F9FA' }}>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-full">
               <div className="lg:col-span-2 space-y-8">
                 <Card className="border border-green-200 bg-green-50">
