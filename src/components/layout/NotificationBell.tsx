@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 interface RecentNotification {
   id: string;
@@ -21,6 +21,8 @@ interface RecentNotification {
 }
 
 export function NotificationBell() {
+  const location = useLocation();
+  const isTransparentNavbar = location.pathname.startsWith('/settings') || location.pathname.startsWith('/careers') || location.pathname.startsWith('/api-access') || location.pathname.startsWith('/billing');
   const [isOpen, setIsOpen] = useState(false);
   const [notifications] = useState<RecentNotification[]>([
     {
@@ -69,9 +71,9 @@ export function NotificationBell() {
         <Button 
           variant="ghost" 
           size="icon" 
-          className="relative h-9 w-9 hover:bg-muted/50"
+          className={"relative h-9 w-9 " + (isTransparentNavbar ? "hover:bg-white/10 text-gray-200" : "hover:bg-muted/50")}
         >
-          <Bell className="h-4 w-4" />
+          <Bell className={"h-4 w-4 " + (isTransparentNavbar ? "text-gray-200" : "")} />
           {unreadCount > 0 && (
             <>
               {/* Pulsing effect */}
