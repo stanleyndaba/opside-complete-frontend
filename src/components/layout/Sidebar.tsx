@@ -52,7 +52,7 @@ interface NavSection {
 }
 export function Sidebar({
     isCollapsed,
-    onToggle: _onToggle,
+    onToggle,
     className
 }: SidebarProps) {
   const location = useLocation();
