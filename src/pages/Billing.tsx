@@ -321,9 +321,10 @@ export default function Billing() {
               Contact our support team
             </Link>
           </div>
-            </div>
-          </div>
         </div>
-      </PageLayout>
+          </div>{/* container */}
+        </div>{/* blueprint bg */}
+      </div>{/* outer wrapper */}
+    </PageLayout>
   );
 }
