@@ -56,7 +56,7 @@ export function Dashboard() {
                       </div>
                     </div>
                     <div className="mt-4">
-                      <Button onClick={() => navigate('/recoveries')}>View All Claims</Button>
+                      <Button className="bg-emerald-500 hover:bg-emerald-400 text-white" onClick={() => navigate('/recoveries')}>View All Claims</Button>
                     </div>
                   </CardContent>
                 </Card>
