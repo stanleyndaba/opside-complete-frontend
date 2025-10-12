@@ -132,7 +132,7 @@ export default function Help() {
           <div className="relative container max-w-4xl mx-auto px-6 pt-6 pb-10 text-gray-300">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Help & Support</h1>
+          <h1 className="text-3xl font-bold text-gray-100 mb-2">Help & Support</h1>
           <p className="text-muted-foreground text-lg">Get the help you need, when you need it</p>
         </div>
 
