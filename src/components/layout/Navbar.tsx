@@ -19,7 +19,9 @@ export function Navbar({
     location.pathname.startsWith('/settings') ||
     location.pathname.startsWith('/careers') ||
     location.pathname.startsWith('/api-access') ||
-    location.pathname.startsWith('/billing');
+    location.pathname.startsWith('/billing') ||
+    location.pathname.startsWith('/whats-new') ||
+    location.pathname.startsWith('/help');
   return <header className={cn(
     "sticky top-0 z-30 transition-all duration-300",
     sidebarCollapsed ? "ml-16" : "ml-64",

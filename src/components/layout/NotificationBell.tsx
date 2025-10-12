@@ -22,7 +22,14 @@ interface RecentNotification {
 
 export function NotificationBell() {
   const location = useLocation();
-  const isTransparentNavbar = location.pathname.startsWith('/settings') || location.pathname.startsWith('/careers') || location.pathname.startsWith('/api-access') || location.pathname.startsWith('/billing');
+  const isTransparentNavbar = (
+    location.pathname.startsWith('/settings') ||
+    location.pathname.startsWith('/careers') ||
+    location.pathname.startsWith('/api-access') ||
+    location.pathname.startsWith('/billing') ||
+    location.pathname.startsWith('/whats-new') ||
+    location.pathname.startsWith('/help')
+  );
   const [isOpen, setIsOpen] = useState(false);
   const [notifications] = useState<RecentNotification[]>([
     {
