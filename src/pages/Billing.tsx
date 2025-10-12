@@ -96,7 +96,10 @@ const handleStripePaymentUpdate = () => {
 export default function Billing() {
   return (
     <PageLayout title="Billing & Invoices">
-      <div className="space-y-8">
+      <div className="relative -m-4 lg:-m-6">
+        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh-64px)]">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+          <div className="relative container mx-auto px-6 pt-10 pb-10 text-gray-300 space-y-8">
         {/* Current Plan & Payment Method */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Your Plan Card */}
@@ -161,12 +164,12 @@ export default function Billing() {
         </div>
 
         {/* Billing History */}
-        <Card>
+        <Card className="bg-white/5 border-white/10 text-gray-300">
           <CardHeader>
             <div className="flex justify-between items-start">
               <div>
-                <CardTitle className="text-xl font-semibold">Billing History</CardTitle>
-                <p className="text-sm text-muted-foreground mt-1">
+                <CardTitle className="text-xl font-semibold text-gray-200">Billing History</CardTitle>
+                <p className="text-sm text-gray-400 mt-1">
                   Complete transparency into every charge and recovery
                 </p>
               </div>
@@ -192,11 +195,11 @@ export default function Billing() {
                 </TableHeader>
                 <TableBody>
                   {mockInvoices.map((invoice) => (
-                    <TableRow key={invoice.id} className="hover:bg-muted/50">
+                    <TableRow key={invoice.id} className="hover:bg-white/5">
                       <TableCell>
                         <Link 
                           to={`/billing/invoice/${invoice.id}`}
-                          className="font-mono text-sm text-primary hover:underline flex items-center gap-1"
+                          className="font-mono text-sm text-emerald-400 hover:underline flex items-center gap-1"
                         >
                           {invoice.id}
                           <ChevronRight className="h-3 w-3" />
@@ -247,10 +250,10 @@ export default function Billing() {
         </Card>
 
         {/* Frequently Asked Billing Questions */}
-        <Card>
+        <Card className="bg-white/5 border-white/10 text-gray-300">
           <CardHeader>
-            <CardTitle className="text-xl font-semibold">Frequently Asked Billing Questions</CardTitle>
-            <p className="text-sm text-muted-foreground">
+            <CardTitle className="text-xl font-semibold text-gray-200">Frequently Asked Billing Questions</CardTitle>
+            <p className="text-sm text-gray-400">
               Quick answers to common billing and payment questions
             </p>
           </CardHeader>
@@ -260,7 +263,7 @@ export default function Billing() {
                 <AccordionTrigger className="text-left">
                   When will I be charged?
                 </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground leading-relaxed">
+                <AccordionContent className="text-gray-400 leading-relaxed">
                   You are only charged when we successfully recover money for you. We generate invoices monthly for all recoveries completed in that period, with payment automatically processed from your saved payment method within 7 days of invoice generation.
                 </AccordionContent>
               </AccordionItem>
@@ -269,7 +272,7 @@ export default function Billing() {
                 <AccordionTrigger className="text-left">
                   What happens if a recovery is later reversed by Amazon?
                 </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground leading-relaxed">
+                <AccordionContent className="text-gray-400 leading-relaxed">
                   In the rare event that Amazon reverses a recovery, we automatically issue you a full credit on your next invoice. If no future invoice exists, we process a direct refund to your payment method within 5-7 business days.
                 </AccordionContent>
               </AccordionItem>
@@ -278,7 +281,7 @@ export default function Billing() {
                 <AccordionTrigger className="text-left">
                   How do I update my company's VAT number?
                 </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground leading-relaxed">
+                <AccordionContent className="text-gray-400 leading-relaxed">
                   You can update your VAT number and other billing details by clicking "Update Payment Method" above, or by contacting our support team. Changes will be reflected on your next invoice.
                 </AccordionContent>
               </AccordionItem>
@@ -287,7 +290,7 @@ export default function Billing() {
                 <AccordionTrigger className="text-left">
                   Can I get invoices automatically sent to my accountant?
                 </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground leading-relaxed">
+                <AccordionContent className="text-gray-400 leading-relaxed">
                   Yes! Contact our support team to set up automatic invoice forwarding to additional email addresses. You can add multiple recipients and they'll receive a copy of every invoice automatically.
                 </AccordionContent>
               </AccordionItem>
@@ -296,7 +299,7 @@ export default function Billing() {
                 <AccordionTrigger className="text-left">
                   How secure is my payment information?
                 </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground leading-relaxed">
+                <AccordionContent className="text-gray-400 leading-relaxed">
                   All payment processing is handled by Stripe, a PCI DSS Level 1 certified payment processor. We never store your full credit card details on our servers - only encrypted tokens that allow us to process payments securely.
                 </AccordionContent>
               </AccordionItem>
@@ -306,17 +309,19 @@ export default function Billing() {
 
         {/* Need More Help */}
         <div className="text-center py-6">
-          <div className="inline-flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="inline-flex items-center gap-2 text-sm text-gray-400">
             <AlertCircle className="h-4 w-4" />
             <span>Have a specific billing question?</span>
           </div>
           <div className="mt-2">
             <Link 
               to="/help" 
-              className="text-primary hover:underline font-medium"
+              className="text-emerald-400 hover:underline font-medium"
             >
               Contact our support team
             </Link>
+          </div>
+        </div>
           </div>
         </div>
       </div>
