@@ -162,7 +162,7 @@ export function Sidebar({
         )}
       >
         {!isCollapsed ? (
-          <div className="select-none font-brand text-xl tracking-wide text-gray-100">Clario</div>
+          <div className="select-none font-brand text-xl tracking-wide text-gray-100 brand-sheen">Clario</div>
         ) : (
           <div className="h-6 w-6 rounded-md bg-white/10" />
         )}

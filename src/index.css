@@ -180,6 +180,21 @@
   .loading-pulse {
     @apply animate-pulse-gentle;
   }
+
+  /* Subtle brand sheen animation for sidebar logo */
+  @keyframes brandSheen {
+    0% { background-position-x: -200%; }
+    100% { background-position-x: 200%; }
+  }
+  .brand-sheen {
+    position: relative;
+    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0) 100%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: brandSheen 3.5s ease-in-out infinite;
+  }
 }
 
 /* Lighter typography across the platform (excludes landing page) */
