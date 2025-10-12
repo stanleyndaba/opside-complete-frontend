@@ -153,8 +153,7 @@ export default function Billing() {
                 </Badge>
               </div>
               <Button 
-                variant="outline" 
-                className="w-full border-white/20 text-gray-200 hover:bg-white/10"
+                className="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-semibold"
                 onClick={handleStripePaymentUpdate}
               >
                 Update Payment Method
@@ -173,7 +172,7 @@ export default function Billing() {
                   Complete transparency into every charge and recovery
                 </p>
               </div>
-              <Button variant="outline" size="sm">
+              <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold">
                 <Download className="h-4 w-4 mr-2" />
                 Export All
               </Button>
