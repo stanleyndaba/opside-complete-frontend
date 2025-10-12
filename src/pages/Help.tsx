@@ -126,7 +126,10 @@ export default function Help() {
 
   return (
     <PageLayout title="Help & Support">
-      <div className="container max-w-4xl p-6">
+      <div className="relative -m-4 lg:-m-6">
+        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+          <div className="relative container max-w-4xl mx-auto px-6 pt-6 pb-10 text-gray-300">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">Help & Support</h1>
@@ -151,15 +154,13 @@ export default function Help() {
           </div>
 
           {/* FAQs */}
-          <Card>
+          <Card className="bg-white/5 border-white/10 text-gray-300">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 text-gray-200">
                 <HelpCircle className="h-5 w-5" />
                 Frequently Asked Questions
               </CardTitle>
-              <CardDescription>
-                Quick answers to the most common questions
-              </CardDescription>
+              <CardDescription className="text-gray-400">Quick answers to the most common questions</CardDescription>
             </CardHeader>
             <CardContent>
               <Accordion type="single" collapsible className="w-full">
@@ -168,7 +169,7 @@ export default function Help() {
                     <AccordionTrigger className="text-left hover:no-underline">
                       {faq.question}
                     </AccordionTrigger>
-                    <AccordionContent className="text-muted-foreground leading-relaxed">
+                    <AccordionContent className="text-gray-400 leading-relaxed">
                       {faq.answer}
                     </AccordionContent>
                   </AccordionItem>
@@ -193,33 +194,31 @@ export default function Help() {
 
           <div className="grid md:grid-cols-2 gap-6">
             {/* Getting Started Guide */}
-            <Card>
+            <Card className="bg-white/5 border-white/10 text-gray-300">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2 text-gray-200">
                   <BookOpen className="h-5 w-5" />
                   Getting Started Guide
                 </CardTitle>
-                <CardDescription>
-                  New to Opside? Start here for a complete walkthrough
-                </CardDescription>
+                <CardDescription className="text-gray-400">New to Opside? Start here for a complete walkthrough</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {gettingStartedSteps.map((step, index) => (
-                  <div key={index} className="flex items-start gap-3 p-3 bg-muted/50 rounded-lg">
+                  <div key={index} className="flex items-start gap-3 p-3 rounded-lg border border-white/10 bg-white/5">
                     <div className="flex items-center justify-center w-6 h-6 bg-primary text-primary-foreground rounded-full text-sm font-medium flex-shrink-0">
                       {index + 1}
                     </div>
                     <div className="flex-1">
                       <h4 className="font-medium text-sm">{step.title}</h4>
-                      <p className="text-xs text-muted-foreground mt-1">{step.description}</p>
-                      <Badge variant="secondary" className="mt-2 text-xs">
+                      <p className="text-xs text-gray-400 mt-1">{step.description}</p>
+                      <Badge variant="secondary" className="mt-2 text-xs bg-white/10">
                         {step.duration}
                       </Badge>
                     </div>
                   </div>
                 ))}
                 
-                <Button className="w-full mt-4" variant="outline">
+                <Button className="w-full mt-4 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold">
                   <Video className="h-4 w-4 mr-2" />
                   Watch Video Tutorial
                 </Button>
@@ -227,41 +226,39 @@ export default function Help() {
             </Card>
 
             {/* Understanding Dashboard */}
-            <Card>
+            <Card className="bg-white/5 border-white/10 text-gray-300">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2 text-gray-200">
                   <MessageSquare className="h-5 w-5" />
                   Understanding Your Dashboard
                 </CardTitle>
-                <CardDescription>
-                  Learn what each metric means and how it's calculated
-                </CardDescription>
+                <CardDescription className="text-gray-400">Learn what each metric means and how it's calculated</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
-                  <div className="p-3 bg-muted/50 rounded-lg">
+                  <div className="p-3 rounded-lg border border-white/10 bg-white/5">
                     <h4 className="font-medium text-sm">Total Guaranteed</h4>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-xs text-gray-400 mt-1">
                       The total amount we've committed to recover for active claims
                     </p>
                   </div>
                   
-                  <div className="p-3 bg-muted/50 rounded-lg">
+                  <div className="p-3 rounded-lg border border-white/10 bg-white/5">
                     <h4 className="font-medium text-sm">Recovery Success Rate</h4>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-xs text-gray-400 mt-1">
                       Percentage of submitted claims that result in successful payouts
                     </p>
                   </div>
                   
-                  <div className="p-3 bg-muted/50 rounded-lg">
+                  <div className="p-3 rounded-lg border border-white/10 bg-white/5">
                     <h4 className="font-medium text-sm">Average Processing Time</h4>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-xs text-gray-400 mt-1">
                       Typical time from claim submission to payout completion
                     </p>
                   </div>
                 </div>
                 
-                <Button className="w-full mt-4" variant="outline">
+                <Button className="w-full mt-4 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold">
                   <ExternalLink className="h-4 w-4 mr-2" />
                   Read Full Guide
                 </Button>
@@ -270,7 +267,7 @@ export default function Help() {
           </div>
         </section>
 
-        <Separator className="my-12" />
+        <Separator className="my-12 border-white/10" />
 
         {/* Tier 3: Human Assistance */}
         <section>
@@ -281,15 +278,13 @@ export default function Help() {
 
           <div className="grid md:grid-cols-2 gap-6">
             {/* Email Support */}
-            <Card>
+            <Card className="bg-white/5 border-white/10 text-gray-300">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2 text-gray-200">
                   <Mail className="h-5 w-5" />
                   Email Support
                 </CardTitle>
-                <CardDescription>
-                  Get detailed help via email - we respond within 24 hours
-                </CardDescription>
+                <CardDescription className="text-gray-400">Get detailed help via email - we respond within 24 hours</CardDescription>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleContactSubmit} className="space-y-4">
@@ -340,7 +335,7 @@ export default function Help() {
                     />
                   </div>
                   
-                  <Button type="submit" className="w-full">
+                  <Button type="submit" className="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-semibold">
                     <Mail className="h-4 w-4 mr-2" />
                     Send Message
                   </Button>
@@ -349,55 +344,55 @@ export default function Help() {
             </Card>
 
             {/* Book a Call */}
-            <Card>
+            <Card className="bg-white/5 border-white/10 text-gray-300">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2 text-gray-200">
                   <Calendar className="h-5 w-5" />
                   Book a 15-Minute Call
                 </CardTitle>
-                <CardDescription>
-                  Schedule a video call for urgent or complex issues
-                </CardDescription>
+                <CardDescription className="text-gray-400">Schedule a video call for urgent or complex issues</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
-                  <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-                    <Phone className="h-4 w-4 text-muted-foreground" />
+                  <div className="flex items-center gap-3 p-3 rounded-lg border border-white/10 bg-white/5">
+                    <Phone className="h-4 w-4 text-gray-400" />
                     <div>
                       <p className="text-sm font-medium">Direct Access</p>
-                      <p className="text-xs text-muted-foreground">Speak with a recovery specialist</p>
+                      <p className="text-xs text-gray-400">Speak with a recovery specialist</p>
                     </div>
                   </div>
                   
-                  <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-                    <Calendar className="h-4 w-4 text-muted-foreground" />
+                  <div className="flex items-center gap-3 p-3 rounded-lg border border-white/10 bg-white/5">
+                    <Calendar className="h-4 w-4 text-gray-400" />
                     <div>
                       <p className="text-sm font-medium">Flexible Scheduling</p>
-                      <p className="text-xs text-muted-foreground">Choose a time that works for you</p>
+                      <p className="text-xs text-gray-400">Choose a time that works for you</p>
                     </div>
                   </div>
                   
-                  <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-                    <Video className="h-4 w-4 text-muted-foreground" />
+                  <div className="flex items-center gap-3 p-3 rounded-lg border border-white/10 bg-white/5">
+                    <Video className="h-4 w-4 text-gray-400" />
                     <div>
                       <p className="text-sm font-medium">Screen Sharing</p>
-                      <p className="text-xs text-muted-foreground">We can walk through your dashboard together</p>
+                      <p className="text-xs text-gray-400">We can walk through your dashboard together</p>
                     </div>
                   </div>
                 </div>
                 
-                <Button className="w-full" variant="default">
+                <Button className="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-semibold">
                   <Calendar className="h-4 w-4 mr-2" />
                   Schedule Call
                 </Button>
                 
-                <p className="text-xs text-muted-foreground text-center">
+                <p className="text-xs text-gray-400 text-center">
                   Available Monday-Friday, 9 AM - 6 PM EST
                 </p>
               </CardContent>
             </Card>
           </div>
         </section>
+          </div>
+        </div>
       </div>
     </PageLayout>
   );
