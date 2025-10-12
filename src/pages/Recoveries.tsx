@@ -147,25 +147,6 @@ export default function Recoveries() {
     }
   });
 
-<<<<<<< HEAD
-  const fetchRecoveries = useCallback(async () => {
-    try {
-      setLoadingList(true);
-      const data = await apiClient.get<RecoveryRow[]>('/api/recoveries');
-      setRecoveries(data);
-    } catch (e) {
-      toast.error('Failed to load recoveries');
-    } finally {
-      setLoadingList(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchRecoveries();
-  }, [fetchRecoveries]);
-
-=======
->>>>>>> 1d086415047f97bc9a840a2076c7e9526d9e44e8
   // Filter data based on search and filters
   const filteredClaims = useMemo(() => {
     let filtered = claims.filter(claim => {
