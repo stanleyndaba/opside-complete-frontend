@@ -73,3 +73,10 @@ export function buildApiUrl(path: string): string {
 	return base ? `${base}${normalized}` : normalized;
 }
 
+// Lightweight helper compatible with legacy callers expecting apiFetch(path, init)
+export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
+  const { method, body, ...rest } = init ?? {};
+  const httpMethod = ((method ?? 'GET') as HttpMethod);
+  return apiClient.request<T>(httpMethod, path, body, rest);
+}
+
