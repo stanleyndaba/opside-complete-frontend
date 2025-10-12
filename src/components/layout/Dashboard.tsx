@@ -307,10 +307,10 @@ export function Dashboard() {
                     </DialogDescription>
                   </DialogHeader>
                   <div className="text-sm">
-                    Status: <span className="font-medium">{detectionState || (runDetection.isPending ? 'starting' : 'queued')}</span>
+                    Status: <span className="font-medium">{detecting ? 'starting' : 'idle'}</span>
                   </div>
                   <div className="text-xs text-muted-foreground">
-                    {typeof detectionProgress === 'number' ? `${detectionProgress}% complete` : 'Preparing datasets...'}
+                    {detecting ? 'Preparing datasets...' : 'Click Run Detection to start.'}
                   </div>
                   <DialogFooter>
                     <Button variant="outline" onClick={() => setDetectOpen(false)}>Close</Button>
