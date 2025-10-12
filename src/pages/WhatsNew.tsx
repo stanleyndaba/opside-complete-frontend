@@ -131,6 +131,7 @@ export default function WhatsNew() {
                 })}
               </div>
             </div>
+          ))}
 
         {/* Updates Feed */}
         <div className="space-y-6">
