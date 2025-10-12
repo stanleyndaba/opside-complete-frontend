@@ -1,4 +1,7 @@
 import React from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { startInventorySync } from '@/lib/api';
+import { useToast } from '@/hooks/use-toast';
 import { Search, User, Settings, Users, CreditCard, Zap, HelpCircle, Sparkles, MessageSquare, LogOut, Building2, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
@@ -116,3 +119,4 @@ export function Navbar({
       </div>
     </header>;
 }
+

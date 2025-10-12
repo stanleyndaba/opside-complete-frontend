@@ -3,7 +3,7 @@ import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { startSync, getSyncStatus } from '@/lib/inventoryApi';
+import { startInventorySync, fetchSyncStatus } from '@/lib/api';
 
 type SyncState = 'idle' | 'starting' | 'in_progress' | 'completed' | 'error';
 
@@ -92,4 +92,5 @@ export default function Sync() {
     </PageLayout>
   );
 }
+
 
