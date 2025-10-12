@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/use-auth';
+import { useApiHealth } from '@/hooks/use-api-health';
 import { NotificationBell } from './NotificationBell';
 import { useAuth as useAuthCtx } from '@/hooks/useAuth';
 import { apiClient } from '@/lib/api';
@@ -21,6 +22,7 @@ export function Navbar({
   onToggleSidebar
 }: NavbarProps) {
   const { user, signInWithAmazon, signOut } = useAuth();
+  const { data: health, isLoading } = useApiHealth();
   const authCtx = useAuthCtx();
   const startSync = useMutation({
     mutationFn: async () => { await apiClient.post('/api/sync/start'); },
