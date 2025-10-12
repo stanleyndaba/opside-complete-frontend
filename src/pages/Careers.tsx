@@ -81,90 +81,91 @@ export default function Careers() {
   ];
 
   return (
-    <PageLayout title="Careers at Clario">
-      <div className="max-w-5xl mx-auto space-y-10">
-        {/* Hero */}
-        <section className="space-y-3 text-center">
-          <h1 className="text-3xl md:text-4xl font-semibold">Build the silent finance team for FBA sellers</h1>
-          <p className="text-muted-foreground max-w-2xl mx-auto">We ship production systems that recover money automatically. If you love high‑impact, owner‑mindset work, you’ll thrive here.</p>
-        </section>
+    <PageLayout title="Careers">
+      <div className="relative -m-4 lg:-m-6">
+        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
 
-        {/* Benefits */}
-        <section className="grid gap-4 sm:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle>Why Clario</CardTitle>
-              <CardDescription>Impact, ownership, and craftsmanship</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-1">
-                <li>Meaningful equity and competitive comp</li>
-                <li>Remote‑first, async‑friendly culture</li>
-                <li>Real customer outcomes over vanity metrics</li>
-                <li>Focus time, low‑meeting environment</li>
-              </ul>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>How we work</CardTitle>
-              <CardDescription>High standards, few layers</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-1">
-                <li>Small, senior teams with clear ownership</li>
-                <li>Write design docs, measure outcomes</li>
-                <li>Secure by default, observable by design</li>
-                <li>Ship, learn, iterate</li>
-              </ul>
-            </CardContent>
-          </Card>
-        </section>
+          <div className="relative mx-auto max-w-3xl px-6 pt-16 md:pt-24 pb-0 text-gray-300">
+            {/* Headline */}
+            <header>
+              <h1 className="font-brand text-4xl md:text-5xl leading-tight text-gray-100">
+                Build the Unseen Engine of Commerce.
+              </h1>
+              <p className="mt-5 text-lg md:text-xl text-gray-400 font-body">
+                We are a small, elite team of engineers and strategists building the intelligent financial layer for e-commerce. We hire for impact, ownership, and an obsession with solving hard problems.
+              </p>
+            </header>
 
-        {/* Open roles */}
-        <section className="space-y-4">
-          <h2 className="text-2xl font-semibold">Open Roles</h2>
-          <div className="space-y-3">
-            {jobs.map((job, idx) => (
-              <Card key={idx} className="border-muted/70">
-                <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                  <div>
-                    <CardTitle className="text-lg">{job.title}</CardTitle>
-                    <CardDescription>{job.location} • {job.salary}</CardDescription>
+            {/* Values Anchor */}
+            <section className="mt-10">
+              <div className="rounded-xl border border-white/10 bg-[#0F172A] shadow-2xl p-6 md:p-8 space-y-6">
+                <div>
+                  <h3 className="font-brand text-emerald-400 text-xl">Relentless Execution</h3>
+                  <p className="mt-2 text-gray-300 font-body">We value speed and precision. We have a bias for action and a culture of shipping, learning, and iterating.</p>
+                </div>
+                <div>
+                  <h3 className="font-brand text-emerald-400 text-xl">Beautiful Abstractions</h3>
+                  <p className="mt-2 text-gray-300 font-body">We take complex, messy systems and build elegant, simple solutions. Our work is powerful on the inside and effortless on the outside.</p>
+                </div>
+                <div>
+                  <h3 className="font-brand text-emerald-400 text-xl">Win for the Seller</h3>
+                  <p className="mt-2 text-gray-300 font-body">Our success is a byproduct of our users' success. Every decision we make must answer the question: "Does this create more value for our sellers?"</p>
+                </div>
+                <div className="pt-2">
+                  <Button asChild className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold">
+                    <a href="#open-roles">View Open Roles</a>
+                  </Button>
+                </div>
+              </div>
+            </section>
+
+            {/* Open roles */}
+            <section id="open-roles" className="mt-12 space-y-6">
+              <h2 className="font-body text-xl md:text-2xl font-semibold text-gray-200">Open Roles</h2>
+              <div className="space-y-4">
+                {jobs.map((job, idx) => (
+                  <div key={idx} className="rounded-lg border border-white/10 bg-white/5">
+                    <div className="p-5 md:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                      <div>
+                        <div className="text-lg text-gray-100 font-semibold">{job.title}</div>
+                        <div className="text-sm text-gray-400">{job.location} • {job.salary}</div>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {job.tags.map((t) => (
+                          <span key={t} className="px-2 py-1 rounded-md text-xs bg-white/10 text-gray-300 border border-white/10">{t}</span>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="px-5 md:px-6 pb-6 space-y-2 text-gray-300">
+                      <p className="text-sm">{job.summary}</p>
+                      <ul className="list-disc pl-5 text-sm text-gray-400 space-y-1">
+                        {job.description.map((d, i) => (<li key={i}>{d}</li>))}
+                      </ul>
+                      <div className="pt-2">
+                        <Button asChild size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold">
+                          <a href={`mailto:careers@getclario.com?subject=${encodeURIComponent('Application: ' + job.title)}`}>Apply</a>
+                        </Button>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    {job.tags.map((t) => (
-                      <Badge key={t} variant="secondary">{t}</Badge>
-                    ))}
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <p className="text-sm text-foreground">{job.summary}</p>
-                  <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-1">
-                    {job.description.map((d, i) => (<li key={i}>{d}</li>))}
-                  </ul>
-                  <div className="pt-2">
-                    <Button asChild size="sm" className="bg-emerald-600 hover:bg-emerald-700">
-                      <a href={`mailto:careers@getclario.com?subject=${encodeURIComponent('Application: ' + job.title)}`}>Apply</a>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                ))}
+              </div>
+            </section>
+
+            {/* Hiring process */}
+            <section className="mt-10 space-y-3">
+              <h2 className="font-body text-xl md:text-2xl font-semibold text-gray-200">Hiring Process</h2>
+              <ol className="list-decimal pl-5 text-sm text-gray-400 space-y-1">
+                <li>Intro call (30m): mutual fit</li>
+                <li>Technical/portfolio deep‑dive (60–90m)</li>
+                <li>Practical exercise or code walkthrough</li>
+                <li>Meet the team + offer</li>
+              </ol>
+              <p className="text-xs text-gray-400">We value a fast, respectful process. If you’re unsure which role fits, email <a className="underline" href="mailto:careers@getclario.com">careers@getclario.com</a>.</p>
+            </section>
           </div>
-        </section>
-
-        {/* Hiring process */}
-        <section className="space-y-3">
-          <h2 className="text-2xl font-semibold">Hiring Process</h2>
-          <ol className="list-decimal pl-5 text-sm text-muted-foreground space-y-1">
-            <li>Intro call (30m): mutual fit</li>
-            <li>Technical/portfolio deep‑dive (60–90m)</li>
-            <li>Practical exercise or code walkthrough</li>
-            <li>Meet the team + offer</li>
-          </ol>
-          <p className="text-xs text-muted-foreground">We value a fast, respectful process. If you’re unsure which role fits, email <a className="underline" href="mailto:careers@getclario.com">careers@getclario.com</a>.</p>
-        </section>
+        </div>
       </div>
     </PageLayout>
   );

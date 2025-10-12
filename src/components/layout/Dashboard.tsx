@@ -110,7 +110,7 @@ export function Dashboard() {
     }).format(amount);
   };
 
-  const mainClass = isSidebarCollapsed ? 'ml-16' : 'ml-56';
+  const mainClass = isSidebarCollapsed ? 'ml-16' : 'ml-64';
 
   return (
     <div className="min-h-screen flex flex-col h-screen overflow-hidden platform">

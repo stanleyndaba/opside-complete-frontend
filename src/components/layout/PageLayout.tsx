@@ -21,7 +21,7 @@ export function PageLayout({
       <div className="flex-1 flex">
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
         
-        <main className={`flex-1 transition-all duration-300 ${isSidebarCollapsed ? 'ml-16' : 'ml-56'}`}>
+        <main className={`flex-1 transition-all duration-300 ${isSidebarCollapsed ? 'ml-16' : 'ml-64'}`}>
           <div className="container max-w-full p-4 lg:p-6 animate-fade-in">
             {isDemo && (
               <div className="mb-4 p-3 border bg-yellow-50 text-yellow-800 text-sm flex items-center justify-between">
