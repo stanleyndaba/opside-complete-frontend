@@ -3,6 +3,7 @@ import { PageLayout } from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
@@ -52,14 +53,14 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold">Clario Profile</h2>
-              <p className="text-muted-foreground">Manage your personal account information</p>
+              <h2 className="text-2xl font-bold text-gray-200">Clario Profile</h2>
+              <p className="text-gray-400">Manage your personal account information</p>
             </div>
             
-            <Card>
+            <Card className="bg-white/5 border-white/10 text-gray-300">
               <CardHeader>
-                <CardTitle>Personal Information</CardTitle>
-                <CardDescription>Update your personal details and profile picture</CardDescription>
+                <CardTitle className="text-gray-200">Personal Information</CardTitle>
+                <CardDescription className="text-gray-400">Update your personal details and profile picture</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="flex items-center gap-6">
@@ -70,11 +71,11 @@ const Settings = () => {
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <Button variant="outline" size="sm">
+                    <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">
                       <Camera className="h-4 w-4 mr-2" />
                       Upload Photo
                     </Button>
-                    <p className="text-sm text-muted-foreground mt-1">
+                    <p className="text-sm text-gray-400 mt-1">
                       JPG, PNG or GIF. Max size 5MB.
                     </p>
                   </div>
@@ -83,16 +84,16 @@ const Settings = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="firstName">First Name</Label>
-                    <Input id="firstName" defaultValue="Thandi" />
+                    <Input variant="dark" id="firstName" defaultValue="Thandi" />
                   </div>
                   <div>
                     <Label htmlFor="lastName">Last Name</Label>
-                    <Input id="lastName" defaultValue="Mthembu" />
+                    <Input variant="dark" id="lastName" defaultValue="Mthembu" />
                   </div>
                   <div className="md:col-span-2">
                     <Label htmlFor="email">Email Address</Label>
-                    <Input id="email" defaultValue="thandi@example.com" disabled />
-                    <p className="text-sm text-muted-foreground mt-1">
+                    <Input variant="dark" id="email" defaultValue="thandi@example.com" disabled />
+                    <p className="text-sm text-gray-400 mt-1">
                       Email is linked to your Amazon account and cannot be changed
                     </p>
                   </div>
@@ -108,33 +109,29 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold">Business Profile</h2>
-              <p className="text-muted-foreground">Manage your company information and preferences</p>
+              <h2 className="text-2xl font-bold text-gray-200">Business Profile</h2>
+              <p className="text-gray-400">Manage your company information and preferences</p>
             </div>
             
-            <Card>
+            <Card className="bg-white/5 border-white/10 text-gray-300">
               <CardHeader>
-                <CardTitle>Company Details</CardTitle>
-                <CardDescription>Information used for invoicing and records</CardDescription>
+                <CardTitle className="text-gray-200">Company Details</CardTitle>
+                <CardDescription className="text-gray-400">Information used for invoicing and records</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
                   <Label htmlFor="businessName">Business Name</Label>
-                  <Input id="businessName" defaultValue="Thandi's Trading Co." />
+                  <Input variant="dark" id="businessName" />
                 </div>
                 
                 <div>
                   <Label htmlFor="businessAddress">Business Address</Label>
-                  <textarea 
-                    id="businessAddress"
-                    className="w-full px-3 py-2 border rounded-md min-h-[80px]"
-                    defaultValue="123 Business Ave&#10;Johannesburg, 2001&#10;South Africa"
-                  />
+                  <Textarea variant="dark" id="businessAddress" className="w-full" />
                 </div>
                 
                 <div>
                   <Label htmlFor="timezone">Timezone</Label>
-                  <select id="timezone" className="w-full px-3 py-2 border rounded-md">
+                  <select id="timezone" className="w-full px-3 py-2 border rounded-md bg-white/5 border-white/10 text-gray-100">
                     <option>South Africa Standard Time (GMT+2)</option>
                     <option>Eastern Standard Time (GMT-5)</option>
                     <option>Pacific Standard Time (GMT-8)</option>
@@ -153,16 +150,16 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold">Billing & Value</h2>
-              <p className="text-muted-foreground">View your ROI and manage billing preferences</p>
+              <h2 className="text-2xl font-bold text-gray-200">Billing & Value</h2>
+              <p className="text-gray-400">View your ROI and manage billing preferences</p>
             </div>
             
-            <Card>
+            <Card className="bg-white/5 border-white/10 text-gray-300">
               <CardContent className="p-6">
                 <div className="text-center py-8">
-                  <CreditCard className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">Complete Billing Dashboard</h3>
-                  <p className="text-muted-foreground mb-4">
+                  <CreditCard className="h-12 w-12 mx-auto text-gray-300 mb-4" />
+                  <h3 className="text-lg font-semibold mb-2 text-gray-200">Complete Billing Dashboard</h3>
+                  <p className="text-gray-400 mb-4">
                     Access your comprehensive billing & value report with ROI calculations, 
                     invoice history, and plan management.
                   </p>
@@ -173,20 +170,20 @@ const Settings = () => {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-white/5 border-white/10 text-gray-300">
               <CardHeader>
-                <CardTitle>Auto-Claim (ACG)</CardTitle>
-                <CardDescription>Automatically submit approved claims once evidence is verified</CardDescription>
+                <CardTitle className="text-gray-200">Auto-Claim (ACG)</CardTitle>
+                <CardDescription className="text-gray-400">Automatically submit approved claims once evidence is verified</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium">Enable Auto-Claim</p>
-                    <p className="text-sm text-muted-foreground">Claims are auto-filed to Amazon when evidence is complete</p>
+                    <p className="font-medium text-gray-200">Enable Auto-Claim</p>
+                    <p className="text-sm text-gray-400">Claims are auto-filed to Amazon when evidence is complete</p>
                   </div>
                   <Switch defaultChecked />
                 </div>
-                <div className="text-xs text-muted-foreground">
+                <div className="text-xs text-gray-400">
                   Note: You can always review individual cases in Recoveries and pause Auto-Claim from here.
                 </div>
               </CardContent>
@@ -198,18 +195,18 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold">API Access</h2>
-              <p className="text-muted-foreground">Programmatic access to your Clario data for automation and integrations</p>
+              <h2 className="text-2xl font-bold text-gray-200">API Access</h2>
+              <p className="text-gray-400">Programmatic access to your Clario data for automation and integrations</p>
             </div>
 
-            <Card>
+            <Card className="bg-white/5 border-white/10 text-gray-300">
               <CardContent className="p-6">
                 <div className="space-y-3">
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-gray-400">
                     Use Clario APIs to pull recovery data, sync evidence statuses, and reconcile payouts in your own systems.
                     Access tokens are scoped and can be rotated at any time. SDKs and examples are available.
                   </p>
-                  <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-1">
+                  <ul className="list-disc pl-5 text-sm text-gray-400 space-y-1">
                     <li>Recoveries, claims, and payout endpoints</li>
                     <li>Webhooks for status changes</li>
                     <li>Fine-grained API keys and scopes</li>
@@ -229,8 +226,8 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold">Platform Integrations</h2>
-              <p className="text-muted-foreground">Manage your platform connections and data sources</p>
+              <h2 className="text-2xl font-bold text-gray-200">Platform Integrations</h2>
+              <p className="text-gray-400">Manage your platform connections and data sources</p>
             </div>
             <div>
               <Button className="bg-blue-600 hover:bg-blue-700 gap-2" onClick={() => navigate('/integrations-hub')}>
@@ -239,18 +236,18 @@ const Settings = () => {
               </Button>
             </div>
             
-            <Card>
+            <Card className="bg-white/5 border-white/10 text-gray-300">
               <CardHeader>
-                <CardTitle>Active Connections</CardTitle>
-                <CardDescription>Your currently connected platforms</CardDescription>
+                <CardTitle className="text-gray-200">Active Connections</CardTitle>
+                <CardDescription className="text-gray-400">Your currently connected platforms</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border border-white/10 rounded-lg bg-white/5">
                   <div className="flex items-center gap-3">
                     <img src="/lovable-uploads/14f98d63-9a1a-4128-8021-1d840d778ea5.png" alt="Amazon Seller Central logo" className="w-20 h-12 object-contain" />
                     <div>
-                      <p className="font-medium">Amazon Seller Central</p>
-                      <p className="text-sm text-muted-foreground">Connected • Last sync: 5 mins ago</p>
+                      <p className="font-medium text-gray-200">Amazon Seller Central</p>
+                      <p className="text-sm text-gray-400">Connected • Last sync: 5 mins ago</p>
                     </div>
                   </div>
                   <Badge className="bg-green-100 text-green-800">Active</Badge>
@@ -258,7 +255,7 @@ const Settings = () => {
               </CardContent>
             </Card>
             
-            <Card>
+            <Card className="bg-white/5 border-white/10 text-gray-300">
               <CardHeader>
                 <CardTitle>Integrations Coming Soon</CardTitle>
                 <CardDescription>Coming soon to expand your recovery capabilities</CardDescription>
@@ -293,21 +290,21 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold">Notifications</h2>
-              <p className="text-muted-foreground">Control how and when we communicate with you</p>
+              <h2 className="text-2xl font-bold text-gray-200">Notifications</h2>
+              <p className="text-gray-400">Control how and when we communicate with you</p>
             </div>
             
-            <Card>
+            <Card className="bg-white/5 border-white/10 text-gray-300">
               <CardHeader>
-                <CardTitle>Email Notifications</CardTitle>
-                <CardDescription>Choose which notifications you'd like to receive</CardDescription>
+                <CardTitle className="text-gray-200">Email Notifications</CardTitle>
+                <CardDescription className="text-gray-400">Choose which notifications you'd like to receive</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 {notificationSettings.map((setting) => (
                   <div key={setting.id} className="flex items-center justify-between">
                     <div className="space-y-1">
-                      <p className="font-medium">{setting.label}</p>
-                      <p className="text-sm text-muted-foreground">{setting.description}</p>
+                      <p className="font-medium text-gray-200">{setting.label}</p>
+                      <p className="text-sm text-gray-400">{setting.description}</p>
                     </div>
                     <Switch defaultChecked={setting.enabled} />
                   </div>
@@ -321,26 +318,26 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold">Security</h2>
-              <p className="text-muted-foreground">Manage your account security and access</p>
+              <h2 className="text-2xl font-bold text-gray-200">Security</h2>
+              <p className="text-gray-400">Manage your account security and access</p>
             </div>
             
-            <Card>
+            <Card className="bg-white/5 border-white/10 text-gray-300">
               <CardHeader>
-                <CardTitle>Login History</CardTitle>
-                <CardDescription>Recent account access activity</CardDescription>
+                <CardTitle className="text-gray-200">Login History</CardTitle>
+                <CardDescription className="text-gray-400">Recent account access activity</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {loginHistory.map((login, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div key={index} className="flex items-center justify-between p-3 border border-white/10 rounded-lg bg-white/5">
                     <div className="flex items-center gap-3">
                       {login.device.includes('iPhone') ? 
-                        <Smartphone className="h-5 w-5 text-muted-foreground" /> : 
-                        <Monitor className="h-5 w-5 text-muted-foreground" />
+                        <Smartphone className="h-5 w-5 text-gray-400" /> : 
+                        <Monitor className="h-5 w-5 text-gray-400" />
                       }
                       <div>
-                        <p className="font-medium">{login.device}</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="font-medium text-gray-200">{login.device}</p>
+                        <p className="text-sm text-gray-400">
                           <MapPin className="h-3 w-3 inline mr-1" />
                           {login.location} • {login.time}
                         </p>
@@ -354,29 +351,29 @@ const Settings = () => {
               </CardContent>
             </Card>
             
-            <Card>
+            <Card className="bg-white/5 border-white/10 text-gray-300">
               <CardHeader>
-                <CardTitle>Security Actions</CardTitle>
-                <CardDescription>Manage your account security</CardDescription>
+                <CardTitle className="text-gray-200">Security Actions</CardTitle>
+                <CardDescription className="text-gray-400">Manage your account security</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Button variant="outline" className="w-full">
+                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
                   <Shield className="h-4 w-4 mr-2" />
                   Log Out of All Other Devices
                 </Button>
               </CardContent>
             </Card>
             
-            <Card className="border-red-200">
+            <Card className="bg-red-500/5 border-red-200/20 text-gray-300">
               <CardHeader>
-                <CardTitle className="text-red-600 flex items-center gap-2">
+                <CardTitle className="text-red-300 flex items-center gap-2">
                   <AlertTriangle className="h-5 w-5" />
                   Danger Zone
                 </CardTitle>
-                <CardDescription>Permanent actions that cannot be undone</CardDescription>
+                <CardDescription className="text-gray-400">Permanent actions that cannot be undone</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
+                <p className="text-sm text-gray-400 mb-4">
                   Deleting your account will permanently remove all data, including recovery history, 
                   team members, and integrations. This action cannot be reversed.
                 </p>
@@ -395,39 +392,49 @@ const Settings = () => {
 
   return (
     <PageLayout title="Account Control Center">
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-[calc(100vh-200px)]">
-        {/* Navigation Menu */}
-        <div className="lg:col-span-1">
-          <Card className="h-fit">
-            <CardHeader>
-              <CardTitle className="text-lg">Settings</CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
-              <nav className="space-y-1 p-2">
-                {menuItems.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => item.id === 'careers' ? navigate('/careers') : setActiveSection(item.id)}
-                    className={cn(
-                      "w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md transition-colors text-left",
-                      activeSection === item.id
-                        ? "bg-primary text-primary-foreground"
-                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                    )}
-                  >
-                    <item.icon className="h-4 w-4 shrink-0" />
-                    {item.label}
-                  </button>
-                ))}
-              </nav>
-            </CardContent>
-          </Card>
-        </div>
-        
-        {/* Main Content */}
-        <div className="lg:col-span-3">
-          <div className="h-full overflow-y-auto">
-            {renderContent()}
+      <div className="relative -m-4 lg:-m-6">
+        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+          <div className="relative container mx-auto px-6 pt-6 pb-0 text-gray-300">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+              {/* Navigation Menu */}
+              <div className="lg:col-span-1">
+                <Card className="h-fit bg-white/5 border-white/10 text-gray-300">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-gray-200">Settings</CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-0">
+                    <nav className="space-y-1 p-2">
+                      {menuItems.map((item) => (
+                        <button
+                          key={item.id}
+                          onClick={() => item.id === 'careers' ? navigate('/careers') : setActiveSection(item.id)}
+                          className={cn(
+                            "relative w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md transition-colors text-left",
+                            activeSection === item.id
+                              ? "bg-white/10 text-gray-100"
+                              : "text-gray-400 hover:bg-white/5 hover:text-gray-100"
+                          )}
+                        >
+                          {activeSection === item.id && (
+                            <span className="absolute left-0 h-5 w-[3px] rounded-r bg-emerald-400" />
+                          )}
+                          <item.icon className="h-4 w-4 shrink-0" />
+                          {item.label}
+                        </button>
+                      ))}
+                    </nav>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Main Content */}
+              <div className="lg:col-span-3">
+                <div className="h-full overflow-y-auto">
+                  {renderContent()}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

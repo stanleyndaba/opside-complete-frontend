@@ -96,7 +96,10 @@ const handleStripePaymentUpdate = () => {
 export default function Billing() {
   return (
     <PageLayout title="Billing & Invoices">
-      <div className="space-y-8">
+      <div className="relative -m-4 lg:-m-6">
+        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+          <div className="relative container mx-auto px-6 pt-6 pb-0 text-gray-300 space-y-8">
         {/* Current Plan & Payment Method */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Your Plan Card */}
@@ -319,7 +322,9 @@ export default function Billing() {
             </Link>
           </div>
         </div>
-      </div>
+          </div>{/* container */}
+        </div>{/* blueprint bg */}
+      </div>{/* outer wrapper */}
     </PageLayout>
   );
 }
