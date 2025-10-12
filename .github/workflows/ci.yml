@@ -24,7 +24,13 @@ jobs:
         run: npm ci
 
       - name: Lint
-        run: npm run lint --silent || true
+        run: npm run lint --silent
+
+      - name: Typecheck
+        run: npm run typecheck --silent
+
+      - name: Check conflict markers
+        run: npm run check:conflicts --silent && test -z "$(npm run -s check:conflicts | grep -E '^(src|app|packages|lib)/')" || (echo "Conflict markers found" && exit 1)
 
       - name: Build
         run: npm run build --silent
