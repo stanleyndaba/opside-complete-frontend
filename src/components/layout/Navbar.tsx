@@ -9,6 +9,8 @@ import { useApiHealth } from '@/hooks/use-api-health';
 import { NotificationBell } from './NotificationBell';
 import { useAuth as useAuthCtx } from '@/hooks/useAuth';
 import { apiClient } from '@/lib/api';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 interface NavbarProps {
   className?: string;
