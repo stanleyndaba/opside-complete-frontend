@@ -1,13 +1,13 @@
 import React from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { startInventorySync } from '@/lib/api';
-import { useToast } from '@/hooks/use-toast';
 import { Search, User, Settings, Users, CreditCard, Zap, HelpCircle, Sparkles, MessageSquare, LogOut, Building2, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/use-auth';
 import { NotificationBell } from './NotificationBell';
+import { useAuth as useAuthCtx } from '@/hooks/useAuth';
+import { apiClient } from '@/lib/api';
 
 interface NavbarProps {
   className?: string;
@@ -21,6 +21,10 @@ export function Navbar({
   onToggleSidebar
 }: NavbarProps) {
   const { user, signInWithAmazon, signOut } = useAuth();
+  const authCtx = useAuthCtx();
+  const startSync = useMutation({
+    mutationFn: async () => { await apiClient.post('/api/sync/start'); },
+  });
   return <header className={cn("bg-background/95 backdrop-blur-sm sticky top-0 z-30 border-b transition-all duration-300", sidebarCollapsed ? "ml-16" : "ml-56", className)}>
       <div className="container flex items-center justify-end h-16 px-4">
         {/* Right side - Notification Bell and Profile Icon */}

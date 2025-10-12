@@ -1,7 +1,4 @@
-import React, { useEffect , useState} from 'react';
-import { useMutation } from '@tanstack/react-query';
-import { startInventorySync } from '@/lib/api';
-import { useToast } from '@/hooks/use-toast';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
@@ -12,6 +9,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Separator } from '@/components/ui/separator';
 import { apiClient } from '@/lib/api';
 import { toast } from 'sonner';
+import { useMutation } from '@tanstack/react-query';
 import { useStatusStream } from '@/hooks/useStatusStream';
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -32,6 +30,20 @@ export function Dashboard() {
         setDetectionNotified(true);
       }
     }
+  });
+
+  // Start Sync action
+  const startSync = useMutation({
+    mutationFn: async () => {
+      await apiClient.post('/api/sync/start');
+    },
+    onSuccess: () => {
+      toast.success('Inventory sync started');
+      navigate('/smart-inventory-sync');
+    },
+    onError: () => {
+      toast.error('Failed to start sync');
+    },
   });
 
   // Mock data for the dashboard
@@ -272,7 +284,7 @@ export function Dashboard() {
                   <Button 
                     className="h-9 flex items-center gap-2"
                     title="Run detection and surface potential missed claims"
-                    onClick={() => runDetection.mutate()}
+                    onClick={() => setDetectOpen(true)}
                   >
                     Detect Missed Claims
                   </Button>
