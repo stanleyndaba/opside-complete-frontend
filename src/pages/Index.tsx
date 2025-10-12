@@ -91,8 +91,7 @@ const Index = () => {
       </main>
 
       <div>
-        <div className="container mx-auto px-6 py-4 flex items-center justify-between text-sm">
-          <div className="font-logo text-base text-foreground">Clario<span className="text-emerald-500">.</span></div>
+        <div className="container mx-auto px-6 py-4 flex items-center justify-end text-sm">
           <div className="flex items-center gap-6 text-muted-foreground">
             <Link to="/terms" className="hover:text-foreground">Terms of use</Link>
             <Link to="/privacy" className="hover:text-foreground">Privacy Policy</Link>
