@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Shield, FileText, Factory, Zap, Settings, CreditCard, Users, HelpCircle, MessageSquare, Sparkles, Download, Key, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Home, Shield, FileText, Factory, Zap, Settings, CreditCard, Users, HelpCircle, MessageSquare, Sparkles, Download, Key, ChevronLeft, ChevronRight, BarChart3 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { EVIDENCE_LOCKER_ENABLED } from '@/lib/featureFlags';
 import { Button } from '@/components/ui/button';
