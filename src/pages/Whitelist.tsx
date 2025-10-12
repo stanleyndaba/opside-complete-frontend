@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { automationApi } from '@/lib/automationApi';
 import { Button } from '@/components/ui/button';
@@ -100,4 +100,5 @@ const Whitelist: React.FC = () => {
 };
 
 export default Whitelist;
+
 
