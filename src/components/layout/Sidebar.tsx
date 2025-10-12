@@ -103,7 +103,7 @@ export function Sidebar({
     }, {
       title: 'API Access',
       icon: Key,
-      href: '/api'
+      href: '/api-access'
     }]
   }, {
     title: 'Support',
