@@ -115,7 +115,7 @@ export default function WhatsNew() {
                           {update.description}
                         </p>
                         <div className="space-y-2">
-                          <h3 className="font-medium text-foreground">What's included:</h3>
+                          <h3 className="font-medium text-gray-100">What's included:</h3>
                           <ul className="space-y-1 text-sm text-muted-foreground">
                             {update.content.map((item, index) => (
                               <li key={index} className="flex items-start gap-2">
