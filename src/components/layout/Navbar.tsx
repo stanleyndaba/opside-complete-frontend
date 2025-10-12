@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/use-auth';
 import { useApiHealth } from '@/hooks/use-api-health';
 import { NotificationBell } from './NotificationBell';
-import { useAuth as useAuthCtx } from '@/hooks/useAuth';
 import { apiClient } from '@/lib/api';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -23,9 +22,8 @@ export function Navbar({
   sidebarCollapsed = false,
   onToggleSidebar
 }: NavbarProps) {
-  const { user, signInWithAmazon, signOut } = useAuth();
+  const { user, isDemo, exitDemo, loginWithAmazon, logout } = useAuth();
   const { data: health, isLoading } = useApiHealth();
-  const authCtx = useAuthCtx();
   const startSync = useMutation({
     mutationFn: async () => { await apiClient.post('/api/sync/start'); },
   });
@@ -111,12 +109,12 @@ export function Navbar({
               
               {/* Section 4: Session Control */}
               {user ? (
-                <DropdownMenuItem onClick={signOut} className="flex items-center gap-2 cursor-pointer text-red-600 focus:text-red-600">
+                <DropdownMenuItem onClick={logout} className="flex items-center gap-2 cursor-pointer text-red-600 focus:text-red-600">
                   <LogOut className="h-4 w-4" />
                   <span>Log Out</span>
                 </DropdownMenuItem>
               ) : (
-                <DropdownMenuItem onClick={signInWithAmazon} className="flex items-center gap-2 cursor-pointer">
+                <DropdownMenuItem onClick={loginWithAmazon} className="flex items-center gap-2 cursor-pointer">
                   <Zap className="h-4 w-4" />
                   <span>Sign in with Amazon</span>
                 </DropdownMenuItem>
