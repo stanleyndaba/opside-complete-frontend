@@ -25,9 +25,16 @@ export class ApiClient {
 
 	async request<T>(method: HttpMethod, path: string, body?: unknown, init?: RequestInit): Promise<T> {
 		const url = this.buildUrl(path);
+		// Include dynamic auth token if present
+		const token = (typeof window !== "undefined" ? window.localStorage.getItem("auth_token") : undefined) || undefined;
+		const headers: Record<string, string> = {
+			...this.defaultHeaders,
+			...(token ? { Authorization: `Bearer ${token}` } : {}),
+			...(init?.headers as Record<string, string> | undefined),
+		};
 		const response = await fetch(url, {
 			method,
-			headers: this.defaultHeaders,
+			headers,
 			body: body != null ? JSON.stringify(body) : undefined,
 			credentials: "include",
 			...init,
@@ -79,4 +86,125 @@ export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> 
   const httpMethod = ((method ?? 'GET') as HttpMethod);
   return apiClient.request<T>(httpMethod, path, body, rest);
 }
+
+// --- Legacy helpers & facade for higher-level API calls ---
+
+export type ApiEnvelope<T> = { ok: true; data: T } | { ok: false; error: string };
+
+function ok<T>(data: T): ApiEnvelope<T> { return { ok: true, data }; }
+function err<T = never>(e: unknown): ApiEnvelope<T> {
+  const message = e instanceof Error ? e.message : String(e);
+  return { ok: false, error: message };
+}
+
+// Plain request returning parsed JSON, throwing on HTTP errors
+export async function apiRequest<T>(path: string, init?: RequestInit, _opts?: { retries?: number }): Promise<T> {
+  return await apiClient.request<T>((init?.method as HttpMethod) ?? 'GET', path, (init as any)?.body, init);
+}
+
+let inMemoryToken: string | null = null;
+export function setAuthToken(token: string | null): void {
+  inMemoryToken = token;
+  try {
+    if (token) window.localStorage.setItem('auth_token', token);
+    else window.localStorage.removeItem('auth_token');
+  } catch {}
+}
+
+export async function fetchCurrentUser<T = any>(): Promise<ApiEnvelope<T>> {
+  try {
+    const data = await apiClient.get<T>('/api/auth/me');
+    return ok(data);
+  } catch (e) {
+    return err(e);
+  }
+}
+
+export function getAmazonLoginUrl(): string {
+  return buildApiUrl('/auth/amazon/start');
+}
+
+// Named exports used by Sync.tsx
+export async function startInventorySync(): Promise<ApiEnvelope<any>> {
+  try {
+    const data = await apiClient.post<any>('/api/sync/start');
+    return ok(data);
+  } catch (e) {
+    return err(e);
+  }
+}
+
+export async function fetchSyncStatus<T = any>(): Promise<ApiEnvelope<T>> {
+  try {
+    const data = await apiClient.get<T>('/api/sync/status');
+    return ok(data);
+  } catch (e) {
+    return err(e);
+  }
+}
+
+// Facade used throughout the app
+export const api = {
+  // Generic envelope helpers
+  async get<T = any>(path: string): Promise<ApiEnvelope<T>> {
+    try { return ok(await apiClient.get<T>(path)); } catch (e) { return err(e); }
+  },
+  async post<T = any>(path: string, body?: unknown): Promise<ApiEnvelope<T>> {
+    try { return ok(await apiClient.post<T>(path, body)); } catch (e) { return err(e); }
+  },
+
+  // Metrics
+  async getDashboardAggregates(window?: '7d' | '30d' | '90d'): Promise<ApiEnvelope<any>> {
+    const q = window ? `?window=${encodeURIComponent(window)}` : '';
+    try { return ok(await apiClient.get(`/api/metrics/dashboard${q}`)); } catch (e) { return err(e); }
+  },
+  async getRecoveriesMetrics(): Promise<ApiEnvelope<any>> {
+    try { return ok(await apiClient.get('/api/metrics/recoveries')); } catch (e) { return err(e); }
+  },
+  async trackEvent(name: string, payload?: Record<string, any>): Promise<ApiEnvelope<any>> {
+    try { return ok(await apiClient.post('/api/metrics/track', { name, payload })); } catch (e) { return err(e); }
+  },
+
+  // Integrations
+  async getIntegrationsStatus(): Promise<ApiEnvelope<any>> {
+    try { return ok(await apiClient.get('/api/v1/integrations/status')); } catch (e) { return err(e); }
+  },
+  async connectAmazon(): Promise<ApiEnvelope<{ redirect_url?: string; auth_url?: string }>> {
+    try { return ok(await apiClient.get('/api/v1/integrations/connect-amazon')); } catch (e) { return err(e); }
+  },
+  async connectDocs(provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox'): Promise<ApiEnvelope<{ redirect_url?: string }>> {
+    const q = `?provider=${encodeURIComponent(provider)}`;
+    try { return ok(await apiClient.get(`/api/v1/integrations/connect-docs${q}`)); } catch (e) { return err(e); }
+  },
+  async disconnectIntegration(provider: string, purge: boolean): Promise<ApiEnvelope<any>> {
+    const q = `?provider=${encodeURIComponent(provider)}&purge=${purge ? 1 : 0}`;
+    try { return ok(await apiClient.post(`/api/v1/integrations/disconnect${q}`)); } catch (e) { return err(e); }
+  },
+
+  // Sync
+  async startAmazonSync(): Promise<ApiEnvelope<{ syncId?: string }>> {
+    try { return ok(await apiClient.post('/api/sync/start')); } catch (e) { return err(e); }
+  },
+
+  // Recoveries
+  async getAmazonRecoveries(): Promise<ApiEnvelope<any>> {
+    try { return ok(await apiClient.get('/api/recoveries')); } catch (e) { return err(e); }
+  },
+  getRecoveryDocumentUrl(recoveryId: string): string {
+    return buildApiUrl(`/api/recoveries/${encodeURIComponent(recoveryId)}/document`);
+  },
+
+  // Detections
+  async runDetections(): Promise<ApiEnvelope<{ detection_id: string }>> {
+    try { return ok(await apiClient.post('/api/detections/run')); } catch (e) { return err(e); }
+  },
+  async getDetectionStatus(detectionId: string): Promise<ApiEnvelope<any>> {
+    try { return ok(await apiClient.get(`/api/detections/status/${encodeURIComponent(detectionId)}`)); } catch (e) { return err(e); }
+  },
+
+  // Billing & Stripe
+  async postLoginStripe(): Promise<ApiEnvelope<any>> {
+    try { return ok(await apiClient.post('/api/auth/post-login/stripe', {})); } catch (e) { return err(e); }
+  },
+};
 
