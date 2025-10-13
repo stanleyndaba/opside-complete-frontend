@@ -88,7 +88,7 @@ export function Dashboard() {
                       </div>
                     </div>
                     <div className="py-2 max-h-[600px] overflow-y-auto">
-                      <div className="relative px-4 max-w-[360px] mx-auto text-[12px] divide-y divide-white/10">
+                      <div className="relative px-4 max-w-[360px] mx-auto text-[12px] divide-y divide-gray-200">
                         {(() => {
                           const events = [
                             { id: 'evt-1', unread: true, title: 'Connection Established', details: 'Amazon connection established', time: 'Just now' },
