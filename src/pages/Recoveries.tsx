@@ -246,7 +246,7 @@ export default function Recoveries() {
           <h1 className="text-3xl font-bold text-foreground mb-2">All Recoveries</h1>
           <p className="text-muted-foreground">Comprehensive view of all recovery claims and their current status</p>
           <div className="mt-4 flex items-center gap-2">
-            <Button size="sm" disabled={selectedIds.size === 0 || submittingBulk} onClick={async () => {
+            <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-white" disabled={selectedIds.size === 0 || submittingBulk} onClick={async () => {
               setSubmittingBulk(true);
               const ids = Array.from(selectedIds);
               for (const id of ids) {

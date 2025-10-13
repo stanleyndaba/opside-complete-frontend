@@ -249,7 +249,7 @@ export default function Reports() {
                 <Calendar initialFocus mode="range" defaultMonth={dateRange?.from} selected={dateRange} onSelect={setDateRange} numberOfMonths={2} className="pointer-events-auto" />
               </PopoverContent>
             </Popover>
-            <Button onClick={() => setExportOpen(true)} className="gap-2">
+            <Button onClick={() => setExportOpen(true)} className="gap-2 bg-emerald-500 hover:bg-emerald-400 text-white">
               <Download className="h-4 w-4" /> Export Data
             </Button>
           </div>
