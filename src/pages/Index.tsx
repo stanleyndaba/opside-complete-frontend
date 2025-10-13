@@ -45,8 +45,13 @@ const Index = () => {
           <div className="font-logo text-xl tracking-tight text-foreground">Clario<span className="text-emerald-500">.</span></div>
           <nav className="flex items-center gap-4 text-sm">
             <Button variant="ghost" onClick={async () => { 
-              const res = await api.connectAmazon(); 
-              if (res.ok && res.data?.auth_url) window.location.href = res.data.auth_url; 
+              try {
+                const res = await api.connectAmazon(); 
+                const url = (res as any)?.data?.auth_url || (res as any)?.data?.redirect_url;
+                if ((res as any)?.ok && url) window.location.href = url as string; else window.location.href = '/auth/amazon-sandbox';
+              } catch {
+                window.location.href = '/auth/amazon-sandbox';
+              }
             }}>
               Login
             </Button>
@@ -81,8 +86,8 @@ const Index = () => {
                   <LinkIcon className="h-5 w-5 mr-2" strokeWidth={1.75} />
                   Connect Amazon
                 </Button>
-                <Button size="lg" variant="outline" className="bg-white text-black border-gray-200 hover:bg-gray-50" onClick={() => navigate('/auth/amazon-sandbox')}>
-                  <Link to="/app" className="inline-flex items-center gap-2">Demo <ArrowRight className="h-4 w-4" strokeWidth={1.75} /></Link>
+                <Button size="lg" variant="outline" className="bg-white text-black border-gray-200 hover:bg-gray-50 inline-flex items-center gap-2" onClick={() => navigate('/auth/amazon-sandbox')}>
+                  Demo <ArrowRight className="h-4 w-4" strokeWidth={1.75} />
                 </Button>
               </div>
             </div>
