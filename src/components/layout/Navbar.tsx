@@ -1,9 +1,11 @@
-import React from 'react';
-import { ArrowUpDown } from 'lucide-react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { ArrowUpDown, Globe, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Link, useLocation } from 'react-router-dom';
 import { NotificationBell } from './NotificationBell';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
 interface NavbarProps {
   className?: string;
   sidebarCollapsed?: boolean;
@@ -22,6 +24,40 @@ export function Navbar({
     location.pathname.startsWith('/billing') ||
     location.pathname.startsWith('/whats-new') ||
     location.pathname.startsWith('/help');
+
+  type LanguageOption = {
+    code: string;
+    country: string;
+    language: string;
+    flag: string;
+  };
+
+  const LANGUAGE_OPTIONS: LanguageOption[] = [
+    { code: 'us-en', country: 'USA', language: 'English', flag: '🇺🇸' },
+    { code: 'ca-en', country: 'Canada', language: 'English', flag: '🇨🇦' },
+    { code: 'ca-fr', country: 'Canada', language: 'Français', flag: '🇨🇦' },
+    { code: 'gb-en', country: 'United Kingdom', language: 'English', flag: '🇬🇧' },
+    { code: 'au-en', country: 'Australia', language: 'English', flag: '🇦🇺' },
+    { code: 'de-de', country: 'Germany', language: 'Deutsch', flag: '🇩🇪' },
+    { code: 'fr-fr', country: 'France', language: 'Français', flag: '🇫🇷' },
+    { code: 'es-es', country: 'Spain', language: 'Español', flag: '🇪🇸' },
+    { code: 'it-it', country: 'Italy', language: 'Italiano', flag: '🇮🇹' },
+    { code: 'nl-nl', country: 'Netherlands', language: 'Nederlands', flag: '🇳🇱' },
+  ];
+
+  const [selectedLanguageCode, setSelectedLanguageCode] = useState<string>(() =>
+    typeof window !== 'undefined' ? localStorage.getItem('clario.langPreference') || 'us-en' : 'us-en'
+  );
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('clario.langPreference', selectedLanguageCode);
+    } catch {}
+  }, [selectedLanguageCode]);
+
+  const selectedLanguage = useMemo<LanguageOption>(() => {
+    return LANGUAGE_OPTIONS.find((o) => o.code === selectedLanguageCode) || LANGUAGE_OPTIONS[0];
+  }, [selectedLanguageCode]);
   return <header className={cn(
     "sticky top-0 z-30 transition-all duration-300",
     sidebarCollapsed ? "ml-16" : "ml-64",
@@ -33,8 +69,35 @@ export function Navbar({
         <div className="flex items-center gap-3">
           <div className="hidden md:flex items-center gap-4 ml-2" />
         </div>
-        {/* Right side - Sync action and Notification Bell */}
+        {/* Right side - Language, Sync, Notifications */}
         <div className="flex items-center gap-4 ml-auto">
+          {/* Language selector */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className={cn(
+                  'inline-flex items-center gap-2 h-9 px-3 rounded-md text-sm transition-colors',
+                  isTransparent ? 'hover:bg-white/10 text-gray-200' : 'hover:bg-accent hover:text-accent-foreground'
+                )}
+                aria-label="Language and region"
+              >
+                <Globe className="h-4 w-4" />
+                <span>
+                  {selectedLanguage.country} | {selectedLanguage.language}
+                </span>
+                <ChevronDown className="h-4 w-4 opacity-70" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="min-w-[220px]">
+              {LANGUAGE_OPTIONS.map((opt) => (
+                <DropdownMenuItem key={opt.code} onClick={() => setSelectedLanguageCode(opt.code)} className="gap-2">
+                  <span className="text-base leading-none">{opt.flag}</span>
+                  <span className="font-medium">{opt.country}</span>
+                  <span className="text-muted-foreground">| {opt.language}</span>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
           {/* Labeled sync button */}
           <button title="Start sync now" className="inline-flex items-center gap-2 h-9 px-3 rounded-md bg-emerald-500 text-white hover:bg-emerald-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 active:bg-emerald-600 transition-colors" onClick={async () => {
             try {
