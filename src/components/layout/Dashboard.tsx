@@ -88,7 +88,7 @@ export function Dashboard() {
                       </div>
                     </div>
                     <div className="py-2 max-h-[600px] overflow-y-auto">
-                      <div className="relative px-2 max-w-[340px] mx-auto text-[12px]">
+                      <div className="relative px-4 max-w-[360px] mx-auto text-[12px] divide-y divide-white/10">
                         {(() => {
                           const events = [
                             { id: 'evt-1', unread: true, title: 'Connection Established', details: 'Amazon connection established', time: 'Just now' },
@@ -97,7 +97,7 @@ export function Dashboard() {
                             { id: 'evt-4', unread: false, title: 'Funds Recovered', details: `Payout confirmed: ${formatCurrency(850.75)}`, time: '2 days ago' },
                           ];
                           return events.map((evt, idx) => (
-                            <div key={evt.id} className={"group relative flex items-start gap-3 " + (idx > 0 ? 'pt-3' : 'pt-2') + " pb-3 overflow-hidden"}>
+                            <div key={evt.id} className={"group relative flex items-start gap-3 py-3 overflow-hidden"}>
                               {/* Read/Unread dot only */}
                               <div className="pt-1">
                                 <span className={"inline-block h-2 w-2 rounded-full " + (evt.unread ? 'bg-blue-500' : 'bg-gray-300')} />
