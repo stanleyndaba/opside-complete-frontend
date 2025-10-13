@@ -240,11 +240,14 @@ export default function Recoveries() {
 
   return (
     <PageLayout title="All Recoveries">
-      <div className="container max-w-full p-6">
+      <div className="relative -m-4 lg:-m-6">
+        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-300 space-y-8">
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">All Recoveries</h1>
-          <p className="text-muted-foreground">Comprehensive view of all recovery claims and their current status</p>
+          <h1 className="text-3xl font-bold text-gray-100 mb-2">All Recoveries</h1>
+          <p className="text-gray-400">Comprehensive view of all recovery claims and their current status</p>
           <div className="mt-4 flex items-center gap-2">
             <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-white" disabled={selectedIds.size === 0 || submittingBulk} onClick={async () => {
               setSubmittingBulk(true);
@@ -268,45 +271,45 @@ export default function Recoveries() {
 
         {/* Key Metrics Bar */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card>
+          <Card className="bg-white/5 border-white/10 text-gray-300">
             <CardContent className="p-6">
               <div className="flex items-center">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Total Claims Found</p>
-                  <p className="text-2xl font-bold text-foreground">{metrics ? metrics.totalClaimsFound : keyMetrics.totalClaimsFound}</p>
+                  <p className="text-sm font-medium text-gray-400">Total Claims Found</p>
+                  <p className="text-2xl font-bold text-gray-100">{metrics ? metrics.totalClaimsFound : keyMetrics.totalClaimsFound}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
           
-          <Card>
+          <Card className="bg-white/5 border-white/10 text-gray-300">
             <CardContent className="p-6">
               <div className="flex items-center">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Currently in Progress</p>
-                  <p className="text-2xl font-bold text-blue-600">{metrics ? metrics.inProgress : keyMetrics.currentlyInProgress}</p>
+                  <p className="text-sm font-medium text-gray-400">Currently in Progress</p>
+                  <p className="text-2xl font-bold text-blue-400">{metrics ? metrics.inProgress : keyMetrics.currentlyInProgress}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
           
-          <Card>
+          <Card className="bg-white/5 border-white/10 text-gray-300">
             <CardContent className="p-6">
               <div className="flex items-center">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Value in Progress</p>
-                  <p className="text-2xl font-bold text-purple-600">{formatCurrency(metrics ? metrics.valueInProgress : keyMetrics.valueInProgress)}</p>
+                  <p className="text-sm font-medium text-gray-400">Value in Progress</p>
+                  <p className="text-2xl font-bold text-purple-400">{formatCurrency(metrics ? metrics.valueInProgress : keyMetrics.valueInProgress)}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
           
-          <Card>
+          <Card className="bg-white/5 border-white/10 text-gray-300">
             <CardContent className="p-6">
               <div className="flex items-center">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">30-Day Success Rate</p>
-                  <p className="text-2xl font-bold text-green-600">{metrics ? Math.round(metrics.successRate30d) : keyMetrics.successRate.toFixed(0)}%</p>
+                  <p className="text-sm font-medium text-gray-400">30-Day Success Rate</p>
+                  <p className="text-2xl font-bold text-emerald-400">{metrics ? Math.round(metrics.successRate30d) : keyMetrics.successRate.toFixed(0)}%</p>
                 </div>
               </div>
             </CardContent>
@@ -314,32 +317,32 @@ export default function Recoveries() {
         </div>
 
         {/* Controls */}
-        <Card className="mb-8">
+        <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
           <CardContent className="p-6">
             <div className="flex flex-wrap gap-4 items-center">
               {/* Search Bar */}
               <div className="relative flex-1 min-w-64">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
                   placeholder="Search by Claim ID, ASIN, or Keyword..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500"
                 />
               </div>
 
               {/* Quick Date Range Buttons */}
               <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={() => setQuickDateRange('30days')}>Last 30 Days</Button>
-                <Button variant="outline" size="sm" onClick={() => setQuickDateRange('quarter')}>Last Quarter</Button>
-                <Button variant="outline" size="sm" onClick={() => setQuickDateRange('year')}>This Year</Button>
-                <Button variant="outline" size="sm" onClick={() => setQuickDateRange('all')}>All Time</Button>
+                <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100" onClick={() => setQuickDateRange('30days')}>Last 30 Days</Button>
+                <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100" onClick={() => setQuickDateRange('quarter')}>Last Quarter</Button>
+                <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100" onClick={() => setQuickDateRange('year')}>This Year</Button>
+                <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100" onClick={() => setQuickDateRange('all')}>All Time</Button>
               </div>
 
               {/* Custom Date Range */}
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" className={cn("w-[280px] justify-start text-left font-normal", !dateRange && "text-muted-foreground")}>
+                  <Button variant="outline" className={cn("w-[280px] justify-start text-left font-medium bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100", !dateRange && "text-blue-700")}>
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {dateRange?.from ? (
                       dateRange.to ? (
@@ -396,7 +399,7 @@ export default function Recoveries() {
         </Card>
 
         {/* Data Table */}
-        <Card>
+        <Card className="bg-white/5 border-white/10 text-gray-300">
           <CardContent className="p-0">
             {loading && (
               <div className="p-4 text-sm text-muted-foreground">Loading recoveries...</div>
@@ -425,7 +428,7 @@ export default function Recoveries() {
               </TableHeader>
               <TableBody>
                 {filteredClaims.map((claim) => (
-                  <TableRow key={claim.id} className="cursor-pointer hover:bg-muted/50">
+                  <TableRow key={claim.id} className="cursor-pointer hover:bg-white/5">
                     <TableCell>
                       <Checkbox checked={selectedIds.has(claim.id)} onCheckedChange={(checked) => {
                         setSelectedIds(prev => {
@@ -436,7 +439,7 @@ export default function Recoveries() {
                       }} />
                     </TableCell>
                     <TableCell>
-                      <Button asChild variant="link" className="p-0 h-auto text-blue-600 hover:text-blue-800 font-mono">
+                      <Button asChild variant="link" className="p-0 h-auto text-emerald-400 hover:text-emerald-300 font-mono">
                         <Link to={`/recoveries/${claim.id}`}>{claim.id}</Link>
                       </Button>
                     </TableCell>
@@ -497,6 +500,8 @@ export default function Recoveries() {
             </Table>
           </CardContent>
         </Card>
+          </div>
+        </div>
       </div>
     </PageLayout>
   );
