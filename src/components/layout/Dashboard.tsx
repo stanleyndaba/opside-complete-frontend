@@ -42,7 +42,7 @@ export function Dashboard() {
                 <Card>
                   <CardContent className="p-6">
                     <h2 className="font-montserrat text-lg text-gray-700 font-semibold">Your Recovered Value</h2>
-                    <p className="text-sm text-muted-foreground mt-1">Auto-submit your FBA recovered value under recoveries</p>
+                    <p className="text-sm text-muted-foreground mt-1">Auto-submit your FBA recovery</p>
                     <div className="text-[22px] font-extrabold mt-2 text-[#0d0d0d]">
                       {formatCurrency(14228)}
                     </div>
