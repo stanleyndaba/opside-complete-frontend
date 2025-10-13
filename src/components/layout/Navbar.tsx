@@ -17,10 +17,12 @@ export function Navbar({
 }: NavbarProps) {
   const location = useLocation();
   const isTransparent =
+    location.pathname === '/' ||
     location.pathname.startsWith('/settings') ||
     location.pathname.startsWith('/careers') ||
     location.pathname.startsWith('/api-access') ||
     location.pathname.startsWith('/billing') ||
+    location.pathname.startsWith('/app') ||
     location.pathname.startsWith('/recoveries') ||
     location.pathname.startsWith('/reports') ||
     location.pathname.startsWith('/whats-new') ||

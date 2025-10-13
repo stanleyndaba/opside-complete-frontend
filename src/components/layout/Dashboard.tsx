@@ -68,21 +68,24 @@ export function Dashboard() {
       <div className="flex-1 flex h-full overflow-hidden">
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
         <main className={'flex-1 transition-all duration-300 overflow-y-auto ' + mainClass}>
-          <div className="container max-w-full p-6" style={{ backgroundColor: '#F8F9FA' }}>
+          <div className="relative -m-4 lg:-m-6">
+            <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+              <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-300 space-y-8">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-full">
               <div className="lg:col-span-2 space-y-8">
-                <Card className="border border-green-200 bg-green-50">
+                <Card className="bg-white/5 border-white/10 text-gray-300">
                   <CardContent className="p-6">
-                    <h2 className="font-montserrat text-lg text-green-900 font-semibold">Welcome to Clario!</h2>
-                    <p className="text-sm text-green-900 mt-1">Your Amazon account has been connected successfully.</p>
+                    <h2 className="font-brand text-lg text-gray-100 font-semibold">Welcome to Clario!</h2>
+                    <p className="text-sm text-gray-400 mt-1">Your Amazon account has been connected successfully.</p>
                   </CardContent>
                 </Card>
 
-                <Card>
+                <Card className="bg-white/5 border-white/10 text-gray-300">
                   <CardContent className="p-6">
-                    <h2 className="font-montserrat text-lg text-gray-700 font-semibold">Your Recovered Value</h2>
-                    <p className="text-sm text-muted-foreground mt-1">Auto-submit your FBA recovery</p>
-                    <div className="text-[22px] font-extrabold mt-2 text-[#0d0d0d]">
+                    <h2 className="font-brand text-lg text-gray-100 font-semibold">Your Recovered Value</h2>
+                    <p className="text-sm text-gray-400 mt-1">Auto-submit your FBA recovery</p>
+                    <div className="text-[22px] font-extrabold mt-2 text-gray-100">
                       {recoveredTotal == null ? (
                         <span className="text-muted-foreground">Loading…</span>
                       ) : (
@@ -91,29 +94,29 @@ export function Dashboard() {
                     </div>
                     <div className="mt-4 space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Pending Recovery</span>
-                        <span className="text-sm font-semibold">{formatCurrency(8560)}</span>
+                        <span className="text-sm text-gray-400">Pending Recovery</span>
+                        <span className="text-sm font-semibold text-gray-100">{formatCurrency(8560)}</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Success Rate</span>
-                        <span className="text-sm font-semibold text-[#33cc33]">94%</span>
+                        <span className="text-sm text-gray-400">Success Rate</span>
+                        <span className="text-sm font-semibold text-emerald-400">94%</span>
                       </div>
                     </div>
                     <div className="mt-4">
-                      <Button className="bg-emerald-500 hover:bg-emerald-400 text-white" onClick={() => navigate('/recoveries')}>View All Claims</Button>
+                      <Button className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold" onClick={() => navigate('/recoveries')}>View All Claims</Button>
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card>
+                <Card className="bg-white/5 border-white/10 text-gray-300">
                   <CardContent className="p-6">
-                    <h2 className="font-montserrat text-lg text-gray-700 font-semibold">Quick Actions</h2>
+                    <h2 className="font-brand text-lg text-gray-100 font-semibold">Quick Actions</h2>
                     <div className="grid grid-cols-2 gap-4 mt-4">
-                      <Button variant="outline" className="flex items-center gap-2">
+                      <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10">
                         <FileText className="h-4 w-4" />
                         View Reports
                       </Button>
-                      <Button variant="outline" className="flex items-center gap-2">
+                      <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10">
                         <BarChart3 className="h-4 w-4" />
                         Analytics
                       </Button>
@@ -161,6 +164,7 @@ export function Dashboard() {
                     </div>
                   </CardContent>
                 </Card>
+              </div>
               </div>
             </div>
           </div>
