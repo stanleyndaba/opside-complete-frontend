@@ -63,7 +63,7 @@ export function Dashboard() {
   const mainClass = isSidebarCollapsed ? 'ml-16' : 'ml-64';
 
   return (
-    <div className="min-h-screen flex flex-col h-screen overflow-hidden platform">
+    <div className="min-h-screen flex flex-col h-screen overflow-hidden platform" style={{ backgroundColor: '#0B1220' }}>
       <Navbar sidebarCollapsed={isSidebarCollapsed} />
       <div className="flex-1 flex h-full overflow-hidden">
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
