@@ -129,8 +129,7 @@ export default function AnalyzingScreen() {
   return (
     <PageLayout title="Analyzing Your Account">
       <div className="max-w-2xl mx-auto mt-20 text-center space-y-6">
-        <div className="flex items-center justify-center gap-2">
-          <Scan className="h-6 w-6 animate-pulse" />
+        <div className="flex items-center justify-center">
           <span className="text-lg font-medium">Analyzing Your Amazon FBA History</span>
         </div>
         <div className="flex flex-col items-center gap-3">
