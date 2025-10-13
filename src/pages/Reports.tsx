@@ -231,16 +231,16 @@ export default function Reports() {
         {/* Page Header & Controls */}
         <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-foreground mb-1">Reports</h1>
-            <p className="text-muted-foreground">Historical clarity and financial reconciliation</p>
+            <h1 className="text-3xl font-bold text-gray-100 mb-1">Reports</h1>
+            <p className="text-gray-400">Historical clarity and financial reconciliation</p>
           </div>
           <div className="flex flex-wrap gap-2 items-center">
-            <Button variant="outline" size="sm" onClick={() => setQuickDateRange('30days')}>Last 30 Days</Button>
-            <Button variant="outline" size="sm" onClick={() => setQuickDateRange('quarter')}>This Quarter</Button>
-            <Button variant="outline" size="sm" onClick={() => setQuickDateRange('year')}>Year to Date</Button>
+            <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100" onClick={() => setQuickDateRange('30days')}>Last 30 Days</Button>
+            <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100" onClick={() => setQuickDateRange('quarter')}>This Quarter</Button>
+            <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100" onClick={() => setQuickDateRange('year')}>Year to Date</Button>
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="outline" className={cn("w-[280px] justify-start text-left font-normal", !dateRange && "text-muted-foreground")}>
+                <Button variant="outline" className={cn("w-[280px] justify-start text-left font-medium bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100", !dateRange && "text-blue-700") }>
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {dateRange?.from ? dateRange.to ? <>
                         {format(dateRange.from, "LLL dd, y")} -{" "}
