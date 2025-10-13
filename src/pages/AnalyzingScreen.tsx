@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Scan, FileSearch, Calculator, CheckCircle2 } from 'lucide-react';
 import { api } from '@/lib/api';
@@ -27,6 +26,11 @@ export default function AnalyzingScreen() {
   const [recoveryData, setRecoveryData] = useState<{ totalAmount: number; currency: string; claimCount: number } | null>(null);
 
   const source = searchParams.get('source') || 'amazon';
+
+  // Circular progress constants
+  const radius = 36; // SVG circle radius
+  const circumference = 2 * Math.PI * radius;
+  const dashOffset = circumference * (1 - progress / 100);
 
   useEffect(() => {
     let currentProgress = 0;
@@ -129,12 +133,13 @@ export default function AnalyzingScreen() {
           <Scan className="h-6 w-6 animate-pulse" />
           <span className="text-lg font-medium">Analyzing Your Amazon FBA History</span>
         </div>
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm">
-            <span>Progress</span>
-            <span>{progress}%</span>
-          </div>
-          <Progress value={progress} className="h-2" />
+        <div className="flex flex-col items-center gap-3">
+          <span className="text-sm text-muted-foreground">Progress</span>
+          <svg viewBox="0 0 100 100" className="w-24 h-24 -rotate-90">
+            <circle cx="50" cy="50" r={radius} fill="none" stroke="currentColor" className="text-gray-300" strokeWidth={6} />
+            <circle cx="50" cy="50" r={radius} fill="none" stroke="currentColor" className="text-gray-500" strokeWidth={6} strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={dashOffset} />
+          </svg>
+          <div className="text-sm font-medium">{progress}%</div>
         </div>
         <div className="py-2">
           <div className="text-lg font-medium mb-2">
