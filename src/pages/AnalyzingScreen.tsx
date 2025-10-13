@@ -124,48 +124,26 @@ export default function AnalyzingScreen() {
 
   return (
     <PageLayout title="Analyzing Your Account">
-      <div className="max-w-2xl mx-auto mt-20">
-        <Card>
-          <CardHeader className="text-center">
-            <CardTitle className="flex items-center justify-center gap-2">
-              <Scan className="h-6 w-6 animate-pulse" />
-              Analyzing Your Amazon FBA History
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Progress</span>
-                <span>{progress}%</span>
-              </div>
-              <Progress value={progress} className="h-2" />
-            </div>
-            
-            <div className="text-center py-4">
-              <div className="text-lg font-medium mb-2">
-                {SCANNING_MESSAGES[currentMessage]}
-              </div>
-              <div className="text-sm text-muted-foreground">
-                This usually takes about 90 seconds...
-              </div>
-            </div>
-
-            <div className="grid grid-cols-3 gap-4 text-xs text-center">
-              <div className="p-2 bg-blue-50 rounded">
-                <FileSearch className="h-4 w-4 mx-auto mb-1" />
-                Transaction Analysis
-              </div>
-              <div className="p-2 bg-orange-50 rounded">
-                <Calculator className="h-4 w-4 mx-auto mb-1" />
-                Fee Reconciliation
-              </div>
-              <div className="p-2 bg-purple-50 rounded">
-                <Scan className="h-4 w-4 mx-auto mb-1" />
-                Claim Detection
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="max-w-2xl mx-auto mt-20 text-center space-y-6">
+        <div className="flex items-center justify-center gap-2">
+          <Scan className="h-6 w-6 animate-pulse" />
+          <span className="text-lg font-medium">Analyzing Your Amazon FBA History</span>
+        </div>
+        <div className="space-y-2">
+          <div className="flex justify-between text-sm">
+            <span>Progress</span>
+            <span>{progress}%</span>
+          </div>
+          <Progress value={progress} className="h-2" />
+        </div>
+        <div className="py-2">
+          <div className="text-lg font-medium mb-2">
+            {SCANNING_MESSAGES[currentMessage]}
+          </div>
+          <div className="text-sm text-muted-foreground">
+            This usually takes about 90 seconds...
+          </div>
+        </div>
       </div>
     </PageLayout>
   );
