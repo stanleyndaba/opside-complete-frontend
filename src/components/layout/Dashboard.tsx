@@ -168,6 +168,7 @@ export function Dashboard() {
               </div>
             </div>
           </div>
+          </div>
         </main>
       </div>
     </div>
