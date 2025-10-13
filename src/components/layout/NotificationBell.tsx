@@ -23,6 +23,8 @@ interface RecentNotification {
 export function NotificationBell() {
   const location = useLocation();
   const isTransparentNavbar = (
+    location.pathname === '/' ||
+    location.pathname.startsWith('/app') ||
     location.pathname.startsWith('/settings') ||
     location.pathname.startsWith('/careers') ||
     location.pathname.startsWith('/api-access') ||
