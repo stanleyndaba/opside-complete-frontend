@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign } from 'lucide-react';
+import { api } from '@/lib/api';
 
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -20,6 +21,44 @@ export function Dashboard() {
       currency: 'USD'
     }).format(amount);
   };
+
+  // Live dashboard recoveries metrics (Continuous Sync UX)
+  const [recoveredTotal, setRecoveredTotal] = useState<number | null>(null);
+  const [recoveredCurrency, setRecoveredCurrency] = useState<string>('USD');
+  const hasFetchedRef = useRef(false);
+
+  useEffect(() => {
+    let active = true;
+    let pollTimer: number | null = null;
+
+    async function fetchRecoveriesOnce() {
+      const res = await api.getAmazonRecoveries();
+      if (!active) return;
+      if (res.ok && res.data) {
+        setRecoveredTotal(res.data.totalAmount ?? 0);
+        if (res.data.currency) setRecoveredCurrency(res.data.currency);
+      }
+    }
+
+    // Initial fetch immediately on mount
+    fetchRecoveriesOnce();
+    hasFetchedRef.current = true;
+
+    // Short burst polling to show numbers populate quickly
+    let polls = 0;
+    pollTimer = window.setInterval(async () => {
+      polls += 1;
+      await fetchRecoveriesOnce();
+      if (polls >= 12) { // ~1 minute at 5s cadence
+        if (pollTimer) window.clearInterval(pollTimer);
+      }
+    }, 5000) as unknown as number;
+
+    return () => {
+      active = false;
+      if (pollTimer) window.clearInterval(pollTimer);
+    };
+  }, []);
 
   const mainClass = isSidebarCollapsed ? 'ml-16' : 'ml-64';
 
@@ -44,7 +83,11 @@ export function Dashboard() {
                     <h2 className="font-montserrat text-lg text-gray-700 font-semibold">Your Recovered Value</h2>
                     <p className="text-sm text-muted-foreground mt-1">Auto-submit your FBA recovery</p>
                     <div className="text-[22px] font-extrabold mt-2 text-[#0d0d0d]">
-                      {formatCurrency(14228)}
+                      {recoveredTotal == null ? (
+                        <span className="text-muted-foreground">Loading…</span>
+                      ) : (
+                        new Intl.NumberFormat('en-US', { style: 'currency', currency: recoveredCurrency || 'USD' }).format(recoveredTotal)
+                      )}
                     </div>
                     <div className="mt-4 space-y-2">
                       <div className="flex items-center justify-between">
