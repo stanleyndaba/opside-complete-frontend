@@ -224,7 +224,10 @@ export default function Reports() {
     return sortDirection === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />;
   };
   return <PageLayout title="Reports">
-      <div className="container max-w-full p-6">
+      <div className="relative -m-4 lg:-m-6">
+        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-300 space-y-8">
         {/* Page Header & Controls */}
         <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
@@ -257,45 +260,45 @@ export default function Reports() {
 
         {/* Key Metrics Bar */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card>
+          <Card className="bg-white/5 border-white/10 text-gray-300">
             <CardContent className="p-6">
               <div className="flex items-center">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Total Recovered</p>
-                  <p className="font-bold text-green-600 text-lg">{formatCurrency(keyMetrics.totalRecovered)}</p>
+                  <p className="text-sm font-medium text-gray-400">Total Recovered</p>
+                  <p className="font-bold text-emerald-400 text-lg">{formatCurrency(keyMetrics.totalRecovered)}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
           
-          <Card>
+          <Card className="bg-white/5 border-white/10 text-gray-300">
             <CardContent className="p-6">
               <div className="flex items-center">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Claims Submitted</p>
-                  <p className="font-bold text-foreground text-lg">{keyMetrics.claimsSubmitted}</p>
+                  <p className="text-sm font-medium text-gray-400">Claims Submitted</p>
+                  <p className="font-bold text-gray-100 text-lg">{keyMetrics.claimsSubmitted}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
           
-          <Card>
+          <Card className="bg-white/5 border-white/10 text-gray-300">
             <CardContent className="p-6">
               <div className="flex items-center">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Success Rate</p>
-                  <p className="font-bold text-blue-600 text-lg">{keyMetrics.successRate.toFixed(1)}%</p>
+                  <p className="text-sm font-medium text-gray-400">Success Rate</p>
+                  <p className="font-bold text-blue-400 text-lg">{keyMetrics.successRate.toFixed(1)}%</p>
                 </div>
               </div>
             </CardContent>
           </Card>
           
-          <Card>
+          <Card className="bg-white/5 border-white/10 text-gray-300">
             <CardContent className="p-6">
               <div className="flex items-center">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Avg. Recovery Time</p>
-                  <p className="font-bold text-foreground text-lg">{keyMetrics.avgRecoveryTime} Days</p>
+                  <p className="text-sm font-medium text-gray-400">Avg. Recovery Time</p>
+                  <p className="font-bold text-gray-100 text-lg">{keyMetrics.avgRecoveryTime} Days</p>
                 </div>
               </div>
             </CardContent>
@@ -305,17 +308,17 @@ export default function Reports() {
         {/* Key Metrics Summary already shown above */}
 
         {/* Visual Breakdown: Recoveries Over Time */}
-        <Card className="mb-8">
+        <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
           <CardContent className="p-6">
-            <h3 className="text-sm font-semibold text-muted-foreground mb-4">Recoveries Over Time</h3>
+            <h3 className="text-sm font-semibold text-gray-200 mb-4">Recoveries Over Time</h3>
             <div className="w-full h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={filteredClaims.map(c => ({ date: format(new Date(c.dateCreated), 'MMM dd'), value: c.amountRecovered }))}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-                  <XAxis dataKey="date" tick={{ fontSize: 12 }} stroke="#9CA3AF" />
-                  <YAxis tick={{ fontSize: 12 }} stroke="#9CA3AF" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
+                  <XAxis dataKey="date" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
+                  <YAxis tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
                   <Tooltip formatter={(v: number) => formatCurrency(v)} />
-                  <Bar dataKey="value" fill="#6366F1" radius={[4,4,0,0]} />
+                  <Bar dataKey="value" fill="#60A5FA" radius={[4,4,0,0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -323,9 +326,9 @@ export default function Reports() {
         </Card>
 
         {/* Detailed Breakdown: Recoveries by Claim Type */}
-        <Card>
+        <Card className="bg-white/5 border-white/10 text-gray-300">
           <CardContent className="p-6">
-            <h3 className="text-sm font-semibold text-muted-foreground mb-4">Recoveries by Claim Type</h3>
+            <h3 className="text-sm font-semibold text-gray-200 mb-4">Recoveries by Claim Type</h3>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -357,6 +360,8 @@ export default function Reports() {
             </Table>
           </CardContent>
         </Card>
+          </div>
+        </div>
       </div>
       {/* Export Modal */}
       <Dialog open={exportOpen} onOpenChange={setExportOpen}>
