@@ -1,4 +1,4 @@
-import { api } from './api';
+import { api, buildApiUrl } from './api';
 
 // Individual exports for Sync.tsx
 export const startSync = async (): Promise<{ syncId: string }> => {
@@ -33,8 +33,8 @@ export const getSyncHistory = async () => {
 };
 
 export const subscribeSyncProgress = (syncId: string, onUpdate: (data: any) => void) => {
-  const url = `/api/sse/sync-progress/${syncId}`;
-  const eventSource = new EventSource(url);
+  const url = buildApiUrl(`/api/sse/sync-progress/${syncId}`);
+  const eventSource = new EventSource(url, { withCredentials: true } as any);
   eventSource.onmessage = (e) => {
     try { onUpdate(JSON.parse(e.data)); } catch { /* noop */ }
   };

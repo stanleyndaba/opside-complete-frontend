@@ -113,11 +113,9 @@ export function Navbar({
             </DropdownMenuContent>
           </DropdownMenu>
           {/* Labeled sync button */}
-          <button title="Start sync now" className="inline-flex items-center gap-2 h-9 px-3 rounded-md bg-emerald-500 text-white hover:bg-emerald-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 active:bg-emerald-600 transition-colors" onClick={async () => {
-            try {
-              const { startSync } = await import('@/lib/inventoryApi');
-              await startSync();
-            } catch {}
+          <button title="Start sync now" className="inline-flex items-center gap-2 h-9 px-3 rounded-md bg-emerald-500 text-white hover:bg-emerald-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 active:bg-emerald-600 transition-colors" onClick={() => {
+            // Always route to the Sync page which starts/monitors the run
+            window.location.href = '/sync';
           }}>
             <ArrowUpDown className="h-4 w-4" />
             <span className="text-sm">Sync</span>
