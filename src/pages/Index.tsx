@@ -80,8 +80,17 @@ const Index = () => {
             <div className="pt-2">
               <div className="flex items-center justify-center gap-3">
                 <Button size="lg" className="bg-emerald-500/90 hover:bg-emerald-600 text-white font-body shadow-lg" onClick={async () => {
-                  const res = await api.connectAmazon();
-                  if (res.ok && res.data?.auth_url) window.location.href = res.data.auth_url;
+                  try {
+                    const res = await (api as any).connectAmazon?.();
+                    const url = (res as any)?.data?.auth_url || (res as any)?.data?.redirect_url;
+                    if ((res as any)?.ok && url) {
+                      window.location.href = url as string;
+                    } else {
+                      window.location.href = '/auth/amazon-sandbox';
+                    }
+                  } catch {
+                    window.location.href = '/auth/amazon-sandbox';
+                  }
                 }}>
                   <LinkIcon className="h-5 w-5 mr-2" strokeWidth={1.75} />
                   Connect Amazon

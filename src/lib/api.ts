@@ -54,6 +54,7 @@ async function requestJson<T>(path: string, options?: RequestInit): Promise<ApiR
 }
 
 export const api = {
+  connectAmazon: () => requestJson<{ auth_url?: string; redirect_url?: string }>(`/auth/amazon/start`, { method: 'GET' }),
   completeAmazonSandboxAuth: (state: string) => requestJson<any>('/api/v1/integrations/amazon/sandbox/callback', { 
     method: 'POST', 
     body: JSON.stringify({ state }) 
