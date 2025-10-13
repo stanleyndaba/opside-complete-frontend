@@ -138,7 +138,7 @@ const Settings = () => {
                   </select>
                 </div>
                 
-                <Button>Update Business Profile</Button>
+                <Button className="bg-emerald-500 hover:bg-emerald-400 text-white">Update Business Profile</Button>
               </CardContent>
             </Card>
           </div>
@@ -163,7 +163,7 @@ const Settings = () => {
                     Access your comprehensive billing & value report with ROI calculations, 
                     invoice history, and plan management.
                   </p>
-                  <Button onClick={() => navigate('/billing')}>
+                <Button className="bg-emerald-500 hover:bg-emerald-400 text-white" onClick={() => navigate('/billing')}>
                     View Billing & Value Report
                   </Button>
                 </div>
@@ -213,7 +213,7 @@ const Settings = () => {
                   </ul>
                 </div>
                 <div className="mt-6">
-                  <Button className="bg-blue-600 hover:bg-blue-700" onClick={() => navigate('/api-access')}>
+                <Button className="bg-emerald-500 hover:bg-emerald-400 text-white" onClick={() => navigate('/api-access')}>
                     Clario APIs
                   </Button>
                 </div>
@@ -230,7 +230,7 @@ const Settings = () => {
               <p className="text-gray-400">Manage your platform connections and data sources</p>
             </div>
             <div>
-              <Button className="bg-blue-600 hover:bg-blue-700 gap-2" onClick={() => navigate('/integrations-hub')}>
+              <Button className="bg-emerald-500 hover:bg-emerald-400 text-white gap-2" onClick={() => navigate('/integrations-hub')}>
                 <Plug className="h-4 w-4" />
                 Clario Integrations
               </Button>
@@ -357,7 +357,7 @@ const Settings = () => {
                 <CardDescription className="text-gray-400">Manage your account security</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                <Button className="w-full bg-emerald-500 hover:bg-emerald-400 text-white">
                   <Shield className="h-4 w-4 mr-2" />
                   Log Out of All Other Devices
                 </Button>
