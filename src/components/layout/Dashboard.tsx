@@ -126,16 +126,16 @@ export function Dashboard() {
               </div>
 
               <div className="lg:col-span-1">
-                <Card className="h-full">
+                <Card className="h-full bg-white/5 border-white/10 text-gray-300">
                   <CardContent className="p-0">
-                    <div className="p-3 border-b border-border">
+                    <div className="p-3 border-b border-white/10">
                       <div className="flex items-center justify-between">
-                        <h3 className="font-semibold text-sm text-foreground">Recent Activity</h3>
-                        <span className="text-xs bg-gray-100 text-black rounded px-2 py-0.5">3 new</span>
+                        <h3 className="font-semibold text-sm text-gray-100">Recent Activity</h3>
+                        <span className="text-xs rounded px-2 py-0.5 bg-white/10 text-gray-200 border border-white/20">3 new</span>
                       </div>
                     </div>
                     <div className="py-2 max-h-[600px] overflow-y-auto">
-                      <div className="relative px-4 max-w-[360px] mx-auto text-[12px] divide-y divide-gray-200">
+                      <div className="relative px-4 max-w-[360px] mx-auto text-[12px] divide-y divide-white/10">
                         {(() => {
                           const events = [
                             { id: 'evt-1', unread: true, title: 'Connection Established', details: 'Amazon connection established', time: 'Just now' },
@@ -147,15 +147,15 @@ export function Dashboard() {
                             <div key={evt.id} className={"group relative flex items-start gap-3 py-3 overflow-hidden"}>
                               {/* Read/Unread dot only */}
                               <div className="pt-1">
-                                <span className={"inline-block h-2 w-2 rounded-full " + (evt.unread ? 'bg-blue-500' : 'bg-gray-300')} />
+                                <span className={"inline-block h-2 w-2 rounded-full " + (evt.unread ? 'bg-blue-500' : 'bg-gray-500')} />
                               </div>
                               {/* Content */}
                               <div className="min-w-0 flex-1">
                                 <div className="flex items-center justify-between">
-                                  <p className={"text-[12px] truncate " + (evt.unread ? 'text-foreground font-semibold' : 'text-muted-foreground font-medium')}>{evt.title}</p>
-                                  <span className={"ml-3 shrink-0 text-[11px] " + (evt.unread ? 'text-foreground font-semibold' : 'text-muted-foreground')}>{evt.time}</span>
+                                  <p className={"text-[12px] truncate " + (evt.unread ? 'text-gray-100 font-semibold' : 'text-gray-400 font-medium')}>{evt.title}</p>
+                                  <span className={"ml-3 shrink-0 text-[11px] " + (evt.unread ? 'text-gray-100 font-semibold' : 'text-gray-400')}>{evt.time}</span>
                                 </div>
-                                <p className="text-[11px] text-muted-foreground mt-0.5 truncate">{evt.details}</p>
+                                <p className="text-[11px] text-gray-400 mt-0.5 truncate">{evt.details}</p>
                               </div>
                             </div>
                           ));
