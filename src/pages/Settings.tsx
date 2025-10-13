@@ -71,7 +71,7 @@ const Settings = () => {
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">
+                    <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-white">
                       <Camera className="h-4 w-4 mr-2" />
                       Upload Photo
                     </Button>
@@ -99,7 +99,7 @@ const Settings = () => {
                   </div>
                 </div>
                 
-                <Button>Save Changes</Button>
+                <Button className="bg-emerald-500 hover:bg-emerald-400 text-white">Save Changes</Button>
               </CardContent>
             </Card>
           </div>
