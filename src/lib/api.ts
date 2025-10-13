@@ -5,9 +5,11 @@ export interface ApiResponse<T> {
   error?: string;
 }
 
-function buildApiUrl(path: string): string {
-  const base = 'http://localhost:3001';
-  return base + (path.startsWith('/') ? path : '/' + path);
+export function buildApiUrl(path: string): string {
+  const envBase = (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_API_BASE_URL) ||
+                  (typeof process !== 'undefined' && (process as any).env?.VITE_API_BASE_URL);
+  const base = (envBase && String(envBase)) || 'http://localhost:3001';
+  return base.replace(/\/$/, '') + (path.startsWith('/') ? path : '/' + path);
 }
 
 async function requestJson<T>(path: string, options?: RequestInit): Promise<ApiResponse<T>> {
