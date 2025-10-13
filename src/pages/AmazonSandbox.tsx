@@ -22,39 +22,33 @@ export default function AmazonSandboxPage() {
 
   return (
     <PageLayout title="Connecting to Amazon">
-      <div className="max-w-md mx-auto mt-20">
-        <Card>
-          <CardHeader className="text-center">
-            <CardTitle className="flex items-center justify-center gap-2">
-              <Loader2 className="h-6 w-6 animate-spin" />
-              Connecting to Amazon...
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-center space-y-4">
-            <div className="flex justify-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-full flex items-center justify-center">
-                <CheckCircle className="h-8 w-8 text-white" />
-              </div>
-            </div>
-            <p className="text-muted-foreground">
-              Simulating Amazon Seller Central authentication...
-            </p>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Requesting permissions...</span>
-                <span className="text-green-600">✓</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span>Verifying account...</span>
-                <span className="text-green-600">✓</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span>Connecting to SP-API...</span>
-                <Loader2 className="h-4 w-4 animate-spin" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="max-w-md mx-auto mt-20 text-center space-y-6">
+        <div className="flex items-center justify-center gap-2 text-foreground">
+          <Loader2 className="h-6 w-6 animate-spin" />
+          <span className="text-lg font-medium">Connecting to Amazon...</span>
+        </div>
+        <div className="flex justify-center">
+          <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-full flex items-center justify-center">
+            <CheckCircle className="h-8 w-8 text-white" />
+          </div>
+        </div>
+        <p className="text-muted-foreground">
+          Simulating Amazon Seller Central authentication...
+        </p>
+        <div className="space-y-2 text-sm">
+          <div className="flex justify-between">
+            <span>Requesting permissions...</span>
+            <span className="text-green-600">✓</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Verifying account...</span>
+            <span className="text-green-600">✓</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Connecting to SP-API...</span>
+            <Loader2 className="h-4 w-4 animate-spin" />
+          </div>
+        </div>
       </div>
     </PageLayout>
   );
