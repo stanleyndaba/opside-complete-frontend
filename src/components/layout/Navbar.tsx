@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ArrowUpDown, Globe, ChevronDown } from 'lucide-react';
+import { ArrowUpDown, Globe, ChevronDown, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Link, useLocation } from 'react-router-dom';
@@ -67,6 +67,21 @@ export function Navbar({
         {/* Left */}
         <div className="flex items-center gap-3">
           <div className="hidden md:flex items-center gap-4 ml-2" />
+        </div>
+        {/* Center - Search */}
+        <div className="flex-1 max-w-xl mx-4 hidden md:block">
+          <div className="relative">
+            <Search className={cn(
+              'absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4',
+              isTransparent ? 'text-gray-300' : 'text-muted-foreground'
+            )} />
+            <Input
+              aria-label="Search"
+              placeholder="search invoices, products, documents, and more"
+              variant={isTransparent ? 'dark' : 'default'}
+              className="pl-9 h-9 rounded-md"
+            />
+          </div>
         </div>
         {/* Right side - Language, Sync, Notifications */}
         <div className="flex items-center gap-4 ml-auto">
