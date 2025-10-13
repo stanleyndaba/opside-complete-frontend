@@ -5,7 +5,6 @@ import { Input } from '@/components/ui/input';
 import { Link, useLocation } from 'react-router-dom';
 import { NotificationBell } from './NotificationBell';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
 interface NavbarProps {
   className?: string;
   sidebarCollapsed?: boolean;
