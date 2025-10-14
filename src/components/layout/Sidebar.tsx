@@ -164,11 +164,11 @@ export function Sidebar({
       >
         {!isCollapsed ? (
           <div className="select-none flex items-center gap-2">
-            <img src="/logo-abstract.svg" alt="Clario" className="h-6 w-6 rounded" />
-            {/* Removed wordmark per request */}
+            <img src="/logo-abstract.svg" alt="Clario" className="h-6 w-6" />
+            <span className="font-[500] text-white">Clario</span>
           </div>
         ) : (
-          <img src="/logo-abstract.svg" alt="Clario" className="h-6 w-6 rounded" />
+          <img src="/logo-abstract.svg" alt="Clario" className="h-6 w-6" />
         )}
         {/* Moved toggle to edge handle below */}
       </div>

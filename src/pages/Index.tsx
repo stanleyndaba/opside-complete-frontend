@@ -45,6 +45,7 @@ const Index = () => {
         <div className="container mx-auto px-6 py-5 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <img src="/logo-abstract.svg" alt="Logo" className="h-8 w-8" />
+            <span className="font-medium text-slate-700">Clario</span>
           </div>
           <nav className="flex items-center gap-4 text-sm">
             <Button variant="ghost" type="button" disabled={connecting} onClick={async () => { 

@@ -74,9 +74,10 @@ export function Navbar({
     className
   )}>
       <div className="container flex items-center h-16 px-4 font-body">
-        {/* Left */}
-        <div className="flex items-center gap-3">
-          <div className="hidden md:flex items-center gap-4 ml-2" />
+        {/* Left brand */}
+        <div className="flex items-center gap-2">
+          <img src="/logo-abstract.svg" alt="Logo" className="h-6 w-6" />
+          <span className={cn('font-medium', isTransparent ? 'text-white' : 'text-slate-700')}>Clario</span>
         </div>
         {/* Center - Search */}
         <div className="flex-1 max-w-xl mx-4 hidden md:block">
