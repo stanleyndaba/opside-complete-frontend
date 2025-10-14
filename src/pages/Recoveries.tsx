@@ -559,7 +559,7 @@ export default function Recoveries() {
                     </TableCell>
                     <TableCell>
                       <Button asChild variant="link" className="p-0 h-auto text-emerald-400 hover:text-emerald-300 font-mono">
-                        <Link to={`/recoveries/${claim.id}`}>{claim.id}</Link>
+                        <Link to={`/recoveries/${claim.id}`} state={{ claim }}>{claim.id}</Link>
                       </Button>
                     </TableCell>
                     <TableCell>{format(new Date(claim.created), 'MMM dd, yyyy')}</TableCell>
@@ -629,14 +629,14 @@ export default function Recoveries() {
                             </DropdownMenuItem>
                           )}
                           {getConfidenceTier(claim._confidence) === 'medium' && (
-                            <DropdownMenuItem asChild>
-                              <Link to={`/recoveries/${claim.id}`} className="flex items-center gap-2">
+                          <DropdownMenuItem asChild>
+                            <Link to={`/recoveries/${claim.id}`} state={{ claim }} className="flex items-center gap-2">
                                 Review Opportunity
                               </Link>
                             </DropdownMenuItem>
                           )}
                           <DropdownMenuItem asChild>
-                            <Link to={`/recoveries/${claim.id}`} className="flex items-center gap-2">
+                            <Link to={`/recoveries/${claim.id}`} state={{ claim }} className="flex items-center gap-2">
                               <Eye className="h-4 w-4" />
                               View Details
                             </Link>

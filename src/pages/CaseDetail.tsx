@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -146,9 +146,24 @@ const deriveEvidence = (id: string): 'Ready' | 'Needs Docs' | 'Collecting' => {
 
 export default function CaseDetail() {
   const { caseId } = useParams<{ caseId: string }>();
+  const location = useLocation() as any;
+  const passedClaim = (location && location.state && (location.state as any).claim) || null;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [caseData, setCaseData] = useState<any | null>(null);
+  const [caseData, setCaseData] = useState<any | null>(passedClaim ? {
+    id: passedClaim.id,
+    title: passedClaim.details,
+    status: passedClaim.status,
+    guaranteedAmount: passedClaim.guaranteedAmount,
+    expectedPayoutDate: passedClaim.expectedPayoutDate,
+    createdDate: passedClaim.created,
+    sku: passedClaim.sku,
+    productName: passedClaim.details,
+    confidence: undefined,
+    evidenceStatus: undefined,
+    documents: passedClaim.matchedDocs || [],
+    events: [] as any[],
+  } : null);
   const { toast } = useToast();
   const [matchedDocs, setMatchedDocs] = useState<any[]>([]);
 
