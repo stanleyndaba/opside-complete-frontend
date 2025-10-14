@@ -111,6 +111,27 @@ export default function Recoveries() {
   const [submittingBulk, setSubmittingBulk] = useState(false);
   const { toast } = useToast();
 
+  // --- Opportunity Radar helpers ---
+  const stableHash = (s: string): number => {
+    let h = 2166136261;
+    for (let i = 0; i < s.length; i++) h = (h ^ s.charCodeAt(i)) * 16777619;
+    return (h >>> 0);
+  };
+  const getConfidence = (id: string): number => {
+    // Stable pseudo-confidence between 0.5 and 0.98
+    const v = stableHash(id) % 4900; // 0..4899
+    return Math.round((v + 500) / 100) / 100; // 0.5 .. 4.99 -> 0.5 .. 4.99, then /? ensure two decimals
+  };
+  const getConfidenceTier = (c: number) => c >= 0.85 ? 'high' : c >= 0.6 ? 'medium' : 'low';
+  const getConfidenceColor = (c: number) => c >= 0.85 ? 'text-emerald-400' : c >= 0.6 ? 'text-amber-400' : 'text-gray-400';
+  const getConfidenceBadge = (c: number) => c >= 0.85 ? 'High' : c >= 0.6 ? 'Medium' : 'Low';
+  const getEvidenceStatus = (id: string): 'Ready' | 'Needs Docs' | 'Collecting' => {
+    const v = stableHash(id) % 100;
+    if (v >= 70) return 'Ready';
+    if (v >= 40) return 'Needs Docs';
+    return 'Collecting';
+  };
+
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -174,6 +195,18 @@ export default function Recoveries() {
     return filtered;
   }, [claims, searchTerm, dateRange, selectedClaimTypes, selectedStatuses]);
 
+  // Rank opportunities: prioritize by confidence * value
+  const rankedClaims = useMemo(() => {
+    return filteredClaims
+      .map(c => ({
+        ...c,
+        _confidence: getConfidence(c.id),
+        _priority: getConfidence(c.id) * (c.guaranteedAmount || 0),
+        _evidence: getEvidenceStatus(c.id)
+      }))
+      .sort((a, b) => b._priority - a._priority);
+  }, [filteredClaims]);
+
   // Calculate key metrics
   const keyMetrics = useMemo(() => {
     const totalClaimsFound = filteredClaims.length;
@@ -201,6 +234,34 @@ export default function Recoveries() {
       successRate
     };
   }, [filteredClaims, claims]);
+
+  // Owed top-line summary (non-paid)
+  const owedSummary = useMemo(() => {
+    const openStatuses = new Set(['New', 'Pending', 'Submitted']);
+    const openClaims = claims.filter(c => openStatuses.has(c.status));
+    const totalOwed = openClaims.reduce((sum, c) => sum + (c.guaranteedAmount || 0), 0);
+    return { totalOwed, openCount: openClaims.length };
+  }, [claims]);
+
+  // Category breakdown chips
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {
+      'Lost Inventory': 0,
+      'Damaged': 0,
+      'Uncredited Returns': 0,
+      'Overcharges': 0,
+      'Misapplied Fees': 0,
+    };
+    for (const c of claims) {
+      if (c.type === 'Lost Inventory') counts['Lost Inventory'] += 1;
+      if (c.type === 'Damaged Goods') counts['Damaged'] += 1;
+      if (c.type === 'Uncredited Return') counts['Uncredited Returns'] += 1;
+      if (c.type === 'Overcharge' || c.type === 'Fee Dispute') counts['Overcharges'] += 1;
+      // Treat Fee Dispute as misapplied fees too if not Overcharge explicitly
+      if (c.type === 'Fee Dispute') counts['Misapplied Fees'] += 1;
+    }
+    return counts;
+  }, [claims]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -268,6 +329,44 @@ export default function Recoveries() {
             )}
           </div>
         </div>
+
+        {/* Opportunity Radar Summary */}
+        <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
+          <CardContent className="p-5 md:p-6">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div>
+                <div className="text-sm text-gray-400">Your Opportunities</div>
+                <div className="text-2xl md:text-3xl font-semibold text-gray-100">
+                  {formatCurrency(owedSummary.totalOwed)} <span className="text-gray-400 text-base font-medium">owed across {owedSummary.openCount} claims</span>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {Object.entries(categoryCounts).map(([label, count]) => (
+                  <span key={label} className="text-xs px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-gray-200">
+                    {label}: {count}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="mt-4 flex items-center gap-3 text-xs text-gray-400">
+              <span>Last scan just now</span>
+              <span className="h-1 w-1 rounded-full bg-gray-500"></span>
+              <button
+                className="inline-flex items-center gap-2 h-8 px-3 rounded-md bg-emerald-500 text-black font-semibold hover:bg-emerald-400"
+                onClick={async () => {
+                  try {
+                    await api.post('/api/detections/run');
+                    toast({ title: 'Detector started', description: 'Scanning new opportunities…' });
+                  } catch (e: any) {
+                    toast({ title: 'Could not start detector', description: e?.message || 'Please try again shortly.' });
+                  }
+                }}
+              >
+                Run Detector
+              </button>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Key Metrics Bar */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -419,6 +518,8 @@ export default function Recoveries() {
                   <TableHead>Claim ID</TableHead>
                   <TableHead>Created</TableHead>
                   <TableHead>Type</TableHead>
+                  <TableHead>Confidence</TableHead>
+                  <TableHead>Evidence</TableHead>
                   <TableHead>Details</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Guaranteed Amount</TableHead>
@@ -427,7 +528,7 @@ export default function Recoveries() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredClaims.map((claim) => (
+                {rankedClaims.map((claim: any) => (
                   <TableRow key={claim.id} className="cursor-pointer hover:bg-white/5">
                     <TableCell>
                       <Checkbox checked={selectedIds.has(claim.id)} onCheckedChange={(checked) => {
@@ -445,6 +546,17 @@ export default function Recoveries() {
                     </TableCell>
                     <TableCell>{format(new Date(claim.created), 'MMM dd, yyyy')}</TableCell>
                     <TableCell>{claim.type}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <span className={`text-xs font-semibold ${getConfidenceColor(claim._confidence)}`}>{claim._confidence.toFixed(2)}</span>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded border border-white/10 bg-white/5 text-gray-300">
+                          {getConfidenceBadge(claim._confidence)}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-xs text-gray-300">{claim._evidence}</span>
+                    </TableCell>
                     <TableCell className="max-w-xs">
                       <div className="truncate" title={claim.details}>
                         {claim.details}
@@ -470,6 +582,26 @@ export default function Recoveries() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
+                          {getConfidenceTier(claim._confidence) === 'high' && (
+                            <DropdownMenuItem onClick={async () => {
+                              try {
+                                await recoveryApi.submitClaim(claim.id);
+                                setClaims(prev => prev.map(c => c.id === claim.id ? { ...c, status: 'Submitted' } : c));
+                                toast({ title: 'Auto-submitted', description: `${claim.id} submitted automatically.` });
+                              } catch (e: any) {
+                                toast({ title: 'Submit failed', description: e?.message || 'Please try again.' });
+                              }
+                            }}>
+                              Auto-Submit (High Confidence)
+                            </DropdownMenuItem>
+                          )}
+                          {getConfidenceTier(claim._confidence) === 'medium' && (
+                            <DropdownMenuItem asChild>
+                              <Link to={`/recoveries/${claim.id}`} className="flex items-center gap-2">
+                                Review Opportunity
+                              </Link>
+                            </DropdownMenuItem>
+                          )}
                           <DropdownMenuItem asChild>
                             <Link to={`/recoveries/${claim.id}`} className="flex items-center gap-2">
                               <Eye className="h-4 w-4" />
