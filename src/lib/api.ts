@@ -71,4 +71,11 @@ export const api = {
   getDashboardAggregates: () => requestJson<any>('/api/metrics/dashboard'),
   getRecoveriesMetrics: () => requestJson<any>('/api/metrics/recoveries'),
   logout: () => requestJson<{ ok: true }>('/api/auth/logout', { method: 'POST' }),
+
+  // Refund Engine endpoints
+  submitClaim: (id: string) => requestJson<any>(`/api/recoveries/${encodeURIComponent(id)}/submit`, { method: 'POST' }),
+  resubmitClaim: (id: string) => requestJson<any>(`/api/recoveries/${encodeURIComponent(id)}/resubmit`, { method: 'POST' }),
+  getRecoveryStatus: (id: string) => requestJson<any>(`/api/recoveries/${encodeURIComponent(id)}/status`),
+  getRecoveryDetail: (id: string) => requestJson<any>(`/api/recoveries/${encodeURIComponent(id)}`),
+  getDocumentViewUrl: (docId: string) => buildApiUrl(`/api/documents/${encodeURIComponent(docId)}/view`),
 };

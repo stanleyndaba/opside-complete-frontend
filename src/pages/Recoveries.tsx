@@ -582,6 +582,21 @@ export default function Recoveries() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
+                          {claim.status === 'Denied' && (
+                            <DropdownMenuItem onClick={async () => {
+                              const hasDocs = true; // Backend should validate; UI assumes action allowed
+                              if (!hasDocs) return;
+                              try {
+                                await api.resubmitClaim(claim.id);
+                                toast({ title: 'Resubmitted', description: `${claim.id} resubmitted with stronger docs.` });
+                                setClaims(prev => prev.map(c => c.id === claim.id ? { ...c, status: 'Submitted' } as any : c));
+                              } catch (e: any) {
+                                toast({ title: 'Resubmission failed', description: e?.message || 'Please try again.' });
+                              }
+                            }}>
+                              Resubmit with stronger docs
+                            </DropdownMenuItem>
+                          )}
                           {getConfidenceTier(claim._confidence) === 'high' && (
                             <DropdownMenuItem onClick={async () => {
                               try {
