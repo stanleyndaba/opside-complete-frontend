@@ -10,12 +10,14 @@ import { Shield, CheckCircle, Settings, RefreshCw, ArrowRight, ExternalLink, Pac
 import { api } from '@/lib/api';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useToast } from '@/components/ui/use-toast';
 
 // ... (keep all the existing interfaces and constants)
 
 export default function IntegrationsHub() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { toast } = useToast();
   const [lastSyncTime, setLastSyncTime] = useState('Just now');
   const [status, setStatus] = useState<{ amazon_connected: boolean; docs_connected: boolean; providers?: Record<string, boolean>; lastIngest?: string; lastSync?: string } | null>(null);
   const [autoCollect, setAutoCollect] = useState<boolean>(true);
@@ -307,14 +309,14 @@ export default function IntegrationsHub() {
                 <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold" onClick={() => navigate('/sync')}>
                   <RefreshCw className="h-4 w-4 mr-2" /> Sync now
                 </Button>
-                <Button size="sm" variant="outline" onClick={async () => { await api.post('/api/detections/run'); }}>
+                <Button size="sm" variant="outline" onClick={async () => { await api.post('/api/detections/run'); toast({ title: 'Detector started', description: 'Scanning new opportunities…' }); }}>
                   Run Detector
                 </Button>
               </div>
               <div className="text-xs text-gray-400">Scopes: orders.read, inventory.read, transactions.read</div>
               <div className="flex gap-2">
                 <Button size="sm" variant="outline" onClick={() => beginProviderOAuth('gdrive')}>Reconnect</Button>
-                <Button size="sm" variant="outline" onClick={async () => { await api.disconnectIntegration('amazon', true); const s = await api.getIntegrationsStatus(); if (s.ok) setStatus(s.data); }}>Disconnect & purge</Button>
+                <Button size="sm" variant="outline" onClick={async () => { await api.disconnectIntegration('amazon', true); toast({ title: 'Disconnected', description: 'Amazon integration revoked and data purged.' }); const s = await api.getIntegrationsStatus(); if (s.ok) setStatus(s.data); }}>Disconnect & purge</Button>
               </div>
             </CardContent>
           </Card>
@@ -334,16 +336,16 @@ export default function IntegrationsHub() {
               </div>
               <div className="flex flex-wrap items-center gap-3 text-sm text-gray-400">
                 <span>Auto‑collect</span>
-                <Button size="sm" variant="outline" onClick={async () => { const next = !autoCollect; setAutoCollect(next); await api.setEvidenceAutoCollect(next); }}>
+                <Button size="sm" variant="outline" onClick={async () => { const next = !autoCollect; setAutoCollect(next); await api.setEvidenceAutoCollect(next); toast({ title: 'Auto‑collect updated', description: next ? 'Enabled' : 'Disabled' }); }}>
                   {autoCollect ? 'Enabled' : 'Disabled'}
                 </Button>
                 <span className="ml-2">Schedule</span>
-                <Button size="sm" variant="outline" onClick={async () => { const next = schedule === 'daily_0200' ? 'hourly' : 'daily_0200'; setSchedule(next); await api.setEvidenceSchedule(next); }}>{schedule === 'daily_0200' ? 'Daily 02:00 UTC' : 'Hourly'}</Button>
+                <Button size="sm" variant="outline" onClick={async () => { const next = schedule === 'daily_0200' ? 'hourly' : 'daily_0200'; setSchedule(next); await api.setEvidenceSchedule(next); toast({ title: 'Schedule saved', description: next === 'hourly' ? 'Hourly ingestion' : 'Daily at 02:00 UTC' }); }}>{schedule === 'daily_0200' ? 'Daily 02:00 UTC' : 'Hourly'}</Button>
               </div>
               <div className="text-xs text-gray-400">Filters: include {filters.includeSenders.join(', ') || '—'}; file types: {filters.fileTypes.join(', ') || '—'}; folders: {filters.folders.join(', ') || '—'}</div>
               <div className="flex items-center gap-3 text-sm text-gray-400">
                 <span>Last ingest: {status?.lastIngest || 'Just now'}</span>
-                <Button size="sm" variant="outline" onClick={async () => { await api.startEvidenceIngest(); }}>Ingest now</Button>
+                <Button size="sm" variant="outline" onClick={async () => { await api.startEvidenceIngest(); toast({ title: 'Ingestion started', description: 'We will notify you when new docs arrive.' }); }}>Ingest now</Button>
                 <Button size="sm" variant="ghost" onClick={() => navigate('/evidence-locker')}>Open Evidence Locker</Button>
               </div>
             </CardContent>
