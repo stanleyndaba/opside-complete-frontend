@@ -10,9 +10,6 @@
     </filter>
   </defs>
 
-  <!-- Blueprint frame -->
-  <rect x="0" y="0" width="128" height="128" rx="20" fill="#0B1220"/>
-
   <!-- Isometric wireframe cube (edges only) -->
   <g filter="url(#glow)" stroke="url(#edge)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none">
     <!-- Top face -->
