@@ -86,7 +86,10 @@ export default function EvidenceLocker() {
   }, [q, documents]);
 
   return <PageLayout title="Evidence Locker & Value Engine">
-      <div className="space-y-8">
+      <div className="relative -m-4 lg:-m-6">
+        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-300 space-y-8">
         {/* Status Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           
@@ -97,7 +100,7 @@ export default function EvidenceLocker() {
         </div>
 
         {/* Upload Section */}
-        <Card>
+        <Card className="bg-white/5 border-white/10 text-gray-300">
           <CardHeader>
             <CardTitle>Upload Evidence Documents</CardTitle>
             <CardDescription>
@@ -105,23 +108,23 @@ export default function EvidenceLocker() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className={`border-2 border-dashed rounded-lg p-8 text-center transition-all ${dragActive ? 'border-primary bg-primary/5' : 'border-muted-foreground/25 hover:border-primary/50'}`} onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}>
-              <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+            <div className={`border-2 border-dashed rounded-lg p-8 text-center transition-all ${dragActive ? 'border-emerald-500/50 bg-white/5' : 'border-white/20 hover:border-emerald-400/50'}`} onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}>
+              <Upload className="h-12 w-12 mx-auto mb-4 text-gray-400" />
               <h3 className="text-lg font-semibold mb-2">Drag & Drop Your Invoices or Purchase Orders Here</h3>
-              <p className="text-muted-foreground mb-4">
+              <p className="text-gray-400 mb-4">
                 Supports PDF, JPG, PNG files up to 10MB
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Button>
+                <Button className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold">
                   <Upload className="w-4 h-4 mr-2" />
                   Browse Files
                 </Button>
                 
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2 text-sm text-gray-400">
                   <Mail className="w-4 h-4" />
                   <span>or email to:</span>
-                  <code className="bg-muted px-2 py-1 rounded text-foreground">
+                  <code className="bg-white/5 border border-white/10 px-2 py-1 rounded text-gray-100">
                     store@invoices.opside.ai
                   </code>
                 </div>
@@ -131,17 +134,17 @@ export default function EvidenceLocker() {
         </Card>
 
         {/* Document List */}
-        <Card>
+        <Card className="bg-white/5 border-white/10 text-gray-300">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle>Document Library</CardTitle>
-                <CardDescription>All uploaded evidence documents</CardDescription>
+                <CardTitle className="text-gray-200">Document Library</CardTitle>
+                <CardDescription className="text-gray-400">All uploaded evidence documents</CardDescription>
               </div>
               <div className="flex items-center gap-2">
                 <div className="relative">
-                  <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input placeholder="Search supplier, invoice #, claim ID…" value={q} onChange={(e) => setQ(e.target.value)} className="pl-8 w-72" />
+                  <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input placeholder="Search supplier, invoice #, claim ID…" value={q} onChange={(e) => setQ(e.target.value)} className="pl-8 w-72 border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" />
                 </div>
               </div>
             </div>
@@ -152,24 +155,24 @@ export default function EvidenceLocker() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Document Name</TableHead>
-                  <TableHead>Supplier</TableHead>
-                  <TableHead>Invoice #</TableHead>
-                  <TableHead>Upload Date</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Parsed Via</TableHead>
-                  <TableHead>Amount</TableHead>
-                  <TableHead>Matched Claims</TableHead>
-                  <TableHead>Linked SKUs</TableHead>
-                  <TableHead>Actions</TableHead>
+                  <TableHead className="text-gray-300">Document Name</TableHead>
+                  <TableHead className="text-gray-300">Supplier</TableHead>
+                  <TableHead className="text-gray-300">Invoice #</TableHead>
+                  <TableHead className="text-gray-300">Upload Date</TableHead>
+                  <TableHead className="text-gray-300">Status</TableHead>
+                  <TableHead className="text-gray-300">Parsed Via</TableHead>
+                  <TableHead className="text-gray-300">Amount</TableHead>
+                  <TableHead className="text-gray-300">Matched Claims</TableHead>
+                  <TableHead className="text-gray-300">Linked SKUs</TableHead>
+                  <TableHead className="text-gray-300">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filtered.map(doc => <TableRow key={doc.id}>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <FileText className="h-4 w-4 text-muted-foreground" />
-                        <span className="font-medium">{doc.name}</span>
+                        <FileText className="h-4 w-4 text-gray-400" />
+                        <span className="font-medium text-gray-100">{doc.name}</span>
                       </div>
                     </TableCell>
                     <TableCell>{doc.supplier || '—'}</TableCell>
@@ -187,18 +190,18 @@ export default function EvidenceLocker() {
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
                         {(doc.matchedClaims || []).map(id => (
-                          <Link key={id} to={`/recoveries/${id}`} className="text-xs px-2 py-0.5 rounded bg-muted hover:bg-muted/70">
+                          <Link key={id} to={`/recoveries/${id}`} className="text-xs px-2 py-0.5 rounded bg-white/5 border border-white/10 hover:bg-white/10">
                             {id}
                           </Link>
                         ))}
                       </div>
                     </TableCell>
                     <TableCell>
-                      <span className="font-medium">{doc.linkedSKUs}</span>
-                      {doc.linkedSKUs > 0 && <span className="text-sm text-muted-foreground ml-1">SKUs</span>}
+                      <span className="font-medium text-gray-100">{doc.linkedSKUs}</span>
+                      {doc.linkedSKUs > 0 && <span className="text-sm text-gray-400 ml-1">SKUs</span>}
                     </TableCell>
                     <TableCell>
-                      {doc.status === 'verified' ? <Link to={`/evidence-locker/document/${doc.id}`}>
+                    {doc.status === 'verified' ? <Link to={`/evidence-locker/document/${doc.id}`}>
                           <Button variant="ghost" size="sm">
                             <Eye className="w-4 h-4 mr-1" />
                             View Details
@@ -213,6 +216,8 @@ export default function EvidenceLocker() {
             </Table>
           </CardContent>
         </Card>
+          </div>
+        </div>
       </div>
     </PageLayout>;
 }

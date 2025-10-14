@@ -29,6 +29,7 @@ export function NotificationBell() {
     location.pathname.startsWith('/careers') ||
     location.pathname.startsWith('/api-access') ||
     location.pathname.startsWith('/billing') ||
+    location.pathname.startsWith('/evidence-locker') ||
     location.pathname.startsWith('/recoveries') ||
     location.pathname.startsWith('/reports') ||
     location.pathname.startsWith('/whats-new') ||
