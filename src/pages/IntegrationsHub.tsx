@@ -17,7 +17,10 @@ export default function IntegrationsHub() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [lastSyncTime, setLastSyncTime] = useState('Just now');
-  const [status, setStatus] = useState<{ amazon_connected: boolean; docs_connected: boolean; providers?: Record<string, boolean> } | null>(null);
+  const [status, setStatus] = useState<{ amazon_connected: boolean; docs_connected: boolean; providers?: Record<string, boolean>; lastIngest?: string; lastSync?: string } | null>(null);
+  const [autoCollect, setAutoCollect] = useState<boolean>(true);
+  const [schedule, setSchedule] = useState<string>('daily_0200');
+  const [filters, setFilters] = useState<{ includeSenders: string[]; excludeSenders: string[]; fileTypes: string[]; folders: string[] }>({ includeSenders: ['invoices@'], excludeSenders: [], fileTypes: ['pdf','png'], folders: ['/Finance'] });
   const [loading, setLoading] = useState(false);
   const [disconnecting, setDisconnecting] = useState<string | null>(null);
   const [requestFormData, setRequestFormData] = useState({
@@ -92,7 +95,12 @@ export default function IntegrationsHub() {
     (async () => {
       const res = await api.getIntegrationsStatus();
       if (!cancelled) {
-        if (res.ok && res.data) setStatus(res.data);
+        if (res.ok && res.data) {
+          setStatus(res.data);
+          if (typeof (res.data as any).autoCollect === 'boolean') setAutoCollect((res.data as any).autoCollect);
+          if ((res.data as any).schedule) setSchedule((res.data as any).schedule);
+          if ((res.data as any).filters) setFilters((res.data as any).filters);
+        }
       }
     })();
     return () => { cancelled = true };
@@ -295,7 +303,7 @@ export default function IntegrationsHub() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center gap-3 text-sm text-gray-400">
-                <span>Last sync: {lastSyncTime}</span>
+                <span>Last sync: {status?.lastSync || lastSyncTime}</span>
                 <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold" onClick={() => navigate('/sync')}>
                   <RefreshCw className="h-4 w-4 mr-2" /> Sync now
                 </Button>
@@ -306,7 +314,7 @@ export default function IntegrationsHub() {
               <div className="text-xs text-gray-400">Scopes: orders.read, inventory.read, transactions.read</div>
               <div className="flex gap-2">
                 <Button size="sm" variant="outline" onClick={() => beginProviderOAuth('gdrive')}>Reconnect</Button>
-                <Button size="sm" variant="outline">Disconnect & purge</Button>
+                <Button size="sm" variant="outline" onClick={async () => { await api.disconnectIntegration('amazon', true); const s = await api.getIntegrationsStatus(); if (s.ok) setStatus(s.data); }}>Disconnect & purge</Button>
               </div>
             </CardContent>
           </Card>
@@ -324,16 +332,18 @@ export default function IntegrationsHub() {
                 <Button className="bg-emerald-600 hover:bg-emerald-700" onClick={() => beginProviderOAuth('gdrive')} disabled={providerLoading!==null}>{providerLoading==='gdrive'?'Connecting…':'Connect Google Drive'}</Button>
                 <Button className="bg-sky-600 hover:bg-sky-700" onClick={() => beginProviderOAuth('dropbox')} disabled={providerLoading!==null}>{providerLoading==='dropbox'?'Connecting…':'Connect Dropbox'}</Button>
               </div>
-              <div className="flex items-center gap-3 text-sm text-gray-400">
+              <div className="flex flex-wrap items-center gap-3 text-sm text-gray-400">
                 <span>Auto‑collect</span>
-                <Button size="sm" variant="outline">Enabled</Button>
+                <Button size="sm" variant="outline" onClick={async () => { const next = !autoCollect; setAutoCollect(next); await api.setEvidenceAutoCollect(next); }}>
+                  {autoCollect ? 'Enabled' : 'Disabled'}
+                </Button>
                 <span className="ml-2">Schedule</span>
-                <Button size="sm" variant="outline">Daily 02:00 UTC</Button>
+                <Button size="sm" variant="outline" onClick={async () => { const next = schedule === 'daily_0200' ? 'hourly' : 'daily_0200'; setSchedule(next); await api.setEvidenceSchedule(next); }}>{schedule === 'daily_0200' ? 'Daily 02:00 UTC' : 'Hourly'}</Button>
               </div>
-              <div className="text-xs text-gray-400">Filters: include invoices@, receipts@; file types: PDF, PNG; folders: /Finance</div>
+              <div className="text-xs text-gray-400">Filters: include {filters.includeSenders.join(', ') || '—'}; file types: {filters.fileTypes.join(', ') || '—'}; folders: {filters.folders.join(', ') || '—'}</div>
               <div className="flex items-center gap-3 text-sm text-gray-400">
-                <span>Last ingest: Just now</span>
-                <Button size="sm" variant="outline" onClick={async () => { await api.post('/api/evidence/sync'); }}>Ingest now</Button>
+                <span>Last ingest: {status?.lastIngest || 'Just now'}</span>
+                <Button size="sm" variant="outline" onClick={async () => { await api.startEvidenceIngest(); }}>Ingest now</Button>
                 <Button size="sm" variant="ghost" onClick={() => navigate('/evidence-locker')}>Open Evidence Locker</Button>
               </div>
             </CardContent>

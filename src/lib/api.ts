@@ -83,4 +83,12 @@ export const api = {
   getDocuments: () => requestJson<any[]>('/api/documents'),
   getDocument: (id: string) => requestJson<any>(`/api/documents/${encodeURIComponent(id)}`),
   getDocumentDownloadUrl: (id: string) => buildApiUrl(`/api/documents/${encodeURIComponent(id)}/download`),
+
+  // Integrations & Evidence ingestion controls
+  getIntegrationsStatus: () => requestJson<any>('/api/integrations/status'),
+  setEvidenceAutoCollect: (enabled: boolean) => requestJson<any>('/api/evidence/auto-collect', { method: 'POST', body: JSON.stringify({ enabled }) }),
+  setEvidenceSchedule: (schedule: string) => requestJson<any>('/api/evidence/schedule', { method: 'POST', body: JSON.stringify({ schedule }) }),
+  setEvidenceFilters: (filters: { includeSenders?: string[]; excludeSenders?: string[]; fileTypes?: string[]; folders?: string[] }) => requestJson<any>('/api/evidence/filters', { method: 'POST', body: JSON.stringify(filters) }),
+  startEvidenceIngest: () => requestJson<any>('/api/evidence/sync', { method: 'POST' }),
+  disconnectIntegration: (provider: string, purge = false) => requestJson<any>(`/api/integrations/${encodeURIComponent(provider)}/disconnect`, { method: 'POST', body: JSON.stringify({ purge }) }),
 };
