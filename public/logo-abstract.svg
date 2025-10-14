@@ -1,21 +1,31 @@
 <svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="g1" x1="0" y1="0" x2="128" y2="128" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#14B8A6"/>
+    <linearGradient id="edge" x1="16" y1="16" x2="112" y2="112" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#22D3EE"/>
       <stop offset="1" stop-color="#60A5FA"/>
     </linearGradient>
-    <radialGradient id="g2" cx="0.5" cy="0.3" r="0.8">
-      <stop offset="0" stop-color="#22D3EE" stop-opacity="0.8"/>
-      <stop offset="1" stop-color="#0B1220" stop-opacity="0"/>
-    </radialGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="0" stdDeviation="1.5" flood-color="#22D3EE" flood-opacity=".75"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#60A5FA" flood-opacity=".35"/>
+    </filter>
   </defs>
+
+  <!-- Blueprint frame -->
   <rect x="0" y="0" width="128" height="128" rx="20" fill="#0B1220"/>
-  <circle cx="64" cy="64" r="64" fill="url(#g2)"/>
-  <g transform="translate(24,24)">
-    <path d="M40 0 L80 40 L40 80 L0 40 Z" fill="none" stroke="url(#g1)" stroke-width="6" stroke-linejoin="round"/>
-    <path d="M20 20 L40 40 L20 60 L0 40 Z" fill="url(#g1)" fill-opacity="0.15" stroke="url(#g1)" stroke-width="4"/>
-    <circle cx="40" cy="40" r="10" fill="#14B8A6"/>
-    <circle cx="60" cy="20" r="6" fill="#60A5FA"/>
-    <circle cx="20" cy="60" r="4" fill="#22D3EE"/>
+
+  <!-- Isometric wireframe cube (edges only) -->
+  <g filter="url(#glow)" stroke="url(#edge)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- Top face -->
+    <path d="M64 24 L96 40 L64 56 L32 40 Z"/>
+    <!-- Right face outline -->
+    <path d="M96 40 L96 72 L64 88 L64 56 Z"/>
+    <!-- Left face outline -->
+    <path d="M32 40 L32 72 L64 88"/>
+    <!-- Back edges to complete cube silhouette -->
+    <path d="M32 72 L64 56"/>
+    <!-- Accent inner diagonals (subtle surface geometry, still edges-only) -->
+    <path opacity="0.6" d="M64 24 L64 56"/>
+    <path opacity="0.35" d="M96 40 L32 72"/>
+    <path opacity="0.35" d="M32 40 L96 72"/>
   </g>
 </svg>
