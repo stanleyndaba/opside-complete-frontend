@@ -254,7 +254,7 @@ export function Sidebar({
         title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         onClick={onToggle}
         className={cn(
-          'absolute top-24 -right-3 z-50 h-8 w-8 rounded-full border border-white/10 bg-white/10 backdrop-blur-sm flex items-center justify-center text-gray-300 hover:bg-white/20',
+          'absolute top-16 -right-3 z-50 h-8 w-8 rounded-full border border-white/10 bg-white/10 backdrop-blur-sm flex items-center justify-center text-gray-300 hover:bg-white/20',
         )}
       >
         {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
