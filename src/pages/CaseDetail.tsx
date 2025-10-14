@@ -312,23 +312,26 @@ export default function CaseDetail() {
 
   return (
     <PageLayout title={`Case ${effectiveCase.id}`}>
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="flex items-center gap-4">
-          <Button asChild variant="ghost" size="sm">
-            <Link to="/recoveries">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Cases
-            </Link>
-          </Button>
-        </div>
+      <div className="relative -m-4 lg:-m-6">
+        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-300 space-y-8">
+            {/* Header */}
+            <div className="flex items-center gap-4">
+              <Button asChild variant="ghost" size="sm" className="text-gray-200 hover:bg-white/10">
+                <Link to="/recoveries">
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back to Cases
+                </Link>
+              </Button>
+            </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column - Case Summary */}
           <div className="lg:col-span-1 space-y-6">
-            <Card>
+            <Card className="bg-white/5 border-white/10 text-gray-300">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2 text-gray-200">
                   <Package className="h-5 w-5" />
                   Case Summary
                 </CardTitle>
@@ -592,9 +595,9 @@ export default function CaseDetail() {
 
           {/* Right Column - Chronological Ledger */}
           <div className="lg:col-span-2">
-            <Card>
+            <Card className="bg-white/5 border-white/10 text-gray-300">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2 text-gray-200">
                   <Clock className="h-5 w-5" />
                   Claim Timeline
                   <Badge variant="outline" className="ml-auto">
@@ -605,7 +608,7 @@ export default function CaseDetail() {
               <CardContent>
                 <div className="space-y-4">
                   {/* At-a-glance header: confidence, evidence, quick actions */}
-                  <div className="flex flex-wrap items-center gap-3 p-3 rounded-md border bg-muted/30">
+                  <div className="flex flex-wrap items-center gap-3 p-3 rounded-md border border-white/10 bg-white/5">
                     <Badge variant="outline" className="text-xs">Confidence: {derivedConfidencePct}%</Badge>
                     <Badge variant="outline" className="text-xs">Evidence: {derivedEvidence}</Badge>
                     <Badge variant="outline" className="text-xs">Matched docs: {matchedCount}</Badge>
@@ -632,9 +635,9 @@ export default function CaseDetail() {
                       );
                       return (
                         <div key={step} className="flex items-center gap-3">
-                          <div className={`h-6 w-6 rounded-full flex items-center justify-center border ${active ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-muted-foreground'}`}>{idx+1}</div>
-                          <span className={`${active ? 'text-foreground font-medium' : 'text-muted-foreground'}`}>{step}</span>
-                          {idx < 3 && <div className={`w-10 h-px ${active ? 'bg-emerald-600' : 'bg-muted'}`} />}
+                          <div className={`h-6 w-6 rounded-full flex items-center justify-center border ${active ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white/10 text-gray-300'}`}>{idx+1}</div>
+                          <span className={`${active ? 'text-gray-100 font-medium' : 'text-gray-400'}`}>{step}</span>
+                          {idx < 3 && <div className={`w-10 h-px ${active ? 'bg-emerald-600' : 'bg-white/10'}`} />}
                         </div>
                       );
                     })}
@@ -692,6 +695,8 @@ export default function CaseDetail() {
                 </div>
               </CardContent>
             </Card>
+          </div>
+            </div>
           </div>
         </div>
       </div>
