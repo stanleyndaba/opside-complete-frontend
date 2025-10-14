@@ -237,14 +237,25 @@ export default function Recoveries() {
 
   // Owed top-line summary (non-paid)
   const owedSummary = useMemo(() => {
+    // Prefer backend metrics when available
+    if (metrics && (typeof (metrics as any).totalOwed === 'number' || typeof (metrics as any).owedTotal === 'number')) {
+      const totalOwed = (metrics as any).totalOwed ?? (metrics as any).owedTotal;
+      const openCount = (metrics as any).openCount ?? (metrics as any).openClaims ?? 0;
+      return { totalOwed, openCount };
+    }
     const openStatuses = new Set(['New', 'Pending', 'Submitted']);
     const openClaims = claims.filter(c => openStatuses.has(c.status));
     const totalOwed = openClaims.reduce((sum, c) => sum + (c.guaranteedAmount || 0), 0);
     return { totalOwed, openCount: openClaims.length };
-  }, [claims]);
+  }, [claims, metrics]);
 
   // Category breakdown chips
   const categoryCounts = useMemo(() => {
+    // Prefer backend-provided category counts if available
+    const fromMetrics = (metrics as any)?.categoryCounts || (metrics as any)?.categories;
+    if (fromMetrics && typeof fromMetrics === 'object') {
+      return fromMetrics as Record<string, number>;
+    }
     const counts: Record<string, number> = {
       'Lost Inventory': 0,
       'Damaged': 0,
@@ -257,11 +268,10 @@ export default function Recoveries() {
       if (c.type === 'Damaged Goods') counts['Damaged'] += 1;
       if (c.type === 'Uncredited Return') counts['Uncredited Returns'] += 1;
       if (c.type === 'Overcharge' || c.type === 'Fee Dispute') counts['Overcharges'] += 1;
-      // Treat Fee Dispute as misapplied fees too if not Overcharge explicitly
       if (c.type === 'Fee Dispute') counts['Misapplied Fees'] += 1;
     }
     return counts;
-  }, [claims]);
+  }, [claims, metrics]);
 
   const getStatusColor = (status: string) => {
     switch (status) {

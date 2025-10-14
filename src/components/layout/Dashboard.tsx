@@ -118,6 +118,23 @@ export function Dashboard() {
                   </CardContent>
                 </Card>
 
+                {/* Opportunity Radar summary for instant visibility */}
+                <Card className="bg-white/5 border-white/10 text-gray-300">
+                  <CardContent className="p-6">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                      <div>
+                        <div className="text-sm text-gray-400">Your Opportunities</div>
+                        <div className="text-2xl font-semibold text-gray-100">
+                          {/* This mirrors Recoveries owed banner; pull from backend metrics when available */}
+                          {/* Placeholder values until we fetch a dashboard metric */}
+                          <span>Loading…</span>
+                        </div>
+                      </div>
+                      <Button size="sm" variant="outline" onClick={() => navigate('/recoveries')}>View details</Button>
+                    </div>
+                  </CardContent>
+                </Card>
+
                 <Card className="bg-white/5 border-white/10 text-gray-300">
                   <CardContent className="p-6">
                     <h2 className="font-brand text-lg text-gray-100 font-semibold">Your Recovered Value</h2>
