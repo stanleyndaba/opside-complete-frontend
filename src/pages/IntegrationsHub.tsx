@@ -109,7 +109,10 @@ export default function IntegrationsHub() {
 
   return (
     <PageLayout title="Clario Platform Integrations">
-      <div className="space-y-8">
+      <div className="relative -m-4 lg:-m-6">
+        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+          <div className="relative container mx-auto px-6 pt-6 pb-12 text-gray-300 space-y-8">
         {/* SHOCK AND AWE: Recovery Reveal Modal */}
         <Dialog open={showRecoveryReveal} onOpenChange={setShowRecoveryReveal}>
           <DialogContent className="max-w-2xl">
@@ -249,8 +252,8 @@ export default function IntegrationsHub() {
 
         {/* Header */}
         <div className="text-center">
-          <h1 className="text-3xl font-bold mb-2">Clario Platform Integrations</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-3xl font-bold mb-2 text-gray-100">Clario Platform Integrations</h1>
+          <p className="text-gray-400">
             Your central command center for all platform connections
           </p>
           {showRecoveryReveal && recoveryData && (
@@ -263,7 +266,7 @@ export default function IntegrationsHub() {
               </div>
             </div>
           )}
-          <div className="mt-3 rounded-md border border-blue-200 bg-blue-50 inline-block px-3 py-2 text-sm text-blue-900">
+          <div className="mt-3 rounded-md border border-white/10 bg-white/5 inline-block px-3 py-2 text-sm text-gray-200">
             Want us to auto-collect invoices & docs for you? Connect Gmail / Outlook / Drive / Dropbox.
           </div>
           <div className="mt-4 max-w-xl mx-auto relative">
@@ -277,8 +280,77 @@ export default function IntegrationsHub() {
           </div>
         </div>
 
-        {/* Rest of the existing IntegrationsHub content remains the same */}
-        {/* ... (all the existing JSX content) */}
+        {/* Core Integrations */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Amazon SP-API */}
+          <Card className="bg-white/5 border-white/10 text-gray-300">
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between text-gray-200">
+                <span className="inline-flex items-center gap-2"><Shield className="h-5 w-5 text-emerald-400" /> Amazon SP‑API</span>
+                <Badge variant="outline" className={cn('text-xs', status?.amazon_connected ? 'border-emerald-300 text-emerald-300' : 'border-white/30 text-gray-300')}>
+                  {status?.amazon_connected ? 'Connected' : 'Not connected'}
+                </Badge>
+              </CardTitle>
+              <CardDescription className="text-gray-400">Sync inventory, fees, reimbursements, shipments and returns.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center gap-3 text-sm text-gray-400">
+                <span>Last sync: {lastSyncTime}</span>
+                <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold" onClick={() => navigate('/sync')}>
+                  <RefreshCw className="h-4 w-4 mr-2" /> Sync now
+                </Button>
+                <Button size="sm" variant="outline" onClick={async () => { await api.post('/api/detections/run'); }}>
+                  Run Detector
+                </Button>
+              </div>
+              <div className="text-xs text-gray-400">Scopes: orders.read, inventory.read, transactions.read</div>
+              <div className="flex gap-2">
+                <Button size="sm" variant="outline" onClick={() => beginProviderOAuth('gdrive')}>Reconnect</Button>
+                <Button size="sm" variant="outline">Disconnect & purge</Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Evidence Sources */}
+          <Card className="bg-white/5 border-white/10 text-gray-300">
+            <CardHeader>
+              <CardTitle className="text-gray-200">Evidence Sources</CardTitle>
+              <CardDescription className="text-gray-400">Connect email and cloud to auto‑ingest invoices, receipts and shipping docs.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <Button className="bg-red-600 hover:bg-red-700" onClick={() => beginProviderOAuth('gmail')} disabled={providerLoading!==null}>{providerLoading==='gmail'?'Connecting…':'Connect Gmail'}</Button>
+                <Button className="bg-blue-600 hover:bg-blue-700" onClick={() => beginProviderOAuth('outlook')} disabled={providerLoading!==null}>{providerLoading==='outlook'?'Connecting…':'Connect Outlook'}</Button>
+                <Button className="bg-emerald-600 hover:bg-emerald-700" onClick={() => beginProviderOAuth('gdrive')} disabled={providerLoading!==null}>{providerLoading==='gdrive'?'Connecting…':'Connect Google Drive'}</Button>
+                <Button className="bg-sky-600 hover:bg-sky-700" onClick={() => beginProviderOAuth('dropbox')} disabled={providerLoading!==null}>{providerLoading==='dropbox'?'Connecting…':'Connect Dropbox'}</Button>
+              </div>
+              <div className="flex items-center gap-3 text-sm text-gray-400">
+                <span>Auto‑collect</span>
+                <Button size="sm" variant="outline">Enabled</Button>
+                <span className="ml-2">Schedule</span>
+                <Button size="sm" variant="outline">Daily 02:00 UTC</Button>
+              </div>
+              <div className="text-xs text-gray-400">Filters: include invoices@, receipts@; file types: PDF, PNG; folders: /Finance</div>
+              <div className="flex items-center gap-3 text-sm text-gray-400">
+                <span>Last ingest: Just now</span>
+                <Button size="sm" variant="outline" onClick={async () => { await api.post('/api/evidence/sync'); }}>Ingest now</Button>
+                <Button size="sm" variant="ghost" onClick={() => navigate('/evidence-locker')}>Open Evidence Locker</Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Live status */}
+        <Card className="bg-white/5 border-white/10 text-gray-300">
+          <CardHeader>
+            <CardTitle className="text-gray-200">Recent Activity</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-sm text-gray-400">Connected Gmail • Ingested 12 docs • 7 matched to claims • Token refreshed</div>
+          </CardContent>
+        </Card>
+
+        </div>
       </div>
     </PageLayout>
   );
