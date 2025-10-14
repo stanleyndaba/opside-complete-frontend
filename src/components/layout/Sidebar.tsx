@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Home, Shield, Settings, HelpCircle, Sparkles, PanelLeftClose, PanelLeftOpen, BarChart3, LogOut, User, Building2 } from 'lucide-react';
+import { Home, Shield, Settings, HelpCircle, Sparkles, PanelLeftClose, PanelLeftOpen, BarChart3, LogOut, User, Building2, FileText } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -65,6 +65,7 @@ export function Sidebar({
 		{ title: 'Command Center', icon: Home, href: '/app' },
 		{ title: 'Reports', icon: BarChart3, href: '/reports' },
 		{ title: 'Recoveries', icon: Shield, href: '/recoveries' },
+		{ title: 'Evidence Locker', icon: FileText, href: '/evidence-locker' },
 	];
 	const accountItems: NavItem[] = [
 		{ title: 'Configure', icon: Settings, href: '/settings' },
