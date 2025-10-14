@@ -188,7 +188,7 @@ export default function CaseDetail() {
           setCaseData(res.data as any);
           setError(null);
         } else {
-          // Fallback: look up claim from list, then synthesize details
+          // Fallback: look up claim from list, then synthesize details (do not clear existing data)
           try {
             const list = await recoveryApi.getRecoveries().catch(() => [] as any);
             const row = Array.isArray(list) ? (list as any[]).find((x) => x.id === caseId) : null;
@@ -210,11 +210,17 @@ export default function CaseDetail() {
               });
               setError(null);
             } else {
-              setCaseData((mockCaseData as any)[caseId]);
+              // Keep existing caseData (from link state) if mock not available
+              if ((mockCaseData as any)[caseId]) {
+                setCaseData((mockCaseData as any)[caseId]);
+              }
               setError(res.error || null);
             }
           } catch (e: any) {
-            setCaseData((mockCaseData as any)[caseId]);
+            // Keep existing
+            if ((mockCaseData as any)[caseId]) {
+              setCaseData((mockCaseData as any)[caseId]);
+            }
             setError(res.error || null);
           }
         }
@@ -278,7 +284,7 @@ export default function CaseDetail() {
     return () => { cancelled = true; };
   }, [caseId]);
   
-  if (!caseId || (!caseData && !(mockCaseData as any)[caseId])) {
+  if (!caseId) {
     return (
       <PageLayout title="Case Not Found">
         <div className="text-center py-12">
@@ -294,7 +300,7 @@ export default function CaseDetail() {
     );
   }
 
-  const effectiveCase = caseData || (mockCaseData as any)[caseId];
+  const effectiveCase = caseData || (mockCaseData as any)[caseId] || passedClaim;
   const derivedConfidencePct = useMemo(() => {
     const v = typeof effectiveCase?.confidence === 'number' ? effectiveCase.confidence : deriveConfidence(caseId!);
     return Math.max(0, Math.min(100, Math.round(v)));
