@@ -113,7 +113,10 @@ export function Navbar({
                 )}
                 aria-label="Language and region"
               >
-                <Globe className="h-4 w-4" />
+                <span className="relative inline-flex">
+                  <Globe className="h-4 w-4" />
+                  <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-emerald-400 ring-1 ring-white/40" />
+                </span>
                 <span>
                   {selectedLanguage.country} | {selectedLanguage.language}
                 </span>
