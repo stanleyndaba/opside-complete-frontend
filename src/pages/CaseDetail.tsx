@@ -364,6 +364,7 @@ export default function CaseDetail() {
                 {/* Evidence & Docs */}
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-muted-foreground">Evidence & Docs</label>
+                  <div className="text-xs text-muted-foreground">Evidence Status: <span className="font-medium text-foreground">{effectiveCase.evidenceStatus ?? 'Collecting'}</span></div>
                   <div className="space-y-2">
                     <Button variant="outline" className="w-full" onClick={() => {
                       window.open(api.getRecoveryDocumentUrl(effectiveCase.id), '_blank');

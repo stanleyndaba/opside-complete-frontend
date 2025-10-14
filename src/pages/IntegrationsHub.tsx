@@ -26,6 +26,7 @@ export default function IntegrationsHub() {
   });
   const [showRequestForm, setShowRequestForm] = useState(false);
   const [showProviderDialog, setShowProviderDialog] = useState(false);
+  const [providerLoading, setProviderLoading] = useState<string | null>(null);
   const [showManualModal, setShowManualModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [waitlistOpen, setWaitlistOpen] = useState(false);
@@ -67,6 +68,24 @@ export default function IntegrationsHub() {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  // Start OAuth for selected provider
+  const beginProviderOAuth = async (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox') => {
+    try {
+      setProviderLoading(provider);
+      const res = await api.post<{ auth_url?: string }>(`/api/v1/integrations/${provider}/connect`);
+      if ((res as any).ok && (res as any).data?.auth_url) {
+        window.location.href = (res as any).data.auth_url as string;
+      } else {
+        // Fallback route if backend returns no URL
+        window.location.href = `/auth/${provider}-sandbox`;
+      }
+    } catch {
+      window.location.href = `/auth/${provider}-sandbox`;
+    } finally {
+      setProviderLoading(null);
+    }
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -206,6 +225,25 @@ export default function IntegrationsHub() {
                 </Button>
               </div>
             </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Provider Picker */}
+        <Dialog open={showProviderDialog} onOpenChange={setShowProviderDialog}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Choose a provider</DialogTitle>
+              <DialogDescription>Select where to ingest evidence from.</DialogDescription>
+            </DialogHeader>
+            <div className="grid grid-cols-2 gap-3">
+              <Button disabled={providerLoading !== null} onClick={() => beginProviderOAuth('gmail')} className="bg-red-600 hover:bg-red-700">{providerLoading==='gmail' ? 'Connecting…' : 'Gmail'}</Button>
+              <Button disabled={providerLoading !== null} onClick={() => beginProviderOAuth('outlook')} className="bg-blue-600 hover:bg-blue-700">{providerLoading==='outlook' ? 'Connecting…' : 'Outlook'}</Button>
+              <Button disabled={providerLoading !== null} onClick={() => beginProviderOAuth('gdrive')} className="bg-emerald-600 hover:bg-emerald-700">{providerLoading==='gdrive' ? 'Connecting…' : 'Google Drive'}</Button>
+              <Button disabled={providerLoading !== null} onClick={() => beginProviderOAuth('dropbox')} className="bg-sky-600 hover:bg-sky-700">{providerLoading==='dropbox' ? 'Connecting…' : 'Dropbox'}</Button>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowProviderDialog(false)}>Cancel</Button>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
 
