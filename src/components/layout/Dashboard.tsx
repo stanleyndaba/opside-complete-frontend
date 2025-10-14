@@ -26,6 +26,9 @@ export function Dashboard() {
   const [recoveredTotal, setRecoveredTotal] = useState<number | null>(null);
   const [recoveredCurrency, setRecoveredCurrency] = useState<string>('USD');
   const hasFetchedRef = useRef(false);
+  const [pendingRecoveryAmount, setPendingRecoveryAmount] = useState<number | null>(null);
+  const [successRate, setSuccessRate] = useState<number | null>(null);
+  const [lastUpdated, setLastUpdated] = useState<string>('');
 
   useEffect(() => {
     let active = true;
@@ -37,11 +40,27 @@ export function Dashboard() {
       if (res.ok && res.data) {
         setRecoveredTotal(res.data.totalAmount ?? 0);
         if (res.data.currency) setRecoveredCurrency(res.data.currency);
+        setLastUpdated(new Date().toLocaleTimeString());
+      }
+    }
+
+    async function fetchMetrics() {
+      const res = await api.getRecoveriesMetrics();
+      if (!active) return;
+      if (res.ok && res.data) {
+        const d: any = res.data;
+        // Prefer backend fields if present; otherwise fallback to existing placeholders
+        const pending = typeof d.valueInProgress === 'number' ? d.valueInProgress : (typeof d.pendingAmount === 'number' ? d.pendingAmount : null);
+        const rate = typeof d.successRate === 'number' ? d.successRate : (typeof d.successRate30d === 'number' ? d.successRate30d : null);
+        if (pending !== null) setPendingRecoveryAmount(pending);
+        if (rate !== null) setSuccessRate(rate);
+        setLastUpdated(new Date().toLocaleTimeString());
       }
     }
 
     // Initial fetch immediately on mount
     fetchRecoveriesOnce();
+    fetchMetrics();
     hasFetchedRef.current = true;
 
     // Short burst polling to show numbers populate quickly
@@ -49,14 +68,31 @@ export function Dashboard() {
     pollTimer = window.setInterval(async () => {
       polls += 1;
       await fetchRecoveriesOnce();
+      await fetchMetrics();
       if (polls >= 12) { // ~1 minute at 5s cadence
         if (pollTimer) window.clearInterval(pollTimer);
       }
     }, 5000) as unknown as number;
 
+    // Listen for backend sync/detection events to refresh immediately
+    let es: EventSource | null = null;
+    try {
+      es = new EventSource('/api/sse/status');
+      es.onmessage = async (e) => {
+        try {
+          const evt = JSON.parse(e.data);
+          if (evt?.type === 'sync' || evt?.type === 'detection') {
+            await fetchRecoveriesOnce();
+            await fetchMetrics();
+          }
+        } catch {}
+      };
+    } catch {}
+
     return () => {
       active = false;
       if (pollTimer) window.clearInterval(pollTimer);
+      if (es) es.close();
     };
   }, []);
 
@@ -93,14 +129,17 @@ export function Dashboard() {
                         new Intl.NumberFormat('en-US', { style: 'currency', currency: recoveredCurrency || 'USD' }).format(recoveredTotal)
                       )}
                     </div>
+                    {lastUpdated && (
+                      <div className="text-xs text-gray-400 mt-1">Last updated: {lastUpdated}</div>
+                    )}
                     <div className="mt-4 space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-gray-400">Pending Recovery</span>
-                        <span className="text-sm font-semibold text-gray-100">{formatCurrency(8560)}</span>
+                        <span className="text-sm font-semibold text-gray-100">{pendingRecoveryAmount == null ? formatCurrency(8560) : formatCurrency(pendingRecoveryAmount)}</span>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-gray-400">Success Rate</span>
-                        <span className="text-sm font-semibold text-emerald-400">94%</span>
+                        <span className="text-sm font-semibold text-emerald-400">{successRate == null ? '94%' : `${Math.round(successRate)}%`}</span>
                       </div>
                     </div>
                     <div className="mt-4">
