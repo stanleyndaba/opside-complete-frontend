@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, AlertCircle, Calendar } from 'lucide-react';
+import { ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, AlertCircle, Calendar, RefreshCw, ExternalLink } from 'lucide-react';
 // duplicate Link import removed
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -149,7 +149,24 @@ export default function CaseDetail() {
         setLoading(false);
       }
     })();
-    // Poll for status updates
+    // Real-time status via SSE with polling fallback
+    let es: EventSource | null = null;
+    try {
+      es = new EventSource(`/api/sse/case/${encodeURIComponent(caseId!)}`);
+      es.onmessage = (e) => {
+        try {
+          const data = JSON.parse(e.data);
+          setCaseData((prev: any) => ({
+            ...(prev || {}),
+            status: data.status ?? prev?.status,
+            expectedPayoutDate: data.expected_payout_date ?? prev?.expectedPayoutDate,
+            amazonCaseId: data.amazonCaseId ?? prev?.amazonCaseId,
+            events: data.events ?? prev?.events,
+            progress: typeof data.progress === 'number' ? data.progress : prev?.progress,
+          }));
+        } catch {}
+      };
+    } catch {}
     const interval = setInterval(async () => {
       if (!caseId) return;
       const statusRes = await api.getRecoveryStatus(caseId);
@@ -160,10 +177,11 @@ export default function CaseDetail() {
           expectedPayoutDate: (statusRes.data as any).expected_payout_date ?? prev?.expectedPayoutDate,
           amazonCaseId: (statusRes.data as any).amazonCaseId ?? prev?.amazonCaseId,
           events: (statusRes.data as any).events ?? prev?.events,
+          progress: (statusRes.data as any).progress ?? prev?.progress,
         }));
       }
-    }, 10000);
-    return () => { cancelled = true; };
+    }, 15000);
+    return () => { cancelled = true; if (es) es.close(); clearInterval(interval); };
   }, [caseId]);
   
   if (!caseId || (!caseData && !(mockCaseData as any)[caseId])) {
@@ -303,8 +321,15 @@ export default function CaseDetail() {
 
                 {effectiveCase.amazonCaseId && (
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground">Amazon Case ID</label>
-                    <p className="font-mono text-sm mt-1">{effectiveCase.amazonCaseId}</p>
+                  <label className="text-sm font-medium text-muted-foreground">Amazon Case</label>
+                  <p className="font-mono text-sm mt-1 inline-flex items-center gap-2">
+                    {effectiveCase.amazonCaseId}
+                    {effectiveCase.amazonCaseId && (
+                      <a href={`https://sellercentral.amazon.com/case-log/${effectiveCase.amazonCaseId}`} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline inline-flex items-center gap-1">
+                        View <ExternalLink className="h-3 w-3" />
+                      </a>
+                    )}
+                  </p>
                   </div>
                 )}
 
@@ -361,6 +386,27 @@ export default function CaseDetail() {
                   Resolve Case
                 </Button>
 
+                {effectiveCase.status === 'Denied' && (
+                  <Button className="w-full mt-2 bg-blue-600 hover:bg-blue-700" onClick={async () => {
+                    // Require at least one document attached
+                    const hasDocs = Array.isArray(effectiveCase.documents) && effectiveCase.documents.length > 0;
+                    if (!hasDocs) {
+                      toast({ title: 'Attach evidence first', description: 'Add at least one supporting document before resubmitting.' });
+                      return;
+                    }
+                    const res = await api.resubmitClaim(effectiveCase.id);
+                    if (res.ok) {
+                      toast({ title: 'Resubmitted with stronger docs', description: 'We will keep you posted on the decision.' });
+                      setCaseData((prev: any) => ({ ...(prev || {}), status: 'Submitted' }));
+                    } else {
+                      toast({ title: 'Resubmission failed', description: res.error || 'Please try again.' });
+                    }
+                  }}>
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    Resubmit with stronger docs
+                  </Button>
+                )}
+
                 {/* Evidence & Docs */}
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-muted-foreground">Evidence & Docs</label>
@@ -402,7 +448,7 @@ export default function CaseDetail() {
                   <Clock className="h-5 w-5" />
                   Claim Timeline
                   <Badge variant="outline" className="ml-auto">
-                    Real-time transparency
+                    {typeof effectiveCase.progress === 'number' ? `${Math.round(effectiveCase.progress)}%` : 'Real-time transparency'}
                   </Badge>
                 </CardTitle>
               </CardHeader>
