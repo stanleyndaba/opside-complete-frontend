@@ -63,6 +63,10 @@ export function Navbar({
   const selectedLanguage = useMemo<LanguageOption>(() => {
     return LANGUAGE_OPTIONS.find((o) => o.code === selectedLanguageCode) || LANGUAGE_OPTIONS[0];
   }, [selectedLanguageCode]);
+
+  // Sandbox badge: show in non-production or when VITE_SANDBOX=true
+  const env: any = (typeof import.meta !== 'undefined' ? (import.meta as any).env : undefined) || (typeof process !== 'undefined' ? (process as any).env : undefined) || {};
+  const isSandbox = String(env.VITE_SANDBOX || '') === 'true' || String(env.MODE || env.NODE_ENV || '') !== 'production';
   return <header className={cn(
     "sticky top-0 z-30 transition-all duration-300",
     sidebarCollapsed ? "ml-16" : "ml-64",
@@ -89,8 +93,16 @@ export function Navbar({
             />
           </div>
         </div>
-        {/* Right side - Language, Sync, Notifications */}
+        {/* Right side - Sandbox badge, Language, Sync, Notifications */}
         <div className="flex items-center gap-4 ml-auto">
+          {isSandbox && (
+            <span className={cn(
+              'text-xs px-2 py-0.5 rounded border',
+              isTransparent ? 'border-amber-300/30 text-amber-200 bg-amber-500/10' : 'border-amber-600/30 text-amber-700 bg-amber-50'
+            )}>
+              Sandbox
+            </span>
+          )}
           {/* Language selector */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
