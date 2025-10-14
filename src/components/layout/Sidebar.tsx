@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Home, Shield, Settings, HelpCircle, Sparkles, PanelLeftClose, PanelLeftOpen, BarChart3, LogOut, User, Building2, FileText } from 'lucide-react';
+import { Home, Shield, Settings, HelpCircle, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, User, Building2, FileText } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -170,15 +170,7 @@ export function Sidebar({
         ) : (
           <img src="/logo-abstract.svg" alt="Clario" className="h-6 w-6 rounded" />
         )}
-        <button
-          title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          className={cn(
-            "h-8 w-8 flex items-center justify-center text-gray-400 hover:text-gray-100 rounded-md hover:bg-white/10"
-          )}
-          onClick={onToggle}
-        >
-          {isCollapsed ? <PanelLeftOpen className="h-5 w-5" /> : <PanelLeftClose className="h-5 w-5" />}
-        </button>
+        {/* Moved toggle to edge handle below */}
       </div>
 
       <ScrollArea className="flex-1">
@@ -256,6 +248,17 @@ export function Sidebar({
           )}
         </div>
       )}
+      {/* Edge toggle handle */}
+      <button
+        aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        onClick={onToggle}
+        className={cn(
+          'absolute top-24 -right-3 z-50 h-8 w-8 rounded-full border border-white/10 bg-white/10 backdrop-blur-sm flex items-center justify-center text-gray-300 hover:bg-white/20',
+        )}
+      >
+        {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+      </button>
     </aside>
   );
 }
