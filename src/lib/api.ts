@@ -78,4 +78,9 @@ export const api = {
   getRecoveryStatus: (id: string) => requestJson<any>(`/api/recoveries/${encodeURIComponent(id)}/status`),
   getRecoveryDetail: (id: string) => requestJson<any>(`/api/recoveries/${encodeURIComponent(id)}`),
   getDocumentViewUrl: (docId: string) => buildApiUrl(`/api/documents/${encodeURIComponent(docId)}/view`),
+
+  // Evidence/documents
+  getDocuments: () => requestJson<any[]>('/api/documents'),
+  getDocument: (id: string) => requestJson<any>(`/api/documents/${encodeURIComponent(id)}`),
+  getDocumentDownloadUrl: (id: string) => buildApiUrl(`/api/documents/${encodeURIComponent(id)}/download`),
 };

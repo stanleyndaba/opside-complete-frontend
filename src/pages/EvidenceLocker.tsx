@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,9 +13,10 @@ import { Link } from 'react-router-dom';
 export default function EvidenceLocker() {
   const [dragActive, setDragActive] = useState(false);
 
-  const [documents, setDocuments] = useState<Array<{ id: string; name: string; uploadDate: string; status: string; linkedSKUs?: number }>>([]);
+  const [documents, setDocuments] = useState<Array<{ id: string; name: string; uploadDate: string; status: string; linkedSKUs?: number; supplier?: string; invoice?: string; amount?: number; parsedVia?: 'regex' | 'ocr' | 'ml'; matchedClaims?: string[] }>>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [q, setQ] = useState('');
 
   useEffect(() => {
     let cancelled = false;
@@ -73,6 +74,17 @@ export default function EvidenceLocker() {
       console.log('Files dropped:', e.dataTransfer.files);
     }
   };
+  const filtered = useMemo(() => {
+    const term = q.trim().toLowerCase();
+    if (!term) return documents;
+    return documents.filter(d =>
+      (d.name || '').toLowerCase().includes(term) ||
+      (d.supplier || '').toLowerCase().includes(term) ||
+      (d.invoice || '').toLowerCase().includes(term) ||
+      (d.matchedClaims || []).some(c => c.toLowerCase().includes(term))
+    );
+  }, [q, documents]);
+
   return <PageLayout title="Evidence Locker & Value Engine">
       <div className="space-y-8">
         {/* Status Overview */}
@@ -129,7 +141,7 @@ export default function EvidenceLocker() {
               <div className="flex items-center gap-2">
                 <div className="relative">
                   <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input placeholder="Search documents..." className="pl-8 w-64" />
+                  <Input placeholder="Search supplier, invoice #, claim ID…" value={q} onChange={(e) => setQ(e.target.value)} className="pl-8 w-72" />
                 </div>
               </div>
             </div>
@@ -141,25 +153,45 @@ export default function EvidenceLocker() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Document Name</TableHead>
+                  <TableHead>Supplier</TableHead>
+                  <TableHead>Invoice #</TableHead>
                   <TableHead>Upload Date</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead>Parsed Via</TableHead>
+                  <TableHead>Amount</TableHead>
+                  <TableHead>Matched Claims</TableHead>
                   <TableHead>Linked SKUs</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {documents.map(doc => <TableRow key={doc.id}>
+                {filtered.map(doc => <TableRow key={doc.id}>
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <FileText className="h-4 w-4 text-muted-foreground" />
                         <span className="font-medium">{doc.name}</span>
                       </div>
                     </TableCell>
+                    <TableCell>{doc.supplier || '—'}</TableCell>
+                    <TableCell>{doc.invoice || '—'}</TableCell>
                     <TableCell>
                       {new Date(doc.uploadDate).toLocaleDateString()}
                     </TableCell>
                     <TableCell>
                       {getStatusBadge(doc.status)}
+                    </TableCell>
+                    <TableCell>
+                      {doc.parsedVia && <Badge variant="outline" className="text-xs capitalize">{doc.parsedVia}</Badge>}
+                    </TableCell>
+                    <TableCell>{typeof doc.amount === 'number' ? `$${doc.amount.toFixed(2)}` : '—'}</TableCell>
+                    <TableCell>
+                      <div className="flex flex-wrap gap-1">
+                        {(doc.matchedClaims || []).map(id => (
+                          <Link key={id} to={`/recoveries/${id}`} className="text-xs px-2 py-0.5 rounded bg-muted hover:bg-muted/70">
+                            {id}
+                          </Link>
+                        ))}
+                      </div>
                     </TableCell>
                     <TableCell>
                       <span className="font-medium">{doc.linkedSKUs}</span>

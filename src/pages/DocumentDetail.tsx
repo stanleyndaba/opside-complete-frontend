@@ -70,7 +70,8 @@ export default function DocumentDetail() {
               </h1>
               <p className="text-muted-foreground">
                 {documentData?.uploadDate ? `Uploaded on ${new Date(documentData.uploadDate).toLocaleDateString()} • ` : ''}
-                {documentData?.processingTime ? `Processed in ${documentData.processingTime}` : ''}
+                {documentData?.processingTime ? `Processed in ${documentData.processingTime} • ` : ''}
+                {documentData?.parsedVia ? `Parsed via ${String(documentData.parsedVia).toUpperCase()}` : ''}
               </p>
             </div>
           </div>
@@ -103,7 +104,7 @@ export default function DocumentDetail() {
         )}
 
         {/* Summary Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>
             <CardContent className="p-4">
               <div className="text-2xl font-bold">{documentData.extractedData.length}</div>
@@ -120,6 +121,12 @@ export default function DocumentDetail() {
             <CardContent className="p-4">
               <div className="text-2xl font-bold">100%</div>
               <div className="text-sm text-muted-foreground">Extraction Confidence</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4">
+              <div className="text-2xl font-bold">{documentData?.supplier || '—'}</div>
+              <div className="text-sm text-muted-foreground">Supplier</div>
             </CardContent>
           </Card>
         </div>
@@ -189,7 +196,7 @@ export default function DocumentDetail() {
             <CardHeader>
               <CardTitle>Extracted Data</CardTitle>
               <CardDescription>
-                AI-identified products and costs from the document
+                Supplier: <span className="font-medium">{documentData?.supplier || '—'}</span> • Invoice #: <span className="font-medium">{documentData?.invoice || '—'}</span>
               </CardDescription>
             </CardHeader>
             <CardContent>
