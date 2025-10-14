@@ -8,6 +8,7 @@ import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Upload, FileText, Search, Mail, Check, AlertTriangle, Clock, Eye } from 'lucide-react';
+import { useToast } from '@/components/ui/use-toast';
 import { api } from '@/lib/api';
 import { Link } from 'react-router-dom';
 export default function EvidenceLocker() {
@@ -17,6 +18,13 @@ export default function EvidenceLocker() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [q, setQ] = useState('');
+  const [supplier, setSupplier] = useState('');
+  const [type, setType] = useState('');
+  const [amountMin, setAmountMin] = useState('');
+  const [amountMax, setAmountMax] = useState('');
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
+  const { toast } = useToast();
 
   useEffect(() => {
     let cancelled = false;
@@ -33,7 +41,20 @@ export default function EvidenceLocker() {
         setLoading(false);
       }
     })();
-    return () => { cancelled = true };
+    // SSE for ingest updates
+    let es: EventSource | null = null;
+    try {
+      es = new EventSource('/api/sse/status');
+      es.onmessage = (e) => {
+        try {
+          const evt = JSON.parse(e.data);
+          if (evt?.type === 'evidence' && evt?.status === 'completed') {
+            toast({ title: 'Ingestion complete', description: 'New documents are available.' });
+          }
+        } catch {}
+      };
+    } catch {}
+    return () => { cancelled = true; if (es) es.close(); };
   }, []);
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -76,14 +97,19 @@ export default function EvidenceLocker() {
   };
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
-    if (!term) return documents;
-    return documents.filter(d =>
-      (d.name || '').toLowerCase().includes(term) ||
-      (d.supplier || '').toLowerCase().includes(term) ||
-      (d.invoice || '').toLowerCase().includes(term) ||
-      (d.matchedClaims || []).some(c => c.toLowerCase().includes(term))
-    );
-  }, [q, documents]);
+    return documents.filter(d => {
+      const matchQ = !term || (d.name || '').toLowerCase().includes(term) || (d.supplier || '').toLowerCase().includes(term) || (d.invoice || '').toLowerCase().includes(term) || (d.matchedClaims || []).some(c => c.toLowerCase().includes(term));
+      const matchSupplier = !supplier || (d.supplier || '').toLowerCase().includes(supplier.toLowerCase());
+      const matchType = !type || (d.type || '').toLowerCase() === type.toLowerCase();
+      const amt = typeof d.amount === 'number' ? d.amount : undefined;
+      const matchAmtMin = !amountMin || (amt !== undefined && amt >= parseFloat(amountMin));
+      const matchAmtMax = !amountMax || (amt !== undefined && amt <= parseFloat(amountMax));
+      const date = d.date ? new Date(d.date) : null;
+      const matchDateFrom = !dateFrom || (date && date >= new Date(dateFrom));
+      const matchDateTo = !dateTo || (date && date <= new Date(dateTo));
+      return matchQ && matchSupplier && matchType && matchAmtMin && matchAmtMax && matchDateFrom && matchDateTo;
+    });
+  }, [q, supplier, type, amountMin, amountMax, dateFrom, dateTo, documents]);
 
   return <PageLayout title="Evidence Locker & Value Engine">
       <div className="relative -m-4 lg:-m-6">
@@ -92,8 +118,8 @@ export default function EvidenceLocker() {
           <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-300 space-y-8">
         
 
-        {/* Upload Section */}
-        <Card className="bg-white/5 border-white/10 text-gray-300">
+        {/* Upload Section (hidden when connected) */}
+        <Card className="bg-white/5 border-white/10 text-gray-300 hidden">
           <CardHeader>
             <CardTitle>Upload Evidence Documents</CardTitle>
             <CardDescription>
@@ -134,11 +160,17 @@ export default function EvidenceLocker() {
                 <CardTitle className="text-gray-200">Document Library</CardTitle>
                 <CardDescription className="text-gray-400">All uploaded evidence documents</CardDescription>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <div className="relative">
                   <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input placeholder="Search supplier, invoice #, claim ID…" value={q} onChange={(e) => setQ(e.target.value)} className="pl-8 w-72 border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" />
                 </div>
+                <Input placeholder="Supplier" value={supplier} onChange={(e) => setSupplier(e.target.value)} className="w-40 border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" />
+                <Input placeholder="Type (invoice/receipt/shipping)" value={type} onChange={(e) => setType(e.target.value)} className="w-56 border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" />
+                <Input placeholder="Amount min" value={amountMin} onChange={(e) => setAmountMin(e.target.value)} className="w-28 border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" />
+                <Input placeholder="Amount max" value={amountMax} onChange={(e) => setAmountMax(e.target.value)} className="w-28 border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" />
+                <Input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" />
+                <Input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" />
               </div>
             </div>
           </CardHeader>

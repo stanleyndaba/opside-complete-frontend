@@ -91,4 +91,5 @@ export const api = {
   setEvidenceFilters: (filters: { includeSenders?: string[]; excludeSenders?: string[]; fileTypes?: string[]; folders?: string[] }) => requestJson<any>('/api/evidence/filters', { method: 'POST', body: JSON.stringify(filters) }),
   startEvidenceIngest: () => requestJson<any>('/api/evidence/sync', { method: 'POST' }),
   disconnectIntegration: (provider: string, purge = false) => requestJson<any>(`/api/integrations/${encodeURIComponent(provider)}/disconnect`, { method: 'POST', body: JSON.stringify({ purge }) }),
+  getEvidenceSummary: () => requestJson<any>('/api/evidence/summary'),
 };

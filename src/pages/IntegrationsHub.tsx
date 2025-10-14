@@ -19,7 +19,7 @@ export default function IntegrationsHub() {
   const [searchParams] = useSearchParams();
   const { toast } = useToast();
   const [lastSyncTime, setLastSyncTime] = useState('Just now');
-  const [status, setStatus] = useState<{ amazon_connected: boolean; docs_connected: boolean; providers?: Record<string, boolean>; lastIngest?: string; lastSync?: string } | null>(null);
+  const [status, setStatus] = useState<{ amazon_connected: boolean; docs_connected: boolean; providers?: Record<string, boolean>; lastIngest?: string; lastSync?: string; providerIngest?: Record<string, { connected: boolean; lastIngest?: string; error?: string; scopes?: string[] }> } | null>(null);
   const [autoCollect, setAutoCollect] = useState<boolean>(true);
   const [schedule, setSchedule] = useState<string>('daily_0200');
   const [filters, setFilters] = useState<{ includeSenders: string[]; excludeSenders: string[]; fileTypes: string[]; folders: string[] }>({ includeSenders: ['invoices@'], excludeSenders: [], fileTypes: ['pdf','png'], folders: ['/Finance'] });
@@ -73,6 +73,26 @@ export default function IntegrationsHub() {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  // SSE for live ingest/detection events
+  useEffect(() => {
+    let es: EventSource | null = null;
+    try {
+      es = new EventSource('/api/sse/status');
+      es.onmessage = (e) => {
+        try {
+          const evt = JSON.parse(e.data);
+          if (evt?.type === 'evidence' && evt?.status) {
+            toast({ title: evt.status === 'completed' ? 'Ingestion complete' : 'Ingestion update', description: evt.message || 'Documents updated.' });
+          }
+          if (evt?.type === 'claim' && evt?.status === 'completed' && evt?.matchedCount) {
+            toast({ title: 'New matches found', description: `${evt.matchedCount} documents matched to claims.` });
+          }
+        } catch {}
+      };
+    } catch {}
+    return () => { if (es) es.close(); };
+  }, [toast]);
 
   // Start OAuth for selected provider
   const beginProviderOAuth = async (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox') => {
@@ -329,10 +349,24 @@ export default function IntegrationsHub() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
-                <Button className="bg-red-600 hover:bg-red-700" onClick={() => beginProviderOAuth('gmail')} disabled={providerLoading!==null}>{providerLoading==='gmail'?'Connecting…':'Connect Gmail'}</Button>
-                <Button className="bg-blue-600 hover:bg-blue-700" onClick={() => beginProviderOAuth('outlook')} disabled={providerLoading!==null}>{providerLoading==='outlook'?'Connecting…':'Connect Outlook'}</Button>
-                <Button className="bg-emerald-600 hover:bg-emerald-700" onClick={() => beginProviderOAuth('gdrive')} disabled={providerLoading!==null}>{providerLoading==='gdrive'?'Connecting…':'Connect Google Drive'}</Button>
-                <Button className="bg-sky-600 hover:bg-sky-700" onClick={() => beginProviderOAuth('dropbox')} disabled={providerLoading!==null}>{providerLoading==='dropbox'?'Connecting…':'Connect Dropbox'}</Button>
+                {(['gmail','outlook','gdrive','dropbox'] as const).map((p) => (
+                  <div key={p} className="flex flex-col gap-2 rounded border border-white/10 bg-white/5 p-3">
+                    <div className="flex items-center justify-between">
+                      <div className="text-sm font-medium capitalize">{p === 'gdrive' ? 'Google Drive' : p}</div>
+                      <Badge variant="outline" className={cn('text-xs', status?.providerIngest?.[p]?.connected ? 'border-emerald-300 text-emerald-300' : status?.providerIngest?.[p]?.error ? 'border-red-300 text-red-300' : 'border-white/30 text-gray-300')}>
+                        {status?.providerIngest?.[p]?.connected ? 'Connected' : status?.providerIngest?.[p]?.error ? 'Error' : 'Not connected'}
+                      </Badge>
+                    </div>
+                    <div className="text-xs text-gray-400">Last ingest: {status?.providerIngest?.[p]?.lastIngest || '—'}</div>
+                    <div className="flex gap-2">
+                      <Button size="sm" className={cn(p==='gmail'?'bg-red-600 hover:bg-red-700': p==='outlook'?'bg-blue-600 hover:bg-blue-700': p==='gdrive'?'bg-emerald-600 hover:bg-emerald-700':'bg-sky-600 hover:bg-sky-700')} onClick={() => beginProviderOAuth(p)} disabled={providerLoading!==null}>{providerLoading===p?'Connecting…':'Reconnect'}</Button>
+                      <Button size="sm" variant="outline" onClick={async () => { await api.disconnectIntegration(p, true); toast({ title: 'Disconnected', description: `${p} revoked and data purged.` }); const s = await api.getIntegrationsStatus(); if (s.ok) setStatus(s.data); }}>Disconnect & purge</Button>
+                    </div>
+                    {Array.isArray(status?.providerIngest?.[p]?.scopes) && status!.providerIngest![p]!.scopes!.length > 0 && (
+                      <div className="text-[11px] text-gray-400">Scopes: {status!.providerIngest![p]!.scopes!.join(', ')}</div>
+                    )}
+                  </div>
+                ))}
               </div>
               <div className="flex flex-wrap items-center gap-3 text-sm text-gray-400">
                 <span>Auto‑collect</span>
@@ -343,6 +377,11 @@ export default function IntegrationsHub() {
                 <Button size="sm" variant="outline" onClick={async () => { const next = schedule === 'daily_0200' ? 'hourly' : 'daily_0200'; setSchedule(next); await api.setEvidenceSchedule(next); toast({ title: 'Schedule saved', description: next === 'hourly' ? 'Hourly ingestion' : 'Daily at 02:00 UTC' }); }}>{schedule === 'daily_0200' ? 'Daily 02:00 UTC' : 'Hourly'}</Button>
               </div>
               <div className="text-xs text-gray-400">Filters: include {filters.includeSenders.join(', ') || '—'}; file types: {filters.fileTypes.join(', ') || '—'}; folders: {filters.folders.join(', ') || '—'}</div>
+              <div className="flex flex-wrap gap-2 text-xs">
+                <Input placeholder="Include senders (comma‑separated)" value={filters.includeSenders.join(', ')} onChange={(e) => setFilters(f => ({ ...f, includeSenders: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))} className="w-full md:w-64 border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" />
+                <Input placeholder="Folders (comma‑separated)" value={filters.folders.join(', ')} onChange={(e) => setFilters(f => ({ ...f, folders: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))} className="w-full md:w-64 border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" />
+                <Button size="sm" variant="outline" onClick={async () => { await api.setEvidenceFilters(filters); toast({ title: 'Filters saved', description: 'Your ingestion filters are active.' }); }}>Save Filters</Button>
+              </div>
               <div className="flex items-center gap-3 text-sm text-gray-400">
                 <span>Last ingest: {status?.lastIngest || 'Just now'}</span>
                 <Button size="sm" variant="outline" onClick={async () => { await api.startEvidenceIngest(); toast({ title: 'Ingestion started', description: 'We will notify you when new docs arrive.' }); }}>Ingest now</Button>
