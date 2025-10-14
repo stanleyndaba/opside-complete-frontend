@@ -350,6 +350,7 @@ export default function IntegrationsHub() {
           </CardContent>
         </Card>
 
+          </div>
         </div>
       </div>
     </PageLayout>
