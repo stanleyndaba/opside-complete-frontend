@@ -132,6 +132,15 @@ export default function CaseDetail() {
   const [caseData, setCaseData] = useState<any | null>(null);
   const { toast } = useToast();
 
+  const normalizeStatus = (s?: string): 'Open' | 'In Progress' | 'Approved' | 'Denied' | 'Unknown' => {
+    const v = (s || '').toLowerCase();
+    if (['denied', 'rejected'].includes(v)) return 'Denied';
+    if (['paid', 'paid out', 'approved'].includes(v)) return 'Approved';
+    if (['submitted', 'under review', 'in progress', 'processing'].includes(v)) return 'In Progress';
+    if (['guaranteed', 'awaiting approval', 'new', 'open'].includes(v)) return 'Open';
+    return 'Unknown';
+  };
+
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -237,10 +246,11 @@ export default function CaseDetail() {
 
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Current Status</label>
-                  <div className="mt-1">
-                    <Badge className={cn("font-medium", getStatusColor(effectiveCase.status))}>
-                      {effectiveCase.status}
+                  <div className="mt-1 flex items-center gap-2">
+                    <Badge variant="outline" className="font-medium">
+                      {normalizeStatus(effectiveCase.status)}
                     </Badge>
+                    <span className="text-xs text-muted-foreground">({effectiveCase.status})</span>
                   </div>
                 </div>
 
