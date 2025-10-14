@@ -165,7 +165,7 @@ export function Sidebar({
         {!isCollapsed ? (
           <div className="select-none flex items-center gap-2">
             <img src="/logo-abstract.svg" alt="Clario" className="h-6 w-6 rounded" />
-            <div className="font-brand text-xl tracking-wide text-gray-100 brand-sheen">Clario</div>
+            {/* Removed wordmark per request */}
           </div>
         ) : (
           <img src="/logo-abstract.svg" alt="Clario" className="h-6 w-6 rounded" />
