@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { format, subDays, startOfYear, startOfQuarter } from 'date-fns';
 import { CalendarIcon, Search, MoreHorizontal, FileText, Eye } from 'lucide-react';
@@ -110,6 +111,11 @@ export default function Recoveries() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [submittingBulk, setSubmittingBulk] = useState(false);
   const { toast } = useToast();
+  const [showParkedOnly, setShowParkedOnly] = useState(false);
+  const [autoSubmitHigh, setAutoSubmitHigh] = useState(false);
+  const [smartPromptOpen, setSmartPromptOpen] = useState(false);
+  const [promptClaim, setPromptClaim] = useState<any | null>(null);
+  const autoSubmittedRef = useRef<Set<string>>(new Set());
 
   // --- Opportunity Radar helpers ---
   const stableHash = (s: string): number => {
@@ -197,15 +203,17 @@ export default function Recoveries() {
 
   // Rank opportunities: prioritize by confidence * value
   const rankedClaims = useMemo(() => {
-    return filteredClaims
+    const base = filteredClaims
       .map(c => ({
         ...c,
         _confidence: getConfidence(c.id),
         _priority: getConfidence(c.id) * (c.guaranteedAmount || 0),
-        _evidence: getEvidenceStatus(c.id)
+        _evidence: getEvidenceStatus(c.id),
+        _matchedCount: Array.isArray((c as any).matchedDocs) ? (c as any).matchedDocs.length : ((c as any).matchedCount ?? 0),
       }))
       .sort((a, b) => b._priority - a._priority);
-  }, [filteredClaims]);
+    return showParkedOnly ? base.filter(c => c._confidence < 0.5) : base;
+  }, [filteredClaims, showParkedOnly]);
 
   // Calculate key metrics
   const keyMetrics = useMemo(() => {
