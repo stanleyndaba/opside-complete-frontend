@@ -174,71 +174,73 @@ export default function EvidenceLocker() {
               </div>
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-6">
             {loading && <div className="text-sm text-muted-foreground">Loading documents…</div>}
             {error && <div className="text-sm text-red-600">{error}</div>}
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="text-gray-300">Document Name</TableHead>
-                  <TableHead className="text-gray-300">Supplier</TableHead>
-                  <TableHead className="text-gray-300">Invoice #</TableHead>
-                  <TableHead className="text-gray-300">Upload Date</TableHead>
-                  <TableHead className="text-gray-300">Status</TableHead>
-                  <TableHead className="text-gray-300">Parsed Via</TableHead>
-                  <TableHead className="text-gray-300">Amount</TableHead>
-                  <TableHead className="text-gray-300">Matched Claims</TableHead>
-                  <TableHead className="text-gray-300">Linked SKUs</TableHead>
-                  <TableHead className="text-gray-300">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filtered.map(doc => <TableRow key={doc.id}>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <FileText className="h-4 w-4 text-gray-400" />
-                        <span className="font-medium text-gray-100">{doc.name}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>{doc.supplier || '—'}</TableCell>
-                    <TableCell>{doc.invoice || '—'}</TableCell>
-                    <TableCell>
-                      {new Date(doc.uploadDate).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell>
-                      {getStatusBadge(doc.status)}
-                    </TableCell>
-                    <TableCell>
-                      {doc.parsedVia && <Badge variant="outline" className="text-xs capitalize">{doc.parsedVia}</Badge>}
-                    </TableCell>
-                    <TableCell>{typeof doc.amount === 'number' ? `$${doc.amount.toFixed(2)}` : '—'}</TableCell>
-                    <TableCell>
-                      <div className="flex flex-wrap gap-1">
-                        {(doc.matchedClaims || []).map(id => (
-                          <Link key={id} to={`/recoveries/${id}`} className="text-xs px-2 py-0.5 rounded bg-white/5 border border-white/10 hover:bg-white/10">
-                            {id}
-                          </Link>
-                        ))}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <span className="font-medium text-gray-100">{doc.linkedSKUs}</span>
-                      {doc.linkedSKUs > 0 && <span className="text-sm text-gray-400 ml-1">SKUs</span>}
-                    </TableCell>
-                    <TableCell>
-                    {doc.status === 'verified' ? <Link to={`/evidence-locker/document/${doc.id}`}>
-                          <Button variant="ghost" size="sm">
+            <div className="overflow-x-auto">
+              <Table className="min-w-[1100px]">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-gray-300 whitespace-nowrap">Document Name</TableHead>
+                    <TableHead className="text-gray-300 whitespace-nowrap">Supplier</TableHead>
+                    <TableHead className="text-gray-300 whitespace-nowrap">Invoice #</TableHead>
+                    <TableHead className="text-gray-300 whitespace-nowrap">Upload Date</TableHead>
+                    <TableHead className="text-gray-300 whitespace-nowrap">Status</TableHead>
+                    <TableHead className="text-gray-300 whitespace-nowrap">Parsed Via</TableHead>
+                    <TableHead className="text-gray-300 whitespace-nowrap">Amount</TableHead>
+                    <TableHead className="text-gray-300 whitespace-nowrap">Matched Claims</TableHead>
+                    <TableHead className="text-gray-300 whitespace-nowrap">Linked SKUs</TableHead>
+                    <TableHead className="text-gray-300 whitespace-nowrap">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filtered.map(doc => <TableRow key={doc.id}>
+                      <TableCell className="whitespace-nowrap">
+                        <div className="flex items-center gap-2">
+                          <FileText className="h-4 w-4 text-gray-400" />
+                          <span className="font-medium text-gray-100">{doc.name}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap">{doc.supplier || '—'}</TableCell>
+                      <TableCell className="whitespace-nowrap">{doc.invoice || '—'}</TableCell>
+                      <TableCell className="whitespace-nowrap">
+                        {new Date(doc.uploadDate).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap">
+                        {getStatusBadge(doc.status)}
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap">
+                        {doc.parsedVia && <Badge variant="outline" className="text-xs capitalize">{doc.parsedVia}</Badge>}
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap">{typeof doc.amount === 'number' ? `$${doc.amount.toFixed(2)}` : '—'}</TableCell>
+                      <TableCell>
+                        <div className="flex flex-wrap gap-1">
+                          {(doc.matchedClaims || []).map(id => (
+                            <Link key={id} to={`/recoveries/${id}`} className="text-xs px-2 py-0.5 rounded bg-white/5 border border-white/10 hover:bg-white/10">
+                              {id}
+                            </Link>
+                          ))}
+                        </div>
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap">
+                        <span className="font-medium text-gray-100">{doc.linkedSKUs}</span>
+                        {doc.linkedSKUs > 0 && <span className="text-sm text-gray-400 ml-1">SKUs</span>}
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap">
+                        {doc.status === 'verified' ? <Link to={`/evidence-locker/document/${doc.id}`}>
+                            <Button variant="ghost" size="sm">
+                              <Eye className="w-4 h-4 mr-1" />
+                              View Details
+                            </Button>
+                          </Link> : <Button variant="ghost" size="sm" disabled>
                             <Eye className="w-4 h-4 mr-1" />
                             View Details
-                          </Button>
-                        </Link> : <Button variant="ghost" size="sm" disabled>
-                          <Eye className="w-4 h-4 mr-1" />
-                          View Details
-                        </Button>}
-                    </TableCell>
-                  </TableRow>)}
-              </TableBody>
-            </Table>
+                          </Button>}
+                      </TableCell>
+                    </TableRow>)}
+                </TableBody>
+              </Table>
+            </div>
           </CardContent>
         </Card>
           </div>
