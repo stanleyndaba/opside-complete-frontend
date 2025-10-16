@@ -613,8 +613,16 @@ export default function CaseDetail() {
                     <Badge variant="outline" className="text-xs">Evidence: {derivedEvidence}</Badge>
                     <Badge variant="outline" className="text-xs">Matched docs: {matchedCount}</Badge>
                     <div className="ml-auto flex gap-2">
-                      <Button size="sm" variant="outline" onClick={() => window.open(api.getRecoveryDocumentUrl(effectiveCase.id), '_blank')}>
-                        <FileText className="h-3.5 w-3.5 mr-1" /> Proof
+                      <Button size="sm" variant="outline" onClick={() => {
+                        const url = api.getRecoveryDocumentUrl(effectiveCase.id);
+                        // If backend serves a single composed proof, open it; otherwise route to document detail
+                        if (url) {
+                          window.open(url, '_blank');
+                        } else if (Array.isArray(matchedDocs) && matchedDocs.length > 0) {
+                          window.open(`/documents/${encodeURIComponent(matchedDocs[0].id)}`, '_blank');
+                        }
+                      }}>
+                        <FileText className="h-3.5 w-3.5 mr-1" /> Proof of Document
                       </Button>
                       <Button size="sm" asChild>
                         <Link to={`/recoveries`}>
