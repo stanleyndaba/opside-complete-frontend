@@ -5,6 +5,21 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Skeleton } from "@/components/ui/skeleton";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import NotFound from "./pages/NotFound";
+import Reports from "./pages/Reports";
+import Settings from "./pages/Settings";
+import IntegrationsHub from "./pages/IntegrationsHub";
+import Recoveries from "./pages/Recoveries";
+import CaseDetail from "./pages/CaseDetail";
+import SmartInventorySync from "./pages/SmartInventorySync";
+import Billing from "./pages/Billing";
+import TeamManagement from "./pages/TeamManagement";
+import ExportCenter from "./pages/ExportCenter";
+import NotificationHub from "./pages/NotificationHub";
+import ApiAccess from "./pages/ApiAccess";
+import Help from "./pages/Help";
+import WhatsNew from "./pages/WhatsNew";
+import { EVIDENCE_LOCKER_ENABLED } from "@/lib/featureFlags";
 
 // Route-level code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -24,21 +39,15 @@ const TeamManagement = lazy(() => import("./pages/TeamManagement"));
 const ExportCenter = lazy(() => import("./pages/ExportCenter"));
 const NotificationHub = lazy(() => import("./pages/NotificationHub"));
 const ApiAccess = lazy(() => import("./pages/ApiAccess"));
+const ApiLanding = lazy(() => import("./pages/ApiLanding"));
 const Help = lazy(() => import("./pages/Help"));
 const WhatsNew = lazy(() => import("./pages/WhatsNew"));
 const OAuthCallback = lazy(() => import("./pages/OAuthCallback"));
 const OAuthSuccess = lazy(() => import("./pages/OAuthSuccess"));
 const StripeCallback = lazy(() => import("./pages/StripeCallback"));
-const About = lazy(() => import("./pages/About"));
-const Careers = lazy(() => import("./pages/Careers"));
-
-// New Evidence Pages
-const EvidenceOnboarding = lazy(() => import("./pages/EvidenceOnboarding"));
-const EvidenceSearch = lazy(() => import("./pages/EvidenceSearch"));
-
-// Shock & Awe Flow Pages
-const AmazonSandbox = lazy(() => import("./pages/AmazonSandbox"));
-const AnalyzingScreen = lazy(() => import("./pages/AnalyzingScreen"));
+const AutomationRules = lazy(() => import("./pages/AutomationRules"));
+const Thresholds = lazy(() => import("./pages/Thresholds"));
+const Whitelist = lazy(() => import("./pages/Whitelist"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -71,45 +80,25 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Suspense fallback={<RouteSkeleton />}>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/app" element={<Dashboard />} />
-            <Route path="/sync" element={<Sync />} />
-            {/* Market/Stocks pages removed for FBA MVP focus */}
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/integrations-hub" element={<IntegrationsHub />} />
-            <Route path="/reports" element={<Reports />} />
-            <Route path="/recoveries" element={<Recoveries />} />
-            <Route path="/recoveries/:caseId" element={<CaseDetail />} />
-            <Route path="/smart-inventory-sync" element={<SmartInventorySync />} />
-            <Route path="/evidence-locker" element={<EvidenceLocker />} />
-            <Route path="/documents/:id" element={<DocumentDetail />} />
-            <Route path="/billing" element={<Billing />} />
-            <Route path="/team" element={<TeamManagement />} />
-            <Route path="/export-center" element={<ExportCenter />} />
-            <Route path="/notifications" element={<NotificationHub />} />
-            <Route path="/api-access" element={<ApiAccess />} />
-            <Route path="/help" element={<Help />} />
-            <Route path="/whats-new" element={<WhatsNew />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/careers" element={<Careers />} />
-            <Route path="/evidence-onboarding" element={<EvidenceOnboarding />} />
-            <Route path="/evidence-search" element={<EvidenceSearch />} />
-            
-            {/* Auth & OAuth Routes */}
-            <Route path="/auth/callback" element={<OAuthCallback />} />
-            <Route path="/auth/success" element={<OAuthSuccess />} />
-            <Route path="/stripe/callback" element={<StripeCallback />} />
-            
-            {/* Shock & Awe Flow Routes */}
-            <Route path="/auth/amazon-sandbox" element={<AmazonSandbox />} />
-            <Route path="/auth/analyzing" element={<AnalyzingScreen />} />
-            
-            {/* 404 Catch All */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/landing" element={<Landing />} />
+          <Route path="/reports" element={<Reports />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/integrations-hub" element={<IntegrationsHub />} />
+          <Route path="/recoveries" element={<Recoveries />} />
+          <Route path="/recoveries/:caseId" element={<CaseDetail />} />
+          <Route path="/smart-inventory-sync" element={<SmartInventorySync />} />
+          <Route path="/billing" element={<Billing />} />
+          <Route path="/team-management" element={<TeamManagement />} />
+          <Route path="/export" element={<ExportCenter />} />
+          <Route path="/notifications" element={<NotificationHub />} />
+          <Route path="/api" element={<ApiAccess />} />
+          <Route path="/help" element={<Help />} />
+          <Route path="/whats-new" element={<WhatsNew />} />
+          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

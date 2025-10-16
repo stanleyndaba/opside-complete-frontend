@@ -1,130 +1,118 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { ArrowUpDown, Globe, ChevronDown, Search } from 'lucide-react';
+import React from 'react';
+import { Search, User, Settings, Users, CreditCard, Zap, HelpCircle, Sparkles, MessageSquare, LogOut, Building2, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useAuth } from '@/hooks/use-auth';
 import { NotificationBell } from './NotificationBell';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { useAuth } from '@/hooks/useAuth';
+
 interface NavbarProps {
   className?: string;
   sidebarCollapsed?: boolean;
   onToggleSidebar?: () => void;
 }
+
 export function Navbar({
   className,
   sidebarCollapsed = false,
   onToggleSidebar
 }: NavbarProps) {
-  const location = useLocation();
-  const isTransparent =
-    location.pathname === '/' ||
-    location.pathname.startsWith('/settings') ||
-    location.pathname.startsWith('/careers') ||
-    location.pathname.startsWith('/api-access') ||
-    location.pathname.startsWith('/billing') ||
-    location.pathname.startsWith('/app') ||
-    location.pathname.startsWith('/recoveries') ||
-    location.pathname.startsWith('/reports') ||
-    location.pathname.startsWith('/whats-new') ||
-    location.pathname.startsWith('/help');
-
-  type LanguageOption = {
-    code: string;
-    country: string;
-    language: string;
-    flag: string;
-  };
-
-  const LANGUAGE_OPTIONS: LanguageOption[] = [
-    { code: 'us-en', country: 'USA', language: 'English', flag: '🇺🇸' },
-    { code: 'ca-en', country: 'Canada', language: 'English', flag: '🇨🇦' },
-    { code: 'ca-fr', country: 'Canada', language: 'Français', flag: '🇨🇦' },
-    { code: 'gb-en', country: 'United Kingdom', language: 'English', flag: '🇬🇧' },
-    { code: 'au-en', country: 'Australia', language: 'English', flag: '🇦🇺' },
-    { code: 'de-de', country: 'Germany', language: 'Deutsch', flag: '🇩🇪' },
-    { code: 'fr-fr', country: 'France', language: 'Français', flag: '🇫🇷' },
-    { code: 'es-es', country: 'Spain', language: 'Español', flag: '🇪🇸' },
-    { code: 'it-it', country: 'Italy', language: 'Italiano', flag: '🇮🇹' },
-    { code: 'nl-nl', country: 'Netherlands', language: 'Nederlands', flag: '🇳🇱' },
-  ];
-
-  const [selectedLanguageCode, setSelectedLanguageCode] = useState<string>(() =>
-    typeof window !== 'undefined' ? localStorage.getItem('clario.langPreference') || 'us-en' : 'us-en'
-  );
-
-  useEffect(() => {
-    try {
-      localStorage.setItem('clario.langPreference', selectedLanguageCode);
-    } catch {}
-  }, [selectedLanguageCode]);
-
-  const selectedLanguage = useMemo<LanguageOption>(() => {
-    return LANGUAGE_OPTIONS.find((o) => o.code === selectedLanguageCode) || LANGUAGE_OPTIONS[0];
-  }, [selectedLanguageCode]);
-  return <header className={cn(
-    "sticky top-0 z-30 transition-all duration-300",
-    sidebarCollapsed ? "ml-16" : "ml-64",
-    isTransparent ? "bg-transparent border-transparent" : "bg-background/90 backdrop-blur-sm border-b",
-    className
-  )}>
-      <div className="container flex items-center h-16 px-4 font-body">
-        {/* Left */}
-        <div className="flex items-center gap-3">
-          <div className="hidden md:flex items-center gap-4 ml-2" />
-        </div>
-        {/* Center - Search */}
-        <div className="flex-1 max-w-xl mx-4 hidden md:block">
-          <div className="relative">
-            <Search className={cn(
-              'absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4',
-              isTransparent ? 'text-gray-300' : 'text-muted-foreground'
-            )} />
-            <Input
-              aria-label="Search"
-              placeholder="search invoices, products, documents, and more"
-              variant={isTransparent ? 'dark' : 'default'}
-              className="pl-9 h-9 rounded-md"
-            />
-          </div>
-        </div>
-        {/* Right side - Language, Sync, Notifications */}
+  const { user, signInWithAmazon, signOut } = useAuth();
+  return <header className={cn("bg-background/95 backdrop-blur-sm sticky top-0 z-30 border-b transition-all duration-300", sidebarCollapsed ? "ml-16" : "ml-56", className)}>
+      <div className="container flex items-center justify-end h-16 px-4">
+        {/* Right side - Notification Bell and Profile Icon */}
         <div className="flex items-center gap-4 ml-auto">
-          {/* Language selector */}
+          <div className="flex items-center gap-1 text-xs">
+            <Activity className={`h-4 w-4 ${isLoading ? 'text-yellow-500' : (health?.status === 'ok' ? 'text-green-600' : 'text-red-600')}`} />
+            <span className="text-muted-foreground hidden md:inline">
+              {isLoading ? 'Checking' : (health?.status === 'ok' ? 'All systems' : 'Degraded')}
+            </span>
+          </div>
+          <NotificationBell />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button
-                className={cn(
-                  'inline-flex items-center gap-2 h-9 px-3 rounded-md text-sm transition-colors',
-                  isTransparent ? 'hover:bg-white/10 text-gray-200' : 'hover:bg-accent hover:text-accent-foreground'
-                )}
-                aria-label="Language and region"
-              >
-                <Globe className="h-4 w-4" />
-                <span>
-                  {selectedLanguage.country} | {selectedLanguage.language}
-                </span>
-                <ChevronDown className="h-4 w-4 opacity-70" />
-              </button>
+              <Avatar className="h-9 w-9 transition-transform duration-200 hover:scale-105 cursor-pointer">
+                <AvatarFallback className="bg-black text-white">
+                  <User className="h-4 w-4" />
+                </AvatarFallback>
+              </Avatar>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="min-w-[220px]">
-              {LANGUAGE_OPTIONS.map((opt) => (
-                <DropdownMenuItem key={opt.code} onClick={() => setSelectedLanguageCode(opt.code)} className="gap-2">
-                  <span className="text-base leading-none">{opt.flag}</span>
-                  <span className="font-medium">{opt.country}</span>
-                  <span className="text-muted-foreground">| {opt.language}</span>
+            <DropdownMenuContent side="bottom" align="end" className="w-64 bg-white border border-gray-200 shadow-lg">
+              {isDemo && (
+                <>
+                  <DropdownMenuItem onClick={exitDemo} className="flex items-center gap-2 cursor-pointer">
+                    <Sparkles className="h-4 w-4" />
+                    <span>Exit Demo Mode</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                </>
+              )}
+              {/* Section 1: Identity */}
+              <DropdownMenuLabel className="pb-2">
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-black">{user?.name ?? 'Guest'}</p>
+                  <p className="text-xs text-gray-600">{user?.email ?? ''}</p>
+                  <div className="flex items-center gap-1 pt-1">
+                    <Building2 className="h-3 w-3 text-gray-500" />
+                    <p className="text-xs text-gray-500">Viewing: {user ? "Your Amazon Store" : "Demo Store"}</p>
+                  </div>
+                </div>
+              </DropdownMenuLabel>
+              
+              <DropdownMenuSeparator />
+              
+              {/* Section 2: Account Management */}
+              <DropdownMenuItem asChild>
+                <Link to="/settings" className="flex items-center gap-2 cursor-pointer">
+                  <Settings className="h-4 w-4" />
+                  <span>Settings</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/team-management" className="flex items-center gap-2 cursor-pointer">
+                  <Users className="h-4 w-4" />
+                  <span>Team Management</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/billing" className="flex items-center gap-2 cursor-pointer">
+                  <CreditCard className="h-4 w-4" />
+                  <span>Billing & Value</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/integrations-hub" className="flex items-center gap-2 cursor-pointer">
+                  <Zap className="h-4 w-4" />
+                  <span>Integrations Hub</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => startSync.mutate()} className="flex items-center gap-2 cursor-pointer">
+                <RefreshCw className="h-4 w-4" />
+                <span>{startSync.isPending ? 'Starting…' : 'Start Sync'}</span>
+              </DropdownMenuItem>
+              
+              <DropdownMenuSeparator />
+              
+              {/* Section 3: Resources & Support */}
+              {/* Trim non-essential menu items for MVP focus */}
+              
+              <DropdownMenuSeparator />
+              
+              {/* Section 4: Session Control */}
+              {user ? (
+                <DropdownMenuItem onClick={signOut} className="flex items-center gap-2 cursor-pointer text-red-600 focus:text-red-600">
+                  <LogOut className="h-4 w-4" />
+                  <span>Log Out</span>
                 </DropdownMenuItem>
-              ))}
+              ) : (
+                <DropdownMenuItem onClick={signInWithAmazon} className="flex items-center gap-2 cursor-pointer">
+                  <Zap className="h-4 w-4" />
+                  <span>Sign in with Amazon</span>
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
-          {/* Labeled sync button */}
-          <button title="Start sync now" className="inline-flex items-center gap-2 h-9 px-3 rounded-md bg-emerald-500 text-white hover:bg-emerald-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 active:bg-emerald-600 transition-colors" onClick={() => {
-            // Always route to the Sync page which starts/monitors the run
-            window.location.href = '/sync';
-          }}>
-            <ArrowUpDown className="h-4 w-4" />
-            <span className="text-sm">Sync</span>
-          </button>
-          <NotificationBell />
         </div>
       </div>
     </header>;

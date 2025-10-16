@@ -50,6 +50,7 @@ const updates = [{
   content: ["In-browser PDF preview", "Image thumbnail gallery", "Quick document search and filtering"],
   cta: "Visit the Evidence Locker to see your documents in a whole new way."
 }];
+
 const getTagIcon = (tag: string) => {
   switch (tag) {
     case 'NEW FEATURE':
@@ -62,6 +63,7 @@ const getTagIcon = (tag: string) => {
       return Star;
   }
 };
+
 export default function WhatsNew() {
   // Group by month label
   const groups = updates.reduce<Record<string, typeof updates>>((acc, u) => {
@@ -70,17 +72,16 @@ export default function WhatsNew() {
     acc[month].push(u);
     return acc;
   }, {});
+
   const orderedMonths = Object.keys(groups);
+
   return (
     <PageLayout title="What's New at Clario">
-      <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
-          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-300 space-y-8">
+      <div className="space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-gray-100 mb-2 font-brand">What's New at Clario</h1>
-          <p className="text-muted-foreground font-body">
+          <h1 className="text-3xl font-bold text-foreground mb-2">What's New at Clario</h1>
+          <p className="text-muted-foreground">
             We're relentlessly improving our platform to find and recover more for you. Here's a log of our latest updates.
           </p>
         </div>
@@ -106,16 +107,16 @@ export default function WhatsNew() {
                             {update.tag}
                           </Badge>
                         </div>
-                        <h2 className="text-xl font-semibold text-gray-100 font-brand">
+                        <h2 className="text-xl font-semibold text-foreground">
                           {update.title}
                         </h2>
                       </CardHeader>
                       <CardContent className="space-y-4">
-                        <p className="text-muted-foreground leading-relaxed font-body">
+                        <p className="text-muted-foreground leading-relaxed">
                           {update.description}
                         </p>
                         <div className="space-y-2">
-                          <h3 className="font-medium text-gray-100">What's included:</h3>
+                          <h3 className="font-medium text-foreground">What's included:</h3>
                           <ul className="space-y-1 text-sm text-muted-foreground">
                             {update.content.map((item, index) => (
                               <li key={index} className="flex items-start gap-2">
@@ -137,17 +138,51 @@ export default function WhatsNew() {
           ))}
         </div>
 
+        {/* Coming Soon Section */}
+        <Card className="overflow-hidden border border-white/10 bg-white/5">
+          <CardHeader className="space-y-4">
+            <h2 className="text-xl font-semibold text-foreground">COMING SOON: The Zero-Effort Evidence Engine</h2>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-3 text-sm leading-relaxed text-foreground">
+              <p>To our founding users,</p>
+              <p>
+                Thank you for being a part of the Clario journey. You're already experiencing our "Glass Box" approach to recoveries—finding claims and linking them directly to the proof.
+              </p>
+              <p>But we're just getting started.</p>
+              <p>
+                We are currently building the next evolution of Clario: a proactive, intelligent engine designed to eliminate the single most annoying part of the reimbursement process—digging for documents.
+              </p>
+              <p className="font-medium">What's Coming:</p>
+              <p>
+                Imagine a world where you never have to search for an old supplier invoice again. The Clario Evidence Engine will securely connect to your email (Gmail/Outlook) and cloud storage to automatically build a complete, private library of your financial proof.
+              </p>
+              <p>
+                When we find a claim, our system will instantly find and match the correct invoice from your library, ensuring you get the maximum possible refund with zero work from you. No more email requests. No more digging through folders. Just faster, larger recoveries.
+              </p>
+              <p>This is more than a recovery tool. This is your automated forensic accountant.</p>
+              <p className="font-medium">Get Early Access:</p>
+              <p>
+                This feature is currently in a closed beta. As a founding member, you have the first opportunity to join the waitlist.
+              </p>
+            </div>
+            <div>
+              <a href="/integrations-hub" className="inline-flex items-center justify-center rounded-md border border-primary px-4 py-2 text-sm font-medium text-primary hover:bg-primary/5">
+                Join the Evidence Engine Beta Waitlist →
+              </a>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Suggestions Banner */}
         <div className="py-6">
-          <div className="rounded-md border border-white/10 bg-white/5 p-4 text-center">
-            <p className="text-sm text-gray-400">
+          <div className="rounded-md border border-blue-200 bg-blue-50 p-4 text-center">
+            <p className="text-sm text-blue-900">
               Have suggestions for new features? We'd love to hear from you!{' '}
-              <a href="/help" className="text-emerald-400 hover:underline font-medium">
+              <a href="/help" className="text-blue-700 hover:underline font-medium">
                 Contact our support team
               </a>
             </p>
-          </div>
-        </div>
           </div>
         </div>
       </div>

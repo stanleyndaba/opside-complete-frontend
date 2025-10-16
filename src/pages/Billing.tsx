@@ -99,61 +99,62 @@ export default function Billing() {
       <div className="relative -m-4 lg:-m-6">
         <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
-          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-300 space-y-8">
+          <div className="relative container mx-auto px-6 pt-6 pb-0 text-gray-300 space-y-8">
         {/* Current Plan & Payment Method */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Your Plan Card */}
-          <Card className="bg-white/5 border-white/10 text-gray-300">
+          <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-gray-200">
-                <Shield className="h-5 w-5 text-emerald-400" />
+              <CardTitle className="flex items-center gap-2">
+                <Shield className="h-5 w-5 text-primary" />
                 Your Plan
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <h3 className="text-lg font-semibold text-gray-100">
+                <h3 className="text-lg font-semibold text-foreground">
                   Opside Performance Plan
                 </h3>
-                <div className="mt-3 p-4 rounded-lg border border-white/10 bg-white/5">
-                  <p className="text-sm text-gray-400 leading-relaxed">
-                    We charge a <span className="font-semibold text-gray-200">20% commission only</span> on the funds we successfully recover for you. 
-                    <span className="font-medium text-emerald-400"> No recovery, no fee.</span>
+                <div className="mt-3 p-4 bg-muted/50 rounded-lg border-l-4 border-primary">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    We charge a <span className="font-semibold text-foreground">20% commission only</span> on the funds we successfully recover for you. 
+                    <span className="font-medium text-primary"> No recovery, no fee.</span>
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-2 text-sm text-emerald-400">
+              <div className="flex items-center gap-2 text-sm text-emerald-600">
                 <Check className="h-4 w-4" />
-                <span className="text-gray-300">Active and monitoring your account 24/7</span>
+                <span>Active and monitoring your account 24/7</span>
               </div>
             </CardContent>
           </Card>
 
           {/* Payment Method Card */}
-          <Card className="bg-white/5 border-white/10 text-gray-300">
+          <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-gray-200">
-                <CreditCard className="h-5 w-5 text-emerald-400" />
+              <CardTitle className="flex items-center gap-2">
+                <CreditCard className="h-5 w-5 text-primary" />
                 Primary Payment Method
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center justify-between p-4 rounded-lg border border-white/10 bg-white/5">
+              <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-black/20 rounded border border-white/10">
-                    <CreditCard className="h-4 w-4 text-gray-400" />
+                  <div className="p-2 bg-background rounded border">
+                    <CreditCard className="h-4 w-4 text-muted-foreground" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-200">Visa ending in 4242</p>
-                    <p className="text-sm text-gray-400">Expires 12/2027</p>
+                    <p className="font-medium text-foreground">Visa ending in 4242</p>
+                    <p className="text-sm text-muted-foreground">Expires 12/2027</p>
                   </div>
                 </div>
-                <Badge variant="outline" className="border-emerald-300/30 text-emerald-300">
+                <Badge variant="outline" className="text-emerald-600 border-emerald-200">
                   Active
                 </Badge>
               </div>
               <Button 
-                className="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-semibold"
+                variant="outline" 
+                className="w-full"
                 onClick={handleStripePaymentUpdate}
               >
                 Update Payment Method
@@ -163,16 +164,16 @@ export default function Billing() {
         </div>
 
         {/* Billing History */}
-        <Card className="bg-white/5 border-white/10 text-gray-300">
+        <Card>
           <CardHeader>
             <div className="flex justify-between items-start">
               <div>
-                <CardTitle className="text-xl font-semibold text-gray-200">Billing History</CardTitle>
-                <p className="text-sm text-gray-400 mt-1">
+                <CardTitle className="text-xl font-semibold">Billing History</CardTitle>
+                <p className="text-sm text-muted-foreground mt-1">
                   Complete transparency into every charge and recovery
                 </p>
               </div>
-              <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold">
+              <Button variant="outline" size="sm">
                 <Download className="h-4 w-4 mr-2" />
                 Export All
               </Button>
@@ -194,11 +195,11 @@ export default function Billing() {
                 </TableHeader>
                 <TableBody>
                   {mockInvoices.map((invoice) => (
-                    <TableRow key={invoice.id} className="hover:bg-white/5">
+                    <TableRow key={invoice.id} className="hover:bg-muted/50">
                       <TableCell>
                         <Link 
                           to={`/billing/invoice/${invoice.id}`}
-                          className="font-mono text-sm text-emerald-400 hover:underline flex items-center gap-1"
+                          className="font-mono text-sm text-primary hover:underline flex items-center gap-1"
                         >
                           {invoice.id}
                           <ChevronRight className="h-3 w-3" />
@@ -249,10 +250,10 @@ export default function Billing() {
         </Card>
 
         {/* Frequently Asked Billing Questions */}
-        <Card className="bg-white/5 border-white/10 text-gray-300">
+        <Card>
           <CardHeader>
-            <CardTitle className="text-xl font-semibold text-gray-200">Frequently Asked Billing Questions</CardTitle>
-            <p className="text-sm text-gray-400">
+            <CardTitle className="text-xl font-semibold">Frequently Asked Billing Questions</CardTitle>
+            <p className="text-sm text-muted-foreground">
               Quick answers to common billing and payment questions
             </p>
           </CardHeader>
@@ -262,7 +263,7 @@ export default function Billing() {
                 <AccordionTrigger className="text-left">
                   When will I be charged?
                 </AccordionTrigger>
-                <AccordionContent className="text-gray-400 leading-relaxed">
+                <AccordionContent className="text-muted-foreground leading-relaxed">
                   You are only charged when we successfully recover money for you. We generate invoices monthly for all recoveries completed in that period, with payment automatically processed from your saved payment method within 7 days of invoice generation.
                 </AccordionContent>
               </AccordionItem>
@@ -271,7 +272,7 @@ export default function Billing() {
                 <AccordionTrigger className="text-left">
                   What happens if a recovery is later reversed by Amazon?
                 </AccordionTrigger>
-                <AccordionContent className="text-gray-400 leading-relaxed">
+                <AccordionContent className="text-muted-foreground leading-relaxed">
                   In the rare event that Amazon reverses a recovery, we automatically issue you a full credit on your next invoice. If no future invoice exists, we process a direct refund to your payment method within 5-7 business days.
                 </AccordionContent>
               </AccordionItem>
@@ -280,7 +281,7 @@ export default function Billing() {
                 <AccordionTrigger className="text-left">
                   How do I update my company's VAT number?
                 </AccordionTrigger>
-                <AccordionContent className="text-gray-400 leading-relaxed">
+                <AccordionContent className="text-muted-foreground leading-relaxed">
                   You can update your VAT number and other billing details by clicking "Update Payment Method" above, or by contacting our support team. Changes will be reflected on your next invoice.
                 </AccordionContent>
               </AccordionItem>
@@ -289,7 +290,7 @@ export default function Billing() {
                 <AccordionTrigger className="text-left">
                   Can I get invoices automatically sent to my accountant?
                 </AccordionTrigger>
-                <AccordionContent className="text-gray-400 leading-relaxed">
+                <AccordionContent className="text-muted-foreground leading-relaxed">
                   Yes! Contact our support team to set up automatic invoice forwarding to additional email addresses. You can add multiple recipients and they'll receive a copy of every invoice automatically.
                 </AccordionContent>
               </AccordionItem>
@@ -298,7 +299,7 @@ export default function Billing() {
                 <AccordionTrigger className="text-left">
                   How secure is my payment information?
                 </AccordionTrigger>
-                <AccordionContent className="text-gray-400 leading-relaxed">
+                <AccordionContent className="text-muted-foreground leading-relaxed">
                   All payment processing is handled by Stripe, a PCI DSS Level 1 certified payment processor. We never store your full credit card details on our servers - only encrypted tokens that allow us to process payments securely.
                 </AccordionContent>
               </AccordionItem>
@@ -308,22 +309,22 @@ export default function Billing() {
 
         {/* Need More Help */}
         <div className="text-center py-6">
-          <div className="inline-flex items-center gap-2 text-sm text-gray-400">
+          <div className="inline-flex items-center gap-2 text-sm text-muted-foreground">
             <AlertCircle className="h-4 w-4" />
             <span>Have a specific billing question?</span>
           </div>
           <div className="mt-2">
             <Link 
               to="/help" 
-              className="text-emerald-400 hover:underline font-medium"
+              className="text-primary hover:underline font-medium"
             >
               Contact our support team
             </Link>
           </div>
         </div>
-          </div>
-        </div>
-      </div>
+          </div>{/* container */}
+        </div>{/* blueprint bg */}
+      </div>{/* outer wrapper */}
     </PageLayout>
   );
 }

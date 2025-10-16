@@ -9,8 +9,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { format, subDays, startOfYear, startOfQuarter } from 'date-fns';
-import { CalendarIcon, Download, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
+import { CalendarIcon, Download, FileText, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { EVIDENCE_LOCKER_ENABLED } from '@/lib/featureFlags';
 import type { DateRange } from 'react-day-picker';
 
 // Mock data for claims
@@ -332,30 +332,73 @@ export default function Reports() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Claim Type</TableHead>
-                  <TableHead>Claims Filed</TableHead>
-                  <TableHead>Amount Recovered</TableHead>
-                  <TableHead>% of Total</TableHead>
+                  <TableHead className="cursor-pointer" onClick={() => handleSort('dateCreated')}>
+                    <div className="flex items-center gap-2">
+                      Claim ID
+                      <SortIcon field="dateCreated" />
+                    </div>
+                  </TableHead>
+                  <TableHead className="cursor-pointer" onClick={() => handleSort('dateCreated')}>
+                    <div className="flex items-center gap-2">
+                      Date Created
+                      <SortIcon field="dateCreated" />
+                    </div>
+                  </TableHead>
+                  <TableHead className="cursor-pointer" onClick={() => handleSort('claimType')}>
+                    <div className="flex items-center gap-2">
+                      Claim Type
+                      <SortIcon field="claimType" />
+                    </div>
+                  </TableHead>
+                  <TableHead className="cursor-pointer" onClick={() => handleSort('status')}>
+                    <div className="flex items-center gap-2">
+                      Status
+                      <SortIcon field="status" />
+                    </div>
+                  </TableHead>
+                  <TableHead className="cursor-pointer" onClick={() => handleSort('amountRecovered')}>
+                    <div className="flex items-center gap-2">
+                      Amount Recovered
+                      <SortIcon field="amountRecovered" />
+                    </div>
+                  </TableHead>
+                  <TableHead className="cursor-pointer" onClick={() => handleSort('payoutDate')}>
+                    <div className="flex items-center gap-2">
+                      Payout Date
+                      <SortIcon field="payoutDate" />
+                    </div>
+                  </TableHead>
+                  {EVIDENCE_LOCKER_ENABLED ? <TableHead>Evidence</TableHead> : null}
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {(() => {
-                  const totalsByType: Record<string, { count: number; amount: number }> = {};
-                  filteredClaims.forEach(c => {
-                    totalsByType[c.claimType] = totalsByType[c.claimType] || { count: 0, amount: 0 };
-                    totalsByType[c.claimType].count += 1;
-                    totalsByType[c.claimType].amount += c.amountRecovered;
-                  });
-                  const grandTotal = Object.values(totalsByType).reduce((s, t) => s + t.amount, 0);
-                  return Object.entries(totalsByType).map(([type, t]) => (
-                    <TableRow key={type}>
-                      <TableCell>{type}</TableCell>
-                      <TableCell>{t.count}</TableCell>
-                      <TableCell className="font-medium">{formatCurrency(t.amount)}</TableCell>
-                      <TableCell>{grandTotal > 0 ? ((t.amount / grandTotal) * 100).toFixed(1) : '0.0'}%</TableCell>
-                    </TableRow>
-                  ));
-                })()}
+                {filteredClaims.map(claim => <TableRow key={claim.id}>
+                    <TableCell>
+                      <Button variant="link" className="p-0 h-auto text-blue-600 hover:text-blue-800">
+                        {claim.id}
+                      </Button>
+                    </TableCell>
+                    <TableCell>{format(new Date(claim.dateCreated), 'MMM dd, yyyy')}</TableCell>
+                    <TableCell>{claim.claimType}</TableCell>
+                    <TableCell>
+                      <Badge className={getStatusColor(claim.status)}>
+                        {claim.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="font-medium">{formatCurrency(claim.amountRecovered)}</TableCell>
+                    <TableCell>
+                      {claim.payoutDate ? format(new Date(claim.payoutDate), 'MMM dd, yyyy') : '-'}
+                    </TableCell>
+                    {EVIDENCE_LOCKER_ENABLED ? (
+                      <TableCell>
+                        <Button variant="ghost" size="sm" asChild>
+                          <a href={`/evidence-locker/document/${claim.evidenceId}`}>
+                            <FileText className="h-4 w-4" />
+                          </a>
+                        </Button>
+                      </TableCell>
+                    ) : null}
+                  </TableRow>)}
               </TableBody>
             </Table>
           </CardContent>

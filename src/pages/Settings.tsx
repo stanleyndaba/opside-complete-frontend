@@ -244,9 +244,7 @@ const Settings = () => {
               <CardContent>
                 <div className="flex items-center justify-between p-4 border border-white/10 rounded-lg bg-white/5">
                   <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-lg bg-white/10 flex items-center justify-center border border-white/10">
-                      <img src="/lovable-uploads/14f98d63-9a1a-4128-8021-1d840d778ea5.png" alt="Amazon Seller Central logo" className="h-7 w-7 object-contain" />
-                    </div>
+                    <img src="/lovable-uploads/14f98d63-9a1a-4128-8021-1d840d778ea5.png" alt="Amazon Seller Central logo" className="w-20 h-12 object-contain" />
                     <div>
                       <p className="font-medium text-gray-200">Amazon Seller Central</p>
                       <p className="text-sm text-gray-400">Connected • Last sync: 5 mins ago</p>
@@ -259,23 +257,25 @@ const Settings = () => {
             
             <Card className="bg-white/5 border-white/10 text-gray-300">
               <CardHeader>
-                <CardTitle className="text-gray-200">Platform Integrations Coming Soon</CardTitle>
-                <CardDescription className="text-gray-400">Coming soon to expand your recovery capabilities</CardDescription>
+                <CardTitle>Integrations Coming Soon</CardTitle>
+                <CardDescription>Coming soon to expand your recovery capabilities</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
-                {['Shopify', 'Walmart Marketplace', 'QuickBooks', 'Xero', 'eBay'].map((platform) => (
-                  <div key={platform} className="flex items-center justify-between p-4 border border-white/10 rounded-lg bg-white/5">
+                {[
+                  { name: 'Shopify', logo: '/lovable-uploads/8efb84ba-e777-4413-ae5a-f7f54bfa6cab.png' },
+                  { name: 'Walmart Marketplace', logo: '/lovable-uploads/cef56367-b57b-46cc-b0cb-a2ffad47fb03.png' },
+                  { name: 'eBay', logo: '/lovable-uploads/f894a44c-fd04-4ec2-8af3-a7235951d82d.png' },
+                  { name: 'QuickBooks', logo: '/lovable-uploads/02ff2e6e-9e67-4481-99a8-4b9caead4540.png' },
+                  { name: 'Xero', logo: '/lovable-uploads/ac3dc504-c896-4f73-9e7e-aefc77dd6e9f.png' },
+                ].map((platform) => (
+                  <div key={platform.name} className="flex items-center justify-between p-4 border rounded-lg opacity-90 bg-background">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-lg bg-white/10 flex items-center justify-center border border-white/10">
-                        {platform === 'Shopify' && <img src="/lovable-uploads/8efb84ba-e777-4413-ae5a-f7f54bfa6cab.png" alt="Shopify logo" className="h-7 w-7 object-contain" />}
-                        {platform === 'Walmart Marketplace' && <img src="/lovable-uploads/cef56367-b57b-46cc-b0cb-a2ffad47fb03.png" alt="Walmart logo" className="h-7 w-7 object-contain" />}
-                        {platform === 'QuickBooks' && <img src="/lovable-uploads/02ff2e6e-9e67-4481-99a8-4b9caead4540.png" alt="QuickBooks logo" className="h-7 w-7 object-contain" />}
-                        {platform === 'Xero' && <img src="/lovable-uploads/ac3dc504-c896-4f73-9e7e-aefc77dd6e9f.png" alt="Xero logo" className="h-7 w-7 object-contain" />}
-                        {platform === 'eBay' && <img src="/lovable-uploads/f894a44c-fd04-4ec2-8af3-a7235951d82d.png" alt="eBay logo" className="h-7 w-7 object-contain" />}
+                      <div className="h-10 w-10 rounded-lg bg-gray-50 flex items-center justify-center border">
+                        <img src={platform.logo} alt={`${platform.name} logo`} className="h-7 w-7 object-contain" />
                       </div>
                       <div>
-                        <p className="font-medium text-gray-200">{platform}</p>
-                        <p className="text-sm text-gray-400">Coming Soon</p>
+                        <p className="font-medium">{platform.name}</p>
+                        <p className="text-sm text-muted-foreground">Coming Soon</p>
                       </div>
                     </div>
                     <Badge variant="secondary">Roadmap</Badge>

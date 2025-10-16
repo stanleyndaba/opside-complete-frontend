@@ -1,116 +1,91 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { api } from '@/lib/api';
-import { startSync, getSyncStatus as getInvStatus, cancelSync as cancelInvSync, getSyncHistory as fetchSyncHistory, subscribeSyncProgress } from '@/lib/inventoryApi';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Progress } from '@/components/ui/progress';
+import { startInventorySync, fetchSyncStatus } from '@/lib/api';
+
+type SyncState = 'idle' | 'starting' | 'in_progress' | 'completed' | 'error';
 
 export default function Sync() {
-  const navigate = useNavigate();
-  const [params] = useSearchParams();
-  const initialSyncId = params.get('id') || undefined;
-  const [syncId, setSyncId] = useState<string | undefined>(initialSyncId);
+  const [state, setState] = useState<SyncState>('idle');
   const [progress, setProgress] = useState<number>(0);
-  const [status, setStatus] = useState<'idle' | 'in_progress' | 'complete' | 'failed'>('idle');
-  const [message, setMessage] = useState<string>('Initializing sync...');
+  const [message, setMessage] = useState<string>('');
+  const pollRef = useRef<number | null>(null);
+
+  const stopPolling = () => {
+    if (pollRef.current) {
+      window.clearInterval(pollRef.current);
+      pollRef.current = null;
+    }
+  };
+
+  const pollStatus = async () => {
+    const res = await fetchSyncStatus<{ status: string; progress?: number; message?: string }>();
+    if (!res.ok) return;
+    const s = res.data?.status || 'in_progress';
+    const p = res.data?.progress ?? progress;
+    const m = res.data?.message || '';
+    setMessage(m);
+    setProgress(p);
+    if (s === 'completed') {
+      setState('completed');
+      stopPolling();
+    } else if (s === 'in_progress' || s === 'queued') {
+      setState('in_progress');
+    }
+  };
+
+  const start = async () => {
+    setState('starting');
+    setProgress(0);
+    setMessage('Initializing sync...');
+    const res = await startInventorySync();
+    if (!res.ok) {
+      setState('error');
+      setMessage('Failed to start sync');
+      return;
+    }
+    setState('in_progress');
+    setMessage('Sync in progress...');
+    stopPolling();
+    pollRef.current = window.setInterval(pollStatus, 1500);
+  };
 
   useEffect(() => {
-    let cancelled = false;
-
-    async function ensureSync() {
-      if (!syncId) {
-        try {
-          const start = await startSync();
-          setSyncId(start.syncId);
-        } catch (e: any) {
-          setStatus('failed');
-          setMessage(e?.message || 'Failed to start sync');
-          return;
-        }
-      }
-      setStatus('in_progress');
-      setMessage('Inventory Sync in progress...');
-    }
-
-    ensureSync();
-
-    // Prefer SSE realtime; fall back to polling if EventSource fails
-    let unsubscribe: (() => void) | null = null;
-    if (syncId) {
-      try {
-        unsubscribe = subscribeSyncProgress(syncId, (s: any) => {
-          if (cancelled) return;
-          if (typeof s.progress === 'number') setProgress(s.progress);
-          if (s.message) setMessage(s.message);
-          if (s.status === 'complete') {
-            setMessage('Sync Complete');
-            setStatus('complete');
-            setTimeout(() => navigate('/app'), 1500);
-          } else if (s.status === 'failed') {
-            setStatus('failed');
-          } else {
-            setStatus('in_progress');
-          }
-        });
-      } catch {}
-    }
-
-    const interval = setInterval(async () => {
-      if (!syncId) return;
-      try {
-        const s = await getInvStatus(syncId);
-        if (cancelled || !s) return;
-        if (typeof s.progress === 'number') setProgress(s.progress);
-        if (s.message) setMessage(s.message);
-        if (s.status === 'complete') {
-          setMessage('Sync Complete');
-          setStatus('complete');
-          clearInterval(interval);
-          setTimeout(() => navigate('/app'), 1500);
-        } else if (s.status === 'failed') {
-          setStatus('failed');
-          clearInterval(interval);
-        } else {
-          setStatus('in_progress');
-        }
-      } catch {}
-    }, 3000);
-
-    return () => {
-      cancelled = true;
-      clearInterval(interval);
-      if (unsubscribe) try { unsubscribe(); } catch {}
-    };
-  }, [syncId, navigate]);
+    return () => stopPolling();
+  }, []);
 
   return (
     <PageLayout title="Smart Inventory Sync">
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-2xl">
         <Card>
           <CardHeader>
             <CardTitle>Inventory Sync</CardTitle>
-            <CardDescription>
-              First run window: last 12 months • Schedule: daily at 02:00 UTC
-            </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <p className="text-sm text-muted-foreground">{message}</p>
-              <div className="w-full bg-gray-100 rounded h-3 overflow-hidden">
-                <div className={`h-3 ${status === 'failed' ? 'bg-red-500' : 'bg-emerald-500'}`} style={{ width: `${progress}%`, transition: 'width 0.6s ease' }} />
-              </div>
-              <div className="flex items-center justify-between text-sm text-muted-foreground">
-                <span>{progress}%</span>
-                <span>{status === 'complete' ? 'Completed' : status === 'failed' ? 'Failed' : 'In Progress'}</span>
-              </div>
-              <div className="mt-4 p-3 rounded border border-blue-200 bg-blue-50 text-xs text-blue-900">
-                Evidence ingestion is running in parallel. We’re collecting supplier docs and linking proofs to detected claims.
-              </div>
-              {status === 'failed' && (
-                <Button onClick={() => window.location.reload()}>Retry</Button>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              We will pull inventory, transactions, and fees from your Amazon Seller account, normalize the data, and run detection algorithms.
+            </p>
+
+            <div className="flex items-center gap-2">
+              <Button onClick={start} disabled={state === 'starting' || state === 'in_progress'}>
+                {state === 'in_progress' ? 'Syncing…' : 'Start Sync'}
+              </Button>
+              {state === 'completed' && (
+                <span className="text-sm text-green-600">Sync Complete</span>
+              )}
+              {state === 'error' && (
+                <span className="text-sm text-red-600">{message}</span>
               )}
             </div>
+
+            {(state === 'starting' || state === 'in_progress') && (
+              <div className="space-y-2">
+                <Progress value={progress} />
+                <div className="text-xs text-muted-foreground">{message}</div>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

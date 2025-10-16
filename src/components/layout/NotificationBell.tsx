@@ -21,20 +21,9 @@ interface RecentNotification {
 }
 
 export function NotificationBell() {
-  const location = useLocation();
-  const isTransparentNavbar = (
-    location.pathname === '/' ||
-    location.pathname.startsWith('/app') ||
-    location.pathname.startsWith('/settings') ||
-    location.pathname.startsWith('/careers') ||
-    location.pathname.startsWith('/api-access') ||
-    location.pathname.startsWith('/billing') ||
-    location.pathname.startsWith('/recoveries') ||
-    location.pathname.startsWith('/reports') ||
-    location.pathname.startsWith('/whats-new') ||
-    location.pathname.startsWith('/help')
-  );
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+  const isTransparent = location.pathname.startsWith('/settings') || location.pathname.startsWith('/careers') || location.pathname.startsWith('/api-access') || location.pathname.startsWith('/billing');
   const [notifications] = useState<RecentNotification[]>([
     {
       id: '1',
@@ -82,9 +71,9 @@ export function NotificationBell() {
         <Button 
           variant="ghost" 
           size="icon" 
-          className={"relative h-9 w-9 " + (isTransparentNavbar ? "hover:bg-white/10 text-gray-200" : "hover:bg-muted/50")}
+          className={"relative h-9 w-9 " + (isTransparent ? 'hover:bg-white/10 text-gray-200' : 'hover:bg-muted/50')}
         >
-          <Bell className={"h-4 w-4 " + (isTransparentNavbar ? "text-gray-200" : "")} />
+          <Bell className={"h-4 w-4 " + (isTransparent ? 'text-gray-200' : '')} />
           {unreadCount > 0 && (
             <>
               {/* Pulsing effect */}
