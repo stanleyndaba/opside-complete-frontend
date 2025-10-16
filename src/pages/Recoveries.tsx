@@ -652,7 +652,27 @@ export default function Recoveries() {
                             <FileText className="h-4 w-4 mr-2" />
                             Resolve Case
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => window.open(api.getRecoveryDocumentUrl(claim.id), '_blank')}>
+                          <DropdownMenuItem onClick={async () => {
+                            const url = api.getRecoveryDocumentUrl(claim.id);
+                            try {
+                              const head = await fetch(url, { method: 'HEAD', credentials: 'include' });
+                              if (head.ok) {
+                                window.open(url, '_blank');
+                                return;
+                              }
+                            } catch {}
+                            try {
+                              const res = await api.getRecoveryDetail(claim.id);
+                              const docs = (res && res.ok && Array.isArray((res as any).data?.documents)) ? (res as any).data!.documents : [];
+                              if (docs.length > 0 && docs[0]?.id) {
+                                window.open(`/documents/${encodeURIComponent(docs[0].id)}`, '_blank');
+                              } else {
+                                toast({ title: 'No proof available yet', description: 'Evidence is still being collected for this case.' });
+                              }
+                            } catch (e: any) {
+                              toast({ title: 'Proof unavailable', description: e?.message || 'Please try again later.' });
+                            }
+                          }}>
                             <FileText className="h-4 w-4 mr-2" />
                             Proof Document
                           </DropdownMenuItem>
