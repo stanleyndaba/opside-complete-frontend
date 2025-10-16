@@ -100,7 +100,7 @@ export function Dashboard() {
 
   return (
     <div className="min-h-screen flex flex-col h-screen overflow-hidden platform" style={{ backgroundColor: '#0B1220' }}>
-      <Navbar sidebarCollapsed={isSidebarCollapsed} />
+      <Navbar sidebarCollapsed={isSidebarCollapsed} forceTransparent />
       <div className="flex-1 flex h-full overflow-hidden">
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
         <main className={'flex-1 transition-all duration-300 overflow-y-auto ' + mainClass}>

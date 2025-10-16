@@ -9,14 +9,16 @@ interface NavbarProps {
   className?: string;
   sidebarCollapsed?: boolean;
   onToggleSidebar?: () => void;
+  forceTransparent?: boolean;
 }
 export function Navbar({
   className,
   sidebarCollapsed = false,
-  onToggleSidebar
+  onToggleSidebar,
+  forceTransparent
 }: NavbarProps) {
   const location = useLocation();
-  const isTransparent =
+  const pathTransparent =
     location.pathname === '/' ||
     location.pathname.startsWith('/settings') ||
     location.pathname.startsWith('/careers') ||
@@ -29,6 +31,7 @@ export function Navbar({
     location.pathname.startsWith('/reports') ||
     location.pathname.startsWith('/whats-new') ||
     location.pathname.startsWith('/help');
+  const isTransparent = !!forceTransparent || pathTransparent;
 
   type LanguageOption = {
     code: string;
