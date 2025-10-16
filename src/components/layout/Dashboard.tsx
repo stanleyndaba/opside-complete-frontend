@@ -121,29 +121,8 @@ export function Dashboard() {
                 <Card className="bg-white/5 border-white/10 text-gray-300">
                   <CardContent className="p-6">
                     <h2 className="font-brand text-lg text-gray-100 font-semibold">Your Recovered Value</h2>
-                    <p className="text-sm text-gray-400 mt-1">Auto-submit your FBA recovery</p>
-                    <div className="text-[22px] font-extrabold mt-2 text-gray-100">
-                      {recoveredTotal == null ? (
-                        <span className="text-muted-foreground">Loading…</span>
-                      ) : (
-                        new Intl.NumberFormat('en-US', { style: 'currency', currency: recoveredCurrency || 'USD' }).format(recoveredTotal)
-                      )}
-                    </div>
-                    {lastUpdated && (
-                      <div className="text-xs text-gray-400 mt-1">Last updated: {lastUpdated}</div>
-                    )}
-                    <div className="mt-4 space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-400">Pending Recovery</span>
-                        <span className="text-sm font-semibold text-gray-100">{pendingRecoveryAmount == null ? formatCurrency(8560) : formatCurrency(pendingRecoveryAmount)}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-400">Success Rate</span>
-                        <span className="text-sm font-semibold text-emerald-400">{successRate == null ? '94%' : `${Math.round(successRate)}%`}</span>
-                      </div>
-                    </div>
-                    <div className="mt-4">
-                      <Button className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold" onClick={() => navigate('/recoveries')}>View All Claims</Button>
+                    <div className="text-[32px] md:text-[36px] font-extrabold mt-2 text-emerald-400">
+                      {formatCurrency(recoveredTotal ?? 0)}
                     </div>
                   </CardContent>
                 </Card>
