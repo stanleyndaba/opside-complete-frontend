@@ -613,13 +613,20 @@ export default function CaseDetail() {
                     <Badge variant="outline" className="text-xs">Evidence: {derivedEvidence}</Badge>
                     <Badge variant="outline" className="text-xs">Matched docs: {matchedCount}</Badge>
                     <div className="ml-auto flex gap-2">
-                      <Button size="sm" variant="outline" onClick={() => {
+                      <Button size="sm" variant="outline" onClick={async () => {
                         const url = api.getRecoveryDocumentUrl(effectiveCase.id);
-                        // If backend serves a single composed proof, open it; otherwise route to document detail
-                        if (url) {
-                          window.open(url, '_blank');
-                        } else if (Array.isArray(matchedDocs) && matchedDocs.length > 0) {
+                        // Try composed proof first; if unavailable, fall back to first matched document
+                        try {
+                          const head = await fetch(url, { method: 'HEAD', credentials: 'include' });
+                          if (head.ok) {
+                            window.open(url, '_blank');
+                            return;
+                          }
+                        } catch {}
+                        if (Array.isArray(matchedDocs) && matchedDocs.length > 0) {
                           window.open(`/documents/${encodeURIComponent(matchedDocs[0].id)}`, '_blank');
+                        } else {
+                          toast({ title: 'No proof available yet', description: 'Evidence is still being collected for this case.' });
                         }
                       }}>
                         <FileText className="h-3.5 w-3.5 mr-1" /> Proof of Document
