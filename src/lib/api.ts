@@ -6,10 +6,22 @@ export interface ApiResponse<T> {
 }
 
 export function buildApiUrl(path: string): string {
-  const envBase = (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_API_BASE_URL) ||
-                  (typeof process !== 'undefined' && (process as any).env?.VITE_API_BASE_URL);
-  const base = (envBase && String(envBase)) || 'http://localhost:3001';
-  return base.replace(/\/$/, '') + (path.startsWith('/') ? path : '/' + path);
+  // Normalize provided path
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+
+  // If caller passed an absolute URL, return as-is
+  if (/^https?:\/\//i.test(path)) return path;
+
+  // Prefer explicit base URL when provided via env
+  const envBase = (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_API_BASE_URL)
+    || (typeof process !== 'undefined' && (process as any).env?.VITE_API_BASE_URL);
+  if (envBase) {
+    return String(envBase).replace(/\/$/, '') + normalizedPath;
+  }
+
+  // Fallback: same-origin relative path (works in Production on Vercel/Netlify)
+  // Avoid hardcoding localhost which breaks deployed environments
+  return normalizedPath;
 }
 
 async function requestJson<T>(path: string, options?: RequestInit): Promise<ApiResponse<T>> {
