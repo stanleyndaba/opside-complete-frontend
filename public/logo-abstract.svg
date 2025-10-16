@@ -1,0 +1,28 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="edge" x1="16" y1="16" x2="112" y2="112" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#22D3EE"/>
+      <stop offset="1" stop-color="#60A5FA"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="0" stdDeviation="1.5" flood-color="#22D3EE" flood-opacity=".75"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#60A5FA" flood-opacity=".35"/>
+    </filter>
+  </defs>
+
+  <!-- Isometric wireframe cube (edges only) -->
+  <g filter="url(#glow)" stroke="url(#edge)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- Top face -->
+    <path d="M64 24 L96 40 L64 56 L32 40 Z"/>
+    <!-- Right face outline -->
+    <path d="M96 40 L96 72 L64 88 L64 56 Z"/>
+    <!-- Left face outline -->
+    <path d="M32 40 L32 72 L64 88"/>
+    <!-- Back edges to complete cube silhouette -->
+    <path d="M32 72 L64 56"/>
+    <!-- Accent inner diagonals (subtle surface geometry, still edges-only) -->
+    <path opacity="0.6" d="M64 24 L64 56"/>
+    <path opacity="0.35" d="M96 40 L32 72"/>
+    <path opacity="0.35" d="M32 40 L96 72"/>
+  </g>
+</svg>
