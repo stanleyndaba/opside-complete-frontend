@@ -244,7 +244,17 @@ export function Dashboard() {
                       <div className="pt-2 space-y-2">
                         <div className="flex justify-between items-center">
                           <span className="text-sm text-gray-600 font-montserrat">Pending Recovery</span>
-                          <span className="font-semibold text-sm font-montserrat">{formatCurrency(metrics?.expected_approved ?? 0)}</span>
+                          <span className="font-semibold text-sm font-montserrat text-[#3399ff]">{formatCurrency(metrics?.expected_approved ?? 0)}</span>
+                        </div>
+                        <div>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="h-7 px-3 bg-gray-100 hover:bg-gray-50 text-gray-800 border-gray-200"
+                            onClick={() => navigate('/recoveries')}
+                          >
+                            Auto-Submit
+                          </Button>
                         </div>
                         <div className="flex justify-between items-center">
                           <span className="text-sm text-gray-600 font-montserrat">30-Day Recovery</span>
