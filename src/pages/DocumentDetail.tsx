@@ -6,10 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, FileText, Check, Edit2, Download } from 'lucide-react';
 import { api } from '@/lib/api';
-import { recoveryApi } from '@/lib/recoveryApi';
 
 export default function DocumentDetail() {
-  const { documentId } = useParams();
+  const { id, documentId } = useParams();
+  const docId = (documentId as string) || (id as string) || '';
   const [hoveredSKU, setHoveredSKU] = useState<string | null>(null);
 
   const [documentData, setDocumentData] = useState<any | null>(null);
@@ -20,14 +20,18 @@ export default function DocumentDetail() {
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      if (!documentId) return;
+      if (!docId) return;
       setLoading(true);
       try {
-        const data = await recoveryApi.getDocument(documentId);
+        const res = await api.getDocument(docId);
         if (!cancelled) {
-          setDocumentData(data as any);
-          setError(null);
-          const d = data as any;
+          if (res.ok) {
+            setDocumentData(res.data as any);
+            setError(null);
+          } else {
+            setError(res.error || 'Failed to load document');
+          }
+          const d = (res as any)?.data || {};
           const issues: Array<{ field: string; message: string }> = [];
           (d?.extractedData || []).forEach((it: any) => {
             if (!it.sku) issues.push({ field: 'sku', message: 'Missing SKU for a line item' });
@@ -44,7 +48,7 @@ export default function DocumentDetail() {
       }
     })();
     return () => { cancelled = true };
-  }, [documentId]);
+  }, [docId]);
 
   const totalValue = (documentData?.extractedData || []).reduce(
     (sum, item) => sum + (item.unitCost * item.quantity), 
@@ -107,7 +111,7 @@ export default function DocumentDetail() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>
             <CardContent className="p-4">
-              <div className="text-2xl font-bold">{documentData.extractedData.length}</div>
+              <div className="text-2xl font-bold">{Array.isArray(documentData?.extractedData) ? documentData!.extractedData.length : 0}</div>
               <div className="text-sm text-muted-foreground">SKUs Identified</div>
             </CardContent>
           </Card>
