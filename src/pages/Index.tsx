@@ -145,7 +145,7 @@ const Index = () => {
               The <span className="text-emerald-500">end</span> of FBA reimbursement work.
             </h1>
             <p className="font-body text-base md:text-xl text-gray-400 font-normal max-w-3xl mx-auto">
-              Clario is the zero-effort platform that automates your FBA financial audits. We find discrepancies, build the evidence, and manage the full recovery process, so you can focus on building your brand.
+              Clario automates the entire reimbursement process, recovering lost revenue from Amazon FBA errors in minutes—not months.
             </p>
             <div className="pt-2">
               <div className="flex items-center justify-center gap-3">
