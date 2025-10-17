@@ -210,6 +210,14 @@
     color: transparent;
     animation: brandSheen 6s linear infinite;
   }
+
+  /* Slow spin utility for loaders */
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  .animate-spin-slow {
+    animation: spin 2.5s linear infinite;
+  }
 }
 
 /* Typography tuning across the platform (excludes landing page) */

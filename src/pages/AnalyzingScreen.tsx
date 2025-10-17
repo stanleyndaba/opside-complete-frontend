@@ -144,10 +144,22 @@ export default function AnalyzingScreen() {
             </div>
             <div className="flex flex-col items-center gap-3">
               <span className="text-sm text-gray-400">Progress</span>
-              <svg viewBox="0 0 100 100" className="w-24 h-24 -rotate-90">
-                <circle cx="50" cy="50" r={radius} fill="none" stroke="currentColor" className="text-white/10" strokeWidth={6} />
-                <circle cx="50" cy="50" r={radius} fill="none" stroke="currentColor" className="text-emerald-400" strokeWidth={6} strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={dashOffset} />
-              </svg>
+              {/* Rotating cube logo as loader; falls back to smaller ring if asset not present */}
+              <div className="h-16 w-16 flex items-center justify-center">
+                <img src="/logo-abstract.svg" alt="Loading" className="h-10 w-10 animate-spin-slow opacity-90" onError={(e) => {
+                  const parent = (e.target as HTMLImageElement).parentElement;
+                  if (!parent) return;
+                  parent.innerHTML = '';
+                  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                  svg.setAttribute('viewBox', '0 0 100 100');
+                  svg.setAttribute('class', 'w-16 h-16 -rotate-90');
+                  svg.innerHTML = `
+                    <circle cx="50" cy="50" r="36" fill="none" stroke="currentColor" class="text-white/10" stroke-width="6" />
+                    <circle cx="50" cy="50" r="36" fill="none" stroke="currentColor" class="text-emerald-400" stroke-width="6" stroke-linecap="round" stroke-dasharray="${circumference}" stroke-dashoffset="${dashOffset}" />
+                  `;
+                  parent.appendChild(svg);
+                }} />
+              </div>
               <div className="text-sm font-medium text-gray-200">{progress}%</div>
             </div>
             <div className="py-2">
