@@ -159,11 +159,15 @@ const Index = () => {
       </div>
 
       <footer id="core-footer">
-        <div className="container mx-auto px-6 py-6 flex items-center justify-center gap-4 text-xs text-gray-400">
-          <a href="mailto:hello@getclario.com" aria-label="Email" className="hover:text-foreground">
-            <Mail className="h-5 w-5" strokeWidth={1.75} />
-          </a>
-          <span>© {new Date().getFullYear()} Clario, Inc. All rights reserved.</span>
+        <div className="container mx-auto px-6 py-6 flex items-center justify-center gap-3 text-xs text-gray-400 text-center">
+          <span>
+            By connecting your account, you agree to Clario's
+            <Link to="/terms" className="mx-1 underline hover:text-gray-200">Terms of Service</Link>
+            and acknowledge our
+            <Link to="/security" className="mx-1 underline hover:text-gray-200">Data Security</Link>
+            &
+            <Link to="/privacy" className="mx-1 underline hover:text-gray-200">Privacy Policy</Link>.
+          </span>
         </div>
       </footer>
     </div>
