@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { Link as LinkIcon, Mail, ChevronDown, Link2, HelpCircle, ScrollText, BookOpen, Building2, Handshake } from 'lucide-react';
+import { Link as LinkIcon, Mail, ChevronDown, Link2, HelpCircle, ScrollText, BookOpen, Building2, Handshake, Check } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { api } from '@/lib/api';
 
@@ -166,6 +166,17 @@ const Index = () => {
                   <LinkIcon className="h-5 w-5 mr-2" strokeWidth={1.75} />
                   Connect Amazon
                 </Button>
+              </div>
+              <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500 text-white text-xs md:text-sm">
+                  <Check className="h-4 w-4" /> No credit card required
+                </span>
+                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500 text-white text-xs md:text-sm">
+                  <Check className="h-4 w-4" /> 14-day free trial
+                </span>
+                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500 text-white text-xs md:text-sm">
+                  <Check className="h-4 w-4" /> Cancel anytime
+                </span>
               </div>
             </div>
           </div>
