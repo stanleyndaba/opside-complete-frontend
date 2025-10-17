@@ -1,13 +1,47 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { Link as LinkIcon, Mail, ArrowRight } from 'lucide-react';
+import { Link as LinkIcon, Mail, ArrowRight, Globe, ChevronDown } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { api } from '@/lib/api';
 
 const Index = () => {
   const navigate = useNavigate();
   const [connecting, setConnecting] = useState(false);
+
+  type LanguageOption = {
+    code: string;
+    country: string;
+    language: string;
+    flag: string;
+  };
+
+  const LANGUAGE_OPTIONS: LanguageOption[] = [
+    { code: 'us-en', country: 'USA', language: 'English', flag: '🇺🇸' },
+    { code: 'ca-en', country: 'Canada', language: 'English', flag: '🇨🇦' },
+    { code: 'ca-fr', country: 'Canada', language: 'Français', flag: '🇨🇦' },
+    { code: 'gb-en', country: 'United Kingdom', language: 'English', flag: '🇬🇧' },
+    { code: 'au-en', country: 'Australia', language: 'English', flag: '🇦🇺' },
+    { code: 'de-de', country: 'Germany', language: 'Deutsch', flag: '🇩🇪' },
+    { code: 'fr-fr', country: 'France', language: 'Français', flag: '🇫🇷' },
+    { code: 'es-es', country: 'Spain', language: 'Español', flag: '🇪🇸' },
+    { code: 'it-it', country: 'Italy', language: 'Italiano', flag: '🇮🇹' },
+    { code: 'nl-nl', country: 'Netherlands', language: 'Nederlands', flag: '🇳🇱' },
+  ];
+
+  const [selectedLanguageCode, setSelectedLanguageCode] = useState<string>(() =>
+    typeof window !== 'undefined' ? localStorage.getItem('clario.langPreference') || 'us-en' : 'us-en'
+  );
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('clario.langPreference', selectedLanguageCode);
+    } catch {}
+  }, [selectedLanguageCode]);
+
+  const selectedLanguage: LanguageOption =
+    LANGUAGE_OPTIONS.find((o) => o.code === selectedLanguageCode) || LANGUAGE_OPTIONS[0];
 
   return (
     <div className="min-h-screen flex flex-col bg-[#0B1220] landing">
@@ -18,6 +52,32 @@ const Index = () => {
             <span className="font-medium text-gray-100">Clario</span>
           </div>
           <nav className="flex items-center gap-4 text-sm">
+            {/* Language selector */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="inline-flex items-center gap-2 h-9 px-3 rounded-md text-sm text-gray-200 hover:bg-white/10 transition-colors"
+                  aria-label="Language and region"
+                >
+                  <span className="relative inline-flex">
+                    <Globe className="h-4 w-4" />
+                  </span>
+                  <span>
+                    {selectedLanguage.country} | {selectedLanguage.language}
+                  </span>
+                  <ChevronDown className="h-4 w-4 opacity-70" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="min-w-[220px]">
+                {LANGUAGE_OPTIONS.map((opt) => (
+                  <DropdownMenuItem key={opt.code} onClick={() => setSelectedLanguageCode(opt.code)} className="gap-2">
+                    <span className="text-base leading-none">{opt.flag}</span>
+                    <span className="font-medium">{opt.country}</span>
+                    <span className="text-muted-foreground">| {opt.language}</span>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Button variant="ghost" className="text-gray-200 hover:bg-white/10 hover:text-white" type="button" disabled={connecting} onClick={async () => { 
               if (connecting) return; setConnecting(true);
               try {
