@@ -365,33 +365,31 @@ export default function Billing() {
         </div>
           </div>
         </div>
+        {/* Export Modal */}
+        <Dialog open={exportOpen} onOpenChange={setExportOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Export Data</DialogTitle>
+              <DialogDescription>Export your billing history.</DialogDescription>
+            </DialogHeader>
+            <div className="space-y-3">
+              <Select value={exportFormat} onValueChange={(v) => setExportFormat(v as 'csv' | 'pdf')}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select format" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="csv">Detailed CSV</SelectItem>
+                  <SelectItem value="pdf">PDF Summary</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setExportOpen(false)}>Cancel</Button>
+              <Button onClick={exportAction}>Generate & Download</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </PageLayout>
-    
-    /* Export Modal */
-    ,
-    <Dialog key="billing-export" open={exportOpen} onOpenChange={setExportOpen}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Export Data</DialogTitle>
-          <DialogDescription>Export your billing history.</DialogDescription>
-        </DialogHeader>
-        <div className="space-y-3">
-          <Select value={exportFormat} onValueChange={(v) => setExportFormat(v as 'csv' | 'pdf')}>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select format" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="csv">Detailed CSV</SelectItem>
-              <SelectItem value="pdf">PDF Summary</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={() => setExportOpen(false)}>Cancel</Button>
-          <Button onClick={exportAction}>Generate & Download</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
   );
 }

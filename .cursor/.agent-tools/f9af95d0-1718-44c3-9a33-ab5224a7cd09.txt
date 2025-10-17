@@ -1,0 +1,145 @@
+vite v5.4.10 building for production...
+transforming...
+Browserslist: browsers data (caniuse-lite) is 12 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+✓ 56 modules transformed.
+
+✨ [vite-plugin-compression]:algorithm=gzip - compressed file successfully: 
+dist//workspace/assets/AmazonSandbox-Dt8__oPO.js.gz        2.34kb / gzip: 1.01kb
+dist//workspace/assets/ApiAccess-qEimzRS-.js.gz            5.98kb / gzip: 2.06kb
+dist//workspace/assets/About-Cqc7EiY3.js.gz                3.14kb / gzip: 1.21kb
+dist//workspace/assets/ApiLanding-D6tAbYVo.js.gz           8.55kb / gzip: 2.98kb
+dist//workspace/assets/AnalyzingScreen-C6inYd_Q.js.gz      5.01kb / gzip: 1.72kb
+dist//workspace/assets/Dashboard-C0r6ckCb.js.gz            6.32kb / gzip: 2.25kb
+dist//workspace/assets/DocumentDetail-CLOd5a9N.js.gz       7.37kb / gzip: 2.30kb
+dist//workspace/assets/CaseDetail-CHjXESH_.js.gz           21.18kb / gzip: 6.16kb
+dist//workspace/assets/EvidenceLocker-BjI8VlU0.js.gz       8.96kb / gzip: 2.91kb
+dist//workspace/assets/EvidenceSearch-mc_GdNH5.js.gz       1.98kb / gzip: 0.96kb
+dist//workspace/assets/EvidenceOnboarding-QXDwk3vi.js.gz   2.61kb / gzip: 1.17kb
+dist//workspace/assets/Billing-B628AqPT.js.gz              4.46kb / gzip: 1.85kb
+dist//workspace/assets/Careers-Dfxhrb44.js.gz              7.19kb / gzip: 2.83kb
+dist//workspace/assets/ExportCenter-DQ6bqLrW.js.gz         6.94kb / gzip: 2.33kb
+dist//workspace/assets/Help-CqHqx3b-.js.gz                 12.89kb / gzip: 4.06kb
+dist//workspace/assets/Index-DFM9EtCK.js.gz                8.75kb / gzip: 2.62kb
+dist//workspace/assets/NotificationHub-pniUG3yq.js.gz      6.25kb / gzip: 2.07kb
+dist//workspace/assets/OAuthCallback-DiulgV4A.js.gz        3.28kb / gzip: 1.41kb
+dist//workspace/assets/Recoveries-weuxFTOd.js.gz           17.45kb / gzip: 5.65kb
+dist//workspace/assets/Reports-hKd1VSZj.js.gz              10.19kb / gzip: 3.48kb
+dist//workspace/assets/Settings-BAmf9rKv.js.gz             15.90kb / gzip: 4.13kb
+dist//workspace/assets/SmartInventorySync-hgC8eZAd.js.gz   5.38kb / gzip: 2.03kb
+dist//workspace/assets/Sidebar-ByJwdAEv.js.gz              14.58kb / gzip: 4.62kb
+dist//workspace/assets/Sync-D1poQjti.js.gz                 3.11kb / gzip: 1.44kb
+dist//workspace/assets/WhatsNew-CSogCx1k.js.gz             5.55kb / gzip: 2.39kb
+dist//workspace/assets/TeamManagement-BM2iAmJ2.js.gz       5.96kb / gzip: 1.90kb
+dist//workspace/assets/accordion-IU1_h3Q7.js.gz            1.01kb / gzip: 0.50kb
+dist//workspace/assets/button-cf5hBvRn.js.gz               1.27kb / gzip: 0.62kb
+dist//workspace/assets/card-gaSLJsMJ.js.gz                 1.01kb / gzip: 0.39kb
+dist//workspace/assets/date-fns-CvI-Jg9D.js.gz             22.75kb / gzip: 6.30kb
+dist//workspace/assets/dialog-X5_kooxq.js.gz               2.18kb / gzip: 0.86kb
+dist//workspace/assets/dropdown-menu-D78yQNzF.js.gz        3.45kb / gzip: 0.94kb
+dist//workspace/assets/icons-Drd6Faih.js.gz                30.20kb / gzip: 6.06kb
+dist//workspace/assets/OAuthSuccess-CJdYDDLm.js.gz         5.41kb / gzip: 2.14kb
+dist//workspace/assets/IntegrationsHub-g1pYGguh.js.gz      15.21kb / gzip: 4.38kb
+dist//workspace/assets/index-Cyk0u9Hx.css.gz               81.33kb / gzip: 13.87kb
+dist//workspace/assets/popover-CxRwTGvx.js.gz              32.56kb / gzip: 10.38kb
+dist//workspace/assets/react-core-DarJlNIv.js.gz           10.16kb / gzip: 3.49kb
+dist//workspace/assets/react-router-qZpM5xWq.js.gz         20.50kb / gzip: 7.64kb
+dist//workspace/assets/select-UenmS4UT.js.gz               2.94kb / gzip: 1.07kb
+dist//workspace/assets/table-DvZY-P6U.js.gz                1.49kb / gzip: 0.52kb
+dist//workspace/assets/use-status-stream-CwNT1Z4t.js.gz    1.24kb / gzip: 0.63kb
+dist//workspace/index.html.gz                              2.31kb / gzip: 0.95kb
+dist//workspace/assets/tanstack-CnUCwORI.js.gz             25.47kb / gzip: 7.85kb
+dist//workspace/assets/index-BPkk-gvY.js.gz                77.69kb / gzip: 25.36kb
+dist//workspace/assets/radix-DLafLZCf.js.gz                125.48kb / gzip: 36.18kb
+dist//workspace/assets/react-dom-BJChOSph.js.gz            152.32kb / gzip: 50.19kb
+dist//workspace/assets/recharts-CXTfgSam.js.gz             359.81kb / gzip: 99.05kb
+dist//workspace/assets/index-CfAxbBoQ.js.gz                310.50kb / gzip: 101.40kb
+
+
+
+✨ [vite-plugin-compression]:algorithm=brotliCompress - compressed file successfully: 
+dist//workspace/assets/About-Cqc7EiY3.js.br                3.14kb / brotliCompress: 1.04kb
+dist//workspace/assets/ApiAccess-qEimzRS-.js.br            5.98kb / brotliCompress: 1.71kb
+dist//workspace/assets/AnalyzingScreen-C6inYd_Q.js.br      5.01kb / brotliCompress: 1.51kb
+dist//workspace/assets/ApiLanding-D6tAbYVo.js.br           8.55kb / brotliCompress: 2.47kb
+dist//workspace/assets/Careers-Dfxhrb44.js.br              7.19kb / brotliCompress: 2.33kb
+dist//workspace/assets/Dashboard-C0r6ckCb.js.br            6.32kb / brotliCompress: 1.98kb
+dist//workspace/assets/Billing-B628AqPT.js.br              4.46kb / brotliCompress: 1.59kb
+dist//workspace/assets/CaseDetail-CHjXESH_.js.br           21.18kb / brotliCompress: 5.39kb
+dist//workspace/assets/AmazonSandbox-Dt8__oPO.js.br        2.34kb / brotliCompress: 0.88kb
+dist//workspace/assets/EvidenceOnboarding-QXDwk3vi.js.br   2.61kb / brotliCompress: 1.00kb
+dist//workspace/assets/DocumentDetail-CLOd5a9N.js.br       7.37kb / brotliCompress: 2.01kb
+dist//workspace/assets/EvidenceSearch-mc_GdNH5.js.br       1.98kb / brotliCompress: 0.84kb
+dist//workspace/assets/EvidenceLocker-BjI8VlU0.js.br       8.96kb / brotliCompress: 2.52kb
+dist//workspace/assets/ExportCenter-DQ6bqLrW.js.br         6.94kb / brotliCompress: 2.02kb
+dist//workspace/assets/Help-CqHqx3b-.js.br                 12.89kb / brotliCompress: 3.33kb
+dist//workspace/assets/Index-DFM9EtCK.js.br                8.75kb / brotliCompress: 2.19kb
+dist//workspace/assets/NotificationHub-pniUG3yq.js.br      6.25kb / brotliCompress: 1.72kb
+dist//workspace/assets/IntegrationsHub-g1pYGguh.js.br      15.21kb / brotliCompress: 3.84kb
+dist//workspace/assets/OAuthCallback-DiulgV4A.js.br        3.28kb / brotliCompress: 1.23kb
+dist//workspace/assets/OAuthSuccess-CJdYDDLm.js.br         5.41kb / brotliCompress: 1.83kb
+dist//workspace/assets/Reports-hKd1VSZj.js.br              10.19kb / brotliCompress: 3.06kb
+dist//workspace/assets/Recoveries-weuxFTOd.js.br           17.45kb / brotliCompress: 4.99kb
+dist//workspace/assets/SmartInventorySync-hgC8eZAd.js.br   5.38kb / brotliCompress: 1.77kb
+dist//workspace/assets/Sync-D1poQjti.js.br                 3.11kb / brotliCompress: 1.27kb
+dist//workspace/assets/Sidebar-ByJwdAEv.js.br              14.58kb / brotliCompress: 4.10kb
+dist//workspace/assets/WhatsNew-CSogCx1k.js.br             5.55kb / brotliCompress: 1.99kb
+dist//workspace/assets/accordion-IU1_h3Q7.js.br            1.01kb / brotliCompress: 0.44kb
+dist//workspace/assets/TeamManagement-BM2iAmJ2.js.br       5.96kb / brotliCompress: 1.68kb
+dist//workspace/assets/Settings-BAmf9rKv.js.br             15.90kb / brotliCompress: 3.48kb
+dist//workspace/assets/button-cf5hBvRn.js.br               1.27kb / brotliCompress: 0.53kb
+dist//workspace/assets/card-gaSLJsMJ.js.br                 1.01kb / brotliCompress: 0.33kb
+dist//workspace/assets/dialog-X5_kooxq.js.br               2.18kb / brotliCompress: 0.75kb
+dist//workspace/assets/dropdown-menu-D78yQNzF.js.br        3.45kb / brotliCompress: 0.80kb
+dist//workspace/assets/date-fns-CvI-Jg9D.js.br             22.75kb / brotliCompress: 5.60kb
+dist//workspace/assets/icons-Drd6Faih.js.br                30.20kb / brotliCompress: 5.26kb
+dist//workspace/assets/react-core-DarJlNIv.js.br           10.16kb / brotliCompress: 3.07kb
+dist//workspace/assets/react-router-qZpM5xWq.js.br         20.50kb / brotliCompress: 6.82kb
+dist//workspace/assets/index-Cyk0u9Hx.css.br               81.33kb / brotliCompress: 11.61kb
+dist//workspace/assets/select-UenmS4UT.js.br               2.94kb / brotliCompress: 0.91kb
+dist//workspace/assets/popover-CxRwTGvx.js.br              32.56kb / brotliCompress: 9.21kb
+dist//workspace/assets/use-status-stream-CwNT1Z4t.js.br    1.24kb / brotliCompress: 0.54kb
+dist//workspace/index.html.br                              2.31kb / brotliCompress: 0.70kb
+dist//workspace/assets/table-DvZY-P6U.js.br                1.49kb / brotliCompress: 0.44kb
+dist//workspace/assets/tanstack-CnUCwORI.js.br             25.47kb / brotliCompress: 7.08kb
+dist//workspace/assets/index-BPkk-gvY.js.br                77.69kb / brotliCompress: 21.95kb
+dist//workspace/assets/radix-DLafLZCf.js.br                125.48kb / brotliCompress: 31.29kb
+dist//workspace/assets/react-dom-BJChOSph.js.br            152.32kb / brotliCompress: 44.05kb
+dist//workspace/assets/index-CfAxbBoQ.js.br                310.50kb / brotliCompress: 85.64kb
+dist//workspace/assets/recharts-CXTfgSam.js.br             359.81kb / brotliCompress: 81.84kb
+
+
+x Build failed in 1.63s
+error during build:
+[vite:esbuild] Transform failed with 2 errors:
+/workspace/src/pages/Billing.tsx:393:8: ERROR: Unexpected closing "div" tag does not match opening "PageLayout" tag
+/workspace/src/pages/Billing.tsx:394:17: ERROR: Unterminated regular expression
+file: /workspace/src/pages/Billing.tsx:393:8
+
+Unexpected closing "div" tag does not match opening "PageLayout" tag
+391|            </DialogContent>
+392|          </Dialog>
+393|        </div>
+   |          ^
+394|      </PageLayout>
+395|    );
+
+Unterminated regular expression
+392|          </Dialog>
+393|        </div>
+394|      </PageLayout>
+   |                   ^
+395|    );
+396|  }
+
+    at failureErrorWithLog (/workspace/node_modules/esbuild/lib/main.js:1472:15)
+    at /workspace/node_modules/esbuild/lib/main.js:755:50
+    at responseCallbacks.<computed> (/workspace/node_modules/esbuild/lib/main.js:622:9)
+    at handleIncomingPacket (/workspace/node_modules/esbuild/lib/main.js:677:12)
+    at Socket.readFromStdout (/workspace/node_modules/esbuild/lib/main.js:600:7)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at Pipe.onStreamRead (node:internal/stream_base_commons:189:23)
