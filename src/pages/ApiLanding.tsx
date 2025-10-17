@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 const ApiLanding = () => {
   return (
     <div className="min-h-screen landing" style={{ backgroundColor: '#0B1220' }}>
-      <header className="sticky top-0 z-40 border-transparent bg-transparent">
+      <header className="sticky top-0 z-40 border-transparent bg-[#0B1220]">
         <div className="container mx-auto px-6 py-5 flex items-center justify-between text-gray-100">
           <div className="flex items-center gap-2">
             <img src="/logo-abstract.svg" alt="Logo" className="h-8 w-8" />
@@ -39,16 +39,28 @@ const ApiLanding = () => {
                   <span className="h-2.5 w-2.5 rounded-full bg-green-500/70" />
                   <span className="ml-3 text-xs uppercase tracking-wider text-gray-400">example.py</span>
                 </div>
-                <pre className="p-6 overflow-x-auto text-sm md:text-base leading-relaxed font-mono text-gray-200"><code>{`
-# Get the latest recovered claims
-from clario import Clario
-
-clario = Clario(api_key="YOUR_API_KEY")
-
-recovered_claims = clario.claims.list( status="recovered", limit=10)
-
-for claim in recovered_claims: print(f"Recovered {claim.amount} for claim ID: {claim.id}")
-`}</code></pre>
+                <pre className="p-6 overflow-x-auto text-sm md:text-base leading-relaxed font-mono text-gray-200"><code>
+                  <span className="text-gray-400"># Get the latest recovered claims</span>
+                  <br />
+                  <span className="text-emerald-400">from</span> clario <span className="text-emerald-400">import</span> <span className="text-sky-300">Clario</span>
+                  <br />
+                  <br />
+                  clario <span className="text-emerald-400">=</span> <span className="text-sky-300">Clario</span>(api_key=<span className="text-amber-300">"YOUR_API_KEY"</span>)
+                  <br />
+                  <br />
+                  recovered_claims <span className="text-emerald-400">=</span> clario.claims.list(
+                  <br />
+                  &nbsp;&nbsp;status=<span className="text-amber-300">"recovered"</span>,
+                  <br />
+                  &nbsp;&nbsp;limit=<span className="text-rose-300">10</span>
+                  <br />
+                  )
+                  <br />
+                  <br />
+                  <span className="text-emerald-400">for</span> claim <span className="text-emerald-400">in</span> recovered_claims:
+                  <br />
+                  &nbsp;&nbsp;print(f<span className="text-amber-300">{"\"Recovered {claim.amount} for claim ID: {claim.id}\""}</span>)
+                </code></pre>
               </div>
             </section>
 
