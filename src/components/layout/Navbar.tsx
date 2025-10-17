@@ -30,7 +30,8 @@ export function Navbar({
     location.pathname.startsWith('/recoveries') ||
     location.pathname.startsWith('/reports') ||
     location.pathname.startsWith('/whats-new') ||
-    location.pathname.startsWith('/help');
+    location.pathname.startsWith('/help') ||
+    location.pathname.startsWith('/auth');
   const isTransparent = !!forceTransparent || pathTransparent;
 
   type LanguageOption = {
