@@ -21,6 +21,7 @@ const SmartInventorySync = lazy(() => import("./pages/SmartInventorySync"));
 const EvidenceLocker = lazy(() => import("./pages/EvidenceLocker"));
 const DocumentDetail = lazy(() => import("./pages/DocumentDetail"));
 const Billing = lazy(() => import("./pages/Billing"));
+const InvoiceDetail = lazy(() => import("./pages/InvoiceDetail"));
 const TeamManagement = lazy(() => import("./pages/TeamManagement"));
 const ExportCenter = lazy(() => import("./pages/ExportCenter"));
 const NotificationHub = lazy(() => import("./pages/NotificationHub"));
@@ -88,6 +89,7 @@ const App = () => (
             <Route path="/evidence-locker" element={<EvidenceLocker />} />
             <Route path="/documents/:id" element={<DocumentDetail />} />
             <Route path="/billing" element={<Billing />} />
+            <Route path="/billing/invoice/:id" element={<InvoiceDetail />} />
             <Route path="/team" element={<TeamManagement />} />
             <Route path="/export-center" element={<ExportCenter />} />
             <Route path="/notifications" element={<NotificationHub />} />
