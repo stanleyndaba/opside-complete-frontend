@@ -277,7 +277,7 @@ export default function Billing() {
                         })}
                       </TableCell>
                       <TableCell>
-                        <Button variant="ghost" size="sm">
+                        <Button variant="ghost" size="sm" onClick={() => window.print()}>
                           <Download className="h-4 w-4 mr-2" />
                           Download PDF
                         </Button>
