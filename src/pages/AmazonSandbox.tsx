@@ -4,6 +4,7 @@ import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, Loader2 } from 'lucide-react';
+import { api } from '@/lib/api';
 
 export default function AmazonSandboxPage() {
   const [searchParams] = useSearchParams();
@@ -11,13 +12,18 @@ export default function AmazonSandboxPage() {
   const state = searchParams.get('state');
 
   useEffect(() => {
-    // SIMULATE SUCCESS WITHOUT BACKEND - just wait and redirect
-    const timer = setTimeout(async () => {
-      // Skip the backend call and go straight to analyzing screen
-      navigate('/auth/analyzing?source=amazon');
-    }, 3000); // 3 second delay to show the OAuth simulation
-
-    return () => clearTimeout(timer);
+    let cancelled = false;
+    (async () => {
+      try {
+        // Establish sandbox session/tenant on backend; ignore errors to keep UX flowing
+        await api.completeAmazonSandboxAuth(state || 'demo');
+      } catch {}
+      if (!cancelled) {
+        // Small pause for UX, then continue
+        setTimeout(() => navigate('/auth/analyzing?source=amazon'), 800);
+      }
+    })();
+    return () => { cancelled = true; };
   }, [state, navigate]);
 
   return (
