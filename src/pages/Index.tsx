@@ -98,6 +98,8 @@ const Index = () => {
             </DropdownMenu>
           </div>
           <nav className="flex items-center gap-4 text-sm">
+            {/* API link */}
+            <Link to="/api" className="text-gray-200 hover:text-white hover:bg-white/10 px-3 py-1.5 rounded-md">API</Link>
             {/* Language selector */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
