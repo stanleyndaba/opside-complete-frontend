@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Link } from 'react-router-dom';
 import { Link as LinkIcon, Mail, ChevronDown, Link2, HelpCircle, ScrollText, BookOpen, Building2, Handshake, Check, ShieldCheck } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -33,6 +34,7 @@ const Index = () => {
   const [selectedLanguageCode, setSelectedLanguageCode] = useState<string>(() =>
     typeof window !== 'undefined' ? localStorage.getItem('clario.langPreference') || 'us-en' : 'us-en'
   );
+  const [langQuery, setLangQuery] = useState<string>('');
 
   useEffect(() => {
     try {
@@ -42,6 +44,16 @@ const Index = () => {
 
   const selectedLanguage: LanguageOption =
     LANGUAGE_OPTIONS.find((o) => o.code === selectedLanguageCode) || LANGUAGE_OPTIONS[0];
+
+  const filteredLanguages = useMemo(() => {
+    const q = langQuery.trim().toLowerCase();
+    if (!q) return LANGUAGE_OPTIONS;
+    return LANGUAGE_OPTIONS.filter(o =>
+      o.language.toLowerCase().includes(q) ||
+      o.country.toLowerCase().includes(q) ||
+      o.code.toLowerCase().includes(q)
+    );
+  }, [langQuery]);
 
   return (
     <div className="min-h-screen flex flex-col bg-[#0B1220] landing">
@@ -111,12 +123,26 @@ const Index = () => {
                   <ChevronDown className="h-4 w-4 opacity-70" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="min-w-[220px] bg-[#0B1220]/70 backdrop-blur-md border border-white/10 text-gray-100 shadow-xl">
-                {LANGUAGE_OPTIONS.map((opt) => (
-                  <DropdownMenuItem key={opt.code} onClick={() => setSelectedLanguageCode(opt.code)} className="gap-2 hover:bg-white/10 focus:bg-white/10">
-                    <span className="font-medium">{opt.language}</span>
-                  </DropdownMenuItem>
-                ))}
+              <DropdownMenuContent align="end" className="min-w-[240px] bg-[#0B1220]/70 backdrop-blur-md border border-white/10 text-gray-100 shadow-xl p-0">
+                <div className="p-2 sticky top-0 bg-[#0B1220]/80 backdrop-blur-md border-b border-white/10" onKeyDown={(e) => e.stopPropagation()}>
+                  <Input
+                    value={langQuery}
+                    onChange={(e) => setLangQuery(e.target.value)}
+                    placeholder="Search language..."
+                    className="h-8 bg-white/10 border-white/10 text-gray-100 placeholder:text-gray-400"
+                  />
+                </div>
+                <div className="max-h-64 overflow-auto">
+                  {filteredLanguages.length === 0 ? (
+                    <DropdownMenuItem disabled className="text-gray-400">No matches</DropdownMenuItem>
+                  ) : (
+                    filteredLanguages.map((opt) => (
+                      <DropdownMenuItem key={opt.code} onClick={() => { setSelectedLanguageCode(opt.code); setLangQuery(''); }} className="gap-2 hover:bg-white/10 focus:bg-white/10">
+                        <span className="font-medium">{opt.language}</span>
+                      </DropdownMenuItem>
+                    ))
+                  )}
+                </div>
               </DropdownMenuContent>
             </DropdownMenu>
             <Button variant="ghost" className="text-gray-200 hover:bg-white/10 hover:text-white" type="button" disabled={connecting} onClick={async () => { 
