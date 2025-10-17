@@ -105,10 +105,8 @@ export function Dashboard() {
       <div className="flex-1 flex h-full overflow-hidden">
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
         <main className={'flex-1 transition-all duration-300 overflow-y-auto ' + mainClass}>
-          <div className="relative">
-            <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
-              <div className="relative container mx-auto px-6 md:px-10 lg:px-12 pt-6 pb-10 text-gray-300 space-y-8">
+          <div className="relative pt-24">
+              <div className="relative container mx-auto px-6 md:px-10 lg:px-12 pb-10 text-gray-300 space-y-8">
             <div className="rounded-2xl bg-[#111827] p-6 md:p-8">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 h-full">
               <div className="lg:col-span-2 space-y-8">
