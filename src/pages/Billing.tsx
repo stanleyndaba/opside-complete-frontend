@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { 
   Download, 
@@ -94,6 +96,46 @@ const handleStripePaymentUpdate = () => {
 };
 
 export default function Billing() {
+  const [exportOpen, setExportOpen] = useState(false);
+  const [exportFormat, setExportFormat] = useState<'csv' | 'pdf'>('csv');
+
+  const exportBillingCSV = () => {
+    const headers = [
+      'Invoice ID',
+      'Date Issued',
+      'Status',
+      'Total Recovered',
+      'Commission (20%)',
+      'Amount Charged',
+      'Recovery Claim IDs'
+    ];
+    const rows = mockInvoices.map(inv => [
+      inv.id,
+      inv.dateIssued,
+      inv.status,
+      inv.totalRecovered,
+      inv.commission,
+      inv.amountCharged,
+      inv.recoveryClaimIds.join('|')
+    ].join(','));
+    const csvContent = [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.setAttribute('hidden', '');
+    a.setAttribute('href', url);
+    a.setAttribute('download', 'billing-history.csv');
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
+  const exportAction = () => {
+    if (exportFormat === 'csv') exportBillingCSV();
+    if (exportFormat === 'pdf') window.print();
+    setExportOpen(false);
+  };
+
   return (
     <PageLayout title="Billing & Invoices">
       <div className="relative -m-4 lg:-m-6">
@@ -172,7 +214,7 @@ export default function Billing() {
                   Complete transparency into every charge and recovery
                 </p>
               </div>
-              <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold">
+              <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold" onClick={() => setExportOpen(true)}>
                 <Download className="h-4 w-4 mr-2" />
                 Export All
               </Button>
@@ -325,5 +367,31 @@ export default function Billing() {
         </div>
       </div>
     </PageLayout>
+    
+    /* Export Modal */
+    ,
+    <Dialog key="billing-export" open={exportOpen} onOpenChange={setExportOpen}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Export Data</DialogTitle>
+          <DialogDescription>Export your billing history.</DialogDescription>
+        </DialogHeader>
+        <div className="space-y-3">
+          <Select value={exportFormat} onValueChange={(v) => setExportFormat(v as 'csv' | 'pdf')}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select format" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="csv">Detailed CSV</SelectItem>
+              <SelectItem value="pdf">PDF Summary</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setExportOpen(false)}>Cancel</Button>
+          <Button onClick={exportAction}>Generate & Download</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
