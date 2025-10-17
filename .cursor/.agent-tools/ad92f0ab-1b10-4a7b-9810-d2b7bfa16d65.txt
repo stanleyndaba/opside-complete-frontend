@@ -1,0 +1,171 @@
+vite v5.4.10 building for production...
+transforming...
+Browserslist: browsers data (caniuse-lite) is 12 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+✓ 3598 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                               2.37 kB │ gzip:   0.98 kB
+dist/assets/index-DJB5Ou50.css               82.62 kB │ gzip:  14.27 kB
+dist/assets/label-CXvm9nJI.js                 0.36 kB │ gzip:   0.26 kB
+dist/assets/separator-CWz8xCZq.js             0.40 kB │ gzip:   0.28 kB
+dist/assets/PageLayout-IK6ArFFN.js            0.59 kB │ gzip:   0.37 kB
+dist/assets/textarea-CSXoZy_r.js              0.62 kB │ gzip:   0.39 kB
+dist/assets/use-status-stream-DpNxczqN.js     0.68 kB │ gzip:   0.41 kB
+dist/assets/recoveryApi-DAs8p-Be.js           0.68 kB │ gzip:   0.27 kB
+dist/assets/NotFound-Ds90XYmL.js              0.70 kB │ gzip:   0.42 kB
+dist/assets/input-D9Z3xcdh.js                 0.72 kB │ gzip:   0.43 kB
+dist/assets/switch-C9_M1Vl6.js                0.85 kB │ gzip:   0.45 kB
+dist/assets/StripeCallback-Ddg_69Zs.js        1.01 kB │ gzip:   0.60 kB
+dist/assets/card-CaklOf0p.js                  1.03 kB │ gzip:   0.40 kB
+dist/assets/accordion-DuHcW8to.js             1.04 kB │ gzip:   0.52 kB
+dist/assets/button-DmKrTE4E.js                1.30 kB │ gzip:   0.64 kB
+dist/assets/table-S1G8eS4v.js                 1.52 kB │ gzip:   0.53 kB
+dist/assets/EvidenceSearch-6seuSJHS.js        2.03 kB │ gzip:   0.98 kB
+dist/assets/dialog-HnyVDD0s.js                2.24 kB │ gzip:   0.88 kB
+dist/assets/AmazonSandbox-BLkv7k8q.js         2.39 kB │ gzip:   1.03 kB
+dist/assets/EvidenceOnboarding-C3_sjY2W.js    2.67 kB │ gzip:   1.20 kB
+dist/assets/select-DrsQTBtm.js                3.01 kB │ gzip:   1.09 kB
+dist/assets/Sync-BhYB4kJg.js                  3.18 kB │ gzip:   1.47 kB
+dist/assets/About-DFHlqoPH.js                 3.20 kB │ gzip:   1.24 kB
+dist/assets/OAuthCallback-Cl5csImd.js         3.36 kB │ gzip:   1.45 kB
+dist/assets/dropdown-menu-CzyHs0F9.js         3.53 kB │ gzip:   0.96 kB
+dist/assets/AnalyzingScreen-D_ibbuRd.js       5.13 kB │ gzip:   1.77 kB
+dist/assets/SmartInventorySync-BUc-q_v1.js    5.51 kB │ gzip:   2.07 kB
+dist/assets/OAuthSuccess-91-zce7g.js          5.53 kB │ gzip:   2.19 kB
+dist/assets/WhatsNew-DkDWEEnP.js              5.68 kB │ gzip:   2.44 kB
+dist/assets/TeamManagement-DvhI7j1w.js        6.10 kB │ gzip:   1.95 kB
+dist/assets/ApiAccess-BOoTcb3X.js             6.12 kB │ gzip:   2.11 kB
+dist/assets/NotificationHub-zti42O6R.js       6.40 kB │ gzip:   2.13 kB
+dist/assets/Dashboard-DJhdqFts.js             6.47 kB │ gzip:   2.30 kB
+dist/assets/ExportCenter-Cnwe4_RX.js          7.11 kB │ gzip:   2.38 kB
+dist/assets/Careers-2S-LqaRP.js               7.33 kB │ gzip:   2.90 kB
+dist/assets/DocumentDetail-APpjHJJ_.js        7.53 kB │ gzip:   2.36 kB
+dist/assets/ApiLanding-D5m0WhSX.js            8.70 kB │ gzip:   3.06 kB
+dist/assets/Index-DwMnRIj1.js                 8.91 kB │ gzip:   2.68 kB
+dist/assets/EvidenceLocker-DU4bKji8.js        9.17 kB │ gzip:   2.98 kB
+dist/assets/Billing-CbZ9Ky3k.js               9.55 kB │ gzip:   2.98 kB
+dist/assets/react-core-DarJlNIv.js           10.40 kB │ gzip:   3.58 kB
+dist/assets/Reports-BnF2UocV.js              10.43 kB │ gzip:   3.56 kB
+dist/assets/Help-CymM6bLa.js                 13.20 kB │ gzip:   4.16 kB
+dist/assets/Sidebar-Xbn2kyeS.js              14.90 kB │ gzip:   4.72 kB
+dist/assets/IntegrationsHub-D56zrV5g.js      15.54 kB │ gzip:   4.49 kB
+dist/assets/Settings-DIfysc9N.js             16.28 kB │ gzip:   4.23 kB
+dist/assets/Recoveries-CAhgSgge.js           17.87 kB │ gzip:   5.79 kB
+dist/assets/CaseDetail-DibPfoQv.js           19.43 kB │ gzip:   5.72 kB
+dist/assets/react-router-qZpM5xWq.js         20.99 kB │ gzip:   7.82 kB
+dist/assets/date-fns-CvI-Jg9D.js             23.30 kB │ gzip:   6.45 kB
+dist/assets/tanstack-CnUCwORI.js             26.08 kB │ gzip:   8.04 kB
+dist/assets/icons-Drd6Faih.js                30.92 kB │ gzip:   6.26 kB
+dist/assets/popover-D6bhfOcr.js              33.35 kB │ gzip:  10.65 kB
+dist/assets/index-CyMjNouN.js                79.52 kB │ gzip:  25.98 kB
+dist/assets/radix-DLafLZCf.js               128.49 kB │ gzip:  37.14 kB
+dist/assets/react-dom-BJChOSph.js           155.98 kB │ gzip:  51.47 kB
+dist/assets/index-CfAxbBoQ.js               317.95 kB │ gzip: 103.97 kB
+dist/assets/recharts-CXTfgSam.js            368.44 kB │ gzip: 101.66 kB
+✓ built in 5.64s
+
+✨ [vite-plugin-compression]:algorithm=gzip - compressed file successfully: 
+dist//workspace/assets/About-DFHlqoPH.js.gz                3.14kb / gzip: 1.21kb
+dist//workspace/assets/AnalyzingScreen-D_ibbuRd.js.gz      5.01kb / gzip: 1.72kb
+dist//workspace/assets/AmazonSandbox-BLkv7k8q.js.gz        2.34kb / gzip: 1.01kb
+dist//workspace/assets/ApiAccess-BOoTcb3X.js.gz            5.98kb / gzip: 2.06kb
+dist//workspace/assets/ApiLanding-D5m0WhSX.js.gz           8.55kb / gzip: 2.98kb
+dist//workspace/assets/Careers-2S-LqaRP.js.gz              7.19kb / gzip: 2.83kb
+dist//workspace/assets/DocumentDetail-APpjHJJ_.js.gz       7.37kb / gzip: 2.30kb
+dist//workspace/assets/CaseDetail-DibPfoQv.js.gz           18.99kb / gzip: 5.57kb
+dist//workspace/assets/EvidenceOnboarding-C3_sjY2W.js.gz   2.61kb / gzip: 1.17kb
+dist//workspace/assets/EvidenceLocker-DU4bKji8.js.gz       8.96kb / gzip: 2.90kb
+dist//workspace/assets/EvidenceSearch-6seuSJHS.js.gz       1.98kb / gzip: 0.96kb
+dist//workspace/assets/ExportCenter-Cnwe4_RX.js.gz         6.94kb / gzip: 2.33kb
+dist//workspace/assets/Billing-CbZ9Ky3k.js.gz              9.33kb / gzip: 2.90kb
+dist//workspace/assets/Dashboard-DJhdqFts.js.gz            6.32kb / gzip: 2.25kb
+dist//workspace/assets/NotificationHub-zti42O6R.js.gz      6.25kb / gzip: 2.08kb
+dist//workspace/assets/Index-DwMnRIj1.js.gz                8.75kb / gzip: 2.62kb
+dist//workspace/assets/Help-CymM6bLa.js.gz                 12.89kb / gzip: 4.05kb
+dist//workspace/assets/OAuthSuccess-91-zce7g.js.gz         5.41kb / gzip: 2.14kb
+dist//workspace/assets/IntegrationsHub-D56zrV5g.js.gz      15.21kb / gzip: 4.38kb
+dist//workspace/assets/Reports-BnF2UocV.js.gz              10.19kb / gzip: 3.48kb
+dist//workspace/assets/Settings-DIfysc9N.js.gz             15.90kb / gzip: 4.12kb
+dist//workspace/assets/OAuthCallback-Cl5csImd.js.gz        3.28kb / gzip: 1.41kb
+dist//workspace/assets/Recoveries-CAhgSgge.js.gz           17.45kb / gzip: 5.64kb
+dist//workspace/assets/SmartInventorySync-BUc-q_v1.js.gz   5.38kb / gzip: 2.02kb
+dist//workspace/assets/Sidebar-Xbn2kyeS.js.gz              14.55kb / gzip: 4.60kb
+dist//workspace/assets/Sync-BhYB4kJg.js.gz                 3.11kb / gzip: 1.43kb
+dist//workspace/assets/WhatsNew-DkDWEEnP.js.gz             5.55kb / gzip: 2.39kb
+dist//workspace/assets/card-CaklOf0p.js.gz                 1.01kb / gzip: 0.39kb
+dist//workspace/assets/TeamManagement-DvhI7j1w.js.gz       5.96kb / gzip: 1.90kb
+dist//workspace/assets/accordion-DuHcW8to.js.gz            1.01kb / gzip: 0.50kb
+dist//workspace/assets/dialog-HnyVDD0s.js.gz               2.18kb / gzip: 0.86kb
+dist//workspace/assets/dropdown-menu-CzyHs0F9.js.gz        3.45kb / gzip: 0.94kb
+dist//workspace/assets/date-fns-CvI-Jg9D.js.gz             22.75kb / gzip: 6.30kb
+dist//workspace/assets/button-DmKrTE4E.js.gz               1.27kb / gzip: 0.62kb
+dist//workspace/assets/icons-Drd6Faih.js.gz                30.20kb / gzip: 6.06kb
+dist//workspace/assets/popover-D6bhfOcr.js.gz              32.56kb / gzip: 10.38kb
+dist//workspace/assets/react-core-DarJlNIv.js.gz           10.16kb / gzip: 3.49kb
+dist//workspace/assets/index-DJB5Ou50.css.gz               80.68kb / gzip: 13.85kb
+dist//workspace/assets/react-router-qZpM5xWq.js.gz         20.50kb / gzip: 7.64kb
+dist//workspace/assets/select-DrsQTBtm.js.gz               2.94kb / gzip: 1.06kb
+dist//workspace/assets/table-S1G8eS4v.js.gz                1.49kb / gzip: 0.52kb
+dist//workspace/index.html.gz                              2.31kb / gzip: 0.95kb
+dist//workspace/assets/tanstack-CnUCwORI.js.gz             25.47kb / gzip: 7.85kb
+dist//workspace/assets/index-CyMjNouN.js.gz                77.69kb / gzip: 25.35kb
+dist//workspace/assets/radix-DLafLZCf.js.gz                125.48kb / gzip: 36.18kb
+dist//workspace/assets/react-dom-BJChOSph.js.gz            152.32kb / gzip: 50.19kb
+dist//workspace/assets/index-CfAxbBoQ.js.gz                310.50kb / gzip: 101.40kb
+dist//workspace/assets/recharts-CXTfgSam.js.gz             359.81kb / gzip: 99.05kb
+
+
+
+✨ [vite-plugin-compression]:algorithm=brotliCompress - compressed file successfully: 
+dist//workspace/assets/AmazonSandbox-BLkv7k8q.js.br        2.34kb / brotliCompress: 0.88kb
+dist//workspace/assets/About-DFHlqoPH.js.br                3.14kb / brotliCompress: 1.04kb
+dist//workspace/assets/AnalyzingScreen-D_ibbuRd.js.br      5.01kb / brotliCompress: 1.51kb
+dist//workspace/assets/ApiAccess-BOoTcb3X.js.br            5.98kb / brotliCompress: 1.71kb
+dist//workspace/assets/Billing-CbZ9Ky3k.js.br              9.33kb / brotliCompress: 2.43kb
+dist//workspace/assets/ApiLanding-D5m0WhSX.js.br           8.55kb / brotliCompress: 2.46kb
+dist//workspace/assets/Careers-2S-LqaRP.js.br              7.19kb / brotliCompress: 2.34kb
+dist//workspace/assets/Dashboard-DJhdqFts.js.br            6.32kb / brotliCompress: 1.98kb
+dist//workspace/assets/DocumentDetail-APpjHJJ_.js.br       7.37kb / brotliCompress: 1.99kb
+dist//workspace/assets/EvidenceLocker-DU4bKji8.js.br       8.96kb / brotliCompress: 2.52kb
+dist//workspace/assets/CaseDetail-DibPfoQv.js.br           18.99kb / brotliCompress: 4.85kb
+dist//workspace/assets/EvidenceSearch-6seuSJHS.js.br       1.98kb / brotliCompress: 0.83kb
+dist//workspace/assets/EvidenceOnboarding-C3_sjY2W.js.br   2.61kb / brotliCompress: 1.00kb
+dist//workspace/assets/ExportCenter-Cnwe4_RX.js.br         6.94kb / brotliCompress: 2.02kb
+dist//workspace/assets/Help-CymM6bLa.js.br                 12.89kb / brotliCompress: 3.33kb
+dist//workspace/assets/Index-DwMnRIj1.js.br                8.75kb / brotliCompress: 2.19kb
+dist//workspace/assets/NotificationHub-zti42O6R.js.br      6.25kb / brotliCompress: 1.73kb
+dist//workspace/assets/OAuthCallback-Cl5csImd.js.br        3.28kb / brotliCompress: 1.23kb
+dist//workspace/assets/IntegrationsHub-D56zrV5g.js.br      15.21kb / brotliCompress: 3.85kb
+dist//workspace/assets/OAuthSuccess-91-zce7g.js.br         5.41kb / brotliCompress: 1.83kb
+dist//workspace/assets/Reports-BnF2UocV.js.br              10.19kb / brotliCompress: 3.06kb
+dist//workspace/assets/Recoveries-CAhgSgge.js.br           17.45kb / brotliCompress: 4.98kb
+dist//workspace/assets/Settings-DIfysc9N.js.br             15.90kb / brotliCompress: 3.48kb
+dist//workspace/assets/Sidebar-Xbn2kyeS.js.br              14.55kb / brotliCompress: 4.09kb
+dist//workspace/assets/Sync-BhYB4kJg.js.br                 3.11kb / brotliCompress: 1.27kb
+dist//workspace/assets/SmartInventorySync-BUc-q_v1.js.br   5.38kb / brotliCompress: 1.76kb
+dist//workspace/assets/accordion-DuHcW8to.js.br            1.01kb / brotliCompress: 0.44kb
+dist//workspace/assets/button-DmKrTE4E.js.br               1.27kb / brotliCompress: 0.53kb
+dist//workspace/assets/TeamManagement-DvhI7j1w.js.br       5.96kb / brotliCompress: 1.67kb
+dist//workspace/assets/card-CaklOf0p.js.br                 1.01kb / brotliCompress: 0.33kb
+dist//workspace/assets/WhatsNew-DkDWEEnP.js.br             5.55kb / brotliCompress: 1.99kb
+dist//workspace/assets/dropdown-menu-CzyHs0F9.js.br        3.45kb / brotliCompress: 0.80kb
+dist//workspace/assets/date-fns-CvI-Jg9D.js.br             22.75kb / brotliCompress: 5.60kb
+dist//workspace/assets/dialog-HnyVDD0s.js.br               2.18kb / brotliCompress: 0.75kb
+dist//workspace/assets/icons-Drd6Faih.js.br                30.20kb / brotliCompress: 5.26kb
+dist//workspace/assets/index-DJB5Ou50.css.br               80.68kb / brotliCompress: 11.60kb
+dist//workspace/assets/select-DrsQTBtm.js.br               2.94kb / brotliCompress: 0.91kb
+dist//workspace/assets/react-core-DarJlNIv.js.br           10.16kb / brotliCompress: 3.07kb
+dist//workspace/assets/react-router-qZpM5xWq.js.br         20.50kb / brotliCompress: 6.82kb
+dist//workspace/assets/table-S1G8eS4v.js.br                1.49kb / brotliCompress: 0.45kb
+dist//workspace/index.html.br                              2.31kb / brotliCompress: 0.71kb
+dist//workspace/assets/popover-D6bhfOcr.js.br              32.56kb / brotliCompress: 9.18kb
+dist//workspace/assets/tanstack-CnUCwORI.js.br             25.47kb / brotliCompress: 7.08kb
+dist//workspace/assets/index-CyMjNouN.js.br                77.69kb / brotliCompress: 21.95kb
+dist//workspace/assets/radix-DLafLZCf.js.br                125.48kb / brotliCompress: 31.29kb
+dist//workspace/assets/index-CfAxbBoQ.js.br                310.50kb / brotliCompress: 85.64kb
+dist//workspace/assets/react-dom-BJChOSph.js.br            152.32kb / brotliCompress: 44.05kb
+dist//workspace/assets/recharts-CXTfgSam.js.br             359.81kb / brotliCompress: 81.84kb
+
+
