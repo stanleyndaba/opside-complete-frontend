@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Skeleton } from "@/components/ui/skeleton";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import DemoOverlay from "@/components/demo/DemoOverlay";
 
 // Route-level code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -111,6 +112,7 @@ const App = () => (
             {/* 404 Catch All */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <DemoOverlay />
         </Suspense>
       </BrowserRouter>
     </TooltipProvider>
