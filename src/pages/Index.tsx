@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { Link as LinkIcon, Mail, ArrowRight, Globe, ChevronDown } from 'lucide-react';
+import { Link as LinkIcon, Mail, ArrowRight, Globe, ChevronDown, Link2, HelpCircle, ScrollText } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { api } from '@/lib/api';
 
@@ -49,7 +49,35 @@ const Index = () => {
         <div className="container mx-auto px-6 py-5 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <img src="/logo-abstract.svg" alt="Logo" className="h-8 w-8" />
-            <span className="font-medium text-gray-100">Clario</span>
+            {/* Brand dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="inline-flex items-center gap-1.5 text-gray-100 hover:text-white hover:bg-white/10 px-2 py-1 rounded-md">
+                  <span className="font-medium">Clario</span>
+                  <ChevronDown className="h-4 w-4 opacity-80" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="min-w-[220px]">
+                <DropdownMenuItem asChild>
+                  <Link to="/integrations-hub" className="flex items-center gap-2">
+                    <Link2 className="h-4 w-4" />
+                    <span>Integrations</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/help" className="flex items-center gap-2">
+                    <HelpCircle className="h-4 w-4" />
+                    <span>Help Center</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/terms" className="flex items-center gap-2">
+                    <ScrollText className="h-4 w-4" />
+                    <span>Terms & Policies</span>
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
           <nav className="flex items-center gap-4 text-sm">
             {/* Language selector */}
