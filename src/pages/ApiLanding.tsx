@@ -39,7 +39,7 @@ const ApiLanding = () => {
                   <span className="h-2.5 w-2.5 rounded-full bg-green-500/70" />
                   <span className="ml-3 text-xs uppercase tracking-wider text-gray-400">example.py</span>
                 </div>
-                <pre className="p-6 overflow-x-auto text-sm md:text-base leading-relaxed font-mono text-gray-200"><code>
+                <pre className="p-6 overflow-x-auto text-sm md:text-base leading-relaxed font-mono text-gray-200"><code>{`
 # Get the latest recovered claims
 from clario import Clario
 
@@ -48,7 +48,7 @@ clario = Clario(api_key="YOUR_API_KEY")
 recovered_claims = clario.claims.list( status="recovered", limit=10)
 
 for claim in recovered_claims: print(f"Recovered {claim.amount} for claim ID: {claim.id}")
-</code></pre>
+`}</code></pre>
               </div>
             </section>
 
