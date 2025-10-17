@@ -144,7 +144,7 @@ const Index = () => {
             <h1 className="font-heading text-4xl md:text-6xl font-bold tracking-tight text-gray-100">
               The <span className="text-emerald-500">end</span> of FBA reimbursement work.
             </h1>
-            <p className="font-body text-base md:text-xl text-gray-300 max-w-3xl mx-auto">
+            <p className="font-body text-base md:text-xl text-gray-400 font-normal max-w-3xl mx-auto">
               Clario is the zero-effort platform that automates your FBA financial audits. We find discrepancies, build the evidence, and manage the full recovery process, so you can focus on building your brand.
             </p>
             <div className="pt-2">
