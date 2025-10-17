@@ -77,50 +77,56 @@ export default function AnalyzingScreen() {
   if (showResults && recoveryData) {
     return (
       <PageLayout title="Analysis Complete">
-        <div className="max-w-2xl mx-auto mt-10">
-          <Card className="border-green-200 bg-green-50">
-            <CardHeader className="text-center">
-              <CardTitle className="flex items-center justify-center gap-2 text-green-700">
+        <div className="relative -m-4 lg:-m-6">
+          <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24 text-gray-300">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+
+            <div className="relative max-w-2xl mx-auto mt-6">
+              <Card className="bg-white/5 border-white/10">
+                <CardHeader className="text-center">
+                  <CardTitle className="flex items-center justify-center gap-2 text-emerald-400">
                 <CheckCircle2 className="h-8 w-8" />
                 Analysis Complete!
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="text-center space-y-6">
-              <div className="space-y-2">
-                <div className="text-5xl font-bold text-green-700">
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="text-center space-y-6">
+                  <div className="space-y-2">
+                    <div className="text-5xl font-bold text-gray-100">
                   {formatCurrency(recoveryData.totalAmount, recoveryData.currency)}
-                </div>
-                <div className="text-lg text-muted-foreground">
+                    </div>
+                    <div className="text-lg text-gray-400">
                   in Potential Recoveries Found
-                </div>
-                <Badge variant="secondary" className="text-sm">
+                    </div>
+                    <Badge variant="outline" className="text-sm border-white/20">
                   {recoveryData.claimCount} claims identified
-                </Badge>
-              </div>
-              
-              <div className="grid grid-cols-3 gap-4 text-sm">
-                <div className="text-center p-3 bg-white rounded-lg border">
-                  <FileSearch className="h-6 w-6 mx-auto mb-2 text-blue-600" />
-                  <div>Lost Inventory</div>
-                  <div className="font-semibold">{formatCurrency(recoveryData.totalAmount * 0.6, recoveryData.currency)}</div>
-                </div>
-                <div className="text-center p-3 bg-white rounded-lg border">
-                  <Calculator className="h-6 w-6 mx-auto mb-2 text-orange-600" />
-                  <div>Fee Errors</div>
-                  <div className="font-semibold">{formatCurrency(recoveryData.totalAmount * 0.3, recoveryData.currency)}</div>
-                </div>
-                <div className="text-center p-3 bg-white rounded-lg border">
-                  <Scan className="h-6 w-6 mx-auto mb-2 text-purple-600" />
-                  <div>Shipments</div>
-                  <div className="font-semibold">{formatCurrency(recoveryData.totalAmount * 0.1, recoveryData.currency)}</div>
-                </div>
-              </div>
+                    </Badge>
+                  </div>
 
-              <div className="text-sm text-muted-foreground">
-                Taking you to your Command Center...
-              </div>
-            </CardContent>
-          </Card>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                    <div className="text-center p-3 rounded-lg border border-white/10 bg-white/5">
+                      <FileSearch className="h-6 w-6 mx-auto mb-2 text-blue-400" />
+                      <div>Lost Inventory</div>
+                      <div className="font-semibold">{formatCurrency(recoveryData.totalAmount * 0.6, recoveryData.currency)}</div>
+                    </div>
+                    <div className="text-center p-3 rounded-lg border border-white/10 bg-white/5">
+                      <Calculator className="h-6 w-6 mx-auto mb-2 text-amber-400" />
+                      <div>Fee Errors</div>
+                      <div className="font-semibold">{formatCurrency(recoveryData.totalAmount * 0.3, recoveryData.currency)}</div>
+                    </div>
+                    <div className="text-center p-3 rounded-lg border border-white/10 bg-white/5">
+                      <Scan className="h-6 w-6 mx-auto mb-2 text-purple-400" />
+                      <div>Shipments</div>
+                      <div className="font-semibold">{formatCurrency(recoveryData.totalAmount * 0.1, recoveryData.currency)}</div>
+                    </div>
+                  </div>
+
+                  <div className="text-sm text-gray-400">
+                    Taking you to your Command Center...
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </div>
       </PageLayout>
     );
@@ -128,24 +134,30 @@ export default function AnalyzingScreen() {
 
   return (
     <PageLayout title="Analyzing Your Account">
-      <div className="max-w-2xl mx-auto mt-20 text-center space-y-6">
-        <div className="flex items-center justify-center">
-          <span className="text-lg font-medium">Analyzing Your Amazon FBA History</span>
-        </div>
-        <div className="flex flex-col items-center gap-3">
-          <span className="text-sm text-muted-foreground">Progress</span>
-          <svg viewBox="0 0 100 100" className="w-24 h-24 -rotate-90">
-            <circle cx="50" cy="50" r={radius} fill="none" stroke="currentColor" className="text-gray-300" strokeWidth={6} />
-            <circle cx="50" cy="50" r={radius} fill="none" stroke="currentColor" className="text-gray-500" strokeWidth={6} strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={dashOffset} />
-          </svg>
-          <div className="text-sm font-medium">{progress}%</div>
-        </div>
-        <div className="py-2">
-          <div className="text-lg font-medium mb-2">
-            {SCANNING_MESSAGES[currentMessage]}
-          </div>
-          <div className="text-sm text-muted-foreground">
-            This usually takes about 90 seconds...
+      <div className="relative -m-4 lg:-m-6">
+        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24 text-gray-300">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+
+          <div className="relative max-w-2xl mx-auto mt-10 text-center space-y-6">
+            <div className="flex items-center justify-center">
+              <span className="text-lg font-medium text-gray-100">Analyzing Your Amazon FBA History</span>
+            </div>
+            <div className="flex flex-col items-center gap-3">
+              <span className="text-sm text-gray-400">Progress</span>
+              <svg viewBox="0 0 100 100" className="w-24 h-24 -rotate-90">
+                <circle cx="50" cy="50" r={radius} fill="none" stroke="currentColor" className="text-white/10" strokeWidth={6} />
+                <circle cx="50" cy="50" r={radius} fill="none" stroke="currentColor" className="text-emerald-400" strokeWidth={6} strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={dashOffset} />
+              </svg>
+              <div className="text-sm font-medium text-gray-200">{progress}%</div>
+            </div>
+            <div className="py-2">
+              <div className="text-lg font-medium mb-2 text-gray-100">
+                {SCANNING_MESSAGES[currentMessage]}
+              </div>
+              <div className="text-sm text-gray-400">
+                This usually takes about 90 seconds...
+              </div>
+            </div>
           </div>
         </div>
       </div>
