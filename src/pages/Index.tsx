@@ -57,21 +57,21 @@ const Index = () => {
                   <ChevronDown className="h-4 w-4 opacity-80" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="min-w-[220px]">
+              <DropdownMenuContent align="start" className="min-w-[220px] bg-[#0B1220]/70 backdrop-blur-md border border-white/10 text-gray-100 shadow-xl">
                 <DropdownMenuItem asChild>
-                  <Link to="/integrations-hub" className="flex items-center gap-2">
+                  <Link to="/integrations-hub" className="flex items-center gap-2 hover:bg-white/10 focus:bg-white/10">
                     <Link2 className="h-4 w-4" />
                     <span>Integrations</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/help" className="flex items-center gap-2">
+                  <Link to="/help" className="flex items-center gap-2 hover:bg-white/10 focus:bg-white/10">
                     <HelpCircle className="h-4 w-4" />
                     <span>Help Center</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/terms" className="flex items-center gap-2">
+                  <Link to="/terms" className="flex items-center gap-2 hover:bg-white/10 focus:bg-white/10">
                     <ScrollText className="h-4 w-4" />
                     <span>Terms & Policies</span>
                   </Link>
@@ -91,12 +91,10 @@ const Index = () => {
                   <ChevronDown className="h-4 w-4 opacity-70" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="min-w-[220px]">
+              <DropdownMenuContent align="end" className="min-w-[220px] bg-[#0B1220]/70 backdrop-blur-md border border-white/10 text-gray-100 shadow-xl">
                 {LANGUAGE_OPTIONS.map((opt) => (
-                  <DropdownMenuItem key={opt.code} onClick={() => setSelectedLanguageCode(opt.code)} className="gap-2">
-                    <span className="text-base leading-none">{opt.flag}</span>
-                    <span className="font-medium">{opt.country}</span>
-                    <span className="text-muted-foreground">| {opt.language}</span>
+                  <DropdownMenuItem key={opt.code} onClick={() => setSelectedLanguageCode(opt.code)} className="gap-2 hover:bg-white/10 focus:bg-white/10">
+                    <span className="font-medium">{opt.language}</span>
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
