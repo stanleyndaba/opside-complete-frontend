@@ -34,39 +34,7 @@ export function Navbar({
     location.pathname.startsWith('/auth');
   const isTransparent = !!forceTransparent || pathTransparent;
 
-  type LanguageOption = {
-    code: string;
-    country: string;
-    language: string;
-    flag: string;
-  };
-
-  const LANGUAGE_OPTIONS: LanguageOption[] = [
-    { code: 'us-en', country: 'USA', language: 'English', flag: '🇺🇸' },
-    { code: 'ca-en', country: 'Canada', language: 'English', flag: '🇨🇦' },
-    { code: 'ca-fr', country: 'Canada', language: 'Français', flag: '🇨🇦' },
-    { code: 'gb-en', country: 'United Kingdom', language: 'English', flag: '🇬🇧' },
-    { code: 'au-en', country: 'Australia', language: 'English', flag: '🇦🇺' },
-    { code: 'de-de', country: 'Germany', language: 'Deutsch', flag: '🇩🇪' },
-    { code: 'fr-fr', country: 'France', language: 'Français', flag: '🇫🇷' },
-    { code: 'es-es', country: 'Spain', language: 'Español', flag: '🇪🇸' },
-    { code: 'it-it', country: 'Italy', language: 'Italiano', flag: '🇮🇹' },
-    { code: 'nl-nl', country: 'Netherlands', language: 'Nederlands', flag: '🇳🇱' },
-  ];
-
-  const [selectedLanguageCode, setSelectedLanguageCode] = useState<string>(() =>
-    typeof window !== 'undefined' ? localStorage.getItem('clario.langPreference') || 'us-en' : 'us-en'
-  );
-
-  useEffect(() => {
-    try {
-      localStorage.setItem('clario.langPreference', selectedLanguageCode);
-    } catch {}
-  }, [selectedLanguageCode]);
-
-  const selectedLanguage = useMemo<LanguageOption>(() => {
-    return LANGUAGE_OPTIONS.find((o) => o.code === selectedLanguageCode) || LANGUAGE_OPTIONS[0];
-  }, [selectedLanguageCode]);
+  // Language preference removed on platform navbar per design
 
   // Sandbox badge: show in non-production or when VITE_SANDBOX=true
   const env: any = (typeof import.meta !== 'undefined' ? (import.meta as any).env : undefined) || (typeof process !== 'undefined' ? (process as any).env : undefined) || {};
@@ -97,7 +65,7 @@ export function Navbar({
             />
           </div>
         </div>
-        {/* Right side - Sandbox badge, Language, Sync, Notifications */}
+        {/* Right side - Sandbox badge, Sync, Notifications */}
         <div className="flex items-center gap-4 ml-auto">
           {isSandbox && (
             <span className={cn(
@@ -107,35 +75,18 @@ export function Navbar({
               Sandbox
             </span>
           )}
-          {/* Language selector */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                className={cn(
-                  'inline-flex items-center gap-2 h-9 px-3 rounded-md text-sm transition-colors',
-                  isTransparent ? 'hover:bg-white/10 text-gray-200' : 'hover:bg-accent hover:text-accent-foreground'
-                )}
-                aria-label="Language preference"
-              >
-                <span>{selectedLanguage.language}</span>
-                <ChevronDown className="h-4 w-4 opacity-70" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="min-w-[220px]">
-              {LANGUAGE_OPTIONS.map((opt) => (
-                <DropdownMenuItem key={opt.code} onClick={() => setSelectedLanguageCode(opt.code)} className="gap-2">
-                  <span className="font-medium">{opt.language}</span>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {/* Language selector removed */}
           {/* Labeled sync button */}
-          <button title="Start sync now" className="inline-flex items-center gap-2 h-9 px-3 rounded-md bg-emerald-500 text-white hover:bg-emerald-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 active:bg-emerald-600 transition-colors" onClick={() => {
-            // Always route to the Sync page which starts/monitors the run
-            window.location.href = '/sync';
-          }}>
+          <button
+            title="Reconcile & Sync"
+            className={cn(
+              'inline-flex items-center gap-2 h-9 px-3 rounded-md text-sm transition-colors border',
+              isTransparent ? 'bg-white/5 border-white/10 text-gray-100 hover:bg-white/10' : 'bg-background border-border hover:bg-accent hover:text-accent-foreground'
+            )}
+            onClick={() => { window.location.href = '/smart-inventory-sync'; }}
+          >
             <ArrowUpDown className="h-4 w-4" />
-            <span className="text-sm">Sync</span>
+            <span>Reconcile & Sync</span>
           </button>
           <NotificationBell />
         </div>
