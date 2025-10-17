@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ArrowUpDown, Globe, ChevronDown, Search } from 'lucide-react';
+import { ArrowUpDown, ChevronDown, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Link, useLocation } from 'react-router-dom';
@@ -114,24 +114,16 @@ export function Navbar({
                   'inline-flex items-center gap-2 h-9 px-3 rounded-md text-sm transition-colors',
                   isTransparent ? 'hover:bg-white/10 text-gray-200' : 'hover:bg-accent hover:text-accent-foreground'
                 )}
-                aria-label="Language and region"
+                aria-label="Language preference"
               >
-                <span className="relative inline-flex">
-                  <Globe className="h-4 w-4" />
-                  <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-emerald-400 ring-1 ring-white/40" />
-                </span>
-                <span>
-                  {selectedLanguage.country} | {selectedLanguage.language}
-                </span>
+                <span>{selectedLanguage.language}</span>
                 <ChevronDown className="h-4 w-4 opacity-70" />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-[220px]">
               {LANGUAGE_OPTIONS.map((opt) => (
                 <DropdownMenuItem key={opt.code} onClick={() => setSelectedLanguageCode(opt.code)} className="gap-2">
-                  <span className="text-base leading-none">{opt.flag}</span>
-                  <span className="font-medium">{opt.country}</span>
-                  <span className="text-muted-foreground">| {opt.language}</span>
+                  <span className="font-medium">{opt.language}</span>
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
