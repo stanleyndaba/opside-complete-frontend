@@ -167,16 +167,25 @@ const Index = () => {
                   Connect Amazon
                 </Button>
               </div>
-              <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500 text-white text-xs md:text-sm">
-                  <Check className="h-4 w-4" /> No credit card required
-                </span>
-                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500 text-white text-xs md:text-sm">
-                  <Check className="h-4 w-4" /> 14-day free trial
-                </span>
-                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500 text-white text-xs md:text-sm">
-                  <Check className="h-4 w-4" /> Cancel anytime
-                </span>
+              <div className="mt-4 flex flex-wrap items-center justify-center gap-4">
+                <div className="inline-flex items-center gap-2">
+                  <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-emerald-500">
+                    <Check className="h-3 w-3 text-white" />
+                  </span>
+                  <span className="text-gray-300 text-sm md:text-base">No credit card required</span>
+                </div>
+                <div className="inline-flex items-center gap-2">
+                  <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-emerald-500">
+                    <Check className="h-3 w-3 text-white" />
+                  </span>
+                  <span className="text-gray-300 text-sm md:text-base">14-day free trial</span>
+                </div>
+                <div className="inline-flex items-center gap-2">
+                  <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-emerald-500">
+                    <Check className="h-3 w-3 text-white" />
+                  </span>
+                  <span className="text-gray-300 text-sm md:text-base">Cancel anytime</span>
+                </div>
               </div>
             </div>
           </div>
