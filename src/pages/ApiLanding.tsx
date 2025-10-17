@@ -36,7 +36,9 @@ const ApiLanding = () => {
   const [connecting, setConnecting] = useState(false);
 
   return (
-    <div className="min-h-screen landing" style={{ backgroundColor: '#0B1220' }}>
+    <div className="relative min-h-screen landing" style={{ backgroundColor: '#0B1220' }}>
+      {/* Full-page blueprint glow across entire viewport, including under the header */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
       <header className="sticky top-0 z-40 border-transparent bg-transparent">
         <div className="container mx-auto px-6 py-5 flex items-center justify-between text-gray-100">
           <div className="flex items-center gap-2">
@@ -84,9 +86,7 @@ const ApiLanding = () => {
       </header>
 
       <main>
-        <div className="relative w-full min-h-[calc(100vh-64px)]">
-          {/* Subtle blueprint glow */}
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+        <div className="relative w-full min-h-screen">
 
           <div className="relative mx-auto max-w-3xl px-6 pt-20 md:pt-28 pb-24 text-gray-300">
             <header>
