@@ -1,17 +1,84 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { ChevronDown } from 'lucide-react';
+import { api } from '@/lib/api';
 
 const ApiLanding = () => {
+  // Language preference (match platform + landing behavior)
+  type LanguageOption = {
+    code: string;
+    country: string;
+    language: string;
+    flag: string;
+  };
+  const LANGUAGE_OPTIONS: LanguageOption[] = [
+    { code: 'us-en', country: 'USA', language: 'English', flag: '🇺🇸' },
+    { code: 'ca-en', country: 'Canada', language: 'English', flag: '🇨🇦' },
+    { code: 'ca-fr', country: 'Canada', language: 'Français', flag: '🇨🇦' },
+    { code: 'gb-en', country: 'United Kingdom', language: 'English', flag: '🇬🇧' },
+    { code: 'au-en', country: 'Australia', language: 'English', flag: '🇦🇺' },
+    { code: 'de-de', country: 'Germany', language: 'Deutsch', flag: '🇩🇪' },
+    { code: 'fr-fr', country: 'France', language: 'Français', flag: '🇫🇷' },
+    { code: 'es-es', country: 'Spain', language: 'Español', flag: '🇪🇸' },
+    { code: 'it-it', country: 'Italy', language: 'Italiano', flag: '🇮🇹' },
+    { code: 'nl-nl', country: 'Netherlands', language: 'Nederlands', flag: '🇳🇱' },
+  ];
+  const [selectedLanguageCode, setSelectedLanguageCode] = useState<string>(() =>
+    typeof window !== 'undefined' ? localStorage.getItem('clario.langPreference') || 'us-en' : 'us-en'
+  );
+  useEffect(() => {
+    try { localStorage.setItem('clario.langPreference', selectedLanguageCode); } catch {}
+  }, [selectedLanguageCode]);
+  const selectedLanguage = LANGUAGE_OPTIONS.find(o => o.code === selectedLanguageCode) || LANGUAGE_OPTIONS[0];
+
+  const [connecting, setConnecting] = useState(false);
+
   return (
     <div className="min-h-screen landing" style={{ backgroundColor: '#0B1220' }}>
-      <header className="sticky top-0 z-40 border-transparent bg-[#0B1220]">
+      <header className="sticky top-0 z-40 border-transparent bg-transparent">
         <div className="container mx-auto px-6 py-5 flex items-center justify-between text-gray-100">
           <div className="flex items-center gap-2">
-            <img src="/logo-abstract.svg" alt="Logo" className="h-8 w-8" />
-            <span className="font-medium">Clario</span>
+            <Link to="/" className="flex items-center gap-2 hover:opacity-90">
+              <img src="/logo-abstract.svg" alt="Logo" className="h-8 w-8" />
+              <span className="font-medium">Clario</span>
+            </Link>
           </div>
-          <nav className="flex items-center gap-4 text-sm">
-            <a href="/" className="text-gray-300 hover:text-white">Home</a>
+          <nav className="flex items-center gap-3 text-sm">
+            {/* Language selector */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="inline-flex items-center gap-2 h-9 px-3 rounded-md text-sm text-gray-200 hover:bg-white/10 transition-colors"
+                  aria-label="Language preference"
+                >
+                  <span>{selectedLanguage.language}</span>
+                  <ChevronDown className="h-4 w-4 opacity-70" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="min-w-[220px] bg-[#0B1220]/70 backdrop-blur-md border border-white/10 text-gray-100 shadow-xl">
+                {LANGUAGE_OPTIONS.map(opt => (
+                  <DropdownMenuItem key={opt.code} onClick={() => setSelectedLanguageCode(opt.code)} className="gap-2 hover:bg-white/10 focus:bg-white/10">
+                    <span className="font-medium">{opt.language}</span>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Login */}
+            <Button variant="ghost" className="text-gray-200 hover:bg-white/10 hover:text-white" type="button" disabled={connecting} onClick={async () => {
+              if (connecting) return; setConnecting(true);
+              try {
+                const res = await api.connectAmazon();
+                const url = (res as any)?.data?.auth_url || (res as any)?.data?.redirect_url;
+                if ((res as any)?.ok && url) window.location.assign(url as string); else window.location.assign('/auth/amazon-sandbox');
+              } catch {
+                window.location.assign('/auth/amazon-sandbox');
+              }
+            }}>
+              Login
+            </Button>
           </nav>
         </div>
       </header>
