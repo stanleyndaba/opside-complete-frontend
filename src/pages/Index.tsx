@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { Link as LinkIcon, Mail, ChevronDown, Link2, HelpCircle, ScrollText } from 'lucide-react';
+import { Link as LinkIcon, Mail, ChevronDown, Link2, HelpCircle, ScrollText, BookOpen, Building2, Handshake } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { api } from '@/lib/api';
 
@@ -65,10 +65,28 @@ const Index = () => {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
+                  <Link to="/api-access" className="flex items-center gap-2 hover:bg-white/10 focus:bg-white/10">
+                    <BookOpen className="h-4 w-4" />
+                    <span>Documentation</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
                   <Link to="/help" className="flex items-center gap-2 hover:bg-white/10 focus:bg-white/10">
                     <HelpCircle className="h-4 w-4" />
                     <span>Help Center</span>
                   </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/about" className="flex items-center gap-2 hover:bg-white/10 focus:bg-white/10">
+                    <Building2 className="h-4 w-4" />
+                    <span>Enterprise</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <a href="mailto:hello@getclario.com?subject=Partnerships" className="flex items-center gap-2 hover:bg-white/10 focus:bg-white/10">
+                    <Handshake className="h-4 w-4" />
+                    <span>Partnerships</span>
+                  </a>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/terms" className="flex items-center gap-2 hover:bg-white/10 focus:bg-white/10">
