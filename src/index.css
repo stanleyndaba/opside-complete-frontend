@@ -195,6 +195,21 @@
     color: transparent;
     animation: brandSheen 3.5s ease-in-out infinite;
   }
+
+  /* Subtle animated gradient text for light grey copy */
+  .text-sheen-subtle {
+    background: linear-gradient(
+      90deg,
+      rgba(156,163,175,0.85) 0%,       /* gray-400 */
+      rgba(99,102,241,0.55) 50%,       /* indigo-500 */
+      rgba(156,163,175,0.85) 100%      /* gray-400 */
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: brandSheen 6s linear infinite;
+  }
 }
 
 /* Typography tuning across the platform (excludes landing page) */
