@@ -91,7 +91,7 @@ const App = () => (
             <Route path="/export-center" element={<ExportCenter />} />
             <Route path="/notifications" element={<NotificationHub />} />
             <Route path="/api-access" element={<ApiAccess />} />
-            <Route path="/api" element={<ApiLanding />} />
+            <Route path="/developer-api" element={<ApiLanding />} />
             <Route path="/help" element={<Help />} />
             <Route path="/whats-new" element={<WhatsNew />} />
             <Route path="/about" element={<About />} />
