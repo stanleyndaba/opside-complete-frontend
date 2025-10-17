@@ -3,6 +3,7 @@ import { useParams, Link, useLocation } from 'react-router-dom';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import Timeline from '@/components/layout/Timeline';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, AlertCircle, Calendar, RefreshCw, ExternalLink } from 'lucide-react';
@@ -637,6 +638,12 @@ export default function CaseDetail() {
                         </Link>
                       </Button>
                     </div>
+                  </div>
+
+                  {/* Timeline: fetch and display audit events */}
+                  <div className="mt-4 p-3 rounded-md border border-white/10 bg-white/5">
+                    <div className="text-sm font-semibold mb-2 text-gray-200">Timeline</div>
+                    <Timeline claimId={effectiveCase.id} />
                   </div>
 
                   {/* Visual Stepper */}
