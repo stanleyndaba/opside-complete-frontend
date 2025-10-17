@@ -195,8 +195,8 @@ export default function Billing() {
                 </Badge>
               </div>
               <Button 
-                className="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-semibold"
-                onClick={handleStripePaymentUpdate}
+                className="w-full bg-emerald-500 hover:bg-emerald-400 text-white font-semibold"
+                onClick={() => { window.location.href = '/stripe/callback'; }}
               >
                 Update Payment Method
               </Button>
