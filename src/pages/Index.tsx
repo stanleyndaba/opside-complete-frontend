@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { Link as LinkIcon, Mail, ArrowRight, Globe, ChevronDown, Link2, HelpCircle, ScrollText } from 'lucide-react';
+import { Link as LinkIcon, Mail, ChevronDown, Link2, HelpCircle, ScrollText } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { api } from '@/lib/api';
 
@@ -85,14 +85,9 @@ const Index = () => {
               <DropdownMenuTrigger asChild>
                 <button
                   className="inline-flex items-center gap-2 h-9 px-3 rounded-md text-sm text-gray-200 hover:bg-white/10 transition-colors"
-                  aria-label="Language and region"
+                  aria-label="Language preference"
                 >
-                  <span className="relative inline-flex">
-                    <Globe className="h-4 w-4" />
-                  </span>
-                  <span>
-                    {selectedLanguage.country} | {selectedLanguage.language}
-                  </span>
+                  <span>{selectedLanguage.language}</span>
                   <ChevronDown className="h-4 w-4 opacity-70" />
                 </button>
               </DropdownMenuTrigger>
