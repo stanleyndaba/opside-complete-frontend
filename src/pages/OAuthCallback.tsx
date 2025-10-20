@@ -58,19 +58,27 @@ export default function OAuthCallback() {
 
   return (
     <PageLayout title="Connecting Account">
-      <div className="max-w-xl mx-auto">
-        <Card>
+      <div className="relative -m-4 lg:-m-6">
+        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24 text-gray-300">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+          <div className="pointer-events-none absolute inset-0 opacity-20 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)] bg-[linear-gradient(to_bottom,transparent_0,transparent_95%,rgba(255,255,255,0.08)_96%),linear-gradient(to_right,transparent_0,transparent_95%,rgba(255,255,255,0.08)_96%)] bg-[length:36px_36px]" />
+
+          <div className="relative max-w-xl mx-auto">
+            <Card className="bg-white/5 border-white/10">
           <CardHeader>
             <CardTitle>OAuth Callback</CardTitle>
             <CardDescription>
               {provider ? `Provider: ${provider}` : 'Completing connection'}
             </CardDescription>
           </CardHeader>
-          <CardContent>
+              <CardContent>
             {!errorMessage ? (
               <div className="space-y-4">
-                <div className="flex items-center gap-2 text-green-700">
-                  <CheckCircle className="h-5 w-5" />
+                <div className="flex items-center gap-2 text-emerald-400">
+                  <span className="relative inline-flex items-center">
+                    <span className="absolute -inset-3 rounded-full bg-emerald-400/20 blur-2xl" />
+                    <img src="/clario-logo.svg" alt="Clario" className="relative h-5 opacity-90" />
+                  </span>
                   <span className="font-medium">{statusMessage}</span>
                 </div>
                 <div className="text-sm text-muted-foreground">
@@ -115,8 +123,10 @@ export default function OAuthCallback() {
                 </div>
               </div>
             )}
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </div>
     </PageLayout>
   );
