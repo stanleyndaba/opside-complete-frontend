@@ -7,12 +7,10 @@ import { Link as LinkIcon, Mail, ChevronDown, Link2, HelpCircle, ScrollText, Boo
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
-import { useToast } from '@/components/ui/use-toast';
 
 const Index = () => {
   const navigate = useNavigate();
   const [connecting, setConnecting] = useState(false);
-  const { toast } = useToast();
   const { toast } = useToast();
 
   type LanguageOption = {
