@@ -25,6 +25,7 @@ export default function AnalyzingScreen() {
   const [currentMessage, setCurrentMessage] = useState(0);
   const [showResults, setShowResults] = useState(false);
   const [recoveryData, setRecoveryData] = useState<{ totalAmount: number; currency: string; claimCount: number } | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
   const source = searchParams.get('source') || 'amazon';
@@ -56,10 +57,15 @@ export default function AnalyzingScreen() {
         api.getAmazonRecoveries().then(response => {
           if (response.ok) {
             setRecoveryData(response.data);
-            toast({ title: 'Analysis complete', description: 'We found potential recoveries in your account.' });
+            toast({ title: 'Analysis complete', description: 'Potential recoveries fetched.' });
           } else {
-            toast({ title: 'Analysis completed with issues', description: response.error || 'Could not load recovery summary.' });
+            setError(response.error || 'Network/Server error');
+            toast({ title: 'Analysis failed', description: response.error || 'Network/Server error' });
           }
+        }).catch((e: any) => {
+          const msg = e?.message || 'Network error';
+          setError(msg);
+          toast({ title: 'Analysis failed', description: msg });
         });
 
         // Auto-redirect to command center after showing results
@@ -170,6 +176,12 @@ export default function AnalyzingScreen() {
               <div className="text-sm text-gray-400">
                 This usually takes about 90 seconds...
               </div>
+              {error && (
+                <div className="mt-3 text-left rounded-md border border-red-500/30 bg-red-500/10 text-red-200 p-3 text-sm">
+                  <div className="font-medium mb-1">Analysis failed</div>
+                  <div>{error}</div>
+                </div>
+              )}
             </div>
 
             <div className="max-w-md mx-auto text-left">
