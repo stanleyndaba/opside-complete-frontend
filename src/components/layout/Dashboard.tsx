@@ -150,7 +150,6 @@ export function Dashboard() {
                         <div className="text-[32px] md:text-[36px] font-extrabold mt-1 text-emerald-400">
                           {formatCurrency(recoveredTotal ?? 0, recoveredCurrency)}
                         </div>
-                        <div className="text-xs text-gray-400 mt-1">Estimated from approved and pending claims</div>
                       </div>
                     </div>
 
@@ -178,6 +177,7 @@ export function Dashboard() {
                       >
                         Auto-Submit
                       </Button>
+                      <div className="mt-2 text-xs text-blue-600">Submit claim. clario auto files new</div>
                     </div>
                   </CardContent>
                 </Card>
