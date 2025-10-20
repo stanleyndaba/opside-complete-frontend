@@ -6,10 +6,14 @@ import { Link } from 'react-router-dom';
 import { Link as LinkIcon, Mail, ChevronDown, Link2, HelpCircle, ScrollText, BookOpen, Building2, Handshake, Check, ShieldCheck } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { api } from '@/lib/api';
+import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 
 const Index = () => {
   const navigate = useNavigate();
   const [connecting, setConnecting] = useState(false);
+  const { toast } = useToast();
+  const { toast } = useToast();
 
   type LanguageOption = {
     code: string;
@@ -147,12 +151,25 @@ const Index = () => {
             </DropdownMenu>
             <Button variant="ghost" className="text-gray-200 hover:bg-white/10 hover:text-white" type="button" disabled={connecting} onClick={async () => { 
               if (connecting) return; setConnecting(true);
+              toast({ title: 'Connecting…', description: 'Starting secure OAuth.' });
+              let navigated = false;
+              const fallback = window.setTimeout(() => {
+                if (!navigated) {
+                  navigated = true;
+                  toast({ title: 'Using Sandbox', description: 'Backend is slow; launching demo flow.' });
+                  window.location.assign('/auth/amazon-sandbox');
+                }
+              }, 1800);
               try {
                 const res = await api.connectAmazon(); 
                 const url = (res as any)?.data?.auth_url || (res as any)?.data?.redirect_url;
-                if ((res as any)?.ok && url) window.location.assign(url as string); else window.location.assign('/auth/amazon-sandbox');
+                if ((res as any)?.ok && url && !navigated) {
+                  navigated = true;
+                  window.clearTimeout(fallback);
+                  window.location.assign(url as string);
+                }
               } catch {
-                window.location.assign('/auth/amazon-sandbox');
+                // let fallback handle
               }
             }}>
               Login
@@ -180,13 +197,25 @@ const Index = () => {
               <div className="flex items-center justify-center gap-3">
                 <Button size="lg" type="button" disabled={connecting} className="bg-emerald-500 hover:bg-emerald-600 text-white font-body shadow-lg" onClick={async () => {
                   if (connecting) return; setConnecting(true);
+                  toast({ title: 'Connecting to Amazon…', description: 'Starting secure OAuth.' });
+                  let navigated = false;
+                  const fallback = window.setTimeout(() => {
+                    if (!navigated) {
+                      navigated = true;
+                      toast({ title: 'Using Sandbox', description: 'Backend is slow; launching demo flow.' });
+                      window.location.assign('/auth/amazon-sandbox');
+                    }
+                  }, 1800);
                   try {
                     const res = await (api as any).connectAmazon?.();
                     const url = (res as any)?.data?.auth_url || (res as any)?.data?.redirect_url;
-                    if ((res as any)?.ok && url) window.location.assign(url as string);
-                    else window.location.assign('/auth/amazon-sandbox');
+                    if ((res as any)?.ok && url && !navigated) {
+                      navigated = true;
+                      window.clearTimeout(fallback);
+                      window.location.assign(url as string);
+                    }
                   } catch {
-                    window.location.assign('/auth/amazon-sandbox');
+                    // let fallback handle
                   }
                 }}>
                   <LinkIcon className="h-5 w-5 mr-2" strokeWidth={1.75} />
