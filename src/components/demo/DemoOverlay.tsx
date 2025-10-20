@@ -50,8 +50,8 @@ export default function DemoOverlay() {
     <div className="fixed bottom-4 right-4 z-[999] hidden md:block">
       <div className="group relative">
         <input type="checkbox" id="demoToggle" className="peer hidden" />
-        <label htmlFor="demoToggle" className="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-emerald-500 text-black font-semibold shadow hover:bg-emerald-400 cursor-pointer">
-          Prove It
+        <label htmlFor="demoToggle" className="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-white/10 text-white font-medium shadow hover:bg-white/15 cursor-pointer">
+          Quick Tour
           <ArrowRight className="h-4 w-4" />
         </label>
         <div className="absolute bottom-12 right-0 w-[360px] max-h-[70vh] overflow-y-auto p-3 rounded-lg border bg-[#0B1220]/95 text-gray-200 backdrop-blur-md shadow-xl opacity-0 pointer-events-none translate-y-2 transition-all duration-200 peer-checked:opacity-100 peer-checked:pointer-events-auto peer-checked:translate-y-0">
