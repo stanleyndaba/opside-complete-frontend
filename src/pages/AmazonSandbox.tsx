@@ -40,10 +40,7 @@ export default function AmazonSandboxPage() {
       <div className="relative -m-4 lg:-m-6">
         <div className="relative w-full bg-transparent min-h-screen pt-4 text-gray-300">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
-          {/* Subtle grid overlay for depth */}
-          <div className="pointer-events-none absolute inset-0 opacity-20 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)] bg-[linear-gradient(to_bottom,transparent_0,transparent_95%,rgba(255,255,255,0.08)_96%),linear-gradient(to_right,transparent_0,transparent_95%,rgba(255,255,255,0.08)_96%)] bg-[length:36px_36px]" />
-          {/* Soft brand glow */}
-          <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-[420px] w-[420px] rounded-full bg-emerald-500/10 blur-3xl" />
+          {/* remove extra overlays that cause haze */}
 
           <div className="relative max-w-md mx-auto mt-16 text-center space-y-6">
             <div className="flex items-center justify-center gap-2 text-gray-100">
