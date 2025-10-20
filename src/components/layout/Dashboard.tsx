@@ -6,12 +6,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign } from 'lucide-react';
 import { api } from '@/lib/api';
-import { useToast } from '@/components/ui/use-toast';
 
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
-  const { toast } = useToast();
 
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
@@ -31,7 +29,6 @@ export function Dashboard() {
   const [pendingRecoveryAmount, setPendingRecoveryAmount] = useState<number | null>(null);
   const [approvedRecoveryAmount, setApprovedRecoveryAmount] = useState<number | null>(null);
   const [nextPaymentAmount, setNextPaymentAmount] = useState<number | null>(null);
-  const [autoClaimEnabled, setAutoClaimEnabled] = useState<boolean>(true);
   const [successRate, setSuccessRate] = useState<number | null>(null);
   const [lastUpdated, setLastUpdated] = useState<string>('');
 
@@ -74,17 +71,10 @@ export function Dashboard() {
           typeof d.payoutDue === 'number' ? d.payoutDue :
           null
         );
-        const acEnabled = (
-          typeof d.autoClaimEnabled === 'boolean' ? d.autoClaimEnabled :
-          typeof d.autoClaim === 'boolean' ? d.autoClaim :
-          typeof d.auto_submit_enabled === 'boolean' ? d.auto_submit_enabled :
-          true
-        );
         if (pending !== null) setPendingRecoveryAmount(pending);
         if (rate !== null) setSuccessRate(rate);
         if (approved !== null) setApprovedRecoveryAmount(approved);
         if (nextPay !== null) setNextPaymentAmount(nextPay);
-        setAutoClaimEnabled(acEnabled);
         setLastUpdated(new Date().toLocaleTimeString());
       }
     }
@@ -162,37 +152,6 @@ export function Dashboard() {
                         </div>
                         <div className="text-xs text-gray-400 mt-1">Estimated from approved and pending claims</div>
                       </div>
-                      <div className="rounded-md border border-white/10 bg-white/5 p-3 min-w-[220px]">
-                        <div className="text-xs text-gray-400">Auto-Claim</div>
-                        <div className="mt-1 flex items-center gap-2">
-                          <span className="text-sm font-medium text-gray-100">{autoClaimEnabled ? 'Enabled' : 'Disabled'}</span>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="h-7 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10"
-                            onClick={async () => {
-                              try {
-                                const next = !autoClaimEnabled;
-                                const res = await api.setAutoClaimEnabled(next);
-                                if ((res as any)?.ok) {
-                                  setAutoClaimEnabled(next);
-                                  toast({
-                                    title: next ? 'Auto-Claim enabled' : 'Auto-Claim disabled',
-                                    description: next
-                                      ? 'Claims will be auto-submitted once evidence is verified.'
-                                      : 'Auto-claim is paused. You can still submit manually.',
-                                  });
-                                }
-                              } catch (e: any) {
-                                toast({ title: 'Failed to update Auto-Claim', description: e?.message || 'Please try again.' });
-                              }
-                            }}
-                          >
-                            {autoClaimEnabled ? 'Disable' : 'Enable'}
-                          </Button>
-                        </div>
-                        <div className="mt-2 text-xs text-gray-400">Claims auto-submitted once evidence is verified</div>
-                      </div>
                     </div>
 
                     <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -208,6 +167,17 @@ export function Dashboard() {
                         <div className="text-xs text-gray-400">Approved</div>
                         <div className="text-xl font-semibold text-emerald-400 mt-1">{formatCurrency(computedApproved ?? 0, recoveredCurrency)}</div>
                       </div>
+                    </div>
+
+                    <div className="mt-5">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="bg-white/5 border-white/10 text-gray-100 hover:bg-white/10"
+                        onClick={() => navigate('/recoveries')}
+                      >
+                        Auto-Submit
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
