@@ -181,14 +181,17 @@ export default function NotificationHub() {
 
   return (
     <PageLayout title="Notification Hub & Preferences">
-      <div className="space-y-8">
+      <div className="relative -m-4 lg:-m-6">
+        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24 text-gray-300">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-300 space-y-8">
         {/* Notification Log */}
-        <Card className="p-6">
+        <Card className="p-6 bg-white/5 border-white/10 text-gray-300">
           <div className="mb-6">
-            <h2 className="text-xl font-semibold text-foreground mb-2">
+            <h2 className="text-xl font-semibold text-gray-100 mb-2">
               Notification Log
             </h2>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-gray-400">
               Complete history of all notifications sent to you. Nothing hidden.
             </p>
           </div>
@@ -201,30 +204,32 @@ export default function NotificationHub() {
                   key={notification.id}
                   className={`flex items-start gap-4 p-4 rounded-lg border transition-colors ${
                     !notification.read 
-                      ? 'bg-muted/50 border-primary/20' 
-                      : 'bg-background hover:bg-muted/30'
+                      ? 'bg-white/5 border-white/10' 
+                      : 'bg-white/5 hover:bg-white/10 border-white/10'
                   }`}
                 >
                   <div className="flex-shrink-0 mt-0.5">
-                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                      <IconComponent className="w-4 h-4 text-primary" />
+                    <div className="w-8 h-8 rounded-full bg-emerald-500/15 flex items-center justify-center">
+                      <IconComponent className="w-4 h-4 text-emerald-400" />
                     </div>
                   </div>
                   
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-foreground mb-1">
+                    <p className="text-sm font-medium text-gray-100 mb-1">
                       {notification.message}
                     </p>
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-3 text-xs text-gray-400">
                       <span>{notification.timestamp}</span>
                       <div className="flex gap-1">
-                        {getChannelBadges(notification.channels)}
+                        {notification.channels.map((channel) => (
+                          <Badge key={channel} variant="outline" className="text-[10px] border-white/20 text-gray-200">{channel}</Badge>
+                        ))}
                       </div>
                     </div>
                   </div>
                   
                   {!notification.read && (
-                    <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0 mt-2"></div>
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full flex-shrink-0 mt-2"></div>
                   )}
                 </div>
               );
@@ -233,12 +238,12 @@ export default function NotificationHub() {
         </Card>
 
         {/* Notification Preferences */}
-        <Card className="p-6">
+        <Card className="p-6 bg-white/5 border-white/10 text-gray-300">
           <div className="mb-6">
-            <h2 className="text-xl font-semibold text-foreground mb-2">
+            <h2 className="text-xl font-semibold text-gray-100 mb-2">
               Notification Preferences
             </h2>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-gray-400">
               Complete control over how and when you hear from us. Respect for your attention.
             </p>
           </div>
@@ -264,18 +269,18 @@ export default function NotificationHub() {
                     {categoryPrefs.map((pref) => {
                       const IconComponent = pref.icon;
                       return (
-                        <div key={pref.id} className="flex items-start gap-4 p-4 border rounded-lg">
+                        <div key={pref.id} className="flex items-start gap-4 p-4 border rounded-lg bg-white/5 border-white/10">
                           <div className="flex-shrink-0 mt-1">
-                            <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
-                              <IconComponent className="w-4 h-4 text-secondary-foreground" />
+                            <div className="w-8 h-8 rounded-full bg-blue-500/15 flex items-center justify-center">
+                              <IconComponent className="w-4 h-4 text-blue-400" />
                             </div>
                           </div>
                           
                           <div className="flex-1 min-w-0">
-                            <h4 className="text-sm font-medium text-foreground mb-1">
+                            <h4 className="text-sm font-medium text-gray-100 mb-1">
                               {pref.title}
                             </h4>
-                            <p className="text-xs text-muted-foreground mb-3">
+                            <p className="text-xs text-gray-400 mb-3">
                               {pref.description}
                             </p>
                             
@@ -287,7 +292,7 @@ export default function NotificationHub() {
                                     updatePreference(pref.id, 'email', checked)
                                   }
                                 />
-                                <span className="text-xs text-muted-foreground">Email</span>
+                                <span className="text-xs text-gray-400">Email</span>
                               </div>
                               
                               <div className="flex items-center gap-2">
@@ -297,7 +302,7 @@ export default function NotificationHub() {
                                     updatePreference(pref.id, 'inApp', checked)
                                   }
                                 />
-                                <span className="text-xs text-muted-foreground">In-App</span>
+                                <span className="text-xs text-gray-400">In-App</span>
                               </div>
                             </div>
                           </div>
@@ -314,6 +319,8 @@ export default function NotificationHub() {
             })}
           </div>
         </Card>
+          </div>
+        </div>
       </div>
     </PageLayout>
   );
