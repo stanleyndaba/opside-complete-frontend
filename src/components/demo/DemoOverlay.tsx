@@ -47,7 +47,7 @@ const steps = [
 
 export default function DemoOverlay() {
   return (
-    <div className="fixed bottom-4 right-4 z-[999] hidden md:block">
+    <div className="fixed bottom-4 right-4 z-[999] hidden md:block" style={{ display: 'none' }}>
       <div className="group relative">
         <input type="checkbox" id="demoToggle" className="peer hidden" />
         <label htmlFor="demoToggle" className="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-white/10 text-white font-medium shadow hover:bg-white/15 cursor-pointer">

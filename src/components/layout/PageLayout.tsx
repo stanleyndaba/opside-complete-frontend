@@ -19,7 +19,10 @@ export function PageLayout({
   };
   const isAuthView = !!hideNavbar && !!hideSidebar;
   const mainIndent = hideSidebar ? 'ml-0' : (isSidebarCollapsed ? 'ml-16' : 'ml-64');
-  return <div className={`min-h-screen flex flex-col platform ${isAuthView ? 'relative' : ''}`}>
+  return <div className={`min-h-screen flex flex-col platform ${isAuthView ? 'relative bg-[#0B1220]' : ''}`}>
+      {isAuthView && (
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+      )}
       {!hideNavbar && (
         <Navbar sidebarCollapsed={isSidebarCollapsed} onToggleSidebar={toggleSidebar} />
       )}
