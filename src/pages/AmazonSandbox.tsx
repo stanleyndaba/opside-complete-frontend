@@ -36,9 +36,9 @@ export default function AmazonSandboxPage() {
   }, [state, navigate]);
 
   return (
-    <PageLayout title="Connecting to Amazon" hideNavbar>
+    <PageLayout title="Connecting to Amazon" hideNavbar hideSidebar>
       <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-[#0B1220] min-h-screen pt-16 text-gray-300">
+        <div className="relative w-full bg-[#0B1220] min-h-screen pt-6 text-gray-300">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
           {/* Subtle grid overlay for depth */}
           <div className="pointer-events-none absolute inset-0 opacity-20 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)] bg-[linear-gradient(to_bottom,transparent_0,transparent_95%,rgba(255,255,255,0.08)_96%),linear-gradient(to_right,transparent_0,transparent_95%,rgba(255,255,255,0.08)_96%)] bg-[length:36px_36px]" />
