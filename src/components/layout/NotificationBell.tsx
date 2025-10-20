@@ -180,7 +180,7 @@ export function NotificationBell() {
         <DropdownMenuSeparator className="bg-white/10" />
         
         <div className="p-2">
-          <Link to="/notifications" onClick={handleNotificationClick}>
+          <Link to="/notifications" onClick={handleNotificationClick} reloadDocument>
             <Button 
               variant="ghost" 
               className="w-full justify-center text-xs h-8 hover:bg-white/10 text-gray-200"

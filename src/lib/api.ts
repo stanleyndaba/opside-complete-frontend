@@ -13,8 +13,8 @@ export function buildApiUrl(path: string): string {
   if (/^https?:\/\//i.test(path)) return path;
 
   // Prefer explicit base URL when provided via env
-  const envBase = (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_API_BASE_URL)
-    || (typeof process !== 'undefined' && (process as any).env?.VITE_API_BASE_URL);
+  const envBase = (typeof import.meta !== 'undefined' && ((import.meta as any).env?.VITE_API_BASE_URL || (import.meta as any).env?.VITE_REFUND_ENGINE_URL))
+    || (typeof process !== 'undefined' && ((process as any).env?.VITE_API_BASE_URL || (process as any).env?.VITE_REFUND_ENGINE_URL));
   if (envBase) {
     return String(envBase).replace(/\/$/, '') + normalizedPath;
   }

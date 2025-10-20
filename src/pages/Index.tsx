@@ -183,11 +183,8 @@ const Index = () => {
                   try {
                     const res = await (api as any).connectAmazon?.();
                     const url = (res as any)?.data?.auth_url || (res as any)?.data?.redirect_url;
-                    if ((res as any)?.ok && url) {
-                      window.location.assign(url as string);
-                    } else {
-                      window.location.assign('/auth/amazon-sandbox');
-                    }
+                    if ((res as any)?.ok && url) window.location.assign(url as string);
+                    else window.location.assign('/auth/amazon-sandbox');
                   } catch {
                     window.location.assign('/auth/amazon-sandbox');
                   }
