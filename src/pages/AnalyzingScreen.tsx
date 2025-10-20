@@ -89,7 +89,7 @@ export default function AnalyzingScreen() {
                   <CardTitle className="flex items-center justify-center gap-2 text-emerald-400">
                     <span className="relative inline-flex items-center">
                       <span className="absolute -inset-4 rounded-full bg-emerald-400/20 blur-2xl" />
-                      <img src="/clario-logo.svg" alt="Clario" className="relative h-8 opacity-90" />
+                      <img src="/logo-abstract.svg" alt="Clario cube" className="relative h-8 w-8 opacity-90" />
                     </span>
                     Analysis Complete!
                   </CardTitle>

@@ -44,8 +44,8 @@ export default function AmazonSandboxPage() {
             <div className="flex justify-center">
               <div className="relative">
                 <div className="absolute -inset-6 rounded-full bg-emerald-400/20 blur-2xl animate-pulse" />
-                <div className="relative rounded-xl border border-white/10 bg-white/5 backdrop-blur-md px-5 py-3 shadow-[0_0_0_1px_rgba(255,255,255,0.06)_inset,0_10px_30px_rgba(0,0,0,0.35)]">
-                  <img src="/clario-logo.svg" alt="Clario" className="h-8 opacity-90" />
+                <div className="relative rounded-xl border border-white/10 bg-white/5 backdrop-blur-md px-4 py-3 shadow-[0_0_0_1px_rgba(255,255,255,0.06)_inset,0_10px_30px_rgba(0,0,0,0.35)]">
+                  <img src="/logo-abstract.svg" alt="Clario cube" className="h-8 w-8 opacity-90" />
                 </div>
               </div>
             </div>
