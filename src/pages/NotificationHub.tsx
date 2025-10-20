@@ -255,10 +255,10 @@ export default function NotificationHub() {
               return (
                 <div key={category}>
                   <div className="mb-4">
-                    <h3 className="text-lg font-medium text-foreground mb-1">
+                    <h3 className="text-lg font-medium text-white mb-1">
                       {category}
                     </h3>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-gray-400">
                       {category === 'Financial Milestones' && 'High-signal, essential updates about your money'}
                       {category === 'Account & Security' && 'Important account and security notifications'}
                       {category === 'Platform & Performance' && 'Updates about platform features and performance'}
