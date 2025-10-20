@@ -17,8 +17,15 @@ export function PageLayout({
   const toggleSidebar = () => {
     setIsSidebarCollapsed(prev => !prev);
   };
+  const isAuthView = !!hideNavbar && !!hideSidebar;
   const mainIndent = hideSidebar ? 'ml-0' : (isSidebarCollapsed ? 'ml-16' : 'ml-64');
-  return <div className="min-h-screen flex flex-col platform">
+  return <div className={`min-h-screen flex flex-col platform ${isAuthView ? 'relative bg-[#0B1220]' : ''}`}>
+      {isAuthView && (
+        <>
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+          <div className="pointer-events-none absolute inset-0 opacity-20 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)] bg-[linear-gradient(to_bottom,transparent_0,transparent_95%,rgba(255,255,255,0.08)_96%),linear-gradient(to_right,transparent_0,transparent_95%,rgba(255,255,255,0.08)_96%)] bg-[length:36px_36px]" />
+        </>
+      )}
       {!hideNavbar && (
         <Navbar sidebarCollapsed={isSidebarCollapsed} onToggleSidebar={toggleSidebar} />
       )}
