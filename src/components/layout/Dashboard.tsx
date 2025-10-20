@@ -6,10 +6,12 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign } from 'lucide-react';
 import { api } from '@/lib/api';
+import { useToast } from '@/components/ui/use-toast';
 
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
@@ -174,8 +176,16 @@ export function Dashboard() {
                                 const res = await api.setAutoClaimEnabled(next);
                                 if ((res as any)?.ok) {
                                   setAutoClaimEnabled(next);
+                                  toast({
+                                    title: next ? 'Auto-Claim enabled' : 'Auto-Claim disabled',
+                                    description: next
+                                      ? 'Claims will be auto-submitted once evidence is verified.'
+                                      : 'Auto-claim is paused. You can still submit manually.',
+                                  });
                                 }
-                              } catch {}
+                              } catch (e: any) {
+                                toast({ title: 'Failed to update Auto-Claim', description: e?.message || 'Please try again.' });
+                              }
                             }}
                           >
                             {autoClaimEnabled ? 'Disable' : 'Enable'}

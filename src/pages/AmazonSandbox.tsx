@@ -5,19 +5,28 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import { api } from '@/lib/api';
+import { useToast } from '@/components/ui/use-toast';
 
 export default function AmazonSandboxPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const state = searchParams.get('state');
+  const { toast } = useToast();
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
         // Establish sandbox session/tenant on backend; ignore errors to keep UX flowing
-        await api.completeAmazonSandboxAuth(state || 'demo');
-      } catch {}
+        const res = await api.completeAmazonSandboxAuth(state || 'demo');
+        if ((res as any)?.ok) {
+          toast({ title: 'Connected to Amazon (Sandbox)', description: 'Redirecting to analysis…' });
+        } else {
+          toast({ title: 'Sandbox connect failed', description: (res as any)?.error || 'Continuing to analysis…' });
+        }
+      } catch (e: any) {
+        toast({ title: 'Sandbox connect failed', description: e?.message || 'Continuing to analysis…' });
+      }
       if (!cancelled) {
         // Small pause for UX, then continue
         setTimeout(() => navigate('/auth/analyzing?source=amazon'), 800);

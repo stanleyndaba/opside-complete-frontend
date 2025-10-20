@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, AlertTriangle, RefreshCw, ExternalLink } from 'lucide-react';
 import { api } from '@/lib/api';
+import { useToast } from '@/components/ui/use-toast';
 
 function useQueryParams() {
   const { search } = useLocation();
@@ -18,6 +19,7 @@ export default function OAuthCallback() {
   const [statusMessage, setStatusMessage] = useState<string>('Finalizing connection...');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [provider, setProvider] = useState<string | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     const p = query.get('provider');
@@ -28,11 +30,13 @@ export default function OAuthCallback() {
       setErrorMessage(decodeURIComponent(error));
       setStatusMessage('Connection failed');
       api.trackEvent('oauth_callback_failure', { provider: p, error });
+      toast({ title: 'Connection failed', description: decodeURIComponent(error) });
       return;
     }
     if (success) {
       setStatusMessage('Connection successful. Updating status...');
       api.trackEvent('oauth_callback_success', { provider: p });
+      toast({ title: 'Connected', description: 'Updating status and redirecting…' });
     }
   }, [query]);
 

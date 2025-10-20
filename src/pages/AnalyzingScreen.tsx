@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Scan, FileSearch, Calculator } from 'lucide-react';
 import { api } from '@/lib/api';
+import { useToast } from '@/components/ui/use-toast';
 
 const SCANNING_MESSAGES = [
   'Analyzing FBA transaction history...',
@@ -24,6 +25,7 @@ export default function AnalyzingScreen() {
   const [currentMessage, setCurrentMessage] = useState(0);
   const [showResults, setShowResults] = useState(false);
   const [recoveryData, setRecoveryData] = useState<{ totalAmount: number; currency: string; claimCount: number } | null>(null);
+  const { toast } = useToast();
 
   const source = searchParams.get('source') || 'amazon';
 
@@ -54,6 +56,9 @@ export default function AnalyzingScreen() {
         api.getAmazonRecoveries().then(response => {
           if (response.ok) {
             setRecoveryData(response.data);
+            toast({ title: 'Analysis complete', description: 'We found potential recoveries in your account.' });
+          } else {
+            toast({ title: 'Analysis completed with issues', description: response.error || 'Could not load recovery summary.' });
           }
         });
 
