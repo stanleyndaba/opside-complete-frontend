@@ -106,13 +106,13 @@ export function NotificationBell() {
       
       <DropdownMenuContent 
         align="end" 
-        className="w-80 max-h-96 overflow-y-auto bg-background border border-border shadow-lg z-50"
+        className="w-80 max-h-96 overflow-y-auto bg-[#0B1220]/95 backdrop-blur-md border border-white/10 shadow-xl z-50 text-gray-200"
       >
-        <div className="p-3 border-b border-border">
+        <div className="p-3 border-b border-white/10">
           <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-sm text-foreground">Notifications</h3>
+            <h3 className="font-semibold text-sm text-gray-100">Notifications</h3>
             {unreadCount > 0 && (
-              <Badge variant="secondary" className="text-xs">
+              <Badge variant="outline" className="text-[10px] border-white/20 text-gray-200">
                 {unreadCount} new
               </Badge>
             )}
@@ -121,7 +121,7 @@ export function NotificationBell() {
 
         <div className="py-1">
           {notifications.length === 0 ? (
-            <div className="p-4 text-center text-sm text-muted-foreground">
+            <div className="p-4 text-center text-sm text-gray-400">
               No notifications yet
             </div>
           ) : (
@@ -129,32 +129,32 @@ export function NotificationBell() {
               const IconComponent = notification.icon;
               const content = (
                 <div 
-                  className={`flex items-start gap-3 p-3 hover:bg-muted/50 transition-colors cursor-pointer ${
-                    !notification.read ? 'bg-muted/30' : ''
+                  className={`flex items-start gap-3 p-3 hover:bg-white/5 transition-colors cursor-pointer ${
+                    !notification.read ? 'bg-white/5' : ''
                   }`}
                   onClick={handleNotificationClick}
                 >
                   <div className={`flex-shrink-0 mt-0.5 w-6 h-6 rounded-full flex items-center justify-center ${
-                    !notification.read ? 'bg-primary/10' : 'bg-muted'
+                    !notification.read ? 'bg-emerald-500/15' : 'bg-white/10'
                   }`}>
                     <IconComponent className={`w-3 h-3 ${
-                      !notification.read ? 'text-primary' : 'text-muted-foreground'
+                      !notification.read ? 'text-emerald-400' : 'text-gray-300'
                     }`} />
                   </div>
                   
                   <div className="flex-1 min-w-0">
                     <p className={`text-xs leading-relaxed ${
-                      !notification.read ? 'font-medium text-foreground' : 'text-muted-foreground'
+                      !notification.read ? 'font-medium text-gray-100' : 'text-gray-400'
                     }`}>
                       {notification.message}
                     </p>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-xs text-gray-500 mt-1">
                       {notification.timestamp}
                     </p>
                   </div>
                   
                   {!notification.read && (
-                    <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0 mt-1.5"></div>
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full flex-shrink-0 mt-1.5"></div>
                   )}
                 </div>
               );
@@ -169,7 +169,7 @@ export function NotificationBell() {
                     <div>{content}</div>
                   )}
                   {index < notifications.length - 1 && (
-                    <DropdownMenuSeparator className="my-0" />
+                    <DropdownMenuSeparator className="my-0 bg-white/10" />
                   )}
                 </React.Fragment>
               );
@@ -177,13 +177,13 @@ export function NotificationBell() {
           )}
         </div>
 
-        <DropdownMenuSeparator />
+        <DropdownMenuSeparator className="bg-white/10" />
         
         <div className="p-2">
           <Link to="/notifications" onClick={handleNotificationClick}>
             <Button 
               variant="ghost" 
-              className="w-full justify-center text-xs h-8 hover:bg-muted/50"
+              className="w-full justify-center text-xs h-8 hover:bg-white/10 text-gray-200"
             >
               View All Notifications
             </Button>
