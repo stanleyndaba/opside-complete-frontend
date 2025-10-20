@@ -82,6 +82,7 @@ export const api = {
 
   getDashboardAggregates: () => requestJson<any>('/api/metrics/dashboard'),
   getRecoveriesMetrics: () => requestJson<any>('/api/metrics/recoveries'),
+  setAutoClaimEnabled: (enabled: boolean) => requestJson<any>('/api/recoveries/auto-claim', { method: 'POST', body: JSON.stringify({ enabled }) }),
   logout: () => requestJson<{ ok: true }>('/api/auth/logout', { method: 'POST' }),
 
   // Refund Engine endpoints

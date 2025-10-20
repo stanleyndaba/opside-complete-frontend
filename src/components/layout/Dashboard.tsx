@@ -160,9 +160,27 @@ export function Dashboard() {
                         </div>
                         <div className="text-xs text-gray-400 mt-1">Estimated from approved and pending claims</div>
                       </div>
-                      <div className="rounded-md border border-white/10 bg-white/5 p-3 min-w-[200px]">
+                      <div className="rounded-md border border-white/10 bg-white/5 p-3 min-w-[220px]">
                         <div className="text-xs text-gray-400">Auto-Claim</div>
-                        <div className="mt-1 text-sm font-medium text-gray-100">{autoClaimEnabled ? 'Enabled' : 'Disabled'}</div>
+                        <div className="mt-1 flex items-center gap-2">
+                          <span className="text-sm font-medium text-gray-100">{autoClaimEnabled ? 'Enabled' : 'Disabled'}</span>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="h-7 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10"
+                            onClick={async () => {
+                              try {
+                                const next = !autoClaimEnabled;
+                                const res = await api.setAutoClaimEnabled(next);
+                                if ((res as any)?.ok) {
+                                  setAutoClaimEnabled(next);
+                                }
+                              } catch {}
+                            }}
+                          >
+                            {autoClaimEnabled ? 'Disable' : 'Enable'}
+                          </Button>
+                        </div>
                         <div className="mt-2 text-xs text-gray-400">Claims auto-submitted once evidence is verified</div>
                       </div>
                     </div>
