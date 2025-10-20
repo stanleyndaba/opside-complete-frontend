@@ -177,7 +177,7 @@ export function Dashboard() {
                       >
                         Auto-Submit
                       </Button>
-                      <div className="mt-2 text-xs text-blue-600">Submit claim. clario auto files new</div>
+                      <div className="mt-2 text-xs text-blue-400">Submit claim. clario auto files new</div>
                     </div>
                   </CardContent>
                 </Card>
