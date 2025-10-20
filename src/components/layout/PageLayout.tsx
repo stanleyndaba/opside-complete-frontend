@@ -4,17 +4,21 @@ import { Sidebar } from '@/components/layout/Sidebar';
 interface PageLayoutProps {
   children: React.ReactNode;
   title: string;
+  hideNavbar?: boolean;
 }
 export function PageLayout({
   children,
-  title
+  title,
+  hideNavbar
 }: PageLayoutProps) {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
   const toggleSidebar = () => {
     setIsSidebarCollapsed(prev => !prev);
   };
   return <div className="min-h-screen flex flex-col platform">
-      <Navbar sidebarCollapsed={isSidebarCollapsed} onToggleSidebar={toggleSidebar} />
+      {!hideNavbar && (
+        <Navbar sidebarCollapsed={isSidebarCollapsed} onToggleSidebar={toggleSidebar} />
+      )}
       
       <div className="flex-1 flex">
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
