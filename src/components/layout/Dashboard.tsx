@@ -33,6 +33,7 @@ export function Dashboard() {
   const [nextPaymentAmount, setNextPaymentAmount] = useState<number | null>(null);
   const [successRate, setSuccessRate] = useState<number | null>(null);
   const [lastUpdated, setLastUpdated] = useState<string>('');
+  const [approvedClaimsThisMonth, setApprovedClaimsThisMonth] = useState<number | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -74,10 +75,18 @@ export function Dashboard() {
           typeof d.payoutDue === 'number' ? d.payoutDue :
           null
         );
+        const approvedClaimsMonth = (
+          typeof d.approvedClaimsThisMonth === 'number' ? d.approvedClaimsThisMonth :
+          typeof d.claimsApprovedThisMonth === 'number' ? d.claimsApprovedThisMonth :
+          typeof d.approvedCountThisMonth === 'number' ? d.approvedCountThisMonth :
+          typeof d.claimsApproved === 'number' ? d.claimsApproved :
+          null
+        );
         if (pending !== null) setPendingRecoveryAmount(pending);
         if (rate !== null) setSuccessRate(rate);
         if (approved !== null) setApprovedRecoveryAmount(approved);
         if (nextPay !== null) setNextPaymentAmount(nextPay);
+        if (approvedClaimsMonth !== null) setApprovedClaimsThisMonth(approvedClaimsMonth);
         setLastUpdated(new Date().toLocaleTimeString());
       }
     }
@@ -198,6 +207,10 @@ export function Dashboard() {
                       <div className="rounded-md border border-white/10 bg-white/5 p-4">
                         <div className="text-xs text-gray-400">Approved</div>
                         <div className="text-xl font-semibold text-emerald-400 mt-1">{formatCurrency(computedApproved ?? 0, recoveredCurrency)}</div>
+                        <div className="text-[11px] mt-1">
+                          <span className="text-gray-400">Total this Month: </span>
+                          <span className="text-blue-400">{approvedClaimsThisMonth != null ? approvedClaimsThisMonth : 0}</span>
+                        </div>
                       </div>
                     </div>
 
