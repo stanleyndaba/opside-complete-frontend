@@ -163,14 +163,22 @@ export function Sidebar({
         )}
       >
         {!isCollapsed ? (
-          <div className="select-none flex items-center gap-2">
-            <img src="/logo-abstract.svg" alt="Clario" className="h-6 w-6" />
-            <span className="font-[500] text-white">Clario</span>
-          </div>
+          <>
+            <div className="select-none flex items-center gap-2">
+              <img src="/logo-abstract.svg" alt="Clario" className="h-6 w-6" />
+              <span className="font-[500] text-white">Clario</span>
+            </div>
+            <div className="text-[11px] text-emerald-400/90 flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              Connected
+            </div>
+          </>
         ) : (
-          <img src="/logo-abstract.svg" alt="Clario" className="h-6 w-6" />
+          <div className="flex items-center gap-2">
+            <img src="/logo-abstract.svg" alt="Clario" className="h-6 w-6" />
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" title="Connected" />
+          </div>
         )}
-        {/* Moved toggle to edge handle below */}
       </div>
 
       <ScrollArea className="flex-1">
@@ -208,15 +216,6 @@ export function Sidebar({
       {/* Profile + Status + Logout */}
       {!isCollapsed && (
         <div className="mt-auto border-t border-white/10 p-4 space-y-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-sm font-medium text-gray-100">Martin Links</div>
-              <div className="text-xs text-gray-400">martin@example.com</div>
-              <div className="text-[11px] text-emerald-400/90 flex items-center gap-1 mt-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> Connected
-              </div>
-            </div>
-          </div>
           <button
             className="w-full flex items-center gap-2 text-left text-gray-400 hover:text-red-300 hover:bg-white/5 px-3 py-2 rounded-md"
             onClick={() => setShowLogout(prev => !prev)}
@@ -226,19 +225,8 @@ export function Sidebar({
           </button>
           {showLogout && (
             <div className="mt-1 rounded-md border border-red-200/20 bg-red-500/5 p-3">
-              <div className="flex items-center gap-2">
-                <div className="h-8 w-8 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
-                  <User className="h-4 w-4 text-red-300" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-red-200 truncate">Martin Links</p>
-                  <p className="text-xs text-red-300 truncate flex items-center gap-1">
-                    <Building2 className="h-3 w-3" /> John's Amazon Store
-                  </p>
-                </div>
-              </div>
               <button
-                className="mt-3 w-full inline-flex items-center justify-center gap-2 text-sm text-white bg-red-600 hover:bg-red-700 px-3 py-2 rounded"
+                className="w-full inline-flex items-center justify-center gap-2 text-sm text-white bg-red-600 hover:bg-red-700 px-3 py-2 rounded"
                 onClick={async () => { try { await api.logout(); } catch (_) {} window.location.href = '/'; }}
               >
                 <LogOut className="h-4 w-4" />

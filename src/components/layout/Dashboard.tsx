@@ -15,10 +15,10 @@ export function Dashboard() {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
 
-  const formatCurrency = (amount: number) => {
+  const formatCurrency = (amount: number, currency: string = 'USD') => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD'
+      currency
     }).format(amount);
   };
 
@@ -27,6 +27,8 @@ export function Dashboard() {
   const [recoveredCurrency, setRecoveredCurrency] = useState<string>('USD');
   const hasFetchedRef = useRef(false);
   const [pendingRecoveryAmount, setPendingRecoveryAmount] = useState<number | null>(null);
+  const [approvedRecoveryAmount, setApprovedRecoveryAmount] = useState<number | null>(null);
+  const [nextPaymentAmount, setNextPaymentAmount] = useState<number | null>(null);
   const [successRate, setSuccessRate] = useState<number | null>(null);
   const [lastUpdated, setLastUpdated] = useState<string>('');
 
@@ -52,8 +54,27 @@ export function Dashboard() {
         // Prefer backend fields if present; otherwise fallback to existing placeholders
         const pending = typeof d.valueInProgress === 'number' ? d.valueInProgress : (typeof d.pendingAmount === 'number' ? d.pendingAmount : null);
         const rate = typeof d.successRate === 'number' ? d.successRate : (typeof d.successRate30d === 'number' ? d.successRate30d : null);
+        const approved = (
+          typeof d.approvedValue === 'number' ? d.approvedValue :
+          typeof d.valueApproved === 'number' ? d.valueApproved :
+          typeof d.paidValue === 'number' ? d.paidValue :
+          typeof d.valuePaid === 'number' ? d.valuePaid :
+          typeof d.approvedAmount === 'number' ? d.approvedAmount :
+          typeof d.amountApproved === 'number' ? d.amountApproved :
+          null
+        );
+        const nextPay = (
+          typeof d.nextPaymentAmount === 'number' ? d.nextPaymentAmount :
+          typeof d.nextPayoutAmount === 'number' ? d.nextPayoutAmount :
+          typeof d.nextPayout === 'number' ? d.nextPayout :
+          typeof d.expectedPayoutAmount === 'number' ? d.expectedPayoutAmount :
+          typeof d.payoutDue === 'number' ? d.payoutDue :
+          null
+        );
         if (pending !== null) setPendingRecoveryAmount(pending);
         if (rate !== null) setSuccessRate(rate);
+        if (approved !== null) setApprovedRecoveryAmount(approved);
+        if (nextPay !== null) setNextPaymentAmount(nextPay);
         setLastUpdated(new Date().toLocaleTimeString());
       }
     }
@@ -98,6 +119,10 @@ export function Dashboard() {
 
   const mainClass = isSidebarCollapsed ? 'ml-16' : 'ml-64';
 
+  const computedApproved = approvedRecoveryAmount != null
+    ? approvedRecoveryAmount
+    : Math.max((recoveredTotal ?? 0) - (pendingRecoveryAmount ?? 0), 0);
+
   return (
     <div className="relative min-h-screen flex flex-col h-screen overflow-hidden platform" style={{ backgroundColor: '#0B1220' }}>
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
@@ -119,27 +144,40 @@ export function Dashboard() {
 
                 <Card className="bg-white/5 border-white/10 text-gray-300">
                   <CardContent className="p-6">
-                    <h2 className="font-brand text-lg text-gray-100 font-semibold">Your Recovered Value</h2>
-                    <div className="text-[32px] md:text-[36px] font-extrabold mt-2 text-emerald-400">
-                      {formatCurrency(recoveredTotal ?? 0)}
-                    </div>
-                    <div className="mt-4 space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-400">Pending Recovery</span>
-                        <span className="text-sm font-semibold text-[#3399ff]">
-                          {pendingRecoveryAmount != null ? formatCurrency(pendingRecoveryAmount) : formatCurrency(0)}
-                        </span>
-                      </div>
+                    <div className="flex items-start justify-between gap-4">
                       <div>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="bg-white/5 border-white/10 text-gray-100 hover:bg-white/10"
-                          onClick={() => navigate('/recoveries')}
-                        >
-                          Auto-Submit
-                        </Button>
+                        <h2 className="font-brand text-lg text-gray-100 font-semibold">Your Recovered Value</h2>
+                        <div className="text-[24px] md:text-[28px] font-semibold mt-1 text-[#66ff99]">
+                          {formatCurrency(recoveredTotal ?? 0, recoveredCurrency)}
+                        </div>
                       </div>
+                    </div>
+
+                    <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="rounded-md border border-white/10 bg-white/5 p-4">
+                        <div className="text-xs text-gray-400">Next Payment</div>
+                        <div className="text-xl font-semibold text-gray-100 mt-1">{formatCurrency(nextPaymentAmount ?? 0, recoveredCurrency)}</div>
+                      </div>
+                      <div className="rounded-md border border-white/10 bg-white/5 p-4">
+                        <div className="text-xs text-gray-400">Pending Recovery</div>
+                        <div className="text-xl font-semibold text-blue-400 mt-1">{formatCurrency(pendingRecoveryAmount ?? 0, recoveredCurrency)}</div>
+                      </div>
+                      <div className="rounded-md border border-white/10 bg-white/5 p-4">
+                        <div className="text-xs text-gray-400">Approved</div>
+                        <div className="text-xl font-semibold text-emerald-400 mt-1">{formatCurrency(computedApproved ?? 0, recoveredCurrency)}</div>
+                      </div>
+                    </div>
+
+                    <div className="mt-5">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="bg-white/5 border-white/10 text-gray-100 hover:bg-white/10"
+                        onClick={() => navigate('/recoveries')}
+                      >
+                        Auto-Submit
+                      </Button>
+                      <div className="mt-2 text-xs text-blue-400">Submit claim. clario auto files new</div>
                     </div>
                   </CardContent>
                 </Card>

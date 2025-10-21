@@ -17,19 +17,48 @@ export const recoveryApi = {
     return response.data;
   },
 
-  submitRecovery: async (data: any) => {
-    const response = await api.post('/api/recoveries/submit', data);
+  submitClaim: async (id: string) => {
+    const response = await api.post(`/api/recoveries/${encodeURIComponent(id)}/submit`);
     if (!response.ok) {
-      throw new Error(response.error || 'Failed to submit recovery');
+      throw new Error(response.error || 'Failed to submit claim');
+    }
+    return response.data;
+  },
+
+  resubmitClaim: async (id: string) => {
+    const response = await api.post(`/api/recoveries/${encodeURIComponent(id)}/resubmit`);
+    if (!response.ok) {
+      throw new Error(response.error || 'Failed to resubmit claim');
     }
     return response.data;
   },
 
   getRecoveryStatus: async (recoveryId: string) => {
-    const response = await api.get(`/api/recoveries/status/${recoveryId}`);
+    const response = await api.get(`/api/recoveries/${encodeURIComponent(recoveryId)}/status`);
     if (!response.ok) {
       throw new Error(response.error || 'Failed to fetch recovery status');
     }
     return response.data;
-  }
+  },
+
+  submitRecoveryAnswer: async (id: string, body: { answer: string }) => {
+    const response = await api.post(`/api/recoveries/${encodeURIComponent(id)}/answer`, body);
+    if (!response.ok) {
+      throw new Error(response.error || 'Failed to submit answer');
+    }
+    return response.data;
+  },
+
+  uploadRecoveryDocuments: async (id: string, files: File[]) => {
+    // This helper uses fetch directly because multipart is easier without the JSON helper
+    const form = new FormData();
+    for (const f of files) form.append('files', f);
+    const res = await fetch(api.buildApiUrl(`/api/recoveries/${encodeURIComponent(id)}/documents/upload`), {
+      method: 'POST',
+      credentials: 'include',
+      body: form as any,
+    } as any);
+    if (!res.ok) throw new Error(await res.text());
+    return res.json();
+  },
 };

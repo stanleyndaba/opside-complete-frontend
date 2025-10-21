@@ -117,9 +117,19 @@ paths:
           schema: { type: string }
       responses:
         '200': { description: OK }
-  /api/claims/{id}/submit:
+  /api/recoveries/{id}/submit:
     post:
       summary: Submit claim
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+  /api/recoveries/{id}/resubmit:
+    post:
+      summary: Resubmit claim with additional evidence
       parameters:
         - in: path
           name: id
@@ -153,6 +163,16 @@ paths:
               type: object
               properties:
                 answer: { type: string }
+      responses:
+        '200': { description: OK }
+  /api/recoveries/{id}/events:
+    get:
+      summary: Recovery events timeline
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
       responses:
         '200': { description: OK }
   /api/recoveries/{id}/documents/upload:
@@ -257,6 +277,11 @@ paths:
   /api/metrics/recoveries:
     get:
       summary: Recoveries metrics
+      responses:
+        '200': { description: OK }
+  /api/metrics/payments:
+    get:
+      summary: Payments and reimbursements metrics
       responses:
         '200': { description: OK }
   /api/metrics/track:

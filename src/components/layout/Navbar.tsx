@@ -29,6 +29,7 @@ export function Navbar({
     location.pathname.startsWith('/app') ||
     location.pathname.startsWith('/recoveries') ||
     location.pathname.startsWith('/reports') ||
+    location.pathname.startsWith('/notifications') ||
     location.pathname.startsWith('/whats-new') ||
     location.pathname.startsWith('/help') ||
     location.pathname.startsWith('/auth');
