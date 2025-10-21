@@ -184,6 +184,9 @@ export function Dashboard() {
                       <div className="rounded-md border border-white/10 bg-white/5 p-4">
                         <div className="text-xs text-gray-400">Pending Recovery</div>
                         <div className="text-xl font-semibold text-blue-400 mt-1">{formatCurrency(pendingRecoveryAmount ?? 0, recoveredCurrency)}</div>
+                        <div className="text-[11px] text-gray-400 mt-1">
+                          No. of Claims: {submittedClaimsCount != null ? submittedClaimsCount : 0}
+                        </div>
                         {submittedClaimsCount != null && (
                           <div className="text-[11px] text-gray-400 mt-1">{submittedClaimsCount} claims submitted</div>
                         )}
@@ -207,7 +210,6 @@ export function Dashboard() {
                       >
                         Auto-Submit
                       </Button>
-                      <div className="mt-2 text-xs text-blue-400">Submit claim. clario auto files new</div>
                     </div>
                   </CardContent>
                 </Card>
