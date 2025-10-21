@@ -189,7 +189,7 @@ export function Dashboard() {
                         <div className="text-[11px] text-gray-400 mt-1">
                           Estimated on {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                         </div>
-                        <div className="text-xs text-blue-400 mt-1">See all upcoming payment</div>
+                        <div className="text-xs text-blue-400 mt-1">See all upcoming payments</div>
                       </div>
                       <div className="rounded-md border border-white/10 bg-white/5 p-4">
                         <div className="text-xs text-gray-400">Pending Recovery</div>
@@ -212,6 +212,7 @@ export function Dashboard() {
                           <span className="text-gray-400">Total this Month: </span>
                           <span className="text-blue-400">{approvedClaimsThisMonth != null ? approvedClaimsThisMonth : 0}</span>
                         </div>
+                        <div className="text-[11px] text-gray-300/80 mt-1">See all approved</div>
                       </div>
                     </div>
 
