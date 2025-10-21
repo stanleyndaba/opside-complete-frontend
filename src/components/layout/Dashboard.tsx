@@ -4,8 +4,9 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign } from 'lucide-react';
+import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info } from 'lucide-react';
 import { api } from '@/lib/api';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -146,7 +147,23 @@ export function Dashboard() {
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <h2 className="font-brand text-lg text-gray-100 font-semibold">Your Recovered Value</h2>
+                        <div className="flex items-center gap-2">
+                          <h2 className="font-brand text-lg text-gray-100 font-semibold">Your Recovered Value</h2>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button
+                                type="button"
+                                aria-label="About recovered value"
+                                className="text-gray-400 hover:text-gray-200 transition-colors"
+                              >
+                                <Info className="h-4 w-4" />
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent side="top" className="bg-black text-white text-xs">
+                              Your recovered profits from claim xyz.
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
                         <div className="text-[24px] md:text-[28px] font-semibold mt-1 text-[#66ff99]">
                           {formatCurrency(recoveredTotal ?? 0, recoveredCurrency)}
                         </div>
