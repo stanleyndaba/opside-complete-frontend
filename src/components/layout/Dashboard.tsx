@@ -157,6 +157,10 @@ export function Dashboard() {
                       <div className="rounded-md border border-white/10 bg-white/5 p-4">
                         <div className="text-xs text-gray-400">Next Payment</div>
                         <div className="text-xl font-semibold text-gray-100 mt-1">{formatCurrency(nextPaymentAmount ?? 0, recoveredCurrency)}</div>
+                        <div className="text-[11px] text-gray-400 mt-1">
+                          Estimated on {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                        </div>
+                        <div className="text-xs text-blue-400 mt-1">See all upcoming payment</div>
                       </div>
                       <div className="rounded-md border border-white/10 bg-white/5 p-4">
                         <div className="text-xs text-gray-400">Pending Recovery</div>
