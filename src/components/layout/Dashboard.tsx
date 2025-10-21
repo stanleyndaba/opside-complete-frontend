@@ -147,7 +147,7 @@ export function Dashboard() {
                     <div className="flex items-start justify-between gap-4">
                       <div>
                         <h2 className="font-brand text-lg text-gray-100 font-semibold">Your Recovered Value</h2>
-                        <div className="text-[32px] md:text-[36px] font-extrabold mt-1 text-emerald-400">
+                        <div className="text-[24px] md:text-[28px] font-semibold mt-1 text-[#66ff99]">
                           {formatCurrency(recoveredTotal ?? 0, recoveredCurrency)}
                         </div>
                       </div>
