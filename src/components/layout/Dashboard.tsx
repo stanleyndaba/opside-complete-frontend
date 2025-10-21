@@ -26,6 +26,7 @@ export function Dashboard() {
   // Live dashboard recoveries metrics (Continuous Sync UX)
   const [recoveredTotal, setRecoveredTotal] = useState<number | null>(null);
   const [recoveredCurrency, setRecoveredCurrency] = useState<string>('USD');
+  const [submittedClaimsCount, setSubmittedClaimsCount] = useState<number | null>(null);
   const hasFetchedRef = useRef(false);
   const [pendingRecoveryAmount, setPendingRecoveryAmount] = useState<number | null>(null);
   const [approvedRecoveryAmount, setApprovedRecoveryAmount] = useState<number | null>(null);
@@ -43,6 +44,7 @@ export function Dashboard() {
       if (res.ok && res.data) {
         setRecoveredTotal(res.data.totalAmount ?? 0);
         if (res.data.currency) setRecoveredCurrency(res.data.currency);
+        if (typeof (res.data as any).claimCount === 'number') setSubmittedClaimsCount((res.data as any).claimCount);
         setLastUpdated(new Date().toLocaleTimeString());
       }
     }
@@ -182,6 +184,13 @@ export function Dashboard() {
                       <div className="rounded-md border border-white/10 bg-white/5 p-4">
                         <div className="text-xs text-gray-400">Pending Recovery</div>
                         <div className="text-xl font-semibold text-blue-400 mt-1">{formatCurrency(pendingRecoveryAmount ?? 0, recoveredCurrency)}</div>
+                        {submittedClaimsCount != null && (
+                          <div className="text-[11px] text-gray-400 mt-1">{submittedClaimsCount} claims submitted</div>
+                        )}
+                        <div className="text-[11px] mt-1">
+                          <span className="text-gray-400">Total: </span>
+                          <span className="text-[#66ff99]">{formatCurrency(recoveredTotal ?? 0, recoveredCurrency)}</span>
+                        </div>
                       </div>
                       <div className="rounded-md border border-white/10 bg-white/5 p-4">
                         <div className="text-xs text-gray-400">Approved</div>
