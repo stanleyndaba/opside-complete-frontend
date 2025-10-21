@@ -178,6 +178,7 @@ export function Dashboard() {
                         <div className="text-[24px] md:text-[28px] font-semibold mt-1 text-[#66ff99]">
                           {formatCurrency(recoveredTotal ?? 0, recoveredCurrency)}
                         </div>
+                        <div className="text-[11px] text-gray-400 mt-1">From approved Claims submitted</div>
                       </div>
                     </div>
 
