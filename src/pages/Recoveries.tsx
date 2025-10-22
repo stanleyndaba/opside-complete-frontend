@@ -370,7 +370,7 @@ export default function Recoveries() {
               <span>Last scan just now</span>
               <span className="h-1 w-1 rounded-full bg-gray-500"></span>
               <button
-                className="inline-flex items-center gap-2 h-8 px-3 rounded-md bg-emerald-500 text-black font-semibold hover:bg-emerald-400"
+                className="inline-flex items-center gap-2 h-8 px-3 rounded-md bg-emerald-500 text-white font-semibold hover:bg-emerald-400"
                 onClick={async () => {
                   try {
                     await api.post('/api/detections/run');
