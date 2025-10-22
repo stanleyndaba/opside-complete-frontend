@@ -242,36 +242,13 @@ const Index = () => {
                   <span className="text-gray-300 text-sm md:text-base">Cancel anytime</span>
                 </div>
               </div>
-              {/* Vertical Expansion Teaser */}
-              <section className="mt-12 max-w-4xl mx-auto text-center">
-                <h3 className="text-2xl md:text-3xl font-semibold text-gray-100">Vertical Expansion</h3>
-                <p className="mt-3 text-gray-300 text-sm md:text-base max-w-3xl mx-auto">
-                  E-commerce is just the beginning. We’re charging into Finance (AP Recovery) next—reclaiming $0.5–2.5M per company in overpayments with zero effort. Insurance, Healthcare, and Pharma are on deck. Join us as we conquer $100M+ ARR across verticals by 2028!
-                </p>
-                {/* Simple roadmap graphic substitute */}
-                <div className="mt-6 grid grid-cols-2 md:grid-cols-5 gap-3 text-xs md:text-sm">
-                  {[
-                    { label: 'E‑commerce', emoji: '🛒' },
-                    { label: 'Finance', emoji: '🏦' },
-                    { label: 'Insurance', emoji: '🛡️' },
-                    { label: 'Healthcare', emoji: '🏥' },
-                    { label: 'Pharma', emoji: '💊' },
-                  ].map((item) => (
-                    <div key={item.label} className="rounded-lg border border-white/10 bg-white/5 p-3">
-                      <div className="text-2xl">{item.emoji}</div>
-                      <div className="mt-1 text-gray-200 font-medium">{item.label}</div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Email capture CTA */}
-                <div className="mt-6 max-w-md mx-auto">
-                  <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); toast({ title: 'Thanks!', description: 'You are on the Finance Pilot list.' }); }}>
-                    <input type="email" required placeholder="Enter your email for Finance Pilot updates" className="flex-1 rounded-md bg-white/10 border border-white/10 px-3 py-2 text-sm text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
-                    <Button type="submit" className="bg-emerald-500 hover:bg-emerald-600 text-white">Sign up</Button>
-                  </form>
-                </div>
-              </section>
+              {/* Email capture CTA only */}
+              <div className="mt-10 max-w-md mx-auto">
+                <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); toast({ title: 'Thanks!', description: 'You are on the Finance Pilot list.' }); }}>
+                  <input type="email" required placeholder="Enter your email for Finance Pilot updates" className="flex-1 rounded-md bg-white/10 border border-white/10 px-3 py-2 text-sm text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+                  <Button type="submit" className="bg-emerald-500 hover:bg-emerald-600 text-white">Sign up</Button>
+                </form>
+              </div>
             </div>
           </div>
         </section>
