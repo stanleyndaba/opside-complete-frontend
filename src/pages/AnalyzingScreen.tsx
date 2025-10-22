@@ -152,12 +152,12 @@ export default function AnalyzingScreen() {
   return (
     <PageLayout title="Analyzing Your Account" hideNavbar hideSidebar>
       <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-transparent min-h-screen pt-4 text-gray-300">
+        <div className="relative w-full bg-transparent min-h-screen text-gray-300 flex items-center justify-center">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
           <div className="pointer-events-none absolute inset-0 opacity-20 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)] bg-[linear-gradient(to_bottom,transparent_0,transparent_95%,rgba(255,255,255,0.08)_96%),linear-gradient(to_right,transparent_0,transparent_95%,rgba(255,255,255,0.08)_96%)] bg-[length:36px_36px]" />
           <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-[320px] w-[320px] rounded-full bg-emerald-500/10 blur-3xl" />
 
-          <div className="relative max-w-xl mx-auto mt-6 text-center space-y-4">
+          <div className="relative max-w-xl w-full mx-auto text-center space-y-4">
             <div className="flex items-center justify-center">
               <span className="text-base font-medium text-gray-100">Analyzing Your Amazon FBA History</span>
             </div>
@@ -184,16 +184,7 @@ export default function AnalyzingScreen() {
               )}
             </div>
 
-            <div className="max-w-md mx-auto text-left">
-              <div className="rounded-lg border border-white/10 bg-white/5 backdrop-blur-sm p-3">
-                <p className="text-xs font-medium text-gray-200 mb-1">What happens now</p>
-                <ul className="text-xs text-gray-400 space-y-1 list-disc pl-4">
-                  <li>We compare orders, inventory adjustments, fees and shipments.</li>
-                  <li>Only read-only data is used; nothing is changed in your account.</li>
-                  <li>You can disconnect and purge at any time from Integrations.</li>
-                </ul>
-              </div>
-            </div>
+            {/* Explanatory box removed for cleaner, centered look */}
           </div>
         </div>
       </div>

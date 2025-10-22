@@ -38,11 +38,11 @@ export default function AmazonSandboxPage() {
   return (
     <PageLayout title="Connecting to Amazon" hideNavbar hideSidebar>
       <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-transparent min-h-screen pt-4 text-gray-300">
+        <div className="relative w-full bg-transparent min-h-screen text-gray-300 flex items-center justify-center">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
           {/* remove extra overlays that cause haze */}
 
-          <div className="relative max-w-md mx-auto mt-16 text-center space-y-6">
+          <div className="relative max-w-md w-full mx-auto text-center space-y-6">
             <div className="flex items-center justify-center gap-2 text-gray-100">
               <Loader2 className="h-6 w-6 animate-spin" />
               <span className="text-lg font-medium">Connecting to Amazon...</span>
@@ -58,31 +58,9 @@ export default function AmazonSandboxPage() {
             <p className="text-gray-400">
               Simulating Amazon Seller Central authentication...
             </p>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span>Requesting permissions...</span>
-                <span className="text-emerald-400">✓</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Verifying account...</span>
-                <span className="text-emerald-400">✓</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Connecting to SP-API...</span>
-                <Loader2 className="h-4 w-4 animate-spin text-gray-300" />
-              </div>
-            </div>
+            {/* Step indicators removed for minimal appearance */}
 
-            <div className="max-w-md mx-auto text-left">
-              <div className="rounded-lg border border-white/10 bg-white/5 backdrop-blur-sm p-4">
-                <p className="text-xs font-medium text-gray-200 mb-1">Security & privacy</p>
-                <ul className="text-xs text-gray-400 space-y-1 list-disc pl-4">
-                  <li>Read-only access — we never modify your Amazon data.</li>
-                  <li>Tokens encrypted at rest; you can revoke access any time.</li>
-                  <li>Data purged on disconnect. SOC 2 journey underway.</li>
-                </ul>
-              </div>
-            </div>
+            {/* Security box removed for minimal appearance */}
           </div>
         </div>
       </div>
