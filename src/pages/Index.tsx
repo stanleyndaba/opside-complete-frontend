@@ -176,12 +176,7 @@ const Index = () => {
       <main className="flex-1">
         <section className="container mx-auto px-6 py-24 md:py-32">
           <div className="max-w-4xl mx-auto text-center space-y-6">
-            <div className="flex justify-center">
-              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-gray-200 text-xs md:text-sm">
-                <ShieldCheck className="h-4 w-4 text-emerald-400" />
-                Trusted by 1,000+ Amazon FBA Sellers
-              </span>
-            </div>
+            {/* Trust chip removed per request */}
             <h1 className="font-heading text-4xl md:text-6xl font-bold tracking-tight text-gray-100">
               The <span className="text-emerald-500">end</span> of FBA reimbursement work.
             </h1>
