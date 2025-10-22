@@ -4,7 +4,8 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud } from 'lucide-react';
 import { api } from '@/lib/api';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
@@ -34,6 +35,7 @@ export function Dashboard() {
   const [successRate, setSuccessRate] = useState<number | null>(null);
   const [lastUpdated, setLastUpdated] = useState<string>('');
   const [approvedClaimsThisMonth, setApprovedClaimsThisMonth] = useState<number | null>(null);
+  const [showEvidencePrompt, setShowEvidencePrompt] = useState<boolean>(false);
 
   useEffect(() => {
     let active = true;
@@ -94,6 +96,24 @@ export function Dashboard() {
     // Initial fetch immediately on mount
     fetchRecoveriesOnce();
     fetchMetrics();
+    // Decide whether to prompt evidence connections (Gmail/Outlook/Drive/Dropbox)
+    (async () => {
+      try {
+        const dismissed = typeof window !== 'undefined' ? localStorage.getItem('clario.evidencePromptDismissed') === 'true' : false;
+        if (dismissed) return;
+        const s = await api.getIntegrationsStatus();
+        if (s.ok) {
+          const prov = (s.data as any)?.providerIngest || {};
+          const anyConnected = Boolean(prov.gmail?.connected || prov.outlook?.connected || prov.gdrive?.connected || prov.dropbox?.connected);
+          if (!anyConnected) setShowEvidencePrompt(true);
+        } else {
+          // If status unknown, still prompt once
+          setShowEvidencePrompt(true);
+        }
+      } catch {
+        setShowEvidencePrompt(true);
+      }
+    })();
     hasFetchedRef.current = true;
 
     // Short burst polling to show numbers populate quickly
@@ -289,6 +309,69 @@ export function Dashboard() {
           </div>
         </main>
       </div>
+      {/* Evidence Connections Prompt on Dashboard as fallback */}
+      <Dialog open={showEvidencePrompt} onOpenChange={setShowEvidencePrompt}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="text-lg">Connect Evidence Sources</DialogTitle>
+            <DialogDescription>
+              Link Gmail/Outlook and Drive/Dropbox to auto‑collect invoices and receipts (read‑only).
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid grid-cols-2 gap-3 pt-2">
+            <Button className="w-full bg-red-600 hover:bg-red-700" onClick={async () => {
+              try {
+                const r = await api.post(`/api/v1/integrations/gmail/connect`);
+                const url = (r as any)?.data?.auth_url as string | undefined;
+                window.location.href = url || '/auth/gmail-sandbox';
+              } catch {
+                window.location.href = '/auth/gmail-sandbox';
+              }
+            }}>
+              <Mail className="h-4 w-4 mr-2" /> Gmail
+            </Button>
+            <Button className="w-full bg-blue-600 hover:bg-blue-700" onClick={async () => {
+              try {
+                const r = await api.post(`/api/v1/integrations/outlook/connect`);
+                const url = (r as any)?.data?.auth_url as string | undefined;
+                window.location.href = url || '/auth/outlook-sandbox';
+              } catch {
+                window.location.href = '/auth/outlook-sandbox';
+              }
+            }}>
+              <Mail className="h-4 w-4 mr-2" /> Outlook
+            </Button>
+            <Button className="w-full bg-emerald-600 hover:bg-emerald-700" onClick={async () => {
+              try {
+                const r = await api.post(`/api/v1/integrations/gdrive/connect`);
+                const url = (r as any)?.data?.auth_url as string | undefined;
+                window.location.href = url || '/auth/gdrive-sandbox';
+              } catch {
+                window.location.href = '/auth/gdrive-sandbox';
+              }
+            }}>
+              <Cloud className="h-4 w-4 mr-2" /> Google Drive
+            </Button>
+            <Button className="w-full bg-sky-600 hover:bg-sky-700" onClick={async () => {
+              try {
+                const r = await api.post(`/api/v1/integrations/dropbox/connect`);
+                const url = (r as any)?.data?.auth_url as string | undefined;
+                window.location.href = url || '/auth/dropbox-sandbox';
+              } catch {
+                window.location.href = '/auth/dropbox-sandbox';
+              }
+            }}>
+              <Cloud className="h-4 w-4 mr-2" /> Dropbox
+            </Button>
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => { setShowEvidencePrompt(false); try { localStorage.setItem('clario.evidencePromptDismissed', 'true'); } catch {} }}>Maybe later</Button>
+            <Button onClick={() => setShowEvidencePrompt(false)} className="gap-2">
+              <ArrowRight className="h-4 w-4" /> Continue
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
