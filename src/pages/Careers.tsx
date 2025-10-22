@@ -86,7 +86,7 @@ export default function Careers() {
         <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
 
-          <div className="relative mx-auto max-w-3xl px-6 pt-16 md:pt-24 pb-0 text-gray-300">
+              <div className="relative mx-auto max-w-3xl px-6 pt-16 md:pt-24 pb-12 md:pb-16 text-gray-300">
             {/* Headline */}
             <header>
               <h1 className="font-brand text-4xl md:text-5xl leading-tight text-gray-100">
@@ -113,7 +113,7 @@ export default function Careers() {
                   <p className="mt-2 text-gray-300 font-body">Our success is a byproduct of our users' success. Every decision we make must answer the question: "Does this create more value for our sellers?"</p>
                 </div>
                 <div className="pt-2">
-                  <Button asChild className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold">
+                  <Button asChild className="bg-emerald-500 hover:bg-emerald-400 text-white font-semibold">
                     <a href="#open-roles">View Open Roles</a>
                   </Button>
                 </div>
@@ -143,7 +143,7 @@ export default function Careers() {
                         {job.description.map((d, i) => (<li key={i}>{d}</li>))}
                       </ul>
                       <div className="pt-2">
-                        <Button asChild size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold">
+                        <Button asChild size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-white font-semibold">
                           <a href={`mailto:careers@getclario.com?subject=${encodeURIComponent('Application: ' + job.title)}`}>Apply</a>
                         </Button>
                       </div>
