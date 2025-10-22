@@ -242,48 +242,36 @@ const Index = () => {
                   <span className="text-gray-300 text-sm md:text-base">Cancel anytime</span>
                 </div>
               </div>
-              <div className="mt-8 flex justify-center">
-                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-gray-300 text-xs md:text-sm">
-                  99% of competitors treat this step as a simple "login." We treat it as the most important moment of trust in the entire user journey.
-                </span>
-              </div>
-              <div className="mt-8 max-w-3xl mx-auto text-left space-y-6">
-                <div className="space-y-2">
-                  <h3 className="text-gray-200 font-semibold">1. What We Really Achieve Here</h3>
-                  <p className="text-gray-400 text-sm md:text-base">
-                    The goal is not to just "connect an account." The goal is to inspire the confidence required for a user to hand us the keys to their kingdom. The outcome should feel like "plugging into money" emotionally, and strategically it must communicate: "This is a professional, secure platform. I am safe here."
-                  </p>
+              {/* Vertical Expansion Teaser */}
+              <section className="mt-12 max-w-4xl mx-auto text-center">
+                <h3 className="text-2xl md:text-3xl font-semibold text-gray-100">Vertical Expansion</h3>
+                <p className="mt-3 text-gray-300 text-sm md:text-base max-w-3xl mx-auto">
+                  E-commerce is just the beginning. We’re charging into Finance (AP Recovery) next—reclaiming $0.5–2.5M per company in overpayments with zero effort. Insurance, Healthcare, and Pharma are on deck. Join us as we conquer $100M+ ARR across verticals by 2028!
+                </p>
+                {/* Simple roadmap graphic substitute */}
+                <div className="mt-6 grid grid-cols-2 md:grid-cols-5 gap-3 text-xs md:text-sm">
+                  {[
+                    { label: 'E‑commerce', emoji: '🛒' },
+                    { label: 'Finance', emoji: '🏦' },
+                    { label: 'Insurance', emoji: '🛡️' },
+                    { label: 'Healthcare', emoji: '🏥' },
+                    { label: 'Pharma', emoji: '💊' },
+                  ].map((item) => (
+                    <div key={item.label} className="rounded-lg border border-white/10 bg-white/5 p-3">
+                      <div className="text-2xl">{item.emoji}</div>
+                      <div className="mt-1 text-gray-200 font-medium">{item.label}</div>
+                    </div>
+                  ))}
                 </div>
-                <div className="space-y-2">
-                  <h3 className="text-gray-200 font-semibold">2. How We Are 10x Better Than Others</h3>
-                  <ul className="list-disc pl-5 text-gray-400 text-sm md:text-base space-y-1">
-                    <li>Competitors ship ugly, generic UIs that feel like hobby projects and security risks.</li>
-                    <li>They force clunky flows and ask for Seller IDs or credentials that break the magic.</li>
-                    <li>They are not transparent about what is happening during connect.</li>
-                  </ul>
-                  <p className="text-gray-400 text-sm md:text-base">
-                    We engineer Frictionless Trust: beautiful, bank‑grade design and clear, transparent steps.
-                  </p>
+
+                {/* Email capture CTA */}
+                <div className="mt-6 max-w-md mx-auto">
+                  <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); toast({ title: 'Thanks!', description: 'You are on the Finance Pilot list.' }); }}>
+                    <input type="email" required placeholder="Enter your email for Finance Pilot updates" className="flex-1 rounded-md bg-white/10 border border-white/10 px-3 py-2 text-sm text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+                    <Button type="submit" className="bg-emerald-500 hover:bg-emerald-600 text-white">Sign up</Button>
+                  </form>
                 </div>
-                <div className="space-y-2">
-                  <h3 className="text-gray-200 font-semibold">3. The Tactical "Godly" Blueprint for Step 1</h3>
-                  <ul className="list-disc pl-5 text-gray-400 text-sm md:text-base space-y-1">
-                    <li><span className="text-gray-300">The Professional "Shield"</span>: Surround the Connect Amazon action with proof of professionalism and security.</li>
-                    <li><span className="text-gray-300">The UI</span>: Deep Midnight Blue — it should feel like a bank, not a blog.</li>
-                    <li><span className="text-gray-300">The Legal Line</span>: Placed directly under the button (see above).</li>
-                    <li><span className="text-gray-300">The "Amazon Approved" Badge</span>: To be placed next to Connect once approved.</li>
-                    <li><span className="text-gray-300">The "One‑Click" Promise</span>:
-                      <ol className="list-decimal pl-5 mt-1 space-y-1">
-                        <li>Click Connect Amazon.</li>
-                        <li>See the official login.amazon.com page and approve.</li>
-                        <li>Return instantly to your Command Center.</li>
-                        <li>No Seller ID, MWS tokens, or copy/paste — pure modern OAuth.</li>
-                      </ol>
-                    </li>
-                    <li><span className="text-gray-300">The Dedicated Tenant</span>: Each account runs in an isolated data environment — never co‑mingled — our FinTech‑grade security promise. See <Link to="/security" className="underline hover:text-gray-200">Data Security</Link>.</li>
-                  </ul>
-                </div>
-              </div>
+              </section>
             </div>
           </div>
         </section>
