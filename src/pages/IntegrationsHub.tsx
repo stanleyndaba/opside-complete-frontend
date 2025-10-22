@@ -329,14 +329,14 @@ export default function IntegrationsHub() {
                 <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold" onClick={() => navigate('/sync')}>
                   <RefreshCw className="h-4 w-4 mr-2" /> Sync now
                 </Button>
-                <Button size="sm" variant="outline" onClick={async () => { await api.post('/api/detections/run'); toast({ title: 'Detector started', description: 'Scanning new opportunities…' }); }}>
+                <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={async () => { await api.post('/api/detections/run'); toast({ title: 'Detector started', description: 'Scanning new opportunities…' }); }}>
                   Run Detector
                 </Button>
               </div>
               <div className="text-xs text-gray-400">Scopes: orders.read, inventory.read, transactions.read</div>
               <div className="flex gap-2">
-                <Button size="sm" variant="outline" onClick={() => navigate('/integrations/reconnect/amazon')}>Reconnect</Button>
-                <Button size="sm" variant="outline" onClick={async () => { await api.disconnectIntegration('amazon', true); toast({ title: 'Disconnected', description: 'Amazon integration revoked and data purged.' }); const s = await api.getIntegrationsStatus(); if (s.ok) setStatus(s.data); }}>Disconnect & purge</Button>
+                <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={() => navigate('/integrations/reconnect/amazon')}>Reconnect</Button>
+                <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={async () => { await api.disconnectIntegration('amazon', true); toast({ title: 'Disconnected', description: 'Amazon integration revoked and data purged.' }); const s = await api.getIntegrationsStatus(); if (s.ok) setStatus(s.data); }}>Disconnect & purge</Button>
               </div>
             </CardContent>
           </Card>
@@ -360,7 +360,7 @@ export default function IntegrationsHub() {
                     <div className="text-xs text-gray-400">Last ingest: {status?.providerIngest?.[p]?.lastIngest || '—'}</div>
                     <div className="flex gap-2">
                       <Button size="sm" className={cn(p==='gmail'?'bg-red-600 hover:bg-red-700': p==='outlook'?'bg-blue-600 hover:bg-blue-700': p==='gdrive'?'bg-emerald-600 hover:bg-emerald-700':'bg-sky-600 hover:bg-sky-700')} onClick={() => navigate(`/integrations/reconnect/${p}`)} disabled={providerLoading!==null}>{providerLoading===p?'Connecting…':'Reconnect'}</Button>
-                      <Button size="sm" variant="outline" onClick={async () => { await api.disconnectIntegration(p, true); toast({ title: 'Disconnected', description: `${p} revoked and data purged.` }); const s = await api.getIntegrationsStatus(); if (s.ok) setStatus(s.data); }}>Disconnect & purge</Button>
+                      <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={async () => { await api.disconnectIntegration(p, true); toast({ title: 'Disconnected', description: `${p} revoked and data purged.` }); const s = await api.getIntegrationsStatus(); if (s.ok) setStatus(s.data); }}>Disconnect & purge</Button>
                     </div>
                     {Array.isArray(status?.providerIngest?.[p]?.scopes) && status!.providerIngest![p]!.scopes!.length > 0 && (
                       <div className="text-[11px] text-gray-400">Scopes: {status!.providerIngest![p]!.scopes!.join(', ')}</div>
@@ -370,21 +370,21 @@ export default function IntegrationsHub() {
               </div>
               <div className="flex flex-wrap items-center gap-3 text-sm text-gray-400">
                 <span>Auto‑collect</span>
-                <Button size="sm" variant="outline" onClick={async () => { const next = !autoCollect; setAutoCollect(next); await api.setEvidenceAutoCollect(next); toast({ title: 'Auto‑collect updated', description: next ? 'Enabled' : 'Disabled' }); }}>
+                <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={async () => { const next = !autoCollect; setAutoCollect(next); await api.setEvidenceAutoCollect(next); toast({ title: 'Auto‑collect updated', description: next ? 'Enabled' : 'Disabled' }); }}>
                   {autoCollect ? 'Enabled' : 'Disabled'}
                 </Button>
                 <span className="ml-2">Schedule</span>
-                <Button size="sm" variant="outline" onClick={async () => { const next = schedule === 'daily_0200' ? 'hourly' : 'daily_0200'; setSchedule(next); await api.setEvidenceSchedule(next); toast({ title: 'Schedule saved', description: next === 'hourly' ? 'Hourly ingestion' : 'Daily at 02:00 UTC' }); }}>{schedule === 'daily_0200' ? 'Daily 02:00 UTC' : 'Hourly'}</Button>
+                <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={async () => { const next = schedule === 'daily_0200' ? 'hourly' : 'daily_0200'; setSchedule(next); await api.setEvidenceSchedule(next); toast({ title: 'Schedule saved', description: next === 'hourly' ? 'Hourly ingestion' : 'Daily at 02:00 UTC' }); }}>{schedule === 'daily_0200' ? 'Daily 02:00 UTC' : 'Hourly'}</Button>
               </div>
               <div className="text-xs text-gray-400">Filters: include {filters.includeSenders.join(', ') || '—'}; file types: {filters.fileTypes.join(', ') || '—'}; folders: {filters.folders.join(', ') || '—'}</div>
               <div className="flex flex-wrap gap-2 text-xs">
                 <Input placeholder="Include senders (comma‑separated)" value={filters.includeSenders.join(', ')} onChange={(e) => setFilters(f => ({ ...f, includeSenders: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))} className="w-full md:w-64 border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" />
                 <Input placeholder="Folders (comma‑separated)" value={filters.folders.join(', ')} onChange={(e) => setFilters(f => ({ ...f, folders: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))} className="w-full md:w-64 border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" />
-                <Button size="sm" variant="outline" onClick={async () => { await api.setEvidenceFilters(filters); toast({ title: 'Filters saved', description: 'Your ingestion filters are active.' }); }}>Save Filters</Button>
+                <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={async () => { await api.setEvidenceFilters(filters); toast({ title: 'Filters saved', description: 'Your ingestion filters are active.' }); }}>Save Filters</Button>
               </div>
               <div className="flex items-center gap-3 text-sm text-gray-400">
                 <span>Last ingest: {status?.lastIngest || 'Just now'}</span>
-                <Button size="sm" variant="outline" onClick={async () => { await api.startEvidenceIngest(); toast({ title: 'Ingestion started', description: 'We will notify you when new docs arrive.' }); }}>Ingest now</Button>
+                <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={async () => { await api.startEvidenceIngest(); toast({ title: 'Ingestion started', description: 'We will notify you when new docs arrive.' }); }}>Ingest now</Button>
                 <Button size="sm" variant="ghost" onClick={() => navigate('/evidence-locker')}>Open Evidence Locker</Button>
               </div>
             </CardContent>
