@@ -121,6 +121,7 @@ export default function UpcomingPayments() {
     const a = document.createElement('a');
     a.href = url; a.download = 'upcoming-payments.csv'; a.click();
     URL.revokeObjectURL(url);
+    toast({ title: 'Exported', description: 'upcoming-payments.csv downloaded.' });
   };
 
   return (

@@ -212,7 +212,7 @@ export default function EvidenceLocker() {
                     const refresh = await api.getDocuments();
                     if (refresh.ok && Array.isArray(refresh.data)) setDocuments(refresh.data);
                   } catch (err: any) {
-                    toast({ title: 'Use Integrations for Auto‑Ingest', description: 'Connect Gmail/Drive in Integrations to ingest documents automatically.' });
+                    toast({ title: 'Upload failed', description: err?.message || 'Use Integrations for auto‑ingest if needed.', variant: 'destructive' });
                   }
                 }} />
                 

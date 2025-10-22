@@ -376,7 +376,7 @@ export default function Recoveries() {
                     await api.post('/api/detections/run');
                     toast({ title: 'Detector started', description: 'Scanning new opportunities…' });
                   } catch (e: any) {
-                    toast({ title: 'Could not start detector', description: e?.message || 'Please try again shortly.' });
+                    toast({ title: 'Could not start detector', description: e?.message || 'Please try again shortly.', variant: 'destructive' });
                   }
                 }}
               >

@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Skeleton } from "@/components/ui/skeleton";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import NotificationsProvider from '@/components/providers/NotificationsProvider';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import DemoOverlay from "@/components/demo/DemoOverlay";
 
@@ -78,6 +79,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <NotificationsProvider>
         <Suspense fallback={<RouteSkeleton />}>
           <Routes>
             <Route path="/" element={<Index />} />
@@ -127,6 +129,7 @@ const App = () => (
           </Routes>
           <DemoOverlay />
         </Suspense>
+        </NotificationsProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
