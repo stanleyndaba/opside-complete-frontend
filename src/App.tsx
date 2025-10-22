@@ -17,6 +17,7 @@ const Settings = lazy(() => import("./pages/Settings"));
 const IntegrationsHub = lazy(() => import("./pages/IntegrationsHub"));
 const Recoveries = lazy(() => import("./pages/Recoveries"));
 const CaseDetail = lazy(() => import("./pages/CaseDetail"));
+const ResolveCase = lazy(() => import("./pages/ResolveCase"));
 const SmartInventorySync = lazy(() => import("./pages/SmartInventorySync"));
 const EvidenceLocker = lazy(() => import("./pages/EvidenceLocker"));
 const DocumentDetail = lazy(() => import("./pages/DocumentDetail"));
@@ -85,6 +86,7 @@ const App = () => (
             <Route path="/reports" element={<Reports />} />
             <Route path="/recoveries" element={<Recoveries />} />
             <Route path="/recoveries/:caseId" element={<CaseDetail />} />
+            <Route path="/recoveries/:caseId/resolve" element={<ResolveCase />} />
             <Route path="/smart-inventory-sync" element={<SmartInventorySync />} />
             <Route path="/evidence-locker" element={<EvidenceLocker />} />
             <Route path="/documents/:id" element={<DocumentDetail />} />

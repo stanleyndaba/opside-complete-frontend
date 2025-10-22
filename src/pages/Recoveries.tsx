@@ -641,16 +641,11 @@ export default function Recoveries() {
                               View Details
                             </Link>
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={async () => {
-                            try {
-                              await recoveryApi.submitClaim(claim.id);
-                              setClaims(prev => prev.map(c => c.id === claim.id ? { ...c, status: 'Submitted' } : c));
-                            } catch (e: any) {
-                              alert(e?.message || 'Failed to resolve');
-                            }
-                          }}>
-                            <FileText className="h-4 w-4 mr-2" />
-                            Resolve Case
+                          <DropdownMenuItem asChild>
+                            <Link to={`/recoveries/${encodeURIComponent(claim.id)}/resolve`} state={{ claim }} className="flex items-center gap-2">
+                              <FileText className="h-4 w-4" />
+                              Resolve Case
+                            </Link>
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={async () => {
                             const url = api.getRecoveryDocumentUrl(claim.id);
