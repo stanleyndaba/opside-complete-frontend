@@ -196,7 +196,7 @@ export default function EvidenceLocker() {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Button className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold" onClick={() => document.getElementById('doc-file-input')?.click()}>
+                <Button className="bg-emerald-500 hover:bg-emerald-400 text-white font-semibold" onClick={() => document.getElementById('doc-file-input')?.click()}>
                   <Upload className="w-4 h-4 mr-2" />
                   Browse Files
                 </Button>
