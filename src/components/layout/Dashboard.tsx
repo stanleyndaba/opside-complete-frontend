@@ -212,7 +212,6 @@ export function Dashboard() {
                           <span className="text-gray-400">Total this Month: </span>
                           <span className="text-blue-400">{approvedClaimsThisMonth != null ? approvedClaimsThisMonth : 0}</span>
                         </div>
-                        <div className="text-[11px] text-gray-300/80 mt-1">See all approved</div>
                       </div>
                     </div>
 
