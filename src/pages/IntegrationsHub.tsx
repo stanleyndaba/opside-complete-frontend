@@ -335,7 +335,7 @@ export default function IntegrationsHub() {
               </div>
               <div className="text-xs text-gray-400">Scopes: orders.read, inventory.read, transactions.read</div>
               <div className="flex gap-2">
-                <Button size="sm" variant="outline" onClick={() => beginProviderOAuth('gdrive')}>Reconnect</Button>
+                <Button size="sm" variant="outline" onClick={() => navigate('/integrations/reconnect/amazon')}>Reconnect</Button>
                 <Button size="sm" variant="outline" onClick={async () => { await api.disconnectIntegration('amazon', true); toast({ title: 'Disconnected', description: 'Amazon integration revoked and data purged.' }); const s = await api.getIntegrationsStatus(); if (s.ok) setStatus(s.data); }}>Disconnect & purge</Button>
               </div>
             </CardContent>
@@ -359,7 +359,7 @@ export default function IntegrationsHub() {
                     </div>
                     <div className="text-xs text-gray-400">Last ingest: {status?.providerIngest?.[p]?.lastIngest || '—'}</div>
                     <div className="flex gap-2">
-                      <Button size="sm" className={cn(p==='gmail'?'bg-red-600 hover:bg-red-700': p==='outlook'?'bg-blue-600 hover:bg-blue-700': p==='gdrive'?'bg-emerald-600 hover:bg-emerald-700':'bg-sky-600 hover:bg-sky-700')} onClick={() => beginProviderOAuth(p)} disabled={providerLoading!==null}>{providerLoading===p?'Connecting…':'Reconnect'}</Button>
+                      <Button size="sm" className={cn(p==='gmail'?'bg-red-600 hover:bg-red-700': p==='outlook'?'bg-blue-600 hover:bg-blue-700': p==='gdrive'?'bg-emerald-600 hover:bg-emerald-700':'bg-sky-600 hover:bg-sky-700')} onClick={() => navigate(`/integrations/reconnect/${p}`)} disabled={providerLoading!==null}>{providerLoading===p?'Connecting…':'Reconnect'}</Button>
                       <Button size="sm" variant="outline" onClick={async () => { await api.disconnectIntegration(p, true); toast({ title: 'Disconnected', description: `${p} revoked and data purged.` }); const s = await api.getIntegrationsStatus(); if (s.ok) setStatus(s.data); }}>Disconnect & purge</Button>
                     </div>
                     {Array.isArray(status?.providerIngest?.[p]?.scopes) && status!.providerIngest![p]!.scopes!.length > 0 && (

@@ -30,6 +30,8 @@ const ApiAccess = lazy(() => import("./pages/ApiAccess"));
 const ApiLanding = lazy(() => import("./pages/ApiLanding"));
 const Help = lazy(() => import("./pages/Help"));
 const WhatsNew = lazy(() => import("./pages/WhatsNew"));
+const ReconnectProvider = lazy(() => import("./pages/ReconnectProvider"));
+const OAuthProviderSandbox = lazy(() => import("./pages/OAuthProviderSandbox"));
 const OAuthCallback = lazy(() => import("./pages/OAuthCallback"));
 const OAuthSuccess = lazy(() => import("./pages/OAuthSuccess"));
 const StripeCallback = lazy(() => import("./pages/StripeCallback"));
@@ -83,6 +85,7 @@ const App = () => (
             {/* Market/Stocks pages removed for FBA MVP focus */}
             <Route path="/settings" element={<Settings />} />
             <Route path="/integrations-hub" element={<IntegrationsHub />} />
+            <Route path="/integrations/reconnect/:provider" element={<ReconnectProvider />} />
             <Route path="/reports" element={<Reports />} />
             <Route path="/recoveries" element={<Recoveries />} />
             <Route path="/recoveries/:caseId" element={<CaseDetail />} />
@@ -112,6 +115,10 @@ const App = () => (
             {/* Shock & Awe Flow Routes */}
             <Route path="/auth/amazon-sandbox" element={<AmazonSandbox />} />
             <Route path="/auth/analyzing" element={<AnalyzingScreen />} />
+            <Route path="/auth/gmail-sandbox" element={<OAuthProviderSandbox />} />
+            <Route path="/auth/outlook-sandbox" element={<OAuthProviderSandbox />} />
+            <Route path="/auth/gdrive-sandbox" element={<OAuthProviderSandbox />} />
+            <Route path="/auth/dropbox-sandbox" element={<OAuthProviderSandbox />} />
             
             {/* 404 Catch All */}
             <Route path="*" element={<NotFound />} />
