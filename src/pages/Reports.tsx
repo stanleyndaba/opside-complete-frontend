@@ -7,6 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { format, subDays, startOfYear, startOfQuarter } from 'date-fns';
 import { CalendarIcon, Download, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
@@ -79,10 +80,15 @@ export default function Reports() {
   const [exportOpen, setExportOpen] = useState(false);
   const [exportFormat, setExportFormat] = useState<'csv' | 'pdf'>('csv');
   const [reportType, setReportType] = useState<'' | 'recovery_payout' | 'fee_dispute' | 'evidence_log'>('');
+  const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   // Filter and sort data
   const filteredClaims = useMemo(() => {
     let filtered = mockClaims.filter(claim => {
+      const term = search.trim().toLowerCase();
+      const matchesSearch = !term || claim.id.toLowerCase().includes(term) || claim.claimType.toLowerCase().includes(term) || claim.status.toLowerCase().includes(term);
       // Date filter
       const claimDate = new Date(claim.dateCreated);
       const dateInRange = (!dateRange.from || claimDate >= dateRange.from) && (!dateRange.to || claimDate <= dateRange.to);
@@ -92,7 +98,7 @@ export default function Reports() {
 
       // Status filter
       const statusMatch = selectedStatuses.length === 0 || selectedStatuses.includes(claim.status);
-      return dateInRange && typeMatch && statusMatch;
+      return dateInRange && typeMatch && statusMatch && matchesSearch;
     });
 
     // Sort data
@@ -114,7 +120,13 @@ export default function Reports() {
       }
     });
     return filtered;
-  }, [dateRange, selectedClaimTypes, selectedStatuses, sortField, sortDirection]);
+  }, [dateRange, selectedClaimTypes, selectedStatuses, sortField, sortDirection, search]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredClaims.length / pageSize));
+  const pageData = useMemo(() => {
+    const start = (page - 1) * pageSize;
+    return filteredClaims.slice(start, start + pageSize);
+  }, [filteredClaims, page, pageSize]);
 
   // Calculate key metrics
   const keyMetrics = useMemo(() => {
@@ -235,6 +247,10 @@ export default function Reports() {
             <p className="text-gray-400">Historical clarity and financial reconciliation</p>
           </div>
           <div className="flex flex-wrap gap-2 items-center">
+            <div className="relative">
+              <Input placeholder="Search claims (ID, type, status)" value={search} onChange={(e)=>{ setSearch(e.target.value); setPage(1); }} className="pl-8 md:w-64 border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" />
+              <CalendarIcon className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            </div>
             <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100" onClick={() => setQuickDateRange('30days')}>Last 30 Days</Button>
             <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100" onClick={() => setQuickDateRange('quarter')}>This Quarter</Button>
             <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100" onClick={() => setQuickDateRange('year')}>Year to Date</Button>
@@ -358,6 +374,18 @@ export default function Reports() {
                 })()}
               </TableBody>
             </Table>
+            <div className="mt-6 flex items-center justify-between">
+              <div className="text-xs text-gray-400">Page {page} of {totalPages} • {filteredClaims.length} claims</div>
+              <div className="flex items-center gap-3">
+                <select className="bg-white/10 border border-white/10 rounded px-2 py-1 text-sm" value={pageSize} onChange={(e)=>{ setPageSize(Number(e.target.value)); setPage(1); }}>
+                  <option value={10}>10 / page</option>
+                  <option value={25}>25 / page</option>
+                  <option value={50}>50 / page</option>
+                </select>
+                <Button variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" disabled={page<=1} onClick={()=>setPage(p=>Math.max(1,p-1))}>Prev</Button>
+                <Button variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" disabled={page>=totalPages} onClick={()=>setPage(p=>Math.min(totalPages,p+1))}>Next</Button>
+              </div>
+            </div>
           </CardContent>
         </Card>
           </div>
