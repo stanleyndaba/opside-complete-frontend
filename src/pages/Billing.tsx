@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Select as UiSelect } from '@/components/ui/select';
+import { useToast } from '@/components/ui/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { 
@@ -98,6 +101,27 @@ const handleStripePaymentUpdate = () => {
 export default function Billing() {
   const [exportOpen, setExportOpen] = useState(false);
   const [exportFormat, setExportFormat] = useState<'csv' | 'pdf'>('csv');
+  const { toast } = useToast();
+
+  // Billing settings
+  const [invoiceRecipients, setInvoiceRecipients] = useState<string[]>([]);
+  const [newRecipient, setNewRecipient] = useState('');
+  const [taxId, setTaxId] = useState('');
+
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('clario.billing') || 'null');
+      if (saved) {
+        setInvoiceRecipients(Array.isArray(saved.recipients) ? saved.recipients : []);
+        setTaxId(saved.taxId || '');
+      }
+    } catch {}
+  }, []);
+
+  const saveBillingSettings = () => {
+    localStorage.setItem('clario.billing', JSON.stringify({ recipients: invoiceRecipients, taxId }));
+    toast({ title: 'Billing settings saved', description: 'Recipients and tax details updated.' });
+  };
 
   const exportBillingCSV = () => {
     const headers = [
@@ -136,6 +160,36 @@ export default function Billing() {
     setExportOpen(false);
   };
 
+  // Invoices table UX: search, filter, pagination
+  const [invoiceSearch, setInvoiceSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState<'All' | InvoiceRecord['status']>('All');
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  const filteredInvoices = useMemo(() => {
+    const term = invoiceSearch.trim().toLowerCase();
+    return mockInvoices
+      .filter(inv => {
+        const matchesSearch = !term || inv.id.toLowerCase().includes(term) || inv.status.toLowerCase().includes(term);
+        const matchesStatus = statusFilter === 'All' || inv.status === statusFilter;
+        return matchesSearch && matchesStatus;
+      })
+      .sort((a, b) => new Date(b.dateIssued).getTime() - new Date(a.dateIssued).getTime());
+  }, [invoiceSearch, statusFilter]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredInvoices.length / pageSize));
+  const pageData = useMemo(() => {
+    const start = (page - 1) * pageSize;
+    return filteredInvoices.slice(start, start + pageSize);
+  }, [filteredInvoices, page, pageSize]);
+
+  const periodTotals = useMemo(() => {
+    const totalRecovered = filteredInvoices.reduce((s, i) => s + i.totalRecovered, 0);
+    const commission = filteredInvoices.reduce((s, i) => s + i.commission, 0);
+    const netToSeller = totalRecovered - commission;
+    return { totalRecovered, commission, netToSeller };
+  }, [filteredInvoices]);
+
   return (
     <PageLayout title="Billing & Invoices">
       <div className="relative -m-4 lg:-m-6">
@@ -168,10 +222,24 @@ export default function Billing() {
                 <Check className="h-4 w-4" />
                 <span className="text-gray-300">Active and monitoring your account 24/7</span>
               </div>
+              <div className="grid grid-cols-3 gap-3 mt-3 text-sm">
+                <div className="rounded border border-white/10 bg-white/5 p-3">
+                  <div className="text-gray-400">Recovered (selected)</div>
+                  <div className="text-gray-100 font-semibold">${periodTotals.totalRecovered.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+                </div>
+                <div className="rounded border border-white/10 bg-white/5 p-3">
+                  <div className="text-gray-400">Our Commission (20%)</div>
+                  <div className="text-blue-300 font-semibold">${periodTotals.commission.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+                </div>
+                <div className="rounded border border-white/10 bg-white/5 p-3">
+                  <div className="text-gray-400">Net to You</div>
+                  <div className="text-emerald-300 font-semibold">${periodTotals.netToSeller.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+                </div>
+              </div>
             </CardContent>
           </Card>
 
-          {/* Payment Method Card */}
+          {/* Payment & Billing Settings Card */}
           <Card className="bg-white/5 border-white/10 text-gray-300">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-gray-200">
@@ -194,12 +262,35 @@ export default function Billing() {
                   Active
                 </Badge>
               </div>
-              <Button 
-                className="w-full bg-emerald-500 hover:bg-emerald-400 text-white font-semibold"
-                onClick={() => { window.location.href = '/stripe/callback'; }}
-              >
-                Update Payment Method
-              </Button>
+              <div className="grid grid-cols-1 gap-4">
+                <div>
+                  <div className="text-sm text-gray-400 mb-1">Invoice Recipients</div>
+                  <div className="flex gap-2">
+                    <Input placeholder="Add recipient email" value={newRecipient} onChange={(e)=>setNewRecipient(e.target.value)} className="border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" />
+                    <Button className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" variant="outline" onClick={() => {
+                      const email = newRecipient.trim(); if (!email) return; setInvoiceRecipients(prev => prev.includes(email) ? prev : [...prev, email]); setNewRecipient('');
+                    }}>Add</Button>
+                  </div>
+                  {invoiceRecipients.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {invoiceRecipients.map((em) => (
+                        <span key={em} className="inline-flex items-center gap-2 px-2 py-1 rounded border border-white/10 bg-white/5 text-xs">
+                          {em}
+                          <button className="text-gray-400 hover:text-gray-200" onClick={() => setInvoiceRecipients(prev => prev.filter(x => x !== em))}>×</button>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <div className="text-sm text-gray-400 mb-1">Tax / VAT Number</div>
+                  <Input placeholder="Optional — shown on invoices" value={taxId} onChange={(e)=>setTaxId(e.target.value)} className="border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" />
+                </div>
+                <div className="flex gap-2">
+                  <Button className="bg-emerald-500 hover:bg-emerald-400 text-white font-semibold" onClick={saveBillingSettings}>Save Billing Settings</Button>
+                  <Button className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" variant="outline" onClick={() => { window.location.href = '/stripe/callback'; }}>Open Stripe Billing Portal</Button>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -221,6 +312,30 @@ export default function Billing() {
             </div>
           </CardHeader>
           <CardContent>
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+              <div className="flex items-center gap-2">
+                <Input placeholder="Search invoices (ID/status)" value={invoiceSearch} onChange={(e)=>{ setInvoiceSearch(e.target.value); setPage(1); }} className="border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500 md:w-72" />
+                <UiSelect value={statusFilter === 'All' ? 'All' : statusFilter} onValueChange={(v)=>{ setStatusFilter(v as any); setPage(1); }}>
+                  <SelectTrigger className="w-[160px]"><SelectValue placeholder="Status" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="All">All</SelectItem>
+                    <SelectItem value="Paid">Paid</SelectItem>
+                    <SelectItem value="Due">Due</SelectItem>
+                    <SelectItem value="Overdue">Overdue</SelectItem>
+                  </SelectContent>
+                </UiSelect>
+              </div>
+              <div className="flex items-center gap-2 text-xs text-gray-400">
+                <span>{filteredInvoices.length} invoices</span>
+                <select className="bg-white/10 border border-white/10 rounded px-2 py-1" value={pageSize} onChange={(e)=>{ setPageSize(Number(e.target.value)); setPage(1); }}>
+                  <option value={10}>10 / page</option>
+                  <option value={25}>25 / page</option>
+                  <option value={50}>50 / page</option>
+                </select>
+                <Button variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" disabled={page<=1} onClick={()=>setPage(p=>Math.max(1,p-1))}>Prev</Button>
+                <Button variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" disabled={page>=totalPages} onClick={()=>setPage(p=>Math.min(totalPages,p+1))}>Next</Button>
+              </div>
+            </div>
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
@@ -235,7 +350,7 @@ export default function Billing() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {mockInvoices.map((invoice) => (
+                  {pageData.map((invoice) => (
                     <TableRow key={invoice.id} className="hover:bg-white/5">
                       <TableCell>
                         <Link 
