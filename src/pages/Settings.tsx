@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,6 +9,7 @@ import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { 
   User, Building2, Users, CreditCard, Zap, Bell, Shield, 
   Upload, MapPin, Clock, Monitor, Smartphone, AlertTriangle,
@@ -131,6 +132,60 @@ const Settings = () => {
     { device: 'Safari on iPhone', location: 'New York, NY', time: '1 day ago', current: false },
     { device: 'Chrome on MacOS', location: 'Los Angeles, CA', time: '3 days ago', current: false }
   ];
+
+  // Security state
+  const [twoFactorEnabled, setTwoFactorEnabled] = useState<boolean>(false);
+  const [backupCodes, setBackupCodes] = useState<string[]>([]);
+  const [loginAlertsEnabled, setLoginAlertsEnabled] = useState<boolean>(true);
+  const [trustedDevice, setTrustedDevice] = useState<boolean>(true);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    try {
+      const sec = JSON.parse(localStorage.getItem('clario.security') || 'null');
+      if (sec) {
+        setTwoFactorEnabled(!!sec.twoFactorEnabled);
+        setBackupCodes(Array.isArray(sec.backupCodes) ? sec.backupCodes : []);
+        setLoginAlertsEnabled(sec.loginAlertsEnabled !== false);
+        setTrustedDevice(sec.trustedDevice !== false);
+      }
+    } catch {}
+  }, []);
+
+  const persistSecurity = (next?: Partial<{ twoFactorEnabled: boolean; backupCodes: string[]; loginAlertsEnabled: boolean; trustedDevice: boolean }>) => {
+    const payload = {
+      twoFactorEnabled,
+      backupCodes,
+      loginAlertsEnabled,
+      trustedDevice,
+      ...(next || {}),
+    };
+    localStorage.setItem('clario.security', JSON.stringify(payload));
+  };
+
+  const generateBackupCodes = () => {
+    const codes = Array.from({ length: 8 }, () => Math.random().toString(36).slice(2, 10).toUpperCase());
+    setBackupCodes(codes);
+    persistSecurity({ backupCodes: codes });
+    toast({ title: 'Backup codes generated', description: 'Store these in a safe place.' });
+  };
+
+  const downloadBackupCodes = () => {
+    const blob = new Blob([backupCodes.join('\n')], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'clario-backup-codes.txt'; a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const exportLoginHistory = () => {
+    const headers = ['Device','Location','Time','Current'];
+    const rows = loginHistory.map(l => [l.device, l.location, l.time, l.current ? 'Yes' : 'No'].join(','));
+    const csv = [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob); const a = document.createElement('a');
+    a.href = url; a.download = 'login-history.csv'; a.click(); URL.revokeObjectURL(url);
+  };
 
   const renderContent = () => {
     switch (activeSection) {
@@ -414,6 +469,10 @@ const Settings = () => {
                 <CardDescription className="text-gray-400">Recent account access activity</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="text-xs text-gray-400">Export a copy of your recent logins</div>
+                  <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={exportLoginHistory}>Export CSV</Button>
+                </div>
                 {loginHistory.map((login, index) => (
                   <div key={index} className="flex items-center justify-between p-3 border border-white/10 rounded-lg bg-white/5">
                     <div className="flex items-center gap-3">
@@ -443,6 +502,54 @@ const Settings = () => {
                 <CardDescription className="text-gray-400">Manage your account security</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
+                <div className="rounded border border-white/10 bg-white/5 p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium text-gray-200">Two‑Factor Authentication (2FA)</p>
+                      <p className="text-sm text-gray-400">Add an extra layer of security to your account</p>
+                    </div>
+                    <Switch checked={twoFactorEnabled} onCheckedChange={(v)=>{ setTwoFactorEnabled(!!v); persistSecurity({ twoFactorEnabled: !!v }); }} />
+                  </div>
+                  {twoFactorEnabled && (
+                    <div className="mt-3">
+                      <div className="text-sm text-gray-400">Backup Codes</div>
+                      {backupCodes.length === 0 ? (
+                        <Button size="sm" className="mt-2 bg-white text-blue-900 border-blue-200 hover:bg-blue-50" variant="outline" onClick={generateBackupCodes}>Generate Backup Codes</Button>
+                      ) : (
+                        <div className="mt-2">
+                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                            {backupCodes.map(c => (<code key={c} className="px-2 py-1 rounded bg-white/5 border border-white/10 text-gray-100">{c}</code>))}
+                          </div>
+                          <div className="mt-2 flex gap-2">
+                            <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={downloadBackupCodes}>Download</Button>
+                            <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={generateBackupCodes}>Regenerate</Button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                <div className="rounded border border-white/10 bg-white/5 p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium text-gray-200">Login Alerts</p>
+                      <p className="text-sm text-gray-400">Email me when a new device logs into my account</p>
+                    </div>
+                    <Switch checked={loginAlertsEnabled} onCheckedChange={(v)=>{ setLoginAlertsEnabled(!!v); persistSecurity({ loginAlertsEnabled: !!v }); }} />
+                  </div>
+                </div>
+
+                <div className="rounded border border-white/10 bg-white/5 p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium text-gray-200">Trust this Device</p>
+                      <p className="text-sm text-gray-400">Skip 2FA on this device for faster sign‑in</p>
+                    </div>
+                    <Switch checked={trustedDevice} onCheckedChange={(v)=>{ setTrustedDevice(!!v); persistSecurity({ trustedDevice: !!v }); }} />
+                  </div>
+                </div>
+
                 <Button className="w-full bg-emerald-500 hover:bg-emerald-400 text-white">
                   <Shield className="h-4 w-4 mr-2" />
                   Log Out of All Other Devices
@@ -463,11 +570,23 @@ const Settings = () => {
                   Deleting your account will permanently remove all data, including recovery history, 
                   team members, and integrations. This action cannot be reversed.
                 </p>
-                <Button variant="destructive" size="sm">
+                <Button variant="destructive" size="sm" onClick={()=>setDeleteOpen(true)}>
                   Delete Account
                 </Button>
               </CardContent>
             </Card>
+            <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Confirm account deletion</DialogTitle>
+                  <DialogDescription>This will permanently remove your account and all associated data.</DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                  <Button variant="outline" onClick={()=>setDeleteOpen(false)}>Cancel</Button>
+                  <Button variant="destructive" onClick={()=>{ setDeleteOpen(false); toast({ title: 'Account deletion requested', description: 'Our support will contact you to confirm.' }); }}>Delete</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         );
 
