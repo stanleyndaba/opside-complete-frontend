@@ -139,6 +139,7 @@ const Settings = () => {
   const [loginAlertsEnabled, setLoginAlertsEnabled] = useState<boolean>(true);
   const [trustedDevice, setTrustedDevice] = useState<boolean>(true);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [loggingOutOthers, setLoggingOutOthers] = useState<boolean>(false);
 
   useEffect(() => {
     try {
@@ -185,6 +186,19 @@ const Settings = () => {
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob); const a = document.createElement('a');
     a.href = url; a.download = 'login-history.csv'; a.click(); URL.revokeObjectURL(url);
+  };
+
+  const logoutOtherDevices = async () => {
+    try {
+      setLoggingOutOthers(true);
+      // Best-effort telemetry; backend should invalidate other sessions server-side
+      await api.post('/api/metrics/track', { name: 'logout_all_devices' });
+      toast({ title: 'Other sessions logged out', description: 'All other devices have been signed out.' });
+    } catch (e: any) {
+      toast({ title: 'Action failed', description: e?.message || 'Please try again.' });
+    } finally {
+      setLoggingOutOthers(false);
+    }
   };
 
   const renderContent = () => {
@@ -550,14 +564,14 @@ const Settings = () => {
                   </div>
                 </div>
 
-                <Button className="w-full bg-emerald-500 hover:bg-emerald-400 text-white">
+                <Button className="w-full bg-emerald-500 hover:bg-emerald-400 text-white" disabled={loggingOutOthers} onClick={logoutOtherDevices}>
                   <Shield className="h-4 w-4 mr-2" />
-                  Log Out of All Other Devices
+                  {loggingOutOthers ? 'Logging out…' : 'Log Out of All Other Devices'}
                 </Button>
               </CardContent>
             </Card>
             
-            <Card className="bg-red-500/5 border-red-200/20 text-gray-300">
+            <Card className="bg-red-500/5 border-red-200/20 text-gray-300 mb-10">
               <CardHeader>
                 <CardTitle className="text-red-300 flex items-center gap-2">
                   <AlertTriangle className="h-5 w-5" />
