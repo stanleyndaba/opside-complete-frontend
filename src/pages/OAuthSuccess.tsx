@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { CheckCircle, AlertTriangle, Shield, ArrowRight, RefreshCw, Power } from 'lucide-react';
+import { CheckCircle, AlertTriangle, Shield, ArrowRight, RefreshCw, Power, Mail, Cloud } from 'lucide-react';
 import { api } from '@/lib/api';
 
 const SCOPE_COPY: Record<string, { label: string; why: string }> = {
@@ -35,6 +35,7 @@ export default function OAuthSuccess() {
   const location = useLocation();
   const navigate = useNavigate();
   const [disconnectOpen, setDisconnectOpen] = useState(false);
+  const [connectEvidenceOpen, setConnectEvidenceOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [statusData, setStatusData] = useState<any>(null);
 
@@ -45,30 +46,26 @@ export default function OAuthSuccess() {
   const scopes = useMemo(() => scopesParam.split(',').map(s => s.trim()).filter(Boolean), [scopesParam]);
 
   useEffect(() => {
-    api.trackEvent('oauth_success_view', { provider, status });
+    api.trackEvent && (api as any).trackEvent('oauth_success_view', { provider, status });
     (async () => {
       // Allow cookie persistence before auth-required calls
-      await new Promise(r => setTimeout(r, 1000));
+      await new Promise(r => setTimeout(r, 800));
       const res = await api.getIntegrationsStatus();
       if (res.ok) setStatusData(res.data);
-      // Auto-start first sync on success
+      // Prompt evidence connections immediately after Amazon connect
       if (status === 'ok') {
-        api.trackEvent('first_sync_started', { provider });
-        const syncRes = await api.startAmazonSync();
-        if (syncRes.ok) {
-          api.trackEvent('first_sync_redirect', { provider });
-          navigate(`/sync?id=${encodeURIComponent(syncRes.data!.syncId)}`);
-        }
+        setTimeout(() => setConnectEvidenceOpen(true), 600);
       }
     })();
   }, [provider, status]);
 
   const handleStartSync = async () => {
     setLoading(true);
-    api.trackEvent('first_sync_clicked', { provider });
-    const res = await api.startAmazonSync();
-    setLoading(false);
-    if (res.ok) navigate(`/sync?id=${encodeURIComponent(res.data!.syncId)}`);
+    try {
+      (api as any).trackEvent && (api as any).trackEvent('first_sync_clicked', { provider });
+    } catch {}
+    // Navigate to the live sync/status page
+    navigate('/smart-inventory-sync');
   };
 
   const handleReconnect = async () => {
@@ -183,6 +180,70 @@ export default function OAuthSuccess() {
           <DialogFooter>
             <Button variant="outline" onClick={() => setDisconnectOpen(false)}>Cancel</Button>
             <Button variant="destructive" onClick={() => handleDisconnect(true)}>Disconnect & purge</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Evidence Connections Prompt */}
+      <Dialog open={connectEvidenceOpen} onOpenChange={setConnectEvidenceOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="text-lg">Connect Evidence Sources</DialogTitle>
+            <DialogDescription>
+              Link your email and cloud storage to auto‑collect invoices and receipts. Read‑only. No writing or sending.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid grid-cols-2 gap-3 pt-2">
+            <Button className="w-full bg-red-600 hover:bg-red-700" onClick={async () => {
+              try {
+                const r = await api.post(`/api/v1/integrations/gmail/connect`);
+                const url = (r as any)?.data?.auth_url as string | undefined;
+                window.location.href = url || '/auth/gmail-sandbox';
+              } catch {
+                window.location.href = '/auth/gmail-sandbox';
+              }
+            }}>
+              <Mail className="h-4 w-4 mr-2" /> Gmail
+            </Button>
+            <Button className="w-full bg-blue-600 hover:bg-blue-700" onClick={async () => {
+              try {
+                const r = await api.post(`/api/v1/integrations/outlook/connect`);
+                const url = (r as any)?.data?.auth_url as string | undefined;
+                window.location.href = url || '/auth/outlook-sandbox';
+              } catch {
+                window.location.href = '/auth/outlook-sandbox';
+              }
+            }}>
+              <Mail className="h-4 w-4 mr-2" /> Outlook
+            </Button>
+            <Button className="w-full bg-emerald-600 hover:bg-emerald-700" onClick={async () => {
+              try {
+                const r = await api.post(`/api/v1/integrations/gdrive/connect`);
+                const url = (r as any)?.data?.auth_url as string | undefined;
+                window.location.href = url || '/auth/gdrive-sandbox';
+              } catch {
+                window.location.href = '/auth/gdrive-sandbox';
+              }
+            }}>
+              <Cloud className="h-4 w-4 mr-2" /> Google Drive
+            </Button>
+            <Button className="w-full bg-sky-600 hover:bg-sky-700" onClick={async () => {
+              try {
+                const r = await api.post(`/api/v1/integrations/dropbox/connect`);
+                const url = (r as any)?.data?.auth_url as string | undefined;
+                window.location.href = url || '/auth/dropbox-sandbox';
+              } catch {
+                window.location.href = '/auth/dropbox-sandbox';
+              }
+            }}>
+              <Cloud className="h-4 w-4 mr-2" /> Dropbox
+            </Button>
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setConnectEvidenceOpen(false)}>Maybe later</Button>
+            <Button onClick={handleStartSync} className="gap-2">
+              <ArrowRight className="h-4 w-4" /> Continue
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
