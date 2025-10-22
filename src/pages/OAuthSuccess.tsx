@@ -52,10 +52,8 @@ export default function OAuthSuccess() {
       await new Promise(r => setTimeout(r, 800));
       const res = await api.getIntegrationsStatus();
       if (res.ok) setStatusData(res.data);
-      // Prompt evidence connections immediately after Amazon connect
-      if (status === 'ok') {
-        setTimeout(() => setConnectEvidenceOpen(true), 600);
-      }
+      // Always prompt evidence connections regardless of Amazon status
+      setTimeout(() => setConnectEvidenceOpen(true), 600);
     })();
   }, [provider, status]);
 
