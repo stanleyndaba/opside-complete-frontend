@@ -355,7 +355,7 @@ export default function Recoveries() {
               <div>
                 <div className="text-sm text-gray-400">Your Opportunities</div>
                 <div className="text-2xl md:text-3xl font-semibold text-gray-100">
-                  {formatCurrency(owedSummary.totalOwed)} <span className="text-gray-400 text-base font-medium">owed across {owedSummary.openCount} claims</span>
+                  <span className="text-[#47d147]">{formatCurrency(owedSummary.totalOwed)}</span> <span className="text-gray-400 text-base font-medium">owed across {owedSummary.openCount} claims</span>
                 </div>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -415,7 +415,7 @@ export default function Recoveries() {
               <div className="flex items-center">
                 <div>
                   <p className="text-sm font-medium text-gray-400">Value in Progress</p>
-                  <p className="text-2xl font-bold text-purple-400">{formatCurrency(metrics ? metrics.valueInProgress : keyMetrics.valueInProgress)}</p>
+                  <p className="text-2xl font-bold text-white">{formatCurrency(metrics ? metrics.valueInProgress : keyMetrics.valueInProgress)}</p>
                 </div>
               </div>
             </CardContent>
