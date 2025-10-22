@@ -242,13 +242,7 @@ const Index = () => {
                   <span className="text-gray-300 text-sm md:text-base">Cancel anytime</span>
                 </div>
               </div>
-              {/* Email capture CTA only */}
-              <div className="mt-10 max-w-md mx-auto">
-                <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); toast({ title: 'Thanks!', description: 'You are on the Finance Pilot list.' }); }}>
-                  <input type="email" required placeholder="Enter your email for Finance Pilot updates" className="flex-1 rounded-md bg-white/10 border border-white/10 px-3 py-2 text-sm text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
-                  <Button type="submit" className="bg-emerald-500 hover:bg-emerald-600 text-white">Sign up</Button>
-                </form>
-              </div>
+              {/* Email capture moved to bottom-left above the legal footer */}
             </div>
           </div>
         </section>
@@ -260,6 +254,17 @@ const Index = () => {
             <Link to="/terms" className="hover:text-gray-200">Terms of use</Link>
             <Link to="/privacy" className="hover:text-gray-200">Privacy Policy</Link>
           </div>
+        </div>
+      </div>
+
+      {/* Bottom-left email capture above legal footer */}
+      <div className="container mx-auto px-6 pb-2">
+        <div className="max-w-md">
+          <h4 className="text-sm font-semibold text-gray-200 mb-2">Get Early Updates</h4>
+          <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); toast({ title: 'Thanks!', description: 'You are on the Finance Pilot list.' }); }}>
+            <input type="email" required placeholder="Enter your email for Finance Pilot updates" className="flex-1 rounded-md bg-white/10 border border-white/10 px-3 py-2 text-sm text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+            <Button type="submit" className="bg-emerald-500 hover:bg-emerald-600 text-white">Sign up</Button>
+          </form>
         </div>
       </div>
 
