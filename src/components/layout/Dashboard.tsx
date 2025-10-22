@@ -5,7 +5,7 @@ import { Sidebar } from '@/components/layout/Sidebar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud } from 'lucide-react';
+import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud, ArrowRight } from 'lucide-react';
 import { api } from '@/lib/api';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
