@@ -159,12 +159,12 @@ export default function ResolveCase() {
                     {error && <div className="text-sm text-red-500" role="alert">{error}</div>}
                     <div>
                       <Label className="text-sm text-gray-400">Case ID</Label>
-                      <div className="font-mono text-sm mt-1">{effectiveCase?.id}</div>
+                      <div className="font-mono text-sm mt-1 text-gray-200">{effectiveCase?.id}</div>
                     </div>
                     <div>
                       <Label className="text-sm text-gray-400">Status</Label>
                       <div className="mt-1">
-                        <Badge variant="outline">{normalizedStatus(effectiveCase?.status)}</Badge>
+                        <Badge variant="outline" className="text-gray-200 border-white/20">{normalizedStatus(effectiveCase?.status)}</Badge>
                       </div>
                     </div>
                     <div>
@@ -175,7 +175,7 @@ export default function ResolveCase() {
                       <Label className="text-sm text-gray-400">Expected Payout</Label>
                       <div className="mt-1 flex items-center gap-2">
                         <Calendar className="h-4 w-4 text-gray-400" />
-                        <span>{effectiveCase?.expectedPayoutDate ? new Date(effectiveCase.expectedPayoutDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '—'}</span>
+                        <span className="text-gray-200">{effectiveCase?.expectedPayoutDate ? new Date(effectiveCase.expectedPayoutDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '—'}</span>
                       </div>
                       <div className="text-xs text-gray-400 mt-1">Confidence {confidencePct}% • Evidence {evidenceStatus}</div>
                     </div>
@@ -230,19 +230,19 @@ export default function ResolveCase() {
                     <RadioGroup value={choice} onValueChange={(v) => setChoice(v as ResolutionChoice)} aria-label="Choose resolution action">
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="submit" id="r-submit" />
-                        <Label htmlFor="r-submit">Submit to Amazon now</Label>
+                        <Label htmlFor="r-submit" className="text-gray-200">Submit to Amazon now</Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="resubmit" id="r-resubmit" />
-                        <Label htmlFor="r-resubmit">Resubmit with stronger docs</Label>
+                        <Label htmlFor="r-resubmit" className="text-gray-200">Resubmit with stronger docs</Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="review" id="r-review" />
-                        <Label htmlFor="r-review">Request manual review</Label>
+                        <Label htmlFor="r-review" className="text-gray-200">Request manual review</Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="park" id="r-park" />
-                        <Label htmlFor="r-park">Park until more data</Label>
+                        <Label htmlFor="r-park" className="text-gray-200">Park until more data</Label>
                       </div>
                     </RadioGroup>
                     <Separator />
@@ -250,7 +250,7 @@ export default function ResolveCase() {
                       <Button className="bg-emerald-600 hover:bg-emerald-700" onClick={onResolve} disabled={submitting}>
                         {submitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />} Resolve Case
                       </Button>
-                      <Button variant="ghost" asChild>
+                      <Button variant="ghost" asChild className="text-gray-200 hover:text-white">
                         <Link to={`/recoveries/${encodeURIComponent(effectiveCase?.id)}`}>View case details</Link>
                       </Button>
                     </div>
