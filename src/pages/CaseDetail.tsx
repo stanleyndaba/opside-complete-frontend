@@ -344,16 +344,16 @@ export default function CaseDetail() {
 
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Case ID</label>
-                  <p className="font-mono text-sm mt-1">{effectiveCase.id}</p>
+                  <p className="font-mono text-sm mt-1 text-gray-200">{effectiveCase.id}</p>
                 </div>
 
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Current Status</label>
                   <div className="mt-1 flex items-center gap-2">
-                    <Badge variant="outline" className="font-medium">
+                    <Badge variant="outline" className="font-medium text-gray-200 border-white/20">
                       {normalizeStatus(effectiveCase.status)}
                     </Badge>
-                    <span className="text-xs text-muted-foreground">({effectiveCase.status})</span>
+                    <span className="text-xs text-gray-200">({effectiveCase.status})</span>
                   </div>
                 </div>
 
@@ -383,13 +383,13 @@ export default function CaseDetail() {
                   <label className="text-sm font-medium text-muted-foreground">Expected Payout Date</label>
                   <p className="mt-1 flex items-center gap-2">
                     <Calendar className="h-4 w-4 text-muted-foreground" />
-                    {effectiveCase.expectedPayoutDate ? new Date(effectiveCase.expectedPayoutDate).toLocaleDateString('en-US', {
+                    <span className="text-gray-200">{effectiveCase.expectedPayoutDate ? new Date(effectiveCase.expectedPayoutDate).toLocaleDateString('en-US', {
                       month: 'long',
                       day: 'numeric',
                       year: 'numeric'
-                    }) : '—'}
+                    }) : '—'}</span>
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1">
+                  <p className="text-xs text-gray-200 mt-1">
                     {derivedConfidencePct}% Confidence • Evidence: {derivedEvidence}
                   </p>
                 </div>
@@ -398,7 +398,7 @@ export default function CaseDetail() {
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Matched document(s)</label>
                   <div className="mt-1 flex flex-wrap gap-2">
-                    <Badge variant="outline" className="border-white/20">{matchedCount} matched</Badge>
+                    <Badge variant="outline" className="border-white/20 text-gray-200">{matchedCount} matched</Badge>
                     {matchedDocs.slice(0, 3).map((d: any) => (
                       <Button key={d.id} variant="outline" size="sm" className="h-7" onClick={() => window.open(`/documents/${encodeURIComponent(d.id)}`, '_blank')}>
                         <FileText className="h-3.5 w-3.5 mr-1" /> {d.name || d.filename || d.id}
@@ -610,9 +610,9 @@ export default function CaseDetail() {
                 <div className="space-y-4">
                   {/* At-a-glance header: confidence, evidence, quick actions */}
                   <div className="flex flex-wrap items-center gap-3 p-3 rounded-md border border-white/10 bg-white/5">
-                    <Badge variant="outline" className="text-xs">Confidence: {derivedConfidencePct}%</Badge>
-                    <Badge variant="outline" className="text-xs">Evidence: {derivedEvidence}</Badge>
-                    <Badge variant="outline" className="text-xs">Matched docs: {matchedCount}</Badge>
+                    <Badge variant="outline" className="text-xs text-gray-200 border-white/20">Confidence: {derivedConfidencePct}%</Badge>
+                    <Badge variant="outline" className="text-xs text-gray-200 border-white/20">Evidence: {derivedEvidence}</Badge>
+                    <Badge variant="outline" className="text-xs text-gray-200 border-white/20">Matched docs: {matchedCount}</Badge>
                     <div className="ml-auto flex gap-2">
                       <Button size="sm" variant="outline" onClick={async () => {
                         const url = api.getRecoveryDocumentUrl(effectiveCase.id);
