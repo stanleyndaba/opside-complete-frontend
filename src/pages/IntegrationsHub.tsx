@@ -326,7 +326,7 @@ export default function IntegrationsHub() {
             <CardContent className="space-y-4">
               <div className="flex items-center gap-3 text-sm text-gray-400">
                 <span>Last sync: {status?.lastSync || lastSyncTime}</span>
-                <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold" onClick={() => navigate('/sync')}>
+                <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-white font-semibold" onClick={() => navigate('/sync')}>
                   <RefreshCw className="h-4 w-4 mr-2" /> Sync now
                 </Button>
                 <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={async () => { await api.post('/api/detections/run'); toast({ title: 'Detector started', description: 'Scanning new opportunities…' }); }}>
