@@ -106,4 +106,8 @@ export const api = {
   startEvidenceIngest: () => requestJson<any>('/api/evidence/sync', { method: 'POST' }),
   disconnectIntegration: (provider: string, purge = false) => requestJson<any>(`/api/integrations/${encodeURIComponent(provider)}/disconnect`, { method: 'POST', body: JSON.stringify({ purge }) }),
   getEvidenceSummary: () => requestJson<any>('/api/evidence/summary'),
+
+  // Inventory/Sync summary endpoints (non-id based)
+  getSyncStatus: () => requestJson<any>('/api/sync/status'),
+  getSyncActivity: () => requestJson<any>('/api/sync/activity'),
 };
