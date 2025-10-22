@@ -21,20 +21,17 @@ const Index = () => {
   };
 
   const LANGUAGE_OPTIONS: LanguageOption[] = [
-    { code: 'us-en', country: 'USA', language: 'English', flag: '🇺🇸' },
-    { code: 'ca-en', country: 'Canada', language: 'English', flag: '🇨🇦' },
-    { code: 'ca-fr', country: 'Canada', language: 'Français', flag: '🇨🇦' },
-    { code: 'gb-en', country: 'United Kingdom', language: 'English', flag: '🇬🇧' },
-    { code: 'au-en', country: 'Australia', language: 'English', flag: '🇦🇺' },
-    { code: 'de-de', country: 'Germany', language: 'Deutsch', flag: '🇩🇪' },
-    { code: 'fr-fr', country: 'France', language: 'Français', flag: '🇫🇷' },
-    { code: 'es-es', country: 'Spain', language: 'Español', flag: '🇪🇸' },
-    { code: 'it-it', country: 'Italy', language: 'Italiano', flag: '🇮🇹' },
-    { code: 'nl-nl', country: 'Netherlands', language: 'Nederlands', flag: '🇳🇱' },
+    { code: 'en', country: 'Global', language: 'English', flag: '🇺🇸' },
+    { code: 'es', country: 'Global', language: 'Spanish', flag: '🇪🇸' },
+    { code: 'zh', country: 'Global', language: 'Chinese (Mandarin)', flag: '🇨🇳' },
+    { code: 'fr', country: 'Global', language: 'French', flag: '🇫🇷' },
+    { code: 'de', country: 'Global', language: 'German', flag: '🇩🇪' },
+    { code: 'ja', country: 'Global', language: 'Japanese', flag: '🇯🇵' },
+    { code: 'ar', country: 'Global', language: 'Arabic', flag: '🇸🇦' },
   ];
 
   const [selectedLanguageCode, setSelectedLanguageCode] = useState<string>(() =>
-    typeof window !== 'undefined' ? localStorage.getItem('clario.langPreference') || 'us-en' : 'us-en'
+    typeof window !== 'undefined' ? localStorage.getItem('clario.langPreference') || 'en' : 'en'
   );
   const [langQuery, setLangQuery] = useState<string>('');
 
