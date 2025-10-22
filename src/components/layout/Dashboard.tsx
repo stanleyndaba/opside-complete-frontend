@@ -222,16 +222,7 @@ export function Dashboard() {
                       </div>
                     </div>
 
-                    <div className="mt-5">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="bg-white/5 border-white/10 text-gray-100 hover:bg-white/10"
-                        onClick={() => navigate('/recoveries')}
-                      >
-                        Auto-Submit
-                      </Button>
-                    </div>
+                    {/* Auto-Submit button removed per request */}
                   </CardContent>
                 </Card>
 
