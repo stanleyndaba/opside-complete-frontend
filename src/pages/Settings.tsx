@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,12 +16,97 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '@/components/ui/use-toast';
+import { api } from '@/lib/api';
 
 type SettingsSection = 'profile' | 'business' | 'team' | 'billing' | 'integrations' | 'notifications' | 'security' | 'api' | 'careers';
 
 const Settings = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [activeSection, setActiveSection] = useState<SettingsSection>('profile');
+
+  // Profile state
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [avatarSrc, setAvatarSrc] = useState<string>('');
+
+  // Business state
+  const [businessName, setBusinessName] = useState<string>('');
+  const [businessAddress, setBusinessAddress] = useState<string>('');
+  const [timezone, setTimezone] = useState<string>('South Africa Standard Time (GMT+2)');
+
+  // Load from backend/localStorage
+  useEffect(() => {
+    try {
+      const savedProfile = JSON.parse(localStorage.getItem('clario.profile') || 'null');
+      if (savedProfile) {
+        setFirstName(savedProfile.firstName || '');
+        setLastName(savedProfile.lastName || '');
+        setEmail(savedProfile.email || '');
+        setAvatarSrc(savedProfile.avatarSrc || '');
+      }
+    } catch {}
+    try {
+      const savedBiz = JSON.parse(localStorage.getItem('clario.business') || 'null');
+      if (savedBiz) {
+        setBusinessName(savedBiz.businessName || '');
+        setBusinessAddress(savedBiz.businessAddress || '');
+        setTimezone(savedBiz.timezone || 'South Africa Standard Time (GMT+2)');
+      }
+    } catch {}
+    (async () => {
+      // Best-effort: hydrate from backend if available
+      const res = await api.get<any>('/api/auth/me');
+      if (res.ok && res.data) {
+        const d: any = res.data;
+        const fn = d.first_name || d.firstName || d.given_name || '';
+        const ln = d.last_name || d.lastName || d.family_name || '';
+        const em = d.email || d.user?.email || email;
+        const av = d.avatar_url || d.picture || '';
+        setFirstName(fn || firstName);
+        setLastName(ln || lastName);
+        setEmail(em || email);
+        setAvatarSrc(av || avatarSrc);
+      }
+    })();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const onUploadPhoto = async (file?: File) => {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = String(reader.result || '');
+      setAvatarSrc(dataUrl);
+      toast({ title: 'Photo ready', description: 'Preview updated. Remember to Save Changes.' });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const saveProfile = async () => {
+    const payload = { firstName, lastName, email, avatarSrc };
+    try {
+      localStorage.setItem('clario.profile', JSON.stringify(payload));
+      // Optional telemetry
+      await api.post('/api/metrics/track', { name: 'profile_update', payload });
+      toast({ title: 'Profile saved', description: 'Your profile changes have been saved.' });
+    } catch (e: any) {
+      toast({ title: 'Save failed', description: e?.message || 'Try again.' });
+    }
+  };
+
+  const saveBusiness = async () => {
+    const payload = { businessName, businessAddress, timezone };
+    try {
+      localStorage.setItem('clario.business', JSON.stringify(payload));
+      await api.post('/api/metrics/track', { name: 'business_update', payload });
+      toast({ title: 'Business profile updated', description: 'Your company details have been saved.' });
+    } catch (e: any) {
+      toast({ title: 'Save failed', description: e?.message || 'Try again.' });
+    }
+  };
 
   const menuItems = [
     { id: 'profile' as SettingsSection, label: 'Clario Profile', icon: User },
@@ -65,16 +150,17 @@ const Settings = () => {
               <CardContent className="space-y-6">
                 <div className="flex items-center gap-6">
                   <Avatar className="h-20 w-20">
-                    <AvatarImage src="" />
+                    <AvatarImage src={avatarSrc} />
                     <AvatarFallback className="text-lg">
                       <User className="h-8 w-8" />
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-white">
+                    <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-white" onClick={() => document.getElementById('profile-photo-input')?.click()}>
                       <Camera className="h-4 w-4 mr-2" />
                       Upload Photo
                     </Button>
+                    <input id="profile-photo-input" type="file" accept="image/*" className="hidden" onChange={(e) => onUploadPhoto((e.target as HTMLInputElement).files?.[0] || undefined)} />
                     <p className="text-sm text-gray-400 mt-1">
                       JPG, PNG or GIF. Max size 5MB.
                     </p>
@@ -84,22 +170,22 @@ const Settings = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="firstName">First Name</Label>
-                    <Input variant="dark" id="firstName" defaultValue="Thandi" />
+                    <Input variant="dark" id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
                   </div>
                   <div>
                     <Label htmlFor="lastName">Last Name</Label>
-                    <Input variant="dark" id="lastName" defaultValue="Mthembu" />
+                    <Input variant="dark" id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} />
                   </div>
                   <div className="md:col-span-2">
                     <Label htmlFor="email">Email Address</Label>
-                    <Input variant="dark" id="email" defaultValue="thandi@example.com" disabled />
+                    <Input variant="dark" id="email" value={email} onChange={(e) => setEmail(e.target.value)} disabled />
                     <p className="text-sm text-gray-400 mt-1">
                       Email is linked to your Amazon account and cannot be changed
                     </p>
                   </div>
                 </div>
                 
-                <Button className="bg-emerald-500 hover:bg-emerald-400 text-white">Save Changes</Button>
+                <Button className="bg-emerald-500 hover:bg-emerald-400 text-white" onClick={saveProfile}>Save Changes</Button>
               </CardContent>
             </Card>
           </div>
@@ -121,24 +207,24 @@ const Settings = () => {
               <CardContent className="space-y-4">
                 <div>
                   <Label htmlFor="businessName">Business Name</Label>
-                  <Input variant="dark" id="businessName" />
+                  <Input variant="dark" id="businessName" value={businessName} onChange={(e) => setBusinessName(e.target.value)} />
                 </div>
                 
                 <div>
                   <Label htmlFor="businessAddress">Business Address</Label>
-                  <Textarea variant="dark" id="businessAddress" className="w-full" />
+                  <Textarea variant="dark" id="businessAddress" className="w-full" value={businessAddress} onChange={(e) => setBusinessAddress(e.target.value)} />
                 </div>
                 
                 <div>
                   <Label htmlFor="timezone">Timezone</Label>
-                  <select id="timezone" className="w-full px-3 py-2 border rounded-md bg-white/5 border-white/10 text-gray-100">
+                  <select id="timezone" className="w-full px-3 py-2 border rounded-md bg-white/5 border-white/10 text-gray-100" value={timezone} onChange={(e) => setTimezone(e.target.value)}>
                     <option>South Africa Standard Time (GMT+2)</option>
                     <option>Eastern Standard Time (GMT-5)</option>
                     <option>Pacific Standard Time (GMT-8)</option>
                   </select>
                 </div>
                 
-                <Button className="bg-emerald-500 hover:bg-emerald-400 text-white">Update Business Profile</Button>
+                <Button className="bg-emerald-500 hover:bg-emerald-400 text-white" onClick={saveBusiness}>Update Business Profile</Button>
               </CardContent>
             </Card>
           </div>
