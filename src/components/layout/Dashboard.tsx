@@ -189,7 +189,14 @@ export function Dashboard() {
                         <div className="text-[11px] text-gray-400 mt-1">
                           Estimated on {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                         </div>
-                        <div className="text-xs text-blue-400 mt-1">upcoming payments</div>
+                        <button
+                          type="button"
+                          className="text-xs text-blue-400 mt-1 underline-offset-2 hover:underline"
+                          onClick={() => navigate('/upcoming-payments')}
+                          aria-label="View upcoming payments"
+                        >
+                          upcoming payments
+                        </button>
                       </div>
                       <div className="rounded-md border border-white/10 bg-white/5 p-4">
                         <div className="text-xs text-gray-400">Pending Recovery</div>

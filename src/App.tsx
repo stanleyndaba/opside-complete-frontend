@@ -37,6 +37,7 @@ const OAuthSuccess = lazy(() => import("./pages/OAuthSuccess"));
 const StripeCallback = lazy(() => import("./pages/StripeCallback"));
 const About = lazy(() => import("./pages/About"));
 const Careers = lazy(() => import("./pages/Careers"));
+const UpcomingPayments = lazy(() => import("./pages/UpcomingPayments"));
 
 // New Evidence Pages
 const EvidenceOnboarding = lazy(() => import("./pages/EvidenceOnboarding"));
@@ -87,6 +88,7 @@ const App = () => (
             <Route path="/integrations-hub" element={<IntegrationsHub />} />
             <Route path="/integrations/reconnect/:provider" element={<ReconnectProvider />} />
             <Route path="/reports" element={<Reports />} />
+            <Route path="/upcoming-payments" element={<UpcomingPayments />} />
             <Route path="/recoveries" element={<Recoveries />} />
             <Route path="/recoveries/:caseId" element={<CaseDetail />} />
             <Route path="/recoveries/:caseId/resolve" element={<ResolveCase />} />
