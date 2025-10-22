@@ -214,7 +214,31 @@ export function Sidebar({
       </ScrollArea>
 
       {/* Profile + Status + Logout */}
-      {!isCollapsed && (
+      {isCollapsed ? (
+        <div className="mt-auto border-t border-white/10 p-2 flex items-center justify-center">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  aria-label="Logout"
+                  className="relative flex items-center justify-center w-12 h-12 rounded-md text-gray-400 hover:bg-white/10 hover:text-red-300 transition-colors"
+                  onClick={async () => {
+                    const ok = window.confirm('Log out of Clario?');
+                    if (!ok) return;
+                    try { await api.logout(); } catch (_) {}
+                    window.location.href = '/';
+                  }}
+                >
+                  <LogOut className="h-5 w-5" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right" className="bg-black text-white">
+                Logout
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      ) : (
         <div className="mt-auto border-t border-white/10 p-4 space-y-3">
           <button
             className="w-full flex items-center gap-2 text-left text-gray-400 hover:text-red-300 hover:bg-white/5 px-3 py-2 rounded-md"
