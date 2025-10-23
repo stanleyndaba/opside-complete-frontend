@@ -11,6 +11,7 @@ interface MonthRow {
   newPaid: number;
   activeSellers: number;
   revenue: number;
+  revenueZar: number;
 }
 
 const DEFAULTS = {
@@ -74,6 +75,7 @@ export default function RevenueModel() {
         sellers = Math.floor(sellers * retentionFactor) + newPaid;
       }
       const revenue = sellers * arps;
+      const revenueZar = revenue * 18.5;
 
       result.push({
         month: months[i],
@@ -81,6 +83,7 @@ export default function RevenueModel() {
         newPaid,
         activeSellers: sellers,
         revenue,
+        revenueZar,
       });
 
       // Next month sessions grow
@@ -90,11 +93,12 @@ export default function RevenueModel() {
   }, [startActiveSellers, monthlySessions, sessionsGrowthFactor, conversionFactor, retentionFactor, arps, months]);
 
   const totalRevenue = useMemo(() => rows.reduce((sum, r) => sum + r.revenue, 0), [rows]);
+  const totalRevenueZar = useMemo(() => rows.reduce((sum, r) => sum + r.revenueZar, 0), [rows]);
 
   const exportCsv = () => {
-    const headers = ['Month','Sessions','NewPaid','ActiveSellers','RevenueUSD'];
-    const lines = rows.map(r => [r.month, r.sessions, r.newPaid, r.activeSellers, r.revenue.toFixed(2)].join(','));
-    const csv = [headers.join(','), ...lines, '', `Total,, , ,${totalRevenue.toFixed(2)}`].join('\n');
+    const headers = ['Month','Sessions','NewPaid','ActiveSellers','RevenueUSD','RevenueZAR'];
+    const lines = rows.map(r => [r.month, r.sessions, r.newPaid, r.activeSellers, r.revenue.toFixed(2), r.revenueZar.toFixed(2)].join(','));
+    const csv = [headers.join(','), ...lines, '', `Total,, , ,${totalRevenue.toFixed(2)},${totalRevenueZar.toFixed(2)}`].join('\n');
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -226,7 +230,8 @@ export default function RevenueModel() {
                       <th className="py-2 pr-4">Sessions</th>
                       <th className="py-2 pr-4">New paid</th>
                       <th className="py-2 pr-4">Active sellers</th>
-                      <th className="py-2">Revenue</th>
+                      <th className="py-2 pr-4">Revenue (USD)</th>
+                      <th className="py-2">Revenue (ZAR)</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -236,14 +241,16 @@ export default function RevenueModel() {
                         <td className="py-2 pr-4 text-gray-300">{r.sessions.toLocaleString()}</td>
                         <td className="py-2 pr-4 text-gray-300">{r.newPaid.toLocaleString()}</td>
                         <td className="py-2 pr-4 text-gray-300">{r.activeSellers.toLocaleString()}</td>
-                        <td className="py-2 text-emerald-300">${r.revenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                        <td className="py-2 pr-4 text-emerald-300">${r.revenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                        <td className="py-2 text-emerald-300">R {r.revenueZar.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                       </tr>
                     ))}
                   </tbody>
                   <tfoot>
                     <tr>
                       <td className="pt-3 text-gray-400" colSpan={4}>Total</td>
-                      <td className="pt-3 text-emerald-300 font-semibold">${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                      <td className="pt-3 pr-4 text-emerald-300 font-semibold">${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                      <td className="pt-3 text-emerald-300 font-semibold">R {totalRevenueZar.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                     </tr>
                   </tfoot>
                 </table>
