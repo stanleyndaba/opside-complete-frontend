@@ -1,0 +1,1 @@
+import jwt from 'jsonwebtoken'; const token = jwt.sign({userId: 'test-user', role: 'user'}, '6d55b17615e87f15b252adc68a4b87ee69c2d910ef4b12d5b12fae94568b86cc', {expiresIn: '24h'}); console.log(token);
