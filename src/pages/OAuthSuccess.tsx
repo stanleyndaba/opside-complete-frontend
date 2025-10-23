@@ -187,12 +187,13 @@ export default function OAuthSuccess() {
         <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle className="text-lg">
-              <span className="inline-flex items-center gap-2">
-                <img src="/logo-abstract.svg" alt="Clario" className="h-5 w-5" />
-                <span className="font-medium text-gray-200">Clario</span>
-                <span className="text-gray-500">—</span>
+              <div className="flex flex-col items-start gap-1">
+                <span className="inline-flex items-center gap-2">
+                  <img src="/logo-abstract.svg" alt="Clario" className="h-5 w-5" />
+                  <span className="font-medium text-black">Clario</span>
+                </span>
                 <span>Connect Evidence Sources</span>
-              </span>
+              </div>
             </DialogTitle>
             <DialogDescription>
               Link your email and cloud storage to auto‑collect invoices and receipts. Read‑only. No writing or sending.
