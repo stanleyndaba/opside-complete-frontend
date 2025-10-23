@@ -4,8 +4,11 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud, ArrowRight } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud, ArrowRight, Plus } from 'lucide-react';
 import { api } from '@/lib/api';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
@@ -36,6 +39,17 @@ export function Dashboard() {
   const [lastUpdated, setLastUpdated] = useState<string>('');
   const [approvedClaimsThisMonth, setApprovedClaimsThisMonth] = useState<number | null>(null);
   const [showEvidencePrompt, setShowEvidencePrompt] = useState<boolean>(false);
+  const [quickActionsEditOpen, setQuickActionsEditOpen] = useState<boolean>(false);
+  const [inviteOpen, setInviteOpen] = useState<boolean>(false);
+  const [inviteEmail, setInviteEmail] = useState<string>('');
+  const { toast } = useToast();
+  const [selectedQuickActions, setSelectedQuickActions] = useState<string[]>(() => {
+    try {
+      const raw = typeof window !== 'undefined' ? localStorage.getItem('clario.quickActions') : null;
+      const parsed = raw ? JSON.parse(raw) : null;
+      return Array.isArray(parsed) && parsed.length > 0 ? parsed : ['ingest_now', 'invite_teammate'];
+    } catch { return ['ingest_now', 'invite_teammate']; }
+  });
 
   useEffect(() => {
     let active = true;
@@ -248,16 +262,29 @@ export function Dashboard() {
 
                 <Card className="bg-white/5 border-white/10 text-gray-300">
                   <CardContent className="p-6">
-                    <h2 className="font-brand text-lg text-gray-100 font-semibold">Quick Actions</h2>
+                    <div className="flex items-center justify-between">
+                      <h2 className="font-brand text-lg text-gray-100 font-semibold">Quick Actions</h2>
+                      <button aria-label="Customize quick actions" className="text-gray-300 hover:text-gray-100" onClick={() => setQuickActionsEditOpen(true)}>
+                        <Plus className="h-4 w-4" />
+                      </button>
+                    </div>
                     <div className="grid grid-cols-2 gap-4 mt-4">
-                      <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10">
-                        <FileText className="h-4 w-4" />
-                        View Reports
-                      </Button>
-                      <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10">
-                        <BarChart3 className="h-4 w-4" />
-                        Analytics
-                      </Button>
+                      {selectedQuickActions.includes('ingest_now') && (
+                        <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10" onClick={async () => {
+                          const r = await api.startEvidenceIngest();
+                          if ((r as any)?.ok) toast({ title: 'Ingestion started', description: 'We will notify you when new docs arrive.' });
+                          else toast({ title: 'Ingestion failed', description: (r as any)?.error || 'Try again.', variant: 'destructive' });
+                        }}>
+                          <Cloud className="h-4 w-4" />
+                          Ingest documents now
+                        </Button>
+                      )}
+                      {selectedQuickActions.includes('invite_teammate') && (
+                        <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10" onClick={() => setInviteOpen(true)}>
+                          <Link2 className="h-4 w-4" />
+                          Invite a teammate
+                        </Button>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -377,6 +404,58 @@ export function Dashboard() {
             <Button onClick={() => setShowEvidencePrompt(false)} className="gap-2">
               <ArrowRight className="h-4 w-4" /> Continue
             </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      {/* Quick Actions Editor */}
+      <Dialog open={quickActionsEditOpen} onOpenChange={setQuickActionsEditOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-lg">Customize Quick Actions</DialogTitle>
+            <DialogDescription>Select which actions to show.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <label className="flex items-center gap-2 text-sm">
+              <Checkbox checked={selectedQuickActions.includes('ingest_now')} onCheckedChange={(c) => {
+                setSelectedQuickActions(prev => {
+                  const next = new Set(prev);
+                  if (c) next.add('ingest_now'); else next.delete('ingest_now');
+                  return Array.from(next);
+                });
+              }} />
+              Ingest documents now
+            </label>
+            <label className="flex items-center gap-2 text-sm">
+              <Checkbox checked={selectedQuickActions.includes('invite_teammate')} onCheckedChange={(c) => {
+                setSelectedQuickActions(prev => {
+                  const next = new Set(prev);
+                  if (c) next.add('invite_teammate'); else next.delete('invite_teammate');
+                  return Array.from(next);
+                });
+              }} />
+              Invite a teammate
+            </label>
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setQuickActionsEditOpen(false)}>Cancel</Button>
+            <Button onClick={() => { try { localStorage.setItem('clario.quickActions', JSON.stringify(selectedQuickActions)); toast({ title: 'Saved', description: 'Quick actions updated.' }); } catch {} setQuickActionsEditOpen(false); }}>Save</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Invite teammate dialog */}
+      <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Invite a Teammate</DialogTitle>
+            <DialogDescription>Send a read‑only invite to finance/ops.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <Input type="email" placeholder="email@company.com" value={inviteEmail} onChange={(e) => setInviteEmail(e.target.value)} />
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setInviteOpen(false)}>Cancel</Button>
+            <Button onClick={async () => { if (!inviteEmail) return; try { await api.post('/api/team/invite', { email: inviteEmail }); toast({ title: 'Invite sent', description: inviteEmail }); } catch (e: any) { toast({ title: 'Invite failed', description: e?.message || 'Please try again.', variant: 'destructive' }); } setInviteOpen(false); setInviteEmail(''); }}>Send Invite</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
