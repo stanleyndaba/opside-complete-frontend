@@ -25,6 +25,22 @@ paths:
       summary: Start Amazon OAuth
       responses:
         '302': { description: Redirect to Amazon OAuth }
+  /api/v1/integrations/amazon/sandbox/callback:
+    post:
+      summary: Complete Amazon sandbox auth
+      description: Simulates Amazon OAuth callback to establish a sandbox session/tenant.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                state:
+                  type: string
+                  description: Opaque state used to correlate flows
+      responses:
+        '200': { description: OK }
   /api/auth/logout:
     post:
       summary: Logout and clear session

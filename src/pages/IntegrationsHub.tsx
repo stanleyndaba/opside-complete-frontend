@@ -98,9 +98,9 @@ export default function IntegrationsHub() {
   const beginProviderOAuth = async (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox') => {
     try {
       setProviderLoading(provider);
-      const res = await api.post<{ auth_url?: string }>(`/api/v1/integrations/${provider}/connect`);
-      if ((res as any).ok && (res as any).data?.auth_url) {
-        window.location.href = (res as any).data.auth_url as string;
+      const res = await api.connectDocs(provider);
+      if (res.ok && res.data?.auth_url) {
+        window.location.href = res.data.auth_url as string;
       } else {
         // Fallback route if backend returns no URL
         window.location.href = `/auth/${provider}-sandbox`;

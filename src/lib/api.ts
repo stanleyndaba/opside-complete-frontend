@@ -72,18 +72,34 @@ export const api = {
   get: <T = any>(path: string) => requestJson<T>(path, { method: 'GET' }),
   post: <T = any>(path: string, body?: unknown) => requestJson<T>(path, { method: 'POST', body: body !== undefined ? JSON.stringify(body) : undefined }),
 
-  connectAmazon: () => requestJson<{ auth_url?: string; redirect_url?: string }>(`/auth/amazon/start`, { method: 'GET' }),
+  // Auth endpoints
+  getMe: () => requestJson<any>('/api/auth/me'),
+  // Amazon SP-API connect (align to /api/v1)
+  connectAmazon: () => requestJson<{ auth_url?: string; redirect_url?: string }>(`/api/v1/integrations/connect-amazon`, { method: 'GET' }),
   completeAmazonSandboxAuth: (state: string) => requestJson<any>('/api/v1/integrations/amazon/sandbox/callback', { 
     method: 'POST', 
     body: JSON.stringify({ state }) 
   }),
+  postLoginStripe: () => requestJson<any>('/api/auth/post-login/stripe', { method: 'POST' }),
+  logout: () => requestJson<{ ok: true }>('/api/auth/logout', { method: 'POST' }),
+
+  // Auth-adjacent helpers for flows
+  connectDocs: (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox') =>
+    requestJson<{ auth_url?: string; redirect_url?: string }>(
+      `/api/v1/integrations/connect-docs?provider=${encodeURIComponent(provider)}`,
+      { method: 'GET' }
+    ),
+  startAmazonSync: () => requestJson<{ syncId: string }>('/api/sync/start', { method: 'POST' }),
+  trackEvent: (name: string, payload?: Record<string, any>) =>
+    requestJson<any>('/api/metrics/track', { method: 'POST', body: JSON.stringify({ name, payload }) }),
 
   getAmazonRecoveries: () => requestJson<{ totalAmount: number; currency: string; claimCount: number }>('/api/v1/integrations/amazon/recoveries'),
 
-  getDashboardAggregates: () => requestJson<any>('/api/metrics/dashboard'),
+  getDashboardAggregates: (window?: '7d' | '30d' | '90d') => requestJson<any>(
+    `/api/metrics/dashboard${window ? `?window=${encodeURIComponent(window)}` : ''}`
+  ),
   getRecoveriesMetrics: () => requestJson<any>('/api/metrics/recoveries'),
   setAutoClaimEnabled: (enabled: boolean) => requestJson<any>('/api/recoveries/auto-claim', { method: 'POST', body: JSON.stringify({ enabled }) }),
-  logout: () => requestJson<{ ok: true }>('/api/auth/logout', { method: 'POST' }),
 
   // Refund Engine endpoints
   submitClaim: (id: string) => requestJson<any>(`/api/recoveries/${encodeURIComponent(id)}/submit`, { method: 'POST' }),
@@ -99,12 +115,16 @@ export const api = {
   getDocumentDownloadUrl: (id: string) => buildApiUrl(`/api/documents/${encodeURIComponent(id)}/download`),
 
   // Integrations & Evidence ingestion controls
-  getIntegrationsStatus: () => requestJson<any>('/api/integrations/status'),
+  getIntegrationsStatus: () => requestJson<any>('/api/v1/integrations/status'),
   setEvidenceAutoCollect: (enabled: boolean) => requestJson<any>('/api/evidence/auto-collect', { method: 'POST', body: JSON.stringify({ enabled }) }),
   setEvidenceSchedule: (schedule: string) => requestJson<any>('/api/evidence/schedule', { method: 'POST', body: JSON.stringify({ schedule }) }),
   setEvidenceFilters: (filters: { includeSenders?: string[]; excludeSenders?: string[]; fileTypes?: string[]; folders?: string[] }) => requestJson<any>('/api/evidence/filters', { method: 'POST', body: JSON.stringify(filters) }),
   startEvidenceIngest: () => requestJson<any>('/api/evidence/sync', { method: 'POST' }),
-  disconnectIntegration: (provider: string, purge = false) => requestJson<any>(`/api/integrations/${encodeURIComponent(provider)}/disconnect`, { method: 'POST', body: JSON.stringify({ purge }) }),
+  disconnectIntegration: (provider: string, purge = false) =>
+    requestJson<any>(
+      `/api/v1/integrations/disconnect?provider=${encodeURIComponent(provider)}&purge=${purge ? 1 : 0}`,
+      { method: 'POST' }
+    ),
   getEvidenceSummary: () => requestJson<any>('/api/evidence/summary'),
 
   // Inventory/Sync summary endpoints (non-id based)
