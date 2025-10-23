@@ -37,6 +37,15 @@
         {
           "name": "GET /auth/amazon/start",
           "request": { "method": "GET", "url": { "raw": "{{API_BASE_URL}}/auth/amazon/start", "host": ["{{API_BASE_URL}}"], "path": ["auth","amazon","start"] } }
+        },
+        {
+          "name": "POST /api/v1/integrations/amazon/sandbox/callback",
+          "request": {
+            "method": "POST",
+            "header": [{"key":"Content-Type","value":"application/json"}],
+            "body": {"mode":"raw","raw":"{\n  \"state\": \"demo\"\n}"},
+            "url": { "raw": "{{API_BASE_URL}}/api/v1/integrations/amazon/sandbox/callback", "host": ["{{API_BASE_URL}}"], "path": ["api","v1","integrations","amazon","sandbox","callback"] }
+          }
         }
       ]
     },
