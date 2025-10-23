@@ -36,9 +36,12 @@ export default function Admin() {
               </div>
               <Switch checked={isAdmin} onCheckedChange={toggle} />
             </div>
-            <div className="pt-4">
+            <div className="pt-4 flex gap-3 flex-wrap">
               <Button asChild className="bg-white/10 hover:bg-white/20 border border-white/10 text-gray-100">
                 <a href="/revenue-model">Open Revenue Model</a>
+              </Button>
+              <Button asChild className="bg-white/10 hover:bg-white/20 border border-white/10 text-gray-100">
+                <a href="/admin/users-integrations">Users & Integrations</a>
               </Button>
             </div>
           </CardContent>

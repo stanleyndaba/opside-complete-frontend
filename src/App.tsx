@@ -42,6 +42,7 @@ const Careers = lazy(() => import("./pages/Careers"));
 const UpcomingPayments = lazy(() => import("./pages/UpcomingPayments"));
 const RevenueModel = lazy(() => import("./pages/RevenueModel"));
 const Admin = lazy(() => import("./pages/Admin"));
+const AdminUsersAndIntegrations = lazy(() => import("./pages/AdminUsersAndIntegrations"));
 
 // New Evidence Pages
 const EvidenceOnboarding = lazy(() => import("./pages/EvidenceOnboarding"));
@@ -95,6 +96,7 @@ const App = () => (
             <Route path="/reports" element={<Reports />} />
             <Route path="/upcoming-payments" element={<UpcomingPayments />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/admin/users-integrations" element={<AdminOnly><AdminUsersAndIntegrations /></AdminOnly>} />
             <Route path="/revenue-model" element={<AdminOnly><RevenueModel /></AdminOnly>} />
             <Route path="/recoveries" element={<Recoveries />} />
             <Route path="/recoveries/:caseId" element={<CaseDetail />} />
