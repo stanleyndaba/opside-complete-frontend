@@ -414,13 +414,13 @@ export function Dashboard() {
       </div>
       {/* Evidence Connections Prompt on Dashboard as fallback */}
       <Dialog open={showEvidencePrompt} onOpenChange={setShowEvidencePrompt}>
-        <DialogContent className="max-w-lg bg-white/10 backdrop-blur-xl border border-white/10 text-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.5)] rounded-2xl">
+        <DialogContent className="max-w-lg bg-[#0B1220]/80 backdrop-blur-2xl border border-white/10 text-gray-100 shadow-[0_20px_80px_rgba(0,0,0,0.6)] rounded-2xl">
           <DialogHeader>
             <DialogTitle className="text-lg text-gray-100">
               <div className="flex flex-col items-start gap-1">
                 <span className="inline-flex items-center gap-2">
                   <img src="/logo-abstract.svg" alt="Clario" className="h-5 w-5" />
-                  <span className="font-medium text-black">Clario</span>
+                  <span className="font-medium text-white">Clario</span>
                 </span>
                 <span>Connect Evidence Sources</span>
               </div>
@@ -477,7 +477,7 @@ export function Dashboard() {
           </div>
           <DialogFooter>
             <Button variant="ghost" className="text-gray-300 hover:text-gray-100" onClick={() => { setShowEvidencePrompt(false); try { localStorage.setItem('clario.evidencePromptDismissed', 'true'); } catch {} }}>Maybe later</Button>
-            <Button onClick={() => setShowEvidencePrompt(false)} className="gap-2 bg-white/10 hover:bg-white/15 border border-white/10 text-gray-100">
+            <Button onClick={() => setShowEvidencePrompt(false)} className="gap-2 bg-white/10 hover:bg-white/20 border border-white/10 text-gray-100">
               <ArrowRight className="h-4 w-4" /> Continue
             </Button>
           </DialogFooter>
@@ -485,7 +485,7 @@ export function Dashboard() {
       </Dialog>
       {/* Quick Actions Editor */}
       <Dialog open={quickActionsEditOpen} onOpenChange={setQuickActionsEditOpen}>
-        <DialogContent className="max-w-md bg-white/10 backdrop-blur-xl border border-white/10 text-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.5)] rounded-2xl">
+        <DialogContent className="max-w-md bg-[#0B1220]/80 backdrop-blur-2xl border border-white/10 text-gray-100 shadow-[0_20px_80px_rgba(0,0,0,0.6)] rounded-2xl">
           <DialogHeader>
             <DialogTitle className="text-lg text-gray-100">Customize Quick Actions</DialogTitle>
             <DialogDescription className="text-gray-400">Select which actions to show.</DialogDescription>
@@ -506,7 +506,7 @@ export function Dashboard() {
           </div>
           <DialogFooter>
             <Button variant="ghost" className="text-gray-300 hover:text-gray-100" onClick={() => setQuickActionsEditOpen(false)}>Cancel</Button>
-            <Button className="bg-white/10 hover:bg-white/15 border border-white/10 text-gray-100" onClick={() => { try { localStorage.setItem('clario.quickActions', JSON.stringify(selectedQuickActions)); toast({ title: 'Saved', description: 'Quick actions updated.' }); } catch {} setQuickActionsEditOpen(false); }}>Save</Button>
+            <Button className="bg-white/10 hover:bg-white/20 border border-white/10 text-gray-100" onClick={() => { try { localStorage.setItem('clario.quickActions', JSON.stringify(selectedQuickActions)); toast({ title: 'Saved', description: 'Quick actions updated.' }); } catch {} setQuickActionsEditOpen(false); }}>Save</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

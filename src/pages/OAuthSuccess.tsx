@@ -184,13 +184,13 @@ export default function OAuthSuccess() {
 
       {/* Evidence Connections Prompt */}
       <Dialog open={connectEvidenceOpen} onOpenChange={setConnectEvidenceOpen}>
-        <DialogContent className="max-w-lg bg-white/10 backdrop-blur-xl border border-white/10 text-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.5)] rounded-2xl">
+        <DialogContent className="max-w-lg bg-[#0B1220]/80 backdrop-blur-2xl border border-white/10 text-gray-100 shadow-[0_20px_80px_rgba(0,0,0,0.6)] rounded-2xl">
           <DialogHeader>
             <DialogTitle className="text-lg text-gray-100">
               <div className="flex flex-col items-start gap-1">
                 <span className="inline-flex items-center gap-2">
                   <img src="/logo-abstract.svg" alt="Clario" className="h-5 w-5" />
-                  <span className="font-medium text-black">Clario</span>
+                  <span className="font-medium text-white">Clario</span>
                 </span>
                 <span>Connect Evidence Sources</span>
               </div>
@@ -247,7 +247,7 @@ export default function OAuthSuccess() {
           </div>
           <DialogFooter>
             <Button variant="ghost" className="text-gray-300 hover:text-gray-100" onClick={() => setConnectEvidenceOpen(false)}>Maybe later</Button>
-            <Button onClick={handleStartSync} className="gap-2 bg-white/10 hover:bg-white/15 border border-white/10 text-gray-100">
+            <Button onClick={handleStartSync} className="gap-2 bg-white/10 hover:bg-white/20 border border-white/10 text-gray-100">
               <ArrowRight className="h-4 w-4" /> Continue
             </Button>
           </DialogFooter>
