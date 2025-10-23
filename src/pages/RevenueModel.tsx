@@ -139,22 +139,22 @@ export default function RevenueModel() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="startSellers">Start Sellers (Jan)</Label>
-                  <Input id="startSellers" type="number" value={startActiveSellers}
+                  <Input id="startSellers" type="number" value={startActiveSellers} variant="dark"
                          onChange={e => setStartActiveSellers(clamp(parseInt(e.target.value || '0', 10), 0, 200000))} />
                 </div>
                 <div>
                   <Label htmlFor="retention">Monthly Retention %</Label>
-                  <Input id="retention" type="number" value={monthlyRetentionPct}
+                  <Input id="retention" type="number" value={monthlyRetentionPct} variant="dark"
                          onChange={e => setMonthlyRetentionPct(clamp(parseFloat(e.target.value || '0'), 0, 100))} />
                 </div>
                 <div>
                   <Label htmlFor="sessions">Sessions (Jan)</Label>
-                  <Input id="sessions" type="number" value={monthlySessions}
+                  <Input id="sessions" type="number" value={monthlySessions} variant="dark"
                          onChange={e => setMonthlySessions(clamp(parseInt(e.target.value || '0', 10), 0, 10_000_000))} />
                 </div>
                 <div>
                   <Label htmlFor="sessionsGrowth">Sessions Growth % /mo</Label>
-                  <Input id="sessionsGrowth" type="number" value={monthlySessionsGrowthPct}
+                  <Input id="sessionsGrowth" type="number" value={monthlySessionsGrowthPct} variant="dark"
                          onChange={e => setMonthlySessionsGrowthPct(clamp(parseFloat(e.target.value || '0'), 0, 200))} />
                 </div>
               </div>
@@ -164,27 +164,27 @@ export default function RevenueModel() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="v2s">Visit → Signup %</Label>
-                    <Input id="v2s" type="number" value={visitToSignupPct}
+                    <Input id="v2s" type="number" value={visitToSignupPct} variant="dark"
                            onChange={e => setVisitToSignupPct(clamp(parseFloat(e.target.value || '0'), 0, 100))} />
                   </div>
                   <div>
                     <Label htmlFor="s2a">Signup → Amazon %</Label>
-                    <Input id="s2a" type="number" value={signupToAmazonPct}
+                    <Input id="s2a" type="number" value={signupToAmazonPct} variant="dark"
                            onChange={e => setSignupToAmazonPct(clamp(parseFloat(e.target.value || '0'), 0, 100))} />
                   </div>
                   <div>
                     <Label htmlFor="a2e">Amazon → Evidence %</Label>
-                    <Input id="a2e" type="number" value={amazonToEvidencePct}
+                    <Input id="a2e" type="number" value={amazonToEvidencePct} variant="dark"
                            onChange={e => setAmazonToEvidencePct(clamp(parseFloat(e.target.value || '0'), 0, 100))} />
                   </div>
                   <div>
                     <Label htmlFor="e2f">Evidence → Findings %</Label>
-                    <Input id="e2f" type="number" value={evidenceToFindingsPct}
+                    <Input id="e2f" type="number" value={evidenceToFindingsPct} variant="dark"
                            onChange={e => setEvidenceToFindingsPct(clamp(parseFloat(e.target.value || '0'), 0, 100))} />
                   </div>
                   <div>
                     <Label htmlFor="f2p">Findings → Payout %</Label>
-                    <Input id="f2p" type="number" value={findingsToPayoutPct}
+                    <Input id="f2p" type="number" value={findingsToPayoutPct} variant="dark"
                            onChange={e => setFindingsToPayoutPct(clamp(parseFloat(e.target.value || '0'), 0, 100))} />
                   </div>
                   <div>
@@ -197,12 +197,12 @@ export default function RevenueModel() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="recovered">Avg Recovered / Seller / Mo ($)</Label>
-                  <Input id="recovered" type="number" value={avgRecoveredPerSeller}
+                  <Input id="recovered" type="number" value={avgRecoveredPerSeller} variant="dark"
                          onChange={e => setAvgRecoveredPerSeller(clamp(parseFloat(e.target.value || '0'), 0, 1_000_000))} />
                 </div>
                 <div>
                   <Label htmlFor="take">Take Rate %</Label>
-                  <Input id="take" type="number" value={takeRatePct}
+                  <Input id="take" type="number" value={takeRatePct} variant="dark"
                          onChange={e => setTakeRatePct(clamp(parseFloat(e.target.value || '0'), 0, 100))} />
                 </div>
                 <div>
