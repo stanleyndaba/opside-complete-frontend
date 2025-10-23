@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
-import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud, ArrowRight, Plus } from 'lucide-react';
+import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud, ArrowRight, Plus, CheckCircle, RefreshCw, RotateCcw, Download, Bell, Shield } from 'lucide-react';
 import { api } from '@/lib/api';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
@@ -50,6 +50,20 @@ export function Dashboard() {
       return Array.isArray(parsed) && parsed.length > 0 ? parsed : ['ingest_now', 'invite_teammate'];
     } catch { return ['ingest_now', 'invite_teammate']; }
   });
+  const QUICK_ACTIONS: Array<{ id: string; label: string }> = [
+    { id: 'connect_evidence', label: 'Connect evidence sources' },
+    { id: 'review_high_conf', label: 'Review high‑confidence cases' },
+    { id: 'resolve_new', label: 'Resolve new opportunities' },
+    { id: 'run_detector', label: 'Run detector' },
+    { id: 'ingest_now', label: 'Ingest documents now' },
+    { id: 'smart_sync', label: 'Smart Inventory Sync' },
+    { id: 'upcoming_payments', label: 'Upcoming payments' },
+    { id: 'export_history', label: 'Export recovery & payout history' },
+    { id: 'evidence_locker', label: 'Evidence Locker' },
+    { id: 'invite_teammate', label: 'Invite a teammate' },
+    { id: 'configure_alerts', label: 'Configure alerts' },
+    { id: 'security_setup', label: 'Security quick setup' },
+  ];
 
   useEffect(() => {
     let active = true;
@@ -269,6 +283,32 @@ export function Dashboard() {
                       </button>
                     </div>
                     <div className="grid grid-cols-2 gap-4 mt-4">
+                      {selectedQuickActions.includes('connect_evidence') && (
+                        <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10" onClick={() => setShowEvidencePrompt(true)}>
+                          <Mail className="h-4 w-4" />
+                          Connect evidence sources
+                        </Button>
+                      )}
+                      {selectedQuickActions.includes('review_high_conf') && (
+                        <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10" onClick={() => navigate('/recoveries', { state: { filter: 'high_confidence' } })}>
+                          <CheckCircle className="h-4 w-4" />
+                          Review high‑confidence cases
+                        </Button>
+                      )}
+                      {selectedQuickActions.includes('resolve_new') && (
+                        <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10" onClick={() => navigate('/recoveries', { state: { filter: 'new_pending' } })}>
+                          <RotateCcw className="h-4 w-4" />
+                          Resolve new opportunities
+                        </Button>
+                      )}
+                      {selectedQuickActions.includes('run_detector') && (
+                        <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10" onClick={async () => {
+                          try { await api.post('/api/detections/run'); toast({ title: 'Detector started', description: 'Scanning new opportunities…' }); } catch(e:any){ toast({ title: 'Detector failed', description: e?.message || 'Please try again.', variant: 'destructive' }); }
+                        }}>
+                          <RefreshCw className="h-4 w-4" />
+                          Run detector
+                        </Button>
+                      )}
                       {selectedQuickActions.includes('ingest_now') && (
                         <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10" onClick={async () => {
                           const r = await api.startEvidenceIngest();
@@ -279,10 +319,46 @@ export function Dashboard() {
                           Ingest documents now
                         </Button>
                       )}
+                      {selectedQuickActions.includes('smart_sync') && (
+                        <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10" onClick={() => navigate('/smart-inventory-sync')}>
+                          <RefreshCw className="h-4 w-4" />
+                          Smart Inventory Sync
+                        </Button>
+                      )}
+                      {selectedQuickActions.includes('upcoming_payments') && (
+                        <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10" onClick={() => navigate('/upcoming-payments')}>
+                          <CircleDollarSign className="h-4 w-4" />
+                          Upcoming payments
+                        </Button>
+                      )}
+                      {selectedQuickActions.includes('export_history') && (
+                        <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10" onClick={() => navigate('/export-center')}>
+                          <Download className="h-4 w-4" />
+                          Export recovery & payout history
+                        </Button>
+                      )}
+                      {selectedQuickActions.includes('evidence_locker') && (
+                        <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10" onClick={() => navigate('/evidence-locker')}>
+                          <FileText className="h-4 w-4" />
+                          Evidence Locker
+                        </Button>
+                      )}
                       {selectedQuickActions.includes('invite_teammate') && (
                         <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10" onClick={() => setInviteOpen(true)}>
                           <Link2 className="h-4 w-4" />
                           Invite a teammate
+                        </Button>
+                      )}
+                      {selectedQuickActions.includes('configure_alerts') && (
+                        <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10" onClick={() => navigate('/notifications')}>
+                          <Bell className="h-4 w-4" />
+                          Configure alerts
+                        </Button>
+                      )}
+                      {selectedQuickActions.includes('security_setup') && (
+                        <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10" onClick={() => navigate('/settings')}>
+                          <Shield className="h-4 w-4" />
+                          Security quick setup
                         </Button>
                       )}
                     </div>
@@ -415,26 +491,18 @@ export function Dashboard() {
             <DialogDescription>Select which actions to show.</DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
-            <label className="flex items-center gap-2 text-sm">
-              <Checkbox checked={selectedQuickActions.includes('ingest_now')} onCheckedChange={(c) => {
-                setSelectedQuickActions(prev => {
-                  const next = new Set(prev);
-                  if (c) next.add('ingest_now'); else next.delete('ingest_now');
-                  return Array.from(next);
-                });
-              }} />
-              Ingest documents now
-            </label>
-            <label className="flex items-center gap-2 text-sm">
-              <Checkbox checked={selectedQuickActions.includes('invite_teammate')} onCheckedChange={(c) => {
-                setSelectedQuickActions(prev => {
-                  const next = new Set(prev);
-                  if (c) next.add('invite_teammate'); else next.delete('invite_teammate');
-                  return Array.from(next);
-                });
-              }} />
-              Invite a teammate
-            </label>
+            {QUICK_ACTIONS.map(a => (
+              <label key={a.id} className="flex items-center gap-2 text-sm">
+                <Checkbox checked={selectedQuickActions.includes(a.id)} onCheckedChange={(c) => {
+                  setSelectedQuickActions(prev => {
+                    const next = new Set(prev);
+                    if (c) next.add(a.id); else next.delete(a.id);
+                    return Array.from(next);
+                  });
+                }} />
+                {a.label}
+              </label>
+            ))}
           </div>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setQuickActionsEditOpen(false)}>Cancel</Button>
