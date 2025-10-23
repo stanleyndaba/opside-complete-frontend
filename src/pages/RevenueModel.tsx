@@ -125,9 +125,8 @@ export default function RevenueModel() {
   };
 
   return (
-    <PageLayout title="Revenue Model (2026)">
-      <div className="relative -m-4 lg:-m-6 min-h-screen bg-[#0B1220]">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+    <PageLayout title="Revenue Model (2026)" forceTransparent midnight>
+      <div className="relative -m-4 lg:-m-6 min-h-screen">
         <div className="container mx-auto px-6 md:px-10 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <Card className="bg-white/10 backdrop-blur-xl border-white/10 rounded-2xl text-gray-300 lg:col-span-1">
