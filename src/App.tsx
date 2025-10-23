@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import NotificationsProvider from '@/components/providers/NotificationsProvider';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import DemoOverlay from "@/components/demo/DemoOverlay";
+import AdminOnly from "@/components/routes/AdminOnly";
 
 // Route-level code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -40,6 +41,7 @@ const About = lazy(() => import("./pages/About"));
 const Careers = lazy(() => import("./pages/Careers"));
 const UpcomingPayments = lazy(() => import("./pages/UpcomingPayments"));
 const RevenueModel = lazy(() => import("./pages/RevenueModel"));
+const Admin = lazy(() => import("./pages/Admin"));
 
 // New Evidence Pages
 const EvidenceOnboarding = lazy(() => import("./pages/EvidenceOnboarding"));
@@ -92,7 +94,8 @@ const App = () => (
             <Route path="/integrations/reconnect/:provider" element={<ReconnectProvider />} />
             <Route path="/reports" element={<Reports />} />
             <Route path="/upcoming-payments" element={<UpcomingPayments />} />
-            <Route path="/revenue-model" element={<RevenueModel />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/revenue-model" element={<AdminOnly><RevenueModel /></AdminOnly>} />
             <Route path="/recoveries" element={<Recoveries />} />
             <Route path="/recoveries/:caseId" element={<CaseDetail />} />
             <Route path="/recoveries/:caseId/resolve" element={<ResolveCase />} />
