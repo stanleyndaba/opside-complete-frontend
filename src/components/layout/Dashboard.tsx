@@ -414,9 +414,9 @@ export function Dashboard() {
       </div>
       {/* Evidence Connections Prompt on Dashboard as fallback */}
       <Dialog open={showEvidencePrompt} onOpenChange={setShowEvidencePrompt}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg bg-white/10 backdrop-blur-xl border border-white/10 text-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.5)] rounded-2xl">
           <DialogHeader>
-            <DialogTitle className="text-lg">
+            <DialogTitle className="text-lg text-gray-100">
               <div className="flex flex-col items-start gap-1">
                 <span className="inline-flex items-center gap-2">
                   <img src="/logo-abstract.svg" alt="Clario" className="h-5 w-5" />
@@ -425,12 +425,12 @@ export function Dashboard() {
                 <span>Connect Evidence Sources</span>
               </div>
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-gray-400">
               Link Gmail/Outlook and Drive/Dropbox to auto‑collect invoices and receipts (read‑only).
             </DialogDescription>
           </DialogHeader>
           <div className="grid grid-cols-2 gap-3 pt-2">
-            <Button className="w-full bg-red-600 hover:bg-red-700" onClick={async () => {
+            <Button className="w-full bg-red-600/90 hover:bg-red-600 text-white border border-white/10" onClick={async () => {
               try {
                 const r = await api.post(`/api/v1/integrations/gmail/connect`);
                 const url = (r as any)?.data?.auth_url as string | undefined;
@@ -441,7 +441,7 @@ export function Dashboard() {
             }}>
               <Mail className="h-4 w-4 mr-2" /> Gmail
             </Button>
-            <Button className="w-full bg-blue-600 hover:bg-blue-700" onClick={async () => {
+            <Button className="w-full bg-blue-600/90 hover:bg-blue-600 text-white border border-white/10" onClick={async () => {
               try {
                 const r = await api.post(`/api/v1/integrations/outlook/connect`);
                 const url = (r as any)?.data?.auth_url as string | undefined;
@@ -452,7 +452,7 @@ export function Dashboard() {
             }}>
               <Mail className="h-4 w-4 mr-2" /> Outlook
             </Button>
-            <Button className="w-full bg-emerald-600 hover:bg-emerald-700" onClick={async () => {
+            <Button className="w-full bg-emerald-600/90 hover:bg-emerald-600 text-white border border-white/10" onClick={async () => {
               try {
                 const r = await api.post(`/api/v1/integrations/gdrive/connect`);
                 const url = (r as any)?.data?.auth_url as string | undefined;
@@ -463,7 +463,7 @@ export function Dashboard() {
             }}>
               <Cloud className="h-4 w-4 mr-2" /> Google Drive
             </Button>
-            <Button className="w-full bg-sky-600 hover:bg-sky-700" onClick={async () => {
+            <Button className="w-full bg-sky-600/90 hover:bg-sky-600 text-white border border-white/10" onClick={async () => {
               try {
                 const r = await api.post(`/api/v1/integrations/dropbox/connect`);
                 const url = (r as any)?.data?.auth_url as string | undefined;
@@ -476,8 +476,8 @@ export function Dashboard() {
             </Button>
           </div>
           <DialogFooter>
-            <Button variant="ghost" onClick={() => { setShowEvidencePrompt(false); try { localStorage.setItem('clario.evidencePromptDismissed', 'true'); } catch {} }}>Maybe later</Button>
-            <Button onClick={() => setShowEvidencePrompt(false)} className="gap-2">
+            <Button variant="ghost" className="text-gray-300 hover:text-gray-100" onClick={() => { setShowEvidencePrompt(false); try { localStorage.setItem('clario.evidencePromptDismissed', 'true'); } catch {} }}>Maybe later</Button>
+            <Button onClick={() => setShowEvidencePrompt(false)} className="gap-2 bg-white/10 hover:bg-white/15 border border-white/10 text-gray-100">
               <ArrowRight className="h-4 w-4" /> Continue
             </Button>
           </DialogFooter>
@@ -485,10 +485,10 @@ export function Dashboard() {
       </Dialog>
       {/* Quick Actions Editor */}
       <Dialog open={quickActionsEditOpen} onOpenChange={setQuickActionsEditOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md bg-white/10 backdrop-blur-xl border border-white/10 text-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.5)] rounded-2xl">
           <DialogHeader>
-            <DialogTitle className="text-lg">Customize Quick Actions</DialogTitle>
-            <DialogDescription>Select which actions to show.</DialogDescription>
+            <DialogTitle className="text-lg text-gray-100">Customize Quick Actions</DialogTitle>
+            <DialogDescription className="text-gray-400">Select which actions to show.</DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
             {QUICK_ACTIONS.map(a => (
@@ -505,8 +505,8 @@ export function Dashboard() {
             ))}
           </div>
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setQuickActionsEditOpen(false)}>Cancel</Button>
-            <Button onClick={() => { try { localStorage.setItem('clario.quickActions', JSON.stringify(selectedQuickActions)); toast({ title: 'Saved', description: 'Quick actions updated.' }); } catch {} setQuickActionsEditOpen(false); }}>Save</Button>
+            <Button variant="ghost" className="text-gray-300 hover:text-gray-100" onClick={() => setQuickActionsEditOpen(false)}>Cancel</Button>
+            <Button className="bg-white/10 hover:bg-white/15 border border-white/10 text-gray-100" onClick={() => { try { localStorage.setItem('clario.quickActions', JSON.stringify(selectedQuickActions)); toast({ title: 'Saved', description: 'Quick actions updated.' }); } catch {} setQuickActionsEditOpen(false); }}>Save</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

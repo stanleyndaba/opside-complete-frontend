@@ -184,9 +184,9 @@ export default function OAuthSuccess() {
 
       {/* Evidence Connections Prompt */}
       <Dialog open={connectEvidenceOpen} onOpenChange={setConnectEvidenceOpen}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg bg-white/10 backdrop-blur-xl border border-white/10 text-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.5)] rounded-2xl">
           <DialogHeader>
-            <DialogTitle className="text-lg">
+            <DialogTitle className="text-lg text-gray-100">
               <div className="flex flex-col items-start gap-1">
                 <span className="inline-flex items-center gap-2">
                   <img src="/logo-abstract.svg" alt="Clario" className="h-5 w-5" />
@@ -195,12 +195,12 @@ export default function OAuthSuccess() {
                 <span>Connect Evidence Sources</span>
               </div>
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-gray-300">
               Link your email and cloud storage to auto‑collect invoices and receipts. Read‑only. No writing or sending.
             </DialogDescription>
           </DialogHeader>
           <div className="grid grid-cols-2 gap-3 pt-2">
-            <Button className="w-full bg-red-600 hover:bg-red-700" onClick={async () => {
+            <Button className="w-full bg-red-600/90 hover:bg-red-600 text-white border border-white/10" onClick={async () => {
               try {
                 const r = await api.post(`/api/v1/integrations/gmail/connect`);
                 const url = (r as any)?.data?.auth_url as string | undefined;
@@ -211,7 +211,7 @@ export default function OAuthSuccess() {
             }}>
               <Mail className="h-4 w-4 mr-2" /> Gmail
             </Button>
-            <Button className="w-full bg-blue-600 hover:bg-blue-700" onClick={async () => {
+            <Button className="w-full bg-blue-600/90 hover:bg-blue-600 text-white border border-white/10" onClick={async () => {
               try {
                 const r = await api.post(`/api/v1/integrations/outlook/connect`);
                 const url = (r as any)?.data?.auth_url as string | undefined;
@@ -222,7 +222,7 @@ export default function OAuthSuccess() {
             }}>
               <Mail className="h-4 w-4 mr-2" /> Outlook
             </Button>
-            <Button className="w-full bg-emerald-600 hover:bg-emerald-700" onClick={async () => {
+            <Button className="w-full bg-emerald-600/90 hover:bg-emerald-600 text-white border border-white/10" onClick={async () => {
               try {
                 const r = await api.post(`/api/v1/integrations/gdrive/connect`);
                 const url = (r as any)?.data?.auth_url as string | undefined;
@@ -233,7 +233,7 @@ export default function OAuthSuccess() {
             }}>
               <Cloud className="h-4 w-4 mr-2" /> Google Drive
             </Button>
-            <Button className="w-full bg-sky-600 hover:bg-sky-700" onClick={async () => {
+            <Button className="w-full bg-sky-600/90 hover:bg-sky-600 text-white border border-white/10" onClick={async () => {
               try {
                 const r = await api.post(`/api/v1/integrations/dropbox/connect`);
                 const url = (r as any)?.data?.auth_url as string | undefined;
@@ -246,8 +246,8 @@ export default function OAuthSuccess() {
             </Button>
           </div>
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setConnectEvidenceOpen(false)}>Maybe later</Button>
-            <Button onClick={handleStartSync} className="gap-2">
+            <Button variant="ghost" className="text-gray-300 hover:text-gray-100" onClick={() => setConnectEvidenceOpen(false)}>Maybe later</Button>
+            <Button onClick={handleStartSync} className="gap-2 bg-white/10 hover:bg-white/15 border border-white/10 text-gray-100">
               <ArrowRight className="h-4 w-4" /> Continue
             </Button>
           </DialogFooter>
