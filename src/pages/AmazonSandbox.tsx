@@ -47,7 +47,7 @@ export default function AmazonSandboxPage() {
               <Loader2 className="h-6 w-6 animate-spin" />
               <span className="text-lg font-medium">Connecting to Amazon...</span>
             </div>
-            {/* Center logo removed per request for minimal focus */}
+            {/* Center logo removed per request */}
             <p className="text-gray-400">
               Simulating Amazon Seller Central authentication...
             </p>
