@@ -158,9 +158,6 @@ export default function AnalyzingScreen() {
           <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-[320px] w-[320px] rounded-full bg-emerald-500/10 blur-3xl" />
 
           <div className="relative max-w-xl w-full mx-auto text-center space-y-4">
-            <div className="flex items-center justify-center">
-              <span className="text-base font-medium text-gray-100">Analyzing Your Amazon FBA History</span>
-            </div>
             <div className="flex flex-col items-center gap-3">
               <span className="text-sm text-gray-400">Progress</span>
               <svg viewBox="0 0 100 100" className="w-10 h-10 -rotate-90">
