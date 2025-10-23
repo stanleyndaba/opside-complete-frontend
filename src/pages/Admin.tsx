@@ -21,8 +21,10 @@ export default function Admin() {
 
   return (
     <PageLayout title="Admin">
-      <div className="container mx-auto px-6 md:px-10 lg:px-12">
-        <Card className="bg-white/5 border-white/10 text-gray-300">
+      <div className="relative -m-4 lg:-m-6">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+        <div className="container mx-auto px-6 md:px-10 lg:px-12">
+        <Card className="bg-white/10 backdrop-blur-xl border-white/10 rounded-2xl text-gray-300">
           <CardHeader>
             <CardTitle className="text-gray-100">Admin Mode</CardTitle>
             <CardDescription>Enable admin access to internal tools.</CardDescription>
@@ -42,6 +44,7 @@ export default function Admin() {
             </div>
           </CardContent>
         </Card>
+        </div>
       </div>
     </PageLayout>
   );

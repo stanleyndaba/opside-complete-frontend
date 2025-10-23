@@ -126,9 +126,11 @@ export default function RevenueModel() {
 
   return (
     <PageLayout title="Revenue Model (2026)">
-      <div className="container mx-auto px-6 md:px-10 lg:px-12">
+      <div className="relative -m-4 lg:-m-6">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+        <div className="container mx-auto px-6 md:px-10 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="bg-white/5 border-white/10 text-gray-300 lg:col-span-1">
+          <Card className="bg-white/10 backdrop-blur-xl border-white/10 rounded-2xl text-gray-300 lg:col-span-1">
             <CardHeader>
               <CardTitle className="text-gray-100">Inputs</CardTitle>
               <CardDescription>Adjust to simulate your funnel and ARPS.</CardDescription>
@@ -210,13 +212,13 @@ export default function RevenueModel() {
               </div>
 
               <div className="flex gap-3 pt-2">
-                <Button onClick={reset} variant="outline">Reset to defaults</Button>
-                <Button onClick={exportCsv} className="gap-2">Export CSV</Button>
+                <Button onClick={reset} variant="outline" className="bg-white/5 text-gray-100 border-white/10">Reset to defaults</Button>
+                <Button onClick={exportCsv} className="gap-2 bg-white/10 text-gray-100 border border-white/10 hover:bg-white/20">Export CSV</Button>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/5 border-white/10 text-gray-300 lg:col-span-2">
+          <Card className="bg-white/10 backdrop-blur-xl border-white/10 rounded-2xl text-gray-300 lg:col-span-2">
             <CardHeader>
               <CardTitle className="text-gray-100">Projection (2026)</CardTitle>
               <CardDescription>Active sellers and revenue per month.</CardDescription>
@@ -258,6 +260,7 @@ export default function RevenueModel() {
             </CardContent>
           </Card>
         </div>
+      </div>
       </div>
     </PageLayout>
   );
