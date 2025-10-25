@@ -12,9 +12,9 @@ function buildApiUrl(path: string): string {
   // If caller passed an absolute URL, return as-is
   if (/^https?:\/\//i.test(path)) return path;
 
-  // Prefer explicit base URL when provided via env
-  const envBase = (typeof import.meta !== 'undefined' && ((import.meta as any).env?.VITE_API_BASE_URL || (import.meta as any).env?.VITE_REFUND_ENGINE_URL))
-    || (typeof process !== 'undefined' && ((process as any).env?.VITE_API_BASE_URL || (process as any).env?.VITE_REFUND_ENGINE_URL));
+  // Prefer explicit base URL when provided via env (but ignore VITE_REFUND_ENGINE_URL for main API)
+  const envBase = (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_API_BASE_URL)
+    || (typeof process !== 'undefined' && (process as any).env?.VITE_API_BASE_URL);
   
   if (envBase) {
     return String(envBase).replace(/\/$/, '') + normalizedPath;
