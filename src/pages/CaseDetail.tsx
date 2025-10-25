@@ -10,7 +10,7 @@ import { ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, A
 // duplicate Link import removed
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { api, buildApiUrl } from '@/lib/api';
+import { api } from '@/lib/api';
 import { recoveryApi } from '@/lib/recoveryApi';
 
 interface CaseEvent {

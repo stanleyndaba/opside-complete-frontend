@@ -1,7 +1,7 @@
-import { buildApiUrl } from '@/lib/api';
+import { api } from '@/lib/api';
 
 async function json<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(buildApiUrl(path), {
+  const res = await fetch(api.buildApiUrl(path), {
     credentials: 'include',
     headers: { 'Content-Type': 'application/json', ...(init?.headers || {}) },
     ...init,
