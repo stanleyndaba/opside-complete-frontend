@@ -5,7 +5,7 @@ export interface ApiResponse<T> {
   error?: string;
 }
 
-export function buildApiUrl(path: string): string {
+function buildApiUrl(path: string): string {
   // Normalize provided path
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
 
@@ -99,6 +99,9 @@ async function requestJson<T>(path: string, options?: RequestInit): Promise<ApiR
 }
 
 export const api = {
+  // Export buildApiUrl for use in other modules
+  buildApiUrl,
+  
   // Generic helpers
   get: <T = any>(path: string) => requestJson<T>(path, { method: 'GET' }),
   post: <T = any>(path: string, body?: unknown) => requestJson<T>(path, { method: 'POST', body: body !== undefined ? JSON.stringify(body) : undefined }),
