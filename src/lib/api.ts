@@ -26,7 +26,8 @@ export function buildApiUrl(path: string): string {
 
 async function requestJson<T>(path: string, options?: RequestInit): Promise<ApiResponse<T>> {
   try {
-    const res = await fetch(buildApiUrl(path), {
+    const url = buildApiUrl(path);
+    const res = await fetch(url, {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
@@ -59,10 +60,14 @@ async function requestJson<T>(path: string, options?: RequestInit): Promise<ApiR
       data,
     };
   } catch (error) {
+    // Don't expose "Failed to fetch" errors to users in sandbox mode
+    const errorMsg = error instanceof Error ? error.message : 'Network error';
+    console.warn(`API request failed for ${path}:`, errorMsg);
+    
     return {
       ok: false,
       status: 0,
-      error: error instanceof Error ? error.message : 'Network error',
+      error: errorMsg,
     };
   }
 }

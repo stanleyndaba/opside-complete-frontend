@@ -22,10 +22,13 @@ export default function AmazonSandboxPage() {
         if (res.ok) {
           toast({ title: 'Connected to Amazon (Sandbox)', description: 'Redirecting to analysis…' });
         } else {
-          toast({ title: 'Sandbox connect failed', description: res.error || 'Continuing to analysis…' });
+          // Log error for debugging but don't block the flow
+          console.warn('Sandbox auth failed:', res.error);
         }
       } catch (e: any) {
-        toast({ title: 'Sandbox connect failed', description: e?.message || 'Continuing to analysis…' });
+        // Log error for debugging but don't block the flow
+        console.warn('Sandbox auth error:', e?.message || e);
+        // This is a demo sandbox, so it's okay to continue
       }
       if (!cancelled) {
         // Small pause for UX, then continue
@@ -33,7 +36,7 @@ export default function AmazonSandboxPage() {
       }
     })();
     return () => { cancelled = true; };
-  }, [state, navigate]);
+  }, [state, navigate, toast]);
 
   return (
     <PageLayout title="Connecting to Amazon" hideNavbar hideSidebar>
