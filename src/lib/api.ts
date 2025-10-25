@@ -95,8 +95,6 @@ export const api = {
   trackEvent: (name: string, payload?: Record<string, any>) =>
     requestJson<any>('/api/metrics/track', { method: 'POST', body: JSON.stringify({ name, payload }) }),
 
-  getAmazonRecoveries: () => requestJson<{ totalAmount: number; currency: string; claimCount: number }>('/api/v1/integrations/amazon/recoveries'),
-
   getDashboardAggregates: (window?: '7d' | '30d' | '90d') => requestJson<any>(
     `/api/metrics/dashboard${window ? `?window=${encodeURIComponent(window)}` : ''}`
   ),

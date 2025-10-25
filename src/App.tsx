@@ -42,6 +42,7 @@ const Careers = lazy(() => import("./pages/Careers"));
 const UpcomingPayments = lazy(() => import("./pages/UpcomingPayments"));
 const RevenueModel = lazy(() => import("./pages/RevenueModel"));
 const Admin = lazy(() => import("./pages/Admin"));
+const AdminUsersAndIntegrations = lazy(() => import("./pages/AdminUsersAndIntegrations"));
 const AmazonAuthTest = lazy(() => import("./pages/AmazonAuthTest"));
 
 // New Evidence Pages
