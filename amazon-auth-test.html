@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon Auth Test - Step 1</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #0B1220;
+            color: #e5e7eb;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 20px 0;
+        }
+        .button {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 8px;
+            transition: background 0.2s;
+        }
+        .button:hover {
+            background: #059669;
+        }
+        .button:disabled {
+            background: #6b7280;
+            cursor: not-allowed;
+        }
+        .result {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .success { border-left: 4px solid #10b981; }
+        .error { border-left: 4px solid #ef4444; }
+        .loading { border-left: 4px solid #f59e0b; }
+        h1 { color: #10b981; }
+        h2 { color: #e5e7eb; margin-top: 32px; }
+        .status { font-weight: bold; }
+        .sandbox-credentials {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Amazon Authentication Test - Step 1</h1>
+    
+    <div class="container">
+        <h2>📋 Backend Environment Status</h2>
+        <div class="sandbox-credentials">
+            <strong>✅ Amazon Sandbox Credentials Provided:</strong><br>
+            AMAZON_SPAPI_BASE_URL: https://sandbox.sellingpartnerapi-na.amazon.com<br>
+            AMAZON_SPAPI_CLIENT_ID: amzn1.application-oa2-client.2b55e98d58e94feb920b2f1efa166432<br>
+            AMAZON_SPAPI_REDIRECT_URI: http://localhost:3000/api/v1/integrations/amazon/callback<br>
+            AMAZON_SPAPI_REFRESH_TOKEN: [Provided - 500+ chars]
+        </div>
+        <div id="backend-status" class="result loading">Checking backend status...</div>
+    </div>
+
+    <div class="container">
+        <h2>🔗 Amazon Authentication Endpoints</h2>
+        <button class="button" onclick="testConnectAmazon()">Test Connect Amazon</button>
+        <button class="button" onclick="testSandboxCallback()">Test Sandbox Callback</button>
+        <button class="button" onclick="testIntegrationStatus()">Test Integration Status</button>
+        <button class="button" onclick="testAuthMe()">Test Auth Me</button>
+        <button class="button" onclick="testAmazonRecoveries()">Test Amazon Recoveries</button>
+        <button class="button" onclick="testSyncStart()">Test Sync Start</button>
+        <div id="test-results"></div>
+    </div>
+
+    <div class="container">
+        <h2>🚀 Live Amazon OAuth Flow</h2>
+        <p>Test the complete OAuth flow with your sandbox credentials:</p>
+        <button class="button" onclick="startAmazonOAuth()" id="oauth-btn">Start Amazon OAuth</button>
+        <div id="oauth-status" class="result" style="display: none;"></div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'https://clario-complete-backend-y5cd.onrender.com';
+        
+        // Test functions
+        async function testEndpoint(name, url, options = {}) {
+            const resultDiv = document.getElementById('test-results');
+            const testDiv = document.createElement('div');
+            testDiv.className = 'result loading';
+            testDiv.innerHTML = `<span class="status">Testing ${name}...</span>`;
+            resultDiv.appendChild(testDiv);
+            
+            try {
+                const response = await fetch(url, {
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    ...options
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    testDiv.className = 'result success';
+                    testDiv.innerHTML = `<span class="status">✅ ${name}: SUCCESS</span>\n${JSON.stringify(data, null, 2)}`;
+                } else {
+                    testDiv.className = 'result error';
+                    testDiv.innerHTML = `<span class="status">❌ ${name}: FAILED (${response.status})</span>\n${JSON.stringify(data, null, 2)}`;
+                }
+            } catch (error) {
+                testDiv.className = 'result error';
+                testDiv.innerHTML = `<span class="status">❌ ${name}: ERROR</span>\n${error.message}`;
+            }
+        }
+        
+        async function testConnectAmazon() {
+            await testEndpoint('Connect Amazon', `${API_BASE_URL}/api/v1/integrations/connect-amazon`);
+        }
+        
+        async function testSandboxCallback() {
+            await testEndpoint('Sandbox Callback', `${API_BASE_URL}/api/v1/integrations/amazon/sandbox/callback`, {
+                method: 'POST',
+                body: JSON.stringify({ state: 'test-state-123' })
+            });
+        }
+        
+        async function testIntegrationStatus() {
+            await testEndpoint('Integration Status', `${API_BASE_URL}/api/v1/integrations/status`);
+        }
+        
+        async function testAuthMe() {
+            await testEndpoint('Auth Me', `${API_BASE_URL}/api/auth/me`);
+        }
+        
+        async function testAmazonRecoveries() {
+            await testEndpoint('Amazon Recoveries', `${API_BASE_URL}/api/v1/integrations/amazon/recoveries`);
+        }
+        
+        async function testSyncStart() {
+            await testEndpoint('Sync Start', `${API_BASE_URL}/api/sync/start`, {
+                method: 'POST'
+            });
+        }
+        
+        async function startAmazonOAuth() {
+            const btn = document.getElementById('oauth-btn');
+            const statusDiv = document.getElementById('oauth-status');
+            
+            btn.disabled = true;
+            btn.textContent = 'Starting OAuth...';
+            statusDiv.style.display = 'block';
+            statusDiv.className = 'result loading';
+            statusDiv.innerHTML = '<span class="status">🔄 Starting Amazon OAuth flow...</span>';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/v1/integrations/connect-amazon`, {
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.auth_url) {
+                    statusDiv.className = 'result success';
+                    statusDiv.innerHTML = `<span class="status">✅ OAuth URL Generated!</span>\nRedirecting to: ${data.auth_url}`;
+                    
+                    // Redirect to Amazon OAuth
+                    setTimeout(() => {
+                        window.location.href = data.auth_url;
+                    }, 2000);
+                } else {
+                    statusDiv.className = 'result error';
+                    statusDiv.innerHTML = `<span class="status">❌ OAuth Failed</span>\n${JSON.stringify(data, null, 2)}`;
+                    btn.disabled = false;
+                    btn.textContent = 'Start Amazon OAuth';
+                }
+            } catch (error) {
+                statusDiv.className = 'result error';
+                statusDiv.innerHTML = `<span class="status">❌ OAuth Error</span>\n${error.message}`;
+                btn.disabled = false;
+                btn.textContent = 'Start Amazon OAuth';
+            }
+        }
+        
+        // Check backend status on load
+        async function checkBackendStatus() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                
+                const data = await response.json();
+                const statusDiv = document.getElementById('backend-status');
+                
+                if (response.ok) {
+                    statusDiv.className = 'result success';
+                    statusDiv.innerHTML = `<span class="status">✅ Backend Online</span>\n${JSON.stringify(data, null, 2)}`;
+                } else {
+                    statusDiv.className = 'result error';
+                    statusDiv.innerHTML = `<span class="status">❌ Backend Error</span>\n${JSON.stringify(data, null, 2)}`;
+                }
+            } catch (error) {
+                const statusDiv = document.getElementById('backend-status');
+                statusDiv.className = 'result error';
+                statusDiv.innerHTML = `<span class="status">❌ Backend Offline</span>\n${error.message}`;
+            }
+        }
+        
+        // Initialize
+        checkBackendStatus();
+    </script>
+</body>
+</html>
