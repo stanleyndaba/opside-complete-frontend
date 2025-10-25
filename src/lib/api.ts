@@ -32,6 +32,7 @@ export function buildApiUrl(path: string): string {
   }
 
   // Use production backend for all deployed environments
+  // Ensure we always return the full URL
   return productionBackend + normalizedPath;
 }
 
