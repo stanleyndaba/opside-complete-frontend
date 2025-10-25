@@ -38,6 +38,8 @@ export function buildApiUrl(path: string): string {
 async function requestJson<T>(path: string, options?: RequestInit): Promise<ApiResponse<T>> {
   try {
     const url = buildApiUrl(path);
+    console.log(`[API] Requesting: ${url}`);
+    
     const res = await fetch(url, {
       credentials: 'include',
       headers: {
@@ -46,6 +48,8 @@ async function requestJson<T>(path: string, options?: RequestInit): Promise<ApiR
       },
       ...options,
     });
+
+    console.log(`[API] Response status: ${res.status} for ${url}`);
 
     let data;
     const text = await res.text();
@@ -58,27 +62,37 @@ async function requestJson<T>(path: string, options?: RequestInit): Promise<ApiR
     }
 
     if (!res.ok) {
+      const errorMsg = data?.error || data?.message || res.statusText || 'Request failed';
+      console.error(`[API] Error for ${url}: ${errorMsg}`);
       return {
         ok: false,
         status: res.status,
-        error: data?.error || data?.message || res.statusText || 'Request failed',
+        error: errorMsg,
       };
     }
 
+    console.log(`[API] Success for ${url}:`, data);
     return {
       ok: true,
       status: res.status,
       data,
     };
   } catch (error) {
-    // Don't expose "Failed to fetch" errors to users in sandbox mode
+    // Provide detailed error information
+    const url = buildApiUrl(path);
     const errorMsg = error instanceof Error ? error.message : 'Network error';
-    console.warn(`API request failed for ${path}:`, errorMsg);
+    const details = `Cannot connect to backend at ${url}. The backend may be down, sleeping, or blocked by CORS.`;
+    
+    console.error(`[API] Request failed for ${path}:`, {
+      error: errorMsg,
+      url,
+      details
+    });
     
     return {
       ok: false,
       status: 0,
-      error: errorMsg,
+      error: details,
     };
   }
 }
