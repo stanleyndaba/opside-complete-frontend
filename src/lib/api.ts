@@ -20,8 +20,8 @@ function buildApiUrl(path: string): string {
     return String(envBase).replace(/\/$/, '') + normalizedPath;
   }
 
-  // Production backend URL
-  const productionBackend = 'https://clario-complete-backend-y5cd.onrender.com';
+  // Production backend URL - use the orchestrator which routes to microservices
+  const productionBackend = 'https://clario-complete-backend-mvak.onrender.com';
   
   // In development, you can override with localhost
   const isDev = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
