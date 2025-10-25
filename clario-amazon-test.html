@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clario - Amazon Authentication Test</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #0B1220;
+            color: #e5e7eb;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background: linear-gradient(135deg, #10b981, #059669);
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 1.2rem;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 20px 0;
+        }
+        .button {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 8px;
+            transition: background 0.2s;
+            font-weight: 500;
+        }
+        .button:hover {
+            background: #059669;
+        }
+        .button:disabled {
+            background: #6b7280;
+            cursor: not-allowed;
+        }
+        .button.secondary {
+            background: transparent;
+            border: 1px solid #10b981;
+            color: #10b981;
+        }
+        .button.secondary:hover {
+            background: #10b981;
+            color: white;
+        }
+        .result {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            font-size: 14px;
+        }
+        .success { border-left: 4px solid #10b981; }
+        .error { border-left: 4px solid #ef4444; }
+        .loading { border-left: 4px solid #f59e0b; }
+        .status { font-weight: bold; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .test-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .test-item h3 {
+            margin: 0 0 12px 0;
+            color: #10b981;
+        }
+        .credentials {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .credentials h3 {
+            margin: 0 0 12px 0;
+            color: #10b981;
+        }
+        .credentials code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #10b981;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        function AmazonAuthTest() {
+            const [backendStatus, setBackendStatus] = useState('checking');
+            const [testResults, setTestResults] = useState({});
+            const [loading, setLoading] = useState({});
+            const [oauthStatus, setOauthStatus] = useState('');
+
+            const API_BASE_URL = 'https://clario-complete-backend-y5cd.onrender.com';
+
+            useEffect(() => {
+                checkBackendStatus();
+            }, []);
+
+            const checkBackendStatus = async () => {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
+                        credentials: 'include',
+                        headers: { 'Content-Type': 'application/json' },
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        setBackendStatus('online');
+                    } else {
+                        setBackendStatus('error');
+                    }
+                } catch (error) {
+                    setBackendStatus('offline');
+                }
+            };
+
+            const runTest = async (testName, url, options = {}) => {
+                setLoading(prev => ({ ...prev, [testName]: true }));
+                
+                try {
+                    const response = await fetch(url, {
+                        credentials: 'include',
+                        headers: { 'Content-Type': 'application/json' },
+                        ...options
+                    });
+                    
+                    const data = await response.json();
+                    
+                    setTestResults(prev => ({
+                        ...prev,
+                        [testName]: {
+                            success: response.ok,
+                            status: response.status,
+                            data: data
+                        }
+                    }));
+                } catch (error) {
+                    setTestResults(prev => ({
+                        ...prev,
+                        [testName]: {
+                            success: false,
+                            error: error.message
+                        }
+                    }));
+                } finally {
+                    setLoading(prev => ({ ...prev, [testName]: false }));
+                }
+            };
+
+            const startAmazonOAuth = async () => {
+                setOauthStatus('Starting OAuth...');
+                
+                try {
+                    const response = await fetch(`${API_BASE_URL}/api/v1/integrations/connect-amazon`, {
+                        credentials: 'include',
+                        headers: { 'Content-Type': 'application/json' },
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok && data.auth_url) {
+                        setOauthStatus(`✅ OAuth URL generated! Redirecting to Amazon...`);
+                        setTimeout(() => {
+                            window.location.href = data.auth_url;
+                        }, 2000);
+                    } else {
+                        setOauthStatus(`❌ OAuth failed: ${JSON.stringify(data)}`);
+                    }
+                } catch (error) {
+                    setOauthStatus(`❌ OAuth error: ${error.message}`);
+                }
+            };
+
+            const tests = [
+                {
+                    name: 'Connect Amazon',
+                    description: 'GET /api/v1/integrations/connect-amazon',
+                    url: `${API_BASE_URL}/api/v1/integrations/connect-amazon`
+                },
+                {
+                    name: 'Sandbox Callback',
+                    description: 'POST /api/v1/integrations/amazon/sandbox/callback',
+                    url: `${API_BASE_URL}/api/v1/integrations/amazon/sandbox/callback`,
+                    options: {
+                        method: 'POST',
+                        body: JSON.stringify({ state: 'test-state-123' })
+                    }
+                },
+                {
+                    name: 'Integration Status',
+                    description: 'GET /api/v1/integrations/status',
+                    url: `${API_BASE_URL}/api/v1/integrations/status`
+                },
+                {
+                    name: 'Amazon Recoveries',
+                    description: 'GET /api/v1/integrations/amazon/recoveries',
+                    url: `${API_BASE_URL}/api/v1/integrations/amazon/recoveries`
+                },
+                {
+                    name: 'Sync Start',
+                    description: 'POST /api/sync/start',
+                    url: `${API_BASE_URL}/api/sync/start`,
+                    options: { method: 'POST' }
+                },
+                {
+                    name: 'Auth Me',
+                    description: 'GET /api/auth/me',
+                    url: `${API_BASE_URL}/api/auth/me`
+                }
+            ];
+
+            return (
+                <div className="container">
+                    <div className="header">
+                        <h1>🧪 Clario Amazon Authentication Test</h1>
+                        <p>Step 1: Authentication & Connection Testing</p>
+                    </div>
+
+                    <div className="card">
+                        <h2>📋 Backend Status</h2>
+                        <div className="credentials">
+                            <h3>✅ Amazon Sandbox Credentials Configured</h3>
+                            <p><strong>AMAZON_SPAPI_BASE_URL:</strong> <code>https://sandbox.sellingpartnerapi-na.amazon.com</code></p>
+                            <p><strong>AMAZON_SPAPI_CLIENT_ID:</strong> <code>amzn1.application-oa2-client.2b55e98d58e94feb920b2f1efa166432</code></p>
+                            <p><strong>AMAZON_SPAPI_REDIRECT_URI:</strong> <code>http://localhost:3000/api/v1/integrations/amazon/callback</code></p>
+                            <p><strong>AMAZON_SPAPI_REFRESH_TOKEN:</strong> <code>[Provided - 500+ characters]</code></p>
+                        </div>
+                        <div className={`result ${backendStatus === 'online' ? 'success' : backendStatus === 'error' ? 'error' : 'loading'}`}>
+                            <span className="status">
+                                {backendStatus === 'online' && '✅ Backend Online'}
+                                {backendStatus === 'error' && '⚠️ Backend Error'}
+                                {backendStatus === 'offline' && '❌ Backend Offline'}
+                                {backendStatus === 'checking' && '🔄 Checking Backend...'}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div className="card">
+                        <h2>🔗 Endpoint Testing</h2>
+                        <div className="grid">
+                            {tests.map((test) => (
+                                <div key={test.name} className="test-item">
+                                    <h3>{test.name}</h3>
+                                    <p style={{ fontSize: '14px', opacity: 0.8, margin: '8px 0' }}>
+                                        {test.description}
+                                    </p>
+                                    <button 
+                                        className="button secondary"
+                                        onClick={() => runTest(test.name, test.url, test.options || {})}
+                                        disabled={loading[test.name]}
+                                    >
+                                        {loading[test.name] && <span className="loading-spinner" style={{ marginRight: '8px' }}></span>}
+                                        {loading[test.name] ? 'Testing...' : 'Test'}
+                                    </button>
+                                    {testResults[test.name] && (
+                                        <div className={`result ${testResults[test.name].success ? 'success' : 'error'}`}>
+                                            <span className="status">
+                                                {testResults[test.name].success ? '✅' : '❌'} {test.name}
+                                                {testResults[test.name].status && ` (${testResults[test.name].status})`}
+                                            </span>
+                                            <br />
+                                            {JSON.stringify(testResults[test.name].data || testResults[test.name].error, null, 2)}
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="card">
+                        <h2>🚀 Live Amazon OAuth Flow</h2>
+                        <p>Test the complete OAuth flow with your sandbox credentials:</p>
+                        <button 
+                            className="button"
+                            onClick={startAmazonOAuth}
+                        >
+                            🔗 Start Amazon OAuth
+                        </button>
+                        {oauthStatus && (
+                            <div className="result success">
+                                {oauthStatus}
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="card">
+                        <h2>📝 Next Steps</h2>
+                        <ol>
+                            <li>Test all endpoints above to verify backend connectivity</li>
+                            <li>Click "Start Amazon OAuth" to test the complete flow</li>
+                            <li>Verify callback handling at <code>/api/v1/integrations/amazon/callback</code></li>
+                            <li>Confirm tenant creation and session management</li>
+                            <li>Test the complete user journey: Sign up → Connect Amazon → Success</li>
+                        </ol>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<AmazonAuthTest />, document.getElementById('root'));
+    </script>
+</body>
+</html>
