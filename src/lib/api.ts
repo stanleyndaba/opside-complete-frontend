@@ -74,14 +74,16 @@ export const api = {
 
   // Auth endpoints
   getMe: () => requestJson<any>('/api/auth/me'),
-  // Amazon SP-API connect (align to /api/v1)
-  connectAmazon: () => requestJson<{ auth_url?: string; redirect_url?: string }>(`/api/v1/integrations/connect-amazon`, { method: 'GET' }),
-  completeAmazonSandboxAuth: (state: string) => requestJson<any>('/api/v1/integrations/amazon/sandbox/callback', { 
+  logout: () => requestJson<{ ok: true }>('/api/auth/logout', { method: 'POST' }),
+  postLoginStripe: () => requestJson<any>('/api/auth/post-login/stripe', { method: 'POST' }),
+
+  // Amazon SP-API endpoints (Step 1 Auth Process)
+  connectAmazon: () => requestJson<{ auth_url: string; state: string }>('/api/v1/integrations/connect-amazon'),
+  completeAmazonSandboxAuth: (state: string) => requestJson<{ ok: boolean }>('/api/v1/integrations/amazon/sandbox/callback', { 
     method: 'POST', 
     body: JSON.stringify({ state }) 
   }),
-  postLoginStripe: () => requestJson<any>('/api/auth/post-login/stripe', { method: 'POST' }),
-  logout: () => requestJson<{ ok: true }>('/api/auth/logout', { method: 'POST' }),
+  getAmazonRecoveries: () => requestJson<{ totalAmount: number; currency: string; claimCount: number }>('/api/v1/integrations/amazon/recoveries'),
 
   // Auth-adjacent helpers for flows
   connectDocs: (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox') =>

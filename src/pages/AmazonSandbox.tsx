@@ -19,10 +19,10 @@ export default function AmazonSandboxPage() {
       try {
         // Establish sandbox session/tenant on backend; ignore errors to keep UX flowing
         const res = await api.completeAmazonSandboxAuth(state || 'demo');
-        if ((res as any)?.ok) {
+        if (res.ok) {
           toast({ title: 'Connected to Amazon (Sandbox)', description: 'Redirecting to analysis…' });
         } else {
-          toast({ title: 'Sandbox connect failed', description: (res as any)?.error || 'Continuing to analysis…' });
+          toast({ title: 'Sandbox connect failed', description: res.error || 'Continuing to analysis…' });
         }
       } catch (e: any) {
         toast({ title: 'Sandbox connect failed', description: e?.message || 'Continuing to analysis…' });

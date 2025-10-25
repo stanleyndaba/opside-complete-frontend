@@ -157,7 +157,7 @@ const Index = () => {
               }, 1800);
               try {
                 const res = await api.connectAmazon(); 
-                const url = (res as any)?.data?.auth_url || (res as any)?.data?.redirect_url;
+                const url = res.data?.auth_url;
                 if ((res as any)?.ok && url && !navigated) {
                   navigated = true;
                   window.clearTimeout(fallback);
@@ -197,8 +197,8 @@ const Index = () => {
                     }
                   }, 1800);
                   try {
-                    const res = await (api as any).connectAmazon?.();
-                    const url = (res as any)?.data?.auth_url || (res as any)?.data?.redirect_url;
+                    const res = await api.connectAmazon();
+                    const url = res.data?.auth_url;
                     if ((res as any)?.ok && url && !navigated) {
                       navigated = true;
                       window.clearTimeout(fallback);

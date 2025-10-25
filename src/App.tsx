@@ -42,7 +42,7 @@ const Careers = lazy(() => import("./pages/Careers"));
 const UpcomingPayments = lazy(() => import("./pages/UpcomingPayments"));
 const RevenueModel = lazy(() => import("./pages/RevenueModel"));
 const Admin = lazy(() => import("./pages/Admin"));
-const AdminUsersAndIntegrations = lazy(() => import("./pages/AdminUsersAndIntegrations"));
+const AmazonAuthTest = lazy(() => import("./pages/AmazonAuthTest"));
 
 // New Evidence Pages
 const EvidenceOnboarding = lazy(() => import("./pages/EvidenceOnboarding"));
@@ -97,6 +97,7 @@ const App = () => (
             <Route path="/upcoming-payments" element={<UpcomingPayments />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin/users-integrations" element={<AdminOnly><AdminUsersAndIntegrations /></AdminOnly>} />
+            <Route path="/admin/amazon-auth-test" element={<AdminOnly><AmazonAuthTest /></AdminOnly>} />
             <Route path="/revenue-model" element={<AdminOnly><RevenueModel /></AdminOnly>} />
             <Route path="/recoveries" element={<Recoveries />} />
             <Route path="/recoveries/:caseId" element={<CaseDetail />} />
@@ -121,6 +122,7 @@ const App = () => (
             {/* Auth & OAuth Routes */}
             <Route path="/auth/callback" element={<OAuthCallback />} />
             <Route path="/auth/success" element={<OAuthSuccess />} />
+            <Route path="/api/v1/integrations/amazon/callback" element={<OAuthCallback />} />
             <Route path="/stripe/callback" element={<StripeCallback />} />
             
             {/* Shock & Awe Flow Routes */}

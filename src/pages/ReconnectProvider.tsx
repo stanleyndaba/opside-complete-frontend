@@ -55,7 +55,7 @@ export default function ReconnectProvider() {
     try {
       if (provider === 'amazon') {
         const res = await api.connectAmazon();
-        const url = (res as any)?.data?.auth_url || (res as any)?.data?.redirect_url;
+        const url = res.data?.auth_url;
         if ((res as any)?.ok && url) {
           window.location.assign(url as string);
           return;
