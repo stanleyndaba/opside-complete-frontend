@@ -53,30 +53,19 @@ export default function AnalyzingScreen() {
         clearInterval(progressInterval);
         setShowResults(true);
         
-        // Fetch the actual recovery data, or use mock data in sandbox mode
+        // Fetch the actual recovery data from backend
         api.getAmazonRecoveries().then(response => {
-          if (response.ok) {
+          if (response.ok && response.data) {
             setRecoveryData(response.data);
-            toast({ title: 'Analysis complete', description: 'Potential recoveries fetched.' });
+            toast({ title: 'Analysis complete', description: 'Potential recoveries identified.' });
           } else {
-            // Use mock data for demo/sandbox mode
-            console.warn('Amazon recoveries API failed, using mock data:', response.error);
-            setRecoveryData({
-              totalAmount: 15420.50,
-              currency: 'USD',
-              claimCount: 23
-            });
-            toast({ title: 'Analysis complete', description: 'Demo data generated.' });
+            setError(response.error || 'Failed to fetch recoveries');
+            toast({ title: 'Analysis failed', description: response.error || 'Unable to connect to backend' });
           }
         }).catch((e: any) => {
-          // Use mock data for demo/sandbox mode
-          console.warn('Amazon recoveries API error, using mock data:', e?.message);
-          setRecoveryData({
-            totalAmount: 15420.50,
-            currency: 'USD',
-            claimCount: 23
-          });
-          toast({ title: 'Analysis complete', description: 'Demo data generated.' });
+          const msg = e?.message || 'Network error';
+          setError(msg);
+          toast({ title: 'Analysis failed', description: `Unable to reach backend: ${msg}` });
         });
 
         // Auto-redirect to command center after showing results

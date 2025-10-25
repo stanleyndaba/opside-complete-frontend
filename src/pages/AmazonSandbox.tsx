@@ -17,21 +17,18 @@ export default function AmazonSandboxPage() {
     let cancelled = false;
     (async () => {
       try {
-        // Establish sandbox session/tenant on backend; ignore errors to keep UX flowing
+        // Establish sandbox session/tenant on backend
         const res = await api.completeAmazonSandboxAuth(state || 'demo');
         if (res.ok) {
-          toast({ title: 'Connected to Amazon (Sandbox)', description: 'Redirecting to analysis…' });
+          console.log('Sandbox auth successful');
         } else {
-          // Log error for debugging but don't block the flow
           console.warn('Sandbox auth failed:', res.error);
         }
       } catch (e: any) {
-        // Log error for debugging but don't block the flow
         console.warn('Sandbox auth error:', e?.message || e);
-        // This is a demo sandbox, so it's okay to continue
       }
       if (!cancelled) {
-        // Small pause for UX, then continue
+        // Small pause for UX, then continue to analysis
         setTimeout(() => navigate('/auth/analyzing?source=amazon'), 800);
       }
     })();

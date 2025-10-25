@@ -15,13 +15,24 @@ export function buildApiUrl(path: string): string {
   // Prefer explicit base URL when provided via env
   const envBase = (typeof import.meta !== 'undefined' && ((import.meta as any).env?.VITE_API_BASE_URL || (import.meta as any).env?.VITE_REFUND_ENGINE_URL))
     || (typeof process !== 'undefined' && ((process as any).env?.VITE_API_BASE_URL || (process as any).env?.VITE_REFUND_ENGINE_URL));
+  
   if (envBase) {
     return String(envBase).replace(/\/$/, '') + normalizedPath;
   }
 
-  // Fallback: same-origin relative path (works in Production on Vercel/Netlify)
-  // Avoid hardcoding localhost which breaks deployed environments
-  return normalizedPath;
+  // Production backend URL
+  const productionBackend = 'https://clario-complete-backend-y5cd.onrender.com';
+  
+  // In development, you can override with localhost
+  const isDev = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+  
+  if (isDev && (import.meta as any).env?.VITE_API_BASE_URL) {
+    const devBase = (import.meta as any).env?.VITE_API_BASE_URL;
+    return String(devBase).replace(/\/$/, '') + normalizedPath;
+  }
+
+  // Use production backend for all deployed environments
+  return productionBackend + normalizedPath;
 }
 
 async function requestJson<T>(path: string, options?: RequestInit): Promise<ApiResponse<T>> {
