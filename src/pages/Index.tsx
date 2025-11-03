@@ -55,7 +55,7 @@ const Index = () => {
     <div className="min-h-screen flex flex-col bg-white text-gray-900">
       <header className="sticky top-0 z-40 border-transparent bg-transparent">
         <div className="container mx-auto px-6 py-5">
-          <div className="flex items-center justify-between gap-6 px-6 py-4 rounded-[25px] border border-black/5 bg-white/90 backdrop-blur-xl shadow-[0_18px_40px_rgba(15,23,42,0.08)] transition-colors">
+          <div className="flex items-center justify-between gap-6 px-6 py-4 rounded-[25px] border border-white/40 bg-white/25 supports-[backdrop-filter]:bg-white/25 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_25px_60px_rgba(15,23,42,0.12)] transition-colors">
             <div className="flex items-center gap-3">
               <img
                 src="/donelogo.png"
