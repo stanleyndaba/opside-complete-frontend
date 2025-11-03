@@ -182,9 +182,8 @@ export function Sidebar({
       </div>
 
       <ScrollArea className="flex-1">
-        <div className={cn("h-full flex", isCollapsed ? "px-2" : "px-3")}> 
-          <div className="w-full h-full flex items-center justify-center">
-            <nav className="space-y-3 w-full">
+        <div className={cn("h-full flex flex-col", isCollapsed ? "px-2" : "px-3")}>
+          <nav className="space-y-3 w-full my-auto">
               <div className="space-y-1">
                 {primaryItems.map((item, idx) => (
                   <React.Fragment key={`p-${idx}`}>
@@ -209,7 +208,6 @@ export function Sidebar({
                 ))}
               </div>
             </nav>
-          </div>
         </div>
       </ScrollArea>
 
@@ -221,7 +219,7 @@ export function Sidebar({
               <TooltipTrigger asChild>
                 <button
                   aria-label="Logout"
-                  className="relative flex items-center justify-center w-12 h-12 rounded-md text-gray-400 hover:bg-white/10 hover:text-red-300 transition-colors"
+                  className="relative flex items-center justify-center w-10 h-10 rounded-md text-gray-400 hover:bg-white/10 hover:text-red-300 transition-colors"
                   onClick={async () => {
                     const ok = window.confirm('Log out of Clario?');
                     if (!ok) return;
