@@ -29,7 +29,7 @@ export default function AmazonAuthTest() {
   const tests = [
     {
       name: 'Connect Amazon',
-      description: 'Test GET /api/v1/integrations/connect-amazon',
+      description: 'Test GET /api/v1/integrations/amazon/auth/start',
       fn: () => api.connectAmazon()
     },
     {

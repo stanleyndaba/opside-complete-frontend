@@ -94,7 +94,7 @@ npm run analyze
 
 Your frontend integrates with these backend services:
 
-1. **Main API Server**: `https://clario-complete-backend-mvak.onrender.com`
+1. **Main API Server**: `https://opside-node-api.onrender.com`
 2. **Refund Engine**: `https://clarios-refund-engine.onrender.com`
 3. **Amazon SP-API**: Sandbox integration for testing
 
