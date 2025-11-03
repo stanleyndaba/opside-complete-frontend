@@ -301,7 +301,7 @@ const Docs = () => {
               </p>
             </div>
           </article>
-        </div>
+        </main>
       </div>
     </div>
   );

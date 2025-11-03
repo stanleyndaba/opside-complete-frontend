@@ -307,7 +307,7 @@ const Privacy = () => {
               <p className="text-sm text-gray-500 italic">Clario operates under the principle of Least Privilege. Your trust is our foundation.</p>
             </div>
           </article>
-        </div>
+        </main>
       </div>
     </div>
   );

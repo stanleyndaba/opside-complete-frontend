@@ -311,7 +311,7 @@ const Terms = () => {
               <p className="text-sm text-gray-500 italic">Clario empowers sellers. Compliance protects us all.</p>
             </div>
           </article>
-        </div>
+        </main>
       </div>
     </div>
   );
