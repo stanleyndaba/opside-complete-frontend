@@ -55,7 +55,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
       onClick={handleConnect}
       disabled={connecting}
       className={cn(
-        'w-full justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-semibold shadow-lg transition-colors',
+        'w-auto justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-semibold shadow-lg transition-colors px-8',
         connecting && 'opacity-80',
         className
       )}

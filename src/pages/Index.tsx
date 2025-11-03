@@ -31,12 +31,30 @@ const Index = () => {
     typeof window !== 'undefined' ? localStorage.getItem('clario.langPreference') || 'en' : 'en'
   );
   const [langQuery, setLangQuery] = useState<string>('');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     try {
       localStorage.setItem('clario.langPreference', selectedLanguageCode);
     } catch {}
   }, [selectedLanguageCode]);
+
+  const primaryLinks = [
+    { label: 'API', href: '/developer-api' },
+    { label: 'Docs', href: '/docs' },
+    { label: 'Resources', href: '/resources' }
+  ];
 
   const selectedLanguage: LanguageOption =
     LANGUAGE_OPTIONS.find((o) => o.code === selectedLanguageCode) || LANGUAGE_OPTIONS[0];
@@ -110,12 +128,16 @@ const Index = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-            <nav className="flex items-center gap-4 text-sm text-gray-700">
-              {/* Primary links */}
-              <Link to="/developer-api" className="px-3 py-1.5 rounded-md hover:bg-gray-100 hover:text-gray-900 transition-colors">API</Link>
-              <Link to="/docs" className="px-3 py-1.5 rounded-md hover:bg-gray-100 hover:text-gray-900 transition-colors">Docs</Link>
-              <Link to="/resources" className="px-3 py-1.5 rounded-md hover:bg-gray-100 hover:text-gray-900 transition-colors">Resources</Link>
-              {/* Language selector */}
+            <nav className="hidden md:flex items-center gap-4 text-sm text-gray-700">
+              {primaryLinks.map((link) => (
+                <Link
+                  key={link.label}
+                  to={link.href}
+                  className="px-3 py-1.5 rounded-md hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                >
+                  {link.label}
+                </Link>
+              ))}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
@@ -149,7 +171,73 @@ const Index = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             </nav>
+            <button
+              type="button"
+              className="md:hidden flex flex-col items-end gap-1.5 rounded-[16px] border border-white/40 bg-white/40 px-3 py-2 transition-colors hover:bg-white/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+              aria-label="Toggle menu"
+              aria-expanded={mobileMenuOpen}
+              onClick={() => setMobileMenuOpen((prev) => !prev)}
+            >
+              <span className="block h-[1px] w-6 bg-gray-900 rounded-full" />
+              <span className="block h-[1px] w-5 bg-gray-900 rounded-full" />
+              <span className="block h-[1px] w-4 bg-gray-900 rounded-full" />
+            </button>
           </div>
+          {mobileMenuOpen && (
+            <div className="mt-4 md:hidden">
+              <div className="flex flex-col gap-2 rounded-[20px] border border-white/40 bg-white/80 supports-[backdrop-filter]:bg-white/70 backdrop-blur-2xl p-4 shadow-2xl">
+                {primaryLinks.map((link) => (
+                  <Link
+                    key={link.label}
+                    to={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="rounded-lg px-3 py-2 text-sm font-medium text-gray-800 hover:bg-white/70 hover:text-gray-900 transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      className="w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-gray-800 hover:bg-white/70 transition-colors"
+                      aria-label="Language preference"
+                    >
+                      Language: {selectedLanguage.language}
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="min-w-[220px] bg-white border border-black/10 text-gray-900 shadow-xl p-0">
+                    <div className="p-2 sticky top-0 bg-white border-b border-black/5" onKeyDown={(e) => e.stopPropagation()}>
+                      <Input
+                        value={langQuery}
+                        onChange={(e) => setLangQuery(e.target.value)}
+                        placeholder="Search language..."
+                        className="h-8 bg-gray-50 border border-gray-200 text-gray-900 placeholder:text-gray-500 focus-visible:ring-emerald-500"
+                      />
+                    </div>
+                    <div className="max-h-64 overflow-auto">
+                      {filteredLanguages.length === 0 ? (
+                        <DropdownMenuItem disabled className="text-gray-400">No matches</DropdownMenuItem>
+                      ) : (
+                        filteredLanguages.map((opt) => (
+                          <DropdownMenuItem
+                            key={opt.code}
+                            onClick={() => {
+                              setSelectedLanguageCode(opt.code);
+                              setLangQuery('');
+                              setMobileMenuOpen(false);
+                            }}
+                            className="gap-2 hover:bg-gray-100 focus:bg-gray-100"
+                          >
+                            <span className="font-medium">{opt.language}</span>
+                          </DropdownMenuItem>
+                        ))
+                      )}
+                    </div>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
+          )}
         </div>
       </header>
 
@@ -164,7 +252,7 @@ const Index = () => {
               Clario automates the entire reimbursement process, recovering lost revenue from Amazon FBA errors in minutes—not months.
             </p>
             <div className="pt-2">
-              <div className="max-w-md mx-auto">
+              <div className="max-w-md mx-auto flex justify-center">
                 <AmazonConnect />
               </div>
               <p className="mt-3 text-xs text-gray-500 max-w-2xl mx-auto">
