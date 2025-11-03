@@ -185,7 +185,7 @@ export function Sidebar({
         <div className={cn("h-full flex", isCollapsed ? "px-2" : "px-3")}>
           <div className="w-full min-h-full grid place-content-center">
             <nav className="space-y-3 w-full">
-              <div className="space-y-1">
+              <div className="space-y-1 pt-6">
                 {primaryItems.map((item, idx) => (
                   <React.Fragment key={`p-${idx}`}>
                     <NavItemComponent item={{...item, href: item.href}} />
