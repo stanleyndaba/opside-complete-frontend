@@ -60,7 +60,7 @@ const Index = () => {
       <header className="sticky top-0 z-40 border-transparent bg-transparent">
         <div className="container mx-auto px-6 py-5 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src="/logo-abstract.svg" alt="Logo" className="h-8 w-8" />
+            <img src="/donelogo.png" alt="Logo" className="h-8 w-8" />
             {/* Brand dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

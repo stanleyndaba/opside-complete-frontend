@@ -43,7 +43,7 @@ const ApiLanding = () => {
         <div className="container mx-auto px-6 py-5 flex items-center justify-between text-gray-100">
           <div className="flex items-center gap-2">
             <Link to="/" className="flex items-center gap-2 hover:opacity-90">
-              <img src="/logo-abstract.svg" alt="Logo" className="h-8 w-8" />
+              <img src="/donelogo.png" alt="Logo" className="h-8 w-8" />
               <span className="font-medium">Clario</span>
             </Link>
           </div>

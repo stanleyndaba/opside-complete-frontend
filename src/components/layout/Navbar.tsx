@@ -51,9 +51,11 @@ export function Navbar({
     className
   )}>
       <div className="container flex items-center h-16 px-4 font-body">
-        {/* Left spacer */}
+        {/* Logo */}
         <div className="flex items-center gap-3">
-          <div className="hidden md:flex items-center gap-4 ml-2" />
+          <Link to="/" className="flex items-center gap-2 hover:opacity-90">
+            <img src="/donelogo.png" alt="Logo" className="h-8 w-8 rounded-full object-cover" />
+          </Link>
         </div>
         {/* Center - Search */}
         <div className="flex-1 max-w-xl mx-4 hidden md:block">
