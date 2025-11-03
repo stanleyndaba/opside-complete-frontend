@@ -39,6 +39,7 @@ const OAuthSuccess = lazy(() => import("./pages/OAuthSuccess"));
 const StripeCallback = lazy(() => import("./pages/StripeCallback"));
 const About = lazy(() => import("./pages/About"));
 const Careers = lazy(() => import("./pages/Careers"));
+const Privacy = lazy(() => import("./pages/Privacy"));
 const UpcomingPayments = lazy(() => import("./pages/UpcomingPayments"));
 const RevenueModel = lazy(() => import("./pages/RevenueModel"));
 const Admin = lazy(() => import("./pages/Admin"));
@@ -118,6 +119,7 @@ const App = () => (
             <Route path="/whats-new" element={<WhatsNew />} />
             <Route path="/about" element={<About />} />
             <Route path="/careers" element={<Careers />} />
+            <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/evidence-onboarding" element={<EvidenceOnboarding />} />
             <Route path="/evidence-search" element={<EvidenceSearch />} />
