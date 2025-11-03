@@ -245,7 +245,7 @@ const Index = () => {
         <section className="container mx-auto px-6 py-24 md:py-32">
           <div className="max-w-4xl mx-auto text-center space-y-6">
             {/* Trust chip removed per request */}
-            <h1 className="font-heading text-4xl md:text-6xl font-bold tracking-tight text-gray-900">
+            <h1 className="font-heading text-4xl md:text-6xl font-black tracking-tight text-gray-900">
               The <span className="text-emerald-600">end</span> of FBA reimbursement work.
             </h1>
             <p className="font-body text-base md:text-xl text-gray-600 font-normal max-w-3xl mx-auto">
