@@ -111,13 +111,13 @@ export function Sidebar({
                 to={item.href}
                 onMouseEnter={handlePrefetch}
                 className={cn(
-                  "relative flex items-center justify-center w-12 h-12 rounded-md transition-colors",
+                  "relative flex items-center justify-center w-10 h-10 rounded-md transition-colors",
                   isActive
                     ? "bg-white/10 text-gray-100"
                     : "text-gray-400 hover:bg-white/10 hover:text-gray-100"
                 )}
               >
-                <item.icon className="h-5 w-5" strokeWidth={1.5} />
+                <item.icon className="h-4 w-4" strokeWidth={1.5} />
               </Link>
             </TooltipTrigger>
             <TooltipContent side="right" className="bg-black text-white">
@@ -132,17 +132,17 @@ export function Sidebar({
         to={item.href}
         onMouseEnter={handlePrefetch}
         className={cn(
-          "relative flex items-center gap-3 px-3 py-2 rounded-md transition-colors",
+          "relative flex items-center gap-2 px-2.5 py-1.5 rounded-md transition-colors",
           isActive
             ? "bg-white/5 text-gray-100"
             : "text-gray-400 hover:bg-white/5 hover:text-gray-100"
         )}
       >
         {isActive && (
-          <span className="absolute left-0 h-6 w-[3px] rounded-r bg-emerald-400" />
+          <span className="absolute left-0 h-5 w-[3px] rounded-r bg-emerald-400" />
         )}
         <item.icon strokeWidth={1.5} className="h-5 w-5 shrink-0" />
-        <span className="text-sm font-medium">{item.title}</span>
+        <span className="text-[13px] font-medium">{item.title}</span>
       </Link>
     );
 	};
@@ -183,8 +183,8 @@ export function Sidebar({
 
       <ScrollArea className="flex-1">
         <div className={cn("h-full flex", isCollapsed ? "px-2" : "px-3")}> 
-          <div className="w-full h-full flex items-center">
-            <nav className="space-y-4 w-full">
+          <div className="w-full h-full flex items-center justify-center">
+            <nav className="space-y-3 w-full">
               <div className="space-y-1">
                 {primaryItems.map((item, idx) => (
                   <React.Fragment key={`p-${idx}`}>
