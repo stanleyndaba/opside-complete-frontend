@@ -144,7 +144,7 @@
             const [loading, setLoading] = useState({});
             const [oauthStatus, setOauthStatus] = useState('');
 
-            const API_BASE_URL = 'https://clario-complete-backend-y5cd.onrender.com';
+            const API_BASE_URL = 'https://opside-node-api.onrender.com';
 
             useEffect(() => {
                 checkBackendStatus();
@@ -206,17 +206,18 @@
                 setOauthStatus('Starting OAuth...');
                 
                 try {
-                    const response = await fetch(`${API_BASE_URL}/api/v1/integrations/connect-amazon`, {
+                    const response = await fetch(`${API_BASE_URL}/api/v1/integrations/amazon/auth/start`, {
                         credentials: 'include',
                         headers: { 'Content-Type': 'application/json' },
                     });
                     
                     const data = await response.json();
+                    const authUrl = data.auth_url || data.authUrl;
                     
-                    if (response.ok && data.auth_url) {
+                    if (response.ok && authUrl) {
                         setOauthStatus(`✅ OAuth URL generated! Redirecting to Amazon...`);
                         setTimeout(() => {
-                            window.location.href = data.auth_url;
+                            window.location.href = authUrl;
                         }, 2000);
                     } else {
                         setOauthStatus(`❌ OAuth failed: ${JSON.stringify(data)}`);
@@ -229,8 +230,8 @@
             const tests = [
                 {
                     name: 'Connect Amazon',
-                    description: 'GET /api/v1/integrations/connect-amazon',
-                    url: `${API_BASE_URL}/api/v1/integrations/connect-amazon`
+                    description: 'GET /api/v1/integrations/amazon/auth/start',
+                    url: `${API_BASE_URL}/api/v1/integrations/amazon/auth/start`
                 },
                 {
                     name: 'Sandbox Callback',

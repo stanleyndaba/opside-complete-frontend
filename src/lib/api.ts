@@ -21,7 +21,7 @@ function buildApiUrl(path: string): string {
   }
 
   // Production backend URL - use the orchestrator which routes to microservices
-  const productionBackend = 'https://clario-complete-backend-mvak.onrender.com';
+  const productionBackend = 'https://opside-node-api.onrender.com';
   
   // In development, you can override with localhost
   const isDev = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
@@ -112,7 +112,28 @@ export const api = {
   postLoginStripe: () => requestJson<any>('/api/auth/post-login/stripe', { method: 'POST' }),
 
   // Amazon SP-API endpoints (Step 1 Auth Process)
-  connectAmazon: () => requestJson<{ auth_url: string; state: string }>('/api/v1/integrations/connect-amazon'),
+  connectAmazon: async () => {
+    const response = await requestJson<{
+      auth_url?: string;
+      authUrl?: string;
+      state?: string;
+      success?: boolean;
+      message?: string;
+    }>('/api/v1/integrations/amazon/auth/start');
+
+    if (response.ok && response.data) {
+      const normalizedAuthUrl = response.data.auth_url ?? response.data.authUrl;
+
+      if (normalizedAuthUrl) {
+        response.data = {
+          ...response.data,
+          auth_url: normalizedAuthUrl,
+        };
+      }
+    }
+
+    return response;
+  },
   completeAmazonSandboxAuth: (state: string) => requestJson<{ ok: boolean; connected: boolean }>('/api/v1/integrations/amazon/sandbox/callback', { method: 'POST', body: JSON.stringify({ state }) }),
   getAmazonRecoveries: () => requestJson<{ totalAmount: number; currency: string; claimCount: number }>('/api/v1/integrations/amazon/recoveries'),
 
