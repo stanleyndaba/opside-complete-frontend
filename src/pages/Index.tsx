@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Link } from 'react-router-dom';
-import { ChevronDown, Link2, HelpCircle, ScrollText, BookOpen, Building2, Handshake, Check } from 'lucide-react';
+import { ChevronDown, Link2, ScrollText, Check } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AmazonConnect } from '@/components/AmazonConnect';
 import { useToast } from '@/components/ui/use-toast';
@@ -87,36 +87,12 @@ const Index = () => {
                     <ChevronDown className="h-4 w-4 opacity-70" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="min-w-[220px] bg-white border border-black/10 text-gray-900 shadow-xl">
+                <DropdownMenuContent align="start" className="min-w-[220px] bg-white/80 supports-[backdrop-filter]:bg-white/70 backdrop-blur-xl border border-white/30 text-gray-900 shadow-2xl">
                   <DropdownMenuItem asChild>
                     <Link to="/integrations-hub" className="flex items-center gap-2 hover:bg-gray-100 focus:bg-gray-100">
                       <Link2 className="h-4 w-4 text-emerald-600" />
                       <span>Integrations</span>
                     </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/api-access" className="flex items-center gap-2 hover:bg-gray-100 focus:bg-gray-100">
-                      <BookOpen className="h-4 w-4 text-emerald-600" />
-                      <span>Documentation</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/help" className="flex items-center gap-2 hover:bg-gray-100 focus:bg-gray-100">
-                      <HelpCircle className="h-4 w-4 text-emerald-600" />
-                      <span>Help Center</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/about" className="flex items-center gap-2 hover:bg-gray-100 focus:bg-gray-100">
-                      <Building2 className="h-4 w-4 text-emerald-600" />
-                      <span>Enterprise</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <a href="mailto:hello@getclario.com?subject=Partnerships" className="flex items-center gap-2 hover:bg-gray-100 focus:bg-gray-100">
-                      <Handshake className="h-4 w-4 text-emerald-600" />
-                      <span>Partnerships</span>
-                    </a>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link to="/terms" className="flex items-center gap-2 hover:bg-gray-100 focus:bg-gray-100">
@@ -147,7 +123,7 @@ const Index = () => {
                     <ChevronDown className="h-4 w-4 opacity-70" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="min-w-[240px] bg-white border border-black/10 text-gray-900 shadow-xl p-0">
+              <DropdownMenuContent align="end" className="min-w-[240px] bg-white/80 supports-[backdrop-filter]:bg-white/70 backdrop-blur-xl border border-white/30 text-gray-900 shadow-2xl p-0">
                   <div className="p-2 sticky top-0 bg-white border-b border-black/5" onKeyDown={(e) => e.stopPropagation()}>
                     <Input
                       value={langQuery}
@@ -204,7 +180,7 @@ const Index = () => {
                       Language: {selectedLanguage.language}
                     </button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" className="min-w-[220px] bg-white border border-black/10 text-gray-900 shadow-xl p-0">
+                  <DropdownMenuContent align="start" className="min-w-[220px] bg-white/80 supports-[backdrop-filter]:bg-white/70 backdrop-blur-xl border border-white/30 text-gray-900 shadow-2xl p-0">
                     <div className="p-2 sticky top-0 bg-white border-b border-black/5" onKeyDown={(e) => e.stopPropagation()}>
                       <Input
                         value={langQuery}
