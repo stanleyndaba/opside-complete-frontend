@@ -291,17 +291,6 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Bottom-left email capture above legal footer */}
-      <div className="container mx-auto px-6 pb-2">
-        <div className="max-w-md">
-          <h4 className="text-sm font-semibold text-gray-800 mb-2">Get Early Updates</h4>
-          <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); toast({ title: 'Thanks!', description: 'You are on the Finance Pilot list.' }); }}>
-            <input type="email" required placeholder="Enter your email for Finance Pilot updates" className="flex-1 rounded-md bg-white border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
-            <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700 text-white">Sign up</Button>
-          </form>
-        </div>
-      </div>
-
       <footer id="core-footer">
         <div className="container mx-auto px-6 py-6 flex items-center justify-center gap-3 text-xs text-gray-500 text-center">
           <span>
