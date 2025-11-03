@@ -60,12 +60,12 @@ const Index = () => {
       <header className="sticky top-0 z-40 border-transparent bg-transparent">
         <div className="container mx-auto px-6 py-5">
           <div className="flex items-center justify-between gap-6 px-6 py-4 rounded-[25px] border border-white/15 bg-white/10 backdrop-blur-xl backdrop-saturate-200 shadow-[0_12px_40px_rgba(11,18,32,0.35)] transition-colors">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <img src="/logo-abstract.svg" alt="Logo" className="h-8 w-8" />
               {/* Brand dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="inline-flex items-center gap-1.5 text-gray-100 hover:text-white bg-white/5 hover:bg-white/15 px-3 py-1.5 rounded-[18px] transition-colors">
+                  <button className="inline-flex items-center gap-1.5 text-gray-100 hover:text-white hover:bg-white/10 px-2 py-1 rounded-md">
                     <span className="font-medium">Clario</span>
                     <ChevronDown className="h-4 w-4 opacity-80" />
                   </button>
@@ -112,12 +112,12 @@ const Index = () => {
             </div>
             <nav className="flex items-center gap-4 text-sm">
               {/* API link */}
-              <Link to="/developer-api" className="text-gray-200/90 hover:text-white hover:bg-white/20 px-3 py-1.5 rounded-[18px] transition-colors">API</Link>
+              <Link to="/developer-api" className="text-gray-200 hover:text-white hover:bg-white/10 px-3 py-1.5 rounded-md">API</Link>
               {/* Language selector */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
-                    className="inline-flex items-center gap-2 h-9 px-3 rounded-[18px] text-sm text-gray-200/90 bg-white/5 hover:bg-white/15 transition-colors"
+                    className="inline-flex items-center gap-2 h-9 px-3 rounded-md text-sm text-gray-200 hover:bg-white/10 transition-colors"
                     aria-label="Language preference"
                   >
                     <span>{selectedLanguage.language}</span>
@@ -146,7 +146,7 @@ const Index = () => {
                   </div>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <Button variant="ghost" className="text-gray-200/90 bg-white/5 hover:bg-white/15 hover:text-white rounded-[18px]" onClick={() => navigate('/integrations-hub')}>
+              <Button variant="ghost" className="text-gray-200 hover:bg-white/10 hover:text-white" onClick={() => navigate('/integrations-hub')}>
                 Dashboard
               </Button>
             </nav>
