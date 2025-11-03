@@ -1,17 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Link } from 'react-router-dom';
-import { Link as LinkIcon, Mail, ChevronDown, Link2, HelpCircle, ScrollText, BookOpen, Building2, Handshake, Check, ShieldCheck } from 'lucide-react';
+import { ChevronDown, Link2, HelpCircle, ScrollText, BookOpen, Building2, Handshake, Check } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AmazonConnect } from '@/components/AmazonConnect';
-import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
 
 const Index = () => {
-  const navigate = useNavigate();
-  const [connecting, setConnecting] = useState(false);
   const { toast } = useToast();
 
   type LanguageOption = {
@@ -166,18 +162,7 @@ const Index = () => {
             </p>
             <div className="pt-2">
               <div className="max-w-md mx-auto">
-                <AmazonConnect 
-                  onConnectionStart={() => setConnecting(true)}
-                  onConnectionComplete={(data) => {
-                    setConnecting(false);
-                    if (data?.recovery_amount) {
-                      navigate(`/integrations-hub?amazon_connected=true&recovery_amount=${data.recovery_amount}`);
-                    } else {
-                      navigate('/integrations-hub?amazon_connected=true');
-                    }
-                  }}
-                  className="bg-white/5 border-white/10"
-                />
+                <AmazonConnect />
               </div>
               <p className="mt-3 text-xs text-gray-400 max-w-2xl mx-auto">
                 By connecting your account, you agree to Clario's
