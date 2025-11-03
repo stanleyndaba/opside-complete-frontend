@@ -189,7 +189,7 @@ export default function OAuthSuccess() {
             <DialogTitle className="text-lg text-gray-100">
               <div className="flex flex-col items-start gap-1">
                 <span className="inline-flex items-center gap-2">
-                  <img src="/logo-abstract.svg" alt="Clario" className="h-5 w-5" />
+                  <img src="/donelogo.png" alt="Clario" className="h-5 w-5" />
                   <span className="font-medium text-white">Clario</span>
                 </span>
                 <span>Connect Evidence Sources</span>

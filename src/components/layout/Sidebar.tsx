@@ -165,7 +165,7 @@ export function Sidebar({
         {!isCollapsed ? (
           <>
             <div className="select-none flex items-center gap-2">
-              <img src="/logo-abstract.svg" alt="Clario" className="h-6 w-6" />
+              <img src="/donelogo.png" alt="Clario" className="h-6 w-6" />
               <span className="font-[500] text-white">Clario</span>
             </div>
             <div className="text-[11px] text-emerald-400/90 flex items-center gap-1">
@@ -175,7 +175,7 @@ export function Sidebar({
           </>
         ) : (
           <div className="flex items-center gap-2">
-            <img src="/logo-abstract.svg" alt="Clario" className="h-6 w-6" />
+            <img src="/donelogo.png" alt="Clario" className="h-6 w-6" />
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" title="Connected" />
           </div>
         )}

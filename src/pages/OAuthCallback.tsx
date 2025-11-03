@@ -114,7 +114,7 @@ export default function OAuthCallback() {
                 <div className="flex items-center gap-2 text-emerald-400">
                   <span className="relative inline-flex items-center">
                     <span className="absolute -inset-3 rounded-full bg-emerald-400/20 blur-2xl" />
-                    <img src="/logo-abstract.svg" alt="Clario cube" className="relative h-5 w-5 opacity-90" />
+                    <img src="/donelogo.png" alt="Clario cube" className="relative h-5 w-5 opacity-90" />
                   </span>
                   <span className="font-medium">{statusMessage}</span>
                   {statusMessage.includes('Analyzing') && (

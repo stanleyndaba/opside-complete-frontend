@@ -41,7 +41,7 @@ export function PageLayout({
             {(hideNavbar && hideSidebar) && (
               <div className="fixed top-3 left-4 z-50 bg-transparent pointer-events-none">
                 <div className="inline-flex items-center gap-2 select-none">
-                  <img src="/logo-abstract.svg" alt="Clario" className="h-6 w-6" />
+                  <img src="/donelogo.png" alt="Clario" className="h-6 w-6" />
                   <span className="text-gray-100 font-medium">Clario</span>
                 </div>
               </div>
