@@ -34,18 +34,42 @@ const ApiLanding = () => {
   const selectedLanguage = LANGUAGE_OPTIONS.find(o => o.code === selectedLanguageCode) || LANGUAGE_OPTIONS[0];
 
   const [connecting, setConnecting] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handleLogin = async () => {
+    if (connecting) return;
+    setConnecting(true);
+    try {
+      const res = await api.connectAmazon();
+      const url = res.data?.auth_url || res.data?.redirect_url;
+      if (res.ok && url) window.location.assign(url as string);
+      else window.location.assign('/auth/amazon-sandbox');
+    } catch {
+      window.location.assign('/auth/amazon-sandbox');
+    }
+  };
 
   return (
     <div className="relative min-h-screen bg-white text-gray-900">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_-10%,rgba(16,185,129,0.08),transparent_40%),radial-gradient(circle_at_80%_-10%,rgba(59,130,246,0.06),transparent_45%)]" />
       <header className="sticky top-0 z-40 border-transparent bg-transparent">
         <div className="container mx-auto px-6 py-5">
-          <div className="flex items-center justify-between gap-6 px-6 py-4 rounded-[25px] border border-white/40 bg-white/30 supports-[backdrop-filter]:bg-white/30 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_25px_60px_rgba(15,23,42,0.1)]">
+          <div className="flex items-center justify-between gap-6 px-6 py-4 rounded-[25px] border border-white/40 bg-white/30 supports-[backdrop-filter]:bg-white/30 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_25px_60px_rgba(15,23,42,0.1)] transition-colors">
             <Link to="/" className="flex items-center gap-3 text-gray-800 hover:text-gray-950 transition-colors">
               <img src="/donelogo.png" alt="Clario" className="h-9 w-9 rounded-full object-cover border border-black/10" />
               <span className="font-semibold">Clario</span>
             </Link>
-            <nav className="flex items-center gap-3 text-sm text-gray-700">
+            <nav className="hidden md:flex items-center gap-3 text-sm text-gray-700">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
@@ -70,21 +94,66 @@ const ApiLanding = () => {
                 className="text-gray-800 hover:bg-gray-100 hover:text-gray-900"
                 type="button"
                 disabled={connecting}
-                onClick={async () => {
-                  if (connecting) return; setConnecting(true);
-                  try {
-                    const res = await api.connectAmazon();
-                    const url = res.data?.auth_url || res.data?.redirect_url;
-                    if (res.ok && url) window.location.assign(url as string); else window.location.assign('/auth/amazon-sandbox');
-                  } catch {
-                    window.location.assign('/auth/amazon-sandbox');
-                  }
-                }}
+                onClick={handleLogin}
               >
                 Login
               </Button>
             </nav>
+            <button
+              type="button"
+              className="md:hidden flex flex-col items-end gap-1.5 rounded-[16px] border border-white/40 bg-white/50 px-3 py-2 transition-colors hover:bg-white/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+              aria-label="Toggle menu"
+              aria-expanded={mobileMenuOpen}
+              onClick={() => setMobileMenuOpen(prev => !prev)}
+            >
+              <span className="block h-[1px] w-6 bg-gray-900 rounded-full" />
+              <span className="block h-[1px] w-5 bg-gray-900 rounded-full" />
+              <span className="block h-[1px] w-4 bg-gray-900 rounded-full" />
+            </button>
           </div>
+          {mobileMenuOpen && (
+            <div className="mt-4 md:hidden">
+              <div className="flex flex-col gap-3 rounded-[20px] border border-white/40 bg-white/80 supports-[backdrop-filter]:bg-white/70 backdrop-blur-2xl p-4 shadow-2xl text-sm text-gray-700">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      className="w-full rounded-lg px-3 py-2 text-left font-medium text-gray-800 hover:bg-white/70 transition-colors"
+                      aria-label="Language preference"
+                    >
+                      Language: {selectedLanguage.language}
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="min-w-[220px] bg-white border border-black/10 text-gray-900 shadow-xl">
+                    {LANGUAGE_OPTIONS.map(opt => (
+                      <DropdownMenuItem
+                        key={opt.code}
+                        onClick={() => {
+                          setSelectedLanguageCode(opt.code);
+                          setMobileMenuOpen(false);
+                        }}
+                        className="gap-2 hover:bg-gray-100 focus:bg-gray-100"
+                      >
+                        <span className="font-medium">{opt.language}</span>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                <Button
+                  variant="ghost"
+                  className="w-full justify-center text-gray-800 hover:bg-gray-100 hover:text-gray-900"
+                  type="button"
+                  disabled={connecting}
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    handleLogin();
+                  }}
+                >
+                  Login
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </header>
 
