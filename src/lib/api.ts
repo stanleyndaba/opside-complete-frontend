@@ -113,10 +113,7 @@ export const api = {
 
   // Amazon SP-API endpoints (Step 1 Auth Process)
   connectAmazon: () => requestJson<{ auth_url: string; state: string }>('/api/v1/integrations/connect-amazon'),
-  completeAmazonSandboxAuth: (state: string) => requestJson<{ ok: boolean }>('/api/v1/integrations/amazon/sandbox/callback', { 
-    method: 'POST', 
-    body: JSON.stringify({ state }) 
-  }),
+  completeAmazonSandboxAuth: (state: string) => requestJson<{ ok: boolean; connected: boolean }>('/api/v1/integrations/amazon/sandbox/callback', { method: 'POST', body: JSON.stringify({ state }) }),
   getAmazonRecoveries: () => requestJson<{ totalAmount: number; currency: string; claimCount: number }>('/api/v1/integrations/amazon/recoveries'),
 
   // Auth-adjacent helpers for flows
@@ -149,7 +146,13 @@ export const api = {
   getDocumentDownloadUrl: (id: string) => buildApiUrl(`/api/documents/${encodeURIComponent(id)}/download`),
 
   // Integrations & Evidence ingestion controls
-  getIntegrationsStatus: () => requestJson<any>('/api/v1/integrations/status'),
+  getIntegrationsStatus: () => requestJson<{
+    amazon_connected: boolean;
+    docs_connected: boolean;
+    lastSync?: string;
+    lastIngest?: string;
+    providerIngest?: Record<string, { connected: boolean; lastIngest?: string; error?: string; scopes?: string[] }>;
+  }>('/api/v1/integrations/status'),
   setEvidenceAutoCollect: (enabled: boolean) => requestJson<any>('/api/evidence/auto-collect', { method: 'POST', body: JSON.stringify({ enabled }) }),
   setEvidenceSchedule: (schedule: string) => requestJson<any>('/api/evidence/schedule', { method: 'POST', body: JSON.stringify({ schedule }) }),
   setEvidenceFilters: (filters: { includeSenders?: string[]; excludeSenders?: string[]; fileTypes?: string[]; folders?: string[] }) => requestJson<any>('/api/evidence/filters', { method: 'POST', body: JSON.stringify(filters) }),

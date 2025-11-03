@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FE-BE Integration Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .pending { background-color: #fff3cd; border-color: #ffeaa7; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+        .results { margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 3px; }
+        pre { white-space: pre-wrap; word-wrap: break-word; }
+    </style>
+</head>
+<body>
+    <h1>Frontend-Backend Integration Test</h1>
+    <p>This page tests key API endpoints to verify FE-BE connectivity.</p>
+
+    <div class="test-section pending" id="api-config-test">
+        <h3>1. API Configuration Test</h3>
+        <button onclick="testApiConfig()">Test API Config</button>
+        <div class="results" id="api-config-results"></div>
+    </div>
+
+    <div class="test-section pending" id="backend-health-test">
+        <h3>2. Backend Health Check</h3>
+        <button onclick="testBackendHealth()">Test Backend Health</button>
+        <div class="results" id="backend-health-results"></div>
+    </div>
+
+    <div class="test-section pending" id="auth-test">
+        <h3>3. Auth Endpoint Test</h3>
+        <button onclick="testAuthEndpoint()">Test Auth</button>
+        <div class="results" id="auth-results"></div>
+    </div>
+
+    <div class="test-section pending" id="integrations-test">
+        <h3>4. Integrations Status Test</h3>
+        <button onclick="testIntegrationsStatus()">Test Integrations</button>
+        <div class="results" id="integrations-results"></div>
+    </div>
+
+    <div class="test-section pending" id="metrics-test">
+        <h3>5. Metrics Dashboard Test</h3>
+        <button onclick="testMetrics()">Test Metrics</button>
+        <div class="results" id="metrics-results"></div>
+    </div>
+
+    <button onclick="runAllTests()" style="background: #007bff; color: white; font-size: 16px; padding: 15px 30px;">Run All Tests</button>
+
+    <script>
+        // API Configuration from your frontend
+        function buildApiUrl(path) {
+            const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+            
+            if (/^https?:\/\//i.test(path)) return path;
+            
+            // Check for environment variable (simulated)
+            const envBase = 'http://localhost:3001'; // Your dev backend
+            if (envBase) {
+                return envBase.replace(/\/$/, '') + normalizedPath;
+            }
+            
+            // Production fallback
+            return 'https://clario-complete-backend-mvak.onrender.com' + normalizedPath;
+        }
+
+        async function makeApiRequest(path, options = {}) {
+            try {
+                const url = buildApiUrl(path);
+                console.log(`Testing: ${url}`);
+                
+                const response = await fetch(url, {
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers,
+                    },
+                    ...options,
+                });
+
+                const text = await response.text();
+                let data;
+                try {
+                    data = text ? JSON.parse(text) : null;
+                } catch {
+                    data = text;
+                }
+
+                return {
+                    ok: response.ok,
+                    status: response.status,
+                    data,
+                    url
+                };
+            } catch (error) {
+                return {
+                    ok: false,
+                    status: 0,
+                    error: error.message,
+                    url: buildApiUrl(path)
+                };
+            }
+        }
+
+        function updateTestResult(testId, success, message, details = null) {
+            const section = document.getElementById(testId);
+            const results = document.getElementById(testId + '-results');
+            
+            section.className = `test-section ${success ? 'success' : 'error'}`;
+            results.innerHTML = `
+                <strong>${success ? '✅ PASS' : '❌ FAIL'}</strong>: ${message}
+                ${details ? `<pre>${JSON.stringify(details, null, 2)}</pre>` : ''}
+            `;
+        }
+
+        async function testApiConfig() {
+            const testUrl = buildApiUrl('/api/test');
+            const prodUrl = buildApiUrl('/api/health');
+            
+            updateTestResult('api-config-test', true, 'API URL Configuration', {
+                testEndpoint: testUrl,
+                healthEndpoint: prodUrl,
+                baseUrlDetected: testUrl.replace('/api/test', '')
+            });
+        }
+
+        async function testBackendHealth() {
+            const result = await makeApiRequest('/api/health');
+            
+            if (result.ok) {
+                updateTestResult('backend-health-test', true, 'Backend is responding', {
+                    status: result.status,
+                    response: result.data,
+                    url: result.url
+                });
+            } else {
+                updateTestResult('backend-health-test', false, 'Backend health check failed', {
+                    status: result.status,
+                    error: result.error || 'No response',
+                    url: result.url
+                });
+            }
+        }
+
+        async function testAuthEndpoint() {
+            const result = await makeApiRequest('/api/auth/me');
+            
+            if (result.status === 401 || result.status === 403) {
+                updateTestResult('auth-test', true, 'Auth endpoint responding (not authenticated)', {
+                    status: result.status,
+                    message: 'Expected 401/403 for unauthenticated request',
+                    url: result.url
+                });
+            } else if (result.ok) {
+                updateTestResult('auth-test', true, 'Auth endpoint responding (authenticated)', {
+                    status: result.status,
+                    user: result.data,
+                    url: result.url
+                });
+            } else {
+                updateTestResult('auth-test', false, 'Auth endpoint error', {
+                    status: result.status,
+                    error: result.error,
+                    url: result.url
+                });
+            }
+        }
+
+        async function testIntegrationsStatus() {
+            const result = await makeApiRequest('/api/v1/integrations/status');
+            
+            if (result.ok || result.status === 401) {
+                updateTestResult('integrations-test', true, 'Integrations endpoint accessible', {
+                    status: result.status,
+                    response: result.data,
+                    url: result.url
+                });
+            } else {
+                updateTestResult('integrations-test', false, 'Integrations endpoint failed', {
+                    status: result.status,
+                    error: result.error,
+                    url: result.url
+                });
+            }
+        }
+
+        async function testMetrics() {
+            const result = await makeApiRequest('/api/metrics/dashboard');
+            
+            if (result.ok || result.status === 401) {
+                updateTestResult('metrics-test', true, 'Metrics endpoint accessible', {
+                    status: result.status,
+                    response: result.data,
+                    url: result.url
+                });
+            } else {
+                updateTestResult('metrics-test', false, 'Metrics endpoint failed', {
+                    status: result.status,
+                    error: result.error,
+                    url: result.url
+                });
+            }
+        }
+
+        async function runAllTests() {
+            console.log('Running all integration tests...');
+            
+            await testApiConfig();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testBackendHealth();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testAuthEndpoint();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testIntegrationsStatus();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testMetrics();
+            
+            console.log('All tests completed!');
+        }
+    </script>
+</body>
+</html>

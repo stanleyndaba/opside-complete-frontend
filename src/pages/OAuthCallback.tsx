@@ -22,10 +22,13 @@ export default function OAuthCallback() {
   const { toast } = useToast();
 
   useEffect(() => {
-    const p = query.get('provider');
+    const p = query.get('provider') || 'amazon';
     const error = query.get('error') || query.get('error_description');
-    const success = query.get('success') || query.get('code');
+    const success = query.get('success') || query.get('code') || query.get('state');
+    const state = query.get('state');
+    
     if (p) setProvider(p);
+    
     if (error) {
       setErrorMessage(decodeURIComponent(error));
       setStatusMessage('Connection failed');
@@ -33,12 +36,26 @@ export default function OAuthCallback() {
       toast({ title: 'Connection failed', description: decodeURIComponent(error) });
       return;
     }
-    if (success) {
-      setStatusMessage('Connection successful. Updating status...');
-      api.trackEvent('oauth_callback_success', { provider: p });
-      toast({ title: 'Connected', description: 'Updating status and redirecting…' });
+    
+    if (success || state) {
+      setStatusMessage('Connection successful. Analyzing your account...');
+      api.trackEvent('oauth_callback_success', { provider: p, state });
+      
+      // Complete the Amazon auth if we have a state parameter
+      if (p === 'amazon' && state) {
+        api.completeAmazonSandboxAuth(state).then(response => {
+          if (response.ok) {
+            setStatusMessage('Connected! Scanning for recovery opportunities...');
+            toast({ title: 'Amazon Connected', description: 'Analyzing your FBA data for recoveries...' });
+          }
+        }).catch(err => {
+          console.error('Failed to complete Amazon auth:', err);
+        });
+      } else {
+        toast({ title: 'Connected', description: 'Updating status and redirecting…' });
+      }
     }
-  }, [query]);
+  }, [query, toast]);
 
   useEffect(() => {
     let cancelled = false;
@@ -48,17 +65,33 @@ export default function OAuthCallback() {
         const res = await api.getIntegrationsStatus();
         if (!res.ok) break;
         if (res.data?.amazon_connected || res.data?.docs_connected) {
-          if (!cancelled) setStatusMessage('Connected. Redirecting...');
+          if (!cancelled) {
+            setStatusMessage('Connected. Fetching recovery data...');
+            
+            // If Amazon is connected, get recovery data for the reveal
+            if (res.data?.amazon_connected && provider === 'amazon') {
+              try {
+                const recoveryRes = await api.getAmazonRecoveries();
+                if (recoveryRes.ok && recoveryRes.data?.totalAmount) {
+                  // Redirect with recovery data for the "shock and awe" reveal
+                  navigate(`/integrations-hub?amazon_connected=true&recovery_amount=${recoveryRes.data.totalAmount}&currency=${recoveryRes.data.currency || 'USD'}&claim_count=${recoveryRes.data.claimCount || 0}`);
+                  return;
+                }
+              } catch (err) {
+                console.error('Failed to fetch recovery data:', err);
+              }
+            }
+          }
           break;
         }
         await new Promise(r => setTimeout(r, 600));
       }
       if (!cancelled) {
-        setTimeout(() => navigate('/integrations-hub'), 600);
+        setTimeout(() => navigate('/integrations-hub?amazon_connected=true'), 600);
       }
     })();
     return () => { cancelled = true };
-  }, [navigate]);
+  }, [navigate, provider]);
 
   return (
     <PageLayout title="Connecting Account">
@@ -84,6 +117,11 @@ export default function OAuthCallback() {
                     <img src="/logo-abstract.svg" alt="Clario cube" className="relative h-5 w-5 opacity-90" />
                   </span>
                   <span className="font-medium">{statusMessage}</span>
+                  {statusMessage.includes('Analyzing') && (
+                    <div className="mt-2 text-xs text-muted-foreground">
+                      Scanning FBA transactions, fees, and inventory data...
+                    </div>
+                  )}
                 </div>
                 <div className="text-sm text-muted-foreground">
                   You can safely close this page. We’ll take you back to Integrations.

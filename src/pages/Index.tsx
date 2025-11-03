@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Link } from 'react-router-dom';
 import { Link as LinkIcon, Mail, ChevronDown, Link2, HelpCircle, ScrollText, BookOpen, Building2, Handshake, Check, ShieldCheck } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { AmazonConnect } from '@/components/AmazonConnect';
 import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -144,30 +145,8 @@ const Index = () => {
                 </div>
               </DropdownMenuContent>
             </DropdownMenu>
-            <Button variant="ghost" className="text-gray-200 hover:bg-white/10 hover:text-white" type="button" disabled={connecting} onClick={async () => { 
-              if (connecting) return; setConnecting(true);
-              toast({ title: 'Connecting…', description: 'Starting secure OAuth.' });
-              let navigated = false;
-              const fallback = window.setTimeout(() => {
-                if (!navigated) {
-                  navigated = true;
-                  toast({ title: 'Using Sandbox', description: 'Backend is slow; launching demo flow.' });
-                  window.location.assign('/auth/amazon-sandbox');
-                }
-              }, 1800);
-              try {
-                const res = await api.connectAmazon(); 
-                const url = res.data?.auth_url;
-                if ((res as any)?.ok && url && !navigated) {
-                  navigated = true;
-                  window.clearTimeout(fallback);
-                  window.location.assign(url as string);
-                }
-              } catch {
-                // let fallback handle
-              }
-            }}>
-              Login
+            <Button variant="ghost" className="text-gray-200 hover:bg-white/10 hover:text-white" onClick={() => navigate('/integrations-hub')}>
+              Dashboard
             </Button>
           </nav>
         </div>
@@ -184,33 +163,19 @@ const Index = () => {
               Clario automates the entire reimbursement process, recovering lost revenue from Amazon FBA errors in minutes—not months.
             </p>
             <div className="pt-2">
-              <div className="flex items-center justify-center gap-3">
-                <Button size="lg" type="button" disabled={connecting} className="bg-emerald-500 hover:bg-emerald-600 text-white font-body shadow-lg" onClick={async () => {
-                  if (connecting) return; setConnecting(true);
-                  toast({ title: 'Connecting to Amazon…', description: 'Starting secure OAuth.' });
-                  let navigated = false;
-                  const fallback = window.setTimeout(() => {
-                    if (!navigated) {
-                      navigated = true;
-                      toast({ title: 'Using Sandbox', description: 'Backend is slow; launching demo flow.' });
-                      window.location.assign('/auth/amazon-sandbox');
+              <div className="max-w-md mx-auto">
+                <AmazonConnect 
+                  onConnectionStart={() => setConnecting(true)}
+                  onConnectionComplete={(data) => {
+                    setConnecting(false);
+                    if (data?.recovery_amount) {
+                      navigate(`/integrations-hub?amazon_connected=true&recovery_amount=${data.recovery_amount}`);
+                    } else {
+                      navigate('/integrations-hub?amazon_connected=true');
                     }
-                  }, 1800);
-                  try {
-                    const res = await api.connectAmazon();
-                    const url = res.data?.auth_url;
-                    if ((res as any)?.ok && url && !navigated) {
-                      navigated = true;
-                      window.clearTimeout(fallback);
-                      window.location.assign(url as string);
-                    }
-                  } catch {
-                    // let fallback handle
-                  }
-                }}>
-                  <LinkIcon className="h-5 w-5 mr-2" strokeWidth={1.75} />
-                  Connect Amazon
-                </Button>
+                  }}
+                  className="bg-white/5 border-white/10"
+                />
               </div>
               <p className="mt-3 text-xs text-gray-400 max-w-2xl mx-auto">
                 By connecting your account, you agree to Clario's

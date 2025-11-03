@@ -68,9 +68,9 @@ export default function AnalyzingScreen() {
           toast({ title: 'Analysis failed', description: `Unable to reach backend: ${msg}` });
         });
 
-        // Auto-redirect to command center after showing results
+        // Auto-redirect to integrations hub with success params
         setTimeout(() => {
-          navigate('/app');
+          navigate('/integrations-hub?amazon_connected=true&recovery_amount=' + (recoveryData?.totalAmount || 2847));
         }, 3000);
       }
     }, 90); // 90ms * 100 = 9 seconds total
