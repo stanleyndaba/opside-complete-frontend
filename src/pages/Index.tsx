@@ -52,85 +52,87 @@ const Index = () => {
   }, [langQuery]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0B1220] landing">
+    <div className="min-h-screen flex flex-col bg-white text-gray-900">
       <header className="sticky top-0 z-40 border-transparent bg-transparent">
         <div className="container mx-auto px-6 py-5">
-          <div className="flex items-center justify-between gap-6 px-6 py-4 rounded-[25px] border border-white/15 bg-white/10 backdrop-blur-xl backdrop-saturate-200 shadow-[0_12px_40px_rgba(11,18,32,0.35)] transition-colors">
-            <div className="flex items-center gap-2">
+          <div className="flex items-center justify-between gap-6 px-6 py-4 rounded-[25px] border border-black/5 bg-white/90 backdrop-blur-xl shadow-[0_18px_40px_rgba(15,23,42,0.08)] transition-colors">
+            <div className="flex items-center gap-3">
               <img
                 src="/donelogo.png"
                 alt="Clario logo"
-                className="h-10 w-10 rounded-full object-cover border border-white/30"
+                className="h-10 w-10 rounded-full object-cover border border-black/10"
               />
               {/* Brand dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="inline-flex items-center gap-1.5 text-gray-100 hover:text-white hover:bg-white/10 px-2 py-1 rounded-md">
+                  <button className="inline-flex items-center gap-1.5 text-gray-900 hover:text-gray-950 hover:bg-gray-100 px-3 py-1.5 rounded-[16px] transition-colors">
                     <span className="font-medium">Clario</span>
-                    <ChevronDown className="h-4 w-4 opacity-80" />
+                    <ChevronDown className="h-4 w-4 opacity-70" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="min-w-[220px] bg-[#0B1220]/70 backdrop-blur-md border border-white/10 text-gray-100 shadow-xl">
+                <DropdownMenuContent align="start" className="min-w-[220px] bg-white border border-black/10 text-gray-900 shadow-xl">
                   <DropdownMenuItem asChild>
-                    <Link to="/integrations-hub" className="flex items-center gap-2 hover:bg-white/10 focus:bg-white/10">
-                      <Link2 className="h-4 w-4" />
+                    <Link to="/integrations-hub" className="flex items-center gap-2 hover:bg-gray-100 focus:bg-gray-100">
+                      <Link2 className="h-4 w-4 text-emerald-600" />
                       <span>Integrations</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/api-access" className="flex items-center gap-2 hover:bg-white/10 focus:bg-white/10">
-                      <BookOpen className="h-4 w-4" />
+                    <Link to="/api-access" className="flex items-center gap-2 hover:bg-gray-100 focus:bg-gray-100">
+                      <BookOpen className="h-4 w-4 text-emerald-600" />
                       <span>Documentation</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/help" className="flex items-center gap-2 hover:bg-white/10 focus:bg-white/10">
-                      <HelpCircle className="h-4 w-4" />
+                    <Link to="/help" className="flex items-center gap-2 hover:bg-gray-100 focus:bg-gray-100">
+                      <HelpCircle className="h-4 w-4 text-emerald-600" />
                       <span>Help Center</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/about" className="flex items-center gap-2 hover:bg-white/10 focus:bg-white/10">
-                      <Building2 className="h-4 w-4" />
+                    <Link to="/about" className="flex items-center gap-2 hover:bg-gray-100 focus:bg-gray-100">
+                      <Building2 className="h-4 w-4 text-emerald-600" />
                       <span>Enterprise</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <a href="mailto:hello@getclario.com?subject=Partnerships" className="flex items-center gap-2 hover:bg-white/10 focus:bg-white/10">
-                      <Handshake className="h-4 w-4" />
+                    <a href="mailto:hello@getclario.com?subject=Partnerships" className="flex items-center gap-2 hover:bg-gray-100 focus:bg-gray-100">
+                      <Handshake className="h-4 w-4 text-emerald-600" />
                       <span>Partnerships</span>
                     </a>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/terms" className="flex items-center gap-2 hover:bg-white/10 focus:bg-white/10">
-                      <ScrollText className="h-4 w-4" />
+                    <Link to="/terms" className="flex items-center gap-2 hover:bg-gray-100 focus:bg-gray-100">
+                      <ScrollText className="h-4 w-4 text-emerald-600" />
                       <span>Terms & Policies</span>
                     </Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-            <nav className="flex items-center gap-4 text-sm">
-              {/* API link */}
-              <Link to="/developer-api" className="text-gray-200 hover:text-white hover:bg-white/10 px-3 py-1.5 rounded-md">API</Link>
+            <nav className="flex items-center gap-4 text-sm text-gray-700">
+              {/* Primary links */}
+              <Link to="/developer-api" className="px-3 py-1.5 rounded-md hover:bg-gray-100 hover:text-gray-900 transition-colors">API</Link>
+              <Link to="/docs" className="px-3 py-1.5 rounded-md hover:bg-gray-100 hover:text-gray-900 transition-colors">Docs</Link>
+              <Link to="/resources" className="px-3 py-1.5 rounded-md hover:bg-gray-100 hover:text-gray-900 transition-colors">Resources</Link>
               {/* Language selector */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
-                    className="inline-flex items-center gap-2 h-9 px-3 rounded-md text-sm text-gray-200 hover:bg-white/10 transition-colors"
+                    className="inline-flex items-center gap-2 h-9 px-3 rounded-md text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                     aria-label="Language preference"
                   >
                     <span>{selectedLanguage.language}</span>
                     <ChevronDown className="h-4 w-4 opacity-70" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="min-w-[240px] bg-[#0B1220]/70 backdrop-blur-md border border-white/10 text-gray-100 shadow-xl p-0">
-                  <div className="p-2 sticky top-0 bg-[#0B1220]/80 backdrop-blur-md border-b border-white/10" onKeyDown={(e) => e.stopPropagation()}>
+                <DropdownMenuContent align="end" className="min-w-[240px] bg-white border border-black/10 text-gray-900 shadow-xl p-0">
+                  <div className="p-2 sticky top-0 bg-white border-b border-black/5" onKeyDown={(e) => e.stopPropagation()}>
                     <Input
                       value={langQuery}
                       onChange={(e) => setLangQuery(e.target.value)}
                       placeholder="Search language..."
-                      className="h-8 bg-white/10 border-white/10 text-gray-100 placeholder:text-gray-400"
+                      className="h-8 bg-gray-50 border border-gray-200 text-gray-900 placeholder:text-gray-500 focus-visible:ring-emerald-500"
                     />
                   </div>
                   <div className="max-h-64 overflow-auto">
@@ -138,7 +140,7 @@ const Index = () => {
                       <DropdownMenuItem disabled className="text-gray-400">No matches</DropdownMenuItem>
                     ) : (
                       filteredLanguages.map((opt) => (
-                        <DropdownMenuItem key={opt.code} onClick={() => { setSelectedLanguageCode(opt.code); setLangQuery(''); }} className="gap-2 hover:bg-white/10 focus:bg-white/10">
+                        <DropdownMenuItem key={opt.code} onClick={() => { setSelectedLanguageCode(opt.code); setLangQuery(''); }} className="gap-2 hover:bg-gray-100 focus:bg-gray-100">
                           <span className="font-medium">{opt.language}</span>
                         </DropdownMenuItem>
                       ))
@@ -146,9 +148,6 @@ const Index = () => {
                   </div>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <Button variant="ghost" className="text-gray-200 hover:bg-white/10 hover:text-white" onClick={() => navigate('/integrations-hub')}>
-                Dashboard
-              </Button>
             </nav>
           </div>
         </div>
@@ -158,36 +157,36 @@ const Index = () => {
         <section className="container mx-auto px-6 py-24 md:py-32">
           <div className="max-w-4xl mx-auto text-center space-y-6">
             {/* Trust chip removed per request */}
-            <h1 className="font-heading text-4xl md:text-6xl font-bold tracking-tight text-gray-100">
-              The <span className="text-emerald-500">end</span> of FBA reimbursement work.
+            <h1 className="font-heading text-4xl md:text-6xl font-bold tracking-tight text-gray-900">
+              The <span className="text-emerald-600">end</span> of FBA reimbursement work.
             </h1>
-            <p className="font-body text-base md:text-xl text-gray-400 font-normal max-w-3xl mx-auto">
+            <p className="font-body text-base md:text-xl text-gray-600 font-normal max-w-3xl mx-auto">
               Clario automates the entire reimbursement process, recovering lost revenue from Amazon FBA errors in minutes—not months.
             </p>
             <div className="pt-2">
               <div className="max-w-md mx-auto">
                 <AmazonConnect />
               </div>
-              <p className="mt-3 text-xs text-gray-400 max-w-2xl mx-auto">
+              <p className="mt-3 text-xs text-gray-500 max-w-2xl mx-auto">
                 By connecting your account, you agree to Clario's
-                <Link to="/terms" className="mx-1 underline hover:text-gray-200">Terms of Service</Link>
+                <Link to="/terms" className="mx-1 underline hover:text-gray-900">Terms of Service</Link>
                 and acknowledge our
-                <Link to="/security" className="mx-1 underline hover:text-gray-200">Data Security</Link>
+                <Link to="/security" className="mx-1 underline hover:text-gray-900">Data Security</Link>
                 &
-                <Link to="/privacy" className="mx-1 underline hover:text-gray-200">Privacy Policy</Link>.
+                <Link to="/privacy" className="mx-1 underline hover:text-gray-900">Privacy Policy</Link>.
               </p>
               <div className="mt-4 flex flex-wrap items-center justify-center gap-4">
                 <div className="inline-flex items-center gap-2">
                   <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-emerald-500">
                     <Check className="h-3 w-3 text-white" />
                   </span>
-                  <span className="text-gray-300 text-sm md:text-base">No credit card required</span>
+                  <span className="text-gray-600 text-sm md:text-base">No credit card required</span>
                 </div>
                 <div className="inline-flex items-center gap-2">
                   <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-emerald-500">
                     <Check className="h-3 w-3 text-white" />
                   </span>
-                  <span className="text-gray-300 text-sm md:text-base">Cancel anytime</span>
+                  <span className="text-gray-600 text-sm md:text-base">Cancel anytime</span>
                 </div>
               </div>
               {/* Email capture moved to bottom-left above the legal footer */}
@@ -198,9 +197,9 @@ const Index = () => {
 
       <div>
         <div className="container mx-auto px-6 py-4 flex items-center justify-end text-sm">
-          <div className="flex items-center gap-6 text-gray-400">
-            <Link to="/terms" className="hover:text-gray-200">Terms of use</Link>
-            <Link to="/privacy" className="hover:text-gray-200">Privacy Policy</Link>
+          <div className="flex items-center gap-6 text-gray-500">
+            <Link to="/terms" className="hover:text-gray-900">Terms of use</Link>
+            <Link to="/privacy" className="hover:text-gray-900">Privacy Policy</Link>
           </div>
         </div>
       </div>
@@ -208,16 +207,16 @@ const Index = () => {
       {/* Bottom-left email capture above legal footer */}
       <div className="container mx-auto px-6 pb-2">
         <div className="max-w-md">
-          <h4 className="text-sm font-semibold text-gray-200 mb-2">Get Early Updates</h4>
+          <h4 className="text-sm font-semibold text-gray-800 mb-2">Get Early Updates</h4>
           <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); toast({ title: 'Thanks!', description: 'You are on the Finance Pilot list.' }); }}>
-            <input type="email" required placeholder="Enter your email for Finance Pilot updates" className="flex-1 rounded-md bg-white/10 border border-white/10 px-3 py-2 text-sm text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
-            <Button type="submit" className="bg-emerald-500 hover:bg-emerald-600 text-white">Sign up</Button>
+            <input type="email" required placeholder="Enter your email for Finance Pilot updates" className="flex-1 rounded-md bg-white border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+            <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700 text-white">Sign up</Button>
           </form>
         </div>
       </div>
 
       <footer id="core-footer">
-        <div className="container mx-auto px-6 py-6 flex items-center justify-center gap-3 text-xs text-gray-400 text-center">
+        <div className="container mx-auto px-6 py-6 flex items-center justify-center gap-3 text-xs text-gray-500 text-center">
           <span>
             © Clario 2025 | {selectedLanguage.language}
           </span>
