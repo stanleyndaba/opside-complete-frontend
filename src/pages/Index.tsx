@@ -58,7 +58,7 @@ const Index = () => {
           <div className="flex items-center justify-between gap-6 px-6 py-4 rounded-[25px] border border-white/15 bg-white/10 backdrop-blur-xl backdrop-saturate-200 shadow-[0_12px_40px_rgba(11,18,32,0.35)] transition-colors">
             <div className="flex items-center gap-2">
               <img
-                src="/lovable-uploads/15af441d-81d1-4a51-932f-382e12379bca.png"
+                src="/donelogo.png"
                 alt="Clario logo"
                 className="h-10 w-10 rounded-full object-cover border border-white/30"
               />
