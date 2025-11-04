@@ -98,10 +98,12 @@ const Index = () => {
                 className="h-10 w-10 rounded-full object-cover border border-black/10"
               />
               {/* Brand dropdown */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="inline-flex items-center gap-1.5 text-gray-900 hover:text-gray-950 hover:bg-gray-100 px-3 py-1.5 rounded-[16px] transition-colors">
-                    <span className="font-medium">Clario</span>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[16px] transition-colors hover:bg-gray-100">
+                      <span className="font-black text-[#b3b3b3] tracking-tight">
+                        CLARIO
+                      </span>
                     <ChevronDown className="h-4 w-4 opacity-70" />
                   </button>
                 </DropdownMenuTrigger>
