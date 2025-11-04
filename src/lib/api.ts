@@ -81,7 +81,8 @@ async function requestJsonWithRetry<T>(
   const url = buildApiUrl(path);
   
   // Use a longer timeout for the first request to allow backend wake-up time
-  const timeout = retryCount === 0 ? 60000 : 30000; // 60s first request, 30s retries
+  // But not too long to avoid hanging the UI when backend is responsive
+  const timeout = retryCount === 0 ? 20000 : 15000; // 20s first request (enough for wake-up), 15s retries
   
   try {
     console.log(`[API] Requesting: ${url}${retryCount > 0 ? ` (retry ${retryCount}/${maxRetries})` : ''}`);
