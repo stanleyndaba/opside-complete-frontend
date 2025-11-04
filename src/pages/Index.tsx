@@ -324,10 +324,6 @@ const Index = () => {
           <div className="container mx-auto px-6 py-24 md:py-28">
             <div className="relative grid gap-12 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
               <div className="relative space-y-8">
-                <div className="inline-flex items-center gap-2 rounded-full border border-gray-300/60 bg-gray-100 px-4 py-1 text-xs font-semibold uppercase tracking-[0.28em] text-gray-600">
-                  <Sparkles className="h-4 w-4 text-gray-500" />
-                  What you gain with Clario
-                </div>
                 <div className="relative h-24 overflow-hidden text-4xl font-semibold text-gray-900 md:text-6xl">
                   <span
                     key={benefitIndex}
