@@ -244,16 +244,24 @@ const Index = () => {
                 <span className="pointer-events-none absolute inset-0 rounded-[25px] bg-gradient-to-r from-emerald-200/40 via-white/10 to-sky-200/40 blur-xl" aria-hidden="true" />
                 <span className="pointer-events-none absolute inset-0 rounded-[25px] border border-white/40" aria-hidden="true" />
                 <span className="relative text-xs font-semibold uppercase tracking-[0.25em] text-emerald-600">New</span>
-                <div className="relative flex items-center gap-3 text-sm font-medium text-gray-700">
-                  <span>Links seamlessly with</span>
-                  <span className="inline-flex items-center gap-1">
-                    <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#EA4335] text-[10px] font-bold leading-none text-white shadow-sm shadow-red-400/30">G</span>
-                    <span className="text-gray-600">Gmail</span>
-                  </span>
-                  <span className="inline-flex items-center gap-1">
-                    <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#0072C6] text-[10px] font-bold leading-none text-white shadow-sm shadow-blue-400/30">O</span>
-                    <span className="text-gray-600">Outlook</span>
-                  </span>
+                  <div className="relative flex items-center gap-3 text-sm font-medium text-gray-700">
+                    <span>Links seamlessly with</span>
+                    <span className="inline-flex items-center gap-3">
+                      <span className="relative inline-flex h-7 w-7 items-center justify-center rounded-full bg-white shadow-sm shadow-red-400/20">
+                        <img
+                          src="/gmailicon.png"
+                          alt="Gmail"
+                          className="h-7 w-7 object-contain"
+                        />
+                      </span>
+                      <span className="relative inline-flex h-7 w-7 items-center justify-center rounded-full bg-white shadow-sm shadow-blue-400/20">
+                        <img
+                          src="/outlookicon.webp"
+                          alt="Outlook"
+                          className="h-7 w-7 object-contain"
+                        />
+                      </span>
+                    </span>
                 </div>
               </div>
             <h1 className="font-heading text-4xl md:text-6xl font-black tracking-tight text-gray-900">
