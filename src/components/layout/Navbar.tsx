@@ -75,22 +75,10 @@ export function Navbar({
             )}>
               Sandbox
             </span>
-          )}
-          {/* Language selector removed */}
-          {/* Labeled sync button */}
-          <button
-            title="Reconcile & Sync"
-            className={cn(
-              'inline-flex items-center gap-2 h-9 px-3 rounded-md text-sm transition-colors border',
-              isTransparent ? 'bg-white/5 border-white/10 text-gray-100 hover:bg-white/10' : 'bg-background border-border hover:bg-accent hover:text-accent-foreground'
-            )}
-            onClick={() => { window.location.href = '/smart-inventory-sync'; }}
-          >
-            <ArrowUpDown className="h-4 w-4" />
-            <span>Reconcile & Sync</span>
-          </button>
-          <NotificationBell />
-        </div>
+        )}
+        {/* Language selector removed */}
+        <NotificationBell />
       </div>
-    </header>;
+    </div>
+  </header>;
 }
