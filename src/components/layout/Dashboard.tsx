@@ -197,7 +197,7 @@ export function Dashboard() {
               <div className="lg:col-span-2 space-y-8">
                 <Card className="bg-white/5 border-white/10 text-gray-300">
                   <CardContent className="p-6">
-                    <h2 className="font-brand text-lg text-gray-100 font-semibold">Welcome to Clario!</h2>
+                    <h2 className="font-brand text-lg text-gray-100 font-semibold">Get Faster Reimbursements with Clario!</h2>
                     <p className="text-sm text-gray-400 mt-1">Your Amazon account has been connected successfully.</p>
                   </CardContent>
                 </Card>
