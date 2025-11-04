@@ -297,7 +297,7 @@ const Index = () => {
                   <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-emerald-500">
                     <Check className="h-3 w-3 text-white" />
                   </span>
-                  <span className="text-gray-600 text-sm md:text-base">No credit card required</span>
+                  <span className="text-gray-600 text-sm md:text-base">No credit cards</span>
                 </div>
                 <div className="inline-flex items-center gap-2">
                   <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-emerald-500">
