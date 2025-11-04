@@ -65,7 +65,7 @@ export default function ReconnectProvider() {
         return;
       }
       // Evidence providers
-      const r = await api.post<{ auth_url?: string }>(`/api/v1/integrations/${provider}/connect`);
+      const r = await api.connectIntegration(provider);
       const url = (r as any)?.data?.auth_url;
       if ((r as any)?.ok && url) {
         window.location.assign(url as string);

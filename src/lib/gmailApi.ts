@@ -3,7 +3,7 @@ import { api } from '@/lib/api';
 export const gmailApi = {
   // Initiate Gmail OAuth connection
   connectGmail: async () => {
-    const res = await api.post('/api/v1/integrations/gmail/connect');
+    const res = await api.connectIntegration('gmail');
     if (!res.ok) throw new Error(res.error || 'Failed to connect Gmail');
     return res.data as { authUrl: string };
   },

@@ -130,13 +130,56 @@ async function requestJson<T>(path: string, options?: RequestInit): Promise<ApiR
   }
 }
 
+/**
+ * Get the current frontend URL dynamically.
+ * This is used to pass to the backend so it can configure OAuth redirects correctly,
+ * even when the deployment domain changes (e.g., Vercel preview deployments).
+ */
+function getFrontendUrl(): string {
+  if (typeof window !== 'undefined') {
+    // Use current browser location
+    return window.location.origin;
+  }
+  
+  // Fallback: Check for Vercel's VERCEL_URL environment variable (includes protocol)
+  if (typeof import.meta !== 'undefined' && import.meta.env) {
+    const vercelUrl = import.meta.env.VERCEL_URL;
+    if (vercelUrl) {
+      // VERCEL_URL doesn't include protocol, so add https
+      return `https://${vercelUrl}`;
+    }
+    
+    // Check for custom frontend URL env var
+    const customUrl = import.meta.env.VITE_FRONTEND_URL;
+    if (customUrl) {
+      return String(customUrl).trim().replace(/\/$/, '');
+    }
+  }
+  
+  // Last resort: use a default (this shouldn't happen in production)
+  return 'https://opside.com';
+}
+
 export const api = {
   // Export buildApiUrl for use in other modules
   buildApiUrl,
   
+  // Export getFrontendUrl for use in other modules
+  getFrontendUrl,
+  
   // Generic helpers
   get: <T = any>(path: string) => requestJson<T>(path, { method: 'GET' }),
   post: <T = any>(path: string, body?: unknown) => requestJson<T>(path, { method: 'POST', body: body !== undefined ? JSON.stringify(body) : undefined }),
+  
+  // Helper for OAuth connection endpoints that need redirect_uri
+  connectIntegration: (provider: string) => {
+    const frontendUrl = getFrontendUrl();
+    const redirectUri = `${frontendUrl}/auth/callback`;
+    return requestJson<{ auth_url?: string; redirect_url?: string }>(
+      `/api/v1/integrations/${encodeURIComponent(provider)}/connect?redirect_uri=${encodeURIComponent(redirectUri)}`,
+      { method: 'POST' }
+    );
+  },
 
   // Auth endpoints
   getMe: () => requestJson<any>('/api/auth/me'),
@@ -145,13 +188,15 @@ export const api = {
 
   // Amazon SP-API endpoints (Step 1 Auth Process)
   connectAmazon: async () => {
+    // Get current frontend URL and pass it to backend for OAuth redirect configuration
+    const frontendUrl = getFrontendUrl();
     const response = await requestJson<{
       auth_url?: string;
       authUrl?: string;
       state?: string;
       success?: boolean;
       message?: string;
-    }>('/api/v1/integrations/amazon/auth/start');
+    }>(`/api/v1/integrations/amazon/auth/start?redirect_uri=${encodeURIComponent(frontendUrl)}/auth/callback`);
 
     if (response.ok && response.data) {
       const normalizedAuthUrl = response.data.auth_url ?? response.data.authUrl;
@@ -170,11 +215,14 @@ export const api = {
   getAmazonRecoveries: () => requestJson<{ totalAmount: number; currency: string; claimCount: number }>('/api/v1/integrations/amazon/recoveries'),
 
   // Auth-adjacent helpers for flows
-  connectDocs: (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox') =>
-    requestJson<{ auth_url?: string; redirect_url?: string }>(
-      `/api/v1/integrations/connect-docs?provider=${encodeURIComponent(provider)}`,
+  connectDocs: (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox') => {
+    // Get current frontend URL and pass it to backend for OAuth redirect configuration
+    const frontendUrl = getFrontendUrl();
+    return requestJson<{ auth_url?: string; redirect_url?: string }>(
+      `/api/v1/integrations/connect-docs?provider=${encodeURIComponent(provider)}&redirect_uri=${encodeURIComponent(frontendUrl)}/auth/callback`,
       { method: 'GET' }
-    ),
+    );
+  },
   startAmazonSync: () => requestJson<{ syncId: string }>('/api/sync/start', { method: 'POST' }),
   trackEvent: (name: string, payload?: Record<string, any>) =>
     requestJson<any>('/api/metrics/track', { method: 'POST', body: JSON.stringify({ name, payload }) }),
