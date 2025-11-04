@@ -414,28 +414,22 @@ const Index = () => {
         </section>
       </main>
 
-      <div>
-        <div className="container mx-auto px-6 py-4 flex items-center justify-end text-sm">
-          <div className="flex items-center gap-6 text-gray-500">
-            <Link to="/terms" className="hover:text-gray-900">Terms of use</Link>
-            <Link to="/privacy" className="hover:text-gray-900">Privacy Policy</Link>
-          </div>
+        <div className="relative">
+          <div className="absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-white via-white/80 to-gray-100 pointer-events-none" aria-hidden="true" />
+          <footer id="core-footer" className="relative bg-gray-100 text-gray-700">
+            <div className="container mx-auto px-6 py-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-xs text-gray-700 text-center md:text-left">
+              <span>© Clario 2025 | {selectedLanguage.language}</span>
+              <p className="text-xs text-gray-600">
+                By connecting your account, you agree to Clario's
+                <Link to="/terms" className="mx-1 underline hover:text-gray-900">Terms of Service</Link>
+                and acknowledge our
+                <Link to="/security" className="mx-1 underline hover:text-gray-900">Data Security</Link>
+                &
+                <Link to="/privacy" className="mx-1 underline hover:text-gray-900">Privacy Policy</Link>.
+              </p>
+            </div>
+          </footer>
         </div>
-      </div>
-
-        <footer id="core-footer">
-          <div className="container mx-auto px-6 py-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-xs text-gray-500 text-center md:text-left">
-            <span>© Clario 2025 | {selectedLanguage.language}</span>
-            <p className="text-xs text-gray-500">
-              By connecting your account, you agree to Clario's
-              <Link to="/terms" className="mx-1 underline hover:text-gray-900">Terms of Service</Link>
-              and acknowledge our
-              <Link to="/security" className="mx-1 underline hover:text-gray-900">Data Security</Link>
-              &
-              <Link to="/privacy" className="mx-1 underline hover:text-gray-900">Privacy Policy</Link>.
-            </p>
-          </div>
-        </footer>
     </div>
   );
 };
