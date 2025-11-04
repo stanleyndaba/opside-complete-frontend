@@ -164,9 +164,11 @@ export function Sidebar({
         >
           {!isCollapsed ? (
             <>
-              <div className="select-none flex items-center gap-2">
-                <img src="/donelogo.png" alt="Clario" className="h-8 w-8 rounded-full object-cover" />
-                <span className="font-[500] text-white">Clario</span>
+              <div className="select-none flex items-center">
+                <span className="relative inline-flex">
+                  <span className="absolute -inset-2 rounded-full bg-emerald-400/25 blur-lg" />
+                  <img src="/donelogo.png" alt="Clario" className="relative h-8 w-8 rounded-full object-cover shadow-lg shadow-emerald-500/25" />
+                </span>
               </div>
               <div className="text-[11px] text-emerald-400/90 flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
@@ -175,7 +177,10 @@ export function Sidebar({
             </>
           ) : (
             <div className="flex items-center gap-2">
-              <img src="/donelogo.png" alt="Clario" className="h-8 w-8 rounded-full object-cover" />
+              <span className="relative inline-flex">
+                <span className="absolute -inset-2 rounded-full bg-emerald-400/25 blur-lg" />
+                <img src="/donelogo.png" alt="Clario" className="relative h-8 w-8 rounded-full object-cover shadow-lg shadow-emerald-500/25" />
+              </span>
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" title="Connected" />
             </div>
           )}
