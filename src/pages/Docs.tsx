@@ -163,11 +163,13 @@ const Docs = () => {
           </div>
         </header>
 
-        <main className="relative container mx-auto px-6 py-12 md:py-20">
-          <div className="text-sm text-gray-500 space-y-1 mb-12">
-            <p><strong>Effective Date:</strong> [Insert Date]</p>
-            <p><strong>Last Updated:</strong> [Insert Date]</p>
-          </div>
+          <main className="relative container mx-auto px-6 py-12 md:py-20">
+            <div className="text-sm text-gray-500 space-y-1 mb-12">
+              <p><strong>Effective Date:</strong> January 1, 2025</p>
+              <p className="text-xs text-gray-400">The day your full-time work and IP creation officially started.</p>
+              <p><strong>Last Updated:</strong> November 4, 2025</p>
+              <p className="text-xs text-gray-400">The day you are physically signing and finalizing the document.</p>
+            </div>
 
           <article className="bg-white/90 border border-black/5 rounded-3xl shadow-[0_25px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl">
             <div className="px-6 py-10 md:px-12 md:py-14 space-y-10 text-gray-700">
