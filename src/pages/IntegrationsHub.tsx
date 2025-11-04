@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -41,7 +41,15 @@ export default function IntegrationsHub() {
   // NEW: Shock and Awe state
   const [showRecoveryReveal, setShowRecoveryReveal] = useState(false);
   const [recoveryData, setRecoveryData] = useState<{ totalAmount: number; currency: string; claimCount: number } | null>(null);
-  const [showEvidenceModal, setShowEvidenceModal] = useState(false);
+    const [showEvidenceModal, setShowEvidenceModal] = useState(false);
+    const benefitWords = useMemo(() => [
+      'Recover more',
+      'Save more',
+      'Gain clarity',
+      'Assert assurance',
+      'Stay in control'
+    ], []);
+    const [benefitIndex, setBenefitIndex] = useState(0);
 
   // Check if we just connected Amazon and should show the reveal
   useEffect(() => {
@@ -73,6 +81,13 @@ export default function IntegrationsHub() {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+
+    useEffect(() => {
+      const cycle = setInterval(() => {
+        setBenefitIndex((prev) => (prev + 1) % benefitWords.length);
+      }, 3200);
+      return () => clearInterval(cycle);
+    }, [benefitWords]);
 
   // SSE for live ingest/detection events
   useEffect(() => {
@@ -332,6 +347,45 @@ export default function IntegrationsHub() {
                 placeholder="Search integrations (Amazon, Shopify, Gmail…)"
                 className="pl-9"
               />
+            </div>
+            <div className="relative mx-auto mt-12 max-w-4xl overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-8 text-left shadow-[0_25px_80px_rgba(15,23,42,0.45)]">
+              <div
+                className="pointer-events-none absolute inset-0 opacity-90"
+                style={{
+                  backgroundImage:
+                    'radial-gradient(rgba(255,255,255,0.14) 1px, transparent 1px), radial-gradient(rgba(148,163,184,0.08) 1px, transparent 1px)',
+                  backgroundSize: '24px 24px',
+                  backgroundPosition: '0 0, 12px 12px'
+                }}
+              />
+              <div className="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+                <div className="space-y-4">
+                  <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-slate-900/60 px-3 py-1 text-xs font-medium uppercase tracking-[0.3em] text-slate-200/70 backdrop-blur-sm">
+                    <Sparkles className="h-4 w-4 text-cyan-300" />
+                    What you unlock
+                  </span>
+                  <div className="relative h-24 overflow-hidden text-4xl font-semibold text-white md:text-5xl">
+                    <span
+                      key={benefitIndex}
+                      className="absolute inset-0 flex items-center text-balance animate-[wordDrift_3.2s_ease-in-out]"
+                    >
+                      {benefitWords[benefitIndex]}
+                    </span>
+                  </div>
+                  <p className="max-w-xl text-base text-slate-200/80 md:text-lg">
+                    Clario automates the tedious work behind reimbursement programs, giving your team sharper insights, measurable savings, and the confidence to scale compliant operations faster.
+                  </p>
+                </div>
+                <div className="relative flex w-full max-w-xs flex-col gap-3 rounded-2xl border border-white/10 bg-slate-900/70 p-5 text-sm text-slate-200/80 backdrop-blur">
+                  <div className="text-xs font-semibold uppercase tracking-widest text-cyan-200/80">Fast wins</div>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-cyan-300" />Automated claim discovery</li>
+                    <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-emerald-300" />Evidence matching with zero spreadsheets</li>
+                    <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-indigo-300" />Alerts before revenue leakage hits</li>
+                    <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-amber-300" />Centralized audit trail for finance teams</li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
 

@@ -211,6 +211,25 @@
     animation: brandSheen 6s linear infinite;
   }
 
+    @keyframes wordDrift {
+      0% {
+        opacity: 0;
+        transform: translateY(24px) scale(0.96);
+      }
+      20% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      80% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-24px) scale(0.96);
+      }
+    }
+
   /* Slow spin utility for loaders */
   @keyframes spin {
     to { transform: rotate(360deg); }
