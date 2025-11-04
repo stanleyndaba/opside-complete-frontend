@@ -413,14 +413,14 @@ export function Dashboard() {
         </main>
       </div>
       {/* Evidence Connections Prompt on Dashboard as fallback */}
-      <Dialog open={showEvidencePrompt} onOpenChange={setShowEvidencePrompt}>
-        <DialogContent className="max-w-lg bg-[#0B1220]/80 backdrop-blur-2xl border border-white/10 text-gray-100 shadow-[0_20px_80px_rgba(0,0,0,0.6)] rounded-2xl">
+        <Dialog open={showEvidencePrompt} onOpenChange={setShowEvidencePrompt}>
+          <DialogContent className="max-w-lg bg-gray-100/95 backdrop-blur-md border border-gray-200 text-gray-900 shadow-[0_20px_80px_rgba(15,23,42,0.25)] rounded-2xl">
           <DialogHeader>
-              <DialogTitle className="text-lg text-gray-100">
+                <DialogTitle className="text-lg text-gray-900">
                 <div className="flex flex-col items-start gap-1">
                   <span className="inline-flex">
                     <span className="relative inline-flex">
-                      <span className="absolute -inset-2 rounded-full bg-emerald-400/25 blur-lg" />
+                        <span className="absolute -inset-2 rounded-full bg-emerald-400/20 blur-lg" />
                       <img
                         src="/donelogo.png"
                         alt="Clario"
@@ -431,12 +431,12 @@ export function Dashboard() {
                   <span>Connect Evidence Sources</span>
                 </div>
             </DialogTitle>
-            <DialogDescription className="text-gray-400">
+              <DialogDescription className="text-gray-600">
               Link Gmail/Outlook and Drive/Dropbox to auto‑collect invoices and receipts (read‑only).
             </DialogDescription>
           </DialogHeader>
           <div className="grid grid-cols-2 gap-3 pt-2">
-            <Button className="w-full bg-red-600/90 hover:bg-red-600 text-white border border-white/10" onClick={async () => {
+              <Button className="w-full bg-red-600 hover:bg-red-500 text-white border border-transparent shadow-sm" onClick={async () => {
               try {
                 const r = await api.post(`/api/v1/integrations/gmail/connect`);
                 const url = (r as any)?.data?.auth_url as string | undefined;
@@ -447,7 +447,7 @@ export function Dashboard() {
             }}>
               <img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 mr-2 object-contain" /> Gmail
             </Button>
-            <Button className="w-full bg-blue-600/90 hover:bg-blue-600 text-white border border-white/10" onClick={async () => {
+              <Button className="w-full bg-blue-600 hover:bg-blue-500 text-white border border-transparent shadow-sm" onClick={async () => {
               try {
                 const r = await api.post(`/api/v1/integrations/outlook/connect`);
                 const url = (r as any)?.data?.auth_url as string | undefined;
@@ -458,7 +458,7 @@ export function Dashboard() {
             }}>
               <img src="/outlookicon.webp" alt="Outlook" className="h-4 w-4 mr-2 object-contain" /> Outlook
             </Button>
-            <Button className="w-full bg-emerald-600/90 hover:bg-emerald-600 text-white border border-white/10" onClick={async () => {
+              <Button className="w-full bg-emerald-600 hover:bg-emerald-500 text-white border border-transparent shadow-sm" onClick={async () => {
               try {
                 const r = await api.post(`/api/v1/integrations/gdrive/connect`);
                 const url = (r as any)?.data?.auth_url as string | undefined;
@@ -469,7 +469,7 @@ export function Dashboard() {
             }}>
               <img src="/gd.png" alt="Google Drive" className="h-4 w-4 mr-2 object-contain" /> Google Drive
             </Button>
-            <Button className="w-full bg-sky-600/90 hover:bg-sky-600 text-white border border-white/10" onClick={async () => {
+              <Button className="w-full bg-sky-600 hover:bg-sky-500 text-white border border-transparent shadow-sm" onClick={async () => {
               try {
                 const r = await api.post(`/api/v1/integrations/dropbox/connect`);
                 const url = (r as any)?.data?.auth_url as string | undefined;
@@ -482,8 +482,8 @@ export function Dashboard() {
             </Button>
           </div>
           <DialogFooter>
-            <Button variant="ghost" className="text-gray-300 hover:text-gray-100" onClick={() => { setShowEvidencePrompt(false); try { localStorage.setItem('clario.evidencePromptDismissed', 'true'); } catch {} }}>Maybe later</Button>
-            <Button onClick={() => setShowEvidencePrompt(false)} className="gap-2 bg-white/10 hover:bg-white/20 border border-white/10 text-gray-100">
+              <Button variant="ghost" className="text-gray-600 hover:text-gray-900" onClick={() => { setShowEvidencePrompt(false); try { localStorage.setItem('clario.evidencePromptDismissed', 'true'); } catch {} }}>Maybe later</Button>
+              <Button onClick={() => setShowEvidencePrompt(false)} className="gap-2 bg-gray-900 hover:bg-gray-800 text-white">
               <ArrowRight className="h-4 w-4" /> Continue
             </Button>
           </DialogFooter>
