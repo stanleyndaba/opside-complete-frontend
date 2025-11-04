@@ -220,6 +220,20 @@ const Index = () => {
         <section className="container mx-auto px-6 py-24 md:py-32">
           <div className="max-w-4xl mx-auto text-center space-y-6">
             {/* Trust chip removed per request */}
+              <div className="inline-flex items-center gap-4 rounded-[25px] border border-emerald-100 bg-white/80 px-5 py-2 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-white/70 mx-auto">
+                <span className="text-xs font-semibold uppercase tracking-[0.25em] text-emerald-600">New</span>
+                <div className="flex items-center gap-3 text-sm font-medium text-gray-700">
+                  <span>Links seamlessly with</span>
+                  <span className="inline-flex items-center gap-1">
+                    <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#EA4335] text-[10px] font-bold leading-none text-white shadow-sm">G</span>
+                    <span className="text-gray-600">Gmail</span>
+                  </span>
+                  <span className="inline-flex items-center gap-1">
+                    <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#0072C6] text-[10px] font-bold leading-none text-white shadow-sm">O</span>
+                    <span className="text-gray-600">Outlook</span>
+                  </span>
+                </div>
+              </div>
             <h1 className="font-heading text-4xl md:text-6xl font-black tracking-tight text-gray-900">
               The <span className="text-emerald-600">end</span> of FBA reimbursement work.
             </h1>
