@@ -138,7 +138,7 @@ export default function IntegrationsHub() {
   };
 
   return (
-    <PageLayout title="Clario Platform Integrations">
+    <PageLayout title="Platform Integrations">
       <div className="relative -m-4 lg:-m-6">
         <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
@@ -295,8 +295,8 @@ export default function IntegrationsHub() {
         </Dialog>
 
         {/* Header */}
-        <div className="text-center">
-          <h1 className="text-3xl font-bold mb-2 text-gray-100">Clario Platform Integrations</h1>
+          <div className="text-center">
+            <h1 className="text-3xl font-bold mb-2 text-gray-100">Platform Integrations</h1>
           <p className="text-gray-400">
             Your central command center for all platform connections
           </p>
@@ -355,7 +355,7 @@ export default function IntegrationsHub() {
               <div className="text-xs text-gray-400">Scopes: orders.read, inventory.read, transactions.read</div>
               <div className="flex gap-2">
                 <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={() => { toast({ title: 'Reconnect Amazon', description: 'Redirecting to connection flow…' }); navigate('/integrations/reconnect/amazon'); }}>Reconnect</Button>
-                <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={async () => { const res = await api.disconnectIntegration('amazon', true); if (res.ok){ toast({ title: 'Disconnected', description: 'Amazon integration revoked and data purged.' }); } else { toast({ title: 'Disconnect failed', description: res.error || 'Please try again.', variant: 'destructive' }); } const s = await api.getIntegrationsStatus(); if (s.ok) setStatus(s.data); }}>Disconnect & purge</Button>
+                  <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={async () => { const res = await api.disconnectIntegration('amazon', true); if (res.ok){ toast({ title: 'Disconnected', description: 'Amazon integration disconnected.' }); } else { toast({ title: 'Disconnect failed', description: res.error || 'Please try again.', variant: 'destructive' }); } const s = await api.getIntegrationsStatus(); if (s.ok) setStatus(s.data); }}>Disconnect</Button>
               </div>
             </CardContent>
           </Card>
@@ -385,7 +385,7 @@ export default function IntegrationsHub() {
                     <div className="text-xs text-gray-400">Last ingest: {status?.providerIngest?.[p]?.lastIngest || '—'}</div>
                     <div className="flex gap-2">
                       <Button size="sm" className={cn(p==='gmail'?'bg-red-600 hover:bg-red-700': p==='outlook'?'bg-blue-600 hover:bg-blue-700': p==='gdrive'?'bg-emerald-600 hover:bg-emerald-700':'bg-sky-600 hover:bg-sky-700')} onClick={() => { toast({ title: 'Reconnect', description: `Redirecting to ${p}…` }); navigate(`/integrations/reconnect/${p}`); }} disabled={providerLoading!==null}>{providerLoading===p?'Connecting…':'Reconnect'}</Button>
-                      <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={async () => { const r = await api.disconnectIntegration(p, true); if (r.ok){ toast({ title: 'Disconnected', description: `${p} revoked and data purged.` }); } else { toast({ title: 'Disconnect failed', description: r.error || 'Please try again.', variant: 'destructive' }); } const s = await api.getIntegrationsStatus(); if (s.ok) setStatus(s.data); }}>Disconnect & purge</Button>
+                        <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={async () => { const r = await api.disconnectIntegration(p, true); if (r.ok){ toast({ title: 'Disconnected', description: `${p} integration disconnected.` }); } else { toast({ title: 'Disconnect failed', description: r.error || 'Please try again.', variant: 'destructive' }); } const s = await api.getIntegrationsStatus(); if (s.ok) setStatus(s.data); }}>Disconnect</Button>
                     </div>
                     {Array.isArray(status?.providerIngest?.[p]?.scopes) && status!.providerIngest![p]!.scopes!.length > 0 && (
                       <div className="text-[11px] text-gray-400">Scopes: {status!.providerIngest![p]!.scopes!.join(', ')}</div>
