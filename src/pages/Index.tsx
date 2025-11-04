@@ -314,13 +314,13 @@ const Index = () => {
         </section>
         <section className="relative isolate -mt-12 bg-white text-gray-900">
           <div
-            className="pointer-events-none absolute inset-0 opacity-70"
+            className="pointer-events-none absolute inset-0 opacity-90"
             aria-hidden="true"
             style={{
               backgroundImage:
-                'radial-gradient(rgba(209,213,219,0.28) 1px, transparent 1px), radial-gradient(rgba(229,231,235,0.18) 1px, transparent 1px)',
-              backgroundSize: '22px 22px',
-              backgroundPosition: '0 0, 11px 11px'
+                'radial-gradient(rgba(179,179,179,0.45) 1.2px, transparent 1.2px), radial-gradient(rgba(209,213,219,0.35) 1.2px, transparent 1.2px)',
+              backgroundSize: '18px 18px',
+              backgroundPosition: '0 0, 9px 9px'
             }}
           />
           <div className="container mx-auto px-6 py-24 md:py-28">
