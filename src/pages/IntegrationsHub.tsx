@@ -210,7 +210,10 @@ export default function IntegrationsHub() {
             <div className="space-y-6 py-4">
               <div className="grid grid-cols-2 gap-4">
                 <Card className="border-blue-200 bg-blue-50 text-center p-6">
-                  <Mail className="h-12 w-12 mx-auto mb-3 text-blue-600" />
+                  <div className="flex items-center justify-center gap-2 mb-3">
+                    <img src="/gmailicon.png" alt="Gmail" className="h-8 w-8 object-contain" />
+                    <img src="/outlookicon.webp" alt="Outlook" className="h-8 w-8 object-contain" />
+                  </div>
                   <h3 className="font-semibold mb-2">Connect Email</h3>
                   <p className="text-sm text-muted-foreground mb-4">
                     Automatically find purchase invoices in your Gmail or Outlook
@@ -227,7 +230,10 @@ export default function IntegrationsHub() {
                 </Card>
                 
                 <Card className="border-green-200 bg-green-50 text-center p-6">
-                  <Cloud className="h-12 w-12 mx-auto mb-3 text-green-600" />
+                  <div className="flex items-center justify-center gap-2 mb-3">
+                    <img src="/gd.png" alt="Google Drive" className="h-8 w-8 object-contain" />
+                    <img src="/db.png" alt="Dropbox" className="h-8 w-8 object-contain" />
+                  </div>
                   <h3 className="font-semibold mb-2">Connect Cloud Storage</h3>
                   <p className="text-sm text-muted-foreground mb-4">
                     Scan Google Drive or Dropbox for receipts and invoices
@@ -269,10 +275,18 @@ export default function IntegrationsHub() {
               <DialogDescription>Select where to ingest evidence from.</DialogDescription>
             </DialogHeader>
             <div className="grid grid-cols-2 gap-3">
-              <Button disabled={providerLoading !== null} onClick={() => beginProviderOAuth('gmail')} className="bg-red-600 hover:bg-red-700">{providerLoading==='gmail' ? 'Connecting…' : 'Gmail'}</Button>
-              <Button disabled={providerLoading !== null} onClick={() => beginProviderOAuth('outlook')} className="bg-blue-600 hover:bg-blue-700">{providerLoading==='outlook' ? 'Connecting…' : 'Outlook'}</Button>
-              <Button disabled={providerLoading !== null} onClick={() => beginProviderOAuth('gdrive')} className="bg-emerald-600 hover:bg-emerald-700">{providerLoading==='gdrive' ? 'Connecting…' : 'Google Drive'}</Button>
-              <Button disabled={providerLoading !== null} onClick={() => beginProviderOAuth('dropbox')} className="bg-sky-600 hover:bg-sky-700">{providerLoading==='dropbox' ? 'Connecting…' : 'Dropbox'}</Button>
+              <Button disabled={providerLoading !== null} onClick={() => beginProviderOAuth('gmail')} className="bg-red-600 hover:bg-red-700">
+                {providerLoading==='gmail' ? 'Connecting…' : <><img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 mr-2 object-contain" /> Gmail</>}
+              </Button>
+              <Button disabled={providerLoading !== null} onClick={() => beginProviderOAuth('outlook')} className="bg-blue-600 hover:bg-blue-700">
+                {providerLoading==='outlook' ? 'Connecting…' : <><img src="/outlookicon.webp" alt="Outlook" className="h-4 w-4 mr-2 object-contain" /> Outlook</>}
+              </Button>
+              <Button disabled={providerLoading !== null} onClick={() => beginProviderOAuth('gdrive')} className="bg-emerald-600 hover:bg-emerald-700">
+                {providerLoading==='gdrive' ? 'Connecting…' : <><img src="/gd.png" alt="Google Drive" className="h-4 w-4 mr-2 object-contain" /> Google Drive</>}
+              </Button>
+              <Button disabled={providerLoading !== null} onClick={() => beginProviderOAuth('dropbox')} className="bg-sky-600 hover:bg-sky-700">
+                {providerLoading==='dropbox' ? 'Connecting…' : <><img src="/db.png" alt="Dropbox" className="h-4 w-4 mr-2 object-contain" /> Dropbox</>}
+              </Button>
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setShowProviderDialog(false)}>Cancel</Button>
@@ -296,8 +310,13 @@ export default function IntegrationsHub() {
               </div>
             </div>
           )}
-          <div className="mt-3 rounded-md border border-white/10 bg-white/5 inline-block px-3 py-2 text-sm text-gray-200">
-            Want us to auto-collect invoices & docs for you? Connect Gmail / Outlook / Drive / Dropbox.
+          <div className="mt-3 rounded-md border border-white/10 bg-white/5 inline-flex items-center gap-3 px-4 py-3 text-sm text-gray-200">
+            <span>Want us to auto-collect invoices & docs for you? Connect</span>
+            <div className="flex items-center gap-2">
+              <img src="/gmailicon.png" alt="Gmail" className="h-5 w-5 object-contain" />
+              <img src="/outlookicon.webp" alt="Outlook" className="h-5 w-5 object-contain" />
+              <span>Drive / Dropbox</span>
+            </div>
           </div>
           <div className="mt-4 max-w-xl mx-auto relative">
             <SearchIcon className="h-4 w-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2" />
@@ -352,7 +371,13 @@ export default function IntegrationsHub() {
                 {(['gmail','outlook','gdrive','dropbox'] as const).map((p) => (
                   <div key={p} className="flex flex-col gap-2 rounded border border-white/10 bg-white/5 p-3">
                     <div className="flex items-center justify-between">
-                      <div className="text-sm font-medium capitalize">{p === 'gdrive' ? 'Google Drive' : p}</div>
+                      <div className="flex items-center gap-2 text-sm font-medium">
+                        {p === 'gmail' && <img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 object-contain" />}
+                        {p === 'outlook' && <img src="/outlookicon.webp" alt="Outlook" className="h-4 w-4 object-contain" />}
+                        {p === 'gdrive' && <img src="/gd.png" alt="Google Drive" className="h-4 w-4 object-contain" />}
+                        {p === 'dropbox' && <img src="/db.png" alt="Dropbox" className="h-4 w-4 object-contain" />}
+                        <span className="capitalize">{p === 'gdrive' ? 'Google Drive' : p}</span>
+                      </div>
                       <Badge variant="outline" className={cn('text-xs', status?.providerIngest?.[p]?.connected ? 'border-emerald-300 text-emerald-300' : status?.providerIngest?.[p]?.error ? 'border-red-300 text-red-300' : 'border-white/30 text-gray-300')}>
                         {status?.providerIngest?.[p]?.connected ? 'Connected' : status?.providerIngest?.[p]?.error ? 'Error' : 'Not connected'}
                       </Badge>

@@ -445,7 +445,7 @@ export function Dashboard() {
                 window.location.href = '/auth/gmail-sandbox';
               }
             }}>
-              <Mail className="h-4 w-4 mr-2" /> Gmail
+              <img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 mr-2 object-contain" /> Gmail
             </Button>
             <Button className="w-full bg-blue-600/90 hover:bg-blue-600 text-white border border-white/10" onClick={async () => {
               try {
@@ -456,7 +456,7 @@ export function Dashboard() {
                 window.location.href = '/auth/outlook-sandbox';
               }
             }}>
-              <Mail className="h-4 w-4 mr-2" /> Outlook
+              <img src="/outlookicon.webp" alt="Outlook" className="h-4 w-4 mr-2 object-contain" /> Outlook
             </Button>
             <Button className="w-full bg-emerald-600/90 hover:bg-emerald-600 text-white border border-white/10" onClick={async () => {
               try {
@@ -467,7 +467,7 @@ export function Dashboard() {
                 window.location.href = '/auth/gdrive-sandbox';
               }
             }}>
-              <Cloud className="h-4 w-4 mr-2" /> Google Drive
+              <img src="/gd.png" alt="Google Drive" className="h-4 w-4 mr-2 object-contain" /> Google Drive
             </Button>
             <Button className="w-full bg-sky-600/90 hover:bg-sky-600 text-white border border-white/10" onClick={async () => {
               try {
@@ -478,7 +478,7 @@ export function Dashboard() {
                 window.location.href = '/auth/dropbox-sandbox';
               }
             }}>
-              <Cloud className="h-4 w-4 mr-2" /> Dropbox
+              <img src="/db.png" alt="Dropbox" className="h-4 w-4 mr-2 object-contain" /> Dropbox
             </Button>
           </div>
           <DialogFooter>
