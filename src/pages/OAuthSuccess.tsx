@@ -188,7 +188,7 @@ export default function OAuthSuccess() {
             <DialogHeader>
               <DialogTitle className="text-lg text-gray-100">
                 <div className="flex flex-col items-start gap-1">
-                  <span className="inline-flex items-center gap-2">
+                  <span className="inline-flex">
                     <span className="relative inline-flex">
                       <span className="absolute -inset-2 rounded-full bg-emerald-400/25 blur-lg" />
                       <img
@@ -197,7 +197,6 @@ export default function OAuthSuccess() {
                         className="relative h-8 w-8 rounded-full object-cover shadow-lg shadow-emerald-500/25"
                       />
                     </span>
-                    <span className="font-medium text-white">Clario</span>
                   </span>
                   <span>Connect Evidence Sources</span>
                 </div>
