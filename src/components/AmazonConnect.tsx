@@ -27,7 +27,9 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         throw new Error(response.error || 'Failed to initiate Amazon connection');
       }
 
-      if (response.data?.auth_url) {
+      // Handle both auth_url and authUrl (backend may return either)
+      const authUrl = response.data?.auth_url || response.data?.authUrl;
+      if (authUrl) {
         // Track the connection attempt
         await api.trackEvent('amazon_connect_initiated', { 
           timestamp: new Date().toISOString(),
@@ -35,7 +37,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         });
 
         // Redirect to Amazon OAuth
-        window.location.href = response.data.auth_url;
+        window.location.href = authUrl;
       } else {
         throw new Error('No authorization URL received from backend');
       }
