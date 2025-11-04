@@ -68,19 +68,38 @@ function buildApiUrl(path: string): string {
   return productionBackend + normalizedPath;
 }
 
-async function requestJson<T>(path: string, options?: RequestInit): Promise<ApiResponse<T>> {
+/**
+ * Make a request with retry logic for sleeping backends (e.g., Render free tier)
+ * Retries up to 3 times with exponential backoff for network errors
+ */
+async function requestJsonWithRetry<T>(
+  path: string,
+  options?: RequestInit,
+  retryCount = 0,
+  maxRetries = 3
+): Promise<ApiResponse<T>> {
+  const url = buildApiUrl(path);
+  
+  // Use a longer timeout for the first request to allow backend wake-up time
+  const timeout = retryCount === 0 ? 60000 : 30000; // 60s first request, 30s retries
+  
   try {
-    const url = buildApiUrl(path);
-    console.log(`[API] Requesting: ${url}`);
+    console.log(`[API] Requesting: ${url}${retryCount > 0 ? ` (retry ${retryCount}/${maxRetries})` : ''}`);
+    
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
     
     const res = await fetch(url, {
       credentials: 'include',
+      signal: controller.signal,
       headers: {
         'Content-Type': 'application/json',
         ...options?.headers,
       },
       ...options,
     });
+    
+    clearTimeout(timeoutId);
 
     console.log(`[API] Response status: ${res.status} for ${url}`);
 
@@ -111,15 +130,45 @@ async function requestJson<T>(path: string, options?: RequestInit): Promise<ApiR
       data,
     };
   } catch (error) {
-    // Provide detailed error information
     const url = buildApiUrl(path);
     const errorMsg = error instanceof Error ? error.message : 'Network error';
-    const details = `Cannot connect to backend at ${url}. The backend may be down, sleeping, or blocked by CORS.`;
+    
+    // Check if this is a network error that might benefit from retry
+    const isNetworkError = 
+      error instanceof TypeError || // Fetch failed
+      errorMsg.includes('fetch') ||
+      errorMsg.includes('network') ||
+      errorMsg.includes('Failed to fetch') ||
+      error instanceof DOMException; // AbortError
+    
+    const isAbortError = error instanceof DOMException && error.name === 'AbortError';
+    
+    // Retry on network errors or timeout (but not on CORS or other errors)
+    if (isNetworkError && !isAbortError && retryCount < maxRetries) {
+      const delay = Math.min(1000 * Math.pow(2, retryCount), 10000); // Exponential backoff: 1s, 2s, 4s, max 10s
+      console.warn(`[API] Network error, retrying in ${delay}ms... (${retryCount + 1}/${maxRetries})`);
+      
+      await new Promise(resolve => setTimeout(resolve, delay));
+      return requestJsonWithRetry<T>(path, options, retryCount + 1, maxRetries);
+    }
+    
+    // Provide detailed error information
+    let details: string;
+    if (isAbortError) {
+      details = `Request timed out after ${timeout}ms. The backend may be sleeping (free tier services can take 30-60 seconds to wake up). Please wait a moment and try again.`;
+    } else if (isNetworkError && retryCount >= maxRetries) {
+      details = `Cannot connect to backend at ${url} after ${maxRetries} retries. The backend may be down, sleeping (free tier services can take 30-60 seconds to wake up), or blocked by CORS. Please check your internet connection and try again in a moment.`;
+    } else if (errorMsg.includes('CORS') || errorMsg.includes('cors')) {
+      details = `CORS error: Cannot connect to backend at ${url}. The backend may not be configured to allow requests from this origin.`;
+    } else {
+      details = `Cannot connect to backend at ${url}. The backend may be down, sleeping, or blocked by CORS. Error: ${errorMsg}`;
+    }
     
     console.error(`[API] Request failed for ${path}:`, {
       error: errorMsg,
       url,
-      details
+      details,
+      retryCount
     });
     
     return {
@@ -128,6 +177,10 @@ async function requestJson<T>(path: string, options?: RequestInit): Promise<ApiR
       error: details,
     };
   }
+}
+
+async function requestJson<T>(path: string, options?: RequestInit): Promise<ApiResponse<T>> {
+  return requestJsonWithRetry<T>(path, options);
 }
 
 /**
