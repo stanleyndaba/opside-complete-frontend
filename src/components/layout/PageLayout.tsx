@@ -38,14 +38,20 @@ export function PageLayout({
 
         <main className={`flex-1 transition-all duration-300 ${mainIndent}`}>
           <div className="container max-w-full p-4 lg:p-6 animate-fade-in">
-            {(hideNavbar && hideSidebar) && (
-              <div className="fixed top-3 left-4 z-50 bg-transparent pointer-events-none">
-                <div className="inline-flex items-center gap-2 select-none">
-                  <img src="/donelogo.png" alt="Clario" className="h-6 w-6" />
-                  <span className="text-gray-100 font-medium">Clario</span>
+              {(hideNavbar && hideSidebar) && (
+                <div className="fixed top-3 left-4 z-50 bg-transparent pointer-events-none">
+                  <div className="inline-flex items-center select-none">
+                    <span className="relative inline-flex">
+                      <span className="absolute -inset-1 rounded-full bg-emerald-400/20 blur-lg" />
+                      <img
+                        src="/donelogo.png"
+                        alt="Clario"
+                        className="relative h-10 w-10 rounded-full object-cover shadow-lg shadow-emerald-500/30"
+                      />
+                    </span>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
             {children}
           </div>
         </main>

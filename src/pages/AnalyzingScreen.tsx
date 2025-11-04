@@ -94,18 +94,8 @@ export default function AnalyzingScreen() {
 
             <div className="relative max-w-2xl mx-auto mt-6">
               <Card className="bg-white/5 border-white/10">
-                <CardHeader className="text-center">
-                    <CardTitle className="flex items-center justify-center gap-2 text-emerald-400">
-                      <span className="relative inline-flex items-center">
-                        <span className="absolute -inset-4 rounded-full bg-emerald-400/20 blur-2xl" />
-                        <img
-                          src="/donelogo.png"
-                          alt="Clario"
-                          className="relative h-10 w-10 rounded-full object-cover shadow-lg shadow-emerald-500/20"
-                        />
-                      </span>
-                      Analysis Complete!
-                    </CardTitle>
+                  <CardHeader className="text-center">
+                    <CardTitle className="text-emerald-400">Analysis Complete!</CardTitle>
                 </CardHeader>
                 <CardContent className="text-center space-y-6">
                   <div className="space-y-2">
@@ -161,17 +151,7 @@ export default function AnalyzingScreen() {
           <div className="pointer-events-none absolute inset-0 opacity-20 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)] bg-[linear-gradient(to_bottom,transparent_0,transparent_95%,rgba(255,255,255,0.08)_96%),linear-gradient(to_right,transparent_0,transparent_95%,rgba(255,255,255,0.08)_96%)] bg-[length:36px_36px]" />
           <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-[320px] w-[320px] rounded-full bg-emerald-500/10 blur-3xl" />
 
-          <div className="relative max-w-xl w-full mx-auto text-center space-y-4">
-              <div className="flex justify-center">
-                <span className="relative inline-flex">
-                  <span className="absolute -inset-3 rounded-full bg-emerald-400/20 blur-2xl" />
-                  <img
-                    src="/donelogo.png"
-                    alt="Clario"
-                    className="relative h-12 w-12 rounded-full object-cover shadow-lg shadow-emerald-500/25"
-                  />
-                </span>
-              </div>
+            <div className="relative max-w-xl w-full mx-auto text-center space-y-4">
             <div className="flex flex-col items-center gap-3">
               <span className="text-sm text-gray-400">Progress</span>
               <svg viewBox="0 0 100 100" className="w-10 h-10 -rotate-90">

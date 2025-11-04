@@ -43,16 +43,6 @@ export default function AmazonSandboxPage() {
             {/* remove extra overlays that cause haze */}
 
             <div className="relative max-w-md w-full mx-auto text-center space-y-6">
-              <div className="flex justify-center">
-                <span className="relative inline-flex">
-                  <span className="absolute -inset-3 rounded-full bg-emerald-400/20 blur-2xl" />
-                  <img
-                    src="/donelogo.png"
-                    alt="Clario"
-                    className="relative h-12 w-12 rounded-full object-cover shadow-lg shadow-emerald-500/25"
-                  />
-                </span>
-              </div>
               <div className="flex items-center justify-center gap-2 text-gray-100">
                 <Loader2 className="h-6 w-6 animate-spin" />
                 <span className="text-lg font-medium">Connecting to Amazon...</span>
