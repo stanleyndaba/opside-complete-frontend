@@ -327,7 +327,7 @@ const Index = () => {
                 <div className="relative h-24 overflow-hidden text-4xl font-bold text-gray-900 md:text-6xl md:font-black">
                   <span
                     key={benefitIndex}
-                    className="absolute inset-0 flex items-center text-balance animate-[wordDrift_3.2s_ease-in-out]"
+                    className="absolute inset-0 flex items-center animate-[wordDrift_3.2s_ease-in-out] text-[#b3b3b3]"
                   >
                     {benefitWords[benefitIndex]}
                   </span>
