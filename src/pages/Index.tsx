@@ -145,6 +145,14 @@ const Index = () => {
                   </div>
                 </DropdownMenuContent>
               </DropdownMenu>
+                <Link to="/login" className="inline-flex">
+                  <Button
+                    variant="outline"
+                    className="h-9 rounded-full border border-gray-200 bg-gray-100/80 px-4 text-sm font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors"
+                  >
+                    Login
+                  </Button>
+                </Link>
             </nav>
             <button
               type="button"
@@ -210,6 +218,18 @@ const Index = () => {
                     </div>
                   </DropdownMenuContent>
                 </DropdownMenu>
+                <Link
+                  to="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="mt-1"
+                >
+                  <Button
+                    variant="outline"
+                    className="w-full justify-center h-9 rounded-full border border-gray-200 bg-gray-100/80 text-sm font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors"
+                  >
+                    Login
+                  </Button>
+                </Link>
               </div>
             </div>
           )}
@@ -243,17 +263,9 @@ const Index = () => {
               Clario automates the entire reimbursement process, recovering lost revenue from Amazon FBA errors in minutes—not months.
             </p>
             <div className="pt-2">
-              <div className="max-w-md mx-auto flex justify-center">
-                <AmazonConnect />
-              </div>
-              <p className="mt-3 text-xs text-gray-500 max-w-2xl mx-auto">
-                By connecting your account, you agree to Clario's
-                <Link to="/terms" className="mx-1 underline hover:text-gray-900">Terms of Service</Link>
-                and acknowledge our
-                <Link to="/security" className="mx-1 underline hover:text-gray-900">Data Security</Link>
-                &
-                <Link to="/privacy" className="mx-1 underline hover:text-gray-900">Privacy Policy</Link>.
-              </p>
+                <div className="max-w-md mx-auto flex justify-center">
+                  <AmazonConnect />
+                </div>
               <div className="mt-4 flex flex-wrap items-center justify-center gap-4">
                 <div className="inline-flex items-center gap-2">
                   <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-emerald-500">
@@ -283,13 +295,19 @@ const Index = () => {
         </div>
       </div>
 
-      <footer id="core-footer">
-        <div className="container mx-auto px-6 py-6 flex items-center justify-center gap-3 text-xs text-gray-500 text-center">
-          <span>
-            © Clario 2025 | {selectedLanguage.language}
-          </span>
-        </div>
-      </footer>
+        <footer id="core-footer">
+          <div className="container mx-auto px-6 py-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-xs text-gray-500 text-center md:text-left">
+            <span>© Clario 2025 | {selectedLanguage.language}</span>
+            <p className="text-xs text-gray-500">
+              By connecting your account, you agree to Clario's
+              <Link to="/terms" className="mx-1 underline hover:text-gray-900">Terms of Service</Link>
+              and acknowledge our
+              <Link to="/security" className="mx-1 underline hover:text-gray-900">Data Security</Link>
+              &
+              <Link to="/privacy" className="mx-1 underline hover:text-gray-900">Privacy Policy</Link>.
+            </p>
+          </div>
+        </footer>
     </div>
   );
 };
