@@ -12,7 +12,7 @@ import http from 'http';
 const tests = [
     {
         name: 'Production Backend Health',
-        url: 'https://clario-complete-backend-mvak.onrender.com/api/health',
+        url: 'https://opside-node-api.onrender.com/api/health',
         expectedStatus: [200, 404] // 404 is ok if endpoint doesn't exist yet
     },
     {
@@ -23,7 +23,7 @@ const tests = [
     },
     {
         name: 'Production Auth Endpoint',
-        url: 'https://clario-complete-backend-mvak.onrender.com/api/auth/me',
+        url: 'https://opside-node-api.onrender.com/api/auth/me',
         expectedStatus: [200, 401, 403] // Auth endpoints should respond
     }
 ];

@@ -155,31 +155,31 @@ export function Sidebar({
         className
       )}
     >
-      {/* Branding + Collapse */}
-      <div
-        className={cn(
-          "border-b border-white/10 flex items-center",
-          isCollapsed ? "p-2 justify-center" : "p-4 justify-between"
-        )}
-      >
-        {!isCollapsed ? (
-          <>
-            <div className="select-none flex items-center gap-2">
-              <img src="/donelogo.png" alt="Clario" className="h-6 w-6" />
-              <span className="font-[500] text-white">Clario</span>
+        {/* Branding + Collapse */}
+        <div
+          className={cn(
+            "border-b border-white/10 flex items-center",
+            isCollapsed ? "p-2 justify-center" : "p-4 justify-between"
+          )}
+        >
+          {!isCollapsed ? (
+            <>
+              <div className="select-none flex items-center gap-2">
+                <img src="/donelogo.png" alt="Clario" className="h-8 w-8 rounded-full object-cover" />
+                <span className="font-[500] text-white">Clario</span>
+              </div>
+              <div className="text-[11px] text-emerald-400/90 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                Connected
+              </div>
+            </>
+          ) : (
+            <div className="flex items-center gap-2">
+              <img src="/donelogo.png" alt="Clario" className="h-8 w-8 rounded-full object-cover" />
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" title="Connected" />
             </div>
-            <div className="text-[11px] text-emerald-400/90 flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              Connected
-            </div>
-          </>
-        ) : (
-          <div className="flex items-center gap-2">
-            <img src="/donelogo.png" alt="Clario" className="h-6 w-6" />
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" title="Connected" />
-          </div>
-        )}
-      </div>
+          )}
+        </div>
 
       <ScrollArea className="flex-1">
         <div className={cn("h-full flex", isCollapsed ? "px-2" : "px-3")}>

@@ -56,11 +56,11 @@ paths:
       summary: Integrations status summary
       responses:
         '200': { description: OK }
-  /api/v1/integrations/connect-amazon:
-    get:
-      summary: Connect Amazon
-      responses:
-        '200': { description: OK }
+/api/v1/integrations/amazon/auth/start:
+  get:
+    summary: Start Amazon OAuth
+    responses:
+      '200': { description: OK }
   /api/v1/integrations/connect-docs:
     get:
       summary: Connect documents provider

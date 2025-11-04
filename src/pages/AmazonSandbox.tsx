@@ -35,28 +35,27 @@ export default function AmazonSandboxPage() {
     return () => { cancelled = true; };
   }, [state, navigate, toast]);
 
-  return (
-    <PageLayout title="Connecting to Amazon" hideNavbar hideSidebar>
-      <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-transparent min-h-screen text-gray-300 flex items-center justify-center">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
-          {/* remove extra overlays that cause haze */}
+    return (
+      <PageLayout title="Connecting to Amazon" hideNavbar hideSidebar>
+        <div className="relative -m-4 lg:-m-6">
+          <div className="relative w-full bg-transparent min-h-screen text-gray-300 flex items-center justify-center">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+            {/* remove extra overlays that cause haze */}
 
-          <div className="relative max-w-md w-full mx-auto text-center space-y-6">
-            <div className="flex items-center justify-center gap-2 text-gray-100">
-              <Loader2 className="h-6 w-6 animate-spin" />
-              <span className="text-lg font-medium">Connecting to Amazon...</span>
+            <div className="relative max-w-md w-full mx-auto text-center space-y-6">
+              <div className="flex items-center justify-center gap-2 text-gray-100">
+                <Loader2 className="h-6 w-6 animate-spin" />
+                <span className="text-lg font-medium">Connecting to Amazon...</span>
+              </div>
+              <p className="text-gray-400">
+                Simulating Amazon Seller Central authentication...
+              </p>
+              {/* Step indicators removed for minimal appearance */}
+
+              {/* Security box removed for minimal appearance */}
             </div>
-            {/* Center logo removed per request */}
-            <p className="text-gray-400">
-              Simulating Amazon Seller Central authentication...
-            </p>
-            {/* Step indicators removed for minimal appearance */}
-
-            {/* Security box removed for minimal appearance */}
           </div>
         </div>
-      </div>
-    </PageLayout>
-  );
+      </PageLayout>
+    );
 }

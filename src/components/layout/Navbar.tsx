@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { ArrowUpDown, ChevronDown, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { NotificationBell } from './NotificationBell';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 interface NavbarProps {
@@ -50,30 +50,24 @@ export function Navbar({
     isTransparent ? "bg-transparent border-transparent backdrop-blur-0 shadow-none" : "bg-background/60 backdrop-blur-sm border-b",
     className
   )}>
-      <div className="container flex items-center h-16 px-4 font-body">
-        {/* Logo */}
-        <div className="flex items-center gap-3">
-          <Link to="/" className="flex items-center gap-2 hover:opacity-90">
-            <img src="/donelogo.png" alt="Logo" className="h-8 w-8 rounded-full object-cover" />
-          </Link>
-        </div>
-        {/* Center - Search */}
-        <div className="flex-1 max-w-xl mx-4 hidden md:block">
-          <div className="relative">
-            <Search className={cn(
-              'absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4',
-              isTransparent ? 'text-gray-300' : 'text-muted-foreground'
-            )} />
-            <Input
-              aria-label="Search"
-              placeholder="search invoices, products, documents, and more"
-              variant={isTransparent ? 'dark' : 'default'}
-              className="pl-9 h-9 rounded-md"
-            />
+        <div className="container flex items-center h-16 px-4 font-body">
+          {/* Center - Search */}
+          <div className="flex-1 max-w-xl hidden md:block md:mx-4">
+            <div className="relative">
+              <Search className={cn(
+                'absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4',
+                isTransparent ? 'text-gray-300' : 'text-muted-foreground'
+              )} />
+              <Input
+                aria-label="Search"
+                placeholder="search invoices, products, documents, and more"
+                variant={isTransparent ? 'dark' : 'default'}
+                className="pl-9 h-9 rounded-md"
+              />
+            </div>
           </div>
-        </div>
-        {/* Right side - Sandbox badge, Sync, Notifications */}
-        <div className="flex items-center gap-4 ml-auto">
+          {/* Right side - Sandbox badge, Sync, Notifications */}
+          <div className="flex items-center gap-4 ml-auto">
           {isSandbox && (
             <span className={cn(
               'text-xs px-2 py-0.5 rounded border',
