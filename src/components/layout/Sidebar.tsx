@@ -186,37 +186,42 @@ export function Sidebar({
           )}
         </div>
 
-      <ScrollArea className="flex-1">
-        <div className={cn("h-full flex", isCollapsed ? "px-2" : "px-3")}>
-          <div className="w-full min-h-full grid place-content-center">
-            <nav className="space-y-3 w-full py-8">
-              <div className="space-y-1">
-                {primaryItems.map((item, idx) => (
-                  <React.Fragment key={`p-${idx}`}>
-                    <NavItemComponent item={{...item, href: item.href}} />
-                  </React.Fragment>
-                ))}
-              </div>
-              {!isCollapsed && <div className="h-px bg-white/10" />}
-              <div className="space-y-1">
-                {accountItems.map((item, idx) => (
-                  <React.Fragment key={`a-${idx}`}>
-                    <NavItemComponent item={item} />
-                  </React.Fragment>
-                ))}
-              </div>
-              {!isCollapsed && <div className="h-px bg-white/10" />}
-              <div className="space-y-1 pb-2">
-                {supportItems.map((item, idx) => (
-                  <React.Fragment key={`s-${idx}`}>
-                    <NavItemComponent item={item} />
-                  </React.Fragment>
-                ))}
-              </div>
-            </nav>
+        <ScrollArea className="flex-1">
+          <div
+            className={cn(
+              "h-full flex justify-center",
+              isCollapsed ? "px-2" : "px-3"
+            )}
+          >
+            <div className="flex flex-col items-center justify-center py-8 space-y-6">
+              <nav className="space-y-3 w-full">
+                <div className="space-y-1">
+                  {primaryItems.map((item, idx) => (
+                    <React.Fragment key={`p-${idx}`}>
+                      <NavItemComponent item={{ ...item, href: item.href }} />
+                    </React.Fragment>
+                  ))}
+                </div>
+                {!isCollapsed && <div className="h-px bg-white/10" />}
+                <div className="space-y-1">
+                  {accountItems.map((item, idx) => (
+                    <React.Fragment key={`a-${idx}`}>
+                      <NavItemComponent item={item} />
+                    </React.Fragment>
+                  ))}
+                </div>
+                {!isCollapsed && <div className="h-px bg-white/10" />}
+                <div className="space-y-1 pb-2">
+                  {supportItems.map((item, idx) => (
+                    <React.Fragment key={`s-${idx}`}>
+                      <NavItemComponent item={item} />
+                    </React.Fragment>
+                  ))}
+                </div>
+              </nav>
+            </div>
           </div>
-        </div>
-      </ScrollArea>
+        </ScrollArea>
 
       {/* Profile + Status + Logout */}
       {isCollapsed ? (
