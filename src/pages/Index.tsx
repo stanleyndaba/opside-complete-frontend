@@ -37,7 +37,7 @@ const Index = () => {
       'Recover',
       'Save More',
       'Gain Clarity',
-      'Assert More Assurance and Control'
+      'Re-Assert More'
     ],
     []
   );
@@ -337,33 +337,34 @@ const Index = () => {
                 </p>
               </div>
               <div className="relative w-full max-w-sm space-y-5 rounded-3xl border border-gray-200 bg-gray-50 p-6 text-sm text-gray-700 justify-self-end">
-                <div className="text-xs font-semibold uppercase tracking-[0.3em] text-gray-500">Proof points</div>
+                <div className="text-xs font-semibold uppercase tracking-[0.3em] text-gray-500">Why Clario Works Better Than Anything Else</div>
                 <ul className="space-y-3">
                   <li className="flex items-center gap-3">
                     <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-900 text-gray-50">
                       <Check className="h-4 w-4" />
                     </span>
-                    Automated reimbursement claims ready in hours
+                    Reimbursements ready in hours, not days or weeks.
                   </li>
                   <li className="flex items-center gap-3">
                     <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-800 text-gray-50">
                       <Check className="h-4 w-4" />
                     </span>
-                    Evidence synced from email or cloud—zero spreadsheets
+                    Your evidence automatically pulls from your email or cloud.
                   </li>
                   <li className="flex items-center gap-3">
                     <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-700 text-gray-50">
                       <Check className="h-4 w-4" />
                     </span>
-                    Real-time alerts before settlement leakage hits
+                    Real-time alerts catch issues before you lose money.
                   </li>
                   <li className="flex items-center gap-3">
                     <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-600 text-gray-50">
                       <Check className="h-4 w-4" />
                     </span>
-                    Unified audit trails that finance teams trust
+                    All your claims and payouts tracked in one trusted dashboard.
                   </li>
                 </ul>
+                <p className="text-sm text-gray-600">It does the works on your behalf.</p>
               </div>
             </div>
           </div>
