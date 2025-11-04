@@ -12,27 +12,59 @@ function buildApiUrl(path: string): string {
   // If caller passed an absolute URL, return as-is
   if (/^https?:\/\//i.test(path)) return path;
 
-  // Prefer explicit base URL when provided via env (but ignore VITE_REFUND_ENGINE_URL for main API)
-  const envBase = (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_API_BASE_URL)
-    || (typeof process !== 'undefined' && (process as any).env?.VITE_API_BASE_URL);
-  
-  if (envBase) {
-    return String(envBase).replace(/\/$/, '') + normalizedPath;
-  }
-
   // Production backend URL - use the new consolidated Node.js API
+  // IMPORTANT: This is the correct backend URL. Do not change unless migrating to a new backend.
   const productionBackend = 'https://opside-node-api.onrender.com';
   
-  // In development, you can override with localhost
-  const isDev = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+  // List of deprecated/old backend URLs that should be rejected
+  const deprecatedBackends = [
+    'clario-complete-backend-y5cd.onrender.com',
+    'https://clario-complete-backend-y5cd.onrender.com',
+  ];
+
+  // Check for environment variable override (Vite exposes VITE_ prefixed vars via import.meta.env)
+  // In Vite, environment variables are available at build time and are injected into the bundle
+  let envBase: string | undefined;
   
-  if (isDev && (import.meta as any).env?.VITE_API_BASE_URL) {
-    const devBase = (import.meta as any).env?.VITE_API_BASE_URL;
-    return String(devBase).replace(/\/$/, '') + normalizedPath;
+  if (typeof import.meta !== 'undefined' && import.meta.env) {
+    // Vite environment variables are directly on import.meta.env
+    envBase = import.meta.env.VITE_API_BASE_URL;
   }
 
-  // Use production backend for all deployed environments
-  // Ensure we always return the full URL
+  // If environment variable is set, validate it before using
+  if (envBase && envBase.trim() !== '') {
+    const baseUrl = String(envBase).trim().replace(/\/$/, '');
+    
+    // Reject deprecated/old backend URLs
+    const isDeprecated = deprecatedBackends.some(deprecated => 
+      baseUrl.includes(deprecated)
+    );
+    
+    if (isDeprecated) {
+      console.warn(
+        `[API] Rejected deprecated backend URL from VITE_API_BASE_URL: ${baseUrl}. ` +
+        `Using correct backend URL instead: ${productionBackend}`
+      );
+    } else {
+      // Valid environment variable - use it
+      console.log(`[API] Using environment variable VITE_API_BASE_URL: ${baseUrl}`);
+      return baseUrl + normalizedPath;
+    }
+  }
+
+  // In development, check for localhost override
+  const isDev = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+  
+  if (isDev) {
+    // In development, you can still use env var, but also allow localhost:3000 fallback
+    const devBackend = 'http://localhost:3000';
+    console.log(`[API] Development mode - using: ${devBackend}`);
+    return devBackend + normalizedPath;
+  }
+
+  // Production: Use the production backend URL
+  // This ensures the correct backend is always used even if env vars aren't set
+  console.log(`[API] Production mode - using backend: ${productionBackend}`);
   return productionBackend + normalizedPath;
 }
 
