@@ -1,18 +1,13 @@
 
-/* Import brand fonts: Satoshi for headlines, Inter for body */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-@import url('https://fonts.cdnfonts.com/css/satoshi');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer utilities {
-  .font-heading { font-family: 'Inter', system-ui, Arial, sans-serif; }
-  .font-body { font-family: 'Inter', system-ui, Arial, sans-serif; }
-  .font-brand { font-family: 'Inter', system-ui, Arial, sans-serif; }
-  .font-logo { font-family: 'Montserrat', 'Inter', system-ui, Arial, sans-serif; font-weight: 900; }
+  .font-heading { font-family: "Geist","Geist Fallback",ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"; }
+  .font-body { font-family: "Geist","Geist Fallback",ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"; }
+  .font-brand { font-family: "Geist","Geist Fallback",ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"; }
+  .font-logo { font-family: "Geist","Geist Fallback",ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"; font-weight: 900; }
 }
 
 @layer base {
