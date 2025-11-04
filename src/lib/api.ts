@@ -104,6 +104,14 @@ async function requestJsonWithRetry<T>(
     clearTimeout(timeoutId);
 
     console.log(`[API] Response status: ${res.status} for ${url}`);
+    
+    // Log response details for debugging
+    if (!res.ok) {
+      console.warn(`[API] Backend responded with error status ${res.status} for ${url}`, {
+        statusText: res.statusText,
+        hasCorsHeaders: res.headers.get('access-control-allow-origin') !== null
+      });
+    }
 
     let data;
     const text = await res.text();
@@ -117,11 +125,28 @@ async function requestJsonWithRetry<T>(
 
     if (!res.ok) {
       const errorMsg = data?.error || data?.message || res.statusText || 'Request failed';
-      console.error(`[API] Error for ${url}: ${errorMsg}`);
+      
+      // Provide specific error messages based on status code
+      let userFriendlyError = errorMsg;
+      if (res.status === 404) {
+        userFriendlyError = `Endpoint not found (404): ${path} - The backend may not have implemented this endpoint yet, or the path is incorrect.`;
+      } else if (res.status === 401) {
+        userFriendlyError = `Unauthorized (401): Please log in or refresh your session.`;
+      } else if (res.status === 403) {
+        userFriendlyError = `Forbidden (403): You don't have permission to access this resource.`;
+      } else if (res.status >= 500) {
+        userFriendlyError = `Server error (${res.status}): ${errorMsg}`;
+      }
+      
+      console.error(`[API] HTTP ${res.status} error for ${url}: ${errorMsg}`);
+      
+      // For HTTP errors (401, 403, 404, 500, etc.), the backend IS responding
+      // These are not network errors and should not be retried
+      // Return immediately with the error
       return {
         ok: false,
         status: res.status,
-        error: errorMsg,
+        error: userFriendlyError,
       };
     }
 
@@ -135,19 +160,34 @@ async function requestJsonWithRetry<T>(
     const url = buildApiUrl(path);
     const errorMsg = error instanceof Error ? error.message : 'Network error';
     
-    // Check if this is a network error that might benefit from retry
-    const isNetworkError = 
-      error instanceof TypeError || // Fetch failed
-      errorMsg.includes('fetch') ||
-      errorMsg.includes('network') ||
-      errorMsg.includes('Failed to fetch') ||
-      error instanceof DOMException; // AbortError
-    
+    // Check error type to determine if retry is appropriate
     const isAbortError = error instanceof DOMException && error.name === 'AbortError';
     
-    // Retry on network errors or timeout (but not on CORS or other errors)
-    // For abort errors (timeouts), also retry since backend might be waking up
-    if ((isNetworkError || isAbortError) && retryCount < maxRetries) {
+    // CORS errors are network errors but retrying won't help - they need backend configuration fix
+    // CORS errors typically show as "Failed to fetch" or "NetworkError" but are actually CORS preflight failures
+    const isCorsError = 
+      errorMsg.includes('CORS') || 
+      errorMsg.includes('cors') ||
+      errorMsg.includes('Access-Control') ||
+      errorMsg.includes('Cross-Origin') ||
+      (errorMsg.includes('Failed to fetch') && typeof window !== 'undefined' && 
+       // Additional CORS detection: if we get "Failed to fetch" but it's likely CORS
+       // (we can't perfectly detect this, but we can check if it's a common pattern)
+       window.location.origin !== new URL(url).origin);
+    
+    // Network errors that might benefit from retry (backend might be waking up)
+    // But NOT CORS errors - those need backend configuration, not retries
+    const isRetryableNetworkError = 
+      !isCorsError && (
+        error instanceof TypeError || // Fetch failed (network error)
+        (errorMsg.includes('fetch') && !errorMsg.includes('CORS')) ||
+        (errorMsg.includes('network') && !errorMsg.includes('CORS')) ||
+        (errorMsg.includes('Failed to fetch') && !isCorsError) ||
+        isAbortError // Timeout - backend might be waking up
+      );
+    
+    // Only retry on retryable network errors (not CORS, not HTTP errors)
+    if (isRetryableNetworkError && retryCount < maxRetries) {
       const delay = Math.min(1000 * Math.pow(2, retryCount), 10000); // Exponential backoff: 1s, 2s, 4s, max 10s
       const retryType = isAbortError ? 'timeout' : 'network error';
       console.warn(`[API] ${retryType}, retrying in ${delay}ms... (${retryCount + 1}/${maxRetries})`);
@@ -158,20 +198,22 @@ async function requestJsonWithRetry<T>(
     
     // Provide detailed error information
     let details: string;
-    if (retryCount >= maxRetries) {
+    
+    if (isCorsError) {
+      // CORS is a configuration issue on the backend, not a network problem
+      details = `CORS error: The backend at ${url} is not configured to allow requests from ${typeof window !== 'undefined' ? window.location.origin : 'this origin'}. This is a backend configuration issue - the backend needs to allow your frontend domain in its CORS settings.`;
+    } else if (retryCount >= maxRetries) {
       // Calculate approximate total wait time
       const totalTime = timeout + (retryCount * 20000) + (1000 * (Math.pow(2, retryCount) - 1));
       if (isAbortError) {
         details = `Request timed out after ${Math.round(timeout/1000)}s. The backend may be sleeping (Render free tier can take 30-60 seconds to wake up). Please wait 30-60 seconds and refresh the page, or try again in a moment.`;
-      } else if (isNetworkError) {
+      } else if (isRetryableNetworkError) {
         details = `Cannot connect to backend at ${url} after ${maxRetries} retries (total wait time: ~${Math.round(totalTime/1000)}s). The backend may be sleeping (Render free tier can take 30-60 seconds to wake up). Please wait 30-60 seconds and refresh the page, or try again in a moment.`;
       } else {
-        details = `Cannot connect to backend at ${url} after ${maxRetries} retries. The backend may be down, sleeping, or blocked by CORS. Error: ${errorMsg}`;
+        details = `Cannot connect to backend at ${url}. Error: ${errorMsg}. Check your internet connection and verify the backend is running.`;
       }
-    } else if (errorMsg.includes('CORS') || errorMsg.includes('cors')) {
-      details = `CORS error: Cannot connect to backend at ${url}. The backend may not be configured to allow requests from this origin.`;
     } else {
-      details = `Cannot connect to backend at ${url}. The backend may be down, sleeping, or blocked by CORS. Error: ${errorMsg}`;
+      details = `Cannot connect to backend at ${url}. Error: ${errorMsg}`;
     }
     
     console.error(`[API] Request failed for ${path}:`, {
