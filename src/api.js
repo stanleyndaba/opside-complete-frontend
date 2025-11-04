@@ -30,7 +30,7 @@ const api = {
       console.error('Login failed:', error);
     }
   },
-  
+
   connectAmazon: async () => {
     try {
       console.log('Starting Amazon connection...');
@@ -59,15 +59,15 @@ const api = {
       console.error('Connect Amazon failed:', error);
     }
   },
-  
+
   getMetrics: async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/metrics`);
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       return await response.json();
     } catch (error) {
       console.error('Get metrics failed:', error);
