@@ -372,125 +372,116 @@ const Index = () => {
             </div>
           </div>
         </section>
-        <section className="relative bg-gradient-to-b from-white via-gray-50 to-white py-24">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(148,163,184,0.18)_0,transparent_55%)] pointer-events-none" aria-hidden="true" />
-          <div className="container relative mx-auto px-6">
-            <div className="grid gap-12 rounded-[40px] border border-gray-200/70 bg-white/90 p-10 shadow-[0_30px_90px_rgba(15,23,42,0.08)] md:grid-cols-[0.55fr_1fr]">
-              <div className="space-y-6">
-                <span className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-gray-100 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-gray-600">
-                  Frequently asked questions
-                </span>
-                <h2 className="text-3xl font-black tracking-tight text-gray-900 md:text-4xl">
-                  Everything you need to know before Clario goes to work.
-                </h2>
-                <p className="text-base text-gray-600 md:text-lg">
-                  Clario is built to be the safest, fastest reimbursement engine for FBA brands. We obsess over compliance, data privacy, and measurable ROI—so you can obsess over growth.
-                </p>
-                <div className="rounded-2xl border border-emerald-200 bg-emerald-50/80 px-4 py-3 text-sm text-emerald-800">
-                  <span className="font-semibold">Pro tip:</span> Connect Clario alongside your current reimbursement tool. We only charge on new dollars we recover.
-                </div>
-              </div>
-              <div className="space-y-6">
-                <Accordion type="single" collapsible className="space-y-3">
-                  <AccordionItem value="safety" className="rounded-2xl border border-gray-200 bg-gray-50 px-4">
-                    <AccordionTrigger className="text-left text-base font-semibold text-gray-900">
-                      Is this safe? Will linking my account get me suspended by Amazon?
-                    </AccordionTrigger>
-                    <AccordionContent className="space-y-3 text-sm text-gray-600">
-                      <p>
-                        This is our most important question. Yes, it is 100% safe. We are an officially-verified Amazon developer using the secure Selling Partner API (SP-API).
-                      </p>
-                      <p>
-                        We only perform actions that are fully compliant with Amazon&apos;s Terms of Service. Clario simply does the work of a manual audit, but 1,000x faster. Your account&apos;s safety is our #1 priority.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-                  <AccordionItem value="data" className="rounded-2xl border border-gray-200 bg-gray-50 px-4">
-                    <AccordionTrigger className="text-left text-base font-semibold text-gray-900">
-                      What data do you access? Do you look at my customer info or sales?
-                    </AccordionTrigger>
-                    <AccordionContent className="space-y-3 text-sm text-gray-600">
-                      <p>
-                        We never look at your customer&apos;s personal information (PII). Our access is limited only to the data required for reimbursements: inventory reports, shipment details, and transaction history.
-                      </p>
-                      <p>
-                        Our Evidence Engine can optionally scan your email or Google Drive, but only for invoice PDFs and proof-of-delivery documents. We don&apos;t care about your sales and we will never sell your data.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-                  <AccordionItem value="cost" className="rounded-2xl border border-gray-200 bg-gray-50 px-4">
-                    <AccordionTrigger className="flex flex-col items-start text-left text-base font-semibold text-gray-900">
-                      <span className="inline-flex items-center gap-2 text-sm font-medium text-gray-500">💰 Cost &amp; Value · The “What&apos;s the catch?”</span>
-                      How much does Clario cost?
-                    </AccordionTrigger>
-                    <AccordionContent className="space-y-3 text-sm text-gray-600">
-                      <p>
-                        It&apos;s simple: We take a 20% commission on successfully recovered funds. There are no monthly fees, no setup fees, and no hidden costs. If you don&apos;t get paid, we don&apos;t get paid.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-                  <AccordionItem value="comparison" className="rounded-2xl border border-gray-200 bg-gray-50 px-4">
-                    <AccordionTrigger className="text-left text-base font-semibold text-gray-900">
-                      How is this different from GETIDA, Sellerise, or Helium 10?
-                    </AccordionTrigger>
-                    <AccordionContent className="space-y-3 text-sm text-gray-600">
-                      <p>
-                        Those tools are dashboards or agencies. They identify problems, but you or their auditors still have to gather evidence and build the case. Clario is an autonomous AI agent.
-                      </p>
-                      <p>
-                        Our Evidence Engine finds the error, locates the matching invoice from your email, builds the case, and files it for you. It&apos;s zero effort, not just less effort.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-                  <AccordionItem value="roi" className="rounded-2xl border border-gray-200 bg-gray-50 px-4">
-                    <AccordionTrigger className="text-left text-base font-semibold text-gray-900">
-                      How much money will I actually get back?
-                    </AccordionTrigger>
-                    <AccordionContent className="space-y-3 text-sm text-gray-600">
-                      <p>
-                        On average, FBA sellers lose 1–3% of annual revenue to “small” errors. For a seller doing $1M a year, that&apos;s $10,000 to $30,000 in lost profit.
-                      </p>
-                      <p>
-                        We can&apos;t guarantee an exact amount, but our AI audits 18 months of data to find every dollar Amazon owes you.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-                  <AccordionItem value="onboarding" className="rounded-2xl border border-gray-200 bg-gray-50 px-4">
-                    <AccordionTrigger className="text-left text-base font-semibold text-gray-900">
-                      What do I have to do to get started?
-                    </AccordionTrigger>
-                    <AccordionContent className="space-y-3 text-sm text-gray-600">
-                      <p>It takes about two minutes:</p>
-                      <ul className="list-disc space-y-2 pl-5 text-gray-600">
-                        <li>Sign up for a Clario account.</li>
-                        <li>Securely connect your Amazon Seller Central account via the SP-API.</li>
-                        <li>(Optional) Grant read-only access to your email or Google Drive so our AI can gather invoices.</li>
-                      </ul>
-                      <p>That&apos;s it. Clario begins auditing immediately.</p>
-                    </AccordionContent>
-                  </AccordionItem>
-                  <AccordionItem value="coexist" className="rounded-2xl border border-gray-200 bg-gray-50 px-4">
-                    <AccordionTrigger className="text-left text-base font-semibold text-gray-900">
-                      What if I already use another reimbursement service?
-                    </AccordionTrigger>
-                    <AccordionContent className="space-y-3 text-sm text-gray-600">
-                      <p>
-                        No problem. Run Clario alongside your current tool. We&apos;re confident our AI Evidence Engine will find dollars that manual audits missed. You only pay us for the new funds we recover.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-                  <AccordionItem value="cancel" className="rounded-2xl border border-gray-200 bg-gray-50 px-4">
-                    <AccordionTrigger className="text-left text-base font-semibold text-gray-900">
-                      What if I want to cancel?
-                    </AccordionTrigger>
-                    <AccordionContent className="space-y-3 text-sm text-gray-600">
-                      <p>
-                        You can cancel anytime. Disconnect Clario from Seller Central and you&apos;re done—no lock-in contracts. We&apos;ll only invoice the 20% commission on claims that were successfully paid out before you canceled.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              </div>
+        <section className="bg-white py-24">
+          <div className="container mx-auto px-6">
+            <div className="mx-auto max-w-3xl text-center space-y-4">
+              <span className="text-sm font-semibold uppercase tracking-[0.3em] text-gray-500">Frequently asked questions</span>
+              <h2 className="text-3xl font-black tracking-tight text-gray-900 md:text-4xl">
+                Everything you wanted to ask before Clario starts recovering funds.
+              </h2>
+              <p className="text-base text-gray-600 md:text-lg">
+                From compliance to costs, here&apos;s the clarity you need before letting our Evidence Engine audit your Amazon account.
+              </p>
+            </div>
+            <div className="mx-auto mt-12 max-w-4xl space-y-2">
+              <Accordion type="single" collapsible className="space-y-2">
+                <AccordionItem value="safety" className="border-b border-gray-200 py-4">
+                  <AccordionTrigger className="text-left text-lg font-semibold text-gray-900 hover:no-underline">
+                    Is this safe? Will linking my account get me suspended by Amazon?
+                  </AccordionTrigger>
+                  <AccordionContent className="pt-3 text-sm text-gray-600 space-y-3">
+                    <p>
+                      This is our most important question. Yes, it is 100% safe. We are an officially-verified Amazon developer using the secure Selling Partner API (SP-API).
+                    </p>
+                    <p>
+                      We only perform actions that are fully compliant with Amazon&apos;s Terms of Service. Clario simply does the work of a manual audit, but 1,000x faster. Your account&apos;s safety is our #1 priority.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="data" className="border-b border-gray-200 py-4">
+                  <AccordionTrigger className="text-left text-lg font-semibold text-gray-900 hover:no-underline">
+                    What data do you access? Do you look at my customer info or sales?
+                  </AccordionTrigger>
+                  <AccordionContent className="pt-3 text-sm text-gray-600 space-y-3">
+                    <p>
+                      We never look at your customer&apos;s personal information (PII). Our access is limited only to the data required for reimbursements: inventory reports, shipment details, and transaction history.
+                    </p>
+                    <p>
+                      Our Evidence Engine can optionally scan your email or Google Drive, but only for invoice PDFs and proof-of-delivery documents. We don&apos;t care about your sales and we will never sell your data.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="cost" className="border-b border-gray-200 py-4">
+                  <AccordionTrigger className="text-left text-lg font-semibold text-gray-900 hover:no-underline">
+                    How much does Clario cost?
+                  </AccordionTrigger>
+                  <AccordionContent className="pt-3 text-sm text-gray-600 space-y-3">
+                    <p>
+                      It&apos;s simple: We take a 20% commission on successfully recovered funds. There are no monthly fees, no setup fees, and no hidden costs. If you don&apos;t get paid, we don&apos;t get paid.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="comparison" className="border-b border-gray-200 py-4">
+                  <AccordionTrigger className="text-left text-lg font-semibold text-gray-900 hover:no-underline">
+                    How is this different from GETIDA, Sellerise, or Helium 10?
+                  </AccordionTrigger>
+                  <AccordionContent className="pt-3 text-sm text-gray-600 space-y-3">
+                    <p>
+                      Those tools are dashboards or agencies. They identify problems, but you or their auditors still have to gather evidence and build the case. Clario is an autonomous AI agent.
+                    </p>
+                    <p>
+                      Our Evidence Engine finds the error, locates the matching invoice from your email, builds the case, and files it for you. It&apos;s zero effort, not just less effort.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="roi" className="border-b border-gray-200 py-4">
+                  <AccordionTrigger className="text-left text-lg font-semibold text-gray-900 hover:no-underline">
+                    How much money will I actually get back?
+                  </AccordionTrigger>
+                  <AccordionContent className="pt-3 text-sm text-gray-600 space-y-3">
+                    <p>
+                      On average, FBA sellers lose 1–3% of annual revenue to “small” errors. For a seller doing $1M a year, that&apos;s $10,000 to $30,000 in lost profit.
+                    </p>
+                    <p>
+                      We can&apos;t guarantee an exact amount, but our AI audits 18 months of data to find every dollar Amazon owes you.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="onboarding" className="border-b border-gray-200 py-4">
+                  <AccordionTrigger className="text-left text-lg font-semibold text-gray-900 hover:no-underline">
+                    What do I have to do to get started?
+                  </AccordionTrigger>
+                  <AccordionContent className="pt-3 text-sm text-gray-600 space-y-3">
+                    <p>It takes about two minutes:</p>
+                    <ul className="list-disc space-y-2 pl-5 text-gray-600">
+                      <li>Sign up for a Clario account.</li>
+                      <li>Securely connect your Amazon Seller Central account via the SP-API.</li>
+                      <li>(Optional) Grant read-only access to your email or Google Drive so our AI can gather invoices.</li>
+                    </ul>
+                    <p>That&apos;s it. Clario begins auditing immediately.</p>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="coexist" className="border-b border-gray-200 py-4">
+                  <AccordionTrigger className="text-left text-lg font-semibold text-gray-900 hover:no-underline">
+                    What if I already use another reimbursement service?
+                  </AccordionTrigger>
+                  <AccordionContent className="pt-3 text-sm text-gray-600 space-y-3">
+                    <p>
+                      No problem. Run Clario alongside your current tool. We&apos;re confident our AI Evidence Engine will find dollars that manual audits missed. You only pay us for the new funds we recover.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="cancel" className="border-b border-gray-200 py-4">
+                  <AccordionTrigger className="text-left text-lg font-semibold text-gray-900 hover:no-underline">
+                    What if I want to cancel?
+                  </AccordionTrigger>
+                  <AccordionContent className="pt-3 text-sm text-gray-600 space-y-3">
+                    <p>
+                      You can cancel anytime. Disconnect Clario from Seller Central and you&apos;re done—no lock-in contracts. We&apos;ll only invoice the 20% commission on claims that were successfully paid out before you canceled.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </div>
           </div>
         </section>
