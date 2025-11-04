@@ -310,25 +310,25 @@ const Index = () => {
             </div>
           </div>
         </section>
-        <section className="relative isolate -mt-12 bg-slate-900 text-white">
+        <section className="relative isolate -mt-12 bg-white text-gray-900">
           <div
-            className="pointer-events-none absolute inset-0 opacity-90"
+            className="pointer-events-none absolute inset-0 opacity-70"
             aria-hidden="true"
             style={{
               backgroundImage:
-                'radial-gradient(rgba(255,255,255,0.12) 1px, transparent 1px), radial-gradient(rgba(148,163,184,0.06) 1px, transparent 1px)',
+                'radial-gradient(rgba(209,213,219,0.28) 1px, transparent 1px), radial-gradient(rgba(229,231,235,0.18) 1px, transparent 1px)',
               backgroundSize: '22px 22px',
               backgroundPosition: '0 0, 11px 11px'
             }}
           />
           <div className="container mx-auto px-6 py-24 md:py-28">
-            <div className="relative flex flex-col gap-10 rounded-[40px] border border-white/10 bg-white/5 p-10 shadow-[0_35px_120px_rgba(15,23,42,0.55)] backdrop-blur-xl md:flex-row md:items-center md:justify-between">
+            <div className="relative flex flex-col gap-10 rounded-[40px] border border-gray-200/60 bg-white p-10 shadow-[0_35px_120px_rgba(15,23,42,0.12)] md:flex-row md:items-center md:justify-between">
               <div className="space-y-6">
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-slate-900/70 px-4 py-1 text-xs font-semibold uppercase tracking-[0.28em] text-slate-200/80">
-                  <Sparkles className="h-4 w-4 text-emerald-300" />
+                <span className="inline-flex items-center gap-2 rounded-full border border-gray-300/60 bg-gray-100 px-4 py-1 text-xs font-semibold uppercase tracking-[0.28em] text-gray-600">
+                  <Sparkles className="h-4 w-4 text-gray-500" />
                   What you gain with Clario
                 </span>
-                <div className="relative h-24 overflow-hidden text-4xl font-semibold md:text-6xl">
+                <div className="relative h-24 overflow-hidden text-4xl font-semibold text-gray-900 md:text-6xl">
                   <span
                     key={benefitIndex}
                     className="absolute inset-0 flex items-center text-balance animate-[wordDrift_3.2s_ease-in-out]"
@@ -336,33 +336,33 @@ const Index = () => {
                     {benefitWords[benefitIndex]}
                   </span>
                 </div>
-                <p className="max-w-xl text-base text-slate-200/85 md:text-lg">
+                <p className="max-w-xl text-base text-gray-600 md:text-lg">
                   Consolidate the chaos: reclaim hidden revenue, protect margins, and spotlight every insight your resilience team needs to stay ahead of marketplace errors.
                 </p>
               </div>
-              <div className="relative w-full max-w-sm space-y-5 rounded-3xl border border-white/10 bg-slate-900/80 p-6 text-sm text-slate-200/85">
-                <div className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-200/80">Proof points</div>
+              <div className="relative w-full max-w-sm space-y-5 rounded-3xl border border-gray-200 bg-gray-50 p-6 text-sm text-gray-700">
+                <div className="text-xs font-semibold uppercase tracking-[0.3em] text-gray-500">Proof points</div>
                 <ul className="space-y-3">
                   <li className="flex items-center gap-3">
-                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-200">
+                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-900 text-gray-50">
                       <Check className="h-4 w-4" />
                     </span>
                     Automated reimbursement claims ready in hours
                   </li>
                   <li className="flex items-center gap-3">
-                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-cyan-500/20 text-cyan-200">
+                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-800 text-gray-50">
                       <Check className="h-4 w-4" />
                     </span>
                     Evidence synced from email or cloud—zero spreadsheets
                   </li>
                   <li className="flex items-center gap-3">
-                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-indigo-500/20 text-indigo-200">
+                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-700 text-gray-50">
                       <Check className="h-4 w-4" />
                     </span>
                     Real-time alerts before settlement leakage hits
                   </li>
                   <li className="flex items-center gap-3">
-                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-amber-500/20 text-amber-200">
+                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-600 text-gray-50">
                       <Check className="h-4 w-4" />
                     </span>
                     Unified audit trails that finance teams trust
