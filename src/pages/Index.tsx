@@ -324,7 +324,7 @@ const Index = () => {
           <div className="container mx-auto px-6 py-24 md:py-28">
             <div className="relative grid gap-12 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
               <div className="relative space-y-8">
-                <div className="relative h-24 overflow-hidden text-4xl font-bold text-gray-900 md:text-6xl md:font-black">
+                <div className="relative h-24 overflow-hidden text-4xl font-black text-gray-900 md:text-6xl">
                   <span
                     key={benefitIndex}
                     className="absolute inset-0 flex items-center animate-[wordDrift_3.2s_ease-in-out] text-[#b3b3b3]"
