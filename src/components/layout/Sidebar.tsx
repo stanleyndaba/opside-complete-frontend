@@ -128,11 +128,11 @@ export function Sidebar({
       );
     }
     return (
-      <Link
-        to={item.href}
-        onMouseEnter={handlePrefetch}
-        className={cn(
-          "relative flex items-center gap-2 px-2.5 py-1.5 rounded-md transition-colors",
+        <Link
+          to={item.href}
+          onMouseEnter={handlePrefetch}
+          className={cn(
+            "relative flex items-center gap-1.5 px-2 py-1.5 rounded-md transition-colors",
           isActive
             ? "bg-white/5 text-gray-100"
             : "text-gray-400 hover:bg-white/5 hover:text-gray-100"
@@ -146,15 +146,15 @@ export function Sidebar({
       </Link>
     );
 	};
-  return (
-    <aside
-      className={cn(
-        "fixed left-0 top-0 transition-all duration-300 ease-in-out flex flex-col h-screen z-40",
-        isCollapsed ? "w-16" : "w-64",
-        "bg-[#0B1220] text-gray-300 border-r border-white/10",
-        className
-      )}
-    >
+    return (
+      <aside
+        className={cn(
+          "fixed left-0 top-0 transition-all duration-300 ease-in-out flex flex-col h-screen z-40",
+          isCollapsed ? "w-16" : "w-60",
+          "bg-[#0B1220] text-gray-300 border-r border-white/10",
+          className
+        )}
+      >
         {/* Branding + Collapse */}
         <div
           className={cn(
@@ -186,14 +186,14 @@ export function Sidebar({
           )}
         </div>
 
-        <ScrollArea className="flex-1">
-          <div
-            className={cn(
-              "h-full flex justify-center",
-              isCollapsed ? "px-2" : "px-3"
-            )}
-          >
-            <div className="flex flex-col items-center justify-center py-8 space-y-6">
+          <ScrollArea className="flex-1">
+            <div
+              className={cn(
+                "h-full flex justify-start",
+                isCollapsed ? "px-1.5" : "px-2"
+              )}
+            >
+              <div className="flex flex-col items-start justify-center py-8 space-y-6 w-full">
               <nav className="space-y-3 w-full">
                 <div className="space-y-1">
                   {primaryItems.map((item, idx) => (
