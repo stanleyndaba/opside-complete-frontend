@@ -17,6 +17,12 @@ export default function AmazonSandboxPage() {
     let cancelled = false;
     (async () => {
       try {
+        // Mark that we're in sandbox mode for this session
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem('amazon_sandbox_mode', 'true');
+          localStorage.setItem('amazon_sandbox_mode', 'true');
+        }
+        
         // Establish sandbox session/tenant on backend
         const res = await api.completeAmazonSandboxAuth(state || 'demo');
         if (res.ok) {

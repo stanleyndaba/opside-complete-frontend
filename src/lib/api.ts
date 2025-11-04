@@ -266,7 +266,53 @@ export const api = {
     return response;
   },
   completeAmazonSandboxAuth: (state: string) => requestJson<{ ok: boolean; connected: boolean }>('/api/v1/integrations/amazon/sandbox/callback', { method: 'POST', body: JSON.stringify({ state }) }),
-  getAmazonRecoveries: () => requestJson<{ totalAmount: number; currency: string; claimCount: number }>('/api/v1/integrations/amazon/recoveries'),
+  getAmazonRecoveries: async () => {
+    // Try to fetch from backend first
+    const response = await requestJson<{ totalAmount: number; currency: string; claimCount: number }>('/api/v1/integrations/amazon/recoveries');
+    
+    // If backend returns valid data, use it
+    if (response.ok && response.data && (response.data.totalAmount > 0 || response.data.claimCount > 0)) {
+      return response;
+    }
+    
+    // Check if we're in sandbox mode (for development/testing)
+    // Sandbox mode is detected if:
+    // 1. We're on localhost
+    // 2. VITE_SANDBOX env var is set to 'true'
+    // 3. We're in development mode
+    // 4. We came from sandbox auth flow (check sessionStorage/localStorage)
+    const isSandbox = 
+      (typeof window !== 'undefined' && (
+        window.location.hostname.includes('localhost') ||
+        window.location.hostname.includes('127.0.0.1') ||
+        sessionStorage.getItem('amazon_sandbox_mode') === 'true' ||
+        localStorage.getItem('amazon_sandbox_mode') === 'true'
+      )) ||
+      (typeof import.meta !== 'undefined' && import.meta.env && (
+        import.meta.env.VITE_SANDBOX === 'true' ||
+        import.meta.env.MODE === 'development' ||
+        import.meta.env.DEV === true
+      ));
+    
+    // In sandbox mode, fallback to mock data if backend doesn't return data
+    if (isSandbox && (!response.ok || !response.data || response.data.totalAmount === 0)) {
+      console.log('[API] Sandbox mode detected - using mock data for Amazon recoveries');
+      const { mockAmazonApi } = await import('./mockApi');
+      const mockData = mockAmazonApi.getRecoveries();
+      return {
+        ok: true,
+        status: 200,
+        data: {
+          totalAmount: mockData.totalAmount,
+          currency: mockData.currency,
+          claimCount: mockData.claimCount,
+        },
+      };
+    }
+    
+    // Return the original response (even if it failed)
+    return response;
+  },
 
   // Auth-adjacent helpers for flows
   connectDocs: (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox') => {
