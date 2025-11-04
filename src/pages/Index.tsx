@@ -339,48 +339,6 @@ const Index = () => {
                 <p className="max-w-xl text-base text-gray-600 md:text-lg">
                   Consolidate the chaos: reclaim hidden revenue, protect margins, and spotlight every insight your resilience team needs to stay ahead of marketplace errors.
                 </p>
-                <div className="grid grid-cols-2 gap-6 text-gray-700 md:grid-cols-3">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-gray-500">
-                      <span className="inline-flex h-2 w-2 rounded-full bg-gray-700" /> Recover
-                    </div>
-                    <p className="text-sm text-gray-600">
-                      Uncover reimbursements hidden inside settlement adjustments with zero manual hunts.
-                    </p>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-gray-500">
-                      <span className="inline-flex h-2 w-2 rounded-full bg-gray-500" /> Save more
-                    </div>
-                    <p className="text-sm text-gray-600">
-                      Stop leakage before it compounds with alerts that flag anomalies as they emerge.
-                    </p>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-gray-500">
-                      <span className="inline-flex h-2 w-2 rounded-full bg-gray-400" /> Clarity
-                    </div>
-                    <p className="text-sm text-gray-600">
-                      Keep finance, ops, and leadership aligned with a single stream of reconciled truth.
-                    </p>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-gray-500">
-                      <span className="inline-flex h-2 w-2 rounded-full bg-gray-300" /> Control
-                    </div>
-                    <p className="text-sm text-gray-600">
-                      Meet every audit request instantly with documented claims, evidence, and decisions.
-                    </p>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-gray-500">
-                      <span className="inline-flex h-2 w-2 rounded-full bg-gray-500" /> Assurance
-                    </div>
-                    <p className="text-sm text-gray-600">
-                      Rely on automated safeguards that ensure every claim is compliant and verifiable.
-                    </p>
-                  </div>
-                </div>
               </div>
               <div className="relative w-full max-w-sm space-y-5 rounded-3xl border border-gray-200 bg-gray-50 p-6 text-sm text-gray-700 justify-self-end">
                 <div className="text-xs font-semibold uppercase tracking-[0.3em] text-gray-500">Proof points</div>
