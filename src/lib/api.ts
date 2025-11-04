@@ -81,8 +81,9 @@ async function requestJsonWithRetry<T>(
   const url = buildApiUrl(path);
   
   // Use a longer timeout for the first request to allow backend wake-up time
-  // But not too long to avoid hanging the UI when backend is responsive
-  const timeout = retryCount === 0 ? 20000 : 15000; // 20s first request (enough for wake-up), 15s retries
+  // Render free tier can take 30-60 seconds to wake up, so we need generous timeouts
+  // But we also want to avoid hanging the UI when backend is responsive
+  const timeout = retryCount === 0 ? 45000 : 20000; // 45s first request (allows full wake-up), 20s retries
   
   try {
     console.log(`[API] Requesting: ${url}${retryCount > 0 ? ` (retry ${retryCount}/${maxRetries})` : ''}`);
@@ -145,9 +146,11 @@ async function requestJsonWithRetry<T>(
     const isAbortError = error instanceof DOMException && error.name === 'AbortError';
     
     // Retry on network errors or timeout (but not on CORS or other errors)
-    if (isNetworkError && !isAbortError && retryCount < maxRetries) {
+    // For abort errors (timeouts), also retry since backend might be waking up
+    if ((isNetworkError || isAbortError) && retryCount < maxRetries) {
       const delay = Math.min(1000 * Math.pow(2, retryCount), 10000); // Exponential backoff: 1s, 2s, 4s, max 10s
-      console.warn(`[API] Network error, retrying in ${delay}ms... (${retryCount + 1}/${maxRetries})`);
+      const retryType = isAbortError ? 'timeout' : 'network error';
+      console.warn(`[API] ${retryType}, retrying in ${delay}ms... (${retryCount + 1}/${maxRetries})`);
       
       await new Promise(resolve => setTimeout(resolve, delay));
       return requestJsonWithRetry<T>(path, options, retryCount + 1, maxRetries);
@@ -155,10 +158,16 @@ async function requestJsonWithRetry<T>(
     
     // Provide detailed error information
     let details: string;
-    if (isAbortError) {
-      details = `Request timed out after ${timeout}ms. The backend may be sleeping (free tier services can take 30-60 seconds to wake up). Please wait a moment and try again.`;
-    } else if (isNetworkError && retryCount >= maxRetries) {
-      details = `Cannot connect to backend at ${url} after ${maxRetries} retries. The backend may be down, sleeping (free tier services can take 30-60 seconds to wake up), or blocked by CORS. Please check your internet connection and try again in a moment.`;
+    if (retryCount >= maxRetries) {
+      // Calculate approximate total wait time
+      const totalTime = timeout + (retryCount * 20000) + (1000 * (Math.pow(2, retryCount) - 1));
+      if (isAbortError) {
+        details = `Request timed out after ${Math.round(timeout/1000)}s. The backend may be sleeping (Render free tier can take 30-60 seconds to wake up). Please wait 30-60 seconds and refresh the page, or try again in a moment.`;
+      } else if (isNetworkError) {
+        details = `Cannot connect to backend at ${url} after ${maxRetries} retries (total wait time: ~${Math.round(totalTime/1000)}s). The backend may be sleeping (Render free tier can take 30-60 seconds to wake up). Please wait 30-60 seconds and refresh the page, or try again in a moment.`;
+      } else {
+        details = `Cannot connect to backend at ${url} after ${maxRetries} retries. The backend may be down, sleeping, or blocked by CORS. Error: ${errorMsg}`;
+      }
     } else if (errorMsg.includes('CORS') || errorMsg.includes('cors')) {
       details = `CORS error: Cannot connect to backend at ${url}. The backend may not be configured to allow requests from this origin.`;
     } else {
