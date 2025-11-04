@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Link } from 'react-router-dom';
-import { ChevronDown, Link2, ScrollText, Check } from 'lucide-react';
+import { ChevronDown, Link2, ScrollText, Check, Sparkles } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AmazonConnect } from '@/components/AmazonConnect';
 import { useToast } from '@/components/ui/use-toast';
@@ -32,6 +32,16 @@ const Index = () => {
   );
   const [langQuery, setLangQuery] = useState<string>('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const benefitWords = useMemo(
+    () => [
+      'Recover',
+      'Save More',
+      'Gain Clarity',
+      'Assert More Assurance and Control'
+    ],
+    []
+  );
+  const [benefitIndex, setBenefitIndex] = useState(0);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -49,6 +59,14 @@ const Index = () => {
       localStorage.setItem('clario.langPreference', selectedLanguageCode);
     } catch {}
   }, [selectedLanguageCode]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    const ticker = window.setInterval(() => {
+      setBenefitIndex((prev) => (prev + 1) % benefitWords.length);
+    }, 3200);
+    return () => window.clearInterval(ticker);
+  }, [benefitWords]);
 
   const primaryLinks = [
     { label: 'API', href: '/developer-api' },
@@ -289,6 +307,68 @@ const Index = () => {
                 </div>
               </div>
               {/* Email capture moved to bottom-left above the legal footer */}
+            </div>
+          </div>
+        </section>
+        <section className="relative isolate -mt-12 bg-slate-900 text-white">
+          <div
+            className="pointer-events-none absolute inset-0 opacity-90"
+            aria-hidden="true"
+            style={{
+              backgroundImage:
+                'radial-gradient(rgba(255,255,255,0.12) 1px, transparent 1px), radial-gradient(rgba(148,163,184,0.06) 1px, transparent 1px)',
+              backgroundSize: '22px 22px',
+              backgroundPosition: '0 0, 11px 11px'
+            }}
+          />
+          <div className="container mx-auto px-6 py-24 md:py-28">
+            <div className="relative flex flex-col gap-10 rounded-[40px] border border-white/10 bg-white/5 p-10 shadow-[0_35px_120px_rgba(15,23,42,0.55)] backdrop-blur-xl md:flex-row md:items-center md:justify-between">
+              <div className="space-y-6">
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-slate-900/70 px-4 py-1 text-xs font-semibold uppercase tracking-[0.28em] text-slate-200/80">
+                  <Sparkles className="h-4 w-4 text-emerald-300" />
+                  What you gain with Clario
+                </span>
+                <div className="relative h-24 overflow-hidden text-4xl font-semibold md:text-6xl">
+                  <span
+                    key={benefitIndex}
+                    className="absolute inset-0 flex items-center text-balance animate-[wordDrift_3.2s_ease-in-out]"
+                  >
+                    {benefitWords[benefitIndex]}
+                  </span>
+                </div>
+                <p className="max-w-xl text-base text-slate-200/85 md:text-lg">
+                  Consolidate the chaos: reclaim hidden revenue, protect margins, and spotlight every insight your resilience team needs to stay ahead of marketplace errors.
+                </p>
+              </div>
+              <div className="relative w-full max-w-sm space-y-5 rounded-3xl border border-white/10 bg-slate-900/80 p-6 text-sm text-slate-200/85">
+                <div className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-200/80">Proof points</div>
+                <ul className="space-y-3">
+                  <li className="flex items-center gap-3">
+                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-200">
+                      <Check className="h-4 w-4" />
+                    </span>
+                    Automated reimbursement claims ready in hours
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-cyan-500/20 text-cyan-200">
+                      <Check className="h-4 w-4" />
+                    </span>
+                    Evidence synced from email or cloud—zero spreadsheets
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-indigo-500/20 text-indigo-200">
+                      <Check className="h-4 w-4" />
+                    </span>
+                    Real-time alerts before settlement leakage hits
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-amber-500/20 text-amber-200">
+                      <Check className="h-4 w-4" />
+                    </span>
+                    Unified audit trails that finance teams trust
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </section>
