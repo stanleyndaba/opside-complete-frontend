@@ -316,7 +316,21 @@ export const api = {
 
     return response;
   },
-  completeAmazonSandboxAuth: (state: string) => requestJson<{ ok: boolean; connected: boolean }>('/api/v1/integrations/amazon/sandbox/callback', { method: 'POST', body: JSON.stringify({ state }) }),
+  completeAmazonSandboxAuth: (state: string) => {
+    console.log('[API] completeAmazonSandboxAuth called with state:', state);
+    const body = JSON.stringify({ state });
+    console.log('[API] Request body:', body);
+    return requestJson<{ ok: boolean; connected: boolean }>(
+      '/api/v1/integrations/amazon/sandbox/callback',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: body
+      }
+    );
+  },
   getAmazonRecoveries: async () => {
     // Try to fetch from backend first
     const response = await requestJson<{ totalAmount: number; currency: string; claimCount: number }>('/api/v1/integrations/amazon/recoveries');

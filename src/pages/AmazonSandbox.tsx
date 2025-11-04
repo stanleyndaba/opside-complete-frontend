@@ -23,15 +23,57 @@ export default function AmazonSandboxPage() {
           localStorage.setItem('amazon_sandbox_mode', 'true');
         }
         
+        console.log('[Sandbox] Starting sandbox auth with state:', state || 'demo');
+        console.log('[Sandbox] Backend URL:', api.buildApiUrl('/api/v1/integrations/amazon/sandbox/callback'));
+        
         // Establish sandbox session/tenant on backend
         const res = await api.completeAmazonSandboxAuth(state || 'demo');
+        
+        console.log('[Sandbox] Response received:', {
+          ok: res.ok,
+          status: res.status,
+          data: res.data,
+          error: res.error
+        });
+        
         if (res.ok) {
-          console.log('Sandbox auth successful');
+          console.log('[Sandbox] Sandbox auth successful:', res.data);
+          toast({
+            title: 'Amazon Connected',
+            description: 'Sandbox authentication successful. Analyzing your account...',
+          });
         } else {
-          console.warn('Sandbox auth failed:', res.error);
+          console.error('[Sandbox] Sandbox auth failed:', {
+            status: res.status,
+            error: res.error,
+            fullResponse: res
+          });
+          toast({
+            title: 'Sandbox Connection Failed',
+            description: res.error || 'Failed to connect to Amazon sandbox. Please try again.',
+            variant: 'destructive'
+          });
+          // Still navigate but with error state
+          if (!cancelled) {
+            setTimeout(() => navigate('/auth/analyzing?source=amazon&error=sandbox_failed'), 1000);
+          }
+          return;
         }
       } catch (e: any) {
-        console.warn('Sandbox auth error:', e?.message || e);
+        console.error('[Sandbox] Sandbox auth exception:', {
+          message: e?.message,
+          error: e,
+          stack: e?.stack
+        });
+        toast({
+          title: 'Connection Error',
+          description: e?.message || 'An unexpected error occurred during sandbox authentication.',
+          variant: 'destructive'
+        });
+        if (!cancelled) {
+          setTimeout(() => navigate('/auth/analyzing?source=amazon&error=exception'), 1000);
+        }
+        return;
       }
       if (!cancelled) {
         // Small pause for UX, then continue to analysis
