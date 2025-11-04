@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { Shield, CheckCircle, Settings, RefreshCw, ArrowRight, ExternalLink, Package, ShoppingBag, Calculator, Truck, Info, Search as SearchIcon, Plug, Mail, Cloud, DollarSign, Zap, FileText } from 'lucide-react';
+import { Shield, CheckCircle, Settings, RefreshCw, ArrowRight, ExternalLink, Package, ShoppingBag, Calculator, Truck, Info, Search as SearchIcon, Plug, Mail, Cloud, DollarSign, Zap, FileText, Sparkles } from 'lucide-react';
 import { api } from '@/lib/api';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -294,40 +294,46 @@ export default function IntegrationsHub() {
           </DialogContent>
         </Dialog>
 
-        {/* Header */}
+          {/* Header */}
           <div className="text-center">
             <h1 className="text-3xl font-bold mb-2 text-gray-100">Platform Integrations</h1>
-          <p className="text-gray-400">
-            Your central command center for all platform connections
-          </p>
-          {showRecoveryReveal && recoveryData && (
-            <div className="mt-4 rounded-lg border border-green-200 bg-green-50 p-4 max-w-md mx-auto">
-              <div className="flex items-center justify-center gap-2 text-green-700">
-                <DollarSign className="h-5 w-5" />
-                <span className="font-semibold">
-                  {formatCurrency(recoveryData.totalAmount, recoveryData.currency)} potential recoveries found
-                </span>
+            <p className="text-gray-400">
+              Your central command center for all platform connections
+            </p>
+            <div className="mt-6 flex justify-center">
+              <span className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-500/15 px-4 py-1 text-xs font-medium uppercase tracking-wide text-cyan-200 shadow-[0_0_18px_rgba(6,182,212,0.25)] animate-pulse">
+                <Sparkles className="h-4 w-4 text-cyan-300" />
+                Works best with work email!
+              </span>
+            </div>
+            {showRecoveryReveal && recoveryData && (
+              <div className="mt-4 rounded-lg border border-green-200 bg-green-50 p-4 max-w-md mx-auto">
+                <div className="flex items-center justify-center gap-2 text-green-700">
+                  <DollarSign className="h-5 w-5" />
+                  <span className="font-semibold">
+                    {formatCurrency(recoveryData.totalAmount, recoveryData.currency)} potential recoveries found
+                  </span>
+                </div>
+              </div>
+            )}
+            <div className="mt-3 inline-flex items-center gap-3 rounded-md border border-white/10 bg-white/5 px-4 py-3 text-sm text-gray-200">
+              <span>Want us to auto-collect invoices & docs for you? Connect</span>
+              <div className="flex items-center gap-2">
+                <img src="/gmailicon.png" alt="Gmail" className="h-5 w-5 object-contain mix-blend-screen saturate-150 drop-shadow-[0_0_12px_rgba(6,182,212,0.35)]" />
+                <img src="/outlookicon.webp" alt="Outlook" className="h-5 w-5 object-contain mix-blend-screen saturate-150 drop-shadow-[0_0_12px_rgba(59,130,246,0.35)]" />
+                <span>Drive / Dropbox</span>
               </div>
             </div>
-          )}
-          <div className="mt-3 rounded-md border border-white/10 bg-white/5 inline-flex items-center gap-3 px-4 py-3 text-sm text-gray-200">
-            <span>Want us to auto-collect invoices & docs for you? Connect</span>
-            <div className="flex items-center gap-2">
-              <img src="/gmailicon.png" alt="Gmail" className="h-5 w-5 object-contain" />
-              <img src="/outlookicon.webp" alt="Outlook" className="h-5 w-5 object-contain" />
-              <span>Drive / Dropbox</span>
+            <div className="mt-4 relative mx-auto max-w-xl">
+              <SearchIcon className="text-muted-foreground absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
+              <Input
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search integrations (Amazon, Shopify, Gmail…)"
+                className="pl-9"
+              />
             </div>
           </div>
-          <div className="mt-4 max-w-xl mx-auto relative">
-            <SearchIcon className="h-4 w-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2" />
-            <Input
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search integrations (Amazon, Shopify, Gmail…)"
-              className="pl-9"
-            />
-          </div>
-        </div>
 
         {/* Core Integrations */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
