@@ -50,7 +50,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         return;
       }
 
-      // Step 1: Get Amazon OAuth URL
+      // Step 1: Call /auth/start to get OAuth URL
       const response = await api.connectAmazon();
       
       if (!response.ok) {
@@ -74,8 +74,10 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
           source: 'zero_friction_onboarding'
         });
 
-        // Redirect to Amazon OAuth
+        // Step 2: Redirect user to Amazon (DO NOT call callback directly!)
         window.location.href = authUrl;
+        // Step 3: Amazon will automatically redirect to /auth/callback?code=...
+        // (This happens automatically - frontend shouldn't call this)
       } else {
         // No auth URL received, fallback to sandbox
         console.warn('[AmazonConnect] No auth URL received, falling back to sandbox');

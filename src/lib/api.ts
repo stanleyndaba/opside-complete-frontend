@@ -293,6 +293,7 @@ export const api = {
 
   // Amazon SP-API endpoints (Step 1 Auth Process)
   connectAmazon: async () => {
+    // Step 1: Call /auth/start to get OAuth URL
     // Get current frontend URL and pass it to backend for OAuth redirect configuration
     const frontendUrl = getFrontendUrl();
     const response = await requestJson<{
@@ -314,6 +315,9 @@ export const api = {
       }
     }
 
+    // Step 2: Redirect user to Amazon (DO NOT call callback directly!)
+    // Step 3: Amazon will automatically redirect to /auth/callback?code=...
+    // (This happens automatically - frontend shouldn't call this)
     return response;
   },
   completeAmazonSandboxAuth: (state: string) => {

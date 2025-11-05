@@ -41,16 +41,14 @@ export default function OAuthCallback() {
       setStatusMessage('Connection successful. Analyzing your account...');
       api.trackEvent('oauth_callback_success', { provider: p, state });
       
-      // Complete the Amazon auth if we have a state parameter
-      if (p === 'amazon' && state) {
-        api.completeAmazonSandboxAuth(state).then(response => {
-          if (response.ok) {
-            setStatusMessage('Connected! Scanning for recovery opportunities...');
-            toast({ title: 'Amazon Connected', description: 'Analyzing your FBA data for recoveries...' });
-          }
-        }).catch(err => {
-          console.error('Failed to complete Amazon auth:', err);
-        });
+      // For real OAuth: Amazon automatically redirected here with code=... parameter
+      // Backend should handle the callback automatically - frontend just displays status
+      // DO NOT call callback endpoint directly - Amazon redirects here automatically
+      if (p === 'amazon') {
+        // Real OAuth callback - backend should have already processed the code
+        // Just show success message and wait for backend to update status
+        setStatusMessage('Connected! Scanning for recovery opportunities...');
+        toast({ title: 'Amazon Connected', description: 'Analyzing your FBA data for recoveries...' });
       } else {
         toast({ title: 'Connected', description: 'Updating status and redirecting…' });
       }
