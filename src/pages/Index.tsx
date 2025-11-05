@@ -318,7 +318,7 @@ const Index = () => {
             </p>
             <div className="pt-2">
                 <div className="max-w-md mx-auto flex justify-center">
-                  <AmazonConnect />
+                  <AmazonConnect className="w-full" />
                 </div>
               <div className="mt-4 flex flex-wrap items-center justify-center gap-4">
                 <div className="inline-flex items-center gap-2">

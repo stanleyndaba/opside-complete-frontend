@@ -13,6 +13,7 @@ interface AmazonConnectProps {
 
 export function AmazonConnect({ onConnectionStart, onConnectionComplete, className }: AmazonConnectProps) {
   const [connecting, setConnecting] = useState(false);
+  const [usingExisting, setUsingExisting] = useState(false);
   const { toast } = useToast();
 
   // Check if we should use sandbox mode
@@ -37,9 +38,69 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
     return false;
   };
 
+  const handleUseExisting = async () => {
+    try {
+      setConnecting(true);
+      setUsingExisting(true);
+      onConnectionStart?.();
+
+      // Use existing refresh token (bypass OAuth)
+      const response = await api.useExistingAmazonConnection();
+      
+      if (response.ok) {
+        // Check if bypass was successful
+        if (response.data?.bypassed && response.data?.redirectUrl) {
+          toast({
+            title: 'Using Existing Connection',
+            description: 'Connected with existing Amazon credentials!',
+          });
+          
+          // Navigate to dashboard
+          window.location.href = response.data.redirectUrl;
+        } else {
+          // Bypass didn't work, fall back to OAuth
+          const authUrl = response.data?.auth_url || response.data?.authUrl;
+          if (authUrl) {
+            toast({
+              title: 'OAuth Required',
+              description: 'Redirecting to Amazon for authorization...',
+            });
+            window.location.href = authUrl;
+          } else {
+            toast({
+              title: 'Connection Failed',
+              description: 'No existing connection found. Please use OAuth.',
+              variant: 'destructive'
+            });
+            setConnecting(false);
+            setUsingExisting(false);
+          }
+        }
+      } else {
+        toast({
+          title: 'Connection Failed',
+          description: response.error || 'Could not use existing connection. Please try OAuth.',
+          variant: 'destructive'
+        });
+        setConnecting(false);
+        setUsingExisting(false);
+      }
+    } catch (error: any) {
+      console.error('[AmazonConnect] Use existing failed:', error);
+      toast({
+        title: 'Connection Error',
+        description: error?.message || 'An unexpected error occurred.',
+        variant: 'destructive'
+      });
+      setConnecting(false);
+      setUsingExisting(false);
+    }
+  };
+
   const handleConnect = async () => {
     try {
       setConnecting(true);
+      setUsingExisting(false);
       onConnectionStart?.();
 
       // ✅ CORRECT: Start OAuth flow
@@ -102,25 +163,54 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
     }
   };
 
+  // Check if className includes w-full to make buttons full width
+  const isFullWidth = className?.includes('w-full');
+  
   return (
-    <Button
-      onClick={handleConnect}
-      disabled={connecting}
-      className={cn(
-        'w-auto justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-semibold shadow-lg transition-colors px-8',
-        connecting && 'opacity-80',
-        className
-      )}
-      size="lg"
-    >
-      {connecting ? (
-        <>
-          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-          Connecting...
-        </>
-      ) : (
-        'Connect Amazon Account'
-      )}
-    </Button>
+    <div className="flex flex-col gap-2">
+      <Button
+        onClick={handleConnect}
+        disabled={connecting}
+        className={cn(
+          isFullWidth ? 'w-full' : 'w-auto',
+          'justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-semibold shadow-lg transition-colors px-8',
+          connecting && !usingExisting && 'opacity-80',
+          className
+        )}
+        size="lg"
+      >
+        {connecting && !usingExisting ? (
+          <>
+            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+            Connecting...
+          </>
+        ) : (
+          'Connect Amazon Account'
+        )}
+      </Button>
+      
+      {/* Use Existing Connection Button (for sandbox with refresh token) */}
+      <Button
+        onClick={handleUseExisting}
+        disabled={connecting}
+        variant="outline"
+        className={cn(
+          isFullWidth ? 'w-full' : 'w-auto',
+          'justify-center border-emerald-500 text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition-colors px-8',
+          connecting && usingExisting && 'opacity-80',
+          className
+        )}
+        size="lg"
+      >
+        {connecting && usingExisting ? (
+          <>
+            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+            Using Existing Connection...
+          </>
+        ) : (
+          'Use Existing Connection (Skip OAuth)'
+        )}
+      </Button>
+    </div>
   );
 }
