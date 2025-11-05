@@ -418,9 +418,19 @@ export const api = {
         );
         
         console.log(`[API] Starting backend request at ${backendStartTime}ms`);
+        console.log(`[API] Backend URL: ${buildApiUrl('/api/v1/integrations/amazon/recoveries')}`);
         const backendPromise = requestJson<{ totalAmount: number; currency: string; claimCount: number }>('/api/v1/integrations/amazon/recoveries');
         
-        const response = await Promise.race([backendPromise, timeoutPromise]) as any;
+        let response: any;
+        try {
+          response = await Promise.race([backendPromise, timeoutPromise]);
+        } catch (raceError: any) {
+          // Promise.race will reject if timeoutPromise rejects first
+          if (raceError?.message?.includes('timeout') || raceError?.message?.includes('Backend timeout')) {
+            throw new Error('Backend timeout - using mock data');
+          }
+          throw raceError;
+        }
         const backendEndTime = performance.now();
         const backendDuration = backendEndTime - backendStartTime;
         
@@ -445,10 +455,49 @@ export const api = {
           // Backend returned zeros - use mock data in sandbox mode
           console.log(`[API] ⚠️ Backend returned zeros in sandbox mode (${backendDuration}ms), using mock data instead:`, response.data);
         }
-      } catch (error) {
+      } catch (error: any) {
         const backendEndTime = performance.now();
         const backendDuration = backendEndTime - backendStartTime;
-        console.log(`[API] Backend slow or failed in sandbox mode (took ${backendDuration}ms), using mock data:`, error);
+        console.error(`[API] ❌ Backend request FAILED in sandbox mode (took ${backendDuration}ms)`);
+        console.error(`[API] Error details:`, {
+          message: error?.message,
+          name: error?.name,
+          stack: error?.stack,
+          response: error?.response,
+          status: error?.status,
+          statusText: error?.statusText
+        });
+        console.error(`[API] Full error object:`, error);
+        
+        // If it's a timeout, show that clearly
+        if (error?.message?.includes('timeout')) {
+          console.error(`[API] ⏱️ BACKEND TIMEOUT: Backend took longer than 3 seconds to respond`);
+          console.error(`[API] 💡 SOLUTION: Backend needs to respond faster or increase timeout`);
+        }
+        
+        // If it's a network error
+        if (error?.name === 'TypeError' || error?.message?.includes('fetch')) {
+          console.error(`[API] 🌐 NETWORK ERROR: Cannot reach backend`);
+          console.error(`[API] 💡 SOLUTION: Check backend URL and CORS configuration`);
+        }
+        
+        // If it's a 401
+        if (error?.status === 401 || error?.response?.status === 401) {
+          console.error(`[API] 🔒 AUTH ERROR: Backend returned 401 Unauthorized`);
+          console.error(`[API] 💡 SOLUTION: Check authentication cookie/session`);
+        }
+        
+        // If it's a 404
+        if (error?.status === 404 || error?.response?.status === 404) {
+          console.error(`[API] 📍 NOT FOUND: Endpoint /api/v1/integrations/amazon/recoveries doesn't exist`);
+          console.error(`[API] 💡 SOLUTION: Backend needs to implement this endpoint`);
+        }
+        
+        // If it's a 500
+        if (error?.status === 500 || error?.response?.status === 500) {
+          console.error(`[API] 💥 SERVER ERROR: Backend returned 500 Internal Server Error`);
+          console.error(`[API] 💡 SOLUTION: Check backend logs for error details`);
+        }
       }
       
       // Use mock data immediately for sandbox mode
