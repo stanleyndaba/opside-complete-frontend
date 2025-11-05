@@ -42,26 +42,18 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
       setConnecting(true);
       onConnectionStart?.();
 
-      // If sandbox mode is enabled, go directly to sandbox flow
-      if (isSandboxMode()) {
-        console.log('[AmazonConnect] Sandbox mode detected - redirecting to sandbox flow');
-        const state = `demo_${Date.now()}`;
-        window.location.href = `/auth/amazon-sandbox?state=${encodeURIComponent(state)}`;
-        return;
-      }
-
+      // ✅ CORRECT: Start OAuth flow
       // Step 1: Call /auth/start to get OAuth URL
       const response = await api.connectAmazon();
       
       if (!response.ok) {
-        console.warn('[AmazonConnect] Real OAuth failed, falling back to sandbox:', response.error);
-        // Fallback to sandbox mode if real OAuth fails
+        console.error('[AmazonConnect] Failed to get OAuth URL:', response.error);
         toast({
-          title: 'Using Sandbox Mode',
-          description: 'Real Amazon OAuth unavailable. Using sandbox mode for testing.',
+          title: 'Connection Failed',
+          description: response.error || 'Failed to start Amazon authentication. Please try again.',
+          variant: 'destructive'
         });
-        const state = `demo_${Date.now()}`;
-        window.location.href = `/auth/amazon-sandbox?state=${encodeURIComponent(state)}`;
+        setConnecting(false);
         return;
       }
 
@@ -79,23 +71,23 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         // Step 3: Amazon will automatically redirect to /auth/callback?code=...
         // (This happens automatically - frontend shouldn't call this)
       } else {
-        // No auth URL received, fallback to sandbox
-        console.warn('[AmazonConnect] No auth URL received, falling back to sandbox');
+        // No auth URL received
+        console.error('[AmazonConnect] No auth URL received from backend');
         toast({
-          title: 'Using Sandbox Mode',
-          description: 'No authorization URL received. Using sandbox mode for testing.',
+          title: 'Connection Failed',
+          description: 'No authorization URL received from backend. Please try again.',
+          variant: 'destructive'
         });
-        const state = `demo_${Date.now()}`;
-        window.location.href = `/auth/amazon-sandbox?state=${encodeURIComponent(state)}`;
+        setConnecting(false);
       }
     } catch (error: any) {
-      console.error('[AmazonConnect] Connection failed, falling back to sandbox:', error);
+      console.error('[AmazonConnect] Connection failed:', error);
       toast({
-        title: 'Using Sandbox Mode',
-        description: 'Connection failed. Using sandbox mode for testing.',
+        title: 'Connection Error',
+        description: error?.message || 'An unexpected error occurred during authentication.',
+        variant: 'destructive'
       });
-      const state = `demo_${Date.now()}`;
-      window.location.href = `/auth/amazon-sandbox?state=${encodeURIComponent(state)}`;
+      setConnecting(false);
     }
   };
 

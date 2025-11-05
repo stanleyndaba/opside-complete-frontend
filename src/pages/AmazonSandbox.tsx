@@ -1,87 +1,76 @@
 import React, { useEffect } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { PageLayout } from '@/components/layout/PageLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
 
 export default function AmazonSandboxPage() {
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const state = searchParams.get('state');
   const { toast } = useToast();
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
-        // Mark that we're in sandbox mode for this session
-        if (typeof window !== 'undefined') {
-          sessionStorage.setItem('amazon_sandbox_mode', 'true');
-          localStorage.setItem('amazon_sandbox_mode', 'true');
-        }
+        console.log('[AmazonSandbox] Starting OAuth flow...');
         
-        console.log('[Sandbox] Starting sandbox auth with state:', state || 'demo');
-        console.log('[Sandbox] Backend URL:', api.buildApiUrl('/api/v1/integrations/amazon/sandbox/callback'));
+        // ✅ CORRECT: Start OAuth flow
+        // Step 1: Call /auth/start to get OAuth URL
+        const response = await api.connectAmazon();
         
-        // Establish sandbox session/tenant on backend
-        const res = await api.completeAmazonSandboxAuth(state || 'demo');
-        
-        console.log('[Sandbox] Response received:', {
-          ok: res.ok,
-          status: res.status,
-          data: res.data,
-          error: res.error
-        });
-        
-        if (res.ok) {
-          console.log('[Sandbox] Sandbox auth successful:', res.data);
+        if (!response.ok) {
+          console.error('[AmazonSandbox] Failed to get OAuth URL:', response.error);
           toast({
-            title: 'Amazon Connected',
-            description: 'Sandbox authentication successful. Analyzing your account...',
-          });
-        } else {
-          console.error('[Sandbox] Sandbox auth failed:', {
-            status: res.status,
-            error: res.error,
-            fullResponse: res
-          });
-          toast({
-            title: 'Sandbox Connection Failed',
-            description: res.error || 'Failed to connect to Amazon sandbox. Please try again.',
+            title: 'Connection Failed',
+            description: response.error || 'Failed to start Amazon authentication. Please try again.',
             variant: 'destructive'
           });
-          // Still navigate but with error state
           if (!cancelled) {
-            setTimeout(() => navigate('/auth/analyzing?source=amazon&error=sandbox_failed'), 1000);
+            setTimeout(() => navigate('/dashboard'), 2000);
           }
           return;
         }
+
+        // Handle both auth_url and authUrl (backend may return either)
+        const authUrl = response.data?.auth_url || response.data?.authUrl;
+        
+        if (authUrl) {
+          console.log('[AmazonSandbox] Redirecting to Amazon OAuth:', authUrl);
+          
+          // Step 2: Redirect user to Amazon (DO NOT call callback directly!)
+          window.location.href = authUrl;
+          // Step 3: Amazon will automatically redirect to /auth/callback?code=...
+          // (This happens automatically - frontend shouldn't call this)
+        } else {
+          console.error('[AmazonSandbox] No auth URL received from backend');
+          toast({
+            title: 'Connection Failed',
+            description: 'No authorization URL received from backend. Please try again.',
+            variant: 'destructive'
+          });
+          if (!cancelled) {
+            setTimeout(() => navigate('/dashboard'), 2000);
+          }
+        }
       } catch (e: any) {
-        console.error('[Sandbox] Sandbox auth exception:', {
+        console.error('[AmazonSandbox] OAuth flow exception:', {
           message: e?.message,
           error: e,
           stack: e?.stack
         });
         toast({
           title: 'Connection Error',
-          description: e?.message || 'An unexpected error occurred during sandbox authentication.',
+          description: e?.message || 'An unexpected error occurred during authentication.',
           variant: 'destructive'
         });
         if (!cancelled) {
-          setTimeout(() => navigate('/auth/analyzing?source=amazon&error=exception'), 1000);
+          setTimeout(() => navigate('/dashboard'), 2000);
         }
-        return;
-      }
-      if (!cancelled) {
-        // Small pause for UX, then continue to analysis
-        setTimeout(() => navigate('/auth/analyzing?source=amazon'), 800);
       }
     })();
     return () => { cancelled = true; };
-  }, [state, navigate, toast]);
+  }, [navigate, toast]);
 
     return (
       <PageLayout title="Connecting to Amazon" hideNavbar hideSidebar>
