@@ -107,51 +107,67 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
       // Step 1: Call /auth/start to get OAuth URL
       const response = await api.connectAmazon();
       
-      if (!response.ok) {
-        console.error('[AmazonConnect] Failed to get OAuth URL:', response.error);
-        
-        // Check if backend returned authUrl in error response (backwards compatibility)
-        const errorData = typeof response.error === 'object' ? response.error : {};
-        const authUrl = errorData.authUrl || errorData.auth_url || errorData.redirectTo;
-        
-        if (authUrl) {
-          console.log('[AmazonConnect] Backend returned authUrl in error, redirecting:', authUrl);
-          window.location.href = authUrl;
+        if (!response.ok) {
+          console.error('[AmazonConnect] Failed to get OAuth URL:', response.error);
+
+          // Check if backend returned authUrl in error response (backwards compatibility)
+          const errorData = typeof response.error === 'object' ? response.error : {};
+          const authUrl = errorData.authUrl || errorData.auth_url || errorData.redirectTo;
+
+          if (authUrl) {
+            console.log('[AmazonConnect] Backend returned authUrl in error, redirecting:', authUrl);
+            window.location.href = authUrl;
+            return;
+          }
+
+          toast({
+            title: 'Connection Failed',
+            description: response.error || 'Failed to start Amazon authentication. Please try again.',
+            variant: 'destructive'
+          });
+          setConnecting(false);
           return;
         }
-        
-        toast({
-          title: 'Connection Failed',
-          description: response.error || 'Failed to start Amazon authentication. Please try again.',
-          variant: 'destructive'
-        });
-        setConnecting(false);
-        return;
-      }
 
-      // Handle both auth_url and authUrl (backend may return either)
-      const authUrl = response.data?.auth_url || response.data?.authUrl;
-      if (authUrl) {
-        // Track the connection attempt
-        await api.trackEvent('amazon_connect_initiated', { 
-          timestamp: new Date().toISOString(),
-          source: 'zero_friction_onboarding'
-        });
+        // Handle both auth_url and authUrl (backend may return either)
+        const authUrl = response.data?.auth_url || response.data?.authUrl;
+        const stateParam = response.data?.state;
 
-        // Step 2: Redirect user to Amazon (DO NOT call callback directly!)
-        window.location.href = authUrl;
-        // Step 3: Amazon will automatically redirect to /auth/callback?code=...
-        // (This happens automatically - frontend shouldn't call this)
-      } else {
-        // No auth URL received
-        console.error('[AmazonConnect] No auth URL received from backend');
-        toast({
-          title: 'Connection Failed',
-          description: 'No authorization URL received from backend. Please try again.',
-          variant: 'destructive'
-        });
-        setConnecting(false);
-      }
+        if (stateParam) {
+          try {
+            sessionStorage.setItem('amazon_sandbox_state', stateParam);
+            localStorage.setItem('amazon_sandbox_state', stateParam);
+          } catch {}
+        }
+
+        if (authUrl && authUrl.includes('/auth/amazon-sandbox')) {
+          try {
+            sessionStorage.setItem('amazon_sandbox_mode', 'true');
+            localStorage.setItem('amazon_sandbox_mode', 'true');
+          } catch {}
+        }
+
+        if (authUrl) {
+          // Track the connection attempt
+          await api.trackEvent('amazon_connect_initiated', {
+            timestamp: new Date().toISOString(),
+            source: 'zero_friction_onboarding'
+          });
+
+          // Step 2: Redirect user to Amazon (DO NOT call callback directly!)
+          window.location.href = authUrl;
+          // Step 3: Amazon will automatically redirect to /auth/callback?code=...
+          // (This happens automatically - frontend shouldn't call this)
+        } else {
+          // No auth URL received
+          console.error('[AmazonConnect] No auth URL received from backend');
+          toast({
+            title: 'Connection Failed',
+            description: 'No authorization URL received from backend. Please try again.',
+            variant: 'destructive'
+          });
+          setConnecting(false);
+        }
     } catch (error: any) {
       console.error('[AmazonConnect] Connection failed:', error);
       toast({
