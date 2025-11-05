@@ -437,23 +437,33 @@ export const api = {
         console.log(`[API] Backend request completed in ${backendDuration}ms`);
         console.log(`[API] Backend response:`, response);
         
+        // Backend returns {success: true, recoveries: {...}} - extract recoveries
+        // Handle both structures: {recoveries: {...}} or direct {...}
+        let recoveryData = response?.data;
+        if (recoveryData?.recoveries) {
+          // Backend wraps data in 'recoveries' object
+          recoveryData = recoveryData.recoveries;
+          console.log(`[API] Extracted recoveries from nested structure:`, recoveryData);
+        }
+        
         // If backend returns valid data quickly (> 0), use it
         // But if backend returns zeros, use mock data instead (sandbox should show demo data)
-        if (response?.ok && response?.data && (response.data.totalAmount > 0 || response.data.claimCount > 0)) {
-          console.log(`[API] ✅ USING REAL BACKEND DATA (${backendDuration}ms):`, response.data);
+        if (response?.ok && recoveryData && (recoveryData.totalAmount > 0 || recoveryData.claimCount > 0)) {
+          console.log(`[API] ✅ USING REAL BACKEND DATA (${backendDuration}ms):`, recoveryData);
           console.log(`[API] 📊 Source: SP-API Sandbox Backend`);
           // Mark as real data
           return {
             ...response,
             data: {
-              ...response.data,
+              ...recoveryData,
               _source: 'backend',
               _backendDuration: backendDuration
             }
           };
-        } else if (response?.ok && response?.data) {
+        } else if (response?.ok && recoveryData) {
           // Backend returned zeros - use mock data in sandbox mode
-          console.log(`[API] ⚠️ Backend returned zeros in sandbox mode (${backendDuration}ms), using mock data instead:`, response.data);
+          console.log(`[API] ⚠️ Backend returned zeros in sandbox mode (${backendDuration}ms), using mock data instead:`, recoveryData);
+          console.log(`[API] 💡 Backend values: totalAmount=${recoveryData.totalAmount}, claimCount=${recoveryData.claimCount}`);
         }
       } catch (error: any) {
         const backendEndTime = performance.now();
@@ -528,12 +538,31 @@ export const api = {
     const prodDuration = performance.now() - prodStartTime;
     console.log(`[API] Production backend request took ${prodDuration}ms`);
     
-    // If backend returns valid data, use it
-    if (response.ok && response.data && (response.data.totalAmount > 0 || response.data.claimCount > 0)) {
-      return response;
+    // Backend returns {success: true, recoveries: {...}} - extract recoveries
+    // Handle both structures: {recoveries: {...}} or direct {...}
+    let recoveryData = response?.data;
+    if (recoveryData?.recoveries) {
+      // Backend wraps data in 'recoveries' object
+      recoveryData = recoveryData.recoveries;
+      console.log(`[API] Extracted recoveries from nested structure:`, recoveryData);
     }
     
-    // Return the original response (even if it failed)
+    // If backend returns valid data, use it
+    if (response.ok && recoveryData && (recoveryData.totalAmount > 0 || recoveryData.claimCount > 0)) {
+      return {
+        ...response,
+        data: recoveryData
+      };
+    }
+    
+    // Return the original response (even if it failed or returned zeros)
+    if (recoveryData && recoveryData !== response.data) {
+      // We extracted recoveries, normalize the response
+      return {
+        ...response,
+        data: recoveryData
+      };
+    }
     return response;
   },
 
