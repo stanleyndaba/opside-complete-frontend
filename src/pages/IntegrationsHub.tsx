@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { Shield, RefreshCw, Info, Search as SearchIcon, DollarSign, Sparkles, CircleDollarSign, PackageSearch, ReceiptPercent, Truck, ShieldCheck } from 'lucide-react';
+import { Shield, RefreshCw, Info, Search as SearchIcon, DollarSign, Sparkles, CircleDollarSign, PackageSearch, ReceiptText, Truck, ShieldCheck } from 'lucide-react';
 import { api } from '@/lib/api';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -187,7 +187,7 @@ export default function IntegrationsHub() {
                           {
                             label: 'Fee Errors',
                             value: recoveryData.totalAmount * 0.3,
-                            icon: ReceiptPercent,
+                            icon: ReceiptText,
                             wrapClass: 'border-sky-400/60 bg-sky-50/90 text-sky-600'
                           },
                           {
