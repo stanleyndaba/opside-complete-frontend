@@ -344,11 +344,19 @@ export const api = {
       state?: string;
       success?: boolean;
       message?: string;
+      bypassed?: boolean;
+      redirectUrl?: string;
     }>(`/api/v1/integrations/amazon/auth/start?redirect_uri=${encodeURIComponent(frontendUrl)}/auth/callback&frontend_url=${encodeURIComponent(frontendUrl)}&bypass=true`);
     
-    // If bypass worked, backend will redirect to dashboard
+    // If bypass worked, backend returns JSON with bypassed: true and redirectUrl
     // If not, we'll get the OAuth URL as fallback
     if (response.ok && response.data) {
+      // Handle bypass response
+      if (response.data.bypassed && response.data.redirectUrl) {
+        return response;
+      }
+      
+      // Handle OAuth URL fallback
       const normalizedAuthUrl = response.data.auth_url ?? response.data.authUrl;
       if (normalizedAuthUrl) {
         response.data = {

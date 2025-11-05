@@ -163,13 +163,17 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
     }
   };
 
+  // Check if className includes w-full to make buttons full width
+  const isFullWidth = className?.includes('w-full');
+  
   return (
     <div className="flex flex-col gap-2">
       <Button
         onClick={handleConnect}
         disabled={connecting}
         className={cn(
-          'w-auto justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-semibold shadow-lg transition-colors px-8',
+          isFullWidth ? 'w-full' : 'w-auto',
+          'justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-semibold shadow-lg transition-colors px-8',
           connecting && !usingExisting && 'opacity-80',
           className
         )}
@@ -191,7 +195,8 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         disabled={connecting}
         variant="outline"
         className={cn(
-          'w-auto justify-center border-emerald-500 text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition-colors px-8',
+          isFullWidth ? 'w-full' : 'w-auto',
+          'justify-center border-emerald-500 text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition-colors px-8',
           connecting && usingExisting && 'opacity-80',
           className
         )}
