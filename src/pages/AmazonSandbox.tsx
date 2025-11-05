@@ -21,6 +21,17 @@ export default function AmazonSandboxPage() {
         
         if (!response.ok) {
           console.error('[AmazonSandbox] Failed to get OAuth URL:', response.error);
+          
+          // Check if backend returned authUrl in error response (backwards compatibility)
+          const errorData = typeof response.error === 'object' ? response.error : {};
+          const authUrl = errorData.authUrl || errorData.auth_url || errorData.redirectTo;
+          
+          if (authUrl) {
+            console.log('[AmazonSandbox] Backend returned authUrl in error, redirecting:', authUrl);
+            window.location.href = authUrl;
+            return;
+          }
+          
           toast({
             title: 'Connection Failed',
             description: response.error || 'Failed to start Amazon authentication. Please try again.',
