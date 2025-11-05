@@ -342,7 +342,7 @@ export default function IntegrationsHub() {
             <CardHeader>
               <CardTitle className="flex items-center justify-between text-gray-200">
                 <span className="inline-flex items-center gap-2"><Shield className="h-5 w-5 text-emerald-400" /> Amazon SP‑API</span>
-                <Badge variant="outline" className={cn('text-xs', status?.amazon_connected ? 'border-emerald-300 text-emerald-300' : 'border-white/30 text-gray-300')}>
+                <Badge variant="outline" className={cn('text-xs', status?.amazon_connected ? 'border-emerald-500 text-emerald-500 font-semibold' : 'border-gray-400/50 text-gray-400')}>
                   {status?.amazon_connected ? 'Connected' : 'Not connected'}
                 </Badge>
               </CardTitle>
@@ -384,7 +384,7 @@ export default function IntegrationsHub() {
                         {p === 'dropbox' && <img src="/db.png" alt="Dropbox" className="h-4 w-4 object-contain" />}
                         <span className="capitalize">{p === 'gdrive' ? 'Google Drive' : p}</span>
                       </div>
-                      <Badge variant="outline" className={cn('text-xs', status?.providerIngest?.[p]?.connected ? 'border-emerald-300 text-emerald-300' : status?.providerIngest?.[p]?.error ? 'border-red-300 text-red-300' : 'border-white/30 text-gray-300')}>
+                      <Badge variant="outline" className={cn('text-xs', status?.providerIngest?.[p]?.connected ? 'border-emerald-500 text-emerald-500 font-semibold' : status?.providerIngest?.[p]?.error ? 'border-red-300 text-red-300' : 'border-gray-400/50 text-gray-400')}>
                         {status?.providerIngest?.[p]?.connected ? 'Connected' : status?.providerIngest?.[p]?.error ? 'Error' : 'Not connected'}
                       </Badge>
                     </div>
