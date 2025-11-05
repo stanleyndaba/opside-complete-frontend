@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { Shield, CheckCircle, Settings, RefreshCw, ArrowRight, ExternalLink, Package, ShoppingBag, Calculator, Truck, Info, Search as SearchIcon, Plug, Mail, Cloud, DollarSign, Zap, FileText, Sparkles } from 'lucide-react';
+import { Shield, RefreshCw, Info, Search as SearchIcon, DollarSign, Sparkles, CircleDollarSign, PackageSearch, ReceiptPercent, Truck, ShieldCheck } from 'lucide-react';
 import { api } from '@/lib/api';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -144,55 +144,94 @@ export default function IntegrationsHub() {
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
           <div className="relative container mx-auto px-6 pt-6 pb-12 text-gray-300 space-y-8">
         {/* SHOCK AND AWE: Recovery Reveal Modal */}
-        <Dialog open={showRecoveryReveal} onOpenChange={setShowRecoveryReveal}>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle className="flex items-center justify-center gap-2 text-2xl text-green-700">
-                <Zap className="h-8 w-8" />
-                Potential Recoveries Found!
-              </DialogTitle>
-            </DialogHeader>
-            <div className="text-center space-y-6 py-4">
-              {recoveryData && (
-                <>
-                  <div className="space-y-2">
-                    <div className="text-5xl font-bold text-green-700">
-                      {formatCurrency(recoveryData.totalAmount, recoveryData.currency)}
+          <Dialog open={showRecoveryReveal} onOpenChange={setShowRecoveryReveal}>
+            <DialogContent className="max-w-3xl overflow-hidden border border-emerald-200/30 bg-white/10 p-0 backdrop-blur-2xl shadow-[0_40px_120px_rgba(16,185,129,0.25)]">
+              <div className="relative">
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-emerald-100/50 via-white/60 to-emerald-200/20 opacity-90" />
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.25),transparent_55%),radial-gradient(circle_at_bottom,rgba(101,163,13,0.18),transparent_55%)]" />
+                <div className="relative px-8 py-10 text-slate-900 md:px-12">
+                  <DialogHeader className="space-y-4 text-center text-slate-900">
+                    <div className="inline-flex items-center gap-2 rounded-full border border-emerald-300/60 bg-white/70 px-4 py-1 text-xs font-semibold uppercase tracking-[0.32em] text-emerald-700 shadow-[0_0_26px_rgba(16,185,129,0.28)]">
+                      <CircleDollarSign className="h-4 w-4" />
+                      <span>Potential recoveries</span>
                     </div>
-                    <div className="text-lg text-muted-foreground">
-                      in Potential Amazon Recoveries
+                    <DialogTitle className="text-3xl font-semibold tracking-tight text-slate-900">
+                      Potential recoveries found in your Amazon account
+                    </DialogTitle>
+                    <DialogDescription className="text-base text-slate-600">
+                      We analyzed your FBA history and surfaced the largest reimbursements waiting to be claimed.
+                    </DialogDescription>
+                  </DialogHeader>
+                  {recoveryData && (
+                    <div className="mt-10 space-y-10">
+                      <div className="space-y-4 text-center">
+                        <div className="text-5xl font-black text-emerald-600 drop-shadow-[0_18px_42px_rgba(16,185,129,0.32)]">
+                          {formatCurrency(recoveryData.totalAmount, recoveryData.currency)}
+                        </div>
+                        <p className="text-sm font-semibold uppercase tracking-[0.32em] text-emerald-700/80">
+                          in potential amazon recoveries
+                        </p>
+                        <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/60 bg-emerald-50/90 px-4 py-1.5 text-sm font-semibold text-emerald-700 shadow-[0_0_22px_rgba(16,185,129,0.25)]">
+                          <ShieldCheck className="h-4 w-4" />
+                          {recoveryData.claimCount} claims identified so far
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                        {[
+                          {
+                            label: 'Lost Inventory',
+                            value: recoveryData.totalAmount * 0.6,
+                            icon: PackageSearch,
+                            wrapClass: 'border-emerald-400/60 bg-emerald-50/90 text-emerald-600'
+                          },
+                          {
+                            label: 'Fee Errors',
+                            value: recoveryData.totalAmount * 0.3,
+                            icon: ReceiptPercent,
+                            wrapClass: 'border-sky-400/60 bg-sky-50/90 text-sky-600'
+                          },
+                          {
+                            label: 'Shipments',
+                            value: recoveryData.totalAmount * 0.1,
+                            icon: Truck,
+                            wrapClass: 'border-amber-400/60 bg-amber-50/85 text-amber-600'
+                          }
+                        ].map(({ label, value, icon: Icon, wrapClass }) => (
+                          <div
+                            key={label}
+                            className="group relative overflow-hidden rounded-2xl border border-white/40 bg-white/70 p-6 shadow-[0_18px_38px_rgba(15,23,42,0.12)] backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1"
+                          >
+                            <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-white/80 via-white/30 to-transparent opacity-80" />
+                            <div className="relative flex flex-col gap-6">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500/80">
+                                    {label}
+                                  </p>
+                                  <p className="mt-2 text-xl font-semibold text-slate-900">
+                                    {formatCurrency(value, recoveryData.currency)}
+                                  </p>
+                                </div>
+                                <div className={`flex h-12 w-12 items-center justify-center rounded-full border ${wrapClass}`}>
+                                  <Icon className="h-5 w-5" />
+                                </div>
+                              </div>
+                              <p className="text-sm text-slate-500">
+                                An aggregated estimate based on your latest reimbursement signals.
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="rounded-2xl border border-white/50 bg-white/70 px-6 py-5 text-sm text-slate-600 shadow-inner backdrop-blur-xl">
+                        Our audit surfaced these opportunities by tracing discrepancies throughout your FBA transaction history. Connect supporting evidence next to convert them into approved reimbursements.
+                      </div>
                     </div>
-                    <Badge variant="secondary" className="text-sm">
-                      {recoveryData.claimCount} claims identified in your account
-                    </Badge>
-                  </div>
-                  
-                  <div className="grid grid-cols-3 gap-4 text-sm">
-                    <div className="text-center p-3 bg-green-50 rounded-lg border border-green-200">
-                      <FileText className="h-6 w-6 mx-auto mb-2 text-blue-600" />
-                      <div>Lost Inventory</div>
-                      <div className="font-semibold">{formatCurrency(recoveryData.totalAmount * 0.6, recoveryData.currency)}</div>
-                    </div>
-                    <div className="text-center p-3 bg-green-50 rounded-lg border border-green-200">
-                      <Calculator className="h-6 w-6 mx-auto mb-2 text-orange-600" />
-                      <div>Fee Errors</div>
-                      <div className="font-semibold">{formatCurrency(recoveryData.totalAmount * 0.3, recoveryData.currency)}</div>
-                    </div>
-                    <div className="text-center p-3 bg-green-50 rounded-lg border border-green-200">
-                      <Package className="h-6 w-6 mx-auto mb-2 text-purple-600" />
-                      <div>Shipments</div>
-                      <div className="font-semibold">{formatCurrency(recoveryData.totalAmount * 0.1, recoveryData.currency)}</div>
-                    </div>
-                  </div>
-
-                  <div className="text-sm text-muted-foreground">
-                    We found these potential recoveries by analyzing your FBA transaction history.
-                  </div>
-                </>
-              )}
-            </div>
-          </DialogContent>
-        </Dialog>
+                  )}
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
 
         {/* SECOND WOW: Evidence Connect Modal */}
         <Dialog open={showEvidenceModal} onOpenChange={setShowEvidenceModal}>
