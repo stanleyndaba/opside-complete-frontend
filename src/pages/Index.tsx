@@ -3,10 +3,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Link } from 'react-router-dom';
-import { ChevronDown, Link2, ScrollText, Check, Sparkles } from 'lucide-react';
+import { ChevronDown, Link2, ScrollText, Check, Gift } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AmazonConnect } from '@/components/AmazonConnect';
 import { useToast } from '@/components/ui/use-toast';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 const Index = () => {
   const { toast } = useToast();
@@ -124,7 +125,7 @@ const Index = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-            <nav className="hidden md:flex items-center gap-4 text-sm text-gray-700">
+              <nav className="hidden md:flex items-center gap-4 text-sm text-gray-700">
               {primaryLinks.map((link) => (
                 <Link
                   key={link.label}
@@ -134,6 +135,21 @@ const Index = () => {
                   {link.label}
                 </Link>
               ))}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 shadow-sm transition-colors hover:bg-emerald-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                    >
+                      <Gift className="h-4 w-4" aria-hidden="true" />
+                      <span className="whitespace-nowrap">No commission on referrals</span>
+                      <span className="sr-only">Invite sellers to Clario and pay 0% commission on their recoveries.</span>
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" align="end" className="max-w-xs text-sm">
+                    Invite sellers to Clario and enjoy 0% commission on every referral you bring.
+                  </TooltipContent>
+                </Tooltip>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
@@ -190,6 +206,15 @@ const Index = () => {
           {mobileMenuOpen && (
             <div className="mt-4 md:hidden">
               <div className="flex flex-col gap-2 rounded-[20px] border border-white/40 bg-white/80 supports-[backdrop-filter]:bg-white/70 backdrop-blur-2xl p-4 shadow-2xl">
+                  <div className="rounded-[18px] border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700 shadow-sm">
+                    <div className="flex items-center gap-2">
+                      <Gift className="h-4 w-4" aria-hidden="true" />
+                      <span>No commission on referrals</span>
+                    </div>
+                    <p className="mt-1 text-xs font-normal text-emerald-700/80">
+                      Bring new sellers to Clario and keep 100% of their recovered funds.
+                    </p>
+                  </div>
                 {primaryLinks.map((link) => (
                   <Link
                     key={link.label}
