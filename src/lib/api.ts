@@ -425,15 +425,25 @@ export const api = {
         const backendDuration = backendEndTime - backendStartTime;
         
         console.log(`[API] Backend request completed in ${backendDuration}ms`);
+        console.log(`[API] Backend response:`, response);
         
         // If backend returns valid data quickly (> 0), use it
         // But if backend returns zeros, use mock data instead (sandbox should show demo data)
         if (response?.ok && response?.data && (response.data.totalAmount > 0 || response.data.claimCount > 0)) {
-          console.log(`[API] Backend returned data quickly (${backendDuration}ms):`, response.data);
-          return response;
+          console.log(`[API] ✅ USING REAL BACKEND DATA (${backendDuration}ms):`, response.data);
+          console.log(`[API] 📊 Source: SP-API Sandbox Backend`);
+          // Mark as real data
+          return {
+            ...response,
+            data: {
+              ...response.data,
+              _source: 'backend',
+              _backendDuration: backendDuration
+            }
+          };
         } else if (response?.ok && response?.data) {
           // Backend returned zeros - use mock data in sandbox mode
-          console.log(`[API] Backend returned zeros in sandbox mode (${backendDuration}ms), using mock data instead:`, response.data);
+          console.log(`[API] ⚠️ Backend returned zeros in sandbox mode (${backendDuration}ms), using mock data instead:`, response.data);
         }
       } catch (error) {
         const backendEndTime = performance.now();
@@ -443,11 +453,12 @@ export const api = {
       
       // Use mock data immediately for sandbox mode
       const mockStartTime = performance.now();
-      console.log('[API] Using mock data for Amazon recoveries (sandbox mode)');
+      console.log('[API] 🎭 Using MOCK DATA for Amazon recoveries (sandbox mode)');
       const { mockAmazonApi } = await import('./mockApi');
       const mockData = mockAmazonApi.getRecoveries();
       const totalTime = performance.now() - startTime;
       console.log(`[API] Mock data loaded in ${performance.now() - mockStartTime}ms, total time: ${totalTime}ms`);
+      console.log(`[API] 📊 Mock data values:`, mockData);
       return {
         ok: true,
         status: 200,
@@ -455,6 +466,8 @@ export const api = {
           totalAmount: mockData.totalAmount,
           currency: mockData.currency,
           claimCount: mockData.claimCount,
+          _source: 'mock',
+          _isMockData: true
         },
       };
     }

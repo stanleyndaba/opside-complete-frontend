@@ -155,6 +155,16 @@ export default function IntegrationsHub() {
                       <CircleDollarSign className="h-4 w-4" />
                       <span>Potential recoveries</span>
                     </div>
+                    {/* Data Source Indicator */}
+                    {recoveryData && ((recoveryData as any)._isMockData || (recoveryData as any)._source === 'mock' ? (
+                      <div className="inline-flex items-center gap-1 rounded-full border border-amber-400/60 bg-amber-50/90 px-3 py-1 text-xs font-semibold text-amber-700 shadow-[0_0_12px_rgba(245,158,11,0.25)]">
+                        🎭 Demo Data (Mock)
+                      </div>
+                    ) : (recoveryData as any)._source === 'backend' ? (
+                      <div className="inline-flex items-center gap-1 rounded-full border border-emerald-400/60 bg-emerald-50/90 px-3 py-1 text-xs font-semibold text-emerald-700 shadow-[0_0_12px_rgba(16,185,129,0.25)]">
+                        ✅ Real SP-API Sandbox Data
+                      </div>
+                    ) : null)}
                     <DialogTitle className="text-3xl font-semibold tracking-tight text-slate-900">
                       Potential recoveries found in your Amazon account
                     </DialogTitle>
