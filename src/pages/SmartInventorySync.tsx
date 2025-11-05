@@ -6,6 +6,7 @@ import { StatsCard } from '@/components/ui/StatsCard';
 import { CheckCircle, AlertTriangle, Truck, Warehouse, ShoppingCart, RotateCcw } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useStatusStream } from '@/hooks/use-status-stream';
+import { SyncHistory } from '@/components/SyncHistory';
 
 export default function SmartInventorySync() {
   const [syncStatus, setSyncStatus] = useState<{ healthy: boolean; lastReconciliation?: string; skusMonitored?: number; discrepanciesFound?: number; dataPointsAnalyzed?: number }>({ healthy: true });
@@ -121,7 +122,7 @@ export default function SmartInventorySync() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <StatsCard
             title="Total SKUs Monitored"
-            value={syncStatus.skusMonitored.toLocaleString()}
+            value={(syncStatus.skusMonitored || 0).toLocaleString()}
             description="Unique products tracked"
           />
           <StatsCard
@@ -131,12 +132,12 @@ export default function SmartInventorySync() {
           />
           <StatsCard
             title="Discrepancies Found"
-            value={syncStatus.discrepanciesFound}
+            value={(syncStatus.discrepanciesFound || 0).toString()}
             description="Last 30 days"
           />
           <StatsCard
             title="Data Points Analyzed"
-            value={syncStatus.dataPointsAnalyzed.toLocaleString()}
+            value={(syncStatus.dataPointsAnalyzed || 0).toLocaleString()}
             description="And growing..."
           />
         </div>
@@ -183,26 +184,37 @@ export default function SmartInventorySync() {
           <Card>
             <CardContent className="p-0">
               <div className="divide-y divide-border">
-                {activityLog.map((entry, index) => (
-                  <div key={index} className="p-4 flex items-start space-x-3">
-                    <div className="flex-shrink-0 mt-1">
-                      <div className={`w-2 h-2 rounded-full ${
-                        entry.type === 'success' ? 'bg-success' : 
-                        entry.type === 'warning' ? 'bg-warning' : 
-                        'bg-primary'
-                      }`}></div>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <p className="text-sm text-foreground">{entry.message}</p>
-                        <time className="text-xs text-muted-foreground">{entry.timestamp}</time>
+                {activityLog.length > 0 ? (
+                  activityLog.map((entry, index) => (
+                    <div key={index} className="p-4 flex items-start space-x-3">
+                      <div className="flex-shrink-0 mt-1">
+                        <div className={`w-2 h-2 rounded-full ${
+                          entry.type === 'success' ? 'bg-success' : 
+                          entry.type === 'warning' ? 'bg-warning' : 
+                          'bg-primary'
+                        }`}></div>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <p className="text-sm text-foreground">{entry.message}</p>
+                          <time className="text-xs text-muted-foreground">{entry.timestamp}</time>
+                        </div>
                       </div>
                     </div>
+                  ))
+                ) : (
+                  <div className="p-4 text-sm text-muted-foreground text-center">
+                    No activity log entries yet
                   </div>
-                ))}
+                )}
               </div>
             </CardContent>
           </Card>
+        </div>
+
+        {/* Sync History */}
+        <div>
+          <SyncHistory />
         </div>
       </div>
     </PageLayout>

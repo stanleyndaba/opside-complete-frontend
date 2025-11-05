@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { CheckCircle, AlertTriangle, RefreshCw, ExternalLink } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
+import { startSync } from '@/lib/inventoryApi';
 
 function useQueryParams() {
   const { search } = useLocation();
@@ -66,9 +67,31 @@ export default function OAuthCallback() {
           if (!cancelled) {
             setStatusMessage('Connected. Fetching recovery data...');
             
-            // If Amazon is connected, get recovery data for the reveal
+            // If Amazon is connected, check if sync needs to be triggered
             if (res.data?.amazon_connected && provider === 'amazon') {
               try {
+                // Check if backend has already started sync (check sync status)
+                const syncStatusRes = await api.getSyncStatus();
+                const hasActiveSync = syncStatusRes.ok && syncStatusRes.data?.hasActiveSync;
+                
+                // If backend hasn't started sync automatically, trigger it from frontend
+                if (!hasActiveSync) {
+                  try {
+                    console.log('[OAuthCallback] Backend didn\'t auto-start sync, triggering from frontend...');
+                    const syncRes = await startSync();
+                    if (syncRes?.syncId) {
+                      console.log('[OAuthCallback] Sync started successfully:', syncRes.syncId);
+                      // Redirect to sync page to show progress
+                      navigate(`/sync?id=${syncRes.syncId}`);
+                      return;
+                    }
+                  } catch (syncErr: any) {
+                    console.error('[OAuthCallback] Failed to start sync:', syncErr);
+                    // Continue to normal flow even if sync start fails
+                  }
+                }
+                
+                // Try to get recovery data for the reveal
                 const recoveryRes = await api.getAmazonRecoveries();
                 if (recoveryRes.ok && recoveryRes.data?.totalAmount) {
                   // Redirect with recovery data for the "shock and awe" reveal
