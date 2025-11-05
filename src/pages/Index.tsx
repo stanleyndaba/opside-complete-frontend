@@ -315,8 +315,8 @@ const Index = () => {
             <h1 className="font-heading text-4xl md:text-6xl font-black tracking-tight text-gray-900">
               The <span className="text-emerald-600">end</span> of FBA reimbursement work.
             </h1>
-            <p className="font-body text-base md:text-xl text-gray-600 font-normal max-w-3xl mx-auto">
-              Clario automates the entire reimbursement process, recovering lost revenue from Amazon FBA errors in minutes—not months.
+              <p className="font-body text-base md:text-xl text-gray-600 font-normal max-w-3xl mx-auto">
+                Think AI Agents for Finance. Clario automates the entire reimbursement process, recovering lost revenue from Amazon FBA errors in minutes—not months.
             </p>
             <div className="pt-2">
                 <div className="max-w-md mx-auto flex justify-center">
