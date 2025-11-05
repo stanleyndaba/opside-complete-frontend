@@ -6,17 +6,16 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { Shield, RefreshCw, Info, Search as SearchIcon, DollarSign, Sparkles, CircleDollarSign, PackageSearch, Receipt, Truck, ShieldCheck } from 'lucide-react';
+import { Shield, RefreshCw, Search as SearchIcon, Sparkles } from 'lucide-react';
 import { api } from '@/lib/api';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
 
 // ... (keep all the existing interfaces and constants)
 
 export default function IntegrationsHub() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
   const { toast } = useToast();
   const [lastSyncTime, setLastSyncTime] = useState('Just now');
   const [status, setStatus] = useState<{ amazon_connected: boolean; docs_connected: boolean; providers?: Record<string, boolean>; lastIngest?: string; lastSync?: string; providerIngest?: Record<string, { connected: boolean; lastIngest?: string; error?: string; scopes?: string[] }> } | null>(null);
@@ -37,32 +36,6 @@ export default function IntegrationsHub() {
   const [waitlistOpen, setWaitlistOpen] = useState(false);
   const [waitlistIntegration, setWaitlistIntegration] = useState<string | null>(null);
   const [waitlistEmail, setWaitlistEmail] = useState('');
-
-  // NEW: Shock and Awe state
-  const [showRecoveryReveal, setShowRecoveryReveal] = useState(false);
-  const [recoveryData, setRecoveryData] = useState<{ totalAmount: number; currency: string; claimCount: number } | null>(null);
-  const [showEvidenceModal, setShowEvidenceModal] = useState(false);
-
-  // Check if we just connected Amazon and should show the reveal
-  useEffect(() => {
-    const amazonConnected = searchParams.get('amazon_connected');
-    const recoveryAmount = searchParams.get('recovery_amount');
-    
-    if (amazonConnected === 'true' && !showRecoveryReveal) {
-      // Fetch the actual recovery data
-      api.getAmazonRecoveries().then(response => {
-        if (response.ok) {
-          setRecoveryData(response.data);
-          setShowRecoveryReveal(true);
-          
-          // Auto-show evidence modal after 3 seconds
-          setTimeout(() => {
-            setShowEvidenceModal(true);
-          }, 3000);
-        }
-      });
-    }
-  }, [searchParams, showRecoveryReveal]);
 
   // Real-time sync simulation
   useEffect(() => {
@@ -130,192 +103,12 @@ export default function IntegrationsHub() {
 
   // ... (keep all the existing useEffect and handler functions)
 
-  const formatCurrency = (amount: number, currency: string) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currency
-    }).format(amount);
-  };
-
   return (
     <PageLayout title="Platform Integrations">
       <div className="relative -m-4 lg:-m-6">
         <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
           <div className="relative container mx-auto px-6 pt-6 pb-12 text-gray-300 space-y-8">
-        {/* SHOCK AND AWE: Recovery Reveal Modal */}
-          <Dialog open={showRecoveryReveal} onOpenChange={setShowRecoveryReveal}>
-            <DialogContent className="max-w-3xl overflow-hidden border border-emerald-200/30 bg-white/10 p-0 backdrop-blur-2xl shadow-[0_40px_120px_rgba(16,185,129,0.25)]">
-              <div className="relative">
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-emerald-100/50 via-white/60 to-emerald-200/20 opacity-90" />
-                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.25),transparent_55%),radial-gradient(circle_at_bottom,rgba(101,163,13,0.18),transparent_55%)]" />
-                <div className="relative px-8 py-10 text-slate-900 md:px-12">
-                  <DialogHeader className="space-y-4 text-center text-slate-900">
-                    <div className="inline-flex items-center gap-2 rounded-full border border-emerald-300/60 bg-white/70 px-4 py-1 text-xs font-semibold uppercase tracking-[0.32em] text-emerald-700 shadow-[0_0_26px_rgba(16,185,129,0.28)]">
-                      <CircleDollarSign className="h-4 w-4" />
-                      <span>Potential recoveries</span>
-                    </div>
-                    {/* Data Source Indicator */}
-                    {recoveryData && ((recoveryData as any)._isMockData || (recoveryData as any)._source === 'mock' ? (
-                      <div className="inline-flex items-center gap-1 rounded-full border border-amber-400/60 bg-amber-50/90 px-3 py-1 text-xs font-semibold text-amber-700 shadow-[0_0_12px_rgba(245,158,11,0.25)]">
-                        🎭 Demo Data (Mock)
-                      </div>
-                    ) : (recoveryData as any)._source === 'backend' ? (
-                      <div className="inline-flex items-center gap-1 rounded-full border border-emerald-400/60 bg-emerald-50/90 px-3 py-1 text-xs font-semibold text-emerald-700 shadow-[0_0_12px_rgba(16,185,129,0.25)]">
-                        ✅ Real SP-API Sandbox Data
-                      </div>
-                    ) : null)}
-                    <DialogTitle className="text-3xl font-semibold tracking-tight text-slate-900">
-                      Potential recoveries found in your Amazon account
-                    </DialogTitle>
-                    <DialogDescription className="text-base text-slate-600">
-                      We analyzed your FBA history and surfaced the largest reimbursements waiting to be claimed.
-                    </DialogDescription>
-                  </DialogHeader>
-                  {recoveryData && (
-                    <div className="mt-10 space-y-10">
-                      <div className="space-y-4 text-center">
-                        <div className="text-5xl font-black text-emerald-600 drop-shadow-[0_18px_42px_rgba(16,185,129,0.32)]">
-                          {formatCurrency(recoveryData.totalAmount, recoveryData.currency)}
-                        </div>
-                        <p className="text-sm font-semibold uppercase tracking-[0.32em] text-emerald-700/80">
-                          in potential amazon recoveries
-                        </p>
-                        <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/60 bg-emerald-50/90 px-4 py-1.5 text-sm font-semibold text-emerald-700 shadow-[0_0_22px_rgba(16,185,129,0.25)]">
-                          <ShieldCheck className="h-4 w-4" />
-                          {recoveryData.claimCount} claims identified so far
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                        {[
-                          {
-                            label: 'Lost Inventory',
-                            value: recoveryData.totalAmount * 0.6,
-                            icon: PackageSearch,
-                            wrapClass: 'border-emerald-400/60 bg-emerald-50/90 text-emerald-600'
-                          },
-                          {
-                            label: 'Fee Errors',
-                            value: recoveryData.totalAmount * 0.3,
-                            icon: Receipt,
-                            wrapClass: 'border-sky-400/60 bg-sky-50/90 text-sky-600'
-                          },
-                          {
-                            label: 'Shipments',
-                            value: recoveryData.totalAmount * 0.1,
-                            icon: Truck,
-                            wrapClass: 'border-amber-400/60 bg-amber-50/85 text-amber-600'
-                          }
-                        ].map(({ label, value, icon: Icon, wrapClass }) => (
-                          <div
-                            key={label}
-                            className="group relative overflow-hidden rounded-2xl border border-white/40 bg-white/70 p-6 shadow-[0_18px_38px_rgba(15,23,42,0.12)] backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1"
-                          >
-                            <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-white/80 via-white/30 to-transparent opacity-80" />
-                            <div className="relative flex flex-col gap-6">
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500/80">
-                                    {label}
-                                  </p>
-                                  <p className="mt-2 text-xl font-semibold text-slate-900">
-                                    {formatCurrency(value, recoveryData.currency)}
-                                  </p>
-                                </div>
-                                <div className={`flex h-12 w-12 items-center justify-center rounded-full border ${wrapClass}`}>
-                                  <Icon className="h-5 w-5" />
-                                </div>
-                              </div>
-                              <p className="text-sm text-slate-500">
-                                An aggregated estimate based on your latest reimbursement signals.
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                      <div className="rounded-2xl border border-white/50 bg-white/70 px-6 py-5 text-sm text-slate-600 shadow-inner backdrop-blur-xl">
-                        Our audit surfaced these opportunities by tracing discrepancies throughout your FBA transaction history. Connect supporting evidence next to convert them into approved reimbursements.
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog>
-
-        {/* SECOND WOW: Evidence Connect Modal */}
-        <Dialog open={showEvidenceModal} onOpenChange={setShowEvidenceModal}>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle className="flex items-center justify-center gap-2 text-2xl text-blue-700">
-                <Shield className="h-8 w-8" />
-                Unlock Higher-Value Claims
-              </DialogTitle>
-              <DialogDescription className="text-center text-lg">
-                Connect your email or cloud storage to automatically find and match invoices
-              </DialogDescription>
-            </DialogHeader>
-            
-            <div className="space-y-6 py-4">
-              <div className="grid grid-cols-2 gap-4">
-                <Card className="border-blue-200 bg-blue-50 text-center p-6">
-                  <div className="flex items-center justify-center gap-2 mb-3">
-                    <img src="/gmailicon.png" alt="Gmail" className="h-8 w-8 object-contain" />
-                    <img src="/outlookicon.webp" alt="Outlook" className="h-8 w-8 object-contain" />
-                  </div>
-                  <h3 className="font-semibold mb-2">Connect Email</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Automatically find purchase invoices in your Gmail or Outlook
-                  </p>
-                  <Button 
-                    className="w-full bg-blue-600 hover:bg-blue-700"
-                    onClick={() => {
-                      setShowEvidenceModal(false);
-                      setShowProviderDialog(true);
-                    }}
-                  >
-                    Connect Email
-                  </Button>
-                </Card>
-                
-                <Card className="border-green-200 bg-green-50 text-center p-6">
-                  <div className="flex items-center justify-center gap-2 mb-3">
-                    <img src="/gd.png" alt="Google Drive" className="h-8 w-8 object-contain" />
-                    <img src="/db.png" alt="Dropbox" className="h-8 w-8 object-contain" />
-                  </div>
-                  <h3 className="font-semibold mb-2">Connect Cloud Storage</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Scan Google Drive or Dropbox for receipts and invoices
-                  </p>
-                  <Button 
-                    className="w-full bg-green-600 hover:bg-green-700"
-                    onClick={() => {
-                      setShowEvidenceModal(false);
-                      setShowProviderDialog(true);
-                    }}
-                  >
-                    Connect Cloud
-                  </Button>
-                </Card>
-              </div>
-
-              <div className="text-center space-y-2">
-                <div className="flex items-center justify-center gap-2 text-sm text-amber-700">
-                  <Info className="h-4 w-4" />
-                  <span>Evidence increases claim approval rates by 3x</span>
-                </div>
-                <Button 
-                  variant="outline" 
-                  onClick={() => setShowEvidenceModal(false)}
-                  className="text-sm"
-                >
-                  I'll upload documents manually later
-                </Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-
         {/* Provider Picker */}
         <Dialog open={showProviderDialog} onOpenChange={setShowProviderDialog}>
           <DialogContent className="max-w-md">
@@ -355,16 +148,6 @@ export default function IntegrationsHub() {
                 Works best with work email!
               </span>
             </div>
-            {showRecoveryReveal && recoveryData && (
-              <div className="mt-4 rounded-lg border border-green-200 bg-green-50 p-4 max-w-md mx-auto">
-                <div className="flex items-center justify-center gap-2 text-green-700">
-                  <DollarSign className="h-5 w-5" />
-                  <span className="font-semibold">
-                    {formatCurrency(recoveryData.totalAmount, recoveryData.currency)} potential recoveries found
-                  </span>
-                </div>
-              </div>
-            )}
             <div className="mt-3 inline-flex items-center gap-3 rounded-md border border-white/10 bg-white/5 px-4 py-3 text-sm text-gray-200">
               <span>Want us to auto-collect invoices & docs for you? Connect</span>
               <div className="flex items-center gap-2">
