@@ -99,57 +99,59 @@ const Index = () => {
                 alt="Clario logo"
                 className="h-10 w-10 rounded-full object-cover border border-black/10"
               />
-              {/* Brand dropdown */}
+              <div className="flex items-center gap-2">
+                {/* Brand dropdown */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[16px] transition-colors hover:bg-gray-100">
                       <span className="font-black text-[#b3b3b3] tracking-tight">
                         CLARIO
                       </span>
-                    <ChevronDown className="h-4 w-4 opacity-70" />
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="min-w-[220px] bg-white/80 supports-[backdrop-filter]:bg-white/70 backdrop-blur-xl border border-white/30 text-gray-900 shadow-2xl">
-                  <DropdownMenuItem asChild>
-                    <Link to="/integrations-hub" className="flex items-center gap-2 hover:bg-gray-100 focus:bg-gray-100">
-                      <Link2 className="h-4 w-4 text-emerald-600" />
-                      <span>Integrations</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/terms" className="flex items-center gap-2 hover:bg-gray-100 focus:bg-gray-100">
-                      <ScrollText className="h-4 w-4 text-emerald-600" />
-                      <span>Terms & Policies</span>
-                    </Link>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-              <nav className="hidden md:flex items-center gap-4 text-sm text-gray-700">
-              {primaryLinks.map((link) => (
-                <Link
-                  key={link.label}
-                  to={link.href}
-                  className="px-3 py-1.5 rounded-md hover:bg-gray-100 hover:text-gray-900 transition-colors"
-                >
-                  {link.label}
-                </Link>
-              ))}
+                      <ChevronDown className="h-4 w-4 opacity-70" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="min-w-[220px] bg-white/80 supports-[backdrop-filter]:bg-white/70 backdrop-blur-xl border border-white/30 text-gray-900 shadow-2xl">
+                    <DropdownMenuItem asChild>
+                      <Link to="/integrations-hub" className="flex items-center gap-2 hover:bg-gray-100 focus:bg-gray-100">
+                        <Link2 className="h-4 w-4 text-emerald-600" />
+                        <span>Integrations</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/terms" className="flex items-center gap-2 hover:bg-gray-100 focus:bg-gray-100">
+                        <ScrollText className="h-4 w-4 text-emerald-600" />
+                        <span>Terms & Policies</span>
+                      </Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <button
                       type="button"
-                      className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 shadow-sm transition-colors hover:bg-emerald-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                      className="inline-flex items-center justify-center rounded-full p-2 text-emerald-600 transition-colors hover:text-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                      aria-label="No commission on referrals"
                     >
-                      <Gift className="h-4 w-4" aria-hidden="true" />
-                      <span className="whitespace-nowrap">No commission on referrals</span>
-                      <span className="sr-only">Invite sellers to Clario and pay 0% commission on their recoveries.</span>
+                      <Gift className="h-5 w-5" aria-hidden="true" />
+                      <span className="sr-only">No commission on referrals</span>
                     </button>
                   </TooltipTrigger>
-                  <TooltipContent side="bottom" align="end" className="max-w-xs text-sm">
+                  <TooltipContent side="bottom" align="start" className="max-w-xs text-sm">
                     Invite sellers to Clario and enjoy 0% commission on every referral you bring.
                   </TooltipContent>
                 </Tooltip>
+              </div>
+            </div>
+              <nav className="hidden md:flex items-center gap-4 text-sm text-gray-700">
+                {primaryLinks.map((link) => (
+                  <Link
+                    key={link.label}
+                    to={link.href}
+                    className="px-3 py-1.5 rounded-md hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
