@@ -389,10 +389,14 @@ export const api = {
         
         console.log(`[API] Backend request completed in ${backendDuration}ms`);
         
-        // If backend returns valid data quickly, use it
+        // If backend returns valid data quickly (> 0), use it
+        // But if backend returns zeros, use mock data instead (sandbox should show demo data)
         if (response?.ok && response?.data && (response.data.totalAmount > 0 || response.data.claimCount > 0)) {
           console.log(`[API] Backend returned data quickly (${backendDuration}ms):`, response.data);
           return response;
+        } else if (response?.ok && response?.data) {
+          // Backend returned zeros - use mock data in sandbox mode
+          console.log(`[API] Backend returned zeros in sandbox mode (${backendDuration}ms), using mock data instead:`, response.data);
         }
       } catch (error) {
         const backendEndTime = performance.now();
