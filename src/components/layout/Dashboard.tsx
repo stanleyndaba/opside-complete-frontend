@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Card, CardContent } from '@/components/ui/card';
@@ -15,6 +15,8 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const searchParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
 
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
@@ -64,6 +66,21 @@ export function Dashboard() {
     { id: 'configure_alerts', label: 'Configure alerts' },
     { id: 'security_setup', label: 'Security quick setup' },
   ];
+
+  // Handle OAuth redirect from backend (e.g., /dashboard?amazon_connected=true)
+  useEffect(() => {
+    const amazonConnected = searchParams.get('amazon_connected');
+    if (amazonConnected === 'true') {
+      toast({
+        title: 'Amazon Connected Successfully',
+        description: 'Your Amazon account has been connected. We\'re analyzing your FBA data for recovery opportunities...',
+      });
+      // Redirect to integrations hub after a short delay to show the success message
+      setTimeout(() => {
+        navigate('/integrations-hub?amazon_connected=true', { replace: true });
+      }, 2000);
+    }
+  }, [searchParams, navigate, toast]);
 
   useEffect(() => {
     let active = true;

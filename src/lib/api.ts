@@ -305,6 +305,8 @@ export const api = {
   connectAmazon: async () => {
     // Step 1: Call /auth/start to get OAuth URL
     // Get current frontend URL and pass it to backend for OAuth redirect configuration
+    // Backend needs this to know where to redirect after OAuth completes
+    // This handles Vercel preview deployments where the URL changes each deploy
     const frontendUrl = getFrontendUrl();
     const response = await requestJson<{
       auth_url?: string;
@@ -312,7 +314,7 @@ export const api = {
       state?: string;
       success?: boolean;
       message?: string;
-    }>(`/api/v1/integrations/amazon/auth/start?redirect_uri=${encodeURIComponent(frontendUrl)}/auth/callback`);
+    }>(`/api/v1/integrations/amazon/auth/start?redirect_uri=${encodeURIComponent(frontendUrl)}/auth/callback&frontend_url=${encodeURIComponent(frontendUrl)}`);
 
     if (response.ok && response.data) {
       const normalizedAuthUrl = response.data.auth_url ?? response.data.authUrl;

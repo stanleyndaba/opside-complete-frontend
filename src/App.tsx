@@ -92,6 +92,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/app" element={<Dashboard />} />
+            <Route path="/dashboard" element={<Dashboard />} /> {/* Backend redirect compatibility */}
             <Route path="/sync" element={<Sync />} />
             {/* Market/Stocks pages removed for FBA MVP focus */}
             <Route path="/settings" element={<Settings />} />
