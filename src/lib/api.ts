@@ -302,19 +302,20 @@ export const api = {
   postLoginStripe: () => requestJson<any>('/api/auth/post-login/stripe', { method: 'POST' }),
 
   // Amazon SP-API endpoints (Step 1 Auth Process)
-  connectAmazon: async () => {
+  connectAmazon: async (bypassOAuth = false) => {
     // Step 1: Call /auth/start to get OAuth URL
     // Get current frontend URL and pass it to backend for OAuth redirect configuration
     // Backend needs this to know where to redirect after OAuth completes
     // This handles Vercel preview deployments where the URL changes each deploy
     const frontendUrl = getFrontendUrl();
+    const bypassParam = bypassOAuth ? '&bypass=true' : '';
     const response = await requestJson<{
       auth_url?: string;
       authUrl?: string;
       state?: string;
       success?: boolean;
       message?: string;
-    }>(`/api/v1/integrations/amazon/auth/start?redirect_uri=${encodeURIComponent(frontendUrl)}/auth/callback&frontend_url=${encodeURIComponent(frontendUrl)}`);
+    }>(`/api/v1/integrations/amazon/auth/start?redirect_uri=${encodeURIComponent(frontendUrl)}/auth/callback&frontend_url=${encodeURIComponent(frontendUrl)}${bypassParam}`);
 
     if (response.ok && response.data) {
       const normalizedAuthUrl = response.data.auth_url ?? response.data.authUrl;
@@ -330,6 +331,32 @@ export const api = {
     // Step 2: Redirect user to Amazon (DO NOT call callback directly!)
     // Step 3: Amazon will automatically redirect to /auth/callback?code=...
     // (This happens automatically - frontend shouldn't call this)
+    return response;
+  },
+  
+  // Use existing Amazon connection (bypass OAuth if refresh token exists)
+  useExistingAmazonConnection: async () => {
+    // Call the OAuth start endpoint with bypass=true to use existing refresh token
+    const frontendUrl = getFrontendUrl();
+    const response = await requestJson<{
+      auth_url?: string;
+      authUrl?: string;
+      state?: string;
+      success?: boolean;
+      message?: string;
+    }>(`/api/v1/integrations/amazon/auth/start?redirect_uri=${encodeURIComponent(frontendUrl)}/auth/callback&frontend_url=${encodeURIComponent(frontendUrl)}&bypass=true`);
+    
+    // If bypass worked, backend will redirect to dashboard
+    // If not, we'll get the OAuth URL as fallback
+    if (response.ok && response.data) {
+      const normalizedAuthUrl = response.data.auth_url ?? response.data.authUrl;
+      if (normalizedAuthUrl) {
+        response.data = {
+          ...response.data,
+          auth_url: normalizedAuthUrl,
+        };
+      }
+    }
     return response;
   },
   completeAmazonSandboxAuth: (state: string) => {
