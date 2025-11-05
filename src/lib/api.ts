@@ -78,6 +78,7 @@ async function requestJsonWithRetry<T>(
   retryCount = 0,
   maxRetries = 3
 ): Promise<ApiResponse<T>> {
+  const requestStartTime = performance.now();
   const url = buildApiUrl(path);
   
   // Use a longer timeout for the first request to allow backend wake-up time
@@ -86,10 +87,15 @@ async function requestJsonWithRetry<T>(
   const timeout = retryCount === 0 ? 45000 : 20000; // 45s first request (allows full wake-up), 20s retries
   
   try {
-    console.log(`[API] Requesting: ${url}${retryCount > 0 ? ` (retry ${retryCount}/${maxRetries})` : ''}`);
+    console.log(`[API] Requesting: ${url}${retryCount > 0 ? ` (retry ${retryCount}/${maxRetries})` : ''} - Timeout: ${timeout}ms`);
     
+    const fetchStartTime = performance.now();
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeout);
+    const timeoutId = setTimeout(() => {
+      const elapsed = performance.now() - fetchStartTime;
+      console.warn(`[API] Request timeout after ${Math.round(elapsed)}ms for ${url}`);
+      controller.abort();
+    }, timeout);
     
     const res = await fetch(url, {
       credentials: 'include',
@@ -102,8 +108,8 @@ async function requestJsonWithRetry<T>(
     });
     
     clearTimeout(timeoutId);
-
-    console.log(`[API] Response status: ${res.status} for ${url}`);
+    const fetchDuration = performance.now() - fetchStartTime;
+    console.log(`[API] Fetch completed in ${Math.round(fetchDuration)}ms - Status: ${res.status} for ${url}`);
     
     // Log response details for debugging
     if (!res.ok) {
@@ -113,6 +119,7 @@ async function requestJsonWithRetry<T>(
       });
     }
 
+    const parseStartTime = performance.now();
     let data;
     const text = await res.text();
     if (text) {
@@ -122,6 +129,9 @@ async function requestJsonWithRetry<T>(
         data = text;
       }
     }
+    const parseDuration = performance.now() - parseStartTime;
+    const totalDuration = performance.now() - requestStartTime;
+    console.log(`[API] Response parsing took ${Math.round(parseDuration)}ms, total request time: ${Math.round(totalDuration)}ms`);
 
     if (!res.ok) {
       const errorMsg = data?.error || data?.message || res.statusText || 'Request failed';
@@ -336,15 +346,9 @@ export const api = {
     );
   },
   getAmazonRecoveries: async () => {
-    // Try to fetch from backend first
-    const response = await requestJson<{ totalAmount: number; currency: string; claimCount: number }>('/api/v1/integrations/amazon/recoveries');
+    const startTime = performance.now();
     
-    // If backend returns valid data, use it
-    if (response.ok && response.data && (response.data.totalAmount > 0 || response.data.claimCount > 0)) {
-      return response;
-    }
-    
-    // Check if we're in sandbox mode (for development/testing)
+    // Check if we're in sandbox mode FIRST (for faster response)
     // Sandbox mode is detected if:
     // 1. We're on localhost
     // 2. VITE_SANDBOX env var is set to 'true'
@@ -363,11 +367,46 @@ export const api = {
         import.meta.env.DEV === true
       ));
     
-    // In sandbox mode, fallback to mock data if backend doesn't return data
-    if (isSandbox && (!response.ok || !response.data || response.data.totalAmount === 0)) {
-      console.log('[API] Sandbox mode detected - using mock data for Amazon recoveries');
+    console.log(`[API] getAmazonRecoveries - Sandbox mode: ${isSandbox}, Time: ${performance.now() - startTime}ms`);
+    
+    // In sandbox mode, try backend but don't wait too long - use mock data quickly
+    if (isSandbox) {
+      console.log('[API] Sandbox mode detected - will use mock data if backend is slow');
+      
+      // Try backend with shorter timeout in sandbox mode (3 seconds)
+      const backendStartTime = performance.now();
+      try {
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Backend timeout - using mock data')), 3000)
+        );
+        
+        console.log(`[API] Starting backend request at ${backendStartTime}ms`);
+        const backendPromise = requestJson<{ totalAmount: number; currency: string; claimCount: number }>('/api/v1/integrations/amazon/recoveries');
+        
+        const response = await Promise.race([backendPromise, timeoutPromise]) as any;
+        const backendEndTime = performance.now();
+        const backendDuration = backendEndTime - backendStartTime;
+        
+        console.log(`[API] Backend request completed in ${backendDuration}ms`);
+        
+        // If backend returns valid data quickly, use it
+        if (response?.ok && response?.data && (response.data.totalAmount > 0 || response.data.claimCount > 0)) {
+          console.log(`[API] Backend returned data quickly (${backendDuration}ms):`, response.data);
+          return response;
+        }
+      } catch (error) {
+        const backendEndTime = performance.now();
+        const backendDuration = backendEndTime - backendStartTime;
+        console.log(`[API] Backend slow or failed in sandbox mode (took ${backendDuration}ms), using mock data:`, error);
+      }
+      
+      // Use mock data immediately for sandbox mode
+      const mockStartTime = performance.now();
+      console.log('[API] Using mock data for Amazon recoveries (sandbox mode)');
       const { mockAmazonApi } = await import('./mockApi');
       const mockData = mockAmazonApi.getRecoveries();
+      const totalTime = performance.now() - startTime;
+      console.log(`[API] Mock data loaded in ${performance.now() - mockStartTime}ms, total time: ${totalTime}ms`);
       return {
         ok: true,
         status: 200,
@@ -377,6 +416,18 @@ export const api = {
           claimCount: mockData.claimCount,
         },
       };
+    }
+    
+    // Production mode: try backend normally with timing
+    const prodStartTime = performance.now();
+    console.log('[API] Production mode - calling backend');
+    const response = await requestJson<{ totalAmount: number; currency: string; claimCount: number }>('/api/v1/integrations/amazon/recoveries');
+    const prodDuration = performance.now() - prodStartTime;
+    console.log(`[API] Production backend request took ${prodDuration}ms`);
+    
+    // If backend returns valid data, use it
+    if (response.ok && response.data && (response.data.totalAmount > 0 || response.data.claimCount > 0)) {
+      return response;
     }
     
     // Return the original response (even if it failed)
