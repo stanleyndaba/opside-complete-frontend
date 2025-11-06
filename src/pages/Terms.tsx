@@ -167,7 +167,7 @@ const Terms = () => {
             <div className="text-sm text-gray-500 space-y-1 mb-12">
               <p><strong>Effective Date:</strong> January 1, 2025</p>
               <p className="text-xs text-gray-400">The day Clario's full-time operations and IP creation officially began.</p>
-              <p><strong>Last Updated:</strong> November 4, 2025</p>
+              <p><strong>Last Updated:</strong> November 6, 2025</p>
               <p className="text-xs text-gray-400">The day Clario legally executed and finalized this document.</p>
             </div>
 
@@ -229,14 +229,21 @@ const Terms = () => {
                 <h2 className="text-2xl font-semibold text-gray-900">3. Fee Structure and Billing (The Business Model)</h2>
                 <p className="text-gray-600 leading-relaxed">Clario operates on a <strong>contingency commission basis</strong>.</p>
                 <ul className="list-disc pl-6 text-gray-600 space-y-2">
-                  <li><strong>Commission Rate</strong>: <strong>[X]%</strong> of the total reimbursement amount successfully credited to your Amazon account by Amazon</li>
+                  <li><strong>Commission Rate</strong>: <strong>20%</strong> of the total reimbursement amount successfully credited to your Amazon account by Amazon</li>
                   <li><strong>Payment Trigger</strong>: Fees are calculated and invoiced <strong>only when Amazon credits funds</strong> to your Seller Central account as a result of a Clario-submitted claim</li>
                   <li><strong>No Recovery, No Fee</strong>: If no reimbursement is awarded, you owe nothing</li>
                 </ul>
                 <p className="text-gray-600 leading-relaxed">
-                  <strong>Founder's Council Exemption</strong>: Early-access users enrolled in the Founder's Council program may be exempt from fees for up to [90 days] from activation. Standard commission applies thereafter.
+                  <strong>Founder's Council Exemption</strong>: Early-access users enrolled in the Founder's Council program may be exempt from fees for the initial 90-day period from activation. Standard commission applies thereafter.
                 </p>
                 <p className="text-gray-600 leading-relaxed">All fees are final and non-refundable unless required by law.</p>
+                <h3 className="text-xl font-medium text-gray-900">3.1 Payment and Billing</h3>
+                <p className="text-gray-600 leading-relaxed">
+                  To use the Service, you must provide a valid payment method (e.g., credit card via Stripe). You authorize Clario to charge your payment method for all commission fees due under this TOS.
+                </p>
+                <p className="text-gray-600 leading-relaxed">
+                  Invoices will be generated monthly in arrears, based on reimbursements successfully credited to your account. Payment is due upon receipt. Failure to pay may result in suspension or termination of your account.
+                </p>
               </section>
 
               <section className="space-y-4">
@@ -272,6 +279,10 @@ const Terms = () => {
                   <a href="mailto:support@clario.app" className="underline text-emerald-600 hover:text-emerald-700">support@clario.app</a>.
                   {' '}Cancellation takes effect immediately. No further claims will be filed after cancellation.
                 </p>
+                <h3 className="text-xl font-medium text-gray-900">5.1 Effect of Termination</h3>
+                <p className="text-gray-600 leading-relaxed">
+                  Upon termination by either party, your license to use the Service ceases immediately. However, you remain liable for all commission fees on claims submitted by Clario prior to termination that are subsequently approved and credited by Amazon. Clario reserves the right to invoice for these post-termination fees.
+                </p>
               </section>
 
               <section className="space-y-4">
@@ -302,9 +313,20 @@ const Terms = () => {
               </section>
 
               <section className="space-y-4">
-                <h2 className="text-2xl font-semibold text-gray-900">Contact Us</h2>
+                <h2 className="text-2xl font-semibold text-gray-900">8. Dispute Resolution by Binding Arbitration</h2>
+                <p className="text-gray-600 leading-relaxed">
+                  <strong>PLEASE READ THIS SECTION CAREFULLY AS IT AFFECTS YOUR RIGHTS.</strong>
+                </p>
+                <p className="text-gray-600 leading-relaxed">
+                  Any dispute, claim, or controversy arising out of or relating to these TOS or the breach, termination, enforcement, interpretation, or validity thereof, shall be determined by binding arbitration in New Castle County, Delaware, rather than in court. You agree to waive your right to a trial by jury or to participate in a class action. This arbitration provision shall survive termination of these TOS.
+                </p>
+              </section>
+
+              <section className="space-y-4">
+                <h2 className="text-2xl font-semibold text-gray-900">9. Contact Us</h2>
                 <p className="text-gray-600 leading-relaxed">For support, cancellation, or legal inquiries:</p>
                 <div className="space-y-2 text-gray-600">
+                  <p><strong>Clario (A Mvelo P. Venture)</strong></p>
                   <p><strong>Email</strong>: <a href="mailto:legal@clario.app" className="underline text-emerald-600 hover:text-emerald-700">legal@clario.app</a></p>
                   <p><strong>Response Time</strong>: Within 48 hours</p>
                 </div>
