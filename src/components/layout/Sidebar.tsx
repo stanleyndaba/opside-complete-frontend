@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Home, Shield, Settings, HelpCircle, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, User, Building2, FileText, Mail } from 'lucide-react';
+import { LayoutDashboard, ShieldCheck, Settings2, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, FolderKanban, LifeBuoy, Mail } from 'lucide-react';
 import { NotificationBell } from './NotificationBell';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -61,20 +61,36 @@ export function Sidebar({
 	const location = useLocation();
   const queryClient = useQueryClient();
   const [showLogout, setShowLogout] = useState(false);
-    
-	const primaryItems: NavItem[] = [
-		{ title: 'Command Center', icon: Home, href: '/app' },
-		{ title: 'Reports', icon: BarChart3, href: '/reports' },
-		{ title: 'Recoveries', icon: Shield, href: '/recoveries' },
-		{ title: 'Evidence Locker', icon: FileText, href: '/evidence-locker' },
-	];
-	const accountItems: NavItem[] = [
-		{ title: 'Configure', icon: Settings, href: '/settings' },
-	];
-	const supportItems: NavItem[] = [
-		{ title: 'Help Centre', icon: HelpCircle, href: '/help' },
-		{ title: 'What\'s new', icon: Sparkles, href: '/whats-new' },
-	];
+
+  const navSections: NavSection[] = [
+    {
+      title: 'Overview',
+      items: [
+        { title: 'Command Center', icon: LayoutDashboard, href: '/app' },
+        { title: 'Recoveries', icon: ShieldCheck, href: '/recoveries' }
+      ]
+    },
+    {
+      title: 'Operations',
+      items: [
+        { title: 'Evidence Locker', icon: FolderKanban, href: '/evidence-locker' },
+        { title: 'Reports', icon: BarChart3, href: '/reports' }
+      ]
+    },
+    {
+      title: 'Manage',
+      items: [
+        { title: 'Settings', icon: Settings2, href: '/settings' }
+      ]
+    },
+    {
+      title: 'Support',
+      items: [
+        { title: 'Help Centre', icon: LifeBuoy, href: '/help' },
+        { title: "What's New", icon: Sparkles, href: '/whats-new' }
+      ]
+    }
+  ];
 	const NavItemComponent = ({
 		item
 	}: {
@@ -195,32 +211,27 @@ export function Sidebar({
               )}
             >
                 <div className="flex flex-col items-start justify-center py-8 space-y-6 w-full">
-              <nav className="space-y-3 w-full">
-                <div className="space-y-1">
-                  {primaryItems.map((item, idx) => (
-                    <React.Fragment key={`p-${idx}`}>
-                      <NavItemComponent item={{ ...item, href: item.href }} />
-                    </React.Fragment>
+                <nav className="w-full space-y-6">
+                  {navSections.map((section) => (
+                    <div key={section.title} className="w-full flex flex-col gap-1">
+                      {!isCollapsed && (
+                        <p className="px-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-gray-500">
+                          {section.title}
+                        </p>
+                      )}
+                      <div className="space-y-1">
+                        {section.items.map((item) => (
+                          <NavItemComponent key={item.title} item={item} />
+                        ))}
+                      </div>
+                    </div>
                   ))}
-                </div>
-                {!isCollapsed && <div className="h-px bg-white/10" />}
-                <div className="space-y-1">
-                  {accountItems.map((item, idx) => (
-                    <React.Fragment key={`a-${idx}`}>
-                      <NavItemComponent item={item} />
-                    </React.Fragment>
-                  ))}
-                </div>
-                {!isCollapsed && <div className="h-px bg-white/10" />}
-                <div className="space-y-1 pb-2">
-                  {supportItems.map((item, idx) => (
-                    <React.Fragment key={`s-${idx}`}>
-                      <NavItemComponent item={item} />
-                    </React.Fragment>
-                  ))}
-                </div>
-                  {!isCollapsed && <div className="h-px bg-white/10" />}
-                  <div className="pt-3">
+                  <div className="w-full pt-1">
+                    {!isCollapsed && (
+                      <p className="px-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-gray-500">
+                        Messages
+                      </p>
+                    )}
                     {isCollapsed ? (
                       <TooltipProvider>
                         <Tooltip>
@@ -238,7 +249,7 @@ export function Sidebar({
                       <NotificationBell label="Messages" forceCountStyle="sidebar" iconOverride={Mail} className="w-full justify-between rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-200" />
                     )}
                   </div>
-              </nav>
+                </nav>
             </div>
           </div>
         </ScrollArea>

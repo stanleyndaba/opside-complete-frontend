@@ -95,10 +95,14 @@ export function NotificationBell({
     setIsOpen(false);
   };
 
+  const baseSidebarClass = showLabel
+    ? 'flex items-center gap-3 px-3 py-2 text-gray-200 hover:bg-white/5'
+    : 'flex items-center justify-center h-10 w-10 text-gray-200 hover:bg-white/10';
+
   const triggerClassNames = [
     'relative rounded-md transition-colors',
     isSidebarStyle
-      ? 'flex items-center gap-3 px-3 py-2 text-gray-200 hover:bg-white/5'
+      ? baseSidebarClass
       : 'h-9 w-9 flex items-center justify-center ' + (isTransparentNavbar ? 'hover:bg-white/10 text-gray-200' : 'hover:bg-muted/50'),
     className
   ].filter(Boolean).join(' ');
