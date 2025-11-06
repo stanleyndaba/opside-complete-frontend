@@ -60,7 +60,7 @@ const ApiLanding = () => {
     setConnecting(true);
     try {
       const res = await api.connectAmazon();
-      const url = res.data?.auth_url || res.data?.redirect_url;
+      const url = res.data?.auth_url;
       if (res.ok && url) window.location.assign(url as string);
       else window.location.assign('/auth/amazon-sandbox');
     } catch {
