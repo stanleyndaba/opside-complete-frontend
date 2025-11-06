@@ -39,6 +39,8 @@ const Index = () => {
   const [isScrollingUp, setIsScrollingUp] = useState(false);
   const [imageRotation, setImageRotation] = useState(0);
   const lastScrollYRef = useRef(0);
+  const [showAnimatedText, setShowAnimatedText] = useState(true);
+  const [animationKey, setAnimationKey] = useState(0);
   const benefitWords = useMemo(
     () => [
       'Recover Faster',
@@ -74,6 +76,25 @@ const Index = () => {
     }, 3200);
     return () => window.clearInterval(ticker);
   }, [benefitWords]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    // Start animation immediately
+    setShowAnimatedText(true);
+    setAnimationKey(0);
+    
+    const interval = setInterval(() => {
+      setShowAnimatedText(false);
+      // Restart animation after a brief pause
+      setTimeout(() => {
+        setAnimationKey(prev => prev + 1);
+        setShowAnimatedText(true);
+      }, 100);
+    }, 5000); // Repeat every 5 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -329,6 +350,43 @@ const Index = () => {
         <section className="relative container mx-auto px-6 py-24 md:py-32">
           <div className="max-w-4xl mx-auto text-center space-y-6">
             {/* Trust chip removed per request */}
+            {/* Animated Cursive Text */}
+            {showAnimatedText && (
+              <div key={animationKey} className="relative overflow-hidden h-8 mb-4 w-full">
+                <div
+                  className="absolute whitespace-nowrap"
+                  style={{
+                    fontFamily: 'cursive, "Brush Script MT", "Lucida Handwriting", serif',
+                    fontStyle: 'italic',
+                    color: '#3F3E3F',
+                    fontSize: '1.125rem',
+                    animation: 'runwayText 4s ease-in-out forwards',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                  }}
+                >
+                  Clario works best with your work email
+                </div>
+              </div>
+            )}
+            <style>{`
+              @keyframes runwayText {
+                0% {
+                  transform: translateX(calc(-50vw - 50%));
+                  opacity: 0;
+                }
+                15% {
+                  opacity: 1;
+                }
+                85% {
+                  opacity: 1;
+                }
+                100% {
+                  transform: translateX(calc(50vw - 50%));
+                  opacity: 0;
+                }
+              }
+            `}</style>
               <div className="relative inline-flex items-center gap-4 rounded-[25px] border border-emerald-100 bg-white/85 px-5 py-2 shadow-[0_12px_45px_rgba(16,185,129,0.25)] backdrop-blur supports-[backdrop-filter]:bg-white/70 mx-auto overflow-hidden">
                 <span className="pointer-events-none absolute inset-0 rounded-[25px] bg-gradient-to-r from-emerald-200/40 via-white/10 to-sky-200/40 blur-xl" aria-hidden="true" />
                 <span className="pointer-events-none absolute inset-0 rounded-[25px] border border-white/40" aria-hidden="true" />
