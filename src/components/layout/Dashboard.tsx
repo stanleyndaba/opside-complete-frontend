@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
-import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud, ArrowRight, Plus, CheckCircle, RefreshCw, RotateCcw, Download, Bell, Shield } from 'lucide-react';
+import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud, ArrowRight, Plus, CheckCircle, RefreshCw, RotateCcw, Download, Bell, Shield, ArrowDown, ArrowUp } from 'lucide-react';
 import { api } from '@/lib/api';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
@@ -284,7 +284,13 @@ export function Dashboard() {
                         </div>
                       </div>
                         <div className="rounded-md border border-slate-200/80 bg-white p-4 shadow-sm">
-                          <div className="text-xs text-slate-500">Approved</div>
+                          <div className="flex items-center gap-1.5">
+                            <div className="text-xs text-slate-500">Approved</div>
+                            <div className="flex items-center gap-1">
+                              <ArrowDown className="h-3 w-3 text-red-500" />
+                              <ArrowUp className="h-3 w-3 text-blue-500" />
+                            </div>
+                          </div>
                           <div className="text-xl font-semibold text-emerald-500 mt-1">{formatCurrency(computedApproved ?? 0, recoveredCurrency)}</div>
                           <div className="text-[11px] mt-1">
                             <span className="text-slate-500">Total this month: </span>
