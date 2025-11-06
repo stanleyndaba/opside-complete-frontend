@@ -403,13 +403,14 @@ export function Dashboard() {
                       <div className="p-3 border-b border-slate-200/80">
                         <div className="flex items-center justify-between">
                           <h3 className="font-semibold text-sm text-slate-900">Recent Activity</h3>
-                          <span className="text-xs rounded px-2 py-0.5 bg-slate-100 text-slate-700 border border-slate-200">3 new</span>
+                          <span className="text-xs rounded px-2 py-0.5 bg-slate-100 text-slate-700 border border-slate-200">4 new</span>
                         </div>
                       </div>
                       <div className="py-2 max-h-[600px] overflow-y-auto">
                         <div className="relative px-4 max-w-[360px] mx-auto text-[12px] divide-y divide-slate-200/70">
                           {(() => {
                             const events = [
+                              { id: 'evt-0', unread: true, title: 'Claim Approved 🎉', details: 'Good news! Claim approved for $1,200 reimbursement.', time: 'Just now' },
                               { id: 'evt-1', unread: true, title: 'Connection Established', details: 'Amazon connection established', time: 'Just now' },
                               { id: 'evt-2', unread: true, title: 'Claims Identified', details: `23 potential claims identified, valued at ~${formatCurrency(14228)}` , time: '2 minutes ago' },
                               { id: 'evt-3', unread: false, title: 'Claim Submitted', details: 'Auto-submitted 5 verified claims', time: 'Yesterday' },
