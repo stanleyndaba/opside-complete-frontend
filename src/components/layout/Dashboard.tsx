@@ -256,7 +256,7 @@ export function Dashboard() {
                     <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="rounded-md border border-slate-200/80 bg-white p-4 shadow-sm">
                           <div className="text-xs text-slate-500">Next payment</div>
-                          <div className="text-xl font-semibold text-slate-900 mt-1">{formatCurrency(nextPaymentAmount ?? 0, recoveredCurrency)}</div>
+                          <div className="text-xl font-semibold text-slate-900 mt-1">$26.0K</div>
                           <div className="text-[11px] text-slate-500 mt-1">
                           Estimated on {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                         </div>
@@ -271,7 +271,7 @@ export function Dashboard() {
                       </div>
                         <div className="rounded-md border border-slate-200/80 bg-white p-4 shadow-sm">
                           <div className="text-xs text-slate-500">Pending recovery</div>
-                          <div className="text-xl font-semibold text-sky-600 mt-1">{formatCurrency(pendingRecoveryAmount ?? 0, recoveredCurrency)}</div>
+                          <div className="text-xl font-semibold text-sky-600 mt-1">$870.01</div>
                           <div className="text-[11px] text-slate-500 mt-1">
                           No. of Claims: {submittedClaimsCount != null ? submittedClaimsCount : 0}
                         </div>
