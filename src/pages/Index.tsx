@@ -383,21 +383,23 @@ const Index = () => {
         </section>
         
         {/* Dashboard Image with Scroll Animation */}
-        <div className="container mx-auto px-6 py-12">
-          <div className="flex justify-center">
+        <div className="container mx-auto px-6 py-16">
+          <div className="flex justify-center items-center min-h-[400px]">
             <div
               className="relative transition-transform duration-300 ease-out"
               style={{
-                transform: `perspective(1000px) rotateX(${imageRotation}deg)`,
+                transform: `perspective(1000px) rotateX(${imageRotation}deg) translateY(-30px)`,
                 transformStyle: 'preserve-3d',
               }}
             >
               <img
                 src="/Dashboardimg.png"
                 alt="Clario Dashboard"
-                className="w-full max-w-6xl h-auto rounded-[25px] shadow-[0_20px_60px_rgba(0,0,0,0.3)] shadow-lg"
+                className="w-full max-w-6xl h-auto rounded-[25px]"
                 style={{
                   transition: 'transform 0.3s ease-out',
+                  boxShadow: '0 40px 100px rgba(0, 0, 0, 0.3), 0 20px 50px rgba(0, 0, 0, 0.2), 0 10px 25px rgba(0, 0, 0, 0.15)',
+                  filter: 'drop-shadow(0 50px 120px rgba(0, 0, 0, 0.2))',
                 }}
               />
             </div>
