@@ -480,7 +480,7 @@ const Index = () => {
                     All your claims and payouts tracked in one trusted dashboard.
                   </li>
                 </ul>
-                <p className="text-sm text-gray-600">It does the works on your behalf.</p>
+                <p className="text-sm text-gray-600">Clario is your Autonomous AI Agent, not your boss. You maintain 100% command over your data, account and recovery processes!</p>
               </div>
             </div>
           </div>

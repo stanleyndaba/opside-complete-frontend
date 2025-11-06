@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import { Input } from '@/components/ui/input';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ChevronDown } from 'lucide-react';
 import { api } from '@/lib/api';
@@ -14,24 +15,32 @@ const ApiLanding = () => {
     flag: string;
   };
   const LANGUAGE_OPTIONS: LanguageOption[] = [
-    { code: 'us-en', country: 'USA', language: 'English', flag: '🇺🇸' },
-    { code: 'ca-en', country: 'Canada', language: 'English', flag: '🇨🇦' },
-    { code: 'ca-fr', country: 'Canada', language: 'Français', flag: '🇨🇦' },
-    { code: 'gb-en', country: 'United Kingdom', language: 'English', flag: '🇬🇧' },
-    { code: 'au-en', country: 'Australia', language: 'English', flag: '🇦🇺' },
-    { code: 'de-de', country: 'Germany', language: 'Deutsch', flag: '🇩🇪' },
-    { code: 'fr-fr', country: 'France', language: 'Français', flag: '🇫🇷' },
-    { code: 'es-es', country: 'Spain', language: 'Español', flag: '🇪🇸' },
-    { code: 'it-it', country: 'Italy', language: 'Italiano', flag: '🇮🇹' },
-    { code: 'nl-nl', country: 'Netherlands', language: 'Nederlands', flag: '🇳🇱' },
+    { code: 'en', country: 'Global', language: 'English', flag: '🇺🇸' },
+    { code: 'es', country: 'Global', language: 'Spanish', flag: '🇪🇸' },
+    { code: 'zh', country: 'Global', language: 'Chinese (Mandarin)', flag: '🇨🇳' },
+    { code: 'fr', country: 'Global', language: 'French', flag: '🇫🇷' },
+    { code: 'de', country: 'Global', language: 'German', flag: '🇩🇪' },
+    { code: 'ja', country: 'Global', language: 'Japanese', flag: '🇯🇵' },
+    { code: 'ar', country: 'Global', language: 'Arabic', flag: '🇸🇦' },
   ];
   const [selectedLanguageCode, setSelectedLanguageCode] = useState<string>(() =>
-    typeof window !== 'undefined' ? localStorage.getItem('clario.langPreference') || 'us-en' : 'us-en'
+    typeof window !== 'undefined' ? localStorage.getItem('clario.langPreference') || 'en' : 'en'
   );
+  const [langQuery, setLangQuery] = useState<string>('');
   useEffect(() => {
     try { localStorage.setItem('clario.langPreference', selectedLanguageCode); } catch {}
   }, [selectedLanguageCode]);
-  const selectedLanguage = LANGUAGE_OPTIONS.find(o => o.code === selectedLanguageCode) || LANGUAGE_OPTIONS[0];
+  const selectedLanguage: LanguageOption =
+    LANGUAGE_OPTIONS.find((o) => o.code === selectedLanguageCode) || LANGUAGE_OPTIONS[0];
+
+  const filteredLanguages = useMemo(() => {
+    const q = langQuery.trim().toLowerCase();
+    if (!q) return LANGUAGE_OPTIONS;
+    return LANGUAGE_OPTIONS.filter(o =>
+      o.language.toLowerCase().includes(q) ||
+      o.country.toLowerCase().includes(q)
+    );
+  }, [langQuery]);
 
   const [connecting, setConnecting] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -80,12 +89,26 @@ const ApiLanding = () => {
                     <ChevronDown className="h-4 w-4 opacity-70" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="min-w-[220px] bg-white border border-black/10 text-gray-900 shadow-xl">
-                  {LANGUAGE_OPTIONS.map(opt => (
-                    <DropdownMenuItem key={opt.code} onClick={() => setSelectedLanguageCode(opt.code)} className="gap-2 hover:bg-gray-100 focus:bg-gray-100">
-                      <span className="font-medium">{opt.language}</span>
-                    </DropdownMenuItem>
-                  ))}
+                <DropdownMenuContent align="end" className="min-w-[240px] bg-white/80 supports-[backdrop-filter]:bg-white/70 backdrop-blur-xl border border-white/30 text-gray-900 shadow-2xl p-0">
+                  <div className="p-2 sticky top-0 bg-white border-b border-black/5" onKeyDown={(e) => e.stopPropagation()}>
+                    <Input
+                      value={langQuery}
+                      onChange={(e) => setLangQuery(e.target.value)}
+                      placeholder="Search language..."
+                      className="h-8 bg-gray-50 border border-gray-200 text-gray-900 placeholder:text-gray-500 focus-visible:ring-emerald-500"
+                    />
+                  </div>
+                  <div className="max-h-64 overflow-auto">
+                    {filteredLanguages.length === 0 ? (
+                      <DropdownMenuItem disabled className="text-gray-400">No matches</DropdownMenuItem>
+                    ) : (
+                      filteredLanguages.map((opt) => (
+                        <DropdownMenuItem key={opt.code} onClick={() => { setSelectedLanguageCode(opt.code); setLangQuery(''); }} className="gap-2 hover:bg-gray-100 focus:bg-gray-100">
+                          <span className="font-medium">{opt.language}</span>
+                        </DropdownMenuItem>
+                      ))
+                    )}
+                  </div>
                 </DropdownMenuContent>
               </DropdownMenu>
 
@@ -123,19 +146,34 @@ const ApiLanding = () => {
                       Language: {selectedLanguage.language}
                     </button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" className="min-w-[220px] bg-white border border-black/10 text-gray-900 shadow-xl">
-                    {LANGUAGE_OPTIONS.map(opt => (
-                      <DropdownMenuItem
-                        key={opt.code}
-                        onClick={() => {
-                          setSelectedLanguageCode(opt.code);
-                          setMobileMenuOpen(false);
-                        }}
-                        className="gap-2 hover:bg-gray-100 focus:bg-gray-100"
-                      >
-                        <span className="font-medium">{opt.language}</span>
-                      </DropdownMenuItem>
-                    ))}
+                  <DropdownMenuContent align="start" className="min-w-[220px] bg-white/80 supports-[backdrop-filter]:bg-white/70 backdrop-blur-xl border border-white/30 text-gray-900 shadow-2xl p-0">
+                    <div className="p-2 sticky top-0 bg-white border-b border-black/5" onKeyDown={(e) => e.stopPropagation()}>
+                      <Input
+                        value={langQuery}
+                        onChange={(e) => setLangQuery(e.target.value)}
+                        placeholder="Search language..."
+                        className="h-8 bg-gray-50 border border-gray-200 text-gray-900 placeholder:text-gray-500 focus-visible:ring-emerald-500"
+                      />
+                    </div>
+                    <div className="max-h-64 overflow-auto">
+                      {filteredLanguages.length === 0 ? (
+                        <DropdownMenuItem disabled className="text-gray-400">No matches</DropdownMenuItem>
+                      ) : (
+                        filteredLanguages.map((opt) => (
+                          <DropdownMenuItem
+                            key={opt.code}
+                            onClick={() => {
+                              setSelectedLanguageCode(opt.code);
+                              setLangQuery('');
+                              setMobileMenuOpen(false);
+                            }}
+                            className="gap-2 hover:bg-gray-100 focus:bg-gray-100"
+                          >
+                            <span className="font-medium">{opt.language}</span>
+                          </DropdownMenuItem>
+                        ))
+                      )}
+                    </div>
                   </DropdownMenuContent>
                 </DropdownMenu>
 
