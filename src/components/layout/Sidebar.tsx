@@ -116,8 +116,8 @@ export function Sidebar({
                 className={cn(
                   "relative flex items-center justify-center w-10 h-10 rounded-md transition-colors",
                   isActive
-                    ? "bg-white/10 text-gray-100"
-                    : "text-gray-400 hover:bg-white/10 hover:text-gray-100"
+                    ? isDashboard ? "bg-white/10 text-white" : "bg-white/10 text-gray-100"
+                    : isDashboard ? "text-[#303030] hover:bg-white/10 hover:text-white" : "text-gray-400 hover:bg-white/10 hover:text-gray-100"
                 )}
               >
                 <item.icon className="h-4 w-4" strokeWidth={1.5} />
@@ -137,8 +137,8 @@ export function Sidebar({
           className={cn(
             "relative flex items-center gap-1.5 px-2 py-1.5 rounded-md transition-colors",
           isActive
-            ? "bg-white/5 text-gray-100"
-            : "text-gray-400 hover:bg-white/5 hover:text-gray-100"
+            ? isDashboard ? "bg-white/5 text-white" : "bg-white/5 text-gray-100"
+            : isDashboard ? "text-[#303030] hover:bg-white/5 hover:text-white" : "text-gray-400 hover:bg-white/5 hover:text-gray-100"
         )}
       >
         {isActive && (
@@ -226,7 +226,7 @@ export function Sidebar({
                         </Tooltip>
                       </TooltipProvider>
                     ) : (
-                      <NotificationBell label="Messages" forceCountStyle="sidebar" iconOverride={Mail} className="w-full justify-between rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-200" />
+                      <NotificationBell label="Messages" forceCountStyle="sidebar" iconOverride={Mail} className={cn("w-full justify-between rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm", isDashboard ? "text-[#303030]" : "text-gray-200")} />
                     )}
                   </div>
                 </nav>
@@ -242,7 +242,10 @@ export function Sidebar({
               <TooltipTrigger asChild>
                 <button
                   aria-label="Logout"
-                  className="relative flex items-center justify-center w-10 h-10 rounded-md text-gray-400 hover:bg-white/10 hover:text-red-300 transition-colors"
+                  className={cn(
+                    "relative flex items-center justify-center w-10 h-10 rounded-md transition-colors",
+                    isDashboard ? "text-[#303030] hover:bg-white/10 hover:text-red-300" : "text-gray-400 hover:bg-white/10 hover:text-red-300"
+                  )}
                   onClick={async () => {
                     const ok = window.confirm('Log out of Clario?');
                     if (!ok) return;
@@ -262,7 +265,10 @@ export function Sidebar({
       ) : (
         <div className="mt-auto border-t border-white/10 p-4 space-y-3">
             <button
-              className="w-full flex items-center gap-2 text-left text-gray-400 hover:text-red-300 hover:bg-white/5 px-3 py-2 rounded-md"
+              className={cn(
+                "w-full flex items-center gap-2 text-left hover:text-red-300 hover:bg-white/5 px-3 py-2 rounded-md",
+                isDashboard ? "text-[#303030]" : "text-gray-400"
+              )}
             onClick={() => setShowLogout(prev => !prev)}
           >
             <LogOut className="h-4 w-4" />
