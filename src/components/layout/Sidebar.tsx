@@ -62,34 +62,17 @@ export function Sidebar({
   const queryClient = useQueryClient();
   const [showLogout, setShowLogout] = useState(false);
 
-  const navSections: NavSection[] = [
-    {
-      title: 'Overview',
-      items: [
-        { title: 'Command Center', icon: LayoutDashboard, href: '/app' },
-        { title: 'Recoveries', icon: ShieldCheck, href: '/recoveries' }
-      ]
-    },
-    {
-      title: 'Operations',
-      items: [
-        { title: 'Evidence Locker', icon: FolderKanban, href: '/evidence-locker' },
-        { title: 'Reports', icon: BarChart3, href: '/reports' }
-      ]
-    },
-    {
-      title: 'Manage',
-      items: [
-        { title: 'Settings', icon: Settings2, href: '/settings' }
-      ]
-    },
-    {
-      title: 'Support',
-      items: [
-        { title: 'Help Centre', icon: LifeBuoy, href: '/help' },
-        { title: "What's New", icon: Sparkles, href: '/whats-new' }
-      ]
-    }
+  const primaryItems: NavItem[] = [
+    { title: 'Command Center', icon: LayoutDashboard, href: '/app' },
+    { title: 'Recoveries', icon: ShieldCheck, href: '/recoveries' },
+    { title: 'Evidence Locker', icon: FolderKanban, href: '/evidence-locker' },
+    { title: 'Reports', icon: BarChart3, href: '/reports' }
+  ];
+
+  const secondaryItems: NavItem[] = [
+    { title: 'Settings', icon: Settings2, href: '/settings' },
+    { title: 'Help Centre', icon: LifeBuoy, href: '/help' },
+    { title: "What's New", icon: Sparkles, href: '/whats-new' }
   ];
 	const NavItemComponent = ({
 		item
@@ -211,27 +194,19 @@ export function Sidebar({
               )}
             >
                 <div className="flex flex-col items-start justify-center py-8 space-y-6 w-full">
-                <nav className="w-full space-y-6">
-                  {navSections.map((section) => (
-                    <div key={section.title} className="w-full flex flex-col gap-1">
-                      {!isCollapsed && (
-                        <p className="px-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-gray-500">
-                          {section.title}
-                        </p>
-                      )}
-                      <div className="space-y-1">
-                        {section.items.map((item) => (
-                          <NavItemComponent key={item.title} item={item} />
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                  <div className="w-full pt-1">
-                    {!isCollapsed && (
-                      <p className="px-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-gray-500">
-                        Messages
-                      </p>
-                    )}
+                <nav className="w-full space-y-4">
+                  <div className="space-y-1">
+                    {primaryItems.map((item) => (
+                      <NavItemComponent key={item.title} item={item} />
+                    ))}
+                  </div>
+                  {!isCollapsed && <div className="h-px bg-white/10" />}
+                  <div className="space-y-1">
+                    {secondaryItems.map((item) => (
+                      <NavItemComponent key={item.title} item={item} />
+                    ))}
+                  </div>
+                  <div className="pt-2">
                     {isCollapsed ? (
                       <TooltipProvider>
                         <Tooltip>
