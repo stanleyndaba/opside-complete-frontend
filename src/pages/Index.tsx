@@ -352,17 +352,15 @@ const Index = () => {
             {/* Trust chip removed per request */}
             {/* Animated Cursive Text */}
             {showAnimatedText && (
-              <div key={animationKey} className="relative overflow-hidden h-8 mb-4 w-full">
+              <div key={animationKey} className="text-center mb-4">
                 <div
-                  className="absolute whitespace-nowrap"
+                  className="inline-block"
                   style={{
                     fontFamily: 'cursive, "Brush Script MT", "Lucida Handwriting", serif',
                     fontStyle: 'italic',
                     color: '#3F3E3F',
                     fontSize: '1.125rem',
-                    animation: 'runwayText 4s ease-in-out forwards',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
+                    animation: 'fadeInOut 4s ease-in-out forwards',
                   }}
                 >
                   Clario works best with your work email
@@ -370,19 +368,17 @@ const Index = () => {
               </div>
             )}
             <style>{`
-              @keyframes runwayText {
+              @keyframes fadeInOut {
                 0% {
-                  transform: translateX(calc(-50vw - 50%));
                   opacity: 0;
                 }
-                15% {
+                20% {
                   opacity: 1;
                 }
-                85% {
+                80% {
                   opacity: 1;
                 }
                 100% {
-                  transform: translateX(calc(50vw - 50%));
                   opacity: 0;
                 }
               }
