@@ -134,7 +134,7 @@ const Index = () => {
   return (
     <div 
       className="min-h-screen flex flex-col bg-white text-gray-900"
-      style={{ fontFamily: "var(--font-inter),-apple-system,Helvetica,Arial,BlinkMacSystemFont,\"Segoe UI\",Roboto,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\",\"Segoe UI Symbol\"" }}
+      style={{ fontFamily: "\"Stack Sans Headline\", sans-serif", fontStyle: "normal" }}
     >
       <header className="sticky top-0 z-40 border-transparent bg-transparent">
         <div className="container mx-auto px-6 py-5">
@@ -624,14 +624,9 @@ const Index = () => {
                     <p className="text-base text-slate-600 md:text-lg">
                       Switch on automated Amazon claims, surface evidence instantly, and keep your team ahead of every discrepancy.
                     </p>
-                    <div className="flex flex-wrap gap-3 text-sm font-medium text-slate-600">
-                      <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 uppercase tracking-widest shadow-sm">
-                        No credit card
-                      </span>
-                      <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 uppercase tracking-widest shadow-sm">
-                        Cancel anytime
-                      </span>
-                    </div>
+                    <p className="text-base text-navy-900 italic" style={{ color: '#001f3f' }}>
+                      Clario will never request your credit card
+                    </p>
                   </div>
                   <div className="flex w-full max-w-sm flex-col items-stretch gap-4 md:items-end">
                     <AmazonConnect showUseExisting={false} className="w-full md:w-auto bg-emerald-500 text-white hover:bg-emerald-400 hover:text-white shadow-[0_18px_45px_rgba(147,197,253,0.35)]" />
