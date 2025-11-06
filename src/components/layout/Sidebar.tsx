@@ -61,6 +61,9 @@ export function Sidebar({
 	const location = useLocation();
   const queryClient = useQueryClient();
   const [showLogout, setShowLogout] = useState(false);
+  
+  // Check if we're on the Dashboard (Command Center) page
+  const isDashboard = location.pathname === '/dashboard' || location.pathname === '/app' || location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/app');
 
   const primaryItems: NavItem[] = [
     { title: 'Command Center', icon: LayoutDashboard, href: '/app' },
@@ -151,9 +154,11 @@ export function Sidebar({
         className={cn(
           "fixed left-0 top-0 transition-all duration-300 ease-in-out flex flex-col h-screen z-40",
           isCollapsed ? "w-16" : "w-60",
-          "bg-[#0B1220] text-gray-300 border-r border-white/10",
+          "text-gray-300 border-r border-white/10",
+          isDashboard ? "" : "bg-[#0B1220]",
           className
         )}
+        style={isDashboard ? { backgroundColor: '#CECECE' } : undefined}
       >
         {/* Branding + Collapse */}
         <div
