@@ -170,23 +170,35 @@ export function Sidebar({
           {!isCollapsed ? (
             <>
                 <div className="select-none flex items-center gap-2">
-                  <span className="relative inline-flex">
-                    <span className="absolute -inset-2 rounded-full bg-emerald-400/25 blur-lg" />
-                    <img src="/donelogo.png" alt="Clario" className="relative h-8 w-8 rounded-full object-cover shadow-lg shadow-emerald-500/25" />
-                  </span>
-                  <span className="text-[11px] text-emerald-400/90 flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                    Connected
-                  </span>
+                  {isDashboard ? (
+                    <span className="text-lg font-black text-gray-800 tracking-tight">CLARIO</span>
+                  ) : (
+                    <>
+                      <span className="relative inline-flex">
+                        <span className="absolute -inset-2 rounded-full bg-emerald-400/25 blur-lg" />
+                        <img src="/donelogo.png" alt="Clario" className="relative h-8 w-8 rounded-full object-cover shadow-lg shadow-emerald-500/25" />
+                      </span>
+                      <span className="text-[11px] text-emerald-400/90 flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                        Connected
+                      </span>
+                    </>
+                  )}
                 </div>
             </>
           ) : (
             <div className="flex items-center gap-2">
-              <span className="relative inline-flex">
-                <span className="absolute -inset-2 rounded-full bg-emerald-400/25 blur-lg" />
-                <img src="/donelogo.png" alt="Clario" className="relative h-8 w-8 rounded-full object-cover shadow-lg shadow-emerald-500/25" />
-              </span>
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" title="Connected" />
+              {isDashboard ? (
+                <span className="text-sm font-black text-gray-800 tracking-tight">CLARIO</span>
+              ) : (
+                <>
+                  <span className="relative inline-flex">
+                    <span className="absolute -inset-2 rounded-full bg-emerald-400/25 blur-lg" />
+                    <img src="/donelogo.png" alt="Clario" className="relative h-8 w-8 rounded-full object-cover shadow-lg shadow-emerald-500/25" />
+                  </span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" title="Connected" />
+                </>
+              )}
             </div>
           )}
         </div>
