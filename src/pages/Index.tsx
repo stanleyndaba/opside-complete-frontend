@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -34,6 +34,11 @@ const Index = () => {
   );
   const [langQuery, setLangQuery] = useState<string>('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [isScrollingUp, setIsScrollingUp] = useState(false);
+  const [imageRotation, setImageRotation] = useState(0);
+  const lastScrollYRef = useRef(0);
   const benefitWords = useMemo(
     () => [
       'Recover Faster',
@@ -69,6 +74,44 @@ const Index = () => {
     }, 3200);
     return () => window.clearInterval(ticker);
   }, [benefitWords]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    let ticking = false;
+    
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+          const scrollDelta = currentScrollY - lastScrollYRef.current;
+          
+          setScrollY(currentScrollY);
+          setIsScrollingUp(scrollDelta < 0);
+          
+          // Create "waking up" flip effect
+          // When scrolling down: flip up (negative rotateX)
+          // When scrolling up: flip up more (positive rotateX)
+          // The more you scroll, the more it "wakes up"
+          const scrollProgress = Math.min(currentScrollY / 500, 1); // Normalize to 0-1 over 500px scroll
+          const baseRotation = scrollProgress * 15; // Max 15 degrees
+          
+          // Add direction-based rotation for more dynamic effect
+          const directionRotation = scrollDelta < 0 ? 5 : -5; // Extra rotation based on direction
+          const rotation = Math.max(-25, Math.min(25, baseRotation + directionRotation));
+          
+          setImageRotation(rotation);
+          setLastScrollY(currentScrollY);
+          lastScrollYRef.current = currentScrollY;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const primaryLinks = [
     { label: 'API', href: '/developer-api' },
@@ -338,6 +381,29 @@ const Index = () => {
             </div>
           </div>
         </section>
+        
+        {/* Dashboard Image with Scroll Animation */}
+        <div className="container mx-auto px-6 py-12">
+          <div className="flex justify-center">
+            <div
+              className="relative transition-transform duration-300 ease-out"
+              style={{
+                transform: `perspective(1000px) rotateX(${imageRotation}deg)`,
+                transformStyle: 'preserve-3d',
+              }}
+            >
+              <img
+                src="/Dashboardimg.png"
+                alt="Clario Dashboard"
+                className="w-full max-w-6xl h-auto rounded-[25px] shadow-[0_20px_60px_rgba(0,0,0,0.3)] shadow-lg"
+                style={{
+                  transition: 'transform 0.3s ease-out',
+                }}
+              />
+            </div>
+          </div>
+        </div>
+
         <section className="relative isolate -mt-12 bg-white text-gray-900">
           <div
             className="pointer-events-none absolute inset-0 opacity-90"
