@@ -509,47 +509,47 @@ const Index = () => {
             </div>
           </div>
         </section>
-        <section className="relative bg-white py-20">
+          <section className="relative bg-white py-20">
           <div className="container mx-auto px-6">
-            <div className="relative overflow-hidden rounded-[36px] border border-gray-200/70 bg-slate-950 text-white shadow-[0_30px_80px_rgba(15,23,42,0.35)]">
-              <div
-                className="pointer-events-none absolute inset-0 opacity-80"
-                aria-hidden="true"
-                style={{
-                  backgroundImage:
-                    'radial-gradient(rgba(16,185,129,0.12) 1px, transparent 1px), radial-gradient(rgba(59,130,246,0.08) 1px, transparent 1px)',
-                  backgroundSize: '28px 28px',
-                  backgroundPosition: '0 0, 14px 14px'
-                }}
-              />
-              <div className="relative z-10 flex flex-col gap-10 px-10 py-14 md:flex-row md:items-center md:justify-between">
-                <div className="max-w-2xl space-y-5">
-                  <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-white/80">
-                    Try Clario
-                  </span>
-                  <h2 className="text-4xl font-black tracking-tight text-white md:text-5xl">
-                    Run reimbursements with confident control.
-                  </h2>
-                  <p className="text-base text-white/75 md:text-lg">
-                    Switch on automated Amazon claims, surface evidence instantly, and keep your team ahead of every discrepancy.
-                  </p>
-                  <div className="flex flex-wrap gap-3 text-sm font-medium text-white/80">
-                    <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 uppercase tracking-widest">
-                      No credit card
+              <div className="relative overflow-hidden rounded-[36px] border border-gray-100 bg-gradient-to-br from-white via-slate-50 to-gray-100 text-slate-900 shadow-[0_30px_80px_rgba(148,163,184,0.25)]">
+                <div
+                  className="pointer-events-none absolute inset-0 opacity-70"
+                  aria-hidden="true"
+                  style={{
+                    backgroundImage:
+                      'radial-gradient(rgba(148,163,184,0.35) 1px, transparent 1px), radial-gradient(rgba(226,232,240,0.45) 1px, transparent 1px)',
+                    backgroundSize: '26px 26px',
+                    backgroundPosition: '0 0, 13px 13px'
+                  }}
+                />
+                <div className="relative z-10 flex flex-col gap-10 px-10 py-14 md:flex-row md:items-center md:justify-between">
+                  <div className="max-w-2xl space-y-5">
+                    <span className="inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/80 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
+                      Try Clario
                     </span>
-                    <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 uppercase tracking-widest">
-                      Cancel anytime
+                    <h2 className="text-4xl font-black tracking-tight text-slate-900 md:text-5xl">
+                      Run reimbursements with confident control.
+                    </h2>
+                    <p className="text-base text-slate-600 md:text-lg">
+                      Switch on automated Amazon claims, surface evidence instantly, and keep your team ahead of every discrepancy.
+                    </p>
+                    <div className="flex flex-wrap gap-3 text-sm font-medium text-slate-600">
+                      <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 uppercase tracking-widest shadow-sm">
+                        No credit card
+                      </span>
+                      <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 uppercase tracking-widest shadow-sm">
+                        Cancel anytime
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex w-full max-w-sm flex-col items-stretch gap-4 md:items-end">
+                    <AmazonConnect showUseExisting={false} className="w-full md:w-auto bg-emerald-500 text-white hover:bg-emerald-400 hover:text-white shadow-[0_18px_45px_rgba(147,197,253,0.35)]" />
+                    <span className="text-sm text-slate-500 md:text-right">
+                      Connect your Amazon account in minutes and see recoveries in motion.
                     </span>
                   </div>
                 </div>
-                <div className="flex w-full max-w-sm flex-col items-stretch gap-4 md:items-end">
-                    <AmazonConnect showUseExisting={false} className="w-full md:w-auto bg-emerald-400 text-white hover:bg-emerald-300 hover:text-white shadow-[0_18px_45px_rgba(16,185,129,0.4)]" />
-                  <span className="text-sm text-white/70 md:text-right">
-                    Connect your Amazon account in minutes and see recoveries in motion.
-                  </span>
-                </div>
               </div>
-            </div>
           </div>
         </section>
       </main>
