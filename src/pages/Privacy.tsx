@@ -167,7 +167,7 @@ const Privacy = () => {
             <div className="text-sm text-gray-500 space-y-1 mb-12">
               <p><strong>Effective Date:</strong> January 1, 2025</p>
               <p className="text-xs text-gray-400">The day Clario's full-time operations and IP creation officially began.</p>
-              <p><strong>Last Updated:</strong> November 4, 2025</p>
+              <p><strong>Last Updated:</strong> November 6, 2025</p>
               <p className="text-xs text-gray-400">The day Clario legally executed and finalized this document.</p>
             </div>
 
@@ -177,6 +177,7 @@ const Privacy = () => {
                 <header className="space-y-3">
                   <p className="uppercase text-xs tracking-[0.3em] text-emerald-600">Privacy</p>
                   <h1 className="text-3xl md:text-4xl font-semibold text-gray-900">Clario Data Privacy Policy</h1>
+                  <p className="text-sm text-gray-500"><strong>Last Updated:</strong> November 6, 2025</p>
                 </header>
                 <p className="leading-relaxed">
                   Clario is committed to protecting the privacy and security of your data. This Data Privacy Policy ("Policy") explains how Clario ("we," "us," or "our") collects, uses, stores, and protects data obtained through the Amazon Selling Partner API ("SP-API") and user-linked external sources (e.g., email or cloud accounts). This Policy applies exclusively to data processed in connection with Clario's automated FBA reimbursement and financial reconciliation service ("Service").
@@ -191,7 +192,7 @@ const Privacy = () => {
 
                 <h3 className="text-xl font-medium text-gray-900">Amazon Data via SP-API</h3>
                 <ul className="list-disc pl-6 text-gray-600 space-y-2">
-                  <li><strong>Minimal PII</strong>: Recipient names and shipping addresses are collected only to comply with Amazon's official FBA reconciliation and return policies (e.g., lost/damaged inventory verification). This PII is never used for advertising, marketing, user profiling, or any purpose outside the core Service.</li>
+                  <li><strong>No End-Customer PII</strong>: Clario's AI Agents do not require or collect any end-customer PII (such as names, addresses, or phone numbers). Our service exclusively accesses non-PII operational, financial, and inventory reports to perform its function.</li>
                   <li>
                     <strong>Non-PII Operational Data</strong> includes:
                     <ul className="list-disc pl-6 space-y-2 text-gray-600">
@@ -257,7 +258,7 @@ const Privacy = () => {
                       </tr>
                       <tr>
                         <td className="py-3 pr-6 font-medium">Infrastructure</td>
-                        <td className="py-3">Hosted on AWS with VPC isolation, WAF, and automated security scanning.</td>
+                        <td className="py-3">Hosted on Amazon Web Services (AWS) in the us-east-1 region, with VPC isolation, WAF, and automated security scanning. (This shows we are co-locating the data in the primary region of our target market, which is best practice).</td>
                       </tr>
                     </tbody>
                   </table>
@@ -268,7 +269,7 @@ const Privacy = () => {
                 <h2 className="text-2xl font-semibold text-gray-900">5. Data Retention Policy (The "When Deleted")</h2>
                 <p className="text-gray-600 leading-relaxed">We do not retain data longer than necessary.</p>
                 <ul className="list-disc pl-6 text-gray-600 space-y-2">
-                  <li><strong>Deauthorization</strong>: If a user deauthorizes Clario from their Amazon account, Clario will initiate the secure deletion of all collected Amazon data, including PII, within 30 days (or the maximum allowed by Amazon, currently 90 days).</li>
+                  <li><strong>Deauthorization</strong>: If a user deauthorizes Clario, we will initiate the secure deletion of all collected Amazon data, including PII, within 30 days, in full compliance with SP-API policy.</li>
                   <li><strong>User Request</strong>: Users can request immediate deletion of their data at any time via in-app settings or by emailing <a href="mailto:support@clario.app" className="underline text-emerald-600 hover:text-emerald-700">support@clario.app</a>. Deletion is completed within 7 business days.</li>
                 </ul>
                 <p className="text-gray-600 leading-relaxed">Audit logs confirming deletion are retained for compliance purposes only.</p>
@@ -298,10 +299,28 @@ const Privacy = () => {
               </section>
 
               <section className="space-y-4">
+                <h2 className="text-2xl font-semibold text-gray-900">8. Your Data Protection Rights</h2>
+                <p className="text-gray-600 leading-relaxed">Depending on your location, you may have the following rights regarding your data:</p>
+                <ul className="list-disc pl-6 text-gray-600 space-y-2">
+                  <li>The right to access, update, or delete the information we have on you.</li>
+                  <li>The right to rectification if that information is inaccurate.</li>
+                  <li>The right to object to our processing of your data.</li>
+                  <li>The right to restrict the processing of your data.</li>
+                  <li>The right to data portability (request a copy of your data).</li>
+                  <li>The right to withdraw consent at any time.</li>
+                </ul>
+                <p className="text-gray-600 leading-relaxed">
+                  For users in the European Economic Area (EEA), UK, or California (CCPA), you may exercise these rights by contacting <a href="mailto:privacy@clario.app" className="underline text-emerald-600 hover:text-emerald-700">privacy@clario.app</a>.
+                </p>
+              </section>
+
+              <section className="space-y-4">
                 <h2 className="text-2xl font-semibold text-gray-900">Contact Us</h2>
                 <p className="text-gray-600 leading-relaxed">For questions, deletion requests, or compliance inquiries:</p>
                 <div className="space-y-2 text-gray-600">
+                  <p><strong>Clario (A Mvelo P. Venture)</strong></p>
                   <p><strong>Email</strong>: <a href="mailto:privacy@clario.app" className="underline text-emerald-600 hover:text-emerald-700">privacy@clario.app</a></p>
+                  <p><strong>Location</strong>: Durban, South Africa</p>
                   <p><strong>Response Time</strong>: Within 48 hours</p>
                 </div>
               </section>
