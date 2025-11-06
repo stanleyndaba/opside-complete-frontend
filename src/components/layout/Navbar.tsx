@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ArrowUpDown, ChevronDown, Search } from 'lucide-react';
+import { ArrowUpDown, ChevronDown, Search, Gift } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { useLocation } from 'react-router-dom';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 interface NavbarProps {
   className?: string;
   sidebarCollapsed?: boolean;
@@ -41,6 +42,9 @@ export function Navbar({
   // Check if we're on the Dashboard (Command Center) page
   const isDashboard = location.pathname === '/dashboard' || location.pathname === '/app' || location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/app');
 
+  // State for referral popup
+  const [showReferralPopup, setShowReferralPopup] = useState(false);
+
   // Language preference removed on platform navbar per design
 
   // Sandbox badge: show in non-production or when VITE_SANDBOX=true
@@ -55,20 +59,31 @@ export function Navbar({
         <div className="container flex items-center h-16 px-4 font-body">
           {/* Center - Search */}
           <div className="flex-1 max-w-xl hidden md:block md:mx-4">
-            <div className="relative">
-              <Search className={cn(
-                'absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4',
-                isDashboard ? 'text-gray-500' : (isTransparent ? 'text-gray-300' : 'text-muted-foreground')
-              )} />
-              <Input
-                aria-label="Search"
-                placeholder="search invoices, products, documents, and more"
-                variant={isTransparent ? 'dark' : 'default'}
-                className={cn(
-                  "pl-9 h-9 rounded-md",
-                  isDashboard && "!bg-white/95 !border-gray-300/80 !text-gray-900 !placeholder:text-gray-600"
-                )}
-              />
+            <div className="relative flex items-center gap-2">
+              <div className="relative flex-1">
+                <Search className={cn(
+                  'absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4',
+                  isDashboard ? 'text-gray-500' : (isTransparent ? 'text-gray-300' : 'text-muted-foreground')
+                )} />
+                <Input
+                  aria-label="Search"
+                  placeholder="search invoices, products, documents, and more"
+                  variant={isTransparent ? 'dark' : 'default'}
+                  className={cn(
+                    "pl-9 h-9 rounded-md",
+                    isDashboard && "!bg-white/95 !border-gray-300/80 !text-gray-900 !placeholder:text-gray-600"
+                  )}
+                />
+              </div>
+              {isDashboard && (
+                <button
+                  onClick={() => setShowReferralPopup(true)}
+                  className="flex items-center justify-center h-9 w-9 rounded-md text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 transition-colors"
+                  aria-label="Referral program"
+                >
+                  <Gift className="h-5 w-5" />
+                </button>
+              )}
             </div>
           </div>
           {/* Right side - Sandbox badge */}
@@ -84,5 +99,24 @@ export function Navbar({
           {/* Language selector removed */}
       </div>
     </div>
+    
+    {/* Referral Popup */}
+    <Dialog open={showReferralPopup} onOpenChange={setShowReferralPopup}>
+      <DialogContent className="max-w-sm bg-emerald-50/95 border border-emerald-200/80 shadow-lg rounded-lg p-6">
+        <div className="flex flex-col items-center gap-4 text-center">
+          <div className="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100">
+            <Gift className="h-6 w-6 text-emerald-600" />
+          </div>
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold text-emerald-900">
+              No commission on referrals
+            </h3>
+            <p className="text-sm text-emerald-700">
+              Bring new sellers to Clario and keep 100% of their recovered funds.
+            </p>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   </header>;
 }
