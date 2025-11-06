@@ -37,6 +37,9 @@ export function Navbar({
     location.pathname.startsWith('/help') ||
     location.pathname.startsWith('/auth');
   const isTransparent = !!forceTransparent || pathTransparent;
+  
+  // Check if we're on the Dashboard (Command Center) page
+  const isDashboard = location.pathname === '/dashboard' || location.pathname === '/app' || location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/app');
 
   // Language preference removed on platform navbar per design
 
@@ -55,13 +58,16 @@ export function Navbar({
             <div className="relative">
               <Search className={cn(
                 'absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4',
-                isTransparent ? 'text-gray-300' : 'text-muted-foreground'
+                isDashboard ? 'text-gray-500' : (isTransparent ? 'text-gray-300' : 'text-muted-foreground')
               )} />
               <Input
                 aria-label="Search"
                 placeholder="search invoices, products, documents, and more"
                 variant={isTransparent ? 'dark' : 'default'}
-                className="pl-9 h-9 rounded-md"
+                className={cn(
+                  "pl-9 h-9 rounded-md",
+                  isDashboard && "!bg-white/95 !border-gray-300/80 !text-gray-900 !placeholder:text-gray-600"
+                )}
               />
             </div>
           </div>
