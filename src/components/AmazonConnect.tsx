@@ -9,15 +9,20 @@ interface AmazonConnectProps {
   onConnectionStart?: () => void;
   onConnectionComplete?: (data: any) => void;
   className?: string;
+  showUseExisting?: boolean;
 }
 
-export function AmazonConnect({ onConnectionStart, onConnectionComplete, className }: AmazonConnectProps) {
+export function AmazonConnect({ onConnectionStart, onConnectionComplete, className, showUseExisting = true }: AmazonConnectProps) {
   const [connecting, setConnecting] = useState(false);
+  const [usingExisting, setUsingExisting] = useState(false);
   const { toast } = useToast();
 
   const handleConnect = async () => {
     try {
       setConnecting(true);
+      if (showUseExisting) {
+        setUsingExisting(false);
+      }
       onConnectionStart?.();
 
       // ✅ CORRECT: Start OAuth flow
@@ -96,6 +101,60 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
     }
   };
 
+  const handleUseExisting = async () => {
+    if (!showUseExisting) return;
+    try {
+      setConnecting(true);
+      setUsingExisting(true);
+      onConnectionStart?.();
+
+      const response = await api.useExistingAmazonConnection();
+
+      if (response.ok) {
+        if (response.data?.bypassed && response.data?.redirectUrl) {
+          toast({
+            title: 'Using existing connection',
+            description: 'Connected with saved Amazon credentials.',
+          });
+          window.location.href = response.data.redirectUrl;
+          return;
+        }
+
+        const authUrl = response.data?.auth_url || response.data?.authUrl;
+        if (authUrl) {
+          toast({
+            title: 'Verification required',
+            description: 'Redirecting you to Amazon to refresh access.',
+          });
+          window.location.href = authUrl;
+          return;
+        }
+
+        toast({
+          title: 'Existing connection unavailable',
+          description: 'Please use the main connect option.',
+          variant: 'destructive'
+        });
+      } else {
+        toast({
+          title: 'Connection failed',
+          description: response.error || 'Could not reuse the existing connection.',
+          variant: 'destructive'
+        });
+      }
+    } catch (error: any) {
+      console.error('[AmazonConnect] Use existing failed:', error);
+      toast({
+        title: 'Connection error',
+        description: error?.message || 'An unexpected error occurred.',
+        variant: 'destructive'
+      });
+    } finally {
+      setConnecting(false);
+      setUsingExisting(false);
+    }
+  };
+
   // Check if className includes w-full to make buttons full width
   const isFullWidth = className?.includes('w-full');
   
@@ -107,12 +166,12 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         className={cn(
           isFullWidth ? 'w-full' : 'w-auto',
           'justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-semibold shadow-lg transition-colors px-8',
-        connecting && 'opacity-80',
+          connecting && (!showUseExisting || !usingExisting) && 'opacity-80',
           className
         )}
         size="lg"
       >
-        {connecting ? (
+        {connecting && (!showUseExisting || !usingExisting) ? (
           <>
             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
             Connecting...
@@ -121,7 +180,28 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
           'Connect Amazon Account'
         )}
       </Button>
-      
+        {showUseExisting && (
+          <Button
+            onClick={handleUseExisting}
+            disabled={connecting}
+            variant="outline"
+            className={cn(
+              isFullWidth ? 'w-full' : 'w-auto',
+              'justify-center border-emerald-500 text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition-colors px-8',
+              connecting && usingExisting && 'opacity-80'
+            )}
+            size="lg"
+          >
+            {connecting && usingExisting ? (
+              <>
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                Reconnecting...
+              </>
+            ) : (
+              'Use Existing Connection (Skip OAuth)'
+            )}
+          </Button>
+        )}
     </div>
   );
 }

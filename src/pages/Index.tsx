@@ -548,7 +548,7 @@ const Index = () => {
                   </div>
                 </div>
                 <div className="flex w-full max-w-sm flex-col items-stretch gap-4 md:items-end">
-                  <AmazonConnect className="w-full md:w-auto bg-emerald-400 text-white hover:bg-emerald-300 hover:text-white shadow-[0_18px_45px_rgba(16,185,129,0.4)]" />
+                    <AmazonConnect showUseExisting={false} className="w-full md:w-auto bg-emerald-400 text-white hover:bg-emerald-300 hover:text-white shadow-[0_18px_45px_rgba(16,185,129,0.4)]" />
                   <span className="text-sm text-white/70 md:text-right">
                     Connect your Amazon account in minutes and see recoveries in motion.
                   </span>
