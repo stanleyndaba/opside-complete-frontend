@@ -200,37 +200,37 @@ export function Dashboard() {
     ? approvedRecoveryAmount
     : Math.max((recoveredTotal ?? 0) - (pendingRecoveryAmount ?? 0), 0);
 
-  return (
-    <div className="relative min-h-screen flex flex-col h-screen overflow-hidden platform" style={{ backgroundColor: '#0B1220' }}>
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+    return (
+      <div className="relative min-h-screen flex flex-col h-screen overflow-hidden bg-gradient-to-br from-gray-50 via-slate-100 to-gray-200 text-slate-900">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(148,163,184,0.18),transparent_45%),radial-gradient(circle_at_80%_20%,rgba(226,232,240,0.25),transparent_45%)]" />
       <Navbar sidebarCollapsed={isSidebarCollapsed} forceTransparent />
       <div className="flex-1 flex h-full overflow-hidden">
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
         <main className={'flex-1 transition-all duration-300 overflow-y-auto ' + mainClass}>
           <div className="relative pt-24">
-              <div className="relative container mx-auto px-6 md:px-10 lg:px-12 pb-10 text-gray-300 space-y-8">
-            <div className="rounded-2xl bg-[#111827] p-6 md:p-8">
+                <div className="relative container mx-auto px-6 md:px-10 lg:px-12 pb-10 text-slate-700 space-y-8">
+              <div className="rounded-2xl bg-white/90 border border-slate-200 shadow-[0_24px_70px_rgba(148,163,184,0.35)] p-6 md:p-8">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 h-full">
               <div className="lg:col-span-2 space-y-8">
-                <Card className="bg-white/5 border-white/10 text-gray-300">
+                  <Card className="bg-white border border-slate-200 text-slate-700 shadow-sm">
                   <CardContent className="p-6">
-                    <h2 className="font-brand text-lg text-gray-100 font-semibold">Get Faster Reimbursements with Clario!</h2>
-                    <p className="text-sm text-gray-400 mt-1">Your Amazon account has been connected successfully.</p>
+                      <h2 className="font-brand text-lg text-slate-900 font-semibold">Get Faster Reimbursements with Clario!</h2>
+                      <p className="text-sm text-slate-500 mt-1">Your Amazon account has been connected successfully.</p>
                   </CardContent>
                 </Card>
 
-                <Card className="bg-white/5 border-white/10 text-gray-300">
+                  <Card className="bg-white border border-slate-200 text-slate-700 shadow-sm">
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between gap-4">
                       <div>
                         <div className="flex items-center gap-2">
-                          <h2 className="font-brand text-lg text-gray-100 font-semibold">Your Recovered Value</h2>
+                            <h2 className="font-brand text-lg text-slate-900 font-semibold">Your Recovered Value</h2>
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <button
                                 type="button"
                                 aria-label="About recovered value"
-                                className="text-gray-400 hover:text-gray-200 transition-colors"
+                                  className="text-slate-400 hover:text-slate-600 transition-colors"
                               >
                                 <Info className="h-4 w-4" />
                               </button>
@@ -240,49 +240,49 @@ export function Dashboard() {
                             </TooltipContent>
                           </Tooltip>
                         </div>
-                        <div className="text-[24px] md:text-[28px] font-semibold mt-1 text-[#66ff99]">
+                          <div className="text-[24px] md:text-[28px] font-semibold mt-1 text-emerald-500">
                           {formatCurrency(recoveredTotal ?? 0, recoveredCurrency)}
                         </div>
-                        <div className="text-[11px] text-gray-400 mt-1">From approved Claims submitted</div>
+                          <div className="text-[11px] text-slate-500 mt-1">From approved claims submitted</div>
                       </div>
                     </div>
 
                     <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="rounded-md border border-white/10 bg-white/5 p-4">
-                        <div className="text-xs text-gray-400">Next Payment</div>
-                        <div className="text-xl font-semibold text-gray-100 mt-1">{formatCurrency(nextPaymentAmount ?? 0, recoveredCurrency)}</div>
-                        <div className="text-[11px] text-gray-400 mt-1">
+                        <div className="rounded-md border border-slate-200/80 bg-white p-4 shadow-sm">
+                          <div className="text-xs text-slate-500">Next payment</div>
+                          <div className="text-xl font-semibold text-slate-900 mt-1">{formatCurrency(nextPaymentAmount ?? 0, recoveredCurrency)}</div>
+                          <div className="text-[11px] text-slate-500 mt-1">
                           Estimated on {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                         </div>
                         <button
                           type="button"
-                          className="text-xs text-blue-400 mt-1 underline-offset-2 hover:underline"
+                            className="text-xs text-indigo-500 mt-1 underline-offset-2 hover:underline"
                           onClick={() => navigate('/upcoming-payments')}
                           aria-label="View upcoming payments"
                         >
                           upcoming payments
                         </button>
                       </div>
-                      <div className="rounded-md border border-white/10 bg-white/5 p-4">
-                        <div className="text-xs text-gray-400">Pending Recovery</div>
-                        <div className="text-xl font-semibold text-blue-400 mt-1">{formatCurrency(pendingRecoveryAmount ?? 0, recoveredCurrency)}</div>
-                        <div className="text-[11px] text-gray-400 mt-1">
+                        <div className="rounded-md border border-slate-200/80 bg-white p-4 shadow-sm">
+                          <div className="text-xs text-slate-500">Pending recovery</div>
+                          <div className="text-xl font-semibold text-sky-600 mt-1">{formatCurrency(pendingRecoveryAmount ?? 0, recoveredCurrency)}</div>
+                          <div className="text-[11px] text-slate-500 mt-1">
                           No. of Claims: {submittedClaimsCount != null ? submittedClaimsCount : 0}
                         </div>
                         {submittedClaimsCount != null && (
-                          <div className="text-[11px] text-gray-400 mt-1">{submittedClaimsCount} claims submitted</div>
+                            <div className="text-[11px] text-slate-500 mt-1">{submittedClaimsCount} claims submitted</div>
                         )}
-                        <div className="text-[11px] mt-1">
-                          <span className="text-gray-400">Total: </span>
-                          <span className="text-[#66ff99]">{formatCurrency(recoveredTotal ?? 0, recoveredCurrency)}</span>
+                          <div className="text-[11px] mt-1">
+                            <span className="text-slate-500">Total: </span>
+                            <span className="text-emerald-500">{formatCurrency(recoveredTotal ?? 0, recoveredCurrency)}</span>
                         </div>
                       </div>
-                      <div className="rounded-md border border-white/10 bg-white/5 p-4">
-                        <div className="text-xs text-gray-400">Approved</div>
-                        <div className="text-xl font-semibold text-emerald-400 mt-1">{formatCurrency(computedApproved ?? 0, recoveredCurrency)}</div>
-                        <div className="text-[11px] mt-1">
-                          <span className="text-gray-400">Total this Month: </span>
-                          <span className="text-blue-400">{approvedClaimsThisMonth != null ? approvedClaimsThisMonth : 0}</span>
+                        <div className="rounded-md border border-slate-200/80 bg-white p-4 shadow-sm">
+                          <div className="text-xs text-slate-500">Approved</div>
+                          <div className="text-xl font-semibold text-emerald-500 mt-1">{formatCurrency(computedApproved ?? 0, recoveredCurrency)}</div>
+                          <div className="text-[11px] mt-1">
+                            <span className="text-slate-500">Total this month: </span>
+                            <span className="text-sky-600">{approvedClaimsThisMonth != null ? approvedClaimsThisMonth : 0}</span>
                         </div>
                       </div>
                     </div>
@@ -291,35 +291,35 @@ export function Dashboard() {
                   </CardContent>
                 </Card>
 
-                <Card className="bg-white/5 border-white/10 text-gray-300">
+                  <Card className="bg-white border border-slate-200 text-slate-700 shadow-sm">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
-                      <h2 className="font-brand text-lg text-gray-100 font-semibold">Quick Actions</h2>
-                      <button aria-label="Customize quick actions" className="text-gray-300 hover:text-gray-100" onClick={() => setQuickActionsEditOpen(true)}>
+                        <h2 className="font-brand text-lg text-slate-900 font-semibold">Quick Actions</h2>
+                        <button aria-label="Customize quick actions" className="text-slate-400 hover:text-slate-600" onClick={() => setQuickActionsEditOpen(true)}>
                         <Plus className="h-4 w-4" />
                       </button>
                     </div>
                     <div className="grid grid-cols-2 gap-4 mt-4">
                       {selectedQuickActions.includes('connect_evidence') && (
-                        <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10" onClick={() => setShowEvidencePrompt(true)}>
+                          <Button variant="outline" className="flex items-center gap-2 bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200" onClick={() => setShowEvidencePrompt(true)}>
                           <Mail className="h-4 w-4" />
                           Connect evidence sources
                         </Button>
                       )}
                       {selectedQuickActions.includes('review_high_conf') && (
-                        <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10" onClick={() => navigate('/recoveries', { state: { filter: 'high_confidence' } })}>
+                          <Button variant="outline" className="flex items-center gap-2 bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200" onClick={() => navigate('/recoveries', { state: { filter: 'high_confidence' } })}>
                           <CheckCircle className="h-4 w-4" />
                           Review high‑confidence cases
                         </Button>
                       )}
                       {selectedQuickActions.includes('resolve_new') && (
-                        <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10" onClick={() => navigate('/recoveries', { state: { filter: 'new_pending' } })}>
+                          <Button variant="outline" className="flex items-center gap-2 bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200" onClick={() => navigate('/recoveries', { state: { filter: 'new_pending' } })}>
                           <RotateCcw className="h-4 w-4" />
                           Resolve new opportunities
                         </Button>
                       )}
                       {selectedQuickActions.includes('run_detector') && (
-                        <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10" onClick={async () => {
+                          <Button variant="outline" className="flex items-center gap-2 bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200" onClick={async () => {
                           try { await api.post('/api/detections/run'); toast({ title: 'Detector started', description: 'Scanning new opportunities…' }); } catch(e:any){ toast({ title: 'Detector failed', description: e?.message || 'Please try again.', variant: 'destructive' }); }
                         }}>
                           <RefreshCw className="h-4 w-4" />
@@ -327,7 +327,7 @@ export function Dashboard() {
                         </Button>
                       )}
                       {selectedQuickActions.includes('ingest_now') && (
-                        <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10" onClick={async () => {
+                          <Button variant="outline" className="flex items-center gap-2 bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200" onClick={async () => {
                           const r = await api.startEvidenceIngest();
                           if ((r as any)?.ok) toast({ title: 'Ingestion started', description: 'We will notify you when new docs arrive.' });
                           else toast({ title: 'Ingestion failed', description: (r as any)?.error || 'Try again.', variant: 'destructive' });
@@ -337,43 +337,43 @@ export function Dashboard() {
                         </Button>
                       )}
                       {selectedQuickActions.includes('smart_sync') && (
-                        <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10" onClick={() => navigate('/smart-inventory-sync')}>
+                          <Button variant="outline" className="flex items-center gap-2 bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200" onClick={() => navigate('/smart-inventory-sync')}>
                           <RefreshCw className="h-4 w-4" />
                           Smart Inventory Sync
                         </Button>
                       )}
                       {selectedQuickActions.includes('upcoming_payments') && (
-                        <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10" onClick={() => navigate('/upcoming-payments')}>
+                          <Button variant="outline" className="flex items-center gap-2 bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200" onClick={() => navigate('/upcoming-payments')}>
                           <CircleDollarSign className="h-4 w-4" />
                           Upcoming payments
                         </Button>
                       )}
                       {selectedQuickActions.includes('export_history') && (
-                        <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10" onClick={() => navigate('/export-center')}>
+                          <Button variant="outline" className="flex items-center gap-2 bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200" onClick={() => navigate('/export-center')}>
                           <Download className="h-4 w-4" />
                           Export recovery & payout history
                         </Button>
                       )}
                       {selectedQuickActions.includes('evidence_locker') && (
-                        <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10" onClick={() => navigate('/evidence-locker')}>
+                          <Button variant="outline" className="flex items-center gap-2 bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200" onClick={() => navigate('/evidence-locker')}>
                           <FileText className="h-4 w-4" />
                           Evidence Locker
                         </Button>
                       )}
                       {selectedQuickActions.includes('invite_teammate') && (
-                        <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10" onClick={() => setInviteOpen(true)}>
+                          <Button variant="outline" className="flex items-center gap-2 bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200" onClick={() => setInviteOpen(true)}>
                           <Link2 className="h-4 w-4" />
                           Invite a teammate
                         </Button>
                       )}
                       {selectedQuickActions.includes('configure_alerts') && (
-                        <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10" onClick={() => navigate('/notifications')}>
+                          <Button variant="outline" className="flex items-center gap-2 bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200" onClick={() => navigate('/notifications')}>
                           <Bell className="h-4 w-4" />
                           Configure alerts
                         </Button>
                       )}
                       {selectedQuickActions.includes('security_setup') && (
-                        <Button variant="outline" className="flex items-center gap-2 bg-white/5 border-white/10 text-gray-100 hover:bg-white/10" onClick={() => navigate('/settings')}>
+                          <Button variant="outline" className="flex items-center gap-2 bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200" onClick={() => navigate('/settings')}>
                           <Shield className="h-4 w-4" />
                           Security quick setup
                         </Button>
@@ -383,45 +383,48 @@ export function Dashboard() {
                 </Card>
               </div>
 
-              <div className="lg:col-span-1">
-                <Card className="h-full bg-white/5 border-white/10 text-gray-300">
-                  <CardContent className="p-0">
-                    <div className="p-3 border-b border-white/10">
-                      <div className="flex items-center justify-between">
-                        <h3 className="font-semibold text-sm text-gray-100">Recent Activity</h3>
-                        <span className="text-xs rounded px-2 py-0.5 bg-white/10 text-gray-200 border border-white/20">3 new</span>
+                <div className="lg:col-span-1">
+                  <Card className="h-full bg-white border border-slate-200 text-slate-700 shadow-sm">
+                    <CardContent className="p-0">
+                      <div className="p-3 border-b border-slate-200/80">
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-semibold text-sm text-slate-900">Recent Activity</h3>
+                          <span className="text-xs rounded px-2 py-0.5 bg-slate-100 text-slate-700 border border-slate-200">3 new</span>
+                        </div>
                       </div>
-                    </div>
-                    <div className="py-2 max-h-[600px] overflow-y-auto">
-                      <div className="relative px-4 max-w-[360px] mx-auto text-[12px] divide-y divide-white/10">
-                        {(() => {
-                          const events = [
-                            { id: 'evt-1', unread: true, title: 'Connection Established', details: 'Amazon connection established', time: 'Just now' },
-                            { id: 'evt-2', unread: true, title: 'Claims Identified', details: `23 potential claims identified, valued at ~${formatCurrency(14228)}` , time: '2 minutes ago' },
-                            { id: 'evt-3', unread: false, title: 'Claim Submitted', details: 'Auto-submitted 5 verified claims', time: 'Yesterday' },
-                            { id: 'evt-4', unread: false, title: 'Funds Recovered', details: `Payout confirmed: ${formatCurrency(850.75)}`, time: '2 days ago' },
-                          ];
-                          return events.map((evt, idx) => (
-                            <div key={evt.id} className={"group relative flex items-start gap-3 py-3 overflow-hidden"}>
-                              {/* Read/Unread dot only */}
-                              <div className="pt-1">
-                                <span className={"inline-block h-2 w-2 rounded-full " + (evt.unread ? 'bg-blue-500' : 'bg-gray-500')} />
-                              </div>
-                              {/* Content */}
-                              <div className="min-w-0 flex-1">
-                                <div className="flex items-center justify-between">
-                                  <p className={"text-[12px] truncate " + (evt.unread ? 'text-gray-100 font-semibold' : 'text-gray-400 font-medium')}>{evt.title}</p>
-                                  <span className={"ml-3 shrink-0 text-[11px] " + (evt.unread ? 'text-gray-100 font-semibold' : 'text-gray-400')}>{evt.time}</span>
+                      <div className="py-2 max-h-[600px] overflow-y-auto">
+                        <div className="relative px-4 max-w-[360px] mx-auto text-[12px] divide-y divide-slate-200/70">
+                          {(() => {
+                            const events = [
+                              { id: 'evt-1', unread: true, title: 'Connection Established', details: 'Amazon connection established', time: 'Just now' },
+                              { id: 'evt-2', unread: true, title: 'Claims Identified', details: `23 potential claims identified, valued at ~${formatCurrency(14228)}` , time: '2 minutes ago' },
+                              { id: 'evt-3', unread: false, title: 'Claim Submitted', details: 'Auto-submitted 5 verified claims', time: 'Yesterday' },
+                              { id: 'evt-4', unread: false, title: 'Funds Recovered', details: `Payout confirmed: ${formatCurrency(850.75)}`, time: '2 days ago' },
+                            ];
+                            return events.map((evt) => (
+                              <div key={evt.id} className="group relative flex items-start gap-3 py-3 overflow-hidden">
+                                <div className="pt-1">
+                                  <span className={'inline-block h-2 w-2 rounded-full ' + (evt.unread ? 'bg-sky-500' : 'bg-slate-400')} />
                                 </div>
-                                <p className="text-[11px] text-gray-400 mt-0.5 truncate">{evt.details}</p>
+                                <div className="min-w-0 flex-1">
+                                  <div className="flex items-center justify-between">
+                                    <p className={'text-[12px] truncate ' + (evt.unread ? 'text-slate-900 font-semibold' : 'text-slate-500 font-medium')}>{evt.title}</p>
+                                    <span className={'ml-3 shrink-0 text-[11px] ' + (evt.unread ? 'text-slate-700 font-semibold' : 'text-slate-400')}>{evt.time}</span>
+                                  </div>
+                                  <p className="text-[11px] text-slate-500 mt-0.5 truncate">{evt.details}</p>
+                                </div>
                               </div>
-                            </div>
-                          ));
-                        })()}
+                            ));
+                          })()}
+                        </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                      <div className="border-t border-slate-200/80 p-4">
+                        <Button className="w-full bg-slate-900 hover:bg-slate-800 text-white border border-slate-900" onClick={() => navigate('/notifications')}>
+                          View all messages
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
               </div>
               </div>
             </div>
@@ -431,7 +434,7 @@ export function Dashboard() {
       </div>
       {/* Evidence Connections Prompt on Dashboard as fallback */}
         <Dialog open={showEvidencePrompt} onOpenChange={setShowEvidencePrompt}>
-          <DialogContent className="max-w-lg bg-gray-100/95 backdrop-blur-md border border-gray-200 text-gray-900 shadow-[0_20px_80px_rgba(15,23,42,0.25)] rounded-2xl">
+        <DialogContent className="max-w-lg bg-white backdrop-blur-md border border-slate-200 text-slate-800 shadow-[0_20px_80px_rgba(148,163,184,0.35)] rounded-2xl">
           <DialogHeader>
                 <DialogTitle className="text-lg text-gray-900">
                 <div className="flex flex-col items-start gap-1">
@@ -448,7 +451,7 @@ export function Dashboard() {
                   <span>Connect Evidence Sources</span>
                 </div>
             </DialogTitle>
-              <DialogDescription className="text-gray-600">
+              <DialogDescription className="text-slate-500">
               Link Gmail/Outlook and Drive/Dropbox to auto‑collect invoices and receipts (read‑only).
             </DialogDescription>
           </DialogHeader>
@@ -498,9 +501,9 @@ export function Dashboard() {
               <img src="/db.png" alt="Dropbox" className="h-4 w-4 mr-2 object-contain" /> Dropbox
             </Button>
           </div>
-          <DialogFooter>
-              <Button variant="ghost" className="text-gray-600 hover:text-gray-900" onClick={() => { setShowEvidencePrompt(false); try { localStorage.setItem('clario.evidencePromptDismissed', 'true'); } catch {} }}>Maybe later</Button>
-              <Button onClick={() => setShowEvidencePrompt(false)} className="gap-2 bg-gray-900 hover:bg-gray-800 text-white">
+            <DialogFooter>
+                <Button variant="ghost" className="text-slate-500 hover:text-slate-700" onClick={() => { setShowEvidencePrompt(false); try { localStorage.setItem('clario.evidencePromptDismissed', 'true'); } catch {} }}>Maybe later</Button>
+                <Button onClick={() => setShowEvidencePrompt(false)} className="gap-2 bg-slate-900 hover:bg-slate-800 text-white">
               <ArrowRight className="h-4 w-4" /> Continue
             </Button>
           </DialogFooter>
@@ -508,10 +511,10 @@ export function Dashboard() {
       </Dialog>
       {/* Quick Actions Editor */}
       <Dialog open={quickActionsEditOpen} onOpenChange={setQuickActionsEditOpen}>
-        <DialogContent className="max-w-md bg-[#0B1220]/80 backdrop-blur-2xl border border-white/10 text-gray-100 shadow-[0_20px_80px_rgba(0,0,0,0.6)] rounded-2xl">
+        <DialogContent className="max-w-md bg-white backdrop-blur-xl border border-slate-200 text-slate-800 shadow-[0_20px_80px_rgba(148,163,184,0.3)] rounded-2xl">
           <DialogHeader>
-            <DialogTitle className="text-lg text-gray-100">Customize Quick Actions</DialogTitle>
-            <DialogDescription className="text-gray-400">Select which actions to show.</DialogDescription>
+              <DialogTitle className="text-lg text-slate-900">Customize Quick Actions</DialogTitle>
+              <DialogDescription className="text-slate-500">Select which actions to show.</DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
             {QUICK_ACTIONS.map(a => (
@@ -528,8 +531,8 @@ export function Dashboard() {
             ))}
           </div>
           <DialogFooter>
-            <Button variant="ghost" className="text-gray-300 hover:text-gray-100" onClick={() => setQuickActionsEditOpen(false)}>Cancel</Button>
-            <Button className="bg-white/10 hover:bg-white/20 border border-white/10 text-gray-100" onClick={() => { try { localStorage.setItem('clario.quickActions', JSON.stringify(selectedQuickActions)); toast({ title: 'Saved', description: 'Quick actions updated.' }); } catch {} setQuickActionsEditOpen(false); }}>Save</Button>
+            <Button variant="ghost" className="text-slate-500 hover:text-slate-700" onClick={() => setQuickActionsEditOpen(false)}>Cancel</Button>
+            <Button className="bg-slate-900 hover:bg-slate-800 text-white" onClick={() => { try { localStorage.setItem('clario.quickActions', JSON.stringify(selectedQuickActions)); toast({ title: 'Saved', description: 'Quick actions updated.' }); } catch {} setQuickActionsEditOpen(false); }}>Save</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
