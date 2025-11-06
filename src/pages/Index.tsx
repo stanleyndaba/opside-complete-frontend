@@ -340,7 +340,7 @@ const Index = () => {
                   fontSize: '1.125rem',
                 }}
               >
-                Clario works best with your work email
+                Clario works best with your work email!
               </div>
             </div>
               <div className="relative inline-flex items-center gap-4 rounded-[25px] border border-emerald-100 bg-white/85 px-5 py-2 shadow-[0_12px_45px_rgba(16,185,129,0.25)] backdrop-blur supports-[backdrop-filter]:bg-white/70 mx-auto overflow-hidden">
