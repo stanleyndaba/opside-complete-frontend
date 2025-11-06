@@ -288,13 +288,15 @@ export function Dashboard() {
                             <div className="text-xs text-slate-500">Approved</div>
                             <div className="flex items-center gap-1">
                               <ArrowDown className="h-3 w-3 text-red-500" />
+                              <span className="text-[10px] text-red-500 font-medium">8%</span>
                               <ArrowUp className="h-3 w-3 text-blue-500" />
+                              <span className="text-[10px] text-blue-500 font-medium">92%</span>
                             </div>
                           </div>
                           <div className="text-xl font-semibold text-emerald-500 mt-1">{formatCurrency(computedApproved ?? 0, recoveredCurrency)}</div>
                           <div className="text-[11px] mt-1">
                             <span className="text-slate-500">Total this month: </span>
-                            <span className="text-sky-600">{approvedClaimsThisMonth != null ? approvedClaimsThisMonth : 0}</span>
+                            <span className="text-sky-600">$31.4K</span>
                         </div>
                       </div>
                     </div>
