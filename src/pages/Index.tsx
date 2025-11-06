@@ -326,7 +326,7 @@ const Index = () => {
       </header>
 
       <main className="flex-1">
-        <section className="container mx-auto px-6 py-24 md:py-32">
+        <section className="relative container mx-auto px-6 py-24 md:py-32">
           <div className="max-w-4xl mx-auto text-center space-y-6">
             {/* Trust chip removed per request */}
               <div className="relative inline-flex items-center gap-4 rounded-[25px] border border-emerald-100 bg-white/85 px-5 py-2 shadow-[0_12px_45px_rgba(16,185,129,0.25)] backdrop-blur supports-[backdrop-filter]:bg-white/70 mx-auto overflow-hidden">
@@ -380,33 +380,39 @@ const Index = () => {
               {/* Email capture moved to bottom-left above the legal footer */}
             </div>
           </div>
+          {/* Gradient transition at bottom of hero section */}
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent via-white/50 to-white pointer-events-none" />
         </section>
         
         {/* Dashboard Image with Scroll Animation */}
-        <div className="container mx-auto px-6 py-16">
-          <div className="flex justify-center items-center min-h-[400px]">
-            <div
-              className="relative transition-transform duration-300 ease-out"
-              style={{
-                transform: `perspective(1000px) rotateX(${imageRotation}deg) translateY(-30px)`,
-                transformStyle: 'preserve-3d',
-              }}
-            >
-              <img
-                src="/Dashboardimg.png"
-                alt="Clario Dashboard"
-                className="w-full max-w-6xl h-auto rounded-[25px]"
+        <div className="relative bg-gradient-to-b from-white via-gray-50/30 to-white">
+          <div className="container mx-auto px-6 py-16">
+            <div className="flex justify-center items-center min-h-[400px]">
+              <div
+                className="relative transition-transform duration-300 ease-out"
                 style={{
-                  transition: 'transform 0.3s ease-out',
-                  boxShadow: '0 40px 100px rgba(0, 0, 0, 0.3), 0 20px 50px rgba(0, 0, 0, 0.2), 0 10px 25px rgba(0, 0, 0, 0.15)',
-                  filter: 'drop-shadow(0 50px 120px rgba(0, 0, 0, 0.2))',
+                  transform: `perspective(1000px) rotateX(${imageRotation}deg) translateY(-30px)`,
+                  transformStyle: 'preserve-3d',
                 }}
-              />
+              >
+                <img
+                  src="/Dashboardimg.png"
+                  alt="Clario Dashboard"
+                  className="w-full max-w-6xl h-auto rounded-[25px]"
+                  style={{
+                    transition: 'transform 0.3s ease-out',
+                    boxShadow: '0 40px 100px rgba(0, 0, 0, 0.3), 0 20px 50px rgba(0, 0, 0, 0.2), 0 10px 25px rgba(0, 0, 0, 0.15)',
+                    filter: 'drop-shadow(0 50px 120px rgba(0, 0, 0, 0.2))',
+                  }}
+                />
+              </div>
             </div>
           </div>
+          {/* Gradient transition at bottom of image section */}
+          <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent via-white/60 to-white pointer-events-none" />
         </div>
 
-        <section className="relative isolate -mt-12 bg-white text-gray-900">
+        <section className="relative isolate bg-white text-gray-900">
           <div
             className="pointer-events-none absolute inset-0 opacity-90"
             aria-hidden="true"
