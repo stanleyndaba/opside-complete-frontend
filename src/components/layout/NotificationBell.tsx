@@ -20,7 +20,21 @@ interface RecentNotification {
   read: boolean;
 }
 
-export function NotificationBell() {
+interface NotificationBellProps {
+  label?: string;
+  className?: string;
+  forceCountStyle?: 'sidebar' | 'default';
+  iconOverride?: React.ElementType;
+  showLabel?: boolean;
+}
+
+export function NotificationBell({
+  label = 'Notifications',
+  className,
+  forceCountStyle = 'default',
+  iconOverride,
+  showLabel = true
+}: NotificationBellProps) {
   const location = useLocation();
   const isTransparentNavbar = (
     location.pathname === '/' ||
@@ -73,34 +87,60 @@ export function NotificationBell() {
   ]);
 
   const unreadCount = notifications.filter(n => !n.read).length;
+  const IconComponent = iconOverride ?? Bell;
+  const isSidebarStyle = forceCountStyle === 'sidebar';
+  const shouldShowLabel = isSidebarStyle && showLabel;
 
   const handleNotificationClick = () => {
     setIsOpen(false);
   };
 
+  const triggerClassNames = [
+    'relative rounded-md transition-colors',
+    isSidebarStyle
+      ? 'flex items-center gap-3 px-3 py-2 text-gray-200 hover:bg-white/5'
+      : 'h-9 w-9 flex items-center justify-center ' + (isTransparentNavbar ? 'hover:bg-white/10 text-gray-200' : 'hover:bg-muted/50'),
+    className
+  ].filter(Boolean).join(' ');
+
+  const badge = unreadCount > 0 && (
+    <>
+      <div
+        className={
+          'absolute rounded-full animate-pulse ' +
+          (isSidebarStyle ? 'top-2 right-3 w-3 h-3 bg-emerald-400/80' : '-top-1 -right-1 w-3 h-3 bg-destructive')
+        }
+      />
+      <div
+        className={
+          'absolute rounded-full flex items-center justify-center text-[8px] font-semibold ' +
+          (isSidebarStyle
+            ? 'top-2 right-3 w-3 h-3 bg-emerald-400 text-white'
+            : '-top-1 -right-1 w-3 h-3 bg-destructive text-destructive-foreground')
+        }
+      >
+        {unreadCount > 9 ? '9+' : unreadCount}
+      </div>
+    </>
+  );
+
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className={"relative h-9 w-9 " + (isTransparentNavbar ? "hover:bg-white/10 text-gray-200" : "hover:bg-muted/50")}
+        <Button
+          variant="ghost"
+          size={isSidebarStyle ? 'default' : 'icon'}
+          className={triggerClassNames}
         >
-          <Bell className={"h-4 w-4 " + (isTransparentNavbar ? "text-gray-200" : "")} />
-          {unreadCount > 0 && (
-            <>
-              {/* Pulsing effect */}
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-destructive rounded-full animate-pulse" />
-              {/* Static dot */}
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-destructive rounded-full flex items-center justify-center">
-                {unreadCount > 9 ? (
-                  <span className="text-[8px] font-bold text-destructive-foreground">9+</span>
-                ) : (
-                  <span className="text-[8px] font-bold text-destructive-foreground">{unreadCount}</span>
-                )}
-              </div>
-            </>
+          <IconComponent className={'h-4 w-4 ' + (isSidebarStyle ? 'text-gray-200' : isTransparentNavbar ? 'text-gray-200' : '')} />
+          {shouldShowLabel && <span className="text-sm font-medium text-gray-200">{label}</span>}
+          {isSidebarStyle && shouldShowLabel && unreadCount > 0 && (
+            <Badge variant="outline" className="ml-auto text-[10px] border-emerald-400/40 text-emerald-200 bg-emerald-500/10">
+              {unreadCount > 9 ? '9+' : unreadCount}
+            </Badge>
           )}
+          {!isSidebarStyle && badge}
+          {isSidebarStyle && !shouldShowLabel && badge}
         </Button>
       </DropdownMenuTrigger>
       
@@ -110,7 +150,7 @@ export function NotificationBell() {
       >
         <div className="p-3 border-b border-white/10">
           <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-sm text-gray-100">Notifications</h3>
+            <h3 className="font-semibold text-sm text-gray-100">{label}</h3>
             {unreadCount > 0 && (
               <Badge variant="outline" className="text-[10px] border-white/20 text-gray-200">
                 {unreadCount} new
@@ -185,7 +225,7 @@ export function NotificationBell() {
               variant="ghost" 
               className="w-full justify-center text-xs h-8 hover:bg-white/10 text-gray-200"
             >
-              View All Notifications
+              View all {label.toLowerCase()}
             </Button>
           </Link>
         </div>

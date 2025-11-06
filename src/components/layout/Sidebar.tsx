@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Home, Shield, Settings, HelpCircle, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, User, Building2, FileText } from 'lucide-react';
+import { Home, Shield, Settings, HelpCircle, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, User, Building2, FileText, Mail } from 'lucide-react';
+import { NotificationBell } from './NotificationBell';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -193,7 +194,7 @@ export function Sidebar({
                 isCollapsed ? "px-1.5" : "px-2"
               )}
             >
-              <div className="flex flex-col items-start justify-center py-8 space-y-6 w-full">
+                <div className="flex flex-col items-start justify-center py-8 space-y-6 w-full">
               <nav className="space-y-3 w-full">
                 <div className="space-y-1">
                   {primaryItems.map((item, idx) => (
@@ -218,6 +219,25 @@ export function Sidebar({
                     </React.Fragment>
                   ))}
                 </div>
+                  {!isCollapsed && <div className="h-px bg-white/10" />}
+                  <div className="pt-3">
+                    {isCollapsed ? (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="flex items-center justify-center">
+                              <NotificationBell label="Messages" forceCountStyle="sidebar" iconOverride={Mail} showLabel={false} />
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent side="right" className="bg-black text-white">
+                            Messages
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ) : (
+                      <NotificationBell label="Messages" forceCountStyle="sidebar" iconOverride={Mail} className="w-full justify-between rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-200" />
+                    )}
+                  </div>
               </nav>
             </div>
           </div>
@@ -250,8 +270,8 @@ export function Sidebar({
         </div>
       ) : (
         <div className="mt-auto border-t border-white/10 p-4 space-y-3">
-          <button
-            className="w-full flex items-center gap-2 text-left text-gray-400 hover:text-red-300 hover:bg-white/5 px-3 py-2 rounded-md"
+            <button
+              className="w-full flex items-center gap-2 text-left text-gray-400 hover:text-red-300 hover:bg-white/5 px-3 py-2 rounded-md"
             onClick={() => setShowLogout(prev => !prev)}
           >
             <LogOut className="h-4 w-4" />

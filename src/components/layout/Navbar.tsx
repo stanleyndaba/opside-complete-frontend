@@ -3,7 +3,6 @@ import { ArrowUpDown, ChevronDown, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { useLocation } from 'react-router-dom';
-import { NotificationBell } from './NotificationBell';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 interface NavbarProps {
   className?: string;
@@ -66,7 +65,7 @@ export function Navbar({
               />
             </div>
           </div>
-          {/* Right side - Sandbox badge, Sync, Notifications */}
+          {/* Right side - Sandbox badge */}
           <div className="flex items-center gap-4 ml-auto">
           {isSandbox && (
             <span className={cn(
@@ -76,8 +75,7 @@ export function Navbar({
               Sandbox
             </span>
         )}
-        {/* Language selector removed */}
-        <NotificationBell />
+          {/* Language selector removed */}
       </div>
     </div>
   </header>;
