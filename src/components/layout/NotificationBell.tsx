@@ -96,8 +96,8 @@ export function NotificationBell({
   };
 
   const baseSidebarClass = showLabel
-    ? 'flex items-center gap-3 px-3 py-2 text-gray-200 hover:bg-white/5'
-    : 'flex items-center justify-center h-10 w-10 text-gray-200 hover:bg-white/10';
+    ? 'flex items-center gap-3 px-3 py-2 hover:bg-white/5'
+    : 'flex items-center justify-center h-10 w-10 hover:bg-white/10';
 
   const triggerClassNames = [
     'relative rounded-md transition-colors',
@@ -112,14 +112,14 @@ export function NotificationBell({
       <div
         className={
           'absolute rounded-full animate-pulse ' +
-          (isSidebarStyle ? 'top-2 right-3 w-3 h-3 bg-emerald-400/80' : '-top-1 -right-1 w-3 h-3 bg-destructive')
+          (isSidebarStyle ? 'top-2 right-3 w-3 h-3 bg-emerald-500/80' : '-top-1 -right-1 w-3 h-3 bg-destructive')
         }
       />
       <div
         className={
           'absolute rounded-full flex items-center justify-center text-[8px] font-semibold ' +
           (isSidebarStyle
-            ? 'top-2 right-3 w-3 h-3 bg-emerald-400 text-white'
+            ? 'top-2 right-3 w-3 h-3 bg-emerald-500 text-white'
             : '-top-1 -right-1 w-3 h-3 bg-destructive text-destructive-foreground')
         }
       >
@@ -136,10 +136,10 @@ export function NotificationBell({
           size={isSidebarStyle ? 'default' : 'icon'}
           className={triggerClassNames}
         >
-          <IconComponent className={'h-4 w-4 ' + (isSidebarStyle ? 'text-gray-200' : isTransparentNavbar ? 'text-gray-200' : '')} />
-          {shouldShowLabel && <span className="text-sm font-medium text-gray-200">{label}</span>}
+          <IconComponent className={'h-4 w-4 ' + (isSidebarStyle ? '' : isTransparentNavbar ? 'text-gray-200' : '')} />
+          {shouldShowLabel && <span className="text-sm font-medium">{label}</span>}
           {isSidebarStyle && shouldShowLabel && unreadCount > 0 && (
-            <Badge variant="outline" className="ml-auto text-[10px] border-emerald-400/40 text-emerald-200 bg-emerald-500/10">
+            <Badge variant="outline" className="ml-auto text-[10px] border-emerald-500 text-white bg-emerald-500">
               {unreadCount > 9 ? '9+' : unreadCount}
             </Badge>
           )}
