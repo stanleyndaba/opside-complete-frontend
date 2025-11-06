@@ -434,7 +434,7 @@ export function Dashboard() {
       </div>
       {/* Evidence Connections Prompt on Dashboard as fallback */}
         <Dialog open={showEvidencePrompt} onOpenChange={setShowEvidencePrompt}>
-        <DialogContent className="max-w-lg bg-white backdrop-blur-md border border-slate-200 text-slate-800 shadow-[0_20px_80px_rgba(148,163,184,0.35)] rounded-2xl">
+          <DialogContent className="max-w-lg bg-[whitesmoke] backdrop-blur-md border border-gray-200 text-gray-900 shadow-[0_20px_80px_rgba(15,23,42,0.25)] rounded-2xl">
           <DialogHeader>
                 <DialogTitle className="text-lg text-gray-900">
                 <div className="flex flex-col items-start gap-1">
