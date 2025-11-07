@@ -491,7 +491,7 @@ const Index = () => {
             <div className="mx-auto flex max-w-6xl flex-col gap-10 md:flex-row md:items-start">
               <div className="space-y-4 md:w-1/3">
                 <span className="text-sm font-semibold uppercase tracking-[0.3em] text-gray-500">Frequently asked questions</span>
-                <h2 className="text-3xl font-black tracking-tight text-gray-900 md:text-4xl">
+                <h2 className="text-3xl font-black tracking-tight text-gray-900 md:text-4xl" style={{ fontFamily: "\"Stack Sans Headline\", sans-serif" }}>
                   Everything you wanted to ask before Clario starts recovering funds.
                 </h2>
                 <p className="text-base text-gray-600 md:text-lg">
