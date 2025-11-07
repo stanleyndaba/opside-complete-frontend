@@ -402,11 +402,6 @@ const Index = () => {
         {/* Dashboard Image with Scroll Animation */}
         <div className="relative bg-gradient-to-b from-white via-gray-50/30 to-white">
           <div className="container mx-auto px-6 py-16">
-            <div className="absolute top-16 right-6 z-20">
-              <h2 className="text-5xl md:text-6xl font-black" style={{ color: '#B5B4B4', fontFamily: "\"Stack Sans Headline\", sans-serif" }}>
-                Claim filing made easy
-              </h2>
-            </div>
             <div className="flex justify-center items-center min-h-[400px] relative z-10">
               <div
                 className="relative transition-transform duration-300 ease-out"
@@ -637,7 +632,7 @@ const Index = () => {
                     <span className="inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/80 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
                       Try Clario
                     </span>
-                    <h2 className="text-4xl font-black tracking-tight text-slate-900 md:text-5xl">
+                    <h2 className="text-4xl font-black tracking-tight text-slate-900 md:text-5xl" style={{ fontFamily: "\"Stack Sans Headline\", sans-serif" }}>
                       Run reimbursements with confident control.
                     </h2>
                     <p className="text-base text-slate-600 md:text-lg">
