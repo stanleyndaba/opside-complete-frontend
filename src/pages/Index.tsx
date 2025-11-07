@@ -368,7 +368,7 @@ const Index = () => {
                     </span>
                 </div>
               </div>
-            <h1 className="font-heading text-4xl md:text-6xl font-black tracking-tight text-gray-900">
+            <h1 className="text-4xl md:text-6xl font-black tracking-tight text-gray-900" style={{ fontFamily: "\"Stack Sans Headline\", sans-serif" }}>
               The <span className="text-emerald-600">end</span> of FBA reimbursement work.
             </h1>
               <p className="font-body text-base md:text-xl text-gray-600 font-normal max-w-3xl mx-auto">
@@ -402,12 +402,12 @@ const Index = () => {
         {/* Dashboard Image with Scroll Animation */}
         <div className="relative bg-gradient-to-b from-white via-gray-50/30 to-white">
           <div className="container mx-auto px-6 py-16">
-            <div className="relative z-10 flex justify-end items-start mb-8">
-              <h2 className="text-5xl md:text-6xl font-black" style={{ color: '#B5B4B4' }}>
-                Reimbursements made easy
+            <div className="absolute top-16 right-6 z-20">
+              <h2 className="text-5xl md:text-6xl font-black" style={{ color: '#B5B4B4', fontFamily: "\"Stack Sans Headline\", sans-serif" }}>
+                Claim filing made easy
               </h2>
             </div>
-            <div className="flex justify-center items-center min-h-[400px] relative z-0">
+            <div className="flex justify-center items-center min-h-[400px] relative z-10">
               <div
                 className="relative transition-transform duration-300 ease-out"
                 style={{
