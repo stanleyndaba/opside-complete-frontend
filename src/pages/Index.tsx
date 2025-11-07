@@ -402,6 +402,11 @@ const Index = () => {
         {/* Dashboard Image with Scroll Animation */}
         <div className="relative bg-gradient-to-b from-white via-gray-50/30 to-white">
           <div className="container mx-auto px-6 py-16">
+            <div className="flex justify-end items-start mb-4">
+              <p className="text-2xl font-black" style={{ color: '#B5B4B4' }}>
+                Reimbursements made easy
+              </p>
+            </div>
             <div className="flex justify-center items-center min-h-[400px]">
               <div
                 className="relative transition-transform duration-300 ease-out"
