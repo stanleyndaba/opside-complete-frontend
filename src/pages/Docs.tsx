@@ -76,7 +76,7 @@ const Docs = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white text-gray-900">
+    <div className="min-h-screen bg-white text-gray-900" style={{ fontFamily: "\"Stack Sans Headline\", sans-serif", fontStyle: "normal" }}>
       <div className="relative">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_-5%,rgba(16,185,129,0.08),transparent_40%),radial-gradient(circle_at_85%_-10%,rgba(59,130,246,0.06),transparent_45%)]" />
         <header className="sticky top-0 z-40 border-transparent bg-transparent">

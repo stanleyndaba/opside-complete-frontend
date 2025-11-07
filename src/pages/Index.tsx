@@ -11,6 +11,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 
 const Index = () => {
   const { toast } = useToast();
+  const [showMoreFAQs, setShowMoreFAQs] = useState(false);
 
   type LanguageOption = {
     code: string;
@@ -548,6 +549,18 @@ const Index = () => {
                       </p>
                     </AccordionContent>
                   </AccordionItem>
+                </Accordion>
+                {!showMoreFAQs && (
+                  <button
+                    onClick={() => setShowMoreFAQs(true)}
+                    className="text-base cursor-pointer mt-4 bg-transparent border-0 p-0 hover:no-underline"
+                    style={{ color: '#303030', textDecoration: 'none' }}
+                  >
+                    more questions and answers
+                  </button>
+                )}
+                {showMoreFAQs && (
+                  <Accordion type="single" collapsible className="space-y-2 mt-2">
                   <AccordionItem value="roi" className="border-b border-gray-200 py-4">
                     <AccordionTrigger className="text-left text-lg font-semibold text-gray-900 hover:no-underline">
                       How much money will I actually get back?
@@ -595,7 +608,8 @@ const Index = () => {
                       </p>
                     </AccordionContent>
                   </AccordionItem>
-                </Accordion>
+                  </Accordion>
+                )}
               </div>
             </div>
           </div>
