@@ -95,10 +95,11 @@ export function Navbar({
             variant="ghost"
             className={cn(
               "flex items-center gap-2 h-9 px-3",
+              isDashboard ? 'text-slate-700 hover:text-slate-800 hover:bg-slate-100' : 
               isTransparent ? 'text-gray-200 hover:text-white hover:bg-white/10' : 'text-muted-foreground hover:text-foreground'
             )}
           >
-            <Link2 className="h-4 w-4" />
+            <Link2 className={cn("h-4 w-4", isDashboard && "text-slate-700")} />
             <span className="hidden sm:inline">Connect Platform</span>
           </Button>
           {isSandbox && (
