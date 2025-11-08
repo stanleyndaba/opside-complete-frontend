@@ -446,24 +446,27 @@ export const api = {
           console.log(`[API] Extracted recoveries from nested structure:`, recoveryData);
         }
         
-        // If backend returns valid data quickly (> 0), use it
-        // But if backend returns zeros, use mock data instead (sandbox should show demo data)
-        if (response?.ok && recoveryData && (recoveryData.totalAmount > 0 || recoveryData.claimCount > 0)) {
+        // Always use backend data if available, even if zeros (to show sync messages)
+        // Only fall back to mock data if backend request failed
+        if (response?.ok && recoveryData) {
           console.log(`[API] ✅ USING REAL BACKEND DATA (${backendDuration}ms):`, recoveryData);
-          console.log(`[API] 📊 Source: SP-API Sandbox Backend`);
-          // Mark as real data
+          console.log(`[API] 📊 Source: ${recoveryData.source || recoveryData.dataSource || 'SP-API Sandbox Backend'}`);
+          // Pass through all fields from backend (including message, needsSync, syncTriggered, source, dataSource)
           return {
             ...response,
             data: {
-              ...recoveryData,
+              totalAmount: recoveryData.totalAmount ?? 0,
+              currency: recoveryData.currency ?? 'USD',
+              claimCount: recoveryData.claimCount ?? 0,
+              source: recoveryData.source,
+              dataSource: recoveryData.dataSource,
+              message: recoveryData.message,
+              needsSync: recoveryData.needsSync,
+              syncTriggered: recoveryData.syncTriggered,
               _source: 'backend',
               _backendDuration: backendDuration
             }
           };
-        } else if (response?.ok && recoveryData) {
-          // Backend returned zeros - use mock data in sandbox mode
-          console.log(`[API] ⚠️ Backend returned zeros in sandbox mode (${backendDuration}ms), using mock data instead:`, recoveryData);
-          console.log(`[API] 💡 Backend values: totalAmount=${recoveryData.totalAmount}, claimCount=${recoveryData.claimCount}`);
         }
       } catch (error: any) {
         const backendEndTime = performance.now();
@@ -510,9 +513,10 @@ export const api = {
         }
       }
       
-      // Use mock data immediately for sandbox mode
+      // Only use mock data if backend request completely failed (not just zeros)
+      // If backend returned zeros with sync info, we should show that instead
       const mockStartTime = performance.now();
-      console.log('[API] 🎭 Using MOCK DATA for Amazon recoveries (sandbox mode)');
+      console.log('[API] 🎭 Backend request failed or timed out - Using MOCK DATA for Amazon recoveries (sandbox mode)');
       const { mockAmazonApi } = await import('./mockApi');
       const mockData = mockAmazonApi.getRecoveries();
       const totalTime = performance.now() - startTime;
@@ -525,6 +529,7 @@ export const api = {
           totalAmount: mockData.totalAmount,
           currency: mockData.currency,
           claimCount: mockData.claimCount,
+          source: 'mock',
           _source: 'mock',
           _isMockData: true
         },
@@ -547,20 +552,39 @@ export const api = {
       console.log(`[API] Extracted recoveries from nested structure:`, recoveryData);
     }
     
-    // If backend returns valid data, use it
-    if (response.ok && recoveryData && (recoveryData.totalAmount > 0 || recoveryData.claimCount > 0)) {
+    // Always return backend data if available (even if zeros), to show sync messages
+    if (response.ok && recoveryData) {
+      // Pass through all fields from backend (including message, needsSync, syncTriggered, source, dataSource)
       return {
         ...response,
-        data: recoveryData
+        data: {
+          totalAmount: recoveryData.totalAmount ?? 0,
+          currency: recoveryData.currency ?? 'USD',
+          claimCount: recoveryData.claimCount ?? 0,
+          source: recoveryData.source,
+          dataSource: recoveryData.dataSource,
+          message: recoveryData.message,
+          needsSync: recoveryData.needsSync,
+          syncTriggered: recoveryData.syncTriggered,
+        }
       };
     }
     
     // Return the original response (even if it failed or returned zeros)
     if (recoveryData && recoveryData !== response.data) {
-      // We extracted recoveries, normalize the response
+      // We extracted recoveries, normalize the response with all fields
       return {
         ...response,
-        data: recoveryData
+        data: {
+          totalAmount: recoveryData.totalAmount ?? 0,
+          currency: recoveryData.currency ?? 'USD',
+          claimCount: recoveryData.claimCount ?? 0,
+          source: recoveryData.source,
+          dataSource: recoveryData.dataSource,
+          message: recoveryData.message,
+          needsSync: recoveryData.needsSync,
+          syncTriggered: recoveryData.syncTriggered,
+        }
       };
     }
     return response;

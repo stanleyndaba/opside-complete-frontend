@@ -12,7 +12,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { format, subDays, startOfYear, startOfQuarter } from 'date-fns';
-import { CalendarIcon, Search, MoreHorizontal, FileText, Eye } from 'lucide-react';
+import { CalendarIcon, Search, MoreHorizontal, FileText, Eye, RefreshCw, Info } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
@@ -20,6 +20,7 @@ import { api } from '@/lib/api';
 import { recoveryApi } from '@/lib/recoveryApi';
 import type { DateRange } from 'react-day-picker';
 import { useStatusStream } from '@/hooks/use-status-stream';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 // Fallback mock data when API is unavailable
 const mockClaims = [
@@ -116,6 +117,29 @@ export default function Recoveries() {
   const [smartPromptOpen, setSmartPromptOpen] = useState(false);
   const [promptClaim, setPromptClaim] = useState<any | null>(null);
   const autoSubmittedRef = useRef<Set<string>>(new Set());
+  
+  // Amazon recoveries integration (from DASHBOARD_CLAIMS_INTEGRATION.md)
+  const [recoveredTotal, setRecoveredTotal] = useState<number | null>(null);
+  const [recoveredCurrency, setRecoveredCurrency] = useState<string>('USD');
+  const [amazonClaimCount, setAmazonClaimCount] = useState<number | null>(null);
+  const [syncMessage, setSyncMessage] = useState<string | null>(null);
+  const [needsSync, setNeedsSync] = useState<boolean>(false);
+  const [syncTriggered, setSyncTriggered] = useState<boolean>(false);
+  const [recoverySource, setRecoverySource] = useState<string | null>(null);
+  const [dataSource, setDataSource] = useState<string | null>(null);
+  
+  // Track previous claims to detect new recoveries
+  const previousClaimIdsRef = useRef<Set<string>>(new Set());
+  const hasInitializedRef = useRef<boolean>(false);
+  const previousRecoveredTotalRef = useRef<number>(0);
+
+  // Helper function for currency formatting (defined early so it can be used in useEffect)
+  const formatCurrency = (amount: number, currency: string = 'USD') => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency
+    }).format(amount);
+  };
 
   // --- Opportunity Radar helpers ---
   const stableHash = (s: string): number => {
@@ -142,13 +166,50 @@ export default function Recoveries() {
     let cancelled = false;
     (async () => {
       setLoading(true);
-      const [resData, metricsRes] = await Promise.all([
+      const [resData, metricsRes, amazonRecoveriesRes] = await Promise.all([
         recoveryApi.getRecoveries().catch(() => null),
         api.getRecoveriesMetrics(),
+        api.getAmazonRecoveries().catch(() => null),
       ]);
       if (!cancelled) {
         if (resData && Array.isArray(resData)) {
-          setClaims(resData as any);
+          const newClaims = resData as any[];
+          
+          // Detect new recoveries by comparing with previous claims
+          if (hasInitializedRef.current) {
+            const currentClaimIds = new Set(newClaims.map(c => c.id));
+            const previousClaimIds = previousClaimIdsRef.current;
+            
+            // Find new claims that weren't in the previous set
+            const newClaimIds = Array.from(currentClaimIds).filter(id => !previousClaimIds.has(id));
+            
+            if (newClaimIds.length > 0) {
+              const newClaimsData = newClaims.filter(c => newClaimIds.includes(c.id));
+              const totalNewAmount = newClaimsData.reduce((sum, c) => sum + (c.guaranteedAmount || 0), 0);
+              
+              // Show toast for new recoveries detected
+              if (newClaimIds.length === 1) {
+                const newClaim = newClaimsData[0];
+                toast({
+                  title: '🎉 New Recovery Detected!',
+                  description: `${newClaim.type || 'Recovery'} found: ${formatCurrency(newClaim.guaranteedAmount || 0)}`,
+                  duration: 5000,
+                });
+              } else {
+                toast({
+                  title: '🎉 New Recoveries Detected!',
+                  description: `${newClaimIds.length} new recoveries found totaling ${formatCurrency(totalNewAmount)}`,
+                  duration: 5000,
+                });
+              }
+            }
+          }
+          
+          // Update previous claim IDs
+          previousClaimIdsRef.current = new Set(newClaims.map(c => c.id));
+          hasInitializedRef.current = true;
+          
+          setClaims(newClaims);
           setError(null);
         } else {
           setError(null);
@@ -161,16 +222,133 @@ export default function Recoveries() {
           setMetricsError(metricsRes.error || null);
           setMetricsLoaded(true);
         }
+        
+        // Handle Amazon recoveries data
+        if (amazonRecoveriesRes?.ok && amazonRecoveriesRes.data) {
+          const data = amazonRecoveriesRes.data as any;
+          const newTotal = data.totalAmount ?? 0;
+          const previousTotal = previousRecoveredTotalRef.current;
+          
+          setRecoveredTotal(newTotal);
+          previousRecoveredTotalRef.current = newTotal;
+          
+          if (data.currency) setRecoveredCurrency(data.currency);
+          if (typeof data.claimCount === 'number') setAmazonClaimCount(data.claimCount);
+          
+          // Handle sync-related fields
+          if (data.message) setSyncMessage(data.message);
+          if (typeof data.needsSync === 'boolean') setNeedsSync(data.needsSync);
+          if (typeof data.syncTriggered === 'boolean') setSyncTriggered(data.syncTriggered);
+          if (data.dataSource) setDataSource(data.dataSource);
+          if (data.source) setRecoverySource(data.source);
+          
+          // Show toast notification if sync is triggered
+          if (data.syncTriggered && data.message) {
+            toast({
+              title: 'Syncing Amazon Account',
+              description: data.message,
+              duration: 5000,
+            });
+          }
+        } else if (amazonRecoveriesRes?.data) {
+          // Handle response even if not fully ok (might have sync info)
+          const data = amazonRecoveriesRes.data as any;
+          if (data.message) setSyncMessage(data.message);
+          if (typeof data.needsSync === 'boolean') setNeedsSync(data.needsSync);
+          if (typeof data.syncTriggered === 'boolean') setSyncTriggered(data.syncTriggered);
+        }
+        
         setLoading(false);
       }
     })();
     return () => { cancelled = true; };
-  }, []);
+  }, [toast]);
 
   // Real-time recovery status updates; update table rows on the fly
   useStatusStream((evt) => {
-    if (evt.type === 'recovery') {
+    // Handle recovery status updates
+    if (evt.type === 'recovery' || evt.type === 'claim') {
       setClaims(prev => prev.map(c => c.id === evt.id ? { ...c, status: evt.status } as any : c));
+    }
+    
+    // Handle detection events - new recoveries detected
+    if (evt.type === 'detection') {
+      // Show toast for detection events
+      const detectionData = (evt as any).data;
+      const claimCount = detectionData?.claimCount || detectionData?.count || detectionData?.newClaims;
+      const totalAmount = detectionData?.totalAmount || detectionData?.amount;
+      
+      if (claimCount || totalAmount) {
+        toast({
+          title: '🔍 New Recoveries Detected!',
+          description: claimCount 
+            ? `${claimCount} new recovery${claimCount !== 1 ? 'ies' : ''} detected${totalAmount ? ` totaling ${formatCurrency(totalAmount)}` : ''}`
+            : totalAmount 
+            ? `New recoveries totaling ${formatCurrency(totalAmount)} detected`
+            : 'New recoveries have been detected',
+          duration: 6000,
+        });
+      } else {
+        toast({
+          title: '🔍 Recovery Detection Complete',
+          description: 'Scan completed. Check for new recovery opportunities.',
+          duration: 5000,
+        });
+      }
+      
+      // Refresh claims list to show new recoveries
+      recoveryApi.getRecoveries().then(res => {
+        if (Array.isArray(res)) {
+          const newClaims = res as any[];
+          const currentClaimIds = new Set(newClaims.map(c => c.id));
+          const previousClaimIds = previousClaimIdsRef.current;
+          
+          // Find new claims
+          const newClaimIds = Array.from(currentClaimIds).filter(id => !previousClaimIds.has(id));
+          
+          if (newClaimIds.length > 0) {
+            // Update previous claim IDs
+            previousClaimIdsRef.current = currentClaimIds;
+            setClaims(newClaims);
+          }
+        }
+      }).catch(() => {
+        // Silently fail
+      });
+    }
+    
+    // Refresh Amazon recoveries when sync/detection events occur
+    if (evt.type === 'sync' || evt.type === 'detection') {
+      api.getAmazonRecoveries().then(res => {
+        if (res.ok && res.data) {
+          const data = res.data as any;
+          const previousTotal = previousRecoveredTotalRef.current;
+          const newTotal = data.totalAmount ?? 0;
+          
+          setRecoveredTotal(newTotal);
+          previousRecoveredTotalRef.current = newTotal;
+          
+          if (data.currency) setRecoveredCurrency(data.currency);
+          if (typeof data.claimCount === 'number') setAmazonClaimCount(data.claimCount);
+          if (data.message) setSyncMessage(data.message);
+          if (typeof data.needsSync === 'boolean') setNeedsSync(data.needsSync);
+          if (typeof data.syncTriggered === 'boolean') setSyncTriggered(data.syncTriggered);
+          if (data.source) setRecoverySource(data.source);
+          if (data.dataSource) setDataSource(data.dataSource);
+          
+          // Show toast if recovered amount increased
+          if (newTotal > previousTotal && previousTotal > 0) {
+            const increase = newTotal - previousTotal;
+            toast({
+              title: '💰 Recovery Amount Updated',
+              description: `Recovered amount increased by ${formatCurrency(increase, data.currency || 'USD')}`,
+              duration: 5000,
+            });
+          }
+        }
+      }).catch(() => {
+        // Silently fail - don't disrupt user experience
+      });
     }
   });
 
@@ -292,13 +470,6 @@ export default function Recoveries() {
     }
   };
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(amount);
-  };
-
   const setQuickDateRange = (range: string) => {
     const now = new Date();
     switch (range) {
@@ -352,11 +523,55 @@ export default function Recoveries() {
         <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
           <CardContent className="p-5 md:p-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <div>
-                <div className="text-sm text-gray-400">Your Opportunities</div>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="text-sm text-gray-400">Your Opportunities</div>
+                  {recoveredTotal != null && recoveredTotal > 0 && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          type="button"
+                          aria-label="About recovered value"
+                          className="text-gray-400 hover:text-gray-300 transition-colors"
+                        >
+                          <Info className="h-3 w-3" />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent side="top" className="bg-black text-white text-xs">
+                        Recovered from approved/completed claims. {recoverySource && `Source: ${recoverySource}`}
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
+                </div>
                 <div className="text-2xl md:text-3xl font-semibold text-gray-100">
                   <span className="text-gray-100">{formatCurrency(owedSummary.totalOwed)}</span> <span className="text-gray-400 text-base font-medium">owed across {owedSummary.openCount} claims</span>
                 </div>
+                {/* Amazon Recoveries Integration */}
+                {recoveredTotal != null && recoveredTotal > 0 && (
+                  <div className="mt-3 text-sm">
+                    <span className="text-emerald-400 font-semibold">
+                      {formatCurrency(recoveredTotal, recoveredCurrency)}
+                    </span>
+                    <span className="text-gray-400 ml-2">
+                      recovered from {amazonClaimCount ?? 0} approved claim{amazonClaimCount !== 1 ? 's' : ''}
+                    </span>
+                  </div>
+                )}
+                {/* Sync status message */}
+                {(syncMessage || needsSync || syncTriggered) && (
+                  <div className={`mt-3 px-3 py-2 rounded-md text-xs ${
+                    syncTriggered 
+                      ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' 
+                      : needsSync 
+                      ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' 
+                      : 'bg-white/5 text-gray-300 border border-white/10'
+                  }`}>
+                    <div className="flex items-start gap-2">
+                      {syncTriggered && <RefreshCw className="h-3 w-3 mt-0.5 animate-spin" />}
+                      <span>{syncMessage || (needsSync ? 'Syncing your Amazon account... Please refresh in a few moments.' : '')}</span>
+                    </div>
+                  </div>
+                )}
               </div>
               <div className="flex flex-wrap gap-2">
                 {Object.entries(categoryCounts).map(([label, count]) => (
@@ -393,7 +608,14 @@ export default function Recoveries() {
               <div className="flex items-center">
                 <div>
                   <p className="text-sm font-medium text-gray-400">Total Claims Found</p>
-                  <p className="text-2xl font-bold text-gray-100">{metrics ? metrics.totalClaimsFound : keyMetrics.totalClaimsFound}</p>
+                  <p className="text-2xl font-bold text-gray-100">
+                    {metrics ? metrics.totalClaimsFound : keyMetrics.totalClaimsFound}
+                    {amazonClaimCount != null && amazonClaimCount > 0 && (
+                      <span className="text-sm text-emerald-400 ml-2 font-normal">
+                        ({amazonClaimCount} from Amazon)
+                      </span>
+                    )}
+                  </p>
                 </div>
               </div>
             </CardContent>

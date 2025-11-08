@@ -41,6 +41,12 @@ export function Dashboard() {
   const [lastUpdated, setLastUpdated] = useState<string>('');
   const [approvedClaimsThisMonth, setApprovedClaimsThisMonth] = useState<number | null>(null);
   const [showEvidencePrompt, setShowEvidencePrompt] = useState<boolean>(false);
+  // Sync status fields from API response
+  const [syncMessage, setSyncMessage] = useState<string | null>(null);
+  const [needsSync, setNeedsSync] = useState<boolean>(false);
+  const [syncTriggered, setSyncTriggered] = useState<boolean>(false);
+  const [dataSource, setDataSource] = useState<string | null>(null);
+  const [recoverySource, setRecoverySource] = useState<string | null>(null);
   const [quickActionsEditOpen, setQuickActionsEditOpen] = useState<boolean>(false);
   const [inviteOpen, setInviteOpen] = useState<boolean>(false);
   const [inviteEmail, setInviteEmail] = useState<string>('');
@@ -90,10 +96,34 @@ export function Dashboard() {
       const res = await api.getAmazonRecoveries();
       if (!active) return;
       if (res.ok && res.data) {
-        setRecoveredTotal(res.data.totalAmount ?? 0);
-        if (res.data.currency) setRecoveredCurrency(res.data.currency);
-        if (typeof (res.data as any).claimCount === 'number') setSubmittedClaimsCount((res.data as any).claimCount);
+        const data = res.data as any;
+        setRecoveredTotal(data.totalAmount ?? 0);
+        if (data.currency) setRecoveredCurrency(data.currency);
+        if (typeof data.claimCount === 'number') setSubmittedClaimsCount(data.claimCount);
+        
+        // Handle sync-related fields from API response
+        if (data.message) setSyncMessage(data.message);
+        if (typeof data.needsSync === 'boolean') setNeedsSync(data.needsSync);
+        if (typeof data.syncTriggered === 'boolean') setSyncTriggered(data.syncTriggered);
+        if (data.dataSource) setDataSource(data.dataSource);
+        if (data.source) setRecoverySource(data.source);
+        
+        // Show toast notification if sync is triggered
+        if (data.syncTriggered && data.message) {
+          toast({
+            title: 'Syncing Amazon Account',
+            description: data.message,
+            duration: 5000,
+          });
+        }
+        
         setLastUpdated(new Date().toLocaleTimeString());
+      } else if (res.data) {
+        // Handle response even if not fully ok (might have sync info)
+        const data = res.data as any;
+        if (data.message) setSyncMessage(data.message);
+        if (typeof data.needsSync === 'boolean') setNeedsSync(data.needsSync);
+        if (typeof data.syncTriggered === 'boolean') setSyncTriggered(data.syncTriggered);
       }
     }
 
@@ -228,7 +258,7 @@ export function Dashboard() {
                   <Card className="bg-white border border-slate-200 text-slate-700 shadow-sm">
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between gap-4">
-                      <div>
+                      <div className="flex-1">
                         <div className="flex items-center gap-2">
                             <h2 className="font-brand text-lg text-slate-900 font-semibold">Your Recovered Value</h2>
                           <Tooltip>
@@ -242,14 +272,34 @@ export function Dashboard() {
                               </button>
                             </TooltipTrigger>
                             <TooltipContent side="top" className="bg-black text-white text-xs">
-                              Your recovered profits from claim xyz.
+                              Your recovered profits from approved/completed claims. {recoverySource && `Source: ${recoverySource}`}
                             </TooltipContent>
                           </Tooltip>
                         </div>
                           <div className="text-[24px] md:text-[28px] font-semibold mt-1 text-emerald-500">
                           {formatCurrency(recoveredTotal ?? 0, recoveredCurrency)}
                         </div>
-                          <div className="text-[11px] text-slate-500 mt-1">From approved claims submitted</div>
+                          <div className="text-[11px] text-slate-500 mt-1">
+                            {submittedClaimsCount != null && submittedClaimsCount > 0 
+                              ? `From ${submittedClaimsCount} claim${submittedClaimsCount !== 1 ? 's' : ''} submitted`
+                              : 'From approved claims submitted'
+                            }
+                          </div>
+                          {/* Sync status message */}
+                          {(syncMessage || needsSync || syncTriggered) && (
+                            <div className={`mt-3 px-3 py-2 rounded-md text-xs ${
+                              syncTriggered 
+                                ? 'bg-blue-50 text-blue-700 border border-blue-200' 
+                                : needsSync 
+                                ? 'bg-amber-50 text-amber-700 border border-amber-200' 
+                                : 'bg-slate-50 text-slate-600 border border-slate-200'
+                            }`}>
+                              <div className="flex items-start gap-2">
+                                {syncTriggered && <RefreshCw className="h-3 w-3 mt-0.5 animate-spin" />}
+                                <span>{syncMessage || (needsSync ? 'Syncing your Amazon account... Please refresh in a few moments.' : '')}</span>
+                              </div>
+                            </div>
+                          )}
                       </div>
                     </div>
 
