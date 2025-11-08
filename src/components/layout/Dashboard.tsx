@@ -413,6 +413,7 @@ export function Dashboard() {
                               { id: 'evt-0', unread: true, title: 'Claim Approved 🎉', details: 'Good news! Claim approved for $1,200 reimbursement.', time: 'Just now' },
                               { id: 'evt-1', unread: true, title: 'Connection Established', details: 'Amazon connection established', time: 'Just now' },
                               { id: 'evt-2', unread: true, title: 'Claims Identified', details: `23 potential claims identified, valued at ~${formatCurrency(14228)}` , time: '2 minutes ago' },
+                              { id: 'evt-2.5', unread: true, title: 'Evidence Matched', details: 'Invoices and shipment records matched for 4 new claims.', time: 'Just now' },
                               { id: 'evt-3', unread: false, title: 'Claim Submitted', details: 'Auto-submitted 5 verified claims', time: 'Yesterday' },
                               { id: 'evt-4', unread: false, title: 'Funds Recovered', details: `Payout confirmed: ${formatCurrency(850.75)}`, time: '2 days ago' },
                             ];
