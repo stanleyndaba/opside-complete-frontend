@@ -267,23 +267,9 @@ export default function IntegrationsHub() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {[
-                { name: 'Shopify', image: '/shopify.png' },
-                { name: 'Walmart', image: '/Walmart_logo.svg.png' },
-                { name: 'Quickbooks', image: '/Quickbooks-Logo-500x281.png' },
-                { name: 'Xero', image: '/Xero-logo-hires-RGB.png' },
-                { name: 'Ebay', image: '/ebay.png' },
-                { name: 'ShipBob', image: '/ShipBob-logo-square.webp' }
-              ].map((platform) => (
-                <div key={platform.name} className="flex items-center justify-between rounded border border-white/10 bg-white/5 p-4">
-                  <div className="flex items-center gap-3">
-                    <img 
-                      src={platform.image} 
-                      alt={platform.name} 
-                      className="h-8 w-auto max-w-[120px] object-contain"
-                    />
-                    <span className="text-sm font-medium text-gray-200">{platform.name}</span>
-                  </div>
+              {['Shopify', 'Walmart', 'Quickbooks', 'Xero', 'Ebay', 'ShipBob'].map((platform) => (
+                <div key={platform} className="flex items-center justify-between rounded border border-white/10 bg-white/5 p-4">
+                  <span className="text-sm font-medium text-gray-200">{platform}</span>
                   <Button 
                     size="sm" 
                     variant="outline" 
