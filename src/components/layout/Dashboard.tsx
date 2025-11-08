@@ -452,19 +452,7 @@ export function Dashboard() {
           <DialogContent className="max-w-lg bg-[whitesmoke] backdrop-blur-md border border-gray-200 text-gray-900 shadow-[0_20px_80px_rgba(15,23,42,0.25)] rounded-2xl">
           <DialogHeader>
                 <DialogTitle className="text-lg text-gray-900">
-                <div className="flex flex-col items-start gap-1">
-                  <span className="inline-flex">
-                    <span className="relative inline-flex">
-                        <span className="absolute -inset-2 rounded-full bg-emerald-400/20 blur-lg" />
-                      <img
-                        src="/donelogo.png"
-                        alt="Clario"
-                        className="relative h-8 w-8 rounded-full object-cover shadow-lg shadow-emerald-500/25"
-                      />
-                    </span>
-                  </span>
-                  <span>Connect Evidence Sources</span>
-                </div>
+                  Connect Evidence Sources
             </DialogTitle>
               <DialogDescription className="text-slate-500">
               Link Gmail/Outlook and Drive/Dropbox to auto‑collect invoices and receipts (read‑only).

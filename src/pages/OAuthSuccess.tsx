@@ -187,19 +187,7 @@ export default function OAuthSuccess() {
         <DialogContent className="max-w-lg bg-[#0B1220]/80 backdrop-blur-2xl border border-white/10 text-gray-100 shadow-[0_20px_80px_rgba(0,0,0,0.6)] rounded-2xl">
             <DialogHeader>
               <DialogTitle className="text-lg text-gray-100">
-                <div className="flex flex-col items-start gap-1">
-                  <span className="inline-flex">
-                    <span className="relative inline-flex">
-                      <span className="absolute -inset-2 rounded-full bg-emerald-400/25 blur-lg" />
-                      <img
-                        src="/donelogo.png"
-                        alt="Clario"
-                        className="relative h-8 w-8 rounded-full object-cover shadow-lg shadow-emerald-500/25"
-                      />
-                    </span>
-                  </span>
-                  <span>Connect Evidence Sources</span>
-                </div>
+                Connect Evidence Sources
               </DialogTitle>
             <DialogDescription className="text-gray-300">
               Link your email and cloud storage to auto‑collect invoices and receipts. Read‑only. No writing or sending.
