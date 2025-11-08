@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ArrowUpDown, ChevronDown, Search, Gift } from 'lucide-react';
+import { ArrowUpDown, ChevronDown, Search, Gift, Link2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 interface NavbarProps {
   className?: string;
   sidebarCollapsed?: boolean;
@@ -18,6 +19,7 @@ export function Navbar({
   forceTransparent
 }: NavbarProps) {
   const location = useLocation();
+  const navigate = useNavigate();
   const pathTransparent =
     location.pathname === '/' ||
     location.pathname.startsWith('/settings') ||
@@ -86,8 +88,19 @@ export function Navbar({
               )}
             </div>
           </div>
-          {/* Right side - Sandbox badge */}
+          {/* Right side - Connect Platform button and Sandbox badge */}
           <div className="flex items-center gap-4 ml-auto">
+          <Button
+            onClick={() => navigate('/integrations-hub')}
+            variant="ghost"
+            className={cn(
+              "flex items-center gap-2 h-9 px-3",
+              isTransparent ? 'text-gray-200 hover:text-white hover:bg-white/10' : 'text-muted-foreground hover:text-foreground'
+            )}
+          >
+            <Link2 className="h-4 w-4" />
+            <span className="hidden sm:inline">Connect Platform</span>
+          </Button>
           {isSandbox && (
             <span className={cn(
               'text-xs px-2 py-0.5 rounded border',
