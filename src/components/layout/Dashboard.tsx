@@ -47,6 +47,9 @@ export function Dashboard() {
   const [syncTriggered, setSyncTriggered] = useState<boolean>(false);
   const [dataSource, setDataSource] = useState<string | null>(null);
   const [recoverySource, setRecoverySource] = useState<string | null>(null);
+  const [activeSyncId, setActiveSyncId] = useState<string | null>(null);
+  const syncPollingRef = useRef<number | null>(null);
+  const syncCheckTimeoutRef = useRef<number | null>(null);
   const [quickActionsEditOpen, setQuickActionsEditOpen] = useState<boolean>(false);
   const [inviteOpen, setInviteOpen] = useState<boolean>(false);
   const [inviteEmail, setInviteEmail] = useState<string>('');
@@ -108,13 +111,20 @@ export function Dashboard() {
         if (data.dataSource) setDataSource(data.dataSource);
         if (data.source) setRecoverySource(data.source);
         
-        // Show toast notification if sync is triggered
-        if (data.syncTriggered && data.message) {
-          toast({
-            title: 'Syncing Amazon Account',
-            description: data.message,
-            duration: 5000,
-          });
+        // If sync is triggered or needed, check sync status and poll for completion
+        if (data.syncTriggered || data.needsSync) {
+          // Check if there's an active sync
+          checkAndMonitorSync();
+        } else {
+          // Clear sync polling if sync is no longer needed
+          if (syncPollingRef.current) {
+            clearInterval(syncPollingRef.current);
+            syncPollingRef.current = null;
+          }
+          if (syncCheckTimeoutRef.current) {
+            clearTimeout(syncCheckTimeoutRef.current);
+            syncCheckTimeoutRef.current = null;
+          }
         }
         
         setLastUpdated(new Date().toLocaleTimeString());
@@ -124,7 +134,149 @@ export function Dashboard() {
         if (data.message) setSyncMessage(data.message);
         if (typeof data.needsSync === 'boolean') setNeedsSync(data.needsSync);
         if (typeof data.syncTriggered === 'boolean') setSyncTriggered(data.syncTriggered);
+        
+        // Check sync status if needed
+        if (data.syncTriggered || data.needsSync) {
+          checkAndMonitorSync();
+        }
       }
+    }
+    
+    // Function to check sync status and monitor completion
+    async function checkAndMonitorSync() {
+      if (!active) return;
+      
+      try {
+        // Check if there's an active sync
+        const syncStatusRes = await api.getSyncStatus();
+        if (syncStatusRes.ok && syncStatusRes.data) {
+          const syncStatus = syncStatusRes.data as any;
+          
+          // If there's an active sync, get the syncId
+          if (syncStatus.hasActiveSync && syncStatus.lastSync?.syncId) {
+            const syncId = syncStatus.lastSync.syncId;
+            setActiveSyncId(syncId);
+            
+            // Start polling for sync completion
+            startSyncPolling(syncId);
+          } else if (syncStatus.lastSync?.status === 'complete') {
+            // Sync completed, refresh data
+            await fetchRecoveriesOnce();
+            await fetchMetrics();
+            setSyncTriggered(false);
+            setNeedsSync(false);
+            setSyncMessage(null);
+            
+            // Clear polling
+            if (syncPollingRef.current) {
+              clearInterval(syncPollingRef.current);
+              syncPollingRef.current = null;
+            }
+          } else if (syncStatus.lastSync?.status === 'failed') {
+            // Sync failed
+            setSyncTriggered(false);
+            setNeedsSync(true); // Still needs sync
+            setSyncMessage('Sync failed. Please try again.');
+            
+            // Clear polling
+            if (syncPollingRef.current) {
+              clearInterval(syncPollingRef.current);
+              syncPollingRef.current = null;
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error checking sync status:', error);
+      }
+    }
+    
+    // Function to poll for sync completion
+    function startSyncPolling(syncId: string) {
+      // Clear any existing polling
+      if (syncPollingRef.current) {
+        clearInterval(syncPollingRef.current);
+      }
+      
+      let pollCount = 0;
+      const maxPolls = 120; // Poll for up to 10 minutes (120 * 5 seconds)
+      
+      syncPollingRef.current = window.setInterval(async () => {
+        if (!active) {
+          if (syncPollingRef.current) {
+            clearInterval(syncPollingRef.current);
+            syncPollingRef.current = null;
+          }
+          return;
+        }
+        
+        pollCount++;
+        
+        try {
+          // Import getSyncStatus from inventoryApi
+          const { getSyncStatus } = await import('@/lib/inventoryApi');
+          const status = await getSyncStatus(syncId);
+          
+          if (status.status === 'complete') {
+            // Sync completed, refresh data
+            await fetchRecoveriesOnce();
+            await fetchMetrics();
+            setSyncTriggered(false);
+            setNeedsSync(false);
+            setSyncMessage('Sync completed successfully!');
+            
+            toast({
+              title: 'Sync Completed',
+              description: 'Your Amazon data has been synced successfully.',
+              duration: 5000,
+            });
+            
+            // Clear polling
+            if (syncPollingRef.current) {
+              clearInterval(syncPollingRef.current);
+              syncPollingRef.current = null;
+            }
+          } else if (status.status === 'failed') {
+            // Sync failed
+            setSyncTriggered(false);
+            setNeedsSync(true);
+            setSyncMessage('Sync failed. Please try again.');
+            
+            toast({
+              title: 'Sync Failed',
+              description: 'The sync encountered an error. Please try again.',
+              variant: 'destructive',
+              duration: 5000,
+            });
+            
+            // Clear polling
+            if (syncPollingRef.current) {
+              clearInterval(syncPollingRef.current);
+              syncPollingRef.current = null;
+            }
+          }
+          // If still in progress, continue polling
+        } catch (error) {
+          console.error('Error polling sync status:', error);
+          
+          // Stop polling after max attempts or if there's an error
+          if (pollCount >= maxPolls) {
+            if (syncPollingRef.current) {
+              clearInterval(syncPollingRef.current);
+              syncPollingRef.current = null;
+            }
+            setSyncMessage('Sync is taking longer than expected. Please check back later.');
+          }
+        }
+      }, 5000); // Poll every 5 seconds
+      
+      // Set timeout to stop polling after 10 minutes
+      syncCheckTimeoutRef.current = window.setTimeout(() => {
+        if (syncPollingRef.current) {
+          clearInterval(syncPollingRef.current);
+          syncPollingRef.current = null;
+        }
+        setSyncMessage('Sync is taking longer than expected. Please check the sync page for details.');
+      }, 600000); // 10 minutes
     }
 
     async function fetchMetrics() {
@@ -221,8 +373,16 @@ export function Dashboard() {
       active = false;
       if (pollTimer) window.clearInterval(pollTimer);
       if (es) es.close();
+      if (syncPollingRef.current) {
+        clearInterval(syncPollingRef.current);
+        syncPollingRef.current = null;
+      }
+      if (syncCheckTimeoutRef.current) {
+        clearTimeout(syncCheckTimeoutRef.current);
+        syncCheckTimeoutRef.current = null;
+      }
     };
-  }, []);
+  }, [toast, navigate]);
 
   const mainClass = isSidebarCollapsed ? 'ml-16' : 'ml-64';
 
@@ -294,9 +454,19 @@ export function Dashboard() {
                                 ? 'bg-amber-50 text-amber-700 border border-amber-200' 
                                 : 'bg-slate-50 text-slate-600 border border-slate-200'
                             }`}>
-                              <div className="flex items-start gap-2">
-                                {syncTriggered && <RefreshCw className="h-3 w-3 mt-0.5 animate-spin" />}
-                                <span>{syncMessage || (needsSync ? 'Syncing your Amazon account... Please refresh in a few moments.' : '')}</span>
+                              <div className="flex items-start justify-between gap-2">
+                                <div className="flex items-start gap-2 flex-1">
+                                  {syncTriggered && <RefreshCw className="h-3 w-3 mt-0.5 animate-spin" />}
+                                  <span>{syncMessage || (needsSync ? 'Syncing your Amazon account... Please refresh in a few moments.' : '')}</span>
+                                </div>
+                                {activeSyncId && (
+                                  <button
+                                    onClick={() => navigate(`/sync?id=${activeSyncId}`)}
+                                    className="text-blue-600 hover:text-blue-800 underline text-xs ml-2"
+                                  >
+                                    View progress
+                                  </button>
+                                )}
                               </div>
                             </div>
                           )}

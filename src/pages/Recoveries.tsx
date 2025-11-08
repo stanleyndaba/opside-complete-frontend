@@ -132,6 +132,9 @@ export default function Recoveries() {
   const previousClaimIdsRef = useRef<Set<string>>(new Set());
   const hasInitializedRef = useRef<boolean>(false);
   const previousRecoveredTotalRef = useRef<number>(0);
+  const [activeSyncId, setActiveSyncId] = useState<string | null>(null);
+  const syncPollingRef = useRef<number | null>(null);
+  const syncCheckTimeoutRef = useRef<number | null>(null);
 
   // Helper function for currency formatting (defined early so it can be used in useEffect)
   const formatCurrency = (amount: number, currency: string = 'USD') => {
@@ -242,13 +245,19 @@ export default function Recoveries() {
           if (data.dataSource) setDataSource(data.dataSource);
           if (data.source) setRecoverySource(data.source);
           
-          // Show toast notification if sync is triggered
-          if (data.syncTriggered && data.message) {
-            toast({
-              title: 'Syncing Amazon Account',
-              description: data.message,
-              duration: 5000,
-            });
+          // If sync is triggered or needed, check sync status and poll for completion
+          if (data.syncTriggered || data.needsSync) {
+            checkAndMonitorSync();
+          } else {
+            // Clear sync polling if sync is no longer needed
+            if (syncPollingRef.current) {
+              clearInterval(syncPollingRef.current);
+              syncPollingRef.current = null;
+            }
+            if (syncCheckTimeoutRef.current) {
+              clearTimeout(syncCheckTimeoutRef.current);
+              syncCheckTimeoutRef.current = null;
+            }
           }
         } else if (amazonRecoveriesRes?.data) {
           // Handle response even if not fully ok (might have sync info)
@@ -256,12 +265,182 @@ export default function Recoveries() {
           if (data.message) setSyncMessage(data.message);
           if (typeof data.needsSync === 'boolean') setNeedsSync(data.needsSync);
           if (typeof data.syncTriggered === 'boolean') setSyncTriggered(data.syncTriggered);
+          
+          // Check sync status if needed
+          if (data.syncTriggered || data.needsSync) {
+            checkAndMonitorSync();
+          }
+        }
+        
+        // Function to check sync status and monitor completion
+        async function checkAndMonitorSync() {
+          if (cancelled) return;
+          
+          try {
+            // Check if there's an active sync
+            const syncStatusRes = await api.getSyncStatus();
+            if (syncStatusRes.ok && syncStatusRes.data) {
+              const syncStatus = syncStatusRes.data as any;
+              
+              // If there's an active sync, get the syncId
+              if (syncStatus.hasActiveSync && syncStatus.lastSync?.syncId) {
+                const syncId = syncStatus.lastSync.syncId;
+                setActiveSyncId(syncId);
+                
+                // Start polling for sync completion
+                startSyncPolling(syncId);
+              } else if (syncStatus.lastSync?.status === 'complete') {
+                // Sync completed, refresh data
+                const [newRecoveriesRes] = await Promise.all([
+                  api.getAmazonRecoveries().catch(() => null),
+                ]);
+                if (newRecoveriesRes?.ok && newRecoveriesRes.data) {
+                  const newData = newRecoveriesRes.data as any;
+                  setRecoveredTotal(newData.totalAmount ?? 0);
+                  if (newData.currency) setRecoveredCurrency(newData.currency);
+                  if (typeof newData.claimCount === 'number') setAmazonClaimCount(newData.claimCount);
+                }
+                setSyncTriggered(false);
+                setNeedsSync(false);
+                setSyncMessage(null);
+                
+                // Clear polling
+                if (syncPollingRef.current) {
+                  clearInterval(syncPollingRef.current);
+                  syncPollingRef.current = null;
+                }
+              } else if (syncStatus.lastSync?.status === 'failed') {
+                // Sync failed
+                setSyncTriggered(false);
+                setNeedsSync(true);
+                setSyncMessage('Sync failed. Please try again.');
+                
+                // Clear polling
+                if (syncPollingRef.current) {
+                  clearInterval(syncPollingRef.current);
+                  syncPollingRef.current = null;
+                }
+              }
+            }
+          } catch (error) {
+            console.error('Error checking sync status:', error);
+          }
+        }
+        
+        // Function to poll for sync completion
+        function startSyncPolling(syncId: string) {
+          // Clear any existing polling
+          if (syncPollingRef.current) {
+            clearInterval(syncPollingRef.current);
+          }
+          
+          let pollCount = 0;
+          const maxPolls = 120; // Poll for up to 10 minutes
+          
+          syncPollingRef.current = window.setInterval(async () => {
+            if (cancelled) {
+              if (syncPollingRef.current) {
+                clearInterval(syncPollingRef.current);
+                syncPollingRef.current = null;
+              }
+              return;
+            }
+            
+            pollCount++;
+            
+            try {
+              const { getSyncStatus } = await import('@/lib/inventoryApi');
+              const status = await getSyncStatus(syncId);
+              
+              if (status.status === 'complete') {
+                // Sync completed, refresh data
+                const [newRecoveriesRes, newClaimsRes] = await Promise.all([
+                  api.getAmazonRecoveries().catch(() => null),
+                  recoveryApi.getRecoveries().catch(() => null),
+                ]);
+                
+                if (newRecoveriesRes?.ok && newRecoveriesRes.data) {
+                  const newData = newRecoveriesRes.data as any;
+                  setRecoveredTotal(newData.totalAmount ?? 0);
+                  if (newData.currency) setRecoveredCurrency(newData.currency);
+                  if (typeof newData.claimCount === 'number') setAmazonClaimCount(newData.claimCount);
+                }
+                
+                if (newClaimsRes && Array.isArray(newClaimsRes)) {
+                  setClaims(newClaimsRes as any);
+                }
+                
+                setSyncTriggered(false);
+                setNeedsSync(false);
+                setSyncMessage('Sync completed successfully!');
+                
+                toast({
+                  title: 'Sync Completed',
+                  description: 'Your Amazon data has been synced successfully.',
+                  duration: 5000,
+                });
+                
+                // Clear polling
+                if (syncPollingRef.current) {
+                  clearInterval(syncPollingRef.current);
+                  syncPollingRef.current = null;
+                }
+              } else if (status.status === 'failed') {
+                // Sync failed
+                setSyncTriggered(false);
+                setNeedsSync(true);
+                setSyncMessage('Sync failed. Please try again.');
+                
+                toast({
+                  title: 'Sync Failed',
+                  description: 'The sync encountered an error. Please try again.',
+                  variant: 'destructive',
+                  duration: 5000,
+                });
+                
+                // Clear polling
+                if (syncPollingRef.current) {
+                  clearInterval(syncPollingRef.current);
+                  syncPollingRef.current = null;
+                }
+              }
+            } catch (error) {
+              console.error('Error polling sync status:', error);
+              
+              if (pollCount >= maxPolls) {
+                if (syncPollingRef.current) {
+                  clearInterval(syncPollingRef.current);
+                  syncPollingRef.current = null;
+                }
+                setSyncMessage('Sync is taking longer than expected. Please check back later.');
+              }
+            }
+          }, 5000); // Poll every 5 seconds
+          
+          // Set timeout to stop polling after 10 minutes
+          syncCheckTimeoutRef.current = window.setTimeout(() => {
+            if (syncPollingRef.current) {
+              clearInterval(syncPollingRef.current);
+              syncPollingRef.current = null;
+            }
+            setSyncMessage('Sync is taking longer than expected. Please check the sync page for details.');
+          }, 600000); // 10 minutes
         }
         
         setLoading(false);
       }
     })();
-    return () => { cancelled = true; };
+    return () => { 
+      cancelled = true;
+      if (syncPollingRef.current) {
+        clearInterval(syncPollingRef.current);
+        syncPollingRef.current = null;
+      }
+      if (syncCheckTimeoutRef.current) {
+        clearTimeout(syncCheckTimeoutRef.current);
+        syncCheckTimeoutRef.current = null;
+      }
+    };
   }, [toast]);
 
   // Real-time recovery status updates; update table rows on the fly
@@ -557,7 +736,7 @@ export default function Recoveries() {
                     </span>
                   </div>
                 )}
-                {/* Sync status message */}
+                                {/* Sync status message */}
                 {(syncMessage || needsSync || syncTriggered) && (
                   <div className={`mt-3 px-3 py-2 rounded-md text-xs ${
                     syncTriggered 
@@ -566,9 +745,19 @@ export default function Recoveries() {
                       ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' 
                       : 'bg-white/5 text-gray-300 border border-white/10'
                   }`}>
-                    <div className="flex items-start gap-2">
-                      {syncTriggered && <RefreshCw className="h-3 w-3 mt-0.5 animate-spin" />}
-                      <span>{syncMessage || (needsSync ? 'Syncing your Amazon account... Please refresh in a few moments.' : '')}</span>
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-start gap-2 flex-1">
+                        {syncTriggered && <RefreshCw className="h-3 w-3 mt-0.5 animate-spin" />}
+                        <span>{syncMessage || (needsSync ? 'Syncing your Amazon account... Please refresh in a few moments.' : '')}</span>
+                      </div>
+                      {activeSyncId && (
+                        <Link
+                          to={`/sync?id=${activeSyncId}`}
+                          className="text-blue-400 hover:text-blue-300 underline text-xs ml-2"
+                        >
+                          View progress
+                        </Link>
+                      )}
                     </div>
                   </div>
                 )}
