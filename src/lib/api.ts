@@ -592,22 +592,11 @@ export const api = {
 
   // Auth-adjacent helpers for flows
   connectDocs: (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox') => {
-    // Get current frontend URL and pass it to backend for OAuth redirect configuration
+    // Use the same connectIntegration pattern which works for all providers
+    // This uses POST /api/v1/integrations/{provider}/connect
+    // The backend should handle Gmail, Outlook, Google Drive, and Dropbox through this endpoint
     const frontendUrl = getFrontendUrl();
     const redirectUri = `${frontendUrl}/auth/callback`;
-    
-    // Use provider-specific auth endpoints as documented in PHASE3
-    // For Gmail: GET /api/v1/integrations/gmail/auth
-    // For other providers, try the same pattern or use connect endpoint
-    if (provider === 'gmail') {
-      return requestJson<{ auth_url?: string; redirect_url?: string }>(
-        `/api/v1/integrations/gmail/auth?redirect_uri=${encodeURIComponent(redirectUri)}`,
-        { method: 'GET' }
-      );
-    }
-    
-    // For other evidence providers, try the /connect endpoint (POST)
-    // This matches the pattern used by connectIntegration
     return requestJson<{ auth_url?: string; redirect_url?: string }>(
       `/api/v1/integrations/${encodeURIComponent(provider)}/connect?redirect_uri=${encodeURIComponent(redirectUri)}`,
       { method: 'POST' }
