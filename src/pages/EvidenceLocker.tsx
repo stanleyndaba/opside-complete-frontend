@@ -330,7 +330,6 @@ export default function EvidenceLocker() {
             </div>
           </CardContent>
         </Card>
-
         {/* Document List */}
         <Card className="bg-white/5 border-white/10 text-gray-300">
           <CardHeader>
