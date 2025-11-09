@@ -3,7 +3,6 @@ import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { StatsCard } from '@/components/ui/StatsCard';
 import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -177,45 +176,72 @@ export default function EvidenceLocker() {
     
     try {
       setLoading(true);
-      const form = new FormData();
-      // API expects 'file' for single file, 'files' for multiple
-      if (files.length === 1) {
-        form.append('file', files[0]);
-      } else {
-        for (const f of files) {
-          form.append('files', f);
+      // Try /api/documents/upload first, fallback to /api/evidence/upload
+      const uploadUrls = [
+        api.buildApiUrl('/api/documents/upload'),
+        api.buildApiUrl('/api/evidence/upload')
+      ];
+      
+      console.log('[Upload] Files to upload:', files.map(f => ({ name: f.name, size: f.size, type: f.type })));
+      
+      let lastError: Error | null = null;
+      let res: Response | null = null;
+      let successfulUrl: string | null = null;
+      
+      // Try both endpoints - recreate FormData for each attempt
+      for (const uploadUrl of uploadUrls) {
+        try {
+          // Recreate FormData for each endpoint attempt (FormData is consumed after fetch)
+          const form = new FormData();
+          // OpenAPI spec shows 'file' (singular) - append all files with 'file' field name
+          for (const f of files) {
+            form.append('file', f);
+          }
+          
+          console.log('[Upload] Trying endpoint:', uploadUrl);
+          console.log('[Upload] FormData entries:', Array.from(form.entries()).map(([key, value]) => ({ key, value: value instanceof File ? value.name : value })));
+          
+          res = await fetch(uploadUrl, { 
+            method: 'POST', 
+            credentials: 'include',
+            body: form
+          });
+          
+          console.log('[Upload] Response status:', res.status, res.statusText, 'from', uploadUrl);
+          
+          if (res.ok) {
+            console.log('[Upload] Success from endpoint:', uploadUrl);
+            successfulUrl = uploadUrl;
+            break;
+          } else {
+            const errorText = await res.text();
+            console.warn('[Upload] Failed on', uploadUrl, ':', res.status, errorText);
+            lastError = new Error(`Upload failed on ${uploadUrl}: ${res.status} ${res.statusText} - ${errorText}`);
+            // Continue to next endpoint
+          }
+        } catch (err: any) {
+          console.warn('[Upload] Error on', uploadUrl, ':', err);
+          lastError = err;
+          // Continue to next endpoint
         }
       }
       
-      const uploadUrl = api.buildApiUrl('/api/documents/upload');
-      console.log('[Upload] Uploading to:', uploadUrl);
-      console.log('[Upload] Files:', files.map(f => ({ name: f.name, size: f.size, type: f.type })));
-      
-      const res = await fetch(uploadUrl, { 
-        method: 'POST', 
-        credentials: 'include',
-        headers: {
-          // Don't set Content-Type header - browser will set it with boundary for FormData
-        },
-        body: form
-      });
-      
-      console.log('[Upload] Response status:', res.status, res.statusText);
-      
-      if (!res.ok) {
-        const errorText = await res.text();
-        console.error('[Upload] Error response:', errorText);
+      if (!res || !res.ok) {
+        const errorText = res ? await res.text().catch(() => 'Unknown error') : 'No response from server';
+        console.error('[Upload] All endpoints failed. Last error:', lastError);
+        console.error('[Upload] Last response:', res ? { status: res.status, statusText: res.statusText, body: errorText } : 'No response');
+        
         let errorData;
         try {
           errorData = JSON.parse(errorText);
         } catch {
-          errorData = { message: errorText || `Upload failed with status ${res.status}` };
+          errorData = { message: errorText || lastError?.message || `Upload failed. Check console for details.` };
         }
-        throw new Error(errorData.message || errorData.error || `Upload failed: ${res.status} ${res.statusText}`);
+        throw new Error(errorData.message || errorData.error || `Upload failed. Please check if the backend endpoint is available. Endpoints tried: ${uploadUrls.join(', ')}`);
       }
       
       const responseData = await res.json().catch(() => null);
-      console.log('[Upload] Success response:', responseData);
+      console.log('[Upload] Success response from', successfulUrl, ':', responseData);
       
       // Show success toast
       toast({ 
@@ -331,26 +357,7 @@ export default function EvidenceLocker() {
       <div className="relative -m-4 lg:-m-6">
         <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
-          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-300">
-        {evidenceStatus && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <StatsCard
-              title="Total Documents"
-              value={evidenceStatus.documentsCount}
-              description="All evidence documents"
-            />
-            <StatsCard
-              title="Processing"
-              value={evidenceStatus.processingCount}
-              description="Documents being parsed"
-            />
-            <StatsCard
-              title="Completed"
-              value={evidenceStatus.documentsCount - evidenceStatus.processingCount}
-              description="Documents ready"
-            />
-          </div>
-        )}
+          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-300 space-y-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <GmailConnectionStatus onStatusChange={setGmailConnected} />
           <EvidenceIngestion gmailConnected={gmailConnected} onIngestionComplete={() => {
@@ -405,45 +412,72 @@ export default function EvidenceLocker() {
                   
                   try {
                     setLoading(true);
-                    const form = new FormData();
-                    // API expects 'file' for single file, 'files' for multiple
-                    if (files.length === 1) {
-                      form.append('file', files[0]);
-                    } else {
-                      for (const f of files) {
-                        form.append('files', f);
+                    // Try /api/documents/upload first, fallback to /api/evidence/upload
+                    const uploadUrls = [
+                      api.buildApiUrl('/api/documents/upload'),
+                      api.buildApiUrl('/api/evidence/upload')
+                    ];
+                    
+                    console.log('[Upload] Files to upload:', files.map(f => ({ name: f.name, size: f.size, type: f.type })));
+                    
+                    let lastError: Error | null = null;
+                    let res: Response | null = null;
+                    let successfulUrl: string | null = null;
+                    
+                    // Try both endpoints - recreate FormData for each attempt
+                    for (const uploadUrl of uploadUrls) {
+                      try {
+                        // Recreate FormData for each endpoint attempt (FormData is consumed after fetch)
+                        const form = new FormData();
+                        // OpenAPI spec shows 'file' (singular) - append all files with 'file' field name
+                        for (const f of files) {
+                          form.append('file', f);
+                        }
+                        
+                        console.log('[Upload] Trying endpoint:', uploadUrl);
+                        console.log('[Upload] FormData entries:', Array.from(form.entries()).map(([key, value]) => ({ key, value: value instanceof File ? value.name : value })));
+                        
+                        res = await fetch(uploadUrl, { 
+                          method: 'POST', 
+                          credentials: 'include',
+                          body: form
+                        });
+                        
+                        console.log('[Upload] Response status:', res.status, res.statusText, 'from', uploadUrl);
+                        
+                        if (res.ok) {
+                          console.log('[Upload] Success from endpoint:', uploadUrl);
+                          successfulUrl = uploadUrl;
+                          break;
+                        } else {
+                          const errorText = await res.text();
+                          console.warn('[Upload] Failed on', uploadUrl, ':', res.status, errorText);
+                          lastError = new Error(`Upload failed on ${uploadUrl}: ${res.status} ${res.statusText} - ${errorText}`);
+                          // Continue to next endpoint
+                        }
+                      } catch (err: any) {
+                        console.warn('[Upload] Error on', uploadUrl, ':', err);
+                        lastError = err;
+                        // Continue to next endpoint
                       }
                     }
                     
-                    const uploadUrl = api.buildApiUrl('/api/documents/upload');
-                    console.log('[Upload] Uploading to:', uploadUrl);
-                    console.log('[Upload] Files:', files.map(f => ({ name: f.name, size: f.size, type: f.type })));
-                    
-                    const res = await fetch(uploadUrl, { 
-                      method: 'POST', 
-                      credentials: 'include',
-                      headers: {
-                        // Don't set Content-Type header - browser will set it with boundary for FormData
-                      },
-                      body: form
-                    });
-                    
-                    console.log('[Upload] Response status:', res.status, res.statusText);
-                    
-                    if (!res.ok) {
-                      const errorText = await res.text();
-                      console.error('[Upload] Error response:', errorText);
+                    if (!res || !res.ok) {
+                      const errorText = res ? await res.text().catch(() => 'Unknown error') : 'No response from server';
+                      console.error('[Upload] All endpoints failed. Last error:', lastError);
+                      console.error('[Upload] Last response:', res ? { status: res.status, statusText: res.statusText, body: errorText } : 'No response');
+                      
                       let errorData;
                       try {
                         errorData = JSON.parse(errorText);
                       } catch {
-                        errorData = { message: errorText || `Upload failed with status ${res.status}` };
+                        errorData = { message: errorText || lastError?.message || `Upload failed. Check console for details.` };
                       }
-                      throw new Error(errorData.message || errorData.error || `Upload failed: ${res.status} ${res.statusText}`);
+                      throw new Error(errorData.message || errorData.error || `Upload failed. Please check if the backend endpoint is available. Endpoints tried: ${uploadUrls.join(', ')}`);
                     }
                     
                     const responseData = await res.json().catch(() => null);
-                    console.log('[Upload] Success response:', responseData);
+                    console.log('[Upload] Success response from', successfulUrl, ':', responseData);
                     
                     // Show success toast
                     toast({ 
