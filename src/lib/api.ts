@@ -594,9 +594,23 @@ export const api = {
   connectDocs: (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox') => {
     // Get current frontend URL and pass it to backend for OAuth redirect configuration
     const frontendUrl = getFrontendUrl();
+    const redirectUri = `${frontendUrl}/auth/callback`;
+    
+    // Use provider-specific auth endpoints as documented in PHASE3
+    // For Gmail: GET /api/v1/integrations/gmail/auth
+    // For other providers, try the same pattern or use connect endpoint
+    if (provider === 'gmail') {
+      return requestJson<{ auth_url?: string; redirect_url?: string }>(
+        `/api/v1/integrations/gmail/auth?redirect_uri=${encodeURIComponent(redirectUri)}`,
+        { method: 'GET' }
+      );
+    }
+    
+    // For other evidence providers, try the /connect endpoint (POST)
+    // This matches the pattern used by connectIntegration
     return requestJson<{ auth_url?: string; redirect_url?: string }>(
-      `/api/v1/integrations/connect-docs?provider=${encodeURIComponent(provider)}&redirect_uri=${encodeURIComponent(frontendUrl)}/auth/callback`,
-      { method: 'GET' }
+      `/api/v1/integrations/${encodeURIComponent(provider)}/connect?redirect_uri=${encodeURIComponent(redirectUri)}`,
+      { method: 'POST' }
     );
   },
   startAmazonSync: () => requestJson<{ syncId: string }>('/api/sync/start', { method: 'POST' }),
