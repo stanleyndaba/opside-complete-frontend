@@ -155,13 +155,78 @@ export default function EvidenceLocker() {
       setDragActive(false);
     }
   };
-  const handleDrop = (e: React.DragEvent) => {
+  const handleDrop = async (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      // Handle file upload logic here
-      console.log('Files dropped:', e.dataTransfer.files);
+    const files = Array.from(e.dataTransfer.files || []);
+    if (!files.length) {
+      toast({ 
+        title: 'No files', 
+        description: 'Please drop valid files to upload.', 
+        variant: 'destructive' 
+      });
+      return;
+    }
+    
+    // Show immediate feedback
+    toast({ 
+      title: 'Uploading...', 
+      description: `Uploading ${files.length} document(s)...` 
+    });
+    
+    try {
+      setLoading(true);
+      const form = new FormData();
+      for (const f of files) form.append('files', f);
+      const res = await fetch(api.buildApiUrl('/api/documents/upload'), { 
+        method: 'POST', 
+        credentials: 'include', 
+        body: form as any 
+      } as any);
+      
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({ message: 'Upload failed' }));
+        throw new Error(errorData.message || 'Upload failed');
+      }
+      
+      // Show success toast
+      toast({ 
+        title: '✅ Uploaded Successfully', 
+        description: `${files.length} document(s) uploaded successfully. Parsing will begin automatically.`,
+        duration: 5000
+      });
+      
+      // Refresh documents list
+      const refresh = await api.getDocuments();
+      if (refresh.ok && Array.isArray(refresh.data)) {
+        setDocuments(refresh.data);
+        // Show toast if new documents were added
+        if (refresh.data.length > documents.length) {
+          const newCount = refresh.data.length - documents.length;
+          toast({ 
+            title: '📄 Documents Added', 
+            description: `${newCount} new document(s) are now in your Evidence Locker.`,
+            duration: 4000
+          });
+        }
+      }
+      
+      // Refresh evidence status
+      const statusRes = await api.getEvidenceStatus();
+      if (statusRes.ok && statusRes.data) {
+        setEvidenceStatus(statusRes.data);
+      }
+    } catch (err: any) {
+      console.error('Upload error:', err);
+      toast({ 
+        title: 'Upload Failed', 
+        description: err?.message || 'Failed to upload documents. Please try again.', 
+        variant: 'destructive',
+        duration: 5000
+      });
+    } finally {
+      setLoading(false);
     }
   };
   const filtered = useMemo(() => {
@@ -300,17 +365,77 @@ export default function EvidenceLocker() {
                 </Button>
                 <input id="doc-file-input" type="file" multiple className="hidden" onChange={async (e) => {
                   const files = Array.from((e.target as HTMLInputElement).files || []);
-                  if (!files.length) return;
+                  if (!files.length) {
+                    toast({ 
+                      title: 'No files', 
+                      description: 'Please select valid files to upload.', 
+                      variant: 'destructive' 
+                    });
+                    return;
+                  }
+                  
+                  // Show immediate feedback
+                  toast({ 
+                    title: 'Uploading...', 
+                    description: `Uploading ${files.length} document(s)...` 
+                  });
+                  
                   try {
+                    setLoading(true);
                     const form = new FormData();
                     for (const f of files) form.append('files', f);
-                    const res = await fetch(api.buildApiUrl('/api/documents/upload'), { method: 'POST', credentials: 'include', body: form as any } as any);
-                    if (!res.ok) throw new Error('Upload failed');
-                    toast({ title: 'Uploaded', description: 'Your documents were uploaded successfully.' });
+                    const res = await fetch(api.buildApiUrl('/api/documents/upload'), { 
+                      method: 'POST', 
+                      credentials: 'include', 
+                      body: form as any 
+                    } as any);
+                    
+                    if (!res.ok) {
+                      const errorData = await res.json().catch(() => ({ message: 'Upload failed' }));
+                      throw new Error(errorData.message || 'Upload failed');
+                    }
+                    
+                    // Show success toast
+                    toast({ 
+                      title: '✅ Uploaded Successfully', 
+                      description: `${files.length} document(s) uploaded successfully. Parsing will begin automatically.`,
+                      duration: 5000
+                    });
+                    
+                    // Refresh documents list
                     const refresh = await api.getDocuments();
-                    if (refresh.ok && Array.isArray(refresh.data)) setDocuments(refresh.data);
+                    if (refresh.ok && Array.isArray(refresh.data)) {
+                      const previousCount = documents.length;
+                      setDocuments(refresh.data);
+                      // Show toast if new documents were added
+                      if (refresh.data.length > previousCount) {
+                        const newCount = refresh.data.length - previousCount;
+                        toast({ 
+                          title: '📄 Documents Added', 
+                          description: `${newCount} new document(s) are now in your Evidence Locker.`,
+                          duration: 4000
+                        });
+                      }
+                    }
+                    
+                    // Refresh evidence status
+                    const statusRes = await api.getEvidenceStatus();
+                    if (statusRes.ok && statusRes.data) {
+                      setEvidenceStatus(statusRes.data);
+                    }
+                    
+                    // Reset file input
+                    e.target.value = '';
                   } catch (err: any) {
-                    toast({ title: 'Upload failed', description: err?.message || 'Use Integrations for auto‑ingest if needed.', variant: 'destructive' });
+                    console.error('Upload error:', err);
+                    toast({ 
+                      title: 'Upload Failed', 
+                      description: err?.message || 'Failed to upload documents. Please try again.', 
+                      variant: 'destructive',
+                      duration: 5000
+                    });
+                  } finally {
+                    setLoading(false);
                   }
                 }} />
                 
