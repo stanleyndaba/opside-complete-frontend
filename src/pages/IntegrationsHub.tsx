@@ -9,13 +9,14 @@ import { cn } from '@/lib/utils';
 import { Shield, RefreshCw, Search as SearchIcon, Sparkles } from 'lucide-react';
 import { api } from '@/lib/api';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
 
 // ... (keep all the existing interfaces and constants)
 
 export default function IntegrationsHub() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
   const [lastSyncTime, setLastSyncTime] = useState('Just now');
   const [status, setStatus] = useState<{ amazon_connected: boolean; docs_connected: boolean; providers?: Record<string, boolean>; lastIngest?: string; lastSync?: string; providerIngest?: Record<string, { connected: boolean; lastIngest?: string; error?: string; scopes?: string[] }> } | null>(null);
@@ -109,6 +110,75 @@ export default function IntegrationsHub() {
       setProviderLoading(null);
     }
   };
+
+  // Handle OAuth callback query parameters
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const gmailConnected = searchParams.get('gmail_connected');
+    const outlookConnected = searchParams.get('outlook_connected');
+    const gdriveConnected = searchParams.get('gdrive_connected');
+    const dropboxConnected = searchParams.get('dropbox_connected');
+    const email = searchParams.get('email');
+    const error = searchParams.get('error');
+    const success = searchParams.get('success');
+
+    // Show success notification if provider was just connected
+    if (gmailConnected === 'true' || outlookConnected === 'true' || gdriveConnected === 'true' || dropboxConnected === 'true') {
+      const providerName = gmailConnected === 'true' ? 'Gmail' 
+        : outlookConnected === 'true' ? 'Outlook'
+        : gdriveConnected === 'true' ? 'Google Drive'
+        : dropboxConnected === 'true' ? 'Dropbox'
+        : 'provider';
+      
+      toast({
+        title: `${providerName} Connected Successfully`,
+        description: email ? `${providerName} connected for ${email}. Evidence ingestion will begin automatically.` : `${providerName} has been connected successfully.`,
+      });
+
+      // Refresh integration status to update UI
+      api.getIntegrationsStatus().then(res => {
+        if (res.ok && res.data) {
+          setStatus(res.data);
+        }
+      });
+
+      // Clean up URL by removing query parameters after processing (optional)
+      const cleanUrl = location.pathname;
+      navigate(cleanUrl, { replace: true });
+    }
+
+    // Show error notification if OAuth failed
+    if (error) {
+      toast({
+        title: 'Connection Failed',
+        description: decodeURIComponent(error),
+        variant: 'destructive',
+      });
+
+      // Clean up URL
+      const cleanUrl = location.pathname;
+      navigate(cleanUrl, { replace: true });
+    }
+
+    // Show generic success message if success parameter is present
+    if (success && !gmailConnected && !outlookConnected && !gdriveConnected && !dropboxConnected) {
+      toast({
+        title: 'Connection Successful',
+        description: 'Your account has been connected successfully.',
+      });
+
+      // Refresh integration status
+      api.getIntegrationsStatus().then(res => {
+        if (res.ok && res.data) {
+          setStatus(res.data);
+        }
+      });
+
+      // Clean up URL
+      const cleanUrl = location.pathname;
+      navigate(cleanUrl, { replace: true });
+    }
+  }, [location.search, navigate, toast]);
 
   useEffect(() => {
     let cancelled = false;

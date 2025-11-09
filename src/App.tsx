@@ -35,6 +35,7 @@ const WhatsNew = lazy(() => import("./pages/WhatsNew"));
 const ReconnectProvider = lazy(() => import("./pages/ReconnectProvider"));
 const OAuthProviderSandbox = lazy(() => import("./pages/OAuthProviderSandbox"));
 const OAuthCallback = lazy(() => import("./pages/OAuthCallback"));
+const OAuthCallbackRedirect = lazy(() => import("./pages/OAuthCallbackRedirect"));
 const OAuthSuccess = lazy(() => import("./pages/OAuthSuccess"));
 const StripeCallback = lazy(() => import("./pages/StripeCallback"));
 const About = lazy(() => import("./pages/About"));
@@ -129,6 +130,7 @@ const App = () => (
             
             {/* Auth & OAuth Routes */}
             <Route path="/auth/callback" element={<OAuthCallback />} />
+            <Route path="/auth/callback/integrations-hub" element={<OAuthCallbackRedirect />} />
             <Route path="/auth/success" element={<OAuthSuccess />} />
             <Route path="/api/v1/integrations/amazon/callback" element={<OAuthCallback />} />
             <Route path="/stripe/callback" element={<StripeCallback />} />
