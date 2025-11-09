@@ -240,7 +240,6 @@ export default function EvidenceLocker() {
         <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
           <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-300 space-y-8">
-        
         {/* Evidence Stats */}
         {evidenceStatus && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -261,7 +260,6 @@ export default function EvidenceLocker() {
             />
           </div>
         )}
-
         {/* Gmail Connection & Ingestion */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <GmailConnectionStatus onStatusChange={setGmailConnected} />
@@ -279,7 +277,6 @@ export default function EvidenceLocker() {
             });
           }} />
         </div>
-
         {/* Upload Section */}
         <Card className="bg-white/5 border-white/10 text-gray-300">
           <CardHeader>

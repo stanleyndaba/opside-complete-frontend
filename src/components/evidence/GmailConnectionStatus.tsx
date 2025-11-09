@@ -35,28 +35,23 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
       // Also check getIntegrationsStatus as fallback (more comprehensive)
       const integrationsRes = await api.getIntegrationsStatus();
       
-      // Helper function to determine if Gmail is connected - handles multiple response formats
+      // Helper function to determine if Gmail is connected - only return true when explicitly verified
       const isGmailConnected = (): boolean => {
-        // Check specific Gmail status endpoint first
+        // Check specific Gmail status endpoint first - must explicitly be true
         if (gmailRes?.ok && gmailRes.data?.connected === true) return true;
         
-        // Check integrations status providerIngest
+        // Check integrations status providerIngest - must explicitly be true
         if (integrationsRes?.ok && integrationsRes.data) {
           const data = integrationsRes.data;
-          // Check providerIngest with lowercase
+          // Check providerIngest with lowercase - must be explicitly true
           if (data.providerIngest?.['gmail']?.connected === true) return true;
-          // Check providerIngest with capitalized
+          // Check providerIngest with capitalized - must be explicitly true
           if (data.providerIngest?.['Gmail']?.connected === true) return true;
-          // Check top-level gmail_connected field
+          // Check top-level gmail_connected field - must be explicitly true
           if ((data as any).gmail_connected === true) return true;
-          // Check if providerIngest entry exists without error
-          const providerData = data.providerIngest?.['gmail'] || data.providerIngest?.['Gmail'];
-          if (providerData && !providerData.error) {
-            // If there's data and no error, assume connected
-            return true;
-          }
         }
         
+        // Only return true if explicitly verified - don't assume connected
         return false;
       };
       
