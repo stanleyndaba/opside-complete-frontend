@@ -64,7 +64,18 @@ export default function ReconnectProvider() {
         window.location.assign('/auth/amazon-sandbox');
         return;
       }
-      // Evidence providers
+      // Evidence providers (gmail, outlook, gdrive, dropbox)
+      if (['gmail', 'outlook', 'gdrive', 'dropbox'].includes(provider)) {
+        const r = await api.connectDocs(provider as 'gmail' | 'outlook' | 'gdrive' | 'dropbox');
+        if (r.ok && r.data?.auth_url) {
+          window.location.assign(r.data.auth_url);
+          return;
+        }
+        // Fallback to sandbox if API fails
+        window.location.assign(`/auth/${provider}-sandbox`);
+        return;
+      }
+      // Other providers (fallback to connectIntegration for backward compatibility)
       const r = await api.connectIntegration(provider);
       const url = (r as any)?.data?.auth_url;
       if ((r as any)?.ok && url) {
