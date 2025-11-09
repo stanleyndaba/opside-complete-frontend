@@ -51,6 +51,9 @@ export function Dashboard() {
   const syncPollingRef = useRef<number | null>(null);
   const syncCheckTimeoutRef = useRef<number | null>(null);
   const [quickActionsEditOpen, setQuickActionsEditOpen] = useState<boolean>(false);
+  // Evidence stats
+  const [evidenceStatus, setEvidenceStatus] = useState<{ documentsCount: number; processingCount: number } | null>(null);
+  const [gmailConnected, setGmailConnected] = useState<boolean>(false);
   const [inviteOpen, setInviteOpen] = useState<boolean>(false);
   const [inviteEmail, setInviteEmail] = useState<string>('');
   const { toast } = useToast();
@@ -90,6 +93,26 @@ export function Dashboard() {
       }, 2000);
     }
   }, [searchParams, navigate, toast]);
+
+  // Fetch evidence status
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const [statusRes, gmailRes] = await Promise.all([
+        api.getEvidenceStatus().catch(() => ({ ok: false, data: null })),
+        api.getGmailStatus().catch(() => ({ ok: false, data: null })),
+      ]);
+      if (!cancelled) {
+        if (statusRes.ok && statusRes.data) {
+          setEvidenceStatus(statusRes.data);
+        }
+        if (gmailRes.ok && gmailRes.data) {
+          setGmailConnected(gmailRes.data.connected);
+        }
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -520,6 +543,47 @@ export function Dashboard() {
                         </div>
                       </div>
                     </div>
+
+                    {/* Evidence Stats */}
+                    {evidenceStatus && (
+                      <div className="mt-6">
+                        <div className="flex items-center justify-between mb-3">
+                          <h3 className="text-sm font-semibold text-slate-900">Evidence Documents</h3>
+                          <button
+                            type="button"
+                            onClick={() => navigate('/evidence-locker')}
+                            className="text-xs text-indigo-500 underline-offset-2 hover:underline"
+                          >
+                            View all
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div className="rounded-md border border-slate-200/80 bg-white p-4 shadow-sm">
+                            <div className="text-xs text-slate-500">Total Documents</div>
+                            <div className="text-xl font-semibold text-slate-900 mt-1">{evidenceStatus.documentsCount}</div>
+                            <div className="text-[11px] text-slate-500 mt-1">All evidence documents</div>
+                          </div>
+                          <div className="rounded-md border border-slate-200/80 bg-white p-4 shadow-sm">
+                            <div className="text-xs text-slate-500">Processing</div>
+                            <div className="text-xl font-semibold text-blue-600 mt-1">{evidenceStatus.processingCount}</div>
+                            <div className="text-[11px] text-slate-500 mt-1">Documents being parsed</div>
+                          </div>
+                          <div className="rounded-md border border-slate-200/80 bg-white p-4 shadow-sm">
+                            <div className="text-xs text-slate-500">Completed</div>
+                            <div className="text-xl font-semibold text-emerald-500 mt-1">
+                              {evidenceStatus.documentsCount - evidenceStatus.processingCount}
+                            </div>
+                            <div className="text-[11px] text-slate-500 mt-1">Documents ready</div>
+                            {gmailConnected && (
+                              <div className="text-[10px] text-emerald-600 mt-1 flex items-center gap-1">
+                                <Mail className="h-3 w-3" />
+                                Gmail connected
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
 
                     {/* Auto-Submit button removed per request */}
                   </CardContent>

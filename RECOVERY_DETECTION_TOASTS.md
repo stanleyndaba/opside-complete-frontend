@@ -218,3 +218,4 @@ if (evt.type === 'detection') {
 - All toasts are non-blocking and don't interrupt user workflow
 - Previous claim IDs are tracked using refs to avoid unnecessary re-renders
 
+

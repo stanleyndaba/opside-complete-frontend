@@ -247,7 +247,15 @@ export default function IntegrationsHub() {
               </div>
               <div className="flex items-center gap-3 text-sm text-gray-400">
                 <span>Last ingest: {status?.lastIngest || 'Just now'}</span>
-                <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={async () => { const r = await api.startEvidenceIngest(); if (r.ok){ toast({ title: 'Ingestion started', description: 'We will notify you when new docs arrive.' }); } else { toast({ title: 'Ingestion failed', description: r.error || 'Try again.', variant: 'destructive' }); } }}>Ingest now</Button>
+                <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={async () => { 
+                  const r = await api.ingestGmailEvidence({ autoParse: true }); 
+                  if (r.ok && r.data){ 
+                    toast({ title: 'Ingestion started', description: `Processing ${r.data.emailsProcessed} emails...` }); 
+                  } else { 
+                    toast({ title: 'Ingestion failed', description: r.error || 'Gmail may not be connected. Try again.', variant: 'destructive' }); 
+                  } 
+                }}>Ingest Gmail Now</Button>
+                <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={async () => { const r = await api.startEvidenceIngest(); if (r.ok){ toast({ title: 'Ingestion started', description: 'We will notify you when new docs arrive.' }); } else { toast({ title: 'Ingestion failed', description: r.error || 'Try again.', variant: 'destructive' }); } }}>Ingest All Sources</Button>
                 <Button size="sm" variant="ghost" onClick={() => navigate('/evidence-locker')}>Open Evidence Locker</Button>
               </div>
             </CardContent>

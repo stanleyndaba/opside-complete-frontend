@@ -621,6 +621,104 @@ export const api = {
   getDocuments: () => requestJson<any[]>('/api/documents'),
   getDocument: (id: string) => requestJson<any>(`/api/documents/${encodeURIComponent(id)}`),
   getDocumentDownloadUrl: (id: string) => buildApiUrl(`/api/documents/${encodeURIComponent(id)}/download`),
+  
+  // PHASE3: Evidence ingestion endpoints (Node.js backend)
+  ingestGmailEvidence: (options?: { query?: string; maxResults?: number; autoParse?: boolean }) =>
+    requestJson<{
+      success: boolean;
+      documentsIngested: number;
+      emailsProcessed: number;
+      errors: string[];
+      message: string;
+    }>('/api/evidence/ingest/gmail', {
+      method: 'POST',
+      body: JSON.stringify({
+        query: options?.query || 'from:amazon.com OR from:amazon.co.uk OR subject:(invoice OR receipt OR "FBA" OR "reimbursement" OR "refund") has:attachment',
+        maxResults: options?.maxResults || 50,
+        autoParse: options?.autoParse !== false,
+      }),
+    }),
+  getEvidenceStatus: () => requestJson<{
+    hasConnectedSource: boolean;
+    lastIngestion?: string;
+    documentsCount: number;
+    processingCount: number;
+  }>('/api/evidence/status'),
+  
+  // PHASE3: Gmail integration endpoints
+  getGmailStatus: () => requestJson<{
+    connected: boolean;
+    lastSync?: string;
+    email?: string;
+  }>('/api/v1/integrations/gmail/status'),
+  disconnectGmail: () => requestJson<any>('/api/v1/integrations/gmail/disconnect', { method: 'DELETE' }),
+  
+  // PHASE3: Document parsing endpoints (Python API)
+  triggerDocumentParse: (documentId: string) =>
+    requestJson<{
+      job_id: string;
+      status: string;
+      message: string;
+      estimated_completion?: string;
+    }>(`/api/v1/evidence/parse/${encodeURIComponent(documentId)}`, { method: 'POST' }),
+  getParserJobStatus: (jobId: string) =>
+    requestJson<{
+      id: string;
+      document_id: string;
+      status: 'pending' | 'processing' | 'completed' | 'failed';
+      progress?: number;
+      confidence_score?: number;
+      error?: string;
+    }>(`/api/v1/evidence/parse/jobs/${encodeURIComponent(jobId)}`),
+  getParserJobs: () => requestJson<{
+    jobs: Array<{
+      id: string;
+      document_id: string;
+      status: string;
+      parser_type: string;
+      confidence_score?: number;
+    }>;
+    total: number;
+  }>('/api/v1/evidence/parse/jobs'),
+  getDocumentWithParsedData: (documentId: string) =>
+    requestJson<{
+      id: string;
+      filename: string;
+      processing_status: 'pending' | 'processing' | 'completed' | 'failed';
+      parser_status?: 'pending' | 'processing' | 'completed' | 'failed';
+      parser_confidence?: number;
+      parsed_metadata?: {
+        supplier_name?: string;
+        invoice_number?: string;
+        invoice_date?: string;
+        total_amount?: number;
+        currency?: string;
+        line_items?: Array<{
+          description: string;
+          quantity: number;
+          unit_price: number;
+          total: number;
+        }>;
+        confidence_score?: number;
+      };
+    }>(`/api/v1/evidence/documents/${encodeURIComponent(documentId)}`),
+  searchDocuments: (filters?: {
+    supplier_name?: string;
+    invoice_number?: string;
+    date_from?: string;
+    date_to?: string;
+    min_amount?: number;
+    max_amount?: number;
+  }) => {
+    const params = new URLSearchParams();
+    if (filters?.supplier_name) params.append('supplier_name', filters.supplier_name);
+    if (filters?.invoice_number) params.append('invoice_number', filters.invoice_number);
+    if (filters?.date_from) params.append('date_from', filters.date_from);
+    if (filters?.date_to) params.append('date_to', filters.date_to);
+    if (filters?.min_amount) params.append('min_amount', filters.min_amount.toString());
+    if (filters?.max_amount) params.append('max_amount', filters.max_amount.toString());
+    return requestJson<any[]>(`/api/v1/evidence/documents/search?${params.toString()}`);
+  },
 
   // Integrations & Evidence ingestion controls
   getIntegrationsStatus: () => requestJson<{

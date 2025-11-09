@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, FileText, Check, Edit2, Download } from 'lucide-react';
 import { api } from '@/lib/api';
+import { ParsingStatus } from '@/components/evidence/ParsingStatus';
+import { useToast } from '@/components/ui/use-toast';
 
 export default function DocumentDetail() {
   const { id, documentId } = useParams();
@@ -13,9 +15,11 @@ export default function DocumentDetail() {
   const [hoveredSKU, setHoveredSKU] = useState<string | null>(null);
 
   const [documentData, setDocumentData] = useState<any | null>(null);
+  const [parsedData, setParsedData] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [validationIssues, setValidationIssues] = useState<Array<{ field: string; message: string }>>([]);
+  const { toast } = useToast();
 
   useEffect(() => {
     let cancelled = false;
@@ -23,15 +27,34 @@ export default function DocumentDetail() {
       if (!docId) return;
       setLoading(true);
       try {
-        const res = await api.getDocument(docId);
+        // Fetch both document data and parsed data
+        const [docRes, parsedRes] = await Promise.all([
+          api.getDocument(docId),
+          api.getDocumentWithParsedData(docId).catch(() => ({ ok: false, data: null })), // Gracefully handle errors
+        ]);
+        
         if (!cancelled) {
-          if (res.ok) {
-            setDocumentData(res.data as any);
+          if (docRes.ok) {
+            setDocumentData(docRes.data as any);
             setError(null);
           } else {
-            setError(res.error || 'Failed to load document');
+            setError(docRes.error || 'Failed to load document');
           }
-          const d = (res as any)?.data || {};
+          
+          if (parsedRes.ok && parsedRes.data) {
+            setParsedData(parsedRes.data);
+            // Merge parsed metadata into document data if available
+            if (parsedRes.data.parsed_metadata) {
+              setDocumentData((prev: any) => ({
+                ...prev,
+                ...parsedRes.data!.parsed_metadata,
+                parser_status: parsedRes.data!.parser_status,
+                parser_confidence: parsedRes.data!.parser_confidence,
+              }));
+            }
+          }
+          
+          const d = (docRes as any)?.data || {};
           const issues: Array<{ field: string; message: string }> = [];
           (d?.extractedData || []).forEach((it: any) => {
             if (!it.sku) issues.push({ field: 'sku', message: 'Missing SKU for a line item' });
@@ -123,7 +146,13 @@ export default function DocumentDetail() {
           </Card>
           <Card>
             <CardContent className="p-4">
-              <div className="text-2xl font-bold">100%</div>
+              <div className="text-2xl font-bold">
+                {documentData?.parser_confidence !== undefined 
+                  ? `${(documentData.parser_confidence * 100).toFixed(0)}%` 
+                  : parsedData?.parser_confidence !== undefined
+                  ? `${(parsedData.parser_confidence * 100).toFixed(0)}%`
+                  : '—'}
+              </div>
               <div className="text-sm text-muted-foreground">Extraction Confidence</div>
             </CardContent>
           </Card>
@@ -134,6 +163,84 @@ export default function DocumentDetail() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Parsing Status */}
+        {docId && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Parsing Status</CardTitle>
+              <CardDescription>Document parsing and extraction status</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ParsingStatus documentId={docId} autoPoll={true} />
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Parsed Metadata Display */}
+        {parsedData?.parsed_metadata && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Parsed Invoice Data</CardTitle>
+              <CardDescription>Structured data extracted from the document</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                {parsedData.parsed_metadata.supplier_name && (
+                  <div>
+                    <div className="text-sm text-muted-foreground">Supplier</div>
+                    <div className="text-lg font-semibold">{parsedData.parsed_metadata.supplier_name}</div>
+                  </div>
+                )}
+                {parsedData.parsed_metadata.invoice_number && (
+                  <div>
+                    <div className="text-sm text-muted-foreground">Invoice #</div>
+                    <div className="text-lg font-semibold">{parsedData.parsed_metadata.invoice_number}</div>
+                  </div>
+                )}
+                {parsedData.parsed_metadata.invoice_date && (
+                  <div>
+                    <div className="text-sm text-muted-foreground">Date</div>
+                    <div className="text-lg font-semibold">
+                      {new Date(parsedData.parsed_metadata.invoice_date).toLocaleDateString()}
+                    </div>
+                  </div>
+                )}
+                {parsedData.parsed_metadata.total_amount !== undefined && (
+                  <div>
+                    <div className="text-sm text-muted-foreground">Total</div>
+                    <div className="text-lg font-semibold">
+                      {parsedData.parsed_metadata.currency || '$'}{parsedData.parsed_metadata.total_amount.toFixed(2)}
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              {parsedData.parsed_metadata.line_items && parsedData.parsed_metadata.line_items.length > 0 && (
+                <div>
+                  <h4 className="text-sm font-semibold mb-2">Line Items</h4>
+                  <div className="space-y-2">
+                    {parsedData.parsed_metadata.line_items.map((item: any, idx: number) => (
+                      <div key={idx} className="p-3 rounded-lg border bg-muted/50">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <div className="font-medium">{item.description || 'Item'}</div>
+                            <div className="text-sm text-muted-foreground">
+                              Qty: {item.quantity} × {parsedData.parsed_metadata.currency || '$'}{item.unit_price?.toFixed(2)}
+                            </div>
+                          </div>
+                          <div className="font-semibold">
+                            {parsedData.parsed_metadata.currency || '$'}{item.total?.toFixed(2)}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
         {/* Main Content - Document View */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

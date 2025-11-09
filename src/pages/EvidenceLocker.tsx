@@ -12,12 +12,17 @@ import { useToast } from '@/components/ui/use-toast';
 import { api } from '@/lib/api';
 import { Link } from 'react-router-dom';
 import { Checkbox } from '@/components/ui/checkbox';
+import { ParsingStatus } from '@/components/evidence/ParsingStatus';
+import { GmailConnectionStatus } from '@/components/evidence/GmailConnectionStatus';
+import { EvidenceIngestion } from '@/components/evidence/EvidenceIngestion';
 export default function EvidenceLocker() {
   const [dragActive, setDragActive] = useState(false);
 
-  const [documents, setDocuments] = useState<Array<{ id: string; name: string; uploadDate: string; status: string; linkedSKUs?: number; supplier?: string; invoice?: string; amount?: number; parsedVia?: 'regex' | 'ocr' | 'ml'; matchedClaims?: string[]; type?: string }>>([]);
+  const [documents, setDocuments] = useState<Array<{ id: string; name: string; uploadDate: string; status: string; linkedSKUs?: number; supplier?: string; invoice?: string; amount?: number; parsedVia?: 'regex' | 'ocr' | 'ml'; matchedClaims?: string[]; type?: string; parser_status?: string; parser_confidence?: number; parsed_metadata?: any }>>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [gmailConnected, setGmailConnected] = useState(false);
+  const [evidenceStatus, setEvidenceStatus] = useState<{ documentsCount: number; processingCount: number } | null>(null);
   const [q, setQ] = useState('');
   const [supplier, setSupplier] = useState('');
   const [type, setType] = useState('');
@@ -34,19 +39,56 @@ export default function EvidenceLocker() {
 
   useEffect(() => {
     let cancelled = false;
+    
+    // Fetch documents and evidence status
     (async () => {
       setLoading(true);
-      const res = await api.getDocuments();
+      const [docRes, statusRes, gmailRes] = await Promise.all([
+        api.getDocuments(),
+        api.getEvidenceStatus(),
+        api.getGmailStatus(),
+      ]);
+      
       if (!cancelled) {
-        if (res.ok && Array.isArray(res.data)) {
-          setDocuments(res.data);
+        if (docRes.ok && Array.isArray(docRes.data)) {
+          // Enhance documents with parsed data
+          const enhancedDocs = await Promise.all(
+            docRes.data.map(async (doc: any) => {
+              // Try to get parsed data for each document
+              try {
+                const parsedRes = await api.getDocumentWithParsedData(doc.id);
+                if (parsedRes.ok && parsedRes.data) {
+                  return {
+                    ...doc,
+                    parser_status: parsedRes.data.parser_status,
+                    parser_confidence: parsedRes.data.parser_confidence,
+                    parsed_metadata: parsedRes.data.parsed_metadata,
+                  };
+                }
+              } catch (e) {
+                // Ignore errors for individual documents
+              }
+              return doc;
+            })
+          );
+          setDocuments(enhancedDocs);
           setError(null);
         } else {
-          setError(res.error || 'Failed to load documents');
+          setError(docRes.error || 'Failed to load documents');
         }
+        
+        if (statusRes.ok && statusRes.data) {
+          setEvidenceStatus(statusRes.data);
+        }
+        
+        if (gmailRes.ok && gmailRes.data) {
+          setGmailConnected(gmailRes.data.connected);
+        }
+        
         setLoading(false);
       }
     })();
+    
     // SSE for ingest updates
     let es: EventSource | null = null;
     try {
@@ -56,10 +98,31 @@ export default function EvidenceLocker() {
           const evt = JSON.parse(e.data);
           if (evt?.type === 'evidence' && evt?.status === 'completed') {
             toast({ title: 'Ingestion complete', description: 'New documents are available.' });
+            // Refresh documents
+            api.getDocuments().then(res => {
+              if (res.ok && Array.isArray(res.data)) {
+                setDocuments(res.data);
+              }
+            });
+          }
+          if (evt?.type === 'parsing' && evt?.status === 'completed') {
+            // Refresh document with parsed data
+            if (evt?.document_id) {
+              api.getDocumentWithParsedData(evt.document_id).then(res => {
+                if (res.ok && res.data) {
+                  setDocuments(prev => prev.map(doc => 
+                    doc.id === evt.document_id 
+                      ? { ...doc, parser_status: res.data!.parser_status, parser_confidence: res.data!.parser_confidence, parsed_metadata: res.data!.parsed_metadata }
+                      : doc
+                  ));
+                }
+              });
+            }
           }
         } catch {}
       };
     } catch {}
+    
     return () => { cancelled = true; if (es) es.close(); };
   }, []);
   const getStatusBadge = (status: string) => {
@@ -178,6 +241,44 @@ export default function EvidenceLocker() {
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
           <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-300 space-y-8">
         
+        {/* Evidence Stats */}
+        {evidenceStatus && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <StatsCard
+              title="Total Documents"
+              value={evidenceStatus.documentsCount}
+              description="All evidence documents"
+            />
+            <StatsCard
+              title="Processing"
+              value={evidenceStatus.processingCount}
+              description="Documents being parsed"
+            />
+            <StatsCard
+              title="Completed"
+              value={evidenceStatus.documentsCount - evidenceStatus.processingCount}
+              description="Documents ready"
+            />
+          </div>
+        )}
+
+        {/* Gmail Connection & Ingestion */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <GmailConnectionStatus onStatusChange={setGmailConnected} />
+          <EvidenceIngestion gmailConnected={gmailConnected} onIngestionComplete={() => {
+            // Refresh documents after ingestion
+            api.getDocuments().then(res => {
+              if (res.ok && Array.isArray(res.data)) {
+                setDocuments(res.data);
+              }
+            });
+            api.getEvidenceStatus().then(res => {
+              if (res.ok && res.data) {
+                setEvidenceStatus(res.data);
+              }
+            });
+          }} />
+        </div>
 
         {/* Upload Section */}
         <Card className="bg-white/5 border-white/10 text-gray-300">
@@ -272,6 +373,7 @@ export default function EvidenceLocker() {
                     <TableHead className="text-gray-300 whitespace-nowrap cursor-pointer" onClick={() => toggleSort('invoice')}>Invoice #</TableHead>
                     <TableHead className="text-gray-300 whitespace-nowrap cursor-pointer" onClick={() => toggleSort('uploadDate')}>Upload Date</TableHead>
                     <TableHead className="text-gray-300 whitespace-nowrap cursor-pointer" onClick={() => toggleSort('status')}>Status</TableHead>
+                    <TableHead className="text-gray-300 whitespace-nowrap cursor-pointer" onClick={() => toggleSort('parser_status')}>Parsing Status</TableHead>
                     <TableHead className="text-gray-300 whitespace-nowrap cursor-pointer" onClick={() => toggleSort('parsedVia')}>Parsed Via</TableHead>
                     <TableHead className="text-gray-300 whitespace-nowrap cursor-pointer" onClick={() => toggleSort('amount')}>Amount</TableHead>
                     <TableHead className="text-gray-300 whitespace-nowrap cursor-pointer" onClick={() => toggleSort('matchedClaims')}>Matched Claims</TableHead>
@@ -301,6 +403,40 @@ export default function EvidenceLocker() {
                         {getStatusBadge(doc.status)}
                       </TableCell>
                       <TableCell className="whitespace-nowrap">
+                        {doc.parser_status && (
+                          <div className="flex items-center gap-2">
+                            {doc.parser_status === 'completed' && (
+                              <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-xs">
+                                <Check className="w-3 h-3 mr-1" />
+                                Parsed
+                              </Badge>
+                            )}
+                            {doc.parser_status === 'processing' && (
+                              <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30 text-xs">
+                                <Clock className="w-3 h-3 mr-1" />
+                                Parsing
+                              </Badge>
+                            )}
+                            {doc.parser_status === 'failed' && (
+                              <Badge className="bg-red-500/20 text-red-400 border-red-500/30 text-xs">
+                                <AlertTriangle className="w-3 h-3 mr-1" />
+                                Failed
+                              </Badge>
+                            )}
+                            {doc.parser_status === 'pending' && (
+                              <Badge className="bg-gray-500/20 text-gray-400 border-gray-500/30 text-xs">
+                                Pending
+                              </Badge>
+                            )}
+                            {doc.parser_confidence !== undefined && (
+                              <span className="text-xs text-gray-400">
+                                {(doc.parser_confidence * 100).toFixed(0)}%
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap">
                         {doc.parsedVia && <Badge variant="outline" className="text-xs capitalize border-white/20 text-gray-200">{doc.parsedVia}</Badge>}
                       </TableCell>
                       <TableCell className="whitespace-nowrap">{typeof doc.amount === 'number' ? `$${doc.amount.toFixed(2)}` : '—'}</TableCell>
@@ -321,12 +457,41 @@ export default function EvidenceLocker() {
                         <div className="flex items-center gap-2">
                           <Button variant="ghost" size="sm" asChild>
                             <Link to={`/documents/${encodeURIComponent(doc.id)}`}>
-                              <Eye className="w-4 h-4 mr-1" /> View Details
+                              <Eye className="w-4 h-4 mr-1" /> View
                             </Link>
                           </Button>
                           <Button variant="ghost" size="sm" onClick={() => downloadDoc(doc.id)}>
-                            <Download className="w-4 h-4 mr-1" /> Download
+                            <Download className="w-4 h-4 mr-1" />
                           </Button>
+                          {doc.parser_status && doc.parser_status !== 'completed' && doc.parser_status !== 'processing' && (
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              onClick={async () => {
+                                try {
+                                  const res = await api.triggerDocumentParse(doc.id);
+                                  if (res.ok) {
+                                    toast({ title: 'Parsing Started', description: 'Document parsing has been triggered.' });
+                                    // Refresh document status
+                                    const parsedRes = await api.getDocumentWithParsedData(doc.id);
+                                    if (parsedRes.ok && parsedRes.data) {
+                                      setDocuments(prev => prev.map(d => 
+                                        d.id === doc.id 
+                                          ? { ...d, parser_status: parsedRes.data!.parser_status }
+                                          : d
+                                      ));
+                                    }
+                                  } else {
+                                    toast({ title: 'Parse Failed', description: res.error || 'Failed to trigger parsing.', variant: 'destructive' });
+                                  }
+                                } catch (error) {
+                                  toast({ title: 'Parse Failed', description: 'An error occurred.', variant: 'destructive' });
+                                }
+                              }}
+                            >
+                              Parse
+                            </Button>
+                          )}
                         </div>
                       </TableCell>
                     </TableRow>)}
