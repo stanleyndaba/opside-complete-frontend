@@ -178,17 +178,44 @@ export default function EvidenceLocker() {
     try {
       setLoading(true);
       const form = new FormData();
-      for (const f of files) form.append('files', f);
-      const res = await fetch(api.buildApiUrl('/api/documents/upload'), { 
+      // API expects 'file' for single file, 'files' for multiple
+      if (files.length === 1) {
+        form.append('file', files[0]);
+      } else {
+        for (const f of files) {
+          form.append('files', f);
+        }
+      }
+      
+      const uploadUrl = api.buildApiUrl('/api/documents/upload');
+      console.log('[Upload] Uploading to:', uploadUrl);
+      console.log('[Upload] Files:', files.map(f => ({ name: f.name, size: f.size, type: f.type })));
+      
+      const res = await fetch(uploadUrl, { 
         method: 'POST', 
-        credentials: 'include', 
-        body: form as any 
-      } as any);
+        credentials: 'include',
+        headers: {
+          // Don't set Content-Type header - browser will set it with boundary for FormData
+        },
+        body: form
+      });
+      
+      console.log('[Upload] Response status:', res.status, res.statusText);
       
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({ message: 'Upload failed' }));
-        throw new Error(errorData.message || 'Upload failed');
+        const errorText = await res.text();
+        console.error('[Upload] Error response:', errorText);
+        let errorData;
+        try {
+          errorData = JSON.parse(errorText);
+        } catch {
+          errorData = { message: errorText || `Upload failed with status ${res.status}` };
+        }
+        throw new Error(errorData.message || errorData.error || `Upload failed: ${res.status} ${res.statusText}`);
       }
+      
+      const responseData = await res.json().catch(() => null);
+      console.log('[Upload] Success response:', responseData);
       
       // Show success toast
       toast({ 
@@ -304,8 +331,7 @@ export default function EvidenceLocker() {
       <div className="relative -m-4 lg:-m-6">
         <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
-          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-300 space-y-8">
-        {/* Evidence Stats */}
+          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-300">
         {evidenceStatus && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <StatsCard
@@ -325,11 +351,9 @@ export default function EvidenceLocker() {
             />
           </div>
         )}
-        {/* Gmail Connection & Ingestion */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <GmailConnectionStatus onStatusChange={setGmailConnected} />
           <EvidenceIngestion gmailConnected={gmailConnected} onIngestionComplete={() => {
-            // Refresh documents after ingestion
             api.getDocuments().then(res => {
               if (res.ok && Array.isArray(res.data)) {
                 setDocuments(res.data);
@@ -342,7 +366,6 @@ export default function EvidenceLocker() {
             });
           }} />
         </div>
-        {/* Upload Section */}
         <Card className="bg-white/5 border-white/10 text-gray-300">
           <CardHeader>
             <CardTitle>Upload Evidence Documents</CardTitle>
@@ -383,17 +406,44 @@ export default function EvidenceLocker() {
                   try {
                     setLoading(true);
                     const form = new FormData();
-                    for (const f of files) form.append('files', f);
-                    const res = await fetch(api.buildApiUrl('/api/documents/upload'), { 
+                    // API expects 'file' for single file, 'files' for multiple
+                    if (files.length === 1) {
+                      form.append('file', files[0]);
+                    } else {
+                      for (const f of files) {
+                        form.append('files', f);
+                      }
+                    }
+                    
+                    const uploadUrl = api.buildApiUrl('/api/documents/upload');
+                    console.log('[Upload] Uploading to:', uploadUrl);
+                    console.log('[Upload] Files:', files.map(f => ({ name: f.name, size: f.size, type: f.type })));
+                    
+                    const res = await fetch(uploadUrl, { 
                       method: 'POST', 
-                      credentials: 'include', 
-                      body: form as any 
-                    } as any);
+                      credentials: 'include',
+                      headers: {
+                        // Don't set Content-Type header - browser will set it with boundary for FormData
+                      },
+                      body: form
+                    });
+                    
+                    console.log('[Upload] Response status:', res.status, res.statusText);
                     
                     if (!res.ok) {
-                      const errorData = await res.json().catch(() => ({ message: 'Upload failed' }));
-                      throw new Error(errorData.message || 'Upload failed');
+                      const errorText = await res.text();
+                      console.error('[Upload] Error response:', errorText);
+                      let errorData;
+                      try {
+                        errorData = JSON.parse(errorText);
+                      } catch {
+                        errorData = { message: errorText || `Upload failed with status ${res.status}` };
+                      }
+                      throw new Error(errorData.message || errorData.error || `Upload failed: ${res.status} ${res.statusText}`);
                     }
+                    
+                    const responseData = await res.json().catch(() => null);
+                    console.log('[Upload] Success response:', responseData);
                     
                     // Show success toast
                     toast({ 
@@ -455,7 +505,6 @@ export default function EvidenceLocker() {
             </div>
           </CardContent>
         </Card>
-        {/* Document List */}
         <Card className="bg-white/5 border-white/10 text-gray-300">
           <CardHeader>
             <div className="flex items-center justify-between">
