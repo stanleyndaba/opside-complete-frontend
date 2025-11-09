@@ -301,21 +301,60 @@ export default function IntegrationsHub() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
-                {(['gmail','outlook','gdrive','dropbox'] as const).map((p) => (
-                  <div key={p} className="flex flex-col gap-2 rounded border border-white/10 bg-white/5 p-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-sm font-medium">
-                        {p === 'gmail' && <img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 object-contain" />}
-                        {p === 'outlook' && <img src="/outlookicon.webp" alt="Outlook" className="h-4 w-4 object-contain" />}
-                        {p === 'gdrive' && <img src="/gd.png" alt="Google Drive" className="h-4 w-4 object-contain" />}
-                        {p === 'dropbox' && <img src="/db.png" alt="Dropbox" className="h-4 w-4 object-contain" />}
-                        <span className="capitalize">{p === 'gdrive' ? 'Google Drive' : p}</span>
+                {(['gmail','outlook','gdrive','dropbox'] as const).map((p) => {
+                  // Helper function to check if provider is connected - handles multiple possible response formats
+                  const isConnected = () => {
+                    // Check providerIngest first (preferred format)
+                    if (status?.providerIngest?.[p]?.connected === true) return true;
+                    // Check with capitalized key (in case API returns 'Gmail' instead of 'gmail')
+                    const capitalized = p.charAt(0).toUpperCase() + p.slice(1);
+                    if (status?.providerIngest?.[capitalized]?.connected === true) return true;
+                    // Check providers field (alternative format)
+                    if (status?.providers?.[p] === true) return true;
+                    if (status?.providers?.[capitalized] === true) return true;
+                    // Check top-level provider_connected fields (e.g., gmail_connected, outlook_connected)
+                    const providerConnectedKey = `${p}_connected` as keyof typeof status;
+                    if (status && (status as any)[providerConnectedKey] === true) return true;
+                    // Check if providerIngest exists but connected is not explicitly false
+                    const providerData = status?.providerIngest?.[p] || status?.providerIngest?.[capitalized];
+                    if (providerData && providerData.connected !== false && !providerData.error) {
+                      // If there's data but no explicit connected field, assume connected if no error
+                      return true;
+                    }
+                    // Check if providerIngest entry exists at all (if it exists, likely connected)
+                    if (status?.providerIngest?.[p] || status?.providerIngest?.[capitalized]) {
+                      // If there's an entry and no error, assume connected
+                      const data = status?.providerIngest?.[p] || status?.providerIngest?.[capitalized];
+                      if (data && !data.error) return true;
+                    }
+                    return false;
+                  };
+                  
+                  const hasError = () => {
+                    return status?.providerIngest?.[p]?.error || status?.providerIngest?.[p.charAt(0).toUpperCase() + p.slice(1)]?.error;
+                  };
+                  
+                  const getLastIngest = () => {
+                    return status?.providerIngest?.[p]?.lastIngest || status?.providerIngest?.[p.charAt(0).toUpperCase() + p.slice(1)]?.lastIngest || '—';
+                  };
+                  
+                  const connected = isConnected();
+                  
+                  return (
+                    <div key={p} className="flex flex-col gap-2 rounded border border-white/10 bg-white/5 p-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-sm font-medium">
+                          {p === 'gmail' && <img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 object-contain" />}
+                          {p === 'outlook' && <img src="/outlookicon.webp" alt="Outlook" className="h-4 w-4 object-contain" />}
+                          {p === 'gdrive' && <img src="/gd.png" alt="Google Drive" className="h-4 w-4 object-contain" />}
+                          {p === 'dropbox' && <img src="/db.png" alt="Dropbox" className="h-4 w-4 object-contain" />}
+                          <span className="capitalize">{p === 'gdrive' ? 'Google Drive' : p}</span>
+                        </div>
+                        <Badge variant="outline" className={cn('text-xs', connected ? 'border-emerald-500 text-emerald-500 font-semibold' : hasError() ? 'border-red-300 text-red-300' : 'border-gray-400/50 text-gray-400')}>
+                          {connected ? 'Connected' : hasError() ? 'Error' : 'Not connected'}
+                        </Badge>
                       </div>
-                      <Badge variant="outline" className={cn('text-xs', status?.providerIngest?.[p]?.connected ? 'border-emerald-500 text-emerald-500 font-semibold' : status?.providerIngest?.[p]?.error ? 'border-red-300 text-red-300' : 'border-gray-400/50 text-gray-400')}>
-                        {status?.providerIngest?.[p]?.connected ? 'Connected' : status?.providerIngest?.[p]?.error ? 'Error' : 'Not connected'}
-                      </Badge>
-                    </div>
-                    <div className="text-xs text-gray-400">Last ingest: {status?.providerIngest?.[p]?.lastIngest || '—'}</div>
+                      <div className="text-xs text-gray-400">Last ingest: {getLastIngest()}</div>
                     <div className="flex gap-2">
                       <Button 
                         size="sm" 
@@ -410,11 +449,15 @@ export default function IntegrationsHub() {
                         )}
                       </Button>
                     </div>
-                    {Array.isArray(status?.providerIngest?.[p]?.scopes) && status!.providerIngest![p]!.scopes!.length > 0 && (
-                      <div className="text-[11px] text-gray-400">Scopes: {status!.providerIngest![p]!.scopes!.join(', ')}</div>
-                    )}
+                    {(() => {
+                      const providerData = status?.providerIngest?.[p] || status?.providerIngest?.[p.charAt(0).toUpperCase() + p.slice(1)];
+                      return Array.isArray(providerData?.scopes) && providerData.scopes.length > 0 ? (
+                        <div className="text-[11px] text-gray-400">Scopes: {providerData.scopes.join(', ')}</div>
+                      ) : null;
+                    })()}
                   </div>
-                ))}
+                  );
+                })}
               </div>
               <div className="flex flex-wrap items-center gap-3 text-sm text-gray-400">
                 <span>Auto‑collect</span>

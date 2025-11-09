@@ -28,14 +28,64 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
   const fetchGmailStatus = async () => {
     try {
       setLoading(true);
-      const res = await api.getGmailStatus();
-      if (res.ok && res.data) {
-        setStatus(res.data);
-        onStatusChange?.(res.data.connected);
-      } else {
-        setStatus({ connected: false });
-        onStatusChange?.(false);
-      }
+      
+      // Try getGmailStatus first (specific endpoint)
+      let gmailRes = await api.getGmailStatus();
+      
+      // Also check getIntegrationsStatus as fallback (more comprehensive)
+      const integrationsRes = await api.getIntegrationsStatus();
+      
+      // Helper function to determine if Gmail is connected - handles multiple response formats
+      const isGmailConnected = (): boolean => {
+        // Check specific Gmail status endpoint first
+        if (gmailRes?.ok && gmailRes.data?.connected === true) return true;
+        
+        // Check integrations status providerIngest
+        if (integrationsRes?.ok && integrationsRes.data) {
+          const data = integrationsRes.data;
+          // Check providerIngest with lowercase
+          if (data.providerIngest?.['gmail']?.connected === true) return true;
+          // Check providerIngest with capitalized
+          if (data.providerIngest?.['Gmail']?.connected === true) return true;
+          // Check top-level gmail_connected field
+          if ((data as any).gmail_connected === true) return true;
+          // Check if providerIngest entry exists without error
+          const providerData = data.providerIngest?.['gmail'] || data.providerIngest?.['Gmail'];
+          if (providerData && !providerData.error) {
+            // If there's data and no error, assume connected
+            return true;
+          }
+        }
+        
+        return false;
+      };
+      
+      const connected = isGmailConnected();
+      
+      // Get email from either endpoint
+      const email = gmailRes?.ok && gmailRes.data?.email 
+        ? gmailRes.data.email 
+        : integrationsRes?.ok && integrationsRes.data?.providerIngest?.['gmail']?.email
+        ? integrationsRes.data.providerIngest['gmail'].email
+        : integrationsRes?.ok && integrationsRes.data?.providerIngest?.['Gmail']?.email
+        ? integrationsRes.data.providerIngest['Gmail'].email
+        : undefined;
+      
+      // Get lastSync from either endpoint
+      const lastSync = gmailRes?.ok && gmailRes.data?.lastSync
+        ? gmailRes.data.lastSync
+        : integrationsRes?.ok && integrationsRes.data?.providerIngest?.['gmail']?.lastIngest
+        ? integrationsRes.data.providerIngest['gmail'].lastIngest
+        : integrationsRes?.ok && integrationsRes.data?.providerIngest?.['Gmail']?.lastIngest
+        ? integrationsRes.data.providerIngest['Gmail'].lastIngest
+        : undefined;
+      
+      setStatus({
+        connected,
+        email,
+        lastSync,
+      });
+      onStatusChange?.(connected);
     } catch (error) {
       console.error('Failed to fetch Gmail status:', error);
       setStatus({ connected: false });
@@ -108,7 +158,7 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
           <div className="flex items-center gap-3">
             {status?.connected ? (
               <>
-                <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
+                <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500 font-semibold">
                   <CheckCircle2 className="w-3 h-3 mr-1" />
                   Connected
                 </Badge>
@@ -117,7 +167,7 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
                 )}
               </>
             ) : (
-              <Badge className="bg-gray-500/20 text-gray-400 border-gray-500/30">
+              <Badge className="bg-gray-500/20 text-gray-400 border-gray-400/50">
                 <XCircle className="w-3 h-3 mr-1" />
                 Not Connected
               </Badge>
