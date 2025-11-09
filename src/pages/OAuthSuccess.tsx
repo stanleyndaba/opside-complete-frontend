@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { CheckCircle, AlertTriangle, Shield, ArrowRight, RefreshCw, Power, Mail, Cloud } from 'lucide-react';
 import { api } from '@/lib/api';
+import { useToast } from '@/components/ui/use-toast';
 
 const SCOPE_COPY: Record<string, { label: string; why: string }> = {
   'orders.read': {
@@ -34,6 +35,7 @@ const SCOPE_COPY: Record<string, { label: string; why: string }> = {
 export default function OAuthSuccess() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [disconnectOpen, setDisconnectOpen] = useState(false);
   const [connectEvidenceOpen, setConnectEvidenceOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -196,44 +198,92 @@ export default function OAuthSuccess() {
           <div className="grid grid-cols-2 gap-3 pt-2">
             <Button className="w-full bg-red-600/90 hover:bg-red-600 text-white border border-white/10" onClick={async () => {
               try {
-                const r = await api.post(`/api/v1/integrations/gmail/connect`);
-                const url = (r as any)?.data?.auth_url as string | undefined;
-                window.location.href = url || '/auth/gmail-sandbox';
-              } catch {
-                window.location.href = '/auth/gmail-sandbox';
+                const r = await api.connectDocs('gmail');
+                if (r.ok && r.data?.auth_url) {
+                  window.location.href = r.data.auth_url;
+                } else {
+                  toast({
+                    title: 'Connection Failed',
+                    description: r.error || 'Failed to initiate Gmail connection. Please try again.',
+                    variant: 'destructive',
+                  });
+                }
+              } catch (error) {
+                console.error('Failed to connect Gmail:', error);
+                toast({
+                  title: 'Connection Failed',
+                  description: 'An error occurred while connecting Gmail. Please try again.',
+                  variant: 'destructive',
+                });
               }
             }}>
               <img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 mr-2 object-contain" /> Gmail
             </Button>
             <Button className="w-full bg-blue-600/90 hover:bg-blue-600 text-white border border-white/10" onClick={async () => {
               try {
-                const r = await api.post(`/api/v1/integrations/outlook/connect`);
-                const url = (r as any)?.data?.auth_url as string | undefined;
-                window.location.href = url || '/auth/outlook-sandbox';
-              } catch {
-                window.location.href = '/auth/outlook-sandbox';
+                const r = await api.connectDocs('outlook');
+                if (r.ok && r.data?.auth_url) {
+                  window.location.href = r.data.auth_url;
+                } else {
+                  toast({
+                    title: 'Connection Failed',
+                    description: r.error || 'Failed to initiate Outlook connection. Please try again.',
+                    variant: 'destructive',
+                  });
+                }
+              } catch (error) {
+                console.error('Failed to connect Outlook:', error);
+                toast({
+                  title: 'Connection Failed',
+                  description: 'An error occurred while connecting Outlook. Please try again.',
+                  variant: 'destructive',
+                });
               }
             }}>
               <img src="/outlookicon.webp" alt="Outlook" className="h-4 w-4 mr-2 object-contain" /> Outlook
             </Button>
             <Button className="w-full bg-emerald-600/90 hover:bg-emerald-600 text-white border border-white/10" onClick={async () => {
               try {
-                const r = await api.post(`/api/v1/integrations/gdrive/connect`);
-                const url = (r as any)?.data?.auth_url as string | undefined;
-                window.location.href = url || '/auth/gdrive-sandbox';
-              } catch {
-                window.location.href = '/auth/gdrive-sandbox';
+                const r = await api.connectDocs('gdrive');
+                if (r.ok && r.data?.auth_url) {
+                  window.location.href = r.data.auth_url;
+                } else {
+                  toast({
+                    title: 'Connection Failed',
+                    description: r.error || 'Failed to initiate Google Drive connection. Please try again.',
+                    variant: 'destructive',
+                  });
+                }
+              } catch (error) {
+                console.error('Failed to connect Google Drive:', error);
+                toast({
+                  title: 'Connection Failed',
+                  description: 'An error occurred while connecting Google Drive. Please try again.',
+                  variant: 'destructive',
+                });
               }
             }}>
               <img src="/gd.png" alt="Google Drive" className="h-4 w-4 mr-2 object-contain" /> Google Drive
             </Button>
             <Button className="w-full bg-sky-600/90 hover:bg-sky-600 text-white border border-white/10" onClick={async () => {
               try {
-                const r = await api.post(`/api/v1/integrations/dropbox/connect`);
-                const url = (r as any)?.data?.auth_url as string | undefined;
-                window.location.href = url || '/auth/dropbox-sandbox';
-              } catch {
-                window.location.href = '/auth/dropbox-sandbox';
+                const r = await api.connectDocs('dropbox');
+                if (r.ok && r.data?.auth_url) {
+                  window.location.href = r.data.auth_url;
+                } else {
+                  toast({
+                    title: 'Connection Failed',
+                    description: r.error || 'Failed to initiate Dropbox connection. Please try again.',
+                    variant: 'destructive',
+                  });
+                }
+              } catch (error) {
+                console.error('Failed to connect Dropbox:', error);
+                toast({
+                  title: 'Connection Failed',
+                  description: 'An error occurred while connecting Dropbox. Please try again.',
+                  variant: 'destructive',
+                });
               }
             }}>
               <img src="/db.png" alt="Dropbox" className="h-4 w-4 mr-2 object-contain" /> Dropbox

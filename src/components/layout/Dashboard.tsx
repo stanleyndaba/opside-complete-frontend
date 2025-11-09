@@ -746,44 +746,92 @@ export function Dashboard() {
           <div className="grid grid-cols-2 gap-3 pt-2">
               <Button className="w-full bg-red-600 hover:bg-red-500 text-white border border-transparent shadow-sm" onClick={async () => {
               try {
-                const r = await api.post(`/api/v1/integrations/gmail/connect`);
-                const url = (r as any)?.data?.auth_url as string | undefined;
-                window.location.href = url || '/auth/gmail-sandbox';
-              } catch {
-                window.location.href = '/auth/gmail-sandbox';
+                const r = await api.connectDocs('gmail');
+                if (r.ok && r.data?.auth_url) {
+                  window.location.href = r.data.auth_url;
+                } else {
+                  toast({
+                    title: 'Connection Failed',
+                    description: r.error || 'Failed to initiate Gmail connection. Please try again.',
+                    variant: 'destructive',
+                  });
+                }
+              } catch (error) {
+                console.error('Failed to connect Gmail:', error);
+                toast({
+                  title: 'Connection Failed',
+                  description: 'An error occurred while connecting Gmail. Please try again.',
+                  variant: 'destructive',
+                });
               }
             }}>
               <img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 mr-2 object-contain" /> Gmail
             </Button>
               <Button className="w-full bg-blue-600 hover:bg-blue-500 text-white border border-transparent shadow-sm" onClick={async () => {
               try {
-                const r = await api.post(`/api/v1/integrations/outlook/connect`);
-                const url = (r as any)?.data?.auth_url as string | undefined;
-                window.location.href = url || '/auth/outlook-sandbox';
-              } catch {
-                window.location.href = '/auth/outlook-sandbox';
+                const r = await api.connectDocs('outlook');
+                if (r.ok && r.data?.auth_url) {
+                  window.location.href = r.data.auth_url;
+                } else {
+                  toast({
+                    title: 'Connection Failed',
+                    description: r.error || 'Failed to initiate Outlook connection. Please try again.',
+                    variant: 'destructive',
+                  });
+                }
+              } catch (error) {
+                console.error('Failed to connect Outlook:', error);
+                toast({
+                  title: 'Connection Failed',
+                  description: 'An error occurred while connecting Outlook. Please try again.',
+                  variant: 'destructive',
+                });
               }
             }}>
               <img src="/outlookicon.webp" alt="Outlook" className="h-4 w-4 mr-2 object-contain" /> Outlook
             </Button>
               <Button className="w-full bg-emerald-600 hover:bg-emerald-500 text-white border border-transparent shadow-sm" onClick={async () => {
               try {
-                const r = await api.post(`/api/v1/integrations/gdrive/connect`);
-                const url = (r as any)?.data?.auth_url as string | undefined;
-                window.location.href = url || '/auth/gdrive-sandbox';
-              } catch {
-                window.location.href = '/auth/gdrive-sandbox';
+                const r = await api.connectDocs('gdrive');
+                if (r.ok && r.data?.auth_url) {
+                  window.location.href = r.data.auth_url;
+                } else {
+                  toast({
+                    title: 'Connection Failed',
+                    description: r.error || 'Failed to initiate Google Drive connection. Please try again.',
+                    variant: 'destructive',
+                  });
+                }
+              } catch (error) {
+                console.error('Failed to connect Google Drive:', error);
+                toast({
+                  title: 'Connection Failed',
+                  description: 'An error occurred while connecting Google Drive. Please try again.',
+                  variant: 'destructive',
+                });
               }
             }}>
               <img src="/gd.png" alt="Google Drive" className="h-4 w-4 mr-2 object-contain" /> Google Drive
             </Button>
               <Button className="w-full bg-sky-600 hover:bg-sky-500 text-white border border-transparent shadow-sm" onClick={async () => {
               try {
-                const r = await api.post(`/api/v1/integrations/dropbox/connect`);
-                const url = (r as any)?.data?.auth_url as string | undefined;
-                window.location.href = url || '/auth/dropbox-sandbox';
-              } catch {
-                window.location.href = '/auth/dropbox-sandbox';
+                const r = await api.connectDocs('dropbox');
+                if (r.ok && r.data?.auth_url) {
+                  window.location.href = r.data.auth_url;
+                } else {
+                  toast({
+                    title: 'Connection Failed',
+                    description: r.error || 'Failed to initiate Dropbox connection. Please try again.',
+                    variant: 'destructive',
+                  });
+                }
+              } catch (error) {
+                console.error('Failed to connect Dropbox:', error);
+                toast({
+                  title: 'Connection Failed',
+                  description: 'An error occurred while connecting Dropbox. Please try again.',
+                  variant: 'destructive',
+                });
               }
             }}>
               <img src="/db.png" alt="Dropbox" className="h-4 w-4 mr-2 object-contain" /> Dropbox
