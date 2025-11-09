@@ -31,6 +31,12 @@ export default function IntegrationsHub() {
   const [showRequestForm, setShowRequestForm] = useState(false);
   const [showProviderDialog, setShowProviderDialog] = useState(false);
   const [providerLoading, setProviderLoading] = useState<string | null>(null);
+  const [disconnectingProvider, setDisconnectingProvider] = useState<string | null>(null);
+  const [ingestingGmail, setIngestingGmail] = useState(false);
+  const [ingestingAll, setIngestingAll] = useState(false);
+  const [savingFilters, setSavingFilters] = useState(false);
+  const [updatingAutoCollect, setUpdatingAutoCollect] = useState(false);
+  const [updatingSchedule, setUpdatingSchedule] = useState(false);
   const [showManualModal, setShowManualModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [waitlistOpen, setWaitlistOpen] = useState(false);
@@ -56,10 +62,29 @@ export default function IntegrationsHub() {
         try {
           const evt = JSON.parse(e.data);
           if (evt?.type === 'evidence' && evt?.status) {
-            toast({ title: evt.status === 'completed' ? 'Ingestion complete' : 'Ingestion update', description: evt.message || 'Documents updated.' });
+            if (evt.status === 'completed') {
+              toast({ 
+                title: 'Ingestion Complete', 
+                description: evt.message || 'Evidence ingestion has completed. Documents are available in Evidence Locker.' 
+              });
+              // Refresh status to update lastIngest and provider status
+              api.getIntegrationsStatus().then(res => {
+                if (res.ok && res.data) {
+                  setStatus(res.data);
+                }
+              });
+            } else {
+              toast({ 
+                title: 'Ingestion Update', 
+                description: evt.message || 'Evidence ingestion is in progress...' 
+              });
+            }
           }
           if (evt?.type === 'claim' && evt?.status === 'completed' && evt?.matchedCount) {
-            toast({ title: 'New matches found', description: `${evt.matchedCount} documents matched to claims.` });
+            toast({ 
+              title: 'New Matches Found', 
+              description: `${evt.matchedCount} documents matched to claims.` 
+            });
           }
         } catch {}
       };
@@ -222,8 +247,98 @@ export default function IntegrationsHub() {
                     </div>
                     <div className="text-xs text-gray-400">Last ingest: {status?.providerIngest?.[p]?.lastIngest || '—'}</div>
                     <div className="flex gap-2">
-                      <Button size="sm" className={cn(p==='gmail'?'bg-red-600 hover:bg-red-700': p==='outlook'?'bg-blue-600 hover:bg-blue-700': p==='gdrive'?'bg-emerald-600 hover:bg-emerald-700':'bg-sky-600 hover:bg-sky-700')} onClick={() => { toast({ title: 'Reconnect', description: `Redirecting to ${p}…` }); navigate(`/integrations/reconnect/${p}`); }} disabled={providerLoading!==null}>{providerLoading===p?'Connecting…':'Reconnect'}</Button>
-                        <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={async () => { const r = await api.disconnectIntegration(p, true); if (r.ok){ toast({ title: 'Disconnected', description: `${p} integration disconnected.` }); } else { toast({ title: 'Disconnect failed', description: r.error || 'Please try again.', variant: 'destructive' }); } const s = await api.getIntegrationsStatus(); if (s.ok) setStatus(s.data); }}>Disconnect</Button>
+                      <Button 
+                        size="sm" 
+                        className={cn(p==='gmail'?'bg-red-600 hover:bg-red-700': p==='outlook'?'bg-blue-600 hover:bg-blue-700': p==='gdrive'?'bg-emerald-600 hover:bg-emerald-700':'bg-sky-600 hover:bg-sky-700')} 
+                        onClick={async () => {
+                          try {
+                            setProviderLoading(p);
+                            const r = await api.connectDocs(p);
+                            if (r.ok && r.data?.auth_url) {
+                              toast({
+                                title: 'Connecting...',
+                                description: `Redirecting to ${p} authentication...`,
+                              });
+                              window.location.href = r.data.auth_url;
+                            } else {
+                              toast({
+                                title: 'Connection Failed',
+                                description: r.error || `Failed to initiate ${p} connection. Please try again.`,
+                                variant: 'destructive',
+                              });
+                            }
+                          } catch (error) {
+                            console.error(`Failed to connect ${p}:`, error);
+                            toast({
+                              title: 'Connection Failed',
+                              description: `An error occurred while connecting ${p}. Please try again.`,
+                              variant: 'destructive',
+                            });
+                          } finally {
+                            setProviderLoading(null);
+                          }
+                        }}
+                        disabled={providerLoading !== null || disconnectingProvider === p}
+                      >
+                        {providerLoading === p ? (
+                          <>
+                            <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
+                            Connecting…
+                          </>
+                        ) : (
+                          'Reconnect'
+                        )}
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" 
+                        onClick={async () => {
+                          if (!confirm(`Are you sure you want to disconnect ${p}? This will stop automatic evidence collection from this source.`)) {
+                            return;
+                          }
+                          try {
+                            setDisconnectingProvider(p);
+                            const r = await api.disconnectIntegration(p, true);
+                            if (r.ok) {
+                              toast({
+                                title: 'Disconnected',
+                                description: `${p === 'gdrive' ? 'Google Drive' : p} integration has been disconnected successfully.`,
+                              });
+                              // Refresh status
+                              const s = await api.getIntegrationsStatus();
+                              if (s.ok && s.data) {
+                                setStatus(s.data);
+                              }
+                            } else {
+                              toast({
+                                title: 'Disconnect Failed',
+                                description: r.error || 'Failed to disconnect. Please try again.',
+                                variant: 'destructive',
+                              });
+                            }
+                          } catch (error) {
+                            console.error(`Failed to disconnect ${p}:`, error);
+                            toast({
+                              title: 'Disconnect Failed',
+                              description: 'An error occurred while disconnecting. Please try again.',
+                              variant: 'destructive',
+                            });
+                          } finally {
+                            setDisconnectingProvider(null);
+                          }
+                        }}
+                        disabled={providerLoading === p || disconnectingProvider === p}
+                      >
+                        {disconnectingProvider === p ? (
+                          <>
+                            <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
+                            Disconnecting…
+                          </>
+                        ) : (
+                          'Disconnect'
+                        )}
+                      </Button>
                     </div>
                     {Array.isArray(status?.providerIngest?.[p]?.scopes) && status!.providerIngest![p]!.scopes!.length > 0 && (
                       <div className="text-[11px] text-gray-400">Scopes: {status!.providerIngest![p]!.scopes!.join(', ')}</div>
@@ -233,29 +348,259 @@ export default function IntegrationsHub() {
               </div>
               <div className="flex flex-wrap items-center gap-3 text-sm text-gray-400">
                 <span>Auto‑collect</span>
-                <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={async () => { const next = !autoCollect; const r = await api.setEvidenceAutoCollect(next); if (r.ok){ setAutoCollect(next); toast({ title: 'Auto‑collect updated', description: next ? 'Enabled' : 'Disabled' }); } else { toast({ title: 'Update failed', description: r.error || 'Try again.', variant: 'destructive' }); } }}>
-                  {autoCollect ? 'Enabled' : 'Disabled'}
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" 
+                  onClick={async () => {
+                    try {
+                      setUpdatingAutoCollect(true);
+                      const next = !autoCollect;
+                      const r = await api.setEvidenceAutoCollect(next);
+                      if (r.ok) {
+                        setAutoCollect(next);
+                        toast({
+                          title: 'Auto‑collect Updated',
+                          description: next ? 'Auto-collection is now enabled.' : 'Auto-collection is now disabled.',
+                        });
+                      } else {
+                        toast({
+                          title: 'Update Failed',
+                          description: r.error || 'Failed to update auto-collect setting. Please try again.',
+                          variant: 'destructive',
+                        });
+                      }
+                    } catch (error) {
+                      console.error('Failed to update auto-collect:', error);
+                      toast({
+                        title: 'Update Failed',
+                        description: 'An error occurred. Please try again.',
+                        variant: 'destructive',
+                      });
+                    } finally {
+                      setUpdatingAutoCollect(false);
+                    }
+                  }}
+                  disabled={updatingAutoCollect}
+                >
+                  {updatingAutoCollect ? (
+                    <>
+                      <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
+                      Updating…
+                    </>
+                  ) : (
+                    autoCollect ? 'Enabled' : 'Disabled'
+                  )}
                 </Button>
                 <span className="ml-2">Schedule</span>
-                <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={async () => { const next = schedule === 'daily_0200' ? 'hourly' : 'daily_0200'; const r = await api.setEvidenceSchedule(next); if (r.ok){ setSchedule(next); toast({ title: 'Schedule saved', description: next === 'hourly' ? 'Hourly ingestion' : 'Daily at 02:00 UTC' }); } else { toast({ title: 'Save failed', description: r.error || 'Try again.', variant: 'destructive' }); } }}>{schedule === 'daily_0200' ? 'Daily 02:00 UTC' : 'Hourly'}</Button>
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" 
+                  onClick={async () => {
+                    try {
+                      setUpdatingSchedule(true);
+                      const next = schedule === 'daily_0200' ? 'hourly' : 'daily_0200';
+                      const r = await api.setEvidenceSchedule(next);
+                      if (r.ok) {
+                        setSchedule(next);
+                        toast({
+                          title: 'Schedule Saved',
+                          description: next === 'hourly' ? 'Evidence will be ingested hourly.' : 'Evidence will be ingested daily at 02:00 UTC.',
+                        });
+                      } else {
+                        toast({
+                          title: 'Save Failed',
+                          description: r.error || 'Failed to update schedule. Please try again.',
+                          variant: 'destructive',
+                        });
+                      }
+                    } catch (error) {
+                      console.error('Failed to update schedule:', error);
+                      toast({
+                        title: 'Save Failed',
+                        description: 'An error occurred. Please try again.',
+                        variant: 'destructive',
+                      });
+                    } finally {
+                      setUpdatingSchedule(false);
+                    }
+                  }}
+                  disabled={updatingSchedule}
+                >
+                  {updatingSchedule ? (
+                    <>
+                      <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
+                      Updating…
+                    </>
+                  ) : (
+                    schedule === 'daily_0200' ? 'Daily 02:00 UTC' : 'Hourly'
+                  )}
+                </Button>
               </div>
               <div className="text-xs text-gray-400">Filters: include {filters.includeSenders.join(', ') || '—'}; file types: {filters.fileTypes.join(', ') || '—'}; folders: {filters.folders.join(', ') || '—'}</div>
               <div className="flex flex-wrap gap-2 text-xs">
-                <Input placeholder="Include senders (comma‑separated)" value={filters.includeSenders.join(', ')} onChange={(e) => setFilters(f => ({ ...f, includeSenders: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))} className="w-full md:w-64 border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" />
-                <Input placeholder="Folders (comma‑separated)" value={filters.folders.join(', ')} onChange={(e) => setFilters(f => ({ ...f, folders: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))} className="w-full md:w-64 border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" />
-                <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={async () => { const r = await api.setEvidenceFilters(filters); if (r.ok){ toast({ title: 'Filters saved', description: 'Your ingestion filters are active.' }); } else { toast({ title: 'Save failed', description: r.error || 'Try again.', variant: 'destructive' }); } }}>Save Filters</Button>
+                <Input 
+                  placeholder="Include senders (comma‑separated)" 
+                  value={filters.includeSenders.join(', ')} 
+                  onChange={(e) => setFilters(f => ({ ...f, includeSenders: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))} 
+                  className="w-full md:w-64 border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" 
+                />
+                <Input 
+                  placeholder="File types (comma‑separated, e.g. pdf, png, jpg)" 
+                  value={filters.fileTypes.join(', ')} 
+                  onChange={(e) => setFilters(f => ({ ...f, fileTypes: e.target.value.split(',').map(s => s.trim().toLowerCase()).filter(Boolean) }))} 
+                  className="w-full md:w-64 border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" 
+                />
+                <Input 
+                  placeholder="Folders (comma‑separated)" 
+                  value={filters.folders.join(', ')} 
+                  onChange={(e) => setFilters(f => ({ ...f, folders: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))} 
+                  className="w-full md:w-64 border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" 
+                />
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" 
+                  onClick={async () => {
+                    try {
+                      setSavingFilters(true);
+                      const r = await api.setEvidenceFilters(filters);
+                      if (r.ok) {
+                        toast({
+                          title: 'Filters Saved',
+                          description: 'Your ingestion filters have been saved and are now active.',
+                        });
+                      } else {
+                        toast({
+                          title: 'Save Failed',
+                          description: r.error || 'Failed to save filters. Please try again.',
+                          variant: 'destructive',
+                        });
+                      }
+                    } catch (error) {
+                      console.error('Failed to save filters:', error);
+                      toast({
+                        title: 'Save Failed',
+                        description: 'An error occurred while saving filters. Please try again.',
+                        variant: 'destructive',
+                      });
+                    } finally {
+                      setSavingFilters(false);
+                    }
+                  }}
+                  disabled={savingFilters}
+                >
+                  {savingFilters ? (
+                    <>
+                      <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
+                      Saving…
+                    </>
+                  ) : (
+                    'Save Filters'
+                  )}
+                </Button>
               </div>
               <div className="flex items-center gap-3 text-sm text-gray-400">
                 <span>Last ingest: {status?.lastIngest || 'Just now'}</span>
-                <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={async () => { 
-                  const r = await api.ingestGmailEvidence({ autoParse: true }); 
-                  if (r.ok && r.data){ 
-                    toast({ title: 'Ingestion started', description: `Processing ${r.data.emailsProcessed} emails...` }); 
-                  } else { 
-                    toast({ title: 'Ingestion failed', description: r.error || 'Gmail may not be connected. Try again.', variant: 'destructive' }); 
-                  } 
-                }}>Ingest Gmail Now</Button>
-                <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={async () => { const r = await api.startEvidenceIngest(); if (r.ok){ toast({ title: 'Ingestion started', description: 'We will notify you when new docs arrive.' }); } else { toast({ title: 'Ingestion failed', description: r.error || 'Try again.', variant: 'destructive' }); } }}>Ingest All Sources</Button>
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" 
+                  onClick={async () => {
+                    try {
+                      setIngestingGmail(true);
+                      const r = await api.ingestGmailEvidence({ autoParse: true });
+                      if (r.ok && r.data) {
+                        toast({
+                          title: 'Ingestion Started',
+                          description: `Processing ${r.data.emailsProcessed} emails. Documents will appear in Evidence Locker when ready.`,
+                        });
+                        // Refresh status after a delay to show updated lastIngest
+                        setTimeout(async () => {
+                          const s = await api.getIntegrationsStatus();
+                          if (s.ok && s.data) {
+                            setStatus(s.data);
+                          }
+                        }, 2000);
+                      } else {
+                        toast({
+                          title: 'Ingestion Failed',
+                          description: r.error || 'Gmail may not be connected. Please connect Gmail first and try again.',
+                          variant: 'destructive',
+                        });
+                      }
+                    } catch (error) {
+                      console.error('Failed to ingest Gmail evidence:', error);
+                      toast({
+                        title: 'Ingestion Failed',
+                        description: 'An error occurred while ingesting evidence. Please try again.',
+                        variant: 'destructive',
+                      });
+                    } finally {
+                      setIngestingGmail(false);
+                    }
+                  }}
+                  disabled={ingestingGmail || ingestingAll}
+                >
+                  {ingestingGmail ? (
+                    <>
+                      <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
+                      Ingesting…
+                    </>
+                  ) : (
+                    'Ingest Gmail Now'
+                  )}
+                </Button>
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" 
+                  onClick={async () => {
+                    try {
+                      setIngestingAll(true);
+                      const r = await api.startEvidenceIngest();
+                      if (r.ok) {
+                        toast({
+                          title: 'Ingestion Started',
+                          description: 'Ingesting evidence from all connected sources. We will notify you when new documents arrive.',
+                        });
+                        // Refresh status after a delay
+                        setTimeout(async () => {
+                          const s = await api.getIntegrationsStatus();
+                          if (s.ok && s.data) {
+                            setStatus(s.data);
+                          }
+                        }, 2000);
+                      } else {
+                        toast({
+                          title: 'Ingestion Failed',
+                          description: r.error || 'Failed to start ingestion. Please try again.',
+                          variant: 'destructive',
+                        });
+                      }
+                    } catch (error) {
+                      console.error('Failed to ingest evidence:', error);
+                      toast({
+                        title: 'Ingestion Failed',
+                        description: 'An error occurred while ingesting evidence. Please try again.',
+                        variant: 'destructive',
+                      });
+                    } finally {
+                      setIngestingAll(false);
+                    }
+                  }}
+                  disabled={ingestingGmail || ingestingAll}
+                >
+                  {ingestingAll ? (
+                    <>
+                      <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
+                      Ingesting…
+                    </>
+                  ) : (
+                    'Ingest All Sources'
+                  )}
+                </Button>
                 <Button size="sm" variant="ghost" onClick={() => navigate('/evidence-locker')}>Open Evidence Locker</Button>
               </div>
             </CardContent>
