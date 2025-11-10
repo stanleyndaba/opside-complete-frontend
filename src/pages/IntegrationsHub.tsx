@@ -20,6 +20,10 @@ export default function IntegrationsHub() {
   const { toast } = useToast();
   const [lastSyncTime, setLastSyncTime] = useState('Just now');
   const [status, setStatus] = useState<{ amazon_connected: boolean; docs_connected: boolean; providers?: Record<string, boolean>; lastIngest?: string; lastSync?: string; providerIngest?: Record<string, { connected: boolean; lastIngest?: string; error?: string; scopes?: string[] }> } | null>(null);
+  
+  // Check if we're in sandbox mode
+  const env: any = (typeof import.meta !== 'undefined' ? (import.meta as any).env : undefined) || (typeof process !== 'undefined' ? (process as any).env : undefined) || {};
+  const isSandbox = String(env.VITE_SANDBOX || '') === 'true' || String(env.MODE || env.NODE_ENV || '') !== 'production';
   const [autoCollect, setAutoCollect] = useState<boolean>(true);
   const [schedule, setSchedule] = useState<string>('daily_0200');
   const [filters, setFilters] = useState<{ includeSenders: string[]; excludeSenders: string[]; fileTypes: string[]; folders: string[] }>({ includeSenders: ['invoices@'], excludeSenders: [], fileTypes: ['pdf','png'], folders: ['/Finance'] });
@@ -269,8 +273,8 @@ export default function IntegrationsHub() {
             <CardHeader>
               <CardTitle className="flex items-center justify-between text-gray-200">
                 <span className="inline-flex items-center gap-2"><Shield className="h-5 w-5 text-emerald-400" /> Amazon SP‑API</span>
-                <Badge variant="outline" className={cn('text-xs', status?.amazon_connected ? 'border-emerald-500 text-emerald-500 font-semibold' : 'border-gray-400/50 text-gray-400')}>
-                  {status?.amazon_connected ? 'Connected' : 'Not connected'}
+                <Badge variant="outline" className={cn('text-xs', (isSandbox || status?.amazon_connected) ? 'border-emerald-500 text-emerald-500 font-semibold' : 'border-gray-400/50 text-gray-400')}>
+                  {(isSandbox || status?.amazon_connected) ? 'Connected' : 'Not connected'}
                 </Badge>
               </CardTitle>
               <CardDescription className="text-gray-400">Sync inventory, fees, reimbursements, shipments and returns.</CardDescription>
@@ -302,31 +306,20 @@ export default function IntegrationsHub() {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 {(['gmail','outlook','gdrive','dropbox'] as const).map((p) => {
-                  // Helper function to check if provider is connected - handles multiple possible response formats
+                  // Helper function to check if provider is connected - only return true if explicitly connected
                   const isConnected = () => {
-                    // Check providerIngest first (preferred format)
+                    // Check providerIngest first (preferred format) - must be explicitly true
                     if (status?.providerIngest?.[p]?.connected === true) return true;
                     // Check with capitalized key (in case API returns 'Gmail' instead of 'gmail')
                     const capitalized = p.charAt(0).toUpperCase() + p.slice(1);
                     if (status?.providerIngest?.[capitalized]?.connected === true) return true;
-                    // Check providers field (alternative format)
+                    // Check providers field (alternative format) - must be explicitly true
                     if (status?.providers?.[p] === true) return true;
                     if (status?.providers?.[capitalized] === true) return true;
-                    // Check top-level provider_connected fields (e.g., gmail_connected, outlook_connected)
+                    // Check top-level provider_connected fields (e.g., gmail_connected, outlook_connected) - must be explicitly true
                     const providerConnectedKey = `${p}_connected` as keyof typeof status;
                     if (status && (status as any)[providerConnectedKey] === true) return true;
-                    // Check if providerIngest exists but connected is not explicitly false
-                    const providerData = status?.providerIngest?.[p] || status?.providerIngest?.[capitalized];
-                    if (providerData && providerData.connected !== false && !providerData.error) {
-                      // If there's data but no explicit connected field, assume connected if no error
-                      return true;
-                    }
-                    // Check if providerIngest entry exists at all (if it exists, likely connected)
-                    if (status?.providerIngest?.[p] || status?.providerIngest?.[capitalized]) {
-                      // If there's an entry and no error, assume connected
-                      const data = status?.providerIngest?.[p] || status?.providerIngest?.[capitalized];
-                      if (data && !data.error) return true;
-                    }
+                    // Only return true if explicitly connected - no assumptions
                     return false;
                   };
                   
