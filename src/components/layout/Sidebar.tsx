@@ -171,7 +171,7 @@ export function Sidebar({
             <>
                 <div className="select-none flex items-center gap-2">
                   {isDashboard ? (
-                    <span className="text-lg font-black text-gray-800 tracking-tight">CLARIO</span>
+                    <span className="text-lg font-black text-gray-800 tracking-tight">Clario</span>
                   ) : (
                     <span className="text-[11px] text-emerald-400/90 flex items-center gap-1">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
@@ -183,7 +183,7 @@ export function Sidebar({
           ) : (
             <div className="flex items-center gap-2">
               {isDashboard ? (
-                <span className="text-sm font-black text-gray-800 tracking-tight">CLARIO</span>
+                <span className="text-sm font-black text-gray-800 tracking-tight">Clario</span>
               ) : (
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" title="Connected" />
               )}
