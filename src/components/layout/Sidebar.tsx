@@ -194,11 +194,11 @@ export function Sidebar({
           <ScrollArea className="flex-1">
             <div
               className={cn(
-                "h-full flex items-center justify-center",
+                "h-full flex",
                 isCollapsed ? "px-1.5" : "px-2"
               )}
             >
-                <nav className={cn("w-full flex flex-col items-center space-y-1", isCollapsed ? "space-y-1" : "space-y-4")}>
+                <nav className={cn("w-full flex flex-col items-center pt-8 pb-4 space-y-1", isCollapsed ? "space-y-1" : "space-y-4")}>
                   <div className={cn("w-full flex flex-col", isCollapsed ? "items-center space-y-1" : "items-start space-y-1")}>
                     {primaryItems.map((item) => (
                       <NavItemComponent key={item.title} item={item} />
