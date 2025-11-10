@@ -328,15 +328,9 @@ const Index = () => {
       </header>
 
       <main className="flex-1">
-        <section className="relative container mx-auto px-6 py-24 md:py-32">
+        <section className="relative container mx-auto px-6 pt-12 md:pt-16 pb-24 md:pb-32">
           <div className="max-w-4xl mx-auto text-center space-y-6">
             {/* Trust chip removed per request */}
-            {/* Cursive Text */}
-            <div className="text-center mb-4">
-              <div className="inline-block text-lg font-semibold text-emerald-500">
-                Clario works best with your work email!
-              </div>
-            </div>
               <div className="relative inline-flex items-center gap-4 rounded-[25px] border border-emerald-100 bg-white/85 px-5 py-2 shadow-[0_12px_45px_rgba(16,185,129,0.25)] backdrop-blur supports-[backdrop-filter]:bg-white/70 mx-auto overflow-hidden">
                 <span className="pointer-events-none absolute inset-0 rounded-[25px] bg-gradient-to-r from-emerald-200/40 via-white/10 to-sky-200/40 blur-xl" aria-hidden="true" />
                 <span className="pointer-events-none absolute inset-0 rounded-[25px] border border-white/40" aria-hidden="true" />
