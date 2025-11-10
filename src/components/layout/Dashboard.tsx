@@ -407,7 +407,7 @@ export function Dashboard() {
     };
   }, [toast, navigate]);
 
-  const mainClass = isSidebarCollapsed ? 'ml-16' : 'ml-64';
+  const mainClass = isSidebarCollapsed ? 'ml-16' : 'ml-60';
 
   const computedApproved = approvedRecoveryAmount != null
     ? approvedRecoveryAmount

@@ -54,7 +54,7 @@ export function Navbar({
   const isSandbox = String(env.VITE_SANDBOX || '') === 'true' || String(env.MODE || env.NODE_ENV || '') !== 'production';
   return <header className={cn(
     "sticky top-0 z-30 transition-all duration-300",
-    sidebarCollapsed ? "ml-16" : "ml-64",
+    sidebarCollapsed ? "ml-16" : "ml-60",
     isTransparent ? "bg-transparent border-transparent backdrop-blur-0 shadow-none" : "bg-background/60 backdrop-blur-sm border-b",
     className
   )}>

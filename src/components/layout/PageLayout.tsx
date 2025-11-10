@@ -22,7 +22,7 @@ export function PageLayout({
     setIsSidebarCollapsed(prev => !prev);
   };
   const isAuthView = !!hideNavbar && !!hideSidebar;
-  const mainIndent = hideSidebar ? 'ml-0' : (isSidebarCollapsed ? 'ml-16' : 'ml-64');
+  const mainIndent = hideSidebar ? 'ml-0' : (isSidebarCollapsed ? 'ml-16' : 'ml-60');
   return <div className={`min-h-screen flex flex-col platform ${isAuthView || midnight ? 'relative bg-[#0B1220]' : ''}`}>
       {(isAuthView || midnight) && (
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
