@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { Shield, RefreshCw, Search as SearchIcon, Sparkles } from 'lucide-react';
+import { Shield, RefreshCw, Sparkles } from 'lucide-react';
 import { api } from '@/lib/api';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -43,7 +43,6 @@ export default function IntegrationsHub() {
   const [updatingAutoCollect, setUpdatingAutoCollect] = useState(false);
   const [updatingSchedule, setUpdatingSchedule] = useState(false);
   const [showManualModal, setShowManualModal] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
   const [waitlistOpen, setWaitlistOpen] = useState(false);
   const [waitlistIntegration, setWaitlistIntegration] = useState<string | null>(null);
   const [waitlistEmail, setWaitlistEmail] = useState('');
@@ -246,23 +245,6 @@ export default function IntegrationsHub() {
                 <Sparkles className="h-4 w-4 text-cyan-300" />
                 Works best with work email!
               </span>
-            </div>
-            <div className="mt-3 inline-flex items-center gap-3 rounded-md border border-white/10 bg-white/5 px-4 py-3 text-sm text-gray-200">
-              <span>Want us to auto-collect invoices & docs for you? Connect</span>
-              <div className="flex items-center gap-2">
-                <img src="/gmailicon.png" alt="Gmail" className="h-5 w-5 object-contain mix-blend-screen saturate-150 drop-shadow-[0_0_12px_rgba(6,182,212,0.35)]" />
-                <img src="/outlookicon.webp" alt="Outlook" className="h-5 w-5 object-contain mix-blend-screen saturate-150 drop-shadow-[0_0_12px_rgba(59,130,246,0.35)]" />
-                <span>Drive / Dropbox</span>
-              </div>
-            </div>
-            <div className="mt-4 relative mx-auto max-w-xl">
-              <SearchIcon className="text-muted-foreground absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
-              <Input
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search integrations (Amazon, Shopify, Gmail…)"
-                className="pl-9"
-              />
             </div>
           </div>
 

@@ -20,12 +20,12 @@ import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
 import { api } from '@/lib/api';
 
-type SettingsSection = 'profile' | 'business' | 'team' | 'billing' | 'integrations' | 'notifications' | 'security' | 'api' | 'careers';
+type SettingsSection = 'business' | 'team' | 'billing' | 'integrations' | 'notifications' | 'security' | 'api' | 'careers';
 
 const Settings = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [activeSection, setActiveSection] = useState<SettingsSection>('profile');
+  const [activeSection, setActiveSection] = useState<SettingsSection>('business');
 
   // Profile state
   const [firstName, setFirstName] = useState<string>('');
@@ -110,7 +110,6 @@ const Settings = () => {
   };
 
   const menuItems = [
-    { id: 'profile' as SettingsSection, label: 'Clario Profile', icon: User },
     { id: 'business' as SettingsSection, label: 'Business Profile', icon: Building2 },
     { id: 'billing' as SettingsSection, label: 'Billing & Value', icon: CreditCard },
     { id: 'api' as SettingsSection, label: 'API Access', icon: Key },
@@ -203,63 +202,6 @@ const Settings = () => {
 
   const renderContent = () => {
     switch (activeSection) {
-      case 'profile':
-        return (
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-200">Clario Profile</h2>
-              <p className="text-gray-400">Manage your personal account information</p>
-            </div>
-            
-            <Card className="bg-white/5 border-white/10 text-gray-300">
-              <CardHeader>
-                <CardTitle className="text-gray-200">Personal Information</CardTitle>
-                <CardDescription className="text-gray-400">Update your personal details and profile picture</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="flex items-center gap-6">
-                  <Avatar className="h-20 w-20">
-                    <AvatarImage src={avatarSrc} />
-                    <AvatarFallback className="text-lg">
-                      <User className="h-8 w-8" />
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-white" onClick={() => document.getElementById('profile-photo-input')?.click()}>
-                      <Camera className="h-4 w-4 mr-2" />
-                      Upload Photo
-                    </Button>
-                    <input id="profile-photo-input" type="file" accept="image/*" className="hidden" onChange={(e) => onUploadPhoto((e.target as HTMLInputElement).files?.[0] || undefined)} />
-                    <p className="text-sm text-gray-400 mt-1">
-                      JPG, PNG or GIF. Max size 5MB.
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="firstName">First Name</Label>
-                    <Input variant="dark" id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
-                  </div>
-                  <div>
-                    <Label htmlFor="lastName">Last Name</Label>
-                    <Input variant="dark" id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} />
-                  </div>
-                  <div className="md:col-span-2">
-                    <Label htmlFor="email">Email Address</Label>
-                    <Input variant="dark" id="email" value={email} onChange={(e) => setEmail(e.target.value)} disabled />
-                    <p className="text-sm text-gray-400 mt-1">
-                      Email is linked to your Amazon account and cannot be changed
-                    </p>
-                  </div>
-                </div>
-                
-                <Button className="bg-emerald-500 hover:bg-emerald-400 text-white" onClick={saveProfile}>Save Changes</Button>
-              </CardContent>
-            </Card>
-          </div>
-        );
-
       case 'business':
         return (
           <div className="space-y-6">
