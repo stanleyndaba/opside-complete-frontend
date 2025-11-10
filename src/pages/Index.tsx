@@ -333,15 +333,7 @@ const Index = () => {
             {/* Trust chip removed per request */}
             {/* Cursive Text */}
             <div className="text-center mb-4">
-              <div
-                className="inline-block"
-                style={{
-                  fontFamily: 'cursive, "Brush Script MT", "Lucida Handwriting", serif',
-                  fontStyle: 'italic',
-                  color: '#3F3E3F',
-                  fontSize: '1.125rem',
-                }}
-              >
+              <div className="inline-block text-lg font-semibold text-emerald-500">
                 Clario works best with your work email!
               </div>
             </div>
