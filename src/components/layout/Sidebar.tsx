@@ -194,11 +194,10 @@ export function Sidebar({
           <ScrollArea className="flex-1">
             <div
               className={cn(
-                "h-full flex",
+                "h-full flex items-center justify-center",
                 isCollapsed ? "px-1.5" : "px-2"
               )}
             >
-                <div className="flex flex-col items-center justify-center w-full py-8">
                 <nav className={cn("w-full flex flex-col items-center space-y-1", isCollapsed ? "space-y-1" : "space-y-4")}>
                   <div className={cn("w-full flex flex-col", isCollapsed ? "items-center space-y-1" : "items-start space-y-1")}>
                     {primaryItems.map((item) => (
@@ -240,8 +239,7 @@ export function Sidebar({
                   </div>
                 </nav>
             </div>
-          </div>
-        </ScrollArea>
+          </ScrollArea>
 
       {/* Profile + Status + Logout */}
       {isCollapsed ? (
