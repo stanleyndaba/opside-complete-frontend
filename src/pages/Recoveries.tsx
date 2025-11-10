@@ -784,7 +784,7 @@ export default function Recoveries() {
                   }
                 }}
               >
-                Run Detector
+                Detect Claims
               </button>
             </div>
           </CardContent>
