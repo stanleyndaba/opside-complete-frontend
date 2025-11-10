@@ -80,10 +80,11 @@ export function Navbar({
               {isDashboard && (
                 <button
                   onClick={() => setShowReferralPopup(true)}
-                  className="flex items-center justify-center h-9 w-9 rounded-md text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 transition-colors"
+                  className="flex items-center gap-2 h-9 px-3 rounded-md text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 transition-colors"
                   aria-label="Referral program"
                 >
                   <Gift className="h-5 w-5" />
+                  <span className="text-sm font-medium">Earn 100%</span>
                 </button>
               )}
             </div>
@@ -129,6 +130,15 @@ export function Navbar({
               Bring new sellers to Clario and keep 100% of their recovered funds.
             </p>
           </div>
+          <Button
+            onClick={() => {
+              // TODO: Implement invite friend functionality
+              setShowReferralPopup(false);
+            }}
+            className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-md transition-colors shadow-md hover:shadow-lg"
+          >
+            Invite Friend +
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
