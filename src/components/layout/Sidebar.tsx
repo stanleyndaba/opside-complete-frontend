@@ -194,30 +194,39 @@ export function Sidebar({
           <ScrollArea className="flex-1">
             <div
               className={cn(
-                "h-full flex justify-start",
+                "h-full flex",
                 isCollapsed ? "px-1.5" : "px-2"
               )}
             >
-                <div className="flex flex-col items-start justify-center py-8 space-y-6 w-full">
-                <nav className="w-full space-y-4">
-                  <div className="space-y-1">
+                <div className="flex flex-col items-center justify-center w-full py-8">
+                <nav className={cn("w-full flex flex-col items-center space-y-1", isCollapsed ? "space-y-1" : "space-y-4")}>
+                  <div className={cn("w-full flex flex-col", isCollapsed ? "items-center space-y-1" : "items-start space-y-1")}>
                     {primaryItems.map((item) => (
                       <NavItemComponent key={item.title} item={item} />
                     ))}
                   </div>
-                  {!isCollapsed && <div className="h-px bg-white/10" />}
-                  <div className="space-y-1">
+                  {!isCollapsed && <div className="h-px bg-white/10 w-full" />}
+                  <div className={cn("w-full flex flex-col", isCollapsed ? "items-center space-y-1" : "items-start space-y-1")}>
                     {secondaryItems.map((item) => (
                       <NavItemComponent key={item.title} item={item} />
                     ))}
                   </div>
-                  <div className="pt-2">
+                  <div className={cn("w-full", isCollapsed ? "flex justify-center" : "")}>
                     {isCollapsed ? (
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <div className="flex items-center justify-center">
-                              <NotificationBell label="Messages" forceCountStyle="sidebar" iconOverride={Mail} showLabel={false} />
+                            <div className={cn(
+                              "relative flex items-center justify-center w-10 h-10 rounded-md transition-colors",
+                              isDashboard ? "text-[#303030] hover:bg-white/10 hover:text-white" : "text-gray-400 hover:bg-white/10 hover:text-gray-100"
+                            )}>
+                              <NotificationBell 
+                                label="Messages" 
+                                forceCountStyle="sidebar" 
+                                iconOverride={Mail} 
+                                showLabel={false} 
+                                className="h-10 w-10 p-0 m-0 border-0 bg-transparent hover:bg-transparent"
+                              />
                             </div>
                           </TooltipTrigger>
                           <TooltipContent side="right" className="bg-black text-white">
