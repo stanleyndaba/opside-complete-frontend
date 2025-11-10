@@ -171,10 +171,11 @@ const Index = () => {
                   <TooltipTrigger asChild>
                     <button
                       type="button"
-                        className="inline-flex items-center justify-center text-emerald-600 transition-colors hover:text-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                        className="inline-flex items-center gap-2 text-emerald-600 transition-colors hover:text-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                       aria-label="No commission on referrals"
                     >
                       <Gift className="h-4 w-4" aria-hidden="true" />
+                      <span className="text-sm font-medium">Earn 100%</span>
                       <span className="sr-only">No commission on referrals</span>
                     </button>
                   </TooltipTrigger>
