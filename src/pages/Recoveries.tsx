@@ -668,14 +668,14 @@ export default function Recoveries() {
   };
 
   return (
-    <PageLayout title="All Recoveries">
+    <PageLayout title="Recoveries">
       <div className="relative -m-4 lg:-m-6">
         <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
           <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-300 space-y-8">
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-100 mb-2">All Recoveries</h1>
+          <h1 className="text-3xl font-bold text-gray-100 mb-2">Recoveries</h1>
           <p className="text-gray-400">Comprehensive view of all recovery claims and their current status</p>
           <div className="mt-4 flex items-center gap-2">
             <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-white" disabled={selectedIds.size === 0 || submittingBulk} onClick={async () => {
@@ -704,7 +704,7 @@ export default function Recoveries() {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="text-sm text-gray-400">Your Opportunities</div>
+                  <div className="text-sm text-gray-400">Detected Reimbursements</div>
                   {recoveredTotal != null && recoveredTotal > 0 && (
                     <Tooltip>
                       <TooltipTrigger asChild>
@@ -723,7 +723,7 @@ export default function Recoveries() {
                   )}
                 </div>
                 <div className="text-2xl md:text-3xl font-semibold text-gray-100">
-                  <span className="text-gray-100">{formatCurrency(owedSummary.totalOwed)}</span> <span className="text-gray-400 text-base font-medium">owed across {owedSummary.openCount} claims</span>
+                  <span className="text-gray-100">{formatCurrency(owedSummary.totalOwed)}</span> <span className="text-gray-400 text-base font-medium">across {owedSummary.openCount} claims</span>
                 </div>
                 {/* Amazon Recoveries Integration */}
                 {recoveredTotal != null && recoveredTotal > 0 && (
