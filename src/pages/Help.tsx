@@ -211,14 +211,14 @@ export default function Help() {
                     <div className="flex-1">
                       <h4 className="font-medium text-sm">{step.title}</h4>
                       <p className="text-xs text-gray-400 mt-1">{step.description}</p>
-                      <Badge variant="secondary" className="mt-2 text-xs bg-white/10">
+                      <Badge variant="secondary" className="mt-2 text-xs bg-white/10 text-white">
                         {step.duration}
                       </Badge>
                     </div>
                   </div>
                 ))}
                 
-                <Button className="w-full mt-4 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold">
+                <Button className="w-full mt-4 bg-emerald-500 hover:bg-emerald-400 text-white font-semibold">
                   <Video className="h-4 w-4 mr-2" />
                   Watch Video Tutorial
                 </Button>
@@ -258,7 +258,7 @@ export default function Help() {
                   </div>
                 </div>
                 
-                <Button className="w-full mt-4 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold">
+                <Button className="w-full mt-4 bg-emerald-500 hover:bg-emerald-400 text-white font-semibold">
                   <ExternalLink className="h-4 w-4 mr-2" />
                   Read Full Guide
                 </Button>
@@ -311,7 +311,7 @@ export default function Help() {
                   <div>
                     <Label htmlFor="category">Issue Category</Label>
                     <Select value={contactForm.category} onValueChange={(value) => setContactForm({ ...contactForm, category: value })}>
-                      <SelectTrigger>
+                      <SelectTrigger className="placeholder:text-black text-black">
                         <SelectValue placeholder="Select issue type" />
                       </SelectTrigger>
                       <SelectContent>
@@ -335,7 +335,7 @@ export default function Help() {
                     />
                   </div>
                   
-                  <Button type="submit" className="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-semibold">
+                  <Button type="submit" className="w-full bg-emerald-500 hover:bg-emerald-400 text-white font-semibold">
                     <Mail className="h-4 w-4 mr-2" />
                     Send Message
                   </Button>
@@ -379,7 +379,7 @@ export default function Help() {
                   </div>
                 </div>
                 
-                <Button className="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-semibold">
+                <Button className="w-full bg-emerald-500 hover:bg-emerald-400 text-white font-semibold">
                   <Calendar className="h-4 w-4 mr-2" />
                   Schedule Call
                 </Button>

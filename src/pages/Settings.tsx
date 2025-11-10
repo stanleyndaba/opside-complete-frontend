@@ -36,7 +36,7 @@ const Settings = () => {
   // Business state
   const [businessName, setBusinessName] = useState<string>('');
   const [businessAddress, setBusinessAddress] = useState<string>('');
-  const [timezone, setTimezone] = useState<string>('South Africa Standard Time (GMT+2)');
+  const [timezone, setTimezone] = useState<string>('Pacific Standard Time (PST) - San Francisco, Bay Area');
 
   // Load from backend/localStorage
   useEffect(() => {
@@ -54,7 +54,7 @@ const Settings = () => {
       if (savedBiz) {
         setBusinessName(savedBiz.businessName || '');
         setBusinessAddress(savedBiz.businessAddress || '');
-        setTimezone(savedBiz.timezone || 'South Africa Standard Time (GMT+2)');
+        setTimezone(savedBiz.timezone || 'Pacific Standard Time (PST) - San Francisco, Bay Area');
       }
     } catch {}
     (async () => {
@@ -228,10 +228,15 @@ const Settings = () => {
                 
                 <div>
                   <Label htmlFor="timezone">Timezone</Label>
-                  <select id="timezone" className="w-full px-3 py-2 border rounded-md bg-white/5 border-white/10 text-gray-100" value={timezone} onChange={(e) => setTimezone(e.target.value)}>
-                    <option>South Africa Standard Time (GMT+2)</option>
-                    <option>Eastern Standard Time (GMT-5)</option>
-                    <option>Pacific Standard Time (GMT-8)</option>
+                  <select id="timezone" className="w-full px-3 py-2 border rounded-md bg-white/5 border-white/10 text-black" value={timezone} onChange={(e) => setTimezone(e.target.value)}>
+                    <option className="text-black">Pacific Standard Time (PST) - San Francisco, Bay Area</option>
+                    <option className="text-black">Pacific Daylight Time (PDT) - San Francisco, Bay Area</option>
+                    <option className="text-black">Eastern Standard Time (EST) - New York</option>
+                    <option className="text-black">Eastern Daylight Time (EDT) - New York</option>
+                    <option className="text-black">Central Standard Time (CST) - Chicago</option>
+                    <option className="text-black">Central Daylight Time (CDT) - Chicago</option>
+                    <option className="text-black">Mountain Standard Time (MST) - Denver</option>
+                    <option className="text-black">Mountain Daylight Time (MDT) - Denver</option>
                   </select>
                 </div>
                 
