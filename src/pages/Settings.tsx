@@ -228,15 +228,15 @@ const Settings = () => {
                 
                 <div>
                   <Label htmlFor="timezone">Timezone</Label>
-                  <select id="timezone" className="w-full px-3 py-2 border rounded-md bg-white/5 border-white/10 text-black" value={timezone} onChange={(e) => setTimezone(e.target.value)}>
-                    <option className="text-black">Pacific Standard Time (PST) - San Francisco, Bay Area</option>
-                    <option className="text-black">Pacific Daylight Time (PDT) - San Francisco, Bay Area</option>
-                    <option className="text-black">Eastern Standard Time (EST) - New York</option>
-                    <option className="text-black">Eastern Daylight Time (EDT) - New York</option>
-                    <option className="text-black">Central Standard Time (CST) - Chicago</option>
-                    <option className="text-black">Central Daylight Time (CDT) - Chicago</option>
-                    <option className="text-black">Mountain Standard Time (MST) - Denver</option>
-                    <option className="text-black">Mountain Daylight Time (MDT) - Denver</option>
+                  <select id="timezone" className="w-full px-3 py-2 border rounded-md bg-white/5 border-white/10 text-gray-200 placeholder:text-gray-400" value={timezone} onChange={(e) => setTimezone(e.target.value)}>
+                    <option value="Pacific Standard Time (PST) - San Francisco, Bay Area" className="bg-[#0B1220] text-gray-200">Pacific Standard Time (PST) - San Francisco, Bay Area</option>
+                    <option value="Pacific Daylight Time (PDT) - San Francisco, Bay Area" className="bg-[#0B1220] text-gray-200">Pacific Daylight Time (PDT) - San Francisco, Bay Area</option>
+                    <option value="Eastern Standard Time (EST) - New York" className="bg-[#0B1220] text-gray-200">Eastern Standard Time (EST) - New York</option>
+                    <option value="Eastern Daylight Time (EDT) - New York" className="bg-[#0B1220] text-gray-200">Eastern Daylight Time (EDT) - New York</option>
+                    <option value="Central Standard Time (CST) - Chicago" className="bg-[#0B1220] text-gray-200">Central Standard Time (CST) - Chicago</option>
+                    <option value="Central Daylight Time (CDT) - Chicago" className="bg-[#0B1220] text-gray-200">Central Daylight Time (CDT) - Chicago</option>
+                    <option value="Mountain Standard Time (MST) - Denver" className="bg-[#0B1220] text-gray-200">Mountain Standard Time (MST) - Denver</option>
+                    <option value="Mountain Daylight Time (MDT) - Denver" className="bg-[#0B1220] text-gray-200">Mountain Daylight Time (MDT) - Denver</option>
                   </select>
                 </div>
                 
