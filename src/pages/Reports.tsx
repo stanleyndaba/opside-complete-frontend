@@ -280,16 +280,16 @@ export default function Reports() {
             <CardContent className="p-6">
               <div className="flex items-center">
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-400">Total Recovered</p>
                   <div className="relative inline-flex items-start">
-                    <span className="font-bold text-emerald-400 text-lg">{formatCurrency(keyMetrics.totalRecovered)}</span>
-                    <div className="absolute -top-0.5 left-full ml-0.5 flex items-center gap-0.5 leading-none">
+                    <p className="text-sm font-medium text-gray-400">Total Recovered</p>
+                    <div className="absolute -top-0.5 left-full ml-1.5 flex items-center gap-0.5 leading-none">
                       <TrendingDown className="h-2.5 w-2.5 text-red-500" />
                       <span className="text-[8px] text-red-500 font-medium">8%</span>
                       <TrendingUp className="h-2.5 w-2.5 text-green-600" />
                       <span className="text-[8px] text-green-600 font-medium">92%</span>
                     </div>
                   </div>
+                  <p className="font-bold text-emerald-400 text-lg mt-1">{formatCurrency(keyMetrics.totalRecovered)}</p>
                 </div>
               </div>
             </CardContent>
@@ -310,16 +310,16 @@ export default function Reports() {
             <CardContent className="p-6">
               <div className="flex items-center">
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-400">Success Rate</p>
                   <div className="relative inline-flex items-start">
-                    <span className="font-bold text-blue-400 text-lg">{keyMetrics.successRate.toFixed(1)}%</span>
-                    <div className="absolute -top-0.5 left-full ml-0.5 flex items-center gap-0.5 leading-none">
+                    <p className="text-sm font-medium text-gray-400">Success Rate</p>
+                    <div className="absolute -top-0.5 left-full ml-1.5 flex items-center gap-0.5 leading-none">
                       <TrendingDown className="h-2.5 w-2.5 text-red-500" />
                       <span className="text-[8px] text-red-500 font-medium">8%</span>
                       <TrendingUp className="h-2.5 w-2.5 text-green-600" />
                       <span className="text-[8px] text-green-600 font-medium">92%</span>
                     </div>
                   </div>
+                  <p className="font-bold text-blue-400 text-lg mt-1">{keyMetrics.successRate.toFixed(1)}%</p>
                 </div>
               </div>
             </CardContent>
