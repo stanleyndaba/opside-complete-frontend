@@ -91,9 +91,7 @@ export default function SmartInventorySync() {
 
   return (
     <PageLayout title="Smart Inventory Sync" midnight forceTransparent>
-      <div className="space-y-8 min-h-screen" style={{
-        fontFamily: "var(--font-inter),-apple-system,Helvetica,Arial,BlinkMacSystemFont,\"Segoe UI\",Roboto,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\",\"Segoe UI Symbol\""
-      }}>
+      <div className="space-y-8 min-h-screen">
         {/* Overall Status Indicator */}
         <Card className="bg-white/10 backdrop-blur-xl border-white/10 rounded-2xl shadow-[0_25px_60px_rgba(15,23,42,0.08)]">
           <CardContent className="p-6">

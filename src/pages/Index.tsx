@@ -135,7 +135,6 @@ const Index = () => {
   return (
     <div 
       className="min-h-screen flex flex-col bg-white text-gray-900"
-      style={{ fontFamily: "\"Stack Sans Headline\", sans-serif", fontStyle: "normal" }}
     >
       <header className="sticky top-0 z-40 border-transparent bg-transparent">
         <div className="container mx-auto px-6 py-5">
@@ -355,7 +354,7 @@ const Index = () => {
                     </span>
                 </div>
               </div>
-            <h1 className="text-4xl md:text-6xl font-black tracking-tight text-gray-900" style={{ fontFamily: "\"Stack Sans Headline\", sans-serif" }}>
+            <h1 className="text-4xl md:text-6xl font-black tracking-tight text-gray-900">
               The <span className="text-emerald-600">end</span> of FBA reimbursement work.
             </h1>
               <p className="font-body text-base md:text-xl text-gray-600 font-normal max-w-3xl mx-auto">
@@ -478,7 +477,7 @@ const Index = () => {
             <div className="mx-auto flex max-w-6xl flex-col gap-10 md:flex-row md:items-start">
               <div className="space-y-4 md:w-1/3">
                 <span className="text-sm font-semibold uppercase tracking-[0.3em] text-gray-500">Frequently asked questions</span>
-                <h2 className="text-3xl font-black tracking-tight text-gray-900 md:text-4xl" style={{ fontFamily: "\"Stack Sans Headline\", sans-serif" }}>
+                <h2 className="text-3xl font-black tracking-tight text-gray-900 md:text-4xl">
                   Everything you wanted to ask before Clario starts recovering funds.
                 </h2>
                 <p className="text-base text-gray-600 md:text-lg">
@@ -619,7 +618,7 @@ const Index = () => {
                     <span className="inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/80 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
                       Try Clario
                     </span>
-                    <h2 className="text-4xl font-black tracking-tight text-slate-900 md:text-5xl" style={{ fontFamily: "\"Stack Sans Headline\", sans-serif" }}>
+                    <h2 className="text-4xl font-black tracking-tight text-slate-900 md:text-5xl">
                       Run reimbursements with confident control.
                     </h2>
                     <p className="text-base text-slate-600 md:text-lg">

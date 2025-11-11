@@ -20,11 +20,11 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				// Brand fonts: Satoshi for headings, Inter for body
-				body: ['Inter', 'system-ui', 'Arial', 'sans-serif'],
-				heading: ['Satoshi', 'Inter', 'system-ui', 'Arial', 'sans-serif'],
-				sans: ['Inter', 'system-ui', 'Arial', 'sans-serif'],
-				brand: ['Satoshi', 'Inter', 'system-ui', 'Arial', 'sans-serif'],
+				// Platform-wide font: Stack Sans Text for everything
+				body: ['"Stack Sans Text"', 'system-ui', 'sans-serif'],
+				heading: ['"Stack Sans Text"', 'system-ui', 'sans-serif'],
+				sans: ['"Stack Sans Text"', 'system-ui', 'sans-serif'],
+				brand: ['"Stack Sans Text"', 'system-ui', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',

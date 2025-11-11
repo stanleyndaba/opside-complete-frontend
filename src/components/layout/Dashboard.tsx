@@ -482,8 +482,7 @@ export function Dashboard() {
       <div 
         className="relative min-h-screen flex flex-col h-screen overflow-hidden text-slate-900"
         style={{ 
-          backgroundColor: '#E8E8E8',
-          fontFamily: "var(--font-inter),-apple-system,Helvetica,Arial,BlinkMacSystemFont,\"Segoe UI\",Roboto,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\",\"Segoe UI Symbol\""
+          backgroundColor: '#E8E8E8'
         }}
       >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(148,163,184,0.18),transparent_45%),radial-gradient(circle_at_80%_20%,rgba(226,232,240,0.25),transparent_45%)]" />

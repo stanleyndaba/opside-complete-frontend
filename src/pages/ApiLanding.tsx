@@ -69,7 +69,7 @@ const ApiLanding = () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-white text-gray-900" style={{ fontFamily: "\"Stack Sans Headline\", sans-serif", fontStyle: "normal" }}>
+    <div className="relative min-h-screen bg-white text-gray-900">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_-10%,rgba(16,185,129,0.08),transparent_40%),radial-gradient(circle_at_80%_-10%,rgba(59,130,246,0.06),transparent_45%)]" />
       <header className="sticky top-0 z-40 border-transparent bg-transparent">
         <div className="container mx-auto px-6 py-5">

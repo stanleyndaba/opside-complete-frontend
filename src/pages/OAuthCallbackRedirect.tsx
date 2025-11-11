@@ -34,7 +34,6 @@ export default function OAuthCallbackRedirect() {
       alignItems: 'center', 
       justifyContent: 'center', 
       minHeight: '100vh',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
       backgroundColor: '#0B1220',
       color: '#e5e7eb'
     }}>

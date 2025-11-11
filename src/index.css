@@ -4,10 +4,10 @@
 @tailwind utilities;
 
 @layer utilities {
-  .font-heading { font-family: "Geist","Geist Fallback",ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"; }
-  .font-body { font-family: "Geist","Geist Fallback",ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"; }
-  .font-brand { font-family: "Geist","Geist Fallback",ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"; }
-  .font-logo { font-family: "Geist","Geist Fallback",ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"; font-weight: 900; }
+  .font-heading { font-family: "Stack Sans Text", system-ui, sans-serif; }
+  .font-body { font-family: "Stack Sans Text", system-ui, sans-serif; }
+  .font-brand { font-family: "Stack Sans Text", system-ui, sans-serif; }
+  .font-logo { font-family: "Stack Sans Text", system-ui, sans-serif; font-weight: 900; }
 }
 
 @layer base {
@@ -105,6 +105,11 @@
   * {
     @apply border-border;
   }
+  
+  /* Global font stack - Stack Sans Text for entire platform */
+  html, body, #root {
+    font-family: "Stack Sans Text", system-ui, sans-serif !important;
+  }
 
   html {
     scroll-behavior: smooth;
@@ -117,14 +122,25 @@
   }
 
   body {
-    /* Default body font */
-    @apply bg-background text-foreground font-body text-[15px];
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    /* Default body font - Stack Sans Text for entire platform */
+    @apply bg-background text-foreground text-[15px];
   }
-
-  /* Default heading fonts */
-  h1, h2, h3, h4, h5, h6 { @apply font-heading; }
-  p, label, input, textarea, select, button { @apply font-body; }
+  
+  /* All text elements use Stack Sans Text - comprehensive coverage */
+  *, *::before, *::after,
+  h1, h2, h3, h4, h5, h6, 
+  p, label, input, textarea, select, button, 
+  span, div, a, li, td, th, 
+  code, pre, small, strong, em, b, i, u, sub, sup,
+  table, thead, tbody, tfoot, tr, 
+  nav, header, footer, aside, section, article, main,
+  ul, ol, dl, dt, dd,
+  form, fieldset, legend,
+  blockquote, cite, q,
+  abbr, acronym, address,
+  [class*="font-"] {
+    font-family: "Stack Sans Text", system-ui, sans-serif !important;
+  }
 
   /* Glass morphism */
   .glass {
