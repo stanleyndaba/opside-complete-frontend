@@ -115,15 +115,15 @@ export function NotificationBell({
       <div
         className={
           'absolute rounded-full animate-pulse ' +
-          (isSidebarStyle ? 'top-2 right-3 w-3 h-3 bg-emerald-500/80' : '-top-1 -right-1 w-3 h-3 bg-destructive')
+          (isSidebarStyle ? 'top-2 right-3 w-4 h-4 bg-emerald-500/80' : '-top-1 -right-1 w-4 h-4 bg-emerald-500/80')
         }
       />
       <div
         className={
-          'absolute rounded-full flex items-center justify-center text-[8px] font-semibold ' +
+          'absolute rounded-full flex items-center justify-center text-[9px] font-semibold ' +
           (isSidebarStyle
-            ? 'top-2 right-3 w-3 h-3 bg-emerald-500 text-white'
-            : '-top-1 -right-1 w-3 h-3 bg-destructive text-destructive-foreground')
+            ? 'top-2 right-3 w-4 h-4 bg-emerald-500 text-white'
+            : '-top-1 -right-1 w-4 h-4 bg-emerald-500 text-white')
         }
       >
         {unreadCount > 9 ? '9+' : unreadCount}

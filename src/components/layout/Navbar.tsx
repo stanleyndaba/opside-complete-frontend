@@ -81,27 +81,37 @@ export function Navbar({
                   )}
                 />
               </div>
+              {/* Message icon - visible on all pages */}
+              <NotificationBell
+                label="Messages"
+                iconOverride={Mail}
+                showLabel={false}
+                className={cn(
+                  "group h-9 w-9 flex items-center justify-center rounded-md transition-colors",
+                  isDashboard 
+                    ? "text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50"
+                    : isTransparent 
+                      ? "text-gray-200 hover:text-white hover:bg-white/10"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                )}
+                iconClassName={cn(
+                  isDashboard 
+                    ? "text-emerald-500 group-hover:text-emerald-600"
+                    : isTransparent 
+                      ? "text-gray-200 group-hover:text-white"
+                      : ""
+                )}
+              />
+              {/* Gift icon - only on dashboard */}
               {isDashboard && (
-                <>
-                  <NotificationBell
-                    label="Messages"
-                    iconOverride={Mail}
-                    showLabel={false}
-                    className={cn(
-                      "group h-9 w-9 flex items-center justify-center rounded-md transition-colors",
-                      "text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50"
-                    )}
-                    iconClassName="text-emerald-500 group-hover:text-emerald-600"
-                  />
-                  <button
-                    onClick={() => setShowReferralPopup(true)}
-                    className="flex items-center gap-2 h-9 px-3 rounded-md text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 transition-colors"
-                    aria-label="Referral program"
-                  >
-                    <Gift className="h-5 w-5" />
-                    <span className="text-sm font-medium">Earn 100%</span>
-                  </button>
-                </>
+                <button
+                  onClick={() => setShowReferralPopup(true)}
+                  className="flex items-center gap-2 h-9 px-3 rounded-md text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 transition-colors"
+                  aria-label="Referral program"
+                >
+                  <Gift className="h-5 w-5" />
+                  <span className="text-sm font-medium">Earn 100%</span>
+                </button>
               )}
             </div>
           </div>
