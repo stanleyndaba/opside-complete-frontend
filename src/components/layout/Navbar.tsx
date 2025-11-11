@@ -1,11 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ArrowUpDown, ChevronDown, Search, Gift, Link2 } from 'lucide-react';
+import { ArrowUpDown, ChevronDown, Search, Gift, Link2, Mail } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { NotificationBell } from './NotificationBell';
 interface NavbarProps {
   className?: string;
   sidebarCollapsed?: boolean;
@@ -38,7 +39,9 @@ export function Navbar({
     location.pathname.startsWith('/notifications') ||
     location.pathname.startsWith('/whats-new') ||
     location.pathname.startsWith('/help') ||
-    location.pathname.startsWith('/auth');
+    location.pathname.startsWith('/auth') ||
+    location.pathname.startsWith('/smart-inventory-sync') ||
+    location.pathname.startsWith('/sync');
   const isTransparent = !!forceTransparent || pathTransparent;
   
   // Check if we're on the Dashboard (Command Center) page
@@ -55,7 +58,7 @@ export function Navbar({
   return <header className={cn(
     "sticky top-0 z-30 transition-all duration-300",
     sidebarCollapsed ? "ml-16" : "ml-60",
-    isTransparent ? "bg-transparent border-transparent backdrop-blur-0 shadow-none" : "bg-background/60 backdrop-blur-sm border-b",
+    isTransparent ? "!bg-transparent !border-transparent backdrop-blur-none shadow-none" : "bg-background/60 backdrop-blur-sm border-b",
     className
   )}>
         <div className="container flex items-center h-16 px-4 font-body">
@@ -73,19 +76,32 @@ export function Navbar({
                   variant={isTransparent ? 'dark' : 'default'}
                   className={cn(
                     "pl-9 h-9 rounded-md",
-                    isDashboard && "!bg-white/95 !border-gray-300/80 !text-gray-900 !placeholder:text-gray-600"
+                    isDashboard && "!bg-white/95 !border-gray-300/80 !text-gray-900 !placeholder:text-gray-600",
+                    isTransparent && !isDashboard && "!bg-white/10 !border-white/20 !text-gray-200 !placeholder:text-gray-400 backdrop-blur-sm"
                   )}
                 />
               </div>
               {isDashboard && (
-                <button
-                  onClick={() => setShowReferralPopup(true)}
-                  className="flex items-center gap-2 h-9 px-3 rounded-md text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 transition-colors"
-                  aria-label="Referral program"
-                >
-                  <Gift className="h-5 w-5" />
-                  <span className="text-sm font-medium">Earn 100%</span>
-                </button>
+                <>
+                  <NotificationBell
+                    label="Messages"
+                    iconOverride={Mail}
+                    showLabel={false}
+                    className={cn(
+                      "group h-9 w-9 flex items-center justify-center rounded-md transition-colors",
+                      "text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50"
+                    )}
+                    iconClassName="text-emerald-500 group-hover:text-emerald-600"
+                  />
+                  <button
+                    onClick={() => setShowReferralPopup(true)}
+                    className="flex items-center gap-2 h-9 px-3 rounded-md text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 transition-colors"
+                    aria-label="Referral program"
+                  >
+                    <Gift className="h-5 w-5" />
+                    <span className="text-sm font-medium">Earn 100%</span>
+                  </button>
+                </>
               )}
             </div>
           </div>

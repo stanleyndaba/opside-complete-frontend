@@ -90,7 +90,7 @@ export default function SmartInventorySync() {
   
 
   return (
-    <PageLayout title="Smart Inventory Sync" midnight>
+    <PageLayout title="Smart Inventory Sync" midnight forceTransparent>
       <div className="space-y-8 min-h-screen" style={{
         fontFamily: "var(--font-inter),-apple-system,Helvetica,Arial,BlinkMacSystemFont,\"Segoe UI\",Roboto,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\",\"Segoe UI Symbol\""
       }}>

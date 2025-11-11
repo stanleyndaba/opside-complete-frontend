@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { LayoutDashboard, ShieldCheck, Settings2, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, FolderKanban, LifeBuoy, Mail } from 'lucide-react';
-import { NotificationBell } from './NotificationBell';
+import { LayoutDashboard, ShieldCheck, Settings2, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, FolderKanban, LifeBuoy } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -209,33 +208,6 @@ export function Sidebar({
                     {secondaryItems.map((item) => (
                       <NavItemComponent key={item.title} item={item} />
                     ))}
-                  </div>
-                  <div className={cn("w-full", isCollapsed ? "flex justify-center" : "")}>
-                    {isCollapsed ? (
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <div className={cn(
-                              "relative flex items-center justify-center w-10 h-10 rounded-md transition-colors",
-                              isDashboard ? "text-[#303030] hover:bg-white/10 hover:text-white" : "text-gray-400 hover:bg-white/10 hover:text-gray-100"
-                            )}>
-                              <NotificationBell 
-                                label="Messages" 
-                                forceCountStyle="sidebar" 
-                                iconOverride={Mail} 
-                                showLabel={false} 
-                                className="h-10 w-10 p-0 m-0 border-0 bg-transparent hover:bg-transparent"
-                              />
-                            </div>
-                          </TooltipTrigger>
-                          <TooltipContent side="right" className="bg-black text-white">
-                            Messages
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    ) : (
-                      <NotificationBell label="Messages" forceCountStyle="sidebar" iconOverride={Mail} className={cn("w-full justify-between rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm", isDashboard ? "text-[#303030]" : "text-gray-200")} />
-                    )}
                   </div>
                 </nav>
             </div>

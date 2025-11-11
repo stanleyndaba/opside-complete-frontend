@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 import { Link, useLocation } from 'react-router-dom';
+import { cn } from '@/lib/utils';
 
 interface RecentNotification {
   id: string;
@@ -26,6 +27,7 @@ interface NotificationBellProps {
   forceCountStyle?: 'sidebar' | 'default';
   iconOverride?: React.ElementType;
   showLabel?: boolean;
+  iconClassName?: string;
 }
 
 export function NotificationBell({
@@ -33,7 +35,8 @@ export function NotificationBell({
   className,
   forceCountStyle = 'default',
   iconOverride,
-  showLabel = true
+  showLabel = true,
+  iconClassName
 }: NotificationBellProps) {
   const location = useLocation();
   const isTransparentNavbar = (
@@ -136,7 +139,10 @@ export function NotificationBell({
           size={isSidebarStyle ? 'default' : 'icon'}
           className={triggerClassNames}
         >
-          <IconComponent className={'h-4 w-4 ' + (isSidebarStyle ? '' : isTransparentNavbar ? 'text-gray-200' : '')} />
+          <IconComponent className={cn(
+            'h-4 w-4',
+            iconClassName || (isSidebarStyle ? '' : isTransparentNavbar ? 'text-gray-200' : '')
+          )} />
           {shouldShowLabel && <span className="text-sm font-medium">{label}</span>}
           {isSidebarStyle && shouldShowLabel && unreadCount > 0 && (
             <Badge variant="outline" className="ml-auto text-[10px] border-emerald-500 text-white bg-emerald-500">
