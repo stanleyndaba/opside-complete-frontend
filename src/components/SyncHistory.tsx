@@ -7,13 +7,13 @@ import { CheckCircle2, XCircle, Clock, AlertCircle, Loader2 } from 'lucide-react
 
 interface SyncHistoryItem {
   syncId: string;
-  status: 'idle' | 'in_progress' | 'complete' | 'failed' | 'cancelled';
+  status: 'idle' | 'running' | 'completed' | 'failed' | 'cancelled';
   startedAt: string;
-  completedAt?: string;
+  completedAt?: string | null;
   ordersProcessed?: number;
   claimsDetected?: number;
   duration?: number;
-  error?: string;
+  error?: string | null;
 }
 
 export function SyncHistory() {
@@ -26,7 +26,12 @@ export function SyncHistory() {
       try {
         setLoading(true);
         const data = await getSyncHistory();
-        if (data?.syncs && Array.isArray(data.syncs)) {
+        // Handle documented response format: {success: true, history: [...], total: N}
+        // Also handle legacy format: {syncs: [...]}
+        if (data?.history && Array.isArray(data.history)) {
+          setSyncs(data.history);
+        } else if (data?.syncs && Array.isArray(data.syncs)) {
+          // Legacy format support
           setSyncs(data.syncs);
         } else {
           setSyncs([]);
@@ -46,11 +51,13 @@ export function SyncHistory() {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'complete':
+      case 'completed':
+      case 'complete': // Support legacy status value
         return <CheckCircle2 className="h-4 w-4 text-emerald-500" />;
       case 'failed':
         return <XCircle className="h-4 w-4 text-red-500" />;
-      case 'in_progress':
+      case 'running':
+      case 'in_progress': // Support legacy status value
         return <Loader2 className="h-4 w-4 text-blue-500 animate-spin" />;
       case 'cancelled':
         return <AlertCircle className="h-4 w-4 text-gray-500" />;
@@ -61,12 +68,14 @@ export function SyncHistory() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'complete':
-        return <Badge variant="outline" className="border-emerald-500 text-emerald-500">Complete</Badge>;
+      case 'completed':
+      case 'complete': // Support legacy status value
+        return <Badge variant="outline" className="border-emerald-500 text-emerald-500">Completed</Badge>;
       case 'failed':
         return <Badge variant="outline" className="border-red-500 text-red-500">Failed</Badge>;
-      case 'in_progress':
-        return <Badge variant="outline" className="border-blue-500 text-blue-500">In Progress</Badge>;
+      case 'running':
+      case 'in_progress': // Support legacy status value
+        return <Badge variant="outline" className="border-blue-500 text-blue-500">Running</Badge>;
       case 'cancelled':
         return <Badge variant="outline" className="border-gray-400 text-gray-400">Cancelled</Badge>;
       default:

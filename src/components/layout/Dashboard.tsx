@@ -170,19 +170,27 @@ export function Dashboard() {
       if (!active) return;
       
       try {
-        // Check if there's an active sync
-        const syncStatusRes = await api.getSyncStatus();
-        if (syncStatusRes.ok && syncStatusRes.data) {
-          const syncStatus = syncStatusRes.data as any;
+        // Check if there's an active sync using the documented API
+        const { getActiveSyncStatus } = await import('@/lib/inventoryApi');
+        const syncStatus = await getActiveSyncStatus();
+        
+        // If there's an active sync, get the syncId
+        if (syncStatus.hasActiveSync && syncStatus.lastSync?.syncId) {
+          const syncId = syncStatus.lastSync.syncId;
+          setActiveSyncId(syncId);
           
-          // If there's an active sync, get the syncId
-          if (syncStatus.hasActiveSync && syncStatus.lastSync?.syncId) {
-            const syncId = syncStatus.lastSync.syncId;
-            setActiveSyncId(syncId);
-            
-            // Start polling for sync completion
-            startSyncPolling(syncId);
-          } else if (syncStatus.lastSync?.status === 'complete') {
+          // Update sync message from lastSync data
+          if (syncStatus.lastSync.message) {
+            setSyncMessage(syncStatus.lastSync.message);
+          }
+          
+          // Start polling for sync completion
+          startSyncPolling(syncId);
+        } else if (syncStatus.lastSync) {
+          // Handle completed/failed syncs
+          const lastSyncStatus = syncStatus.lastSync.status;
+          
+          if (lastSyncStatus === 'completed' || lastSyncStatus === 'complete') {
             // Sync completed, refresh data
             await fetchRecoveriesOnce();
             await fetchMetrics();
@@ -190,16 +198,59 @@ export function Dashboard() {
             setNeedsSync(false);
             setSyncMessage(null);
             
+            // Show enhanced toast with claims detected info
+            const claimsDetected = syncStatus.lastSync.claimsDetected ?? 0;
+            const ordersProcessed = syncStatus.lastSync.ordersProcessed ?? 0;
+            
+            if (claimsDetected > 0) {
+              toast({
+                title: '✅ Sync Completed',
+                description: `Sync completed successfully! ${claimsDetected} claim${claimsDetected !== 1 ? 's' : ''} detected from ${ordersProcessed.toLocaleString()} order${ordersProcessed !== 1 ? 's' : ''}.`,
+                duration: 6000,
+              });
+            } else {
+              toast({
+                title: '✅ Sync Completed',
+                description: 'Your Amazon data has been synced successfully.',
+                duration: 5000,
+              });
+            }
+            
             // Clear polling
             if (syncPollingRef.current) {
               clearInterval(syncPollingRef.current);
               syncPollingRef.current = null;
             }
-          } else if (syncStatus.lastSync?.status === 'failed') {
+          } else if (lastSyncStatus === 'failed') {
             // Sync failed
             setSyncTriggered(false);
             setNeedsSync(true); // Still needs sync
-            setSyncMessage('Sync failed. Please try again.');
+            setSyncMessage(syncStatus.lastSync.message || 'Sync failed. Please try again.');
+            
+            // Show error toast with more details
+            toast({
+              title: '❌ Sync Failed',
+              description: syncStatus.lastSync.error || syncStatus.lastSync.message || 'The sync encountered an error. Please try again.',
+              variant: 'destructive',
+              duration: 6000,
+            });
+            
+            // Clear polling
+            if (syncPollingRef.current) {
+              clearInterval(syncPollingRef.current);
+              syncPollingRef.current = null;
+            }
+          } else if (lastSyncStatus === 'cancelled') {
+            // Sync cancelled
+            setSyncTriggered(false);
+            setNeedsSync(false);
+            setSyncMessage('Sync was cancelled.');
+            
+            toast({
+              title: '⏸️ Sync Cancelled',
+              description: 'The sync was cancelled.',
+              duration: 4000,
+            });
             
             // Clear polling
             if (syncPollingRef.current) {
@@ -239,7 +290,8 @@ export function Dashboard() {
           const { getSyncStatus } = await import('@/lib/inventoryApi');
           const status = await getSyncStatus(syncId);
           
-          if (status.status === 'complete') {
+          // Handle both 'completed' and legacy 'complete' status values
+          if (status.status === 'completed' || status.status === 'complete') {
             // Sync completed, refresh data
             await fetchRecoveriesOnce();
             await fetchMetrics();
@@ -247,11 +299,23 @@ export function Dashboard() {
             setNeedsSync(false);
             setSyncMessage('Sync completed successfully!');
             
-            toast({
-              title: 'Sync Completed',
-              description: 'Your Amazon data has been synced successfully.',
-              duration: 5000,
-            });
+            // Show enhanced toast with claims detected info
+            const claimsDetected = status.claimsDetected ?? 0;
+            const ordersProcessed = status.ordersProcessed ?? 0;
+            
+            if (claimsDetected > 0) {
+              toast({
+                title: '✅ Sync Completed',
+                description: `Sync completed successfully! ${claimsDetected} claim${claimsDetected !== 1 ? 's' : ''} detected from ${ordersProcessed.toLocaleString()} order${ordersProcessed !== 1 ? 's' : ''}.`,
+                duration: 6000,
+              });
+            } else {
+              toast({
+                title: '✅ Sync Completed',
+                description: 'Your Amazon data has been synced successfully.',
+                duration: 5000,
+              });
+            }
             
             // Clear polling
             if (syncPollingRef.current) {
@@ -265,10 +329,10 @@ export function Dashboard() {
             setSyncMessage('Sync failed. Please try again.');
             
             toast({
-              title: 'Sync Failed',
-              description: 'The sync encountered an error. Please try again.',
+              title: '❌ Sync Failed',
+              description: status.error || status.message || 'The sync encountered an error. Please try again.',
               variant: 'destructive',
-              duration: 5000,
+              duration: 6000,
             });
             
             // Clear polling
