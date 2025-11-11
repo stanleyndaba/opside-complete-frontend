@@ -338,14 +338,14 @@ const Index = () => {
                   <div className="relative flex items-center gap-3 text-sm font-medium text-gray-700">
                     <span>Links seamlessly with</span>
                     <span className="inline-flex items-center gap-3">
-                      <span className="relative inline-flex h-7 w-7 items-center justify-center rounded-full bg-white shadow-sm shadow-red-400/20">
+                      <span className="relative inline-flex h-7 w-7 items-center justify-center rounded-full bg-transparent">
                         <img
                           src="/gmailicon.png"
                           alt="Gmail"
                           className="h-7 w-7 object-contain"
                         />
                       </span>
-                      <span className="relative inline-flex h-7 w-7 items-center justify-center rounded-full bg-white shadow-sm shadow-blue-400/20">
+                      <span className="relative inline-flex h-7 w-7 items-center justify-center rounded-full bg-transparent">
                         <img
                           src="/outlookicon.webp"
                           alt="Outlook"
