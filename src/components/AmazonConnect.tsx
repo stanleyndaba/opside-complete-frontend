@@ -108,13 +108,48 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
       setUsingExisting(true);
       onConnectionStart?.();
 
-      const response = await api.useExistingAmazonConnection();
+      // OPTIMIZATION: Check connection status first (lightweight endpoint)
+      // This avoids calling the slow bypass endpoint if Amazon is already connected.
+      // The bypass endpoint can be slow because:
+      // 1. Backend might be sleeping (Render free tier takes 30-60s to wake up)
+      // 2. It validates/refreshes tokens (involves API calls to Amazon)
+      // 3. It might trigger automatic syncs
+      // By checking status first, we can skip all of that if already connected.
+      try {
+        const statusResponse = await api.getIntegrationsStatus();
+        if (statusResponse.ok && statusResponse.data?.amazon_connected) {
+          // Amazon is already connected! Just redirect to dashboard
+          toast({
+            title: '✅ Already Connected',
+            description: 'Your Amazon account is already connected. Redirecting...',
+            duration: 2000,
+          });
+          // Redirect to integrations hub (simpler, no auto-redirects)
+          setTimeout(() => {
+            window.location.href = '/integrations-hub?amazon_connected=true';
+          }, 500);
+          return;
+        }
+      } catch (statusError) {
+        // If status check fails, continue with bypass endpoint (might be first time)
+        console.log('[AmazonConnect] Status check failed, trying bypass endpoint:', statusError);
+      }
+
+      // If not connected, try the bypass endpoint with a shorter timeout
+      // Use a promise race to timeout faster if backend is slow
+      const bypassPromise = api.useExistingAmazonConnection();
+      const timeoutPromise = new Promise<Awaited<typeof bypassPromise>>((_, reject) => {
+        setTimeout(() => reject(new Error('Connection check timed out. The backend may be sleeping. Please try again in a moment.')), 15000); // 15s timeout instead of 45s
+      });
+
+      const response = await Promise.race([bypassPromise, timeoutPromise]);
 
       if (response.ok) {
         if (response.data?.bypassed && response.data?.redirectUrl) {
           toast({
-            title: 'Using existing connection',
+            title: '✅ Using Existing Connection',
             description: 'Connected with saved Amazon credentials.',
+            duration: 2000,
           });
           window.location.href = response.data.redirectUrl;
           return;
@@ -123,32 +158,44 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         const authUrl = response.data?.auth_url || response.data?.authUrl;
         if (authUrl) {
           toast({
-            title: 'Verification required',
+            title: 'Verification Required',
             description: 'Redirecting you to Amazon to refresh access.',
+            duration: 2000,
           });
           window.location.href = authUrl;
           return;
         }
 
         toast({
-          title: 'Existing connection unavailable',
-          description: 'Please use the main connect option.',
+          title: 'Existing Connection Unavailable',
+          description: 'No saved connection found. Please use the main connect option.',
           variant: 'destructive'
         });
       } else {
         toast({
-          title: 'Connection failed',
-          description: response.error || 'Could not reuse the existing connection.',
+          title: 'Connection Failed',
+          description: response.error || 'Could not reuse the existing connection. Please try the main connect button.',
           variant: 'destructive'
         });
       }
     } catch (error: any) {
       console.error('[AmazonConnect] Use existing failed:', error);
-      toast({
-        title: 'Connection error',
-        description: error?.message || 'An unexpected error occurred.',
-        variant: 'destructive'
-      });
+      
+      // Provide more helpful error messages
+      if (error?.message?.includes('timed out') || error?.message?.includes('sleeping')) {
+        toast({
+          title: '⏱️ Backend Slow to Respond',
+          description: 'The backend is taking longer than expected. This usually means it\'s waking up from sleep. Please wait 30-60 seconds and try again, or use the main "Connect Amazon Account" button.',
+          variant: 'destructive',
+          duration: 8000,
+        });
+      } else {
+        toast({
+          title: 'Connection Error',
+          description: error?.message || 'An unexpected error occurred. Please try the main connect button instead.',
+          variant: 'destructive'
+        });
+      }
     } finally {
       setConnecting(false);
       setUsingExisting(false);
