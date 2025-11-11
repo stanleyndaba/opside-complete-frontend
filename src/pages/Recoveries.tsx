@@ -901,7 +901,7 @@ export default function Recoveries() {
 
               {/* Claim Type Filter */}
               <Select>
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-[180px] text-slate-800 placeholder:text-slate-800">
                   <SelectValue placeholder="Filter by Claim Type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -913,7 +913,7 @@ export default function Recoveries() {
 
               {/* Status Filter */}
               <Select>
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-[180px] text-slate-800 placeholder:text-slate-800">
                   <SelectValue placeholder="Filter by Status" />
                 </SelectTrigger>
                 <SelectContent>
