@@ -1,10 +1,13 @@
 import { api } from './api';
 
 // Type definitions matching the documented API responses
+// Note: 'complete' is included for legacy backend compatibility
+export type SyncStatus = 'idle' | 'running' | 'completed' | 'complete' | 'failed' | 'cancelled';
+
 export interface SyncStatusResponse {
   success?: boolean;
   syncId: string;
-  status: 'idle' | 'running' | 'completed' | 'failed' | 'cancelled';
+  status: SyncStatus;
   progress: number;
   message: string;
   startedAt: string;
@@ -24,7 +27,7 @@ export interface SyncHistoryResponse {
   success: boolean;
   history: Array<{
     syncId: string;
-    status: 'idle' | 'running' | 'completed' | 'failed' | 'cancelled';
+    status: SyncStatus;
     startedAt: string;
     completedAt?: string | null;
     ordersProcessed?: number;

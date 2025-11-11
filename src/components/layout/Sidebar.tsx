@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { LayoutDashboard, ShieldCheck, Settings2, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, FolderKanban, LifeBuoy } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -76,13 +76,13 @@ export function Sidebar({
     { title: 'Help Centre', icon: LifeBuoy, href: '/help' },
     { title: "What's New", icon: Sparkles, href: '/whats-new' }
   ];
-	const NavItemComponent = ({
+	const NavItemComponent = React.memo(({
 		item
 	}: {
 		item: NavItem;
 	}) => {
 		const isActive = location.pathname === item.href;
-    const handlePrefetch = () => {
+    const handlePrefetch = useCallback(() => {
       prefetchRoute(item.href);
       if (item.href === '/app') {
         queryClient.prefetchQuery({ queryKey: ['dashboard-aggregates', '30d'], queryFn: async () => {
@@ -103,7 +103,7 @@ export function Sidebar({
           return r.data;
         }});
       }
-    };
+    }, [item.href, queryClient]);
     if (isCollapsed) {
       return (
         <TooltipProvider>
@@ -113,11 +113,12 @@ export function Sidebar({
                 to={item.href}
                 onMouseEnter={handlePrefetch}
                 className={cn(
-                  "relative flex items-center justify-center w-10 h-10 rounded-md transition-colors",
+                  "relative flex items-center justify-center w-10 h-10 rounded-md transition-colors duration-200",
                   isActive
                     ? isDashboard ? "bg-white/10 text-white" : "bg-white/10 text-gray-100"
                     : isDashboard ? "text-[#303030] hover:bg-white/10 hover:text-white" : "text-gray-400 hover:bg-white/10 hover:text-gray-100"
                 )}
+                style={{ willChange: 'background-color' }}
               >
                 <item.icon className="h-4 w-4" strokeWidth={1.5} />
               </Link>
@@ -134,11 +135,12 @@ export function Sidebar({
           to={item.href}
           onMouseEnter={handlePrefetch}
           className={cn(
-            "relative flex items-center gap-1.5 px-2 py-1.5 rounded-md transition-colors",
+            "relative flex items-center gap-1.5 px-2 py-1.5 rounded-md transition-colors duration-200",
           isActive
             ? isDashboard ? "bg-white/5 text-white" : "bg-white/5 text-gray-100"
             : isDashboard ? "text-[#303030] hover:bg-white/5 hover:text-white" : "text-gray-400 hover:bg-white/5 hover:text-gray-100"
         )}
+        style={{ willChange: 'background-color' }}
       >
         {isActive && (
           <span className="absolute left-0 h-5 w-[3px] rounded-r bg-emerald-400" />
@@ -151,13 +153,13 @@ export function Sidebar({
     return (
       <aside
         className={cn(
-          "fixed left-0 top-0 transition-all duration-300 ease-in-out flex flex-col h-screen z-40",
+          "fixed left-0 top-0 transition-all duration-300 ease-in-out flex flex-col h-screen z-40 gpu-accelerated",
           isCollapsed ? "w-16" : "w-60",
           "text-gray-300 border-r border-white/10",
           isDashboard ? "" : "bg-[#0B1220]",
           className
         )}
-        style={isDashboard ? { backgroundColor: '#CECECE' } : undefined}
+        style={isDashboard ? { backgroundColor: '#CECECE', willChange: 'width' } : { willChange: 'width' }}
       >
         {/* Branding + Collapse */}
         <div

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
@@ -18,16 +18,16 @@ export function Dashboard() {
   const location = useLocation();
   const searchParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
 
-  const toggleSidebar = () => {
-    setIsSidebarCollapsed(!isSidebarCollapsed);
-  };
+  const toggleSidebar = useCallback(() => {
+    setIsSidebarCollapsed(prev => !prev);
+  }, []);
 
-  const formatCurrency = (amount: number, currency: string = 'USD') => {
+  const formatCurrency = useCallback((amount: number, currency: string = 'USD') => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency
     }).format(amount);
-  };
+  }, []);
 
   // Live dashboard recoveries metrics (Continuous Sync UX)
   const [recoveredTotal, setRecoveredTotal] = useState<number | null>(null);
@@ -190,6 +190,7 @@ export function Dashboard() {
           // Handle completed/failed syncs
           const lastSyncStatus = syncStatus.lastSync.status;
           
+          // Check for completed status (including legacy 'complete' value)
           if (lastSyncStatus === 'completed' || lastSyncStatus === 'complete') {
             // Sync completed, refresh data
             await fetchRecoveriesOnce();
@@ -290,7 +291,7 @@ export function Dashboard() {
           const { getSyncStatus } = await import('@/lib/inventoryApi');
           const status = await getSyncStatus(syncId);
           
-          // Handle both 'completed' and legacy 'complete' status values
+          // Check for completed status (including legacy 'complete' value)
           if (status.status === 'completed' || status.status === 'complete') {
             // Sync completed, refresh data
             await fetchRecoveriesOnce();

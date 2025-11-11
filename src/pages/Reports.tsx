@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, Suspense, lazy } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,11 +8,47 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { format, subDays, startOfYear, startOfQuarter } from 'date-fns';
 import { CalendarIcon, Download, ArrowUpDown, ArrowUp, ArrowDown, TrendingDown, TrendingUp } from 'lucide-react';
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import type { DateRange } from 'react-day-picker';
+
+// Chart skeleton loader
+const ChartSkeleton = () => (
+  <div className="w-full h-[300px] flex items-center justify-center">
+    <Skeleton className="w-full h-full" />
+  </div>
+);
+
+// Lazy-loaded chart component for better code splitting
+const RecoveryChart = lazy(() => 
+  import('recharts').then(recharts => ({
+    default: ({ data }: { data: Array<{ date: string; value: number }> }) => {
+      const { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } = recharts;
+      const formatCurrency = (amount: number) => {
+        return new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0
+        }).format(amount);
+      };
+      
+      return (
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={data}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
+            <XAxis dataKey="date" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
+            <YAxis tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
+            <Tooltip formatter={(v: number) => formatCurrency(v)} />
+            <Bar dataKey="value" fill="#60A5FA" radius={[4,4,0,0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      );
+    }
+  }))
+);
 
 // Mock data for claims
 const mockClaims = [{
@@ -227,14 +263,22 @@ export default function Reports() {
     if (exportFormat === 'pdf') window.print();
     setExportOpen(false);
   };
-  const SortIcon = ({
+  // Memoize chart data to prevent unnecessary recalculations
+  const chartData = useMemo(() => {
+    return filteredClaims.map(c => ({ 
+      date: format(new Date(c.dateCreated), 'MMM dd'), 
+      value: c.amountRecovered 
+    }));
+  }, [filteredClaims]);
+
+  const SortIcon = React.memo(({
     field
   }: {
     field: SortField;
   }) => {
     if (sortField !== field) return <ArrowUpDown className="h-4 w-4" />;
     return sortDirection === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />;
-  };
+  });
   return <PageLayout title="Reports">
       <div className="relative -m-4 lg:-m-6">
         <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
@@ -343,16 +387,10 @@ export default function Reports() {
         <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
           <CardContent className="p-6">
             <h3 className="text-sm font-semibold text-gray-200 mb-4">Recoveries Over Time</h3>
-            <div className="w-full h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={filteredClaims.map(c => ({ date: format(new Date(c.dateCreated), 'MMM dd'), value: c.amountRecovered }))}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
-                  <XAxis dataKey="date" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
-                  <YAxis tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
-                  <Tooltip formatter={(v: number) => formatCurrency(v)} />
-                  <Bar dataKey="value" fill="#60A5FA" radius={[4,4,0,0]} />
-                </BarChart>
-              </ResponsiveContainer>
+            <div className="w-full h-64 gpu-accelerated">
+              <Suspense fallback={<ChartSkeleton />}>
+                <RecoveryChart data={chartData} />
+              </Suspense>
             </div>
           </CardContent>
         </Card>
