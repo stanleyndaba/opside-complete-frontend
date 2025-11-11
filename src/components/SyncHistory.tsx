@@ -53,14 +53,14 @@ export function SyncHistory() {
     switch (status) {
       case 'completed':
       case 'complete': // Support legacy status value
-        return <CheckCircle2 className="h-4 w-4 text-emerald-500" />;
+        return <CheckCircle2 className="h-4 w-4 text-emerald-400" />;
       case 'failed':
-        return <XCircle className="h-4 w-4 text-red-500" />;
+        return <XCircle className="h-4 w-4 text-red-400" />;
       case 'running':
       case 'in_progress': // Support legacy status value
-        return <Loader2 className="h-4 w-4 text-blue-500 animate-spin" />;
+        return <Loader2 className="h-4 w-4 text-blue-400 animate-spin" />;
       case 'cancelled':
-        return <AlertCircle className="h-4 w-4 text-gray-500" />;
+        return <AlertCircle className="h-4 w-4 text-gray-400" />;
       default:
         return <Clock className="h-4 w-4 text-gray-400" />;
     }
@@ -70,16 +70,16 @@ export function SyncHistory() {
     switch (status) {
       case 'completed':
       case 'complete': // Support legacy status value
-        return <Badge variant="outline" className="border-emerald-500 text-emerald-500">Completed</Badge>;
+        return <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20">Completed</Badge>;
       case 'failed':
-        return <Badge variant="outline" className="border-red-500 text-red-500">Failed</Badge>;
+        return <Badge className="bg-red-500/10 text-red-400 border-red-500/20">Failed</Badge>;
       case 'running':
       case 'in_progress': // Support legacy status value
-        return <Badge variant="outline" className="border-blue-500 text-blue-500">Running</Badge>;
+        return <Badge className="bg-blue-500/10 text-blue-400 border-blue-500/20">Running</Badge>;
       case 'cancelled':
-        return <Badge variant="outline" className="border-gray-400 text-gray-400">Cancelled</Badge>;
+        return <Badge className="bg-gray-500/10 text-gray-400 border-gray-500/20">Cancelled</Badge>;
       default:
-        return <Badge variant="outline" className="border-gray-400 text-gray-400">Idle</Badge>;
+        return <Badge className="bg-gray-500/10 text-gray-400 border-gray-500/20">Idle</Badge>;
     }
   };
 
@@ -93,14 +93,14 @@ export function SyncHistory() {
 
   if (loading) {
     return (
-      <Card>
+      <Card className="bg-white/10 backdrop-blur-xl border-white/10 rounded-2xl shadow-[0_8px_32px_0_rgba(31,38,135,0.1)]">
         <CardHeader>
-          <CardTitle>Sync History</CardTitle>
-          <CardDescription>Loading sync history...</CardDescription>
+          <CardTitle className="text-gray-100">Sync History</CardTitle>
+          <CardDescription className="text-gray-400">Loading sync history...</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
           </div>
         </CardContent>
       </Card>
@@ -109,13 +109,13 @@ export function SyncHistory() {
 
   if (error) {
     return (
-      <Card>
+      <Card className="bg-white/10 backdrop-blur-xl border-white/10 rounded-2xl shadow-[0_8px_32px_0_rgba(31,38,135,0.1)]">
         <CardHeader>
-          <CardTitle>Sync History</CardTitle>
-          <CardDescription>Error loading sync history</CardDescription>
+          <CardTitle className="text-gray-100">Sync History</CardTitle>
+          <CardDescription className="text-gray-400">Error loading sync history</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="text-sm text-red-500">{error}</div>
+          <div className="text-sm text-red-400">{error}</div>
         </CardContent>
       </Card>
     );
@@ -123,13 +123,13 @@ export function SyncHistory() {
 
   if (syncs.length === 0) {
     return (
-      <Card>
+      <Card className="bg-white/10 backdrop-blur-xl border-white/10 rounded-2xl shadow-[0_8px_32px_0_rgba(31,38,135,0.1)]">
         <CardHeader>
-          <CardTitle>Sync History</CardTitle>
-          <CardDescription>No sync history available</CardDescription>
+          <CardTitle className="text-gray-100">Sync History</CardTitle>
+          <CardDescription className="text-gray-400">No sync history available</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="text-sm text-muted-foreground text-center py-8">
+          <div className="text-sm text-gray-400 text-center py-8">
             No syncs have been performed yet. Start a sync to see history here.
           </div>
         </CardContent>
@@ -138,10 +138,10 @@ export function SyncHistory() {
   }
 
   return (
-    <Card>
+    <Card className="bg-white/10 backdrop-blur-xl border-white/10 rounded-2xl shadow-[0_8px_32px_0_rgba(31,38,135,0.1)]">
       <CardHeader>
-        <CardTitle>Sync History</CardTitle>
-        <CardDescription>
+        <CardTitle className="text-gray-100">Sync History</CardTitle>
+        <CardDescription className="text-gray-400">
           View past sync jobs and their status
         </CardDescription>
       </CardHeader>
@@ -150,38 +150,38 @@ export function SyncHistory() {
           {syncs.map((sync) => (
             <div
               key={sync.syncId}
-              className="border rounded-lg p-4 hover:bg-accent/50 transition-colors"
+              className="border border-white/10 rounded-lg p-4 bg-white/5 hover:bg-white/10 transition-all duration-300"
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-3 flex-1">
                   <div className="mt-0.5">{getStatusIcon(sync.status)}</div>
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="font-medium text-sm">{sync.syncId}</span>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="font-medium text-sm text-gray-100 font-mono">{sync.syncId.slice(0, 8)}...</span>
                       {getStatusBadge(sync.status)}
                     </div>
-                    <div className="text-xs text-muted-foreground space-y-1">
+                    <div className="text-xs text-gray-400 space-y-1">
                       <div>
-                        Started: {formatDistanceToNow(new Date(sync.startedAt), { addSuffix: true })}
+                        Started: <span className="text-gray-300">{formatDistanceToNow(new Date(sync.startedAt), { addSuffix: true })}</span>
                       </div>
                       {sync.completedAt && (
                         <div>
-                          Completed: {formatDistanceToNow(new Date(sync.completedAt), { addSuffix: true })}
+                          Completed: <span className="text-gray-300">{formatDistanceToNow(new Date(sync.completedAt), { addSuffix: true })}</span>
                         </div>
                       )}
                       {sync.duration !== undefined && (
-                        <div>Duration: {formatDuration(sync.duration)}</div>
+                        <div>Duration: <span className="text-gray-300">{formatDuration(sync.duration)}</span></div>
                       )}
                       {sync.ordersProcessed !== undefined && (
-                        <div>Orders processed: {sync.ordersProcessed.toLocaleString()}</div>
+                        <div>Orders processed: <span className="text-gray-300">{sync.ordersProcessed.toLocaleString()}</span></div>
                       )}
                       {sync.claimsDetected !== undefined && (
-                        <div className="text-emerald-600 font-medium">
+                        <div className="text-emerald-400 font-medium">
                           Claims detected: {sync.claimsDetected.toLocaleString()}
                         </div>
                       )}
                       {sync.error && (
-                        <div className="text-red-500 mt-2">
+                        <div className="text-red-400 mt-2">
                           Error: {sync.error}
                         </div>
                       )}
