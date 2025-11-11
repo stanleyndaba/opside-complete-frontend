@@ -135,7 +135,7 @@ export function Sidebar({
           to={item.href}
           onMouseEnter={handlePrefetch}
           className={cn(
-            "relative flex items-center gap-1.5 px-2 py-1.5 rounded-md transition-colors duration-200",
+            "relative flex items-center gap-3 w-full px-3 py-1.5 rounded-md transition-colors duration-200",
           isActive
             ? isDashboard ? "bg-white/5 text-white" : "bg-white/5 text-gray-100"
             : isDashboard ? "text-[#303030] hover:bg-white/5 hover:text-white" : "text-gray-400 hover:bg-white/5 hover:text-gray-100"
