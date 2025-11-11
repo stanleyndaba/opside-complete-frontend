@@ -149,7 +149,7 @@ export function Sidebar({
         <span className="text-[13px] font-medium">{item.title}</span>
       </Link>
     );
-	};
+	});
     return (
       <aside
         className={cn(
