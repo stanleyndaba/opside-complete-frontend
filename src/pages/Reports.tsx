@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { format, subDays, startOfYear, startOfQuarter } from 'date-fns';
-import { CalendarIcon, Download, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { CalendarIcon, Download, ArrowUpDown, ArrowUp, ArrowDown, TrendingDown, TrendingUp } from 'lucide-react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import type { DateRange } from 'react-day-picker';
 
@@ -279,9 +279,17 @@ export default function Reports() {
           <Card className="bg-white/5 border-white/10 text-gray-300">
             <CardContent className="p-6">
               <div className="flex items-center">
-                <div>
+                <div className="flex-1">
                   <p className="text-sm font-medium text-gray-400">Total Recovered</p>
-                  <p className="font-bold text-emerald-400 text-lg">{formatCurrency(keyMetrics.totalRecovered)}</p>
+                  <div className="relative inline-flex items-start">
+                    <span className="font-bold text-emerald-400 text-lg">{formatCurrency(keyMetrics.totalRecovered)}</span>
+                    <div className="absolute -top-0.5 left-full ml-0.5 flex items-center gap-0.5 leading-none">
+                      <TrendingDown className="h-2.5 w-2.5 text-red-500" />
+                      <span className="text-[8px] text-red-500 font-medium">8%</span>
+                      <TrendingUp className="h-2.5 w-2.5 text-green-600" />
+                      <span className="text-[8px] text-green-600 font-medium">92%</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -301,9 +309,17 @@ export default function Reports() {
           <Card className="bg-white/5 border-white/10 text-gray-300">
             <CardContent className="p-6">
               <div className="flex items-center">
-                <div>
+                <div className="flex-1">
                   <p className="text-sm font-medium text-gray-400">Success Rate</p>
-                  <p className="font-bold text-blue-400 text-lg">{keyMetrics.successRate.toFixed(1)}%</p>
+                  <div className="relative inline-flex items-start">
+                    <span className="font-bold text-blue-400 text-lg">{keyMetrics.successRate.toFixed(1)}%</span>
+                    <div className="absolute -top-0.5 left-full ml-0.5 flex items-center gap-0.5 leading-none">
+                      <TrendingDown className="h-2.5 w-2.5 text-red-500" />
+                      <span className="text-[8px] text-red-500 font-medium">8%</span>
+                      <TrendingUp className="h-2.5 w-2.5 text-green-600" />
+                      <span className="text-[8px] text-green-600 font-medium">92%</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </CardContent>
