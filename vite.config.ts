@@ -38,7 +38,6 @@ export default defineConfig(({ mode }) => ({
     },
     chunkSizeWarningLimit: 1000, // Warn for chunks larger than 1MB
     target: 'esnext', // Use modern JS for better performance
-    minify: 'esbuild', // Use esbuild for faster minification (default and faster than terser)
     cssCodeSplit: true, // Split CSS for better caching
   },
   plugins: [
