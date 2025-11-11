@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
-import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud, ArrowRight, Plus, CheckCircle, RefreshCw, RotateCcw, Download, Bell, Shield, ArrowDown, ArrowUp } from 'lucide-react';
+import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud, ArrowRight, Plus, CheckCircle, RefreshCw, RotateCcw, Download, Bell, Shield, TrendingDown, TrendingUp } from 'lucide-react';
 import { api } from '@/lib/api';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
@@ -594,10 +594,10 @@ export function Dashboard() {
                           <div className="flex items-center gap-1.5">
                             <div className="text-xs text-slate-500">Approved</div>
                             <div className="flex items-center gap-1">
-                              <ArrowDown className="h-3 w-3 text-red-500" />
+                              <TrendingDown className="h-3 w-3 text-red-500" />
                               <span className="text-[10px] text-red-500 font-medium">8%</span>
-                              <ArrowUp className="h-3 w-3 text-blue-500" />
-                              <span className="text-[10px] text-blue-500 font-medium">92%</span>
+                              <TrendingUp className="h-3 w-3 text-green-600" />
+                              <span className="text-[10px] text-green-600 font-medium">92%</span>
                             </div>
                           </div>
                           <div className="text-xl font-semibold text-emerald-500 mt-1">{formatCurrency(computedApproved ?? 0, recoveredCurrency)}</div>
