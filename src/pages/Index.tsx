@@ -473,38 +473,6 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Transparent Tracking Section */}
-        <section className="relative isolate bg-white text-gray-900 py-24 md:py-32">
-          <div className="container mx-auto px-6">
-            <div className="grid gap-12 md:grid-cols-2 md:items-center md:gap-16">
-              {/* Image on the left */}
-              <div className="order-2 md:order-1">
-                <img
-                  src="/Trans.png"
-                  alt="Transparent Tracking"
-                  className="w-full rounded-[25px] shadow-[0_20px_60px_rgba(0,0,0,0.15),0_10px_30px_rgba(0,0,0,0.1)] object-cover"
-                  style={{
-                    borderRadius: '25px',
-                    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.15), 0 10px 30px rgba(0, 0, 0, 0.1)',
-                    height: '600px',
-                    objectFit: 'cover',
-                    width: '100%'
-                  }}
-                />
-              </div>
-              {/* Text on the right */}
-              <div className="order-1 md:order-2 space-y-6">
-                <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-500 leading-tight">
-                  Transparent Tracking
-                </h2>
-                <p className="text-lg md:text-xl text-gray-400 leading-relaxed">
-                  stay ontop of your submitted claims any time of the day 24/7
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
         <section className="bg-white py-24">
           <div className="container mx-auto px-6">
             <div className="mx-auto flex max-w-6xl flex-col gap-10 md:flex-row md:items-start">
