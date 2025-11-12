@@ -174,6 +174,11 @@ export default function Recoveries() {
 
   // Helper function to merge recoveries with detection results (without applying filters)
   const mergeRecoveries = useCallback((syncedRecoveries: any[], detectedClaims: any[]) => {
+    console.log('[Recoveries] mergeRecoveries called:', {
+      syncedCount: syncedRecoveries?.length || 0,
+      detectedCount: detectedClaims?.length || 0
+    });
+    
     // Transform detection results to match recovery format
     const detected = (detectedClaims || []).map(det => ({
       id: det.id,
@@ -216,6 +221,7 @@ export default function Recoveries() {
       return dateB - dateA;
     });
     
+    console.log('[Recoveries] mergeRecoveries result:', merged.length, 'items');
     setMergedRecoveries(merged);
   }, []);
 
