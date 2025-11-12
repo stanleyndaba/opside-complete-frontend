@@ -295,8 +295,8 @@ export default function IntegrationsHub() {
                 <span className="block mt-2 text-sm text-gray-400">
                   Read-only access. No writing or sending permissions.
                 </span>
-                <span className="block mt-2 text-xs text-amber-300/80">
-                  📧 Gmail is available now. Outlook is coming soon.
+                <span className="block mt-2 text-xs text-emerald-300/90 font-medium">
+                  ✅ Gmail is available now. Outlook, Google Drive, and Dropbox coming in a week.
                 </span>
               </DialogDescription>
             </DialogHeader>
@@ -330,46 +330,40 @@ export default function IntegrationsHub() {
                 </Button>
                 <div className="absolute inset-0 flex items-center justify-center">
                   <Badge variant="outline" className="border-amber-400/50 text-amber-300 bg-amber-500/20 text-[10px] px-1.5 py-0.5">
-                    Soon
+                    ~1 week
                   </Badge>
                 </div>
               </div>
-              <Button 
-                disabled={providerLoading !== null} 
-                onClick={() => beginProviderOAuth('gdrive')} 
-                className="bg-emerald-600/90 hover:bg-emerald-600 text-white border border-white/10 h-auto py-3 flex flex-col items-center gap-2"
-              >
-                {providerLoading==='gdrive' ? (
-                  <>
-                    <RefreshCw className="h-5 w-5 animate-spin" />
-                    <span>Connecting…</span>
-                  </>
-                ) : (
-                  <>
-                    <img src="/gd.png" alt="Google Drive" className="h-6 w-6 object-contain" />
-                    <span>Google Drive</span>
-                    <span className="text-xs text-emerald-100">Cloud Storage</span>
-                  </>
-                )}
-              </Button>
-              <Button 
-                disabled={providerLoading !== null} 
-                onClick={() => beginProviderOAuth('dropbox')} 
-                className="bg-sky-600/90 hover:bg-sky-600 text-white border border-white/10 h-auto py-3 flex flex-col items-center gap-2"
-              >
-                {providerLoading==='dropbox' ? (
-                  <>
-                    <RefreshCw className="h-5 w-5 animate-spin" />
-                    <span>Connecting…</span>
-                  </>
-                ) : (
-                  <>
-                    <img src="/db.png" alt="Dropbox" className="h-6 w-6 object-contain" />
-                    <span>Dropbox</span>
-                    <span className="text-xs text-sky-100">Cloud Storage</span>
-                  </>
-                )}
-              </Button>
+              <div className="relative">
+                <Button 
+                  disabled={true}
+                  className="bg-emerald-600/40 hover:bg-emerald-600/40 text-white/60 border border-white/10 h-auto py-3 flex flex-col items-center gap-2 cursor-not-allowed opacity-60"
+                >
+                  <img src="/gd.png" alt="Google Drive" className="h-6 w-6 object-contain" />
+                  <span>Google Drive</span>
+                  <span className="text-xs text-emerald-100/60">Coming Soon</span>
+                </Button>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Badge variant="outline" className="border-amber-400/50 text-amber-300 bg-amber-500/20 text-[10px] px-1.5 py-0.5">
+                    ~1 week
+                  </Badge>
+                </div>
+              </div>
+              <div className="relative">
+                <Button 
+                  disabled={true}
+                  className="bg-sky-600/40 hover:bg-sky-600/40 text-white/60 border border-white/10 h-auto py-3 flex flex-col items-center gap-2 cursor-not-allowed opacity-60"
+                >
+                  <img src="/db.png" alt="Dropbox" className="h-6 w-6 object-contain" />
+                  <span>Dropbox</span>
+                  <span className="text-xs text-sky-100/60">Coming Soon</span>
+                </Button>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Badge variant="outline" className="border-amber-400/50 text-amber-300 bg-amber-500/20 text-[10px] px-1.5 py-0.5">
+                    ~1 week
+                  </Badge>
+                </div>
+              </div>
             </div>
             <DialogFooter className="mt-4">
               <Button variant="outline" onClick={() => setShowProviderDialog(false)} className="border-white/10 text-gray-300 hover:bg-white/10">
@@ -455,24 +449,28 @@ export default function IntegrationsHub() {
               )}
               <div className="grid grid-cols-2 gap-3">
                 {(['gmail','outlook','gdrive','dropbox'] as const).map((p) => {
-                  // Skip Outlook for now - mark as coming soon
-                  if (p === 'outlook') {
+                  // Skip Outlook, Google Drive, and Dropbox for now - mark as coming soon
+                  if (p === 'outlook' || p === 'gdrive' || p === 'dropbox') {
+                    const providerName = p === 'gdrive' ? 'Google Drive' : p === 'outlook' ? 'Outlook' : 'Dropbox';
+                    const providerIcon = p === 'outlook' ? '/outlookicon.webp' : p === 'gdrive' ? '/gd.png' : '/db.png';
+                    const providerColor = p === 'outlook' ? 'blue' : p === 'gdrive' ? 'emerald' : 'sky';
+                    
                     return (
                       <div key={p} className="flex flex-col gap-2 rounded border border-white/10 bg-white/5 p-3 opacity-60">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2 text-sm font-medium">
-                            <img src="/outlookicon.webp" alt="Outlook" className="h-4 w-4 object-contain" />
-                            <span>Outlook</span>
+                            <img src={providerIcon} alt={providerName} className="h-4 w-4 object-contain" />
+                            <span>{providerName}</span>
                           </div>
                           <Badge variant="outline" className="border-amber-400/50 text-amber-300 bg-amber-500/20 text-xs">
-                            Coming Soon
+                            ~1 week
                           </Badge>
                         </div>
-                        <div className="text-xs text-gray-500">OAuth configuration in progress</div>
+                        <div className="text-xs text-gray-500">Coming soon</div>
                         <Button 
                           size="sm" 
                           disabled={true}
-                          className="bg-blue-600/40 hover:bg-blue-600/40 text-white/60 cursor-not-allowed"
+                          className={`bg-${providerColor}-600/40 hover:bg-${providerColor}-600/40 text-white/60 cursor-not-allowed`}
                         >
                           Connect
                         </Button>
@@ -507,14 +505,13 @@ export default function IntegrationsHub() {
                   
                   const connected = isConnected();
                   
+                  // Only Gmail reaches here (outlook, gdrive, dropbox are filtered out above)
                   return (
                     <div key={p} className="flex flex-col gap-2 rounded border border-white/10 bg-white/5 p-3">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2 text-sm font-medium">
-                          {p === 'gmail' && <img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 object-contain" />}
-                          {p === 'gdrive' && <img src="/gd.png" alt="Google Drive" className="h-4 w-4 object-contain" />}
-                          {p === 'dropbox' && <img src="/db.png" alt="Dropbox" className="h-4 w-4 object-contain" />}
-                          <span className="capitalize">{p === 'gdrive' ? 'Google Drive' : p}</span>
+                          <img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 object-contain" />
+                          <span>Gmail</span>
                         </div>
                         <Badge variant="outline" className={cn('text-xs', connected ? 'border-emerald-500 text-emerald-500 font-semibold' : hasError() ? 'border-red-300 text-red-300' : 'border-gray-400/50 text-gray-400')}>
                           {connected ? 'Connected' : hasError() ? 'Error' : 'Not connected'}
@@ -524,7 +521,7 @@ export default function IntegrationsHub() {
                     <div className="flex gap-2">
                       <Button 
                         size="sm" 
-                        className={cn(p==='gmail'?'bg-red-600 hover:bg-red-700': p==='gdrive'?'bg-emerald-600 hover:bg-emerald-700':'bg-sky-600 hover:bg-sky-700')} 
+                        className="bg-red-600 hover:bg-red-700" 
                         onClick={async () => {
                           try {
                             setProviderLoading(p);
@@ -578,7 +575,7 @@ export default function IntegrationsHub() {
                             if (r.ok) {
                               toast({
                                 title: 'Disconnected',
-                                description: `${p === 'gdrive' ? 'Google Drive' : p} integration has been disconnected successfully.`,
+                                description: 'Gmail integration has been disconnected successfully.',
                               });
                             // Refresh status and sources
                             const s = await api.getIntegrationsStatus();
