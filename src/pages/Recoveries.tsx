@@ -619,9 +619,19 @@ export default function Recoveries() {
     // Use mergedRecoveries if it has data, otherwise fall back to claims
     // null means not initialized yet, so use claims
     // empty array means initialized but no data, so also use claims if available
-    const sourceData = (mergedRecoveries !== null && mergedRecoveries.length > 0) 
-      ? mergedRecoveries 
-      : (claims && claims.length > 0 ? claims : []);
+    let sourceData: any[] = [];
+    if (mergedRecoveries !== null) {
+      // mergedRecoveries has been initialized
+      if (mergedRecoveries.length > 0) {
+        sourceData = mergedRecoveries;
+      } else {
+        // mergedRecoveries is empty, fall back to claims
+        sourceData = (claims && claims.length > 0) ? claims : [];
+      }
+    } else {
+      // mergedRecoveries not initialized yet, use claims
+      sourceData = (claims && claims.length > 0) ? claims : [];
+    }
     
     // Debug logging (remove in production if needed)
     if (sourceData.length === 0 && !loading) {
