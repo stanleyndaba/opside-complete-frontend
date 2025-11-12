@@ -116,9 +116,12 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
       // 3. It might trigger automatic syncs
       // By checking status first, we can skip all of that if already connected.
       try {
+        console.log('[AmazonConnect] Checking connection status...');
         const statusResponse = await api.getIntegrationsStatus();
+        console.log('[AmazonConnect] Connection status response:', statusResponse);
         if (statusResponse.ok && statusResponse.data?.amazon_connected) {
           // Amazon is already connected! Just redirect to dashboard
+          console.log('[AmazonConnect] ✅ Amazon already connected, redirecting to integrations hub');
           toast({
             title: 'Clario',
             description: 'Your amazon account is Already connected, redirecting',
@@ -129,6 +132,8 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
             window.location.href = '/integrations-hub?amazon_connected=true';
           }, 500);
           return;
+        } else {
+          console.log('[AmazonConnect] ⚠️ Amazon not connected yet, attempting bypass...');
         }
       } catch (statusError) {
         // If status check fails, continue with bypass endpoint (might be first time)
@@ -142,10 +147,14 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         setTimeout(() => reject(new Error('Connection check timed out. The backend may be sleeping. Please try again in a moment.')), 15000); // 15s timeout instead of 45s
       });
 
+      console.log('[AmazonConnect] Attempting bypass connection...');
       const response = await Promise.race([bypassPromise, timeoutPromise]);
+      console.log('[AmazonConnect] Bypass response:', response);
 
       if (response.ok) {
         if (response.data?.bypassed && response.data?.redirectUrl) {
+          console.log('[AmazonConnect] ✅ Bypass successful! Backend found refresh token and validated it.');
+          console.log('[AmazonConnect] Redirect URL:', response.data.redirectUrl);
           toast({
             title: '✅ Using Existing Connection',
             description: 'Connected with saved Amazon credentials.',
@@ -157,6 +166,8 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
 
         const authUrl = response.data?.auth_url || response.data?.authUrl;
         if (authUrl) {
+          console.log('[AmazonConnect] ⚠️ No refresh token found, redirecting to OAuth flow');
+          console.log('[AmazonConnect] OAuth URL:', authUrl);
           toast({
             title: 'Verification Required',
             description: 'Redirecting you to Amazon to refresh access.',
@@ -166,12 +177,14 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
           return;
         }
 
+        console.log('[AmazonConnect] ❌ Bypass failed: No redirect URL or OAuth URL returned');
         toast({
           title: 'Existing Connection Unavailable',
           description: 'No saved connection found. Please use the main connect option.',
           variant: 'destructive'
         });
       } else {
+        console.log('[AmazonConnect] ❌ Bypass failed:', response.error);
         toast({
           title: 'Connection Failed',
           description: response.error || 'Could not reuse the existing connection. Please try the main connect button.',
