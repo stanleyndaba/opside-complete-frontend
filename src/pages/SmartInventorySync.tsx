@@ -14,7 +14,7 @@ import {
   XCircle, Clock, ArrowUpDown
 } from 'lucide-react';
 import { api } from '@/lib/api';
-import { useStatusStream } from '@/hooks/use-status-stream';
+// import { useStatusStream } from '@/hooks/use-status-stream'; // Not used currently
 import { SyncHistory } from '@/components/SyncHistory';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/components/ui/use-toast';
@@ -191,60 +191,98 @@ export default function SmartInventorySync() {
   // Get user ID
   useEffect(() => {
     (async () => {
-      const res = await api.getMe();
-      if (res.ok && res.data) {
-        setUserId(res.data.id || res.data.user_id);
+      try {
+        const res = await api.getMe();
+        if (res.ok && res.data) {
+          setUserId(res.data.id || res.data.user_id || res.data.userId);
+        } else {
+          // Even if API fails, show the page (it will show empty state)
+          console.warn('Failed to get user ID, but continuing to show page');
+          setLoading(false);
+        }
+      } catch (e) {
+        console.error('Error getting user ID:', e);
+        // Continue to show page even if user ID fetch fails
+        setLoading(false);
       }
     })();
   }, []);
 
   // Load sync status
   useEffect(() => {
+    if (!userId) return;
+
     const loadSyncStatus = async () => {
       try {
         const res = await api.getSyncStatusDetailed({ userId: userId || undefined });
         if (res.ok && res.data) {
           setSyncStatus(res.data);
+        } else {
+          // If API fails, set default status
+          setSyncStatus({ status: 'idle' });
         }
       } catch (e) {
         console.error('Failed to load sync status:', e);
+        // Set default status on error
+        setSyncStatus({ status: 'idle' });
       }
     };
 
-    if (userId) {
+    loadSyncStatus();
+    
+    // Poll sync status every 5 seconds if running
+    const interval = setInterval(() => {
       loadSyncStatus();
-      // Poll sync status every 5 seconds if running
-      const interval = setInterval(() => {
-        if (syncStatus.status === 'running') {
-          loadSyncStatus();
-        }
-      }, 5000);
-      return () => clearInterval(interval);
-    }
-  }, [userId, syncStatus.status]);
+    }, 5000);
+    
+    return () => clearInterval(interval);
+  }, [userId]);
 
-  // Load data based on active tab
+  // Use useMemo to memoize filter values to prevent unnecessary re-renders
+  const memoizedOrdersFilters = useMemo(() => ordersFilters, [ordersFilters.status, ordersFilters.fulfillmentChannel, ordersFilters.search]);
+  const memoizedShipmentsFilters = useMemo(() => shipmentsFilters, [shipmentsFilters.status, shipmentsFilters.search]);
+  const memoizedReturnsFilters = useMemo(() => returnsFilters, [returnsFilters.status, returnsFilters.search]);
+  const memoizedSettlementsFilters = useMemo(() => settlementsFilters, [settlementsFilters.transactionType, settlementsFilters.search]);
+  const memoizedDateRange = useMemo(() => dateRange, [dateRange.startDate, dateRange.endDate]);
+
+  // Load data based on active tab - only when tab or userId changes initially
   useEffect(() => {
-    if (!userId) return;
+    if (!userId) {
+      // Show empty state if no userId - don't block rendering
+      setLoading(false);
+      return;
+    }
+
+    let cancelled = false;
 
     const loadData = async () => {
+      if (cancelled) return;
+      
       setLoading(true);
       setError(null);
+      
       try {
         switch (activeTab) {
           case 'orders':
             const ordersRes = await api.getOrders({
               userId,
-              status: ordersFilters.status || undefined,
-              fulfillmentChannel: ordersFilters.fulfillmentChannel as 'FBA' | 'FBM' | undefined,
-              startDate: dateRange.startDate || undefined,
-              endDate: dateRange.endDate || undefined,
+              status: memoizedOrdersFilters.status || undefined,
+              fulfillmentChannel: memoizedOrdersFilters.fulfillmentChannel as 'FBA' | 'FBM' | undefined,
+              startDate: memoizedDateRange.startDate || undefined,
+              endDate: memoizedDateRange.endDate || undefined,
               limit: ordersPagination.limit,
               offset: ordersPagination.offset,
             });
-            if (ordersRes.ok && ordersRes.data) {
+            if (!cancelled && ordersRes.ok && ordersRes.data) {
               const data = ordersRes.data.data || ordersRes.data;
-              setOrders(Array.isArray(data) ? data : []);
+              const ordersArray = Array.isArray(data) ? data : [];
+              // Client-side search filter
+              const filteredOrders = memoizedOrdersFilters.search 
+                ? ordersArray.filter((order: Order) => 
+                    order?.order_id?.toLowerCase().includes(memoizedOrdersFilters.search.toLowerCase())
+                  )
+                : ordersArray;
+              setOrders(filteredOrders);
               if (ordersRes.data.pagination) {
                 setOrdersPagination(prev => ({
                   ...prev,
@@ -252,20 +290,28 @@ export default function SmartInventorySync() {
                   hasMore: ordersRes.data.pagination.hasMore || false,
                 }));
               }
+            } else if (!cancelled) {
+              setOrders([]);
             }
             break;
           case 'shipments':
             const shipmentsRes = await api.getShipments({
               userId,
-              status: shipmentsFilters.status || undefined,
-              startDate: dateRange.startDate || undefined,
-              endDate: dateRange.endDate || undefined,
+              status: memoizedShipmentsFilters.status || undefined,
+              startDate: memoizedDateRange.startDate || undefined,
+              endDate: memoizedDateRange.endDate || undefined,
               limit: shipmentsPagination.limit,
               offset: shipmentsPagination.offset,
             });
-            if (shipmentsRes.ok && shipmentsRes.data) {
+            if (!cancelled && shipmentsRes.ok && shipmentsRes.data) {
               const data = shipmentsRes.data.data || shipmentsRes.data;
-              setShipments(Array.isArray(data) ? data : []);
+              const shipmentsArray = Array.isArray(data) ? data : [];
+              const filteredShipments = memoizedShipmentsFilters.search
+                ? shipmentsArray.filter((shipment: Shipment) =>
+                    shipment?.shipment_id?.toLowerCase().includes(memoizedShipmentsFilters.search.toLowerCase())
+                  )
+                : shipmentsArray;
+              setShipments(filteredShipments);
               if (shipmentsRes.data.pagination) {
                 setShipmentsPagination(prev => ({
                   ...prev,
@@ -273,20 +319,28 @@ export default function SmartInventorySync() {
                   hasMore: shipmentsRes.data.pagination.hasMore || false,
                 }));
               }
+            } else if (!cancelled) {
+              setShipments([]);
             }
             break;
           case 'returns':
             const returnsRes = await api.getReturns({
               userId,
-              status: returnsFilters.status || undefined,
-              startDate: dateRange.startDate || undefined,
-              endDate: dateRange.endDate || undefined,
+              status: memoizedReturnsFilters.status || undefined,
+              startDate: memoizedDateRange.startDate || undefined,
+              endDate: memoizedDateRange.endDate || undefined,
               limit: returnsPagination.limit,
               offset: returnsPagination.offset,
             });
-            if (returnsRes.ok && returnsRes.data) {
+            if (!cancelled && returnsRes.ok && returnsRes.data) {
               const data = returnsRes.data.data || returnsRes.data;
-              setReturns(Array.isArray(data) ? data : []);
+              const returnsArray = Array.isArray(data) ? data : [];
+              const filteredReturns = memoizedReturnsFilters.search
+                ? returnsArray.filter((ret: Return) =>
+                    ret?.return_id?.toLowerCase().includes(memoizedReturnsFilters.search.toLowerCase())
+                  )
+                : returnsArray;
+              setReturns(filteredReturns);
               if (returnsRes.data.pagination) {
                 setReturnsPagination(prev => ({
                   ...prev,
@@ -294,20 +348,28 @@ export default function SmartInventorySync() {
                   hasMore: returnsRes.data.pagination.hasMore || false,
                 }));
               }
+            } else if (!cancelled) {
+              setReturns([]);
             }
             break;
           case 'settlements':
             const settlementsRes = await api.getSettlements({
               userId,
-              transactionType: settlementsFilters.transactionType || undefined,
-              startDate: dateRange.startDate || undefined,
-              endDate: dateRange.endDate || undefined,
+              transactionType: memoizedSettlementsFilters.transactionType || undefined,
+              startDate: memoizedDateRange.startDate || undefined,
+              endDate: memoizedDateRange.endDate || undefined,
               limit: settlementsPagination.limit,
               offset: settlementsPagination.offset,
             });
-            if (settlementsRes.ok && settlementsRes.data) {
+            if (!cancelled && settlementsRes.ok && settlementsRes.data) {
               const data = settlementsRes.data.data || settlementsRes.data;
-              setSettlements(Array.isArray(data) ? data : []);
+              const settlementsArray = Array.isArray(data) ? data : [];
+              const filteredSettlements = memoizedSettlementsFilters.search
+                ? settlementsArray.filter((settlement: Settlement) =>
+                    settlement?.settlement_id?.toLowerCase().includes(memoizedSettlementsFilters.search.toLowerCase())
+                  )
+                : settlementsArray;
+              setSettlements(filteredSettlements);
               if (settlementsRes.data.pagination) {
                 setSettlementsPagination(prev => ({
                   ...prev,
@@ -315,19 +377,31 @@ export default function SmartInventorySync() {
                   hasMore: settlementsRes.data.pagination.hasMore || false,
                 }));
               }
+            } else if (!cancelled) {
+              setSettlements([]);
             }
             break;
         }
       } catch (e: any) {
-        setError(e?.message || 'Failed to load data');
-        toast({ title: 'Error', description: e?.message || 'Failed to load data' });
+        if (!cancelled) {
+          console.error('Error loading data:', e);
+          setError(null);
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
     };
 
-    loadData();
-  }, [activeTab, userId, ordersFilters, shipmentsFilters, returnsFilters, settlementsFilters, dateRange, ordersPagination.offset, shipmentsPagination.offset, returnsPagination.offset, settlementsPagination.offset]);
+    // Load data immediately on tab/userId change, debounced for filter changes
+    const timeoutId = setTimeout(loadData, activeTab !== 'orders' && orders.length === 0 ? 0 : 100);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timeoutId);
+    };
+  }, [activeTab, userId, memoizedOrdersFilters, memoizedShipmentsFilters, memoizedReturnsFilters, memoizedSettlementsFilters, memoizedDateRange, ordersPagination.offset, shipmentsPagination.offset, returnsPagination.offset, settlementsPagination.offset]);
 
   // Trigger manual sync
   const handleSync = async () => {
@@ -400,52 +474,88 @@ export default function SmartInventorySync() {
     return <Badge variant="secondary">{status}</Badge>;
   };
 
-  // Summary stats
+  // Summary stats - with safe defaults
   const ordersSummary = useMemo(() => {
-    return {
-      total: orders.length,
-      totalAmount: orders.reduce((sum, order) => sum + (order.total_amount || 0), 0),
-      byStatus: orders.reduce((acc, order) => {
-        acc[order.order_status] = (acc[order.order_status] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>),
-    };
+    try {
+      return {
+        total: Array.isArray(orders) ? orders.length : 0,
+        totalAmount: Array.isArray(orders) ? orders.reduce((sum, order) => sum + (order?.total_amount || 0), 0) : 0,
+        byStatus: Array.isArray(orders) ? orders.reduce((acc, order) => {
+          const status = order?.order_status || 'Unknown';
+          acc[status] = (acc[status] || 0) + 1;
+          return acc;
+        }, {} as Record<string, number>) : {},
+      };
+    } catch (e) {
+      return { total: 0, totalAmount: 0, byStatus: {} };
+    }
   }, [orders]);
 
   const shipmentsSummary = useMemo(() => {
-    return {
-      total: shipments.length,
-      missingItems: shipments.filter(s => s.missing_quantity > 0).length,
-      byStatus: shipments.reduce((acc, shipment) => {
-        acc[shipment.status] = (acc[shipment.status] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>),
-    };
+    try {
+      return {
+        total: Array.isArray(shipments) ? shipments.length : 0,
+        missingItems: Array.isArray(shipments) ? shipments.filter(s => (s?.missing_quantity || 0) > 0).length : 0,
+        byStatus: Array.isArray(shipments) ? shipments.reduce((acc, shipment) => {
+          const status = shipment?.status || 'Unknown';
+          acc[status] = (acc[status] || 0) + 1;
+          return acc;
+        }, {} as Record<string, number>) : {},
+      };
+    } catch (e) {
+      return { total: 0, missingItems: 0, byStatus: {} };
+    }
   }, [shipments]);
 
   const returnsSummary = useMemo(() => {
-    return {
-      total: returns.length,
-      totalRefunded: returns.reduce((sum, ret) => sum + ret.refund_amount, 0),
-      partial: returns.filter(r => r.is_partial).length,
-      byStatus: returns.reduce((acc, ret) => {
-        acc[ret.status] = (acc[ret.status] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>),
-    };
+    try {
+      return {
+        total: Array.isArray(returns) ? returns.length : 0,
+        totalRefunded: Array.isArray(returns) ? returns.reduce((sum, ret) => sum + (ret?.refund_amount || 0), 0) : 0,
+        partial: Array.isArray(returns) ? returns.filter(r => r?.is_partial).length : 0,
+        byStatus: Array.isArray(returns) ? returns.reduce((acc, ret) => {
+          const status = ret?.status || 'Unknown';
+          acc[status] = (acc[status] || 0) + 1;
+          return acc;
+        }, {} as Record<string, number>) : {},
+      };
+    } catch (e) {
+      return { total: 0, totalRefunded: 0, partial: 0, byStatus: {} };
+    }
   }, [returns]);
 
   const settlementsSummary = useMemo(() => {
-    return {
-      total: settlements.length,
-      totalFees: settlements.reduce((sum, s) => sum + s.fees, 0),
-      totalAmount: settlements.reduce((sum, s) => sum + s.amount, 0),
-      byType: settlements.reduce((acc, s) => {
-        acc[s.transaction_type] = (acc[s.transaction_type] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>),
-    };
+    try {
+      return {
+        total: Array.isArray(settlements) ? settlements.length : 0,
+        totalFees: Array.isArray(settlements) ? settlements.reduce((sum, s) => sum + (s?.fees || 0), 0) : 0,
+        totalAmount: Array.isArray(settlements) ? settlements.reduce((sum, s) => sum + (s?.amount || 0), 0) : 0,
+        byType: Array.isArray(settlements) ? settlements.reduce((acc, s) => {
+          const type = s?.transaction_type || 'Unknown';
+          acc[type] = (acc[type] || 0) + 1;
+          return acc;
+        }, {} as Record<string, number>) : {},
+      };
+    } catch (e) {
+      return { total: 0, totalFees: 0, totalAmount: 0, byType: {} };
+    }
   }, [settlements]);
+
+  // Render sync status text safely
+  const getSyncStatusText = () => {
+    if (syncStatus.status === 'completed') return 'Last synced successfully';
+    if (syncStatus.status === 'running') return `Syncing... ${syncStatus.progress || 0}%`;
+    if (syncStatus.status === 'failed') return 'Sync failed';
+    if (syncStatus.lastSync) return `Last synced ${formatDateTime(syncStatus.lastSync)}`;
+    return 'No sync yet';
+  };
+
+  const getSyncStatusDescription = () => {
+    if (syncStatus.status === 'running') return 'Data synchronization in progress';
+    if (syncStatus.status === 'completed') return 'All data is up to date';
+    if (syncStatus.status === 'failed') return 'Please try syncing again';
+    return 'Click "Sync Now" to fetch latest data';
+  };
 
   return (
     <PageLayout title="Smart Inventory Sync" midnight forceTransparent>
@@ -466,16 +576,10 @@ export default function SmartInventorySync() {
                 )}
                 <div className="flex-1">
                   <h2 className="text-2xl font-semibold text-gray-100 mb-1">
-                    {syncStatus.status === 'completed' && 'Last synced successfully'}
-                    {syncStatus.status === 'running' && `Syncing... ${syncStatus.progress || 0}%`}
-                    {syncStatus.status === 'failed' && 'Sync failed'}
-                    {syncStatus.status === 'idle' && (syncStatus.lastSync ? `Last synced ${formatDateTime(syncStatus.lastSync)}` : 'No sync yet')}
+                    {getSyncStatusText()}
                   </h2>
                   <p className="text-gray-300 text-sm">
-                    {syncStatus.status === 'running' && 'Data synchronization in progress'}
-                    {syncStatus.status === 'completed' && 'All data is up to date'}
-                    {syncStatus.status === 'failed' && 'Please try syncing again'}
-                    {syncStatus.status === 'idle' && 'Click "Sync Now" to fetch latest data'}
+                    {getSyncStatusDescription()}
                   </p>
                   {syncStatus.status === 'running' && syncStatus.progress !== undefined && (
                     <Progress value={syncStatus.progress} className="mt-2" />
@@ -500,7 +604,7 @@ export default function SmartInventorySync() {
               </div>
               <Button 
                 onClick={handleSync} 
-                disabled={syncing || syncStatus.status === 'running'}
+                disabled={syncing || syncStatus.status === 'running' || !userId}
                 className="bg-emerald-500 hover:bg-emerald-400 text-white"
               >
                 {syncing || syncStatus.status === 'running' ? (
@@ -525,9 +629,10 @@ export default function SmartInventorySync() {
             <CardContent className="p-6">
               <div className="flex items-start gap-3">
                 <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="text-sm font-semibold text-red-400 mb-1">Error</h4>
+                <div className="flex-1">
+                  <h4 className="text-sm font-semibold text-red-400 mb-1">Error Loading Data</h4>
                   <p className="text-sm text-gray-300">{error}</p>
+                  <p className="text-xs text-gray-400 mt-2">The page will continue to work, but data may not be available.</p>
                 </div>
               </div>
             </CardContent>
@@ -645,15 +750,19 @@ export default function SmartInventorySync() {
                 <CardDescription>Your Amazon order data</CardDescription>
               </CardHeader>
               <CardContent>
-                {loading ? (
+                {loading && orders.length === 0 ? (
                   <div className="flex items-center justify-center py-8">
                     <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
                     <span className="ml-2 text-gray-400">Loading orders...</span>
                   </div>
                 ) : orders.length === 0 ? (
                   <div className="text-center py-8 text-gray-400">
-                    No orders found. {!userId && 'Please connect your Amazon account.'}
-                    {userId && 'Click "Sync Now" to fetch your orders.'}
+                    <p className="mb-2">No orders found.</p>
+                    {!userId ? (
+                      <p className="text-sm">Please connect your Amazon account to view orders.</p>
+                    ) : (
+                      <p className="text-sm">Click "Sync Now" to fetch your orders from Amazon.</p>
+                    )}
                   </div>
                 ) : (
                   <div className="overflow-x-auto">
@@ -670,26 +779,19 @@ export default function SmartInventorySync() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {orders
-                          .filter(order => {
-                            if (ordersFilters.search && !order.order_id.toLowerCase().includes(ordersFilters.search.toLowerCase())) {
-                              return false;
-                            }
-                            return true;
-                          })
-                          .map((order) => (
-                            <TableRow key={order.id}>
-                              <TableCell className="font-mono text-sm">{order.order_id}</TableCell>
-                              <TableCell>{formatDate(order.order_date)}</TableCell>
-                              <TableCell>{getStatusBadge(order.order_status)}</TableCell>
-                              <TableCell>
-                                <Badge variant="outline">{order.fulfillment_channel}</Badge>
-                              </TableCell>
-                              <TableCell>{order.items.length} item(s)</TableCell>
-                              <TableCell>{formatCurrency(order.total_amount, order.currency)}</TableCell>
-                              <TableCell>{order.currency}</TableCell>
-                            </TableRow>
-                          ))}
+                        {orders.map((order) => (
+                          <TableRow key={order.id || order.order_id}>
+                            <TableCell className="font-mono text-sm">{order.order_id || '—'}</TableCell>
+                            <TableCell>{formatDate(order.order_date)}</TableCell>
+                            <TableCell>{getStatusBadge(order.order_status || 'Unknown')}</TableCell>
+                            <TableCell>
+                              <Badge variant="outline">{order.fulfillment_channel || '—'}</Badge>
+                            </TableCell>
+                            <TableCell>{order.items?.length || 0} item(s)</TableCell>
+                            <TableCell>{formatCurrency(order.total_amount, order.currency)}</TableCell>
+                            <TableCell>{order.currency || 'USD'}</TableCell>
+                          </TableRow>
+                        ))}
                       </TableBody>
                     </Table>
                   </div>
@@ -792,14 +894,7 @@ export default function SmartInventorySync() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {shipments
-                          .filter(shipment => {
-                            if (shipmentsFilters.search && !shipment.shipment_id.toLowerCase().includes(shipmentsFilters.search.toLowerCase())) {
-                              return false;
-                            }
-                            return true;
-                          })
-                          .map((shipment) => (
+                        {shipments.map((shipment) => (
                             <TableRow key={shipment.id}>
                               <TableCell className="font-mono text-sm">{shipment.shipment_id}</TableCell>
                               <TableCell className="font-mono text-sm">{shipment.order_id || '—'}</TableCell>
@@ -913,14 +1008,7 @@ export default function SmartInventorySync() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {returns
-                          .filter(ret => {
-                            if (returnsFilters.search && !ret.return_id.toLowerCase().includes(returnsFilters.search.toLowerCase())) {
-                              return false;
-                            }
-                            return true;
-                          })
-                          .map((ret) => (
+                        {returns.map((ret) => (
                             <TableRow key={ret.id}>
                               <TableCell className="font-mono text-sm">{ret.return_id}</TableCell>
                               <TableCell className="font-mono text-sm">{ret.order_id || '—'}</TableCell>
@@ -1034,14 +1122,7 @@ export default function SmartInventorySync() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {settlements
-                          .filter(settlement => {
-                            if (settlementsFilters.search && !settlement.settlement_id.toLowerCase().includes(settlementsFilters.search.toLowerCase())) {
-                              return false;
-                            }
-                            return true;
-                          })
-                          .map((settlement) => (
+                        {settlements.map((settlement) => (
                             <TableRow key={settlement.id}>
                               <TableCell className="font-mono text-sm">{settlement.settlement_id}</TableCell>
                               <TableCell className="font-mono text-sm">{settlement.order_id || '—'}</TableCell>
