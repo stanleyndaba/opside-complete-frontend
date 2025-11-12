@@ -1650,7 +1650,7 @@ export default function Recoveries() {
                               </Link>
                             </DropdownMenuItem>
                           )}
-                          <DropdownMenuItem onClick={async () => {
+                          <DropdownMenuItem className="text-blue-400 focus:text-blue-300 focus:bg-blue-400/10" onClick={async () => {
                             const url = api.getRecoveryDocumentUrl(claim.id);
                             try {
                               const head = await fetch(url, { method: 'HEAD', credentials: 'include' });

@@ -566,7 +566,7 @@ export default function CaseDetail() {
                   <label className="text-sm font-medium text-muted-foreground">Evidence & Docs</label>
                   <div className="text-xs text-muted-foreground">Evidence Status: <span className="font-medium text-foreground">{effectiveCase.evidenceStatus ?? 'Collecting'}</span></div>
                   <div className="space-y-2">
-                    <Button variant="outline" className="w-full" onClick={() => {
+                    <Button variant="outline" className="w-full text-blue-400 hover:text-blue-300 border-blue-400/30 hover:border-blue-400/50" onClick={() => {
                       window.open(api.getRecoveryDocumentUrl(effectiveCase.id), '_blank');
                     }}>
                       <FileText className="h-4 w-4 mr-2" />
@@ -601,7 +601,7 @@ export default function CaseDetail() {
                 <CardTitle className="flex items-center gap-2 text-gray-200">
                   <Clock className="h-5 w-5" />
                   Claim Timeline
-                  <Badge variant="outline" className="ml-auto">
+                  <Badge variant="outline" className="ml-auto text-white border-white/30">
                     {typeof effectiveCase.progress === 'number' ? `${Math.round(effectiveCase.progress)}%` : 'Real-time transparency'}
                   </Badge>
                 </CardTitle>
@@ -614,7 +614,7 @@ export default function CaseDetail() {
                     <Badge variant="outline" className="text-xs text-gray-200 border-white/20">Evidence: {derivedEvidence}</Badge>
                     <Badge variant="outline" className="text-xs text-gray-200 border-white/20">Matched docs: {matchedCount}</Badge>
                     <div className="ml-auto flex gap-2">
-                      <Button size="sm" variant="outline" onClick={async () => {
+                      <Button size="sm" variant="outline" className="text-blue-400 hover:text-blue-300 border-blue-400/30 hover:border-blue-400/50" onClick={async () => {
                         const url = api.getRecoveryDocumentUrl(effectiveCase.id);
                         // Try composed proof first; if unavailable, fall back to first matched document
                         try {
