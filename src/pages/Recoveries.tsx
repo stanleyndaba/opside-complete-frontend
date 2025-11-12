@@ -233,8 +233,15 @@ export default function Recoveries() {
         }),
       ]);
       if (!cancelled) {
+        console.log('[Recoveries] Data fetch results:', {
+          resData: resData ? (Array.isArray(resData) ? `${resData.length} items` : 'not array') : 'null',
+          detectionRes: detectionRes?.ok ? `${detectionRes.data?.results?.length || 0} results` : 'failed',
+          currentClaimsLength: claims.length
+        });
+
         if (resData && Array.isArray(resData)) {
           const newClaims = resData as any[];
+          console.log('[Recoveries] Got recoveries from API:', newClaims.length);
           
           // Detect new recoveries by comparing with previous claims
           if (hasInitializedRef.current) {
@@ -275,27 +282,33 @@ export default function Recoveries() {
           
           // Merge with detection results
           if (detectionRes.ok && detectionRes.data?.results) {
+            console.log('[Recoveries] Merging with detection results:', detectionRes.data.results.length);
             setDetectionResults(detectionRes.data.results);
             mergeRecoveries(newClaims, detectionRes.data.results);
           } else {
             // No detection results, but we have synced recoveries - merge with empty detection array
+            console.log('[Recoveries] No detection results, merging recoveries only');
             setDetectionResults([]);
             mergeRecoveries(newClaims, []);
           }
         } else {
           // No synced recoveries from API - keep existing claims (might be mock data)
+          console.log('[Recoveries] No API data, using existing claims:', claims.length);
           // Only merge if we have detection results
           if (detectionRes.ok && detectionRes.data?.results) {
+            console.log('[Recoveries] Merging detection results with existing claims');
             setDetectionResults(detectionRes.data.results);
             // Merge detection results with existing claims (or empty if no claims)
             mergeRecoveries(claims.length > 0 ? claims : [], detectionRes.data.results);
           } else {
             // No detection results either - just ensure mergedRecoveries reflects current claims
+            console.log('[Recoveries] No detection results, merging existing claims only');
             setDetectionResults([]);
             // If we have claims, merge them (even if empty detection), otherwise set empty
             if (claims.length > 0) {
               mergeRecoveries(claims, []);
             } else {
+              console.warn('[Recoveries] No claims available at all!');
               mergeRecoveries([], []);
             }
           }
@@ -633,17 +646,15 @@ export default function Recoveries() {
       sourceData = (claims && claims.length > 0) ? claims : [];
     }
     
-    // Debug logging (remove in production if needed)
-    if (sourceData.length === 0 && !loading) {
-      console.log('[Recoveries] No data to display:', {
-        mergedRecoveries: mergedRecoveries,
-        mergedRecoveriesLength: mergedRecoveries?.length ?? 'null',
-        claimsLength: claims?.length || 0,
-        filterSource,
-        filterConfidence,
-        loading
-      });
-    }
+    // Debug logging
+    console.log('[Recoveries] Filtering data:', {
+      sourceDataLength: sourceData.length,
+      mergedRecoveries: mergedRecoveries !== null ? `${mergedRecoveries.length} items` : 'null',
+      claimsLength: claims?.length || 0,
+      filterSource,
+      filterConfidence,
+      loading
+    });
     
     let filtered = sourceData.filter(claim => {
       // Source filter (Phase 3)
