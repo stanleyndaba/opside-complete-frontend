@@ -745,4 +745,131 @@ export const api = {
   // Inventory/Sync summary endpoints (non-id based)
   getSyncStatus: () => requestJson<any>('/api/sync/status'),
   getSyncActivity: () => requestJson<any>('/api/sync/activity'),
+
+  // Phase 2: Orders, Shipments, Returns, Settlements endpoints
+  getOrders: (params?: {
+    userId?: string;
+    startDate?: string;
+    endDate?: string;
+    status?: string;
+    fulfillmentChannel?: 'FBA' | 'FBM';
+    limit?: number;
+    offset?: number;
+  }) => {
+    const queryParams = new URLSearchParams();
+    if (params?.userId) queryParams.append('userId', params.userId);
+    if (params?.startDate) queryParams.append('startDate', params.startDate);
+    if (params?.endDate) queryParams.append('endDate', params.endDate);
+    if (params?.status) queryParams.append('status', params.status);
+    if (params?.fulfillmentChannel) queryParams.append('fulfillmentChannel', params.fulfillmentChannel);
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    if (params?.offset) queryParams.append('offset', params.offset.toString());
+    const query = queryParams.toString();
+    return requestJson<any>(`/api/v1/integrations/amazon/orders${query ? `?${query}` : ''}`);
+  },
+
+  getShipments: (params?: {
+    userId?: string;
+    orderId?: string;
+    status?: string;
+    startDate?: string;
+    endDate?: string;
+    limit?: number;
+    offset?: number;
+  }) => {
+    const queryParams = new URLSearchParams();
+    if (params?.userId) queryParams.append('userId', params.userId);
+    if (params?.orderId) queryParams.append('orderId', params.orderId);
+    if (params?.status) queryParams.append('status', params.status);
+    if (params?.startDate) queryParams.append('startDate', params.startDate);
+    if (params?.endDate) queryParams.append('endDate', params.endDate);
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    if (params?.offset) queryParams.append('offset', params.offset.toString());
+    const query = queryParams.toString();
+    return requestJson<any>(`/api/v1/integrations/amazon/shipments${query ? `?${query}` : ''}`);
+  },
+
+  getReturns: (params?: {
+    userId?: string;
+    orderId?: string;
+    status?: string;
+    startDate?: string;
+    endDate?: string;
+    limit?: number;
+    offset?: number;
+  }) => {
+    const queryParams = new URLSearchParams();
+    if (params?.userId) queryParams.append('userId', params.userId);
+    if (params?.orderId) queryParams.append('orderId', params.orderId);
+    if (params?.status) queryParams.append('status', params.status);
+    if (params?.startDate) queryParams.append('startDate', params.startDate);
+    if (params?.endDate) queryParams.append('endDate', params.endDate);
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    if (params?.offset) queryParams.append('offset', params.offset.toString());
+    const query = queryParams.toString();
+    return requestJson<any>(`/api/v1/integrations/amazon/returns${query ? `?${query}` : ''}`);
+  },
+
+  getSettlements: (params?: {
+    userId?: string;
+    orderId?: string;
+    transactionType?: string;
+    startDate?: string;
+    endDate?: string;
+    limit?: number;
+    offset?: number;
+  }) => {
+    const queryParams = new URLSearchParams();
+    if (params?.userId) queryParams.append('userId', params.userId);
+    if (params?.orderId) queryParams.append('orderId', params.orderId);
+    if (params?.transactionType) queryParams.append('transactionType', params.transactionType);
+    if (params?.startDate) queryParams.append('startDate', params.startDate);
+    if (params?.endDate) queryParams.append('endDate', params.endDate);
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    if (params?.offset) queryParams.append('offset', params.offset.toString());
+    const query = queryParams.toString();
+    return requestJson<any>(`/api/v1/integrations/amazon/settlements${query ? `?${query}` : ''}`);
+  },
+
+  // Trigger manual sync
+  triggerSync: (params?: {
+    userId?: string;
+    syncTypes?: Array<'orders' | 'shipments' | 'returns' | 'settlements'>;
+  }) => {
+    return requestJson<{
+      success: boolean;
+      syncId: string;
+      message: string;
+      estimatedDuration?: string;
+    }>('/api/v1/integrations/amazon/sync', {
+      method: 'POST',
+      body: JSON.stringify({
+        userId: params?.userId,
+        syncTypes: params?.syncTypes || ['orders', 'shipments', 'returns', 'settlements'],
+      }),
+    });
+  },
+
+  // Get detailed sync status
+  getSyncStatusDetailed: (params?: { userId?: string; syncId?: string }) => {
+    const queryParams = new URLSearchParams();
+    if (params?.userId) queryParams.append('userId', params.userId);
+    if (params?.syncId) queryParams.append('syncId', params.syncId);
+    const query = queryParams.toString();
+    return requestJson<{
+      success: boolean;
+      status: 'running' | 'completed' | 'failed';
+      syncId: string;
+      progress: number;
+      results: {
+        orders?: { count: number; status: string };
+        shipments?: { count: number; status: string };
+        returns?: { count: number; status: string };
+        settlements?: { count: number; status: string };
+      };
+      startedAt?: string;
+      completedAt?: string;
+      duration?: number;
+    }>(`/api/v1/integrations/amazon/sync/status${query ? `?${query}` : ''}`);
+  },
 };
