@@ -192,7 +192,13 @@ export default function OAuthSuccess() {
                 Connect Evidence Sources
               </DialogTitle>
             <DialogDescription className="text-gray-300">
-              Link your email and cloud storage to auto‑collect invoices and receipts. Read‑only. No writing or sending.
+              Link your email and cloud storage to automatically collect invoices, receipts, and shipping documents.
+              <span className="block mt-2 text-sm text-gray-400">
+                Read-only access. No writing or sending permissions.
+              </span>
+              <span className="block mt-2 text-xs text-emerald-300/90 font-medium">
+                Gmail is available now. Outlook, Google Drive, and Dropbox coming in a week.
+              </span>
             </DialogDescription>
           </DialogHeader>
           <div className="grid grid-cols-2 gap-3 pt-2">
@@ -219,74 +225,17 @@ export default function OAuthSuccess() {
             }}>
               <img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 mr-2 object-contain" /> Gmail
             </Button>
-            <Button className="w-full bg-blue-600/90 hover:bg-blue-600 text-white border border-white/10" onClick={async () => {
-              try {
-                const r = await api.connectDocs('outlook');
-                if (r.ok && r.data?.auth_url) {
-                  window.location.href = r.data.auth_url;
-                } else {
-                  toast({
-                    title: 'Connection Failed',
-                    description: r.error || 'Failed to initiate Outlook connection. Please try again.',
-                    variant: 'destructive',
-                  });
-                }
-              } catch (error) {
-                console.error('Failed to connect Outlook:', error);
-                toast({
-                  title: 'Connection Failed',
-                  description: 'An error occurred while connecting Outlook. Please try again.',
-                  variant: 'destructive',
-                });
-              }
-            }}>
+            <Button disabled={true} className="w-full bg-blue-600/40 hover:bg-blue-600/40 text-white/60 border border-white/10 cursor-not-allowed opacity-60">
               <img src="/outlookicon.webp" alt="Outlook" className="h-4 w-4 mr-2 object-contain" /> Outlook
+              <span className="ml-2 text-xs">Coming soon</span>
             </Button>
-            <Button className="w-full bg-emerald-600/90 hover:bg-emerald-600 text-white border border-white/10" onClick={async () => {
-              try {
-                const r = await api.connectDocs('gdrive');
-                if (r.ok && r.data?.auth_url) {
-                  window.location.href = r.data.auth_url;
-                } else {
-                  toast({
-                    title: 'Connection Failed',
-                    description: r.error || 'Failed to initiate Google Drive connection. Please try again.',
-                    variant: 'destructive',
-                  });
-                }
-              } catch (error) {
-                console.error('Failed to connect Google Drive:', error);
-                toast({
-                  title: 'Connection Failed',
-                  description: 'An error occurred while connecting Google Drive. Please try again.',
-                  variant: 'destructive',
-                });
-              }
-            }}>
+            <Button disabled={true} className="w-full bg-emerald-600/40 hover:bg-emerald-600/40 text-white/60 border border-white/10 cursor-not-allowed opacity-60">
               <img src="/gd.png" alt="Google Drive" className="h-4 w-4 mr-2 object-contain" /> Google Drive
+              <span className="ml-2 text-xs">Coming soon</span>
             </Button>
-            <Button className="w-full bg-sky-600/90 hover:bg-sky-600 text-white border border-white/10" onClick={async () => {
-              try {
-                const r = await api.connectDocs('dropbox');
-                if (r.ok && r.data?.auth_url) {
-                  window.location.href = r.data.auth_url;
-                } else {
-                  toast({
-                    title: 'Connection Failed',
-                    description: r.error || 'Failed to initiate Dropbox connection. Please try again.',
-                    variant: 'destructive',
-                  });
-                }
-              } catch (error) {
-                console.error('Failed to connect Dropbox:', error);
-                toast({
-                  title: 'Connection Failed',
-                  description: 'An error occurred while connecting Dropbox. Please try again.',
-                  variant: 'destructive',
-                });
-              }
-            }}>
+            <Button disabled={true} className="w-full bg-sky-600/40 hover:bg-sky-600/40 text-white/60 border border-white/10 cursor-not-allowed opacity-60">
               <img src="/db.png" alt="Dropbox" className="h-4 w-4 mr-2 object-contain" /> Dropbox
+              <span className="ml-2 text-xs">Coming soon</span>
             </Button>
           </div>
           <DialogFooter>
