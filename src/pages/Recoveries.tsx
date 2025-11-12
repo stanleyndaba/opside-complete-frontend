@@ -1089,7 +1089,7 @@ export default function Recoveries() {
                     : claim._confidence;
                   
                   return (
-                  <TableRow key={claim.id} className="cursor-pointer hover:bg-white/5">
+                    <TableRow key={claim.id} className="cursor-pointer hover:bg-white/5">
                     <TableCell>
                       <Checkbox checked={selectedIds.has(claim.id)} onCheckedChange={(checked) => {
                         setSelectedIds(prev => {
@@ -1246,7 +1246,8 @@ export default function Recoveries() {
                       </DropdownMenu>
                     </TableCell>
                   </TableRow>
-                ))}
+                  );
+                })}
               </TableBody>
             </Table>
           </CardContent>
