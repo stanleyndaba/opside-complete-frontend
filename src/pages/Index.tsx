@@ -648,7 +648,7 @@ const Index = () => {
               <h1 
                 className="text-8xl md:text-9xl lg:text-[12rem] font-black tracking-tight"
                 style={{
-                  background: 'linear-gradient(135deg, #ffffff 0%, #f1f3f5 15%, #e9ecef 30%, #dee2e6 45%, #ced4da 60%, #adb5bd 75%, #868e96 90%, #495057 100%)',
+                  background: 'linear-gradient(135deg, #f1f3f5 0%, #e9ecef 25%, #dee2e6 50%, #e9ecef 75%, #f1f3f5 100%)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   backgroundClip: 'text',
