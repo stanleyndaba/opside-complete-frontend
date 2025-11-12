@@ -172,10 +172,10 @@ export default function Recoveries() {
     return 'Collecting';
   };
 
-  // Helper function to merge recoveries with detection results
+  // Helper function to merge recoveries with detection results (without applying filters)
   const mergeRecoveries = useCallback((syncedRecoveries: any[], detectedClaims: any[]) => {
     // Transform detection results to match recovery format
-    const detected = detectedClaims.map(det => ({
+    const detected = (detectedClaims || []).map(det => ({
       id: det.id,
       source: 'detected',
       type: det.anomaly_type || 'Detected Claim',
@@ -209,29 +209,15 @@ export default function Recoveries() {
       _matchedCount: Array.isArray((rec as any).matchedDocs) ? (rec as any).matchedDocs.length : ((rec as any).matchedCount ?? 0),
     }));
     
-    // Combine and sort
+    // Combine and sort (don't apply filters here - let filteredClaims handle that)
     const merged = [...detected, ...synced].sort((a, b) => {
       const dateA = new Date(a.discovery_date || a.created || a.created_at || 0).getTime();
       const dateB = new Date(b.discovery_date || b.created || b.created_at || 0).getTime();
       return dateB - dateA;
     });
     
-    // Apply filters
-    let filtered = merged;
-    if (filterSource !== 'all') {
-      filtered = filtered.filter(r => r.source === filterSource);
-    }
-    if (filterConfidence !== 'all' && filterSource === 'detected') {
-      filtered = filtered.filter(r => {
-        if (!r.confidence_score) return false;
-        if (filterConfidence === 'high') return r.confidence_score >= 0.85;
-        if (filterConfidence === 'medium') return r.confidence_score >= 0.50 && r.confidence_score < 0.85;
-        return r.confidence_score < 0.50;
-      });
-    }
-    
-    setMergedRecoveries(filtered);
-  }, [filterSource, filterConfidence]);
+    setMergedRecoveries(merged);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -241,7 +227,10 @@ export default function Recoveries() {
         recoveryApi.getRecoveries().catch(() => null),
         api.getRecoveriesMetrics(),
         api.getAmazonRecoveries().catch(() => null),
-        detectionApi.getDetectionResults({ limit: 100, offset: 0 }).catch(() => ({ ok: false, data: null })),
+        detectionApi.getDetectionResults({ limit: 100, offset: 0 }).catch((err) => {
+          console.warn('Failed to fetch detection results:', err);
+          return { ok: false, data: null };
+        }),
       ]);
       if (!cancelled) {
         if (resData && Array.isArray(resData)) {
@@ -289,6 +278,8 @@ export default function Recoveries() {
             setDetectionResults(detectionRes.data.results);
             mergeRecoveries(newClaims, detectionRes.data.results);
           } else {
+            // No detection results, but we have synced recoveries - merge with empty detection array
+            setDetectionResults([]);
             mergeRecoveries(newClaims, []);
           }
         } else {
@@ -298,6 +289,8 @@ export default function Recoveries() {
             setDetectionResults(detectionRes.data.results);
             mergeRecoveries([], detectionRes.data.results);
           } else {
+            // No data at all - set empty arrays
+            setDetectionResults([]);
             mergeRecoveries([], []);
           }
         }
@@ -615,24 +608,33 @@ export default function Recoveries() {
     }
   });
 
-  // Update merged recoveries when filters change
-  useEffect(() => {
-    mergeRecoveries(claims, detectionResults);
-  }, [filterSource, filterConfidence, mergeRecoveries]);
-
   // Filter data based on search and filters - use mergedRecoveries if available
   const filteredClaims = useMemo(() => {
-    const sourceData = mergedRecoveries.length > 0 ? mergedRecoveries : claims;
+    // Use mergedRecoveries if it has data, otherwise fall back to claims
+    const sourceData = (mergedRecoveries && mergedRecoveries.length > 0) ? mergedRecoveries : claims;
     let filtered = sourceData.filter(claim => {
+      // Source filter (Phase 3)
+      if (filterSource !== 'all') {
+        if (claim.source !== filterSource) return false;
+      }
+      
+      // Confidence filter (Phase 3) - only for detected claims
+      if (filterConfidence !== 'all' && filterSource === 'detected') {
+        if (!claim.confidence_score) return false;
+        if (filterConfidence === 'high' && claim.confidence_score < 0.85) return false;
+        if (filterConfidence === 'medium' && (claim.confidence_score < 0.50 || claim.confidence_score >= 0.85)) return false;
+        if (filterConfidence === 'low' && claim.confidence_score >= 0.50) return false;
+      }
+      
       // Search filter
       const searchMatch = !searchTerm || 
-        claim.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        claim.sku.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        claim.id?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        claim.sku?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         claim.asin?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        claim.details.toLowerCase().includes(searchTerm.toLowerCase());
+        claim.details?.toLowerCase().includes(searchTerm.toLowerCase());
       
       // Date filter
-      const claimDate = new Date(claim.created);
+      const claimDate = new Date(claim.created || claim.discovery_date || claim.created_at || 0);
       const dateMatch = (!dateRange?.from || claimDate >= dateRange.from) && 
                        (!dateRange?.to || claimDate <= dateRange.to);
       
@@ -646,7 +648,7 @@ export default function Recoveries() {
     });
 
     return filtered;
-  }, [mergedRecoveries, claims, searchTerm, dateRange, selectedClaimTypes, selectedStatuses]);
+  }, [mergedRecoveries, claims, filterSource, filterConfidence, searchTerm, dateRange, selectedClaimTypes, selectedStatuses]);
 
   // Rank opportunities: prioritize by confidence * value
   const rankedClaims = useMemo(() => {
