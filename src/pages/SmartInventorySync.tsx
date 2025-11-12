@@ -642,28 +642,28 @@ export default function SmartInventorySync() {
         {/* Main Data Tabs */}
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as DataTab)} className="space-y-6">
           <TabsList className="bg-white/10 backdrop-blur-xl border-white/10 rounded-lg p-1">
-            <TabsTrigger value="orders" className="data-[state=active]:bg-white/20">
+            <TabsTrigger value="orders" className="data-[state=active]:bg-white/20 text-white">
               <ShoppingCart className="h-4 w-4 mr-2" />
               Orders
               {ordersSummary.total > 0 && (
                 <Badge variant="secondary" className="ml-2">{ordersSummary.total}</Badge>
               )}
             </TabsTrigger>
-            <TabsTrigger value="shipments" className="data-[state=active]:bg-white/20">
+            <TabsTrigger value="shipments" className="data-[state=active]:bg-white/20 text-white">
               <Truck className="h-4 w-4 mr-2" />
               Shipments
               {shipmentsSummary.total > 0 && (
                 <Badge variant="secondary" className="ml-2">{shipmentsSummary.total}</Badge>
               )}
             </TabsTrigger>
-            <TabsTrigger value="returns" className="data-[state=active]:bg-white/20">
+            <TabsTrigger value="returns" className="data-[state=active]:bg-white/20 text-white">
               <RotateCcw className="h-4 w-4 mr-2" />
               Returns
               {returnsSummary.total > 0 && (
                 <Badge variant="secondary" className="ml-2">{returnsSummary.total}</Badge>
               )}
             </TabsTrigger>
-            <TabsTrigger value="settlements" className="data-[state=active]:bg-white/20">
+            <TabsTrigger value="settlements" className="data-[state=active]:bg-white/20 text-white">
               <DollarSign className="h-4 w-4 mr-2" />
               Settlements
               {settlementsSummary.total > 0 && (
@@ -708,11 +708,11 @@ export default function SmartInventorySync() {
                     placeholder="Search by Order ID..."
                     value={ordersFilters.search}
                     onChange={(e) => setOrdersFilters(prev => ({ ...prev, search: e.target.value }))}
-                    className="bg-white/5 border-white/10"
+                    className="bg-white/5 border-white/10 text-white placeholder:text-gray-400"
                   />
                   <Select value={ordersFilters.status || 'all'} onValueChange={(v) => setOrdersFilters(prev => ({ ...prev, status: v === 'all' ? '' : v }))}>
-                    <SelectTrigger className="bg-white/5 border-white/10">
-                      <SelectValue placeholder="All Statuses" />
+                    <SelectTrigger className="bg-white/5 border-white/10 text-white">
+                      <SelectValue placeholder="All Statuses" className="text-white" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">All Statuses</SelectItem>
@@ -723,8 +723,8 @@ export default function SmartInventorySync() {
                     </SelectContent>
                   </Select>
                   <Select value={ordersFilters.fulfillmentChannel || 'all'} onValueChange={(v) => setOrdersFilters(prev => ({ ...prev, fulfillmentChannel: v === 'all' ? '' : v }))}>
-                    <SelectTrigger className="bg-white/5 border-white/10">
-                      <SelectValue placeholder="All Channels" />
+                    <SelectTrigger className="bg-white/5 border-white/10 text-white">
+                      <SelectValue placeholder="All Channels" className="text-white" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">All Channels</SelectItem>
@@ -736,7 +736,7 @@ export default function SmartInventorySync() {
                     type="date"
                     value={dateRange.startDate}
                     onChange={(e) => setDateRange(prev => ({ ...prev, startDate: e.target.value }))}
-                    className="bg-white/5 border-white/10"
+                    className="bg-white/5 border-white/10 text-white placeholder:text-gray-400"
                     placeholder="Start Date"
                   />
                 </div>
@@ -746,7 +746,7 @@ export default function SmartInventorySync() {
             {/* Orders Table */}
             <Card className="bg-white/10 backdrop-blur-xl border-white/10">
               <CardHeader>
-                <CardTitle>Orders</CardTitle>
+                <CardTitle className="text-white">Orders</CardTitle>
                 <CardDescription>Your Amazon order data</CardDescription>
               </CardHeader>
               <CardContent>
@@ -836,11 +836,11 @@ export default function SmartInventorySync() {
                     placeholder="Search by Shipment ID..."
                     value={shipmentsFilters.search}
                     onChange={(e) => setShipmentsFilters(prev => ({ ...prev, search: e.target.value }))}
-                    className="bg-white/5 border-white/10"
+                    className="bg-white/5 border-white/10 text-white placeholder:text-gray-400"
                   />
                   <Select value={shipmentsFilters.status || 'all'} onValueChange={(v) => setShipmentsFilters(prev => ({ ...prev, status: v === 'all' ? '' : v }))}>
-                    <SelectTrigger className="bg-white/5 border-white/10">
-                      <SelectValue placeholder="All Statuses" />
+                    <SelectTrigger className="bg-white/5 border-white/10 text-white">
+                      <SelectValue placeholder="All Statuses" className="text-white" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">All Statuses</SelectItem>
@@ -855,7 +855,7 @@ export default function SmartInventorySync() {
                     type="date"
                     value={dateRange.startDate}
                     onChange={(e) => setDateRange(prev => ({ ...prev, startDate: e.target.value }))}
-                    className="bg-white/5 border-white/10"
+                    className="bg-white/5 border-white/10 text-white placeholder:text-gray-400"
                     placeholder="Start Date"
                   />
                 </div>
@@ -865,7 +865,7 @@ export default function SmartInventorySync() {
             {/* Shipments Table */}
             <Card className="bg-white/10 backdrop-blur-xl border-white/10">
               <CardHeader>
-                <CardTitle>Shipments</CardTitle>
+                <CardTitle className="text-white">Shipments</CardTitle>
                 <CardDescription>FBA shipment tracking data</CardDescription>
               </CardHeader>
               <CardContent>
@@ -952,11 +952,11 @@ export default function SmartInventorySync() {
                     placeholder="Search by Return ID..."
                     value={returnsFilters.search}
                     onChange={(e) => setReturnsFilters(prev => ({ ...prev, search: e.target.value }))}
-                    className="bg-white/5 border-white/10"
+                    className="bg-white/5 border-white/10 text-white placeholder:text-gray-400"
                   />
                   <Select value={returnsFilters.status || 'all'} onValueChange={(v) => setReturnsFilters(prev => ({ ...prev, status: v === 'all' ? '' : v }))}>
-                    <SelectTrigger className="bg-white/5 border-white/10">
-                      <SelectValue placeholder="All Statuses" />
+                    <SelectTrigger className="bg-white/5 border-white/10 text-white">
+                      <SelectValue placeholder="All Statuses" className="text-white" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">All Statuses</SelectItem>
@@ -970,7 +970,7 @@ export default function SmartInventorySync() {
                     type="date"
                     value={dateRange.startDate}
                     onChange={(e) => setDateRange(prev => ({ ...prev, startDate: e.target.value }))}
-                    className="bg-white/5 border-white/10"
+                    className="bg-white/5 border-white/10 text-white placeholder:text-gray-400"
                     placeholder="Start Date"
                   />
                 </div>
@@ -980,7 +980,7 @@ export default function SmartInventorySync() {
             {/* Returns Table */}
             <Card className="bg-white/10 backdrop-blur-xl border-white/10">
               <CardHeader>
-                <CardTitle>Returns</CardTitle>
+                <CardTitle className="text-white">Returns</CardTitle>
                 <CardDescription>Customer return data</CardDescription>
               </CardHeader>
               <CardContent>
@@ -1065,11 +1065,11 @@ export default function SmartInventorySync() {
                     placeholder="Search by Settlement ID..."
                     value={settlementsFilters.search}
                     onChange={(e) => setSettlementsFilters(prev => ({ ...prev, search: e.target.value }))}
-                    className="bg-white/5 border-white/10"
+                    className="bg-white/5 border-white/10 text-white placeholder:text-gray-400"
                   />
                   <Select value={settlementsFilters.transactionType || 'all'} onValueChange={(v) => setSettlementsFilters(prev => ({ ...prev, transactionType: v === 'all' ? '' : v }))}>
-                    <SelectTrigger className="bg-white/5 border-white/10">
-                      <SelectValue placeholder="All Types" />
+                    <SelectTrigger className="bg-white/5 border-white/10 text-white">
+                      <SelectValue placeholder="All Types" className="text-white" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">All Types</SelectItem>
@@ -1084,7 +1084,7 @@ export default function SmartInventorySync() {
                     type="date"
                     value={dateRange.startDate}
                     onChange={(e) => setDateRange(prev => ({ ...prev, startDate: e.target.value }))}
-                    className="bg-white/5 border-white/10"
+                    className="bg-white/5 border-white/10 text-white placeholder:text-gray-400"
                     placeholder="Start Date"
                   />
                 </div>
@@ -1094,7 +1094,7 @@ export default function SmartInventorySync() {
             {/* Settlements Table */}
             <Card className="bg-white/10 backdrop-blur-xl border-white/10">
               <CardHeader>
-                <CardTitle>Settlements</CardTitle>
+                <CardTitle className="text-white">Settlements</CardTitle>
                 <CardDescription>Financial settlements and fee data</CardDescription>
               </CardHeader>
               <CardContent>
