@@ -482,10 +482,13 @@ const Index = () => {
                 <img
                   src="/Trans.png"
                   alt="Transparent Tracking"
-                  className="w-full h-auto rounded-[25px] shadow-[0_20px_60px_rgba(0,0,0,0.15),0_10px_30px_rgba(0,0,0,0.1)]"
+                  className="w-full rounded-[25px] shadow-[0_20px_60px_rgba(0,0,0,0.15),0_10px_30px_rgba(0,0,0,0.1)] object-cover"
                   style={{
                     borderRadius: '25px',
-                    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.15), 0 10px 30px rgba(0, 0, 0, 0.1)'
+                    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.15), 0 10px 30px rgba(0, 0, 0, 0.1)',
+                    height: '600px',
+                    objectFit: 'cover',
+                    width: '100%'
                   }}
                 />
               </div>
