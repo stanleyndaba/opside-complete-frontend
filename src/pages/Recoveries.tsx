@@ -1093,7 +1093,7 @@ export default function Recoveries() {
             )}
             {!loading && !error && rankedClaims.length === 0 && (
               <div className="p-4 text-sm text-gray-400">
-                No recoveries found. {mergedRecoveries.length === 0 && claims.length === 0 
+                No recoveries found. {((mergedRecoveries === null || (mergedRecoveries && mergedRecoveries.length === 0)) && (!claims || claims.length === 0))
                   ? 'Try syncing your Amazon account or running the detector.' 
                   : 'Try adjusting your filters.'}
               </div>
