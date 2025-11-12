@@ -873,3 +873,68 @@ export const api = {
     }>(`/api/v1/integrations/amazon/sync/status${query ? `?${query}` : ''}`);
   },
 };
+
+// Phase 3: Detection/Claims API methods
+export const detectionApi = {
+  // Get all detection results
+  getDetectionResults: async (params?: { status?: string; limit?: number; offset?: number; userId?: string }) => {
+    const queryParams = new URLSearchParams();
+    if (params?.status) queryParams.append('status', params.status);
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    if (params?.offset) queryParams.append('offset', params.offset.toString());
+    if (params?.userId) queryParams.append('userId', params.userId);
+    const query = queryParams.toString();
+    return requestJson<{
+      success: boolean;
+      results: Array<{
+        id: string;
+        seller_id: string;
+        sync_id: string;
+        anomaly_type: string;
+        severity: string;
+        estimated_value: number;
+        currency: string;
+        confidence_score: number;
+        evidence: any;
+        status: string;
+        discovery_date: string;
+        deadline_date: string;
+        days_remaining: number;
+      }>;
+      total: number;
+    }>(`/api/v1/integrations/detections/results${query ? `?${query}` : ''}`);
+  },
+
+  // Get detection statistics
+  getDetectionStatistics: async (userId?: string) => {
+    const queryParams = new URLSearchParams();
+    if (userId) queryParams.append('userId', userId);
+    const query = queryParams.toString();
+    return requestJson<{
+      success: boolean;
+      statistics: {
+        totalDetections: number;
+        highConfidence: number;
+        mediumConfidence: number;
+        lowConfidence: number;
+        estimatedRecovery: number;
+        averageConfidence: number;
+      };
+    }>(`/api/v1/integrations/detections/statistics${query ? `?${query}` : ''}`);
+  },
+
+  // Get claims approaching deadline
+  getClaimsApproachingDeadline: async (params?: { userId?: string; days?: number }) => {
+    const queryParams = new URLSearchParams();
+    if (params?.userId) queryParams.append('userId', params.userId);
+    if (params?.days) queryParams.append('days', params.days.toString());
+    else queryParams.append('days', '7'); // Default to 7 days
+    const query = queryParams.toString();
+    return requestJson<{
+      success: boolean;
+      claims: Array<any>;
+      count: number;
+      threshold_days: number;
+    }>(`/api/v1/integrations/detections/deadlines${query ? `?${query}` : ''}`);
+  },
+};

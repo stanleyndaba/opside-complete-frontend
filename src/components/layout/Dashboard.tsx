@@ -9,7 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud, ArrowRight, Plus, CheckCircle, RefreshCw, RotateCcw, Download, Bell, Shield, TrendingDown, TrendingUp } from 'lucide-react';
-import { api } from '@/lib/api';
+import { api, detectionApi } from '@/lib/api';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 export function Dashboard() {
@@ -57,6 +57,15 @@ export function Dashboard() {
   const [inviteOpen, setInviteOpen] = useState<boolean>(false);
   const [inviteEmail, setInviteEmail] = useState<string>('');
   const { toast } = useToast();
+  // Phase 3: Detection statistics
+  const [detectionStats, setDetectionStats] = useState<{
+    totalDetections: number;
+    highConfidence: number;
+    mediumConfidence: number;
+    lowConfidence: number;
+    estimatedRecovery: number;
+    averageConfidence: number;
+  } | null>(null);
   const [selectedQuickActions, setSelectedQuickActions] = useState<string[]>(() => {
     try {
       const raw = typeof window !== 'undefined' ? localStorage.getItem('clario.quickActions') : null;
@@ -94,13 +103,14 @@ export function Dashboard() {
     }
   }, [searchParams, navigate, toast]);
 
-  // Fetch evidence status
+  // Fetch evidence status and detection statistics
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const [statusRes, gmailRes] = await Promise.all([
+      const [statusRes, gmailRes, detectionStatsRes] = await Promise.all([
         api.getEvidenceStatus().catch(() => ({ ok: false, data: null })),
         api.getGmailStatus().catch(() => ({ ok: false, data: null })),
+        detectionApi.getDetectionStatistics().catch(() => ({ ok: false, data: null })),
       ]);
       if (!cancelled) {
         if (statusRes.ok && statusRes.data) {
@@ -108,6 +118,9 @@ export function Dashboard() {
         }
         if (gmailRes.ok && gmailRes.data) {
           setGmailConnected(gmailRes.data.connected);
+        }
+        if (detectionStatsRes.ok && detectionStatsRes.data?.statistics) {
+          setDetectionStats(detectionStatsRes.data.statistics);
         }
       }
     })();
@@ -652,6 +665,51 @@ export function Dashboard() {
                     {/* Auto-Submit button removed per request */}
                   </CardContent>
                 </Card>
+
+                {/* Phase 3: Detection Summary Card */}
+                {detectionStats && detectionStats.totalDetections > 0 && (
+                  <Card className="bg-white border border-slate-200 text-slate-700 shadow-sm">
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <h2 className="font-brand text-lg text-slate-900 font-semibold">💰 Detected Claims</h2>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200"
+                          onClick={() => navigate('/recoveries', { state: { filter: 'detected' } })}
+                        >
+                          View All →
+                        </Button>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4 mb-4">
+                        <div className="rounded-md border border-slate-200/80 bg-white p-4 shadow-sm">
+                          <div className="text-xs text-slate-500">Total Detected</div>
+                          <div className="text-xl font-semibold text-slate-900 mt-1">{detectionStats.totalDetections}</div>
+                        </div>
+                        <div className="rounded-md border border-slate-200/80 bg-white p-4 shadow-sm">
+                          <div className="text-xs text-slate-500">Recovery Potential</div>
+                          <div className="text-xl font-semibold text-emerald-500 mt-1">
+                            {formatCurrency(detectionStats.estimatedRecovery)}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 text-sm">
+                          <span className="text-emerald-500">⚡</span>
+                          <span className="text-slate-700">High: <span className="font-semibold">{detectionStats.highConfidence}</span> claims</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm">
+                          <span className="text-amber-500">❓</span>
+                          <span className="text-slate-700">Medium: <span className="font-semibold">{detectionStats.mediumConfidence}</span> claims</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm">
+                          <span className="text-slate-500">📋</span>
+                          <span className="text-slate-700">Low: <span className="font-semibold">{detectionStats.lowConfidence}</span> claims</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
 
                   <Card className="bg-white border border-slate-200 text-slate-700 shadow-sm">
                   <CardContent className="p-6">

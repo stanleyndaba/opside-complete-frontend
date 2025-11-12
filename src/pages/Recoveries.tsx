@@ -17,6 +17,7 @@ import { Link } from 'react-router-dom';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { api } from '@/lib/api';
+import { detectionApi } from '@/lib/api';
 import { recoveryApi } from '@/lib/recoveryApi';
 import type { DateRange } from 'react-day-picker';
 import { useStatusStream } from '@/hooks/use-status-stream';
@@ -118,6 +119,12 @@ export default function Recoveries() {
   const [promptClaim, setPromptClaim] = useState<any | null>(null);
   const autoSubmittedRef = useRef<Set<string>>(new Set());
   
+  // Phase 3: Detection results integration
+  const [detectionResults, setDetectionResults] = useState<any[]>([]);
+  const [mergedRecoveries, setMergedRecoveries] = useState<any[]>([]);
+  const [filterSource, setFilterSource] = useState<'all' | 'detected' | 'synced'>('all');
+  const [filterConfidence, setFilterConfidence] = useState<'all' | 'high' | 'medium' | 'low'>('all');
+  
   // Amazon recoveries integration (from DASHBOARD_CLAIMS_INTEGRATION.md)
   const [recoveredTotal, setRecoveredTotal] = useState<number | null>(null);
   const [recoveredCurrency, setRecoveredCurrency] = useState<string>('USD');
@@ -165,14 +172,76 @@ export default function Recoveries() {
     return 'Collecting';
   };
 
+  // Helper function to merge recoveries with detection results
+  const mergeRecoveries = useCallback((syncedRecoveries: any[], detectedClaims: any[]) => {
+    // Transform detection results to match recovery format
+    const detected = detectedClaims.map(det => ({
+      id: det.id,
+      source: 'detected',
+      type: det.anomaly_type || 'Detected Claim',
+      details: `${det.anomaly_type || 'Claim'} detected with ${(det.confidence_score * 100).toFixed(0)}% confidence`,
+      status: det.status || 'New',
+      guaranteedAmount: det.estimated_value || 0,
+      currency: det.currency || 'USD',
+      confidence_score: det.confidence_score,
+      days_remaining: det.days_remaining,
+      discovery_date: det.discovery_date,
+      deadline_date: det.deadline_date,
+      created: det.discovery_date || det.created_at || new Date().toISOString(),
+      expectedPayoutDate: det.deadline_date || null,
+      sku: det.evidence?.sku || 'N/A',
+      asin: det.evidence?.asin || 'N/A',
+      _confidence: det.confidence_score,
+      _priority: (det.confidence_score || 0) * (det.estimated_value || 0),
+      _evidence: det.days_remaining && det.days_remaining <= 7 ? 'Ready' : 'Collecting',
+      _matchedCount: 0,
+    }));
+    
+    // Mark synced recoveries
+    const synced = (syncedRecoveries || []).map(rec => ({
+      ...rec,
+      source: 'synced',
+      confidence_score: null,
+      days_remaining: null,
+      _confidence: getConfidence(rec.id),
+      _priority: getConfidence(rec.id) * (rec.guaranteedAmount || 0),
+      _evidence: getEvidenceStatus(rec.id),
+      _matchedCount: Array.isArray((rec as any).matchedDocs) ? (rec as any).matchedDocs.length : ((rec as any).matchedCount ?? 0),
+    }));
+    
+    // Combine and sort
+    const merged = [...detected, ...synced].sort((a, b) => {
+      const dateA = new Date(a.discovery_date || a.created || a.created_at || 0).getTime();
+      const dateB = new Date(b.discovery_date || b.created || b.created_at || 0).getTime();
+      return dateB - dateA;
+    });
+    
+    // Apply filters
+    let filtered = merged;
+    if (filterSource !== 'all') {
+      filtered = filtered.filter(r => r.source === filterSource);
+    }
+    if (filterConfidence !== 'all' && filterSource === 'detected') {
+      filtered = filtered.filter(r => {
+        if (!r.confidence_score) return false;
+        if (filterConfidence === 'high') return r.confidence_score >= 0.85;
+        if (filterConfidence === 'medium') return r.confidence_score >= 0.50 && r.confidence_score < 0.85;
+        return r.confidence_score < 0.50;
+      });
+    }
+    
+    setMergedRecoveries(filtered);
+  }, [filterSource, filterConfidence]);
+
   useEffect(() => {
     let cancelled = false;
     (async () => {
       setLoading(true);
-      const [resData, metricsRes, amazonRecoveriesRes] = await Promise.all([
+      const [resData, metricsRes, amazonRecoveriesRes, detectionRes] = await Promise.all([
         recoveryApi.getRecoveries().catch(() => null),
         api.getRecoveriesMetrics(),
         api.getAmazonRecoveries().catch(() => null),
+        detectionApi.getDetectionResults({ limit: 100, offset: 0 }).catch(() => ({ ok: false, data: null })),
       ]);
       if (!cancelled) {
         if (resData && Array.isArray(resData)) {
@@ -214,8 +283,23 @@ export default function Recoveries() {
           
           setClaims(newClaims);
           setError(null);
+          
+          // Merge with detection results
+          if (detectionRes.ok && detectionRes.data?.results) {
+            setDetectionResults(detectionRes.data.results);
+            mergeRecoveries(newClaims, detectionRes.data.results);
+          } else {
+            mergeRecoveries(newClaims, []);
+          }
         } else {
           setError(null);
+          // Still try to merge even if no synced recoveries
+          if (detectionRes.ok && detectionRes.data?.results) {
+            setDetectionResults(detectionRes.data.results);
+            mergeRecoveries([], detectionRes.data.results);
+          } else {
+            mergeRecoveries([], []);
+          }
         }
         if (metricsRes.ok && metricsRes.data) {
           setMetrics(metricsRes.data);
@@ -531,9 +615,15 @@ export default function Recoveries() {
     }
   });
 
-  // Filter data based on search and filters
+  // Update merged recoveries when filters change
+  useEffect(() => {
+    mergeRecoveries(claims, detectionResults);
+  }, [filterSource, filterConfidence, mergeRecoveries]);
+
+  // Filter data based on search and filters - use mergedRecoveries if available
   const filteredClaims = useMemo(() => {
-    let filtered = claims.filter(claim => {
+    const sourceData = mergedRecoveries.length > 0 ? mergedRecoveries : claims;
+    let filtered = sourceData.filter(claim => {
       // Search filter
       const searchMatch = !searchTerm || 
         claim.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -556,7 +646,7 @@ export default function Recoveries() {
     });
 
     return filtered;
-  }, [claims, searchTerm, dateRange, selectedClaimTypes, selectedStatuses]);
+  }, [mergedRecoveries, claims, searchTerm, dateRange, selectedClaimTypes, selectedStatuses]);
 
   // Rank opportunities: prioritize by confidence * value
   const rankedClaims = useMemo(() => {
@@ -922,6 +1012,37 @@ export default function Recoveries() {
                   ))}
                 </SelectContent>
               </Select>
+
+              {/* Source Filter (Phase 3) */}
+              <Select value={filterSource} onValueChange={(value: 'all' | 'detected' | 'synced') => {
+                setFilterSource(value);
+              }}>
+                <SelectTrigger className="w-[180px] text-slate-800 placeholder:text-slate-800">
+                  <SelectValue placeholder="Filter by Source" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Sources</SelectItem>
+                  <SelectItem value="detected">Detected (Phase 3)</SelectItem>
+                  <SelectItem value="synced">Synced from Amazon</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {/* Confidence Filter (Phase 3) - only show when filtering by detected */}
+              {filterSource === 'detected' && (
+                <Select value={filterConfidence} onValueChange={(value: 'all' | 'high' | 'medium' | 'low') => {
+                  setFilterConfidence(value);
+                }}>
+                  <SelectTrigger className="w-[180px] text-slate-800 placeholder:text-slate-800">
+                    <SelectValue placeholder="Filter by Confidence" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Confidence Levels</SelectItem>
+                    <SelectItem value="high">High (≥85%)</SelectItem>
+                    <SelectItem value="medium">Medium (50-85%)</SelectItem>
+                    <SelectItem value="low">Low (&lt;50%)</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -944,6 +1065,7 @@ export default function Recoveries() {
                       else setSelectedIds(new Set());
                     }} />
                   </TableHead>
+                  <TableHead>Source</TableHead>
                   <TableHead>Claim ID</TableHead>
                   <TableHead>Created</TableHead>
                   <TableHead>Type</TableHead>
@@ -951,13 +1073,22 @@ export default function Recoveries() {
                   <TableHead>Evidence</TableHead>
                   <TableHead>Details</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead>Days Remaining</TableHead>
                   <TableHead>Guaranteed Amount</TableHead>
                   <TableHead>Expected Payout</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {rankedClaims.map((claim: any) => (
+                {rankedClaims.map((claim: any) => {
+                  const confidenceBadge = claim.confidence_score !== null && claim.confidence_score !== undefined
+                    ? (claim.confidence_score >= 0.85 ? { label: 'High', color: 'green' } : claim.confidence_score >= 0.50 ? { label: 'Medium', color: 'yellow' } : { label: 'Low', color: 'gray' })
+                    : null;
+                  const displayConfidence = claim.confidence_score !== null && claim.confidence_score !== undefined
+                    ? claim.confidence_score
+                    : claim._confidence;
+                  
+                  return (
                   <TableRow key={claim.id} className="cursor-pointer hover:bg-white/5">
                     <TableCell>
                       <Checkbox checked={selectedIds.has(claim.id)} onCheckedChange={(checked) => {
@@ -969,18 +1100,37 @@ export default function Recoveries() {
                       }} />
                     </TableCell>
                     <TableCell>
+                      {claim.source === 'detected' ? (
+                        <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30">Detected</Badge>
+                      ) : (
+                        <Badge className="bg-gray-500/20 text-gray-300 border-gray-500/30">Synced</Badge>
+                      )}
+                    </TableCell>
+                    <TableCell>
                       <Button asChild variant="link" className="p-0 h-auto text-emerald-400 hover:text-emerald-300 font-mono">
                         <Link to={`/recoveries/${claim.id}`} state={{ claim }}>{claim.id}</Link>
                       </Button>
                     </TableCell>
-                    <TableCell>{format(new Date(claim.created), 'MMM dd, yyyy')}</TableCell>
+                    <TableCell>{format(new Date(claim.created || claim.discovery_date || claim.created_at), 'MMM dd, yyyy')}</TableCell>
                     <TableCell>{claim.type}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <span className={`text-xs font-semibold ${getConfidenceColor(claim._confidence)}`}>{claim._confidence.toFixed(2)}</span>
-                        <span className="text-[10px] px-1.5 py-0.5 rounded border border-white/10 bg-white/5 text-gray-300">
-                          {getConfidenceBadge(claim._confidence)}
-                        </span>
+                        {confidenceBadge ? (
+                          <span className={`text-xs px-1.5 py-0.5 rounded border ${
+                            confidenceBadge.color === 'green' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' :
+                            confidenceBadge.color === 'yellow' ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' :
+                            'bg-gray-500/20 text-gray-300 border-gray-500/30'
+                          }`}>
+                            {confidenceBadge.label} ({(claim.confidence_score * 100).toFixed(0)}%)
+                          </span>
+                        ) : (
+                          <>
+                            <span className={`text-xs font-semibold ${getConfidenceColor(displayConfidence)}`}>{displayConfidence.toFixed(2)}</span>
+                            <span className="text-[10px] px-1.5 py-0.5 rounded border border-white/10 bg-white/5 text-gray-300">
+                              {getConfidenceBadge(displayConfidence)}
+                            </span>
+                          </>
+                        )}
                       </div>
                     </TableCell>
                     <TableCell>
@@ -999,7 +1149,16 @@ export default function Recoveries() {
                         {claim.status}
                       </Badge>
                     </TableCell>
-                    <TableCell className="font-medium">{formatCurrency(claim.guaranteedAmount)}</TableCell>
+                    <TableCell>
+                      {claim.days_remaining !== null && claim.days_remaining !== undefined ? (
+                        <span className={claim.days_remaining <= 7 ? 'text-amber-400 font-semibold' : 'text-gray-300'}>
+                          {claim.days_remaining} days
+                        </span>
+                      ) : (
+                        <span className="text-gray-500">-</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="font-medium">{formatCurrency(claim.guaranteedAmount, claim.currency || 'USD')}</TableCell>
                     <TableCell>
                       {claim.expectedPayoutDate ? format(new Date(claim.expectedPayoutDate), 'MMM dd, yyyy') : '-'}
                     </TableCell>
@@ -1026,11 +1185,12 @@ export default function Recoveries() {
                               Resubmit with stronger docs
                             </DropdownMenuItem>
                           )}
-                          {getConfidenceTier(claim._confidence) === 'high' && (
+                          {((claim.confidence_score !== null && claim.confidence_score !== undefined && claim.confidence_score >= 0.85) || getConfidenceTier(claim._confidence) === 'high') && (
                             <DropdownMenuItem onClick={async () => {
                               try {
                                 await recoveryApi.submitClaim(claim.id);
                                 setClaims(prev => prev.map(c => c.id === claim.id ? { ...c, status: 'Submitted' } : c));
+                                setMergedRecoveries(prev => prev.map(c => c.id === claim.id ? { ...c, status: 'Submitted' } : c));
                                 toast({ title: 'Auto-submitted', description: `${claim.id} submitted automatically.` });
                               } catch (e: any) {
                                 toast({ title: 'Submit failed', description: e?.message || 'Please try again.' });
