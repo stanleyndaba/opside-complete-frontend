@@ -192,6 +192,33 @@
     @apply bg-muted-foreground/50;
   }
 
+  /* Smooth horizontal scrolling for recoveries table */
+  .recoveries-table-scroll {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  }
+
+  .recoveries-table-scroll::-webkit-scrollbar {
+    height: 10px;
+  }
+
+  .recoveries-table-scroll::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+  }
+
+  .recoveries-table-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    transition: background 0.2s ease;
+  }
+
+  .recoveries-table-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
   /* Chart & data visualization styles */
   .chart-container {
     @apply w-full h-full min-h-[200px] rounded-lg overflow-hidden;

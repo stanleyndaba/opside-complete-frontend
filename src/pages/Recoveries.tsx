@@ -1099,7 +1099,13 @@ export default function Recoveries() {
               </div>
             )}
             {!loading && rankedClaims.length > 0 && (
-            <div className="overflow-x-auto overflow-y-visible" style={{ scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}>
+            <div 
+              className="overflow-x-auto overflow-y-visible recoveries-table-scroll" 
+              style={{ 
+                scrollBehavior: 'smooth', 
+                WebkitOverflowScrolling: 'touch'
+              }}
+            >
             <Table className="min-w-full">
               <TableHeader>
                 <TableRow>
