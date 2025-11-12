@@ -1083,8 +1083,8 @@ export default function Recoveries() {
         </Card>
 
         {/* Data Table */}
-        <Card className="bg-white/5 border-white/10 text-gray-300">
-          <CardContent className="p-0">
+        <Card className="bg-white/5 border-white/10 text-gray-300 w-full overflow-hidden">
+          <CardContent className="p-0 w-full">
             {loading && (
               <div className="p-4 text-sm text-muted-foreground">Loading recoveries...</div>
             )}
@@ -1100,13 +1100,15 @@ export default function Recoveries() {
             )}
             {!loading && rankedClaims.length > 0 && (
             <div 
-              className="overflow-x-auto overflow-y-visible recoveries-table-scroll" 
+              className="w-full overflow-x-auto overflow-y-visible recoveries-table-scroll" 
               style={{ 
                 scrollBehavior: 'smooth', 
-                WebkitOverflowScrolling: 'touch'
+                WebkitOverflowScrolling: 'touch',
+                width: '100%',
+                maxWidth: '100%'
               }}
             >
-            <Table className="min-w-full">
+            <Table style={{ minWidth: '1400px', width: 'max-content' }}>
               <TableHeader>
                 <TableRow>
                   <TableHead>
