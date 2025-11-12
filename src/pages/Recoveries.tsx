@@ -795,9 +795,9 @@ export default function Recoveries() {
   return (
     <PageLayout title="Recoveries">
       <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
+        <div className="relative w-full bg-[#0B1220] min-h-screen -mt-24 pt-24 pb-6">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
-          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-300 space-y-8">
+          <div className="relative container mx-auto px-6 pt-6 pb-6 text-gray-300 space-y-6 max-w-7xl">
         {/* Page Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-100 mb-2">Recoveries</h1>
@@ -1084,7 +1084,7 @@ export default function Recoveries() {
 
         {/* Data Table */}
         <Card className="bg-white/5 border-white/10 text-gray-300">
-          <CardContent className="p-0">
+          <CardContent className="p-0 max-h-[calc(100vh-500px)] overflow-hidden flex flex-col">
             {loading && (
               <div className="p-4 text-sm text-muted-foreground">Loading recoveries...</div>
             )}
@@ -1099,7 +1099,8 @@ export default function Recoveries() {
               </div>
             )}
             {!loading && rankedClaims.length > 0 && (
-            <Table>
+            <div className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-500px)]">
+            <Table className="min-w-full">
               <TableHeader>
                 <TableRow>
                   <TableHead>
@@ -1293,6 +1294,7 @@ export default function Recoveries() {
                 })}
               </TableBody>
             </Table>
+            </div>
             )}
           </CardContent>
         </Card>
