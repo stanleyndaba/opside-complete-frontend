@@ -13,7 +13,8 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { 
   User, Building2, Users, CreditCard, Zap, Bell, Shield, 
   Upload, MapPin, Clock, Monitor, Smartphone, AlertTriangle,
-  CheckCircle, Calendar, Globe, Camera, Key, Plug, Briefcase
+  CheckCircle, Calendar, Globe, Camera, Key, Plug, Briefcase,
+  RefreshCw, XCircle, Store, CreditCard as CreditCardIcon
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
@@ -33,10 +34,31 @@ const Settings = () => {
   const [email, setEmail] = useState<string>('');
   const [avatarSrc, setAvatarSrc] = useState<string>('');
 
-  // Business state
+  // Business state (legacy - keeping for compatibility)
   const [businessName, setBusinessName] = useState<string>('');
   const [businessAddress, setBusinessAddress] = useState<string>('');
   const [timezone, setTimezone] = useState<string>('Pacific Standard Time (PST) - San Francisco, Bay Area');
+
+  // Seller Profile state
+  interface SellerProfile {
+    id?: string;
+    amazon_seller_id?: string;
+    company_name?: string;
+    linked_marketplaces?: string[];
+    stripe_customer_id?: string;
+    stripe_account_id?: string;
+    last_sync_attempt_at?: string;
+    last_sync_completed_at?: string;
+    last_sync_job_id?: string;
+    created_at?: string;
+    last_login?: string;
+    amazon_connected?: boolean;
+    stripe_connected?: boolean;
+  }
+
+  const [sellerProfile, setSellerProfile] = useState<SellerProfile>({});
+  const [loadingProfile, setLoadingProfile] = useState<boolean>(true);
+  const [amazonSellersInfo, setAmazonSellersInfo] = useState<any>(null);
 
   // Load from backend/localStorage
   useEffect(() => {
@@ -75,6 +97,68 @@ const Settings = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Load seller profile data
+  useEffect(() => {
+    const loadSellerProfile = async () => {
+      setLoadingProfile(true);
+      try {
+        // Fetch basic profile
+        const meRes = await api.get<any>('/api/auth/me');
+        if (meRes.ok && meRes.data) {
+          const basicData = meRes.data;
+          setSellerProfile(prev => ({
+            ...prev,
+            id: basicData.id,
+            email: basicData.email,
+            company_name: basicData.name || basicData.company_name,
+            amazon_connected: basicData.amazon_connected || false,
+            stripe_connected: basicData.stripe_connected || false,
+            created_at: basicData.created_at,
+            last_login: basicData.last_login,
+          }));
+        }
+
+        // Fetch extended profile
+        try {
+          const profileRes = await api.get<any>('/api/v1/users/profile');
+          if (profileRes.ok && profileRes.data) {
+            setSellerProfile(prev => ({
+              ...prev,
+              ...profileRes.data,
+            }));
+          }
+        } catch (e) {
+          // Extended profile endpoint might not exist, that's okay
+        }
+
+        // Fetch Amazon sellers info
+        try {
+          const sellersRes = await api.get<any>('/api/v1/integrations/amazon/sellers-info');
+          if (sellersRes.ok && sellersRes.data) {
+            setAmazonSellersInfo(sellersRes.data);
+            if (sellersRes.data.company_name) {
+              setSellerProfile(prev => ({
+                ...prev,
+                company_name: sellersRes.data.company_name || prev.company_name,
+                amazon_seller_id: sellersRes.data.seller_id || prev.amazon_seller_id,
+              }));
+            }
+          }
+        } catch (e) {
+          // Sellers info endpoint might not exist, that's okay
+        }
+      } catch (e) {
+        console.error('Failed to load seller profile:', e);
+      } finally {
+        setLoadingProfile(false);
+      }
+    };
+
+    if (activeSection === 'business') {
+      loadSellerProfile();
+    }
+  }, [activeSection]);
+
   const onUploadPhoto = async (file?: File) => {
     if (!file) return;
     const reader = new FileReader();
@@ -110,7 +194,7 @@ const Settings = () => {
   };
 
   const menuItems = [
-    { id: 'business' as SettingsSection, label: 'Business Profile', icon: Building2 },
+    { id: 'business' as SettingsSection, label: 'Seller Profile', icon: Building2 },
     { id: 'billing' as SettingsSection, label: 'Billing & Value', icon: CreditCard },
     { id: 'api' as SettingsSection, label: 'API Access', icon: Key },
     { id: 'integrations' as SettingsSection, label: 'Integrations Hub', icon: Zap },
@@ -200,49 +284,383 @@ const Settings = () => {
     }
   };
 
+  // Marketplace mapping
+  const MARKETPLACE_NAMES: Record<string, { name: string; flag: string }> = {
+    'ATVPDKIKX0DER': { name: 'United States', flag: '🇺🇸' },
+    'A1PA6795UKMFR9': { name: 'Germany', flag: '🇩🇪' },
+    'A1RKKUPIHCS9HS': { name: 'Spain', flag: '🇪🇸' },
+    'A13V1IB3VIYZZH': { name: 'France', flag: '🇫🇷' },
+    'A1F83G8C2ARO7P': { name: 'United Kingdom', flag: '🇬🇧' },
+    'A1VC38T7YXB528': { name: 'Japan', flag: '🇯🇵' },
+    'A1AM78C64UM0Y8': { name: 'India', flag: '🇮🇳' },
+    'A2EUQ1WTGCTBG2': { name: 'Canada', flag: '🇨🇦' },
+    'A39IBJ37TRP1C6': { name: 'Australia', flag: '🇦🇺' },
+    'A2Q3Y263D00KWC': { name: 'Brazil', flag: '🇧🇷' },
+    'A1M83G8C2ARO7P': { name: 'Mexico', flag: '🇲🇽' },
+  };
+
+  // Format date helper
+  const formatDate = (dateString?: string): string => {
+    if (!dateString) return 'Never';
+    try {
+      const date = new Date(dateString);
+      const now = new Date();
+      const diffMs = now.getTime() - date.getTime();
+      const diffMins = Math.floor(diffMs / 60000);
+      const diffHours = Math.floor(diffMs / 3600000);
+      const diffDays = Math.floor(diffMs / 86400000);
+
+      if (diffMins < 1) return 'Just now';
+      if (diffMins < 60) return `${diffMins} ${diffMins === 1 ? 'minute' : 'minutes'} ago`;
+      if (diffHours < 24) return `${diffHours} ${diffHours === 1 ? 'hour' : 'hours'} ago`;
+      if (diffDays < 30) return `${diffDays} ${diffDays === 1 ? 'day' : 'days'} ago`;
+      
+      return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    } catch {
+      return dateString;
+    }
+  };
+
+  // Format date with time
+  const formatDateTime = (dateString?: string): string => {
+    if (!dateString) return 'Never';
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      });
+    } catch {
+      return dateString;
+    }
+  };
+
+  // Get marketplace display info
+  const getMarketplaceDisplay = (marketplaceId: string) => {
+    // Check if we have marketplace info from Amazon API
+    if (amazonSellersInfo?.marketplaces) {
+      const marketplace = amazonSellersInfo.marketplaces.find((m: any) => m.id === marketplaceId);
+      if (marketplace) {
+        return { name: marketplace.name, flag: '' }; // Could add flag mapping if needed
+      }
+    }
+    // Fallback to static mapping
+    return MARKETPLACE_NAMES[marketplaceId] || { name: marketplaceId, flag: '🌐' };
+  };
+
   const renderContent = () => {
     switch (activeSection) {
       case 'business':
+        const marketplaces = sellerProfile.linked_marketplaces || amazonSellersInfo?.marketplaces?.map((m: any) => m.id) || [];
+        const isAmazonConnected = sellerProfile.amazon_connected || false;
+        const isStripeConnected = sellerProfile.stripe_connected || false;
+        
         return (
           <div className="space-y-6">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-200">Business Profile</h2>
-              <p className="text-gray-400">Manage your company information and preferences</p>
+            {/* Header Section */}
+            <div className="flex items-start justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-200">
+                  {sellerProfile.company_name || 'Unknown Company'}
+                </h2>
+                {sellerProfile.amazon_seller_id && (
+                  <p className="text-sm text-gray-400 mt-1">
+                    Seller ID: {sellerProfile.amazon_seller_id}
+                  </p>
+                )}
+              </div>
+              <Badge 
+                className={isAmazonConnected 
+                  ? "bg-green-500/20 text-green-300 border-green-500/30" 
+                  : "bg-red-500/20 text-red-300 border-red-500/30"
+                }
+              >
+                {isAmazonConnected ? (
+                  <>
+                    <CheckCircle className="h-3 w-3 mr-1" />
+                    Connected
+                  </>
+                ) : (
+                  <>
+                    <XCircle className="h-3 w-3 mr-1" />
+                    Not Connected
+                  </>
+                )}
+              </Badge>
             </div>
-            
-            <Card className="bg-white/5 border-white/10 text-gray-300">
-              <CardHeader>
-                <CardTitle className="text-gray-200">Company Details</CardTitle>
-                <CardDescription className="text-gray-400">Information used for invoicing and records</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label htmlFor="businessName">Business Name</Label>
-                  <Input variant="dark" id="businessName" value={businessName} onChange={(e) => setBusinessName(e.target.value)} />
-                </div>
-                
-                <div>
-                  <Label htmlFor="businessAddress">Business Address</Label>
-                  <Textarea variant="dark" id="businessAddress" className="w-full" value={businessAddress} onChange={(e) => setBusinessAddress(e.target.value)} />
-                </div>
-                
-                <div>
-                  <Label htmlFor="timezone">Timezone</Label>
-                  <select id="timezone" className="w-full px-3 py-2 border rounded-md bg-white/5 border-white/10 text-gray-200 placeholder:text-gray-400" value={timezone} onChange={(e) => setTimezone(e.target.value)}>
-                    <option value="Pacific Standard Time (PST) - San Francisco, Bay Area" className="bg-[#0B1220] text-gray-200">Pacific Standard Time (PST) - San Francisco, Bay Area</option>
-                    <option value="Pacific Daylight Time (PDT) - San Francisco, Bay Area" className="bg-[#0B1220] text-gray-200">Pacific Daylight Time (PDT) - San Francisco, Bay Area</option>
-                    <option value="Eastern Standard Time (EST) - New York" className="bg-[#0B1220] text-gray-200">Eastern Standard Time (EST) - New York</option>
-                    <option value="Eastern Daylight Time (EDT) - New York" className="bg-[#0B1220] text-gray-200">Eastern Daylight Time (EDT) - New York</option>
-                    <option value="Central Standard Time (CST) - Chicago" className="bg-[#0B1220] text-gray-200">Central Standard Time (CST) - Chicago</option>
-                    <option value="Central Daylight Time (CDT) - Chicago" className="bg-[#0B1220] text-gray-200">Central Daylight Time (CDT) - Chicago</option>
-                    <option value="Mountain Standard Time (MST) - Denver" className="bg-[#0B1220] text-gray-200">Mountain Standard Time (MST) - Denver</option>
-                    <option value="Mountain Daylight Time (MDT) - Denver" className="bg-[#0B1220] text-gray-200">Mountain Daylight Time (MDT) - Denver</option>
-                  </select>
-                </div>
-                
-                <Button className="bg-emerald-500 hover:bg-emerald-400 text-white" onClick={saveBusiness}>Update Business Profile</Button>
-              </CardContent>
-            </Card>
+
+            {loadingProfile ? (
+              <Card className="bg-white/5 border-white/10 text-gray-300">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-center py-8">
+                    <RefreshCw className="h-6 w-6 animate-spin text-gray-400" />
+                    <span className="ml-2 text-gray-400">Loading seller profile...</span>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : (
+              <>
+                {/* Basic Information Section */}
+                <Card className="bg-white/5 border-white/10 text-gray-300">
+                  <CardHeader>
+                    <CardTitle className="text-gray-200">Basic Information</CardTitle>
+                    <CardDescription className="text-gray-400">Your account details and activity</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label className="text-gray-400 text-sm">Company Name</Label>
+                        <div className="mt-1 flex items-center gap-2">
+                          <Store className="h-4 w-4 text-gray-400" />
+                          <p className="text-gray-200">
+                            {sellerProfile.company_name || 'Not available'}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      {sellerProfile.amazon_seller_id && (
+                        <div>
+                          <Label className="text-gray-400 text-sm">Amazon Seller ID</Label>
+                          <div className="mt-1 flex items-center gap-2">
+                            <Key className="h-4 w-4 text-gray-400" />
+                            <p className="text-gray-200 font-mono text-sm">
+                              {sellerProfile.amazon_seller_id}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {sellerProfile.created_at && (
+                        <div>
+                          <Label className="text-gray-400 text-sm">Member Since</Label>
+                          <div className="mt-1 flex items-center gap-2">
+                            <Calendar className="h-4 w-4 text-gray-400" />
+                            <p className="text-gray-200">
+                              {formatDate(sellerProfile.created_at)}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {sellerProfile.last_login && (
+                        <div>
+                          <Label className="text-gray-400 text-sm">Last Active</Label>
+                          <div className="mt-1 flex items-center gap-2">
+                            <Clock className="h-4 w-4 text-gray-400" />
+                            <p className="text-gray-200">
+                              {formatDate(sellerProfile.last_login)}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Marketplace Information Section */}
+                {marketplaces.length > 0 && (
+                  <Card className="bg-white/5 border-white/10 text-gray-300">
+                    <CardHeader>
+                      <CardTitle className="text-gray-200">Marketplace Information</CardTitle>
+                      <CardDescription className="text-gray-400">
+                        Active marketplaces where you sell
+                        <Badge variant="secondary" className="ml-2">
+                          {marketplaces.length} {marketplaces.length === 1 ? 'Marketplace' : 'Marketplaces'}
+                        </Badge>
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        {marketplaces.map((marketplaceId: string) => {
+                          const display = getMarketplaceDisplay(marketplaceId);
+                          return (
+                            <div 
+                              key={marketplaceId}
+                              className="flex items-center gap-3 p-3 border border-white/10 rounded-lg bg-white/5"
+                            >
+                              <span className="text-2xl">{display.flag}</span>
+                              <span className="text-gray-200">{display.name}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {/* Integration Status Section */}
+                <Card className="bg-white/5 border-white/10 text-gray-300">
+                  <CardHeader>
+                    <CardTitle className="text-gray-200">Integration Status</CardTitle>
+                    <CardDescription className="text-gray-400">Manage your platform connections</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {/* Amazon Integration */}
+                    <div className="flex items-center justify-between p-4 border border-white/10 rounded-lg bg-white/5">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-lg bg-white/10 flex items-center justify-center border border-white/10">
+                          <img 
+                            src="/lovable-uploads/14f98d63-9a1a-4128-8021-1d840d778ea5.png" 
+                            alt="Amazon Seller Central logo" 
+                            className="h-7 w-7 object-contain" 
+                          />
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-200">Amazon Seller Central</p>
+                          <div className="flex items-center gap-2 mt-1">
+                            {isAmazonConnected ? (
+                              <>
+                                <CheckCircle className="h-4 w-4 text-green-400" />
+                                <span className="text-sm text-gray-400">Connected</span>
+                                {sellerProfile.last_sync_completed_at && (
+                                  <span className="text-sm text-gray-400">
+                                    • Synced {formatDate(sellerProfile.last_sync_completed_at)}
+                                  </span>
+                                )}
+                              </>
+                            ) : (
+                              <>
+                                <XCircle className="h-4 w-4 text-red-400" />
+                                <span className="text-sm text-gray-400">Not Connected</span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        {isAmazonConnected ? (
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className="bg-white/5 border-white/10 text-gray-200 hover:bg-white/10"
+                            onClick={() => navigate('/integrations-hub')}
+                          >
+                            Manage
+                          </Button>
+                        ) : (
+                          <Button 
+                            size="sm"
+                            className="bg-emerald-500 hover:bg-emerald-400 text-white"
+                            onClick={() => navigate('/integrations-hub')}
+                          >
+                            Connect Amazon
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Stripe Integration */}
+                    <div className="flex items-center justify-between p-4 border border-white/10 rounded-lg bg-white/5">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-lg bg-white/10 flex items-center justify-center border border-white/10">
+                          <CreditCardIcon className="h-5 w-5 text-gray-400" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-200">Stripe</p>
+                          <div className="flex items-center gap-2 mt-1">
+                            {isStripeConnected ? (
+                              <>
+                                <CheckCircle className="h-4 w-4 text-green-400" />
+                                <span className="text-sm text-gray-400">Connected</span>
+                              </>
+                            ) : (
+                              <>
+                                <XCircle className="h-4 w-4 text-gray-400" />
+                                <span className="text-sm text-gray-400">Not Connected</span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        {isStripeConnected ? (
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className="bg-white/5 border-white/10 text-gray-200 hover:bg-white/10"
+                            onClick={() => navigate('/billing')}
+                          >
+                            Manage
+                          </Button>
+                        ) : (
+                          <Button 
+                            variant="outline"
+                            size="sm"
+                            className="bg-white/5 border-white/10 text-gray-200 hover:bg-white/10"
+                            onClick={() => navigate('/billing')}
+                          >
+                            Connect Stripe
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Sync Information Section */}
+                {(sellerProfile.last_sync_attempt_at || sellerProfile.last_sync_completed_at || sellerProfile.last_sync_job_id) && (
+                  <Card className="bg-white/5 border-white/10 text-gray-300">
+                    <CardHeader>
+                      <CardTitle className="text-gray-200">Sync Status</CardTitle>
+                      <CardDescription className="text-gray-400">Data synchronization information</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      {sellerProfile.last_sync_attempt_at && (
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <RefreshCw className="h-4 w-4 text-gray-400" />
+                            <div>
+                              <p className="text-sm font-medium text-gray-200">Last Sync Attempt</p>
+                              <p className="text-xs text-gray-400">
+                                {formatDateTime(sellerProfile.last_sync_attempt_at)}
+                              </p>
+                            </div>
+                          </div>
+                          {sellerProfile.last_sync_completed_at ? (
+                            <CheckCircle className="h-5 w-5 text-green-400" />
+                          ) : (
+                            <AlertTriangle className="h-5 w-5 text-yellow-400" />
+                          )}
+                        </div>
+                      )}
+                      
+                      {sellerProfile.last_sync_completed_at && (
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4 text-green-400" />
+                            <div>
+                              <p className="text-sm font-medium text-gray-200">Last Successful Sync</p>
+                              <p className="text-xs text-gray-400">
+                                {formatDateTime(sellerProfile.last_sync_completed_at)}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {sellerProfile.last_sync_job_id && (
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <RefreshCw className="h-4 w-4 text-gray-400 animate-spin" />
+                            <div>
+                              <p className="text-sm font-medium text-gray-200">Current Sync Job</p>
+                              <p className="text-xs text-gray-400 font-mono">
+                                {sellerProfile.last_sync_job_id}
+                              </p>
+                            </div>
+                          </div>
+                          <Badge variant="secondary">In Progress</Badge>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                )}
+              </>
+            )}
           </div>
         );
 
