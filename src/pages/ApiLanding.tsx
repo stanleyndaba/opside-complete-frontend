@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Link2, ScrollText } from 'lucide-react';
 import { api } from '@/lib/api';
 
 const ApiLanding = () => {
@@ -74,10 +74,33 @@ const ApiLanding = () => {
       <header className="sticky top-0 z-40 border-transparent bg-transparent">
         <div className="container mx-auto px-6 py-5">
           <div className="flex items-center justify-between gap-6 px-6 py-4 rounded-[25px] border border-white/40 bg-white/30 supports-[backdrop-filter]:bg-white/30 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_25px_60px_rgba(15,23,42,0.1)] transition-colors">
-            <Link to="/" className="flex items-center gap-3 text-gray-800 hover:text-gray-950 transition-colors">
-              <img src="/donelogo.png" alt="Clario" className="h-9 w-9 rounded-full object-cover border border-black/10" />
-              <span className="font-semibold">Clario</span>
-            </Link>
+            <div className="flex items-center gap-3">
+              {/* Brand dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[16px] transition-colors hover:bg-gray-100">
+                    <span className="font-black text-[#b3b3b3] tracking-tight">
+                      CLARIO
+                    </span>
+                    <ChevronDown className="h-4 w-4 opacity-70" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="min-w-[220px] bg-white/80 supports-[backdrop-filter]:bg-white/70 backdrop-blur-xl border border-white/30 text-gray-900 shadow-2xl">
+                  <DropdownMenuItem asChild>
+                    <Link to="/integrations-hub" className="flex items-center gap-2 hover:bg-gray-100 focus:bg-gray-100">
+                      <Link2 className="h-4 w-4 text-emerald-600" />
+                      <span>Integrations</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/terms" className="flex items-center gap-2 hover:bg-gray-100 focus:bg-gray-100">
+                      <ScrollText className="h-4 w-4 text-emerald-600" />
+                      <span>Terms & Policies</span>
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
             <nav className="hidden md:flex items-center gap-3 text-sm text-gray-700">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
