@@ -209,7 +209,7 @@ export default function Billing() {
             <CardContent className="space-y-4">
               <div>
                 <h3 className="text-lg font-semibold text-gray-100">
-                  Opside Performance Plan
+                  Clario Billing
                 </h3>
                 <div className="mt-3 p-4 rounded-lg border border-white/10 bg-white/5">
                   <p className="text-sm text-gray-400 leading-relaxed">
