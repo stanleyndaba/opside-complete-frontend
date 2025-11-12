@@ -897,15 +897,12 @@ export function Dashboard() {
             </Button>
               <Button disabled={true} className="w-full bg-blue-600/40 hover:bg-blue-600/40 text-white/60 border border-transparent shadow-sm cursor-not-allowed opacity-60">
               <img src="/outlookicon.webp" alt="Outlook" className="h-4 w-4 mr-2 object-contain" /> Outlook
-              <span className="ml-2 text-xs">Beta</span>
             </Button>
               <Button disabled={true} className="w-full bg-emerald-600/40 hover:bg-emerald-600/40 text-white/60 border border-transparent shadow-sm cursor-not-allowed opacity-60">
               <img src="/gd.png" alt="Google Drive" className="h-4 w-4 mr-2 object-contain" /> Google Drive
-              <span className="ml-2 text-xs">Beta</span>
             </Button>
               <Button disabled={true} className="w-full bg-sky-600/40 hover:bg-sky-600/40 text-white/60 border border-transparent shadow-sm cursor-not-allowed opacity-60">
               <img src="/db.png" alt="Dropbox" className="h-4 w-4 mr-2 object-contain" /> Dropbox
-              <span className="ml-2 text-xs">Beta</span>
             </Button>
           </div>
             <DialogFooter>
