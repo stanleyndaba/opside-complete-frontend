@@ -129,13 +129,40 @@ export default function IntegrationsHub() {
       if (res.ok && res.data?.auth_url) {
         window.location.href = res.data.auth_url as string;
       } else {
-        // Fallback route if backend returns no URL
+        // Check for specific error messages
+        const errorMsg = res.error || 'Unknown error';
+        if (errorMsg.includes('OAuth configuration not found') || errorMsg.includes('500')) {
+          toast({
+            title: `${provider === 'gdrive' ? 'Google Drive' : provider === 'gmail' ? 'Gmail' : provider === 'dropbox' ? 'Dropbox' : 'Outlook'} OAuth Not Configured`,
+            description: `The backend OAuth configuration for ${provider === 'gdrive' ? 'Google Drive' : provider === 'gmail' ? 'Gmail' : provider === 'dropbox' ? 'Dropbox' : 'Outlook'} is not set up. Please contact support or check backend environment variables.`,
+            variant: 'destructive',
+          });
+          setProviderLoading(null);
+          return;
+        }
+        // Fallback route if backend returns no URL (for sandbox/development)
+        console.warn(`OAuth connection failed for ${provider}, trying sandbox fallback:`, res.error);
         window.location.href = `/auth/${provider}-sandbox`;
       }
-    } catch {
+    } catch (error: any) {
+      console.error(`Failed to connect ${provider}:`, error);
+      const errorMsg = error?.message || error?.toString() || 'Unknown error';
+      if (errorMsg.includes('OAuth configuration not found') || errorMsg.includes('500')) {
+        toast({
+          title: `${provider === 'gdrive' ? 'Google Drive' : provider === 'gmail' ? 'Gmail' : provider === 'dropbox' ? 'Dropbox' : 'Outlook'} OAuth Not Configured`,
+          description: `The backend OAuth configuration for ${provider === 'gdrive' ? 'Google Drive' : provider === 'gmail' ? 'Gmail' : provider === 'dropbox' ? 'Dropbox' : 'Outlook'} is not set up. Please contact support or check backend environment variables.`,
+          variant: 'destructive',
+        });
+        setProviderLoading(null);
+        return;
+      }
+      // Fallback to sandbox route
       window.location.href = `/auth/${provider}-sandbox`;
     } finally {
-      setProviderLoading(null);
+      // Only clear loading if we didn't redirect
+      if (providerLoading === provider) {
+        setProviderLoading(null);
+      }
     }
   };
 
