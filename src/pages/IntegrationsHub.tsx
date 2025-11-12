@@ -295,6 +295,9 @@ export default function IntegrationsHub() {
                 <span className="block mt-2 text-sm text-gray-400">
                   Read-only access. No writing or sending permissions.
                 </span>
+                <span className="block mt-2 text-xs text-amber-300/80">
+                  📧 Gmail is available now. Outlook is coming soon.
+                </span>
               </DialogDescription>
             </DialogHeader>
             <div className="grid grid-cols-2 gap-3 pt-4">
@@ -316,24 +319,21 @@ export default function IntegrationsHub() {
                   </>
                 )}
               </Button>
-              <Button 
-                disabled={providerLoading !== null} 
-                onClick={() => beginProviderOAuth('outlook')} 
-                className="bg-blue-600/90 hover:bg-blue-600 text-white border border-white/10 h-auto py-3 flex flex-col items-center gap-2"
-              >
-                {providerLoading==='outlook' ? (
-                  <>
-                    <RefreshCw className="h-5 w-5 animate-spin" />
-                    <span>Connecting…</span>
-                  </>
-                ) : (
-                  <>
-                    <img src="/outlookicon.webp" alt="Outlook" className="h-6 w-6 object-contain" />
-                    <span>Outlook</span>
-                    <span className="text-xs text-blue-100">Email</span>
-                  </>
-                )}
-              </Button>
+              <div className="relative">
+                <Button 
+                  disabled={true}
+                  className="bg-blue-600/40 hover:bg-blue-600/40 text-white/60 border border-white/10 h-auto py-3 flex flex-col items-center gap-2 cursor-not-allowed opacity-60"
+                >
+                  <img src="/outlookicon.webp" alt="Outlook" className="h-6 w-6 object-contain" />
+                  <span>Outlook</span>
+                  <span className="text-xs text-blue-100/60">Coming Soon</span>
+                </Button>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Badge variant="outline" className="border-amber-400/50 text-amber-300 bg-amber-500/20 text-[10px] px-1.5 py-0.5">
+                    Soon
+                  </Badge>
+                </div>
+              </div>
               <Button 
                 disabled={providerLoading !== null} 
                 onClick={() => beginProviderOAuth('gdrive')} 
@@ -455,6 +455,31 @@ export default function IntegrationsHub() {
               )}
               <div className="grid grid-cols-2 gap-3">
                 {(['gmail','outlook','gdrive','dropbox'] as const).map((p) => {
+                  // Skip Outlook for now - mark as coming soon
+                  if (p === 'outlook') {
+                    return (
+                      <div key={p} className="flex flex-col gap-2 rounded border border-white/10 bg-white/5 p-3 opacity-60">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2 text-sm font-medium">
+                            <img src="/outlookicon.webp" alt="Outlook" className="h-4 w-4 object-contain" />
+                            <span>Outlook</span>
+                          </div>
+                          <Badge variant="outline" className="border-amber-400/50 text-amber-300 bg-amber-500/20 text-xs">
+                            Coming Soon
+                          </Badge>
+                        </div>
+                        <div className="text-xs text-gray-500">OAuth configuration in progress</div>
+                        <Button 
+                          size="sm" 
+                          disabled={true}
+                          className="bg-blue-600/40 hover:bg-blue-600/40 text-white/60 cursor-not-allowed"
+                        >
+                          Connect
+                        </Button>
+                      </div>
+                    );
+                  }
+                  
                   // Helper function to check if provider is connected - only return true if explicitly connected
                   const isConnected = () => {
                     // Check providerIngest first (preferred format) - must be explicitly true
@@ -487,7 +512,6 @@ export default function IntegrationsHub() {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2 text-sm font-medium">
                           {p === 'gmail' && <img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 object-contain" />}
-                          {p === 'outlook' && <img src="/outlookicon.webp" alt="Outlook" className="h-4 w-4 object-contain" />}
                           {p === 'gdrive' && <img src="/gd.png" alt="Google Drive" className="h-4 w-4 object-contain" />}
                           {p === 'dropbox' && <img src="/db.png" alt="Dropbox" className="h-4 w-4 object-contain" />}
                           <span className="capitalize">{p === 'gdrive' ? 'Google Drive' : p}</span>
@@ -500,7 +524,7 @@ export default function IntegrationsHub() {
                     <div className="flex gap-2">
                       <Button 
                         size="sm" 
-                        className={cn(p==='gmail'?'bg-red-600 hover:bg-red-700': p==='outlook'?'bg-blue-600 hover:bg-blue-700': p==='gdrive'?'bg-emerald-600 hover:bg-emerald-700':'bg-sky-600 hover:bg-sky-700')} 
+                        className={cn(p==='gmail'?'bg-red-600 hover:bg-red-700': p==='gdrive'?'bg-emerald-600 hover:bg-emerald-700':'bg-sky-600 hover:bg-sky-700')} 
                         onClick={async () => {
                           try {
                             setProviderLoading(p);
