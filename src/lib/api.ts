@@ -902,10 +902,10 @@ export const detectionApi = {
         days_remaining: number;
       }>;
       total: number;
-    }>(`/api/v1/integrations/detections/results${query ? `?${query}` : ''}`);
+    }>(`/api/detections/results${query ? `?${query}` : ''}`);
   },
 
-  // Get detection statistics
+  // Get detection statistics (full format from Phase 3 guide)
   getDetectionStatistics: async (userId?: string) => {
     const queryParams = new URLSearchParams();
     if (userId) queryParams.append('userId', userId);
@@ -913,14 +913,84 @@ export const detectionApi = {
     return requestJson<{
       success: boolean;
       statistics: {
-        totalDetections: number;
-        highConfidence: number;
-        mediumConfidence: number;
-        lowConfidence: number;
-        estimatedRecovery: number;
-        averageConfidence: number;
+        total_anomalies?: number;
+        totalDetections?: number; // Fallback for backward compatibility
+        total_value?: number;
+        estimatedRecovery?: number; // Fallback
+        by_severity?: {
+          high?: { count: number; value: number };
+          medium?: { count: number; value: number };
+          low?: { count: number; value: number };
+        };
+        by_type?: Record<string, { count: number; value: number }>;
+        by_confidence?: {
+          high: number;
+          medium: number;
+          low: number;
+        };
+        highConfidence?: number; // Fallback
+        mediumConfidence?: number; // Fallback
+        lowConfidence?: number; // Fallback
+        expiring_soon?: number;
+        expired_count?: number;
+        averageConfidence?: number;
       };
-    }>(`/api/v1/integrations/detections/statistics${query ? `?${query}` : ''}`);
+    }>(`/api/detections/statistics${query ? `?${query}` : ''}`);
+  },
+
+  // Get confidence distribution
+  getConfidenceDistribution: async (userId?: string) => {
+    const queryParams = new URLSearchParams();
+    if (userId) queryParams.append('userId', userId);
+    const query = queryParams.toString();
+    return requestJson<{
+      success: boolean;
+      distribution: {
+        total_detections: number;
+        by_confidence: {
+          high: number;
+          medium: number;
+          low: number;
+        };
+        by_anomaly_type?: Record<string, {
+          high: number;
+          medium: number;
+          low: number;
+          total: number;
+        }>;
+        confidence_ranges?: Record<string, number>;
+        recovery_rates?: {
+          high: number;
+          medium: number;
+          low: number;
+        };
+        average_confidence: number;
+      };
+    }>(`/api/detections/confidence-distribution${query ? `?${query}` : ''}`);
+  },
+
+  // Resolve a detection
+  resolveDetection: async (id: string, body: { notes?: string; resolution_amount?: number }) => {
+    return requestJson<{
+      success: boolean;
+      message: string;
+      detection: any;
+    }>(`/api/detections/${encodeURIComponent(id)}/resolve`, {
+      method: 'PUT',
+      body: JSON.stringify(body),
+    });
+  },
+
+  // Update detection status
+  updateDetectionStatus: async (id: string, body: { status: string; notes?: string }) => {
+    return requestJson<{
+      success: boolean;
+      message: string;
+      detection: any;
+    }>(`/api/detections/${encodeURIComponent(id)}/status`, {
+      method: 'PUT',
+      body: JSON.stringify(body),
+    });
   },
 
   // Get claims approaching deadline
@@ -932,9 +1002,17 @@ export const detectionApi = {
     const query = queryParams.toString();
     return requestJson<{
       success: boolean;
-      claims: Array<any>;
+      claims: Array<{
+        id: string;
+        anomaly_type: string;
+        estimated_value: number;
+        days_remaining: number;
+        deadline_date: string;
+        severity: string;
+        confidence_score: number;
+      }>;
       count: number;
       threshold_days: number;
-    }>(`/api/v1/integrations/detections/deadlines${query ? `?${query}` : ''}`);
+    }>(`/api/detections/deadlines${query ? `?${query}` : ''}`);
   },
 };

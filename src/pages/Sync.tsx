@@ -9,6 +9,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { SyncHistory } from '@/components/SyncHistory';
 import { RefreshCw, XCircle, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useDetectionUpdates } from '@/hooks/use-detection-updates';
 
 export default function Sync() {
   const navigate = useNavigate();
@@ -24,6 +25,27 @@ export default function Sync() {
   const { toast } = useToast();
   const previousStatusRef = useRef<'idle' | 'running' | 'completed' | 'failed' | 'cancelled'>('idle');
   const toastShownRef = useRef<{ started?: boolean; completed?: boolean; failed?: boolean; cancelled?: boolean }>({});
+  
+  // Phase 3: Detection updates SSE - connect when sync completes
+  useDetectionUpdates(
+    status === 'completed' && syncId ? syncId : null,
+    (event) => {
+      // Handle detection updates
+      if (event.status === 'complete') {
+        toast({
+          title: '✅ Detection Complete',
+          description: event.message || `Detection completed. ${event.total_detections || 0} anomalies found.`,
+          duration: 6000,
+        });
+      } else if (event.new_detections_count && event.new_detections_count > 0) {
+        toast({
+          title: '🔍 New Detections',
+          description: `${event.new_detections_count} new anomaly${event.new_detections_count !== 1 ? 'ies' : ''} detected`,
+          duration: 5000,
+        });
+      }
+    }
+  );
 
   const updateSyncState = (s: SyncStatusResponse) => {
     setSyncData(s);

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, Suspense, lazy } from 'react';
+import React, { useState, useMemo, Suspense, lazy, useEffect } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 import { format, subDays, startOfYear, startOfQuarter } from 'date-fns';
 import { CalendarIcon, Download, ArrowUpDown, ArrowUp, ArrowDown, TrendingDown, TrendingUp } from 'lucide-react';
 import type { DateRange } from 'react-day-picker';
+import { detectionApi } from '@/lib/api';
 
 // Chart skeleton loader
 const ChartSkeleton = () => (
@@ -21,7 +22,7 @@ const ChartSkeleton = () => (
   </div>
 );
 
-// Lazy-loaded chart component for better code splitting
+// Lazy-loaded chart components for better code splitting
 const RecoveryChart = lazy(() => 
   import('recharts').then(recharts => ({
     default: ({ data }: { data: Array<{ date: string; value: number }> }) => {
@@ -44,6 +45,210 @@ const RecoveryChart = lazy(() =>
             <Tooltip formatter={(v: number) => formatCurrency(v)} />
             <Bar dataKey="value" fill="#60A5FA" radius={[4,4,0,0]} />
           </BarChart>
+        </ResponsiveContainer>
+      );
+    }
+  }))
+);
+
+// Anomaly Type Distribution Line Chart
+const AnomalyTypeChart = lazy(() =>
+  import('recharts').then(recharts => ({
+    default: ({ data }: { data: Array<{ type: string; count: number; value: number }> }) => {
+      const { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend, Area, AreaChart } = recharts;
+      const formatCurrency = (amount: number) => {
+        return new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0
+        }).format(amount);
+      };
+      
+      return (
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={data}>
+            <defs>
+              <linearGradient id="countGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#60A5FA" stopOpacity={0.8}/>
+                <stop offset="95%" stopColor="#60A5FA" stopOpacity={0.1}/>
+              </linearGradient>
+              <linearGradient id="valueGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#10B981" stopOpacity={0.8}/>
+                <stop offset="95%" stopColor="#10B981" stopOpacity={0.1}/>
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
+            <XAxis dataKey="type" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" angle={-45} textAnchor="end" height={80} />
+            <YAxis yAxisId="left" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
+            <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" tickFormatter={(v) => formatCurrency(v)} />
+            <Tooltip 
+              formatter={(value: number, name: string) => {
+                if (name === 'value') return formatCurrency(value);
+                return value;
+              }}
+            />
+            <Legend />
+            <Area yAxisId="left" type="monotone" dataKey="count" stroke="#60A5FA" fill="url(#countGradient)" strokeWidth={2} name="Count" />
+            <Line yAxisId="right" type="monotone" dataKey="value" stroke="#10B981" strokeWidth={3} dot={{ fill: '#10B981', r: 4 }} name="Value" />
+          </AreaChart>
+        </ResponsiveContainer>
+      );
+    }
+  }))
+);
+
+// Severity Distribution Line Chart
+const SeverityChart = lazy(() =>
+  import('recharts').then(recharts => ({
+    default: ({ data }: { data: Array<{ severity: string; count: number; value: number }> }) => {
+      const { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend, Area, AreaChart } = recharts;
+      const formatCurrency = (amount: number) => {
+        return new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0
+        }).format(amount);
+      };
+      
+      return (
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={data}>
+            <defs>
+              <linearGradient id="countGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#60A5FA" stopOpacity={0.8}/>
+                <stop offset="95%" stopColor="#60A5FA" stopOpacity={0.1}/>
+              </linearGradient>
+              <linearGradient id="valueGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#10B981" stopOpacity={0.8}/>
+                <stop offset="95%" stopColor="#10B981" stopOpacity={0.1}/>
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
+            <XAxis dataKey="severity" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
+            <YAxis yAxisId="left" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
+            <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" tickFormatter={(v) => formatCurrency(v)} />
+            <Tooltip 
+              formatter={(value: number, name: string) => {
+                if (name === 'value') return formatCurrency(value);
+                return value;
+              }}
+            />
+            <Legend />
+            <Area yAxisId="left" type="monotone" dataKey="count" stroke="#60A5FA" fill="url(#countGradient)" strokeWidth={2} name="Count" />
+            <Line yAxisId="right" type="monotone" dataKey="value" stroke="#10B981" strokeWidth={3} dot={{ fill: '#10B981', r: 4 }} name="Value" />
+          </AreaChart>
+        </ResponsiveContainer>
+      );
+    }
+  }))
+);
+
+// Confidence Distribution Line Chart
+const ConfidenceChart = lazy(() =>
+  import('recharts').then(recharts => {
+    const { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Area, AreaChart } = recharts;
+    
+    return {
+      default: ({ data }: { data: Array<{ level: string; count: number }> }) => {
+        return (
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={data}>
+              <defs>
+                <linearGradient id="confidenceGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#60A5FA" stopOpacity={0.8}/>
+                  <stop offset="95%" stopColor="#60A5FA" stopOpacity={0.1}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
+              <XAxis dataKey="level" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
+              <YAxis tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
+              <Tooltip />
+              <Area 
+                type="monotone" 
+                dataKey="count" 
+                stroke="#60A5FA" 
+                fill="url(#confidenceGradient)"
+                strokeWidth={3}
+                dot={{ fill: '#60A5FA', r: 5 }}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        );
+      }
+    };
+  })
+);
+
+// Recovery Rates Line Chart with Gradient
+const RecoveryRatesChart = lazy(() =>
+  import('recharts').then(recharts => ({
+    default: ({ data }: { data: Array<{ level: string; rate: number }> }) => {
+      const { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend, Area, AreaChart } = recharts;
+      
+      return (
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={data}>
+            <defs>
+              <linearGradient id="recoveryGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#10B981" stopOpacity={0.8}/>
+                <stop offset="95%" stopColor="#10B981" stopOpacity={0.1}/>
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
+            <XAxis dataKey="level" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
+            <YAxis 
+              tick={{ fontSize: 12, fill: '#9CA3AF' }} 
+              stroke="#374151"
+              tickFormatter={(value) => `${(value * 100).toFixed(0)}%`}
+            />
+            <Tooltip formatter={(value: number) => `${(value * 100).toFixed(1)}%`} />
+            <Legend />
+            <Area 
+              type="monotone" 
+              dataKey="rate" 
+              stroke="#10B981" 
+              fill="url(#recoveryGradient)"
+              strokeWidth={3}
+              dot={{ fill: '#10B981', r: 5 }}
+              name="Recovery Rate"
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      );
+    }
+  }))
+);
+
+// Confidence Range Histogram Line Chart
+const ConfidenceHistogram = lazy(() =>
+  import('recharts').then(recharts => ({
+    default: ({ data }: { data: Array<{ range: string; count: number }> }) => {
+      const { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Area, AreaChart } = recharts;
+      
+      return (
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={data}>
+            <defs>
+              <linearGradient id="histogramGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.8}/>
+                <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0.1}/>
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
+            <XAxis dataKey="range" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" angle={-45} textAnchor="end" height={80} />
+            <YAxis tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
+            <Tooltip />
+            <Area 
+              type="monotone" 
+              dataKey="count" 
+              stroke="#8B5CF6" 
+              fill="url(#histogramGradient)"
+              strokeWidth={3}
+              dot={{ fill: '#8B5CF6', r: 5 }}
+            />
+          </AreaChart>
         </ResponsiveContainer>
       );
     }
@@ -119,6 +324,38 @@ export default function Reports() {
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  
+  // Phase 3: Detection statistics state
+  const [detectionStats, setDetectionStats] = useState<any>(null);
+  const [confidenceDistribution, setConfidenceDistribution] = useState<any>(null);
+  const [loadingStats, setLoadingStats] = useState(false);
+
+  // Fetch Phase 3 detection statistics
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      setLoadingStats(true);
+      try {
+        const [statsRes, distRes] = await Promise.all([
+          detectionApi.getDetectionStatistics().catch(() => ({ ok: false, data: null })),
+          detectionApi.getConfidenceDistribution().catch(() => ({ ok: false, data: null })),
+        ]);
+        if (!cancelled) {
+          if (statsRes.ok && statsRes.data?.statistics) {
+            setDetectionStats(statsRes.data.statistics);
+          }
+          if (distRes.ok && distRes.data?.distribution) {
+            setConfidenceDistribution(distRes.data.distribution);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to load detection statistics:', error);
+      } finally {
+        if (!cancelled) setLoadingStats(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   // Filter and sort data
   const filteredClaims = useMemo(() => {
@@ -271,6 +508,57 @@ export default function Reports() {
     }));
   }, [filteredClaims]);
 
+  // Phase 3: Detection statistics chart data
+  const anomalyTypeChartData = useMemo(() => {
+    if (!detectionStats?.by_type) return [];
+    return Object.entries(detectionStats.by_type).map(([type, data]: [string, any]) => ({
+      type: type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+      count: data.count || 0,
+      value: data.value || 0
+    })).sort((a, b) => b.value - a.value);
+  }, [detectionStats]);
+
+  const severityChartData = useMemo(() => {
+    if (!detectionStats?.by_severity) return [];
+    return Object.entries(detectionStats.by_severity).map(([severity, data]: [string, any]) => ({
+      severity: severity.charAt(0).toUpperCase() + severity.slice(1),
+      count: data.count || 0,
+      value: data.value || 0
+    }));
+  }, [detectionStats]);
+
+  const confidenceChartData = useMemo(() => {
+    if (!detectionStats?.by_confidence && !confidenceDistribution?.by_confidence) return [];
+    const source = confidenceDistribution?.by_confidence || detectionStats.by_confidence;
+    return [
+      { level: 'High', count: source.high || 0 },
+      { level: 'Medium', count: source.medium || 0 },
+      { level: 'Low', count: source.low || 0 }
+    ];
+  }, [detectionStats, confidenceDistribution]);
+
+  const recoveryRatesChartData = useMemo(() => {
+    if (!confidenceDistribution?.recovery_rates) return [];
+    return [
+      { level: 'High', rate: confidenceDistribution.recovery_rates.high || 0 },
+      { level: 'Medium', rate: confidenceDistribution.recovery_rates.medium || 0 },
+      { level: 'Low', rate: confidenceDistribution.recovery_rates.low || 0 }
+    ];
+  }, [confidenceDistribution]);
+
+  const confidenceHistogramData = useMemo(() => {
+    if (!confidenceDistribution?.confidence_ranges) return [];
+    return Object.entries(confidenceDistribution.confidence_ranges).map(([range, count]: [string, any]) => ({
+      range,
+      count: count || 0
+    })).sort((a, b) => {
+      // Sort by range start value
+      const aStart = parseFloat(a.range.split('-')[0]);
+      const bStart = parseFloat(b.range.split('-')[0]);
+      return aStart - bStart;
+    });
+  }, [confidenceDistribution]);
+
   const SortIcon = React.memo(({
     field
   }: {
@@ -318,8 +606,8 @@ export default function Reports() {
           </div>
         </div>
 
-        {/* Key Metrics Bar */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        {/* Key Metrics Bar - Enhanced with Phase 3 Detection Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card className="bg-white/5 border-white/10 text-gray-300">
             <CardContent className="p-6">
               <div className="flex items-center">
@@ -334,6 +622,11 @@ export default function Reports() {
                     </div>
                   </div>
                   <p className="font-bold text-emerald-400 text-lg mt-1">{formatCurrency(keyMetrics.totalRecovered)}</p>
+                  {detectionStats?.total_value && (
+                    <p className="text-xs text-gray-400 mt-1">
+                      {formatCurrency(detectionStats.total_value)} from detections
+                    </p>
+                  )}
                 </div>
               </div>
             </CardContent>
@@ -345,6 +638,11 @@ export default function Reports() {
                 <div>
                   <p className="text-sm font-medium text-gray-400">Claims Submitted</p>
                   <p className="font-bold text-gray-100 text-lg">{keyMetrics.claimsSubmitted}</p>
+                  {detectionStats?.total_anomalies && (
+                    <p className="text-xs text-gray-400 mt-1">
+                      {detectionStats.total_anomalies} anomalies detected
+                    </p>
+                  )}
                 </div>
               </div>
             </CardContent>
@@ -364,6 +662,11 @@ export default function Reports() {
                     </div>
                   </div>
                   <p className="font-bold text-blue-400 text-lg mt-1">{keyMetrics.successRate.toFixed(1)}%</p>
+                  {confidenceDistribution?.average_confidence && (
+                    <p className="text-xs text-gray-400 mt-1">
+                      Avg confidence: {(confidenceDistribution.average_confidence * 100).toFixed(0)}%
+                    </p>
+                  )}
                 </div>
               </div>
             </CardContent>
@@ -375,6 +678,11 @@ export default function Reports() {
                 <div>
                   <p className="text-sm font-medium text-gray-400">Avg. Recovery Time</p>
                   <p className="font-bold text-gray-100 text-lg">{keyMetrics.avgRecoveryTime} Days</p>
+                  {detectionStats?.expiring_soon !== undefined && detectionStats.expiring_soon > 0 && (
+                    <p className="text-xs text-amber-400 mt-1">
+                      {detectionStats.expiring_soon} expiring soon
+                    </p>
+                  )}
                 </div>
               </div>
             </CardContent>
@@ -394,6 +702,86 @@ export default function Reports() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Phase 3: Detection Statistics Charts */}
+        {detectionStats && (
+          <>
+            {/* Anomaly Type Distribution */}
+            {anomalyTypeChartData.length > 0 && (
+              <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
+                <CardContent className="p-6">
+                  <h3 className="text-sm font-semibold text-gray-200 mb-4">Anomaly Type Distribution</h3>
+                  <p className="text-xs text-gray-400 mb-4">Breakdown of detected anomalies by type, showing count and total value</p>
+                  <div className="w-full h-80 gpu-accelerated">
+                    <Suspense fallback={<ChartSkeleton />}>
+                      <AnomalyTypeChart data={anomalyTypeChartData} />
+                    </Suspense>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Severity Distribution */}
+            {severityChartData.length > 0 && (
+              <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
+                <CardContent className="p-6">
+                  <h3 className="text-sm font-semibold text-gray-200 mb-4">Severity Distribution</h3>
+                  <p className="text-xs text-gray-400 mb-4">Distribution of anomalies by severity level (high, medium, low)</p>
+                  <div className="w-full h-64 gpu-accelerated">
+                    <Suspense fallback={<ChartSkeleton />}>
+                      <SeverityChart data={severityChartData} />
+                    </Suspense>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Confidence Distribution */}
+            {confidenceChartData.length > 0 && (
+              <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
+                <CardContent className="p-6">
+                  <h3 className="text-sm font-semibold text-gray-200 mb-4">Confidence Distribution</h3>
+                  <p className="text-xs text-gray-400 mb-4">Number of detections by confidence level</p>
+                  <div className="w-full h-64 gpu-accelerated">
+                    <Suspense fallback={<ChartSkeleton />}>
+                      <ConfidenceChart data={confidenceChartData} />
+                    </Suspense>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Recovery Rates by Confidence */}
+            {recoveryRatesChartData.length > 0 && (
+              <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
+                <CardContent className="p-6">
+                  <h3 className="text-sm font-semibold text-gray-200 mb-4">Recovery Rates by Confidence Level</h3>
+                  <p className="text-xs text-gray-400 mb-4">Success rate of recovery claims based on detection confidence</p>
+                  <div className="w-full h-64 gpu-accelerated">
+                    <Suspense fallback={<ChartSkeleton />}>
+                      <RecoveryRatesChart data={recoveryRatesChartData} />
+                    </Suspense>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Confidence Range Histogram */}
+            {confidenceHistogramData.length > 0 && (
+              <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
+                <CardContent className="p-6">
+                  <h3 className="text-sm font-semibold text-gray-200 mb-4">Confidence Score Distribution</h3>
+                  <p className="text-xs text-gray-400 mb-4">Histogram showing distribution of confidence scores across all detections</p>
+                  <div className="w-full h-64 gpu-accelerated">
+                    <Suspense fallback={<ChartSkeleton />}>
+                      <ConfidenceHistogram data={confidenceHistogramData} />
+                    </Suspense>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </>
+        )}
 
         {/* Detailed Breakdown: Recoveries by Claim Type */}
         <Card className="bg-white/5 border-white/10 text-gray-300">

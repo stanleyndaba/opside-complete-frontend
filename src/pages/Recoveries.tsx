@@ -10,9 +10,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { format, subDays, startOfYear, startOfQuarter } from 'date-fns';
-import { CalendarIcon, Search, MoreHorizontal, FileText, Eye, RefreshCw, Info } from 'lucide-react';
+import { CalendarIcon, Search, MoreHorizontal, FileText, Eye, RefreshCw, Info, AlertTriangle, X, CheckCircle2, Clock, ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
@@ -125,6 +127,20 @@ export default function Recoveries() {
   const [filterSource, setFilterSource] = useState<'all' | 'detected' | 'synced'>('all');
   const [filterConfidence, setFilterConfidence] = useState<'all' | 'high' | 'medium' | 'low'>('all');
   
+  // Phase 3: Detection statistics and urgent claims
+  const [detectionStats, setDetectionStats] = useState<any>(null);
+  const [urgentClaims, setUrgentClaims] = useState<any[]>([]);
+  const [urgentClaimsCount, setUrgentClaimsCount] = useState<number>(0);
+  const [resolveModalOpen, setResolveModalOpen] = useState(false);
+  const [statusUpdateModalOpen, setStatusUpdateModalOpen] = useState(false);
+  const [selectedDetection, setSelectedDetection] = useState<any | null>(null);
+  const [resolveNotes, setResolveNotes] = useState('');
+  const [resolveAmount, setResolveAmount] = useState('');
+  const [statusUpdateNotes, setStatusUpdateNotes] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState<string>('pending');
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+  const [detectionDetails, setDetectionDetails] = useState<any | null>(null);
+  
   // Amazon recoveries integration (from DASHBOARD_CLAIMS_INTEGRATION.md)
   const [recoveredTotal, setRecoveredTotal] = useState<number | null>(null);
   const [recoveredCurrency, setRecoveredCurrency] = useState<string>('USD');
@@ -223,6 +239,27 @@ export default function Recoveries() {
     
     console.log('[Recoveries] mergeRecoveries result:', merged.length, 'items');
     setMergedRecoveries(merged);
+  }, []);
+
+  // Fetch detection statistics and urgent claims
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const [statsRes, urgentRes] = await Promise.all([
+        detectionApi.getDetectionStatistics().catch(() => ({ ok: false, data: null })),
+        detectionApi.getClaimsApproachingDeadline({ days: 7 }).catch(() => ({ ok: false, data: null })),
+      ]);
+      if (!cancelled) {
+        if (statsRes.ok && statsRes.data?.statistics) {
+          setDetectionStats(statsRes.data.statistics);
+        }
+        if (urgentRes.ok && urgentRes.data) {
+          setUrgentClaims(urgentRes.data.claims || []);
+          setUrgentClaimsCount(urgentRes.data.count || 0);
+        }
+      }
+    })();
+    return () => { cancelled = true; };
   }, []);
 
   useEffect(() => {
@@ -840,6 +877,101 @@ export default function Recoveries() {
           </div>
         </div>
 
+        {/* Urgent Claims Banner - Phase 3 */}
+        {urgentClaimsCount > 0 && (
+          <Card className={`mb-6 border-2 ${
+            urgentClaims.some(c => c.days_remaining <= 3)
+              ? 'bg-red-500/10 border-red-500/50'
+              : 'bg-amber-500/10 border-amber-500/50'
+          }`}>
+            <CardContent className="p-4">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start gap-3 flex-1">
+                  <AlertTriangle className={`h-5 w-5 mt-0.5 ${
+                    urgentClaims.some(c => c.days_remaining <= 3)
+                      ? 'text-red-400'
+                      : 'text-amber-400'
+                  }`} />
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-gray-100 mb-1">
+                      {urgentClaimsCount} Claim{urgentClaimsCount !== 1 ? 's' : ''} Expiring Soon
+                    </h3>
+                    <p className="text-sm text-gray-300 mb-3">
+                      {urgentClaims.some(c => c.days_remaining <= 3)
+                        ? 'Some claims are expiring in less than 3 days. File them immediately to avoid missing the deadline.'
+                        : 'These claims are approaching their 60-day Amazon deadline. Review and file them soon.'}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {urgentClaims.slice(0, 5).map((claim) => (
+                        <div
+                          key={claim.id}
+                          className={`px-3 py-2 rounded-md border ${
+                            claim.days_remaining <= 3
+                              ? 'bg-red-500/20 border-red-500/30'
+                              : 'bg-amber-500/20 border-amber-500/30'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2">
+                            <Clock className={`h-3 w-3 ${
+                              claim.days_remaining <= 3 ? 'text-red-300' : 'text-amber-300'
+                            }`} />
+                            <span className="text-xs font-medium text-gray-200">
+                              {claim.days_remaining} day{claim.days_remaining !== 1 ? 's' : ''} left
+                            </span>
+                            <span className="text-xs text-gray-400">•</span>
+                            <span className="text-xs text-gray-300">
+                              {formatCurrency(claim.estimated_value)}
+                            </span>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="h-6 px-2 text-xs ml-2"
+                              onClick={() => {
+                                // Navigate to claim or open details
+                                const foundClaim = mergedRecoveries?.find(c => c.id === claim.id) || 
+                                                  claims.find(c => c.id === claim.id);
+                                if (foundClaim) {
+                                  window.location.href = `/recoveries/${claim.id}`;
+                                }
+                              }}
+                            >
+                              File Claim
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                      {urgentClaims.length > 5 && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-8 text-xs"
+                          onClick={() => {
+                            setFilterSource('detected');
+                            // Scroll to table
+                            setTimeout(() => {
+                              document.querySelector('.recoveries-table-scroll')?.scrollIntoView({ behavior: 'smooth' });
+                            }, 100);
+                          }}
+                        >
+                          View All {urgentClaimsCount} Claims
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0"
+                  onClick={() => setUrgentClaimsCount(0)}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Opportunity Radar Summary */}
         <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
           <CardContent className="p-5 md:p-6">
@@ -932,21 +1064,49 @@ export default function Recoveries() {
           </CardContent>
         </Card>
 
-        {/* Key Metrics Bar */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        {/* Key Metrics Bar - Enhanced with Phase 3 Statistics */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card className="bg-white/5 border-white/10 text-gray-300">
             <CardContent className="p-6">
               <div className="flex items-center">
                 <div>
                   <p className="text-sm font-medium text-gray-400">Total Claims Found</p>
                   <p className="text-2xl font-bold text-gray-100">
-                    {metrics ? metrics.totalClaimsFound : keyMetrics.totalClaimsFound}
+                    {detectionStats?.total_anomalies ?? detectionStats?.totalDetections ?? (metrics ? metrics.totalClaimsFound : keyMetrics.totalClaimsFound)}
                     {amazonClaimCount != null && amazonClaimCount > 0 && (
                       <span className="text-sm text-emerald-400 ml-2 font-normal">
                         ({amazonClaimCount} from Amazon)
                       </span>
                     )}
                   </p>
+                  {detectionStats?.total_anomalies && (
+                    <p className="text-xs text-gray-400 mt-1">
+                      {detectionStats.by_confidence?.high || 0} high confidence
+                    </p>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-white/5 border-white/10 text-gray-300">
+            <CardContent className="p-6">
+              <div className="flex items-center">
+                <div>
+                  <p className="text-sm font-medium text-gray-400">
+                    {detectionStats?.total_value ? 'Total Recovery Value' : 'Value in Progress'}
+                  </p>
+                  <p className="text-2xl font-bold text-white">
+                    {formatCurrency(
+                      detectionStats?.total_value ?? 
+                      (metrics ? metrics.valueInProgress : keyMetrics.valueInProgress)
+                    )}
+                  </p>
+                  {detectionStats?.expiring_soon !== undefined && detectionStats.expiring_soon > 0 && (
+                    <p className="text-xs text-amber-400 mt-1">
+                      {detectionStats.expiring_soon} expiring soon
+                    </p>
+                  )}
                 </div>
               </div>
             </CardContent>
@@ -958,17 +1118,11 @@ export default function Recoveries() {
                 <div>
                   <p className="text-sm font-medium text-gray-400">Currently in Progress</p>
                   <p className="text-2xl font-bold text-blue-400">{metrics ? metrics.inProgress : keyMetrics.currentlyInProgress}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-white/5 border-white/10 text-gray-300">
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <div>
-                  <p className="text-sm font-medium text-gray-400">Value in Progress</p>
-                  <p className="text-2xl font-bold text-white">{formatCurrency(metrics ? metrics.valueInProgress : keyMetrics.valueInProgress)}</p>
+                  {detectionStats?.expired_count !== undefined && detectionStats.expired_count > 0 && (
+                    <p className="text-xs text-red-400 mt-1">
+                      {detectionStats.expired_count} expired
+                    </p>
+                  )}
                 </div>
               </div>
             </CardContent>
@@ -980,11 +1134,74 @@ export default function Recoveries() {
                 <div>
                   <p className="text-sm font-medium text-gray-400">30-Day Success Rate</p>
                   <p className="text-2xl font-bold text-emerald-400">{metrics ? Math.round(metrics.successRate30d) : keyMetrics.successRate.toFixed(0)}%</p>
+                  {detectionStats?.by_confidence && (
+                    <p className="text-xs text-gray-400 mt-1">
+                      {detectionStats.by_confidence.medium + detectionStats.by_confidence.low} medium/low
+                    </p>
+                  )}
                 </div>
               </div>
             </CardContent>
           </Card>
         </div>
+
+        {/* Phase 3: Detection Statistics Breakdown */}
+        {detectionStats && (detectionStats.by_severity || detectionStats.by_type) && (
+          <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
+            <CardContent className="p-6">
+              <h3 className="text-lg font-semibold text-gray-100 mb-4">Detection Statistics</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* By Severity */}
+                {detectionStats.by_severity && (
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-400 mb-3">By Severity</h4>
+                    <div className="space-y-2">
+                      {Object.entries(detectionStats.by_severity).map(([severity, data]: [string, any]) => (
+                        <div key={severity} className="flex items-center justify-between p-2 rounded bg-white/5">
+                          <div className="flex items-center gap-2">
+                            <Badge className={
+                              severity === 'high' ? 'bg-red-500/20 text-red-300 border-red-500/30' :
+                              severity === 'medium' ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' :
+                              'bg-gray-500/20 text-gray-300 border-gray-500/30'
+                            }>
+                              {severity.charAt(0).toUpperCase() + severity.slice(1)}
+                            </Badge>
+                            <span className="text-sm text-gray-300">{data.count} claims</span>
+                          </div>
+                          <span className="text-sm font-semibold text-gray-100">
+                            {formatCurrency(data.value)}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                {/* By Type */}
+                {detectionStats.by_type && (
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-400 mb-3">By Anomaly Type</h4>
+                    <div className="space-y-2 max-h-48 overflow-y-auto">
+                      {Object.entries(detectionStats.by_type).slice(0, 5).map(([type, data]: [string, any]) => (
+                        <div key={type} className="flex items-center justify-between p-2 rounded bg-white/5">
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm text-gray-300 capitalize">
+                              {type.replace(/_/g, ' ')}
+                            </span>
+                            <span className="text-xs text-gray-400">({data.count})</span>
+                          </div>
+                          <span className="text-sm font-semibold text-gray-100">
+                            {formatCurrency(data.value)}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Controls */}
         <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
@@ -1275,18 +1492,55 @@ export default function Recoveries() {
                               </Link>
                             </DropdownMenuItem>
                           )}
-                          <DropdownMenuItem asChild>
-                            <Link to={`/recoveries/${claim.id}`} state={{ claim }} className="flex items-center gap-2">
-                              <Eye className="h-4 w-4" />
+                          {/* Phase 3: Status Update - only for detected claims */}
+                          {claim.source === 'detected' && claim.status !== 'resolved' && (
+                            <DropdownMenuItem onClick={() => {
+                              setSelectedDetection(claim);
+                              setSelectedStatus(claim.status || 'pending');
+                              setStatusUpdateNotes('');
+                              setStatusUpdateModalOpen(true);
+                            }}>
+                              <CheckCircle2 className="h-4 w-4 mr-2" />
+                              Update Status
+                            </DropdownMenuItem>
+                          )}
+                          {/* Phase 3: Resolve Detection - only for detected claims */}
+                          {claim.source === 'detected' && claim.status !== 'resolved' && (
+                            <DropdownMenuItem onClick={() => {
+                              setSelectedDetection(claim);
+                              setResolveNotes('');
+                              setResolveAmount(claim.guaranteedAmount?.toString() || '');
+                              setResolveModalOpen(true);
+                            }}>
+                              <CheckCircle2 className="h-4 w-4 mr-2" />
+                              Mark as Resolved
+                            </DropdownMenuItem>
+                          )}
+                          {/* Phase 3: View Details - open modal for detected claims, navigate for synced */}
+                          {claim.source === 'detected' ? (
+                            <DropdownMenuItem onClick={() => {
+                              setDetectionDetails(claim);
+                              setDetailsModalOpen(true);
+                            }}>
+                              <Eye className="h-4 w-4 mr-2" />
                               View Details
-                            </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem asChild>
-                            <Link to={`/recoveries/${encodeURIComponent(claim.id)}/resolve`} state={{ claim }} className="flex items-center gap-2">
-                              <FileText className="h-4 w-4" />
-                              Resolve Case
-                            </Link>
-                          </DropdownMenuItem>
+                            </DropdownMenuItem>
+                          ) : (
+                            <DropdownMenuItem asChild>
+                              <Link to={`/recoveries/${claim.id}`} state={{ claim }} className="flex items-center gap-2">
+                                <Eye className="h-4 w-4" />
+                                View Details
+                              </Link>
+                            </DropdownMenuItem>
+                          )}
+                          {claim.source !== 'detected' && (
+                            <DropdownMenuItem asChild>
+                              <Link to={`/recoveries/${encodeURIComponent(claim.id)}/resolve`} state={{ claim }} className="flex items-center gap-2">
+                                <FileText className="h-4 w-4" />
+                                Resolve Case
+                              </Link>
+                            </DropdownMenuItem>
+                          )}
                           <DropdownMenuItem onClick={async () => {
                             const url = api.getRecoveryDocumentUrl(claim.id);
                             try {
@@ -1323,6 +1577,451 @@ export default function Recoveries() {
             )}
           </CardContent>
         </Card>
+
+        {/* Phase 3: Resolve Detection Modal */}
+        <Dialog open={resolveModalOpen} onOpenChange={setResolveModalOpen}>
+          <DialogContent className="bg-[#0B1220] border-white/10 text-gray-300">
+            <DialogHeader>
+              <DialogTitle>Mark Detection as Resolved</DialogTitle>
+              <DialogDescription className="text-gray-400">
+                Mark this detection as resolved and record the resolution details.
+              </DialogDescription>
+            </DialogHeader>
+            {selectedDetection && (
+              <div className="space-y-4 py-4">
+                <div>
+                  <Label className="text-gray-300">Detection ID</Label>
+                  <p className="text-sm text-gray-400 font-mono">{selectedDetection.id}</p>
+                </div>
+                <div>
+                  <Label className="text-gray-300">Anomaly Type</Label>
+                  <p className="text-sm text-gray-400 capitalize">
+                    {selectedDetection.type?.replace(/_/g, ' ') || selectedDetection.anomaly_type?.replace(/_/g, ' ')}
+                  </p>
+                </div>
+                <div>
+                  <Label htmlFor="resolve-amount" className="text-gray-300">Resolution Amount</Label>
+                  <Input
+                    id="resolve-amount"
+                    type="number"
+                    step="0.01"
+                    value={resolveAmount}
+                    onChange={(e) => setResolveAmount(e.target.value)}
+                    placeholder="0.00"
+                    className="bg-white/5 border-white/10 text-gray-100"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="resolve-notes" className="text-gray-300">Notes</Label>
+                  <Textarea
+                    id="resolve-notes"
+                    value={resolveNotes}
+                    onChange={(e) => setResolveNotes(e.target.value)}
+                    placeholder="Enter resolution notes (e.g., 'Resolved via Amazon reimbursement')"
+                    className="bg-white/5 border-white/10 text-gray-100 min-h-[100px]"
+                  />
+                </div>
+              </div>
+            )}
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setResolveModalOpen(false);
+                  setSelectedDetection(null);
+                  setResolveNotes('');
+                  setResolveAmount('');
+                }}
+                className="border-white/10"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={async () => {
+                  if (!selectedDetection) return;
+                  try {
+                    const res = await detectionApi.resolveDetection(selectedDetection.id, {
+                      notes: resolveNotes,
+                      resolution_amount: resolveAmount ? parseFloat(resolveAmount) : undefined,
+                    });
+                    if (res.ok) {
+                      toast({
+                        title: 'Detection Resolved',
+                        description: res.data?.message || 'Detection marked as resolved successfully.',
+                      });
+                      // Update the detection in state
+                      setDetectionResults(prev => prev.map(d => 
+                        d.id === selectedDetection.id ? { ...d, status: 'resolved' } : d
+                      ));
+                      setMergedRecoveries(prev => prev?.map(c => 
+                        c.id === selectedDetection.id ? { ...c, status: 'resolved' } : c
+                      ));
+                      setResolveModalOpen(false);
+                      setSelectedDetection(null);
+                      setResolveNotes('');
+                      setResolveAmount('');
+                      // Refresh statistics
+                      const statsRes = await detectionApi.getDetectionStatistics();
+                      if (statsRes.ok && statsRes.data?.statistics) {
+                        setDetectionStats(statsRes.data.statistics);
+                      }
+                    } else {
+                      toast({
+                        title: 'Failed to Resolve',
+                        description: res.error || 'Please try again.',
+                        variant: 'destructive',
+                      });
+                    }
+                  } catch (e: any) {
+                    toast({
+                      title: 'Error',
+                      description: e?.message || 'Failed to resolve detection.',
+                      variant: 'destructive',
+                    });
+                  }
+                }}
+                className="bg-emerald-500 hover:bg-emerald-400 text-white"
+              >
+                Mark as Resolved
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Phase 3: Status Update Modal */}
+        <Dialog open={statusUpdateModalOpen} onOpenChange={setStatusUpdateModalOpen}>
+          <DialogContent className="bg-[#0B1220] border-white/10 text-gray-300">
+            <DialogHeader>
+              <DialogTitle>Update Detection Status</DialogTitle>
+              <DialogDescription className="text-gray-400">
+                Update the status of this detection through the workflow: Pending → Reviewed → Disputed → Resolved
+              </DialogDescription>
+            </DialogHeader>
+            {selectedDetection && (
+              <div className="space-y-4 py-4">
+                <div>
+                  <Label className="text-gray-300">Detection ID</Label>
+                  <p className="text-sm text-gray-400 font-mono">{selectedDetection.id}</p>
+                </div>
+                <div>
+                  <Label htmlFor="status-select" className="text-gray-300">Status</Label>
+                  <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                    <SelectTrigger id="status-select" className="bg-white/5 border-white/10 text-gray-100">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pending">Pending</SelectItem>
+                      <SelectItem value="reviewed">Reviewed</SelectItem>
+                      <SelectItem value="disputed">Disputed</SelectItem>
+                      <SelectItem value="resolved">Resolved</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="status-notes" className="text-gray-300">Notes</Label>
+                  <Textarea
+                    id="status-notes"
+                    value={statusUpdateNotes}
+                    onChange={(e) => setStatusUpdateNotes(e.target.value)}
+                    placeholder="Enter notes for this status change (e.g., 'Reviewed and verified')"
+                    className="bg-white/5 border-white/10 text-gray-100 min-h-[100px]"
+                  />
+                </div>
+              </div>
+            )}
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setStatusUpdateModalOpen(false);
+                  setSelectedDetection(null);
+                  setStatusUpdateNotes('');
+                  setSelectedStatus('pending');
+                }}
+                className="border-white/10"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={async () => {
+                  if (!selectedDetection) return;
+                  try {
+                    const res = await detectionApi.updateDetectionStatus(selectedDetection.id, {
+                      status: selectedStatus,
+                      notes: statusUpdateNotes,
+                    });
+                    if (res.ok) {
+                      toast({
+                        title: 'Status Updated',
+                        description: res.data?.message || 'Detection status updated successfully.',
+                      });
+                      // Update the detection in state
+                      setDetectionResults(prev => prev.map(d => 
+                        d.id === selectedDetection.id ? { ...d, status: selectedStatus } : d
+                      ));
+                      setMergedRecoveries(prev => prev?.map(c => 
+                        c.id === selectedDetection.id ? { ...c, status: selectedStatus } : c
+                      ));
+                      setStatusUpdateModalOpen(false);
+                      setSelectedDetection(null);
+                      setStatusUpdateNotes('');
+                      setSelectedStatus('pending');
+                    } else {
+                      toast({
+                        title: 'Failed to Update Status',
+                        description: res.error || 'Please try again.',
+                        variant: 'destructive',
+                      });
+                    }
+                  } catch (e: any) {
+                    toast({
+                      title: 'Error',
+                      description: e?.message || 'Failed to update status.',
+                      variant: 'destructive',
+                    });
+                  }
+                }}
+                className="bg-blue-500 hover:bg-blue-400 text-white"
+              >
+                Update Status
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Phase 3: Detection Details Modal */}
+        <Dialog open={detailsModalOpen} onOpenChange={setDetailsModalOpen}>
+          <DialogContent className="bg-[#0B1220] border-white/10 text-gray-300 max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Detection Details</DialogTitle>
+              <DialogDescription className="text-gray-400">
+                Complete information about this detected anomaly
+              </DialogDescription>
+            </DialogHeader>
+            {detectionDetails && (
+              <div className="space-y-6 py-4">
+                {/* Basic Information */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-gray-300">Detection ID</Label>
+                    <p className="text-sm text-gray-400 font-mono mt-1">{detectionDetails.id}</p>
+                  </div>
+                  <div>
+                    <Label className="text-gray-300">Sync ID</Label>
+                    <p className="text-sm text-gray-400 font-mono mt-1">{detectionDetails.sync_id || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <Label className="text-gray-300">Anomaly Type</Label>
+                    <p className="text-sm text-gray-300 capitalize mt-1">
+                      {detectionDetails.type?.replace(/_/g, ' ') || detectionDetails.anomaly_type?.replace(/_/g, ' ') || 'Unknown'}
+                    </p>
+                  </div>
+                  <div>
+                    <Label className="text-gray-300">Severity</Label>
+                    <Badge className={`mt-1 ${
+                      detectionDetails.severity === 'high' ? 'bg-red-500/20 text-red-300 border-red-500/30' :
+                      detectionDetails.severity === 'medium' ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' :
+                      'bg-gray-500/20 text-gray-300 border-gray-500/30'
+                    }`}>
+                      {detectionDetails.severity?.charAt(0).toUpperCase() + detectionDetails.severity?.slice(1) || 'Unknown'}
+                    </Badge>
+                  </div>
+                  <div>
+                    <Label className="text-gray-300">Status</Label>
+                    <Badge className={cn('mt-1', getStatusColor(detectionDetails.status))}>
+                      {detectionDetails.status}
+                    </Badge>
+                  </div>
+                  <div>
+                    <Label className="text-gray-300">Confidence Score</Label>
+                    <div className="flex items-center gap-2 mt-1">
+                      {detectionDetails.confidence_score !== null && detectionDetails.confidence_score !== undefined ? (
+                        <>
+                          <span className="text-sm font-semibold text-gray-300">
+                            {(detectionDetails.confidence_score * 100).toFixed(1)}%
+                          </span>
+                          <Badge className={
+                            detectionDetails.confidence_score >= 0.85 ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' :
+                            detectionDetails.confidence_score >= 0.50 ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' :
+                            'bg-gray-500/20 text-gray-300 border-gray-500/30'
+                          }>
+                            {detectionDetails.confidence_score >= 0.85 ? 'High' : detectionDetails.confidence_score >= 0.50 ? 'Medium' : 'Low'}
+                          </Badge>
+                        </>
+                      ) : (
+                        <span className="text-sm text-gray-400">N/A</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Financial Information */}
+                <div className="border-t border-white/10 pt-4">
+                  <h4 className="text-sm font-semibold text-gray-200 mb-3">Financial Information</h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-gray-300">Estimated Value</Label>
+                      <p className="text-lg font-semibold text-emerald-400 mt-1">
+                        {formatCurrency(detectionDetails.estimated_value || detectionDetails.guaranteedAmount || 0, detectionDetails.currency || 'USD')}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-gray-300">Currency</Label>
+                      <p className="text-sm text-gray-300 mt-1">{detectionDetails.currency || 'USD'}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Dates & Deadlines */}
+                <div className="border-t border-white/10 pt-4">
+                  <h4 className="text-sm font-semibold text-gray-200 mb-3">Dates & Deadlines</h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-gray-300">Discovery Date</Label>
+                      <p className="text-sm text-gray-300 mt-1">
+                        {detectionDetails.discovery_date 
+                          ? format(new Date(detectionDetails.discovery_date), 'MMM dd, yyyy HH:mm')
+                          : detectionDetails.created 
+                          ? format(new Date(detectionDetails.created), 'MMM dd, yyyy HH:mm')
+                          : 'N/A'}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-gray-300">Deadline Date</Label>
+                      <p className={`text-sm font-semibold mt-1 ${
+                        detectionDetails.days_remaining !== undefined && detectionDetails.days_remaining <= 7
+                          ? 'text-amber-400'
+                          : 'text-gray-300'
+                      }`}>
+                        {detectionDetails.deadline_date 
+                          ? format(new Date(detectionDetails.deadline_date), 'MMM dd, yyyy')
+                          : 'N/A'}
+                      </p>
+                    </div>
+                    {detectionDetails.days_remaining !== undefined && (
+                      <div>
+                        <Label className="text-gray-300">Days Remaining</Label>
+                        <p className={`text-sm font-semibold mt-1 ${
+                          detectionDetails.days_remaining <= 3 ? 'text-red-400' :
+                          detectionDetails.days_remaining <= 7 ? 'text-amber-400' :
+                          'text-gray-300'
+                        }`}>
+                          {detectionDetails.days_remaining} day{detectionDetails.days_remaining !== 1 ? 's' : ''}
+                        </p>
+                      </div>
+                    )}
+                    <div>
+                      <Label className="text-gray-300">Created At</Label>
+                      <p className="text-sm text-gray-300 mt-1">
+                        {detectionDetails.created_at 
+                          ? format(new Date(detectionDetails.created_at), 'MMM dd, yyyy HH:mm')
+                          : 'N/A'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Evidence */}
+                {detectionDetails.evidence && (
+                  <div className="border-t border-white/10 pt-4">
+                    <h4 className="text-sm font-semibold text-gray-200 mb-3">Evidence</h4>
+                    <div className="bg-white/5 border border-white/10 rounded-md p-4">
+                      <pre className="text-xs text-gray-300 overflow-x-auto">
+                        {JSON.stringify(detectionDetails.evidence, null, 2)}
+                      </pre>
+                    </div>
+                  </div>
+                )}
+
+                {/* Related Event IDs */}
+                {detectionDetails.related_event_ids && detectionDetails.related_event_ids.length > 0 && (
+                  <div className="border-t border-white/10 pt-4">
+                    <h4 className="text-sm font-semibold text-gray-200 mb-3">Related Event IDs</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {detectionDetails.related_event_ids.map((eventId: string, idx: number) => (
+                        <Badge key={idx} variant="outline" className="font-mono text-xs">
+                          {eventId}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Product Information */}
+                {(detectionDetails.sku || detectionDetails.asin) && (
+                  <div className="border-t border-white/10 pt-4">
+                    <h4 className="text-sm font-semibold text-gray-200 mb-3">Product Information</h4>
+                    <div className="grid grid-cols-2 gap-4">
+                      {detectionDetails.sku && (
+                        <div>
+                          <Label className="text-gray-300">SKU</Label>
+                          <p className="text-sm text-gray-300 font-mono mt-1">{detectionDetails.sku}</p>
+                        </div>
+                      )}
+                      {detectionDetails.asin && (
+                        <div>
+                          <Label className="text-gray-300">ASIN</Label>
+                          <p className="text-sm text-gray-300 font-mono mt-1">{detectionDetails.asin}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Details/Description */}
+                {detectionDetails.details && (
+                  <div className="border-t border-white/10 pt-4">
+                    <h4 className="text-sm font-semibold text-gray-200 mb-3">Description</h4>
+                    <p className="text-sm text-gray-300">{detectionDetails.details}</p>
+                  </div>
+                )}
+              </div>
+            )}
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setDetailsModalOpen(false);
+                  setDetectionDetails(null);
+                }}
+                className="border-white/10"
+              >
+                Close
+              </Button>
+              {detectionDetails && (
+                <>
+                  {detectionDetails.status !== 'resolved' && (
+                    <Button
+                      onClick={() => {
+                        setDetailsModalOpen(false);
+                        setSelectedDetection(detectionDetails);
+                        setSelectedStatus(detectionDetails.status || 'pending');
+                        setStatusUpdateModalOpen(true);
+                      }}
+                      className="bg-blue-500 hover:bg-blue-400 text-white"
+                    >
+                      Update Status
+                    </Button>
+                  )}
+                  {detectionDetails.status !== 'resolved' && (
+                    <Button
+                      onClick={() => {
+                        setDetailsModalOpen(false);
+                        setSelectedDetection(detectionDetails);
+                        setResolveNotes('');
+                        setResolveAmount((detectionDetails.estimated_value || detectionDetails.guaranteedAmount || 0).toString());
+                        setResolveModalOpen(true);
+                      }}
+                      className="bg-emerald-500 hover:bg-emerald-400 text-white"
+                    >
+                      Mark as Resolved
+                    </Button>
+                  )}
+                </>
+              )}
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
           </div>
         </div>
       </div>

@@ -1,18 +1,21 @@
 import React, { PropsWithChildren, useEffect } from 'react';
 import { useStatusStream } from '@/hooks/use-status-stream';
-import { toast } from '@/hooks/use-toast';
+import { usePhase3Notifications } from '@/hooks/use-phase3-notifications';
 
 export function NotificationsProvider({ children }: PropsWithChildren<{}>) {
-  // Initialize global live feed toasts via SSE
-  const { close } = useStatusStream();
+  // Initialize global live feed toasts via SSE (legacy)
+  const { close: closeStatusStream } = useStatusStream();
+  
+  // Initialize Phase 3 notifications SSE
+  const { close: closePhase3Notifications } = usePhase3Notifications();
 
   useEffect(() => {
-    // Announce that live feed is active (non-intrusive)
-    // toast({ title: 'Live feed connected', description: 'Real-time updates enabled.' });
+    // Both SSE connections are now active
     return () => {
-      close();
+      closeStatusStream();
+      closePhase3Notifications();
     };
-  }, [close]);
+  }, [closeStatusStream, closePhase3Notifications]);
 
   return <>{children}</>;
 }
