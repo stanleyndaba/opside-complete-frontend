@@ -625,7 +625,8 @@ export const api = {
   getDocument: (id: string) => requestJson<any>(`/api/documents/${encodeURIComponent(id)}`),
   getDocumentDownloadUrl: (id: string) => buildApiUrl(`/api/documents/${encodeURIComponent(id)}/download`),
   
-  // PHASE3: Evidence ingestion endpoints (Node.js backend)
+  // PHASE4: Evidence ingestion endpoints (Node.js backend)
+  // Gmail ingestion
   ingestGmailEvidence: (options?: { query?: string; maxResults?: number; autoParse?: boolean }) =>
     requestJson<{
       success: boolean;
@@ -641,12 +642,132 @@ export const api = {
         autoParse: options?.autoParse !== false,
       }),
     }),
+  // Outlook ingestion
+  ingestOutlookEvidence: (options?: { query?: string; maxResults?: number; autoParse?: boolean }) =>
+    requestJson<{
+      success: boolean;
+      documentsIngested: number;
+      emailsProcessed: number;
+      errors: string[];
+      message: string;
+    }>('/api/evidence/ingest/outlook', {
+      method: 'POST',
+      body: JSON.stringify({
+        query: options?.query,
+        maxResults: options?.maxResults || 50,
+        autoParse: options?.autoParse !== false,
+      }),
+    }),
+  // Google Drive ingestion
+  ingestGoogleDriveEvidence: (options?: { query?: string; maxResults?: number; autoParse?: boolean; folderId?: string }) =>
+    requestJson<{
+      success: boolean;
+      documentsIngested: number;
+      filesProcessed: number;
+      errors: string[];
+      message: string;
+    }>('/api/evidence/ingest/gdrive', {
+      method: 'POST',
+      body: JSON.stringify({
+        query: options?.query,
+        maxResults: options?.maxResults || 50,
+        autoParse: options?.autoParse !== false,
+        folderId: options?.folderId,
+      }),
+    }),
+  // Dropbox ingestion
+  ingestDropboxEvidence: (options?: { query?: string; maxResults?: number; autoParse?: boolean; folderPath?: string }) =>
+    requestJson<{
+      success: boolean;
+      documentsIngested: number;
+      filesProcessed: number;
+      errors: string[];
+      message: string;
+    }>('/api/evidence/ingest/dropbox', {
+      method: 'POST',
+      body: JSON.stringify({
+        query: options?.query,
+        maxResults: options?.maxResults || 50,
+        autoParse: options?.autoParse !== false,
+        folderPath: options?.folderPath,
+      }),
+    }),
+  // Unified ingestion - RECOMMENDED: Use this for all sources in parallel
+  ingestAllEvidence: (options?: { providers?: string[]; query?: string; maxResults?: number; autoParse?: boolean; folderId?: string; folderPath?: string }) =>
+    requestJson<{
+      success: boolean;
+      totalDocumentsIngested: number;
+      totalItemsProcessed: number;
+      errors: string[];
+      results: {
+        gmail?: { success: boolean; documentsIngested: number; emailsProcessed: number; errors: string[] };
+        outlook?: { success: boolean; documentsIngested: number; emailsProcessed: number; errors: string[] };
+        gdrive?: { success: boolean; documentsIngested: number; filesProcessed: number; errors: string[] };
+        dropbox?: { success: boolean; documentsIngested: number; filesProcessed: number; errors: string[] };
+      };
+      message: string;
+    }>('/api/evidence/ingest/all', {
+      method: 'POST',
+      body: JSON.stringify({
+        providers: options?.providers,
+        query: options?.query,
+        maxResults: options?.maxResults || 50,
+        autoParse: options?.autoParse !== false,
+        folderId: options?.folderId,
+        folderPath: options?.folderPath,
+      }),
+    }),
   getEvidenceStatus: () => requestJson<{
     hasConnectedSource: boolean;
     lastIngestion?: string;
     documentsCount: number;
     processingCount: number;
   }>('/api/evidence/status'),
+  // Evidence source management
+  getEvidenceSources: () => requestJson<{
+    success: boolean;
+    sources: Array<{
+      id: string;
+      provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox';
+      account_email: string;
+      status: 'connected' | 'disconnected' | 'error';
+      last_sync_at: string | null;
+      created_at: string;
+      metadata: Record<string, any>;
+    }>;
+    count: number;
+  }>('/api/evidence/sources'),
+  getEvidenceSource: (id: string) => requestJson<{
+    success: boolean;
+    source: {
+      id: string;
+      provider: string;
+      account_email: string;
+      status: string;
+      last_sync_at: string | null;
+      created_at: string;
+      metadata: Record<string, any>;
+    };
+  }>(`/api/evidence/sources/${encodeURIComponent(id)}`),
+  getEvidenceSourceStatus: (id: string) => requestJson<{
+    success: boolean;
+    status: {
+      connected: boolean;
+      status: string;
+      lastSync: string | null;
+      hasToken: boolean;
+      provider: string;
+    };
+  }>(`/api/evidence/sources/${encodeURIComponent(id)}/status`),
+  disconnectEvidenceSource: (id: string) => requestJson<{
+    success: boolean;
+    message: string;
+    source: {
+      id: string;
+      provider: string;
+      status: 'disconnected';
+    };
+  }>(`/api/evidence/sources/${encodeURIComponent(id)}`, { method: 'DELETE' }),
   
   // PHASE3: Gmail integration endpoints
   getGmailStatus: () => requestJson<{
@@ -734,7 +855,8 @@ export const api = {
   setEvidenceAutoCollect: (enabled: boolean) => requestJson<any>('/api/evidence/auto-collect', { method: 'POST', body: JSON.stringify({ enabled }) }),
   setEvidenceSchedule: (schedule: string) => requestJson<any>('/api/evidence/schedule', { method: 'POST', body: JSON.stringify({ schedule }) }),
   setEvidenceFilters: (filters: { includeSenders?: string[]; excludeSenders?: string[]; fileTypes?: string[]; folders?: string[] }) => requestJson<any>('/api/evidence/filters', { method: 'POST', body: JSON.stringify(filters) }),
-  startEvidenceIngest: () => requestJson<any>('/api/evidence/sync', { method: 'POST' }),
+  // Legacy endpoint - now uses unified orchestrator
+  startEvidenceIngest: () => requestJson<any>('/api/evidence/ingest/all', { method: 'POST', body: JSON.stringify({ maxResults: 50, autoParse: true }) }),
   disconnectIntegration: (provider: string, purge = false) =>
     requestJson<any>(
       `/api/v1/integrations/disconnect?provider=${encodeURIComponent(provider)}&purge=${purge ? 1 : 0}`,
