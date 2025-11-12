@@ -710,24 +710,24 @@ export default function SmartInventorySync() {
                     onChange={(e) => setOrdersFilters(prev => ({ ...prev, search: e.target.value }))}
                     className="bg-white/5 border-white/10"
                   />
-                  <Select value={ordersFilters.status} onValueChange={(v) => setOrdersFilters(prev => ({ ...prev, status: v }))}>
+                  <Select value={ordersFilters.status || 'all'} onValueChange={(v) => setOrdersFilters(prev => ({ ...prev, status: v === 'all' ? '' : v }))}>
                     <SelectTrigger className="bg-white/5 border-white/10">
                       <SelectValue placeholder="All Statuses" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All Statuses</SelectItem>
+                      <SelectItem value="all">All Statuses</SelectItem>
                       <SelectItem value="Pending">Pending</SelectItem>
                       <SelectItem value="Shipped">Shipped</SelectItem>
                       <SelectItem value="Delivered">Delivered</SelectItem>
                       <SelectItem value="Cancelled">Cancelled</SelectItem>
                     </SelectContent>
                   </Select>
-                  <Select value={ordersFilters.fulfillmentChannel} onValueChange={(v) => setOrdersFilters(prev => ({ ...prev, fulfillmentChannel: v }))}>
+                  <Select value={ordersFilters.fulfillmentChannel || 'all'} onValueChange={(v) => setOrdersFilters(prev => ({ ...prev, fulfillmentChannel: v === 'all' ? '' : v }))}>
                     <SelectTrigger className="bg-white/5 border-white/10">
                       <SelectValue placeholder="All Channels" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All Channels</SelectItem>
+                      <SelectItem value="all">All Channels</SelectItem>
                       <SelectItem value="FBA">FBA</SelectItem>
                       <SelectItem value="FBM">FBM</SelectItem>
                     </SelectContent>
@@ -838,12 +838,12 @@ export default function SmartInventorySync() {
                     onChange={(e) => setShipmentsFilters(prev => ({ ...prev, search: e.target.value }))}
                     className="bg-white/5 border-white/10"
                   />
-                  <Select value={shipmentsFilters.status} onValueChange={(v) => setShipmentsFilters(prev => ({ ...prev, status: v }))}>
+                  <Select value={shipmentsFilters.status || 'all'} onValueChange={(v) => setShipmentsFilters(prev => ({ ...prev, status: v === 'all' ? '' : v }))}>
                     <SelectTrigger className="bg-white/5 border-white/10">
                       <SelectValue placeholder="All Statuses" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All Statuses</SelectItem>
+                      <SelectItem value="all">All Statuses</SelectItem>
                       <SelectItem value="in_transit">In Transit</SelectItem>
                       <SelectItem value="received">Received</SelectItem>
                       <SelectItem value="partial">Partial</SelectItem>
@@ -954,12 +954,12 @@ export default function SmartInventorySync() {
                     onChange={(e) => setReturnsFilters(prev => ({ ...prev, search: e.target.value }))}
                     className="bg-white/5 border-white/10"
                   />
-                  <Select value={returnsFilters.status} onValueChange={(v) => setReturnsFilters(prev => ({ ...prev, status: v }))}>
+                  <Select value={returnsFilters.status || 'all'} onValueChange={(v) => setReturnsFilters(prev => ({ ...prev, status: v === 'all' ? '' : v }))}>
                     <SelectTrigger className="bg-white/5 border-white/10">
                       <SelectValue placeholder="All Statuses" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All Statuses</SelectItem>
+                      <SelectItem value="all">All Statuses</SelectItem>
                       <SelectItem value="pending">Pending</SelectItem>
                       <SelectItem value="processed">Processed</SelectItem>
                       <SelectItem value="refunded">Refunded</SelectItem>
@@ -1067,12 +1067,12 @@ export default function SmartInventorySync() {
                     onChange={(e) => setSettlementsFilters(prev => ({ ...prev, search: e.target.value }))}
                     className="bg-white/5 border-white/10"
                   />
-                  <Select value={settlementsFilters.transactionType} onValueChange={(v) => setSettlementsFilters(prev => ({ ...prev, transactionType: v }))}>
+                  <Select value={settlementsFilters.transactionType || 'all'} onValueChange={(v) => setSettlementsFilters(prev => ({ ...prev, transactionType: v === 'all' ? '' : v }))}>
                     <SelectTrigger className="bg-white/5 border-white/10">
                       <SelectValue placeholder="All Types" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All Types</SelectItem>
+                      <SelectItem value="all">All Types</SelectItem>
                       <SelectItem value="fee">Fee</SelectItem>
                       <SelectItem value="refund">Refund</SelectItem>
                       <SelectItem value="reimbursement">Reimbursement</SelectItem>
