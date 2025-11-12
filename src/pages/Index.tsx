@@ -397,7 +397,7 @@ const Index = () => {
                 }}
               >
                 <img
-                  src="/DB22.png"
+                  src="/DB43.png"
                   alt="Clario Dashboard"
                   className="w-full max-w-6xl h-auto rounded-[25px]"
                   style={{
