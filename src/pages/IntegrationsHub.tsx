@@ -34,7 +34,6 @@ export default function IntegrationsHub() {
     description: ''
   });
   const [showRequestForm, setShowRequestForm] = useState(false);
-  const [showProviderDialog, setShowProviderDialog] = useState(false);
   const [providerLoading, setProviderLoading] = useState<string | null>(null);
   const [disconnectingProvider, setDisconnectingProvider] = useState<string | null>(null);
   const [ingestingGmail, setIngestingGmail] = useState(false);
@@ -121,50 +120,6 @@ export default function IntegrationsHub() {
     return () => { if (es) es.close(); };
   }, [toast]);
 
-  // Start OAuth for selected provider
-  const beginProviderOAuth = async (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox') => {
-    try {
-      setProviderLoading(provider);
-      const res = await api.connectDocs(provider);
-      if (res.ok && res.data?.auth_url) {
-        window.location.href = res.data.auth_url as string;
-      } else {
-        // Check for specific error messages
-        const errorMsg = res.error || 'Unknown error';
-        if (errorMsg.includes('OAuth configuration not found') || errorMsg.includes('500')) {
-          toast({
-            title: `${provider === 'gdrive' ? 'Google Drive' : provider === 'gmail' ? 'Gmail' : provider === 'dropbox' ? 'Dropbox' : 'Outlook'} OAuth Not Configured`,
-            description: `The backend OAuth configuration for ${provider === 'gdrive' ? 'Google Drive' : provider === 'gmail' ? 'Gmail' : provider === 'dropbox' ? 'Dropbox' : 'Outlook'} is not set up. Please contact support or check backend environment variables.`,
-            variant: 'destructive',
-          });
-          setProviderLoading(null);
-          return;
-        }
-        // Fallback route if backend returns no URL (for sandbox/development)
-        console.warn(`OAuth connection failed for ${provider}, trying sandbox fallback:`, res.error);
-        window.location.href = `/auth/${provider}-sandbox`;
-      }
-    } catch (error: any) {
-      console.error(`Failed to connect ${provider}:`, error);
-      const errorMsg = error?.message || error?.toString() || 'Unknown error';
-      if (errorMsg.includes('OAuth configuration not found') || errorMsg.includes('500')) {
-        toast({
-          title: `${provider === 'gdrive' ? 'Google Drive' : provider === 'gmail' ? 'Gmail' : provider === 'dropbox' ? 'Dropbox' : 'Outlook'} OAuth Not Configured`,
-          description: `The backend OAuth configuration for ${provider === 'gdrive' ? 'Google Drive' : provider === 'gmail' ? 'Gmail' : provider === 'dropbox' ? 'Dropbox' : 'Outlook'} is not set up. Please contact support or check backend environment variables.`,
-          variant: 'destructive',
-        });
-        setProviderLoading(null);
-        return;
-      }
-      // Fallback to sandbox route
-      window.location.href = `/auth/${provider}-sandbox`;
-    } finally {
-      // Only clear loading if we didn't redirect
-      if (providerLoading === provider) {
-        setProviderLoading(null);
-      }
-    }
-  };
 
   // Handle OAuth callback query parameters
   useEffect(() => {
@@ -282,75 +237,6 @@ export default function IntegrationsHub() {
         <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
           <div className="relative container mx-auto px-6 pt-6 pb-12 text-gray-300 space-y-8">
-        {/* Connect Evidence Sources Popup */}
-        <Dialog open={showProviderDialog} onOpenChange={setShowProviderDialog}>
-          <DialogContent className="max-w-lg bg-[#0B1220]/95 backdrop-blur-xl border-white/10 text-gray-100 shadow-[0_20px_80px_rgba(0,0,0,0.6)]">
-            <DialogHeader>
-              <DialogTitle className="text-xl text-gray-100 flex items-center gap-2">
-                <Shield className="h-5 w-5 text-emerald-400" />
-                Connect Evidence Sources
-              </DialogTitle>
-              <DialogDescription className="text-gray-300">
-                Link your email and cloud storage to automatically collect invoices, receipts, and shipping documents. 
-                <span className="block mt-2 text-sm text-gray-400">
-                  Read-only access. No writing or sending permissions.
-                </span>
-                <span className="block mt-2 text-xs text-emerald-300/90 font-medium">
-                  Gmail is available now. Outlook, Google Drive, and Dropbox coming in a week.
-                </span>
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid grid-cols-2 gap-3 pt-4">
-              <Button 
-                disabled={providerLoading !== null} 
-                onClick={() => beginProviderOAuth('gmail')} 
-                className="bg-red-600/90 hover:bg-red-600 text-white border border-white/10 h-auto py-3 flex flex-col items-center gap-2"
-              >
-                {providerLoading==='gmail' ? (
-                  <>
-                    <RefreshCw className="h-5 w-5 animate-spin" />
-                    <span>Connecting…</span>
-                  </>
-                ) : (
-                  <>
-                    <img src="/gmailicon.png" alt="Gmail" className="h-6 w-6 object-contain" />
-                    <span>Gmail</span>
-                    <span className="text-xs text-red-100">Email</span>
-                  </>
-                )}
-              </Button>
-              <Button 
-                disabled={true}
-                className="bg-blue-600/40 hover:bg-blue-600/40 text-white/60 border border-white/10 h-auto py-3 flex flex-col items-center gap-2 cursor-not-allowed opacity-60"
-              >
-                <img src="/outlookicon.webp" alt="Outlook" className="h-6 w-6 object-contain" />
-                <span>Outlook</span>
-                <span className="text-xs text-blue-100/60">Coming Soon</span>
-              </Button>
-              <Button 
-                disabled={true}
-                className="bg-emerald-600/40 hover:bg-emerald-600/40 text-white/60 border border-white/10 h-auto py-3 flex flex-col items-center gap-2 cursor-not-allowed opacity-60"
-              >
-                <img src="/gd.png" alt="Google Drive" className="h-6 w-6 object-contain" />
-                <span>Google Drive</span>
-                <span className="text-xs text-emerald-100/60">Coming Soon</span>
-              </Button>
-              <Button 
-                disabled={true}
-                className="bg-sky-600/40 hover:bg-sky-600/40 text-white/60 border border-white/10 h-auto py-3 flex flex-col items-center gap-2 cursor-not-allowed opacity-60"
-              >
-                <img src="/db.png" alt="Dropbox" className="h-6 w-6 object-contain" />
-                <span>Dropbox</span>
-                <span className="text-xs text-sky-100/60">Coming Soon</span>
-              </Button>
-            </div>
-            <DialogFooter className="mt-4">
-              <Button variant="outline" onClick={() => setShowProviderDialog(false)} className="border-white/10 text-gray-300 hover:bg-white/10">
-                Cancel
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
 
           {/* Header */}
           <div className="text-center">
@@ -400,18 +286,13 @@ export default function IntegrationsHub() {
           {/* Evidence Sources */}
           <Card className="bg-white/5 border-white/10 text-gray-300">
             <CardHeader>
-              <CardTitle className="flex items-center justify-between text-gray-200">
-                <span>Evidence Sources</span>
-                <Button 
-                  size="sm" 
-                  className="bg-emerald-500 hover:bg-emerald-400 text-white" 
-                  onClick={() => setShowProviderDialog(true)}
-                >
-                  <Shield className="h-4 w-4 mr-2" />
-                  Connect Sources
-                </Button>
-              </CardTitle>
-              <CardDescription className="text-gray-400">Connect email and cloud to auto‑ingest invoices, receipts and shipping docs.</CardDescription>
+              <CardTitle className="text-gray-200">Evidence Sources</CardTitle>
+              <CardDescription className="text-gray-400">
+                Connect email and cloud to auto‑ingest invoices, receipts and shipping docs. 
+                <span className="block mt-1 text-xs text-emerald-300/80">
+                  Gmail is available now. Outlook, Google Drive, and Dropbox coming in a week.
+                </span>
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {evidenceSources.length > 0 && (
@@ -494,11 +375,11 @@ export default function IntegrationsHub() {
                           {connected ? 'Connected' : hasError() ? 'Error' : 'Not connected'}
                         </Badge>
                       </div>
-                      <div className="text-xs text-gray-400">Last ingest: {getLastIngest()}</div>
+                      {connected && <div className="text-xs text-gray-400">Last ingest: {getLastIngest()}</div>}
                     <div className="flex gap-2">
                       <Button 
                         size="sm" 
-                        className="bg-red-600 hover:bg-red-700" 
+                        className={cn(connected ? 'bg-red-600 hover:bg-red-700' : 'bg-emerald-500 hover:bg-emerald-400')} 
                         onClick={async () => {
                           try {
                             setProviderLoading(p);
@@ -506,25 +387,48 @@ export default function IntegrationsHub() {
                             if (r.ok && r.data?.auth_url) {
                               toast({
                                 title: 'Connecting...',
-                                description: `Redirecting to ${p} authentication...`,
+                                description: `Redirecting to Gmail authentication...`,
                               });
                               window.location.href = r.data.auth_url;
                             } else {
+                              // Check for specific error messages
+                              const errorMsg = r.error || 'Unknown error';
+                              if (errorMsg.includes('OAuth configuration not found') || errorMsg.includes('500')) {
+                                toast({
+                                  title: 'Gmail OAuth Not Configured',
+                                  description: 'The backend OAuth configuration for Gmail is not set up. Please contact support or check backend environment variables.',
+                                  variant: 'destructive',
+                                });
+                                setProviderLoading(null);
+                                return;
+                              }
                               toast({
                                 title: 'Connection Failed',
-                                description: r.error || `Failed to initiate ${p} connection. Please try again.`,
+                                description: r.error || 'Failed to initiate Gmail connection. Please try again.',
                                 variant: 'destructive',
                               });
                             }
-                          } catch (error) {
+                          } catch (error: any) {
                             console.error(`Failed to connect ${p}:`, error);
+                            const errorMsg = error?.message || error?.toString() || 'Unknown error';
+                            if (errorMsg.includes('OAuth configuration not found') || errorMsg.includes('500')) {
+                              toast({
+                                title: 'Gmail OAuth Not Configured',
+                                description: 'The backend OAuth configuration for Gmail is not set up. Please contact support or check backend environment variables.',
+                                variant: 'destructive',
+                              });
+                              setProviderLoading(null);
+                              return;
+                            }
                             toast({
                               title: 'Connection Failed',
-                              description: `An error occurred while connecting ${p}. Please try again.`,
+                              description: 'An error occurred while connecting Gmail. Please try again.',
                               variant: 'destructive',
                             });
                           } finally {
-                            setProviderLoading(null);
+                            if (providerLoading === p) {
+                              setProviderLoading(null);
+                            }
                           }
                         }}
                         disabled={providerLoading !== null || disconnectingProvider === p}
@@ -535,25 +439,26 @@ export default function IntegrationsHub() {
                             Connecting…
                           </>
                         ) : (
-                          'Reconnect'
+                          connected ? 'Reconnect' : 'Connect'
                         )}
                       </Button>
-                      <Button 
-                        size="sm" 
-                        variant="outline" 
-                        className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" 
-                        onClick={async () => {
-                          if (!confirm(`Are you sure you want to disconnect ${p}? This will stop automatic evidence collection from this source.`)) {
-                            return;
-                          }
-                          try {
-                            setDisconnectingProvider(p);
-                            const r = await api.disconnectIntegration(p, true);
-                            if (r.ok) {
-                              toast({
-                                title: 'Disconnected',
-                                description: 'Gmail integration has been disconnected successfully.',
-                              });
+                      {connected && (
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" 
+                          onClick={async () => {
+                            if (!confirm('Are you sure you want to disconnect Gmail? This will stop automatic evidence collection from this source.')) {
+                              return;
+                            }
+                            try {
+                              setDisconnectingProvider(p);
+                              const r = await api.disconnectIntegration(p, true);
+                              if (r.ok) {
+                                toast({
+                                  title: 'Disconnected',
+                                  description: 'Gmail integration has been disconnected successfully.',
+                                });
                             // Refresh status and sources
                             const s = await api.getIntegrationsStatus();
                             if (s.ok && s.data) {
@@ -592,6 +497,7 @@ export default function IntegrationsHub() {
                           'Disconnect'
                         )}
                       </Button>
+                      )}
                     </div>
                     {(() => {
                       const providerData = status?.providerIngest?.[p] || status?.providerIngest?.[p.charAt(0).toUpperCase() + p.slice(1)];
