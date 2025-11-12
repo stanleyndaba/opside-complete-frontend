@@ -673,6 +673,37 @@ const Index = () => {
         </section>
       </main>
 
+        {/* CLARIO Brand Section */}
+        <section className="relative bg-white py-24 md:py-32">
+          <div className="container mx-auto px-6">
+            <div className="flex flex-col items-center justify-center text-center space-y-8">
+              <h1 
+                className="text-8xl md:text-9xl lg:text-[12rem] font-black tracking-tight"
+                style={{
+                  background: 'linear-gradient(135deg, #ffffff 0%, #f1f3f5 15%, #e9ecef 30%, #dee2e6 45%, #ced4da 60%, #adb5bd 75%, #868e96 90%, #495057 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  textShadow: '0 4px 8px rgba(0, 0, 0, 0.15)',
+                  filter: 'drop-shadow(0 6px 12px rgba(0, 0, 0, 0.2))',
+                  letterSpacing: '-0.02em'
+                }}
+              >
+                CLARIO
+              </h1>
+              <Button 
+                size="lg" 
+                className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all"
+                asChild
+              >
+                <Link to="/integrations-hub">
+                  Try Now
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </section>
+
         <div className="relative">
           <div className="absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-white via-white/80 to-gray-100 pointer-events-none" aria-hidden="true" />
           <footer id="core-footer" className="relative bg-gray-100 text-gray-700">
