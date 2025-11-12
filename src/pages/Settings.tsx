@@ -14,7 +14,7 @@ import {
   User, Building2, Users, CreditCard, Zap, Bell, Shield, 
   Upload, MapPin, Clock, Monitor, Smartphone, AlertTriangle,
   CheckCircle, Calendar, Globe, Camera, Key, Plug, Briefcase,
-  RefreshCw, XCircle, Store, CreditCard as CreditCardIcon
+  RefreshCw, XCircle, Store
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
@@ -557,7 +557,11 @@ const Settings = () => {
                     <div className="flex items-center justify-between p-4 border border-white/10 rounded-lg bg-white/5">
                       <div className="flex items-center gap-3">
                         <div className="h-10 w-10 rounded-lg bg-white/10 flex items-center justify-center border border-white/10">
-                          <CreditCardIcon className="h-5 w-5 text-gray-400" />
+                          <img 
+                            src="/Stripe-logo.png" 
+                            alt="Stripe logo" 
+                            className="h-7 w-7 object-contain" 
+                          />
                         </div>
                         <div>
                           <p className="font-medium text-gray-200">Stripe</p>
