@@ -121,7 +121,7 @@ export default function Recoveries() {
   
   // Phase 3: Detection results integration
   const [detectionResults, setDetectionResults] = useState<any[]>([]);
-  const [mergedRecoveries, setMergedRecoveries] = useState<any[]>([]);
+  const [mergedRecoveries, setMergedRecoveries] = useState<any[] | null>(null); // null means not initialized yet
   const [filterSource, setFilterSource] = useState<'all' | 'detected' | 'synced'>('all');
   const [filterConfidence, setFilterConfidence] = useState<'all' | 'high' | 'medium' | 'low'>('all');
   
@@ -283,15 +283,21 @@ export default function Recoveries() {
             mergeRecoveries(newClaims, []);
           }
         } else {
-          setError(null);
-          // Still try to merge even if no synced recoveries
+          // No synced recoveries from API - keep existing claims (might be mock data)
+          // Only merge if we have detection results
           if (detectionRes.ok && detectionRes.data?.results) {
             setDetectionResults(detectionRes.data.results);
-            mergeRecoveries([], detectionRes.data.results);
+            // Merge detection results with existing claims (or empty if no claims)
+            mergeRecoveries(claims.length > 0 ? claims : [], detectionRes.data.results);
           } else {
-            // No data at all - set empty arrays
+            // No detection results either - just ensure mergedRecoveries reflects current claims
             setDetectionResults([]);
-            mergeRecoveries([], []);
+            // If we have claims, merge them (even if empty detection), otherwise set empty
+            if (claims.length > 0) {
+              mergeRecoveries(claims, []);
+            } else {
+              mergeRecoveries([], []);
+            }
           }
         }
         if (metricsRes.ok && metricsRes.data) {
@@ -611,7 +617,24 @@ export default function Recoveries() {
   // Filter data based on search and filters - use mergedRecoveries if available
   const filteredClaims = useMemo(() => {
     // Use mergedRecoveries if it has data, otherwise fall back to claims
-    const sourceData = (mergedRecoveries && mergedRecoveries.length > 0) ? mergedRecoveries : claims;
+    // null means not initialized yet, so use claims
+    // empty array means initialized but no data, so also use claims if available
+    const sourceData = (mergedRecoveries !== null && mergedRecoveries.length > 0) 
+      ? mergedRecoveries 
+      : (claims && claims.length > 0 ? claims : []);
+    
+    // Debug logging (remove in production if needed)
+    if (sourceData.length === 0 && !loading) {
+      console.log('[Recoveries] No data to display:', {
+        mergedRecoveries: mergedRecoveries,
+        mergedRecoveriesLength: mergedRecoveries?.length ?? 'null',
+        claimsLength: claims?.length || 0,
+        filterSource,
+        filterConfidence,
+        loading
+      });
+    }
+    
     let filtered = sourceData.filter(claim => {
       // Source filter (Phase 3)
       if (filterSource !== 'all') {
@@ -1058,6 +1081,14 @@ export default function Recoveries() {
             {error && (
               <div className="p-4 text-sm text-red-600">{error}</div>
             )}
+            {!loading && !error && rankedClaims.length === 0 && (
+              <div className="p-4 text-sm text-gray-400">
+                No recoveries found. {mergedRecoveries.length === 0 && claims.length === 0 
+                  ? 'Try syncing your Amazon account or running the detector.' 
+                  : 'Try adjusting your filters.'}
+              </div>
+            )}
+            {!loading && rankedClaims.length > 0 && (
             <Table>
               <TableHeader>
                 <TableRow>
@@ -1252,6 +1283,7 @@ export default function Recoveries() {
                 })}
               </TableBody>
             </Table>
+            )}
           </CardContent>
         </Card>
           </div>
