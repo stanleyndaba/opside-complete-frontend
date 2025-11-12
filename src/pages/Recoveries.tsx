@@ -141,6 +141,111 @@ export default function Recoveries() {
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [detectionDetails, setDetectionDetails] = useState<any | null>(null);
   
+  // Table drag-to-scroll functionality
+  const tableScrollRef = useRef<HTMLDivElement>(null);
+  const isDraggingRef = useRef<boolean>(false);
+  const hasDraggedRef = useRef<boolean>(false);
+  const startXRef = useRef<number>(0);
+  const scrollLeftRef = useRef<number>(0);
+  const [isDragging, setIsDragging] = useState(false);
+  
+  // Handle mouse down for drag scrolling
+  const handleMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!tableScrollRef.current) return;
+    const target = e.target as HTMLElement;
+    // Don't start dragging if clicking on interactive elements
+    if (target.closest('button, a, input, select, [role="checkbox"], [role="menuitem"], .dropdown-menu, [role="dialog"]')) {
+      return;
+    }
+    // Initialize drag state (but don't prevent default yet - wait for actual drag)
+    isDraggingRef.current = false;
+    hasDraggedRef.current = false;
+    const rect = tableScrollRef.current.getBoundingClientRect();
+    startXRef.current = e.pageX - rect.left;
+    scrollLeftRef.current = tableScrollRef.current.scrollLeft;
+  }, []);
+  
+  // Handle mouse up to stop dragging
+  const handleMouseUp = useCallback(() => {
+    if (!tableScrollRef.current) return;
+    // Only prevent click if we actually dragged
+    if (hasDraggedRef.current) {
+      // Prevent click event if we dragged
+      setTimeout(() => {
+        hasDraggedRef.current = false;
+      }, 100);
+    }
+    isDraggingRef.current = false;
+    setIsDragging(false);
+    if (tableScrollRef.current) {
+      tableScrollRef.current.style.cursor = 'grab';
+    }
+  }, []);
+  
+  // Handle mouse leave to stop dragging
+  const handleMouseLeave = useCallback(() => {
+    if (!tableScrollRef.current) return;
+    isDraggingRef.current = false;
+    setIsDragging(false);
+    hasDraggedRef.current = false;
+    if (tableScrollRef.current) {
+      tableScrollRef.current.style.cursor = 'grab';
+    }
+  }, []);
+  
+  // Global mouse handlers for drag scrolling (works even if mouse leaves the table)
+  useEffect(() => {
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+      if (!tableScrollRef.current) return;
+      
+      // Check if we should start dragging (after mouse moved a bit)
+      if (!isDraggingRef.current && startXRef.current !== 0) {
+        const rect = tableScrollRef.current.getBoundingClientRect();
+        const x = e.pageX - rect.left;
+        const deltaX = Math.abs(x - startXRef.current);
+        
+        // Start dragging only if mouse moved more than 5 pixels (drag threshold)
+        if (deltaX > 5) {
+          isDraggingRef.current = true;
+          setIsDragging(true);
+          hasDraggedRef.current = true;
+          document.body.style.cursor = 'grabbing';
+          document.body.style.userSelect = 'none';
+        }
+      }
+      
+      // Perform scrolling if dragging
+      if (isDraggingRef.current && tableScrollRef.current) {
+        e.preventDefault();
+        const rect = tableScrollRef.current.getBoundingClientRect();
+        const x = e.pageX - rect.left;
+        const walk = (x - startXRef.current) * 2; // Scroll speed multiplier
+        tableScrollRef.current.scrollLeft = scrollLeftRef.current - walk;
+      }
+    };
+    
+    const handleGlobalMouseUp = () => {
+      if (isDraggingRef.current && tableScrollRef.current) {
+        isDraggingRef.current = false;
+        setIsDragging(false);
+        tableScrollRef.current.style.cursor = 'grab';
+      }
+      startXRef.current = 0;
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    };
+    
+    document.addEventListener('mousemove', handleGlobalMouseMove);
+    document.addEventListener('mouseup', handleGlobalMouseUp);
+    
+    return () => {
+      document.removeEventListener('mousemove', handleGlobalMouseMove);
+      document.removeEventListener('mouseup', handleGlobalMouseUp);
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    };
+  }, []);
+  
   // Amazon recoveries integration (from DASHBOARD_CLAIMS_INTEGRATION.md)
   const [recoveredTotal, setRecoveredTotal] = useState<number | null>(null);
   const [recoveredCurrency, setRecoveredCurrency] = useState<string>('USD');
@@ -1334,15 +1439,19 @@ export default function Recoveries() {
             )}
             {!loading && rankedClaims.length > 0 && (
             <div 
+              ref={tableScrollRef}
               className="w-full overflow-x-auto overflow-y-visible recoveries-table-scroll" 
               style={{ 
                 scrollBehavior: 'smooth', 
                 WebkitOverflowScrolling: 'touch',
                 width: '100%',
-                maxWidth: '100%'
+                maxWidth: '100%',
+                cursor: isDragging ? 'grabbing' : 'grab'
               }}
+              onMouseDown={handleMouseDown}
+              onMouseLeave={handleMouseLeave}
             >
-            <Table style={{ minWidth: '1400px', width: 'max-content' }}>
+            <Table style={{ minWidth: '1600px', width: 'max-content' }}>
               <TableHeader>
                 <TableRow>
                   <TableHead>
