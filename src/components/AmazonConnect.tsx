@@ -120,8 +120,8 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         if (statusResponse.ok && statusResponse.data?.amazon_connected) {
           // Amazon is already connected! Just redirect to dashboard
           toast({
-            title: '✅ Already Connected',
-            description: 'Your Amazon account is already connected. Redirecting...',
+            title: 'Clario',
+            description: 'Your amazon account is Already connected, redirecting',
             duration: 2000,
           });
           // Redirect to integrations hub (simpler, no auto-redirects)
