@@ -23,9 +23,11 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
   const [connecting, setConnecting] = useState(false);
   const [usingExisting, setUsingExisting] = useState(false);
   const [showSyncPopup, setShowSyncPopup] = useState(false);
+  const [showNotificationSheet, setShowNotificationSheet] = useState(false);
   const [syncProgress, setSyncProgress] = useState(0);
   const [currentWord, setCurrentWord] = useState(0);
   const syncProgressRef = useRef(0);
+  const notificationShownRef = useRef(false);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -34,7 +36,13 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
   // Update ref when progress changes
   useEffect(() => {
     syncProgressRef.current = syncProgress;
-  }, [syncProgress]);
+    
+    // Show notification sheet when progress reaches 32%
+    if (syncProgress >= 32 && !notificationShownRef.current && showSyncPopup) {
+      setShowNotificationSheet(true);
+      notificationShownRef.current = true;
+    }
+  }, [syncProgress, showSyncPopup]);
 
   // Cycle through words while loading
   useEffect(() => {
@@ -74,6 +82,8 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
       // Reset progress when popup closes
       setSyncProgress(0);
       setCurrentWord(0);
+      notificationShownRef.current = false;
+      setShowNotificationSheet(false);
     }
   }, [showSyncPopup]);
 
@@ -268,7 +278,12 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
   };
 
   const handleSyncData = () => {
+    // Close both popups
     setShowSyncPopup(false);
+    setShowNotificationSheet(false);
+    // Reset notification flag
+    notificationShownRef.current = false;
+    // Navigate to sync page
     navigate('/smart-inventory-sync');
   };
 
@@ -423,6 +438,50 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Notification Panel - Slides from right at 32% */}
+      {showNotificationSheet && (
+        <div 
+          className={cn(
+            "fixed inset-y-0 right-0 z-50 w-full sm:max-w-md bg-[whitesmoke] border-l border-gray-200 shadow-2xl transition-transform duration-500 ease-out",
+            showNotificationSheet ? "translate-x-0" : "translate-x-full"
+          )}
+          style={{ 
+            transform: showNotificationSheet ? 'translateX(0)' : 'translateX(100%)',
+            transition: 'transform 0.5s ease-out'
+          }}
+        >
+          <div className="h-full overflow-y-auto p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-semibold text-gray-900">
+                Discrepancies Found
+              </h3>
+            </div>
+            
+            <div className="space-y-4">
+              <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-600">Orders</span>
+                    <span className="text-lg font-semibold text-gray-900">23</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-600">Shipments</span>
+                    <span className="text-lg font-semibold text-gray-900">15</span>
+                  </div>
+                  <div className="pt-2 border-t border-gray-200">
+                    <span className="text-sm text-gray-500">and more...</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="text-xs text-gray-500">
+                These discrepancies will be analyzed and processed during the sync.
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
