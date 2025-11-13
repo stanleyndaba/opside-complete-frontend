@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
 import { cn } from '@/lib/utils';
+import { useNavigate } from 'react-router-dom';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 interface AmazonConnectProps {
   onConnectionStart?: () => void;
@@ -15,7 +22,49 @@ interface AmazonConnectProps {
 export function AmazonConnect({ onConnectionStart, onConnectionComplete, className, showUseExisting = true }: AmazonConnectProps) {
   const [connecting, setConnecting] = useState(false);
   const [usingExisting, setUsingExisting] = useState(false);
+  const [showSyncPopup, setShowSyncPopup] = useState(false);
+  const [syncProgress, setSyncProgress] = useState(0);
+  const [currentWord, setCurrentWord] = useState(0);
   const { toast } = useToast();
+  const navigate = useNavigate();
+
+  const syncWords = ['shipment', 'orders', 'settlement', 'returns'];
+
+  // Cycle through words while loading
+  useEffect(() => {
+    if (showSyncPopup && syncProgress < 100) {
+      const wordInterval = setInterval(() => {
+        setCurrentWord((prev) => (prev + 1) % syncWords.length);
+      }, 1500); // Change word every 1.5 seconds
+      return () => clearInterval(wordInterval);
+    }
+  }, [showSyncPopup, syncProgress, syncWords.length]);
+
+  // Animate progress from 0 to 100%
+  useEffect(() => {
+    if (showSyncPopup) {
+      const duration = 8000; // 8 seconds total
+      const steps = 100;
+      const intervalTime = duration / steps;
+      
+      let currentStep = 0;
+      const progressInterval = setInterval(() => {
+        currentStep++;
+        const newProgress = Math.min((currentStep / steps) * 100, 100);
+        setSyncProgress(newProgress);
+        
+        if (newProgress >= 100) {
+          clearInterval(progressInterval);
+        }
+      }, intervalTime);
+
+      return () => clearInterval(progressInterval);
+    } else {
+      // Reset progress when popup closes
+      setSyncProgress(0);
+      setCurrentWord(0);
+    }
+  }, [showSyncPopup]);
 
   const handleConnect = async () => {
     try {
@@ -120,17 +169,11 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         const statusResponse = await api.getIntegrationsStatus();
         console.log('[AmazonConnect] Connection status response:', statusResponse);
         if (statusResponse.ok && statusResponse.data?.amazon_connected) {
-          // Amazon is already connected! Just redirect to dashboard
-          console.log('[AmazonConnect] ✅ Amazon already connected, redirecting to integrations hub');
-          toast({
-            title: 'Clario',
-            description: 'Your amazon account is Already connected, redirecting',
-            duration: 2000,
-          });
-          // Redirect to integrations hub (simpler, no auto-redirects)
-          setTimeout(() => {
-            window.location.href = '/integrations-hub?amazon_connected=true';
-          }, 500);
+          // Amazon is already connected! Show sync popup
+          console.log('[AmazonConnect] ✅ Amazon already connected, showing sync popup');
+          setConnecting(false);
+          setUsingExisting(false);
+          setShowSyncPopup(true);
           return;
         } else {
           console.log('[AmazonConnect] ⚠️ Amazon not connected yet, attempting bypass...');
@@ -155,12 +198,10 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         if (response.data?.bypassed && response.data?.redirectUrl) {
           console.log('[AmazonConnect] ✅ Bypass successful! Backend found refresh token and validated it.');
           console.log('[AmazonConnect] Redirect URL:', response.data.redirectUrl);
-          toast({
-            title: '✅ Using Existing Connection',
-            description: 'Connected with saved Amazon credentials.',
-            duration: 2000,
-          });
-          window.location.href = response.data.redirectUrl;
+          // Show sync popup instead of immediately redirecting
+          setConnecting(false);
+          setUsingExisting(false);
+          setShowSyncPopup(true);
           return;
         }
 
@@ -215,53 +256,155 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
     }
   };
 
+  const handleSyncData = () => {
+    setShowSyncPopup(false);
+    navigate('/smart-inventory-sync');
+  };
+
+  // Calculate circular progress for SVG
+  const radius = 40;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (syncProgress / 100) * circumference;
+
   // Check if className includes w-full to make buttons full width
   const isFullWidth = className?.includes('w-full');
   
   return (
-    <div className="flex flex-col gap-2">
-      <Button
-        onClick={handleConnect}
-        disabled={connecting}
-        className={cn(
-          isFullWidth ? 'w-full' : 'w-auto',
-          'justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-semibold shadow-lg transition-colors px-8',
-          connecting && (!showUseExisting || !usingExisting) && 'opacity-80',
-          className
-        )}
-        size="lg"
-      >
-        {connecting && (!showUseExisting || !usingExisting) ? (
-          <>
-            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-            Connecting...
-          </>
-        ) : (
-          'Connect Amazon Account'
-        )}
-      </Button>
-        {showUseExisting && (
-          <Button
-            onClick={handleUseExisting}
-            disabled={connecting}
-            variant="outline"
-            className={cn(
-              isFullWidth ? 'w-full' : 'w-auto',
-              'justify-center border-emerald-500 text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition-colors px-8',
-              connecting && usingExisting && 'opacity-80'
+    <>
+      <div className="flex flex-col gap-2">
+        <Button
+          onClick={handleConnect}
+          disabled={connecting}
+          className={cn(
+            isFullWidth ? 'w-full' : 'w-auto',
+            'justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-semibold shadow-lg transition-colors px-8',
+            connecting && (!showUseExisting || !usingExisting) && 'opacity-80',
+            className
+          )}
+          size="lg"
+        >
+          {connecting && (!showUseExisting || !usingExisting) ? (
+            <>
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+              Connecting...
+            </>
+          ) : (
+            'Connect Amazon Account'
+          )}
+        </Button>
+          {showUseExisting && (
+            <Button
+              onClick={handleUseExisting}
+              disabled={connecting}
+              variant="outline"
+              className={cn(
+                isFullWidth ? 'w-full' : 'w-auto',
+                'justify-center border-emerald-500 text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition-colors px-8',
+                connecting && usingExisting && 'opacity-80'
+              )}
+              size="lg"
+            >
+              {connecting && usingExisting ? (
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  Reconnecting...
+                </>
+              ) : (
+                'Use Existing Connection (Skip OAuth)'
+              )}
+            </Button>
+          )}
+      </div>
+
+      {/* Sync Data Popup */}
+      <Dialog open={showSyncPopup} onOpenChange={(open) => {
+        // Prevent closing while loading (before 100%)
+        if (!open && syncProgress >= 100) {
+          setShowSyncPopup(false);
+        }
+      }}>
+        <DialogContent 
+          className="max-w-lg bg-[whitesmoke] backdrop-blur-md border border-gray-200 text-gray-900 shadow-[0_20px_80px_rgba(15,23,42,0.25)] rounded-2xl"
+          onInteractOutside={(e) => {
+            // Prevent closing by clicking outside while loading
+            if (syncProgress < 100) {
+              e.preventDefault();
+            }
+          }}
+          onEscapeKeyDown={(e) => {
+            // Prevent closing with Escape key while loading
+            if (syncProgress < 100) {
+              e.preventDefault();
+            }
+          }}
+        >
+          <DialogHeader>
+            <DialogTitle className="text-lg text-gray-900 text-center">
+              Analysing 18 months of seller data
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="flex flex-col items-center justify-center py-6 space-y-6">
+            {/* Circular Progress Indicator */}
+            <div className="relative w-32 h-32">
+              <svg className="transform -rotate-90 w-32 h-32" viewBox="0 0 100 100">
+                {/* Background circle */}
+                <circle
+                  cx="50"
+                  cy="50"
+                  r={radius}
+                  stroke="rgb(229, 231, 235)"
+                  strokeWidth="8"
+                  fill="none"
+                />
+                {/* Progress circle */}
+                <circle
+                  cx="50"
+                  cy="50"
+                  r={radius}
+                  stroke="rgb(156, 163, 175)"
+                  strokeWidth="8"
+                  fill="none"
+                  strokeDasharray={circumference}
+                  strokeDashoffset={offset}
+                  strokeLinecap="round"
+                  className="transition-all duration-300 ease-out"
+                />
+              </svg>
+              {/* Percentage text */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-2xl font-semibold text-gray-700">
+                  {Math.round(syncProgress)}%
+                </span>
+              </div>
+            </div>
+
+            {/* Cycling word */}
+            {syncProgress < 100 && (
+              <div className="text-center">
+                <p className="text-sm text-gray-600 animate-pulse">
+                  Processing {syncWords[currentWord]}...
+                </p>
+              </div>
             )}
-            size="lg"
-          >
-            {connecting && usingExisting ? (
-              <>
-                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                Reconnecting...
-              </>
-            ) : (
-              'Use Existing Connection (Skip OAuth)'
-            )}
-          </Button>
-        )}
-    </div>
+
+            {/* Sync Data Button */}
+            <Button
+              onClick={handleSyncData}
+              disabled={syncProgress < 100}
+              className={cn(
+                "w-full font-semibold shadow-lg transition-colors",
+                syncProgress >= 100 
+                  ? "bg-emerald-500 hover:bg-emerald-600 text-white" 
+                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
+              )}
+              size="lg"
+            >
+              Sync Data
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
