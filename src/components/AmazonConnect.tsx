@@ -442,40 +442,46 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
       {/* Notification Panel - Slides from right at 32% */}
       {showNotificationSheet && (
         <div 
-          className={cn(
-            "fixed inset-y-0 right-0 z-50 w-full sm:max-w-md bg-[whitesmoke] border-l border-gray-200 shadow-2xl transition-transform duration-500 ease-out",
-            showNotificationSheet ? "translate-x-0" : "translate-x-full"
-          )}
+          className="fixed right-0 top-1/2 -translate-y-1/2 z-50 w-full max-w-lg bg-[whitesmoke] backdrop-blur-md border border-gray-200 text-gray-900 shadow-[0_20px_80px_rgba(15,23,42,0.25)] rounded-2xl p-6 transition-transform duration-500 ease-out"
           style={{ 
-            transform: showNotificationSheet ? 'translateX(0)' : 'translateX(100%)',
+            transform: showNotificationSheet ? 'translateX(0) translateY(-50%)' : 'translateX(100%) translateY(-50%)',
             transition: 'transform 0.5s ease-out'
           }}
         >
-          <div className="h-full overflow-y-auto p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-gray-900">
-                Discrepancies Found
-              </h3>
+          <div className="relative">
+            {/* CLARIO Logo - Top Left */}
+            <div className="absolute top-0 left-0">
+              <span className="font-black text-[#b3b3b3] tracking-tight text-sm">
+                CLARIO
+              </span>
             </div>
             
-            <div className="space-y-4">
+            <div className="mt-8 space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900 text-center">
+                Discrepancies Found
+              </h3>
+              
               <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Orders</span>
-                    <span className="text-lg font-semibold text-gray-900">23</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Shipments</span>
-                    <span className="text-lg font-semibold text-gray-900">15</span>
-                  </div>
-                  <div className="pt-2 border-t border-gray-200">
-                    <span className="text-sm text-gray-500">and more...</span>
-                  </div>
+                  {/* First discrepancy - appears at 32% */}
+                  {syncProgress >= 32 && (
+                    <div className="flex items-center justify-between animate-in fade-in slide-in-from-left-2 duration-300">
+                      <span className="text-sm text-gray-600">Orders</span>
+                      <span className="text-lg font-semibold text-gray-900">23</span>
+                    </div>
+                  )}
+                  
+                  {/* Second discrepancy - appears at 39% */}
+                  {syncProgress >= 39 && (
+                    <div className="flex items-center justify-between animate-in fade-in slide-in-from-left-2 duration-300">
+                      <span className="text-sm text-gray-600">Shipments</span>
+                      <span className="text-lg font-semibold text-gray-900">15</span>
+                    </div>
+                  )}
                 </div>
               </div>
               
-              <div className="text-xs text-gray-500">
+              <div className="text-xs text-gray-500 text-center">
                 These discrepancies will be analyzed and processed during the sync.
               </div>
             </div>
