@@ -8,10 +8,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { 
   CheckCircle, AlertTriangle, Truck, Warehouse, ShoppingCart, RotateCcw, 
   Loader2, RefreshCw, Search, Download, Calendar, Package, DollarSign,
-  XCircle, Clock, ArrowUpDown
+  XCircle, Clock, ArrowUpDown, ArrowRight
 } from 'lucide-react';
 import { api } from '@/lib/api';
 // import { useStatusStream } from '@/hooks/use-status-stream'; // Not used currently
@@ -166,6 +167,7 @@ export default function SmartInventorySync() {
   const [loading, setLoading] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showEvidencePrompt, setShowEvidencePrompt] = useState<boolean>(false);
 
   // Data state
   const [orders, setOrders] = useState<Order[]>([]);
@@ -206,6 +208,41 @@ export default function SmartInventorySync() {
         setLoading(false);
       }
     })();
+  }, []);
+
+  // Show evidence prompt 4 seconds after landing on the page
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      // Check if user has dismissed the prompt before
+      try {
+        const dismissed = typeof window !== 'undefined' ? localStorage.getItem('clario.evidencePromptDismissed') === 'true' : false;
+        if (!dismissed) {
+          // Check if any evidence sources are connected
+          (async () => {
+            try {
+              const s = await api.getIntegrationsStatus();
+              if (s.ok) {
+                const prov = (s.data as any)?.providerIngest || {};
+                const anyConnected = Boolean(prov.gmail?.connected || prov.outlook?.connected || prov.gdrive?.connected || prov.dropbox?.connected);
+                if (!anyConnected) {
+                  setShowEvidencePrompt(true);
+                }
+              } else {
+                // If status unknown, still prompt once
+                setShowEvidencePrompt(true);
+              }
+            } catch {
+              setShowEvidencePrompt(true);
+            }
+          })();
+        }
+      } catch {
+        // If localStorage check fails, still show prompt
+        setShowEvidencePrompt(true);
+      }
+    }, 4000); // 4 seconds delay
+
+    return () => clearTimeout(timer);
   }, []);
 
   // Load sync status
@@ -1149,6 +1186,135 @@ export default function SmartInventorySync() {
           <SyncHistory />
         </div>
       </div>
+
+      {/* Evidence Connections Prompt */}
+      <Dialog open={showEvidencePrompt} onOpenChange={setShowEvidencePrompt}>
+        <DialogContent className="max-w-lg bg-[whitesmoke] backdrop-blur-md border border-gray-200 text-gray-900 shadow-[0_20px_80px_rgba(15,23,42,0.25)] rounded-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-lg text-gray-900">
+              Connect Evidence Sources
+            </DialogTitle>
+            <DialogDescription className="text-slate-500">
+              Link your email and cloud storage to automatically collect invoices, receipts, and shipping documents.
+              <span className="block mt-2 text-sm text-slate-600">
+                Read-only access. No writing or sending permissions.
+              </span>
+              <span className="block mt-2 text-xs text-emerald-600 font-medium">
+                Gmail is available now. Outlook, Google Drive, and Dropbox coming in a week.
+              </span>
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid grid-cols-2 gap-3 pt-2">
+            <Button className="w-full bg-red-600 hover:bg-red-500 text-white border border-transparent shadow-sm" onClick={async () => {
+              try {
+                const r = await api.connectDocs('gmail');
+                if (r.ok && r.data?.auth_url) {
+                  window.location.href = r.data.auth_url;
+                } else {
+                  toast({
+                    title: 'Connection Failed',
+                    description: r.error || 'Failed to initiate Gmail connection. Please try again.',
+                    variant: 'destructive',
+                  });
+                }
+              } catch (error) {
+                console.error('Failed to connect Gmail:', error);
+                toast({
+                  title: 'Connection Failed',
+                  description: 'An error occurred while connecting Gmail. Please try again.',
+                  variant: 'destructive',
+                });
+              }
+            }}>
+              <img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 mr-2 object-contain" /> Gmail
+            </Button>
+            <Button 
+              className="w-full bg-blue-600/40 hover:bg-blue-600/50 text-white/70 border border-transparent shadow-sm backdrop-blur-sm opacity-70"
+              onClick={async () => {
+                try {
+                  const r = await api.connectDocs('outlook');
+                  if (r.ok && r.data?.auth_url) {
+                    window.location.href = r.data.auth_url;
+                  } else {
+                    toast({
+                      title: 'Connection Failed',
+                      description: r.error || 'Failed to initiate Outlook connection. Please try again.',
+                      variant: 'destructive',
+                    });
+                  }
+                } catch (error) {
+                  console.error('Failed to connect Outlook:', error);
+                  toast({
+                    title: 'Connection Failed',
+                    description: 'An error occurred while connecting Outlook. Please try again.',
+                    variant: 'destructive',
+                  });
+                }
+              }}
+            >
+              <img src="/outlookicon.webp" alt="Outlook" className="h-4 w-4 mr-2 object-contain" /> Outlook
+            </Button>
+            <Button 
+              className="w-full bg-emerald-600/40 hover:bg-emerald-600/50 text-white/70 border border-transparent shadow-sm backdrop-blur-sm opacity-70"
+              onClick={async () => {
+                try {
+                  const r = await api.connectDocs('gdrive');
+                  if (r.ok && r.data?.auth_url) {
+                    window.location.href = r.data.auth_url;
+                  } else {
+                    toast({
+                      title: 'Connection Failed',
+                      description: r.error || 'Failed to initiate Google Drive connection. Please try again.',
+                      variant: 'destructive',
+                    });
+                  }
+                } catch (error) {
+                  console.error('Failed to connect Google Drive:', error);
+                  toast({
+                    title: 'Connection Failed',
+                    description: 'An error occurred while connecting Google Drive. Please try again.',
+                    variant: 'destructive',
+                  });
+                }
+              }}
+            >
+              <img src="/gd.png" alt="Google Drive" className="h-4 w-4 mr-2 object-contain" /> Google Drive
+            </Button>
+            <Button 
+              className="w-full bg-sky-600/40 hover:bg-sky-600/50 text-white/70 border border-transparent shadow-sm backdrop-blur-sm opacity-70"
+              onClick={async () => {
+                try {
+                  const r = await api.connectDocs('dropbox');
+                  if (r.ok && r.data?.auth_url) {
+                    window.location.href = r.data.auth_url;
+                  } else {
+                    toast({
+                      title: 'Connection Failed',
+                      description: r.error || 'Failed to initiate Dropbox connection. Please try again.',
+                      variant: 'destructive',
+                    });
+                  }
+                } catch (error) {
+                  console.error('Failed to connect Dropbox:', error);
+                  toast({
+                    title: 'Connection Failed',
+                    description: 'An error occurred while connecting Dropbox. Please try again.',
+                    variant: 'destructive',
+                  });
+                }
+              }}
+            >
+              <img src="/db.png" alt="Dropbox" className="h-4 w-4 mr-2 object-contain" /> Dropbox
+            </Button>
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" className="text-slate-500 hover:text-slate-700" onClick={() => { setShowEvidencePrompt(false); try { localStorage.setItem('clario.evidencePromptDismissed', 'true'); } catch {} }}>Maybe later</Button>
+            <Button onClick={() => setShowEvidencePrompt(false)} className="gap-2 bg-slate-900 hover:bg-slate-800 text-white">
+              <ArrowRight className="h-4 w-4" /> Continue
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </PageLayout>
   );
 }
