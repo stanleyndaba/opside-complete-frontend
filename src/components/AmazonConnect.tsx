@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import { api } from '@/lib/api';
@@ -25,25 +25,36 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
   const [showSyncPopup, setShowSyncPopup] = useState(false);
   const [syncProgress, setSyncProgress] = useState(0);
   const [currentWord, setCurrentWord] = useState(0);
+  const syncProgressRef = useRef(0);
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  const syncWords = ['shipment', 'orders', 'settlement', 'returns'];
+  const syncWords = ['shipment', 'orders', 'returns', 'settlements'];
+
+  // Update ref when progress changes
+  useEffect(() => {
+    syncProgressRef.current = syncProgress;
+  }, [syncProgress]);
 
   // Cycle through words while loading
   useEffect(() => {
-    if (showSyncPopup && syncProgress < 100) {
-      const wordInterval = setInterval(() => {
-        setCurrentWord((prev) => (prev + 1) % syncWords.length);
-      }, 1500); // Change word every 1.5 seconds
-      return () => clearInterval(wordInterval);
-    }
-  }, [showSyncPopup, syncProgress, syncWords.length]);
+    if (!showSyncPopup) return;
+    
+    const wordInterval = setInterval(() => {
+      // Check current progress from ref
+      if (syncProgressRef.current >= 100) {
+        return;
+      }
+      setCurrentWord((prev) => (prev + 1) % syncWords.length);
+    }, 1500); // Change word every 1.5 seconds
+    
+    return () => clearInterval(wordInterval);
+  }, [showSyncPopup, syncWords.length]);
 
   // Animate progress from 0 to 100%
   useEffect(() => {
     if (showSyncPopup) {
-      const duration = 8000; // 8 seconds total
+      const duration = 15000; // 15 seconds total
       const steps = 100;
       const intervalTime = duration / steps;
       
@@ -338,6 +349,13 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
             }
           }}
         >
+          {/* CLARIO Logo - Top Left */}
+          <div className="absolute top-4 left-4">
+            <span className="font-black text-[#b3b3b3] tracking-tight text-sm">
+              CLARIO
+            </span>
+          </div>
+          
           <DialogHeader>
             <DialogTitle className="text-lg text-gray-900 text-center">
               Analysing 18 months of seller data
