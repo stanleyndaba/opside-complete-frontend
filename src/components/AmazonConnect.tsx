@@ -472,7 +472,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
                       </div>
                       <div className="flex items-center justify-end mt-1">
                         <span className="text-xs text-gray-900">valued at: </span>
-                        <span className="text-xs font-semibold text-blue-600">$149.00</span>
+                        <span className="text-xs font-semibold text-blue-600 ml-1">$149.00</span>
                       </div>
                     </div>
                   )}
@@ -486,7 +486,21 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
                       </div>
                       <div className="flex items-center justify-end mt-1">
                         <span className="text-xs text-gray-900">valued at: </span>
-                        <span className="text-xs font-semibold text-blue-600">$800.09</span>
+                        <span className="text-xs font-semibold text-blue-600 ml-1">$800.09</span>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Third discrepancy - appears at 45% */}
+                  {syncProgress >= 45 && (
+                    <div className="animate-in fade-in slide-in-from-left-2 duration-300">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-600">Settlement</span>
+                        <span className="text-lg font-semibold text-gray-900">45</span>
+                      </div>
+                      <div className="flex items-center justify-end mt-1">
+                        <span className="text-xs text-gray-900">valued at: </span>
+                        <span className="text-xs font-semibold text-blue-600 ml-1">$740.00</span>
                       </div>
                     </div>
                   )}
