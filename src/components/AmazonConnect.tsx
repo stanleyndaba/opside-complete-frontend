@@ -1,16 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
 import { cn } from '@/lib/utils';
-import { useNavigate } from 'react-router-dom';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
 
 interface AmazonConnectProps {
   onConnectionStart?: () => void;
@@ -22,70 +15,7 @@ interface AmazonConnectProps {
 export function AmazonConnect({ onConnectionStart, onConnectionComplete, className, showUseExisting = true }: AmazonConnectProps) {
   const [connecting, setConnecting] = useState(false);
   const [usingExisting, setUsingExisting] = useState(false);
-  const [showSyncPopup, setShowSyncPopup] = useState(false);
-  const [showNotificationSheet, setShowNotificationSheet] = useState(false);
-  const [syncProgress, setSyncProgress] = useState(0);
-  const [currentWord, setCurrentWord] = useState(0);
-  const syncProgressRef = useRef(0);
-  const notificationShownRef = useRef(false);
   const { toast } = useToast();
-  const navigate = useNavigate();
-
-  const syncWords = ['shipment', 'orders', 'returns', 'settlements'];
-
-  // Update ref when progress changes
-  useEffect(() => {
-    syncProgressRef.current = syncProgress;
-    
-    // Show notification sheet when progress reaches 32%
-    if (syncProgress >= 32 && !notificationShownRef.current && showSyncPopup) {
-      setShowNotificationSheet(true);
-      notificationShownRef.current = true;
-    }
-  }, [syncProgress, showSyncPopup]);
-
-  // Cycle through words while loading
-  useEffect(() => {
-    if (!showSyncPopup) return;
-    
-    const wordInterval = setInterval(() => {
-      // Check current progress from ref
-      if (syncProgressRef.current >= 100) {
-        return;
-      }
-      setCurrentWord((prev) => (prev + 1) % syncWords.length);
-    }, 1500); // Change word every 1.5 seconds
-    
-    return () => clearInterval(wordInterval);
-  }, [showSyncPopup, syncWords.length]);
-
-  // Animate progress from 0 to 100%
-  useEffect(() => {
-    if (showSyncPopup) {
-      const duration = 15000; // 15 seconds total
-      const steps = 100;
-      const intervalTime = duration / steps;
-      
-      let currentStep = 0;
-      const progressInterval = setInterval(() => {
-        currentStep++;
-        const newProgress = Math.min((currentStep / steps) * 100, 100);
-        setSyncProgress(newProgress);
-        
-        if (newProgress >= 100) {
-          clearInterval(progressInterval);
-        }
-      }, intervalTime);
-
-      return () => clearInterval(progressInterval);
-    } else {
-      // Reset progress when popup closes
-      setSyncProgress(0);
-      setCurrentWord(0);
-      notificationShownRef.current = false;
-      setShowNotificationSheet(false);
-    }
-  }, [showSyncPopup]);
 
   const handleConnect = async () => {
     try {
@@ -190,11 +120,11 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         const statusResponse = await api.getIntegrationsStatus();
         console.log('[AmazonConnect] Connection status response:', statusResponse);
         if (statusResponse.ok && statusResponse.data?.amazon_connected) {
-          // Amazon is already connected! Show sync popup
-          console.log('[AmazonConnect] ✅ Amazon already connected, showing sync popup');
+          // Amazon is already connected! Just redirect
+          console.log('[AmazonConnect] ✅ Amazon already connected');
           setConnecting(false);
           setUsingExisting(false);
-          setShowSyncPopup(true);
+          window.location.href = '/dashboard?amazon_connected=true';
           return;
         } else {
           console.log('[AmazonConnect] ⚠️ Amazon not connected yet, attempting bypass...');
@@ -297,257 +227,53 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
     }
   };
 
-  const handleSyncData = () => {
-    // Close both popups
-    setShowSyncPopup(false);
-    setShowNotificationSheet(false);
-    // Reset notification flag
-    notificationShownRef.current = false;
-    // Navigate to sync page
-    navigate('/smart-inventory-sync');
-  };
-
-  // Calculate circular progress for SVG
-  const radius = 40;
-  const circumference = 2 * Math.PI * radius;
-  const offset = circumference - (syncProgress / 100) * circumference;
-
   // Check if className includes w-full to make buttons full width
   const isFullWidth = className?.includes('w-full');
   
   return (
-    <>
-      <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2">
+      <Button
+        onClick={handleConnect}
+        disabled={connecting}
+        className={cn(
+          isFullWidth ? 'w-full' : 'w-auto',
+          'justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-semibold shadow-lg transition-colors px-8',
+          connecting && (!showUseExisting || !usingExisting) && 'opacity-80',
+          className
+        )}
+        size="lg"
+      >
+        {connecting && (!showUseExisting || !usingExisting) ? (
+          <>
+            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+            Connecting...
+          </>
+        ) : (
+          'Connect Amazon Account'
+        )}
+      </Button>
+      {showUseExisting && (
         <Button
-          onClick={handleConnect}
+          onClick={handleUseExisting}
           disabled={connecting}
+          variant="outline"
           className={cn(
             isFullWidth ? 'w-full' : 'w-auto',
-            'justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-semibold shadow-lg transition-colors px-8',
-            connecting && (!showUseExisting || !usingExisting) && 'opacity-80',
-            className
+            'justify-center border-emerald-500 text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition-colors px-8',
+            connecting && usingExisting && 'opacity-80'
           )}
           size="lg"
         >
-          {connecting && (!showUseExisting || !usingExisting) ? (
+          {connecting && usingExisting ? (
             <>
               <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-              Connecting...
+              Reconnecting...
             </>
           ) : (
-            'Connect Amazon Account'
+            'Use Existing Connection (Skip OAuth)'
           )}
         </Button>
-          {showUseExisting && (
-            <Button
-              onClick={handleUseExisting}
-              disabled={connecting}
-              variant="outline"
-              className={cn(
-                isFullWidth ? 'w-full' : 'w-auto',
-                'justify-center border-emerald-500 text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition-colors px-8',
-                connecting && usingExisting && 'opacity-80'
-              )}
-              size="lg"
-            >
-              {connecting && usingExisting ? (
-                <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Reconnecting...
-                </>
-              ) : (
-                'Use Existing Connection (Skip OAuth)'
-              )}
-            </Button>
-          )}
-      </div>
-
-      {/* Sync Data Popup */}
-      <Dialog open={showSyncPopup} onOpenChange={(open) => {
-        // Prevent closing while loading (before 100%)
-        if (!open && syncProgress >= 100) {
-          setShowSyncPopup(false);
-        }
-      }}>
-        <DialogContent 
-          className="max-w-lg bg-[whitesmoke] backdrop-blur-md border border-gray-200 text-gray-900 shadow-[0_20px_80px_rgba(15,23,42,0.25)] rounded-2xl"
-          onInteractOutside={(e) => {
-            // Prevent closing by clicking outside while loading
-            if (syncProgress < 100) {
-              e.preventDefault();
-            }
-          }}
-          onEscapeKeyDown={(e) => {
-            // Prevent closing with Escape key while loading
-            if (syncProgress < 100) {
-              e.preventDefault();
-            }
-          }}
-        >
-          {/* CLARIO Logo - Top Left */}
-          <div className="absolute top-4 left-4">
-            <span className="font-black text-[#b3b3b3] tracking-tight text-sm">
-              CLARIO
-            </span>
-          </div>
-          
-          <DialogHeader>
-            <DialogTitle className="text-lg text-gray-900 text-center">
-              Analysing 18 months of seller data
-            </DialogTitle>
-          </DialogHeader>
-          
-          <div className="flex flex-col items-center justify-center py-6 space-y-6">
-            {/* Circular Progress Indicator */}
-            <div className="relative w-32 h-32">
-              <svg className="transform -rotate-90 w-32 h-32" viewBox="0 0 100 100">
-                {/* Background circle */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r={radius}
-                  stroke="rgb(229, 231, 235)"
-                  strokeWidth="8"
-                  fill="none"
-                />
-                {/* Progress circle */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r={radius}
-                  stroke="rgb(156, 163, 175)"
-                  strokeWidth="8"
-                  fill="none"
-                  strokeDasharray={circumference}
-                  strokeDashoffset={offset}
-                  strokeLinecap="round"
-                  className="transition-all duration-300 ease-out"
-                />
-              </svg>
-              {/* Percentage text */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-2xl font-semibold text-gray-700">
-                  {Math.round(syncProgress)}%
-                </span>
-              </div>
-            </div>
-
-            {/* Cycling word */}
-            {syncProgress < 100 && (
-              <div className="text-center">
-                <p className="text-sm text-gray-600 animate-pulse">
-                  Processing {syncWords[currentWord]}...
-                </p>
-              </div>
-            )}
-
-            {/* Sync Data Button */}
-            <Button
-              onClick={handleSyncData}
-              disabled={syncProgress < 100}
-              className={cn(
-                "w-full font-semibold shadow-lg transition-colors",
-                syncProgress >= 100 
-                  ? "bg-emerald-500 hover:bg-emerald-600 text-white" 
-                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
-              )}
-              size="lg"
-            >
-              Sync Data
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Notification Panel - Slides from right at 32% */}
-      {showNotificationSheet && (
-        <div 
-          className="fixed right-0 top-1/2 -translate-y-1/2 z-50 w-full max-w-lg bg-[whitesmoke] backdrop-blur-md border border-gray-200 text-gray-900 shadow-[0_20px_80px_rgba(15,23,42,0.25)] rounded-2xl p-6 transition-transform duration-500 ease-out"
-          style={{ 
-            transform: showNotificationSheet ? 'translateX(0) translateY(-50%)' : 'translateX(100%) translateY(-50%)',
-            transition: 'transform 0.5s ease-out'
-          }}
-        >
-          <div className="relative">
-            {/* CLARIO Logo - Top Left */}
-            <div className="absolute top-0 left-0">
-              <span className="font-black text-[#b3b3b3] tracking-tight text-sm">
-                CLARIO
-              </span>
-            </div>
-            
-            <div className="mt-8 space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900 text-center">
-                Discrepancies Found
-              </h3>
-              
-              <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
-                <div className="space-y-3">
-                  {/* First discrepancy - appears at 32% */}
-                  {syncProgress >= 32 && (
-                    <div className="animate-in fade-in slide-in-from-left-2 duration-300">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600">Orders</span>
-                        <span className="text-lg font-semibold text-gray-900">23</span>
-                      </div>
-                      <div className="flex items-center justify-end mt-1">
-                        <span className="text-xs text-gray-900">valued at: </span>
-                        <span className="text-xs font-semibold text-blue-600 ml-1">$149.00</span>
-                      </div>
-                    </div>
-                  )}
-                  
-                  {/* Second discrepancy - appears at 39% */}
-                  {syncProgress >= 39 && (
-                    <div className="animate-in fade-in slide-in-from-left-2 duration-300">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600">Shipments</span>
-                        <span className="text-lg font-semibold text-gray-900">15</span>
-                      </div>
-                      <div className="flex items-center justify-end mt-1">
-                        <span className="text-xs text-gray-900">valued at: </span>
-                        <span className="text-xs font-semibold text-blue-600 ml-1">$800.09</span>
-                      </div>
-                    </div>
-                  )}
-                  
-                  {/* Third discrepancy - appears at 45% */}
-                  {syncProgress >= 45 && (
-                    <div className="animate-in fade-in slide-in-from-left-2 duration-300">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600">Settlement</span>
-                        <span className="text-lg font-semibold text-gray-900">45</span>
-                      </div>
-                      <div className="flex items-center justify-end mt-1">
-                        <span className="text-xs text-gray-900">valued at: </span>
-                        <span className="text-xs font-semibold text-blue-600 ml-1">$740.00</span>
-                      </div>
-                    </div>
-                  )}
-                  
-                  {/* Fourth discrepancy - appears at 50% */}
-                  {syncProgress >= 50 && (
-                    <div className="animate-in fade-in slide-in-from-left-2 duration-300">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600">Fee Dispute</span>
-                        <span className="text-lg font-semibold text-gray-900">12</span>
-                      </div>
-                      <div className="flex items-center justify-end mt-1">
-                        <span className="text-xs text-gray-900">valued at: </span>
-                        <span className="text-xs font-semibold text-blue-600 ml-1">$450.00</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-              
-              <div className="text-xs text-gray-500 text-center">
-                These discrepancies will be analyzed and processed during the sync.
-              </div>
-            </div>
-          </div>
-        </div>
       )}
-    </>
+    </div>
   );
 }
