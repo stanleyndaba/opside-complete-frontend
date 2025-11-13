@@ -84,7 +84,7 @@ export function EvidenceIngestion({ onIngestionComplete, gmailConnected = false 
       } else {
         toast({
           title: 'Ingestion Failed',
-          description: res.error || 'Failed to trigger Gmail evidence ingestion. Please try again.',
+          description: res.error || 'Failed to trigger Gmail doc ingestion. Please try again.',
           variant: 'destructive',
         });
         setResult({
@@ -120,10 +120,10 @@ export function EvidenceIngestion({ onIngestionComplete, gmailConnected = false 
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-gray-200">
           <Mail className="h-5 w-5" />
-          Evidence Ingestion
+          Doc Ingestion
         </CardTitle>
         <CardDescription className="text-gray-400">
-          Trigger Gmail evidence ingestion to collect documents from your emails
+          Trigger Gmail doc ingestion to collect documents from your emails
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">

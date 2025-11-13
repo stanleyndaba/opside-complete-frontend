@@ -259,7 +259,7 @@ export default function EvidenceLocker() {
           const newCount = refresh.data.length - documents.length;
           toast({ 
             title: '📄 Documents Added', 
-            description: `${newCount} new document(s) are now in your Evidence Locker.`,
+            description: `${newCount} new document(s) are now in your Doc Locker.`,
             duration: 4000
           });
         }
@@ -353,7 +353,7 @@ export default function EvidenceLocker() {
     window.open(url, '_blank');
   };
 
-  return <PageLayout title="Evidence Locker & Value Engine">
+  return <PageLayout title="Doc Locker">
       <div className="relative -m-4 lg:-m-6">
         <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
@@ -375,7 +375,7 @@ export default function EvidenceLocker() {
         </div>
         <Card className="bg-white/5 border-white/10 text-gray-300">
           <CardHeader>
-            <CardTitle>Upload Evidence Documents</CardTitle>
+            <CardTitle>Upload Documents</CardTitle>
             <CardDescription>
               Upload invoices, purchase orders, and receipts to verify your product costs
             </CardDescription>
@@ -496,7 +496,7 @@ export default function EvidenceLocker() {
                         const newCount = refresh.data.length - previousCount;
                         toast({ 
                           title: '📄 Documents Added', 
-                          description: `${newCount} new document(s) are now in your Evidence Locker.`,
+                          description: `${newCount} new document(s) are now in your Doc Locker.`,
                           duration: 4000
                         });
                       }

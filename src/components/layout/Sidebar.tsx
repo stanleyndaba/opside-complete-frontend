@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { LayoutDashboard, ShieldCheck, Settings2, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, FolderKanban, LifeBuoy, User } from 'lucide-react';
+import { LayoutDashboard, ShieldCheck, Settings2, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, FileText, LifeBuoy, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -67,7 +67,7 @@ export function Sidebar({
   const primaryItems: NavItem[] = [
     { title: 'Command Center', icon: LayoutDashboard, href: '/app' },
     { title: 'Recoveries', icon: ShieldCheck, href: '/recoveries' },
-    { title: 'Evidence Locker', icon: FolderKanban, href: '/evidence-locker' },
+    { title: 'Doc Locker', icon: FileText, href: '/evidence-locker' },
     { title: 'Reports', icon: BarChart3, href: '/reports' }
   ];
 

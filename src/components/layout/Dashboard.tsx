@@ -82,7 +82,7 @@ export function Dashboard() {
     { id: 'smart_sync', label: 'Smart Inventory Sync' },
     { id: 'upcoming_payments', label: 'Upcoming payments' },
     { id: 'export_history', label: 'Export recovery & payout history' },
-    { id: 'evidence_locker', label: 'Evidence Locker' },
+    { id: 'evidence_locker', label: 'Doc Locker' },
     { id: 'invite_teammate', label: 'Invite a teammate' },
     { id: 'configure_alerts', label: 'Configure alerts' },
     { id: 'security_setup', label: 'Security quick setup' },
@@ -777,7 +777,7 @@ export function Dashboard() {
                       {selectedQuickActions.includes('evidence_locker') && (
                           <Button variant="outline" className="flex items-center gap-2 bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200" onClick={() => navigate('/evidence-locker')}>
                           <FileText className="h-4 w-4" />
-                          Evidence Locker
+                          Doc Locker
                         </Button>
                       )}
                       {selectedQuickActions.includes('invite_teammate') && (
