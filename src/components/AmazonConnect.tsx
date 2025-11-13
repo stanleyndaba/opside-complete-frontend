@@ -504,6 +504,20 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
                       </div>
                     </div>
                   )}
+                  
+                  {/* Fourth discrepancy - appears at 50% */}
+                  {syncProgress >= 50 && (
+                    <div className="animate-in fade-in slide-in-from-left-2 duration-300">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-600">Fee Dispute</span>
+                        <span className="text-lg font-semibold text-gray-900">12</span>
+                      </div>
+                      <div className="flex items-center justify-end mt-1">
+                        <span className="text-xs text-gray-900">valued at: </span>
+                        <span className="text-xs font-semibold text-blue-600 ml-1">$450.00</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
               
