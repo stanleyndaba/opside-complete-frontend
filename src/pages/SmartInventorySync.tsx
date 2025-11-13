@@ -20,6 +20,8 @@ import { SyncHistory } from '@/components/SyncHistory';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/components/ui/use-toast';
 import { useNavigate } from 'react-router-dom';
+import { MockDataIndicator } from '@/components/MockDataIndicator';
+import { ConnectionStatusBadge } from '@/components/ConnectionStatusBadge';
 
 // TypeScript interfaces based on PHASE2_FRONTEND_GUIDE.md
 interface OrderItem {
@@ -156,7 +158,7 @@ interface SyncStatus {
   duration?: number;
 }
 
-type DataTab = 'orders' | 'shipments' | 'returns' | 'settlements';
+type DataTab = 'claims' | 'inventory' | 'orders' | 'shipments' | 'returns' | 'settlements';
 
 export default function SmartInventorySync() {
   const navigate = useNavigate();
@@ -170,10 +172,18 @@ export default function SmartInventorySync() {
   const [showEvidencePrompt, setShowEvidencePrompt] = useState<boolean>(false);
 
   // Data state
+  const [claims, setClaims] = useState<any[]>([]);
+  const [inventory, setInventory] = useState<any[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [shipments, setShipments] = useState<Shipment[]>([]);
   const [returns, setReturns] = useState<Return[]>([]);
   const [settlements, setSettlements] = useState<Settlement[]>([]);
+  
+  // Phase 1: Mock data indicators
+  const [claimsIsMock, setClaimsIsMock] = useState(false);
+  const [claimsMockScenario, setClaimsMockScenario] = useState<string | null>(null);
+  const [inventoryIsMock, setInventoryIsMock] = useState(false);
+  const [inventoryMockScenario, setInventoryMockScenario] = useState<string | null>(null);
 
   // Pagination
   const [ordersPagination, setOrdersPagination] = useState({ limit: 50, offset: 0, total: 0, hasMore: false });
@@ -300,6 +310,35 @@ export default function SmartInventorySync() {
       
       try {
         switch (activeTab) {
+          case 'claims':
+            const claimsRes = await api.getAmazonClaims({
+              startDate: memoizedDateRange.startDate || undefined,
+              endDate: memoizedDateRange.endDate || undefined,
+            });
+            if (!cancelled && claimsRes.ok && claimsRes.data) {
+              const claimsData = claimsRes.data.data || [];
+              setClaims(Array.isArray(claimsData) ? claimsData : []);
+              setClaimsIsMock(claimsRes.data.isMock || false);
+              setClaimsMockScenario(claimsRes.data.mockScenario || null);
+            } else if (!cancelled) {
+              setClaims([]);
+              setClaimsIsMock(false);
+              setClaimsMockScenario(null);
+            }
+            break;
+          case 'inventory':
+            const inventoryRes = await api.getAmazonInventory();
+            if (!cancelled && inventoryRes.ok && inventoryRes.data) {
+              const inventoryData = inventoryRes.data.data || [];
+              setInventory(Array.isArray(inventoryData) ? inventoryData : []);
+              setInventoryIsMock(inventoryRes.data.isMock || false);
+              setInventoryMockScenario(inventoryRes.data.mockScenario || null);
+            } else if (!cancelled) {
+              setInventory([]);
+              setInventoryIsMock(false);
+              setInventoryMockScenario(null);
+            }
+            break;
           case 'orders':
             const ordersRes = await api.getOrders({
               userId,
@@ -680,6 +719,26 @@ export default function SmartInventorySync() {
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as DataTab)} className="space-y-6">
           <TabsList className="bg-white/10 backdrop-blur-xl border-white/10 rounded-lg p-1">
             <TabsTrigger 
+              value="claims" 
+              className="data-[state=active]:bg-white/20 data-[state=active]:text-emerald-500 text-white hover:text-emerald-500 transition-colors"
+            >
+              <DollarSign className="h-4 w-4 mr-2" />
+              Claims
+              {claims.length > 0 && (
+                <Badge variant="secondary" className="ml-2">{claims.length}</Badge>
+              )}
+            </TabsTrigger>
+            <TabsTrigger 
+              value="inventory" 
+              className="data-[state=active]:bg-white/20 data-[state=active]:text-emerald-500 text-white hover:text-emerald-500 transition-colors"
+            >
+              <Warehouse className="h-4 w-4 mr-2" />
+              Inventory
+              {inventory.length > 0 && (
+                <Badge variant="secondary" className="ml-2">{inventory.length}</Badge>
+              )}
+            </TabsTrigger>
+            <TabsTrigger 
               value="orders" 
               className="data-[state=active]:bg-white/20 data-[state=active]:text-emerald-500 text-white hover:text-emerald-500 transition-colors"
             >
@@ -720,6 +779,128 @@ export default function SmartInventorySync() {
               )}
             </TabsTrigger>
           </TabsList>
+
+          {/* Claims Tab */}
+          <TabsContent value="claims" className="space-y-6">
+            <Card className="bg-white/10 backdrop-blur-xl border-white/10">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-white">Claims & Reimbursements</CardTitle>
+                    <CardDescription>Financial events and reimbursement claims</CardDescription>
+                  </div>
+                  <MockDataIndicator isMock={claimsIsMock} scenario={claimsMockScenario || undefined} />
+                </div>
+              </CardHeader>
+              <CardContent>
+                {loading && claims.length === 0 ? (
+                  <div className="flex items-center justify-center py-8">
+                    <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+                    <span className="ml-2 text-gray-400">Loading claims...</span>
+                  </div>
+                ) : claims.length === 0 ? (
+                  <div className="text-center py-8 text-gray-400">
+                    <p className="mb-2">No claims found.</p>
+                    <p className="text-sm">Click "Sync Now" to fetch your claims from Amazon.</p>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>ID</TableHead>
+                          <TableHead>Order ID</TableHead>
+                          <TableHead>Amount</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead>Type</TableHead>
+                          <TableHead>Date</TableHead>
+                          <TableHead>Description</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {claims.map((claim) => (
+                          <TableRow key={claim.id}>
+                            <TableCell className="font-mono text-sm">{claim.id}</TableCell>
+                            <TableCell className="font-mono text-sm">{claim.orderId || '—'}</TableCell>
+                            <TableCell>{formatCurrency(claim.amount, claim.currency)}</TableCell>
+                            <TableCell>{getStatusBadge(claim.status)}</TableCell>
+                            <TableCell>
+                              <Badge variant="outline">{claim.type}</Badge>
+                            </TableCell>
+                            <TableCell>{formatDate(claim.createdAt)}</TableCell>
+                            <TableCell className="text-sm text-gray-300">{claim.description || '—'}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Inventory Tab */}
+          <TabsContent value="inventory" className="space-y-6">
+            <Card className="bg-white/10 backdrop-blur-xl border-white/10">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-white">Inventory</CardTitle>
+                    <CardDescription>Current inventory levels and stock information</CardDescription>
+                  </div>
+                  <MockDataIndicator isMock={inventoryIsMock} scenario={inventoryMockScenario || undefined} />
+                </div>
+              </CardHeader>
+              <CardContent>
+                {loading && inventory.length === 0 ? (
+                  <div className="flex items-center justify-center py-8">
+                    <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+                    <span className="ml-2 text-gray-400">Loading inventory...</span>
+                  </div>
+                ) : inventory.length === 0 ? (
+                  <div className="text-center py-8 text-gray-400">
+                    <p className="mb-2">No inventory found.</p>
+                    <p className="text-sm">Click "Sync Now" to fetch your inventory from Amazon.</p>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>SKU</TableHead>
+                          <TableHead>ASIN</TableHead>
+                          <TableHead>Product Name</TableHead>
+                          <TableHead>Available</TableHead>
+                          <TableHead>Reserved</TableHead>
+                          <TableHead>Inbound</TableHead>
+                          <TableHead>Total</TableHead>
+                          <TableHead>Condition</TableHead>
+                          <TableHead>Location</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {inventory.map((item) => (
+                          <TableRow key={item.sku}>
+                            <TableCell className="font-mono text-sm">{item.sku}</TableCell>
+                            <TableCell className="font-mono text-sm">{item.asin || '—'}</TableCell>
+                            <TableCell className="text-sm text-gray-300">{item.productName || '—'}</TableCell>
+                            <TableCell>{item.quantityAvailable ?? '—'}</TableCell>
+                            <TableCell>{item.quantityReserved ?? '—'}</TableCell>
+                            <TableCell>{item.quantityInbound ?? '—'}</TableCell>
+                            <TableCell className="font-semibold">{item.quantityTotal ?? '—'}</TableCell>
+                            <TableCell>
+                              <Badge variant="outline">{item.condition || '—'}</Badge>
+                            </TableCell>
+                            <TableCell className="text-sm text-gray-300">{item.warehouseLocation || '—'}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
 
           {/* Orders Tab */}
           <TabsContent value="orders" className="space-y-6">

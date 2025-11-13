@@ -219,10 +219,30 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         if (response.data?.bypassed && response.data?.redirectUrl) {
           console.log('[AmazonConnect] ✅ Bypass successful! Backend found refresh token and validated it.');
           console.log('[AmazonConnect] Redirect URL:', response.data.redirectUrl);
-          // Show sync popup instead of immediately redirecting
-          setConnecting(false);
-          setUsingExisting(false);
-          setShowSyncPopup(true);
+          
+          // Handle bypass response according to Phase 1 requirements
+          const data = response.data;
+          if (data.sandboxMode && !data.connectionVerified) {
+            // In sandbox mode with mock data
+            toast({
+              title: 'Connected!',
+              description: 'Using test data.',
+              duration: 3000,
+            });
+          } else {
+            toast({
+              title: 'Amazon connected successfully!',
+              description: 'Your account is now connected.',
+              duration: 3000,
+            });
+          }
+          
+          // Redirect to dashboard or provided redirect URL
+          if (data.redirectUrl) {
+            window.location.href = data.redirectUrl;
+          } else {
+            window.location.href = '/dashboard?amazon_connected=true';
+          }
           return;
         }
 

@@ -24,11 +24,15 @@ function buildApiUrl(path: string): string {
 
   // Check for environment variable override (Vite exposes VITE_ prefixed vars via import.meta.env)
   // In Vite, environment variables are available at build time and are injected into the bundle
+  // Support both VITE_INTEGRATIONS_URL (for Vite) and NEXT_PUBLIC_INTEGRATIONS_URL (for compatibility)
   let envBase: string | undefined;
   
   if (typeof import.meta !== 'undefined' && import.meta.env) {
     // Vite environment variables are directly on import.meta.env
-    envBase = import.meta.env.VITE_API_BASE_URL;
+    // Check for integrations URL first (Phase 1 requirement), then fall back to API base URL
+    envBase = import.meta.env.VITE_INTEGRATIONS_URL || 
+              import.meta.env.NEXT_PUBLIC_INTEGRATIONS_URL || 
+              import.meta.env.VITE_API_BASE_URL;
   }
 
   // If environment variable is set, validate it before using
@@ -852,6 +856,103 @@ export const api = {
     lastIngest?: string;
     providerIngest?: Record<string, { connected: boolean; lastIngest?: string; error?: string; scopes?: string[] }>;
   }>('/api/v1/integrations/status'),
+
+  // Phase 1: Amazon connection status check
+  getAmazonConnectionStatus: () => requestJson<{
+    connected: boolean;
+    sandboxMode?: boolean;
+    useMockGenerator?: boolean;
+    useMockData?: boolean;
+    lastSync?: string;
+    connectionVerified?: boolean;
+  }>('/api/v1/integrations/amazon/status'),
+
+  // Phase 1: Fetch Claims (Financial Events)
+  getAmazonClaims: (params?: {
+    startDate?: string;
+    endDate?: string;
+  }) => {
+    const queryParams = new URLSearchParams();
+    if (params?.startDate) queryParams.append('startDate', params.startDate);
+    if (params?.endDate) queryParams.append('endDate', params.endDate);
+    const query = queryParams.toString();
+    return requestJson<{
+      success: boolean;
+      data: Array<{
+        id: string;
+        orderId?: string;
+        amount: number;
+        status: string;
+        type: string;
+        currency: string;
+        createdAt: string;
+        description?: string;
+        fromApi?: boolean;
+        isMock?: boolean;
+        mockScenario?: string;
+      }>;
+      isMock?: boolean;
+      mockScenario?: string;
+      message?: string;
+    }>(`/api/v1/integrations/amazon/claims${query ? `?${query}` : ''}`);
+  },
+
+  // Phase 1: Fetch Inventory
+  getAmazonInventory: () => requestJson<{
+    success: boolean;
+    data: Array<{
+      sku: string;
+      asin?: string;
+      fnsku?: string;
+      productName?: string;
+      quantityAvailable?: number;
+      quantityReserved?: number;
+      quantityInbound?: number;
+      quantityTotal?: number;
+      condition?: string;
+      warehouseLocation?: string;
+      isMock?: boolean;
+      mockScenario?: string;
+    }>;
+    isMock?: boolean;
+    mockScenario?: string;
+    message?: string;
+  }>('/api/v1/integrations/amazon/inventory'),
+
+  // Phase 1: Fetch Orders (already exists but adding for consistency)
+  // Note: getOrders already exists above, but this is the Phase 1 specific endpoint
+  getAmazonOrdersPhase1: (params?: {
+    startDate?: string;
+    endDate?: string;
+  }) => {
+    const queryParams = new URLSearchParams();
+    if (params?.startDate) queryParams.append('startDate', params.startDate);
+    if (params?.endDate) queryParams.append('endDate', params.endDate);
+    const query = queryParams.toString();
+    return requestJson<{
+      success: boolean;
+      data: Array<{
+        id: string;
+        order_id: string;
+        order_date: string;
+        order_status: string;
+        fulfillment_channel: string;
+        total_amount?: number;
+        currency: string;
+        items?: Array<{
+          sku: string;
+          asin: string;
+          quantity: number;
+          price: number;
+        }>;
+        isMock?: boolean;
+        mockScenario?: string;
+      }>;
+      isMock?: boolean;
+      mockScenario?: string;
+      message?: string;
+    }>(`/api/v1/integrations/amazon/orders${query ? `?${query}` : ''}`);
+  },
   setEvidenceAutoCollect: (enabled: boolean) => requestJson<any>('/api/evidence/auto-collect', { method: 'POST', body: JSON.stringify({ enabled }) }),
   setEvidenceSchedule: (schedule: string) => requestJson<any>('/api/evidence/schedule', { method: 'POST', body: JSON.stringify({ schedule }) }),
   setEvidenceFilters: (filters: { includeSenders?: string[]; excludeSenders?: string[]; fileTypes?: string[]; folders?: string[] }) => requestJson<any>('/api/evidence/filters', { method: 'POST', body: JSON.stringify(filters) }),
