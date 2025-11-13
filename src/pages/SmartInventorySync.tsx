@@ -679,28 +679,40 @@ export default function SmartInventorySync() {
         {/* Main Data Tabs */}
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as DataTab)} className="space-y-6">
           <TabsList className="bg-white/10 backdrop-blur-xl border-white/10 rounded-lg p-1">
-            <TabsTrigger value="orders" className="data-[state=active]:bg-white/20 text-white">
+            <TabsTrigger 
+              value="orders" 
+              className="data-[state=active]:bg-white/20 data-[state=active]:text-emerald-500 text-white hover:text-emerald-500 transition-colors"
+            >
               <ShoppingCart className="h-4 w-4 mr-2" />
               Orders
               {ordersSummary.total > 0 && (
                 <Badge variant="secondary" className="ml-2">{ordersSummary.total}</Badge>
               )}
             </TabsTrigger>
-            <TabsTrigger value="shipments" className="data-[state=active]:bg-white/20 text-white">
+            <TabsTrigger 
+              value="shipments" 
+              className="data-[state=active]:bg-white/20 data-[state=active]:text-emerald-500 text-white hover:text-emerald-500 transition-colors"
+            >
               <Truck className="h-4 w-4 mr-2" />
               Shipments
               {shipmentsSummary.total > 0 && (
                 <Badge variant="secondary" className="ml-2">{shipmentsSummary.total}</Badge>
               )}
             </TabsTrigger>
-            <TabsTrigger value="returns" className="data-[state=active]:bg-white/20 text-white">
+            <TabsTrigger 
+              value="returns" 
+              className="data-[state=active]:bg-white/20 data-[state=active]:text-emerald-500 text-white hover:text-emerald-500 transition-colors"
+            >
               <RotateCcw className="h-4 w-4 mr-2" />
               Returns
               {returnsSummary.total > 0 && (
                 <Badge variant="secondary" className="ml-2">{returnsSummary.total}</Badge>
               )}
             </TabsTrigger>
-            <TabsTrigger value="settlements" className="data-[state=active]:bg-white/20 text-white">
+            <TabsTrigger 
+              value="settlements" 
+              className="data-[state=active]:bg-white/20 data-[state=active]:text-emerald-500 text-white hover:text-emerald-500 transition-colors"
+            >
               <DollarSign className="h-4 w-4 mr-2" />
               Settlements
               {settlementsSummary.total > 0 && (

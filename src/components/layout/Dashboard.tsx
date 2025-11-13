@@ -858,16 +858,13 @@ export function Dashboard() {
         <Dialog open={showEvidencePrompt} onOpenChange={setShowEvidencePrompt}>
           <DialogContent className="max-w-lg bg-[whitesmoke] backdrop-blur-md border border-gray-200 text-gray-900 shadow-[0_20px_80px_rgba(15,23,42,0.25)] rounded-2xl">
           <DialogHeader>
-                <DialogTitle className="text-lg text-gray-900">
-                  Connect Evidence Sources
+            <DialogTitle className="text-lg text-gray-900">
+              Connect Doc Sources
             </DialogTitle>
-              <DialogDescription className="text-slate-500">
+            <DialogDescription className="text-slate-500">
               Link your email and cloud storage to automatically collect invoices, receipts, and shipping documents.
               <span className="block mt-2 text-sm text-slate-600">
                 Read-only access. No writing or sending permissions.
-              </span>
-              <span className="block mt-2 text-xs text-emerald-600 font-medium">
-                Gmail is available now. Outlook, Google Drive, and Dropbox coming in a week.
               </span>
             </DialogDescription>
           </DialogHeader>
@@ -895,18 +892,87 @@ export function Dashboard() {
             }}>
               <img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 mr-2 object-contain" /> Gmail
             </Button>
-              <Button disabled={true} className="w-full bg-blue-600/40 hover:bg-blue-600/40 text-white/60 border border-transparent shadow-sm cursor-not-allowed opacity-60">
+            <Button 
+              className="w-full bg-blue-600 hover:bg-blue-500 text-white border border-transparent shadow-sm"
+              onClick={async () => {
+                try {
+                  const r = await api.connectDocs('outlook');
+                  if (r.ok && r.data?.auth_url) {
+                    window.location.href = r.data.auth_url;
+                  } else {
+                    toast({
+                      title: 'Connection Failed',
+                      description: r.error || 'Failed to initiate Outlook connection. Please try again.',
+                      variant: 'destructive',
+                    });
+                  }
+                } catch (error) {
+                  console.error('Failed to connect Outlook:', error);
+                  toast({
+                    title: 'Connection Failed',
+                    description: 'An error occurred while connecting Outlook. Please try again.',
+                    variant: 'destructive',
+                  });
+                }
+              }}
+            >
               <img src="/outlookicon.webp" alt="Outlook" className="h-4 w-4 mr-2 object-contain" /> Outlook
             </Button>
-              <Button disabled={true} className="w-full bg-emerald-600/40 hover:bg-emerald-600/40 text-white/60 border border-transparent shadow-sm cursor-not-allowed opacity-60">
+            <Button 
+              className="w-full bg-emerald-600 hover:bg-emerald-500 text-white border border-transparent shadow-sm"
+              onClick={async () => {
+                try {
+                  const r = await api.connectDocs('gdrive');
+                  if (r.ok && r.data?.auth_url) {
+                    window.location.href = r.data.auth_url;
+                  } else {
+                    toast({
+                      title: 'Connection Failed',
+                      description: r.error || 'Failed to initiate Google Drive connection. Please try again.',
+                      variant: 'destructive',
+                    });
+                  }
+                } catch (error) {
+                  console.error('Failed to connect Google Drive:', error);
+                  toast({
+                    title: 'Connection Failed',
+                    description: 'An error occurred while connecting Google Drive. Please try again.',
+                    variant: 'destructive',
+                  });
+                }
+              }}
+            >
               <img src="/gd.png" alt="Google Drive" className="h-4 w-4 mr-2 object-contain" /> Google Drive
             </Button>
-              <Button disabled={true} className="w-full bg-sky-600/40 hover:bg-sky-600/40 text-white/60 border border-transparent shadow-sm cursor-not-allowed opacity-60">
+            <Button 
+              className="w-full bg-sky-600 hover:bg-sky-500 text-white border border-transparent shadow-sm"
+              onClick={async () => {
+                try {
+                  const r = await api.connectDocs('dropbox');
+                  if (r.ok && r.data?.auth_url) {
+                    window.location.href = r.data.auth_url;
+                  } else {
+                    toast({
+                      title: 'Connection Failed',
+                      description: r.error || 'Failed to initiate Dropbox connection. Please try again.',
+                      variant: 'destructive',
+                    });
+                  }
+                } catch (error) {
+                  console.error('Failed to connect Dropbox:', error);
+                  toast({
+                    title: 'Connection Failed',
+                    description: 'An error occurred while connecting Dropbox. Please try again.',
+                    variant: 'destructive',
+                  });
+                }
+              }}
+            >
               <img src="/db.png" alt="Dropbox" className="h-4 w-4 mr-2 object-contain" /> Dropbox
             </Button>
           </div>
             <DialogFooter>
-                <Button variant="ghost" className="text-slate-500 hover:text-slate-700" onClick={() => { setShowEvidencePrompt(false); try { localStorage.setItem('clario.evidencePromptDismissed', 'true'); } catch {} }}>Maybe later</Button>
+                <Button variant="ghost" className="text-slate-500 hover:text-slate-700" onClick={() => { setShowEvidencePrompt(false); try { localStorage.setItem('clario.evidencePromptDismissed', 'true'); } catch {} }}>Not now</Button>
                 <Button onClick={() => setShowEvidencePrompt(false)} className="gap-2 bg-slate-900 hover:bg-slate-800 text-white">
               <ArrowRight className="h-4 w-4" /> Continue
             </Button>

@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { LayoutDashboard, ShieldCheck, Settings2, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, FolderKanban, LifeBuoy } from 'lucide-react';
+import { LayoutDashboard, ShieldCheck, Settings2, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, FolderKanban, LifeBuoy, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -217,8 +217,25 @@ export function Sidebar({
 
       {/* Profile + Status + Logout */}
       {isCollapsed ? (
-        <div className="mt-auto border-t border-white/10 p-2 flex items-center justify-center">
+        <div className="mt-auto border-t border-white/10 p-2 flex flex-col items-center justify-center gap-2">
           <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  to="/settings"
+                  aria-label="Account"
+                  className={cn(
+                    "relative flex items-center justify-center w-10 h-10 rounded-md transition-colors",
+                    isDashboard ? "text-[#303030] hover:bg-white/10 hover:text-emerald-500" : "text-gray-400 hover:bg-white/10 hover:text-emerald-500"
+                  )}
+                >
+                  <User className="h-5 w-5" />
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right" className="bg-black text-white">
+                Account
+              </TooltipContent>
+            </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
@@ -245,6 +262,16 @@ export function Sidebar({
         </div>
       ) : (
         <div className="mt-auto border-t border-white/10 p-4 space-y-3">
+            <Link
+              to="/settings"
+              className={cn(
+                "w-full flex items-center gap-2 text-left hover:text-emerald-500 hover:bg-white/5 px-3 py-2 rounded-md transition-colors",
+                isDashboard ? "text-[#303030]" : "text-gray-400"
+              )}
+            >
+              <User className="h-4 w-4" />
+              <span className="text-sm">Account</span>
+            </Link>
             <button
               className={cn(
                 "w-full flex items-center gap-2 text-left hover:text-red-300 hover:bg-white/5 px-3 py-2 rounded-md",
