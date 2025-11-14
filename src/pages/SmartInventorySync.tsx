@@ -313,6 +313,58 @@ export default function SmartInventorySync() {
         const res = await api.getSyncStatus(syncIdParam);
         if (res.ok && res.data) {
           const statusData = res.data;
+          
+          // Check if we have a syncId from a previous 409 response but status shows no active sync
+          // This might mean the sync completed but status endpoint doesn't show it
+          if (currentSyncIdRef.current && currentSyncIdRef.current !== 'unknown' && 
+              !statusData.hasActiveSync && !statusData.lastSync) {
+            // Try to get detailed status for this specific syncId
+            console.log('[Sync Status] No active sync in general status, checking detailed status for:', currentSyncIdRef.current);
+            try {
+              const detailedRes = await api.getSyncStatusDetailed({ syncId: currentSyncIdRef.current });
+              if (detailedRes.ok && detailedRes.data) {
+                const detailed = detailedRes.data;
+                const mappedStatus = detailed.status === 'completed' ? 'completed' : 
+                                     detailed.status === 'in_progress' || detailed.status === 'running' ? 'running' : 
+                                     detailed.status === 'failed' ? 'failed' : 'idle';
+                
+                setSyncStatus({
+                  status: mappedStatus,
+                  syncId: detailed.syncId,
+                  progress: detailed.progress || 0,
+                  lastSync: detailed.completedAt || detailed.startedAt,
+                });
+                
+                // If sync completed, refresh claims
+                if (detailed.status === 'completed' && detailed.syncId && syncCompletedRef.current !== detailed.syncId) {
+                  syncCompletedRef.current = detailed.syncId;
+                  console.log('[Sync Status] Sync completed (from detailed status), refreshing claims...');
+                  // Refresh claims after sync completion
+                  try {
+                    const claimsRes = await api.getAmazonClaims();
+                    if (claimsRes.ok && claimsRes.data) {
+                      let claimsData: any[] = [];
+                      if ('data' in claimsRes.data && Array.isArray(claimsRes.data.data)) {
+                        claimsData = claimsRes.data.data;
+                      } else if (Array.isArray(claimsRes.data)) {
+                        claimsData = claimsRes.data;
+                      }
+                      setClaims(claimsData);
+                      setClaimsIsMock(claimsRes.data.isMock || false);
+                      setClaimsMockScenario(claimsRes.data.mockScenario || null);
+                      console.log('[Sync Status] Refreshed claims after sync completion:', claimsData.length);
+                    }
+                  } catch (e) {
+                    console.error('[Sync Status] Error refreshing claims:', e);
+                  }
+                }
+                return; // Don't process general status if we got detailed status
+              }
+            } catch (e) {
+              console.error('[Sync Status] Error getting detailed status:', e);
+            }
+          }
+          
           if (statusData.hasActiveSync && statusData.lastSync) {
             const lastSync = statusData.lastSync;
             // Map backend status values to frontend status
