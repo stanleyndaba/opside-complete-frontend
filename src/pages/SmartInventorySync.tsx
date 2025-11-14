@@ -173,6 +173,7 @@ export default function SmartInventorySync() {
   const [amazonConnected, setAmazonConnected] = useState(false);
   const syncCompletedRef = useRef<string | null>(null); // Track which syncId we've already handled
   const currentSyncIdRef = useRef<string | undefined>(undefined); // Track current syncId for polling
+  const detailedStatusEndpointAvailableRef = useRef<boolean | null>(null); // Track if detailed status endpoint exists (null = unknown, true = available, false = 404)
 
   // Data state
   const [claims, setClaims] = useState<any[]>([]);
@@ -331,10 +332,64 @@ export default function SmartInventorySync() {
               !statusData.hasActiveSync && !statusData.lastSync) {
             // Try to get detailed status for this specific syncId
             // Note: This endpoint may not be implemented (404), so we handle it gracefully
+            // Skip if we already know the endpoint doesn't exist
+            if (detailedStatusEndpointAvailableRef.current === false) {
+              // Endpoint is known to be unavailable, skip the call
+              // Just try refreshing data in case sync completed
+              if (syncCompletedRef.current !== currentSyncIdRef.current) {
+                try {
+                  const [claimsRes, inventoryRes] = await Promise.all([
+                    api.getAmazonClaims(),
+                    api.getAmazonInventory()
+                  ]);
+                  
+                  let hasData = false;
+                  if (claimsRes.ok && claimsRes.data && claimsRes.data.success !== false) {
+                    let claimsData: any[] = [];
+                    if ('data' in claimsRes.data && Array.isArray(claimsRes.data.data)) {
+                      claimsData = claimsRes.data.data;
+                    } else if (Array.isArray(claimsRes.data)) {
+                      claimsData = claimsRes.data;
+                    }
+                    if (claimsData.length > 0) {
+                      hasData = true;
+                      setClaims(claimsData);
+                      setClaimsIsMock(claimsRes.data.isMock || false);
+                      setClaimsMockScenario(claimsRes.data.mockScenario || null);
+                    }
+                  }
+                  
+                  if (inventoryRes.ok && inventoryRes.data && inventoryRes.data.success !== false && 'data' in inventoryRes.data) {
+                    const inventoryData = inventoryRes.data.data || [];
+                    if (inventoryData.length > 0) {
+                      hasData = true;
+                      setInventory(Array.isArray(inventoryData) ? inventoryData : []);
+                      setInventoryIsMock(inventoryRes.data.isMock || false);
+                      setInventoryMockScenario(inventoryRes.data.mockScenario || null);
+                    }
+                  }
+                  
+                  if (hasData && currentSyncIdRef.current) {
+                    syncCompletedRef.current = currentSyncIdRef.current;
+                    setSyncStatus({ 
+                      status: 'completed', 
+                      syncId: currentSyncIdRef.current,
+                      progress: 100
+                    });
+                  }
+                } catch (e) {
+                  console.error('[Sync Status] Error checking for data:', e);
+                }
+              }
+              return; // Skip detailed status call
+            }
+            
             console.log('[Sync Status] No active sync in general status, checking detailed status for:', currentSyncIdRef.current);
             try {
               const detailedRes = await api.getSyncStatusDetailed({ syncId: currentSyncIdRef.current });
               if (detailedRes.ok && detailedRes.data) {
+                // Endpoint exists and returned data
+                detailedStatusEndpointAvailableRef.current = true;
                 const detailed = detailedRes.data;
                 // Map backend status values to frontend status
                 // Backend may return "in_progress" or "running"
@@ -374,6 +429,8 @@ export default function SmartInventorySync() {
                 }
                 return; // Don't process general status if we got detailed status
               } else if (detailedRes.status === 404) {
+                // Mark endpoint as unavailable to avoid future calls
+                detailedStatusEndpointAvailableRef.current = false;
                 // Endpoint not implemented - this is fine, just continue with general status
                 console.log('[Sync Status] Detailed status endpoint not available (404), trying to refresh data in case sync completed...');
                 // Since we have a syncId but no active sync and detailed endpoint doesn't exist,
@@ -435,6 +492,10 @@ export default function SmartInventorySync() {
               }
             } catch (e) {
               // Silently handle errors - detailed status endpoint may not be implemented
+              // If it's a 404 or network error, mark as unavailable
+              if (e instanceof Error && (e.message.includes('404') || e.message.includes('Not Found'))) {
+                detailedStatusEndpointAvailableRef.current = false;
+              }
               console.log('[Sync Status] Detailed status check failed (endpoint may not be implemented):', e instanceof Error ? e.message : 'Unknown error');
             }
           }
