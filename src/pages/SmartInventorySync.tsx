@@ -243,18 +243,29 @@ export default function SmartInventorySync() {
         });
         
         if (claimsRes.ok && claimsRes.data) {
-          // Handle both response formats: { data: [...] } or direct array
-          let claimsData: any[] = [];
-          if ('data' in claimsRes.data && Array.isArray(claimsRes.data.data)) {
-            claimsData = claimsRes.data.data;
-          } else if (Array.isArray(claimsRes.data)) {
-            claimsData = claimsRes.data;
+          // Check if backend returned success: true
+          if (claimsRes.data.success !== false) {
+            // Handle both response formats: { data: [...] } or direct array
+            let claimsData: any[] = [];
+            if ('data' in claimsRes.data && Array.isArray(claimsRes.data.data)) {
+              claimsData = claimsRes.data.data;
+            } else if (Array.isArray(claimsRes.data)) {
+              claimsData = claimsRes.data;
+            }
+            
+            console.log('[Initial Load] Loaded claims:', claimsData.length);
+            setClaims(claimsData);
+            setClaimsIsMock(claimsRes.data.isMock || false);
+            setClaimsMockScenario(claimsRes.data.mockScenario || null);
+          } else {
+            console.warn('[Initial Load] Backend returned success: false:', {
+              message: claimsRes.data.message,
+              data: claimsRes.data
+            });
+            setClaims([]);
+            setClaimsIsMock(false);
+            setClaimsMockScenario(null);
           }
-          
-          console.log('[Initial Load] Loaded claims:', claimsData.length);
-          setClaims(claimsData);
-          setClaimsIsMock(claimsRes.data.isMock || false);
-          setClaimsMockScenario(claimsRes.data.mockScenario || null);
         }
       } catch (e) {
         console.error('[Initial Load] Error loading claims:', e);
@@ -419,23 +430,31 @@ export default function SmartInventorySync() {
                   });
                   
                   if (claimsRes.ok && claimsRes.data) {
-                    // Handle both response formats: { data: [...] } or direct array
-                    let claimsData: any[] = [];
-                    if ('data' in claimsRes.data && Array.isArray(claimsRes.data.data)) {
-                      claimsData = claimsRes.data.data;
-                    } else if (Array.isArray(claimsRes.data)) {
-                      claimsData = claimsRes.data;
+                    // Check if backend returned success: true
+                    if (claimsRes.data.success !== false) {
+                      // Handle both response formats: { data: [...] } or direct array
+                      let claimsData: any[] = [];
+                      if ('data' in claimsRes.data && Array.isArray(claimsRes.data.data)) {
+                        claimsData = claimsRes.data.data;
+                      } else if (Array.isArray(claimsRes.data)) {
+                        claimsData = claimsRes.data;
+                      }
+                      
+                      console.log('[Sync] Refreshed claims data:', {
+                        count: claimsData.length,
+                        isMock: claimsRes.data.isMock || false,
+                        mockScenario: claimsRes.data.mockScenario || null
+                      });
+                      
+                      setClaims(claimsData);
+                      setClaimsIsMock(claimsRes.data.isMock || false);
+                      setClaimsMockScenario(claimsRes.data.mockScenario || null);
+                    } else {
+                      console.warn('[Sync] Backend returned success: false:', {
+                        message: claimsRes.data.message,
+                        data: claimsRes.data
+                      });
                     }
-                    
-                    console.log('[Sync] Refreshed claims data:', {
-                      count: claimsData.length,
-                      isMock: claimsRes.data.isMock || false,
-                      mockScenario: claimsRes.data.mockScenario || null
-                    });
-                    
-                    setClaims(claimsData);
-                    setClaimsIsMock(claimsRes.data.isMock || false);
-                    setClaimsMockScenario(claimsRes.data.mockScenario || null);
                   } else {
                     console.error('[Sync] Failed to fetch claims:', {
                       ok: claimsRes.ok,
@@ -451,12 +470,20 @@ export default function SmartInventorySync() {
                 // Fetch inventory
                 try {
                   const inventoryRes = await api.getAmazonInventory();
-                  if (inventoryRes.ok && inventoryRes.data && 'data' in inventoryRes.data) {
-                    const inventoryData = inventoryRes.data.data || [];
-                    setInventory(Array.isArray(inventoryData) ? inventoryData : []);
-                    setInventoryIsMock(inventoryRes.data.isMock || false);
-                    setInventoryMockScenario(inventoryRes.data.mockScenario || null);
-                    console.log('[Sync] Refreshed inventory data:', inventoryData.length, 'items');
+                  if (inventoryRes.ok && inventoryRes.data) {
+                    // Check if backend returned success: true
+                    if (inventoryRes.data.success !== false && 'data' in inventoryRes.data) {
+                      const inventoryData = inventoryRes.data.data || [];
+                      setInventory(Array.isArray(inventoryData) ? inventoryData : []);
+                      setInventoryIsMock(inventoryRes.data.isMock || false);
+                      setInventoryMockScenario(inventoryRes.data.mockScenario || null);
+                      console.log('[Sync] Refreshed inventory data:', inventoryData.length, 'items');
+                    } else {
+                      console.warn('[Sync] Backend returned success: false for inventory:', {
+                        message: inventoryRes.data.message,
+                        data: inventoryRes.data
+                      });
+                    }
                   } else {
                     console.error('[Sync] Failed to fetch inventory:', inventoryRes.error || 'Unknown error');
                   }
@@ -497,7 +524,7 @@ export default function SmartInventorySync() {
                 console.log('[Sync Status] Detailed status endpoint not available (404)');
                 setSyncStatus({ status: 'idle' });
               } else {
-                setSyncStatus({ status: 'idle' });
+          setSyncStatus({ status: 'idle' });
               }
             } catch (e) {
               // Silently handle errors - detailed status endpoint may not be implemented
@@ -559,24 +586,36 @@ export default function SmartInventorySync() {
             });
             
             if (!cancelled && claimsRes.ok && claimsRes.data) {
-              // Handle both response formats: { data: [...] } or direct array
-              let claimsData: any[] = [];
-              if ('data' in claimsRes.data && Array.isArray(claimsRes.data.data)) {
-                claimsData = claimsRes.data.data;
-              } else if (Array.isArray(claimsRes.data)) {
-                claimsData = claimsRes.data;
+              // Check if backend returned success: true
+              if (claimsRes.data.success !== false) {
+                // Handle both response formats: { data: [...] } or direct array
+                let claimsData: any[] = [];
+                if ('data' in claimsRes.data && Array.isArray(claimsRes.data.data)) {
+                  claimsData = claimsRes.data.data;
+                } else if (Array.isArray(claimsRes.data)) {
+                  claimsData = claimsRes.data;
+                }
+                
+                console.log('[Claims] Parsed claims data:', {
+                  count: claimsData.length,
+                  isMock: claimsRes.data.isMock || false,
+                  mockScenario: claimsRes.data.mockScenario || null,
+                  sampleClaim: claimsData[0] || null
+                });
+                
+                setClaims(claimsData);
+                setClaimsIsMock(claimsRes.data.isMock || false);
+                setClaimsMockScenario(claimsRes.data.mockScenario || null);
+              } else {
+                // Backend returned success: false
+                console.warn('[Claims] Backend returned success: false:', {
+                  message: claimsRes.data.message,
+                  data: claimsRes.data
+                });
+                setClaims([]);
+                setClaimsIsMock(false);
+                setClaimsMockScenario(null);
               }
-              
-              console.log('[Claims] Parsed claims data:', {
-                count: claimsData.length,
-                isMock: claimsRes.data.isMock || false,
-                mockScenario: claimsRes.data.mockScenario || null,
-                sampleClaim: claimsData[0] || null
-              });
-              
-              setClaims(claimsData);
-              setClaimsIsMock(claimsRes.data.isMock || false);
-              setClaimsMockScenario(claimsRes.data.mockScenario || null);
             } else if (!cancelled) {
               console.warn('[Claims] Failed to fetch claims:', {
                 ok: claimsRes.ok,
@@ -593,10 +632,21 @@ export default function SmartInventorySync() {
             // Inventory endpoint doesn't require userId - uses session auth
             const inventoryRes = await api.getAmazonInventory();
             if (!cancelled && inventoryRes.ok && inventoryRes.data) {
-              const inventoryData = inventoryRes.data.data || [];
-              setInventory(Array.isArray(inventoryData) ? inventoryData : []);
-              setInventoryIsMock(inventoryRes.data.isMock || false);
-              setInventoryMockScenario(inventoryRes.data.mockScenario || null);
+              // Check if backend returned success: true
+              if (inventoryRes.data.success !== false) {
+                const inventoryData = inventoryRes.data.data || [];
+                setInventory(Array.isArray(inventoryData) ? inventoryData : []);
+                setInventoryIsMock(inventoryRes.data.isMock || false);
+                setInventoryMockScenario(inventoryRes.data.mockScenario || null);
+              } else {
+                console.warn('[Inventory] Backend returned success: false:', {
+                  message: inventoryRes.data.message,
+                  data: inventoryRes.data
+                });
+                setInventory([]);
+                setInventoryIsMock(false);
+                setInventoryMockScenario(null);
+              }
             } else if (!cancelled) {
               setInventory([]);
               setInventoryIsMock(false);
