@@ -606,7 +606,12 @@ export const api = {
       { method: 'POST' }
     );
   },
-  startAmazonSync: () => requestJson<{ syncId: string }>('/api/sync/start', { method: 'POST' }),
+  startAmazonSync: () => requestJson<{ 
+    syncId?: string;
+    sync_id?: string;
+    status?: string;
+    message?: string;
+  }>('/api/sync/start', { method: 'POST' }),
   trackEvent: (name: string, payload?: Record<string, any>) =>
     requestJson<any>('/api/metrics/track', { method: 'POST', body: JSON.stringify({ name, payload }) }),
 

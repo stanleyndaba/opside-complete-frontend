@@ -508,20 +508,40 @@ export default function SmartInventorySync() {
 
     setSyncing(true);
     try {
-      const res = await api.triggerSync({ userId: userId || undefined });
+      // Use the Phase 1 sync endpoint which doesn't require userId
+      const res = await api.startAmazonSync();
       if (res.ok && res.data) {
-        toast({ title: 'Sync Started', description: res.data.message || 'Sync initiated successfully' });
-        setSyncStatus({ status: 'running', syncId: res.data.syncId, progress: 0 });
+        const syncId = res.data.syncId || res.data.sync_id;
+        toast({ 
+          title: 'Sync Started', 
+          description: res.data.message || 'Sync initiated successfully' 
+        });
+        setSyncStatus({ 
+          status: 'running', 
+          syncId: syncId || 'unknown', 
+          progress: 0 
+        });
         // Refresh connection status after sync starts
         const statusRes = await api.getAmazonConnectionStatus();
         if (statusRes.ok && statusRes.data) {
           setAmazonConnected(statusRes.data.connected || false);
         }
       } else {
-        toast({ title: 'Error', description: res.error || 'Failed to start sync' });
+        const errorMsg = res.error || res.data?.message || 'Failed to start sync';
+        console.error('[Sync] Error response:', res);
+        toast({ 
+          title: 'Sync Failed', 
+          description: errorMsg,
+          variant: 'destructive'
+        });
       }
     } catch (e: any) {
-      toast({ title: 'Error', description: e?.message || 'Failed to start sync' });
+      console.error('[Sync] Exception:', e);
+      toast({ 
+        title: 'Sync Failed', 
+        description: e?.message || 'Failed to start sync. Please try again.',
+        variant: 'destructive'
+      });
     } finally {
       setSyncing(false);
     }
