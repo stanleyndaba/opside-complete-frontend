@@ -170,6 +170,7 @@ export default function SmartInventorySync() {
   const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showEvidencePrompt, setShowEvidencePrompt] = useState<boolean>(false);
+  const [amazonConnected, setAmazonConnected] = useState(false);
 
   // Data state
   const [claims, setClaims] = useState<any[]>([]);
@@ -200,7 +201,7 @@ export default function SmartInventorySync() {
   // Date filters
   const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' });
 
-  // Get user ID
+  // Get user ID and check Amazon connection status
   useEffect(() => {
     (async () => {
       try {
@@ -216,6 +217,16 @@ export default function SmartInventorySync() {
         console.error('Error getting user ID:', e);
         // Continue to show page even if user ID fetch fails
         setLoading(false);
+      }
+
+      // Check Amazon connection status
+      try {
+        const statusRes = await api.getAmazonConnectionStatus();
+        if (statusRes.ok && statusRes.data) {
+          setAmazonConnected(statusRes.data.connected || false);
+        }
+      } catch (e) {
+        console.error('Error checking Amazon connection:', e);
       }
     })();
   }, []);
@@ -294,12 +305,6 @@ export default function SmartInventorySync() {
 
   // Load data based on active tab - only when tab or userId changes initially
   useEffect(() => {
-    if (!userId) {
-      // Show empty state if no userId - don't block rendering
-      setLoading(false);
-      return;
-    }
-
     let cancelled = false;
 
     const loadData = async () => {
@@ -311,6 +316,7 @@ export default function SmartInventorySync() {
       try {
         switch (activeTab) {
           case 'claims':
+            // Claims endpoint doesn't require userId - uses session auth
             const claimsRes = await api.getAmazonClaims({
               startDate: memoizedDateRange.startDate || undefined,
               endDate: memoizedDateRange.endDate || undefined,
@@ -327,6 +333,7 @@ export default function SmartInventorySync() {
             }
             break;
           case 'inventory':
+            // Inventory endpoint doesn't require userId - uses session auth
             const inventoryRes = await api.getAmazonInventory();
             if (!cancelled && inventoryRes.ok && inventoryRes.data) {
               const inventoryData = inventoryRes.data.data || [];
@@ -340,6 +347,14 @@ export default function SmartInventorySync() {
             }
             break;
           case 'orders':
+            if (!userId) {
+              // Orders endpoint requires userId
+              if (!cancelled) {
+                setOrders([]);
+                setLoading(false);
+              }
+              break;
+            }
             const ordersRes = await api.getOrders({
               userId,
               status: memoizedOrdersFilters.status || undefined,
@@ -481,17 +496,27 @@ export default function SmartInventorySync() {
 
   // Trigger manual sync
   const handleSync = async () => {
-    if (!userId) {
-      toast({ title: 'Error', description: 'User ID not found' });
+    // Check if Amazon is connected first
+    if (!amazonConnected) {
+      toast({ 
+        title: 'Not Connected', 
+        description: 'Please connect your Amazon account first to sync data.',
+        variant: 'destructive'
+      });
       return;
     }
 
     setSyncing(true);
     try {
-      const res = await api.triggerSync({ userId });
+      const res = await api.triggerSync({ userId: userId || undefined });
       if (res.ok && res.data) {
         toast({ title: 'Sync Started', description: res.data.message || 'Sync initiated successfully' });
         setSyncStatus({ status: 'running', syncId: res.data.syncId, progress: 0 });
+        // Refresh connection status after sync starts
+        const statusRes = await api.getAmazonConnectionStatus();
+        if (statusRes.ok && statusRes.data) {
+          setAmazonConnected(statusRes.data.connected || false);
+        }
       } else {
         toast({ title: 'Error', description: res.error || 'Failed to start sync' });
       }
@@ -680,8 +705,8 @@ export default function SmartInventorySync() {
               </div>
               <Button 
                 onClick={handleSync} 
-                disabled={syncing || syncStatus.status === 'running' || !userId}
-                className="bg-emerald-500 hover:bg-emerald-400 text-white"
+                disabled={syncing || syncStatus.status === 'running' || !amazonConnected}
+                className="bg-emerald-500 hover:bg-emerald-400 text-white disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {syncing || syncStatus.status === 'running' ? (
                   <>
