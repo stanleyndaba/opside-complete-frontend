@@ -230,6 +230,35 @@ export default function SmartInventorySync() {
       } catch (e) {
         console.error('Error checking Amazon connection:', e);
       }
+      
+      // Load claims immediately on mount (default tab is 'claims')
+      // This ensures claims are loaded even if the tab hasn't changed
+      try {
+        console.log('[Initial Load] Fetching claims on page mount...');
+        const claimsRes = await api.getAmazonClaims();
+        console.log('[Initial Load] Claims response:', {
+          ok: claimsRes.ok,
+          status: claimsRes.status,
+          hasData: !!claimsRes.data
+        });
+        
+        if (claimsRes.ok && claimsRes.data) {
+          // Handle both response formats: { data: [...] } or direct array
+          let claimsData: any[] = [];
+          if ('data' in claimsRes.data && Array.isArray(claimsRes.data.data)) {
+            claimsData = claimsRes.data.data;
+          } else if (Array.isArray(claimsRes.data)) {
+            claimsData = claimsRes.data;
+          }
+          
+          console.log('[Initial Load] Loaded claims:', claimsData.length);
+          setClaims(claimsData);
+          setClaimsIsMock(claimsRes.data.isMock || false);
+          setClaimsMockScenario(claimsRes.data.mockScenario || null);
+        }
+      } catch (e) {
+        console.error('[Initial Load] Error loading claims:', e);
+      }
     })();
   }, []);
 
@@ -319,18 +348,44 @@ export default function SmartInventorySync() {
               try {
                 // Fetch claims
                 try {
+                  console.log('[Sync] Fetching claims after sync completion...');
                   const claimsRes = await api.getAmazonClaims();
-                  if (claimsRes.ok && claimsRes.data && 'data' in claimsRes.data) {
-                    const claimsData = claimsRes.data.data || [];
-                    setClaims(Array.isArray(claimsData) ? claimsData : []);
+                  console.log('[Sync] Claims API response:', {
+                    ok: claimsRes.ok,
+                    status: claimsRes.status,
+                    error: claimsRes.error,
+                    hasData: !!claimsRes.data,
+                    dataKeys: claimsRes.data ? Object.keys(claimsRes.data) : []
+                  });
+                  
+                  if (claimsRes.ok && claimsRes.data) {
+                    // Handle both response formats: { data: [...] } or direct array
+                    let claimsData: any[] = [];
+                    if ('data' in claimsRes.data && Array.isArray(claimsRes.data.data)) {
+                      claimsData = claimsRes.data.data;
+                    } else if (Array.isArray(claimsRes.data)) {
+                      claimsData = claimsRes.data;
+                    }
+                    
+                    console.log('[Sync] Refreshed claims data:', {
+                      count: claimsData.length,
+                      isMock: claimsRes.data.isMock || false,
+                      mockScenario: claimsRes.data.mockScenario || null
+                    });
+                    
+                    setClaims(claimsData);
                     setClaimsIsMock(claimsRes.data.isMock || false);
                     setClaimsMockScenario(claimsRes.data.mockScenario || null);
-                    console.log('[Sync] Refreshed claims data:', claimsData.length, 'claims');
                   } else {
-                    console.error('[Sync] Failed to fetch claims:', claimsRes.error || 'Unknown error');
+                    console.error('[Sync] Failed to fetch claims:', {
+                      ok: claimsRes.ok,
+                      status: claimsRes.status,
+                      error: claimsRes.error,
+                      data: claimsRes.data
+                    });
                   }
                 } catch (e) {
-                  console.error('Failed to fetch claims after sync:', e);
+                  console.error('[Sync] Exception fetching claims after sync:', e);
                 }
                 
                 // Fetch inventory
@@ -405,16 +460,46 @@ export default function SmartInventorySync() {
         switch (activeTab) {
           case 'claims':
             // Claims endpoint doesn't require userId - uses session auth
+            console.log('[Claims] Fetching claims data...');
             const claimsRes = await api.getAmazonClaims({
               startDate: memoizedDateRange.startDate || undefined,
               endDate: memoizedDateRange.endDate || undefined,
             });
+            console.log('[Claims] API response:', {
+              ok: claimsRes.ok,
+              status: claimsRes.status,
+              error: claimsRes.error,
+              hasData: !!claimsRes.data,
+              dataKeys: claimsRes.data ? Object.keys(claimsRes.data) : [],
+              dataStructure: claimsRes.data
+            });
+            
             if (!cancelled && claimsRes.ok && claimsRes.data) {
-              const claimsData = claimsRes.data.data || [];
-              setClaims(Array.isArray(claimsData) ? claimsData : []);
+              // Handle both response formats: { data: [...] } or direct array
+              let claimsData: any[] = [];
+              if ('data' in claimsRes.data && Array.isArray(claimsRes.data.data)) {
+                claimsData = claimsRes.data.data;
+              } else if (Array.isArray(claimsRes.data)) {
+                claimsData = claimsRes.data;
+              }
+              
+              console.log('[Claims] Parsed claims data:', {
+                count: claimsData.length,
+                isMock: claimsRes.data.isMock || false,
+                mockScenario: claimsRes.data.mockScenario || null,
+                sampleClaim: claimsData[0] || null
+              });
+              
+              setClaims(claimsData);
               setClaimsIsMock(claimsRes.data.isMock || false);
               setClaimsMockScenario(claimsRes.data.mockScenario || null);
             } else if (!cancelled) {
+              console.warn('[Claims] Failed to fetch claims:', {
+                ok: claimsRes.ok,
+                status: claimsRes.status,
+                error: claimsRes.error,
+                data: claimsRes.data
+              });
               setClaims([]);
               setClaimsIsMock(false);
               setClaimsMockScenario(null);
