@@ -375,7 +375,63 @@ export default function SmartInventorySync() {
                 return; // Don't process general status if we got detailed status
               } else if (detailedRes.status === 404) {
                 // Endpoint not implemented - this is fine, just continue with general status
-                console.log('[Sync Status] Detailed status endpoint not available (404), using general status');
+                console.log('[Sync Status] Detailed status endpoint not available (404), trying to refresh data in case sync completed...');
+                // Since we have a syncId but no active sync and detailed endpoint doesn't exist,
+                // the sync might have completed. Try refreshing data once.
+                if (syncCompletedRef.current !== currentSyncIdRef.current) {
+                  try {
+                    const [claimsRes, inventoryRes] = await Promise.all([
+                      api.getAmazonClaims(),
+                      api.getAmazonInventory()
+                    ]);
+                    
+                    // If we get data, assume sync completed
+                    let hasData = false;
+                    if (claimsRes.ok && claimsRes.data && claimsRes.data.success !== false) {
+                      let claimsData: any[] = [];
+                      if ('data' in claimsRes.data && Array.isArray(claimsRes.data.data)) {
+                        claimsData = claimsRes.data.data;
+                      } else if (Array.isArray(claimsRes.data)) {
+                        claimsData = claimsRes.data;
+                      }
+                      if (claimsData.length > 0) {
+                        hasData = true;
+                        setClaims(claimsData);
+                        setClaimsIsMock(claimsRes.data.isMock || false);
+                        setClaimsMockScenario(claimsRes.data.mockScenario || null);
+                        console.log('[Sync Status] Found', claimsData.length, 'claims - sync likely completed');
+                      }
+                    }
+                    
+                    if (inventoryRes.ok && inventoryRes.data && inventoryRes.data.success !== false && 'data' in inventoryRes.data) {
+                      const inventoryData = inventoryRes.data.data || [];
+                      if (inventoryData.length > 0) {
+                        hasData = true;
+                        setInventory(Array.isArray(inventoryData) ? inventoryData : []);
+                        setInventoryIsMock(inventoryRes.data.isMock || false);
+                        setInventoryMockScenario(inventoryRes.data.mockScenario || null);
+                        console.log('[Sync Status] Found', inventoryData.length, 'inventory items - sync likely completed');
+                      }
+                    }
+                    
+                    // If we found data, mark sync as completed
+                    if (hasData && currentSyncIdRef.current) {
+                      syncCompletedRef.current = currentSyncIdRef.current;
+                      setSyncStatus({ 
+                        status: 'completed', 
+                        syncId: currentSyncIdRef.current,
+                        progress: 100
+                      });
+                      toast({
+                        title: '✅ Sync Completed',
+                        description: 'Your Amazon data has been synced successfully.',
+                        duration: 3000,
+                      });
+                    }
+                  } catch (e) {
+                    console.error('[Sync Status] Error checking for data:', e);
+                  }
+                }
               }
             } catch (e) {
               // Silently handle errors - detailed status endpoint may not be implemented
@@ -875,9 +931,48 @@ export default function SmartInventorySync() {
             });
             toast({ 
               title: 'Sync Already Running', 
-              description: `Sync is already in progress (${existingSyncId}). Please wait for it to complete.`,
+              description: `Sync is already in progress (${existingSyncId}). Checking status and refreshing data...`,
               duration: 5000
             });
+            
+            // Immediately try to refresh data in case the sync already completed
+            // The sync might have finished very quickly
+            try {
+              console.log('[Sync] 409 received - immediately refreshing data in case sync completed...');
+              const [claimsRes, inventoryRes] = await Promise.all([
+                api.getAmazonClaims(),
+                api.getAmazonInventory()
+              ]);
+              
+              // Refresh claims if available
+              if (claimsRes.ok && claimsRes.data && claimsRes.data.success !== false) {
+                let claimsData: any[] = [];
+                if ('data' in claimsRes.data && Array.isArray(claimsRes.data.data)) {
+                  claimsData = claimsRes.data.data;
+                } else if (Array.isArray(claimsRes.data)) {
+                  claimsData = claimsRes.data;
+                }
+                if (claimsData.length > 0) {
+                  console.log('[Sync] Found', claimsData.length, 'claims after 409 - sync may have completed');
+                  setClaims(claimsData);
+                  setClaimsIsMock(claimsRes.data.isMock || false);
+                  setClaimsMockScenario(claimsRes.data.mockScenario || null);
+                }
+              }
+              
+              // Refresh inventory if available
+              if (inventoryRes.ok && inventoryRes.data && inventoryRes.data.success !== false && 'data' in inventoryRes.data) {
+                const inventoryData = inventoryRes.data.data || [];
+                if (inventoryData.length > 0) {
+                  console.log('[Sync] Found', inventoryData.length, 'inventory items after 409 - sync may have completed');
+                  setInventory(Array.isArray(inventoryData) ? inventoryData : []);
+                  setInventoryIsMock(inventoryRes.data.isMock || false);
+                  setInventoryMockScenario(inventoryRes.data.mockScenario || null);
+                }
+              }
+            } catch (e) {
+              console.error('[Sync] Error refreshing data after 409:', e);
+            }
           } else {
             // If we can't get the syncId, still show the message but don't set status
             toast({ 
