@@ -971,7 +971,12 @@ export const api = {
   getEvidenceSummary: () => requestJson<any>('/api/evidence/summary'),
 
   // Inventory/Sync summary endpoints (non-id based)
-  getSyncStatus: () => requestJson<any>('/api/sync/status'),
+  getSyncStatus: (params?: { syncId?: string }) => {
+    const queryParams = new URLSearchParams();
+    if (params?.syncId) queryParams.append('syncId', params.syncId);
+    const query = queryParams.toString();
+    return requestJson<any>(`/api/sync/status${query ? `?${query}` : ''}`);
+  },
   getSyncActivity: () => requestJson<any>('/api/sync/activity'),
 
   // Phase 2: Orders, Shipments, Returns, Settlements endpoints
@@ -1078,9 +1083,12 @@ export const api = {
     
     return requestJson<{
       success: boolean;
-      syncId: string;
+      syncId?: string;
       message: string;
+      status?: 'in_progress' | 'running' | 'completed' | 'failed';
       estimatedDuration?: string;
+      error?: string;
+      existingSyncId?: string;
     }>('/api/v1/integrations/amazon/sync', {
       method: 'POST',
       body: body,

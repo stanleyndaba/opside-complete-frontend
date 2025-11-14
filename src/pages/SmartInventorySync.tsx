@@ -172,6 +172,7 @@ export default function SmartInventorySync() {
   const [showEvidencePrompt, setShowEvidencePrompt] = useState<boolean>(false);
   const [amazonConnected, setAmazonConnected] = useState(false);
   const syncCompletedRef = useRef<string | null>(null); // Track which syncId we've already handled
+  const currentSyncIdRef = useRef<string | undefined>(undefined); // Track current syncId for polling
 
   // Data state
   const [claims, setClaims] = useState<any[]>([]);
@@ -271,17 +272,33 @@ export default function SmartInventorySync() {
   useEffect(() => {
     const loadSyncStatus = async () => {
       try {
+        // Use syncId from ref if available for more accurate status polling
+        // Using ref avoids dependency issues in useEffect
+        const syncIdParam = currentSyncIdRef.current 
+          ? { syncId: currentSyncIdRef.current } 
+          : undefined;
+        
         // Try the general sync status endpoint first (doesn't require userId)
-        const res = await api.getSyncStatus();
+        // Pass syncId if we have one for more accurate polling
+        const res = await api.getSyncStatus(syncIdParam);
         if (res.ok && res.data) {
           const statusData = res.data;
           if (statusData.hasActiveSync && statusData.lastSync) {
             const lastSync = statusData.lastSync;
+            // Map backend status values to frontend status
+            // Backend may return "in_progress" which maps to "running"
+            const mappedStatus = lastSync.status === 'completed' ? 'completed' : 
+                                 lastSync.status === 'in_progress' || lastSync.status === 'running' ? 'running' : 
+                                 lastSync.status === 'failed' ? 'failed' : 'idle';
+            
+            const syncId = lastSync.syncId;
+            if (syncId) {
+              currentSyncIdRef.current = syncId; // Update ref when we get syncId from status
+            }
+            
             setSyncStatus({
-              status: lastSync.status === 'completed' ? 'completed' : 
-                      lastSync.status === 'running' ? 'running' : 
-                      lastSync.status === 'failed' ? 'failed' : 'idle',
-              syncId: lastSync.syncId,
+              status: mappedStatus,
+              syncId: syncId,
               progress: lastSync.progress || 0,
               lastSync: lastSync.completedAt || lastSync.startedAt,
             });
@@ -588,9 +605,15 @@ export default function SmartInventorySync() {
           title: 'Sync Started', 
           description: res.data.message || 'Sync initiated successfully' 
         });
+        // Backend returns status: "in_progress", map to 'running' for internal state
+        const backendStatus = res.data.status;
+        const actualSyncId = syncId || 'unknown';
+        currentSyncIdRef.current = actualSyncId; // Update ref for polling
         setSyncStatus({ 
-          status: 'running', 
-          syncId: syncId || 'unknown', 
+          status: backendStatus === 'in_progress' || backendStatus === 'running' ? 'running' : 
+                  backendStatus === 'completed' ? 'completed' : 
+                  backendStatus === 'failed' ? 'failed' : 'running',
+          syncId: actualSyncId, 
           progress: 0 
         });
         // Refresh connection status after sync starts
@@ -603,26 +626,50 @@ export default function SmartInventorySync() {
         // The useEffect will handle polling and data refresh
       } else {
         // Backend returned an error - show detailed error message
-        const errorMsg = res.error || res.data?.message || 'Failed to start sync';
+        const errorData = res.data as any; // Error responses may have different shape
+        const errorMsg = res.error || errorData?.message || 'Failed to start sync';
+        const errorCode = errorData?.error;
         console.error('[Sync] Error response:', {
           status: res.status,
           error: res.error,
-          data: res.data,
+          errorCode: errorCode,
+          data: errorData,
           fullResponse: res
         });
         
+        // Handle 409 Conflict - Sync already in progress
+        if (res.status === 409 || errorCode === 'sync_in_progress') {
+          const existingSyncId = errorData?.existingSyncId || 'unknown';
+          currentSyncIdRef.current = existingSyncId; // Update ref for polling
+          setSyncStatus({ 
+            status: 'running', 
+            syncId: existingSyncId, 
+            progress: 0 
+          });
+          toast({ 
+            title: 'Sync Already Running', 
+            description: errorMsg || 'A sync is already in progress. Please wait for it to complete.',
+            duration: 5000
+          });
+          return; // Don't show error toast, just inform user
+        }
+        
         // Provide more helpful error message based on status code
         let userMessage = errorMsg;
-        if (res.status === 500) {
+        let title = 'Sync Failed';
+        
+        if (res.status === 500 || errorCode === 'internal_server_error') {
           userMessage = 'Backend server error. The sync endpoint may not be fully implemented yet. Please check backend logs.';
-        } else if (res.status === 401) {
-          userMessage = 'Please connect your Amazon account first.';
-        } else if (res.status === 400) {
-          userMessage = errorMsg || 'Invalid sync request. Please try again.';
+        } else if (res.status === 401 || errorCode === 'unauthorized') {
+          title = 'Authentication Required';
+          userMessage = 'Please log in to sync your Amazon data.';
+        } else if (res.status === 400 || errorCode === 'amazon_not_connected') {
+          title = 'Amazon Not Connected';
+          userMessage = errorMsg || 'Amazon account not connected. Please connect your Amazon account first.';
         }
         
         toast({ 
-          title: 'Sync Failed', 
+          title: title, 
           description: userMessage,
           variant: 'destructive',
           duration: 6000
