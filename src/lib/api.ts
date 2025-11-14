@@ -156,11 +156,12 @@ async function requestJsonWithRetry<T>(
       
       // For HTTP errors (401, 403, 404, 500, etc.), the backend IS responding
       // These are not network errors and should not be retried
-      // Return immediately with the error
+      // Return immediately with the error, but include data in case it has useful info (e.g., existingSyncId for 409)
       return {
         ok: false,
         status: res.status,
         error: userFriendlyError,
+        data: data, // Include parsed response body for error responses (e.g., 409 with existingSyncId)
       };
     }
 

@@ -303,7 +303,8 @@ export default function SmartInventorySync() {
       try {
         // Use syncId from ref if available for more accurate status polling
         // Using ref avoids dependency issues in useEffect
-        const syncIdParam = currentSyncIdRef.current 
+        // Don't poll with 'unknown' syncId - wait for a real syncId
+        const syncIdParam = currentSyncIdRef.current && currentSyncIdRef.current !== 'unknown'
           ? { syncId: currentSyncIdRef.current } 
           : undefined;
         
@@ -724,18 +725,34 @@ export default function SmartInventorySync() {
         
         // Handle 409 Conflict - Sync already in progress
         if (res.status === 409 || errorCode === 'sync_in_progress') {
-          const existingSyncId = errorData?.existingSyncId || 'unknown';
-          currentSyncIdRef.current = existingSyncId; // Update ref for polling
-          setSyncStatus({ 
-            status: 'running', 
-            syncId: existingSyncId, 
-            progress: 0 
+          // Try to get existingSyncId from response data (now included in error responses)
+          const existingSyncId = res.data?.existingSyncId || errorData?.existingSyncId || 'unknown';
+          console.log('[Sync] 409 Conflict - Existing sync found:', {
+            existingSyncId: existingSyncId,
+            responseData: res.data,
+            errorData: errorData
           });
-          toast({ 
-            title: 'Sync Already Running', 
-            description: errorMsg || 'A sync is already in progress. Please wait for it to complete.',
-            duration: 5000
-          });
+          
+          if (existingSyncId && existingSyncId !== 'unknown') {
+            currentSyncIdRef.current = existingSyncId; // Update ref for polling
+            setSyncStatus({ 
+              status: 'running', 
+              syncId: existingSyncId, 
+              progress: 0 
+            });
+            toast({ 
+              title: 'Sync Already Running', 
+              description: `Sync is already in progress (${existingSyncId}). Please wait for it to complete.`,
+              duration: 5000
+            });
+          } else {
+            // If we can't get the syncId, still show the message but don't set status
+            toast({ 
+              title: 'Sync Already Running', 
+              description: errorMsg || 'A sync is already in progress. Please wait for it to complete.',
+              duration: 5000
+            });
+          }
           return; // Don't show error toast, just inform user
         }
         
