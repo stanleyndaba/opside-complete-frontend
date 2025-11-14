@@ -246,9 +246,11 @@ export default function SmartInventorySync() {
         if (claimsRes.ok && claimsRes.data) {
           // Check if backend returned success: true
           if (claimsRes.data.success !== false) {
-            // Handle both response formats: { data: [...] } or direct array
+            // Handle multiple response formats: { data: [...] }, { claims: [...] }, or direct array
             let claimsData: any[] = [];
-            if ('data' in claimsRes.data && Array.isArray(claimsRes.data.data)) {
+            if ('claims' in claimsRes.data && Array.isArray(claimsRes.data.claims)) {
+              claimsData = claimsRes.data.claims;
+            } else if ('data' in claimsRes.data && Array.isArray(claimsRes.data.data)) {
               claimsData = claimsRes.data.data;
             } else if (Array.isArray(claimsRes.data)) {
               claimsData = claimsRes.data;
@@ -335,8 +337,8 @@ export default function SmartInventorySync() {
             // Skip if we already know the endpoint doesn't exist
             if (detailedStatusEndpointAvailableRef.current === false) {
               // Endpoint is known to be unavailable, skip the call
-              // Just try refreshing data in case sync completed
-              if (syncCompletedRef.current !== currentSyncIdRef.current) {
+              // Just try refreshing data in case sync completed (only once per syncId)
+              if (syncCompletedRef.current !== currentSyncIdRef.current && currentSyncIdRef.current) {
                 try {
                   const [claimsRes, inventoryRes] = await Promise.all([
                     api.getAmazonClaims(),
@@ -346,7 +348,9 @@ export default function SmartInventorySync() {
                   let hasData = false;
                   if (claimsRes.ok && claimsRes.data && claimsRes.data.success !== false) {
                     let claimsData: any[] = [];
-                    if ('data' in claimsRes.data && Array.isArray(claimsRes.data.data)) {
+                    if ('claims' in claimsRes.data && Array.isArray(claimsRes.data.claims)) {
+                      claimsData = claimsRes.data.claims;
+                    } else if ('data' in claimsRes.data && Array.isArray(claimsRes.data.data)) {
                       claimsData = claimsRes.data.data;
                     } else if (Array.isArray(claimsRes.data)) {
                       claimsData = claimsRes.data;
@@ -356,29 +360,58 @@ export default function SmartInventorySync() {
                       setClaims(claimsData);
                       setClaimsIsMock(claimsRes.data.isMock || false);
                       setClaimsMockScenario(claimsRes.data.mockScenario || null);
+                    } else {
+                      // Update state even if empty to show "no data" message
+                      setClaims([]);
+                      setClaimsIsMock(claimsRes.data.isMock || false);
+                      setClaimsMockScenario(claimsRes.data.mockScenario || null);
                     }
                   }
                   
-                  if (inventoryRes.ok && inventoryRes.data && inventoryRes.data.success !== false && 'data' in inventoryRes.data) {
-                    const inventoryData = inventoryRes.data.data || [];
+                  if (inventoryRes.ok && inventoryRes.data && inventoryRes.data.success !== false) {
+                    let inventoryData: any[] = [];
+                    if ('inventory' in inventoryRes.data && Array.isArray(inventoryRes.data.inventory)) {
+                      inventoryData = inventoryRes.data.inventory;
+                    } else if ('data' in inventoryRes.data && Array.isArray(inventoryRes.data.data)) {
+                      inventoryData = inventoryRes.data.data;
+                    } else if (Array.isArray(inventoryRes.data)) {
+                      inventoryData = inventoryRes.data;
+                    }
                     if (inventoryData.length > 0) {
                       hasData = true;
                       setInventory(Array.isArray(inventoryData) ? inventoryData : []);
                       setInventoryIsMock(inventoryRes.data.isMock || false);
                       setInventoryMockScenario(inventoryRes.data.mockScenario || null);
+                    } else {
+                      // Update state even if empty to show "no data" message
+                      setInventory([]);
+                      setInventoryIsMock(inventoryRes.data.isMock || false);
+                      setInventoryMockScenario(inventoryRes.data.mockScenario || null);
                     }
                   }
                   
-                  if (hasData && currentSyncIdRef.current) {
-                    syncCompletedRef.current = currentSyncIdRef.current;
+                  // Mark as checked to prevent infinite loop, even if no data found
+                  syncCompletedRef.current = currentSyncIdRef.current;
+                  
+                  if (hasData) {
                     setSyncStatus({ 
                       status: 'completed', 
                       syncId: currentSyncIdRef.current,
                       progress: 100
                     });
+                  } else {
+                    // No data found, but sync is checked - set to idle
+                    setSyncStatus({ 
+                      status: 'idle', 
+                      syncId: currentSyncIdRef.current
+                    });
                   }
                 } catch (e) {
                   console.error('[Sync Status] Error checking for data:', e);
+                  // Mark as checked even on error to prevent infinite loop
+                  if (currentSyncIdRef.current) {
+                    syncCompletedRef.current = currentSyncIdRef.current;
+                  }
                 }
               }
               return; // Skip detailed status call
@@ -411,9 +444,11 @@ export default function SmartInventorySync() {
                   // Refresh claims after sync completion
                   try {
                     const claimsRes = await api.getAmazonClaims();
-                    if (claimsRes.ok && claimsRes.data) {
+                    if (claimsRes.ok && claimsRes.data && claimsRes.data.success !== false) {
                       let claimsData: any[] = [];
-                      if ('data' in claimsRes.data && Array.isArray(claimsRes.data.data)) {
+                      if ('claims' in claimsRes.data && Array.isArray(claimsRes.data.claims)) {
+                        claimsData = claimsRes.data.claims;
+                      } else if ('data' in claimsRes.data && Array.isArray(claimsRes.data.data)) {
                         claimsData = claimsRes.data.data;
                       } else if (Array.isArray(claimsRes.data)) {
                         claimsData = claimsRes.data;
@@ -435,7 +470,7 @@ export default function SmartInventorySync() {
                 console.log('[Sync Status] Detailed status endpoint not available (404), trying to refresh data in case sync completed...');
                 // Since we have a syncId but no active sync and detailed endpoint doesn't exist,
                 // the sync might have completed. Try refreshing data once.
-                if (syncCompletedRef.current !== currentSyncIdRef.current) {
+                if (syncCompletedRef.current !== currentSyncIdRef.current && currentSyncIdRef.current) {
                   try {
                     const [claimsRes, inventoryRes] = await Promise.all([
                       api.getAmazonClaims(),
@@ -446,7 +481,9 @@ export default function SmartInventorySync() {
                     let hasData = false;
                     if (claimsRes.ok && claimsRes.data && claimsRes.data.success !== false) {
                       let claimsData: any[] = [];
-                      if ('data' in claimsRes.data && Array.isArray(claimsRes.data.data)) {
+                      if ('claims' in claimsRes.data && Array.isArray(claimsRes.data.claims)) {
+                        claimsData = claimsRes.data.claims;
+                      } else if ('data' in claimsRes.data && Array.isArray(claimsRes.data.data)) {
                         claimsData = claimsRes.data.data;
                       } else if (Array.isArray(claimsRes.data)) {
                         claimsData = claimsRes.data;
@@ -457,23 +494,39 @@ export default function SmartInventorySync() {
                         setClaimsIsMock(claimsRes.data.isMock || false);
                         setClaimsMockScenario(claimsRes.data.mockScenario || null);
                         console.log('[Sync Status] Found', claimsData.length, 'claims - sync likely completed');
+                      } else {
+                        setClaims([]);
+                        setClaimsIsMock(claimsRes.data.isMock || false);
+                        setClaimsMockScenario(claimsRes.data.mockScenario || null);
                       }
                     }
                     
-                    if (inventoryRes.ok && inventoryRes.data && inventoryRes.data.success !== false && 'data' in inventoryRes.data) {
-                      const inventoryData = inventoryRes.data.data || [];
+                    if (inventoryRes.ok && inventoryRes.data && inventoryRes.data.success !== false) {
+                      let inventoryData: any[] = [];
+                      if ('inventory' in inventoryRes.data && Array.isArray(inventoryRes.data.inventory)) {
+                        inventoryData = inventoryRes.data.inventory;
+                      } else if ('data' in inventoryRes.data && Array.isArray(inventoryRes.data.data)) {
+                        inventoryData = inventoryRes.data.data;
+                      } else if (Array.isArray(inventoryRes.data)) {
+                        inventoryData = inventoryRes.data;
+                      }
                       if (inventoryData.length > 0) {
                         hasData = true;
                         setInventory(Array.isArray(inventoryData) ? inventoryData : []);
                         setInventoryIsMock(inventoryRes.data.isMock || false);
                         setInventoryMockScenario(inventoryRes.data.mockScenario || null);
                         console.log('[Sync Status] Found', inventoryData.length, 'inventory items - sync likely completed');
+                      } else {
+                        setInventory([]);
+                        setInventoryIsMock(inventoryRes.data.isMock || false);
+                        setInventoryMockScenario(inventoryRes.data.mockScenario || null);
                       }
                     }
                     
-                    // If we found data, mark sync as completed
-                    if (hasData && currentSyncIdRef.current) {
-                      syncCompletedRef.current = currentSyncIdRef.current;
+                    // Mark as checked to prevent infinite loop, even if no data found
+                    syncCompletedRef.current = currentSyncIdRef.current;
+                    
+                    if (hasData) {
                       setSyncStatus({ 
                         status: 'completed', 
                         syncId: currentSyncIdRef.current,
@@ -484,9 +537,19 @@ export default function SmartInventorySync() {
                         description: 'Your Amazon data has been synced successfully.',
                         duration: 3000,
                       });
+                    } else {
+                      // No data found, but sync is checked - set to idle
+                      setSyncStatus({ 
+                        status: 'idle', 
+                        syncId: currentSyncIdRef.current
+                      });
                     }
                   } catch (e) {
                     console.error('[Sync Status] Error checking for data:', e);
+                    // Mark as checked even on error to prevent infinite loop
+                    if (currentSyncIdRef.current) {
+                      syncCompletedRef.current = currentSyncIdRef.current;
+                    }
                   }
                 }
               }
@@ -549,9 +612,11 @@ export default function SmartInventorySync() {
                   if (claimsRes.ok && claimsRes.data) {
                     // Check if backend returned success: true
                     if (claimsRes.data.success !== false) {
-                      // Handle both response formats: { data: [...] } or direct array
+                      // Handle multiple response formats: { data: [...] }, { claims: [...] }, or direct array
                       let claimsData: any[] = [];
-                      if ('data' in claimsRes.data && Array.isArray(claimsRes.data.data)) {
+                      if ('claims' in claimsRes.data && Array.isArray(claimsRes.data.claims)) {
+                        claimsData = claimsRes.data.claims;
+                      } else if ('data' in claimsRes.data && Array.isArray(claimsRes.data.data)) {
                         claimsData = claimsRes.data.data;
                       } else if (Array.isArray(claimsRes.data)) {
                         claimsData = claimsRes.data;
@@ -589,8 +654,16 @@ export default function SmartInventorySync() {
                   const inventoryRes = await api.getAmazonInventory();
                   if (inventoryRes.ok && inventoryRes.data) {
                     // Check if backend returned success: true
-                    if (inventoryRes.data.success !== false && 'data' in inventoryRes.data) {
-                      const inventoryData = inventoryRes.data.data || [];
+                    if (inventoryRes.data.success !== false) {
+                      // Handle multiple response formats: { data: [...] }, { inventory: [...] }, or direct array
+                      let inventoryData: any[] = [];
+                      if ('inventory' in inventoryRes.data && Array.isArray(inventoryRes.data.inventory)) {
+                        inventoryData = inventoryRes.data.inventory;
+                      } else if ('data' in inventoryRes.data && Array.isArray(inventoryRes.data.data)) {
+                        inventoryData = inventoryRes.data.data;
+                      } else if (Array.isArray(inventoryRes.data)) {
+                        inventoryData = inventoryRes.data;
+                      }
                       setInventory(Array.isArray(inventoryData) ? inventoryData : []);
                       setInventoryIsMock(inventoryRes.data.isMock || false);
                       setInventoryMockScenario(inventoryRes.data.mockScenario || null);
@@ -705,9 +778,11 @@ export default function SmartInventorySync() {
             if (!cancelled && claimsRes.ok && claimsRes.data) {
               // Check if backend returned success: true
               if (claimsRes.data.success !== false) {
-                // Handle both response formats: { data: [...] } or direct array
+                // Handle multiple response formats: { data: [...] }, { claims: [...] }, or direct array
                 let claimsData: any[] = [];
-                if ('data' in claimsRes.data && Array.isArray(claimsRes.data.data)) {
+                if ('claims' in claimsRes.data && Array.isArray(claimsRes.data.claims)) {
+                  claimsData = claimsRes.data.claims;
+                } else if ('data' in claimsRes.data && Array.isArray(claimsRes.data.data)) {
                   claimsData = claimsRes.data.data;
                 } else if (Array.isArray(claimsRes.data)) {
                   claimsData = claimsRes.data;
@@ -751,7 +826,15 @@ export default function SmartInventorySync() {
             if (!cancelled && inventoryRes.ok && inventoryRes.data) {
               // Check if backend returned success: true
               if (inventoryRes.data.success !== false) {
-                const inventoryData = inventoryRes.data.data || [];
+                // Handle multiple response formats: { data: [...] }, { inventory: [...] }, or direct array
+                let inventoryData: any[] = [];
+                if ('inventory' in inventoryRes.data && Array.isArray(inventoryRes.data.inventory)) {
+                  inventoryData = inventoryRes.data.inventory;
+                } else if ('data' in inventoryRes.data && Array.isArray(inventoryRes.data.data)) {
+                  inventoryData = inventoryRes.data.data;
+                } else if (Array.isArray(inventoryRes.data)) {
+                  inventoryData = inventoryRes.data;
+                }
                 setInventory(Array.isArray(inventoryData) ? inventoryData : []);
                 setInventoryIsMock(inventoryRes.data.isMock || false);
                 setInventoryMockScenario(inventoryRes.data.mockScenario || null);
@@ -1008,7 +1091,9 @@ export default function SmartInventorySync() {
               // Refresh claims if available
               if (claimsRes.ok && claimsRes.data && claimsRes.data.success !== false) {
                 let claimsData: any[] = [];
-                if ('data' in claimsRes.data && Array.isArray(claimsRes.data.data)) {
+                if ('claims' in claimsRes.data && Array.isArray(claimsRes.data.claims)) {
+                  claimsData = claimsRes.data.claims;
+                } else if ('data' in claimsRes.data && Array.isArray(claimsRes.data.data)) {
                   claimsData = claimsRes.data.data;
                 } else if (Array.isArray(claimsRes.data)) {
                   claimsData = claimsRes.data;
@@ -1018,15 +1103,30 @@ export default function SmartInventorySync() {
                   setClaims(claimsData);
                   setClaimsIsMock(claimsRes.data.isMock || false);
                   setClaimsMockScenario(claimsRes.data.mockScenario || null);
+                } else {
+                  setClaims([]);
+                  setClaimsIsMock(claimsRes.data.isMock || false);
+                  setClaimsMockScenario(claimsRes.data.mockScenario || null);
                 }
               }
               
               // Refresh inventory if available
-              if (inventoryRes.ok && inventoryRes.data && inventoryRes.data.success !== false && 'data' in inventoryRes.data) {
-                const inventoryData = inventoryRes.data.data || [];
+              if (inventoryRes.ok && inventoryRes.data && inventoryRes.data.success !== false) {
+                let inventoryData: any[] = [];
+                if ('inventory' in inventoryRes.data && Array.isArray(inventoryRes.data.inventory)) {
+                  inventoryData = inventoryRes.data.inventory;
+                } else if ('data' in inventoryRes.data && Array.isArray(inventoryRes.data.data)) {
+                  inventoryData = inventoryRes.data.data;
+                } else if (Array.isArray(inventoryRes.data)) {
+                  inventoryData = inventoryRes.data;
+                }
                 if (inventoryData.length > 0) {
                   console.log('[Sync] Found', inventoryData.length, 'inventory items after 409 - sync may have completed');
                   setInventory(Array.isArray(inventoryData) ? inventoryData : []);
+                  setInventoryIsMock(inventoryRes.data.isMock || false);
+                  setInventoryMockScenario(inventoryRes.data.mockScenario || null);
+                } else {
+                  setInventory([]);
                   setInventoryIsMock(inventoryRes.data.isMock || false);
                   setInventoryMockScenario(inventoryRes.data.mockScenario || null);
                 }
