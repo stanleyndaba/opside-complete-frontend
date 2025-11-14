@@ -152,7 +152,13 @@ async function requestJsonWithRetry<T>(
         userFriendlyError = `Server error (${res.status}): ${errorMsg}`;
       }
       
-      console.error(`[API] HTTP ${res.status} error for ${url}: ${errorMsg}`);
+      // Log 404s as warnings (not errors) since they're often expected (endpoint not implemented)
+      // Log other errors as errors
+      if (res.status === 404) {
+        console.warn(`[API] HTTP 404 for ${url}: ${errorMsg} (endpoint may not be implemented)`);
+      } else {
+        console.error(`[API] HTTP ${res.status} error for ${url}: ${errorMsg}`);
+      }
       
       // For HTTP errors (401, 403, 404, 500, etc.), the backend IS responding
       // These are not network errors and should not be retried
