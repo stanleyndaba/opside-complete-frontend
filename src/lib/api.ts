@@ -899,6 +899,7 @@ export const api = {
   }>('/api/v1/integrations/amazon/status'),
 
   // Phase 1: Fetch Claims (Financial Events)
+  // Backend returns: { success: true, claims: [...], isMock?: boolean, mockScenario?: string, message?: string, ... }
   getAmazonClaims: (params?: {
     startDate?: string;
     endDate?: string;
@@ -909,7 +910,21 @@ export const api = {
     const query = queryParams.toString();
     return requestJson<{
       success: boolean;
-      data: Array<{
+      claims: Array<{
+        id: string;
+        orderId?: string;
+        amount: number;
+        status: string;
+        type: string;
+        currency: string;
+        createdAt: string;
+        description?: string;
+        fromApi?: boolean;
+        isMock?: boolean;
+        mockScenario?: string;
+      }>;
+      // Also support legacy 'data' format for backward compatibility
+      data?: Array<{
         id: string;
         orderId?: string;
         amount: number;
@@ -925,13 +940,30 @@ export const api = {
       isMock?: boolean;
       mockScenario?: string;
       message?: string;
+      dataType?: string;
     }>(`/api/v1/integrations/amazon/claims${query ? `?${query}` : ''}`);
   },
 
   // Phase 1: Fetch Inventory
+  // Backend returns: { success: true, inventory: [...], isMock?: boolean, mockScenario?: string, message?: string, ... }
   getAmazonInventory: () => requestJson<{
     success: boolean;
-    data: Array<{
+    inventory: Array<{
+      sku: string;
+      asin?: string;
+      fnsku?: string;
+      productName?: string;
+      quantityAvailable?: number;
+      quantityReserved?: number;
+      quantityInbound?: number;
+      quantityTotal?: number;
+      condition?: string;
+      warehouseLocation?: string;
+      isMock?: boolean;
+      mockScenario?: string;
+    }>;
+    // Also support legacy 'data' format for backward compatibility
+    data?: Array<{
       sku: string;
       asin?: string;
       fnsku?: string;
@@ -948,6 +980,7 @@ export const api = {
     isMock?: boolean;
     mockScenario?: string;
     message?: string;
+    dataType?: string;
   }>('/api/v1/integrations/amazon/inventory'),
 
   // Phase 1: Fetch Orders (already exists but adding for consistency)
