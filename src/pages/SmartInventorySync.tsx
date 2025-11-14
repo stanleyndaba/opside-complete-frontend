@@ -319,6 +319,7 @@ export default function SmartInventorySync() {
           if (currentSyncIdRef.current && currentSyncIdRef.current !== 'unknown' && 
               !statusData.hasActiveSync && !statusData.lastSync) {
             // Try to get detailed status for this specific syncId
+            // Note: This endpoint may not be implemented (404), so we handle it gracefully
             console.log('[Sync Status] No active sync in general status, checking detailed status for:', currentSyncIdRef.current);
             try {
               const detailedRes = await api.getSyncStatusDetailed({ syncId: currentSyncIdRef.current });
@@ -361,9 +362,13 @@ export default function SmartInventorySync() {
                   }
                 }
                 return; // Don't process general status if we got detailed status
+              } else if (detailedRes.status === 404) {
+                // Endpoint not implemented - this is fine, just continue with general status
+                console.log('[Sync Status] Detailed status endpoint not available (404), using general status');
               }
             } catch (e) {
-              console.error('[Sync Status] Error getting detailed status:', e);
+              // Silently handle errors - detailed status endpoint may not be implemented
+              console.log('[Sync Status] Detailed status check failed (endpoint may not be implemented):', e instanceof Error ? e.message : 'Unknown error');
             }
           }
           
@@ -466,12 +471,36 @@ export default function SmartInventorySync() {
             setSyncStatus({ status: 'idle' });
           }
         } else {
-          // Fallback to detailed status if available
+          // Fallback to detailed status if available (but handle 404 gracefully)
           if (userId) {
-            const detailedRes = await api.getSyncStatusDetailed({ userId });
-            if (detailedRes.ok && detailedRes.data) {
-              setSyncStatus(detailedRes.data);
-            } else {
+            try {
+              const detailedRes = await api.getSyncStatusDetailed({ userId });
+              if (detailedRes.ok && detailedRes.data) {
+                const detailed = detailedRes.data;
+                // Map backend status to frontend SyncStatus type
+                const mappedStatus = detailed.status === 'completed' ? 'completed' : 
+                                     (detailed.status === 'in_progress' || detailed.status === 'running') ? 'running' : 
+                                     detailed.status === 'failed' ? 'failed' : 'idle';
+                
+                setSyncStatus({
+                  status: mappedStatus,
+                  syncId: detailed.syncId,
+                  progress: detailed.progress || 0,
+                  lastSync: detailed.completedAt || detailed.startedAt,
+                  results: detailed.results,
+                  startedAt: detailed.startedAt,
+                  completedAt: detailed.completedAt,
+                  duration: detailed.duration,
+                });
+              } else if (detailedRes.status === 404) {
+                // Endpoint not implemented - just set idle status
+                console.log('[Sync Status] Detailed status endpoint not available (404)');
+                setSyncStatus({ status: 'idle' });
+              } else {
+                setSyncStatus({ status: 'idle' });
+              }
+            } catch (e) {
+              // Silently handle errors - detailed status endpoint may not be implemented
               setSyncStatus({ status: 'idle' });
             }
           } else {
