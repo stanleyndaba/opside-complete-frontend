@@ -550,7 +550,26 @@ export const api = {
     // Production mode: try backend normally with timing
     const prodStartTime = performance.now();
     console.log('[API] Production mode - calling backend');
-    const response = await requestJson<{ totalAmount: number; currency: string; claimCount: number }>('/api/v1/integrations/amazon/recoveries');
+    const response = await requestJson<{
+      totalAmount: number;
+      currency: string;
+      claimCount: number;
+      source?: string;
+      dataSource?: string;
+      message?: string;
+      needsSync?: boolean;
+      syncTriggered?: boolean;
+      recoveries?: {
+        totalAmount: number;
+        currency: string;
+        claimCount: number;
+        source?: string;
+        dataSource?: string;
+        message?: string;
+        needsSync?: boolean;
+        syncTriggered?: boolean;
+      };
+    }>('/api/v1/integrations/amazon/recoveries');
     const prodDuration = performance.now() - prodStartTime;
     console.log(`[API] Production backend request took ${prodDuration}ms`);
     
