@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -163,7 +163,7 @@ type DataTab = 'claims' | 'inventory' | 'orders' | 'shipments' | 'returns' | 'se
 export default function SmartInventorySync() {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState<DataTab>('orders');
+  const [activeTab, setActiveTab] = useState<DataTab>('claims');
   const [syncStatus, setSyncStatus] = useState<SyncStatus>({ status: 'idle' });
   const [userId, setUserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -171,6 +171,7 @@ export default function SmartInventorySync() {
   const [error, setError] = useState<string | null>(null);
   const [showEvidencePrompt, setShowEvidencePrompt] = useState<boolean>(false);
   const [amazonConnected, setAmazonConnected] = useState(false);
+  const syncCompletedRef = useRef<string | null>(null); // Track which syncId we've already handled
 
   // Data state
   const [claims, setClaims] = useState<any[]>([]);
@@ -266,22 +267,92 @@ export default function SmartInventorySync() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Load sync status
+  // Load sync status and poll if running
   useEffect(() => {
-    if (!userId) return;
-
     const loadSyncStatus = async () => {
       try {
-        const res = await api.getSyncStatusDetailed({ userId: userId || undefined });
+        // Try the general sync status endpoint first (doesn't require userId)
+        const res = await api.getSyncStatus();
         if (res.ok && res.data) {
-          setSyncStatus(res.data);
+          const statusData = res.data;
+          if (statusData.hasActiveSync && statusData.lastSync) {
+            const lastSync = statusData.lastSync;
+            setSyncStatus({
+              status: lastSync.status === 'completed' ? 'completed' : 
+                      lastSync.status === 'running' ? 'running' : 
+                      lastSync.status === 'failed' ? 'failed' : 'idle',
+              syncId: lastSync.syncId,
+              progress: lastSync.progress || 0,
+              lastSync: lastSync.completedAt || lastSync.startedAt,
+            });
+            
+            // If sync just completed, refresh data for the active tab (only once per syncId)
+            if (lastSync.status === 'completed' && lastSync.syncId && syncCompletedRef.current !== lastSync.syncId) {
+              syncCompletedRef.current = lastSync.syncId;
+              
+              // Show completion toast
+              toast({
+                title: '✅ Sync Completed',
+                description: 'Your Amazon data has been synced successfully. Refreshing data...',
+                duration: 3000,
+              });
+              
+              // Always refresh claims and inventory after sync completes (regardless of active tab)
+              // This ensures data is available when user switches tabs
+              try {
+                // Fetch claims
+                try {
+                  const claimsRes = await api.getAmazonClaims();
+                  if (claimsRes.ok && claimsRes.data && 'data' in claimsRes.data) {
+                    const claimsData = claimsRes.data.data || [];
+                    setClaims(Array.isArray(claimsData) ? claimsData : []);
+                    setClaimsIsMock(claimsRes.data.isMock || false);
+                    setClaimsMockScenario(claimsRes.data.mockScenario || null);
+                    console.log('[Sync] Refreshed claims data:', claimsData.length, 'claims');
+                  } else {
+                    console.error('[Sync] Failed to fetch claims:', claimsRes.error || 'Unknown error');
+                  }
+                } catch (e) {
+                  console.error('Failed to fetch claims after sync:', e);
+                }
+                
+                // Fetch inventory
+                try {
+                  const inventoryRes = await api.getAmazonInventory();
+                  if (inventoryRes.ok && inventoryRes.data && 'data' in inventoryRes.data) {
+                    const inventoryData = inventoryRes.data.data || [];
+                    setInventory(Array.isArray(inventoryData) ? inventoryData : []);
+                    setInventoryIsMock(inventoryRes.data.isMock || false);
+                    setInventoryMockScenario(inventoryRes.data.mockScenario || null);
+                    console.log('[Sync] Refreshed inventory data:', inventoryData.length, 'items');
+                  } else {
+                    console.error('[Sync] Failed to fetch inventory:', inventoryRes.error || 'Unknown error');
+                  }
+                } catch (e) {
+                  console.error('Failed to fetch inventory after sync:', e);
+                }
+              } catch (e) {
+                console.error('Failed to refresh data after sync:', e);
+              }
+            }
+          } else {
+            setSyncStatus({ status: 'idle' });
+          }
         } else {
-          // If API fails, set default status
-          setSyncStatus({ status: 'idle' });
+          // Fallback to detailed status if available
+          if (userId) {
+            const detailedRes = await api.getSyncStatusDetailed({ userId });
+            if (detailedRes.ok && detailedRes.data) {
+              setSyncStatus(detailedRes.data);
+            } else {
+              setSyncStatus({ status: 'idle' });
+            }
+          } else {
+            setSyncStatus({ status: 'idle' });
+          }
         }
       } catch (e) {
         console.error('Failed to load sync status:', e);
-        // Set default status on error
         setSyncStatus({ status: 'idle' });
       }
     };
@@ -294,7 +365,7 @@ export default function SmartInventorySync() {
     }, 5000);
     
     return () => clearInterval(interval);
-  }, [userId]);
+  }, [userId, activeTab]);
 
   // Use useMemo to memoize filter values to prevent unnecessary re-renders
   const memoizedOrdersFilters = useMemo(() => ordersFilters, [ordersFilters.status, ordersFilters.fulfillmentChannel, ordersFilters.search]);
@@ -508,10 +579,10 @@ export default function SmartInventorySync() {
 
     setSyncing(true);
     try {
-      // Use the Phase 1 sync endpoint which doesn't require userId
-      const res = await api.startAmazonSync();
+      // Use the Phase 1 sync endpoint: POST /api/v1/integrations/amazon/sync
+      const res = await api.triggerSync({ userId: userId || undefined });
       if (res.ok && res.data) {
-        const syncId = res.data.syncId || res.data.sync_id;
+        const syncId = res.data.syncId;
         toast({ 
           title: 'Sync Started', 
           description: res.data.message || 'Sync initiated successfully' 
@@ -526,6 +597,9 @@ export default function SmartInventorySync() {
         if (statusRes.ok && statusRes.data) {
           setAmazonConnected(statusRes.data.connected || false);
         }
+        
+        // Start polling for sync completion
+        // The useEffect will handle polling and data refresh
       } else {
         const errorMsg = res.error || res.data?.message || 'Failed to start sync';
         console.error('[Sync] Error response:', res);
