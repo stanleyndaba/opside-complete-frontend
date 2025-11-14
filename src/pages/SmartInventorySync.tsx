@@ -324,8 +324,10 @@ export default function SmartInventorySync() {
               const detailedRes = await api.getSyncStatusDetailed({ syncId: currentSyncIdRef.current });
               if (detailedRes.ok && detailedRes.data) {
                 const detailed = detailedRes.data;
+                // Map backend status values to frontend status
+                // Backend may return "in_progress" or "running"
                 const mappedStatus = detailed.status === 'completed' ? 'completed' : 
-                                     detailed.status === 'in_progress' || detailed.status === 'running' ? 'running' : 
+                                     (detailed.status === 'in_progress' || detailed.status === 'running') ? 'running' : 
                                      detailed.status === 'failed' ? 'failed' : 'idle';
                 
                 setSyncStatus({

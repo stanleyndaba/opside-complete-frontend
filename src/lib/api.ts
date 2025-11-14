@@ -1104,7 +1104,7 @@ export const api = {
     const query = queryParams.toString();
     return requestJson<{
       success: boolean;
-      status: 'running' | 'completed' | 'failed';
+      status: 'running' | 'in_progress' | 'completed' | 'failed';
       syncId: string;
       progress: number;
       results: {
