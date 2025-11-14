@@ -1059,11 +1059,23 @@ export const api = {
     return requestJson<any>(`/api/v1/integrations/amazon/settlements${query ? `?${query}` : ''}`);
   },
 
-  // Trigger manual sync
+  // Trigger manual sync (Phase 1 - no body required, uses session auth)
   triggerSync: (params?: {
     userId?: string;
     syncTypes?: Array<'orders' | 'shipments' | 'returns' | 'settlements'>;
   }) => {
+    // Phase 1 endpoint: POST /api/v1/integrations/amazon/sync
+    // According to Phase 1 requirements (line 151-164), this should work with NO body
+    // Uses session-based authentication via cookies
+    // If backend requires body, we'll send minimal body
+    const hasParams = params?.userId || params?.syncTypes;
+    const body = hasParams 
+      ? JSON.stringify({
+          ...(params?.userId && { userId: params.userId }),
+          ...(params?.syncTypes && { syncTypes: params.syncTypes }),
+        })
+      : JSON.stringify({}); // Send empty body as per Phase 1 requirements
+    
     return requestJson<{
       success: boolean;
       syncId: string;
@@ -1071,10 +1083,7 @@ export const api = {
       estimatedDuration?: string;
     }>('/api/v1/integrations/amazon/sync', {
       method: 'POST',
-      body: JSON.stringify({
-        userId: params?.userId,
-        syncTypes: params?.syncTypes || ['orders', 'shipments', 'returns', 'settlements'],
-      }),
+      body: body,
     });
   },
 

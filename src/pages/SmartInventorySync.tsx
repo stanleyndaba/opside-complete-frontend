@@ -580,7 +580,8 @@ export default function SmartInventorySync() {
     setSyncing(true);
     try {
       // Use the Phase 1 sync endpoint: POST /api/v1/integrations/amazon/sync
-      const res = await api.triggerSync({ userId: userId || undefined });
+      // According to Phase 1 requirements, this should work with empty body (uses session auth)
+      const res = await api.triggerSync();
       if (res.ok && res.data) {
         const syncId = res.data.syncId;
         toast({ 
@@ -601,12 +602,30 @@ export default function SmartInventorySync() {
         // Start polling for sync completion
         // The useEffect will handle polling and data refresh
       } else {
+        // Backend returned an error - show detailed error message
         const errorMsg = res.error || res.data?.message || 'Failed to start sync';
-        console.error('[Sync] Error response:', res);
+        console.error('[Sync] Error response:', {
+          status: res.status,
+          error: res.error,
+          data: res.data,
+          fullResponse: res
+        });
+        
+        // Provide more helpful error message based on status code
+        let userMessage = errorMsg;
+        if (res.status === 500) {
+          userMessage = 'Backend server error. The sync endpoint may not be fully implemented yet. Please check backend logs.';
+        } else if (res.status === 401) {
+          userMessage = 'Please connect your Amazon account first.';
+        } else if (res.status === 400) {
+          userMessage = errorMsg || 'Invalid sync request. Please try again.';
+        }
+        
         toast({ 
           title: 'Sync Failed', 
-          description: errorMsg,
-          variant: 'destructive'
+          description: userMessage,
+          variant: 'destructive',
+          duration: 6000
         });
       }
     } catch (e: any) {
