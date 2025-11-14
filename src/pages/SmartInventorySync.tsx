@@ -1058,12 +1058,22 @@ export default function SmartInventorySync() {
         
         // Handle 409 Conflict - Sync already in progress
         if (res.status === 409 || errorCode === 'sync_in_progress') {
-          // Try to get existingSyncId from response data (now included in error responses)
-          const existingSyncId = res.data?.existingSyncId || errorData?.existingSyncId || 'unknown';
+          // Try to get existingSyncId from response data (check multiple possible locations)
+          // Backend might return it at: res.data.existingSyncId, res.data.data.existingSyncId, or errorData.existingSyncId
+          const existingSyncId = 
+            res.data?.existingSyncId || 
+            (res.data as any)?.data?.existingSyncId ||
+            errorData?.existingSyncId || 
+            errorData?.data?.existingSyncId ||
+            (errorData as any)?.syncId || // Sometimes backend returns syncId instead
+            'unknown';
+          
           console.log('[Sync] 409 Conflict - Existing sync found:', {
             existingSyncId: existingSyncId,
             responseData: res.data,
-            errorData: errorData
+            errorData: errorData,
+            allKeys: res.data ? Object.keys(res.data) : [],
+            errorDataKeys: errorData ? Object.keys(errorData) : []
           });
           
           if (existingSyncId && existingSyncId !== 'unknown') {
@@ -1135,12 +1145,61 @@ export default function SmartInventorySync() {
               console.error('[Sync] Error refreshing data after 409:', e);
             }
           } else {
-            // If we can't get the syncId, still show the message but don't set status
+            // If we can't get the syncId, still show the message and try to check general sync status
+            console.warn('[Sync] 409 received but could not extract existingSyncId. Checking general sync status...');
             toast({ 
               title: 'Sync Already Running', 
               description: errorMsg || 'A sync is already in progress. Please wait for it to complete.',
               duration: 5000
             });
+            
+            // Try to check general sync status to see if we can find the active sync
+            try {
+              const statusRes = await api.getSyncStatus();
+              if (statusRes.ok && statusRes.data) {
+                const statusData = statusRes.data as any;
+                if (statusData.hasActiveSync && statusData.syncId) {
+                  console.log('[Sync] Found active sync from general status:', statusData.syncId);
+                  currentSyncIdRef.current = statusData.syncId;
+                  setSyncStatus({ 
+                    status: 'running', 
+                    syncId: statusData.syncId, 
+                    progress: 0 
+                  });
+                } else if (statusData.lastSync?.syncId) {
+                  // Use last sync ID if available
+                  console.log('[Sync] Using last sync ID from general status:', statusData.lastSync.syncId);
+                  currentSyncIdRef.current = statusData.lastSync.syncId;
+                  setSyncStatus({ 
+                    status: 'running', 
+                    syncId: statusData.lastSync.syncId, 
+                    progress: 0 
+                  });
+                } else {
+                  // Set status to running even without syncId - polling will handle it
+                  setSyncStatus({ 
+                    status: 'running', 
+                    syncId: 'unknown', 
+                    progress: 0 
+                  });
+                }
+              } else {
+                // Set status to running even without syncId - polling will handle it
+                setSyncStatus({ 
+                  status: 'running', 
+                  syncId: 'unknown', 
+                  progress: 0 
+                });
+              }
+            } catch (e) {
+              console.error('[Sync] Error checking general sync status after 409:', e);
+              // Set status to running even without syncId - polling will handle it
+              setSyncStatus({ 
+                status: 'running', 
+                syncId: 'unknown', 
+                progress: 0 
+              });
+            }
           }
           return; // Don't show error toast, just inform user
         }
