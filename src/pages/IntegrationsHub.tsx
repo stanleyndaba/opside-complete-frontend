@@ -137,7 +137,7 @@ export default function IntegrationsHub() {
     // Handle Amazon OAuth callback (per FRONTEND_AMAZON_OAUTH_SYNC_STATUS.md)
     if (amazonConnected === 'true') {
       toast({
-        title: '✅ Amazon Account Connected Successfully',
+        title: 'Amazon Account Connected Successfully',
         description: message || 'Amazon account connected successfully! Redirecting to sync status...',
       });
 
