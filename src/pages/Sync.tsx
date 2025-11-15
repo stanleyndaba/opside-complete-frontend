@@ -170,15 +170,32 @@ export default function Sync() {
           if (cancelled) return;
           console.error('Failed to load sync status:', e);
           const errorMessage = e?.message || 'Failed to load sync status';
-          setError(errorMessage);
           
-          // Show error toast
-          toast({
-            title: '⚠️ Error Loading Sync Status',
-            description: errorMessage || 'Failed to load sync status. Please refresh the page.',
-            variant: 'destructive',
-            duration: 5000,
-          });
+          // If sync not found, clear the syncId and state
+          if (errorMessage.includes('not found') || errorMessage.includes('Sync not found')) {
+            setSyncId(undefined);
+            setSyncData(null);
+            setStatus('idle');
+            setProgress(0);
+            setMessage('Sync not found. Please start a new sync.');
+            setError(null);
+            // Clear syncId from URL
+            navigate('/sync', { replace: true });
+            
+            toast({
+              title: '⚠️ Sync Not Found',
+              description: 'The sync you were viewing no longer exists. Please start a new sync.',
+              duration: 5000,
+            });
+          } else {
+            setError(errorMessage);
+            toast({
+              title: '⚠️ Error Loading Sync Status',
+              description: errorMessage || 'Failed to load sync status. Please refresh the page.',
+              variant: 'destructive',
+              duration: 5000,
+            });
+          }
         }
       }
     }
@@ -225,8 +242,21 @@ export default function Sync() {
             interval = null;
           }
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error('Polling error:', err);
+        // If sync not found during polling, stop polling and clear state
+        if (err?.message?.includes('not found') || err?.message?.includes('Sync not found')) {
+          if (interval) {
+            clearInterval(interval);
+            interval = null;
+          }
+          setSyncId(undefined);
+          setSyncData(null);
+          setStatus('idle');
+          setProgress(0);
+          setMessage('Sync not found. Please start a new sync.');
+          navigate('/sync', { replace: true });
+        }
       }
     }, 3000);
 
