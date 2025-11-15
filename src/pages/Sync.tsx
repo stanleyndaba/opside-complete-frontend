@@ -345,7 +345,36 @@ export default function Sync() {
           <CardContent>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <p className="text-sm text-muted-foreground">{message}</p>
+                <div className="flex-1">
+                  {syncData && status === 'completed' && (() => {
+                    const ordersProcessed = syncData.ordersProcessed || 0;
+                    const inventoryCount = syncData.inventoryCount || 0;
+                    const shipmentsCount = syncData.shipmentsCount || 0;
+                    const returnsCount = syncData.returnsCount || 0;
+                    const settlementsCount = syncData.settlementsCount || 0;
+                    const feesCount = syncData.feesCount || 0;
+                    const totalItemsSynced = 
+                      ordersProcessed +
+                      inventoryCount +
+                      shipmentsCount +
+                      returnsCount +
+                      settlementsCount +
+                      feesCount;
+                    
+                    // Use calculated total if available, otherwise fall back to message
+                    if (totalItemsSynced > 0) {
+                      return (
+                        <p className="text-sm text-muted-foreground">
+                          Sync completed successfully - {totalItemsSynced.toLocaleString()} items synced
+                        </p>
+                      );
+                    }
+                    return <p className="text-sm text-muted-foreground">{message}</p>;
+                  })()}
+                  {(!syncData || status !== 'completed') && (
+                    <p className="text-sm text-muted-foreground">{message}</p>
+                  )}
+                </div>
                 {getStatusBadge()}
               </div>
               
@@ -368,6 +397,106 @@ export default function Sync() {
                   </div>
                 )}
               </div>
+
+              {/* Sync Details Breakdown - Calculate total items synced */}
+              {syncData && status === 'completed' && (() => {
+                const ordersProcessed = syncData.ordersProcessed || 0;
+                const inventoryCount = syncData.inventoryCount || 0;
+                const shipmentsCount = syncData.shipmentsCount || 0;
+                const returnsCount = syncData.returnsCount || 0;
+                const settlementsCount = syncData.settlementsCount || 0;
+                const feesCount = syncData.feesCount || 0;
+                const claimsDetected = syncData.claimsDetected || 0;
+                
+                // Calculate total items synced (sum of all data types)
+                const totalItemsSynced = 
+                  ordersProcessed +
+                  inventoryCount +
+                  shipmentsCount +
+                  returnsCount +
+                  settlementsCount +
+                  feesCount;
+                
+                // Only show breakdown if we have data
+                if (totalItemsSynced === 0 && !inventoryCount && !shipmentsCount && !returnsCount && !settlementsCount) {
+                  return null;
+                }
+                
+                return (
+                  <div className="space-y-4 pt-4 border-t">
+                    {/* Total Items Synced */}
+                    <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md p-4">
+                      <p className="text-xs text-muted-foreground mb-1">Total Items Synced</p>
+                      <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                        {totalItemsSynced.toLocaleString()} items
+                      </p>
+                    </div>
+                    
+                    {/* Data Type Breakdown */}
+                    <div className="space-y-3">
+                      <h4 className="text-sm font-semibold text-muted-foreground">Data Type Breakdown</h4>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        {ordersProcessed !== undefined && syncData.totalOrders !== undefined && (
+                          <div className="bg-gray-50 dark:bg-gray-900/50 rounded-md p-3">
+                            <p className="text-xs text-muted-foreground mb-1">Orders</p>
+                            <p className="text-lg font-semibold">
+                              {ordersProcessed.toLocaleString()} / {syncData.totalOrders.toLocaleString()}
+                            </p>
+                          </div>
+                        )}
+                        {inventoryCount !== undefined && (
+                          <div className="bg-gray-50 dark:bg-gray-900/50 rounded-md p-3">
+                            <p className="text-xs text-muted-foreground mb-1">Inventory</p>
+                            <p className="text-lg font-semibold">
+                              {inventoryCount.toLocaleString()} items
+                            </p>
+                          </div>
+                        )}
+                        {shipmentsCount !== undefined && (
+                          <div className="bg-gray-50 dark:bg-gray-900/50 rounded-md p-3">
+                            <p className="text-xs text-muted-foreground mb-1">Shipments</p>
+                            <p className="text-lg font-semibold">
+                              {shipmentsCount.toLocaleString()} items
+                            </p>
+                          </div>
+                        )}
+                        {returnsCount !== undefined && (
+                          <div className="bg-gray-50 dark:bg-gray-900/50 rounded-md p-3">
+                            <p className="text-xs text-muted-foreground mb-1">Returns</p>
+                            <p className="text-lg font-semibold">
+                              {returnsCount.toLocaleString()} items
+                            </p>
+                          </div>
+                        )}
+                        {settlementsCount !== undefined && (
+                          <div className="bg-gray-50 dark:bg-gray-900/50 rounded-md p-3">
+                            <p className="text-xs text-muted-foreground mb-1">Settlements</p>
+                            <p className="text-lg font-semibold">
+                              {settlementsCount.toLocaleString()} items
+                            </p>
+                          </div>
+                        )}
+                        {feesCount !== undefined && (
+                          <div className="bg-gray-50 dark:bg-gray-900/50 rounded-md p-3">
+                            <p className="text-xs text-muted-foreground mb-1">Fees</p>
+                            <p className="text-lg font-semibold">
+                              {feesCount.toLocaleString()} items
+                            </p>
+                          </div>
+                        )}
+                        {claimsDetected !== undefined && claimsDetected > 0 && (
+                          <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-md p-3 border border-emerald-200 dark:border-emerald-800">
+                            <p className="text-xs text-muted-foreground mb-1">Claims Detected</p>
+                            <p className="text-lg font-semibold text-emerald-600 dark:text-emerald-400">
+                              {claimsDetected.toLocaleString()}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
 
               {error && (
                 <div className="p-3 rounded-md bg-red-50 border border-red-200 text-sm text-red-700">
