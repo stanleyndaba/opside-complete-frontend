@@ -101,6 +101,11 @@ export default function SyncStatus() {
         setIsUsingMockData(false);
         // Map API response to our interface (handle both camelCase and snake_case)
         const data = response.data as any;
+        
+        // Debug logging to see what we're getting from API
+        console.log('[SyncStatus] API Response:', data);
+        console.log('[SyncStatus] lastSync data:', data.lastSync);
+        
         const mappedData: SyncStatusData = {
           hasActiveSync: data.hasActiveSync || false,
           lastSync: data.lastSync ? {
@@ -120,6 +125,18 @@ export default function SyncStatus() {
             claimsDetected: data.lastSync.claimsDetected
           } : null
         };
+        
+        console.log('[SyncStatus] Mapped data:', mappedData);
+        console.log('[SyncStatus] Breakdown values:', {
+          ordersProcessed: mappedData.lastSync?.ordersProcessed,
+          inventoryCount: mappedData.lastSync?.inventoryCount,
+          shipmentsCount: mappedData.lastSync?.shipmentsCount,
+          returnsCount: mappedData.lastSync?.returnsCount,
+          settlementsCount: mappedData.lastSync?.settlementsCount,
+          feesCount: mappedData.lastSync?.feesCount,
+          claimsDetected: mappedData.lastSync?.claimsDetected
+        });
+        
         setSyncStatus(mappedData);
         setIsLoading(false);
       } else {
@@ -364,64 +381,67 @@ export default function SyncStatus() {
                         )}
                       </div>
                       
-                      {/* Data Type Breakdown */}
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                        {ordersProcessed > 0 && totalOrders > 0 && (
-                          <div>
-                            <p className="text-xs text-muted-foreground mb-1">Orders</p>
-                            <p className="text-lg font-semibold">
-                              {ordersProcessed.toLocaleString()} / {totalOrders.toLocaleString()}
-                            </p>
-                          </div>
-                        )}
-                        {inventoryCount > 0 && (
-                          <div>
-                            <p className="text-xs text-muted-foreground mb-1">Inventory</p>
-                            <p className="text-lg font-semibold">
-                              {inventoryCount.toLocaleString()} items
-                            </p>
-                          </div>
-                        )}
-                        {shipmentsCount > 0 && (
-                          <div>
-                            <p className="text-xs text-muted-foreground mb-1">Shipments</p>
-                            <p className="text-lg font-semibold">
-                              {shipmentsCount.toLocaleString()} items
-                            </p>
-                          </div>
-                        )}
-                        {returnsCount > 0 && (
-                          <div>
-                            <p className="text-xs text-muted-foreground mb-1">Returns</p>
-                            <p className="text-lg font-semibold">
-                              {returnsCount.toLocaleString()} items
-                            </p>
-                          </div>
-                        )}
-                        {settlementsCount > 0 && (
-                          <div>
-                            <p className="text-xs text-muted-foreground mb-1">Settlements</p>
-                            <p className="text-lg font-semibold">
-                              {settlementsCount.toLocaleString()} items
-                            </p>
-                          </div>
-                        )}
-                        {feesCount > 0 && (
-                          <div>
-                            <p className="text-xs text-muted-foreground mb-1">Fees</p>
-                            <p className="text-lg font-semibold">
-                              {feesCount.toLocaleString()} items
-                            </p>
-                          </div>
-                        )}
-                        {claimsDetected > 0 && (
-                          <div>
-                            <p className="text-xs text-muted-foreground mb-1">Claims Detected</p>
-                            <p className="text-lg font-semibold text-emerald-600 dark:text-emerald-400">
-                              {claimsDetected.toLocaleString()}
-                            </p>
-                          </div>
-                        )}
+                      {/* Data Type Breakdown - Always show all fields */}
+                      <div className="space-y-3">
+                        <h4 className="text-sm font-semibold text-muted-foreground mb-3">Data Type Breakdown</h4>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                          {(ordersProcessed !== undefined || totalOrders !== undefined) && (
+                            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-md p-3">
+                              <p className="text-xs text-muted-foreground mb-1">Orders</p>
+                              <p className="text-lg font-semibold">
+                                {ordersProcessed.toLocaleString()} / {totalOrders.toLocaleString()}
+                              </p>
+                            </div>
+                          )}
+                          {inventoryCount !== undefined && (
+                            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-md p-3">
+                              <p className="text-xs text-muted-foreground mb-1">Inventory</p>
+                              <p className="text-lg font-semibold">
+                                {inventoryCount.toLocaleString()} items
+                              </p>
+                            </div>
+                          )}
+                          {shipmentsCount !== undefined && (
+                            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-md p-3">
+                              <p className="text-xs text-muted-foreground mb-1">Shipments</p>
+                              <p className="text-lg font-semibold">
+                                {shipmentsCount.toLocaleString()} items
+                              </p>
+                            </div>
+                          )}
+                          {returnsCount !== undefined && (
+                            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-md p-3">
+                              <p className="text-xs text-muted-foreground mb-1">Returns</p>
+                              <p className="text-lg font-semibold">
+                                {returnsCount.toLocaleString()} items
+                              </p>
+                            </div>
+                          )}
+                          {settlementsCount !== undefined && (
+                            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-md p-3">
+                              <p className="text-xs text-muted-foreground mb-1">Settlements</p>
+                              <p className="text-lg font-semibold">
+                                {settlementsCount.toLocaleString()} items
+                              </p>
+                            </div>
+                          )}
+                          {feesCount !== undefined && (
+                            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-md p-3">
+                              <p className="text-xs text-muted-foreground mb-1">Fees</p>
+                              <p className="text-lg font-semibold">
+                                {feesCount.toLocaleString()} items
+                              </p>
+                            </div>
+                          )}
+                          {claimsDetected !== undefined && (
+                            <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-md p-3 border border-emerald-200 dark:border-emerald-800">
+                              <p className="text-xs text-muted-foreground mb-1">Claims Detected</p>
+                              <p className="text-lg font-semibold text-emerald-600 dark:text-emerald-400">
+                                {claimsDetected.toLocaleString()}
+                              </p>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   );
