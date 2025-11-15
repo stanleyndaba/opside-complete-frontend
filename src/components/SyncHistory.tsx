@@ -11,6 +11,12 @@ interface SyncHistoryItem {
   startedAt: string;
   completedAt?: string | null;
   ordersProcessed?: number;
+  totalOrders?: number;
+  inventoryCount?: number;      // ⭐ NEW
+  shipmentsCount?: number;       // ⭐ NEW
+  returnsCount?: number;         // ⭐ NEW
+  settlementsCount?: number;     // ⭐ NEW
+  feesCount?: number;            // ⭐ NEW
   claimsDetected?: number;
   duration?: number;
   error?: string | null;
@@ -172,11 +178,62 @@ export function SyncHistory() {
                       {sync.duration !== undefined && (
                         <div>Duration: <span className="text-gray-300">{formatDuration(sync.duration)}</span></div>
                       )}
-                      {sync.ordersProcessed !== undefined && (
-                        <div>Orders processed: <span className="text-gray-300">{sync.ordersProcessed.toLocaleString()}</span></div>
-                      )}
-                      {sync.claimsDetected !== undefined && (
-                        <div className="text-emerald-400 font-medium">
+                      
+                      {/* Calculate total items synced */}
+                      {(() => {
+                        const ordersProcessed = sync.ordersProcessed || 0;
+                        const inventoryCount = sync.inventoryCount || 0;
+                        const shipmentsCount = sync.shipmentsCount || 0;
+                        const returnsCount = sync.returnsCount || 0;
+                        const settlementsCount = sync.settlementsCount || 0;
+                        const feesCount = sync.feesCount || 0;
+                        const totalItemsSynced = 
+                          ordersProcessed +
+                          inventoryCount +
+                          shipmentsCount +
+                          returnsCount +
+                          settlementsCount +
+                          feesCount;
+                        
+                        return (
+                          <>
+                            {totalItemsSynced > 0 && (
+                              <div className="mt-2 pt-2 border-t border-white/10">
+                                <div className="text-blue-400 font-medium mb-1">
+                                  Total: {totalItemsSynced.toLocaleString()} items synced
+                                </div>
+                                <div className="grid grid-cols-2 gap-2 mt-2">
+                                  {sync.ordersProcessed !== undefined && sync.totalOrders !== undefined && (
+                                    <div>Orders: <span className="text-gray-300">{sync.ordersProcessed.toLocaleString()} / {sync.totalOrders.toLocaleString()}</span></div>
+                                  )}
+                                  {inventoryCount > 0 && (
+                                    <div>Inventory: <span className="text-gray-300">{inventoryCount.toLocaleString()}</span></div>
+                                  )}
+                                  {shipmentsCount > 0 && (
+                                    <div>Shipments: <span className="text-gray-300">{shipmentsCount.toLocaleString()}</span></div>
+                                  )}
+                                  {returnsCount > 0 && (
+                                    <div>Returns: <span className="text-gray-300">{returnsCount.toLocaleString()}</span></div>
+                                  )}
+                                  {settlementsCount > 0 && (
+                                    <div>Settlements: <span className="text-gray-300">{settlementsCount.toLocaleString()}</span></div>
+                                  )}
+                                  {feesCount > 0 && (
+                                    <div>Fees: <span className="text-gray-300">{feesCount.toLocaleString()}</span></div>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+                            {/* Fallback to old format if new fields not available */}
+                            {totalItemsSynced === 0 && sync.ordersProcessed !== undefined && (
+                              <div>Orders processed: <span className="text-gray-300">{sync.ordersProcessed.toLocaleString()}</span></div>
+                            )}
+                          </>
+                        );
+                      })()}
+                      
+                      {sync.claimsDetected !== undefined && sync.claimsDetected > 0 && (
+                        <div className="text-emerald-400 font-medium mt-1">
                           Claims detected: {sync.claimsDetected.toLocaleString()}
                         </div>
                       )}

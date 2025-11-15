@@ -37,6 +37,12 @@ export interface SyncHistoryResponse {
     startedAt: string;
     completedAt?: string | null;
     ordersProcessed?: number;
+    totalOrders?: number;
+    inventoryCount?: number;      // ⭐ NEW
+    shipmentsCount?: number;       // ⭐ NEW
+    returnsCount?: number;         // ⭐ NEW
+    settlementsCount?: number;     // ⭐ NEW
+    feesCount?: number;            // ⭐ NEW
     claimsDetected?: number;
     duration?: number;
     error?: string | null;
