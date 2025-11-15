@@ -123,13 +123,55 @@ export default function IntegrationsHub() {
   // Handle OAuth callback query parameters
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
+    const amazonConnected = searchParams.get('amazon_connected');
     const gmailConnected = searchParams.get('gmail_connected');
     const outlookConnected = searchParams.get('outlook_connected');
     const gdriveConnected = searchParams.get('gdrive_connected');
     const dropboxConnected = searchParams.get('dropbox_connected');
     const email = searchParams.get('email');
     const error = searchParams.get('error');
+    const message = searchParams.get('message');
+    const amazonError = searchParams.get('amazon_error');
     const success = searchParams.get('success');
+
+    // Handle Amazon OAuth callback (per FRONTEND_AMAZON_OAUTH_SYNC_STATUS.md)
+    if (amazonConnected === 'true') {
+      toast({
+        title: '✅ Amazon Account Connected Successfully',
+        description: message || 'Amazon account connected successfully! Redirecting to sync status...',
+      });
+
+      // Refresh integration status to update UI
+      api.getIntegrationsStatus().then(res => {
+        if (res.ok && res.data) {
+          setStatus(res.data);
+        }
+      });
+
+      // Clean up URL by removing query parameters after processing
+      const cleanUrl = location.pathname;
+      navigate(cleanUrl, { replace: true });
+
+      // Auto-redirect to sync status page after 2-3 seconds (per documentation)
+      setTimeout(() => {
+        navigate('/sync-status');
+      }, 2500);
+      return; // Exit early to avoid processing other providers
+    }
+
+    // Handle Amazon OAuth error
+    if (amazonError === 'true' || (error && amazonConnected === null && !gmailConnected && !outlookConnected && !gdriveConnected && !dropboxConnected)) {
+      toast({
+        title: '❌ Amazon Connection Failed',
+        description: error ? decodeURIComponent(error) : (message || 'Failed to connect Amazon account. Please try again.'),
+        variant: 'destructive',
+      });
+
+      // Clean up URL
+      const cleanUrl = location.pathname;
+      navigate(cleanUrl, { replace: true });
+      return; // Exit early
+    }
 
     // Show success notification if provider was just connected
     if (gmailConnected === 'true' || outlookConnected === 'true' || gdriveConnected === 'true' || dropboxConnected === 'true') {
@@ -163,8 +205,8 @@ export default function IntegrationsHub() {
       navigate(cleanUrl, { replace: true });
     }
 
-    // Show error notification if OAuth failed
-    if (error) {
+    // Show error notification if OAuth failed (for non-Amazon providers)
+    if (error && !amazonError && amazonConnected !== 'true') {
       toast({
         title: 'Connection Failed',
         description: decodeURIComponent(error),
@@ -177,7 +219,7 @@ export default function IntegrationsHub() {
     }
 
     // Show generic success message if success parameter is present
-    if (success && !gmailConnected && !outlookConnected && !gdriveConnected && !dropboxConnected) {
+    if (success && !amazonConnected && !gmailConnected && !outlookConnected && !gdriveConnected && !dropboxConnected) {
       toast({
         title: 'Connection Successful',
         description: 'Your account has been connected successfully.',
