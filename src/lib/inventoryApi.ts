@@ -26,7 +26,22 @@ export interface SyncStatusResponse {
 
 export interface ActiveSyncStatusResponse {
   hasActiveSync: boolean;
-  lastSync: SyncStatusResponse | null;
+  lastSync: {
+    syncId: string;
+    status: string;
+    progress?: number;
+    message?: string;
+    startedAt?: string;
+    completedAt?: string;
+    ordersProcessed?: number;
+    totalOrders?: number;
+    inventoryCount?: number;
+    shipmentsCount?: number;
+    returnsCount?: number;
+    settlementsCount?: number;
+    feesCount?: number;
+    claimsDetected?: number;
+  } | null;
 }
 
 export interface SyncHistoryResponse {

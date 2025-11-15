@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { RefreshCw, CheckCircle2, XCircle, Loader2, AlertCircle, Clock } from 'lucide-react';
-import { api } from '@/lib/api';
+import { getActiveSyncStatus } from '@/lib/inventoryApi';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
 import { cn } from '@/lib/utils';
@@ -95,57 +95,50 @@ export default function SyncStatus() {
         return;
       }
 
-      const response = await api.getSyncStatus();
+      const data = await getActiveSyncStatus();
       
-      if (response.ok && response.data) {
-        setIsUsingMockData(false);
-        // Map API response to our interface (handle both camelCase and snake_case)
-        const data = response.data as any;
-        
-        // Debug logging to see what we're getting from API
-        console.log('[SyncStatus] API Response:', data);
-        console.log('[SyncStatus] lastSync data:', data.lastSync);
-        
-        const mappedData: SyncStatusData = {
-          hasActiveSync: data.hasActiveSync || false,
-          lastSync: data.lastSync ? {
-            id: data.lastSync.syncId || data.lastSync.id || '',
-            status: data.lastSync.status || 'idle',
-            started_at: data.lastSync.startedAt || data.lastSync.started_at || '',
-            completed_at: data.lastSync.completedAt || data.lastSync.completed_at || null,
-            progress: data.lastSync.progress || 0,
-            message: data.lastSync.message,
-            ordersProcessed: data.lastSync.ordersProcessed,
-            totalOrders: data.lastSync.totalOrders,
-            inventoryCount: data.lastSync.inventoryCount,      // ⭐ NEW
-            shipmentsCount: data.lastSync.shipmentsCount,       // ⭐ NEW
-            returnsCount: data.lastSync.returnsCount,           // ⭐ NEW
-            settlementsCount: data.lastSync.settlementsCount,   // ⭐ NEW
-            feesCount: data.lastSync.feesCount,                // ⭐ NEW
-            claimsDetected: data.lastSync.claimsDetected
-          } : null
-        };
-        
-        console.log('[SyncStatus] Mapped data:', mappedData);
-        console.log('[SyncStatus] Breakdown values:', {
-          ordersProcessed: mappedData.lastSync?.ordersProcessed,
-          inventoryCount: mappedData.lastSync?.inventoryCount,
-          shipmentsCount: mappedData.lastSync?.shipmentsCount,
-          returnsCount: mappedData.lastSync?.returnsCount,
-          settlementsCount: mappedData.lastSync?.settlementsCount,
-          feesCount: mappedData.lastSync?.feesCount,
-          claimsDetected: mappedData.lastSync?.claimsDetected
-        });
-        
-        setSyncStatus(mappedData);
-        setIsLoading(false);
-      } else {
-        // Backend unavailable, use mock data
-        console.warn('[SyncStatus] Backend unavailable, using mock data');
-        setIsUsingMockData(true);
-        setSyncStatus(MOCK_SYNC_STATUS as SyncStatusData);
-        setIsLoading(false);
-      }
+      setIsUsingMockData(false);
+      
+      // Debug logging to see what we're getting from API
+      console.log('[SyncStatus] API Response:', data);
+      console.log('[SyncStatus] lastSync data:', data.lastSync);
+      
+      const mappedData: SyncStatusData = {
+        hasActiveSync: data.hasActiveSync || false,
+        lastSync: data.lastSync ? {
+          id: data.lastSync.syncId || (data.lastSync as any).id || '',
+          status: (data.lastSync.status === 'completed' ? 'completed' : 
+                  data.lastSync.status === 'running' ? 'running' :
+                  data.lastSync.status === 'failed' ? 'failed' :
+                  data.lastSync.status === 'cancelled' ? 'cancelled' : 'idle') as any,
+          started_at: data.lastSync.startedAt || (data.lastSync as any).started_at || '',
+          completed_at: data.lastSync.completedAt || (data.lastSync as any).completed_at || null,
+          progress: data.lastSync.progress || 0,
+          message: data.lastSync.message,
+          ordersProcessed: data.lastSync.ordersProcessed,
+          totalOrders: data.lastSync.totalOrders,
+          inventoryCount: data.lastSync.inventoryCount,
+          shipmentsCount: data.lastSync.shipmentsCount,
+          returnsCount: data.lastSync.returnsCount,
+          settlementsCount: data.lastSync.settlementsCount,
+          feesCount: data.lastSync.feesCount,
+          claimsDetected: data.lastSync.claimsDetected
+        } : null
+      };
+      
+      console.log('[SyncStatus] Mapped data:', mappedData);
+      console.log('[SyncStatus] Breakdown values:', {
+        ordersProcessed: mappedData.lastSync?.ordersProcessed,
+        inventoryCount: mappedData.lastSync?.inventoryCount,
+        shipmentsCount: mappedData.lastSync?.shipmentsCount,
+        returnsCount: mappedData.lastSync?.returnsCount,
+        settlementsCount: mappedData.lastSync?.settlementsCount,
+        feesCount: mappedData.lastSync?.feesCount,
+        claimsDetected: mappedData.lastSync?.claimsDetected
+      });
+      
+      setSyncStatus(mappedData);
+      setIsLoading(false);
     } catch (error) {
       console.error('[SyncStatus] Failed to get sync status:', error);
       // Use mock data on error
