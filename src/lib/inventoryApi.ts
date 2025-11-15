@@ -12,9 +12,15 @@ export interface SyncStatusResponse {
   message: string;
   startedAt: string;
   completedAt?: string | null;
+  estimatedCompletion?: string;
   ordersProcessed?: number;
   totalOrders?: number;
-  claimsDetected?: number;
+  inventoryCount?: number;      // ⭐ NEW - Inventory items synced
+  shipmentsCount?: number;       // ⭐ NEW - Shipments synced
+  returnsCount?: number;         // ⭐ NEW - Returns synced
+  settlementsCount?: number;     // ⭐ NEW - Settlements synced
+  feesCount?: number;            // ⭐ NEW - Fees synced
+  claimsDetected?: number;       // ⭐ NEW - Claims detected
   error?: string | null;
 }
 

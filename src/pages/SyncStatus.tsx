@@ -19,10 +19,15 @@ const MOCK_SYNC_STATUS = {
     started_at: new Date(Date.now() - 10 * 60 * 1000).toISOString(), // 10 min ago
     completed_at: new Date(Date.now() - 8 * 60 * 1000).toISOString(), // 8 min ago
     progress: 100,
-    message: 'Sync completed successfully',
-    ordersProcessed: 1247,
-    totalOrders: 2500,
-    claimsDetected: 5
+    message: 'Sync completed successfully - 321 items synced',
+    ordersProcessed: 75,
+    totalOrders: 75,
+    inventoryCount: 75,        // ⭐ NEW
+    shipmentsCount: 52,       // ⭐ NEW
+    returnsCount: 37,         // ⭐ NEW
+    settlementsCount: 45,     // ⭐ NEW
+    feesCount: 0,            // ⭐ NEW
+    claimsDetected: 37       // ⭐ UPDATED
   }
 };
 
@@ -34,9 +39,14 @@ const MOCK_ACTIVE_SYNC = {
     started_at: new Date(Date.now() - 2 * 60 * 1000).toISOString(), // 2 min ago
     completed_at: null,
     progress: 45,
-    message: 'Processing orders... 1,247 of 2,500 orders processed',
-    ordersProcessed: 1247,
-    totalOrders: 2500,
+    message: 'Processing orders... 50 of 75 orders processed',
+    ordersProcessed: 50,
+    totalOrders: 75,
+    inventoryCount: 40,       // ⭐ NEW
+    shipmentsCount: 30,       // ⭐ NEW
+    returnsCount: 20,         // ⭐ NEW
+    settlementsCount: 25,     // ⭐ NEW
+    feesCount: 0,            // ⭐ NEW
     claimsDetected: 0
   }
 };
@@ -57,6 +67,11 @@ interface SyncStatusData {
     message?: string;
     ordersProcessed?: number;
     totalOrders?: number;
+    inventoryCount?: number;      // ⭐ NEW
+    shipmentsCount?: number;       // ⭐ NEW
+    returnsCount?: number;         // ⭐ NEW
+    settlementsCount?: number;     // ⭐ NEW
+    feesCount?: number;            // ⭐ NEW
     claimsDetected?: number;
   } | null;
 }
@@ -84,7 +99,28 @@ export default function SyncStatus() {
       
       if (response.ok && response.data) {
         setIsUsingMockData(false);
-        setSyncStatus(response.data as SyncStatusData);
+        // Map API response to our interface (handle both camelCase and snake_case)
+        const data = response.data as any;
+        const mappedData: SyncStatusData = {
+          hasActiveSync: data.hasActiveSync || false,
+          lastSync: data.lastSync ? {
+            id: data.lastSync.syncId || data.lastSync.id || '',
+            status: data.lastSync.status || 'idle',
+            started_at: data.lastSync.startedAt || data.lastSync.started_at || '',
+            completed_at: data.lastSync.completedAt || data.lastSync.completed_at || null,
+            progress: data.lastSync.progress || 0,
+            message: data.lastSync.message,
+            ordersProcessed: data.lastSync.ordersProcessed,
+            totalOrders: data.lastSync.totalOrders,
+            inventoryCount: data.lastSync.inventoryCount,      // ⭐ NEW
+            shipmentsCount: data.lastSync.shipmentsCount,       // ⭐ NEW
+            returnsCount: data.lastSync.returnsCount,           // ⭐ NEW
+            settlementsCount: data.lastSync.settlementsCount,   // ⭐ NEW
+            feesCount: data.lastSync.feesCount,                // ⭐ NEW
+            claimsDetected: data.lastSync.claimsDetected
+          } : null
+        };
+        setSyncStatus(mappedData);
         setIsLoading(false);
       } else {
         // Backend unavailable, use mock data
@@ -295,25 +331,101 @@ export default function SyncStatus() {
                   </div>
                 )}
 
-                {/* Sync Details */}
-                <div className="grid grid-cols-2 gap-4 pt-4 border-t">
-                  {lastSync.ordersProcessed !== undefined && lastSync.totalOrders !== undefined && (
-                    <div>
-                      <p className="text-xs text-muted-foreground mb-1">Orders Processed</p>
-                      <p className="text-lg font-semibold">
-                        {lastSync.ordersProcessed.toLocaleString()} / {lastSync.totalOrders.toLocaleString()}
-                      </p>
+                {/* Sync Details - Calculate total items synced */}
+                {(() => {
+                  const ordersProcessed = lastSync.ordersProcessed || 0;
+                  const totalOrders = lastSync.totalOrders || 0;
+                  const inventoryCount = lastSync.inventoryCount || 0;
+                  const shipmentsCount = lastSync.shipmentsCount || 0;
+                  const returnsCount = lastSync.returnsCount || 0;
+                  const settlementsCount = lastSync.settlementsCount || 0;
+                  const feesCount = lastSync.feesCount || 0;
+                  const claimsDetected = lastSync.claimsDetected || 0;
+                  
+                  // Calculate total items synced (sum of all data types)
+                  const totalItemsSynced = 
+                    ordersProcessed +
+                    inventoryCount +
+                    shipmentsCount +
+                    returnsCount +
+                    settlementsCount +
+                    feesCount;
+                  
+                  return (
+                    <div className="space-y-4 pt-4 border-t">
+                      {/* Total Items Synced */}
+                      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md p-4">
+                        <p className="text-xs text-muted-foreground mb-1">Total Items Synced</p>
+                        <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                          {totalItemsSynced.toLocaleString()} items
+                        </p>
+                        {lastSync.message && lastSync.message.includes('items synced') && (
+                          <p className="text-xs text-muted-foreground mt-1">{lastSync.message}</p>
+                        )}
+                      </div>
+                      
+                      {/* Data Type Breakdown */}
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        {ordersProcessed > 0 && totalOrders > 0 && (
+                          <div>
+                            <p className="text-xs text-muted-foreground mb-1">Orders</p>
+                            <p className="text-lg font-semibold">
+                              {ordersProcessed.toLocaleString()} / {totalOrders.toLocaleString()}
+                            </p>
+                          </div>
+                        )}
+                        {inventoryCount > 0 && (
+                          <div>
+                            <p className="text-xs text-muted-foreground mb-1">Inventory</p>
+                            <p className="text-lg font-semibold">
+                              {inventoryCount.toLocaleString()} items
+                            </p>
+                          </div>
+                        )}
+                        {shipmentsCount > 0 && (
+                          <div>
+                            <p className="text-xs text-muted-foreground mb-1">Shipments</p>
+                            <p className="text-lg font-semibold">
+                              {shipmentsCount.toLocaleString()} items
+                            </p>
+                          </div>
+                        )}
+                        {returnsCount > 0 && (
+                          <div>
+                            <p className="text-xs text-muted-foreground mb-1">Returns</p>
+                            <p className="text-lg font-semibold">
+                              {returnsCount.toLocaleString()} items
+                            </p>
+                          </div>
+                        )}
+                        {settlementsCount > 0 && (
+                          <div>
+                            <p className="text-xs text-muted-foreground mb-1">Settlements</p>
+                            <p className="text-lg font-semibold">
+                              {settlementsCount.toLocaleString()} items
+                            </p>
+                          </div>
+                        )}
+                        {feesCount > 0 && (
+                          <div>
+                            <p className="text-xs text-muted-foreground mb-1">Fees</p>
+                            <p className="text-lg font-semibold">
+                              {feesCount.toLocaleString()} items
+                            </p>
+                          </div>
+                        )}
+                        {claimsDetected > 0 && (
+                          <div>
+                            <p className="text-xs text-muted-foreground mb-1">Claims Detected</p>
+                            <p className="text-lg font-semibold text-emerald-600 dark:text-emerald-400">
+                              {claimsDetected.toLocaleString()}
+                            </p>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  )}
-                  {lastSync.claimsDetected !== undefined && (
-                    <div>
-                      <p className="text-xs text-muted-foreground mb-1">Claims Detected</p>
-                      <p className="text-lg font-semibold text-emerald-600 dark:text-emerald-400">
-                        {lastSync.claimsDetected.toLocaleString()}
-                      </p>
-                    </div>
-                  )}
-                </div>
+                  );
+                })()}
 
                 {/* Message */}
                 {lastSync.message && lastSync.status !== 'running' && lastSync.status !== 'in_progress' && (
