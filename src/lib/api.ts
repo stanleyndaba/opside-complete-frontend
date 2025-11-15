@@ -60,8 +60,8 @@ function buildApiUrl(path: string): string {
   const isDev = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
   
   if (isDev) {
-    // In development, you can still use env var, but also allow localhost:3000 fallback
-    const devBackend = 'http://localhost:3000';
+    // In development, use localhost:3001 (backend port) or env var override
+    const devBackend = envBase && envBase.includes('localhost') ? envBase : 'http://localhost:3001';
     console.log(`[API] Development mode - using: ${devBackend}`);
     return devBackend + normalizedPath;
   }
@@ -309,6 +309,17 @@ export const api = {
 
   // Auth endpoints
   getMe: () => requestJson<any>('/api/auth/me'),
+  getUserProfile: () => requestJson<{
+    success: boolean;
+    user: {
+      id: string;
+      email?: string;
+      amazon_seller_id?: string;
+      seller_id?: string;
+      company_name?: string;
+      created_at: string;
+    };
+  }>('/api/auth/me'),
   logout: () => requestJson<{ ok: true }>('/api/auth/logout', { method: 'POST' }),
   postLoginStripe: () => requestJson<any>('/api/auth/post-login/stripe', { method: 'POST' }),
 
@@ -1037,6 +1048,265 @@ export const api = {
     return requestJson<any>(`/api/sync/status${query ? `?${query}` : ''}`);
   },
   getSyncActivity: () => requestJson<any>('/api/sync/activity'),
+
+  // Agent 3: Claim Detection endpoints
+  runClaimDetection: (syncId?: string) => requestJson<{
+    success: boolean;
+    detectionId?: string;
+    detection_id?: string;
+    message?: string;
+  }>('/api/detections/run', {
+    method: 'POST',
+    body: syncId ? JSON.stringify({ syncId }) : undefined,
+  }),
+  getDetectionStatus: (detectionId: string) => requestJson<{
+    success: boolean;
+    status: 'in_progress' | 'complete' | 'failed';
+    detection_id: string;
+    total_detected?: number;
+    summary?: any;
+  }>(`/api/detections/status/${encodeURIComponent(detectionId)}`),
+
+  // Agent 6: Evidence Matching endpoints
+  runEvidenceMatching: (userId?: string) => requestJson<{
+    success: boolean;
+    jobId?: string;
+    matches?: number;
+    message?: string;
+  }>('/api/evidence/matching/run', {
+    method: 'POST',
+    body: userId ? JSON.stringify({ userId }) : undefined,
+  }),
+  getMatchingResults: (params?: { userId?: string; claimId?: string; limit?: number }) => {
+    const queryParams = new URLSearchParams();
+    if (params?.userId) queryParams.append('userId', params.userId);
+    if (params?.claimId) queryParams.append('claimId', params.claimId);
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    const query = queryParams.toString();
+    return requestJson<{
+      success: boolean;
+      results: Array<{
+        id: string;
+        claim_id: string;
+        document_id: string;
+        confidence_score: number;
+        match_type: string;
+        action_taken: string;
+      }>;
+      total: number;
+    }>(`/api/evidence/matching/results${query ? `?${query}` : ''}`);
+  },
+  getMatchingStatus: (jobId: string) => requestJson<{
+    success: boolean;
+    status: 'pending' | 'processing' | 'completed' | 'failed';
+    matches?: number;
+    autoSubmitted?: number;
+    smartPromptsCreated?: number;
+  }>(`/api/evidence/matching/status/${encodeURIComponent(jobId)}`),
+
+  // Agent 7: Refund Filing endpoints (dispute cases)
+  getDisputeCases: (params?: { userId?: string; status?: string; limit?: number }) => {
+    const queryParams = new URLSearchParams();
+    if (params?.userId) queryParams.append('userId', params.userId);
+    if (params?.status) queryParams.append('status', params.status);
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    const query = queryParams.toString();
+    return requestJson<{
+      success: boolean;
+      cases: Array<{
+        id: string;
+        case_number: string;
+        claim_id: string;
+        status: string;
+        amount: number;
+        currency: string;
+        created_at: string;
+      }>;
+      total: number;
+    }>(`/api/disputes${query ? `?${query}` : ''}`);
+  },
+  getDisputeCase: (caseId: string) => requestJson<{
+    success: boolean;
+    case: {
+      id: string;
+      case_number: string;
+      claim_id: string;
+      status: string;
+      amount: number;
+      currency: string;
+      created_at: string;
+      updated_at: string;
+    };
+  }>(`/api/disputes/${encodeURIComponent(caseId)}`),
+
+  // Agent 8: Recoveries endpoints (additional methods)
+  getRecoveryRecords: (params?: { userId?: string; status?: string; limit?: number }) => {
+    const queryParams = new URLSearchParams();
+    if (params?.userId) queryParams.append('userId', params.userId);
+    if (params?.status) queryParams.append('status', params.status);
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    const query = queryParams.toString();
+    return requestJson<{
+      success: boolean;
+      records: Array<{
+        id: string;
+        case_id: string;
+        recovery_status: string;
+        amount: number;
+        currency: string;
+        detected_at: string;
+      }>;
+      total: number;
+    }>(`/api/recoveries/records${query ? `?${query}` : ''}`);
+  },
+  getReconciliationStatus: (recoveryId: string) => requestJson<{
+    success: boolean;
+    status: 'pending' | 'reconciled' | 'discrepancy';
+    amount: number;
+    expected_amount: number;
+    discrepancy?: number;
+  }>(`/api/recoveries/${encodeURIComponent(recoveryId)}/reconciliation`),
+
+  // Agent 9: Billing endpoints
+  getBillingTransactions: (params?: { userId?: string; status?: string; limit?: number }) => {
+    const queryParams = new URLSearchParams();
+    if (params?.userId) queryParams.append('userId', params.userId);
+    if (params?.status) queryParams.append('status', params.status);
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    const query = queryParams.toString();
+    return requestJson<{
+      success: boolean;
+      transactions: Array<{
+        id: string;
+        recovery_id: string;
+        amount: number;
+        platform_fee: number;
+        seller_payout: number;
+        status: string;
+        created_at: string;
+      }>;
+      total: number;
+    }>(`/api/billing/transactions${query ? `?${query}` : ''}`);
+  },
+  getBillingInvoices: (params?: { userId?: string; limit?: number }) => {
+    const queryParams = new URLSearchParams();
+    if (params?.userId) queryParams.append('userId', params.userId);
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    const query = queryParams.toString();
+    return requestJson<{
+      success: boolean;
+      invoices: Array<{
+        id: string;
+        period_start: string;
+        period_end: string;
+        total_amount: number;
+        platform_fee: number;
+        status: string;
+      }>;
+      total: number;
+    }>(`/api/billing/invoices${query ? `?${query}` : ''}`);
+  },
+  getBillingStatus: (userId?: string) => {
+    const query = userId ? `?userId=${encodeURIComponent(userId)}` : '';
+    return requestJson<{
+      success: boolean;
+      status: {
+        total_recovered: number;
+        total_fees: number;
+        pending_billing: number;
+        last_billing_date?: string;
+      };
+    }>(`/api/billing/status${query}`);
+  },
+
+  // Agent 10: Notifications endpoints
+  getNotifications: (params?: { userId?: string; unreadOnly?: boolean; limit?: number }) => {
+    const queryParams = new URLSearchParams();
+    if (params?.userId) queryParams.append('userId', params.userId);
+    if (params?.unreadOnly) queryParams.append('unreadOnly', 'true');
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    const query = queryParams.toString();
+    return requestJson<{
+      success: boolean;
+      notifications: Array<{
+        id: string;
+        type: string;
+        title: string;
+        message: string;
+        read: boolean;
+        created_at: string;
+      }>;
+      total: number;
+    }>(`/api/notifications${query ? `?${query}` : ''}`);
+  },
+  markNotificationRead: (notificationId: string) => requestJson<{
+    success: boolean;
+    message: string;
+  }>(`/api/notifications/${encodeURIComponent(notificationId)}/read`, { method: 'POST' }),
+  getUnreadCount: (userId?: string) => {
+    const query = userId ? `?userId=${encodeURIComponent(userId)}` : '';
+    return requestJson<{
+      success: boolean;
+      count: number;
+    }>(`/api/notifications/unread${query}`);
+  },
+
+  // Agent 11: Learning endpoints
+  getLearningMetrics: (params?: { userId?: string; window?: '7d' | '30d' | '90d' }) => {
+    const queryParams = new URLSearchParams();
+    if (params?.userId) queryParams.append('userId', params.userId);
+    if (params?.window) queryParams.append('window', params.window);
+    const query = queryParams.toString();
+    return requestJson<{
+      success: boolean;
+      metrics: {
+        total_events: number;
+        success_rate: number;
+        improvement_rate: number;
+        by_agent: Record<string, {
+          events: number;
+          success_rate: number;
+        }>;
+      };
+    }>(`/api/learning/metrics${query ? `?${query}` : ''}`);
+  },
+  getLearningInsights: (params?: { userId?: string; limit?: number }) => {
+    const queryParams = new URLSearchParams();
+    if (params?.userId) queryParams.append('userId', params.userId);
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    const query = queryParams.toString();
+    return requestJson<{
+      success: boolean;
+      insights: Array<{
+        id: string;
+        type: string;
+        title: string;
+        description: string;
+        impact: string;
+        created_at: string;
+      }>;
+      total: number;
+    }>(`/api/learning/insights${query ? `?${query}` : ''}`);
+  },
+  getThresholdOptimizations: (params?: { userId?: string; agent?: string }) => {
+    const queryParams = new URLSearchParams();
+    if (params?.userId) queryParams.append('userId', params.userId);
+    if (params?.agent) queryParams.append('agent', params.agent);
+    const query = queryParams.toString();
+    return requestJson<{
+      success: boolean;
+      optimizations: Array<{
+        id: string;
+        agent: string;
+        threshold_type: string;
+        old_value: number;
+        new_value: number;
+        improvement: number;
+        created_at: string;
+      }>;
+      total: number;
+    }>(`/api/learning/thresholds${query ? `?${query}` : ''}`);
+  },
 
   // Phase 2: Orders, Shipments, Returns, Settlements endpoints
   getOrders: (params?: {

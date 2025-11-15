@@ -47,6 +47,7 @@ const RevenueModel = lazy(() => import("./pages/RevenueModel"));
 const Admin = lazy(() => import("./pages/Admin"));
 const AdminUsersAndIntegrations = lazy(() => import("./pages/AdminUsersAndIntegrations"));
 const AmazonAuthTest = lazy(() => import("./pages/AmazonAuthTest"));
+const Agent1Test = lazy(() => import("./pages/Agent1Test"));
 const Terms = lazy(() => import("./pages/Terms"));
 
 // New Evidence Pages
@@ -107,6 +108,7 @@ const App = () => (
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin/users-integrations" element={<AdminOnly><AdminUsersAndIntegrations /></AdminOnly>} />
             <Route path="/admin/amazon-auth-test" element={<AdminOnly><AmazonAuthTest /></AdminOnly>} />
+            <Route path="/test/agent1" element={<Agent1Test />} />
             <Route path="/revenue-model" element={<AdminOnly><RevenueModel /></AdminOnly>} />
             <Route path="/recoveries" element={<Recoveries />} />
             <Route path="/recoveries/:caseId" element={<CaseDetail />} />

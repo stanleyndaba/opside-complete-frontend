@@ -1,5 +1,8 @@
 // src/api.js
-const API_BASE_URL = 'https://opside-node-api.onrender.com';
+// Use environment variable or default to production backend
+const API_BASE_URL = 
+  (typeof import !== 'undefined' && import.meta?.env?.VITE_INTEGRATIONS_URL) ||
+  (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3001' : 'https://opside-node-api.onrender.com');
 
 const api = {
   login: async () => {
