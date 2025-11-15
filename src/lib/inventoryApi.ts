@@ -101,20 +101,52 @@ export const cancelSync = async (syncId: string): Promise<{ success: boolean; me
 
 // Get sync history - GET /api/sync/history
 export const getSyncHistory = async (limit = 20, offset = 0): Promise<SyncHistoryResponse> => {
-  const response = await api.get<SyncHistoryResponse>(`/api/sync/history?limit=${limit}&offset=${offset}`);
+  const response = await api.get<any>(`/api/sync/history?limit=${limit}&offset=${offset}`);
+  
+  // Debug logging
+  console.log('[getSyncHistory] API Response:', response);
+  console.log('[getSyncHistory] Response OK?', response.ok);
+  console.log('[getSyncHistory] Response data:', response.data);
+  console.log('[getSyncHistory] Response data type:', typeof response.data);
+  console.log('[getSyncHistory] Is array?', Array.isArray(response.data));
+  
   if (!response.ok) {
+    console.error('[getSyncHistory] API Error:', response.error);
     throw new Error(response.error || 'Failed to fetch sync history');
   }
+  
   // Handle both old format (syncs array) and new format (history array)
-  if (response.data && 'syncs' in response.data && Array.isArray((response.data as any).syncs)) {
-    // Convert old format to new format
-    return {
-      success: true,
-      history: (response.data as any).syncs,
-      total: (response.data as any).syncs.length
-    };
+  // Also handle direct array response
+  if (response.data) {
+    // Check if response.data is directly an array
+    if (Array.isArray(response.data)) {
+      console.log('[getSyncHistory] Response is direct array, length:', response.data.length);
+      return {
+        success: true,
+        history: response.data as any,
+        total: response.data.length
+      };
+    }
+    
+    // Check for syncs array (legacy format)
+    if ('syncs' in response.data && Array.isArray((response.data as any).syncs)) {
+      console.log('[getSyncHistory] Using syncs array (legacy), length:', (response.data as any).syncs.length);
+      return {
+        success: true,
+        history: (response.data as any).syncs,
+        total: (response.data as any).syncs.length
+      };
+    }
+    
+    // Check for history array (new format)
+    if ('history' in response.data && Array.isArray((response.data as any).history)) {
+      console.log('[getSyncHistory] Using history array, length:', (response.data as any).history.length);
+      return response.data as SyncHistoryResponse;
+    }
   }
-  return response.data || { success: true, history: [], total: 0 };
+  
+  console.warn('[getSyncHistory] No valid history found, returning empty');
+  return { success: true, history: [], total: 0 };
 };
 
 // Get sync statistics - GET /api/v1/integrations/sync/statistics
