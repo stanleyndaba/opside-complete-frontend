@@ -231,49 +231,49 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
   const isFullWidth = className?.includes('w-full');
   
   return (
-    <div className="flex flex-col gap-2">
-      <Button
-        onClick={handleConnect}
-        disabled={connecting}
-        className={cn(
-          isFullWidth ? 'w-full' : 'w-auto',
-          'justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-semibold shadow-lg transition-colors px-8',
-          connecting && (!showUseExisting || !usingExisting) && 'opacity-80',
-          className
-        )}
-        size="lg"
-      >
-        {connecting && (!showUseExisting || !usingExisting) ? (
-          <>
-            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-            Connecting...
-          </>
-        ) : (
-          'Connect Amazon Account'
-        )}
-      </Button>
-      {showUseExisting && (
+      <div className="flex flex-col gap-2">
         <Button
-          onClick={handleUseExisting}
+          onClick={handleConnect}
           disabled={connecting}
-          variant="outline"
           className={cn(
             isFullWidth ? 'w-full' : 'w-auto',
-            'justify-center border-emerald-500 text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition-colors px-8',
-            connecting && usingExisting && 'opacity-80'
+            'justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-semibold shadow-lg transition-colors px-8',
+            connecting && (!showUseExisting || !usingExisting) && 'opacity-80',
+            className
           )}
           size="lg"
         >
-          {connecting && usingExisting ? (
+          {connecting && (!showUseExisting || !usingExisting) ? (
             <>
               <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-              Reconnecting...
+              Connecting...
             </>
           ) : (
-            'Use Existing Connection (Skip OAuth)'
+            'Connect Amazon Account'
           )}
         </Button>
-      )}
-    </div>
+          {showUseExisting && (
+            <Button
+              onClick={handleUseExisting}
+              disabled={connecting}
+              variant="outline"
+              className={cn(
+                isFullWidth ? 'w-full' : 'w-auto',
+                'justify-center border-emerald-500 text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition-colors px-8',
+                connecting && usingExisting && 'opacity-80'
+              )}
+              size="lg"
+            >
+              {connecting && usingExisting ? (
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  Reconnecting...
+                </>
+              ) : (
+                'Use Existing Connection (Skip OAuth)'
+              )}
+            </Button>
+          )}
+      </div>
   );
 }
