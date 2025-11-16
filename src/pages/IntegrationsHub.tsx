@@ -300,9 +300,8 @@ export default function IntegrationsHub() {
               <CardHeader className="space-y-4">
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="relative h-14 w-14 rounded-full bg-[#232F3E] shadow-[0_10px_25px_rgba(0,0,0,0.35)] flex items-center justify-center">
-                      <span className="text-2xl font-black text-[#FF9900]">a</span>
-                      <div className="absolute bottom-2 left-2 right-2 h-1 rounded-full bg-gradient-to-r from-[#FF9900] via-[#FFB347] to-[#FFE29A]" />
+                    <div className="h-14 w-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+                      <img src="/Amazon-logo.png" alt="Amazon logo" className="h-9 w-9 object-contain" />
                     </div>
                     <div>
                       <CardTitle className="text-gray-200 text-xl">Amazon SP‑API</CardTitle>
@@ -332,25 +331,25 @@ export default function IntegrationsHub() {
                   </div>
                 </div>
                 <Button 
-                  size="lg" 
-                  className="bg-[#FF9900] hover:bg-[#f7901c] text-[#0B1220] font-semibold w-full" 
+                  size="default" 
+                  className="bg-emerald-500 hover:bg-emerald-400 text-white font-semibold w-full md:w-auto px-6" 
                   onClick={() => {
                     toast({
-                      title: (isSandbox || status?.amazon_connected) ? 'Manage Amazon Connection' : 'Connect Amazon',
+                      title: (isSandbox || status?.amazon_connected) ? 'Configure Amazon Connection' : 'Connect Amazon',
                       description: 'Redirecting to Amazon SP‑API flow…',
                     });
                     navigate('/integrations/reconnect/amazon');
                   }}
                 >
-                  {(isSandbox || status?.amazon_connected) ? 'Manage Amazon Connection' : 'Connect Amazon'}
+                  {(isSandbox || status?.amazon_connected) ? 'Configure' : 'Connect Amazon'}
                 </Button>
               </CardContent>
             </Card>
 
-          {/* Evidence Sources */}
+          {/* Document Source */}
           <Card className="bg-white/5 border-white/10 text-gray-300">
             <CardHeader>
-              <CardTitle className="text-gray-200">Evidence Sources</CardTitle>
+                <CardTitle className="text-gray-200">Document Source</CardTitle>
               <CardDescription className="text-gray-400">
                 Connect email and cloud to auto‑ingest invoices, receipts and shipping docs. 
                 <span className="block mt-1 text-xs text-emerald-300/80">
