@@ -866,11 +866,13 @@ export default function Recoveries() {
       .filter(claim => ['New', 'Pending', 'Submitted'].includes(claim.status))
       .reduce((sum, claim) => sum + claim.guaranteedAmount, 0);
     
-    // Calculate 30-day success rate from all claims
+    // Calculate 30-day success rate from all claims (use mergedRecoveries if available)
+    const dataSource = mergedRecoveries !== null ? mergedRecoveries : claims;
     const thirtyDaysAgo = subDays(new Date(), 30);
-    const recentClaims = claims.filter(claim => 
-      new Date(claim.created) >= thirtyDaysAgo
-    );
+    const recentClaims = dataSource.filter(claim => {
+      const claimDate = new Date(claim.created || claim.discovery_date || claim.created_at || 0);
+      return claimDate >= thirtyDaysAgo;
+    });
     const successfulClaims = recentClaims.filter(claim => claim.status === 'Paid');
     const successRate = recentClaims.length > 0 
       ? (successfulClaims.length / recentClaims.length) * 100 
@@ -882,7 +884,7 @@ export default function Recoveries() {
       valueInProgress,
       successRate
     };
-  }, [filteredClaims, claims]);
+  }, [filteredClaims, claims, mergedRecoveries]);
 
   // Owed top-line summary (non-paid)
   const owedSummary = useMemo(() => {
@@ -892,11 +894,14 @@ export default function Recoveries() {
       const openCount = (metrics as any).openCount ?? (metrics as any).openClaims ?? 0;
       return { totalOwed, openCount };
     }
+    
+    // Use mergedRecoveries (includes Agent 3 detections) if available, otherwise fall back to claims
+    const dataSource = mergedRecoveries !== null ? mergedRecoveries : claims;
     const openStatuses = new Set(['New', 'Pending', 'Submitted']);
-    const openClaims = claims.filter(c => openStatuses.has(c.status));
+    const openClaims = dataSource.filter(c => openStatuses.has(c.status));
     const totalOwed = openClaims.reduce((sum, c) => sum + (c.guaranteedAmount || 0), 0);
     return { totalOwed, openCount: openClaims.length };
-  }, [claims, metrics]);
+  }, [claims, metrics, mergedRecoveries]);
 
   // Category breakdown chips
   const categoryCounts = useMemo(() => {
@@ -905,6 +910,8 @@ export default function Recoveries() {
     if (fromMetrics && typeof fromMetrics === 'object') {
       return fromMetrics as Record<string, number>;
     }
+    // Use mergedRecoveries (includes Agent 3 detections) if available, otherwise fall back to claims
+    const dataSource = mergedRecoveries !== null ? mergedRecoveries : claims;
     const counts: Record<string, number> = {
       'Lost Inventory': 0,
       'Damaged': 0,
@@ -912,15 +919,17 @@ export default function Recoveries() {
       'Overcharges': 0,
       'Misapplied Fees': 0,
     };
-    for (const c of claims) {
-      if (c.type === 'Lost Inventory') counts['Lost Inventory'] += 1;
-      if (c.type === 'Damaged Goods') counts['Damaged'] += 1;
-      if (c.type === 'Uncredited Return') counts['Uncredited Returns'] += 1;
-      if (c.type === 'Overcharge' || c.type === 'Fee Dispute') counts['Overcharges'] += 1;
-      if (c.type === 'Fee Dispute') counts['Misapplied Fees'] += 1;
+    for (const c of dataSource) {
+      // Map Agent 3 anomaly types to categories
+      const type = c.type || c.anomaly_type || '';
+      if (type === 'Lost Inventory' || type === 'missing_unit') counts['Lost Inventory'] += 1;
+      if (type === 'Damaged Goods' || type === 'damaged_stock') counts['Damaged'] += 1;
+      if (type === 'Uncredited Return' || type === 'return_not_credited') counts['Uncredited Returns'] += 1;
+      if (type === 'Overcharge' || type === 'Fee Dispute' || type === 'incorrect_fee' || type === 'overcharge' || type === 'duplicate_charge') counts['Overcharges'] += 1;
+      if (type === 'Fee Dispute' || type === 'incorrect_fee') counts['Misapplied Fees'] += 1;
     }
     return counts;
-  }, [claims, metrics]);
+  }, [claims, metrics, mergedRecoveries]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
