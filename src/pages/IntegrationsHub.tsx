@@ -273,15 +273,15 @@ export default function IntegrationsHub() {
   // ... (keep all the existing useEffect and handler functions)
 
   return (
-    <PageLayout title="Platform Integrations">
+    <PageLayout title="Integrations">
       <div className="relative -m-4 lg:-m-6">
         <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
           <div className="relative container mx-auto px-6 pt-6 pb-12 text-gray-300 space-y-8">
 
           {/* Header */}
-          <div className="text-center">
-            <h1 className="text-3xl font-bold mb-2 text-gray-100">Platform Integrations</h1>
+            <div className="text-center">
+              <h1 className="text-3xl font-bold mb-2 text-gray-100">Integrations</h1>
             <p className="text-gray-400">
               Your central command center for all platform connections
             </p>
