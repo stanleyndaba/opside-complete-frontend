@@ -268,233 +268,242 @@ export default function SyncStatus() {
 
   return (
     <PageLayout title="Sync Status">
-      <div className="max-w-4xl mx-auto space-y-6">
-        {/* Mock Data Indicator */}
-        {isUsingMockData && (
-          <Card className="border-amber-500/50 bg-amber-500/10">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
-                <AlertCircle className="h-4 w-4" />
-                <span className="text-sm font-medium">🔧 Using mock data</span>
-                <span className="text-xs text-amber-500">(Backend unavailable - remove in production)</span>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              {getStatusIcon()}
-              Amazon Sync Status
-            </CardTitle>
-            <CardDescription>
-              Current synchronization status for your Amazon account
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {!lastSync ? (
-              <div className="space-y-4">
-                <div className="text-center py-8">
-                  <AlertCircle className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">No Sync History</h3>
-                  <p className="text-muted-foreground mb-4">
-                    No sync history yet. Start a sync to see status.
-                  </p>
-                  <Button onClick={() => navigate('/sync')}>
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                    Start Sync
-                  </Button>
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-6">
-                {/* Status and Last Synced */}
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium">Status</p>
-                    {getStatusBadge()}
-                  </div>
-                  <div className="text-right space-y-1">
-                    <p className="text-sm font-medium">Last Synced</p>
-                    <p className="text-sm text-muted-foreground">
-                      {lastSync.completed_at 
-                        ? `${getMinutesAgo(lastSync.completed_at)} minutes ago`
-                        : lastSync.started_at
-                        ? `Started ${getMinutesAgo(lastSync.started_at)} minutes ago`
-                        : 'Never'}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Progress Bar (if running) */}
-                {(lastSync.status === 'running' || lastSync.status === 'in_progress') && (
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Progress</span>
-                      <span className="font-medium">{lastSync.progress}%</span>
+      <div className="relative -m-4 lg:-m-6">
+        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-300">
+            <div className="max-w-4xl mx-auto space-y-6">
+              {/* Mock Data Indicator */}
+              {isUsingMockData && (
+                <Card className="border-amber-500/50 bg-amber-500/10 text-amber-100">
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-2">
+                      <AlertCircle className="h-4 w-4" />
+                      <span className="text-sm font-medium">Using mock data</span>
+                      <span className="text-xs text-amber-300">(Backend unavailable - remove in production)</span>
                     </div>
-                    <Progress value={lastSync.progress} className="h-2" />
-                    {lastSync.message && (
-                      <p className="text-xs text-muted-foreground">{lastSync.message}</p>
-                    )}
-                  </div>
-                )}
+                  </CardContent>
+                </Card>
+              )}
 
-                {/* Sync Details - Calculate total items synced */}
-                {(() => {
-                  const ordersProcessed = lastSync.ordersProcessed || 0;
-                  const totalOrders = lastSync.totalOrders || 0;
-                  const inventoryCount = lastSync.inventoryCount || 0;
-                  const shipmentsCount = lastSync.shipmentsCount || 0;
-                  const returnsCount = lastSync.returnsCount || 0;
-                  const settlementsCount = lastSync.settlementsCount || 0;
-                  const feesCount = lastSync.feesCount || 0;
-                  const claimsDetected = lastSync.claimsDetected || 0;
-                  
-                  // Calculate total items synced (sum of all data types)
-                  const totalItemsSynced = 
-                    ordersProcessed +
-                    inventoryCount +
-                    shipmentsCount +
-                    returnsCount +
-                    settlementsCount +
-                    feesCount;
-                  
-                  return (
-                    <div className="space-y-4 pt-4 border-t">
-                      {/* Total Items Synced */}
-                      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md p-4">
-                        <p className="text-xs text-muted-foreground mb-1">Total Items Synced</p>
-                        <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                          {totalItemsSynced.toLocaleString()} items
+              <Card className="bg-white/5 border-white/10 text-gray-100">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    {getStatusIcon()}
+                    Amazon Sync Status
+                  </CardTitle>
+                  <CardDescription className="text-gray-300">
+                    Current synchronization status for your Amazon account
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {!lastSync ? (
+                    <div className="space-y-4">
+                      <div className="text-center py-8">
+                        <AlertCircle className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                        <h3 className="text-lg font-semibold mb-2 text-gray-100">No Sync History</h3>
+                        <p className="text-sm text-gray-300 mb-4">
+                          No sync history yet. Start a sync to see status.
                         </p>
-                        {lastSync.message && lastSync.message.includes('items synced') && (
-                          <p className="text-xs text-muted-foreground mt-1">{lastSync.message}</p>
-                        )}
+                        <Button onClick={() => navigate('/sync')}>
+                          <RefreshCw className="h-4 w-4 mr-2" />
+                          Start Sync
+                        </Button>
                       </div>
-                      
-                      {/* Data Type Breakdown - Always show all fields */}
-                      <div className="space-y-3">
-                        <h4 className="text-sm font-semibold text-muted-foreground mb-3">Data Type Breakdown</h4>
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                          {(ordersProcessed !== undefined || totalOrders !== undefined) && (
-                            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-md p-3">
-                              <p className="text-xs text-muted-foreground mb-1">Orders</p>
-                              <p className="text-lg font-semibold">
-                                {ordersProcessed.toLocaleString()} / {totalOrders.toLocaleString()}
-                              </p>
-                            </div>
-                          )}
-                          {inventoryCount !== undefined && (
-                            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-md p-3">
-                              <p className="text-xs text-muted-foreground mb-1">Inventory</p>
-                              <p className="text-lg font-semibold">
-                                {inventoryCount.toLocaleString()} items
-                              </p>
-                            </div>
-                          )}
-                          {shipmentsCount !== undefined && (
-                            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-md p-3">
-                              <p className="text-xs text-muted-foreground mb-1">Shipments</p>
-                              <p className="text-lg font-semibold">
-                                {shipmentsCount.toLocaleString()} items
-                              </p>
-                            </div>
-                          )}
-                          {returnsCount !== undefined && (
-                            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-md p-3">
-                              <p className="text-xs text-muted-foreground mb-1">Returns</p>
-                              <p className="text-lg font-semibold">
-                                {returnsCount.toLocaleString()} items
-                              </p>
-                            </div>
-                          )}
-                          {settlementsCount !== undefined && (
-                            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-md p-3">
-                              <p className="text-xs text-muted-foreground mb-1">Settlements</p>
-                              <p className="text-lg font-semibold">
-                                {settlementsCount.toLocaleString()} items
-                              </p>
-                            </div>
-                          )}
-                          {feesCount !== undefined && (
-                            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-md p-3">
-                              <p className="text-xs text-muted-foreground mb-1">Fees</p>
-                              <p className="text-lg font-semibold">
-                                {feesCount.toLocaleString()} items
-                              </p>
-                            </div>
-                          )}
-                          {claimsDetected !== undefined && (
-                            <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-md p-3 border border-emerald-200 dark:border-emerald-800">
-                              <p className="text-xs text-muted-foreground mb-1">Claims Detected</p>
-                              <p className="text-lg font-semibold text-emerald-600 dark:text-emerald-400">
-                                {claimsDetected.toLocaleString()}
-                              </p>
-                            </div>
-                          )}
+                    </div>
+                  ) : (
+                    <div className="space-y-6">
+                      {/* Status and Last Synced */}
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-1">
+                          <p className="text-sm font-medium text-gray-200">Status</p>
+                          {getStatusBadge()}
+                        </div>
+                        <div className="text-right space-y-1">
+                          <p className="text-sm font-medium text-gray-200">Last Synced</p>
+                          <p className="text-sm text-gray-400">
+                            {lastSync.completed_at 
+                              ? `${getMinutesAgo(lastSync.completed_at)} minutes ago`
+                              : lastSync.started_at
+                              ? `Started ${getMinutesAgo(lastSync.started_at)} minutes ago`
+                              : 'Never'}
+                          </p>
                         </div>
                       </div>
-                    </div>
-                  );
-                })()}
 
-                {/* Message */}
-                {lastSync.message && lastSync.status !== 'running' && lastSync.status !== 'in_progress' && (
-                  <div className={cn(
-                    "p-3 rounded-md text-sm",
-                    lastSync.status === 'completed' 
-                      ? "bg-emerald-50 border border-emerald-200 text-emerald-700 dark:bg-emerald-900/20 dark:border-emerald-800 dark:text-emerald-400"
-                      : lastSync.status === 'failed'
-                      ? "bg-red-50 border border-red-200 text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-400"
-                      : "bg-gray-50 border border-gray-200 text-gray-700 dark:bg-gray-900/20 dark:border-gray-800 dark:text-gray-400"
-                  )}>
-                    {lastSync.message}
-                  </div>
-                )}
+                      {/* Progress Bar (if running) */}
+                      {(lastSync.status === 'running' || lastSync.status === 'in_progress') && (
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="text-gray-300">Progress</span>
+                            <span className="font-medium text-gray-100">{lastSync.progress}%</span>
+                          </div>
+                          <Progress value={lastSync.progress} className="h-2" />
+                          {lastSync.message && (
+                            <p className="text-xs text-gray-300">{lastSync.message}</p>
+                          )}
+                        </div>
+                      )}
 
-                {/* Timestamps */}
-                <div className="grid grid-cols-2 gap-4 pt-4 border-t text-xs text-muted-foreground">
-                  {lastSync.started_at && (
-                    <div>
-                      <p className="font-medium mb-1">Started</p>
-                      <p>{new Date(lastSync.started_at).toLocaleString()}</p>
+                      {/* Sync Details - Calculate total items synced */}
+                      {(() => {
+                        const ordersProcessed = lastSync.ordersProcessed || 0;
+                        const totalOrders = lastSync.totalOrders || 0;
+                        const inventoryCount = lastSync.inventoryCount || 0;
+                        const shipmentsCount = lastSync.shipmentsCount || 0;
+                        const returnsCount = lastSync.returnsCount || 0;
+                        const settlementsCount = lastSync.settlementsCount || 0;
+                        const feesCount = lastSync.feesCount || 0;
+                        const claimsDetected = lastSync.claimsDetected || 0;
+                        
+                        // Calculate total items synced (sum of all data types)
+                        const totalItemsSynced = 
+                          ordersProcessed +
+                          inventoryCount +
+                          shipmentsCount +
+                          returnsCount +
+                          settlementsCount +
+                          feesCount;
+                        
+                        return (
+                          <div className="space-y-4 pt-4 border-t border-white/10">
+                            {/* Total Items Synced */}
+                            <div className="bg-blue-500/10 border border-blue-500/40 rounded-md p-4">
+                              <p className="text-xs text-blue-100 mb-1">Total Items Synced</p>
+                              <p className="text-2xl font-bold text-blue-300">
+                                {totalItemsSynced.toLocaleString()} items
+                              </p>
+                              {lastSync.message && lastSync.message.includes('items synced') && (
+                                <p className="text-xs text-blue-100 mt-1">{lastSync.message}</p>
+                              )}
+                            </div>
+                            
+                            {/* Data Type Breakdown - Always show all fields */}
+                            <div className="space-y-3">
+                              <h4 className="text-sm font-semibold text-gray-200 mb-3">Data Type Breakdown</h4>
+                              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                {(ordersProcessed !== undefined || totalOrders !== undefined) && (
+                                  <div className="bg-white/5 rounded-md p-3 border border-white/10">
+                                    <p className="text-xs text-gray-300 mb-1">Orders</p>
+                                    <p className="text-lg font-semibold text-gray-100">
+                                      {ordersProcessed.toLocaleString()} / {totalOrders.toLocaleString()}
+                                    </p>
+                                  </div>
+                                )}
+                                {inventoryCount !== undefined && (
+                                  <div className="bg-white/5 rounded-md p-3 border border-white/10">
+                                    <p className="text-xs text-gray-300 mb-1">Inventory</p>
+                                    <p className="text-lg font-semibold text-gray-100">
+                                      {inventoryCount.toLocaleString()} items
+                                    </p>
+                                  </div>
+                                )}
+                                {shipmentsCount !== undefined && (
+                                  <div className="bg-white/5 rounded-md p-3 border border-white/10">
+                                    <p className="text-xs text-gray-300 mb-1">Shipments</p>
+                                    <p className="text-lg font-semibold text-gray-100">
+                                      {shipmentsCount.toLocaleString()} items
+                                    </p>
+                                  </div>
+                                )}
+                                {returnsCount !== undefined && (
+                                  <div className="bg-white/5 rounded-md p-3 border border-white/10">
+                                    <p className="text-xs text-gray-300 mb-1">Returns</p>
+                                    <p className="text-lg font-semibold text-gray-100">
+                                      {returnsCount.toLocaleString()} items
+                                    </p>
+                                  </div>
+                                )}
+                                {settlementsCount !== undefined && (
+                                  <div className="bg-white/5 rounded-md p-3 border border-white/10">
+                                    <p className="text-xs text-gray-300 mb-1">Settlements</p>
+                                    <p className="text-lg font-semibold text-gray-100">
+                                      {settlementsCount.toLocaleString()} items
+                                    </p>
+                                  </div>
+                                )}
+                                {feesCount !== undefined && (
+                                  <div className="bg-white/5 rounded-md p-3 border border-white/10">
+                                    <p className="text-xs text-gray-300 mb-1">Fees</p>
+                                    <p className="text-lg font-semibold text-gray-100">
+                                      {feesCount.toLocaleString()} items
+                                    </p>
+                                  </div>
+                                )}
+                                {claimsDetected !== undefined && (
+                                  <div className="bg-emerald-500/10 rounded-md p-3 border border-emerald-500/40">
+                                    <p className="text-xs text-emerald-100 mb-1">Claims Detected</p>
+                                    <p className="text-lg font-semibold text-emerald-300">
+                                      {claimsDetected.toLocaleString()}
+                                    </p>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })()}
+
+                      {/* Message */}
+                      {lastSync.message && lastSync.status !== 'running' && lastSync.status !== 'in_progress' && (
+                        <div className={cn(
+                          "p-3 rounded-md text-sm border",
+                          lastSync.status === 'completed' 
+                            ? "bg-emerald-500/10 border-emerald-500/40 text-emerald-100"
+                            : lastSync.status === 'failed'
+                            ? "bg-red-500/10 border-red-500/40 text-red-100"
+                            : "bg-white/5 border-white/10 text-gray-200"
+                        )}>
+                          {lastSync.message}
+                        </div>
+                      )}
+
+                      {/* Timestamps */}
+                      <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/10 text-xs text-gray-300">
+                        {lastSync.started_at && (
+                          <div>
+                            <p className="font-medium mb-1 text-gray-200">Started</p>
+                            <p>{new Date(lastSync.started_at).toLocaleString()}</p>
+                          </div>
+                        )}
+                        {lastSync.completed_at && (
+                          <div>
+                            <p className="font-medium mb-1 text-gray-200">Completed</p>
+                            <p>{new Date(lastSync.completed_at).toLocaleString()}</p>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-white/10">
+                        <Button 
+                          variant="outline" 
+                          onClick={() => fetchSyncStatus(isUsingMockData)}
+                          className="border-white/20 text-gray-100 hover:bg-white/10"
+                        >
+                          <RefreshCw className="h-4 w-4 mr-2" />
+                          Refresh
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          onClick={() => navigate('/integrations-hub')}
+                          className="border-white/20 text-gray-100 hover:bg-white/10"
+                        >
+                          Go to Integrations
+                        </Button>
+                        {lastSync.status === 'completed' && (
+                          <Button onClick={() => navigate('/app')}>
+                            Go to Dashboard
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   )}
-                  {lastSync.completed_at && (
-                    <div>
-                      <p className="font-medium mb-1">Completed</p>
-                      <p>{new Date(lastSync.completed_at).toLocaleString()}</p>
-                    </div>
-                  )}
-                </div>
-
-                {/* Actions */}
-                <div className="flex items-center gap-2 pt-4 border-t">
-                  <Button 
-                    variant="outline" 
-                    onClick={() => fetchSyncStatus(isUsingMockData)}
-                  >
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                    Refresh
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    onClick={() => navigate('/integrations-hub')}
-                  >
-                    Go to Integrations
-                  </Button>
-                  {lastSync.status === 'completed' && (
-                    <Button onClick={() => navigate('/app')}>
-                      Go to Dashboard
-                    </Button>
-                  )}
-                </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
       </div>
     </PageLayout>
   );
