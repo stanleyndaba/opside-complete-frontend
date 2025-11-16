@@ -931,36 +931,6 @@ export default function IntegrationsHub() {
           </Card>
         </div>
 
-        {/* Platforms Coming to Clario */}
-        <Card className="bg-white/5 border-white/10 text-gray-300">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-gray-200">
-              Platforms Coming to Clario
-              <Badge variant="outline" className="border-amber-400/30 text-amber-300 bg-amber-500/10 text-xs">
-                Pre-Beta
-              </Badge>
-            </CardTitle>
-            <CardDescription className="text-gray-400">These platforms are coming soon. Stay tuned for updates!</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {['Shopify', 'Walmart', 'Quickbooks', 'Xero', 'Ebay', 'ShipBob'].map((platform) => (
-                <div key={platform} className="flex items-center justify-between rounded border border-white/10 bg-white/5 p-4">
-                  <span className="text-sm font-medium text-gray-200">{platform}</span>
-                  <Button 
-                    size="sm" 
-                    variant="outline" 
-                    disabled
-                    className="bg-white/5 text-gray-400 border-gray-400/30 cursor-not-allowed opacity-50"
-                  >
-                    Connect
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
         {/* Live status */}
         <Card className="bg-white/5 border-white/10 text-gray-300">
           <CardHeader>
