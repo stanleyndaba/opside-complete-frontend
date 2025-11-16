@@ -376,275 +376,318 @@ export default function Sync() {
 
   return (
     <PageLayout title="Smart Inventory Sync">
-      <div className="max-w-4xl mx-auto space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              {getStatusIcon()}
-              Inventory Sync
-            </CardTitle>
-            <CardDescription>
-              First run window: last 12 months • Schedule: daily at 02:00 UTC
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  {syncData && status === 'completed' && (() => {
-                    const ordersProcessed = syncData.ordersProcessed || 0;
-                    const inventoryCount = syncData.inventoryCount || 0;
-                    const shipmentsCount = syncData.shipmentsCount || 0;
-                    const returnsCount = syncData.returnsCount || 0;
-                    const settlementsCount = syncData.settlementsCount || 0;
-                    const feesCount = syncData.feesCount || 0;
-                    const totalItemsSynced = 
-                      ordersProcessed +
-                      inventoryCount +
-                      shipmentsCount +
-                      returnsCount +
-                      settlementsCount +
-                      feesCount;
+      <div className="relative -m-4 lg:-m-6">
+        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-300">
+            <div className="max-w-4xl mx-auto space-y-6">
+              <Card className="bg-white/5 border-white/10 text-gray-100">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    {getStatusIcon()}
+                    Inventory Sync
+                  </CardTitle>
+                  <CardDescription className="text-gray-300">
+                    First run window: last 12 months • Schedule: daily at 02:00 UTC
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        {syncData && status === 'completed' && (() => {
+                          const ordersProcessed = syncData.ordersProcessed || 0;
+                          const inventoryCount = syncData.inventoryCount || 0;
+                          const shipmentsCount = syncData.shipmentsCount || 0;
+                          const returnsCount = syncData.returnsCount || 0;
+                          const settlementsCount = syncData.settlementsCount || 0;
+                          const feesCount = syncData.feesCount || 0;
+                          const totalItemsSynced = 
+                            ordersProcessed +
+                            inventoryCount +
+                            shipmentsCount +
+                            returnsCount +
+                            settlementsCount +
+                            feesCount;
+                          
+                          // Use calculated total if available, otherwise fall back to message
+                          if (totalItemsSynced > 0) {
+                            return (
+                              <p className="text-sm text-gray-300">
+                                Sync completed successfully - {totalItemsSynced.toLocaleString()} items synced
+                              </p>
+                            );
+                          }
+                          return <p className="text-sm text-gray-300">{message}</p>;
+                        })()}
+                        {(!syncData || status !== 'completed') && (
+                          <p className="text-sm text-gray-300">{message}</p>
+                        )}
+                      </div>
+                      {getStatusBadge()}
+                    </div>
                     
-                    // Use calculated total if available, otherwise fall back to message
-                    if (totalItemsSynced > 0) {
+                    <Progress value={progress} className="h-2" />
+                    
+                    <div className="flex items-center justify-between text-sm text-gray-300">
+                      <span>{progress}%</span>
+                      {syncData && (
+                        <div className="flex items-center gap-4 text-xs">
+                          {syncData.ordersProcessed !== undefined && syncData.totalOrders !== undefined && (
+                            <span>
+                              {syncData.ordersProcessed.toLocaleString()} / {syncData.totalOrders.toLocaleString()} orders
+                            </span>
+                          )}
+                          {syncData.claimsDetected !== undefined && (
+                            <span className="text-emerald-300 font-medium">
+                              {syncData.claimsDetected.toLocaleString()} claims detected
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Sync Details Breakdown - Calculate total items synced */}
+                    {syncData && status === 'completed' && (() => {
+                      const ordersProcessed = syncData.ordersProcessed || 0;
+                      const inventoryCount = syncData.inventoryCount || 0;
+                      const shipmentsCount = syncData.shipmentsCount || 0;
+                      const returnsCount = syncData.returnsCount || 0;
+                      const settlementsCount = syncData.settlementsCount || 0;
+                      const feesCount = syncData.feesCount || 0;
+                      const claimsDetected = syncData.claimsDetected || 0;
+                      
+                      // Check if this is an old sync with incomplete metadata
+                      const isOldSyncFormat = ordersProcessed > 0 && inventoryCount === 0 && shipmentsCount === 0 && 
+                                             returnsCount === 0 && settlementsCount === 0 && feesCount === 0;
+                      
+                      // Calculate total items synced (sum of all data types)
+                      const totalItemsSynced = 
+                        ordersProcessed +
+                        inventoryCount +
+                        shipmentsCount +
+                        returnsCount +
+                        settlementsCount +
+                        feesCount;
+                      
+                      // Only show breakdown if we have data
+                      if (totalItemsSynced === 0 && !inventoryCount && !shipmentsCount && !returnsCount && !settlementsCount) {
+                        return null;
+                      }
+                      
+                      // Show warning if old sync format
+                      if (isOldSyncFormat) {
+                        return (
+                          <div className="space-y-4 pt-4 border-t border-amber-500/40">
+                            <div className="bg-amber-500/10 border border-amber-500/40 rounded-md p-4">
+                              <p className="text-sm font-medium text-amber-100 mb-2">
+                                ⚠️ Old Sync Format Detected
+                              </p>
+                              <p className="text-xs text-amber-100/80 mb-3">
+                                This sync was created before we added detailed data type counts. The counts shown may be incomplete.
+                              </p>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => {
+                                  setSyncId(undefined);
+                                  navigate('/sync', { replace: true });
+                                  toast({
+                                    title: '🔄 Start New Sync',
+                                    description: 'Please click "Start Sync" to create a new sync with complete data.',
+                                    duration: 5000,
+                                  });
+                                }}
+                                className="border-amber-300 text-amber-100 hover:bg-amber-500/20"
+                              >
+                                Start New Sync
+                              </Button>
+                            </div>
+                          </div>
+                        );
+                      }
+                      
                       return (
-                        <p className="text-sm text-muted-foreground">
-                          Sync completed successfully - {totalItemsSynced.toLocaleString()} items synced
-                        </p>
+                        <div className="space-y-4 pt-4 border-t border-white/10">
+                          {/* Total Items Synced */}
+                          <div className="bg-blue-500/10 border border-blue-500/40 rounded-md p-4">
+                            <p className="text-xs text-blue-100 mb-1">Total Items Synced</p>
+                            <p className="text-2xl font-bold text-blue-300">
+                              {totalItemsSynced.toLocaleString()} items
+                            </p>
+                          </div>
+                          
+                          {/* Data Type Breakdown */}
+                          <div className="space-y-3">
+                            <h4 className="text-sm font-semibold text-gray-200">Data Type Breakdown</h4>
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                              {ordersProcessed !== undefined && syncData.totalOrders !== undefined && (
+                                <div className="bg-white/5 rounded-md p-3 border border-white/10">
+                                  <p className="text-xs text-gray-300 mb-1">Orders</p>
+                                  <p className="text-lg font-semibold text-gray-100">
+                                    {ordersProcessed.toLocaleString()} / {syncData.totalOrders.toLocaleString()}
+                                  </p>
+                                </div>
+                              )}
+                              {inventoryCount !== undefined && (
+                                <div className="bg-white/5 rounded-md p-3 border border-white/10">
+                                  <p className="text-xs text-gray-300 mb-1">Inventory</p>
+                                  <p className="text-lg font-semibold text-gray-100">
+                                    {inventoryCount.toLocaleString()} items
+                                  </p>
+                                </div>
+                              )}
+                              {shipmentsCount !== undefined && (
+                                <div className="bg-white/5 rounded-md p-3 border border-white/10">
+                                  <p className="text-xs text-gray-300 mb-1">Shipments</p>
+                                  <p className="text-lg font-semibold text-gray-100">
+                                    {shipmentsCount.toLocaleString()} items
+                                  </p>
+                                </div>
+                              )}
+                              {returnsCount !== undefined && (
+                                <div className="bg-white/5 rounded-md p-3 border border-white/10">
+                                  <p className="text-xs text-gray-300 mb-1">Returns</p>
+                                  <p className="text-lg font-semibold text-gray-100">
+                                    {returnsCount.toLocaleString()} items
+                                  </p>
+                                </div>
+                              )}
+                              {settlementsCount !== undefined && (
+                                <div className="bg-white/5 rounded-md p-3 border border-white/10">
+                                  <p className="text-xs text-gray-300 mb-1">Settlements</p>
+                                  <p className="text-lg font-semibold text-gray-100">
+                                    {settlementsCount.toLocaleString()} items
+                                  </p>
+                                </div>
+                              )}
+                              {feesCount !== undefined && (
+                                <div className="bg-white/5 rounded-md p-3 border border-white/10">
+                                  <p className="text-xs text-gray-300 mb-1">Fees</p>
+                                  <p className="text-lg font-semibold text-gray-100">
+                                    {feesCount.toLocaleString()} items
+                                  </p>
+                                </div>
+                              )}
+                              {claimsDetected !== undefined && claimsDetected > 0 && (
+                                <div className="bg-emerald-500/10 rounded-md p-3 border border-emerald-500/40">
+                                  <p className="text-xs text-emerald-100 mb-1">Claims Detected</p>
+                                  <p className="text-lg font-semibold text-emerald-300">
+                                    {claimsDetected.toLocaleString()}
+                                  </p>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
                       );
-                    }
-                    return <p className="text-sm text-muted-foreground">{message}</p>;
-                  })()}
-                  {(!syncData || status !== 'completed') && (
-                    <p className="text-sm text-muted-foreground">{message}</p>
-                  )}
-                </div>
-                {getStatusBadge()}
-              </div>
-              
-              <Progress value={progress} className="h-2" />
-              
-              <div className="flex items-center justify-between text-sm text-muted-foreground">
-                <span>{progress}%</span>
-                {syncData && (
-                  <div className="flex items-center gap-4 text-xs">
-                    {syncData.ordersProcessed !== undefined && syncData.totalOrders !== undefined && (
-                      <span>
-                        {syncData.ordersProcessed.toLocaleString()} / {syncData.totalOrders.toLocaleString()} orders
-                      </span>
-                    )}
-                    {syncData.claimsDetected !== undefined && (
-                      <span className="text-emerald-600 font-medium">
-                        {syncData.claimsDetected.toLocaleString()} claims detected
-                      </span>
-                    )}
-                  </div>
-                )}
-              </div>
+                    })()}
 
-              {/* Sync Details Breakdown - Calculate total items synced */}
-              {syncData && status === 'completed' && (() => {
-                const ordersProcessed = syncData.ordersProcessed || 0;
-                const inventoryCount = syncData.inventoryCount || 0;
-                const shipmentsCount = syncData.shipmentsCount || 0;
-                const returnsCount = syncData.returnsCount || 0;
-                const settlementsCount = syncData.settlementsCount || 0;
-                const feesCount = syncData.feesCount || 0;
-                const claimsDetected = syncData.claimsDetected || 0;
-                
-                // Check if this is an old sync with incomplete metadata
-                // Old syncs might have ordersProcessed but missing other counts
-                const hasAllCounts = inventoryCount > 0 || shipmentsCount > 0 || returnsCount > 0 || 
-                                     settlementsCount > 0 || feesCount > 0 || 
-                                     (inventoryCount === 0 && shipmentsCount === 0 && returnsCount === 0 && 
-                                      settlementsCount === 0 && feesCount === 0 && ordersProcessed > 0);
-                const isOldSyncFormat = ordersProcessed > 0 && inventoryCount === 0 && shipmentsCount === 0 && 
-                                       returnsCount === 0 && settlementsCount === 0 && feesCount === 0;
-                
-                // Calculate total items synced (sum of all data types)
-                const totalItemsSynced = 
-                  ordersProcessed +
-                  inventoryCount +
-                  shipmentsCount +
-                  returnsCount +
-                  settlementsCount +
-                  feesCount;
-                
-                // Only show breakdown if we have data
-                if (totalItemsSynced === 0 && !inventoryCount && !shipmentsCount && !returnsCount && !settlementsCount) {
-                  return null;
-                }
-                
-                // Show warning if old sync format
-                if (isOldSyncFormat) {
-                  return (
-                    <div className="space-y-4 pt-4 border-t">
-                      <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-md p-4">
-                        <p className="text-sm font-medium text-amber-800 dark:text-amber-200 mb-2">
-                          ⚠️ Old Sync Format Detected
-                        </p>
-                        <p className="text-xs text-amber-700 dark:text-amber-300 mb-3">
-                          This sync was created before we added detailed data type counts. The counts shown may be incomplete.
-                        </p>
+                    {error && (
+                      <div className="p-3 rounded-md bg-red-500/10 border border-red-500/40 text-sm text-red-100">
+                        <strong>Error:</strong> {error}
+                      </div>
+                    )}
+
+                    {syncData?.startedAt && (
+                      <div className="text-xs text-gray-300">
+                        Started: {new Date(syncData.startedAt).toLocaleString()}
+                      </div>
+                    )}
+
+                    {syncData?.completedAt && (
+                      <div className="text-xs text-gray-300">
+                        Completed: {new Date(syncData.completedAt).toLocaleString()}
+                      </div>
+                    )}
+
+                    <div className="mt-4 p-3 rounded border border-blue-500/40 bg-blue-500/10 text-xs text-blue-100">
+                      Evidence ingestion is running in parallel. We're collecting supplier docs and linking proofs to detected claims.
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      {status === 'running' && (
                         <Button
-                          size="sm"
                           variant="outline"
-                          onClick={() => {
-                            setSyncId(undefined);
-                            navigate('/sync', { replace: true });
-                            toast({
-                              title: '🔄 Start New Sync',
-                              description: 'Please click "Start Sync" to create a new sync with complete data.',
-                              duration: 5000,
-                            });
-                          }}
+                          onClick={handleCancelSync}
+                          disabled={isCancelling}
+                          className="border-white/20 text-gray-100 hover:bg-white/10"
                         >
-                          Start New Sync
+                          {isCancelling ? (
+                            <>
+                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                              Cancelling...
+                            </>
+                          ) : (
+                            <>
+                              <XCircle className="h-4 w-4 mr-2" />
+                              Cancel Sync
+                            </>
+                          )}
                         </Button>
-                      </div>
-                    </div>
-                  );
-                }
-                
-                return (
-                  <div className="space-y-4 pt-4 border-t">
-                    {/* Total Items Synced */}
-                    <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md p-4">
-                      <p className="text-xs text-muted-foreground mb-1">Total Items Synced</p>
-                      <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                        {totalItemsSynced.toLocaleString()} items
-                      </p>
-                    </div>
-                    
-                    {/* Data Type Breakdown */}
-                    <div className="space-y-3">
-                      <h4 className="text-sm font-semibold text-muted-foreground">Data Type Breakdown</h4>
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                        {ordersProcessed !== undefined && syncData.totalOrders !== undefined && (
-                          <div className="bg-gray-50 dark:bg-gray-900/50 rounded-md p-3">
-                            <p className="text-xs text-muted-foreground mb-1">Orders</p>
-                            <p className="text-lg font-semibold">
-                              {ordersProcessed.toLocaleString()} / {syncData.totalOrders.toLocaleString()}
-                            </p>
-                          </div>
-                        )}
-                        {inventoryCount !== undefined && (
-                          <div className="bg-gray-50 dark:bg-gray-900/50 rounded-md p-3">
-                            <p className="text-xs text-muted-foreground mb-1">Inventory</p>
-                            <p className="text-lg font-semibold">
-                              {inventoryCount.toLocaleString()} items
-                            </p>
-                          </div>
-                        )}
-                        {shipmentsCount !== undefined && (
-                          <div className="bg-gray-50 dark:bg-gray-900/50 rounded-md p-3">
-                            <p className="text-xs text-muted-foreground mb-1">Shipments</p>
-                            <p className="text-lg font-semibold">
-                              {shipmentsCount.toLocaleString()} items
-                            </p>
-                          </div>
-                        )}
-                        {returnsCount !== undefined && (
-                          <div className="bg-gray-50 dark:bg-gray-900/50 rounded-md p-3">
-                            <p className="text-xs text-muted-foreground mb-1">Returns</p>
-                            <p className="text-lg font-semibold">
-                              {returnsCount.toLocaleString()} items
-                            </p>
-                          </div>
-                        )}
-                        {settlementsCount !== undefined && (
-                          <div className="bg-gray-50 dark:bg-gray-900/50 rounded-md p-3">
-                            <p className="text-xs text-muted-foreground mb-1">Settlements</p>
-                            <p className="text-lg font-semibold">
-                              {settlementsCount.toLocaleString()} items
-                            </p>
-                          </div>
-                        )}
-                        {feesCount !== undefined && (
-                          <div className="bg-gray-50 dark:bg-gray-900/50 rounded-md p-3">
-                            <p className="text-xs text-muted-foreground mb-1">Fees</p>
-                            <p className="text-lg font-semibold">
-                              {feesCount.toLocaleString()} items
-                            </p>
-                          </div>
-                        )}
-                        {claimsDetected !== undefined && claimsDetected > 0 && (
-                          <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-md p-3 border border-emerald-200 dark:border-emerald-800">
-                            <p className="text-xs text-muted-foreground mb-1">Claims Detected</p>
-                            <p className="text-lg font-semibold text-emerald-600 dark:text-emerald-400">
-                              {claimsDetected.toLocaleString()}
-                            </p>
-                          </div>
-                        )}
-                      </div>
+                      )}
+                      
+                      {(status === 'failed' || status === 'cancelled') && (
+                        <Button
+                          variant="outline"
+                          onClick={handleRetry}
+                          className="border-white/20 text-gray-100 hover:bg-white/10"
+                        >
+                          <RefreshCw className="h-4 w-4 mr-2" />
+                          Retry Sync
+                        </Button>
+                      )}
+
+                      {status === 'completed' && (
+                        <Button
+                          variant="outline"
+                          onClick={() => navigate('/app')}
+                          className="border-white/20 text-gray-100 hover:bg-white/10"
+                        >
+                          Go to Dashboard
+                        </Button>
+                      )}
                     </div>
                   </div>
-                );
-              })()}
+                </CardContent>
+              </Card>
 
-              {error && (
-                <div className="p-3 rounded-md bg-red-50 border border-red-200 text-sm text-red-700">
-                  <strong>Error:</strong> {error}
-                </div>
-              )}
-
-              {syncData?.startedAt && (
-                <div className="text-xs text-muted-foreground">
-                  Started: {new Date(syncData.startedAt).toLocaleString()}
-                </div>
-              )}
-
-              {syncData?.completedAt && (
-                <div className="text-xs text-muted-foreground">
-                  Completed: {new Date(syncData.completedAt).toLocaleString()}
-                </div>
-              )}
-
-              <div className="mt-4 p-3 rounded border border-blue-200 bg-blue-50 text-xs text-blue-900">
-                Evidence ingestion is running in parallel. We're collecting supplier docs and linking proofs to detected claims.
-              </div>
-
-              <div className="flex items-center gap-2">
-                {status === 'running' && (
-                  <Button
-                    variant="outline"
-                    onClick={handleCancelSync}
-                    disabled={isCancelling}
-                  >
-                    {isCancelling ? (
-                      <>
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        Cancelling...
-                      </>
-                    ) : (
-                      <>
-                        <XCircle className="h-4 w-4 mr-2" />
-                        Cancel Sync
-                      </>
-                    )}
-                  </Button>
-                )}
-                
-                {(status === 'failed' || status === 'cancelled') && (
-                  <Button onClick={handleRetry}>
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                    Retry Sync
-                  </Button>
-                )}
-
-                {status === 'completed' && (
-                  <Button onClick={() => navigate('/app')}>
-                    Go to Dashboard
-                  </Button>
-                )}
-              </div>
+              {/* Sync History */}
+              <Card className="bg-white/5 border-white/10 text-gray-100">
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between">
+                    <span>Sync History</span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={async () => {
+                        try {
+                          const history = await getSyncHistory();
+                          setSyncHistory(history);
+                        } catch (err: any) {
+                          setError(err?.message || 'Failed to reload sync history');
+                        }
+                      }}
+                      className="border-white/20 text-gray-100 hover:bg-white/10"
+                    >
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                      Refresh History
+                    </Button>
+                  </CardTitle>
+                  <CardDescription className="text-gray-300">
+                    View your previous sync runs and their outcomes
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <SyncHistory
+                    syncHistory={syncHistory}
+                    onSelectSync={handleSelectSyncFromHistory}
+                  />
+                </CardContent>
+              </Card>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Sync History */}
-        <SyncHistory />
+          </div>
+        </div>
       </div>
     </PageLayout>
   );
