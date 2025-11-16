@@ -767,7 +767,7 @@ const Settings = () => {
           return (
             <div className="space-y-6">
               <div>
-                <h2 className="text-2xl font-bold text-gray-200">Platform Integrations</h2>
+                <h2 className="text-2xl font-bold text-gray-200">Integrations</h2>
                 <p className="text-gray-400">Manage your platform connections and data sources</p>
               </div>
               <div>
@@ -778,10 +778,7 @@ const Settings = () => {
               </div>
               
               <Card className="bg-white/5 border-white/10 text-gray-300">
-                <CardHeader>
-                  <CardTitle className="text-gray-200">Active Connections</CardTitle>
-                  <CardDescription className="text-gray-400">Your currently connected platforms</CardDescription>
-                </CardHeader>
+                <CardHeader />
                 <CardContent className="space-y-4">
                   <div className="rounded-2xl border border-white/10 bg-white/5 divide-y divide-white/10">
                     {activePlatforms.map(platform => (
@@ -796,10 +793,7 @@ const Settings = () => {
                             <p className="text-xs text-gray-500 mt-1">Last sync: {platform.lastSync}</p>
                           </div>
                         </div>
-                        <div className="flex flex-col gap-2 md:items-end">
-                          <Badge variant="outline" className={cn('text-xs px-3 py-1 rounded-full', platform.connected ? 'border-emerald-500/60 text-emerald-300' : 'border-amber-500/60 text-amber-300')}>
-                            {platform.connected ? 'Connected' : 'Not connected'}
-                          </Badge>
+                          <div className="flex flex-col gap-2 md:items-end">
                           <Button 
                             size="sm" 
                             className="bg-emerald-500 hover:bg-emerald-400 text-white" 
@@ -816,7 +810,7 @@ const Settings = () => {
               
               <Card className="bg-white/5 border-white/10 text-gray-300">
                 <CardHeader>
-                  <CardTitle className="text-gray-200">Platform Integrations Coming Soon</CardTitle>
+                  <CardTitle className="text-gray-200">Coming</CardTitle>
                   <CardDescription className="text-gray-400">Coming soon to expand your recovery capabilities</CardDescription>
                 </CardHeader>
                 <CardContent>
