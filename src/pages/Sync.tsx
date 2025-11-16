@@ -453,6 +453,15 @@ export default function Sync() {
                 const feesCount = syncData.feesCount || 0;
                 const claimsDetected = syncData.claimsDetected || 0;
                 
+                // Check if this is an old sync with incomplete metadata
+                // Old syncs might have ordersProcessed but missing other counts
+                const hasAllCounts = inventoryCount > 0 || shipmentsCount > 0 || returnsCount > 0 || 
+                                     settlementsCount > 0 || feesCount > 0 || 
+                                     (inventoryCount === 0 && shipmentsCount === 0 && returnsCount === 0 && 
+                                      settlementsCount === 0 && feesCount === 0 && ordersProcessed > 0);
+                const isOldSyncFormat = ordersProcessed > 0 && inventoryCount === 0 && shipmentsCount === 0 && 
+                                       returnsCount === 0 && settlementsCount === 0 && feesCount === 0;
+                
                 // Calculate total items synced (sum of all data types)
                 const totalItemsSynced = 
                   ordersProcessed +
@@ -465,6 +474,37 @@ export default function Sync() {
                 // Only show breakdown if we have data
                 if (totalItemsSynced === 0 && !inventoryCount && !shipmentsCount && !returnsCount && !settlementsCount) {
                   return null;
+                }
+                
+                // Show warning if old sync format
+                if (isOldSyncFormat) {
+                  return (
+                    <div className="space-y-4 pt-4 border-t">
+                      <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-md p-4">
+                        <p className="text-sm font-medium text-amber-800 dark:text-amber-200 mb-2">
+                          ⚠️ Old Sync Format Detected
+                        </p>
+                        <p className="text-xs text-amber-700 dark:text-amber-300 mb-3">
+                          This sync was created before we added detailed data type counts. The counts shown may be incomplete.
+                        </p>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            setSyncId(undefined);
+                            navigate('/sync', { replace: true });
+                            toast({
+                              title: '🔄 Start New Sync',
+                              description: 'Please click "Start Sync" to create a new sync with complete data.',
+                              duration: 5000,
+                            });
+                          }}
+                        >
+                          Start New Sync
+                        </Button>
+                      </div>
+                    </div>
+                  );
                 }
                 
                 return (
