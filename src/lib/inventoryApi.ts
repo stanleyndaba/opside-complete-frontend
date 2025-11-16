@@ -100,8 +100,27 @@ export const getActiveSyncStatus = async (): Promise<ActiveSyncStatusResponse> =
 export const getSyncStatus = async (syncId: string): Promise<SyncStatusResponse> => {
   const response = await api.get<SyncStatusResponse>(`/api/sync/status/${syncId}`);
   if (!response.ok) {
+    // Check if it's a "not found" error
+    if (response.status === 404 || response.error?.includes('not found') || response.error?.includes('Sync not found')) {
+      throw new Error('Sync not found');
+    }
     throw new Error(response.error || 'Failed to get sync status');
   }
+  
+  // Debug: Log the response
+  console.log('[getSyncStatus] API Response:', {
+    syncId: response.data?.syncId,
+    status: response.data?.status,
+    ordersProcessed: response.data?.ordersProcessed,
+    totalOrders: response.data?.totalOrders,
+    inventoryCount: response.data?.inventoryCount,
+    shipmentsCount: response.data?.shipmentsCount,
+    returnsCount: response.data?.returnsCount,
+    settlementsCount: response.data?.settlementsCount,
+    feesCount: response.data?.feesCount,
+    claimsDetected: response.data?.claimsDetected
+  });
+  
   return response.data;
 };
 

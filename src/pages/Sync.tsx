@@ -165,6 +165,21 @@ export default function Sync() {
         try {
           const s = await getSyncStatus(syncId);
           if (cancelled) return;
+          
+          // Debug: Log what we received
+          console.log('[Sync] Received sync status:', {
+            syncId: s.syncId,
+            status: s.status,
+            ordersProcessed: s.ordersProcessed,
+            totalOrders: s.totalOrders,
+            inventoryCount: s.inventoryCount,
+            shipmentsCount: s.shipmentsCount,
+            returnsCount: s.returnsCount,
+            settlementsCount: s.settlementsCount,
+            feesCount: s.feesCount,
+            claimsDetected: s.claimsDetected
+          });
+          
           updateSyncState(s);
         } catch (e: any) {
           if (cancelled) return;
