@@ -14,7 +14,7 @@ function buildApiUrl(path: string): string {
 
   // Production backend URL - use the new consolidated Node.js API
   // IMPORTANT: This is the correct backend URL. Do not change unless migrating to a new backend.
-  const productionBackend = 'https://opside-node-api.onrender.com';
+  const productionBackend = 'https://opside-node-api-woco.onrender.com';
   
   // List of deprecated/old backend URLs that should be rejected
   const deprecatedBackends = [
