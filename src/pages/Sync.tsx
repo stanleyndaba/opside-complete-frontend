@@ -653,38 +653,7 @@ export default function Sync() {
               </Card>
 
               {/* Sync History */}
-              <Card className="bg-white/5 border-white/10 text-gray-100">
-                <CardHeader>
-                  <CardTitle className="flex items-center justify-between">
-                    <span>Sync History</span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={async () => {
-                        try {
-                          const history = await getSyncHistory();
-                          setSyncHistory(history);
-                        } catch (err: any) {
-                          setError(err?.message || 'Failed to reload sync history');
-                        }
-                      }}
-                      className="border-white/20 text-gray-100 hover:bg-white/10"
-                    >
-                      <RefreshCw className="h-4 w-4 mr-2" />
-                      Refresh History
-                    </Button>
-                  </CardTitle>
-                  <CardDescription className="text-gray-300">
-                    View your previous sync runs and their outcomes
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <SyncHistory
-                    syncHistory={syncHistory}
-                    onSelectSync={handleSelectSyncFromHistory}
-                  />
-                </CardContent>
-              </Card>
+              <SyncHistory />
             </div>
           </div>
         </div>
