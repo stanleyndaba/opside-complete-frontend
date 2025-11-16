@@ -170,6 +170,47 @@ export default function SmartInventorySync() {
   const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showEvidencePrompt, setShowEvidencePrompt] = useState<boolean>(false);
+  const [docPromptLoading, setDocPromptLoading] = useState<string | null>(null);
+  const docSourceOptions: Array<{
+    id: 'gmail' | 'outlook' | 'gdrive' | 'dropbox';
+    name: string;
+    icon: string;
+    description: string;
+  }> = [
+    { id: 'gmail', name: 'Gmail', icon: '/gmailicon.png', description: 'Best for invoices & receipts' },
+    { id: 'outlook', name: 'Outlook', icon: '/outlookicon.webp', description: 'Connect Microsoft 365 mailboxes' },
+    { id: 'gdrive', name: 'Google Drive', icon: '/gd.png', description: 'Pull PDFs from shared drives' },
+    { id: 'dropbox', name: 'Dropbox', icon: '/db.png', description: 'Scan folders for shipping docs' },
+  ];
+
+  const connectDocSource = async (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox') => {
+    const providerName = provider === 'gdrive' ? 'Google Drive'
+      : provider === 'gmail' ? 'Gmail'
+      : provider === 'dropbox' ? 'Dropbox'
+      : 'Outlook';
+    try {
+      setDocPromptLoading(provider);
+      const r = await api.connectDocs(provider);
+      if (r.ok && r.data?.auth_url) {
+        window.location.href = r.data.auth_url;
+      } else {
+        toast({
+          title: 'Connection Failed',
+          description: r.error || `Failed to initiate ${providerName} connection. Please try again.`,
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error(`Failed to connect ${providerName}:`, error);
+      toast({
+        title: 'Connection Failed',
+        description: `An error occurred while connecting ${providerName}. Please try again.`,
+        variant: 'destructive',
+      });
+    } finally {
+      setDocPromptLoading(null);
+    }
+  };
   const [amazonConnected, setAmazonConnected] = useState(false);
   const syncCompletedRef = useRef<string | null>(null); // Track which syncId we've already handled
   const currentSyncIdRef = useRef<string | undefined>(undefined); // Track current syncId for polling
@@ -2202,130 +2243,56 @@ export default function SmartInventorySync() {
       </div>
 
       {/* Evidence Connections Prompt */}
-      <Dialog open={showEvidencePrompt} onOpenChange={setShowEvidencePrompt}>
-        <DialogContent className="max-w-lg bg-[whitesmoke] backdrop-blur-md border border-gray-200 text-gray-900 shadow-[0_20px_80px_rgba(15,23,42,0.25)] rounded-2xl">
-          <DialogHeader>
-            <DialogTitle className="text-lg text-gray-900">
-              Connect Doc Sources
-            </DialogTitle>
-            <DialogDescription className="text-slate-500">
-              Link your email and cloud storage to automatically collect invoices, receipts, and shipping documents.
-              <span className="block mt-2 text-sm text-slate-600">
-                Read-only access. No writing or sending permissions.
-              </span>
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid grid-cols-2 gap-3 pt-2">
-            <Button className="w-full bg-red-600 hover:bg-red-500 text-white border border-transparent shadow-sm" onClick={async () => {
-              try {
-                const r = await api.connectDocs('gmail');
-                if (r.ok && r.data?.auth_url) {
-                  window.location.href = r.data.auth_url;
-                } else {
-                  toast({
-                    title: 'Connection Failed',
-                    description: r.error || 'Failed to initiate Gmail connection. Please try again.',
-                    variant: 'destructive',
-                  });
-                }
-              } catch (error) {
-                console.error('Failed to connect Gmail:', error);
-                toast({
-                  title: 'Connection Failed',
-                  description: 'An error occurred while connecting Gmail. Please try again.',
-                  variant: 'destructive',
-                });
-              }
-            }}>
-              <img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 mr-2 object-contain" /> Gmail
-            </Button>
-            <Button 
-              className="w-full bg-blue-600 hover:bg-blue-500 text-white border border-transparent shadow-sm"
-              onClick={async () => {
-                try {
-                  const r = await api.connectDocs('outlook');
-                  if (r.ok && r.data?.auth_url) {
-                    window.location.href = r.data.auth_url;
-                  } else {
-                    toast({
-                      title: 'Connection Failed',
-                      description: r.error || 'Failed to initiate Outlook connection. Please try again.',
-                      variant: 'destructive',
-                    });
-                  }
-                } catch (error) {
-                  console.error('Failed to connect Outlook:', error);
-                  toast({
-                    title: 'Connection Failed',
-                    description: 'An error occurred while connecting Outlook. Please try again.',
-                    variant: 'destructive',
-                  });
-                }
-              }}
-            >
-              <img src="/outlookicon.webp" alt="Outlook" className="h-4 w-4 mr-2 object-contain" /> Outlook
-            </Button>
-            <Button 
-              className="w-full bg-emerald-600 hover:bg-emerald-500 text-white border border-transparent shadow-sm"
-              onClick={async () => {
-                try {
-                  const r = await api.connectDocs('gdrive');
-                  if (r.ok && r.data?.auth_url) {
-                    window.location.href = r.data.auth_url;
-                  } else {
-                    toast({
-                      title: 'Connection Failed',
-                      description: r.error || 'Failed to initiate Google Drive connection. Please try again.',
-                      variant: 'destructive',
-                    });
-                  }
-                } catch (error) {
-                  console.error('Failed to connect Google Drive:', error);
-                  toast({
-                    title: 'Connection Failed',
-                    description: 'An error occurred while connecting Google Drive. Please try again.',
-                    variant: 'destructive',
-                  });
-                }
-              }}
-            >
-              <img src="/gd.png" alt="Google Drive" className="h-4 w-4 mr-2 object-contain" /> Google Drive
-            </Button>
-            <Button 
-              className="w-full bg-sky-600 hover:bg-sky-500 text-white border border-transparent shadow-sm"
-              onClick={async () => {
-                try {
-                  const r = await api.connectDocs('dropbox');
-                  if (r.ok && r.data?.auth_url) {
-                    window.location.href = r.data.auth_url;
-                  } else {
-                    toast({
-                      title: 'Connection Failed',
-                      description: r.error || 'Failed to initiate Dropbox connection. Please try again.',
-                      variant: 'destructive',
-                    });
-                  }
-                } catch (error) {
-                  console.error('Failed to connect Dropbox:', error);
-                  toast({
-                    title: 'Connection Failed',
-                    description: 'An error occurred while connecting Dropbox. Please try again.',
-                    variant: 'destructive',
-                  });
-                }
-              }}
-            >
-              <img src="/db.png" alt="Dropbox" className="h-4 w-4 mr-2 object-contain" /> Dropbox
-            </Button>
-          </div>
-          <DialogFooter>
-            <Button variant="ghost" className="text-slate-500 hover:text-slate-700" onClick={() => { setShowEvidencePrompt(false); try { localStorage.setItem('clario.evidencePromptDismissed', 'true'); } catch {} }}>Not now</Button>
-            <Button onClick={() => setShowEvidencePrompt(false)} className="gap-2 bg-slate-900 hover:bg-slate-800 text-white">
-              <ArrowRight className="h-4 w-4" /> Continue
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        <Dialog open={showEvidencePrompt} onOpenChange={setShowEvidencePrompt}>
+          <DialogContent className="max-w-md bg-white backdrop-blur-md border border-gray-200 text-gray-900 shadow-[0_18px_60px_rgba(15,23,42,0.25)] rounded-2xl p-0 overflow-hidden">
+            <DialogHeader className="px-5 pt-5 pb-2">
+              <DialogTitle className="text-base font-semibold text-slate-900">
+                Connect Doc Sources
+              </DialogTitle>
+              <DialogDescription className="text-sm text-slate-500">
+                Link your email and cloud storage to automatically collect invoices, receipts, and shipping documents.
+                <span className="block mt-1 text-xs text-slate-500/90">
+                  Read-only access. No writing or sending permissions.
+                </span>
+              </DialogDescription>
+            </DialogHeader>
+            <div className="px-5 pb-4">
+              <div className="rounded-2xl border border-slate-200 divide-y divide-slate-200 overflow-hidden bg-white/70">
+                {docSourceOptions.map((option) => (
+                  <button
+                    key={option.id}
+                    className="flex w-full items-center justify-between px-4 py-3 text-left hover:bg-slate-50 transition disabled:cursor-not-allowed"
+                    onClick={() => connectDocSource(option.id)}
+                    disabled={docPromptLoading === option.id}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-lg bg-slate-100 flex items-center justify-center">
+                        <img src={option.icon} alt={option.name} className="h-5 w-5 object-contain" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-slate-900">{option.name}</p>
+                        <p className="text-xs text-slate-500">{option.description}</p>
+                      </div>
+                    </div>
+                    {docPromptLoading === option.id ? (
+                      <RefreshCw className="h-4 w-4 animate-spin text-slate-400" />
+                    ) : (
+                      <span className="text-xs font-medium text-slate-500">Connect</span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <DialogFooter className="px-5 pb-5">
+              <Button variant="ghost" className="text-slate-500 hover:text-slate-700" onClick={() => { setShowEvidencePrompt(false); try { localStorage.setItem('clario.evidencePromptDismissed', 'true'); } catch {} }}>
+                Not now
+              </Button>
+              <Button onClick={() => setShowEvidencePrompt(false)} className="gap-2 bg-slate-900 hover:bg-slate-800 text-white">
+                <ArrowRight className="h-4 w-4" /> Continue
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
     </PageLayout>
   );
 }

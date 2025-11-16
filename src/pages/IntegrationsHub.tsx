@@ -69,6 +69,38 @@ export default function IntegrationsHub() {
     created_at: string;
     metadata: Record<string, any>;
   }>>([]);
+  const handleConnectDocSource = async (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox') => {
+    const providerName = provider === 'gdrive' ? 'Google Drive' 
+      : provider === 'gmail' ? 'Gmail' 
+      : provider === 'dropbox' ? 'Dropbox' 
+      : 'Outlook';
+    try {
+      setProviderLoading(provider);
+      const r = await api.connectDocs(provider);
+      if (r.ok && r.data?.auth_url) {
+        toast({
+          title: `Connecting ${providerName}`,
+          description: `Redirecting to ${providerName} authentication...`,
+        });
+        window.location.href = r.data.auth_url;
+      } else {
+        toast({
+          title: 'Connection Failed',
+          description: r.error || `Failed to initiate ${providerName} connection. Please try again.`,
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error(`Failed to connect ${provider}:`, error);
+      toast({
+        title: 'Connection Failed',
+        description: `An error occurred while connecting ${providerName}. Please try again.`,
+        variant: 'destructive',
+      });
+    } finally {
+      setProviderLoading(prev => (prev === provider ? null : prev));
+    }
+  };
 
   // Real-time sync simulation
   useEffect(() => {
@@ -406,62 +438,13 @@ export default function IntegrationsHub() {
                             <Badge variant="outline" className={cn('w-fit text-xs', connected ? 'border-emerald-500 text-emerald-400 font-semibold' : hasError() ? 'border-red-400 text-red-300' : 'border-gray-400/40 text-gray-300')}>
                               {connected ? 'Connected' : hasError() ? 'Error' : 'Not connected'}
                             </Badge>
-                            <div className="flex gap-2">
-                              <Button 
-                                size="sm" 
-                                className={cn(connected ? 'bg-emerald-600/10 text-emerald-200 border border-emerald-500/30 hover:bg-emerald-600/20' : 'bg-emerald-500 hover:bg-emerald-400 text-white')} 
-                                onClick={async () => {
-                                  try {
-                                    setProviderLoading(p);
-                                    const r = await api.connectDocs(p);
-                                    if (r.ok && r.data?.auth_url) {
-                                      toast({
-                                        title: 'Connecting...',
-                                        description: `Redirecting to Gmail authentication...`,
-                                      });
-                                      window.location.href = r.data.auth_url;
-                                    } else {
-                                      const errorMsg = r.error || 'Unknown error';
-                                      if (errorMsg.includes('OAuth configuration not found') || errorMsg.includes('500')) {
-                                        toast({
-                                          title: 'Gmail OAuth Not Configured',
-                                          description: 'The backend OAuth configuration for Gmail is not set up. Please contact support or check backend environment variables.',
-                                          variant: 'destructive',
-                                        });
-                                        setProviderLoading(null);
-                                        return;
-                                      }
-                                      toast({
-                                        title: 'Connection Failed',
-                                        description: r.error || 'Failed to initiate Gmail connection. Please try again.',
-                                        variant: 'destructive',
-                                      });
-                                    }
-                                  } catch (error: any) {
-                                    console.error(`Failed to connect ${p}:`, error);
-                                    const errorMsg = error?.message || error?.toString() || 'Unknown error';
-                                    if (errorMsg.includes('OAuth configuration not found') || errorMsg.includes('500')) {
-                                      toast({
-                                        title: 'Gmail OAuth Not Configured',
-                                        description: 'The backend OAuth configuration for Gmail is not set up. Please contact support or check backend environment variables.',
-                                        variant: 'destructive',
-                                      });
-                                      setProviderLoading(null);
-                                      return;
-                                    }
-                                    toast({
-                                      title: 'Connection Failed',
-                                      description: 'An error occurred while connecting Gmail. Please try again.',
-                                      variant: 'destructive',
-                                    });
-                                  } finally {
-                                    if (providerLoading === p) {
-                                      setProviderLoading(null);
-                                    }
-                                  }
-                                }}
-                                disabled={providerLoading !== null || disconnectingProvider === p}
-                              >
+                              <div className="flex gap-2">
+                                <Button 
+                                  size="sm" 
+                                  className={cn(connected ? 'bg-emerald-600/10 text-emerald-200 border border-emerald-500/30 hover:bg-emerald-600/20' : 'bg-emerald-500 hover:bg-emerald-400 text-white')} 
+                                  onClick={() => handleConnectDocSource(p)}
+                                  disabled={providerLoading !== null || disconnectingProvider === p}
+                                >
                                 {providerLoading === p ? (
                                   <>
                                     <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
