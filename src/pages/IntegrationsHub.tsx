@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { Shield, RefreshCw, Sparkles } from 'lucide-react';
+import { RefreshCw, Sparkles } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
@@ -293,36 +293,59 @@ export default function IntegrationsHub() {
             </div>
           </div>
 
-        {/* Core Integrations */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Amazon SP-API */}
-          <Card className="bg-white/5 border-white/10 text-gray-300">
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between text-gray-200">
-                <span className="inline-flex items-center gap-2"><Shield className="h-5 w-5 text-emerald-400" /> Amazon SP‑API</span>
-                <Badge variant="outline" className={cn('text-xs', (isSandbox || status?.amazon_connected) ? 'border-emerald-500 text-emerald-500 font-semibold' : 'border-gray-400/50 text-gray-400')}>
-                  {(isSandbox || status?.amazon_connected) ? 'Connected' : 'Not connected'}
-                </Badge>
-              </CardTitle>
-              <CardDescription className="text-gray-400">Sync inventory, fees, reimbursements, shipments and returns.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center gap-3 text-sm text-gray-400">
-                <span>Last sync: {status?.lastSync || lastSyncTime}</span>
-                <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-white font-semibold" onClick={() => { navigate('/smart-inventory-sync'); toast({ title: 'Opening Sync', description: 'Reconciling and refreshing data…' }); }}>
-                  <RefreshCw className="h-4 w-4 mr-2" /> Sync now
+          {/* Core Integrations */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Amazon SP-API */}
+            <Card className="bg-white/5 border-white/10 text-gray-300">
+              <CardHeader className="space-y-4">
+                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="relative h-14 w-14 rounded-full bg-[#232F3E] shadow-[0_10px_25px_rgba(0,0,0,0.35)] flex items-center justify-center">
+                      <span className="text-2xl font-black text-[#FF9900]">a</span>
+                      <div className="absolute bottom-2 left-2 right-2 h-1 rounded-full bg-gradient-to-r from-[#FF9900] via-[#FFB347] to-[#FFE29A]" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-gray-200 text-xl">Amazon SP‑API</CardTitle>
+                      <CardDescription className="text-gray-400">Sync inventory, fees, reimbursements, shipments and returns.</CardDescription>
+                    </div>
+                  </div>
+                  <Badge variant="outline" className={cn('text-xs px-3 py-1 rounded-full', (isSandbox || status?.amazon_connected) ? 'border-emerald-500 text-emerald-400 font-semibold' : 'border-gray-400/50 text-gray-400')}>
+                    {(isSandbox || status?.amazon_connected) ? 'Connected' : 'Not connected'}
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid gap-3 text-sm text-gray-300">
+                  <div className="flex items-center justify-between text-xs uppercase tracking-wide text-gray-500">
+                    <span>Status</span>
+                    <span className={cn('font-semibold', (isSandbox || status?.amazon_connected) ? 'text-emerald-300' : 'text-amber-300')}>
+                      {(isSandbox || status?.amazon_connected) ? 'Active' : 'Awaiting Connection'}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-400">Last sync</span>
+                    <span className="text-gray-200">{status?.lastSync || lastSyncTime}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs text-gray-400">
+                    <span>Scopes</span>
+                    <span className="text-gray-200 text-right">orders.read · inventory.read · transactions.read</span>
+                  </div>
+                </div>
+                <Button 
+                  size="lg" 
+                  className="bg-[#FF9900] hover:bg-[#f7901c] text-[#0B1220] font-semibold w-full" 
+                  onClick={() => {
+                    toast({
+                      title: (isSandbox || status?.amazon_connected) ? 'Manage Amazon Connection' : 'Connect Amazon',
+                      description: 'Redirecting to Amazon SP‑API flow…',
+                    });
+                    navigate('/integrations/reconnect/amazon');
+                  }}
+                >
+                  {(isSandbox || status?.amazon_connected) ? 'Manage Amazon Connection' : 'Connect Amazon'}
                 </Button>
-                <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={async () => { try { await api.post('/api/detections/run'); toast({ title: 'Detector started', description: 'Scanning new opportunities…' }); } catch(e:any){ toast({ title: 'Detector failed', description: e?.message || 'Please try again.', variant: 'destructive' }); } }}>
-                  Run Detector
-                </Button>
-              </div>
-              <div className="text-xs text-gray-400">Scopes: orders.read, inventory.read, transactions.read</div>
-              <div className="flex gap-2">
-                <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={() => { toast({ title: 'Reconnect Amazon', description: 'Redirecting to connection flow…' }); navigate('/integrations/reconnect/amazon'); }}>Reconnect</Button>
-                  <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={async () => { const res = await api.disconnectIntegration('amazon', true); if (res.ok){ toast({ title: 'Disconnected', description: 'Amazon integration disconnected.' }); } else { toast({ title: 'Disconnect failed', description: res.error || 'Please try again.', variant: 'destructive' }); } const s = await api.getIntegrationsStatus(); if (s.ok) setStatus(s.data); }}>Disconnect</Button>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
 
           {/* Evidence Sources */}
           <Card className="bg-white/5 border-white/10 text-gray-300">
