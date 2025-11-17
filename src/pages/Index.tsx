@@ -320,7 +320,11 @@ const Index = () => {
               <div className="relative inline-flex items-center gap-4 rounded-[25px] border border-emerald-100 bg-white/85 px-5 py-2 shadow-[0_12px_45px_rgba(16,185,129,0.25)] backdrop-blur supports-[backdrop-filter]:bg-white/70 mx-auto overflow-hidden">
                 <span className="pointer-events-none absolute inset-0 rounded-[25px] bg-gradient-to-r from-emerald-200/40 via-white/10 to-sky-200/40 blur-xl" aria-hidden="true" />
                 <span className="pointer-events-none absolute inset-0 rounded-[25px] border border-white/40" aria-hidden="true" />
-                <span className="relative text-xs font-semibold text-emerald-600">New:</span>
+                <span className="relative flex items-center gap-2">
+                  <span className="relative h-2 w-2 rounded-full bg-emerald-800">
+                    <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-75"></span>
+                  </span>
+                </span>
                   <div className="relative flex items-center gap-3 text-sm font-medium text-gray-700">
                     <span>Links seamlessly with</span>
                     <span className="inline-flex items-center gap-3">
