@@ -314,8 +314,19 @@ const Index = () => {
         </header>
 
       <main className="flex-1">
-        <section className="relative container mx-auto px-6 pt-12 md:pt-16 pb-24 md:pb-32">
-          <div className="max-w-4xl mx-auto text-center space-y-6">
+        <section className="relative container mx-auto px-6 pt-12 md:pt-16 pb-24 md:pb-32 overflow-hidden">
+          {/* Background Image */}
+          <div className="absolute inset-0 z-0">
+            <img 
+              src="/horizon.jpg" 
+              alt="Background" 
+              className="w-full h-full object-cover"
+            />
+          </div>
+          {/* White gradient transition at bottom */}
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent via-white/50 to-white pointer-events-none z-10" />
+          {/* Content */}
+          <div className="relative z-10 max-w-4xl mx-auto text-center space-y-6">
             {/* Trust chip removed per request */}
               <div className="relative inline-flex items-center gap-4 rounded-[25px] border border-emerald-100 bg-white/85 px-5 py-2 shadow-[0_12px_45px_rgba(16,185,129,0.25)] backdrop-blur supports-[backdrop-filter]:bg-white/70 mx-auto overflow-hidden">
                 <span className="pointer-events-none absolute inset-0 rounded-[25px] bg-gradient-to-r from-emerald-200/40 via-white/10 to-sky-200/40 blur-xl" aria-hidden="true" />
@@ -372,8 +383,6 @@ const Index = () => {
               {/* Email capture moved to bottom-left above the legal footer */}
             </div>
           </div>
-          {/* Gradient transition at bottom of hero section */}
-          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent via-white/50 to-white pointer-events-none" />
         </section>
         
         {/* Dashboard Image with Scroll Animation */}
