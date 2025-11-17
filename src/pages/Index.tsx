@@ -373,7 +373,7 @@ const Index = () => {
         </section>
         
         {/* Dashboard Image with Scroll Animation */}
-        <div className="relative bg-gradient-to-b from-white via-gray-50/30 to-white">
+        <div className="hidden md:block relative bg-gradient-to-b from-white via-gray-50/30 to-white">
           <div className="container mx-auto px-6 py-16">
             <div className="flex justify-center items-center min-h-[400px] relative z-10">
               <div
