@@ -314,15 +314,15 @@ const Index = () => {
         </header>
 
       <main className="flex-1">
-        <section className="relative container mx-auto px-6 pt-12 md:pt-16 pb-24 md:pb-32 overflow-hidden">
-          {/* Background Image */}
-          <div className="absolute inset-0 z-0">
-            <img 
-              src="/horizon.jpg" 
-              alt="Background" 
-              className="w-full h-full object-cover"
-            />
-          </div>
+        <section 
+          className="relative min-h-[600px] container mx-auto px-6 pt-12 md:pt-16 pb-24 md:pb-32 overflow-hidden"
+          style={{
+            backgroundImage: 'url(/horizon.jpg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat'
+          }}
+        >
           {/* White gradient transition at bottom */}
           <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent via-white/50 to-white pointer-events-none z-10" />
           {/* Content */}
