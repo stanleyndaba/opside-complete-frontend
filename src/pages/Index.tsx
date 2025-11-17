@@ -139,8 +139,13 @@ const Index = () => {
       <header className="sticky top-0 z-40 border-transparent bg-transparent">
         <div className="container mx-auto px-6 py-5">
           <div className="flex items-center justify-between gap-6 px-6 py-4 rounded-[25px] border border-white/40 bg-white/25 supports-[backdrop-filter]:bg-white/25 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_25px_60px_rgba(15,23,42,0.12)] transition-colors">
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-3">
+              <img
+                src="/donelogo.png"
+                alt="Clario logo"
+                className="h-10 w-10 rounded-full object-cover border border-black/10"
+              />
+              <div className="flex items-center gap-2">
                 {/* Brand dropdown */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -166,19 +171,18 @@ const Index = () => {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                  <Tooltip>
+                <Tooltip>
                   <TooltipTrigger asChild>
                     <button
                       type="button"
-                        className="inline-flex items-center gap-2 text-emerald-600 transition-colors hover:text-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                      className="inline-flex items-center justify-center rounded-full p-2 text-emerald-600 transition-colors hover:text-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                       aria-label="No commission on referrals"
                     >
-                      <Gift className="h-4 w-4" aria-hidden="true" />
-                      <span className="text-sm font-medium">Earn 100%</span>
+                      <Gift className="h-5 w-5" aria-hidden="true" />
                       <span className="sr-only">No commission on referrals</span>
                     </button>
                   </TooltipTrigger>
-                    <TooltipContent side="bottom" align="start" sideOffset={8} className="max-w-xs text-sm">
+                  <TooltipContent side="bottom" align="start" className="max-w-xs text-sm">
                     Invite sellers to Clario and enjoy 0% commission on every referral you bring.
                   </TooltipContent>
                 </Tooltip>
