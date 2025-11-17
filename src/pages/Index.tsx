@@ -3,11 +3,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Link } from 'react-router-dom';
-import { ChevronDown, Link2, ScrollText, Check, Gift } from 'lucide-react';
+import { ChevronDown, Check, Gift } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AmazonConnect } from '@/components/AmazonConnect';
 import { useToast } from '@/components/ui/use-toast';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 const Index = () => {
   const { toast } = useToast();
@@ -140,39 +140,13 @@ const Index = () => {
         <div className="container mx-auto px-6 py-5">
           <div className="flex items-center justify-between gap-6 px-6 py-4 rounded-[25px] border border-white/40 bg-white/25 supports-[backdrop-filter]:bg-white/25 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_25px_60px_rgba(15,23,42,0.12)] transition-colors">
             <div className="flex items-center gap-3">
-              <img
-                src="/donelogo.png"
-                alt="Clario logo"
-                className="h-10 w-10 rounded-full object-cover border border-black/10"
-              />
-              <div className="flex items-center gap-2">
-                {/* Brand dropdown */}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[16px] transition-colors hover:bg-gray-100">
-                      <span className="font-black text-[#b3b3b3] tracking-tight">
-                        CLARIO
-                      </span>
-                      <ChevronDown className="h-4 w-4 opacity-70" />
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" className="min-w-[220px] bg-white/80 supports-[backdrop-filter]:bg-white/70 backdrop-blur-xl border border-white/30 text-gray-900 shadow-2xl">
-                    <DropdownMenuItem asChild>
-                      <Link to="/integrations-hub" className="flex items-center gap-2 hover:bg-gray-100 focus:bg-gray-100">
-                        <Link2 className="h-4 w-4 text-emerald-600" />
-                        <span>Integrations</span>
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link to="/terms" className="flex items-center gap-2 hover:bg-gray-100 focus:bg-gray-100">
-                        <ScrollText className="h-4 w-4 text-emerald-600" />
-                        <span>Terms & Policies</span>
-                      </Link>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <Tooltip>
-                  <TooltipTrigger asChild>
+              <Link to="/" className="inline-flex items-center px-3 py-1.5 rounded-[16px] transition-colors hover:bg-gray-100">
+                <span className="font-black text-[#b3b3b3] tracking-tight">
+                  CLARIO
+                </span>
+              </Link>
+                <Popover>
+                  <PopoverTrigger asChild>
                     <button
                       type="button"
                       className="inline-flex items-center justify-center rounded-full p-2 text-emerald-600 transition-colors hover:text-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
@@ -181,11 +155,21 @@ const Index = () => {
                       <Gift className="h-5 w-5" aria-hidden="true" />
                       <span className="sr-only">No commission on referrals</span>
                     </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="bottom" align="start" className="max-w-xs text-sm">
-                    Invite sellers to Clario and enjoy 0% commission on every referral you bring.
-                  </TooltipContent>
-                </Tooltip>
+                  </PopoverTrigger>
+                  <PopoverContent side="bottom" align="start" className="w-80 p-0 border-0 shadow-xl">
+                    <div className="bg-emerald-50 rounded-lg p-5 space-y-4">
+                      <div className="space-y-2">
+                        <h3 className="font-semibold text-emerald-900 text-base">No commission on referrals</h3>
+                        <p className="text-sm text-emerald-800">
+                          Bring new sellers to Clario and keep 100% of their recovered funds.
+                        </p>
+                      </div>
+                      <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium">
+                        Invite Friend +
+                      </Button>
+                    </div>
+                  </PopoverContent>
+                </Popover>
               </div>
             </div>
               <nav className="hidden md:flex items-center gap-4 text-sm text-gray-700">
@@ -685,8 +669,6 @@ const Index = () => {
                 By connecting your account, you agree to Clario's
                 <Link to="/terms" className="mx-1 underline hover:text-gray-900">Terms of Service</Link>
                 and acknowledge our
-                <Link to="/security" className="mx-1 underline hover:text-gray-900">Data Security</Link>
-                &
                 <Link to="/privacy" className="mx-1 underline hover:text-gray-900">Privacy Policy</Link>.
               </p>
             </div>
