@@ -204,12 +204,12 @@ const Terms = () => {
         </header>
 
           <main className="relative container mx-auto px-6 py-12 md:py-20">
-            <div className="text-sm text-gray-500 space-y-1 mb-12">
-              <p><strong>Effective Date:</strong> January 1, 2025</p>
-              <p className="text-xs text-gray-400">The day Clario's full-time operations and IP creation officially began.</p>
-              <p><strong>Last Updated:</strong> November 6, 2025</p>
-              <p className="text-xs text-gray-400">The day Clario legally executed and finalized this document.</p>
-            </div>
+              <div className="text-sm text-gray-500 space-y-1 mb-12">
+                <p><strong>Effective Date:</strong> January 1, 2025</p>
+                <p className="text-xs text-gray-400">The day Clario's full-time operations and IP creation officially began.</p>
+                <p><strong>Last Updated:</strong> November 17, 2025</p>
+                <p className="text-xs text-gray-400">The day Clario legally executed and finalized this document.</p>
+              </div>
 
           <article className="bg-white/90 border border-black/5 rounded-3xl shadow-[0_25px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl">
             <div className="px-6 py-10 md:px-12 md:py-14 space-y-10 text-gray-700">
@@ -232,8 +232,8 @@ const Terms = () => {
 
               <hr className="border-gray-200" />
 
-              <section className="space-y-4">
-                <h2 className="text-2xl font-semibold text-gray-900">1. Acceptance and Service Scope (The Foundation)</h2>
+                <section className="space-y-4">
+                  <h2 className="text-2xl font-semibold text-gray-900">1. Acceptance and Service Scope</h2>
                 <p className="text-gray-600 leading-relaxed">
                   <strong>Clario</strong> is a software-as-a-service (SaaS) tool that automates the identification, evidence-matching, and submission of FBA reimbursement claims on the User's behalf.
                 </p>
@@ -250,8 +250,8 @@ const Terms = () => {
                 </ul>
               </section>
 
-              <section className="space-y-4">
-                <h2 className="text-2xl font-semibold text-gray-900">2. User Responsibilities and Conduct (The Amazon Shield)</h2>
+                <section className="space-y-4">
+                  <h2 className="text-2xl font-semibold text-gray-900">2. User Responsibilities and Conduct</h2>
                 <p className="text-gray-600 leading-relaxed">You are solely responsible for your use of Clario.</p>
                 <p className="text-gray-600 leading-relaxed">You agree to:</p>
                 <ul className="list-disc pl-6 text-gray-600 space-y-2">
@@ -265,8 +265,8 @@ const Terms = () => {
                 </p>
               </section>
 
-              <section className="space-y-4">
-                <h2 className="text-2xl font-semibold text-gray-900">3. Fee Structure and Billing (The Business Model)</h2>
+                <section className="space-y-4">
+                  <h2 className="text-2xl font-semibold text-gray-900">3. Fee Structure and Billing</h2>
                 <p className="text-gray-600 leading-relaxed">Clario operates on a <strong>contingency commission basis</strong>.</p>
                 <ul className="list-disc pl-6 text-gray-600 space-y-2">
                   <li><strong>Commission Rate</strong>: <strong>20%</strong> of the total reimbursement amount successfully credited to your Amazon account by Amazon</li>
@@ -365,8 +365,8 @@ const Terms = () => {
               <section className="space-y-4">
                 <h2 className="text-2xl font-semibold text-gray-900">9. Contact Us</h2>
                 <p className="text-gray-600 leading-relaxed">For support, cancellation, or legal inquiries:</p>
-                <div className="space-y-2 text-gray-600">
-                  <p><strong>Clario (A Mvelo P. Venture)</strong></p>
+                  <div className="space-y-2 text-gray-600">
+                    <p><strong>Clario, Inc.</strong></p>
                   <p><strong>Email</strong>: <a href="mailto:legal@clario.app" className="underline text-emerald-600 hover:text-emerald-700">legal@clario.app</a></p>
                   <p><strong>Response Time</strong>: Within 48 hours</p>
                 </div>
