@@ -105,7 +105,7 @@ const Terms = () => {
                       <div className="space-y-2">
                         <h3 className="font-semibold text-emerald-900 text-base">No commission on referrals</h3>
                         <p className="text-sm text-emerald-800">
-                          Bring new sellers to Clario and keep 100% of their recovered funds.
+                          Sellers who bring new sellers to Clario keep 100% value of their recovered funds
                         </p>
                       </div>
                       <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium">
