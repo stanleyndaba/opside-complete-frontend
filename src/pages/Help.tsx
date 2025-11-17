@@ -125,14 +125,14 @@ export default function Help() {
   };
 
   return (
-    <PageLayout title="Help & Support">
+    <PageLayout title="Seller Support">
       <div className="relative -m-4 lg:-m-6">
         <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
           <div className="relative container max-w-4xl mx-auto px-6 pt-6 pb-10 text-gray-300">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-100 mb-2">Help & Support</h1>
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-100 mb-2">Seller Support</h1>
           <p className="text-muted-foreground text-lg">Get the help you need, when you need it</p>
         </div>
 

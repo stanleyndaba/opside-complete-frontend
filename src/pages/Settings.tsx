@@ -746,69 +746,102 @@ const Settings = () => {
           </div>
         );
 
-      case 'integrations':
-        return (
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-200">Platform Integrations</h2>
-              <p className="text-gray-400">Manage your platform connections and data sources</p>
-            </div>
-            <div>
-              <Button className="bg-emerald-500 hover:bg-emerald-400 text-white gap-2" onClick={() => navigate('/integrations-hub')}>
-                <Plug className="h-4 w-4" />
-                Clario Integrations
-              </Button>
-            </div>
-            
-            <Card className="bg-white/5 border-white/10 text-gray-300">
-              <CardHeader>
-                <CardTitle className="text-gray-200">Active Connections</CardTitle>
-                <CardDescription className="text-gray-400">Your currently connected platforms</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between p-4 border border-white/10 rounded-lg bg-white/5">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-lg bg-white/10 flex items-center justify-center border border-white/10">
-                      <img src="/lovable-uploads/14f98d63-9a1a-4128-8021-1d840d778ea5.png" alt="Amazon Seller Central logo" className="h-7 w-7 object-contain" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-gray-200">Amazon Seller Central</p>
-                      <p className="text-sm text-gray-400">Connected • Last sync: 5 mins ago</p>
-                    </div>
-                  </div>
-                  <Badge className="bg-green-100 text-green-800">Active</Badge>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="bg-white/5 border-white/10 text-gray-300">
-              <CardHeader>
-                <CardTitle className="text-gray-200">Platform Integrations Coming Soon</CardTitle>
-                <CardDescription className="text-gray-400">Coming soon to expand your recovery capabilities</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {['Shopify', 'Walmart Marketplace', 'QuickBooks', 'Xero', 'eBay'].map((platform) => (
-                  <div key={platform} className="flex items-center justify-between p-4 border border-white/10 rounded-lg bg-white/5">
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-lg bg-white/10 flex items-center justify-center border border-white/10">
-                        {platform === 'Shopify' && <img src="/lovable-uploads/8efb84ba-e777-4413-ae5a-f7f54bfa6cab.png" alt="Shopify logo" className="h-7 w-7 object-contain" />}
-                        {platform === 'Walmart Marketplace' && <img src="/lovable-uploads/cef56367-b57b-46cc-b0cb-a2ffad47fb03.png" alt="Walmart logo" className="h-7 w-7 object-contain" />}
-                        {platform === 'QuickBooks' && <img src="/lovable-uploads/02ff2e6e-9e67-4481-99a8-4b9caead4540.png" alt="QuickBooks logo" className="h-7 w-7 object-contain" />}
-                        {platform === 'Xero' && <img src="/lovable-uploads/ac3dc504-c896-4f73-9e7e-aefc77dd6e9f.png" alt="Xero logo" className="h-7 w-7 object-contain" />}
-                        {platform === 'eBay' && <img src="/lovable-uploads/f894a44c-fd04-4ec2-8af3-a7235951d82d.png" alt="eBay logo" className="h-7 w-7 object-contain" />}
+        case 'integrations': {
+          const activePlatforms = [
+            {
+              id: 'amazon',
+              name: 'Amazon Seller Central',
+              icon: '/lovable-uploads/14f98d63-9a1a-4128-8021-1d840d778ea5.png',
+              description: 'SP‑API sync for reimbursements, shipments, and claims.',
+              connected: sellerProfile.amazon_connected ?? true,
+              lastSync: sellerProfile.last_sync_completed_at ? formatDate(sellerProfile.last_sync_completed_at) : '5 mins ago'
+            }
+          ];
+          const upcomingPlatforms = [
+            { id: 'shopify', name: 'Shopify', icon: '/lovable-uploads/8efb84ba-e777-4413-ae5a-f7f54bfa6cab.png' },
+            { id: 'walmart', name: 'Walmart Marketplace', icon: '/lovable-uploads/cef56367-b57b-46cc-b0cb-a2ffad47fb03.png' },
+            { id: 'quickbooks', name: 'QuickBooks', icon: '/lovable-uploads/02ff2e6e-9e67-4481-99a8-4b9caead4540.png' },
+            { id: 'xero', name: 'Xero', icon: '/lovable-uploads/ac3dc504-c896-4f73-9e7e-aefc77dd6e9f.png' },
+            { id: 'ebay', name: 'eBay', icon: '/lovable-uploads/f894a44c-fd04-4ec2-8af3-a7235951d82d.png' },
+          ];
+          return (
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-200">Integrations</h2>
+                <p className="text-gray-400">Manage your platform connections and data sources</p>
+              </div>
+              <div>
+                <Button className="bg-emerald-500 hover:bg-emerald-400 text-white gap-2" onClick={() => navigate('/integrations-hub')}>
+                  <Plug className="h-4 w-4" />
+                  Clario Integrations
+                </Button>
+              </div>
+              
+              <Card className="bg-white/5 border-white/10 text-gray-300">
+                <CardHeader />
+                <CardContent className="space-y-4">
+                  <div className="rounded-2xl border border-white/10 bg-white/5 divide-y divide-white/10">
+                    {activePlatforms.map(platform => (
+                      <div key={platform.id} className="flex flex-col gap-4 px-4 py-4 md:flex-row md:items-center md:justify-between">
+                        <div className="flex items-center gap-3 flex-1">
+                          <div className="h-12 w-12 rounded-xl bg-white/10 flex items-center justify-center border border-white/10">
+                            <img src={platform.icon} alt={`${platform.name} logo`} className="h-8 w-8 object-contain" />
+                          </div>
+                          <div>
+                            <p className="font-semibold text-gray-100">{platform.name}</p>
+                            <p className="text-sm text-gray-400">{platform.description}</p>
+                            <p className="text-xs text-gray-500 mt-1">Last sync: {platform.lastSync}</p>
+                          </div>
+                        </div>
+                          <div className="flex flex-col gap-2 md:items-end">
+                          <Button 
+                            size="sm" 
+                            className="bg-emerald-500 hover:bg-emerald-400 text-white" 
+                            onClick={() => navigate('/integrations-hub')}
+                          >
+                            {platform.connected ? 'Manage' : 'Connect'}
+                          </Button>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-medium text-gray-200">{platform}</p>
-                        <p className="text-sm text-gray-400">Coming Soon</p>
-                      </div>
-                    </div>
-                    <Badge variant="secondary">Roadmap</Badge>
+                    ))}
                   </div>
-                ))}
-              </CardContent>
-            </Card>
-          </div>
-        );
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-white/5 border-white/10 text-gray-300">
+                <CardHeader>
+                  <CardTitle className="text-gray-200">Coming</CardTitle>
+                  <CardDescription className="text-gray-400">Coming soon to expand your recovery capabilities</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="rounded-2xl border border-white/10 bg-white/5 divide-y divide-white/10">
+                    {upcomingPlatforms.map(platform => (
+                      <div key={platform.id} className="flex flex-col gap-4 px-4 py-4 md:flex-row md:items-center md:justify-between opacity-80">
+                        <div className="flex items-center gap-3 flex-1">
+                          <div className="h-12 w-12 rounded-xl bg-white/10 flex items-center justify-center border border-white/10">
+                            <img src={platform.icon} alt={`${platform.name} logo`} className="h-8 w-8 object-contain" />
+                          </div>
+                          <div>
+                            <p className="font-semibold text-gray-100">{platform.name}</p>
+                            <p className="text-sm text-gray-500">Coming soon</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <Badge variant="outline" className="text-xs border-amber-400/40 text-amber-200">
+                            Roadmap
+                          </Badge>
+                          <Button size="sm" disabled className="bg-white/5 text-gray-400 border border-white/10 cursor-not-allowed">
+                            Connect
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          );
+        }
 
       case 'notifications':
         return (

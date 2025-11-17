@@ -72,14 +72,14 @@ export default function WhatsNew() {
   }, {});
   const orderedMonths = Object.keys(groups);
   return (
-    <PageLayout title="What's New at Clario">
+    <PageLayout title="What's New">
       <div className="relative -m-4 lg:-m-6">
         <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
           <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-300 space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-gray-100 mb-2 font-brand">What's New at Clario</h1>
+          <h1 className="text-3xl font-bold text-gray-100 mb-2 font-brand">What's New</h1>
           <p className="text-muted-foreground font-body">
             We're relentlessly improving our platform to find and recover more for you. Here's a log of our latest updates.
           </p>
