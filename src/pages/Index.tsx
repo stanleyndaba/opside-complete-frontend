@@ -286,7 +286,7 @@ const Index = () => {
       <div className="relative z-10" style={{ minHeight: '100vh' }}>
         <main className="flex-1 relative z-10">
           <section 
-            className="relative min-h-[600px] container mx-auto px-6 pt-12 md:pt-16 pb-24 md:pb-32 overflow-hidden"
+            className="relative min-h-[600px] container mx-auto px-6 pt-12 md:pt-16 pb-0 overflow-hidden"
           >
           {/* Content */}
           <div className="relative z-10 max-w-4xl mx-auto text-center space-y-6">
@@ -352,8 +352,8 @@ const Index = () => {
         <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-b from-transparent via-white/30 to-white pointer-events-none z-20" />
       </div>
       {/* End of background image area - white content starts here */}
-      <div className="relative z-10" style={{ background: 'white' }}>
-        <section className="relative isolate bg-white text-gray-900">
+      <div className="relative z-10 -mt-48" style={{ background: 'white' }}>
+        <section className="relative isolate bg-white text-gray-900 pt-48">
           <div
             className="pointer-events-none absolute inset-0 opacity-90"
             aria-hidden="true"
