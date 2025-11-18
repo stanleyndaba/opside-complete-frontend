@@ -134,7 +134,14 @@ const Index = () => {
 
   return (
     <div 
-      className="min-h-screen flex flex-col bg-white text-gray-900"
+      className="min-h-screen flex flex-col text-gray-900 relative"
+      style={{
+        backgroundImage: 'url(/horizon.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed'
+      }}
     >
       <header className="sticky top-0 z-40 border-transparent bg-transparent">
         <div className="container mx-auto px-6 py-5">
@@ -316,12 +323,6 @@ const Index = () => {
       <main className="flex-1">
         <section 
           className="relative min-h-[600px] container mx-auto px-6 pt-12 md:pt-16 pb-24 md:pb-32 overflow-hidden"
-          style={{
-            backgroundImage: 'url(/horizon.jpg)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat'
-          }}
         >
           {/* White gradient transition at bottom */}
           <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent via-white/50 to-white pointer-events-none z-10" />
@@ -356,7 +357,7 @@ const Index = () => {
                     </span>
                 </div>
               </div>
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-gray-900">
+            <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-white">
               The <span className="text-emerald-600">end</span> of FBA reimbursement work.
             </h1>
               <p className="font-body text-base md:text-xl text-gray-600 font-normal max-w-3xl mx-auto">
