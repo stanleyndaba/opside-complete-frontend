@@ -142,6 +142,14 @@
     font-family: "Stack Sans Text", system-ui, sans-serif !important;
   }
 
+  /* Override for code snippets - use programming fonts */
+  pre code,
+  pre,
+  code[class*="code"],
+  pre[class*="code"] {
+    font-family: 'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Consolas', 'Monaco', 'Menlo', 'Courier New', monospace !important;
+  }
+
   /* Glass morphism */
   .glass {
     @apply bg-white/10 backdrop-blur-lg border border-white/20 shadow-glass;

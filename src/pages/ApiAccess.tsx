@@ -30,7 +30,7 @@ const ApiAccess = () => {
                   <span className="h-2.5 w-2.5 rounded-full bg-green-500/70" />
                   <span className="ml-3 text-xs uppercase tracking-wider text-gray-400">example.py</span>
                 </div>
-                <pre className="p-6 overflow-x-auto text-sm md:text-base leading-relaxed font-mono text-gray-200">
+                <pre className="p-6 overflow-x-auto text-sm md:text-base leading-relaxed text-gray-200" style={{ fontFamily: "'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Consolas', 'Monaco', 'Menlo', 'Courier New', monospace" }}>
 <code>
 <span className="text-gray-400"># Get the latest recovered claims</span>
 <br />
