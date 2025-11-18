@@ -94,20 +94,27 @@ const Index = () => {
     <div 
       className="min-h-screen flex flex-col text-gray-900 relative"
     >
-      <header className="sticky top-0 z-40 border-transparent bg-transparent" style={{
-        backgroundImage: 'url(/horizon.jpg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}>
+      <div className="relative" style={{ minHeight: '100vh' }}>
+        {/* Single background image covering header and hero - using absolute positioning for mobile stability */}
+        <div 
+          className="absolute inset-0 z-0 pointer-events-none"
+          style={{
+            backgroundImage: 'url(/horizon.jpg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat'
+          }}
+        />
+        <div className="relative z-10">
+      <header className="sticky top-0 z-40 border-transparent bg-transparent" style={{ background: 'transparent' }}>
         <div className="container mx-auto px-6 py-5">
           <div className="flex items-center justify-between gap-6 px-6 py-4 rounded-[25px] border border-white/40 bg-white/25 supports-[backdrop-filter]:bg-white/25 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_25px_60px_rgba(15,23,42,0.12)] transition-colors">
-            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3">
               <Link to="/" className="inline-flex items-center px-3 py-1.5 rounded-[16px] transition-colors hover:bg-gray-100">
-                <span className="font-black text-[#b3b3b3] tracking-tight">
-                  CLARIO
-                </span>
-              </Link>
+                      <span className="font-black text-[#b3b3b3] tracking-tight">
+                        CLARIO
+                      </span>
+                      </Link>
                 <Popover>
                   <PopoverTrigger asChild>
                     <button
@@ -130,10 +137,10 @@ const Index = () => {
                       <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium">
                         Invite Friend +
                       </Button>
-                    </div>
+              </div>
                   </PopoverContent>
                 </Popover>
-              </div>
+            </div>
               <nav className="hidden md:flex items-center gap-4 text-sm text-gray-700">
                 {primaryLinks.map((link) => (
                   <Link
@@ -184,8 +191,8 @@ const Index = () => {
                     Login
                   </Button>
                 </Link>
-              </nav>
-              <button
+            </nav>
+            <button
               type="button"
               className="md:hidden flex flex-col items-end gap-1.5 rounded-[16px] border border-white/40 bg-white/40 px-3 py-2 transition-colors hover:bg-white/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
               aria-label="Toggle menu"
@@ -195,9 +202,9 @@ const Index = () => {
               <span className="block h-[1px] w-6 bg-gray-900 rounded-full" />
               <span className="block h-[1px] w-5 bg-gray-900 rounded-full" />
               <span className="block h-[1px] w-4 bg-gray-900 rounded-full" />
-              </button>
-            </div>
-            {mobileMenuOpen && (
+            </button>
+          </div>
+          {mobileMenuOpen && (
             <div className="mt-4 md:hidden">
               <div className="flex flex-col gap-2 rounded-[20px] border border-white/40 bg-white/80 supports-[backdrop-filter]:bg-white/70 backdrop-blur-2xl p-4 shadow-2xl">
                   <div className="rounded-[18px] border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700 shadow-sm">
@@ -272,20 +279,13 @@ const Index = () => {
                 </Link>
               </div>
             </div>
-            )}
-          </div>
-        </header>
-
-      <main className="flex-1">
-        <section 
-          className="relative min-h-[600px] container mx-auto px-6 pt-12 md:pt-16 pb-24 md:pb-32 overflow-hidden"
-          style={{
-            backgroundImage: 'url(/horizon.jpg)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat'
-          }}
-        >
+          )}
+        </div>
+      </header>
+        <main className="flex-1 relative z-10">
+          <section 
+            className="relative min-h-[600px] container mx-auto px-6 pt-12 md:pt-16 pb-24 md:pb-32 overflow-hidden"
+          >
           {/* White gradient transition at bottom */}
           <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent via-white/50 to-white pointer-events-none z-10" />
           {/* Content */}
@@ -347,7 +347,11 @@ const Index = () => {
             </div>
           </div>
         </section>
-
+        </main>
+        </div>
+      </div>
+      {/* End of background image area - white content starts here */}
+      <div className="relative z-10" style={{ background: 'white' }}>
         <section className="relative isolate bg-white text-gray-900">
           <div
             className="pointer-events-none absolute inset-0 opacity-90"
@@ -574,8 +578,8 @@ const Index = () => {
               </div>
           </div>
         </section>
-      </main>
-
+      </div>
+      <div className="relative z-10">
         {/* CLARIO Brand Section */}
         <section className="relative bg-white py-24 md:py-32">
           <div className="container mx-auto px-6">
@@ -621,6 +625,7 @@ const Index = () => {
             </div>
           </footer>
         </div>
+      </div>
     </div>
   );
 };
