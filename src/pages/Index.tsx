@@ -349,8 +349,8 @@ const Index = () => {
         </section>
         </main>
       </div>
-      {/* End of background image area - white content starts here */}
-      <div className="relative z-10" style={{ background: 'white' }}>
+      {/* End of background image area - white content starts here - no gap */}
+      <div className="relative z-10" style={{ background: 'white', marginTop: '-64px' }}>
         <section className="relative isolate bg-white text-gray-900">
           {/* White gradient at top of benefit section - smooth transition from hero */}
           <div className="absolute top-0 left-0 right-0 h-64 bg-gradient-to-b from-transparent via-white/40 to-white pointer-events-none z-10" />
