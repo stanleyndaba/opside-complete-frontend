@@ -146,7 +146,10 @@
   pre code,
   pre,
   code[class*="code"],
-  pre[class*="code"] {
+  pre[class*="code"],
+  pre span,
+  pre code span,
+  code span {
     font-family: 'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Consolas', 'Monaco', 'Menlo', 'Courier New', monospace !important;
   }
 
