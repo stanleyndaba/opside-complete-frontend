@@ -93,15 +93,13 @@ const Index = () => {
   return (
     <div 
       className="min-h-screen flex flex-col text-gray-900 relative"
-      style={{
+    >
+      <header className="sticky top-0 z-40 border-transparent bg-transparent" style={{
         backgroundImage: 'url(/horizon.jpg)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        backgroundAttachment: 'fixed'
-      }}
-    >
-      <header className="sticky top-0 z-40 border-transparent bg-transparent">
+        backgroundRepeat: 'no-repeat'
+      }}>
         <div className="container mx-auto px-6 py-5">
           <div className="flex items-center justify-between gap-6 px-6 py-4 rounded-[25px] border border-white/40 bg-white/25 supports-[backdrop-filter]:bg-white/25 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_25px_60px_rgba(15,23,42,0.12)] transition-colors">
             <div className="flex items-center gap-3">
@@ -281,6 +279,12 @@ const Index = () => {
       <main className="flex-1">
         <section 
           className="relative min-h-[600px] container mx-auto px-6 pt-12 md:pt-16 pb-24 md:pb-32 overflow-hidden"
+          style={{
+            backgroundImage: 'url(/horizon.jpg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat'
+          }}
         >
           {/* White gradient transition at bottom */}
           <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent via-white/50 to-white pointer-events-none z-10" />
@@ -318,7 +322,7 @@ const Index = () => {
             <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-white">
               The <span className="text-emerald-600">end</span> of FBA reimbursement work.
             </h1>
-              <p className="font-body text-base md:text-xl text-gray-600 font-normal max-w-3xl mx-auto">
+              <p className="font-body text-sm md:text-base text-white font-normal max-w-3xl mx-auto">
                 Think AI Agents for Finance. Clario automates the entire reimbursement process, recovering lost revenue from Amazon FBA errors in minutes—not months.
             </p>
             <div className="pt-2">
