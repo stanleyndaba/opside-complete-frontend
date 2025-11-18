@@ -106,7 +106,7 @@ const Index = () => {
           }}
         />
         <div className="relative z-10">
-      <header className="sticky top-0 z-40 border-transparent bg-transparent" style={{ background: 'transparent' }}>
+      <header className="relative z-40 border-transparent bg-transparent" style={{ background: 'transparent' }}>
         <div className="container mx-auto px-6 py-5">
           <div className="flex items-center justify-between gap-6 px-6 py-4 rounded-[25px] border border-white/40 bg-white/25 supports-[backdrop-filter]:bg-white/25 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_25px_60px_rgba(15,23,42,0.12)] transition-colors">
               <div className="flex items-center gap-3">
