@@ -103,7 +103,8 @@ const Index = () => {
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
           height: '100vh',
-          minHeight: '100vh'
+          minHeight: '100vh',
+          width: '100%'
         }}
       />
       {/* Sticky navbar - outside wrapper so it stays sticky throughout entire page */}
@@ -283,10 +284,11 @@ const Index = () => {
           )}
         </div>
       </header>
-      <div className="relative z-10" style={{ minHeight: '100vh' }}>
-        <main className="flex-1 relative z-10">
+      <div className="relative z-10" style={{ minHeight: '100vh', background: 'transparent' }}>
+        <main className="flex-1 relative z-10" style={{ background: 'transparent' }}>
           <section 
             className="relative min-h-[600px] container mx-auto px-6 pt-12 md:pt-16 pb-0 overflow-hidden"
+            style={{ background: 'transparent' }}
           >
           {/* Content */}
           <div className="relative z-10 max-w-4xl mx-auto text-center space-y-6">
