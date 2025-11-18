@@ -351,9 +351,9 @@ const Index = () => {
         {/* White gradient transition blending hero section to next section */}
         <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-b from-transparent via-white/50 to-white pointer-events-none z-20" />
       </div>
-      {/* End of background image area - white content starts here */}
-      <div className="relative z-10 -mt-64" style={{ background: 'white' }}>
-        <section className="relative isolate bg-white text-gray-900 pt-64">
+      {/* End of background image area - white content starts here - overlapping to eliminate gap */}
+      <div className="relative z-10" style={{ background: 'white', marginTop: '-256px', paddingTop: '256px' }}>
+        <section className="relative isolate bg-white text-gray-900">
           <div
             className="pointer-events-none absolute inset-0 opacity-90"
             aria-hidden="true"
