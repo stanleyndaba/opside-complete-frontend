@@ -288,8 +288,6 @@ const Index = () => {
           <section 
             className="relative min-h-[600px] container mx-auto px-6 pt-12 md:pt-16 pb-24 md:pb-32 overflow-hidden"
           >
-          {/* White gradient transition at bottom */}
-          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent via-white/50 to-white pointer-events-none z-10" />
           {/* Content */}
           <div className="relative z-10 max-w-4xl mx-auto text-center space-y-6">
             {/* Trust chip removed per request */}
@@ -350,6 +348,8 @@ const Index = () => {
           </div>
         </section>
         </main>
+        {/* White gradient transition blending hero section to next section */}
+        <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-b from-transparent via-white/30 to-white pointer-events-none z-20" />
       </div>
       {/* End of background image area - white content starts here */}
       <div className="relative z-10" style={{ background: 'white' }}>
