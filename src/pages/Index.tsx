@@ -349,10 +349,10 @@ const Index = () => {
         </section>
         </main>
         {/* White gradient transition blending hero section to next section */}
-        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-b from-transparent via-white/60 to-white pointer-events-none z-20" />
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent via-white/60 to-white pointer-events-none z-20" />
       </div>
       {/* End of background image area - white content starts here - overlapping to eliminate gap */}
-      <div className="relative z-10" style={{ background: 'white', marginTop: '-160px', paddingTop: '160px' }}>
+      <div className="relative z-10" style={{ background: 'white', marginTop: '-128px', paddingTop: '128px' }}>
         <section className="relative isolate bg-white text-gray-900">
           <div
             className="pointer-events-none absolute inset-0 opacity-90"
