@@ -94,18 +94,7 @@ const Index = () => {
     <div 
       className="min-h-screen flex flex-col text-gray-900 relative"
     >
-      <div className="relative" style={{ minHeight: '100vh' }}>
-        {/* Single background image covering header and hero - using absolute positioning for mobile stability */}
-        <div 
-          className="absolute inset-0 z-0 pointer-events-none"
-          style={{
-            backgroundImage: 'url(/horizon.jpg)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat'
-          }}
-        />
-        <div className="relative z-10">
+      {/* Sticky navbar - outside wrapper so it stays sticky throughout entire page */}
       <header className="sticky top-0 z-40 border-transparent bg-transparent" style={{ background: 'transparent' }}>
         <div className="container mx-auto px-6 py-5">
           <div className="flex items-center justify-between gap-6 px-6 py-4 rounded-[25px] border border-white/40 bg-white/25 supports-[backdrop-filter]:bg-white/25 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_25px_60px_rgba(15,23,42,0.12)] transition-colors">
@@ -282,6 +271,18 @@ const Index = () => {
           )}
         </div>
       </header>
+      <div className="relative" style={{ minHeight: '100vh' }}>
+        {/* Single background image covering header and hero - using absolute positioning for mobile stability */}
+        <div 
+          className="absolute inset-0 z-0 pointer-events-none"
+          style={{
+            backgroundImage: 'url(/horizon.jpg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat'
+          }}
+        />
+        <div className="relative z-10">
         <main className="flex-1 relative z-10">
           <section 
             className="relative min-h-[600px] container mx-auto px-6 pt-12 md:pt-16 pb-24 md:pb-32 overflow-hidden"
