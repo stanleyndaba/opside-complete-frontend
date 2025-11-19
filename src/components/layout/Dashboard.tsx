@@ -244,7 +244,7 @@ export function Dashboard() {
             // Show error toast with more details
             toast({
               title: 'Sync Failed',
-              description: syncStatus.lastSync.error || syncStatus.lastSync.message || 'The sync encountered an error. Please try again.',
+              description: syncStatus.lastSync.message || 'The sync encountered an error. Please try again.',
               variant: 'destructive',
               duration: 6000,
             });
