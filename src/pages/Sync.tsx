@@ -522,7 +522,10 @@ export default function Sync() {
                             <div className="bg-white/5 rounded-md border border-white/10 divide-y divide-white/10">
                               {ordersProcessed !== undefined && syncData.totalOrders !== undefined && (
                                 <div className="flex items-center justify-between py-3 px-4">
-                                  <p className="text-sm text-gray-400">Orders</p>
+                                  <div>
+                                    <p className="text-sm text-gray-400">Orders</p>
+                                    <p className="text-[10px] text-gray-500 mt-0.5">Auditing for Lost and Damaged fulfillment status</p>
+                                  </div>
                                   <p className="text-sm font-medium text-gray-100">
                                     {ordersProcessed.toLocaleString()} / {syncData.totalOrders.toLocaleString()}
                                   </p>
@@ -530,7 +533,10 @@ export default function Sync() {
                               )}
                               {inventoryCount !== undefined && (
                                 <div className="flex items-center justify-between py-3 px-4">
-                                  <p className="text-sm text-gray-400">Inventory</p>
+                                  <div>
+                                    <p className="text-sm text-gray-400">Inventory</p>
+                                    <p className="text-[10px] text-gray-500 mt-0.5">Cross-referencing Daily Ledger vs. Physical Count</p>
+                                  </div>
                                   <p className="text-sm font-medium text-gray-100">
                                     {inventoryCount.toLocaleString()} items
                                   </p>
@@ -538,7 +544,10 @@ export default function Sync() {
                               )}
                               {shipmentsCount !== undefined && (
                                 <div className="flex items-center justify-between py-3 px-4">
-                                  <p className="text-sm text-gray-400">Shipments</p>
+                                  <div>
+                                    <p className="text-sm text-gray-400">Shipments</p>
+                                    <p className="text-[10px] text-gray-500 mt-0.5">Verifying Inbound FBA receiving discrepancies</p>
+                                  </div>
                                   <p className="text-sm font-medium text-gray-100">
                                     {shipmentsCount.toLocaleString()} items
                                   </p>
@@ -546,7 +555,10 @@ export default function Sync() {
                               )}
                               {returnsCount !== undefined && (
                                 <div className="flex items-center justify-between py-3 px-4">
-                                  <p className="text-sm text-gray-400">Returns</p>
+                                  <div>
+                                    <p className="text-sm text-gray-400">Returns</p>
+                                    <p className="text-[10px] text-gray-500 mt-0.5">Checking Customer Refunded vs. Unit Returned logic</p>
+                                  </div>
                                   <p className="text-sm font-medium text-gray-100">
                                     {returnsCount.toLocaleString()} items
                                   </p>
@@ -554,7 +566,10 @@ export default function Sync() {
                               )}
                               {settlementsCount !== undefined && (
                                 <div className="flex items-center justify-between py-3 px-4">
-                                  <p className="text-sm text-gray-400">Settlement</p>
+                                  <div>
+                                    <p className="text-sm text-gray-400">Settlement</p>
+                                    <p className="text-[10px] text-gray-500 mt-0.5">Reconciling previous reimbursements for reversals</p>
+                                  </div>
                                   <p className="text-sm font-medium text-gray-100">
                                     {settlementsCount.toLocaleString()} items
                                   </p>
@@ -562,7 +577,10 @@ export default function Sync() {
                               )}
                               {feesCount !== undefined && (
                                 <div className="flex items-center justify-between py-3 px-4">
-                                  <p className="text-sm text-gray-400">Fees</p>
+                                  <div>
+                                    <p className="text-sm text-gray-400">Fees</p>
+                                    <p className="text-[10px] text-gray-500 mt-0.5">Scanning weight/dimension overcharge anomalies</p>
+                                  </div>
                                   <p className="text-sm font-medium text-gray-100">
                                     {feesCount.toLocaleString()} items
                                   </p>

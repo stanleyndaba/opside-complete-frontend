@@ -390,7 +390,6 @@ export default function SyncStatus() {
                           {(ordersProcessed !== undefined || totalOrders !== undefined) && (
                                   <div className="bg-white/5 rounded-md p-3 border border-white/10">
                                     <p className="text-xs text-gray-300 mb-1">Orders</p>
-                                    <p className="text-[10px] text-gray-400 mb-2">Auditing for Lost and Damaged fulfillment status</p>
                                     <p className="text-lg font-semibold text-gray-100">
                                 {ordersProcessed.toLocaleString()} / {totalOrders.toLocaleString()}
                               </p>
@@ -399,7 +398,6 @@ export default function SyncStatus() {
                           {inventoryCount !== undefined && (
                                   <div className="bg-white/5 rounded-md p-3 border border-white/10">
                                     <p className="text-xs text-gray-300 mb-1">Inventory</p>
-                                    <p className="text-[10px] text-gray-400 mb-2">Cross-referencing Daily Ledger vs. Physical Count</p>
                                     <p className="text-lg font-semibold text-gray-100">
                                 {inventoryCount.toLocaleString()} items
                               </p>
@@ -408,7 +406,6 @@ export default function SyncStatus() {
                           {shipmentsCount !== undefined && (
                                   <div className="bg-white/5 rounded-md p-3 border border-white/10">
                                     <p className="text-xs text-gray-300 mb-1">Shipments</p>
-                                    <p className="text-[10px] text-gray-400 mb-2">Verifying Inbound FBA receiving discrepancies</p>
                                     <p className="text-lg font-semibold text-gray-100">
                                 {shipmentsCount.toLocaleString()} items
                               </p>
@@ -417,7 +414,6 @@ export default function SyncStatus() {
                           {returnsCount !== undefined && (
                                   <div className="bg-white/5 rounded-md p-3 border border-white/10">
                                     <p className="text-xs text-gray-300 mb-1">Returns</p>
-                                    <p className="text-[10px] text-gray-400 mb-2">Checking Customer Refunded vs. Unit Returned logic</p>
                                     <p className="text-lg font-semibold text-gray-100">
                                 {returnsCount.toLocaleString()} items
                               </p>
@@ -426,7 +422,6 @@ export default function SyncStatus() {
                           {settlementsCount !== undefined && (
                                   <div className="bg-white/5 rounded-md p-3 border border-white/10">
                                     <p className="text-xs text-gray-300 mb-1">Settlements</p>
-                                    <p className="text-[10px] text-gray-400 mb-2">Reconciling previous reimbursements for reversals</p>
                                     <p className="text-lg font-semibold text-gray-100">
                                 {settlementsCount.toLocaleString()} items
                               </p>
@@ -435,7 +430,6 @@ export default function SyncStatus() {
                           {feesCount !== undefined && (
                                   <div className="bg-white/5 rounded-md p-3 border border-white/10">
                                     <p className="text-xs text-gray-300 mb-1">Fees</p>
-                                    <p className="text-[10px] text-gray-400 mb-2">Scanning weight/dimension overcharge anomalies</p>
                                     <p className="text-lg font-semibold text-gray-100">
                                 {feesCount.toLocaleString()} items
                               </p>
