@@ -1020,7 +1020,7 @@ const Settings = () => {
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
               {/* Navigation Menu */}
               <div className="lg:col-span-1">
-                <Card className="h-fit bg-white/5 border-white/10 text-gray-300">
+                <Card className="lg:sticky lg:top-6 h-fit bg-white/5 border-white/10 text-gray-300">
                   <CardHeader>
                     <CardTitle className="text-lg text-gray-200">Settings</CardTitle>
                   </CardHeader>
@@ -1051,9 +1051,7 @@ const Settings = () => {
 
               {/* Main Content */}
               <div className="lg:col-span-3">
-                <div className="h-full overflow-y-auto">
-                  {renderContent()}
-                </div>
+                {renderContent()}
               </div>
             </div>
           </div>

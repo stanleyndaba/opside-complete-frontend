@@ -120,11 +120,11 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         const statusResponse = await api.getIntegrationsStatus();
         console.log('[AmazonConnect] Connection status response:', statusResponse);
         if (statusResponse.ok && statusResponse.data?.amazon_connected) {
-          // Amazon is already connected! Just redirect to sync status
+          // Amazon is already connected! Just redirect to integrations hub
           console.log('[AmazonConnect] ✅ Amazon already connected');
           setConnecting(false);
           setUsingExisting(false);
-          window.location.href = '/sync-status';
+          window.location.href = '/integrations-hub?amazon_connected=true';
           return;
         } else {
           console.log('[AmazonConnect] ⚠️ Amazon not connected yet, attempting bypass...');
@@ -167,13 +167,8 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
             });
           }
           
-          // Redirect to sync status page (per FRONTEND_AMAZON_OAUTH_SYNC_STATUS.md)
-          // Use provided redirectUrl if it's a sync-status page, otherwise default to sync-status
-          if (data.redirectUrl && data.redirectUrl.includes('/sync-status')) {
-            window.location.href = data.redirectUrl;
-          } else {
-            window.location.href = '/sync-status';
-          }
+          // Redirect directly to integrations hub (skip loading page)
+          window.location.href = '/integrations-hub?amazon_connected=true';
           return;
         }
 
