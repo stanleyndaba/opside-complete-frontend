@@ -383,9 +383,9 @@ export default function Sync() {
             <div className="max-w-4xl mx-auto space-y-6">
               <Card className="bg-white/5 border-white/10 text-gray-100">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
+                    <CardTitle className="flex items-center gap-2">
                     {getStatusIcon()}
-                    Inventory Sync
+                      Merchandise Sync
                   </CardTitle>
                   <CardDescription className="text-gray-300">
                     First run window: last 12 months • Schedule: daily at 02:00 UTC
@@ -510,9 +510,9 @@ export default function Sync() {
                       return (
                         <div className="space-y-4 pt-4 border-t border-white/10">
                           {/* Total Items Synced */}
-                          <div className="bg-blue-500/10 border border-blue-500/40 rounded-md p-4">
+                            <div className="bg-blue-500/10 border border-blue-500/40 rounded-md p-4">
                             <p className="text-xs text-blue-100 mb-1">Total Items Synced</p>
-                            <p className="text-2xl font-bold text-blue-300">
+                              <p className="text-xl font-semibold text-blue-300">
                               {totalItemsSynced.toLocaleString()} items
                             </p>
                           </div>
@@ -585,7 +585,7 @@ export default function Sync() {
                                         <p className="text-xs uppercase tracking-wide text-gray-400">{row.label}</p>
                                         <p className="text-sm text-gray-400">{row.helper}</p>
                                       </div>
-                                      <p className="text-lg md:text-xl font-semibold text-gray-100">{row.value}</p>
+                                      <p className="text-base md:text-lg font-semibold text-gray-100">{row.value}</p>
                                     </div>
                                   ))}
                                   {claimsDetected !== undefined && claimsDetected > 0 && (
@@ -594,7 +594,7 @@ export default function Sync() {
                                         <p className="text-xs uppercase tracking-wide text-emerald-200">Claims</p>
                                         <p className="text-sm text-emerald-200/80">Detected during this sync</p>
                                       </div>
-                                      <p className="text-lg md:text-xl font-semibold text-emerald-300">
+                                      <p className="text-base md:text-lg font-semibold text-emerald-300">
                                         {claimsDetected.toLocaleString()}
                                       </p>
                                     </div>
@@ -663,11 +663,11 @@ export default function Sync() {
                       )}
 
                       {status === 'completed' && (
-                        <Button
-                          variant="outline"
-                          onClick={() => navigate('/app')}
-                          className="border-white/20 text-gray-100 hover:bg-white/10"
-                        >
+                          <Button
+                            variant="outline"
+                            onClick={() => navigate('/app')}
+                            className="border-white/20 text-[#0B1F5B] hover:bg-white/10 hover:text-[#0B1F5B]"
+                          >
                           Go to Dashboard
                         </Button>
                       )}
