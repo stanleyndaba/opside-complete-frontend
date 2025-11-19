@@ -112,11 +112,11 @@ export function Sidebar({
               <Link
                 to={item.href}
                 onMouseEnter={handlePrefetch}
-                className={cn(
+                  className={cn(
                   "relative flex items-center justify-center w-10 h-10 rounded-md transition-colors duration-200",
                   isActive
-                    ? isDashboard ? "bg-white/10 text-white" : "bg-white/10 text-gray-100"
-                    : isDashboard ? "text-[#303030] hover:bg-white/10 hover:text-white" : "text-gray-400 hover:bg-white/10 hover:text-gray-100"
+                    ? "bg-white/10 text-gray-100"
+                    : "text-gray-400 hover:bg-white/10 hover:text-gray-100"
                 )}
                 style={{ willChange: 'background-color' }}
               >
@@ -137,8 +137,8 @@ export function Sidebar({
           className={cn(
             "relative flex items-center gap-3 w-full px-3 py-1.5 rounded-md transition-colors duration-200",
           isActive
-            ? isDashboard ? "bg-white/5 text-white" : "bg-white/5 text-gray-100"
-            : isDashboard ? "text-[#303030] hover:bg-white/5 hover:text-white" : "text-gray-400 hover:bg-white/5 hover:text-gray-100"
+            ? "bg-white/5 text-gray-100"
+            : "text-gray-400 hover:bg-white/5 hover:text-gray-100"
         )}
         style={{ willChange: 'background-color' }}
       >
@@ -156,10 +156,10 @@ export function Sidebar({
           "fixed left-0 top-0 transition-all duration-300 ease-in-out flex flex-col h-screen z-40 gpu-accelerated",
           isCollapsed ? "w-16" : "w-60",
           "text-gray-300 border-r border-white/10",
-          isDashboard ? "" : "bg-[#0B1220]",
+          "bg-[#0B1220]",
           className
         )}
-        style={isDashboard ? { backgroundColor: '#CECECE', willChange: 'width' } : { willChange: 'width' }}
+        style={{ willChange: 'width' }}
       >
         {/* Branding + Collapse */}
         <div
@@ -171,23 +171,15 @@ export function Sidebar({
           {!isCollapsed ? (
             <>
                 <div className="select-none flex items-center gap-2">
-                  {isDashboard ? (
-                    <span className="text-lg font-black text-gray-800 tracking-tight">Clario</span>
-                  ) : (
-                    <span className="text-[11px] text-emerald-400/90 flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                      Connected
-                    </span>
-                  )}
+                  <span className="text-[11px] text-emerald-400/90 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                    Connected, secured
+                  </span>
                 </div>
             </>
           ) : (
             <div className="flex items-center gap-2">
-              {isDashboard ? (
-                <span className="text-sm font-black text-gray-800 tracking-tight">Clario</span>
-              ) : (
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" title="Connected" />
-              )}
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" title="Connected, secured" />
             </div>
           )}
         </div>
@@ -226,7 +218,7 @@ export function Sidebar({
                   aria-label="Account"
                   className={cn(
                     "relative flex items-center justify-center w-10 h-10 rounded-md transition-colors",
-                    isDashboard ? "text-[#303030] hover:bg-white/10 hover:text-emerald-500" : "text-gray-400 hover:bg-white/10 hover:text-emerald-500"
+                    "text-gray-400 hover:bg-white/10 hover:text-emerald-500"
                   )}
                 >
                   <User className="h-5 w-5" />
@@ -242,7 +234,7 @@ export function Sidebar({
                   aria-label="Logout"
                   className={cn(
                     "relative flex items-center justify-center w-10 h-10 rounded-md transition-colors",
-                    isDashboard ? "text-[#303030] hover:bg-white/10 hover:text-red-300" : "text-gray-400 hover:bg-white/10 hover:text-red-300"
+                    "text-gray-400 hover:bg-white/10 hover:text-red-300"
                   )}
                   onClick={async () => {
                     const ok = window.confirm('Log out of Clario?');
@@ -266,7 +258,7 @@ export function Sidebar({
               to="/settings"
               className={cn(
                 "w-full flex items-center gap-2 text-left hover:text-emerald-500 hover:bg-white/5 px-3 py-2 rounded-md transition-colors",
-                isDashboard ? "text-[#303030]" : "text-gray-400"
+                "text-gray-400"
               )}
             >
               <User className="h-4 w-4" />
@@ -275,7 +267,7 @@ export function Sidebar({
             <button
               className={cn(
                 "w-full flex items-center gap-2 text-left hover:text-red-300 hover:bg-white/5 px-3 py-2 rounded-md",
-                isDashboard ? "text-[#303030]" : "text-gray-400"
+                "text-gray-400"
               )}
             onClick={() => setShowLogout(prev => !prev)}
           >
