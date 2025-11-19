@@ -386,15 +386,12 @@ const Index = () => {
         </section>
         
         {/* How it works section */}
-        <section className="relative z-10 container mx-auto px-6 pt-16 pb-20">
-          <div className="max-w-4xl mx-auto text-center space-y-6">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-800">
-              How it works
-            </p>
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white">
+        <section className="relative z-10 container mx-auto px-6 pt-24 md:pt-32 pb-20">
+          <div className="max-w-4xl space-y-6 text-left">
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-gray-600">
               Recover lost FBA revenue on complete autopilot.
             </h2>
-            <p className="text-base md:text-lg text-white/90 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base md:text-lg text-black max-w-3xl leading-relaxed">
               Bypass the manual grind. From deep-dive audits to final deposit, our 11-agent engine autonomously identifies, files, and tracks every claim with <span className="font-semibold">{precisionCount.toFixed(2)}%</span> precision.
             </p>
           </div>
