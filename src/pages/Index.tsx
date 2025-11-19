@@ -388,11 +388,11 @@ const Index = () => {
         {/* How it works section */}
         <section className="relative z-10 container mx-auto px-6 pt-24 md:pt-32 pb-20">
           <div className="max-w-4xl space-y-6 text-left">
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-gray-600">
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight" style={{ color: '#bfbfbf' }}>
               Recover lost FBA revenue on complete autopilot.
             </h2>
             <p className="text-base md:text-lg text-black max-w-3xl leading-relaxed">
-              Bypass the manual grind. From deep-dive audits to final deposit, our 11-agent engine autonomously identifies, files, and tracks every claim with <span className="font-semibold">{precisionCount.toFixed(2)}%</span> precision.
+              Bypass the manual grind. From deep-dive audits to final deposit, our 11-agent engine autonomously identifies, files, and tracks every claim with <span className="font-semibold text-emerald-500">{precisionCount.toFixed(2)}%</span> precision.
             </p>
           </div>
         </section>
