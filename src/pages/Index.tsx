@@ -45,6 +45,7 @@ const Index = () => {
     []
   );
   const [benefitIndex, setBenefitIndex] = useState(0);
+  const [precisionCount, setPrecisionCount] = useState(0);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -55,6 +56,29 @@ const Index = () => {
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Animate precision counter from 0 to 99.27
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const targetValue = 99.27;
+    const duration = 1500; // 1.5 seconds for fast animation
+    const steps = 60; // 60 steps for smooth animation
+    const increment = targetValue / steps;
+    const stepDuration = duration / steps;
+    
+    let currentStep = 0;
+    const interval = window.setInterval(() => {
+      currentStep++;
+      const newValue = Math.min(increment * currentStep, targetValue);
+      setPrecisionCount(parseFloat(newValue.toFixed(2)));
+      
+      if (newValue >= targetValue) {
+        clearInterval(interval);
+      }
+    }, stepDuration);
+    
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -358,6 +382,21 @@ const Index = () => {
               </div>
               {/* Email capture moved to bottom-left above the legal footer */}
             </div>
+          </div>
+        </section>
+        
+        {/* How it works section */}
+        <section className="relative z-10 container mx-auto px-6 pt-16 pb-20">
+          <div className="max-w-4xl mx-auto text-center space-y-6">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-800">
+              How it works
+            </p>
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white">
+              Recover lost FBA revenue on complete autopilot.
+            </h2>
+            <p className="text-base md:text-lg text-white/90 max-w-3xl mx-auto leading-relaxed">
+              Bypass the manual grind. From deep-dive audits to final deposit, our 11-agent engine autonomously identifies, files, and tracks every claim with <span className="font-semibold">{precisionCount.toFixed(2)}%</span> precision.
+            </p>
           </div>
         </section>
         </main>
