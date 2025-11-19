@@ -322,7 +322,7 @@ const Index = () => {
       <div className="relative z-10" style={{ background: 'transparent' }}>
         <main className="flex-1 relative z-10" style={{ background: 'transparent' }}>
           <section 
-            className="relative container mx-auto px-6 pt-12 md:pt-16 pb-0 overflow-hidden"
+            className="relative container mx-auto px-6 pt-12 md:pt-16 pb-12 md:pb-16 overflow-hidden"
             style={{ background: 'transparent' }}
           >
           {/* Content */}
@@ -389,7 +389,7 @@ const Index = () => {
       {/* End of background image area - white content starts here - no gap */}
       <div className="relative z-10" style={{ background: 'white', marginTop: '0' }}>
         <section className="relative isolate bg-white text-gray-900">
-          <div className="container mx-auto px-6 pt-12 md:pt-16 pb-24 md:pb-28">
+          <div className="container mx-auto px-6 pt-12 md:pt-20 pb-24 md:pb-28">
             <div className="relative grid gap-12 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
               <div className="relative space-y-8">
                 <h2 className="text-4xl md:text-6xl font-bold tracking-tight" style={{ color: '#a6a6a6' }}>
