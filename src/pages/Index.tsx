@@ -389,21 +389,11 @@ const Index = () => {
       {/* End of background image area - white content starts here - no gap */}
       <div className="relative z-10" style={{ background: 'white', marginTop: '0' }}>
         <section className="relative isolate bg-white text-gray-900">
-          <div
-            className="pointer-events-none absolute inset-0 opacity-90"
-            aria-hidden="true"
-            style={{
-              backgroundImage:
-                'radial-gradient(rgba(179,179,179,0.45) 1.2px, transparent 1.2px), radial-gradient(rgba(209,213,219,0.35) 1.2px, transparent 1.2px)',
-              backgroundSize: '18px 18px',
-              backgroundPosition: '0 0, 9px 9px'
-            }}
-          />
           <div className="container mx-auto px-6 pt-8 pb-24 md:pb-28">
             <div className="relative grid gap-12 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
               <div className="relative space-y-8">
-                <h2 className="text-4xl md:text-6xl font-bold tracking-tight" style={{ color: '#bfbfbf' }}>
-                  Recover lost FBA revenue on complete autopilot.
+                <h2 className="text-4xl md:text-6xl font-bold tracking-tight" style={{ color: '#a6a6a6' }}>
+                  Recover lost revenue on complete autopilot.
                 </h2>
                 <p className="text-base md:text-lg text-black max-w-3xl leading-relaxed">
                   Bypass the manual grind. From deep-dive audits to final deposit, our 11-agent engine autonomously identifies, files, and tracks every claim with <span className="font-semibold text-emerald-500">{precisionCount.toFixed(2)}%</span> precision.
@@ -607,25 +597,6 @@ const Index = () => {
                   </div>
                 </div>
               </div>
-          </div>
-        </section>
-        
-        {/* Benefit Section - moved here */}
-        <section className="relative bg-white py-20">
-          <div className="container mx-auto px-6">
-            <div className="relative space-y-8 max-w-4xl">
-              <div className="relative h-24 overflow-hidden text-4xl font-black text-gray-900 md:text-6xl">
-                <span
-                  key={benefitIndex}
-                  className="absolute inset-0 flex items-center animate-[wordDrift_3.2s_ease-in-out] text-[#b3b3b3]"
-                >
-                  {benefitWords[benefitIndex]}
-                </span>
-              </div>
-              <p className="max-w-xl text-base text-gray-600 md:text-lg">
-                Consolidate the chaos: reclaim hidden revenue, protect margins, and spotlight every insight your resilience team needs to stay ahead of marketplace errors.
-              </p>
-            </div>
           </div>
         </section>
       </div>
