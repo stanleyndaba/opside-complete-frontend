@@ -251,16 +251,21 @@ export default function SyncStatus() {
 
   if (isLoading) {
     return (
-      <PageLayout title="Sync Status">
-        <div className="max-w-4xl mx-auto">
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-center gap-2">
-                <Loader2 className="h-5 w-5 animate-spin text-blue-500" />
-                <span className="text-muted-foreground">Loading sync status...</span>
+      <PageLayout title="Sync Status" hideNavbar hideSidebar>
+        <div className="relative -m-4 lg:-m-6">
+          <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24 text-gray-300 flex items-center justify-center">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+            <div className="pointer-events-none absolute inset-0 opacity-20 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)] bg-[linear-gradient(to_bottom,transparent_0,transparent_95%,rgba(255,255,255,0.08)_96%),linear-gradient(to_right,transparent_0,transparent_95%,rgba(255,255,255,0.08)_96%)] bg-[length:36px_36px]" />
+            <div className="relative max-w-xl w-full mx-auto text-center space-y-4">
+              <div className="flex flex-col items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <Loader2 className="h-6 w-6 animate-spin text-blue-400" />
+                  <Loader2 className="h-6 w-6 animate-spin text-emerald-400" style={{ animationDirection: 'reverse' }} />
+                </div>
+                <span className="text-lg font-medium text-gray-200">Load data sync</span>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </PageLayout>
     );
