@@ -366,7 +366,7 @@ const Index = () => {
               backgroundPosition: '0 0, 9px 9px'
             }}
           />
-          <div className="container mx-auto px-6 pt-64 pb-24 md:pb-28">
+          <div className="container mx-auto px-6 pt-16 pb-24 md:pb-28">
             <div className="relative grid gap-12 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
               <div className="relative space-y-8">
                 <div className="relative h-24 overflow-hidden text-4xl font-black text-gray-900 md:text-6xl">
