@@ -600,7 +600,7 @@ export function Dashboard() {
                         )}
                           <div className="text-[11px] mt-1">
                             <span className="text-gray-400">Total: </span>
-                            <span className="text-emerald-400">{formatCurrency(recoveredTotal ?? 0, recoveredCurrency)}</span>
+                            <span className="text-gray-200">{formatCurrency(recoveredTotal ?? 0, recoveredCurrency)}</span>
                         </div>
                       </div>
                         <div className="rounded-md border border-white/10 bg-white/5 p-4 shadow-sm">
