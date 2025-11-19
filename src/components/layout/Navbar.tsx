@@ -67,8 +67,8 @@ export function Navbar({
             <div className="relative flex items-center gap-2">
               <div className="relative flex-1">
                 <Search className={cn(
-                  'absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4',
-                  isDashboard ? 'text-gray-500' : (isTransparent ? 'text-gray-300' : 'text-muted-foreground')
+                  'absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 stroke-[2]',
+                  isDashboard ? 'text-gray-700' : (isTransparent ? 'text-gray-400' : 'text-gray-600')
                 )} />
                 <Input
                   aria-label="Search"

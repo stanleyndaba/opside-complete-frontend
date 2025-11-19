@@ -51,7 +51,7 @@ const EvidenceSearch: React.FC = () => {
               onClick={handleSearch}
               disabled={loading}
             >
-              <Search className="mr-2 h-4 w-4" />
+              <Search className="mr-2 h-4 w-4 stroke-[2]" />
               {loading ? 'Searching...' : 'Search'}
             </Button>
           </div>

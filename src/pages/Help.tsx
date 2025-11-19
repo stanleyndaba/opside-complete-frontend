@@ -143,7 +143,7 @@ export default function Help() {
             
             {/* Prominent Search Bar */}
             <div className="relative max-w-2xl mx-auto">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-600 stroke-[2]" />
               <Input
                 placeholder='Search for help (e.g., "How is my bill calculated?")'
                 value={searchTerm}

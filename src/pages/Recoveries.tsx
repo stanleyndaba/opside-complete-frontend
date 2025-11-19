@@ -1323,7 +1323,7 @@ export default function Recoveries() {
             <div className="flex flex-wrap gap-4 items-center">
               {/* Search Bar */}
               <div className="relative flex-1 min-w-64">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500 stroke-[2]" />
                 <Input
                   placeholder="Search by Claim ID, ASIN, or Keyword..."
                   value={searchTerm}
