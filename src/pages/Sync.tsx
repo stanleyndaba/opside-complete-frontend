@@ -427,19 +427,19 @@ export default function Sync() {
                       {getStatusBadge()}
                     </div>
                     
-                    <Progress value={progress} className="h-2" />
+                    <Progress value={progress} className="h-1" />
                     
-                    <div className="flex items-center justify-between text-sm text-gray-300">
+                    <div className="flex items-center justify-between text-xs text-gray-300">
                       <span>{progress}%</span>
                       {syncData && (
                         <div className="flex items-center gap-4 text-xs">
                           {syncData.ordersProcessed !== undefined && syncData.totalOrders !== undefined && (
-                            <span>
+                            <span className="text-xs">
                               {syncData.ordersProcessed.toLocaleString()} / {syncData.totalOrders.toLocaleString()} orders
                             </span>
                           )}
                           {syncData.claimsDetected !== undefined && (
-                            <span className="text-emerald-300 font-medium">
+                            <span className="text-emerald-300 font-medium text-xs">
                               {syncData.claimsDetected.toLocaleString()} claims detected
                             </span>
                           )}
