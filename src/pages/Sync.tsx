@@ -427,7 +427,7 @@ export default function Sync() {
                       {getStatusBadge()}
                     </div>
                     
-                    <Progress value={progress} className="h-2" />
+                      <Progress value={progress} className="h-1.5" />
                     
                     <div className="flex items-center justify-between text-sm text-gray-300">
                       <span>{progress}%</span>
@@ -635,7 +635,7 @@ export default function Sync() {
                           variant="outline"
                           onClick={handleCancelSync}
                           disabled={isCancelling}
-                          className="border-white/20 text-gray-100 hover:bg-white/10"
+                            className="border-white/20 text-[#0B1F5B] hover:bg-white/10 hover:text-[#0B1F5B]"
                         >
                           {isCancelling ? (
                             <>
