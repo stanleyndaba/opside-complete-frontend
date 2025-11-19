@@ -591,7 +591,7 @@ export function Dashboard() {
                       </div>
                         <div className="rounded-md border border-white/10 bg-white/5 p-4 shadow-sm">
                           <div className="text-xs text-gray-400">Pending recovery</div>
-                          <div className="text-xl font-semibold text-sky-400 mt-1">$870.01</div>
+                          <div className="text-xl font-semibold text-gray-200 mt-1">$870.01</div>
                           <div className="text-[11px] text-gray-400 mt-1">
                           No. of Claims: {submittedClaimsCount != null ? submittedClaimsCount : 0}
                         </div>
@@ -613,10 +613,10 @@ export function Dashboard() {
                               <span className="text-[10px] text-green-600 font-medium">92%</span>
                             </div>
                           </div>
-                          <div className="text-xl font-semibold text-emerald-400 mt-1">{formatCurrency(computedApproved ?? 0, recoveredCurrency)}</div>
+                          <div className="text-xl font-semibold text-gray-200 mt-1">{formatCurrency(computedApproved ?? 0, recoveredCurrency)}</div>
                           <div className="text-[11px] mt-1">
                             <span className="text-gray-400">Total this month: </span>
-                            <span className="text-sky-400">$31.4K</span>
+                            <span className="text-gray-200">$31.4K</span>
                         </div>
                       </div>
                     </div>
