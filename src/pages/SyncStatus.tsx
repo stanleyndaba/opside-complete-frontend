@@ -79,9 +79,9 @@ interface SyncStatusData {
 export default function SyncStatus() {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [syncStatus, setSyncStatus] = useState<SyncStatusData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isUsingMockData, setIsUsingMockData] = useState(false);
+  const [syncStatus, setSyncStatus] = useState<SyncStatusData | null>(MOCK_SYNC_STATUS as SyncStatusData);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isUsingMockData, setIsUsingMockData] = useState(true);
   const [pollingInterval, setPollingInterval] = useState<NodeJS.Timeout | null>(null);
 
   // Fetch sync status
@@ -165,7 +165,7 @@ export default function SyncStatus() {
       setPollingInterval(interval);
     };
 
-    // Initial fetch
+    // Initial fetch - start immediately without showing loading state
     fetchSyncStatus().then(() => {
       if (cancelled) return;
       startPolling();

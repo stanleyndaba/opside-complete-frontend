@@ -110,7 +110,6 @@ export function Navbar({
                   aria-label="Referral program"
                 >
                   <Gift className="h-5 w-5" />
-                  <span className="text-sm font-medium">Earn 100%</span>
                 </button>
               )}
             </div>

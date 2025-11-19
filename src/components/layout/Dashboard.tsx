@@ -621,46 +621,6 @@ export function Dashboard() {
                       </div>
                     </div>
 
-                    {/* Evidence Stats */}
-                    {evidenceStatus && (
-                      <div className="mt-6">
-                        <div className="flex items-center justify-between mb-3">
-                          <h3 className="text-sm font-semibold text-gray-200">Evidence Documents</h3>
-                          <button
-                            type="button"
-                            onClick={() => navigate('/evidence-locker')}
-                            className="text-xs text-indigo-400 underline-offset-2 hover:underline"
-                          >
-                            View all
-                          </button>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                          <div className="rounded-md border border-white/10 bg-white/5 p-4 shadow-sm">
-                            <div className="text-xs text-gray-400">Total Documents</div>
-                            <div className="text-xl font-semibold text-gray-200 mt-1">{evidenceStatus.documentsCount}</div>
-                            <div className="text-[11px] text-gray-400 mt-1">All evidence documents</div>
-                          </div>
-                          <div className="rounded-md border border-white/10 bg-white/5 p-4 shadow-sm">
-                            <div className="text-xs text-gray-400">Processing</div>
-                            <div className="text-xl font-semibold text-blue-400 mt-1">{evidenceStatus.processingCount}</div>
-                            <div className="text-[11px] text-gray-400 mt-1">Documents being parsed</div>
-                          </div>
-                          <div className="rounded-md border border-white/10 bg-white/5 p-4 shadow-sm">
-                            <div className="text-xs text-gray-400">Completed</div>
-                            <div className="text-xl font-semibold text-emerald-400 mt-1">
-                              {evidenceStatus.documentsCount - evidenceStatus.processingCount}
-                            </div>
-                            <div className="text-[11px] text-gray-400 mt-1">Documents ready</div>
-                            {gmailConnected && (
-                              <div className="text-[10px] text-emerald-400 mt-1 flex items-center gap-1">
-                                <Mail className="h-3 w-3" />
-                                Gmail connected
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    )}
 
                     {/* Auto-Submit button removed per request */}
                   </CardContent>
