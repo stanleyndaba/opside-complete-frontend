@@ -6,7 +6,6 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { startSync, getSyncStatus, cancelSync, getSyncHistory, subscribeSyncProgress, type SyncStatusResponse } from '@/lib/inventoryApi';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { SyncHistory } from '@/components/SyncHistory';
 import { RefreshCw, XCircle, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useDetectionUpdates } from '@/hooks/use-detection-updates';
@@ -654,8 +653,6 @@ export default function Sync() {
                 </CardContent>
               </Card>
 
-              {/* Sync Records */}
-              <SyncHistory />
             </div>
           </div>
         </div>

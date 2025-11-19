@@ -104,7 +104,18 @@ const Index = () => {
           backgroundRepeat: 'no-repeat',
           height: '100vh',
           minHeight: '100vh',
-          width: '100%'
+          width: '100%',
+          filter: 'brightness(0.6)'
+        }}
+      />
+      {/* Dark overlay for better text visibility */}
+      <div 
+        className="absolute inset-x-0 top-0 z-0 pointer-events-none"
+        style={{
+          height: '100vh',
+          minHeight: '100vh',
+          width: '100%',
+          backgroundColor: 'rgba(0, 0, 0, 0.2)'
         }}
       />
       {/* Sticky navbar - outside wrapper so it stays sticky throughout entire page */}
@@ -352,10 +363,8 @@ const Index = () => {
         </main>
       </div>
       {/* End of background image area - white content starts here - no gap */}
-      <div className="relative z-10" style={{ background: 'white', marginTop: '-64px' }}>
+      <div className="relative z-10" style={{ background: 'white', marginTop: '0' }}>
         <section className="relative isolate bg-white text-gray-900">
-          {/* White gradient at top of benefit section - smooth transition from hero */}
-          <div className="absolute top-0 left-0 right-0 h-64 bg-gradient-to-b from-transparent via-white/40 to-white pointer-events-none z-10" />
           <div
             className="pointer-events-none absolute inset-0 opacity-90"
             aria-hidden="true"
@@ -366,7 +375,7 @@ const Index = () => {
               backgroundPosition: '0 0, 9px 9px'
             }}
           />
-          <div className="container mx-auto px-6 pt-16 pb-24 md:pb-28">
+          <div className="container mx-auto px-6 pt-8 pb-24 md:pb-28">
             <div className="relative grid gap-12 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
               <div className="relative space-y-8">
                 <div className="relative h-24 overflow-hidden text-4xl font-black text-gray-900 md:text-6xl">
