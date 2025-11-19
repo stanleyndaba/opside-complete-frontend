@@ -383,9 +383,9 @@ export default function Sync() {
             <div className="max-w-4xl mx-auto space-y-6">
               <Card className="bg-white/5 border-white/10 text-gray-100">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
+                    <CardTitle className="flex items-center gap-2">
                     {getStatusIcon()}
-                    Inventory Sync
+                      Merchandise Sync
                   </CardTitle>
                   <CardDescription className="text-gray-300">
                     First run window: last 12 months • Schedule: daily at 02:00 UTC
@@ -427,7 +427,7 @@ export default function Sync() {
                       {getStatusBadge()}
                     </div>
                     
-                    <Progress value={progress} className="h-2" />
+                      <Progress value={progress} className="h-1.5" />
                     
                     <div className="flex items-center justify-between text-sm text-gray-300">
                       <span>{progress}%</span>
@@ -510,9 +510,9 @@ export default function Sync() {
                       return (
                         <div className="space-y-4 pt-4 border-t border-white/10">
                           {/* Total Items Synced */}
-                          <div className="bg-blue-500/10 border border-blue-500/40 rounded-md p-4">
+                            <div className="bg-blue-500/10 border border-blue-500/40 rounded-md p-4">
                             <p className="text-xs text-blue-100 mb-1">Total Items Synced</p>
-                            <p className="text-2xl font-bold text-blue-300">
+                              <p className="text-xl font-semibold text-blue-300">
                               {totalItemsSynced.toLocaleString()} items
                             </p>
                           </div>
@@ -520,64 +520,88 @@ export default function Sync() {
                           {/* Data Type Breakdown */}
                           <div className="space-y-3">
                             <h4 className="text-sm font-semibold text-gray-200">Data Type Breakdown</h4>
-                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                              {ordersProcessed !== undefined && syncData.totalOrders !== undefined && (
-                                <div className="bg-white/5 rounded-md p-3 border border-white/10">
-                                  <p className="text-xs text-gray-300 mb-1">Orders</p>
-                                  <p className="text-lg font-semibold text-gray-100">
-                                    {ordersProcessed.toLocaleString()} / {syncData.totalOrders.toLocaleString()}
-                                  </p>
+                            {(() => {
+                              const breakdownRows = [
+                                {
+                                  key: 'orders',
+                                  label: 'Orders',
+                                  helper:
+                                    syncData.totalOrders !== undefined
+                                      ? 'Processed vs total orders'
+                                      : 'Orders processed this run',
+                                  value:
+                                    syncData.totalOrders !== undefined
+                                      ? `${ordersProcessed.toLocaleString()} / ${syncData.totalOrders.toLocaleString()}`
+                                      : ordersProcessed.toLocaleString(),
+                                  show: ordersProcessed !== undefined || syncData.totalOrders !== undefined,
+                                },
+                                {
+                                  key: 'inventory',
+                                  label: 'Inventory',
+                                  helper: 'Catalog items refreshed',
+                                  value: inventoryCount.toLocaleString(),
+                                  show: inventoryCount !== undefined,
+                                },
+                                {
+                                  key: 'shipments',
+                                  label: 'Shipments',
+                                  helper: 'Fulfillment events captured',
+                                  value: shipmentsCount.toLocaleString(),
+                                  show: shipmentsCount !== undefined,
+                                },
+                                {
+                                  key: 'returns',
+                                  label: 'Returns',
+                                  helper: 'Customer returns reconciled',
+                                  value: returnsCount.toLocaleString(),
+                                  show: returnsCount !== undefined,
+                                },
+                                {
+                                  key: 'settlements',
+                                  label: 'Settlement',
+                                  helper: 'Financial reports ingested',
+                                  value: settlementsCount.toLocaleString(),
+                                  show: settlementsCount !== undefined,
+                                },
+                                {
+                                  key: 'fees',
+                                  label: 'Fees',
+                                  helper: 'Fee events reconciled',
+                                  value: feesCount.toLocaleString(),
+                                  show: feesCount !== undefined,
+                                },
+                              ].filter((row) => row.show);
+
+                              return (
+                                <div className="overflow-hidden rounded-lg border border-white/10 bg-white/5">
+                                  {breakdownRows.map((row, idx) => (
+                                    <div
+                                      key={row.key}
+                                      className={`flex items-center justify-between px-4 py-3 ${
+                                        idx !== breakdownRows.length - 1 ? 'border-b border-white/10' : ''
+                                      }`}
+                                    >
+                                      <div>
+                                        <p className="text-xs uppercase tracking-wide text-gray-400">{row.label}</p>
+                                        <p className="text-sm text-gray-400">{row.helper}</p>
+                                      </div>
+                                      <p className="text-base md:text-lg font-semibold text-gray-100">{row.value}</p>
+                                    </div>
+                                  ))}
+                                  {claimsDetected !== undefined && claimsDetected > 0 && (
+                                    <div className="flex items-center justify-between px-4 py-3 bg-emerald-500/5">
+                                      <div>
+                                        <p className="text-xs uppercase tracking-wide text-emerald-200">Claims</p>
+                                        <p className="text-sm text-emerald-200/80">Detected during this sync</p>
+                                      </div>
+                                      <p className="text-base md:text-lg font-semibold text-emerald-300">
+                                        {claimsDetected.toLocaleString()}
+                                      </p>
+                                    </div>
+                                  )}
                                 </div>
-                              )}
-                              {inventoryCount !== undefined && (
-                                <div className="bg-white/5 rounded-md p-3 border border-white/10">
-                                  <p className="text-xs text-gray-300 mb-1">Inventory</p>
-                                  <p className="text-lg font-semibold text-gray-100">
-                                    {inventoryCount.toLocaleString()} items
-                                  </p>
-                                </div>
-                              )}
-                              {shipmentsCount !== undefined && (
-                                <div className="bg-white/5 rounded-md p-3 border border-white/10">
-                                  <p className="text-xs text-gray-300 mb-1">Shipments</p>
-                                  <p className="text-lg font-semibold text-gray-100">
-                                    {shipmentsCount.toLocaleString()} items
-                                  </p>
-                                </div>
-                              )}
-                              {returnsCount !== undefined && (
-                                <div className="bg-white/5 rounded-md p-3 border border-white/10">
-                                  <p className="text-xs text-gray-300 mb-1">Returns</p>
-                                  <p className="text-lg font-semibold text-gray-100">
-                                    {returnsCount.toLocaleString()} items
-                                  </p>
-                                </div>
-                              )}
-                              {settlementsCount !== undefined && (
-                                <div className="bg-white/5 rounded-md p-3 border border-white/10">
-                                  <p className="text-xs text-gray-300 mb-1">Settlements</p>
-                                  <p className="text-lg font-semibold text-gray-100">
-                                    {settlementsCount.toLocaleString()} items
-                                  </p>
-                                </div>
-                              )}
-                              {feesCount !== undefined && (
-                                <div className="bg-white/5 rounded-md p-3 border border-white/10">
-                                  <p className="text-xs text-gray-300 mb-1">Fees</p>
-                                  <p className="text-lg font-semibold text-gray-100">
-                                    {feesCount.toLocaleString()} items
-                                  </p>
-                                </div>
-                              )}
-                              {claimsDetected !== undefined && claimsDetected > 0 && (
-                                <div className="bg-emerald-500/10 rounded-md p-3 border border-emerald-500/40">
-                                  <p className="text-xs text-emerald-100 mb-1">Claims Detected</p>
-                                  <p className="text-lg font-semibold text-emerald-300">
-                                    {claimsDetected.toLocaleString()}
-                                  </p>
-                                </div>
-                              )}
-                            </div>
+                              );
+                            })()}
                           </div>
                         </div>
                       );
@@ -611,7 +635,7 @@ export default function Sync() {
                           variant="outline"
                           onClick={handleCancelSync}
                           disabled={isCancelling}
-                          className="border-white/20 text-gray-100 hover:bg-white/10"
+                            className="border-white/20 text-[#0B1F5B] hover:bg-white/10 hover:text-[#0B1F5B]"
                         >
                           {isCancelling ? (
                             <>
@@ -639,11 +663,11 @@ export default function Sync() {
                       )}
 
                       {status === 'completed' && (
-                        <Button
-                          variant="outline"
-                          onClick={() => navigate('/app')}
-                          className="border-white/20 text-gray-100 hover:bg-white/10"
-                        >
+                          <Button
+                            variant="outline"
+                            onClick={() => navigate('/app')}
+                            className="border-white/20 text-[#0B1F5B] hover:bg-white/10 hover:text-[#0B1F5B]"
+                          >
                           Go to Dashboard
                         </Button>
                       )}
