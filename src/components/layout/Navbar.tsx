@@ -68,7 +68,7 @@ export function Navbar({
               <div className="relative flex-1">
                 <Search className={cn(
                   'absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 stroke-[2]',
-                  isDashboard ? 'text-gray-700' : (isTransparent ? 'text-gray-400' : 'text-gray-600')
+                  isDashboard ? 'text-gray-400' : (isTransparent ? 'text-gray-400' : 'text-gray-600')
                 )} />
                 <Input
                   aria-label="Search"
@@ -76,7 +76,7 @@ export function Navbar({
                   variant={isTransparent ? 'dark' : 'default'}
                   className={cn(
                     "pl-9 h-9 rounded-md",
-                    isDashboard && "!bg-white/95 !border-gray-300/80 !text-gray-900 !placeholder:text-gray-600",
+                    isDashboard && "!bg-white/5 !border-white/10 !text-gray-200 !placeholder:text-gray-400 backdrop-blur-sm",
                     isTransparent && !isDashboard && "!bg-white/10 !border-white/20 !text-gray-200 !placeholder:text-gray-400 backdrop-blur-sm"
                   )}
                 />
@@ -122,11 +122,11 @@ export function Navbar({
             variant="ghost"
             className={cn(
               "flex items-center gap-2 h-9 px-3",
-              isDashboard ? 'bg-[#F5F5F5] text-gray-800 hover:bg-[#E8E8E8] hover:text-gray-900' : 
+              isDashboard ? 'bg-transparent text-[#F5F5F5] hover:bg-white/10 hover:text-[#F5F5F5]' : 
               isTransparent ? 'text-gray-200 hover:text-white hover:bg-white/10' : 'text-muted-foreground hover:text-foreground'
             )}
           >
-            <Link2 className={cn("h-4 w-4", isDashboard && "text-gray-800")} />
+            <Link2 className={cn("h-4 w-4", isDashboard && "text-[#F5F5F5]")} />
             <span className="hidden sm:inline">Connect Platform</span>
           </Button>
           {isSandbox && (
