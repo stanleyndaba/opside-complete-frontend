@@ -33,13 +33,13 @@ export default function Sync() {
       // Handle detection updates
       if (event.status === 'complete') {
         toast({
-          title: '✅ Detection Complete',
+          title: 'Detection Complete',
           description: event.message || `Detection completed. ${event.total_detections || 0} anomalies found.`,
           duration: 6000,
         });
       } else if (event.new_detections_count && event.new_detections_count > 0) {
         toast({
-          title: '🔍 New Detections',
+          title: 'New Detections',
           description: `${event.new_detections_count} new anomaly${event.new_detections_count !== 1 ? 'ies' : ''} detected`,
           duration: 5000,
         });
@@ -73,13 +73,13 @@ export default function Sync() {
         
         if (claimsCount > 0) {
           toast({
-            title: '✅ Sync Completed',
+            title: 'Sync Completed',
             description: `Sync completed successfully! ${claimsCount} claim${claimsCount !== 1 ? 's' : ''} detected from ${ordersProcessed.toLocaleString()} order${ordersProcessed !== 1 ? 's' : ''}.`,
             duration: 6000,
           });
         } else {
           toast({
-            title: '✅ Sync Completed',
+            title: 'Sync Completed',
             description: `Sync completed successfully. Processed ${ordersProcessed.toLocaleString()} of ${totalOrders.toLocaleString()} orders.`,
             duration: 5000,
           });
@@ -87,7 +87,7 @@ export default function Sync() {
       } else if (mappedStatus === 'failed' && !toastShownRef.current.failed) {
         toastShownRef.current.failed = true;
         toast({
-          title: '❌ Sync Failed',
+          title: 'Sync Failed',
           description: s.error || s.message || 'The sync encountered an error. Please try again.',
           variant: 'destructive',
           duration: 6000,
@@ -97,7 +97,7 @@ export default function Sync() {
         // This handles cancellation from SSE/polling, not just from handleCancelSync button
         toastShownRef.current.cancelled = true;
         toast({
-          title: '⏸️ Sync Cancelled',
+          title: 'Sync Cancelled',
           description: s.message || 'The sync has been cancelled.',
           duration: 4000,
         });
@@ -153,7 +153,7 @@ export default function Sync() {
           
           // Show error toast
           toast({
-            title: '❌ Failed to Start Sync',
+            title: 'Failed to Start Sync',
             description: e?.message || 'Failed to start sync. Please try again.',
             variant: 'destructive',
             duration: 5000,
@@ -198,14 +198,14 @@ export default function Sync() {
             navigate('/sync', { replace: true });
             
             toast({
-              title: '⚠️ Sync Not Found',
+              title: 'Sync Not Found',
               description: 'The sync you were viewing no longer exists. Please start a new sync.',
               duration: 5000,
             });
           } else {
             setError(errorMessage);
             toast({
-              title: '⚠️ Error Loading Sync Status',
+              title: 'Error Loading Sync Status',
               description: errorMessage || 'Failed to load sync status. Please refresh the page.',
               variant: 'destructive',
               duration: 5000,
@@ -301,7 +301,7 @@ export default function Sync() {
       
       // Show toast immediately for user feedback
       toast({
-        title: '⏸️ Sync Cancelled',
+        title: 'Sync Cancelled',
         description: 'The sync has been cancelled successfully.',
         duration: 4000,
       });
@@ -312,7 +312,7 @@ export default function Sync() {
     } catch (e: any) {
       setError(e?.message || 'Failed to cancel sync');
       toast({
-        title: '❌ Failed to Cancel Sync',
+        title: 'Failed to Cancel Sync',
         description: e?.message || 'Failed to cancel sync. Please try again.',
         variant: 'destructive',
         duration: 5000,

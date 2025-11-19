@@ -59,7 +59,7 @@ export const useDetectionUpdates = (
           // Show toast for new detections
           if (data.new_detections_count && data.new_detections_count > 0) {
             toast({
-              title: '🔍 New Detections Found',
+              title: 'New Detections Found',
               description: `${data.new_detections_count} new anomaly${data.new_detections_count !== 1 ? 'ies' : ''} detected${data.total_detections ? ` (${data.total_detections} total)` : ''}`,
               duration: 5000,
             });
@@ -75,7 +75,7 @@ export const useDetectionUpdates = (
           onUpdate?.(data);
 
           toast({
-            title: '✅ Detection Complete',
+            title: 'Detection Complete',
             description: data.message || `Detection job completed. ${data.total_detections || 0} anomalies found.`,
             duration: 6000,
           });

@@ -407,13 +407,13 @@ export default function Recoveries() {
               if (newClaimIds.length === 1) {
                 const newClaim = newClaimsData[0];
                 toast({
-                  title: '🎉 New Recovery Detected!',
+                  title: 'New Recovery Detected!',
                   description: `${newClaim.type || 'Recovery'} found: ${formatCurrency(newClaim.guaranteedAmount || 0)}`,
                   duration: 5000,
                 });
               } else {
                 toast({
-                  title: '🎉 New Recoveries Detected!',
+                  title: 'New Recoveries Detected!',
                   description: `${newClaimIds.length} new recoveries found totaling ${formatCurrency(totalNewAmount)}`,
                   duration: 5000,
                 });
@@ -703,7 +703,7 @@ export default function Recoveries() {
       
       if (claimCount || totalAmount) {
         toast({
-          title: '🔍 New Recoveries Detected!',
+          title: 'New Recoveries Detected!',
           description: claimCount 
             ? `${claimCount} new recovery${claimCount !== 1 ? 'ies' : ''} detected${totalAmount ? ` totaling ${formatCurrency(totalAmount)}` : ''}`
             : totalAmount 
@@ -713,7 +713,7 @@ export default function Recoveries() {
         });
       } else {
         toast({
-          title: '🔍 Recovery Detection Complete',
+          title: 'Recovery Detection Complete',
           description: 'Scan completed. Check for new recovery opportunities.',
           duration: 5000,
         });
@@ -763,7 +763,7 @@ export default function Recoveries() {
           if (newTotal > previousTotal && previousTotal > 0) {
             const increase = newTotal - previousTotal;
             toast({
-              title: '💰 Recovery Amount Updated',
+              title: 'Recovery Amount Updated',
               description: `Recovered amount increased by ${formatCurrency(increase, data.currency || 'USD')}`,
               duration: 5000,
             });

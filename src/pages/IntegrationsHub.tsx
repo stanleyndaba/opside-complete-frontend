@@ -194,7 +194,7 @@ export default function IntegrationsHub() {
     // Handle Amazon OAuth error
     if (amazonError === 'true' || (error && amazonConnected === null && !gmailConnected && !outlookConnected && !gdriveConnected && !dropboxConnected)) {
       toast({
-        title: '❌ Amazon Connection Failed',
+        title: 'Amazon Connection Failed',
         description: error ? decodeURIComponent(error) : (message || 'Failed to connect Amazon account. Please try again.'),
         variant: 'destructive',
       });
@@ -332,7 +332,7 @@ export default function IntegrationsHub() {
               <CardHeader className="space-y-4">
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="h-14 w-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+                    <div className="flex items-center justify-center">
                       <img src="/Amazon-logo.png" alt="Amazon logo" className="h-9 w-9 object-contain" />
                     </div>
                     <div>

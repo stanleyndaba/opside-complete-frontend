@@ -218,13 +218,13 @@ export function Dashboard() {
             
             if (claimsDetected > 0) {
               toast({
-                title: '✅ Sync Completed',
+                title: 'Sync Completed',
                 description: `Sync completed successfully! ${claimsDetected} claim${claimsDetected !== 1 ? 's' : ''} detected from ${ordersProcessed.toLocaleString()} order${ordersProcessed !== 1 ? 's' : ''}.`,
                 duration: 6000,
               });
             } else {
               toast({
-                title: '✅ Sync Completed',
+                title: 'Sync Completed',
                 description: 'Your Amazon data has been synced successfully.',
                 duration: 5000,
               });
@@ -243,7 +243,7 @@ export function Dashboard() {
             
             // Show error toast with more details
             toast({
-              title: '❌ Sync Failed',
+              title: 'Sync Failed',
               description: syncStatus.lastSync.error || syncStatus.lastSync.message || 'The sync encountered an error. Please try again.',
               variant: 'destructive',
               duration: 6000,
@@ -261,7 +261,7 @@ export function Dashboard() {
             setSyncMessage('Sync was cancelled.');
             
             toast({
-              title: '⏸️ Sync Cancelled',
+              title: 'Sync Cancelled',
               description: 'The sync was cancelled.',
               duration: 4000,
             });
@@ -319,13 +319,13 @@ export function Dashboard() {
             
             if (claimsDetected > 0) {
               toast({
-                title: '✅ Sync Completed',
+                title: 'Sync Completed',
                 description: `Sync completed successfully! ${claimsDetected} claim${claimsDetected !== 1 ? 's' : ''} detected from ${ordersProcessed.toLocaleString()} order${ordersProcessed !== 1 ? 's' : ''}.`,
                 duration: 6000,
               });
             } else {
               toast({
-                title: '✅ Sync Completed',
+                title: 'Sync Completed',
                 description: 'Your Amazon data has been synced successfully.',
                 duration: 5000,
               });
@@ -342,12 +342,12 @@ export function Dashboard() {
             setNeedsSync(true);
             setSyncMessage('Sync failed. Please try again.');
             
-            toast({
-              title: '❌ Sync Failed',
-              description: status.error || status.message || 'The sync encountered an error. Please try again.',
-              variant: 'destructive',
-              duration: 6000,
-            });
+              toast({
+                title: 'Sync Failed',
+                description: status.error || status.message || 'The sync encountered an error. Please try again.',
+                variant: 'destructive',
+                duration: 6000,
+              });
             
             // Clear polling
             if (syncPollingRef.current) {
@@ -493,40 +493,40 @@ export function Dashboard() {
 
     return (
       <div 
-        className="relative min-h-screen flex flex-col h-screen overflow-hidden text-slate-900"
+        className="relative min-h-screen flex flex-col h-screen overflow-hidden text-gray-300"
         style={{ 
-          backgroundColor: '#E8E8E8'
+          backgroundColor: '#0B1220'
         }}
       >
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(148,163,184,0.18),transparent_45%),radial-gradient(circle_at_80%_20%,rgba(226,232,240,0.25),transparent_45%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
       <Navbar sidebarCollapsed={isSidebarCollapsed} forceTransparent />
       <div className="flex-1 flex h-full overflow-hidden">
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
         <main className={'flex-1 transition-all duration-300 overflow-y-auto ' + mainClass}>
           <div className="relative pt-24">
-                <div className="relative container mx-auto px-6 md:px-10 lg:px-12 pb-10 text-slate-700 space-y-8">
-              <div className="rounded-2xl bg-white/90 border border-slate-200 shadow-[0_24px_70px_rgba(148,163,184,0.35)] p-6 md:p-8">
+                <div className="relative container mx-auto px-6 md:px-10 lg:px-12 pb-10 text-gray-300 space-y-8">
+              <div className="rounded-2xl bg-white/5 border border-white/10 backdrop-blur-lg shadow-[0_24px_70px_rgba(0,0,0,0.35)] p-6 md:p-8">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 h-full">
               <div className="lg:col-span-2 space-y-8">
-                  <Card className="bg-white border border-slate-200 text-slate-700 shadow-sm">
+                  <Card className="bg-white/5 border border-white/10 text-gray-300 shadow-sm">
                   <CardContent className="p-6">
-                      <h2 className="font-brand text-lg text-slate-900 font-semibold">Get Faster Reimbursements with Clario!</h2>
-                      <p className="text-sm text-slate-500 mt-1">Your Amazon account has been connected successfully.</p>
+                      <h2 className="font-brand text-lg text-gray-200 font-semibold">Get Faster Reimbursements with Clario!</h2>
+                      <p className="text-sm text-gray-400 mt-1">Your Amazon account has been connected successfully.</p>
                   </CardContent>
                 </Card>
 
-                  <Card className="bg-white border border-slate-200 text-slate-700 shadow-sm">
+                  <Card className="bg-white/5 border border-white/10 text-gray-300 shadow-sm">
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
-                            <h2 className="font-brand text-lg text-slate-900 font-semibold">Your Recovered Value</h2>
+                            <h2 className="font-brand text-lg text-gray-200 font-semibold">Your Recovered Value</h2>
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <button
                                 type="button"
                                 aria-label="About recovered value"
-                                  className="text-slate-400 hover:text-slate-600 transition-colors"
+                                  className="text-gray-400 hover:text-gray-300 transition-colors"
                               >
                                 <Info className="h-4 w-4" />
                               </button>
@@ -536,10 +536,10 @@ export function Dashboard() {
                             </TooltipContent>
                           </Tooltip>
                         </div>
-                          <div className="text-[24px] md:text-[28px] font-semibold mt-1 text-emerald-500">
+                          <div className="text-[24px] md:text-[28px] font-semibold mt-1 text-emerald-400">
                           {formatCurrency(recoveredTotal ?? 0, recoveredCurrency)}
                         </div>
-                          <div className="text-[11px] text-slate-500 mt-1">
+                          <div className="text-[11px] text-gray-400 mt-1">
                             {submittedClaimsCount != null && submittedClaimsCount > 0 
                               ? `From ${submittedClaimsCount} claim${submittedClaimsCount !== 1 ? 's' : ''} submitted`
                               : 'From approved claims submitted'
@@ -549,10 +549,10 @@ export function Dashboard() {
                           {(syncMessage || needsSync || syncTriggered) && (
                             <div className={`mt-3 px-3 py-2 rounded-md text-xs ${
                               syncTriggered 
-                                ? 'bg-blue-50 text-blue-700 border border-blue-200' 
+                                ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' 
                                 : needsSync 
-                                ? 'bg-amber-50 text-amber-700 border border-amber-200' 
-                                : 'bg-slate-50 text-slate-600 border border-slate-200'
+                                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' 
+                                : 'bg-white/5 text-gray-300 border border-white/10'
                             }`}>
                               <div className="flex items-start justify-between gap-2">
                                 <div className="flex items-start gap-2 flex-1">
@@ -562,7 +562,7 @@ export function Dashboard() {
                                 {activeSyncId && (
                                   <button
                                     onClick={() => navigate(`/sync?id=${activeSyncId}`)}
-                                    className="text-blue-600 hover:text-blue-800 underline text-xs ml-2"
+                                    className="text-blue-400 hover:text-blue-300 underline text-xs ml-2"
                                   >
                                     View progress
                                   </button>
@@ -574,38 +574,38 @@ export function Dashboard() {
                     </div>
 
                     <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="rounded-md border border-slate-200/80 bg-white p-4 shadow-sm">
-                          <div className="text-xs text-slate-500">Next payment</div>
-                          <div className="text-xl font-semibold text-slate-900 mt-1">$26.0K</div>
-                          <div className="text-[11px] text-slate-500 mt-1">
+                        <div className="rounded-md border border-white/10 bg-white/5 p-4 shadow-sm">
+                          <div className="text-xs text-gray-400">Next payment</div>
+                          <div className="text-xl font-semibold text-gray-200 mt-1">$26.0K</div>
+                          <div className="text-[11px] text-gray-400 mt-1">
                           Estimated on {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                         </div>
                         <button
                           type="button"
-                            className="text-xs text-indigo-500 mt-1 underline-offset-2 hover:underline"
+                            className="text-xs text-indigo-400 mt-1 underline-offset-2 hover:underline"
                           onClick={() => navigate('/upcoming-payments')}
                           aria-label="View upcoming payments"
                         >
                           upcoming payments
                         </button>
                       </div>
-                        <div className="rounded-md border border-slate-200/80 bg-white p-4 shadow-sm">
-                          <div className="text-xs text-slate-500">Pending recovery</div>
-                          <div className="text-xl font-semibold text-sky-600 mt-1">$870.01</div>
-                          <div className="text-[11px] text-slate-500 mt-1">
+                        <div className="rounded-md border border-white/10 bg-white/5 p-4 shadow-sm">
+                          <div className="text-xs text-gray-400">Pending recovery</div>
+                          <div className="text-xl font-semibold text-sky-400 mt-1">$870.01</div>
+                          <div className="text-[11px] text-gray-400 mt-1">
                           No. of Claims: {submittedClaimsCount != null ? submittedClaimsCount : 0}
                         </div>
                         {submittedClaimsCount != null && (
-                            <div className="text-[11px] text-slate-500 mt-1">{submittedClaimsCount} claims submitted</div>
+                            <div className="text-[11px] text-gray-400 mt-1">{submittedClaimsCount} claims submitted</div>
                         )}
                           <div className="text-[11px] mt-1">
-                            <span className="text-slate-500">Total: </span>
-                            <span className="text-emerald-500">{formatCurrency(recoveredTotal ?? 0, recoveredCurrency)}</span>
+                            <span className="text-gray-400">Total: </span>
+                            <span className="text-emerald-400">{formatCurrency(recoveredTotal ?? 0, recoveredCurrency)}</span>
                         </div>
                       </div>
-                        <div className="rounded-md border border-slate-200/80 bg-white p-4 shadow-sm">
+                        <div className="rounded-md border border-white/10 bg-white/5 p-4 shadow-sm">
                           <div className="flex items-center gap-1.5">
-                            <div className="text-xs text-slate-500">Approved</div>
+                            <div className="text-xs text-gray-400">Approved</div>
                             <div className="flex items-center gap-1">
                               <TrendingDown className="h-3 w-3 text-red-500" />
                               <span className="text-[10px] text-red-500 font-medium">8%</span>
@@ -613,10 +613,10 @@ export function Dashboard() {
                               <span className="text-[10px] text-green-600 font-medium">92%</span>
                             </div>
                           </div>
-                          <div className="text-xl font-semibold text-emerald-500 mt-1">{formatCurrency(computedApproved ?? 0, recoveredCurrency)}</div>
+                          <div className="text-xl font-semibold text-emerald-400 mt-1">{formatCurrency(computedApproved ?? 0, recoveredCurrency)}</div>
                           <div className="text-[11px] mt-1">
-                            <span className="text-slate-500">Total this month: </span>
-                            <span className="text-sky-600">$31.4K</span>
+                            <span className="text-gray-400">Total this month: </span>
+                            <span className="text-sky-400">$31.4K</span>
                         </div>
                       </div>
                     </div>
@@ -625,34 +625,34 @@ export function Dashboard() {
                     {evidenceStatus && (
                       <div className="mt-6">
                         <div className="flex items-center justify-between mb-3">
-                          <h3 className="text-sm font-semibold text-slate-900">Evidence Documents</h3>
+                          <h3 className="text-sm font-semibold text-gray-200">Evidence Documents</h3>
                           <button
                             type="button"
                             onClick={() => navigate('/evidence-locker')}
-                            className="text-xs text-indigo-500 underline-offset-2 hover:underline"
+                            className="text-xs text-indigo-400 underline-offset-2 hover:underline"
                           >
                             View all
                           </button>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                          <div className="rounded-md border border-slate-200/80 bg-white p-4 shadow-sm">
-                            <div className="text-xs text-slate-500">Total Documents</div>
-                            <div className="text-xl font-semibold text-slate-900 mt-1">{evidenceStatus.documentsCount}</div>
-                            <div className="text-[11px] text-slate-500 mt-1">All evidence documents</div>
+                          <div className="rounded-md border border-white/10 bg-white/5 p-4 shadow-sm">
+                            <div className="text-xs text-gray-400">Total Documents</div>
+                            <div className="text-xl font-semibold text-gray-200 mt-1">{evidenceStatus.documentsCount}</div>
+                            <div className="text-[11px] text-gray-400 mt-1">All evidence documents</div>
                           </div>
-                          <div className="rounded-md border border-slate-200/80 bg-white p-4 shadow-sm">
-                            <div className="text-xs text-slate-500">Processing</div>
-                            <div className="text-xl font-semibold text-blue-600 mt-1">{evidenceStatus.processingCount}</div>
-                            <div className="text-[11px] text-slate-500 mt-1">Documents being parsed</div>
+                          <div className="rounded-md border border-white/10 bg-white/5 p-4 shadow-sm">
+                            <div className="text-xs text-gray-400">Processing</div>
+                            <div className="text-xl font-semibold text-blue-400 mt-1">{evidenceStatus.processingCount}</div>
+                            <div className="text-[11px] text-gray-400 mt-1">Documents being parsed</div>
                           </div>
-                          <div className="rounded-md border border-slate-200/80 bg-white p-4 shadow-sm">
-                            <div className="text-xs text-slate-500">Completed</div>
-                            <div className="text-xl font-semibold text-emerald-500 mt-1">
+                          <div className="rounded-md border border-white/10 bg-white/5 p-4 shadow-sm">
+                            <div className="text-xs text-gray-400">Completed</div>
+                            <div className="text-xl font-semibold text-emerald-400 mt-1">
                               {evidenceStatus.documentsCount - evidenceStatus.processingCount}
                             </div>
-                            <div className="text-[11px] text-slate-500 mt-1">Documents ready</div>
+                            <div className="text-[11px] text-gray-400 mt-1">Documents ready</div>
                             {gmailConnected && (
-                              <div className="text-[10px] text-emerald-600 mt-1 flex items-center gap-1">
+                              <div className="text-[10px] text-emerald-400 mt-1 flex items-center gap-1">
                                 <Mail className="h-3 w-3" />
                                 Gmail connected
                               </div>
@@ -668,78 +668,78 @@ export function Dashboard() {
 
                 {/* Phase 3: Detection Summary Card */}
                 {detectionStats && detectionStats.totalDetections > 0 && (
-                  <Card className="bg-white border border-slate-200 text-slate-700 shadow-sm">
+                  <Card className="bg-white/5 border border-white/10 text-gray-300 shadow-sm">
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between mb-4">
-                        <h2 className="font-brand text-lg text-slate-900 font-semibold">💰 Detected Claims</h2>
+                        <h2 className="font-brand text-lg text-gray-200 font-semibold">💰 Detected Claims</h2>
                         <Button
                           variant="outline"
                           size="sm"
-                          className="bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200"
+                          className="bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10"
                           onClick={() => navigate('/recoveries', { state: { filter: 'detected' } })}
                         >
                           View All →
                         </Button>
                       </div>
                       <div className="grid grid-cols-2 gap-4 mb-4">
-                        <div className="rounded-md border border-slate-200/80 bg-white p-4 shadow-sm">
-                          <div className="text-xs text-slate-500">Total Detected</div>
-                          <div className="text-xl font-semibold text-slate-900 mt-1">{detectionStats.totalDetections}</div>
+                        <div className="rounded-md border border-white/10 bg-white/5 p-4 shadow-sm">
+                          <div className="text-xs text-gray-400">Total Detected</div>
+                          <div className="text-xl font-semibold text-gray-200 mt-1">{detectionStats.totalDetections}</div>
                         </div>
-                        <div className="rounded-md border border-slate-200/80 bg-white p-4 shadow-sm">
-                          <div className="text-xs text-slate-500">Recovery Potential</div>
-                          <div className="text-xl font-semibold text-emerald-500 mt-1">
+                        <div className="rounded-md border border-white/10 bg-white/5 p-4 shadow-sm">
+                          <div className="text-xs text-gray-400">Recovery Potential</div>
+                          <div className="text-xl font-semibold text-emerald-400 mt-1">
                             {formatCurrency(detectionStats.estimatedRecovery)}
                           </div>
                         </div>
                       </div>
                       <div className="space-y-2">
                         <div className="flex items-center gap-2 text-sm">
-                          <span className="text-emerald-500">⚡</span>
-                          <span className="text-slate-700">High: <span className="font-semibold">{detectionStats.highConfidence}</span> claims</span>
+                          <span className="text-emerald-400">⚡</span>
+                          <span className="text-gray-300">High: <span className="font-semibold">{detectionStats.highConfidence}</span> claims</span>
                         </div>
                         <div className="flex items-center gap-2 text-sm">
-                          <span className="text-amber-500">❓</span>
-                          <span className="text-slate-700">Medium: <span className="font-semibold">{detectionStats.mediumConfidence}</span> claims</span>
+                          <span className="text-amber-400">❓</span>
+                          <span className="text-gray-300">Medium: <span className="font-semibold">{detectionStats.mediumConfidence}</span> claims</span>
                         </div>
                         <div className="flex items-center gap-2 text-sm">
-                          <span className="text-slate-500">📋</span>
-                          <span className="text-slate-700">Low: <span className="font-semibold">{detectionStats.lowConfidence}</span> claims</span>
+                          <span className="text-gray-400">📋</span>
+                          <span className="text-gray-300">Low: <span className="font-semibold">{detectionStats.lowConfidence}</span> claims</span>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
                 )}
 
-                  <Card className="bg-white border border-slate-200 text-slate-700 shadow-sm">
+                  <Card className="bg-white/5 border border-white/10 text-gray-300 shadow-sm">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
-                        <h2 className="font-brand text-lg text-slate-900 font-semibold">Quick Actions</h2>
-                        <button aria-label="Customize quick actions" className="text-slate-400 hover:text-slate-600" onClick={() => setQuickActionsEditOpen(true)}>
+                        <h2 className="font-brand text-lg text-gray-200 font-semibold">Quick Actions</h2>
+                        <button aria-label="Customize quick actions" className="text-gray-400 hover:text-gray-300" onClick={() => setQuickActionsEditOpen(true)}>
                         <Plus className="h-4 w-4" />
                       </button>
                     </div>
                     <div className="grid grid-cols-2 gap-4 mt-4">
                       {selectedQuickActions.includes('connect_evidence') && (
-                          <Button variant="outline" className="flex items-center gap-2 bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200" onClick={() => setShowEvidencePrompt(true)}>
+                          <Button variant="outline" className="flex items-center gap-2 bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10" onClick={() => setShowEvidencePrompt(true)}>
                           <Mail className="h-4 w-4" />
                           Connect evidence sources
                         </Button>
                       )}
                       {selectedQuickActions.includes('review_high_conf') && (
-                          <Button variant="outline" className="flex items-center gap-2 bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200" onClick={() => navigate('/recoveries', { state: { filter: 'high_confidence' } })}>
+                          <Button variant="outline" className="flex items-center gap-2 bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10" onClick={() => navigate('/recoveries', { state: { filter: 'high_confidence' } })}>
                           <CheckCircle className="h-4 w-4" />
                           Review high‑confidence cases
                         </Button>
                       )}
                       {selectedQuickActions.includes('resolve_new') && (
-                          <Button variant="outline" className="flex items-center gap-2 bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200" onClick={() => navigate('/recoveries', { state: { filter: 'new_pending' } })}>
+                          <Button variant="outline" className="flex items-center gap-2 bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10" onClick={() => navigate('/recoveries', { state: { filter: 'new_pending' } })}>
                           <RotateCcw className="h-4 w-4" />
                           Resolve new opportunities
                         </Button>
                       )}
                       {selectedQuickActions.includes('run_detector') && (
-                          <Button variant="outline" className="flex items-center gap-2 bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200" onClick={async () => {
+                          <Button variant="outline" className="flex items-center gap-2 bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10" onClick={async () => {
                           try { await api.post('/api/detections/run'); toast({ title: 'Detector started', description: 'Scanning new opportunities…' }); } catch(e:any){ toast({ title: 'Detector failed', description: e?.message || 'Please try again.', variant: 'destructive' }); }
                         }}>
                           <RefreshCw className="h-4 w-4" />
@@ -747,53 +747,53 @@ export function Dashboard() {
                         </Button>
                       )}
                       {selectedQuickActions.includes('ingest_now') && (
-                          <Button variant="outline" className="flex items-center gap-2 bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200" onClick={async () => {
+                          <Button variant="outline" className="flex items-center gap-2 bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10" onClick={async () => {
                           const r = await api.startEvidenceIngest();
                           if ((r as any)?.ok) toast({ title: 'Ingestion started', description: 'We will notify you when new docs arrive.' });
-                          else toast({ title: 'Ingestion failed', description: (r as any)?.error || 'Try again.', variant: 'destructive' });
+                          else toast({ title: 'Ingestion failed', description: (r as any)?.error || 'Try again.', variant: 'destructive' }); 
                         }}>
                           <Cloud className="h-4 w-4" />
                           Ingest documents now
                         </Button>
                       )}
                       {selectedQuickActions.includes('smart_sync') && (
-                          <Button variant="outline" className="flex items-center gap-2 bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200" onClick={() => navigate('/smart-inventory-sync')}>
+                          <Button variant="outline" className="flex items-center gap-2 bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10" onClick={() => navigate('/smart-inventory-sync')}>
                           <RefreshCw className="h-4 w-4" />
                           Smart Inventory Sync
                         </Button>
                       )}
                       {selectedQuickActions.includes('upcoming_payments') && (
-                          <Button variant="outline" className="flex items-center gap-2 bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200" onClick={() => navigate('/upcoming-payments')}>
+                          <Button variant="outline" className="flex items-center gap-2 bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10" onClick={() => navigate('/upcoming-payments')}>
                           <CircleDollarSign className="h-4 w-4" />
                           Upcoming payments
                         </Button>
                       )}
                       {selectedQuickActions.includes('export_history') && (
-                          <Button variant="outline" className="flex items-center gap-2 bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200" onClick={() => navigate('/export-center')}>
+                          <Button variant="outline" className="flex items-center gap-2 bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10" onClick={() => navigate('/export-center')}>
                           <Download className="h-4 w-4" />
                           Export recovery & payout history
                         </Button>
                       )}
                       {selectedQuickActions.includes('evidence_locker') && (
-                          <Button variant="outline" className="flex items-center gap-2 bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200" onClick={() => navigate('/evidence-locker')}>
+                          <Button variant="outline" className="flex items-center gap-2 bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10" onClick={() => navigate('/evidence-locker')}>
                           <FileText className="h-4 w-4" />
                           Doc Locker
                         </Button>
                       )}
                       {selectedQuickActions.includes('invite_teammate') && (
-                          <Button variant="outline" className="flex items-center gap-2 bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200" onClick={() => setInviteOpen(true)}>
+                          <Button variant="outline" className="flex items-center gap-2 bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10" onClick={() => setInviteOpen(true)}>
                           <Link2 className="h-4 w-4" />
                           Invite a teammate
                         </Button>
                       )}
                       {selectedQuickActions.includes('configure_alerts') && (
-                          <Button variant="outline" className="flex items-center gap-2 bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200" onClick={() => navigate('/notifications')}>
+                          <Button variant="outline" className="flex items-center gap-2 bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10" onClick={() => navigate('/notifications')}>
                           <Bell className="h-4 w-4" />
                           Configure alerts
                         </Button>
                       )}
                       {selectedQuickActions.includes('security_setup') && (
-                          <Button variant="outline" className="flex items-center gap-2 bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200" onClick={() => navigate('/settings')}>
+                          <Button variant="outline" className="flex items-center gap-2 bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10" onClick={() => navigate('/settings')}>
                           <Shield className="h-4 w-4" />
                           Security quick setup
                         </Button>
@@ -804,19 +804,19 @@ export function Dashboard() {
               </div>
 
                 <div className="lg:col-span-1">
-                  <Card className="h-full bg-white border border-slate-200 text-slate-700 shadow-sm">
+                  <Card className="h-full bg-white/5 border border-white/10 text-gray-300 shadow-sm">
                     <CardContent className="p-0">
-                      <div className="p-3 border-b border-slate-200/80">
+                      <div className="p-3 border-b border-white/10">
                         <div className="flex items-center justify-between">
-                          <h3 className="font-semibold text-sm text-slate-900">Recent Activity</h3>
-                          <span className="text-xs rounded px-2 py-0.5 bg-slate-100 text-slate-700 border border-slate-200">4 new</span>
+                          <h3 className="font-semibold text-sm text-gray-200">Recent Activity</h3>
+                          <span className="text-xs rounded px-2 py-0.5 bg-white/5 text-gray-300 border border-white/10">4 new</span>
                         </div>
                       </div>
                       <div className="py-2 max-h-[600px] overflow-y-auto">
-                        <div className="relative px-4 max-w-[360px] mx-auto text-[12px] divide-y divide-slate-200/70">
+                        <div className="relative px-4 max-w-[360px] mx-auto text-[12px] divide-y divide-white/10">
                           {(() => {
                             const events = [
-                              { id: 'evt-0', unread: true, title: 'Claim Approved 🎉', details: 'Good news! Claim approved for $1,200 reimbursement.', time: 'Just now' },
+                              { id: 'evt-0', unread: true, title: 'Claim Approved', details: 'Good news! Claim approved for $1,200 reimbursement.', time: 'Just now' },
                               { id: 'evt-1', unread: true, title: 'Connection Established', details: 'Amazon connection established', time: 'Just now' },
                               { id: 'evt-2', unread: true, title: 'Claims Identified', details: `23 potential claims identified, valued at ~${formatCurrency(14228)}` , time: '2 minutes ago' },
                               { id: 'evt-2.5', unread: true, title: 'Evidence Matched', details: 'Invoices and shipment records matched for 4 new claims.', time: 'Just now' },
@@ -826,22 +826,22 @@ export function Dashboard() {
                             return events.map((evt) => (
                               <div key={evt.id} className="group relative flex items-start gap-3 py-3 overflow-hidden">
                                 <div className="pt-1">
-                                  <span className={'inline-block h-2 w-2 rounded-full ' + (evt.unread ? 'bg-sky-500' : 'bg-slate-400')} />
+                                  <span className={'inline-block h-2 w-2 rounded-full ' + (evt.unread ? 'bg-sky-400' : 'bg-gray-500')} />
                                 </div>
                                 <div className="min-w-0 flex-1">
                                   <div className="flex items-center justify-between">
-                                    <p className={'text-[12px] truncate ' + (evt.unread ? 'text-slate-900 font-semibold' : 'text-slate-500 font-medium')}>{evt.title}</p>
-                                    <span className={'ml-3 shrink-0 text-[11px] ' + (evt.unread ? 'text-slate-700 font-semibold' : 'text-slate-400')}>{evt.time}</span>
+                                    <p className={'text-[12px] truncate ' + (evt.unread ? 'text-gray-200 font-semibold' : 'text-gray-400 font-medium')}>{evt.title}</p>
+                                    <span className={'ml-3 shrink-0 text-[11px] ' + (evt.unread ? 'text-gray-300 font-semibold' : 'text-gray-500')}>{evt.time}</span>
                                   </div>
-                                  <p className="text-[11px] text-slate-500 mt-0.5 truncate">{evt.details}</p>
+                                  <p className="text-[11px] text-gray-400 mt-0.5 truncate">{evt.details}</p>
                                 </div>
                               </div>
                             ));
                           })()}
                         </div>
                       </div>
-                      <div className="border-t border-slate-200/80 p-4">
-                        <Button className="w-full bg-slate-900 hover:bg-slate-800 text-white border border-slate-900" onClick={() => navigate('/notifications')}>
+                      <div className="border-t border-white/10 p-4">
+                        <Button className="w-full bg-white/10 hover:bg-white/20 text-gray-200 border border-white/20" onClick={() => navigate('/notifications')}>
                           View all messages
                         </Button>
                       </div>
@@ -856,14 +856,14 @@ export function Dashboard() {
       </div>
       {/* Evidence Connections Prompt on Dashboard as fallback */}
         <Dialog open={showEvidencePrompt} onOpenChange={setShowEvidencePrompt}>
-          <DialogContent className="max-w-lg bg-[whitesmoke] backdrop-blur-md border border-gray-200 text-gray-900 shadow-[0_20px_80px_rgba(15,23,42,0.25)] rounded-2xl">
+          <DialogContent className="max-w-lg bg-white/5 backdrop-blur-lg border border-white/10 text-gray-300 shadow-[0_20px_80px_rgba(0,0,0,0.5)] rounded-2xl">
           <DialogHeader>
-            <DialogTitle className="text-lg text-gray-900">
+            <DialogTitle className="text-lg text-gray-200">
               Connect Doc Sources
             </DialogTitle>
-            <DialogDescription className="text-slate-500">
+            <DialogDescription className="text-gray-400">
               Link your email and cloud storage to automatically collect invoices, receipts, and shipping documents.
-              <span className="block mt-2 text-sm text-slate-600">
+              <span className="block mt-2 text-sm text-gray-400">
                 Read-only access. No writing or sending permissions.
               </span>
             </DialogDescription>
@@ -972,8 +972,8 @@ export function Dashboard() {
             </Button>
           </div>
             <DialogFooter>
-                <Button variant="ghost" className="text-slate-500 hover:text-slate-700" onClick={() => { setShowEvidencePrompt(false); try { localStorage.setItem('clario.evidencePromptDismissed', 'true'); } catch {} }}>Not now</Button>
-                <Button onClick={() => setShowEvidencePrompt(false)} className="gap-2 bg-slate-900 hover:bg-slate-800 text-white">
+                <Button variant="ghost" className="text-gray-400 hover:text-gray-300" onClick={() => { setShowEvidencePrompt(false); try { localStorage.setItem('clario.evidencePromptDismissed', 'true'); } catch {} }}>Not now</Button>
+                <Button onClick={() => setShowEvidencePrompt(false)} className="gap-2 bg-white/10 hover:bg-white/20 text-gray-200 border border-white/20">
               <ArrowRight className="h-4 w-4" /> Continue
             </Button>
           </DialogFooter>
@@ -981,10 +981,10 @@ export function Dashboard() {
       </Dialog>
       {/* Quick Actions Editor */}
       <Dialog open={quickActionsEditOpen} onOpenChange={setQuickActionsEditOpen}>
-        <DialogContent className="max-w-md bg-white backdrop-blur-xl border border-slate-200 text-slate-800 shadow-[0_20px_80px_rgba(148,163,184,0.3)] rounded-2xl">
+        <DialogContent className="max-w-md bg-white/5 backdrop-blur-lg border border-white/10 text-gray-300 shadow-[0_20px_80px_rgba(0,0,0,0.5)] rounded-2xl">
           <DialogHeader>
-              <DialogTitle className="text-lg text-slate-900">Customize Quick Actions</DialogTitle>
-              <DialogDescription className="text-slate-500">Select which actions to show.</DialogDescription>
+              <DialogTitle className="text-lg text-gray-200">Customize Quick Actions</DialogTitle>
+              <DialogDescription className="text-gray-400">Select which actions to show.</DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
             {QUICK_ACTIONS.map(a => (
@@ -1001,8 +1001,8 @@ export function Dashboard() {
             ))}
           </div>
           <DialogFooter>
-            <Button variant="ghost" className="text-slate-500 hover:text-slate-700" onClick={() => setQuickActionsEditOpen(false)}>Cancel</Button>
-            <Button className="bg-slate-900 hover:bg-slate-800 text-white" onClick={() => { try { localStorage.setItem('clario.quickActions', JSON.stringify(selectedQuickActions)); toast({ title: 'Saved', description: 'Quick actions updated.' }); } catch {} setQuickActionsEditOpen(false); }}>Save</Button>
+            <Button variant="ghost" className="text-gray-400 hover:text-gray-300" onClick={() => setQuickActionsEditOpen(false)}>Cancel</Button>
+            <Button className="bg-white/10 hover:bg-white/20 text-gray-200 border border-white/20" onClick={() => { try { localStorage.setItem('clario.quickActions', JSON.stringify(selectedQuickActions)); toast({ title: 'Saved', description: 'Quick actions updated.' }); } catch {} setQuickActionsEditOpen(false); }}>Save</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

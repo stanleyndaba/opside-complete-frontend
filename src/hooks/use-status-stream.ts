@@ -32,29 +32,29 @@ export const useStatusStream = (onEvent?: (event: StatusEvent) => void) => {
 
         // Handle Agent 1-11 events
         if (type === 'sync' && status === 'started') {
-          toast({ title: '🔄 Data Sync Started', description: 'Syncing Amazon data...' });
+          toast({ title: 'Data Sync Started', description: 'Syncing Amazon data...' });
         } else if (type === 'sync' && status === 'completed') {
-          toast({ title: '✅ Data Sync Complete', description: 'Amazon data synced successfully' });
+          toast({ title: 'Data Sync Complete', description: 'Amazon data synced successfully' });
         } else if (type === 'detection' && status === 'started') {
-          toast({ title: '🔍 Claim Detection Started', description: 'Analyzing data for claims...' });
+          toast({ title: 'Claim Detection Started', description: 'Analyzing data for claims...' });
         } else if (type === 'detection' && status === 'completed') {
           const count = data?.totalDetected || data?.count || 0;
-          toast({ title: '✅ Claims Detected', description: `${count} claim${count !== 1 ? 's' : ''} found` });
+          toast({ title: 'Claims Detected', description: `${count} claim${count !== 1 ? 's' : ''} found` });
         } else if (type === 'evidence' && status === 'started') {
-          toast({ title: '📦 Evidence Ingestion Started', description: 'Collecting evidence documents...' });
+          toast({ title: 'Evidence Ingestion Started', description: 'Collecting evidence documents...' });
         } else if (type === 'evidence' && status === 'completed') {
           const count = data?.documentsIngested || data?.count || 0;
-          toast({ title: '✅ Evidence Collected', description: `${count} document${count !== 1 ? 's' : ''} ingested` });
+          toast({ title: 'Evidence Collected', description: `${count} document${count !== 1 ? 's' : ''} ingested` });
         } else if (type === 'claim' && (status === 'filed' || status === 'completed')) {
-          toast({ title: '📝 Claim Filed', description: claimId ? `Case ${claimId} submitted` : 'Case submitted' });
+          toast({ title: 'Claim Filed', description: claimId ? `Case ${claimId} submitted` : 'Case submitted' });
         } else if ((type === 'claim' && status === 'approved') || (type === 'refund' && status === 'approved')) {
-          toast({ title: '✅ Refund Approved', description: amount ? `${asMoney(amount)} approved` : 'Approved' });
+          toast({ title: 'Refund Approved', description: amount ? `${asMoney(amount)} approved` : 'Approved' });
         } else if (type === 'refund' && status === 'deposited') {
-          toast({ title: '💰 Funds Deposited', description: amount ? `${asMoney(amount)} credited` : 'Funds credited' });
+          toast({ title: 'Funds Deposited', description: amount ? `${asMoney(amount)} credited` : 'Funds credited' });
         } else if (type === 'evidence' && status === 'linked') {
-          toast({ title: '🔗 Evidence Linked', description: claimId ? `Linked to ${claimId}` : 'Evidence linked' });
+          toast({ title: 'Evidence Linked', description: claimId ? `Linked to ${claimId}` : 'Evidence linked' });
         } else if (status === 'failed') {
-          toast({ title: '❌ Task Failed', description: `${type} failed`, variant: 'destructive' });
+          toast({ title: 'Task Failed', description: `${type} failed`, variant: 'destructive' });
         }
       } catch (error) {
         console.error('Failed to parse status event:', error);

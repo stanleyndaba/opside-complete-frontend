@@ -245,7 +245,7 @@ export default function EvidenceLocker() {
       
       // Show success toast
       toast({ 
-        title: '✅ Uploaded Successfully', 
+        title: 'Uploaded Successfully', 
         description: `${files.length} document(s) uploaded successfully. Parsing will begin automatically.`,
         duration: 5000
       });
@@ -258,7 +258,7 @@ export default function EvidenceLocker() {
         if (refresh.data.length > documents.length) {
           const newCount = refresh.data.length - documents.length;
           toast({ 
-            title: '📄 Documents Added', 
+            title: 'Documents Added', 
             description: `${newCount} new document(s) are now in your Doc Locker.`,
             duration: 4000
           });
@@ -481,7 +481,7 @@ export default function EvidenceLocker() {
                     
                     // Show success toast
                     toast({ 
-                      title: '✅ Uploaded Successfully', 
+                      title: 'Uploaded Successfully', 
                       description: `${files.length} document(s) uploaded successfully. Parsing will begin automatically.`,
                       duration: 5000
                     });
@@ -495,7 +495,7 @@ export default function EvidenceLocker() {
                       if (refresh.data.length > previousCount) {
                         const newCount = refresh.data.length - previousCount;
                         toast({ 
-                          title: '📄 Documents Added', 
+                          title: 'Documents Added', 
                           description: `${newCount} new document(s) are now in your Doc Locker.`,
                           duration: 4000
                         });

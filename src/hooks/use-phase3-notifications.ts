@@ -150,7 +150,7 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
               case 'claim_expiring':
                 const expiringData = notificationEvent.data;
                 toast({
-                  title: expiringData.urgency === 'critical' ? '🚨 Urgent: Claim Expiring Soon!' : '⚠️ Claim Expiring Soon',
+                  title: expiringData.urgency === 'critical' ? 'Urgent: Claim Expiring Soon!' : 'Claim Expiring Soon',
                   description: expiringData.message || `Claim expires in ${expiringData.days_remaining} days. ${formatCurrency(expiringData.estimated_value)} at risk.`,
                   variant: expiringData.urgency === 'critical' ? 'destructive' : 'default',
                   duration: 8000,
@@ -160,7 +160,7 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
               case 'detection_resolved':
                 const resolvedData = notificationEvent.data;
                 toast({
-                  title: '✅ Detection Resolved',
+                  title: 'Detection Resolved',
                   description: resolvedData.message || `Detection ${resolvedData.detection_id} has been resolved.`,
                   duration: 5000,
                 });
@@ -169,7 +169,7 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
               case 'detection_status_changed':
                 const statusData = notificationEvent.data;
                 toast({
-                  title: '📝 Status Updated',
+                  title: 'Status Updated',
                   description: statusData.message || `Detection status changed from ${statusData.previous_status} to ${statusData.new_status}.`,
                   duration: 4000,
                 });
@@ -178,7 +178,7 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
               case 'sync_complete':
                 const syncData = notificationEvent.data;
                 toast({
-                  title: '✅ Sync Completed',
+                  title: 'Sync Completed',
                   description: syncData.message || `Sync completed. ${syncData.claims_detected || 0} claims detected from ${syncData.orders_processed || 0} orders.`,
                   duration: 6000,
                 });
@@ -187,7 +187,7 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
               case 'sync_failed':
                 const failedData = notificationEvent.data;
                 toast({
-                  title: '❌ Sync Failed',
+                  title: 'Sync Failed',
                   description: failedData.message || failedData.error || 'Sync encountered an error.',
                   variant: 'destructive',
                   duration: 6000,

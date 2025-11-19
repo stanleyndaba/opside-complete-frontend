@@ -210,7 +210,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
       // Provide more helpful error messages
       if (error?.message?.includes('timed out') || error?.message?.includes('sleeping')) {
         toast({
-          title: '⏱️ Backend Slow to Respond',
+          title: 'Backend Slow to Respond',
           description: 'The backend is taking longer than expected. This usually means it\'s waking up from sleep. Please wait 30-60 seconds and try again, or use the main "Connect Amazon Account" button.',
           variant: 'destructive',
           duration: 8000,

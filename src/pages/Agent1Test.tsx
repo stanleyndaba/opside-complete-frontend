@@ -162,13 +162,13 @@ export default function Agent1Test() {
 
       if (result.ok) {
         toast({
-          title: '✅ Test Passed',
+          title: 'Test Passed',
           description: testCase.name,
           duration: 2000
         });
       } else {
         toast({
-          title: '❌ Test Failed',
+          title: 'Test Failed',
           description: result.error || 'Unknown error',
           variant: 'destructive',
           duration: 3000
@@ -186,7 +186,7 @@ export default function Agent1Test() {
         return updated;
       });
       toast({
-        title: '❌ Test Error',
+        title: 'Test Error',
         description: error.message || 'Unknown error',
         variant: 'destructive',
         duration: 3000
