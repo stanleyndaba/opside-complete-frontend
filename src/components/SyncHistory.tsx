@@ -117,8 +117,8 @@ export function SyncHistory() {
     return (
       <Card className="bg-white/10 backdrop-blur-xl border-white/10 rounded-2xl shadow-[0_8px_32px_0_rgba(31,38,135,0.1)]">
         <CardHeader>
-          <CardTitle className="text-gray-100">Sync History</CardTitle>
-          <CardDescription className="text-gray-400">Loading sync history...</CardDescription>
+          <CardTitle className="text-gray-100">Sync Records</CardTitle>
+          <CardDescription className="text-gray-400">Loading sync records...</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-center py-8">
@@ -133,8 +133,8 @@ export function SyncHistory() {
     return (
       <Card className="bg-white/10 backdrop-blur-xl border-white/10 rounded-2xl shadow-[0_8px_32px_0_rgba(31,38,135,0.1)]">
         <CardHeader>
-          <CardTitle className="text-gray-100">Sync History</CardTitle>
-          <CardDescription className="text-gray-400">Error loading sync history</CardDescription>
+          <CardTitle className="text-gray-100">Sync Records</CardTitle>
+          <CardDescription className="text-gray-400">Error loading sync records</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="text-sm text-red-400">{error}</div>
@@ -147,8 +147,8 @@ export function SyncHistory() {
     return (
       <Card className="bg-white/10 backdrop-blur-xl border-white/10 rounded-2xl shadow-[0_8px_32px_0_rgba(31,38,135,0.1)]">
         <CardHeader>
-          <CardTitle className="text-gray-100">Sync History</CardTitle>
-          <CardDescription className="text-gray-400">No sync history available</CardDescription>
+          <CardTitle className="text-gray-100">Sync Records</CardTitle>
+          <CardDescription className="text-gray-400">No sync records available</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="text-sm text-gray-400 text-center py-8">
@@ -162,7 +162,7 @@ export function SyncHistory() {
   return (
     <Card className="bg-white/10 backdrop-blur-xl border-white/10 rounded-2xl shadow-[0_8px_32px_0_rgba(31,38,135,0.1)]">
       <CardHeader>
-        <CardTitle className="text-gray-100">Sync History</CardTitle>
+        <CardTitle className="text-gray-100">Sync Records</CardTitle>
         <CardDescription className="text-gray-400">
           View past sync jobs and their status
         </CardDescription>

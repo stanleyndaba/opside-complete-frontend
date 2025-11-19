@@ -385,7 +385,7 @@ export default function Sync() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     {getStatusIcon()}
-                    Inventory Sync
+                    Merchandise Sync
                   </CardTitle>
                   <CardDescription className="text-gray-300">
                     First run window: last 12 months • Schedule: daily at 02:00 UTC
@@ -512,7 +512,7 @@ export default function Sync() {
                           {/* Total Items Synced */}
                           <div className="bg-blue-500/10 border border-blue-500/40 rounded-md p-4">
                             <p className="text-xs text-blue-100 mb-1">Total Items Synced</p>
-                            <p className="text-2xl font-bold text-blue-300">
+                            <p className="text-lg font-bold text-blue-300">
                               {totalItemsSynced.toLocaleString()} items
                             </p>
                           </div>
@@ -520,59 +520,59 @@ export default function Sync() {
                           {/* Data Type Breakdown */}
                           <div className="space-y-3">
                             <h4 className="text-sm font-semibold text-gray-200">Data Type Breakdown</h4>
-                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            <div className="bg-white/5 rounded-md border border-white/10 divide-y divide-white/10">
                               {ordersProcessed !== undefined && syncData.totalOrders !== undefined && (
-                                <div className="bg-white/5 rounded-md p-3 border border-white/10">
-                                  <p className="text-xs text-gray-300 mb-1">Orders</p>
-                                  <p className="text-lg font-semibold text-gray-100">
+                                <div className="flex items-center justify-between py-3 px-4">
+                                  <p className="text-sm text-gray-400">Orders</p>
+                                  <p className="text-sm font-medium text-gray-100">
                                     {ordersProcessed.toLocaleString()} / {syncData.totalOrders.toLocaleString()}
                                   </p>
                                 </div>
                               )}
                               {inventoryCount !== undefined && (
-                                <div className="bg-white/5 rounded-md p-3 border border-white/10">
-                                  <p className="text-xs text-gray-300 mb-1">Inventory</p>
-                                  <p className="text-lg font-semibold text-gray-100">
+                                <div className="flex items-center justify-between py-3 px-4">
+                                  <p className="text-sm text-gray-400">Inventory</p>
+                                  <p className="text-sm font-medium text-gray-100">
                                     {inventoryCount.toLocaleString()} items
                                   </p>
                                 </div>
                               )}
                               {shipmentsCount !== undefined && (
-                                <div className="bg-white/5 rounded-md p-3 border border-white/10">
-                                  <p className="text-xs text-gray-300 mb-1">Shipments</p>
-                                  <p className="text-lg font-semibold text-gray-100">
+                                <div className="flex items-center justify-between py-3 px-4">
+                                  <p className="text-sm text-gray-400">Shipments</p>
+                                  <p className="text-sm font-medium text-gray-100">
                                     {shipmentsCount.toLocaleString()} items
                                   </p>
                                 </div>
                               )}
                               {returnsCount !== undefined && (
-                                <div className="bg-white/5 rounded-md p-3 border border-white/10">
-                                  <p className="text-xs text-gray-300 mb-1">Returns</p>
-                                  <p className="text-lg font-semibold text-gray-100">
+                                <div className="flex items-center justify-between py-3 px-4">
+                                  <p className="text-sm text-gray-400">Returns</p>
+                                  <p className="text-sm font-medium text-gray-100">
                                     {returnsCount.toLocaleString()} items
                                   </p>
                                 </div>
                               )}
                               {settlementsCount !== undefined && (
-                                <div className="bg-white/5 rounded-md p-3 border border-white/10">
-                                  <p className="text-xs text-gray-300 mb-1">Settlements</p>
-                                  <p className="text-lg font-semibold text-gray-100">
+                                <div className="flex items-center justify-between py-3 px-4">
+                                  <p className="text-sm text-gray-400">Settlement</p>
+                                  <p className="text-sm font-medium text-gray-100">
                                     {settlementsCount.toLocaleString()} items
                                   </p>
                                 </div>
                               )}
                               {feesCount !== undefined && (
-                                <div className="bg-white/5 rounded-md p-3 border border-white/10">
-                                  <p className="text-xs text-gray-300 mb-1">Fees</p>
-                                  <p className="text-lg font-semibold text-gray-100">
+                                <div className="flex items-center justify-between py-3 px-4">
+                                  <p className="text-sm text-gray-400">Fees</p>
+                                  <p className="text-sm font-medium text-gray-100">
                                     {feesCount.toLocaleString()} items
                                   </p>
                                 </div>
                               )}
                               {claimsDetected !== undefined && claimsDetected > 0 && (
-                                <div className="bg-emerald-500/10 rounded-md p-3 border border-emerald-500/40">
-                                  <p className="text-xs text-emerald-100 mb-1">Claims Detected</p>
-                                  <p className="text-lg font-semibold text-emerald-300">
+                                <div className="flex items-center justify-between py-3 px-4">
+                                  <p className="text-sm text-emerald-300">Claims Detected</p>
+                                  <p className="text-sm font-medium text-emerald-300">
                                     {claimsDetected.toLocaleString()}
                                   </p>
                                 </div>
@@ -611,7 +611,8 @@ export default function Sync() {
                           variant="outline"
                           onClick={handleCancelSync}
                           disabled={isCancelling}
-                          className="border-white/20 text-gray-100 hover:bg-white/10"
+                          className="border-white/20 hover:bg-white/10"
+                          style={{ color: '#001f3f' }}
                         >
                           {isCancelling ? (
                             <>
@@ -642,7 +643,8 @@ export default function Sync() {
                         <Button
                           variant="outline"
                           onClick={() => navigate('/app')}
-                          className="border-white/20 text-gray-100 hover:bg-white/10"
+                          className="border-white/20 hover:bg-white/10"
+                          style={{ color: '#001f3f' }}
                         >
                           Go to Dashboard
                         </Button>
@@ -652,7 +654,7 @@ export default function Sync() {
                 </CardContent>
               </Card>
 
-              {/* Sync History */}
+              {/* Sync Records */}
               <SyncHistory />
             </div>
           </div>
