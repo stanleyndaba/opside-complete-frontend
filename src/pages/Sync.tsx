@@ -520,64 +520,88 @@ export default function Sync() {
                           {/* Data Type Breakdown */}
                           <div className="space-y-3">
                             <h4 className="text-sm font-semibold text-gray-200">Data Type Breakdown</h4>
-                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                              {ordersProcessed !== undefined && syncData.totalOrders !== undefined && (
-                                <div className="bg-white/5 rounded-md p-3 border border-white/10">
-                                  <p className="text-xs text-gray-300 mb-1">Orders</p>
-                                  <p className="text-lg font-semibold text-gray-100">
-                                    {ordersProcessed.toLocaleString()} / {syncData.totalOrders.toLocaleString()}
-                                  </p>
+                            {(() => {
+                              const breakdownRows = [
+                                {
+                                  key: 'orders',
+                                  label: 'Orders',
+                                  helper:
+                                    syncData.totalOrders !== undefined
+                                      ? 'Processed vs total orders'
+                                      : 'Orders processed this run',
+                                  value:
+                                    syncData.totalOrders !== undefined
+                                      ? `${ordersProcessed.toLocaleString()} / ${syncData.totalOrders.toLocaleString()}`
+                                      : ordersProcessed.toLocaleString(),
+                                  show: ordersProcessed !== undefined || syncData.totalOrders !== undefined,
+                                },
+                                {
+                                  key: 'inventory',
+                                  label: 'Inventory',
+                                  helper: 'Catalog items refreshed',
+                                  value: inventoryCount.toLocaleString(),
+                                  show: inventoryCount !== undefined,
+                                },
+                                {
+                                  key: 'shipments',
+                                  label: 'Shipments',
+                                  helper: 'Fulfillment events captured',
+                                  value: shipmentsCount.toLocaleString(),
+                                  show: shipmentsCount !== undefined,
+                                },
+                                {
+                                  key: 'returns',
+                                  label: 'Returns',
+                                  helper: 'Customer returns reconciled',
+                                  value: returnsCount.toLocaleString(),
+                                  show: returnsCount !== undefined,
+                                },
+                                {
+                                  key: 'settlements',
+                                  label: 'Settlement',
+                                  helper: 'Financial reports ingested',
+                                  value: settlementsCount.toLocaleString(),
+                                  show: settlementsCount !== undefined,
+                                },
+                                {
+                                  key: 'fees',
+                                  label: 'Fees',
+                                  helper: 'Fee events reconciled',
+                                  value: feesCount.toLocaleString(),
+                                  show: feesCount !== undefined,
+                                },
+                              ].filter((row) => row.show);
+
+                              return (
+                                <div className="overflow-hidden rounded-lg border border-white/10 bg-white/5">
+                                  {breakdownRows.map((row, idx) => (
+                                    <div
+                                      key={row.key}
+                                      className={`flex items-center justify-between px-4 py-3 ${
+                                        idx !== breakdownRows.length - 1 ? 'border-b border-white/10' : ''
+                                      }`}
+                                    >
+                                      <div>
+                                        <p className="text-xs uppercase tracking-wide text-gray-400">{row.label}</p>
+                                        <p className="text-sm text-gray-400">{row.helper}</p>
+                                      </div>
+                                      <p className="text-lg md:text-xl font-semibold text-gray-100">{row.value}</p>
+                                    </div>
+                                  ))}
+                                  {claimsDetected !== undefined && claimsDetected > 0 && (
+                                    <div className="flex items-center justify-between px-4 py-3 bg-emerald-500/5">
+                                      <div>
+                                        <p className="text-xs uppercase tracking-wide text-emerald-200">Claims</p>
+                                        <p className="text-sm text-emerald-200/80">Detected during this sync</p>
+                                      </div>
+                                      <p className="text-lg md:text-xl font-semibold text-emerald-300">
+                                        {claimsDetected.toLocaleString()}
+                                      </p>
+                                    </div>
+                                  )}
                                 </div>
-                              )}
-                              {inventoryCount !== undefined && (
-                                <div className="bg-white/5 rounded-md p-3 border border-white/10">
-                                  <p className="text-xs text-gray-300 mb-1">Inventory</p>
-                                  <p className="text-lg font-semibold text-gray-100">
-                                    {inventoryCount.toLocaleString()} items
-                                  </p>
-                                </div>
-                              )}
-                              {shipmentsCount !== undefined && (
-                                <div className="bg-white/5 rounded-md p-3 border border-white/10">
-                                  <p className="text-xs text-gray-300 mb-1">Shipments</p>
-                                  <p className="text-lg font-semibold text-gray-100">
-                                    {shipmentsCount.toLocaleString()} items
-                                  </p>
-                                </div>
-                              )}
-                              {returnsCount !== undefined && (
-                                <div className="bg-white/5 rounded-md p-3 border border-white/10">
-                                  <p className="text-xs text-gray-300 mb-1">Returns</p>
-                                  <p className="text-lg font-semibold text-gray-100">
-                                    {returnsCount.toLocaleString()} items
-                                  </p>
-                                </div>
-                              )}
-                              {settlementsCount !== undefined && (
-                                <div className="bg-white/5 rounded-md p-3 border border-white/10">
-                                  <p className="text-xs text-gray-300 mb-1">Settlements</p>
-                                  <p className="text-lg font-semibold text-gray-100">
-                                    {settlementsCount.toLocaleString()} items
-                                  </p>
-                                </div>
-                              )}
-                              {feesCount !== undefined && (
-                                <div className="bg-white/5 rounded-md p-3 border border-white/10">
-                                  <p className="text-xs text-gray-300 mb-1">Fees</p>
-                                  <p className="text-lg font-semibold text-gray-100">
-                                    {feesCount.toLocaleString()} items
-                                  </p>
-                                </div>
-                              )}
-                              {claimsDetected !== undefined && claimsDetected > 0 && (
-                                <div className="bg-emerald-500/10 rounded-md p-3 border border-emerald-500/40">
-                                  <p className="text-xs text-emerald-100 mb-1">Claims Detected</p>
-                                  <p className="text-lg font-semibold text-emerald-300">
-                                    {claimsDetected.toLocaleString()}
-                                  </p>
-                                </div>
-                              )}
-                            </div>
+                              );
+                            })()}
                           </div>
                         </div>
                       );
