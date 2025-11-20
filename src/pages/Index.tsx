@@ -120,23 +120,23 @@ const Index = () => {
     >
       {/* Background image covering navbar and hero section */}
       <div 
-        className="fixed inset-x-0 top-0 z-0 pointer-events-none"
+        className="fixed inset-0 z-0 pointer-events-none"
         style={{
           backgroundImage: 'url(/horizon.jpg)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
           height: '100vh',
-          width: '100%',
+          width: '100vw',
           filter: 'brightness(0.6)'
         }}
       />
       {/* Dark overlay for better text visibility */}
       <div 
-        className="fixed inset-x-0 top-0 z-0 pointer-events-none"
+        className="fixed inset-0 z-0 pointer-events-none"
         style={{
           height: '100vh',
-          width: '100%',
+          width: '100vw',
           backgroundColor: 'rgba(0, 0, 0, 0.2)'
         }}
       />
@@ -348,6 +348,14 @@ const Index = () => {
                         <img
                           src="/outlookicon.webp"
                           alt="Outlook"
+                          className="h-7 w-7 object-contain"
+                        />
+                      </span>
+                      <span className="text-emerald-500 font-bold text-lg">+</span>
+                      <span className="relative inline-flex h-7 w-7 items-center justify-center rounded-full bg-transparent">
+                        <img
+                          src="/gd.png"
+                          alt="Google Drive"
                           className="h-7 w-7 object-contain"
                         />
                       </span>
