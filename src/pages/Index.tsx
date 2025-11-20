@@ -120,24 +120,22 @@ const Index = () => {
     >
       {/* Background image covering navbar and hero section */}
       <div 
-        className="absolute inset-x-0 top-0 z-0 pointer-events-none"
+        className="fixed inset-x-0 top-0 z-0 pointer-events-none"
         style={{
           backgroundImage: 'url(/horizon.jpg)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
           height: '100vh',
-          minHeight: '100vh',
           width: '100%',
           filter: 'brightness(0.6)'
         }}
       />
       {/* Dark overlay for better text visibility */}
       <div 
-        className="absolute inset-x-0 top-0 z-0 pointer-events-none"
+        className="fixed inset-x-0 top-0 z-0 pointer-events-none"
         style={{
           height: '100vh',
-          minHeight: '100vh',
           width: '100%',
           backgroundColor: 'rgba(0, 0, 0, 0.2)'
         }}
@@ -242,7 +240,7 @@ const Index = () => {
             </button>
           </div>
           {mobileMenuOpen && (
-            <div className="mt-4 md:hidden">
+            <div className="mt-4 md:hidden relative z-50">
               <div className="flex flex-col gap-2 rounded-[20px] border border-white/40 bg-white/80 supports-[backdrop-filter]:bg-white/70 backdrop-blur-2xl p-4 shadow-2xl">
                   <div className="rounded-[18px] border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700 shadow-sm">
                     <div className="flex items-center gap-2">
@@ -400,31 +398,31 @@ const Index = () => {
                 </p>
               </div>
               <div className="relative w-full max-w-sm space-y-5 rounded-3xl border border-gray-200 bg-gray-50 p-6 text-sm text-gray-700 justify-self-end">
-                <div className="text-xs font-semibold uppercase tracking-[0.3em] text-gray-500">Why Clario Works Better Than Anything Else</div>
+                <div className="text-xs font-semibold uppercase tracking-[0.3em] text-gray-500">Why 11 Clario Agents Beat 1 Human</div>
                 <ul className="space-y-3">
-                  <li className="flex items-center gap-3">
-                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-900 text-gray-50">
+                  <li className="flex items-start gap-3">
+                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-900 text-gray-50 shrink-0 mt-0.5">
                       <Check className="h-4 w-4" />
                     </span>
-                    Reimbursements ready in hours, not days or weeks.
+                    <span><strong>Discovery (Agent 3)</strong> Audits ledgers in milliseconds to find hidden claims humans miss.</span>
                   </li>
-                  <li className="flex items-center gap-3">
-                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-800 text-gray-50">
+                  <li className="flex items-start gap-3">
+                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-800 text-gray-50 shrink-0 mt-0.5">
                       <Check className="h-4 w-4" />
                     </span>
-                    Your evidence automatically pulls from your email or cloud.
+                    <span><strong>Auto-Evidence (Agent 5)</strong> Securely hunts your email & drive for invoices. Zero manual uploads.</span>
                   </li>
-                  <li className="flex items-center gap-3">
-                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-700 text-gray-50">
+                  <li className="flex items-start gap-3">
+                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-700 text-gray-50 shrink-0 mt-0.5">
                       <Check className="h-4 w-4" />
                     </span>
-                    Real-time alerts catch issues before you lose money.
+                    <span><strong>24/7 Recoveries (Agent 8)</strong> Monitors every claim round-the-clock. If Amazon stalls, we flag it.</span>
                   </li>
-                  <li className="flex items-center gap-3">
-                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-600 text-gray-50">
+                  <li className="flex items-start gap-3">
+                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-600 text-gray-50 shrink-0 mt-0.5">
                       <Check className="h-4 w-4" />
                     </span>
-                    All your claims and payouts tracked in one trusted dashboard.
+                    <span><strong>Finance (Agent 9)</strong> Confirms the actual deposit hit your bank before we count it.</span>
                   </li>
                 </ul>
                 <p className="text-sm text-gray-600">Clario is your Autonomous AI Agent, not your boss. You maintain 100% command over your data, account and recovery processes!</p>
