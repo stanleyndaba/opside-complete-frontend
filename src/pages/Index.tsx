@@ -58,6 +58,19 @@ const Index = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Prevent body scroll when mobile menu is open to prevent image movement
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
+
   // Animate precision counter from 0 to 99.27
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -121,29 +134,25 @@ const Index = () => {
     >
       {/* Background image covering navbar and hero section */}
       <div 
-        className="fixed inset-0 z-0 pointer-events-none"
+        className="absolute inset-x-0 top-0 z-0 pointer-events-none"
         style={{
           backgroundImage: 'url(/horizon.jpg)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
           height: '100vh',
-          left: 0,
-          right: 0,
-          top: 0,
-          bottom: 0,
+          minHeight: '100vh',
+          width: '100%',
           filter: 'brightness(0.6)'
         }}
       />
       {/* Dark overlay for better text visibility */}
       <div 
-        className="fixed inset-0 z-0 pointer-events-none"
+        className="absolute inset-x-0 top-0 z-0 pointer-events-none"
         style={{
           height: '100vh',
-          left: 0,
-          right: 0,
-          top: 0,
-          bottom: 0,
+          minHeight: '100vh',
+          width: '100%',
           backgroundColor: 'rgba(0, 0, 0, 0.2)'
         }}
       />
@@ -400,7 +409,7 @@ const Index = () => {
         </main>
       </div>
       {/* End of background image area - white content starts here - no gap */}
-      <div className="relative z-10 overflow-x-hidden" style={{ background: 'white', marginTop: '0', width: '100%', maxWidth: '100%', position: 'relative', left: 0, right: 0 }}>
+      <div className="relative z-10 w-full" style={{ background: 'white', marginTop: '0' }}>
         <section className="relative isolate bg-white text-gray-900 w-full" style={{ width: '100%', maxWidth: '100%' }}>
           <div className="container mx-auto px-6 pt-12 md:pt-20 pb-24 md:pb-28">
             <div className="relative grid gap-12 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
