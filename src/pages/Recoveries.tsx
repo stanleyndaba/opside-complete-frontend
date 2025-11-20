@@ -14,7 +14,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { format, subDays, startOfYear, startOfQuarter } from 'date-fns';
-import { CalendarIcon, Search, MoreHorizontal, FileText, Eye, RefreshCw, Info, AlertTriangle, X, CheckCircle2, Clock, ExternalLink } from 'lucide-react';
+import { CalendarIcon, Search, MoreHorizontal, FileText, Eye, RefreshCw, Info, AlertTriangle, X, CheckCircle2, Clock, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
@@ -131,6 +131,7 @@ export default function Recoveries() {
   const [detectionStats, setDetectionStats] = useState<any>(null);
   const [urgentClaims, setUrgentClaims] = useState<any[]>([]);
   const [urgentClaimsCount, setUrgentClaimsCount] = useState<number>(0);
+  const [urgentClaimsExpanded, setUrgentClaimsExpanded] = useState<boolean>(true);
   const [resolveModalOpen, setResolveModalOpen] = useState(false);
   const [statusUpdateModalOpen, setStatusUpdateModalOpen] = useState(false);
   const [selectedDetection, setSelectedDetection] = useState<any | null>(null);
@@ -991,97 +992,141 @@ export default function Recoveries() {
           </div>
         </div>
 
-        {/* Urgent Claims Banner - Phase 3 */}
+        {/* Urgent Claims Banner - Collapsible */}
         {urgentClaimsCount > 0 && (
           <Card className={`mb-6 border-2 ${
             urgentClaims.some(c => c.days_remaining <= 3)
               ? 'bg-red-500/10 border-red-500/50'
               : 'bg-amber-500/10 border-amber-500/50'
           }`}>
-            <CardContent className="p-4">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex items-start gap-3 flex-1">
-                  <AlertTriangle className={`h-5 w-5 mt-0.5 ${
+            <CardContent className="p-0">
+              {/* Header - Always Visible */}
+              <div 
+                className="flex items-center justify-between gap-4 p-4 cursor-pointer hover:bg-white/5 transition-colors"
+                onClick={() => setUrgentClaimsExpanded(!urgentClaimsExpanded)}
+              >
+                <div className="flex items-center gap-3 flex-1">
+                  <AlertTriangle className={`h-5 w-5 ${
                     urgentClaims.some(c => c.days_remaining <= 3)
                       ? 'text-red-400'
                       : 'text-amber-400'
                   }`} />
                   <div className="flex-1">
-                    <h3 className="font-semibold text-gray-100 mb-1">
+                    <h3 className="font-semibold text-gray-100">
                       {urgentClaimsCount} Claim{urgentClaimsCount !== 1 ? 's' : ''} Expiring Soon
                     </h3>
-                    <p className="text-sm text-gray-300 mb-3">
+                    <p className="text-sm text-gray-300 mt-0.5">
                       {urgentClaims.some(c => c.days_remaining <= 3)
                         ? 'Some claims are expiring in less than 3 days. File them immediately to avoid missing the deadline.'
                         : 'These claims are approaching their 60-day Amazon deadline. Review and file them soon.'}
                     </p>
-                    <div className="flex flex-wrap gap-2">
-                      {urgentClaims.slice(0, 5).map((claim) => (
-                        <div
-                          key={claim.id}
-                          className={`px-3 py-2 rounded-md border ${
-                            claim.days_remaining <= 3
-                              ? 'bg-red-500/20 border-red-500/30'
-                              : 'bg-amber-500/20 border-amber-500/30'
-                          }`}
-                        >
-                          <div className="flex items-center gap-2">
-                            <Clock className={`h-3 w-3 ${
-                              claim.days_remaining <= 3 ? 'text-red-300' : 'text-amber-300'
-                            }`} />
-                            <span className="text-xs font-medium text-gray-200">
-                              {claim.days_remaining} day{claim.days_remaining !== 1 ? 's' : ''} left
-                            </span>
-                            <span className="text-xs text-gray-400">•</span>
-                            <span className="text-xs text-gray-300">
-                              {formatCurrency(claim.estimated_value)}
-                            </span>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              className="h-6 px-2 text-xs ml-2"
-                              onClick={() => {
-                                // Navigate to claim or open details
-                                const foundClaim = mergedRecoveries?.find(c => c.id === claim.id) || 
-                                                  claims.find(c => c.id === claim.id);
-                                if (foundClaim) {
-                                  window.location.href = `/recoveries/${claim.id}`;
-                                }
-                              }}
-                            >
-                              File Claim
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
-                      {urgentClaims.length > 5 && (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="h-8 text-xs"
-                          onClick={() => {
-                            setFilterSource('detected');
-                            // Scroll to table
-                            setTimeout(() => {
-                              document.querySelector('.recoveries-table-scroll')?.scrollIntoView({ behavior: 'smooth' });
-                            }, 100);
-                          }}
-                        >
-                          View All {urgentClaimsCount} Claims
-                        </Button>
-                      )}
-                    </div>
                   </div>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 w-8 p-0"
-                  onClick={() => setUrgentClaimsCount(0)}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setUrgentClaimsExpanded(!urgentClaimsExpanded);
+                    }}
+                  >
+                    {urgentClaimsExpanded ? (
+                      <ChevronUp className="h-4 w-4" />
+                    ) : (
+                      <ChevronDown className="h-4 w-4" />
+                    )}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setUrgentClaimsCount(0);
+                    }}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
+
+              {/* Claims List - Collapsible */}
+              {urgentClaimsExpanded && (
+                <div className="border-t border-white/10">
+                  {urgentClaims.map((claim, index) => {
+                    const foundClaim = mergedRecoveries?.find(c => c.id === claim.id) || 
+                                      claims.find(c => c.id === claim.id);
+                    const isUrgent = claim.days_remaining <= 3;
+                    
+                    return (
+                      <div key={claim.id}>
+                        <div className="flex items-center justify-between gap-4 p-4 hover:bg-white/5 transition-colors">
+                          <div className="flex items-center gap-4 flex-1 min-w-0">
+                            <Clock className={`h-4 w-4 flex-shrink-0 ${
+                              isUrgent ? 'text-red-300' : 'text-amber-300'
+                            }`} />
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-3 flex-wrap">
+                                <span className={`text-sm font-medium ${
+                                  isUrgent ? 'text-red-300' : 'text-amber-300'
+                                }`}>
+                                  {claim.days_remaining} day{claim.days_remaining !== 1 ? 's' : ''} left
+                                </span>
+                                <span className="text-xs text-gray-400">•</span>
+                                <span className="text-sm text-gray-200 font-semibold">
+                                  {formatCurrency(claim.estimated_value)}
+                                </span>
+                                {claim.anomaly_type && (
+                                  <>
+                                    <span className="text-xs text-gray-400">•</span>
+                                    <span className="text-xs text-gray-400 capitalize">
+                                      {claim.anomaly_type.replace(/_/g, ' ')}
+                                    </span>
+                                  </>
+                                )}
+                              </div>
+                              {claim.details && (
+                                <p className="text-xs text-gray-400 mt-1 truncate">
+                                  {claim.details}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                          <Button
+                            size="sm"
+                            className={`flex-shrink-0 ${
+                              isUrgent
+                                ? 'bg-red-500 hover:bg-red-400 text-white'
+                                : 'bg-amber-500 hover:bg-amber-400 text-white'
+                            }`}
+                            onClick={() => {
+                              if (foundClaim) {
+                                window.location.href = `/recoveries/${claim.id}`;
+                              } else {
+                                // Fallback: try to submit directly
+                                recoveryApi.submitClaim(claim.id).catch((e: any) => {
+                                  toast({
+                                    title: 'Error',
+                                    description: e?.message || 'Could not file claim',
+                                    variant: 'destructive'
+                                  });
+                                });
+                              }
+                            }}
+                          >
+                            File Claim
+                          </Button>
+                        </div>
+                        {index < urgentClaims.length - 1 && (
+                          <div className="border-b border-white/10 mx-4" />
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </CardContent>
           </Card>
         )}
@@ -1111,19 +1156,20 @@ export default function Recoveries() {
                   )}
                 </div>
                 <div className="text-2xl md:text-3xl font-semibold text-gray-100">
-                  <span className="text-gray-100">{formatCurrency(owedSummary.totalOwed)}</span> <span className="text-gray-400 text-base font-medium">across {owedSummary.openCount} claims</span>
+                  {recoveredTotal != null && recoveredTotal > 0 ? (
+                    <>
+                      <span className="text-emerald-400">{formatCurrency(recoveredTotal, recoveredCurrency)}</span>
+                      <span className="text-gray-400 text-base font-medium ml-2">
+                        recovered from {amazonClaimCount ?? 0} approved claim{amazonClaimCount !== 1 ? 's' : ''}
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="text-gray-100">{formatCurrency(0)}</span>
+                      <span className="text-gray-400 text-base font-medium ml-2">No recoveries yet</span>
+                    </>
+                  )}
                 </div>
-                {/* Amazon Recoveries Integration */}
-                {recoveredTotal != null && recoveredTotal > 0 && (
-                  <div className="mt-3 text-sm">
-                    <span className="text-emerald-400 font-semibold">
-                      {formatCurrency(recoveredTotal, recoveredCurrency)}
-                    </span>
-                    <span className="text-gray-400 ml-2">
-                      recovered from {amazonClaimCount ?? 0} approved claim{amazonClaimCount !== 1 ? 's' : ''}
-                    </span>
-                  </div>
-                )}
                                 {/* Sync status message */}
                 {(syncMessage || needsSync || syncTriggered) && (
                   <div className={`mt-3 px-3 py-2 rounded-md text-xs ${
