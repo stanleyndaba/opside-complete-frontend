@@ -278,6 +278,15 @@ export default function SyncStatus() {
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
           <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-300">
       <div className="max-w-4xl mx-auto space-y-6">
+        {isUsingMockData && (
+          <Card className="bg-yellow-500/10 border-yellow-500/40 text-yellow-100">
+            <CardContent className="pt-6">
+              <p className="text-sm">
+                Using mock data (Backend unavailable - remove in production)
+              </p>
+            </CardContent>
+          </Card>
+        )}
               <Card className="bg-white/5 border-white/10 text-gray-100">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
