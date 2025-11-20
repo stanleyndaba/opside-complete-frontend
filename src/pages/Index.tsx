@@ -599,6 +599,11 @@ const Index = () => {
                 <div className="relative z-10 flex flex-col gap-10 px-10 py-14 md:flex-row md:items-center md:justify-between">
                   <div className="max-w-2xl space-y-5">
                     <span className="inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/80 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
+                      <span className="relative flex items-center gap-2">
+                        <span className="relative h-2 w-2 rounded-full bg-emerald-800">
+                          <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-75"></span>
+                        </span>
+                      </span>
                       Try Clario
                     </span>
                     <h2 className="text-4xl font-black tracking-tight text-slate-900 md:text-5xl">
