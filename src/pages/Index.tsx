@@ -116,7 +116,8 @@ const Index = () => {
 
   return (
     <div 
-      className="min-h-screen flex flex-col text-gray-900 relative overflow-x-hidden"
+      className="min-h-screen flex flex-col text-gray-900 relative overflow-x-hidden w-full"
+      style={{ width: '100%', maxWidth: '100%', overflowX: 'hidden' }}
     >
       {/* Background image covering navbar and hero section */}
       <div 
@@ -399,9 +400,9 @@ const Index = () => {
         </main>
       </div>
       {/* End of background image area - white content starts here - no gap */}
-      <div className="relative z-10 w-full overflow-x-hidden" style={{ background: 'white', marginTop: '0', width: '100%', maxWidth: '100%' }}>
+      <div className="relative z-10 overflow-x-hidden" style={{ background: 'white', marginTop: '0', width: '100%', maxWidth: '100%', position: 'relative', left: 0, right: 0 }}>
         <section className="relative isolate bg-white text-gray-900 w-full" style={{ width: '100%', maxWidth: '100%' }}>
-          <div className="container mx-auto px-6 pt-12 md:pt-20 pb-24 md:pb-28" style={{ width: '100%', maxWidth: '100%' }}>
+          <div className="container mx-auto px-6 pt-12 md:pt-20 pb-24 md:pb-28">
             <div className="relative grid gap-12 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
               <div className="relative space-y-8">
                 <h2 className="text-4xl md:text-6xl font-bold tracking-tight" style={{ color: '#a6a6a6' }}>
