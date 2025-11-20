@@ -177,18 +177,16 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
           return;
         }
 
-        const authUrl = response.data?.auth_url || response.data?.authUrl;
-        if (authUrl) {
-          console.log('[AmazonConnect] ⚠️ No refresh token found, redirecting to OAuth flow');
-          console.log('[AmazonConnect] OAuth URL:', authUrl);
-          toast({
-            title: 'Verification Required',
-            description: 'Redirecting you to Amazon to refresh access.',
-            duration: 2000,
-          });
-          window.location.href = authUrl;
-          return;
-        }
+        // If no refresh token found, still go to sync-status page
+        // The sync-status page will handle showing the connection prompt
+        console.log('[AmazonConnect] ⚠️ No refresh token found, redirecting to sync-status');
+        toast({
+          title: 'No Existing Connection',
+          description: 'Please connect your Amazon account first.',
+          duration: 3000,
+        });
+        window.location.href = '/sync-status';
+        return;
 
         console.log('[AmazonConnect] ❌ Bypass failed: No redirect URL or OAuth URL returned');
         toast({
