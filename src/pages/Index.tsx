@@ -156,8 +156,8 @@ const Index = () => {
           backgroundColor: 'rgba(0, 0, 0, 0.2)'
         }}
       />
-      {/* Sticky navbar - outside wrapper so it stays sticky throughout entire page */}
-      <header className="sticky top-0 z-40 border-transparent bg-transparent" style={{ background: 'transparent' }}>
+      {/* Fixed navbar - stays at top while content scrolls underneath */}
+      <header className="fixed top-0 left-0 right-0 z-40 border-transparent bg-transparent" style={{ background: 'transparent' }}>
         <div className="container mx-auto px-6 py-5">
           <div className="flex items-center justify-between gap-6 px-6 py-4 rounded-[25px] border border-white/40 bg-white/25 supports-[backdrop-filter]:bg-white/25 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_25px_60px_rgba(15,23,42,0.12)] transition-colors">
               <div className="flex items-center gap-3">
@@ -336,7 +336,7 @@ const Index = () => {
       <div className="relative z-10" style={{ background: 'transparent' }}>
         <main className="flex-1 relative z-10" style={{ background: 'transparent' }}>
           <section 
-            className="relative container mx-auto px-6 pt-12 md:pt-16 pb-12 md:pb-16 overflow-hidden"
+            className="relative container mx-auto px-6 pt-24 md:pt-28 pb-12 md:pb-16 overflow-hidden"
             style={{ background: 'transparent' }}
           >
           {/* Content */}
