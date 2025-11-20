@@ -127,7 +127,10 @@ const Index = () => {
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
           height: '100vh',
-          width: '100vw',
+          left: 0,
+          right: 0,
+          top: 0,
+          bottom: 0,
           filter: 'brightness(0.6)'
         }}
       />
@@ -136,7 +139,10 @@ const Index = () => {
         className="fixed inset-0 z-0 pointer-events-none"
         style={{
           height: '100vh',
-          width: '100vw',
+          left: 0,
+          right: 0,
+          top: 0,
+          bottom: 0,
           backgroundColor: 'rgba(0, 0, 0, 0.2)'
         }}
       />
@@ -393,9 +399,9 @@ const Index = () => {
         </main>
       </div>
       {/* End of background image area - white content starts here - no gap */}
-      <div className="relative z-10 w-full overflow-x-hidden" style={{ background: 'white', marginTop: '0' }}>
-        <section className="relative isolate bg-white text-gray-900 w-full">
-          <div className="container mx-auto px-6 pt-12 md:pt-20 pb-24 md:pb-28">
+      <div className="relative z-10 w-full overflow-x-hidden" style={{ background: 'white', marginTop: '0', width: '100%', maxWidth: '100%' }}>
+        <section className="relative isolate bg-white text-gray-900 w-full" style={{ width: '100%', maxWidth: '100%' }}>
+          <div className="container mx-auto px-6 pt-12 md:pt-20 pb-24 md:pb-28" style={{ width: '100%', maxWidth: '100%' }}>
             <div className="relative grid gap-12 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
               <div className="relative space-y-8">
                 <h2 className="text-4xl md:text-6xl font-bold tracking-tight" style={{ color: '#a6a6a6' }}>
@@ -439,8 +445,8 @@ const Index = () => {
           </div>
         </section>
 
-        <section className="bg-white py-24">
-          <div className="container mx-auto px-6">
+        <section className="bg-white py-24 w-full overflow-x-hidden" style={{ width: '100%', maxWidth: '100%' }}>
+          <div className="container mx-auto px-6 w-full" style={{ width: '100%', maxWidth: '100%' }}>
             <div className="mx-auto flex max-w-6xl flex-col gap-10 md:flex-row md:items-start">
               <div className="space-y-4 md:w-1/3">
                 <span className="text-sm font-semibold uppercase tracking-[0.3em] text-gray-500">Frequently asked questions</span>
@@ -567,8 +573,8 @@ const Index = () => {
             </div>
           </div>
         </section>
-          <section className="relative bg-white py-20">
-          <div className="container mx-auto px-6">
+          <section className="relative bg-white py-20 w-full overflow-x-hidden" style={{ width: '100%', maxWidth: '100%' }}>
+          <div className="container mx-auto px-6 w-full" style={{ width: '100%', maxWidth: '100%' }}>
               <div className="relative overflow-hidden rounded-[36px] border border-gray-100 bg-gradient-to-br from-white via-slate-50 to-gray-100 text-slate-900 shadow-[0_30px_80px_rgba(148,163,184,0.25)]">
                 <div
                   className="pointer-events-none absolute inset-0 opacity-70"
@@ -608,8 +614,8 @@ const Index = () => {
       </div>
       <div className="relative z-10">
         {/* CLARIO Brand Section */}
-        <section className="relative bg-white py-24 md:py-32">
-          <div className="container mx-auto px-6">
+        <section className="relative bg-white py-24 md:py-32 w-full overflow-x-hidden" style={{ width: '100%', maxWidth: '100%' }}>
+          <div className="container mx-auto px-6 w-full" style={{ width: '100%', maxWidth: '100%' }}>
             <div className="flex flex-col items-center justify-center text-center space-y-8">
               <h1 
                 className="text-8xl md:text-9xl lg:text-[12rem] font-black tracking-tight"
@@ -640,8 +646,8 @@ const Index = () => {
 
         <div className="relative">
           <div className="absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-white via-white/80 to-gray-100 pointer-events-none" aria-hidden="true" />
-          <footer id="core-footer" className="relative bg-gray-100 text-gray-700">
-            <div className="container mx-auto px-6 py-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-xs text-gray-700 text-center md:text-left">
+          <footer id="core-footer" className="relative bg-gray-100 text-gray-700 w-full overflow-x-hidden" style={{ width: '100%', maxWidth: '100%' }}>
+            <div className="container mx-auto px-6 py-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-xs text-gray-700 text-center md:text-left w-full" style={{ width: '100%', maxWidth: '100%' }}>
               <span>© Clario 2025 | {selectedLanguage.language}</span>
               <p className="text-xs text-gray-600">
                 By connecting your account, you agree to Clario's
