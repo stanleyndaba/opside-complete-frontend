@@ -336,43 +336,43 @@ const Index = () => {
       <div className="relative z-10" style={{ background: 'transparent' }}>
         <main className="flex-1 relative z-10" style={{ background: 'transparent' }}>
           <section 
-            className="relative container mx-auto px-6 pt-24 md:pt-28 pb-12 md:pb-16 overflow-hidden"
+            className="relative container mx-auto px-6 pt-32 md:pt-36 pb-12 md:pb-16 overflow-hidden"
             style={{ background: 'transparent' }}
           >
           {/* Content */}
           <div className="relative z-10 max-w-4xl mx-auto text-center space-y-6">
             {/* Trust chip removed per request */}
-              <div className="relative inline-flex items-center gap-4 rounded-[25px] border border-emerald-100 bg-white/85 px-5 py-2 shadow-[0_12px_45px_rgba(16,185,129,0.25)] backdrop-blur supports-[backdrop-filter]:bg-white/70 mx-auto overflow-hidden">
-                <span className="pointer-events-none absolute inset-0 rounded-[25px] bg-gradient-to-r from-emerald-200/40 via-white/10 to-sky-200/40 blur-xl" aria-hidden="true" />
-                <span className="pointer-events-none absolute inset-0 rounded-[25px] border border-white/40" aria-hidden="true" />
-                <span className="relative flex items-center gap-2">
-                  <span className="relative h-2 w-2 rounded-full bg-emerald-800">
+              <div className="relative inline-flex items-center gap-2 md:gap-4 rounded-[20px] md:rounded-[25px] border border-emerald-100 bg-white/85 px-3 py-1.5 md:px-5 md:py-2 shadow-[0_12px_45px_rgba(16,185,129,0.25)] backdrop-blur supports-[backdrop-filter]:bg-white/70 mx-auto overflow-hidden">
+                <span className="pointer-events-none absolute inset-0 rounded-[20px] md:rounded-[25px] bg-gradient-to-r from-emerald-200/40 via-white/10 to-sky-200/40 blur-xl" aria-hidden="true" />
+                <span className="pointer-events-none absolute inset-0 rounded-[20px] md:rounded-[25px] border border-white/40" aria-hidden="true" />
+                <span className="relative flex items-center gap-1 md:gap-2">
+                  <span className="relative h-1.5 w-1.5 md:h-2 md:w-2 rounded-full bg-emerald-800">
                     <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-75"></span>
                   </span>
                 </span>
-                  <div className="relative flex items-center gap-3 text-sm font-medium text-gray-700">
+                  <div className="relative flex items-center gap-1.5 md:gap-3 text-xs md:text-sm font-medium text-gray-700">
                     <span>Links seamlessly with</span>
-                    <span className="inline-flex items-center gap-3">
-                      <span className="relative inline-flex h-7 w-7 items-center justify-center rounded-full bg-transparent">
+                    <span className="inline-flex items-center gap-1.5 md:gap-3">
+                      <span className="relative inline-flex h-5 w-5 md:h-7 md:w-7 items-center justify-center rounded-full bg-transparent">
                         <img
                           src="/gmailicon.png"
                           alt="Gmail"
-                          className="h-7 w-7 object-contain"
+                          className="h-5 w-5 md:h-7 md:w-7 object-contain"
                         />
                       </span>
-                      <span className="relative inline-flex h-7 w-7 items-center justify-center rounded-full bg-transparent">
+                      <span className="relative inline-flex h-5 w-5 md:h-7 md:w-7 items-center justify-center rounded-full bg-transparent">
                         <img
                           src="/outlookicon.webp"
                           alt="Outlook"
-                          className="h-7 w-7 object-contain"
+                          className="h-5 w-5 md:h-7 md:w-7 object-contain"
                         />
                       </span>
-                      <span className="text-emerald-500 font-bold text-lg">+</span>
-                      <span className="relative inline-flex h-7 w-7 items-center justify-center rounded-full bg-transparent">
+                      <span className="text-emerald-500 font-bold text-sm md:text-lg">+</span>
+                      <span className="relative inline-flex h-5 w-5 md:h-7 md:w-7 items-center justify-center rounded-full bg-transparent">
                         <img
                           src="/gd.png"
                           alt="Google Drive"
-                          className="h-7 w-7 object-contain"
+                          className="h-5 w-5 md:h-7 md:w-7 object-contain"
                         />
                       </span>
                     </span>
