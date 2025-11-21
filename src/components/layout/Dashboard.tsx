@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { useToast } from '@/hooks/use-toast';
 import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud, ArrowRight, Plus, CheckCircle, RefreshCw, RotateCcw, Download, Bell, Shield, TrendingDown, TrendingUp } from 'lucide-react';
 import { api, detectionApi } from '@/lib/api';
+import { recoveryApi } from '@/lib/recoveryApi';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
@@ -36,8 +37,10 @@ export function Dashboard() {
   const [submittedClaimsCount, setSubmittedClaimsCount] = useState<number | null>(null);
   const hasFetchedRef = useRef(false);
   const [pendingRecoveryAmount, setPendingRecoveryAmount] = useState<number | null>(null);
+  const [pendingClaimsCount, setPendingClaimsCount] = useState<number | null>(null);
   const [approvedRecoveryAmount, setApprovedRecoveryAmount] = useState<number | null>(null);
   const [nextPaymentAmount, setNextPaymentAmount] = useState<number | null>(null);
+  const [nextPaymentDate, setNextPaymentDate] = useState<string | null>(null);
   const [successRate, setSuccessRate] = useState<number | null>(null);
   const [lastUpdated, setLastUpdated] = useState<string>('');
   const [approvedClaimsThisMonth, setApprovedClaimsThisMonth] = useState<number | null>(null);
@@ -51,6 +54,7 @@ export function Dashboard() {
   const [activeSyncId, setActiveSyncId] = useState<string | null>(null);
   const syncPollingRef = useRef<number | null>(null);
   const syncCheckTimeoutRef = useRef<number | null>(null);
+  const upcomingPaymentsLoadedRef = useRef(false);
   const [quickActionsEditOpen, setQuickActionsEditOpen] = useState<boolean>(false);
   // Evidence stats
   const [evidenceStatus, setEvidenceStatus] = useState<{ documentsCount: number; processingCount: number } | null>(null);
@@ -126,6 +130,77 @@ export function Dashboard() {
       }
     })();
     return () => { cancelled = true; };
+  }, []);
+
+  const updateUpcomingMetrics = useCallback((payments: any[]) => {
+    upcomingPaymentsLoadedRef.current = true;
+
+    const normalizeNumber = (value: any): number | undefined => {
+      if (typeof value === 'number' && Number.isFinite(value)) return value;
+      if (typeof value === 'string') {
+        const sanitized = value.replace(/[$,]/g, '').trim();
+        if (!sanitized) return undefined;
+        const parsed = Number(sanitized);
+        return Number.isFinite(parsed) ? parsed : undefined;
+      }
+      return undefined;
+    };
+
+    const normalizedPayments = Array.isArray(payments)
+      ? payments.map((payment) => {
+          const amount =
+            normalizeNumber(payment?.guaranteedAmount) ??
+            normalizeNumber(payment?.amount) ??
+            normalizeNumber(payment?.claim_amount) ??
+            normalizeNumber(payment?.claimAmount) ??
+            normalizeNumber(payment?.expectedAmount) ??
+            (typeof payment?.amount_cents === 'number' ? payment.amount_cents / 100 : undefined) ??
+            0;
+
+          const date =
+            payment?.expectedPayoutDate ||
+            payment?.expected_payout_date ||
+            payment?.payoutDate ||
+            payment?.payout_date ||
+            payment?.expectedDate ||
+            payment?.expected_date ||
+            payment?.estimatedPayoutDate ||
+            payment?.estimated_payout_date ||
+            null;
+
+          return {
+            amount: Number.isFinite(amount) ? amount : 0,
+            date: date ? String(date) : null
+          };
+        })
+      : [];
+
+    if (normalizedPayments.length === 0) {
+      setPendingRecoveryAmount(0);
+      setPendingClaimsCount(0);
+      setNextPaymentAmount(0);
+      setNextPaymentDate(null);
+      return;
+    }
+
+    setPendingClaimsCount(normalizedPayments.length);
+    const totalPending = normalizedPayments.reduce((sum, entry) => sum + Math.max(entry.amount, 0), 0);
+    setPendingRecoveryAmount(totalPending);
+
+    const datedPayments = normalizedPayments.filter(entry => entry.date);
+    if (datedPayments.length > 0) {
+      const sortedByDate = [...datedPayments].sort((a, b) => new Date(a.date!).getTime() - new Date(b.date!).getTime());
+      const nextDate = sortedByDate[0]?.date as string;
+      const amountForNextDate = normalizedPayments
+        .filter(entry => entry.date === nextDate)
+        .reduce((sum, entry) => sum + Math.max(entry.amount, 0), 0);
+
+      setNextPaymentAmount(amountForNextDate);
+      setNextPaymentDate(nextDate);
+    } else {
+      setNextPaymentAmount(totalPending);
+      setNextPaymentDate(null);
+    }
   }, []);
 
   useEffect(() => {
@@ -209,6 +284,7 @@ export function Dashboard() {
             // Sync completed, refresh data
             await fetchRecoveriesOnce();
             await fetchMetrics();
+            await fetchUpcomingPayments();
             setSyncTriggered(false);
             setNeedsSync(false);
             setSyncMessage(null);
@@ -310,6 +386,7 @@ export function Dashboard() {
             // Sync completed, refresh data
             await fetchRecoveriesOnce();
             await fetchMetrics();
+            await fetchUpcomingPayments();
             setSyncTriggered(false);
             setNeedsSync(false);
             setSyncMessage('Sync completed successfully!');
@@ -342,6 +419,7 @@ export function Dashboard() {
             setSyncTriggered(false);
             setNeedsSync(true);
             setSyncMessage('Sync failed. Please try again.');
+            await fetchUpcomingPayments();
             
               toast({
                 title: 'Sync Failed',
@@ -413,18 +491,32 @@ export function Dashboard() {
           typeof d.claimsApproved === 'number' ? d.claimsApproved :
           null
         );
-        if (pending !== null) setPendingRecoveryAmount(pending);
+        if (pending !== null && !upcomingPaymentsLoadedRef.current) setPendingRecoveryAmount(pending);
         if (rate !== null) setSuccessRate(rate);
         if (approved !== null) setApprovedRecoveryAmount(approved);
-        if (nextPay !== null) setNextPaymentAmount(nextPay);
+        if (nextPay !== null && !upcomingPaymentsLoadedRef.current) {
+          setNextPaymentAmount(nextPay);
+          setNextPaymentDate(null);
+        }
         if (approvedClaimsMonth !== null) setApprovedClaimsThisMonth(approvedClaimsMonth);
         setLastUpdated(new Date().toLocaleTimeString());
+      }
+    }
+
+    async function fetchUpcomingPayments() {
+      try {
+        const payments = await recoveryApi.getRecoveries();
+        if (!active) return;
+        updateUpcomingMetrics(Array.isArray(payments) ? payments : []);
+      } catch (error) {
+        console.error('[Dashboard] Failed to fetch upcoming payments:', error);
       }
     }
 
     // Initial fetch immediately on mount
     fetchRecoveriesOnce();
     fetchMetrics();
+    fetchUpcomingPayments();
     // Decide whether to prompt evidence connections (Gmail/Outlook/Drive/Dropbox)
     (async () => {
       try {
@@ -451,6 +543,7 @@ export function Dashboard() {
       polls += 1;
       await fetchRecoveriesOnce();
       await fetchMetrics();
+      await fetchUpcomingPayments();
       if (polls >= 12) { // ~1 minute at 5s cadence
         if (pollTimer) window.clearInterval(pollTimer);
       }
@@ -466,6 +559,7 @@ export function Dashboard() {
           if (evt?.type === 'sync' || evt?.type === 'detection') {
             await fetchRecoveriesOnce();
             await fetchMetrics();
+            await fetchUpcomingPayments();
           }
         } catch {}
       };
@@ -484,13 +578,15 @@ export function Dashboard() {
         syncCheckTimeoutRef.current = null;
       }
     };
-  }, [toast, navigate]);
+  }, [toast, navigate, updateUpcomingMetrics]);
 
   const mainClass = isSidebarCollapsed ? 'ml-16' : 'ml-60';
 
   const computedApproved = approvedRecoveryAmount != null
     ? approvedRecoveryAmount
     : Math.max((recoveredTotal ?? 0) - (pendingRecoveryAmount ?? 0), 0);
+  const effectivePendingClaims = pendingClaimsCount ?? submittedClaimsCount ?? 0;
+  const hasPendingClaimsData = pendingClaimsCount != null || submittedClaimsCount != null;
 
     return (
       <div 
@@ -577,10 +673,14 @@ export function Dashboard() {
                     <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="rounded-md border border-white/10 bg-white/5 p-4 shadow-sm">
                           <div className="text-xs text-gray-400">Next payment</div>
-                          <div className="text-xl font-semibold text-gray-200 mt-1">$26.0K</div>
+                          <div className="text-xl font-semibold text-gray-200 mt-1">
+                            {formatCurrency((nextPaymentAmount ?? 0), recoveredCurrency)}
+                          </div>
                           <div className="text-[11px] text-gray-400 mt-1">
-                          Estimated on {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                        </div>
+                            {nextPaymentDate
+                              ? `Estimated on ${new Date(nextPaymentDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
+                              : 'No payout scheduled yet'}
+                          </div>
                         <button
                           type="button"
                             className="text-xs text-indigo-400 mt-1 underline-offset-2 hover:underline"
@@ -592,17 +692,21 @@ export function Dashboard() {
                       </div>
                         <div className="rounded-md border border-white/10 bg-white/5 p-4 shadow-sm">
                           <div className="text-xs text-gray-400">Pending recovery</div>
-                          <div className="text-xl font-semibold text-gray-200 mt-1">$870.01</div>
+                          <div className="text-xl font-semibold text-gray-200 mt-1">
+                            {formatCurrency((pendingRecoveryAmount ?? 0), recoveredCurrency)}
+                          </div>
                           <div className="text-[11px] text-gray-400 mt-1">
-                          No. of Claims: {submittedClaimsCount != null ? submittedClaimsCount : 0}
-                        </div>
-                        {submittedClaimsCount != null && (
-                            <div className="text-[11px] text-gray-400 mt-1">{submittedClaimsCount} claims submitted</div>
-                        )}
+                            No. of Claims: {effectivePendingClaims}
+                          </div>
+                          {hasPendingClaimsData && (
+                            <div className="text-[11px] text-gray-400 mt-1">
+                              {effectivePendingClaims === 1 ? '1 claim awaiting payout' : `${effectivePendingClaims} claims awaiting payout`}
+                            </div>
+                          )}
                           <div className="text-[11px] mt-1">
-                            <span className="text-gray-400">Total: </span>
+                            <span className="text-gray-400">Recovered so far: </span>
                             <span className="text-gray-200">{formatCurrency(recoveredTotal ?? 0, recoveredCurrency)}</span>
-                        </div>
+                          </div>
                       </div>
                         <div className="rounded-md border border-white/10 bg-white/5 p-4 shadow-sm">
                           <div className="flex items-center gap-1.5">

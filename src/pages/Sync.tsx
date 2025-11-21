@@ -628,8 +628,7 @@ export default function Sync() {
                           variant="outline"
                           onClick={handleCancelSync}
                           disabled={isCancelling}
-                          className="border-white/20 hover:bg-white/10"
-                          style={{ color: '#001f3f' }}
+                          className="bg-white text-[#172B4D] border-white/40 hover:bg-white/90"
                         >
                           {isCancelling ? (
                             <>
@@ -660,8 +659,7 @@ export default function Sync() {
                         <Button
                           variant="outline"
                           onClick={() => navigate('/app')}
-                          className="border-white/20 hover:bg-white/10"
-                          style={{ color: '#001f3f' }}
+                          className="bg-white text-[#172B4D] border-white/40 hover:bg-white/90"
                         >
                           Go to Dashboard
                         </Button>

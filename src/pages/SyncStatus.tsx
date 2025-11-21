@@ -79,19 +79,24 @@ interface SyncStatusData {
 export default function SyncStatus() {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [syncStatus, setSyncStatus] = useState<SyncStatusData | null>(MOCK_SYNC_STATUS as SyncStatusData);
-  const [isLoading, setIsLoading] = useState(false);
+  const [syncStatus, setSyncStatus] = useState<SyncStatusData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [isUsingMockData, setIsUsingMockData] = useState(true);
   const [pollingInterval, setPollingInterval] = useState<NodeJS.Timeout | null>(null);
 
   // Fetch sync status
-  const fetchSyncStatus = async (useMock = false) => {
+  const fetchSyncStatus = async (options?: { useMock?: boolean; showLoading?: boolean }) => {
+    const { useMock = false, showLoading = false } = options || {};
+    if (showLoading) {
+      setIsLoading(true);
+    }
+
     try {
       if (useMock) {
         // Use mock data
         setIsUsingMockData(true);
         setSyncStatus(MOCK_SYNC_STATUS as SyncStatusData);
-        setIsLoading(false);
+        if (showLoading) setIsLoading(false);
         return;
       }
 
@@ -144,13 +149,13 @@ export default function SyncStatus() {
       });
       
       setSyncStatus(mappedData);
-      setIsLoading(false);
+      if (showLoading) setIsLoading(false);
     } catch (error) {
       console.error('[SyncStatus] Failed to get sync status:', error);
       // Use mock data on error
       setIsUsingMockData(true);
       setSyncStatus(MOCK_SYNC_STATUS as SyncStatusData);
-      setIsLoading(false);
+      if (showLoading) setIsLoading(false);
     }
   };
 
@@ -165,14 +170,14 @@ export default function SyncStatus() {
         if (cancelled) return;
         
         // Always fetch latest status - the fetchSyncStatus function will check if we should use mock data
-        await fetchSyncStatus(isUsingMockData);
+        await fetchSyncStatus();
       }, 3000); // Poll every 3 seconds
       
       setPollingInterval(interval);
     };
 
-    // Initial fetch - start immediately without showing loading state
-    fetchSyncStatus().then(() => {
+    // Initial fetch with loading state
+    fetchSyncStatus({ showLoading: true }).then(() => {
       if (cancelled) return;
       startPolling();
     });
@@ -201,7 +206,7 @@ export default function SyncStatus() {
     } else if ((status === 'running' || status === 'in_progress' || (status === 'completed' && syncStatus.lastSync.progress < 100)) && !pollingInterval) {
       // Restart polling if sync becomes active again
       const interval = setInterval(async () => {
-        await fetchSyncStatus(isUsingMockData);
+        await fetchSyncStatus();
       }, 3000);
       setPollingInterval(interval);
     }
@@ -497,7 +502,7 @@ export default function SyncStatus() {
                       <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-white/10">
                   <Button 
                     variant="outline" 
-                    onClick={() => fetchSyncStatus(isUsingMockData)}
+                    onClick={() => fetchSyncStatus({ showLoading: true })}
                           className="border-white/20 text-gray-100 hover:bg-white/10"
                   >
                     <RefreshCw className="h-4 w-4 mr-2" />
