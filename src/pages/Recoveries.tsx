@@ -1022,7 +1022,7 @@ export default function Recoveries() {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -1072,12 +1072,12 @@ export default function Recoveries() {
                                 <span className={`text-sm font-medium ${
                                   isUrgent ? 'text-red-300' : 'text-amber-300'
                                 }`}>
-                                  {claim.days_remaining} day{claim.days_remaining !== 1 ? 's' : ''} left
-                                </span>
-                                <span className="text-xs text-gray-400">•</span>
+                              {claim.days_remaining} day{claim.days_remaining !== 1 ? 's' : ''} left
+                            </span>
+                            <span className="text-xs text-gray-400">•</span>
                                 <span className="text-sm text-gray-200 font-semibold">
-                                  {formatCurrency(claim.estimated_value)}
-                                </span>
+                              {formatCurrency(claim.estimated_value)}
+                            </span>
                                 {claim.anomaly_type && (
                                   <>
                                     <span className="text-xs text-gray-400">•</span>
@@ -1094,16 +1094,16 @@ export default function Recoveries() {
                               )}
                             </div>
                           </div>
-                          <Button
-                            size="sm"
+                            <Button
+                              size="sm"
                             className={`flex-shrink-0 ${
                               isUrgent
                                 ? 'bg-red-500 hover:bg-red-400 text-white'
                                 : 'bg-amber-500 hover:bg-amber-400 text-white'
                             }`}
-                            onClick={() => {
-                              if (foundClaim) {
-                                window.location.href = `/recoveries/${claim.id}`;
+                              onClick={() => {
+                                if (foundClaim) {
+                                  window.location.href = `/recoveries/${claim.id}`;
                               } else {
                                 // Fallback: try to submit directly
                                 recoveryApi.submitClaim(claim.id).catch((e: any) => {
@@ -1113,19 +1113,19 @@ export default function Recoveries() {
                                     variant: 'destructive'
                                   });
                                 });
-                              }
-                            }}
-                          >
-                            File Claim
-                          </Button>
-                        </div>
+                                }
+                              }}
+                            >
+                              File Claim
+                            </Button>
+                          </div>
                         {index < urgentClaims.length - 1 && (
                           <div className="border-b border-white/10 mx-4" />
-                        )}
-                      </div>
+                      )}
+                    </div>
                     );
                   })}
-                </div>
+                  </div>
               )}
             </CardContent>
           </Card>
@@ -1160,8 +1160,8 @@ export default function Recoveries() {
                     <>
                       <span className="text-emerald-400">{formatCurrency(recoveredTotal, recoveredCurrency)}</span>
                       <span className="text-gray-400 text-base font-medium ml-2">
-                        recovered from {amazonClaimCount ?? 0} approved claim{amazonClaimCount !== 1 ? 's' : ''}
-                      </span>
+                      recovered from {amazonClaimCount ?? 0} approved claim{amazonClaimCount !== 1 ? 's' : ''}
+                    </span>
                     </>
                   ) : (
                     <>

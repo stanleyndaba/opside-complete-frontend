@@ -7,8 +7,6 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { NotificationBell } from './NotificationBell';
-import { ThemeToggle } from '@/components/ThemeToggle';
-import { useTheme } from '@/contexts/ThemeContext';
 interface NavbarProps {
   className?: string;
   sidebarCollapsed?: boolean;
@@ -21,7 +19,6 @@ export function Navbar({
   onToggleSidebar,
   forceTransparent
 }: NavbarProps) {
-  const { theme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
   const pathTransparent =
@@ -117,27 +114,18 @@ export function Navbar({
               )}
             </div>
           </div>
-          {/* Right side - Theme Toggle, Connect Platform button and Sandbox badge */}
+          {/* Right side - Connect Platform button and Sandbox badge */}
           <div className="flex items-center gap-4 ml-auto">
-          <ThemeToggle 
-            className={cn(
-              isDashboard && theme === 'dark' 
-                ? "text-gray-200 hover:text-white hover:bg-white/10" 
-                : isTransparent && theme === 'dark'
-                  ? "text-gray-200 hover:text-white hover:bg-white/10"
-                  : ""
-            )}
-          />
           <Button
             onClick={() => navigate('/integrations-hub')}
             variant="ghost"
             className={cn(
               "flex items-center gap-2 h-9 px-3",
-              isDashboard && theme === 'dark' ? 'bg-transparent text-[#F5F5F5] hover:bg-white/10 hover:text-[#F5F5F5]' : 
-              isTransparent && theme === 'dark' ? 'text-gray-200 hover:text-white hover:bg-white/10' : 'text-muted-foreground hover:text-foreground'
+              isDashboard ? 'bg-transparent text-[#F5F5F5] hover:bg-white/10 hover:text-[#F5F5F5]' : 
+              isTransparent ? 'text-gray-200 hover:text-white hover:bg-white/10' : 'text-muted-foreground hover:text-foreground'
             )}
           >
-            <Link2 className={cn("h-4 w-4", isDashboard && theme === 'dark' && "text-[#F5F5F5]")} />
+            <Link2 className={cn("h-4 w-4", isDashboard && "text-[#F5F5F5]")} />
             <span className="hidden sm:inline">Connect Platform</span>
           </Button>
           {isSandbox && (

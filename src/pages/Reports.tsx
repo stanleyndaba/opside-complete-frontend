@@ -566,7 +566,7 @@ export default function Reports() {
     return Object.entries(byType).map(([type, data]: [string, any]) => {
       const dataObj = typeof data === 'object' ? data : { count: 0, value: 0 };
       return {
-        type: type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+      type: type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
         count: dataObj.count || dataObj.total || 0,
         value: dataObj.value || dataObj.amount || dataObj.total_value || 0
       };
@@ -793,87 +793,87 @@ export default function Reports() {
         </Card>
 
         {/* Phase 3: Detection Statistics Charts */}
-        {/* Anomaly Type Distribution */}
-        <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
-          <CardContent className="p-6">
-            <h3 className="text-sm font-semibold text-gray-200 mb-4">Anomaly Type Distribution</h3>
-            <p className="text-xs text-gray-400 mb-4">Breakdown of detected anomalies by type, showing count and total value</p>
-            <div className="w-full h-80 gpu-accelerated">
+            {/* Anomaly Type Distribution */}
+              <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
+                <CardContent className="p-6">
+                  <h3 className="text-sm font-semibold text-gray-200 mb-4">Anomaly Type Distribution</h3>
+                  <p className="text-xs text-gray-400 mb-4">Breakdown of detected anomalies by type, showing count and total value</p>
+                  <div className="w-full h-80 gpu-accelerated">
               {anomalyTypeChartData.length > 0 ? (
-                <Suspense fallback={<ChartSkeleton />}>
-                  <AnomalyTypeChart data={anomalyTypeChartData} />
-                </Suspense>
+                    <Suspense fallback={<ChartSkeleton />}>
+                      <AnomalyTypeChart data={anomalyTypeChartData} />
+                    </Suspense>
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-gray-400">
                   <p>No anomaly type data available</p>
                 </div>
               )}
-            </div>
-          </CardContent>
-        </Card>
+                  </div>
+                </CardContent>
+              </Card>
 
-        {/* Severity Distribution */}
+            {/* Severity Distribution */}
         {detectionStats && severityChartData.length > 0 && (
-          <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
-            <CardContent className="p-6">
-              <h3 className="text-sm font-semibold text-gray-200 mb-4">Severity Distribution</h3>
-              <p className="text-xs text-gray-400 mb-4">Distribution of anomalies by severity level (high, medium, low)</p>
-              <div className="w-full h-64 gpu-accelerated">
-                <Suspense fallback={<ChartSkeleton />}>
-                  <SeverityChart data={severityChartData} />
-                </Suspense>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+              <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
+                <CardContent className="p-6">
+                  <h3 className="text-sm font-semibold text-gray-200 mb-4">Severity Distribution</h3>
+                  <p className="text-xs text-gray-400 mb-4">Distribution of anomalies by severity level (high, medium, low)</p>
+                  <div className="w-full h-64 gpu-accelerated">
+                    <Suspense fallback={<ChartSkeleton />}>
+                      <SeverityChart data={severityChartData} />
+                    </Suspense>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
-        {/* Confidence Distribution */}
+            {/* Confidence Distribution */}
         {(detectionStats || confidenceDistribution) && confidenceChartData.length > 0 && (
-          <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
-            <CardContent className="p-6">
-              <h3 className="text-sm font-semibold text-gray-200 mb-4">Confidence Distribution</h3>
-              <p className="text-xs text-gray-400 mb-4">Number of detections by confidence level</p>
-              <div className="w-full h-64 gpu-accelerated">
-                <Suspense fallback={<ChartSkeleton />}>
-                  <ConfidenceChart data={confidenceChartData} />
-                </Suspense>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+              <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
+                <CardContent className="p-6">
+                  <h3 className="text-sm font-semibold text-gray-200 mb-4">Confidence Distribution</h3>
+                  <p className="text-xs text-gray-400 mb-4">Number of detections by confidence level</p>
+                  <div className="w-full h-64 gpu-accelerated">
+                    <Suspense fallback={<ChartSkeleton />}>
+                      <ConfidenceChart data={confidenceChartData} />
+                    </Suspense>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
-        {/* Recovery Rates by Confidence */}
-        <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
-          <CardContent className="p-6">
-            <h3 className="text-sm font-semibold text-gray-200 mb-4">Recovery Rates by Confidence Level</h3>
-            <p className="text-xs text-gray-400 mb-4">Success rate of recovery claims based on detection confidence</p>
-            <div className="w-full h-64 gpu-accelerated">
+            {/* Recovery Rates by Confidence */}
+              <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
+                <CardContent className="p-6">
+                  <h3 className="text-sm font-semibold text-gray-200 mb-4">Recovery Rates by Confidence Level</h3>
+                  <p className="text-xs text-gray-400 mb-4">Success rate of recovery claims based on detection confidence</p>
+                  <div className="w-full h-64 gpu-accelerated">
               {recoveryRatesChartData.length > 0 ? (
-                <Suspense fallback={<ChartSkeleton />}>
-                  <RecoveryRatesChart data={recoveryRatesChartData} />
-                </Suspense>
+                    <Suspense fallback={<ChartSkeleton />}>
+                      <RecoveryRatesChart data={recoveryRatesChartData} />
+                    </Suspense>
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-gray-400">
                   <p>No recovery rate data available</p>
                 </div>
               )}
-            </div>
-          </CardContent>
-        </Card>
+                  </div>
+                </CardContent>
+              </Card>
 
-        {/* Confidence Range Histogram */}
+            {/* Confidence Range Histogram */}
         {confidenceDistribution && confidenceHistogramData.length > 0 && (
-          <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
-            <CardContent className="p-6">
-              <h3 className="text-sm font-semibold text-gray-200 mb-4">Confidence Score Distribution</h3>
-              <p className="text-xs text-gray-400 mb-4">Histogram showing distribution of confidence scores across all detections</p>
-              <div className="w-full h-64 gpu-accelerated">
-                <Suspense fallback={<ChartSkeleton />}>
-                  <ConfidenceHistogram data={confidenceHistogramData} />
-                </Suspense>
-              </div>
-            </CardContent>
-          </Card>
+              <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
+                <CardContent className="p-6">
+                  <h3 className="text-sm font-semibold text-gray-200 mb-4">Confidence Score Distribution</h3>
+                  <p className="text-xs text-gray-400 mb-4">Histogram showing distribution of confidence scores across all detections</p>
+                  <div className="w-full h-64 gpu-accelerated">
+                    <Suspense fallback={<ChartSkeleton />}>
+                      <ConfidenceHistogram data={confidenceHistogramData} />
+                    </Suspense>
+                  </div>
+                </CardContent>
+              </Card>
         )}
 
         {/* Detailed Breakdown: Recoveries by Claim Type */}

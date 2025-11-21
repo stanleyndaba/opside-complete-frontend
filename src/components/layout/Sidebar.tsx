@@ -9,7 +9,6 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Link, useLocation } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api';
-import { useTheme } from '@/contexts/ThemeContext';
 
 // Lightweight prefetch using dynamic import hints matching route chunks
 const prefetchRoute = (path: string) => {
@@ -58,7 +57,6 @@ export function Sidebar({
     onToggle,
     className
 }: SidebarProps) {
-	const { theme } = useTheme();
 	const location = useLocation();
   const queryClient = useQueryClient();
   const [showLogout, setShowLogout] = useState(false);
@@ -116,22 +114,16 @@ export function Sidebar({
                 onMouseEnter={handlePrefetch}
                   className={cn(
                   "relative flex items-center justify-center w-10 h-10 rounded-md transition-colors duration-200",
-                  theme === 'dark'
-                    ? isActive
-                      ? "bg-white/10 text-gray-100"
-                      : "text-gray-400 hover:bg-white/10 hover:text-gray-100"
-                    : isActive
-                      ? "bg-gray-200 text-[#172B4D]"
-                      : "text-gray-600 hover:bg-gray-100 hover:text-[#172B4D]"
+                  isActive
+                    ? "bg-white/10 text-gray-100"
+                    : "text-gray-400 hover:bg-white/10 hover:text-gray-100"
                 )}
                 style={{ willChange: 'background-color' }}
               >
                 <item.icon className="h-4 w-4" strokeWidth={1.5} />
               </Link>
             </TooltipTrigger>
-            <TooltipContent side="right" className={cn(
-              theme === 'dark' ? "bg-black text-white" : "bg-gray-900 text-white"
-            )}>
+            <TooltipContent side="right" className="bg-black text-white">
               {item.title}
             </TooltipContent>
           </Tooltip>
@@ -144,13 +136,9 @@ export function Sidebar({
           onMouseEnter={handlePrefetch}
           className={cn(
             "relative flex items-center gap-3 w-full px-3 py-1.5 rounded-md transition-colors duration-200",
-          theme === 'dark'
-            ? isActive
-              ? "bg-white/5 text-gray-100"
-              : "text-gray-400 hover:bg-white/5 hover:text-gray-100"
-            : isActive
-              ? "bg-gray-200 text-[#172B4D]"
-              : "text-gray-600 hover:bg-gray-100 hover:text-[#172B4D]"
+          isActive
+            ? "bg-white/5 text-gray-100"
+            : "text-gray-400 hover:bg-white/5 hover:text-gray-100"
         )}
         style={{ willChange: 'background-color' }}
       >
@@ -167,9 +155,8 @@ export function Sidebar({
         className={cn(
           "fixed left-0 top-0 transition-all duration-300 ease-in-out flex flex-col h-screen z-40 gpu-accelerated",
           isCollapsed ? "w-16" : "w-60",
-          theme === 'dark'
-            ? "text-gray-300 border-r border-white/10 bg-[#0B1220]"
-            : "text-[#172B4D] border-r border-gray-200 bg-[#F4F5F7]",
+          "text-gray-300 border-r border-white/10",
+          "bg-[#0B1220]",
           className
         )}
         style={{ willChange: 'width' }}
@@ -177,8 +164,7 @@ export function Sidebar({
         {/* Branding + Collapse */}
         <div
           className={cn(
-            "border-b flex items-center",
-            theme === 'dark' ? "border-white/10" : "border-gray-200",
+            "border-b border-white/10 flex items-center",
             isCollapsed ? "p-2 justify-center" : "p-4 justify-between"
           )}
         >
@@ -211,10 +197,7 @@ export function Sidebar({
                       <NavItemComponent key={item.title} item={item} />
                     ))}
                   </div>
-                  {!isCollapsed && <div className={cn(
-                    "h-px w-full",
-                    theme === 'dark' ? "bg-white/10" : "bg-gray-200"
-                  )} />}
+                  {!isCollapsed && <div className="h-px bg-white/10 w-full" />}
                   <div className={cn("w-full flex flex-col", isCollapsed ? "items-center space-y-1" : "items-start space-y-1")}>
                     {secondaryItems.map((item) => (
                       <NavItemComponent key={item.title} item={item} />
@@ -235,17 +218,13 @@ export function Sidebar({
                   aria-label="Account"
                   className={cn(
                     "relative flex items-center justify-center w-10 h-10 rounded-md transition-colors",
-                    theme === 'dark'
-                      ? "text-gray-400 hover:bg-white/10 hover:text-emerald-500"
-                      : "text-gray-600 hover:bg-gray-100 hover:text-emerald-500"
+                    "text-gray-400 hover:bg-white/10 hover:text-emerald-500"
                   )}
                 >
                   <User className="h-5 w-5" />
                 </Link>
               </TooltipTrigger>
-              <TooltipContent side="right" className={cn(
-                theme === 'dark' ? "bg-black text-white" : "bg-gray-900 text-white"
-              )}>
+              <TooltipContent side="right" className="bg-black text-white">
                 Account
               </TooltipContent>
             </Tooltip>
@@ -255,9 +234,7 @@ export function Sidebar({
                   aria-label="Logout"
                   className={cn(
                     "relative flex items-center justify-center w-10 h-10 rounded-md transition-colors",
-                    theme === 'dark'
-                      ? "text-gray-400 hover:bg-white/10 hover:text-red-300"
-                      : "text-gray-600 hover:bg-gray-100 hover:text-red-500"
+                    "text-gray-400 hover:bg-white/10 hover:text-red-300"
                   )}
                   onClick={async () => {
                     const ok = window.confirm('Log out of Clario?');
@@ -269,9 +246,7 @@ export function Sidebar({
                   <LogOut className="h-5 w-5" />
                 </button>
               </TooltipTrigger>
-              <TooltipContent side="right" className={cn(
-                theme === 'dark' ? "bg-black text-white" : "bg-gray-900 text-white"
-              )}>
+              <TooltipContent side="right" className="bg-black text-white">
                 Logout
               </TooltipContent>
             </Tooltip>
@@ -282,10 +257,8 @@ export function Sidebar({
             <Link
               to="/settings"
               className={cn(
-                "w-full flex items-center gap-2 text-left px-3 py-2 rounded-md transition-colors",
-                theme === 'dark'
-                  ? "hover:text-emerald-500 hover:bg-white/5 text-gray-400"
-                  : "hover:text-emerald-500 hover:bg-gray-100 text-gray-600"
+                "w-full flex items-center gap-2 text-left hover:text-emerald-500 hover:bg-white/5 px-3 py-2 rounded-md transition-colors",
+                "text-gray-400"
               )}
             >
               <User className="h-4 w-4" />
@@ -293,10 +266,8 @@ export function Sidebar({
             </Link>
             <button
               className={cn(
-                "w-full flex items-center gap-2 text-left px-3 py-2 rounded-md",
-                theme === 'dark'
-                  ? "hover:text-red-300 hover:bg-white/5 text-gray-400"
-                  : "hover:text-red-500 hover:bg-gray-100 text-gray-600"
+                "w-full flex items-center gap-2 text-left hover:text-red-300 hover:bg-white/5 px-3 py-2 rounded-md",
+                "text-gray-400"
               )}
             onClick={() => setShowLogout(prev => !prev)}
           >
@@ -322,10 +293,7 @@ export function Sidebar({
         title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         onClick={onToggle}
         className={cn(
-          'absolute top-16 -right-3 z-50 h-8 w-8 rounded-full backdrop-blur-sm flex items-center justify-center',
-          theme === 'dark'
-            ? "border border-white/10 bg-white/10 text-gray-300 hover:bg-white/20"
-            : "border border-gray-200 bg-white text-gray-600 hover:bg-gray-100",
+          'absolute top-16 -right-3 z-50 h-8 w-8 rounded-full border border-white/10 bg-white/10 backdrop-blur-sm flex items-center justify-center text-gray-300 hover:bg-white/20',
         )}
       >
         {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
