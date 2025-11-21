@@ -14,6 +14,7 @@ import { format, subDays, startOfYear, startOfQuarter } from 'date-fns';
 import { CalendarIcon, Download, ArrowUpDown, ArrowUp, ArrowDown, TrendingDown, TrendingUp } from 'lucide-react';
 import type { DateRange } from 'react-day-picker';
 import { detectionApi } from '@/lib/api';
+import { recoveryApi } from '@/lib/recoveryApi';
 
 // Chart skeleton loader
 const ChartSkeleton = () => (
@@ -304,65 +305,81 @@ const ConfidenceHistogram = lazy(() =>
   }))
 );
 
-// Mock data for claims
-const mockClaims = [{
-  id: 'CLM-001',
-  dateCreated: '2024-01-15',
-  claimType: 'Lost Inventory',
-  status: 'Paid',
-  amountRecovered: 450.00,
-  payoutDate: '2024-02-18',
-  evidenceId: 'EVD-001'
-}, {
-  id: 'CLM-002',
-  dateCreated: '2024-01-22',
-  claimType: 'Fee Dispute',
-  status: 'Pending',
-  amountRecovered: 125.50,
-  payoutDate: null,
-  evidenceId: 'EVD-002'
-}, {
-  id: 'CLM-003',
-  dateCreated: '2024-02-01',
-  claimType: 'Damaged Goods',
-  status: 'Paid',
-  amountRecovered: 850.75,
-  payoutDate: '2024-03-05',
-  evidenceId: 'EVD-003'
-}, {
-  id: 'CLM-004',
-  dateCreated: '2024-02-10',
-  claimType: 'Lost Inventory',
-  status: 'Submitted',
-  amountRecovered: 320.00,
-  payoutDate: null,
-  evidenceId: 'EVD-004'
-}, {
-  id: 'CLM-005',
-  dateCreated: '2024-02-15',
-  claimType: 'Fee Dispute',
-  status: 'Denied',
-  amountRecovered: 0,
-  payoutDate: null,
-  evidenceId: 'EVD-005'
-}, {
-  id: 'CLM-006',
-  dateCreated: '2024-03-01',
-  claimType: 'Damaged Goods',
-  status: 'Paid',
-  amountRecovered: 1200.25,
-  payoutDate: '2024-03-25',
-  evidenceId: 'EVD-006'
-}];
-const claimTypes = ['Lost Inventory', 'Fee Dispute', 'Damaged Goods', 'Overcharge'];
-const statusOptions = ['Pending', 'Submitted', 'Paid', 'Denied'];
+type ClaimRecord = {
+  id: string;
+  dateCreated: string;
+  claimType: string;
+  status: string;
+  amountRecovered: number;
+  payoutDate: string | null;
+};
+
+const parseNumericAmount = (value: any): number | null => {
+  if (value === null || value === undefined) return null;
+  if (typeof value === 'number' && Number.isFinite(value)) return value;
+  if (typeof value === 'string') {
+    const sanitized = value.replace(/[$,]/g, '').trim();
+    if (!sanitized) return null;
+    const parsed = Number(sanitized);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+  return null;
+};
+
+const prettifyLabel = (value: any, fallback: string) => {
+  if (!value || typeof value !== 'string') return fallback;
+  return value
+    .replace(/[_-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+};
+
+const normalizeClaimRecord = (raw: any, index: number): ClaimRecord => {
+  const amount =
+    parseNumericAmount(raw.actual_amount) ??
+    parseNumericAmount(raw.amount_recovered) ??
+    parseNumericAmount(raw.amount) ??
+    (typeof raw.amount_cents === 'number' ? raw.amount_cents / 100 : null) ??
+    parseNumericAmount(raw.claim_amount) ??
+    parseNumericAmount(raw.guaranteedAmount) ??
+    parseNumericAmount(raw.expectedAmount) ??
+    (typeof raw.expected_amount_cents === 'number' ? raw.expected_amount_cents / 100 : null) ??
+    0;
+
+  const createdAt =
+    raw.created_at ||
+    raw.createdAt ||
+    raw.created ||
+    raw.date_created ||
+    raw.submitted_at ||
+    raw.inserted_at ||
+    raw.detected_at ||
+    new Date().toISOString();
+
+  const payoutDate =
+    raw.payout_date ||
+    raw.payoutDate ||
+    raw.paid_at ||
+    raw.completed_at ||
+    raw.reconciled_at ||
+    raw.expected_payout_date ||
+    raw.expectedPayoutDate ||
+    null;
+
+  return {
+    id: String(raw.claim_id || raw.id || raw.reference_id || raw.reference || `claim-${index}`),
+    dateCreated: new Date(createdAt).toISOString(),
+    claimType: prettifyLabel(raw.dispute_type || raw.type || raw.claim_type || raw.category || 'Unknown', 'Unknown'),
+    status: prettifyLabel(raw.status || raw.state || raw.claim_status || raw.recovery_status || 'Pending', 'Pending'),
+    amountRecovered: Number.isFinite(amount) ? amount : 0,
+    payoutDate: payoutDate ? new Date(payoutDate).toISOString() : null
+  };
+};
 type SortField = 'dateCreated' | 'claimType' | 'status' | 'amountRecovered' | 'payoutDate';
 type SortDirection = 'asc' | 'desc';
 export default function Reports() {
-  const [dateRange, setDateRange] = useState<DateRange | undefined>({
-    from: subDays(new Date(), 30),
-    to: new Date()
-  });
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [selectedClaimTypes, setSelectedClaimTypes] = useState<string[]>([]);
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
   const [sortField, setSortField] = useState<SortField>('dateCreated');
@@ -378,6 +395,8 @@ export default function Reports() {
   const [detectionStats, setDetectionStats] = useState<any>(null);
   const [confidenceDistribution, setConfidenceDistribution] = useState<any>(null);
   const [loadingStats, setLoadingStats] = useState(false);
+  const [claims, setClaims] = useState<ClaimRecord[]>([]);
+  const [claimsLoading, setClaimsLoading] = useState(false);
 
   // Fetch Phase 3 detection statistics
   useEffect(() => {
@@ -406,14 +425,39 @@ export default function Reports() {
     return () => { cancelled = true; };
   }, []);
 
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      setClaimsLoading(true);
+      try {
+        const recoveries = await recoveryApi.getRecoveries();
+        if (cancelled) return;
+        if (Array.isArray(recoveries) && recoveries.length > 0) {
+          const normalized = recoveries
+            .map((record, index) => normalizeClaimRecord(record, index))
+            .filter((claim) => Boolean(claim.dateCreated));
+          setClaims(normalized);
+        } else {
+          setClaims([]);
+        }
+      } catch (error) {
+        console.error('[Reports] Failed to load recovery records:', error);
+        if (!cancelled) setClaims([]);
+      } finally {
+        if (!cancelled) setClaimsLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
   // Filter and sort data
   const filteredClaims = useMemo(() => {
-    let filtered = mockClaims.filter(claim => {
+    let filtered = claims.filter(claim => {
       const term = search.trim().toLowerCase();
       const matchesSearch = !term || claim.id.toLowerCase().includes(term) || claim.claimType.toLowerCase().includes(term) || claim.status.toLowerCase().includes(term);
       // Date filter
       const claimDate = new Date(claim.dateCreated);
-      const dateInRange = (!dateRange.from || claimDate >= dateRange.from) && (!dateRange.to || claimDate <= dateRange.to);
+      const dateInRange = (!dateRange?.from || claimDate >= dateRange.from) && (!dateRange?.to || claimDate <= dateRange.to);
 
       // Claim type filter
       const typeMatch = selectedClaimTypes.length === 0 || selectedClaimTypes.includes(claim.claimType);
@@ -442,7 +486,7 @@ export default function Reports() {
       }
     });
     return filtered;
-  }, [dateRange, selectedClaimTypes, selectedStatuses, sortField, sortDirection, search]);
+  }, [claims, dateRange, selectedClaimTypes, selectedStatuses, sortField, sortDirection, search]);
 
   const totalPages = Math.max(1, Math.ceil(filteredClaims.length / pageSize));
   const pageData = useMemo(() => {
@@ -521,10 +565,7 @@ export default function Reports() {
         });
         break;
       case 'all':
-        setDateRange({
-          from: undefined,
-          to: undefined
-        });
+        setDateRange(undefined);
         break;
     }
   };
@@ -551,10 +592,21 @@ export default function Reports() {
   };
   // Memoize chart data to prevent unnecessary recalculations
   const chartData = useMemo(() => {
-    return filteredClaims.map(c => ({ 
-      date: format(new Date(c.dateCreated), 'MMM dd'), 
-      value: c.amountRecovered 
-    }));
+    if (filteredClaims.length === 0) return [];
+    const buckets = new Map<string, number>();
+    filteredClaims.forEach((claim) => {
+      const rawDate = claim.payoutDate || claim.dateCreated;
+      if (!rawDate) return;
+      const isoKey = format(new Date(rawDate), 'yyyy-MM-dd');
+      const current = buckets.get(isoKey) ?? 0;
+      buckets.set(isoKey, current + (claim.amountRecovered || 0));
+    });
+    return Array.from(buckets.entries())
+      .sort((a, b) => new Date(a[0]).getTime() - new Date(b[0]).getTime())
+      .map(([iso, value]) => ({
+        date: format(new Date(iso), 'MMM dd'),
+        value
+      }));
   }, [filteredClaims]);
 
   // Phase 3: Detection statistics chart data
@@ -785,9 +837,19 @@ export default function Reports() {
           <CardContent className="p-6">
             <h3 className="text-sm font-semibold text-gray-200 mb-4">Recoveries Over Time</h3>
             <div className="w-full h-64 gpu-accelerated">
-              <Suspense fallback={<ChartSkeleton />}>
-                <RecoveryChart data={chartData} />
-              </Suspense>
+              {claimsLoading ? (
+                <ChartSkeleton />
+              ) : chartData.length > 0 ? (
+                <Suspense fallback={<ChartSkeleton />}>
+                  <RecoveryChart data={chartData} />
+                </Suspense>
+              ) : (
+                <div className="h-full flex items-center justify-center text-gray-400 text-sm text-center px-4">
+                  {claims.length === 0
+                    ? 'No recoveries recorded yet. Sync your account or file claims to populate this view.'
+                    : 'No recoveries within the selected date range.'}
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
