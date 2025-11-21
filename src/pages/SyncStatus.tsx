@@ -122,7 +122,7 @@ export default function SyncStatus() {
           returnsCount: data.lastSync.returnsCount,
           settlementsCount: data.lastSync.settlementsCount,
           feesCount: data.lastSync.feesCount,
-          claimsDetected: data.lastSync.claimsDetected
+          claimsDetected: data.lastSync.claimsDetected ?? data.lastSync.claimsCount ?? 0
         } : null
       };
       
@@ -185,13 +185,14 @@ export default function SyncStatus() {
     
     const status = syncStatus.lastSync.status;
     
-    // Stop polling when sync is done
-    if (status === 'completed' || status === 'failed' || status === 'cancelled') {
+    // Stop polling when sync is done (but only if progress is 100 for completed status)
+    const isActuallyComplete = status === 'completed' && syncStatus.lastSync.progress >= 100;
+    if (isActuallyComplete || status === 'failed' || status === 'cancelled') {
       if (pollingInterval) {
         clearInterval(pollingInterval);
         setPollingInterval(null);
       }
-    } else if ((status === 'running' || status === 'in_progress') && !pollingInterval) {
+    } else if ((status === 'running' || status === 'in_progress' || (status === 'completed' && syncStatus.lastSync.progress < 100)) && !pollingInterval) {
       // Restart polling if sync becomes active again
       const interval = setInterval(async () => {
         await fetchSyncStatus(isUsingMockData);
@@ -204,7 +205,12 @@ export default function SyncStatus() {
   const getStatusIcon = () => {
     if (!syncStatus?.lastSync) return <AlertCircle className="h-5 w-5 text-gray-400" />;
     
-    switch (syncStatus.lastSync.status) {
+    // If status is 'completed' but progress < 100, treat it as still running
+    const effectiveStatus = (syncStatus.lastSync.status === 'completed' && syncStatus.lastSync.progress < 100)
+      ? 'running'
+      : syncStatus.lastSync.status;
+    
+    switch (effectiveStatus) {
       case 'completed':
         return <CheckCircle2 className="h-5 w-5 text-emerald-500" />;
       case 'failed':
@@ -224,7 +230,12 @@ export default function SyncStatus() {
       return <Badge variant="outline" className="border-gray-400 text-gray-400">No Sync History</Badge>;
     }
     
-    switch (syncStatus.lastSync.status) {
+    // If status is 'completed' but progress < 100, treat it as still running
+    const effectiveStatus = (syncStatus.lastSync.status === 'completed' && syncStatus.lastSync.progress < 100)
+      ? 'running'
+      : syncStatus.lastSync.status;
+    
+    switch (effectiveStatus) {
       case 'completed':
         return <Badge variant="outline" className="border-emerald-500 text-emerald-500">Completed</Badge>;
       case 'failed':
@@ -332,8 +343,9 @@ export default function SyncStatus() {
                   </div>
                 </div>
 
-                {/* Progress Bar (if running) */}
-                {(lastSync.status === 'running' || lastSync.status === 'in_progress') && (
+                {/* Progress Bar (if running or completed but progress < 100) */}
+                {((lastSync.status === 'running' || lastSync.status === 'in_progress') || 
+                  (lastSync.status === 'completed' && lastSync.progress < 100)) && (
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-xs">
                             <span className="text-gray-300">Progress</span>
