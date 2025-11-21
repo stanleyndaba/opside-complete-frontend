@@ -33,24 +33,37 @@ export default function UpcomingPayments() {
       try {
         const res = await recoveryApi.getRecoveries();
         if (!cancelled) {
-          if (Array.isArray(res)) {
+          if (Array.isArray(res) && res.length > 0) {
+            // Map API response to frontend format
+            // API returns: amount, expected_payout_date, created_at
+            // Frontend expects: guaranteedAmount, expectedPayoutDate, created
             const mapped = (res as any[]).map((c) => ({
-              id: c.id,
-              created: c.created,
-              type: c.type,
+              id: c.id || c.claim_id,
+              created: c.created || c.created_at,
+              type: c.type || c.dispute_type || 'unknown',
               status: c.status,
-              guaranteedAmount: c.guaranteedAmount ?? 0,
-              expectedPayoutDate: (c.expectedPayoutDate ?? null) as string | null,
+              // Map amount fields (API may use 'amount' or 'guaranteedAmount')
+              guaranteedAmount: c.guaranteedAmount ?? c.amount ?? 0,
+              // Map payout date fields (API may use 'expected_payout_date' or 'expectedPayoutDate')
+              expectedPayoutDate: (c.expectedPayoutDate ?? c.expected_payout_date ?? null) as string | null,
               currency: (c.currency ?? 'USD') as string,
             })) as RecoveryClaim[];
             setClaims(mapped);
             const firstWithCurrency = (mapped.find(c => !!c.currency)?.currency) || 'USD';
             setCurrency(firstWithCurrency);
+          } else {
+            // No data - set empty array
+            setClaims([]);
           }
         }
-      } catch {
+      } catch (error: any) {
         if (!cancelled) {
-          toast({ title: 'Could not load upcoming payments', description: 'Please try again later.' });
+          console.error('Failed to load upcoming payments:', error);
+          toast({ 
+            title: 'Could not load upcoming payments', 
+            description: error?.message || 'Please try again later.' 
+          });
+          setClaims([]);
         }
       } finally {
         if (!cancelled) setLoading(false);

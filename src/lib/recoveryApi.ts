@@ -2,11 +2,28 @@ import { api } from './api';
 
 export const recoveryApi = {
   getRecoveries: async () => {
+    // Try new upcoming-payments endpoint first (gets real data from dispute_cases)
+    try {
+      const upcomingResponse = await api.get('/api/v1/integrations/amazon/upcoming-payments');
+      if (upcomingResponse.ok && upcomingResponse.data?.recoveries) {
+        return upcomingResponse.data.recoveries;
+      }
+    } catch (e) {
+      console.warn('Upcoming payments endpoint failed, falling back to recoveries:', e);
+    }
+    
+    // Fallback to old endpoint
     const response = await api.get('/api/recoveries');
     if (!response.ok) {
       throw new Error(response.error || 'Failed to fetch recoveries');
     }
-    return response.data;
+    // Handle both old format (direct array) and new format (with recoveries array)
+    if (Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.data?.recoveries) {
+      return response.data.recoveries;
+    }
+    return [];
   },
 
   getRecoveryMetrics: async () => {
