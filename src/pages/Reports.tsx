@@ -510,12 +510,18 @@ export default function Reports() {
 
   // Phase 3: Detection statistics chart data
   const anomalyTypeChartData = useMemo(() => {
-    if (!detectionStats?.by_type) return [];
-    return Object.entries(detectionStats.by_type).map(([type, data]: [string, any]) => ({
-      type: type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-      count: data.count || 0,
-      value: data.value || 0
-    })).sort((a, b) => b.value - a.value);
+    if (!detectionStats) return [];
+    // Try different possible data structures
+    const byType = detectionStats.by_type || detectionStats.byType || detectionStats.anomaly_types || {};
+    if (Object.keys(byType).length === 0) return [];
+    return Object.entries(byType).map(([type, data]: [string, any]) => {
+      const dataObj = typeof data === 'object' ? data : { count: 0, value: 0 };
+      return {
+        type: type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+        count: dataObj.count || dataObj.total || 0,
+        value: dataObj.value || dataObj.amount || dataObj.total_value || 0
+      };
+    }).filter(item => item.count > 0 || item.value > 0).sort((a, b) => b.value - a.value);
   }, [detectionStats]);
 
   const severityChartData = useMemo(() => {
@@ -538,12 +544,20 @@ export default function Reports() {
   }, [detectionStats, confidenceDistribution]);
 
   const recoveryRatesChartData = useMemo(() => {
-    if (!confidenceDistribution?.recovery_rates) return [];
-    return [
-      { level: 'High', rate: confidenceDistribution.recovery_rates.high || 0 },
-      { level: 'Medium', rate: confidenceDistribution.recovery_rates.medium || 0 },
-      { level: 'Low', rate: confidenceDistribution.recovery_rates.low || 0 }
+    if (!confidenceDistribution) return [];
+    // Try different possible data structures
+    const recoveryRates = confidenceDistribution.recovery_rates || 
+                         confidenceDistribution.recoveryRates || 
+                         confidenceDistribution.rates || {};
+    
+    const data = [
+      { level: 'High', rate: recoveryRates.high || recoveryRates.high_confidence || 0 },
+      { level: 'Medium', rate: recoveryRates.medium || recoveryRates.medium_confidence || 0 },
+      { level: 'Low', rate: recoveryRates.low || recoveryRates.low_confidence || 0 }
     ];
+    
+    // Only return if at least one rate is > 0
+    return data.some(d => d.rate > 0) ? data : [];
   }, [confidenceDistribution]);
 
   const confidenceHistogramData = useMemo(() => {
@@ -621,10 +635,17 @@ export default function Reports() {
                       <span className="text-[8px] text-green-600 font-medium">92%</span>
                     </div>
                   </div>
-                  <p className="font-bold text-emerald-400 text-lg mt-1">{formatCurrency(keyMetrics.totalRecovered)}</p>
-                  {detectionStats?.total_value && (
+                  <p className="font-bold text-emerald-400 text-lg mt-1">
+                    {detectionStats?.total_value 
+                      ? formatCurrency(detectionStats.total_value)
+                      : keyMetrics.totalRecovered > 0 
+                        ? formatCurrency(keyMetrics.totalRecovered)
+                        : null
+                    }
+                  </p>
+                  {detectionStats?.total_value && keyMetrics.totalRecovered > 0 && (
                     <p className="text-xs text-gray-400 mt-1">
-                      {formatCurrency(detectionStats.total_value)} from detections
+                      {formatCurrency(keyMetrics.totalRecovered)} from approved claims
                     </p>
                   )}
                 </div>
@@ -637,10 +658,17 @@ export default function Reports() {
               <div className="flex items-center">
                 <div>
                   <p className="text-sm font-medium text-gray-400">Claims Submitted</p>
-                  <p className="font-bold text-gray-100 text-lg">{keyMetrics.claimsSubmitted}</p>
-                  {detectionStats?.total_anomalies && (
+                  <p className="font-bold text-gray-100 text-lg">
+                    {detectionStats?.total_anomalies 
+                      ? detectionStats.total_anomalies
+                      : keyMetrics.claimsSubmitted > 0 
+                        ? keyMetrics.claimsSubmitted
+                        : null
+                    }
+                  </p>
+                  {detectionStats?.total_anomalies && keyMetrics.claimsSubmitted > 0 && (
                     <p className="text-xs text-gray-400 mt-1">
-                      {detectionStats.total_anomalies} anomalies detected
+                      {keyMetrics.claimsSubmitted} claims filed
                     </p>
                   )}
                 </div>
@@ -661,10 +689,17 @@ export default function Reports() {
                       <span className="text-[8px] text-green-600 font-medium">92%</span>
                     </div>
                   </div>
-                  <p className="font-bold text-blue-400 text-lg mt-1">{keyMetrics.successRate.toFixed(1)}%</p>
-                  {confidenceDistribution?.average_confidence && (
+                  <p className="font-bold text-blue-400 text-lg mt-1">
+                    {keyMetrics.successRate > 0 
+                      ? `${keyMetrics.successRate.toFixed(1)}%`
+                      : confidenceDistribution?.average_confidence
+                        ? `${(confidenceDistribution.average_confidence * 100).toFixed(1)}%`
+                        : null
+                    }
+                  </p>
+                  {confidenceDistribution?.average_confidence && keyMetrics.successRate === 0 && (
                     <p className="text-xs text-gray-400 mt-1">
-                      Avg confidence: {(confidenceDistribution.average_confidence * 100).toFixed(0)}%
+                      Avg confidence
                     </p>
                   )}
                 </div>
@@ -677,7 +712,12 @@ export default function Reports() {
               <div className="flex items-center">
                 <div>
                   <p className="text-sm font-medium text-gray-400">Avg. Recovery Time</p>
-                  <p className="font-bold text-gray-100 text-lg">{keyMetrics.avgRecoveryTime} Days</p>
+                  <p className="font-bold text-gray-100 text-lg">
+                    {keyMetrics.avgRecoveryTime > 0 
+                      ? `${keyMetrics.avgRecoveryTime} Days`
+                      : null
+                    }
+                  </p>
                   {detectionStats?.expiring_soon !== undefined && detectionStats.expiring_soon > 0 && (
                     <p className="text-xs text-amber-400 mt-1">
                       {detectionStats.expiring_soon} expiring soon
@@ -704,83 +744,87 @@ export default function Reports() {
         </Card>
 
         {/* Phase 3: Detection Statistics Charts */}
-        {detectionStats && (
-          <>
-            {/* Anomaly Type Distribution */}
-            {anomalyTypeChartData.length > 0 && (
-              <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
-                <CardContent className="p-6">
-                  <h3 className="text-sm font-semibold text-gray-200 mb-4">Anomaly Type Distribution</h3>
-                  <p className="text-xs text-gray-400 mb-4">Breakdown of detected anomalies by type, showing count and total value</p>
-                  <div className="w-full h-80 gpu-accelerated">
-                    <Suspense fallback={<ChartSkeleton />}>
-                      <AnomalyTypeChart data={anomalyTypeChartData} />
-                    </Suspense>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+        {/* Anomaly Type Distribution */}
+        <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
+          <CardContent className="p-6">
+            <h3 className="text-sm font-semibold text-gray-200 mb-4">Anomaly Type Distribution</h3>
+            <p className="text-xs text-gray-400 mb-4">Breakdown of detected anomalies by type, showing count and total value</p>
+            <div className="w-full h-80 gpu-accelerated">
+              {anomalyTypeChartData.length > 0 ? (
+                <Suspense fallback={<ChartSkeleton />}>
+                  <AnomalyTypeChart data={anomalyTypeChartData} />
+                </Suspense>
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-gray-400">
+                  <p>No anomaly type data available</p>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
 
-            {/* Severity Distribution */}
-            {severityChartData.length > 0 && (
-              <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
-                <CardContent className="p-6">
-                  <h3 className="text-sm font-semibold text-gray-200 mb-4">Severity Distribution</h3>
-                  <p className="text-xs text-gray-400 mb-4">Distribution of anomalies by severity level (high, medium, low)</p>
-                  <div className="w-full h-64 gpu-accelerated">
-                    <Suspense fallback={<ChartSkeleton />}>
-                      <SeverityChart data={severityChartData} />
-                    </Suspense>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+        {/* Severity Distribution */}
+        {detectionStats && severityChartData.length > 0 && (
+          <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
+            <CardContent className="p-6">
+              <h3 className="text-sm font-semibold text-gray-200 mb-4">Severity Distribution</h3>
+              <p className="text-xs text-gray-400 mb-4">Distribution of anomalies by severity level (high, medium, low)</p>
+              <div className="w-full h-64 gpu-accelerated">
+                <Suspense fallback={<ChartSkeleton />}>
+                  <SeverityChart data={severityChartData} />
+                </Suspense>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
-            {/* Confidence Distribution */}
-            {confidenceChartData.length > 0 && (
-              <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
-                <CardContent className="p-6">
-                  <h3 className="text-sm font-semibold text-gray-200 mb-4">Confidence Distribution</h3>
-                  <p className="text-xs text-gray-400 mb-4">Number of detections by confidence level</p>
-                  <div className="w-full h-64 gpu-accelerated">
-                    <Suspense fallback={<ChartSkeleton />}>
-                      <ConfidenceChart data={confidenceChartData} />
-                    </Suspense>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+        {/* Confidence Distribution */}
+        {(detectionStats || confidenceDistribution) && confidenceChartData.length > 0 && (
+          <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
+            <CardContent className="p-6">
+              <h3 className="text-sm font-semibold text-gray-200 mb-4">Confidence Distribution</h3>
+              <p className="text-xs text-gray-400 mb-4">Number of detections by confidence level</p>
+              <div className="w-full h-64 gpu-accelerated">
+                <Suspense fallback={<ChartSkeleton />}>
+                  <ConfidenceChart data={confidenceChartData} />
+                </Suspense>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
-            {/* Recovery Rates by Confidence */}
-            {recoveryRatesChartData.length > 0 && (
-              <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
-                <CardContent className="p-6">
-                  <h3 className="text-sm font-semibold text-gray-200 mb-4">Recovery Rates by Confidence Level</h3>
-                  <p className="text-xs text-gray-400 mb-4">Success rate of recovery claims based on detection confidence</p>
-                  <div className="w-full h-64 gpu-accelerated">
-                    <Suspense fallback={<ChartSkeleton />}>
-                      <RecoveryRatesChart data={recoveryRatesChartData} />
-                    </Suspense>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+        {/* Recovery Rates by Confidence */}
+        <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
+          <CardContent className="p-6">
+            <h3 className="text-sm font-semibold text-gray-200 mb-4">Recovery Rates by Confidence Level</h3>
+            <p className="text-xs text-gray-400 mb-4">Success rate of recovery claims based on detection confidence</p>
+            <div className="w-full h-64 gpu-accelerated">
+              {recoveryRatesChartData.length > 0 ? (
+                <Suspense fallback={<ChartSkeleton />}>
+                  <RecoveryRatesChart data={recoveryRatesChartData} />
+                </Suspense>
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-gray-400">
+                  <p>No recovery rate data available</p>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
 
-            {/* Confidence Range Histogram */}
-            {confidenceHistogramData.length > 0 && (
-              <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
-                <CardContent className="p-6">
-                  <h3 className="text-sm font-semibold text-gray-200 mb-4">Confidence Score Distribution</h3>
-                  <p className="text-xs text-gray-400 mb-4">Histogram showing distribution of confidence scores across all detections</p>
-                  <div className="w-full h-64 gpu-accelerated">
-                    <Suspense fallback={<ChartSkeleton />}>
-                      <ConfidenceHistogram data={confidenceHistogramData} />
-                    </Suspense>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-          </>
+        {/* Confidence Range Histogram */}
+        {confidenceDistribution && confidenceHistogramData.length > 0 && (
+          <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
+            <CardContent className="p-6">
+              <h3 className="text-sm font-semibold text-gray-200 mb-4">Confidence Score Distribution</h3>
+              <p className="text-xs text-gray-400 mb-4">Histogram showing distribution of confidence scores across all detections</p>
+              <div className="w-full h-64 gpu-accelerated">
+                <Suspense fallback={<ChartSkeleton />}>
+                  <ConfidenceHistogram data={confidenceHistogramData} />
+                </Suspense>
+              </div>
+            </CardContent>
+          </Card>
         )}
 
         {/* Detailed Breakdown: Recoveries by Claim Type */}
@@ -805,7 +849,19 @@ export default function Reports() {
                     totalsByType[c.claimType].amount += c.amountRecovered;
                   });
                   const grandTotal = Object.values(totalsByType).reduce((s, t) => s + t.amount, 0);
-                  return Object.entries(totalsByType).map(([type, t]) => (
+                  const entries = Object.entries(totalsByType);
+                  
+                  if (entries.length === 0) {
+                    return (
+                      <TableRow>
+                        <TableCell colSpan={4} className="text-center text-gray-400 py-8">
+                          No claims data available
+                        </TableCell>
+                      </TableRow>
+                    );
+                  }
+                  
+                  return entries.map(([type, t]) => (
                     <TableRow key={type}>
                       <TableCell>{type}</TableCell>
                       <TableCell>{t.count}</TableCell>
