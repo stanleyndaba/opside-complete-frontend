@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Skeleton } from "@/components/ui/skeleton";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import NotificationsProvider from '@/components/providers/NotificationsProvider';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import DemoOverlay from "@/components/demo/DemoOverlay";
 import AdminOnly from "@/components/routes/AdminOnly";
@@ -89,11 +90,12 @@ const RouteSkeleton = () => (
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <NotificationsProvider>
+    <ThemeProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <NotificationsProvider>
         <Suspense fallback={<RouteSkeleton />}>
           <Routes>
             <Route path="/" element={<Index />} />
@@ -155,9 +157,10 @@ const App = () => (
           </Routes>
           <DemoOverlay />
         </Suspense>
-        </NotificationsProvider>
-      </BrowserRouter>
-    </TooltipProvider>
+          </NotificationsProvider>
+        </BrowserRouter>
+      </TooltipProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 

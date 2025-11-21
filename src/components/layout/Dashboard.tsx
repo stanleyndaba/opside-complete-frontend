@@ -11,8 +11,11 @@ import { useToast } from '@/hooks/use-toast';
 import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud, ArrowRight, Plus, CheckCircle, RefreshCw, RotateCcw, Download, Bell, Shield, TrendingDown, TrendingUp } from 'lucide-react';
 import { api, detectionApi } from '@/lib/api';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { useTheme } from '@/contexts/ThemeContext';
+import { cn } from '@/lib/utils';
 
 export function Dashboard() {
+  const { theme } = useTheme();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -493,53 +496,94 @@ export function Dashboard() {
 
     return (
       <div 
-        className="relative min-h-screen flex flex-col h-screen overflow-hidden text-gray-300"
-        style={{ 
-          backgroundColor: '#0B1220'
-        }}
+        className={cn(
+          "relative min-h-screen flex flex-col h-screen overflow-hidden",
+          theme === 'dark' 
+            ? "text-gray-300 bg-[#0B1220]" 
+            : "text-[#172B4D] bg-white"
+        )}
       >
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+        {theme === 'dark' && (
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+        )}
       <Navbar sidebarCollapsed={isSidebarCollapsed} forceTransparent />
       <div className="flex-1 flex h-full overflow-hidden">
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
         <main className={'flex-1 transition-all duration-300 overflow-y-auto ' + mainClass}>
           <div className="relative pt-24">
-                <div className="relative container mx-auto px-6 md:px-10 lg:px-12 pb-10 text-gray-300 space-y-8">
-              <div className="rounded-2xl bg-white/5 border border-white/10 backdrop-blur-lg shadow-[0_24px_70px_rgba(0,0,0,0.35)] p-6 md:p-8">
+                <div className={cn(
+                  "relative container mx-auto px-6 md:px-10 lg:px-12 pb-10 space-y-8",
+                  theme === 'dark' ? "text-gray-300" : "text-[#172B4D]"
+                )}>
+              <div className={cn(
+                "rounded-2xl backdrop-blur-lg p-6 md:p-8",
+                theme === 'dark' 
+                  ? "bg-white/5 border border-white/10 shadow-[0_24px_70px_rgba(0,0,0,0.35)]" 
+                  : "bg-white border border-gray-200 shadow-lg"
+              )}>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 h-full">
               <div className="lg:col-span-2 space-y-8">
-                  <Card className="bg-white/5 border border-white/10 text-gray-300 shadow-sm">
+                  <Card className={cn(
+                    "shadow-sm",
+                    theme === 'dark' 
+                      ? "bg-white/5 border border-white/10 text-gray-300" 
+                      : "bg-white border border-gray-200 text-[#172B4D]"
+                  )}>
                   <CardContent className="p-6">
-                      <h2 className="font-brand text-lg text-gray-200 font-semibold">Get Faster Reimbursements with Clario!</h2>
-                      <p className="text-sm text-gray-400 mt-1">Your Amazon account has been connected successfully.</p>
+                      <h2 className={cn(
+                        "font-brand text-lg font-semibold",
+                        theme === 'dark' ? "text-gray-200" : "text-[#172B4D]"
+                      )}>Get Faster Reimbursements with Clario!</h2>
+                      <p className={cn(
+                        "text-sm mt-1",
+                        theme === 'dark' ? "text-gray-400" : "text-gray-600"
+                      )}>Your Amazon account has been connected successfully.</p>
                   </CardContent>
                 </Card>
 
-                  <Card className="bg-white/5 border border-white/10 text-gray-300 shadow-sm">
+                  <Card className={cn(
+                    "shadow-sm",
+                    theme === 'dark' 
+                      ? "bg-white/5 border border-white/10 text-gray-300" 
+                      : "bg-white border border-gray-200 text-[#172B4D]"
+                  )}>
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
-                            <h2 className="font-brand text-lg text-gray-200 font-semibold">Your Recovered Value</h2>
+                            <h2 className={cn(
+                              "font-brand text-lg font-semibold",
+                              theme === 'dark' ? "text-gray-200" : "text-[#172B4D]"
+                            )}>Your Recovered Value</h2>
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <button
                                 type="button"
                                 aria-label="About recovered value"
-                                  className="text-gray-400 hover:text-gray-300 transition-colors"
+                                className={cn(
+                                  "transition-colors",
+                                  theme === 'dark' ? "text-gray-400 hover:text-gray-300" : "text-gray-600 hover:text-gray-800"
+                                )}
                               >
                                 <Info className="h-4 w-4" />
                               </button>
                             </TooltipTrigger>
-                            <TooltipContent side="top" className="bg-black text-white text-xs">
+                            <TooltipContent side="top" className={cn(
+                              "text-xs",
+                              theme === 'dark' ? "bg-black text-white" : "bg-gray-900 text-white"
+                            )}>
                               Your recovered profits from approved/completed claims. {recoverySource && `Source: ${recoverySource}`}
                             </TooltipContent>
                           </Tooltip>
                         </div>
+                          {/* Keep emerald-400 for action color (recovered money) */}
                           <div className="text-[24px] md:text-[28px] font-semibold mt-1 text-emerald-400">
                           {formatCurrency(recoveredTotal ?? 0, recoveredCurrency)}
                         </div>
-                          <div className="text-[11px] text-gray-400 mt-1">
+                          <div className={cn(
+                            "text-[11px] mt-1",
+                            theme === 'dark' ? "text-gray-400" : "text-gray-600"
+                          )}>
                             {submittedClaimsCount != null && submittedClaimsCount > 0 
                               ? `From ${submittedClaimsCount} claim${submittedClaimsCount !== 1 ? 's' : ''} submitted`
                               : 'From approved claims submitted'
@@ -574,10 +618,24 @@ export function Dashboard() {
                     </div>
 
                     <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="rounded-md border border-white/10 bg-white/5 p-4 shadow-sm">
-                          <div className="text-xs text-gray-400">Next payment</div>
-                          <div className="text-xl font-semibold text-gray-200 mt-1">$26.0K</div>
-                          <div className="text-[11px] text-gray-400 mt-1">
+                        <div className={cn(
+                          "rounded-md p-4 shadow-sm",
+                          theme === 'dark' 
+                            ? "border border-white/10 bg-white/5" 
+                            : "border border-gray-200 bg-white"
+                        )}>
+                          <div className={cn(
+                            "text-xs",
+                            theme === 'dark' ? "text-gray-400" : "text-gray-600"
+                          )}>Next payment</div>
+                          <div className={cn(
+                            "text-xl font-semibold mt-1",
+                            theme === 'dark' ? "text-gray-200" : "text-[#172B4D]"
+                          )}>$26.0K</div>
+                          <div className={cn(
+                            "text-[11px] mt-1",
+                            theme === 'dark' ? "text-gray-400" : "text-gray-600"
+                          )}>
                           Estimated on {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                         </div>
                         <button
@@ -589,10 +647,24 @@ export function Dashboard() {
                           upcoming payments
                         </button>
                       </div>
-                        <div className="rounded-md border border-white/10 bg-white/5 p-4 shadow-sm">
-                          <div className="text-xs text-gray-400">Pending recovery</div>
-                          <div className="text-xl font-semibold text-gray-200 mt-1">$870.01</div>
-                          <div className="text-[11px] text-gray-400 mt-1">
+                        <div className={cn(
+                          "rounded-md p-4 shadow-sm",
+                          theme === 'dark' 
+                            ? "border border-white/10 bg-white/5" 
+                            : "border border-gray-200 bg-white"
+                        )}>
+                          <div className={cn(
+                            "text-xs",
+                            theme === 'dark' ? "text-gray-400" : "text-gray-600"
+                          )}>Pending recovery</div>
+                          <div className={cn(
+                            "text-xl font-semibold mt-1",
+                            theme === 'dark' ? "text-gray-200" : "text-[#172B4D]"
+                          )}>$870.01</div>
+                          <div className={cn(
+                            "text-[11px] mt-1",
+                            theme === 'dark' ? "text-gray-400" : "text-gray-600"
+                          )}>
                           No. of Claims: {submittedClaimsCount != null ? submittedClaimsCount : 0}
                         </div>
                         {submittedClaimsCount != null && (
