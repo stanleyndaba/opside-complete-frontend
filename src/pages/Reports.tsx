@@ -42,7 +42,16 @@ const RecoveryChart = lazy(() =>
             <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
             <XAxis dataKey="date" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
             <YAxis tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
-            <Tooltip formatter={(v: number) => formatCurrency(v)} />
+            <Tooltip 
+              formatter={(v: number) => formatCurrency(v)}
+              contentStyle={{ 
+                backgroundColor: 'white', 
+                border: '1px solid #e5e7eb',
+                borderRadius: '6px',
+                color: '#172B4D'
+              }}
+              labelStyle={{ color: '#172B4D' }}
+            />
             <Bar dataKey="value" fill="#60A5FA" radius={[4,4,0,0]} />
           </BarChart>
         </ResponsiveContainer>
@@ -87,8 +96,18 @@ const AnomalyTypeChart = lazy(() =>
                 if (name === 'value') return formatCurrency(value);
                 return value;
               }}
+              contentStyle={{ 
+                backgroundColor: 'white', 
+                border: '1px solid #e5e7eb',
+                borderRadius: '6px',
+                color: '#172B4D'
+              }}
+              labelStyle={{ color: '#172B4D' }}
             />
-            <Legend />
+            <Legend 
+              wrapperStyle={{ color: '#172B4D' }}
+              iconType="line"
+            />
             <Area yAxisId="left" type="monotone" dataKey="count" stroke="#60A5FA" fill="url(#countGradient)" strokeWidth={2} name="Count" />
             <Line yAxisId="right" type="monotone" dataKey="value" stroke="#10B981" strokeWidth={3} dot={{ fill: '#10B981', r: 4 }} name="Value" />
           </AreaChart>
@@ -134,8 +153,18 @@ const SeverityChart = lazy(() =>
                 if (name === 'value') return formatCurrency(value);
                 return value;
               }}
+              contentStyle={{ 
+                backgroundColor: 'white', 
+                border: '1px solid #e5e7eb',
+                borderRadius: '6px',
+                color: '#172B4D'
+              }}
+              labelStyle={{ color: '#172B4D' }}
             />
-            <Legend />
+            <Legend 
+              wrapperStyle={{ color: '#172B4D' }}
+              iconType="line"
+            />
             <Area yAxisId="left" type="monotone" dataKey="count" stroke="#60A5FA" fill="url(#countGradient)" strokeWidth={2} name="Count" />
             <Line yAxisId="right" type="monotone" dataKey="value" stroke="#10B981" strokeWidth={3} dot={{ fill: '#10B981', r: 4 }} name="Value" />
           </AreaChart>
@@ -164,7 +193,15 @@ const ConfidenceChart = lazy(() =>
               <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
               <XAxis dataKey="level" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
               <YAxis tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
-              <Tooltip />
+              <Tooltip 
+                contentStyle={{ 
+                  backgroundColor: 'white', 
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '6px',
+                  color: '#172B4D'
+                }}
+                labelStyle={{ color: '#172B4D' }}
+              />
               <Area 
                 type="monotone" 
                 dataKey="count" 
@@ -203,8 +240,20 @@ const RecoveryRatesChart = lazy(() =>
               stroke="#374151"
               tickFormatter={(value) => `${(value * 100).toFixed(0)}%`}
             />
-            <Tooltip formatter={(value: number) => `${(value * 100).toFixed(1)}%`} />
-            <Legend />
+            <Tooltip 
+              formatter={(value: number) => `${(value * 100).toFixed(1)}%`}
+              contentStyle={{ 
+                backgroundColor: 'white', 
+                border: '1px solid #e5e7eb',
+                borderRadius: '6px',
+                color: '#172B4D'
+              }}
+              labelStyle={{ color: '#172B4D' }}
+            />
+            <Legend 
+              wrapperStyle={{ color: '#172B4D' }}
+              iconType="line"
+            />
             <Area 
               type="monotone" 
               dataKey="rate" 
