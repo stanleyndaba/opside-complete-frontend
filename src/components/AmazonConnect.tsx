@@ -258,7 +258,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
               variant="outline"
               className={cn(
                 isFullWidth ? 'w-full' : 'w-auto',
-                'justify-center border-emerald-500 text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition-colors px-8',
+                'justify-center bg-white text-emerald-500 border-emerald-500 hover:bg-emerald-50 hover:text-emerald-600 transition-colors px-8',
                 connecting && usingExisting && 'opacity-80'
               )}
               size="lg"

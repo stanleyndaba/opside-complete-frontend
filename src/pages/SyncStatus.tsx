@@ -511,7 +511,10 @@ export default function SyncStatus() {
                     Go to Integrations
                   </Button>
                   {lastSync.status === 'completed' && (
-                    <Button onClick={() => navigate('/app')}>
+                    <Button 
+                      onClick={() => navigate('/app')}
+                      className="bg-white text-[#172B4D] hover:bg-white/90 font-semibold border border-white/30"
+                    >
                       Go to Dashboard
                     </Button>
                   )}

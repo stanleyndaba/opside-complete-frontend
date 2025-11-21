@@ -136,7 +136,7 @@ export default function Sync() {
           
           // Show toast for sync start
           toast({
-            title: '🔄 Sync Started',
+            title: 'Sync Started',
             description: 'Your Amazon data sync has started. This may take a few minutes.',
             duration: 4000,
           });
@@ -334,7 +334,7 @@ export default function Sync() {
     
     // Show toast
     toast({
-      title: '🔄 Retrying Sync',
+      title: 'Retrying Sync',
       description: 'Starting a new sync...',
       duration: 3000,
     });
@@ -492,7 +492,7 @@ export default function Sync() {
                                   setSyncId(undefined);
                                   navigate('/sync', { replace: true });
                                   toast({
-                                    title: '🔄 Start New Sync',
+                                    title: 'Start New Sync',
                                     description: 'Please click "Start Sync" to create a new sync with complete data.',
                                     duration: 5000,
                                   });
