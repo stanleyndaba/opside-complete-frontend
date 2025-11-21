@@ -15,7 +15,9 @@ export const recoveryApi = {
     // Fallback to old endpoint
     const response = await api.get('/api/recoveries');
     if (!response.ok) {
-      throw new Error(response.error || 'Failed to fetch recoveries');
+      const err: any = new Error(response.error || 'Failed to fetch recoveries');
+      err.status = response.status;
+      throw err;
     }
     // Handle both old format (direct array) and new format (with recoveries array)
     if (Array.isArray(response.data)) {

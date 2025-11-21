@@ -25,6 +25,8 @@ export default function UpcomingPayments() {
   const [claims, setClaims] = useState<RecoveryClaim[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [currency, setCurrency] = useState<string>('USD');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [reloadToken, setReloadToken] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -51,18 +53,25 @@ export default function UpcomingPayments() {
             setClaims(mapped);
             const firstWithCurrency = (mapped.find(c => !!c.currency)?.currency) || 'USD';
             setCurrency(firstWithCurrency);
+            setErrorMessage(null);
           } else {
-            // No data - set empty array
             setClaims([]);
+            setErrorMessage(null);
           }
         }
       } catch (error: any) {
         if (!cancelled) {
           console.error('Failed to load upcoming payments:', error);
-          toast({ 
-            title: 'Could not load upcoming payments', 
-            description: error?.message || 'Please try again later.' 
-          });
+          const status = error?.status || error?.response?.status;
+          if (status === 401) {
+            setErrorMessage('Session expired. Please refresh or reconnect your Amazon account to see upcoming payouts.');
+          } else {
+            toast({ 
+              title: 'Could not load upcoming payments', 
+              description: error?.message || 'Please try again later.' 
+            });
+            setErrorMessage(error?.message || 'We could not load upcoming payouts. Please try again shortly.');
+          }
           setClaims([]);
         }
       } finally {
@@ -70,7 +79,7 @@ export default function UpcomingPayments() {
       }
     })();
     return () => { cancelled = true; };
-  }, [toast]);
+  }, [toast, reloadToken]);
 
   const upcomingGroups = useMemo(() => {
     const groups: Record<string, RecoveryClaim[]> = {};
@@ -150,6 +159,20 @@ export default function UpcomingPayments() {
                 <CardDescription className="text-gray-400">Projected Amazon payouts based on claim status and expected payout dates</CardDescription>
               </CardHeader>
               <CardContent className="p-6">
+                {errorMessage && (
+                  <div className="mb-4 rounded-md border border-amber-500/30 bg-amber-500/10 text-amber-100 text-sm p-3 flex flex-wrap items-center gap-3">
+                    <span className="flex-1">{errorMessage}</span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="bg-white text-amber-900 border-amber-200 hover:bg-amber-50"
+                      onClick={() => setReloadToken((token) => token + 1)}
+                      disabled={loading}
+                    >
+                      Retry
+                    </Button>
+                  </div>
+                )}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="rounded-md border border-white/10 bg-white/5 p-4">
                     <div className="text-xs text-gray-400">Next Expected Payout</div>
