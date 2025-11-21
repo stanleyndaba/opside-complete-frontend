@@ -103,26 +103,32 @@ export default function SyncStatus() {
       console.log('[SyncStatus] API Response:', data);
       console.log('[SyncStatus] lastSync data:', data.lastSync);
       
+      const rawLastSync = data.lastSync as any;
+      const normalizedStatus =
+        rawLastSync?.status === 'completed' ? 'completed' :
+        rawLastSync?.status === 'running' || rawLastSync?.status === 'in_progress' ? 'running' :
+        rawLastSync?.status === 'failed' ? 'failed' :
+        rawLastSync?.status === 'cancelled' ? 'cancelled' : 'idle';
+      const rawProgress = rawLastSync?.progress ?? rawLastSync?.progress_percent ?? 0;
+      const normalizedProgress = normalizedStatus === 'completed' && rawProgress < 100 ? 100 : rawProgress;
+
       const mappedData: SyncStatusData = {
         hasActiveSync: data.hasActiveSync || false,
-        lastSync: data.lastSync ? {
-          id: data.lastSync.syncId || (data.lastSync as any).id || '',
-          status: (data.lastSync.status === 'completed' ? 'completed' : 
-                  data.lastSync.status === 'running' ? 'running' :
-                  data.lastSync.status === 'failed' ? 'failed' :
-                  data.lastSync.status === 'cancelled' ? 'cancelled' : 'idle') as any,
-          started_at: data.lastSync.startedAt || (data.lastSync as any).started_at || '',
-          completed_at: data.lastSync.completedAt || (data.lastSync as any).completed_at || null,
-          progress: data.lastSync.progress || 0,
-          message: data.lastSync.message,
-          ordersProcessed: data.lastSync.ordersProcessed,
-          totalOrders: data.lastSync.totalOrders,
-          inventoryCount: data.lastSync.inventoryCount,
-          shipmentsCount: data.lastSync.shipmentsCount,
-          returnsCount: data.lastSync.returnsCount,
-          settlementsCount: data.lastSync.settlementsCount,
-          feesCount: data.lastSync.feesCount,
-          claimsDetected: data.lastSync.claimsDetected ?? data.lastSync.claimsCount ?? 0
+        lastSync: rawLastSync ? {
+          id: rawLastSync.syncId || rawLastSync.id || '',
+          status: normalizedStatus as any,
+          started_at: rawLastSync.startedAt || rawLastSync.started_at || '',
+          completed_at: rawLastSync.completedAt || rawLastSync.completed_at || null,
+          progress: normalizedProgress,
+          message: rawLastSync.message,
+          ordersProcessed: rawLastSync.ordersProcessed ?? rawLastSync.orders_processed ?? 0,
+          totalOrders: rawLastSync.totalOrders ?? rawLastSync.total_orders ?? 0,
+          inventoryCount: rawLastSync.inventoryCount ?? rawLastSync.inventory_count ?? 0,
+          shipmentsCount: rawLastSync.shipmentsCount ?? rawLastSync.shipments_count ?? 0,
+          returnsCount: rawLastSync.returnsCount ?? rawLastSync.returns_count ?? 0,
+          settlementsCount: rawLastSync.settlementsCount ?? rawLastSync.settlements_count ?? 0,
+          feesCount: rawLastSync.feesCount ?? rawLastSync.fees_count ?? 0,
+          claimsDetected: rawLastSync.claimsDetected ?? rawLastSync.claims_count ?? rawLastSync.claimsDetectedCount ?? rawLastSync.claims_detected ?? 0
         } : null
       };
       
