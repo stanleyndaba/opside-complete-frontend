@@ -176,11 +176,10 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
                 break;
 
               case 'sync_complete':
-                const syncData = notificationEvent.data;
                 toast({
-                  title: 'Sync Completed',
-                  description: syncData.message || `Sync completed. ${syncData.claims_detected || 0} claims detected from ${syncData.orders_processed || 0} orders.`,
-                  duration: 6000,
+                  title: 'Sync Complete',
+                  description: 'Complete successfully. See dashboard.',
+                  duration: 5000,
                 });
                 break;
 

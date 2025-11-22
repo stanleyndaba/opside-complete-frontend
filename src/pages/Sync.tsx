@@ -70,19 +70,11 @@ export default function Sync() {
         const ordersProcessed = s.ordersProcessed ?? 0;
         const totalOrders = s.totalOrders ?? 0;
         
-        if (claimsCount > 0) {
-          toast({
-            title: 'Sync Completed',
-            description: `Sync completed successfully! ${claimsCount} claim${claimsCount !== 1 ? 's' : ''} detected from ${ordersProcessed.toLocaleString()} order${ordersProcessed !== 1 ? 's' : ''}.`,
-            duration: 6000,
-          });
-        } else {
-          toast({
-            title: 'Sync Completed',
-            description: `Sync completed successfully. Processed ${ordersProcessed.toLocaleString()} of ${totalOrders.toLocaleString()} orders.`,
-            duration: 5000,
-          });
-        }
+        toast({
+          title: 'Sync Complete',
+          description: 'Complete successfully. See dashboard.',
+          duration: 5000,
+        });
       } else if (mappedStatus === 'failed' && !toastShownRef.current.failed) {
         toastShownRef.current.failed = true;
         toast({

@@ -34,7 +34,7 @@ export const useStatusStream = (onEvent?: (event: StatusEvent) => void) => {
         if (type === 'sync' && status === 'started') {
           toast({ title: 'Data Sync Started', description: 'Syncing Amazon data...' });
         } else if (type === 'sync' && status === 'completed') {
-          toast({ title: 'Data Sync Complete', description: 'Amazon data synced successfully' });
+          toast({ title: 'Sync Complete', description: 'Complete successfully. See dashboard.' });
         } else if (type === 'detection' && status === 'started') {
           toast({ title: 'Claim Detection Started', description: 'Analyzing data for claims...' });
         } else if (type === 'detection' && status === 'completed') {

@@ -620,8 +620,8 @@ export default function Recoveries() {
                 setSyncMessage('Sync completed successfully!');
                 
                 toast({
-                  title: 'Sync Completed',
-                  description: 'Your Amazon data has been synced successfully.',
+                  title: 'Sync Complete',
+                  description: 'Complete successfully. See dashboard.',
                   duration: 5000,
                 });
                 

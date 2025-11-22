@@ -660,8 +660,8 @@ export default function SmartInventorySync() {
                         progress: 100
                       });
                       toast({
-                        title: 'Sync Completed',
-                        description: 'Your Amazon data has been synced successfully.',
+                        title: 'Sync Complete',
+                        description: 'Complete successfully. See dashboard.',
                         duration: 3000,
                       });
                     } else {
@@ -716,8 +716,8 @@ export default function SmartInventorySync() {
               
               // Show completion toast
               toast({
-                title: 'Sync Completed',
-                description: 'Your Amazon data has been synced successfully. Refreshing data...',
+                title: 'Sync Complete',
+                description: 'Complete successfully. See dashboard.',
                 duration: 3000,
               });
               

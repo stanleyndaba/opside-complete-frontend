@@ -293,19 +293,11 @@ export function Dashboard() {
             const claimsDetected = syncStatus.lastSync.claimsDetected ?? 0;
             const ordersProcessed = syncStatus.lastSync.ordersProcessed ?? 0;
             
-            if (claimsDetected > 0) {
-              toast({
-                title: 'Sync Completed',
-                description: `Sync completed successfully! ${claimsDetected} claim${claimsDetected !== 1 ? 's' : ''} detected from ${ordersProcessed.toLocaleString()} order${ordersProcessed !== 1 ? 's' : ''}.`,
-                duration: 6000,
-              });
-            } else {
-              toast({
-                title: 'Sync Completed',
-                description: 'Your Amazon data has been synced successfully.',
-                duration: 5000,
-              });
-            }
+            toast({
+              title: 'Sync Complete',
+              description: 'Complete successfully. See dashboard.',
+              duration: 5000,
+            });
             
             // Clear polling
             if (syncPollingRef.current) {
@@ -395,19 +387,11 @@ export function Dashboard() {
             const claimsDetected = status.claimsDetected ?? 0;
             const ordersProcessed = status.ordersProcessed ?? 0;
             
-            if (claimsDetected > 0) {
-              toast({
-                title: 'Sync Completed',
-                description: `Sync completed successfully! ${claimsDetected} claim${claimsDetected !== 1 ? 's' : ''} detected from ${ordersProcessed.toLocaleString()} order${ordersProcessed !== 1 ? 's' : ''}.`,
-                duration: 6000,
-              });
-            } else {
-              toast({
-                title: 'Sync Completed',
-                description: 'Your Amazon data has been synced successfully.',
-                duration: 5000,
-              });
-            }
+            toast({
+              title: 'Sync Complete',
+              description: 'Complete successfully. See dashboard.',
+              duration: 5000,
+            });
             
             // Clear polling
             if (syncPollingRef.current) {
