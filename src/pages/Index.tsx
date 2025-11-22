@@ -468,7 +468,7 @@ const Index = () => {
                   {AGENT_HIGHLIGHTS.map((item, index) => (
                     <div
                       key={item.title}
-                      className={`absolute inset-0 flex flex-col gap-3 transition-all duration-500 ${
+                      className={`absolute inset-0 flex flex-col items-center justify-center gap-3 px-6 text-center transition-all duration-500 ${
                         agentHighlightIndex === index ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
                       }`}
                       aria-hidden={agentHighlightIndex !== index}
