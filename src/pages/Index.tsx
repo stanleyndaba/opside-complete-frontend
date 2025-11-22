@@ -464,7 +464,7 @@ const Index = () => {
               </div>
               <div className="relative w-full max-w-sm space-y-5 rounded-3xl border border-gray-200 bg-gray-50 p-6 text-sm text-gray-700 justify-self-end overflow-hidden">
                 <div className="text-xs font-semibold uppercase tracking-[0.3em] text-gray-500">Why 11 Clario Agents Beat 1 Human</div>
-                <div className="relative h-44 overflow-hidden rounded-2xl border border-gray-200 bg-white/80 p-5">
+                <div className="relative h-44 overflow-hidden">
                   {AGENT_HIGHLIGHTS.map((item, index) => (
                     <div
                       key={item.title}
@@ -473,25 +473,11 @@ const Index = () => {
                       }`}
                       aria-hidden={agentHighlightIndex !== index}
                     >
-                      <span className={`inline-flex h-10 w-10 items-center justify-center rounded-full text-white ${item.accentClass}`}>
-                        <Check className="h-5 w-5" />
-                      </span>
                       <div>
-                        <p className="text-base font-semibold text-gray-900">{item.title}</p>
+                        <p className="text-base font-semibold" style={{ color: '#99f2c8' }}>{item.title}</p>
                         <p className="text-sm text-gray-600">{item.description}</p>
                       </div>
                     </div>
-                  ))}
-                </div>
-                <div className="flex items-center justify-center gap-2">
-                  {AGENT_HIGHLIGHTS.map((_, index) => (
-                    <span
-                      key={index}
-                      className={`h-2 w-2 rounded-full transition-colors ${
-                        agentHighlightIndex === index ? 'bg-emerald-500' : 'bg-gray-300'
-                      }`}
-                      aria-label={`Highlight ${index + 1}`}
-                    />
                   ))}
                 </div>
                 <p className="text-sm text-gray-600">Clario is your Autonomous AI Agent, not your boss. You maintain 100% command over your data, account and recovery processes!</p>
