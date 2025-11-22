@@ -273,20 +273,11 @@ export default function SyncStatus() {
 
   if (isLoading) {
     return (
-      <PageLayout title="Sync Status" hideNavbar hideSidebar>
-        <div className="relative -m-4 lg:-m-6">
-          <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24 text-gray-300 flex items-center justify-center">
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
-            <div className="pointer-events-none absolute inset-0 opacity-20 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)] bg-[linear-gradient(to_bottom,transparent_0,transparent_95%,rgba(255,255,255,0.08)_96%),linear-gradient(to_right,transparent_0,transparent_95%,rgba(255,255,255,0.08)_96%)] bg-[length:36px_36px]" />
-            <div className="relative max-w-xl w-full mx-auto text-center space-y-4">
-              <div className="flex flex-col items-center gap-3">
-                <div className="flex items-center gap-2">
-                  <Loader2 className="h-6 w-6 animate-spin text-blue-400" />
-                  <Loader2 className="h-6 w-6 animate-spin text-emerald-400" style={{ animationDirection: 'reverse' }} />
-                </div>
-                <span className="text-lg font-medium text-gray-200">Load data sync</span>
-              </div>
-            </div>
+      <PageLayout title="Sync Status">
+        <div className="flex min-h-[40vh] items-center justify-center bg-white text-gray-700">
+          <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white px-6 py-4 shadow-sm">
+            <Loader2 className="h-5 w-5 animate-spin text-emerald-500" />
+            <span className="text-sm font-medium">Loading sync status…</span>
           </div>
         </div>
       </PageLayout>
@@ -295,11 +286,9 @@ export default function SyncStatus() {
 
   return (
     <PageLayout title="Sync Status">
-      <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
-          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-300">
-      <div className="max-w-4xl mx-auto space-y-6">
+      <div className="bg-white">
+        <div className="container mx-auto px-6 py-10 text-gray-900">
+          <div className="max-w-4xl mx-auto space-y-6">
         {isUsingMockData && (
           <Card className="bg-yellow-500/10 border-yellow-500/40 text-yellow-100">
             <CardContent className="pt-6">
@@ -373,96 +362,14 @@ export default function SyncStatus() {
                 {(() => {
                   const ordersProcessed = lastSync.ordersProcessed || 0;
                   const totalOrders = lastSync.totalOrders || 0;
-                  const inventoryCount = lastSync.inventoryCount || 0;
-                  const shipmentsCount = lastSync.shipmentsCount || 0;
-                  const returnsCount = lastSync.returnsCount || 0;
-                  const settlementsCount = lastSync.settlementsCount || 0;
-                  const feesCount = lastSync.feesCount || 0;
-                  const claimsDetected = lastSync.claimsDetected || 0;
-                  
-                  // Calculate total items synced (sum of all data types)
-                  const totalItemsSynced = 
-                    ordersProcessed +
-                    inventoryCount +
-                    shipmentsCount +
-                    returnsCount +
-                    settlementsCount +
-                    feesCount;
-                  
+
                   return (
-                          <div className="space-y-4 pt-4 border-t border-white/10">
-                      {/* Total Items Synced */}
-                            <div className="bg-blue-500/10 border border-blue-500/40 rounded-md p-4">
-                              <p className="text-xs text-blue-100 mb-1">Total Items Synced</p>
-                              <p className="text-2xl font-bold text-blue-300">
-                          {totalItemsSynced.toLocaleString()} items
+                    <div className="space-y-4 pt-4 border-t border-white/10">
+                      <div className="bg-blue-500/10 border border-blue-500/40 rounded-md p-4">
+                        <p className="text-xs text-blue-100 mb-1">Orders Processed</p>
+                        <p className="text-2xl font-bold text-blue-300">
+                          {ordersProcessed.toLocaleString()} / {totalOrders.toLocaleString()}
                         </p>
-                        {lastSync.message && lastSync.message.includes('items synced') && (
-                                <p className="text-xs text-blue-100 mt-1">{lastSync.message}</p>
-                        )}
-                      </div>
-                      
-                      {/* Data Type Breakdown - Always show all fields */}
-                      <div className="space-y-3">
-                              <h4 className="text-sm font-semibold text-gray-200 mb-3">Data Type Breakdown</h4>
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                          {(ordersProcessed !== undefined || totalOrders !== undefined) && (
-                                  <div className="bg-white/5 rounded-md p-3 border border-white/10">
-                                    <p className="text-xs text-gray-300 mb-1">Orders</p>
-                                    <p className="text-lg font-semibold text-gray-100">
-                                {ordersProcessed.toLocaleString()} / {totalOrders.toLocaleString()}
-                              </p>
-                            </div>
-                          )}
-                          {inventoryCount !== undefined && (
-                                  <div className="bg-white/5 rounded-md p-3 border border-white/10">
-                                    <p className="text-xs text-gray-300 mb-1">Inventory</p>
-                                    <p className="text-lg font-semibold text-gray-100">
-                                {inventoryCount.toLocaleString()} items
-                              </p>
-                            </div>
-                          )}
-                          {shipmentsCount !== undefined && (
-                                  <div className="bg-white/5 rounded-md p-3 border border-white/10">
-                                    <p className="text-xs text-gray-300 mb-1">Shipments</p>
-                                    <p className="text-lg font-semibold text-gray-100">
-                                {shipmentsCount.toLocaleString()} items
-                              </p>
-                            </div>
-                          )}
-                          {returnsCount !== undefined && (
-                                  <div className="bg-white/5 rounded-md p-3 border border-white/10">
-                                    <p className="text-xs text-gray-300 mb-1">Returns</p>
-                                    <p className="text-lg font-semibold text-gray-100">
-                                {returnsCount.toLocaleString()} items
-                              </p>
-                            </div>
-                          )}
-                          {settlementsCount !== undefined && (
-                                  <div className="bg-white/5 rounded-md p-3 border border-white/10">
-                                    <p className="text-xs text-gray-300 mb-1">Settlements</p>
-                                    <p className="text-lg font-semibold text-gray-100">
-                                {settlementsCount.toLocaleString()} items
-                              </p>
-                            </div>
-                          )}
-                          {feesCount !== undefined && (
-                                  <div className="bg-white/5 rounded-md p-3 border border-white/10">
-                                    <p className="text-xs text-gray-300 mb-1">Fees</p>
-                                    <p className="text-lg font-semibold text-gray-100">
-                                {feesCount.toLocaleString()} items
-                              </p>
-                            </div>
-                          )}
-                          {claimsDetected !== undefined && (
-                                  <div className="bg-emerald-500/10 rounded-md p-3 border border-emerald-500/40">
-                                    <p className="text-xs text-emerald-100 mb-1">Claims Detected</p>
-                                    <p className="text-lg font-semibold text-emerald-300">
-                                {claimsDetected.toLocaleString()}
-                              </p>
-                            </div>
-                          )}
-                        </div>
                       </div>
                     </div>
                   );
