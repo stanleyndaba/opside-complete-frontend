@@ -438,7 +438,6 @@ export default function SyncStatus() {
             </div>
           </div>
         </div>
-      </div>
     </PageLayout>
   );
 }
