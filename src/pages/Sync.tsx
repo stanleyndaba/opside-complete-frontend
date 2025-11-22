@@ -374,19 +374,17 @@ export default function Sync() {
   };
 
   return (
-    <PageLayout title="Smart Inventory Sync">
-      <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
-          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-300">
-            <div className="max-w-4xl mx-auto space-y-6">
-              <Card className="bg-white/5 border-white/10 text-gray-100">
+    <PageLayout title="Smart Inventory Sync" hideNavbar hideSidebar plainBackground>
+      <div className="bg-white">
+        <div className="container mx-auto px-6 py-10 text-gray-900">
+          <div className="max-w-4xl mx-auto space-y-6">
+              <Card className="bg-white border border-gray-200 text-gray-900 shadow-sm">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     {getStatusIcon()}
                     Merchandise Sync
                   </CardTitle>
-                  <CardDescription className="text-gray-300">
+                  <CardDescription className="text-gray-500">
                     First run window: last 12 months • Schedule: daily at 02:00 UTC
                   </CardDescription>
                 </CardHeader>
@@ -412,15 +410,15 @@ export default function Sync() {
                           // Use calculated total if available, otherwise fall back to message
                           if (totalItemsSynced > 0) {
                             return (
-                              <p className="text-sm text-gray-300">
+                              <p className="text-sm text-gray-600">
                                 Sync completed successfully - {totalItemsSynced.toLocaleString()} items synced
                               </p>
                             );
                           }
-                          return <p className="text-sm text-gray-300">{message}</p>;
+                          return <p className="text-sm text-gray-600">{message}</p>;
                         })()}
                         {(!syncData || status !== 'completed') && (
-                          <p className="text-sm text-gray-300">{message}</p>
+                          <p className="text-sm text-gray-600">{message}</p>
                         )}
                       </div>
                       {getStatusBadge()}
@@ -428,7 +426,7 @@ export default function Sync() {
                     
                     <Progress value={progress} className="h-1" />
                     
-                    <div className="flex items-center justify-between text-xs text-gray-300">
+                    <div className="flex items-center justify-between text-xs text-gray-600">
                       <span>{progress}%</span>
                       {syncData && (
                         <div className="flex items-center gap-4 text-xs">
@@ -438,7 +436,7 @@ export default function Sync() {
                             </span>
                           )}
                           {syncData.claimsDetected !== undefined && (
-                            <span className="text-emerald-300 font-medium text-xs">
+                            <span className="text-emerald-600 font-medium text-xs">
                               {syncData.claimsDetected.toLocaleString()} claims detected
                             </span>
                           )}
@@ -477,12 +475,12 @@ export default function Sync() {
                       // Show warning if old sync format
                       if (isOldSyncFormat) {
                         return (
-                          <div className="space-y-4 pt-4 border-t border-amber-500/40">
-                            <div className="bg-amber-500/10 border border-amber-500/40 rounded-md p-4">
-                              <p className="text-sm font-medium text-amber-100 mb-2">
+                          <div className="space-y-4 pt-4 border-t border-amber-200">
+                            <div className="bg-amber-50 border border-amber-200 rounded-md p-4">
+                              <p className="text-sm font-medium text-amber-800 mb-2">
                                 ⚠️ Old Sync Format Detected
                               </p>
-                              <p className="text-xs text-amber-100/80 mb-3">
+                              <p className="text-xs text-amber-700 mb-3">
                                 This sync was created before we added detailed data type counts. The counts shown may be incomplete.
                               </p>
                               <Button
@@ -497,7 +495,7 @@ export default function Sync() {
                                     duration: 5000,
                                   });
                                 }}
-                                className="border-amber-300 text-amber-100 hover:bg-amber-500/20"
+                                className="border-amber-300 text-amber-800 hover:bg-amber-50"
                               >
                                 Start New Sync
                               </Button>
@@ -507,26 +505,26 @@ export default function Sync() {
                       }
                       
                       return (
-                        <div className="space-y-4 pt-4 border-t border-white/10">
+                        <div className="space-y-4 pt-4 border-t border-gray-100">
                           {/* Total Items Synced */}
-                          <div className="bg-blue-500/10 border border-blue-500/40 rounded-md p-4">
-                            <p className="text-xs text-blue-100 mb-1">Total Items Synced</p>
-                            <p className="text-lg font-bold text-blue-300">
+                          <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
+                            <p className="text-xs text-blue-700 mb-1">Total Items Synced</p>
+                            <p className="text-lg font-bold text-blue-700">
                               {totalItemsSynced.toLocaleString()} items
                             </p>
                           </div>
                           
                           {/* Data Type Breakdown */}
                           <div className="space-y-3">
-                            <h4 className="text-sm font-semibold text-gray-200">Data Type Breakdown</h4>
-                            <div className="bg-white/5 rounded-md border border-white/10 divide-y divide-white/10">
+                            <h4 className="text-sm font-semibold text-gray-800">Data Type Breakdown</h4>
+                            <div className="bg-gray-50 rounded-md border border-gray-200 divide-y divide-gray-100">
                               {ordersProcessed !== undefined && syncData.totalOrders !== undefined && (
                                 <div className="flex items-center justify-between py-3 px-4">
                                   <div>
-                                    <p className="text-sm text-gray-400">Orders</p>
+                                    <p className="text-sm text-gray-600">Orders</p>
                                     <p className="text-[10px] text-gray-500 mt-0.5">Auditing for Lost and Damaged fulfillment status</p>
                                   </div>
-                                  <p className="text-sm font-medium text-gray-100">
+                                  <p className="text-sm font-medium text-gray-900">
                                     {ordersProcessed.toLocaleString()} / {syncData.totalOrders.toLocaleString()}
                                   </p>
                                 </div>
@@ -534,10 +532,10 @@ export default function Sync() {
                               {inventoryCount !== undefined && (
                                 <div className="flex items-center justify-between py-3 px-4">
                                   <div>
-                                    <p className="text-sm text-gray-400">Inventory</p>
+                                    <p className="text-sm text-gray-600">Inventory</p>
                                     <p className="text-[10px] text-gray-500 mt-0.5">Cross-referencing Daily Ledger vs. Physical Count</p>
                                   </div>
-                                  <p className="text-sm font-medium text-gray-100">
+                                  <p className="text-sm font-medium text-gray-900">
                                     {inventoryCount.toLocaleString()} items
                                   </p>
                                 </div>
@@ -545,10 +543,10 @@ export default function Sync() {
                               {shipmentsCount !== undefined && (
                                 <div className="flex items-center justify-between py-3 px-4">
                                   <div>
-                                    <p className="text-sm text-gray-400">Shipments</p>
+                                    <p className="text-sm text-gray-600">Shipments</p>
                                     <p className="text-[10px] text-gray-500 mt-0.5">Verifying Inbound FBA receiving discrepancies</p>
                                   </div>
-                                  <p className="text-sm font-medium text-gray-100">
+                                  <p className="text-sm font-medium text-gray-900">
                                     {shipmentsCount.toLocaleString()} items
                                   </p>
                                 </div>
@@ -556,10 +554,10 @@ export default function Sync() {
                               {returnsCount !== undefined && (
                                 <div className="flex items-center justify-between py-3 px-4">
                                   <div>
-                                    <p className="text-sm text-gray-400">Returns</p>
+                                    <p className="text-sm text-gray-600">Returns</p>
                                     <p className="text-[10px] text-gray-500 mt-0.5">Checking Customer Refunded vs. Unit Returned logic</p>
                                   </div>
-                                  <p className="text-sm font-medium text-gray-100">
+                                  <p className="text-sm font-medium text-gray-900">
                                     {returnsCount.toLocaleString()} items
                                   </p>
                                 </div>
@@ -567,10 +565,10 @@ export default function Sync() {
                               {settlementsCount !== undefined && (
                                 <div className="flex items-center justify-between py-3 px-4">
                                   <div>
-                                    <p className="text-sm text-gray-400">Settlement</p>
+                                    <p className="text-sm text-gray-600">Settlement</p>
                                     <p className="text-[10px] text-gray-500 mt-0.5">Reconciling previous reimbursements for reversals</p>
                                   </div>
-                                  <p className="text-sm font-medium text-gray-100">
+                                  <p className="text-sm font-medium text-gray-900">
                                     {settlementsCount.toLocaleString()} items
                                   </p>
                                 </div>
@@ -578,18 +576,18 @@ export default function Sync() {
                               {feesCount !== undefined && (
                                 <div className="flex items-center justify-between py-3 px-4">
                                   <div>
-                                    <p className="text-sm text-gray-400">Fees</p>
+                                    <p className="text-sm text-gray-600">Fees</p>
                                     <p className="text-[10px] text-gray-500 mt-0.5">Scanning weight/dimension overcharge anomalies</p>
                                   </div>
-                                  <p className="text-sm font-medium text-gray-100">
+                                  <p className="text-sm font-medium text-gray-900">
                                     {feesCount.toLocaleString()} items
                                   </p>
                                 </div>
                               )}
                               {claimsDetected !== undefined && claimsDetected > 0 && (
                                 <div className="flex items-center justify-between py-3 px-4">
-                                  <p className="text-sm text-emerald-300">Claims Detected</p>
-                                  <p className="text-sm font-medium text-emerald-300">
+                                  <p className="text-sm text-emerald-600">Claims Detected</p>
+                                  <p className="text-sm font-medium text-emerald-600">
                                     {claimsDetected.toLocaleString()}
                                   </p>
                                 </div>
@@ -601,24 +599,24 @@ export default function Sync() {
                     })()}
 
                     {error && (
-                      <div className="p-3 rounded-md bg-red-500/10 border border-red-500/40 text-sm text-red-100">
+                      <div className="p-3 rounded-md bg-red-50 border border-red-200 text-sm text-red-800">
                         <strong>Error:</strong> {error}
                       </div>
                     )}
 
                     {syncData?.startedAt && (
-                      <div className="text-xs text-gray-300">
+                      <div className="text-xs text-gray-600">
                         Started: {new Date(syncData.startedAt).toLocaleString()}
                       </div>
                     )}
 
                     {syncData?.completedAt && (
-                      <div className="text-xs text-gray-300">
+                      <div className="text-xs text-gray-600">
                         Completed: {new Date(syncData.completedAt).toLocaleString()}
                       </div>
                     )}
 
-                    <div className="mt-4 p-3 rounded border border-blue-500/40 bg-blue-500/10 text-xs text-blue-100">
+                    <div className="mt-4 p-3 rounded border border-blue-200 bg-blue-50 text-xs text-blue-700">
                       Evidence ingestion is running in parallel. We're collecting supplier docs and linking proofs to detected claims.
                     </div>
 
@@ -628,7 +626,7 @@ export default function Sync() {
                           variant="outline"
                           onClick={handleCancelSync}
                           disabled={isCancelling}
-                          className="bg-white text-[#172B4D] border-white/40 hover:bg-white/90"
+                          className="bg-gray-900 text-white border-gray-900 hover:bg-gray-800"
                         >
                           {isCancelling ? (
                             <>
@@ -648,7 +646,7 @@ export default function Sync() {
                         <Button
                           variant="outline"
                           onClick={handleRetry}
-                          className="border-white/20 text-gray-100 hover:bg-white/10"
+                          className="border-gray-200 text-gray-700 hover:bg-gray-50"
                         >
                           <RefreshCw className="h-4 w-4 mr-2" />
                           Retry Sync
@@ -659,7 +657,7 @@ export default function Sync() {
                         <Button
                           variant="outline"
                           onClick={() => navigate('/app')}
-                          className="bg-white text-[#172B4D] border-white/40 hover:bg-white/90"
+                          className="bg-gray-900 text-white border-gray-900 hover:bg-gray-800"
                         >
                           Go to Dashboard
                         </Button>

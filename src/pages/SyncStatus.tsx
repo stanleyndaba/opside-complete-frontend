@@ -273,7 +273,7 @@ export default function SyncStatus() {
 
   if (isLoading) {
     return (
-      <PageLayout title="Sync Status">
+      <PageLayout title="Sync Status" hideNavbar hideSidebar plainBackground>
         <div className="flex min-h-[40vh] items-center justify-center bg-white text-gray-700">
           <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white px-6 py-4 shadow-sm">
             <Loader2 className="h-5 w-5 animate-spin text-emerald-500" />
@@ -285,12 +285,12 @@ export default function SyncStatus() {
   }
 
   return (
-    <PageLayout title="Sync Status">
+    <PageLayout title="Sync Status" hideNavbar hideSidebar plainBackground>
       <div className="bg-white">
         <div className="container mx-auto px-6 py-10 text-gray-900">
           <div className="max-w-4xl mx-auto space-y-6">
         {isUsingMockData && (
-          <Card className="bg-yellow-500/10 border-yellow-500/40 text-yellow-100">
+          <Card className="bg-amber-50 border border-amber-200 text-amber-900">
             <CardContent className="pt-6">
               <p className="text-sm">
                 Using mock data (Backend unavailable - remove in production)
@@ -298,13 +298,13 @@ export default function SyncStatus() {
             </CardContent>
           </Card>
         )}
-              <Card className="bg-white/5 border-white/10 text-gray-100">
+              <Card className="bg-white border border-gray-200 text-gray-900 shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               {getStatusIcon()}
               Amazon Sync Status
             </CardTitle>
-                  <CardDescription className="text-gray-300">
+                  <CardDescription className="text-gray-500">
               Current synchronization status for your Amazon account
             </CardDescription>
           </CardHeader>
@@ -312,9 +312,9 @@ export default function SyncStatus() {
             {!lastSync ? (
               <div className="space-y-4">
                 <div className="text-center py-8">
-                  <AlertCircle className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-                        <h3 className="text-lg font-semibold mb-2 text-gray-100">No Sync History</h3>
-                        <p className="text-sm text-gray-300 mb-4">
+                  <AlertCircle className="h-12 w-12 mx-auto text-gray-300 mb-4" />
+                        <h3 className="text-lg font-semibold mb-2 text-gray-900">No Sync History</h3>
+                        <p className="text-sm text-gray-600 mb-4">
                     No sync history yet. Start a sync to see status.
                   </p>
                   <Button onClick={() => navigate('/sync')}>
@@ -328,12 +328,12 @@ export default function SyncStatus() {
                 {/* Status and Last Synced */}
                 <div className="flex items-center justify-between">
                   <div className="space-y-1">
-                          <p className="text-sm font-medium text-gray-200">Status</p>
+                          <p className="text-sm font-medium text-gray-700">Status</p>
                     {getStatusBadge()}
                   </div>
                   <div className="text-right space-y-1">
-                          <p className="text-sm font-medium text-gray-200">Last Synced</p>
-                          <p className="text-sm text-gray-400">
+                          <p className="text-sm font-medium text-gray-700">Last Synced</p>
+                          <p className="text-sm text-gray-500">
                       {lastSync.completed_at 
                         ? `${getMinutesAgo(lastSync.completed_at)} minutes ago`
                         : lastSync.started_at
@@ -348,12 +348,12 @@ export default function SyncStatus() {
                   (lastSync.status === 'completed' && lastSync.progress < 100)) && (
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-xs">
-                            <span className="text-gray-300">Progress</span>
-                            <span className="font-medium text-gray-100">{lastSync.progress}%</span>
+                            <span className="text-gray-500">Progress</span>
+                            <span className="font-medium text-gray-900">{lastSync.progress}%</span>
                     </div>
                     <Progress value={lastSync.progress} className="h-1" />
                     {lastSync.message && (
-                            <p className="text-xs text-gray-300">{lastSync.message}</p>
+                            <p className="text-xs text-gray-600">{lastSync.message}</p>
                     )}
                   </div>
                 )}
@@ -364,10 +364,10 @@ export default function SyncStatus() {
                   const totalOrders = lastSync.totalOrders || 0;
 
                   return (
-                    <div className="space-y-4 pt-4 border-t border-white/10">
-                      <div className="bg-blue-500/10 border border-blue-500/40 rounded-md p-4">
-                        <p className="text-xs text-blue-100 mb-1">Orders Processed</p>
-                        <p className="text-2xl font-bold text-blue-300">
+                    <div className="space-y-4 pt-4 border-t border-gray-100">
+                      <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
+                        <p className="text-xs text-blue-700 mb-1">Orders Processed</p>
+                        <p className="text-2xl font-bold text-blue-700">
                           {ordersProcessed.toLocaleString()} / {totalOrders.toLocaleString()}
                         </p>
                       </div>
@@ -380,37 +380,37 @@ export default function SyncStatus() {
                   <div className={cn(
                           "p-3 rounded-md text-sm border",
                     lastSync.status === 'completed' 
-                            ? "bg-emerald-500/10 border-emerald-500/40 text-emerald-100"
+                            ? "bg-emerald-50 border-emerald-200 text-emerald-800"
                       : lastSync.status === 'failed'
-                            ? "bg-red-500/10 border-red-500/40 text-red-100"
-                            : "bg-white/5 border-white/10 text-gray-200"
+                            ? "bg-red-50 border-red-200 text-red-800"
+                            : "bg-gray-50 border-gray-200 text-gray-700"
                   )}>
                     {lastSync.message}
                   </div>
                 )}
 
                 {/* Timestamps */}
-                      <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/10 text-xs text-gray-300">
+                      <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-100 text-xs text-gray-600">
                   {lastSync.started_at && (
                     <div>
-                            <p className="font-medium mb-1 text-gray-200">Started</p>
+                            <p className="font-medium mb-1 text-gray-700">Started</p>
                       <p>{new Date(lastSync.started_at).toLocaleString()}</p>
                     </div>
                   )}
                   {lastSync.completed_at && (
                     <div>
-                            <p className="font-medium mb-1 text-gray-200">Completed</p>
+                            <p className="font-medium mb-1 text-gray-700">Completed</p>
                       <p>{new Date(lastSync.completed_at).toLocaleString()}</p>
                     </div>
                   )}
                 </div>
 
                 {/* Actions */}
-                      <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-white/10">
+                      <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-gray-100">
                   <Button 
                     variant="outline" 
                     onClick={() => fetchSyncStatus({ showLoading: true })}
-                          className="border-white/20 text-gray-100 hover:bg-white/10"
+                          className="border-gray-200 text-gray-700 hover:bg-gray-50"
                   >
                     <RefreshCw className="h-4 w-4 mr-2" />
                     Refresh
@@ -418,14 +418,14 @@ export default function SyncStatus() {
                   <Button 
                     variant="outline" 
                     onClick={() => navigate('/integrations-hub')}
-                          className="border-white/20 text-gray-100 hover:bg-white/10"
+                          className="border-gray-200 text-gray-700 hover:bg-gray-50"
                   >
                     Go to Integrations
                   </Button>
                   {lastSync.status === 'completed' && (
                     <Button 
                       onClick={() => navigate('/app')}
-                      className="bg-white text-[#172B4D] hover:bg-white/90 font-semibold border border-white/30"
+                      className="bg-gray-900 text-white hover:bg-gray-800 font-semibold border border-gray-900"
                     >
                       Go to Dashboard
                     </Button>
