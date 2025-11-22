@@ -193,30 +193,6 @@ const Index = () => {
       className="min-h-screen flex flex-col text-gray-900 relative overflow-x-hidden w-full"
       style={{ width: '100%', maxWidth: '100%', overflowX: 'hidden' }}
     >
-      {/* Background image covering navbar and hero section */}
-      <div 
-        className="absolute inset-x-0 top-0 z-0 pointer-events-none"
-        style={{
-          backgroundImage: 'url(/horizon.jpg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          height: '100vh',
-          minHeight: '100vh',
-          width: '100%',
-          filter: 'brightness(0.6)'
-        }}
-      />
-      {/* Dark overlay for better text visibility */}
-      <div 
-        className="absolute inset-x-0 top-0 z-0 pointer-events-none"
-        style={{
-          height: '100vh',
-          minHeight: '100vh',
-          width: '100%',
-          backgroundColor: 'rgba(0, 0, 0, 0.2)'
-        }}
-      />
       {/* Fixed navbar - stays at top while content scrolls underneath */}
       <header className="fixed top-0 left-0 right-0 z-40 border-transparent bg-transparent" style={{ background: 'transparent' }}>
         <div className="container mx-auto px-6 py-5">
@@ -396,11 +372,10 @@ const Index = () => {
           )}
         </div>
       </header>
-      <div className="relative z-10" style={{ background: 'transparent' }}>
-        <main className="flex-1 relative z-10" style={{ background: 'transparent' }}>
+      <div className="relative z-10" style={{ background: 'white' }}>
+        <main className="flex-1 relative z-10" style={{ background: 'white' }}>
           <section 
             className="relative container mx-auto px-6 pt-32 md:pt-36 pb-12 md:pb-16 overflow-hidden"
-            style={{ background: 'transparent' }}
           >
           {/* Content */}
           <div className="relative z-10 max-w-4xl mx-auto text-center space-y-6">
@@ -441,13 +416,13 @@ const Index = () => {
                     </span>
                 </div>
               </div>
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-white">
+            <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-gray-900">
               FBA Reimbursements on{" "}
               <span className="bg-gradient-to-r from-[#1f4037] to-[#99f2c8] bg-clip-text text-transparent">
                 Autopilot
               </span>
             </h1>
-              <p className="font-body text-sm md:text-base text-white font-normal max-w-3xl mx-auto">
+              <p className="font-body text-sm md:text-base text-gray-700 font-normal max-w-3xl mx-auto">
                 Think AI Agents for Finance. Clario automates the entire reimbursement process, recovering lost revenue from Amazon FBA errors in minutes—not months.
             </p>
             <div className="pt-2">
@@ -459,13 +434,13 @@ const Index = () => {
                   <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-emerald-500">
                     <Check className="h-3 w-3 text-white" />
                   </span>
-                  <span className="text-white text-sm md:text-base">No credit cards</span>
+                  <span className="text-gray-700 text-sm md:text-base">No credit cards</span>
                 </div>
                 <div className="inline-flex items-center gap-2">
                   <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-emerald-500">
                     <Check className="h-3 w-3 text-white" />
                   </span>
-                  <span className="text-white text-sm md:text-base">Cancel anytime</span>
+                  <span className="text-gray-700 text-sm md:text-base">Cancel anytime</span>
                 </div>
               </div>
               {/* Email capture moved to bottom-left above the legal footer */}
