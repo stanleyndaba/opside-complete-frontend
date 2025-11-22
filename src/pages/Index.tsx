@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Link } from 'react-router-dom';
-import { ChevronDown, Check, Gift, Linkedin, Mail, Shield, Sparkles, Twitter } from 'lucide-react';
+import { ChevronDown, Check, Gift, Linkedin, Mail, Twitter } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AmazonConnect } from '@/components/AmazonConnect';
 import { useToast } from '@/components/ui/use-toast';
@@ -44,24 +44,6 @@ const FOOTER_NAV_SECTIONS: { title: string; links: FooterLinkItem[] }[] = [
       { label: 'Privacy', href: '/privacy' },
       { label: 'Terms', href: '/terms' },
     ],
-  },
-];
-
-const FOOTER_HIGHLIGHTS: { title: string; description: string; icon: IconComponent }[] = [
-  {
-    title: 'SP-API Native',
-    description: 'Verified Amazon Selling Partner scopes, zero gray-hat surprises.',
-    icon: Shield,
-  },
-  {
-    title: '11 Autonomous Agents',
-    description: 'Evidence, filing, follow-up, and finance checks without hand-offs.',
-    icon: Sparkles,
-  },
-  {
-    title: 'Evidence Locker',
-    description: 'Securely ingests Gmail, Outlook, and Drive to auto-attach proof.',
-    icon: Mail,
   },
 ];
 
@@ -748,22 +730,7 @@ const Index = () => {
               }}
               aria-hidden="true"
             />
-            <div className="relative z-10 container mx-auto px-6 py-16 space-y-12">
-              <div className="grid gap-4 md:grid-cols-3">
-                {FOOTER_HIGHLIGHTS.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <div
-                      key={item.title}
-                      className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_25px_60px_rgba(2,6,23,0.45)]"
-                    >
-                      <Icon className="h-6 w-6 text-emerald-300" aria-hidden="true" />
-                      <h3 className="mt-4 text-base font-semibold text-white">{item.title}</h3>
-                      <p className="mt-1 text-sm text-white/70">{item.description}</p>
-                    </div>
-                  );
-                })}
-              </div>
+            <div className="relative z-10 container mx-auto px-6 py-16 space-y-10">
               <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between">
                 <div className="max-w-sm space-y-4">
                   <Link to="/" className="inline-flex items-center text-2xl font-black tracking-widest text-white">
