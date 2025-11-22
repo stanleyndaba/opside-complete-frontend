@@ -169,7 +169,9 @@ const Index = () => {
           <div className="flex items-center justify-between gap-6 px-6 py-4 rounded-[25px] border border-white/40 bg-white/25 supports-[backdrop-filter]:bg-white/25 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_25px_60px_rgba(15,23,42,0.12)] transition-colors">
               <div className="flex items-center gap-3">
               <Link to="/" className="inline-flex items-center px-3 py-1.5 rounded-[16px] transition-colors hover:bg-gray-100">
-                      <span className="font-black text-[#b3b3b3] tracking-tight">
+                      <span
+                        className="font-black tracking-tight bg-gradient-to-r from-[#1f4037] to-[#99f2c8] bg-clip-text text-transparent"
+                      >
                         CLARIO
                       </span>
                       </Link>
@@ -416,13 +418,13 @@ const Index = () => {
         </main>
       </div>
       {/* End of background image area - white content starts here - no gap */}
-      <div className="relative z-10 w-full" style={{ background: 'white', marginTop: '0' }}>
+      <div className="relative z-10 w-full" style={{ background: 'white', marginTop: '3rem' }}>
         <section className="relative isolate bg-white text-gray-900 w-full" style={{ width: '100%', maxWidth: '100%' }}>
           <div className="container mx-auto px-6 pt-12 md:pt-20 pb-24 md:pb-28">
             <div className="relative grid gap-12 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
               <div className="relative space-y-8">
                 <h2 className="text-4xl md:text-6xl font-bold tracking-tight" style={{ color: '#a6a6a6' }}>
-                  Recover lost revenue on complete autopilot.
+                  Recover lost revenue on complete <span className="bg-gradient-to-r from-[#1f4037] to-[#99f2c8] bg-clip-text text-transparent">autopilot.</span>
                 </h2>
                 <p className="text-base md:text-lg text-black max-w-3xl leading-relaxed">
                   Bypass the manual grind. From deep-dive audits to final deposit, our 11-agent engine autonomously identifies, files, and tracks every claim with <span className="font-semibold text-emerald-500">{precisionCount.toFixed(2)}%</span> precision.
@@ -640,16 +642,8 @@ const Index = () => {
           <div className="container mx-auto px-6 w-full" style={{ width: '100%', maxWidth: '100%' }}>
             <div className="flex flex-col items-center justify-center text-center space-y-8">
               <h1 
-                className="text-8xl md:text-9xl lg:text-[12rem] font-black tracking-tight"
-                style={{
-                  background: 'linear-gradient(135deg, #f1f3f5 0%, #e9ecef 25%, #dee2e6 50%, #e9ecef 75%, #f1f3f5 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                  textShadow: '0 4px 8px rgba(0, 0, 0, 0.15)',
-                  filter: 'drop-shadow(0 6px 12px rgba(0, 0, 0, 0.2))',
-                  letterSpacing: '-0.02em'
-                }}
+                className="text-8xl md:text-9xl lg:text-[12rem] font-black tracking-tight bg-gradient-to-r from-[#1f4037] to-[#99f2c8] bg-clip-text text-transparent drop-shadow-[0_6px_12px_rgba(0,0,0,0.2)]"
+                style={{ letterSpacing: '-0.02em' }}
               >
                 CLARIO
               </h1>
