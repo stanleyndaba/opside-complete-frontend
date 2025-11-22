@@ -20,9 +20,11 @@ export function Toaster() {
               <div className="select-none font-black uppercase tracking-[0.4em] text-[11px] text-gray-500">
                 CLARIO
               </div>
-              {title && title !== 'CLARIO' && <ToastTitle className="text-gray-900">{title}</ToastTitle>}
+              {title && title !== 'CLARIO' && (
+                <ToastTitle className="text-blue-600 font-semibold">{title}</ToastTitle>
+              )}
               {description && (
-                <ToastDescription className="text-gray-600">{description}</ToastDescription>
+                <ToastDescription className="text-white font-medium">{description}</ToastDescription>
               )}
             </div>
             {action}
