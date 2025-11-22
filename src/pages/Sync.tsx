@@ -670,7 +670,6 @@ export default function Sync() {
             </div>
           </div>
         </div>
-      </div>
     </PageLayout>
   );
 }
