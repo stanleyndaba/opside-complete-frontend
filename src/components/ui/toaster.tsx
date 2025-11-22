@@ -17,10 +17,12 @@ export function Toaster() {
         return (
           <Toast key={id} {...props}>
             <div className="grid gap-1">
-              <div className="select-none font-brand text-sm tracking-wide text-emerald-300">Clario</div>
-              {title && title !== 'Clario' && <ToastTitle className="text-gray-100">{title}</ToastTitle>}
+              <div className="select-none font-black uppercase tracking-[0.4em] text-[11px] text-gray-500">
+                CLARIO
+              </div>
+              {title && title !== 'CLARIO' && <ToastTitle className="text-gray-900">{title}</ToastTitle>}
               {description && (
-                <ToastDescription className="text-gray-300">{description}</ToastDescription>
+                <ToastDescription className="text-gray-600">{description}</ToastDescription>
               )}
             </div>
             {action}
