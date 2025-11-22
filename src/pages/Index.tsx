@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Link } from 'react-router-dom';
-import { ChevronDown, Check, Gift, Linkedin, Mail, Twitter } from 'lucide-react';
+import { ChevronDown, Check, Gift, Globe, Linkedin, Twitter } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AmazonConnect } from '@/components/AmazonConnect';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -667,7 +667,6 @@ const Index = () => {
         </section>
 
         <div className="relative">
-          <div className="absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-white via-white/80 to-gray-100 pointer-events-none" aria-hidden="true" />
           <footer
             id="core-footer"
             className="relative bg-white text-gray-900 w-full border-t border-gray-100"
@@ -675,10 +674,7 @@ const Index = () => {
           >
             <div className="container mx-auto px-6 py-14 space-y-8">
               <div className="space-y-4">
-                <Link to="/" className="inline-flex items-center text-2xl font-black tracking-widest text-gray-900">
-                  CLARIO
-                </Link>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-600 leading-relaxed max-w-sm">
                   Autonomous reimbursements crafted for modern Amazon operators. Secure data flows, transparent claims,
                   and a finance-ready audit trail—no agency overhead.
                 </p>
@@ -692,7 +688,7 @@ const Index = () => {
                         target="_blank"
                         rel="noreferrer"
                         aria-label={social.label}
-                        className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 text-gray-500 transition hover:border-gray-900 hover:text-gray-900"
+                        className="inline-flex h-10 w-10 items-center justify-center text-gray-500 transition hover:text-gray-900"
                       >
                         <Icon className="h-4 w-4" />
                       </a>
@@ -706,19 +702,18 @@ const Index = () => {
                 </p>
                 <div className="flex flex-wrap items-center gap-4 text-gray-600">
                   <Link to="/privacy" className="transition hover:text-gray-900">
-                    Privacy
+                    Privacy Policy
                   </Link>
                   <Link to="/terms" className="transition hover:text-gray-900">
-                    Terms
+                    Terms of Service
                   </Link>
                   <Link to="/docs" className="transition hover:text-gray-900">
-                    Documentation
+                    Acceptable Use Policy
                   </Link>
                   <span className="inline-flex items-center gap-2">
-                    <Mail className="h-3.5 w-3.5" />
-                    support@clario.ai
+                    <Globe className="h-3.5 w-3.5" />
+                    {selectedLanguage.language}
                   </span>
-                  <span>Serving sellers in {selectedLanguage.language}</span>
                 </div>
               </div>
             </div>
