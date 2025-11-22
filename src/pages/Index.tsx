@@ -456,7 +456,10 @@ const Index = () => {
             <div className="relative grid gap-12 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
               <div className="relative space-y-8">
                 <h2 className="text-4xl md:text-6xl font-bold tracking-tight" style={{ color: '#a6a6a6' }}>
-                  Recover lost revenue on complete autopilot.
+                  Recover lost revenue on complete{' '}
+                  <span className="bg-gradient-to-r from-[#1f4037] to-[#99f2c8] bg-clip-text text-transparent">
+                    autopilot.
+                  </span>
                 </h2>
                 <p className="text-base md:text-lg text-black max-w-3xl leading-relaxed">
                   Bypass the manual grind. From deep-dive audits to final deposit, our 11-agent engine autonomously identifies, files, and tracks every claim with <span className="font-semibold text-emerald-500">{precisionCount.toFixed(2)}%</span> precision.
