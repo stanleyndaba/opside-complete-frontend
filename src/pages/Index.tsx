@@ -97,6 +97,17 @@ const Index = () => {
   );
   const [benefitIndex, setBenefitIndex] = useState(0);
   const [precisionCount, setPrecisionCount] = useState(0);
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const previousBodyBg = document.body.style.backgroundColor;
+    const previousHtmlBg = document.documentElement.style.backgroundColor;
+    document.body.style.backgroundColor = '#ffffff';
+    document.documentElement.style.backgroundColor = '#ffffff';
+    return () => {
+      document.body.style.backgroundColor = previousBodyBg;
+      document.documentElement.style.backgroundColor = previousHtmlBg;
+    };
+  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
