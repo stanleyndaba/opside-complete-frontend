@@ -669,7 +669,7 @@ const Index = () => {
         <div className="relative">
           <footer
             id="core-footer"
-            className="relative bg-white text-gray-900 w-full border-t border-gray-100"
+            className="relative bg-white text-gray-900 w-full"
             style={{ width: '100%', maxWidth: '100%' }}
           >
             <div className="container mx-auto px-6 py-14 space-y-8">
@@ -697,10 +697,7 @@ const Index = () => {
                 </div>
               </div>
               <div className="flex flex-col gap-4 border-t border-gray-200 pt-6 text-xs text-gray-500 md:flex-row md:items-center md:justify-between">
-                <p className="text-gray-600">
-                  © {currentYear} Clario. Built for operators who need Amazon reimbursements and visibility in real time.
-                </p>
-                <div className="flex flex-wrap items-center gap-4 text-gray-600">
+                <div className="order-1 flex flex-wrap items-center gap-4 text-gray-600 md:order-2">
                   <Link to="/privacy" className="transition hover:text-gray-900">
                     Privacy Policy
                   </Link>
@@ -715,6 +712,9 @@ const Index = () => {
                     {selectedLanguage.language}
                   </span>
                 </div>
+                <p className="order-2 text-gray-600 md:order-1">
+                  © {currentYear} Clario. Built for operators who need Amazon reimbursements and visibility in real time.
+                </p>
               </div>
             </div>
           </footer>
