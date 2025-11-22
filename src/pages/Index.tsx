@@ -3,11 +3,72 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Link } from 'react-router-dom';
-import { ChevronDown, Check, Gift } from 'lucide-react';
+import { ChevronDown, Check, Gift, Linkedin, Mail, Shield, Sparkles, Twitter } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AmazonConnect } from '@/components/AmazonConnect';
 import { useToast } from '@/components/ui/use-toast';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+
+type IconComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
+
+type FooterLinkItem = {
+  label: string;
+  href: string;
+  isExternal?: boolean;
+};
+
+const FOOTER_NAV_SECTIONS: { title: string; links: FooterLinkItem[] }[] = [
+  {
+    title: 'Platform',
+    links: [
+      { label: 'Integrations Hub', href: '/integrations-hub' },
+      { label: 'Recoveries HQ', href: '/recoveries' },
+      { label: 'Evidence Locker', href: '/evidence-locker' },
+      { label: 'Smart Inventory Sync', href: '/smart-inventory-sync' },
+    ],
+  },
+  {
+    title: 'Resources',
+    links: [
+      { label: 'Docs', href: '/docs' },
+      { label: 'Developer API', href: '/developer-api' },
+      { label: 'Help Center', href: '/help' },
+      { label: 'What’s New', href: '/whats-new' },
+    ],
+  },
+  {
+    title: 'Company',
+    links: [
+      { label: 'About', href: '/about' },
+      { label: 'Careers', href: '/careers' },
+      { label: 'Privacy', href: '/privacy' },
+      { label: 'Terms', href: '/terms' },
+    ],
+  },
+];
+
+const FOOTER_HIGHLIGHTS: { title: string; description: string; icon: IconComponent }[] = [
+  {
+    title: 'SP-API Native',
+    description: 'Verified Amazon Selling Partner scopes, zero gray-hat surprises.',
+    icon: Shield,
+  },
+  {
+    title: '11 Autonomous Agents',
+    description: 'Evidence, filing, follow-up, and finance checks without hand-offs.',
+    icon: Sparkles,
+  },
+  {
+    title: 'Evidence Locker',
+    description: 'Securely ingests Gmail, Outlook, and Drive to auto-attach proof.',
+    icon: Mail,
+  },
+];
+
+const SOCIAL_LINKS: { label: string; href: string; icon: IconComponent }[] = [
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/company/clario-ai', icon: Linkedin },
+  { label: 'Twitter', href: 'https://x.com/ClarioAI', icon: Twitter },
+];
 
 const Index = () => {
   const { toast } = useToast();
@@ -34,6 +95,7 @@ const Index = () => {
     typeof window !== 'undefined' ? localStorage.getItem('clario.langPreference') || 'en' : 'en'
   );
   const [langQuery, setLangQuery] = useState<string>('');
+  const [footerEmail, setFooterEmail] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const benefitWords = useMemo(
     () => [
@@ -126,6 +188,18 @@ const Index = () => {
       o.code.toLowerCase().includes(q)
     );
   }, [langQuery]);
+
+  const handleFooterSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!footerEmail.trim()) return;
+    toast({
+      title: 'Subscribed to releases',
+      description: 'We’ll send the next automation drop straight to your inbox.',
+    });
+    setFooterEmail('');
+  };
+
+  const currentYear = new Date().getFullYear();
 
   return (
     <div 
@@ -661,15 +735,144 @@ const Index = () => {
 
         <div className="relative">
           <div className="absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-white via-white/80 to-gray-100 pointer-events-none" aria-hidden="true" />
-          <footer id="core-footer" className="relative bg-gray-100 text-gray-700 w-full overflow-x-hidden" style={{ width: '100%', maxWidth: '100%' }}>
-            <div className="container mx-auto px-6 py-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-xs text-gray-700 text-center md:text-left w-full" style={{ width: '100%', maxWidth: '100%' }}>
-              <span>© Clario 2025 | {selectedLanguage.language}</span>
-              <p className="text-xs text-gray-600">
-                By connecting your account, you agree to Clario's
-                <Link to="/terms" className="mx-1 underline hover:text-gray-900">Terms of Service</Link>
-                and acknowledge our
-                <Link to="/privacy" className="mx-1 underline hover:text-gray-900">Privacy Policy</Link>.
-              </p>
+          <footer
+            id="core-footer"
+            className="relative overflow-hidden bg-[#040b18] text-white w-full"
+            style={{ width: '100%', maxWidth: '100%' }}
+          >
+            <div
+              className="absolute inset-0 opacity-90"
+              style={{
+                backgroundImage:
+                  'radial-gradient(circle at top, rgba(16,185,129,0.18), transparent 50%), radial-gradient(circle at bottom right, rgba(59,130,246,0.15), transparent 45%)',
+              }}
+              aria-hidden="true"
+            />
+            <div className="relative z-10 container mx-auto px-6 py-16 space-y-12">
+              <div className="grid gap-4 md:grid-cols-3">
+                {FOOTER_HIGHLIGHTS.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <div
+                      key={item.title}
+                      className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_25px_60px_rgba(2,6,23,0.45)]"
+                    >
+                      <Icon className="h-6 w-6 text-emerald-300" aria-hidden="true" />
+                      <h3 className="mt-4 text-base font-semibold text-white">{item.title}</h3>
+                      <p className="mt-1 text-sm text-white/70">{item.description}</p>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between">
+                <div className="max-w-sm space-y-4">
+                  <Link to="/" className="inline-flex items-center text-2xl font-black tracking-widest text-white">
+                    CLARIO
+                  </Link>
+                  <p className="text-sm text-white/75">
+                    Autonomous reimbursements crafted for modern Amazon operators. Secure data flows, transparent claims,
+                    and a finance-ready audit trail—no agency overhead.
+                  </p>
+                  <div className="flex items-center gap-3">
+                    {SOCIAL_LINKS.map((social) => {
+                      const Icon = social.icon;
+                      return (
+                        <a
+                          key={social.label}
+                          href={social.href}
+                          target="_blank"
+                          rel="noreferrer"
+                          aria-label={social.label}
+                          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white/80 transition hover:border-white hover:text-white"
+                        >
+                          <Icon className="h-4 w-4" />
+                        </a>
+                      );
+                    })}
+                  </div>
+                </div>
+                <div className="grid flex-1 grid-cols-2 gap-8 min-[500px]:grid-cols-3">
+                  {FOOTER_NAV_SECTIONS.map((section) => (
+                    <div key={section.title}>
+                      <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/50">
+                        {section.title}
+                      </p>
+                      <ul className="mt-4 space-y-2 text-sm">
+                        {section.links.map((link) =>
+                          link.isExternal ? (
+                            <li key={link.label}>
+                              <a
+                                href={link.href}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-white/80 transition hover:text-white"
+                              >
+                                {link.label}
+                              </a>
+                            </li>
+                          ) : (
+                            <li key={link.label}>
+                              <Link to={link.href} className="text-white/80 transition hover:text-white">
+                                {link.label}
+                              </Link>
+                            </li>
+                          ),
+                        )}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+                <div className="max-w-sm rounded-3xl border border-white/15 bg-white/5 p-6">
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-100">
+                    Launch Updates
+                  </p>
+                  <p className="mt-2 text-sm text-white/80">
+                    Weekly drop of release notes, reimbursement tactics, and SP-API changes—tailored for{' '}
+                    {selectedLanguage.language} sellers.
+                  </p>
+                  <form onSubmit={handleFooterSubmit} className="mt-4 space-y-3">
+                    <Input
+                      type="email"
+                      value={footerEmail}
+                      onChange={(event) => setFooterEmail(event.target.value)}
+                      required
+                      placeholder="name@brand.com"
+                      aria-label="Email for product updates"
+                      className="border-white/20 bg-black/30 text-white placeholder:text-white/50 focus-visible:ring-emerald-400"
+                    />
+                    <Button
+                      type="submit"
+                      className="w-full rounded-full bg-emerald-400 text-gray-900 hover:bg-emerald-300"
+                    >
+                      Join the drop
+                    </Button>
+                    <p className="text-[11px] text-white/60">
+                      Zero spam. We only send product releases and confirmed recovery wins.
+                    </p>
+                  </form>
+                </div>
+              </div>
+              <div className="flex flex-col gap-4 border-t border-white/10 pt-6 text-xs text-white/60 md:flex-row md:items-center md:justify-between">
+                <p>
+                  © {currentYear} Clario. Built for operators who need Amazon reimbursements and visibility in real time.
+                </p>
+                <div className="flex flex-wrap items-center gap-4">
+                  <Link to="/privacy" className="transition hover:text-white">
+                    Privacy
+                  </Link>
+                  <Link to="/terms" className="transition hover:text-white">
+                    Terms
+                  </Link>
+                  <Link to="/docs" className="transition hover:text-white">
+                    Documentation
+                  </Link>
+                  <span className="inline-flex items-center gap-2 text-white/70">
+                    <Mail className="h-3.5 w-3.5" />
+                    support@clario.ai
+                  </span>
+                  <span className="text-white/70">Serving sellers in {selectedLanguage.language}</span>
+                </div>
+              </div>
             </div>
           </footer>
         </div>
