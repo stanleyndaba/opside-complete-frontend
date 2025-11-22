@@ -15,6 +15,29 @@ const SOCIAL_LINKS: { label: string; href: string; icon: IconComponent }[] = [
   { label: 'Twitter', href: 'https://x.com/ClarioAI', icon: Twitter },
 ];
 
+const AGENT_HIGHLIGHTS = [
+  {
+    title: 'Discovery (Agent 3)',
+    description: 'Audits ledgers in milliseconds to find hidden claims humans miss.',
+    accentClass: 'bg-gray-900',
+  },
+  {
+    title: 'Auto-Evidence (Agent 5)',
+    description: 'Securely hunts your email & drive for invoices. Zero manual uploads.',
+    accentClass: 'bg-gray-800',
+  },
+  {
+    title: '24/7 Recoveries (Agent 8)',
+    description: 'Monitors every claim around the clock. If Amazon stalls, we flag it.',
+    accentClass: 'bg-gray-700',
+  },
+  {
+    title: 'Finance (Agent 9)',
+    description: 'Confirms the actual deposit hit your bank before we count it.',
+    accentClass: 'bg-gray-600',
+  },
+];
+
 const Index = () => {
   const [showMoreFAQs, setShowMoreFAQs] = useState(false);
 
@@ -40,6 +63,7 @@ const Index = () => {
   );
   const [langQuery, setLangQuery] = useState<string>('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [agentHighlightIndex, setAgentHighlightIndex] = useState(0);
   const benefitWords = useMemo(
     () => [
       'Recover Faster',
@@ -61,6 +85,14 @@ const Index = () => {
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    const interval = window.setInterval(() => {
+      setAgentHighlightIndex((prev) => (prev + 1) % AGENT_HIGHLIGHTS.length);
+    }, 3200);
+    return () => window.clearInterval(interval);
   }, []);
 
   // Prevent body scroll when mobile menu is open to prevent image movement
@@ -430,34 +462,38 @@ const Index = () => {
                   Bypass the manual grind. From deep-dive audits to final deposit, our 11-agent engine autonomously identifies, files, and tracks every claim with <span className="font-semibold text-emerald-500">{precisionCount.toFixed(2)}%</span> precision.
                 </p>
               </div>
-              <div className="relative w-full max-w-sm space-y-5 rounded-3xl border border-gray-200 bg-gray-50 p-6 text-sm text-gray-700 justify-self-end">
+              <div className="relative w-full max-w-sm space-y-5 rounded-3xl border border-gray-200 bg-gray-50 p-6 text-sm text-gray-700 justify-self-end overflow-hidden">
                 <div className="text-xs font-semibold uppercase tracking-[0.3em] text-gray-500">Why 11 Clario Agents Beat 1 Human</div>
-                <ul className="space-y-3">
-                  <li className="flex items-start gap-3">
-                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-900 text-gray-50 shrink-0 mt-0.5">
-                      <Check className="h-4 w-4" />
-                    </span>
-                    <span><strong>Discovery (Agent 3)</strong> Audits ledgers in milliseconds to find hidden claims humans miss.</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-800 text-gray-50 shrink-0 mt-0.5">
-                      <Check className="h-4 w-4" />
-                    </span>
-                    <span><strong>Auto-Evidence (Agent 5)</strong> Securely hunts your email & drive for invoices. Zero manual uploads.</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-700 text-gray-50 shrink-0 mt-0.5">
-                      <Check className="h-4 w-4" />
-                    </span>
-                    <span><strong>24/7 Recoveries (Agent 8)</strong> Monitors every claim round-the-clock. If Amazon stalls, we flag it.</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-600 text-gray-50 shrink-0 mt-0.5">
-                      <Check className="h-4 w-4" />
-                    </span>
-                    <span><strong>Finance (Agent 9)</strong> Confirms the actual deposit hit your bank before we count it.</span>
-                  </li>
-                </ul>
+                <div className="relative h-44 overflow-hidden rounded-2xl border border-gray-200 bg-white/80 p-5">
+                  {AGENT_HIGHLIGHTS.map((item, index) => (
+                    <div
+                      key={item.title}
+                      className={`absolute inset-0 flex flex-col gap-3 transition-all duration-500 ${
+                        agentHighlightIndex === index ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
+                      }`}
+                      aria-hidden={agentHighlightIndex !== index}
+                    >
+                      <span className={`inline-flex h-10 w-10 items-center justify-center rounded-full text-white ${item.accentClass}`}>
+                        <Check className="h-5 w-5" />
+                      </span>
+                      <div>
+                        <p className="text-base font-semibold text-gray-900">{item.title}</p>
+                        <p className="text-sm text-gray-600">{item.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex items-center justify-center gap-2">
+                  {AGENT_HIGHLIGHTS.map((_, index) => (
+                    <span
+                      key={index}
+                      className={`h-2 w-2 rounded-full transition-colors ${
+                        agentHighlightIndex === index ? 'bg-emerald-500' : 'bg-gray-300'
+                      }`}
+                      aria-label={`Highlight ${index + 1}`}
+                    />
+                  ))}
+                </div>
                 <p className="text-sm text-gray-600">Clario is your Autonomous AI Agent, not your boss. You maintain 100% command over your data, account and recovery processes!</p>
               </div>
             </div>
