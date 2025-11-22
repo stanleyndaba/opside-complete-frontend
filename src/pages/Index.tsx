@@ -202,7 +202,7 @@ const Index = () => {
               <div className="flex items-center gap-3">
               <Link to="/" className="inline-flex items-center px-3 py-1.5 rounded-[16px] transition-colors hover:bg-gray-100">
                       <span
-                        className="font-black tracking-tight bg-gradient-to-r from-[#1f4037] to-[#99f2c8] bg-clip-text text-transparent"
+                        className="font-black text-[#b3b3b3] tracking-tight"
                       >
                         CLARIO
                       </span>
@@ -420,7 +420,10 @@ const Index = () => {
                 </div>
               </div>
             <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-white">
-              FBA Reimbursements on Autopilot
+              FBA Reimbursements on{" "}
+              <span className="bg-gradient-to-r from-[#1f4037] to-[#99f2c8] bg-clip-text text-transparent">
+                Autopilot
+              </span>
             </h1>
               <p className="font-body text-sm md:text-base text-white font-normal max-w-3xl mx-auto">
                 Think AI Agents for Finance. Clario automates the entire reimbursement process, recovering lost revenue from Amazon FBA errors in minutes—not months.
@@ -456,7 +459,7 @@ const Index = () => {
             <div className="relative grid gap-12 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
               <div className="relative space-y-8">
                 <h2 className="text-4xl md:text-6xl font-bold tracking-tight" style={{ color: '#a6a6a6' }}>
-                  Recover lost revenue on complete <span className="bg-gradient-to-r from-[#1f4037] to-[#99f2c8] bg-clip-text text-transparent">autopilot.</span>
+                  Recover lost revenue on complete autopilot.
                 </h2>
                 <p className="text-base md:text-lg text-black max-w-3xl leading-relaxed">
                   Bypass the manual grind. From deep-dive audits to final deposit, our 11-agent engine autonomously identifies, files, and tracks every claim with <span className="font-semibold text-emerald-500">{precisionCount.toFixed(2)}%</span> precision.
