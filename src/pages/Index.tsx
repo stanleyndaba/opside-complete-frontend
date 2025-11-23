@@ -483,21 +483,21 @@ const Index = () => {
               </div>
               <div className="mt-5 flex flex-wrap items-center justify-center gap-8 text-gray-700">
                 <div className="text-center">
-                  <div className="text-[35px] font-extralight text-gray-900" data-count="99.2">
+                  <div className="text-[45px] font-extralight text-gray-900" data-count="99.2">
                     <span className="counting" data-target="99.2">99.2%</span>
                   </div>
                   <p className="text-xs text-gray-500 font-semibold">accuracy</p>
                 </div>
-                <span className="text-black font-semibold text-3xl leading-none mx-2">|</span>
+                <span className="h-10 w-px bg-black/80 rounded-full mx-2" aria-hidden="true" />
                 <div className="text-center">
-                  <div className="text-[35px] font-extralight text-gray-900" data-count="24">
+                  <div className="text-[45px] font-extralight text-gray-900" data-count="24">
                     <span className="counting" data-target="24">24/7</span>
                   </div>
                   <p className="text-xs text-gray-500 font-semibold">monitoring</p>
                 </div>
-                <span className="text-black font-semibold text-3xl leading-none mx-2">|</span>
+                <span className="h-10 w-px bg-black/80 rounded-full mx-2" aria-hidden="true" />
                 <div className="text-center">
-                  <div className="text-[35px] font-extralight text-gray-900" data-count="80">
+                  <div className="text-[45px] font-extralight text-gray-900" data-count="80">
                     <span className="counting" data-target="80">80%</span>
                   </div>
                   <p className="text-xs text-gray-500 font-semibold">reduced manual work</p>
