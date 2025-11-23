@@ -515,7 +515,7 @@ const Index = () => {
                   <span className="text-gray-700 text-sm md:text-base">Cancel anytime</span>
                 </div>
               </div>
-              <div className="mt-5 flex flex-wrap items-center justify-center gap-8 text-gray-700">
+              <div className="mt-5 flex flex-col items-center justify-center gap-4 text-gray-700 md:flex-row md:gap-8">
                 {HERO_METRICS.map((metric, index) => {
                   const currentValue = metricValues[index];
                   const displayValue =
@@ -524,6 +524,11 @@ const Index = () => {
                       : `${currentValue.toFixed(metric.decimals)}${metric.suffix}`;
                   return (
                     <React.Fragment key={metric.label}>
+                      {index > 0 && (
+                        <span className="text-black font-semibold text-base md:hidden" aria-hidden="true">
+                          |
+                        </span>
+                      )}
                       <div className="text-center">
                         <div className="text-[50px] font-extralight text-gray-900">
                           {displayValue}
@@ -531,7 +536,7 @@ const Index = () => {
                         <p className="text-xs text-gray-500 font-semibold">{metric.label}</p>
                       </div>
                       {index < HERO_METRICS.length - 1 && (
-                        <span className="h-10 w-px bg-black/80 rounded-full mx-2" aria-hidden="true" />
+                        <span className="hidden md:inline-flex h-10 w-px bg-black/80 rounded-full mx-2" aria-hidden="true" />
                       )}
                     </React.Fragment>
                   );
