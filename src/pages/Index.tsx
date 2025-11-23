@@ -248,7 +248,14 @@ const Index = () => {
               </span>
             </div>
             <div className="flex flex-col items-center gap-2">
-              <Unlock className="h-6 w-6 text-gray-400" />
+              <div className="relative flex items-center justify-center">
+                <Unlock className="h-8 w-8 text-emerald-500" strokeWidth={2} style={{ fill: 'currentColor' }} />
+                <div className="absolute -top-3 flex gap-1">
+                  <span className="block h-3 w-0.5 rounded-full bg-emerald-400 origin-bottom rotate-[-20deg]" aria-hidden="true" />
+                  <span className="block h-4 w-0.5 rounded-full bg-emerald-500" aria-hidden="true" />
+                  <span className="block h-3 w-0.5 rounded-full bg-emerald-400 origin-bottom rotate-[20deg]" aria-hidden="true" />
+                </div>
+              </div>
               <DialogTitle className="text-base font-semibold text-gray-900 text-center sm:text-lg">
                 Authorize Read-Only Access
               </DialogTitle>
