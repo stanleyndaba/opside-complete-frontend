@@ -481,6 +481,14 @@ const Index = () => {
                   <span className="text-gray-700 text-sm md:text-base">Cancel anytime</span>
                 </div>
               </div>
+              <div className="mt-3 text-center text-[13px] md:text-sm text-gray-600 font-medium tracking-tight">
+                <span className="uppercase text-gray-500 mr-2">Metrics</span>
+                <span className="text-gray-900 font-semibold">99.2%</span> <span className="text-gray-500">(accuracy)</span>
+                <span className="text-gray-400 mx-2">|</span>
+                <span className="text-gray-900 font-semibold">24/7</span> <span className="text-gray-500">(monitoring)</span>
+                <span className="text-gray-400 mx-2">|</span>
+                <span className="text-gray-900 font-semibold">80%</span> <span className="text-gray-500">(reduced manual review)</span>
+              </div>
               {/* Email capture moved to bottom-left above the legal footer */}
             </div>
           </div>
