@@ -488,12 +488,14 @@ const Index = () => {
                   </div>
                   <p className="text-xs uppercase tracking-[0.35em] text-gray-500">Accuracy</p>
                 </div>
+                <span className="text-black font-black text-lg">|</span>
                 <div className="text-center">
                   <div className="text-[35px] font-extralight text-gray-900" data-count="24">
                     <span className="counting" data-target="24">24/7</span>
                   </div>
                   <p className="text-xs uppercase tracking-[0.35em] text-gray-500">Monitoring</p>
                 </div>
+                <span className="text-black font-black text-lg">|</span>
                 <div className="text-center">
                   <div className="text-[35px] font-extralight text-gray-900" data-count="80">
                     <span className="counting" data-target="80">80%</span>
