@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ChevronDown, Check, Gift, Globe } from 'lucide-react';
+import { ArrowRight, ChevronDown, Check, Gift, Globe, Unlock } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AmazonConnect } from '@/components/AmazonConnect';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -247,9 +247,12 @@ const Index = () => {
                 CLARIO
               </span>
             </div>
-            <DialogTitle className="text-base font-semibold text-gray-900 text-center sm:text-lg">
-              Authorize Read-Only Access
-            </DialogTitle>
+            <div className="flex flex-col items-center gap-2">
+              <Unlock className="h-6 w-6 text-gray-400" />
+              <DialogTitle className="text-base font-semibold text-gray-900 text-center sm:text-lg">
+                Authorize Read-Only Access
+              </DialogTitle>
+            </div>
             <DialogDescription className="text-sm text-gray-600">
               Clario requires permission to scan your historical ledgers. We cannot change prices or delete inventory.
             </DialogDescription>
@@ -503,15 +506,11 @@ const Index = () => {
                 </div>
               <div className="mt-4 flex flex-wrap items-center justify-center gap-4">
                 <div className="inline-flex items-center gap-2">
-                  <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-emerald-500">
-                    <Check className="h-3 w-3 text-white" />
-                  </span>
+                  <span className="inline-flex h-2 w-2 rounded-full bg-gray-400" aria-hidden="true" />
                   <span className="text-gray-700 text-sm md:text-base">No credit cards</span>
                 </div>
                 <div className="inline-flex items-center gap-2">
-                  <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-emerald-500">
-                    <Check className="h-3 w-3 text-white" />
-                  </span>
+                  <span className="inline-flex h-2 w-2 rounded-full bg-gray-400" aria-hidden="true" />
                   <span className="text-gray-700 text-sm md:text-base">Cancel anytime</span>
                 </div>
               </div>
