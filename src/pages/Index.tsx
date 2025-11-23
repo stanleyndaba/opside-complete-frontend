@@ -486,21 +486,21 @@ const Index = () => {
                   <div className="text-[35px] font-extralight text-gray-900" data-count="99.2">
                     <span className="counting" data-target="99.2">99.2%</span>
                   </div>
-                  <p className="text-xs uppercase tracking-[0.35em] text-gray-500">Accuracy</p>
+                  <p className="text-xs text-gray-500 font-semibold">accuracy</p>
                 </div>
-                <span className="text-black font-black text-lg">|</span>
+                <span className="text-black font-semibold text-3xl leading-none mx-2">|</span>
                 <div className="text-center">
                   <div className="text-[35px] font-extralight text-gray-900" data-count="24">
                     <span className="counting" data-target="24">24/7</span>
                   </div>
-                  <p className="text-xs uppercase tracking-[0.35em] text-gray-500">Monitoring</p>
+                  <p className="text-xs text-gray-500 font-semibold">monitoring</p>
                 </div>
-                <span className="text-black font-black text-lg">|</span>
+                <span className="text-black font-semibold text-3xl leading-none mx-2">|</span>
                 <div className="text-center">
                   <div className="text-[35px] font-extralight text-gray-900" data-count="80">
                     <span className="counting" data-target="80">80%</span>
                   </div>
-                  <p className="text-xs uppercase tracking-[0.35em] text-gray-500">Reduced manual review</p>
+                  <p className="text-xs text-gray-500 font-semibold">reduced manual work</p>
                 </div>
               </div>
               {/* Email capture moved to bottom-left above the legal footer */}
