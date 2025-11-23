@@ -302,24 +302,22 @@ export default function SyncStatus() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               {getStatusIcon()}
-              Amazon Sync Status
+              Ledgers Log Sync
             </CardTitle>
                   <CardDescription className="text-gray-500">
-              Current synchronization status for your Amazon account
+              Current synchronization for heavy data
             </CardDescription>
           </CardHeader>
           <CardContent>
             {!lastSync ? (
               <div className="space-y-4">
                 <div className="text-center py-8">
-                  <AlertCircle className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-                        <h3 className="text-lg font-semibold mb-2 text-gray-900">No Sync History</h3>
+                        <h3 className="text-lg font-semibold mb-2 text-gray-900">Synchronize your data</h3>
                         <p className="text-sm text-gray-600 mb-4">
                     No sync history yet. Start a sync to see status.
                   </p>
                   <Button onClick={() => navigate('/sync')}>
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                    Start Sync
+                    Sync now
                   </Button>
                 </div>
               </div>
