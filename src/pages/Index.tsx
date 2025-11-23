@@ -532,7 +532,7 @@ const Index = () => {
           <div className="container mx-auto px-6 pt-24 md:pt-32 pb-24 md:pb-28">
             <div className="relative grid gap-12 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
               <div className="relative space-y-8">
-                <h2 className="text-4xl md:text-6xl font-bold tracking-tight" style={{ color: '#a6a6a6' }}>
+                <h2 className="text-5xl md:text-6xl font-bold tracking-tight" style={{ color: '#a6a6a6' }}>
                   Recover lost revenue on complete{' '}
                   <span className="bg-gradient-to-r from-[#1f4037] to-[#99f2c8] bg-clip-text text-transparent">
                     autopilot.
