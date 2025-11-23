@@ -30,7 +30,7 @@ const SOCIAL_LINKS = [
   ) }
 ];
 
-export const BrandFooter: React.FC<Props> = ({ selectedLanguageLabel }) => {
+const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
   return (
     <div className="relative z-10 w-full bg-white">
       <section className="relative bg-white py-24 md:py-32 w-full overflow-x-hidden" style={{ width: '100%', maxWidth: '100%' }}>
@@ -104,5 +104,6 @@ export const BrandFooter: React.FC<Props> = ({ selectedLanguageLabel }) => {
   );
 };
 
+export const BrandFooter = React.memo(FooterComponent);
 export default BrandFooter;
 

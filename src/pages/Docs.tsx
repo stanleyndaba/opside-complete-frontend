@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,25 +7,17 @@ import { ChevronDown, Gift } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { api } from '@/lib/api';
 import { BrandFooter } from '@/components/layout/BrandFooter';
-
-type LanguageOption = {
-  code: string;
-  country: string;
-  language: string;
-  flag: string;
-};
-
-const LANGUAGE_OPTIONS: LanguageOption[] = [
-  { code: 'en', country: 'Global', language: 'English', flag: '🇺🇸' },
-  { code: 'es', country: 'Global', language: 'Spanish', flag: '🇪🇸' },
-  { code: 'zh', country: 'Global', language: 'Chinese (Mandarin)', flag: '🇨🇳' },
-  { code: 'fr', country: 'Global', language: 'French', flag: '🇫🇷' },
-  { code: 'de', country: 'Global', language: 'German', flag: '🇩🇪' },
-  { code: 'ja', country: 'Global', language: 'Japanese', flag: '🇯🇵' },
-  { code: 'ar', country: 'Global', language: 'Arabic', flag: '🇸🇦' },
-];
+import type { LanguageOption } from '@/config/site';
+import { LANGUAGE_OPTIONS, SITE_META } from '@/config/site';
+import { usePageMeta } from '@/hooks/usePageMeta';
 
 const Docs = () => {
+  usePageMeta({
+    title: 'Clario Acceptable Use Policy',
+    description: 'Understand the acceptable use standards for Clario’s autonomous reimbursement platform.',
+    url: `${SITE_META.url}/docs`,
+    image: SITE_META.image
+  });
   const [selectedLanguageCode, setSelectedLanguageCode] = useState<string>(() =>
     typeof window !== 'undefined' ? localStorage.getItem('clario.langPreference') || 'en' : 'en'
   );

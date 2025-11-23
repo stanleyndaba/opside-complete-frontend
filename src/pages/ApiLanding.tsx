@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
@@ -6,24 +6,17 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { ChevronDown, Link2, ScrollText } from 'lucide-react';
 import { api } from '@/lib/api';
 import { BrandFooter } from '@/components/layout/BrandFooter';
+import type { LanguageOption } from '@/config/site';
+import { LANGUAGE_OPTIONS, SITE_META } from '@/config/site';
+import { usePageMeta } from '@/hooks/usePageMeta';
 
 const ApiLanding = () => {
-  // Language preference (match platform + landing behavior)
-  type LanguageOption = {
-    code: string;
-    country: string;
-    language: string;
-    flag: string;
-  };
-  const LANGUAGE_OPTIONS: LanguageOption[] = [
-    { code: 'en', country: 'Global', language: 'English', flag: '🇺🇸' },
-    { code: 'es', country: 'Global', language: 'Spanish', flag: '🇪🇸' },
-    { code: 'zh', country: 'Global', language: 'Chinese (Mandarin)', flag: '🇨🇳' },
-    { code: 'fr', country: 'Global', language: 'French', flag: '🇫🇷' },
-    { code: 'de', country: 'Global', language: 'German', flag: '🇩🇪' },
-    { code: 'ja', country: 'Global', language: 'Japanese', flag: '🇯🇵' },
-    { code: 'ar', country: 'Global', language: 'Arabic', flag: '🇸🇦' },
-  ];
+  usePageMeta({
+    title: 'Clario API Access',
+    description: 'Explore Clario’s developer-ready endpoints and SP-API integrations.',
+    url: `${SITE_META.url}/developer-api`,
+    image: SITE_META.image
+  });
   const [selectedLanguageCode, setSelectedLanguageCode] = useState<string>(() =>
     typeof window !== 'undefined' ? localStorage.getItem('clario.langPreference') || 'en' : 'en'
   );

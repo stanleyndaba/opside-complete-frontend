@@ -9,30 +9,9 @@ import { AmazonConnect } from '@/components/AmazonConnect';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { BrandFooter } from '@/components/layout/BrandFooter';
-
-type IconComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
-
-const LinkedinColorIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
-    <rect width="24" height="24" rx="4" fill="#0A66C2" />
-    <path
-      d="M9.5 9.5h2.4v1.4c.34-.68 1.22-1.47 2.64-1.47 2.82 0 3.46 1.53 3.46 3.86v4.7h-2.5v-4.16c0-1.24-.02-2.83-1.73-2.83-1.73 0-1.99 1.35-1.99 2.74v4.25H9.5V9.5Z"
-      fill="white"
-    />
-    <path d="M6.43 8.06c.83 0 1.5-.67 1.5-1.49a1.5 1.5 0 0 0-3 0c0 .82.67 1.5 1.5 1.5Z" fill="white" />
-    <path d="M5.2 9.5h2.5v8.5H5.2V9.5Z" fill="white" />
-  </svg>
-);
-
-const XColorIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
-    <rect width="24" height="24" rx="4" fill="black" />
-    <path
-      d="M14.79 6.75h2.31l-5.06 5.62L17.5 17.5h-2.83l-3.18-3.8-3.64 3.8H5.54l5.39-5.64L6.5 6.75h2.92l2.9 3.48 3.47-3.48Z"
-      fill="white"
-    />
-  </svg>
-);
+import type { LanguageOption } from '@/config/site';
+import { AGENT_HIGHLIGHTS, HERO_METRICS, LANGUAGE_OPTIONS, SITE_META } from '@/config/site';
+import { usePageMeta } from '@/hooks/usePageMeta';
 
 const PadlockIcon: React.FC = () => (
   <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
@@ -52,54 +31,9 @@ const PadlockIcon: React.FC = () => (
   </svg>
 );
 
-const HERO_METRICS = [
-  { label: 'accuracy', target: 99.2, suffix: '%', decimals: 1 },
-  { label: 'monitoring', target: 24, suffix: '/7', decimals: 0 },
-  { label: 'reduced manual work', target: 80, suffix: '%', decimals: 0 }
-];
-
-const AGENT_HIGHLIGHTS = [
-  {
-    title: 'Discovery (Agent 3)',
-    description: 'Audits ledgers in milliseconds to find hidden claims humans miss.',
-    accentClass: 'bg-gray-900',
-  },
-  {
-    title: 'Auto-Evidence (Agent 5)',
-    description: 'Securely hunts your email & drive for invoices. Zero manual uploads.',
-    accentClass: 'bg-gray-800',
-  },
-  {
-    title: '24/7 Recoveries (Agent 8)',
-    description: 'Monitors every claim around the clock. If Amazon stalls, we flag it.',
-    accentClass: 'bg-gray-700',
-  },
-  {
-    title: 'Finance (Agent 9)',
-    description: 'Confirms the actual deposit hit your bank before we count it.',
-    accentClass: 'bg-gray-600',
-  },
-];
-
 const Index = () => {
+  usePageMeta(SITE_META);
   const [showMoreFAQs, setShowMoreFAQs] = useState(false);
-
-  type LanguageOption = {
-    code: string;
-    country: string;
-    language: string;
-    flag: string;
-  };
-
-  const LANGUAGE_OPTIONS: LanguageOption[] = [
-    { code: 'en', country: 'Global', language: 'English', flag: '🇺🇸' },
-    { code: 'es', country: 'Global', language: 'Spanish', flag: '🇪🇸' },
-    { code: 'zh', country: 'Global', language: 'Chinese (Mandarin)', flag: '🇨🇳' },
-    { code: 'fr', country: 'Global', language: 'French', flag: '🇫🇷' },
-    { code: 'de', country: 'Global', language: 'German', flag: '🇩🇪' },
-    { code: 'ja', country: 'Global', language: 'Japanese', flag: '🇯🇵' },
-    { code: 'ar', country: 'Global', language: 'Arabic', flag: '🇸🇦' },
-  ];
 
   const [selectedLanguageCode, setSelectedLanguageCode] = useState<string>(() =>
     typeof window !== 'undefined' ? localStorage.getItem('clario.langPreference') || 'en' : 'en'
@@ -484,6 +418,10 @@ const Index = () => {
                         <img
                           src="/gmailicon.png"
                           alt="Gmail"
+                          width={28}
+                          height={28}
+                          loading="lazy"
+                          decoding="async"
                           className="h-5 w-5 md:h-7 md:w-7 object-contain"
                         />
                       </span>
@@ -491,6 +429,10 @@ const Index = () => {
                         <img
                           src="/outlookicon.webp"
                           alt="Outlook"
+                          width={28}
+                          height={28}
+                          loading="lazy"
+                          decoding="async"
                           className="h-5 w-5 md:h-7 md:w-7 object-contain"
                         />
                       </span>
@@ -499,6 +441,10 @@ const Index = () => {
                         <img
                           src="/gd.png"
                           alt="Google Drive"
+                          width={28}
+                          height={28}
+                          loading="lazy"
+                          decoding="async"
                           className="h-5 w-5 md:h-7 md:w-7 object-contain"
                         />
                       </span>
