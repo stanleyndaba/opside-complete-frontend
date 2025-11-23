@@ -7,6 +7,7 @@ import { ChevronDown, Check, Gift, Globe } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AmazonConnect } from '@/components/AmazonConnect';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 type IconComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
 
@@ -97,6 +98,7 @@ const Index = () => {
   );
   const [benefitIndex, setBenefitIndex] = useState(0);
   const [precisionCount, setPrecisionCount] = useState(0);
+  const [showPermissionNotice, setShowPermissionNotice] = useState(true);
   useEffect(() => {
     if (typeof document === 'undefined') return;
     const previousBodyBg = document.body.style.backgroundColor;
@@ -203,6 +205,21 @@ const Index = () => {
       className="min-h-screen flex flex-col text-gray-900 relative overflow-x-hidden w-full"
       style={{ width: '100%', maxWidth: '100%', overflowX: 'hidden' }}
     >
+      <Dialog open={showPermissionNotice} onOpenChange={setShowPermissionNotice}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-semibold text-gray-900">Permissions</DialogTitle>
+            <DialogDescription className="text-sm text-gray-600">
+              Read-only access to your ledger and inventory. We cannot change prices or delete listings—only analyze activity.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button className="w-full" onClick={() => setShowPermissionNotice(false)}>
+              Proceed
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       {/* Fixed navbar - stays at top while content scrolls underneath */}
       <header className="fixed top-0 left-0 right-0 z-40 border-transparent bg-transparent" style={{ background: 'transparent' }}>
         <div className="container mx-auto px-6 py-5">
