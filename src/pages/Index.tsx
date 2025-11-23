@@ -515,7 +515,7 @@ const Index = () => {
                   <span className="text-gray-700 text-sm md:text-base">Cancel anytime</span>
                 </div>
               </div>
-              <div className="mt-5 flex flex-col items-start justify-center gap-4 text-left text-gray-700 md:flex-row md:items-center md:gap-8 md:text-center">
+              <div className="mt-5 flex flex-col items-start justify-center gap-6 text-left text-gray-700 md:flex-row md:items-center md:gap-8 md:text-center">
                 {HERO_METRICS.map((metric, index) => {
                   const currentValue = metricValues[index];
                   const displayValue =
@@ -524,18 +524,20 @@ const Index = () => {
                       : `${currentValue.toFixed(metric.decimals)}${metric.suffix}`;
                   return (
                     <React.Fragment key={metric.label}>
-                      <div className="w-full">
-                        <div className="text-[50px] font-extralight text-gray-900">
-                          {displayValue}
+                      <div className="w-full flex flex-col gap-1">
+                        <p className="text-xs text-gray-500 font-semibold uppercase tracking-[0.3em]">{metric.label}</p>
+                        <div className="flex items-center gap-3 md:flex-col md:gap-2 md:items-center md:text-center">
+                          <div className="text-[50px] font-extralight text-gray-900">
+                            {displayValue}
+                          </div>
+                          {index < HERO_METRICS.length - 1 && (
+                            <span
+                              className="h-10 w-px bg-black/80 rounded-full self-stretch md:self-center md:my-0 md:mx-2"
+                              aria-hidden="true"
+                            />
+                          )}
                         </div>
-                        <p className="text-xs text-gray-500 font-semibold">{metric.label}</p>
                       </div>
-                      {index < HERO_METRICS.length - 1 && (
-                        <span
-                          className="h-10 w-px bg-black/80 rounded-full my-2 md:my-0 md:mx-2 self-start md:self-auto"
-                          aria-hidden="true"
-                        />
-                      )}
                     </React.Fragment>
                   );
                 })}
