@@ -715,7 +715,11 @@ const Index = () => {
                       Try Clario
                     </span>
                     <h2 className="text-4xl font-black tracking-tight text-slate-900 md:text-5xl">
-                      Run reimbursements with confident control.
+                      Run reimbursements with{' '}
+                      <span className="bg-gradient-to-r from-[#1f4037] to-[#99f2c8] bg-clip-text text-transparent">
+                        confident control
+                      </span>
+                      .
                     </h2>
                     <p className="text-base text-slate-600 md:text-lg">
                       Switch on automated Amazon claims, surface evidence instantly, and keep your team ahead of every discrepancy.
