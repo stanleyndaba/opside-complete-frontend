@@ -38,6 +38,12 @@ const SOCIAL_LINKS: { label: string; href: string; icon: IconComponent }[] = [
   { label: 'X (Formerly Twitter)', href: 'https://x.com/ClarioAI', icon: XColorIcon },
 ];
 
+const HERO_METRICS = [
+  { label: 'accuracy', target: 99.2, suffix: '%', decimals: 1 },
+  { label: 'monitoring', target: 24, suffix: '/7', decimals: 0 },
+  { label: 'reduced manual work', target: 80, suffix: '%', decimals: 0 }
+];
+
 const AGENT_HIGHLIGHTS = [
   {
     title: 'Discovery (Agent 3)',
@@ -99,6 +105,8 @@ const Index = () => {
   const [benefitIndex, setBenefitIndex] = useState(0);
   const [precisionCount, setPrecisionCount] = useState(0);
   const [showPermissionNotice, setShowPermissionNotice] = useState(true);
+  const [metricValues, setMetricValues] = useState<number[]>(() => HERO_METRICS.map(() => 0));
+  const metricIntervals = React.useRef<number[]>([]);
   useEffect(() => {
     if (typeof document === 'undefined') return;
     const previousBodyBg = document.body.style.backgroundColor;
@@ -197,6 +205,32 @@ const Index = () => {
       o.code.toLowerCase().includes(q)
     );
   }, [langQuery]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    metricIntervals.current.forEach(id => window.clearInterval(id));
+    setMetricValues(HERO_METRICS.map(() => 0));
+    metricIntervals.current = HERO_METRICS.map((metric, index) => {
+      const steps = metric.label === 'monitoring' ? metric.target : 100;
+      const increment = metric.target / Math.max(1, steps);
+      const intervalId = window.setInterval(() => {
+        setMetricValues(prev => {
+          const next = [...prev];
+          const nextValue = Math.min(next[index] + increment, metric.target);
+          next[index] = nextValue;
+          if (nextValue >= metric.target) {
+            window.clearInterval(metricIntervals.current[index]);
+          }
+          return next;
+        });
+      }, 1);
+      return intervalId;
+    });
+
+    return () => {
+      metricIntervals.current.forEach(id => window.clearInterval(id));
+    };
+  }, []);
 
   const currentYear = new Date().getFullYear();
 
@@ -482,26 +516,26 @@ const Index = () => {
                 </div>
               </div>
               <div className="mt-5 flex flex-wrap items-center justify-center gap-8 text-gray-700">
-                <div className="text-center">
-                  <div className="text-[45px] font-extralight text-gray-900" data-count="99.2">
-                    <span className="counting" data-target="99.2">99.2%</span>
-                  </div>
-                  <p className="text-xs text-gray-500 font-semibold">accuracy</p>
-                </div>
-                <span className="h-10 w-px bg-black/80 rounded-full mx-2" aria-hidden="true" />
-                <div className="text-center">
-                  <div className="text-[45px] font-extralight text-gray-900" data-count="24">
-                    <span className="counting" data-target="24">24/7</span>
-                  </div>
-                  <p className="text-xs text-gray-500 font-semibold">monitoring</p>
-                </div>
-                <span className="h-10 w-px bg-black/80 rounded-full mx-2" aria-hidden="true" />
-                <div className="text-center">
-                  <div className="text-[45px] font-extralight text-gray-900" data-count="80">
-                    <span className="counting" data-target="80">80%</span>
-                  </div>
-                  <p className="text-xs text-gray-500 font-semibold">reduced manual work</p>
-                </div>
+                {HERO_METRICS.map((metric, index) => {
+                  const currentValue = metricValues[index];
+                  const displayValue =
+                    metric.label === 'monitoring'
+                      ? `${Math.min(Math.round(currentValue), metric.target)}/7`
+                      : `${currentValue.toFixed(metric.decimals)}${metric.suffix}`;
+                  return (
+                    <React.Fragment key={metric.label}>
+                      <div className="text-center">
+                        <div className="text-[50px] font-extralight text-gray-900">
+                          {displayValue}
+                        </div>
+                        <p className="text-xs text-gray-500 font-semibold">{metric.label}</p>
+                      </div>
+                      {index < HERO_METRICS.length - 1 && (
+                        <span className="h-10 w-px bg-black/80 rounded-full mx-2" aria-hidden="true" />
+                      )}
+                    </React.Fragment>
+                  );
+                })}
               </div>
               {/* Email capture moved to bottom-left above the legal footer */}
             </div>
