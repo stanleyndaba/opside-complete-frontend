@@ -237,9 +237,7 @@ const Docs = () => {
           <div className="max-w-4xl mx-auto space-y-10 text-gray-700">
             <div className="text-sm text-gray-500 space-y-1">
               <p><strong>Effective Date:</strong> January 1, 2025</p>
-              <p className="text-xs text-gray-400">The day Clario&apos;s full-time operations and IP creation officially began.</p>
               <p><strong>Last Updated:</strong> November 4, 2025</p>
-              <p className="text-xs text-gray-400">The day Clario legally executed and finalized this document.</p>
             </div>
               <header className="space-y-4">
                 <div className="space-y-2">

@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ChevronDown, Link2, ScrollText } from 'lucide-react';
 import { api } from '@/lib/api';
+import { BrandFooter } from '@/components/layout/BrandFooter';
 
 const ApiLanding = () => {
   // Language preference (match platform + landing behavior)
@@ -296,6 +297,7 @@ const ApiLanding = () => {
           </div>
         </div>
       </main>
+      <BrandFooter selectedLanguageLabel={selectedLanguage.language} />
     </div>
   );
 };

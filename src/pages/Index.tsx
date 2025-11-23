@@ -37,15 +37,16 @@ const XColorIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
 const PadlockIcon: React.FC = () => (
   <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
     <path
-      d="M12 14V10C12 6.13401 15.134 3 19 3C22.866 3 26 6.13401 26 10V14"
+      d="M12 15V10C12 6.13401 15.134 3 19 3C22.866 3 26 6.13401 26 10V15"
       stroke="#065f46"
-      strokeWidth="2"
+      strokeWidth="2.2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      fill="none"
     />
-    <rect x="8" y="14" width="22" height="16" rx="4" fill="#059669" />
+    <rect x="9" y="15" width="20" height="17" rx="4" fill="#059669" />
     <path
-      d="M19 20C20.1046 20 21 20.8954 21 22C21 22.8894 20.4212 23.6538 19.6154 23.9133L20 27H18L18.3846 23.9133C17.5788 23.6538 17 22.8894 17 22C17 20.8954 17.8954 20 19 20Z"
+      d="M19 21C20.1046 21 21 21.8954 21 23C21 23.8894 20.4212 24.6538 19.6154 24.9133L20 28H18L18.3846 24.9133C17.5788 24.6538 17 23.8894 17 23C17 21.8954 17.8954 21 19 21Z"
       fill="white"
     />
   </svg>
