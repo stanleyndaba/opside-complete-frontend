@@ -180,8 +180,7 @@ const Index = () => {
 
 
   const primaryLinks = [
-    { label: 'API', href: '/developer-api' },
-    { label: 'Docs', href: '/docs' }
+    { label: 'API', href: '/developer-api' }
   ];
 
   const selectedLanguage: LanguageOption =
