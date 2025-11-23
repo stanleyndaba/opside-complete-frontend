@@ -206,10 +206,17 @@ const Index = () => {
       style={{ width: '100%', maxWidth: '100%', overflowX: 'hidden' }}
     >
       <Dialog open={showPermissionNotice} onOpenChange={setShowPermissionNotice}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-lg font-semibold text-gray-900">Permissions</DialogTitle>
-            <DialogDescription className="text-sm text-gray-600">
+        <DialogContent className="sm:max-w-md bg-white">
+          <DialogHeader className="space-y-4">
+            <div className="relative flex items-center justify-center">
+              <span className="absolute left-0 text-sm font-black tracking-tight text-gray-400">
+                CLARIO
+              </span>
+              <DialogTitle className="text-lg font-semibold text-gray-900 text-center">
+                Permissions
+              </DialogTitle>
+            </div>
+            <DialogDescription className="text-sm text-gray-600 text-center">
               Read-only access to your ledger and inventory. We cannot change prices or delete listings—only analyze activity.
             </DialogDescription>
           </DialogHeader>
