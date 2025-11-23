@@ -250,11 +250,6 @@ const Index = () => {
             <div className="flex flex-col items-center gap-2">
               <div className="relative flex items-center justify-center">
                 <Unlock className="h-8 w-8 text-emerald-500" strokeWidth={2} style={{ fill: 'currentColor' }} />
-                <div className="absolute -top-3 flex gap-1">
-                  <span className="block h-3 w-0.5 rounded-full bg-emerald-400 origin-bottom rotate-[-20deg]" aria-hidden="true" />
-                  <span className="block h-4 w-0.5 rounded-full bg-emerald-500" aria-hidden="true" />
-                  <span className="block h-3 w-0.5 rounded-full bg-emerald-400 origin-bottom rotate-[20deg]" aria-hidden="true" />
-                </div>
               </div>
               <DialogTitle className="text-base font-semibold text-gray-900 text-center sm:text-lg">
                 Authorize Read-Only Access
@@ -617,13 +612,10 @@ const Index = () => {
           <div className="container mx-auto px-6 w-full" style={{ width: '100%', maxWidth: '100%' }}>
             <div className="mx-auto flex max-w-6xl flex-col gap-10 md:flex-row md:items-start">
               <div className="space-y-4 md:w-1/3">
-                <span className="text-sm font-semibold uppercase tracking-[0.3em] text-gray-500">Frequently asked questions</span>
+                <span className="text-sm font-semibold bg-gradient-to-r from-[#1f4037] to-[#99f2c8] bg-clip-text text-transparent">frequently asked questions</span>
                 <h2 className="text-3xl font-black tracking-tight text-gray-900 md:text-4xl">
                   Everything you wanted to ask before Clario starts recovering funds.
                 </h2>
-                <p className="text-base text-gray-600 md:text-lg">
-                  From compliance to costs, here&apos;s the clarity you need before letting our Evidence Engine audit your Amazon account.
-                </p>
               </div>
               <div className="space-y-2 md:w-2/3">
                 <Accordion type="single" collapsible className="space-y-2">
