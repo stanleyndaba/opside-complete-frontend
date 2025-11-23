@@ -21,7 +21,7 @@ export function Toaster() {
                 CLARIO
               </div>
               {title && title !== 'CLARIO' && (
-                <ToastTitle className="text-[#BBD58E] font-semibold">{title}</ToastTitle>
+                <ToastTitle className="text-[#22C55E] font-semibold">{title}</ToastTitle>
               )}
               {description && (
                 <ToastDescription className="text-white font-normal">{description}</ToastDescription>
