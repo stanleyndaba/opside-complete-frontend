@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Link } from 'react-router-dom';
-import { ChevronDown, Check, Gift, Globe } from 'lucide-react';
+import { ArrowRight, ChevronDown, Check, Gift, Globe } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AmazonConnect } from '@/components/AmazonConnect';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -221,8 +221,12 @@ const Index = () => {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="pt-2">
-            <Button className="w-full" onClick={() => setShowPermissionNotice(false)}>
+            <Button
+              className="w-full bg-emerald-500 text-white hover:bg-emerald-600 flex items-center justify-center gap-2"
+              onClick={() => setShowPermissionNotice(false)}
+            >
               Proceed now
+              <ArrowRight className="h-4 w-4" />
             </Button>
           </DialogFooter>
         </DialogContent>
