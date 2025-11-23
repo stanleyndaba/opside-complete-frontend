@@ -515,7 +515,7 @@ const Index = () => {
                   <span className="text-gray-700 text-sm md:text-base">Cancel anytime</span>
                 </div>
               </div>
-              <div className="mt-5 flex flex-col items-center justify-center gap-4 text-gray-700 md:flex-row md:gap-8 md:items-center">
+              <div className="mt-5 flex flex-col items-start justify-center gap-4 text-gray-700 md:flex-row md:items-center md:gap-8 md:text-center">
                 {HERO_METRICS.map((metric, index) => {
                   const currentValue = metricValues[index];
                   const displayValue =
@@ -524,29 +524,19 @@ const Index = () => {
                       : `${currentValue.toFixed(metric.decimals)}${metric.suffix}`;
                   return (
                     <React.Fragment key={metric.label}>
-                      <div className="w-full text-left md:text-center">
+                      <div className="w-full">
                         <div className="text-[50px] font-extralight text-gray-900">
                           {displayValue}
                         </div>
                         <p className="text-xs text-gray-500 font-semibold">{metric.label}</p>
-                        {index < HERO_METRICS.length - 1 && (
-                          <div className="mt-3 flex items-center gap-3 text-black font-semibold md:hidden">
-                            <span className="text-base" aria-hidden="true">
-                              |
-                            </span>
-                            <span className="text-[50px] font-extralight text-gray-900">
-                              {HERO_METRICS[index + 1].label === 'monitoring'
-                                ? `${Math.min(Math.round(metricValues[index + 1]), HERO_METRICS[index + 1].target)}/7`
-                                : `${metricValues[index + 1].toFixed(HERO_METRICS[index + 1].decimals)}${HERO_METRICS[index + 1].suffix}`}
-                            </span>
-                            <p className="text-xs text-gray-500 font-semibold">
-                              {HERO_METRICS[index + 1].label}
-                            </p>
-                          </div>
-                        )}
                       </div>
                       {index < HERO_METRICS.length - 1 && (
-                        <span className="hidden md:inline-flex h-10 w-px bg-black/80 rounded-full mx-2" aria-hidden="true" />
+                        <>
+                          <span className="hidden md:inline-flex h-10 w-px bg-black/80 rounded-full mx-2" aria-hidden="true" />
+                          <div className="flex items-center text-black font-semibold md:hidden" aria-hidden="true">
+                            <span className="text-base">|</span>
+                          </div>
+                        </>
                       )}
                     </React.Fragment>
                   );
