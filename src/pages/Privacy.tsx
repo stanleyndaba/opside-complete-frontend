@@ -6,6 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { ChevronDown, Gift } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { api } from '@/lib/api';
+import { BrandFooter } from '@/components/layout/BrandFooter';
 
 type LanguageOption = {
   code: string;
@@ -233,8 +234,7 @@ const Privacy = () => {
         </header>
 
         <main className="relative container mx-auto px-6 py-12 md:py-20">
-          <article className="bg-white/90 border border-black/5 rounded-3xl shadow-[0_25px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl">
-            <div className="px-6 py-10 md:px-12 md:py-14 space-y-10 text-gray-700">
+          <div className="max-w-4xl mx-auto space-y-10 text-gray-700">
               <section className="space-y-3">
                 <p className="uppercase text-xs tracking-[0.3em] text-emerald-600">Privacy</p>
                 <h1 className="text-3xl md:text-4xl font-semibold text-gray-900">Clario Privacy Policy</h1>
@@ -353,9 +353,9 @@ const Privacy = () => {
                 <p>If you have questions about this Privacy Policy or our compliance with the Amazon DPP, contact us at:</p>
                 <p><strong>Email:</strong> <a href="mailto:legal@clario.app" className="underline text-emerald-600 hover:text-emerald-700">legal@clario.app</a></p>
               </section>
-            </div>
-          </article>
+          </div>
         </main>
+        <BrandFooter selectedLanguageLabel={selectedLanguage.language} />
       </div>
     </div>
   );

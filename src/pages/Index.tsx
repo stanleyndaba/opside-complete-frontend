@@ -3,11 +3,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ChevronDown, Check, Gift, Globe, Unlock } from 'lucide-react';
+import { ArrowRight, ChevronDown, Gift, Globe } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AmazonConnect } from '@/components/AmazonConnect';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { BrandFooter } from '@/components/layout/BrandFooter';
 
 type IconComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
 
@@ -33,10 +34,22 @@ const XColorIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   </svg>
 );
 
-const SOCIAL_LINKS: { label: string; href: string; icon: IconComponent }[] = [
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/company/clario-ai', icon: LinkedinColorIcon },
-  { label: 'X (Formerly Twitter)', href: 'https://x.com/ClarioAI', icon: XColorIcon },
-];
+const PadlockIcon: React.FC = () => (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+    <path
+      d="M12 14V10C12 6.13401 15.134 3 19 3C22.866 3 26 6.13401 26 10V14"
+      stroke="#065f46"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <rect x="8" y="14" width="22" height="16" rx="4" fill="#059669" />
+    <path
+      d="M19 20C20.1046 20 21 20.8954 21 22C21 22.8894 20.4212 23.6538 19.6154 23.9133L20 27H18L18.3846 23.9133C17.5788 23.6538 17 22.8894 17 22C17 20.8954 17.8954 20 19 20Z"
+      fill="white"
+    />
+  </svg>
+);
 
 const HERO_METRICS = [
   { label: 'accuracy', target: 99.2, suffix: '%', decimals: 1 },
@@ -248,9 +261,7 @@ const Index = () => {
               </span>
             </div>
             <div className="flex flex-col items-center gap-2">
-              <div className="relative flex items-center justify-center">
-                <Unlock className="h-8 w-8 text-emerald-500" strokeWidth={2} style={{ fill: 'currentColor' }} />
-              </div>
+              <PadlockIcon />
               <DialogTitle className="text-base font-semibold text-gray-900 text-center sm:text-lg">
                 Authorize Read-Only Access
               </DialogTitle>
@@ -777,84 +788,7 @@ const Index = () => {
           </div>
         </section>
       </div>
-      <div className="relative z-10">
-        {/* CLARIO Brand Section */}
-        <section className="relative bg-white py-24 md:py-32 w-full overflow-x-hidden" style={{ width: '100%', maxWidth: '100%' }}>
-          <div className="container mx-auto px-6 w-full" style={{ width: '100%', maxWidth: '100%' }}>
-            <div className="flex flex-col items-center justify-center text-center space-y-8">
-              <h1 
-                className="text-8xl md:text-9xl lg:text-[12rem] font-black tracking-tight bg-gradient-to-r from-[#1f4037] to-[#99f2c8] bg-clip-text text-transparent drop-shadow-[0_6px_12px_rgba(0,0,0,0.2)]"
-                style={{ letterSpacing: '-0.02em' }}
-              >
-                CLARIO
-              </h1>
-              <Button 
-                size="lg" 
-                className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all"
-                asChild
-              >
-                <Link to="/integrations-hub">
-                  Try Now
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </section>
-
-        <div className="relative">
-          <footer
-            id="core-footer"
-            className="relative bg-white text-gray-900 w-full"
-            style={{ width: '100%', maxWidth: '100%' }}
-          >
-            <div className="container mx-auto px-6 py-14 space-y-8">
-              <div className="space-y-4">
-                <p className="text-sm text-gray-600 leading-relaxed max-w-sm">
-                  Autonomous reimbursements crafted for modern Amazon operators. Secure data flows, transparent claims,
-                  and a finance-ready audit trail—no agency overhead.
-                </p>
-                <div className="flex items-center gap-3">
-                  {SOCIAL_LINKS.map((social) => {
-                    const Icon = social.icon;
-                    return (
-                      <a
-                        key={social.label}
-                        href={social.href}
-                        target="_blank"
-                        rel="noreferrer"
-                        aria-label={social.label}
-                        className="inline-flex h-10 w-10 items-center justify-center transition hover:scale-105"
-                      >
-                        <Icon className="h-5 w-5" />
-                      </a>
-                    );
-                  })}
-                </div>
-              </div>
-              <div className="flex flex-col gap-4 border-t border-gray-200 pt-6 text-xs text-gray-500 md:flex-row md:items-center md:justify-between">
-                <div className="order-1 flex flex-wrap items-center gap-4 text-gray-600 md:order-2">
-                  <Link to="/privacy" className="transition hover:text-gray-900">
-                    Privacy Policy
-                  </Link>
-                  <Link to="/terms" className="transition hover:text-gray-900">
-                    Terms of Service
-                  </Link>
-                  <Link to="/docs" className="transition hover:text-gray-900">
-                    Acceptable Use Policy
-                  </Link>
-                  <span className="inline-flex items-center gap-2">
-                    <Globe className="h-3.5 w-3.5" />
-                    {selectedLanguage.language}
-                  </span>
-                </div>
-                <p className="order-2 text-gray-600 md:order-1">
-                  © {currentYear} Clario. Built for operators who need Amazon reimbursements and visibility in real time.
-                </p>
-              </div>
-            </div>
-          </footer>
-        </div>
-      </div>
+      <BrandFooter selectedLanguageLabel={selectedLanguage.language} />
     </div>
   );
 };

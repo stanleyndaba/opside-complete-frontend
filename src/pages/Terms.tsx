@@ -6,6 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { ChevronDown, Gift } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { api } from '@/lib/api';
+import { BrandFooter } from '@/components/layout/BrandFooter';
 
 type LanguageOption = {
   code: string;
@@ -232,16 +233,15 @@ const Terms = () => {
           </div>
         </header>
 
-          <main className="relative container mx-auto px-6 py-12 md:py-20">
-              <div className="text-sm text-gray-500 space-y-1 mb-12">
-                <p><strong>Effective Date:</strong> January 1, 2025</p>
-                <p className="text-xs text-gray-400">The day Clario's full-time operations and IP creation officially began.</p>
-                <p><strong>Last Updated:</strong> November 17, 2025</p>
-                <p className="text-xs text-gray-400">The day Clario legally executed and finalized this document.</p>
-              </div>
+        <main className="relative container mx-auto px-6 py-12 md:py-20">
+          <div className="max-w-4xl mx-auto space-y-10 text-gray-700">
+            <div className="text-sm text-gray-500 space-y-1">
+              <p><strong>Effective Date:</strong> January 1, 2025</p>
+              <p className="text-xs text-gray-400">The day Clario&apos;s full-time operations and IP creation officially began.</p>
+              <p><strong>Last Updated:</strong> November 17, 2025</p>
+              <p className="text-xs text-gray-400">The day Clario legally executed and finalized this document.</p>
+            </div>
 
-          <article className="bg-white/90 border border-black/5 rounded-3xl shadow-[0_25px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl">
-            <div className="px-6 py-10 md:px-12 md:py-14 space-y-10 text-gray-700">
               <section className="space-y-4">
                 <header className="space-y-3">
                   <p className="uppercase text-xs tracking-[0.3em] text-emerald-600">Legal</p>
@@ -402,9 +402,9 @@ const Terms = () => {
               </section>
 
               <p className="text-sm text-gray-500 italic">Clario empowers sellers. Compliance protects us all.</p>
-            </div>
-          </article>
+          </div>
         </main>
+        <BrandFooter selectedLanguageLabel={selectedLanguage.language} />
       </div>
     </div>
   );
