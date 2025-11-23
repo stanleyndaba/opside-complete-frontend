@@ -515,32 +515,53 @@ const Index = () => {
                   <span className="text-gray-700 text-sm md:text-base">Cancel anytime</span>
                 </div>
               </div>
-              <div className="mt-5 flex flex-col items-start justify-center gap-6 text-left text-gray-700 md:flex-row md:items-center md:gap-8 md:text-center">
-                {HERO_METRICS.map((metric, index) => {
-                  const currentValue = metricValues[index];
-                  const displayValue =
-                    metric.label === 'monitoring'
-                      ? `${Math.min(Math.round(currentValue), metric.target)}/7`
-                      : `${currentValue.toFixed(metric.decimals)}${metric.suffix}`;
-                  return (
-                    <React.Fragment key={metric.label}>
-                      <div className="w-full flex flex-col gap-1">
-                        <p className="text-xs text-gray-500 font-semibold uppercase tracking-[0.3em]">{metric.label}</p>
-                        <div className="flex items-center gap-3 md:flex-col md:gap-2 md:items-center md:text-center">
+              <div className="mt-5 w-full text-gray-700">
+                <div className="flex flex-col items-start gap-6 text-left md:hidden">
+                  {HERO_METRICS.map((metric, index) => {
+                    const currentValue = metricValues[index];
+                    const displayValue =
+                      metric.label === 'monitoring'
+                        ? `${Math.min(Math.round(currentValue), metric.target)}/7`
+                        : `${currentValue.toFixed(metric.decimals)}${metric.suffix}`;
+                    return (
+                      <React.Fragment key={`mobile-${metric.label}`}>
+                        <div className="flex flex-col gap-1">
+                          <p className="text-xs text-gray-500 font-semibold">{metric.label}</p>
+                          <div className="flex items-center gap-3">
+                            <div className="text-[50px] font-extralight text-gray-900">
+                              {displayValue}
+                            </div>
+                            {index < HERO_METRICS.length - 1 && (
+                              <span className="h-10 w-px bg-black/80 rounded-full" aria-hidden="true" />
+                            )}
+                          </div>
+                        </div>
+                      </React.Fragment>
+                    );
+                  })}
+                </div>
+                <div className="hidden md:flex md:flex-row md:items-center md:justify-center md:gap-8 text-center">
+                  {HERO_METRICS.map((metric, index) => {
+                    const currentValue = metricValues[index];
+                    const displayValue =
+                      metric.label === 'monitoring'
+                        ? `${Math.min(Math.round(currentValue), metric.target)}/7`
+                        : `${currentValue.toFixed(metric.decimals)}${metric.suffix}`;
+                    return (
+                      <React.Fragment key={`desktop-${metric.label}`}>
+                        <div className="text-center">
                           <div className="text-[50px] font-extralight text-gray-900">
                             {displayValue}
                           </div>
-                          {index < HERO_METRICS.length - 1 && (
-                            <span
-                              className="h-10 w-px bg-black/80 rounded-full self-stretch md:self-center md:my-0 md:mx-2"
-                              aria-hidden="true"
-                            />
-                          )}
+                          <p className="text-xs text-gray-500 font-semibold">{metric.label}</p>
                         </div>
-                      </div>
-                    </React.Fragment>
-                  );
-                })}
+                        {index < HERO_METRICS.length - 1 && (
+                          <span className="h-10 w-px bg-black/80 rounded-full mx-2" aria-hidden="true" />
+                        )}
+                      </React.Fragment>
+                    );
+                  })}
+                </div>
               </div>
               {/* Email capture moved to bottom-left above the legal footer */}
             </div>
