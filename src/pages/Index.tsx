@@ -206,7 +206,7 @@ const Index = () => {
       style={{ width: '100%', maxWidth: '100%', overflowX: 'hidden' }}
     >
       <Dialog open={showPermissionNotice} onOpenChange={setShowPermissionNotice}>
-        <DialogContent className="w-[calc(100vw-2rem)] max-w-md bg-white p-4 sm:p-6">
+        <DialogContent className="w-[calc(100vw-2rem)] max-w-md rounded-2xl bg-white p-4 sm:p-6">
           <DialogHeader className="space-y-3 text-center">
             <div className="text-left">
               <span className="text-xs font-black tracking-tight text-gray-400 sm:text-sm">
