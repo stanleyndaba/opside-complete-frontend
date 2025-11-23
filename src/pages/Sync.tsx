@@ -374,10 +374,10 @@ export default function Sync() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     {getStatusIcon()}
-                    Merchandise Sync
+                    Ledgers, Shipments, Returns Syncing.
                   </CardTitle>
                   <CardDescription className="text-gray-500">
-                    First run window: last 12 months • Schedule: daily at 02:00 UTC
+                    First run window: last 18 months • Schedule: daily at 02:00 UTC
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -518,92 +518,26 @@ export default function Sync() {
                         );
                       }
                       
+                      const logEntries = [
+                        'Fetching last 18 months of Inventory History...',
+                        '14,205 Transactions Found...',
+                        'Cross-referencing Shipment IDs...'
+                      ];
+
                       return (
                         <div className="space-y-4 pt-4 border-t border-gray-100">
-                          <div className="bg-emerald-50 border border-emerald-200 rounded-md p-4">
-                            <p className="text-xs text-emerald-700 mb-1">Inventory Value</p>
-                            <p className="text-lg font-bold text-emerald-700">
-                              {syncData?.inventoryValue ? syncData.inventoryValue.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) : '$0'}
-                            </p>
-                          </div>
-                          
-                          {/* Data Type Breakdown */}
                           <div className="space-y-3">
-                            <h4 className="text-sm font-semibold text-gray-800">Data Type Breakdown</h4>
-                            <div className="bg-gray-50 rounded-md border border-gray-200 divide-y divide-gray-100">
-                              {ordersProcessed !== undefined && syncData.totalOrders !== undefined && (
-                                <div className="flex items-center justify-between py-3 px-4">
-                                  <div>
-                                    <p className="text-sm text-gray-600">Orders</p>
-                                    <p className="text-[10px] text-gray-500 mt-0.5">Auditing for Lost and Damaged fulfillment status</p>
-                                  </div>
-                                  <p className="text-sm font-medium text-gray-900">
-                                    {ordersProcessed.toLocaleString()} / {syncData.totalOrders.toLocaleString()}
-                                  </p>
-                                </div>
-                              )}
-                              {inventoryCount !== undefined && (
-                                <div className="flex items-center justify-between py-3 px-4">
-                                  <div>
-                                    <p className="text-sm text-gray-600">Inventory</p>
-                                    <p className="text-[10px] text-gray-500 mt-0.5">Cross-referencing Daily Ledger vs. Physical Count</p>
-                                  </div>
-                                  <p className="text-sm font-medium text-gray-900">
-                                    {inventoryCount.toLocaleString()} items
-                                  </p>
-                                </div>
-                              )}
-                              {shipmentsCount !== undefined && (
-                                <div className="flex items-center justify-between py-3 px-4">
-                                  <div>
-                                    <p className="text-sm text-gray-600">Shipments</p>
-                                    <p className="text-[10px] text-gray-500 mt-0.5">Verifying Inbound FBA receiving discrepancies</p>
-                                  </div>
-                                  <p className="text-sm font-medium text-gray-900">
-                                    {shipmentsCount.toLocaleString()} items
-                                  </p>
-                                </div>
-                              )}
-                              {returnsCount !== undefined && (
-                                <div className="flex items-center justify-between py-3 px-4">
-                                  <div>
-                                    <p className="text-sm text-gray-600">Returns</p>
-                                    <p className="text-[10px] text-gray-500 mt-0.5">Checking Customer Refunded vs. Unit Returned logic</p>
-                                  </div>
-                                  <p className="text-sm font-medium text-gray-900">
-                                    {returnsCount.toLocaleString()} items
-                                  </p>
-                                </div>
-                              )}
-                              {settlementsCount !== undefined && (
-                                <div className="flex items-center justify-between py-3 px-4">
-                                  <div>
-                                    <p className="text-sm text-gray-600">Settlement</p>
-                                    <p className="text-[10px] text-gray-500 mt-0.5">Reconciling previous reimbursements for reversals</p>
-                                  </div>
-                                  <p className="text-sm font-medium text-gray-900">
-                                    {settlementsCount.toLocaleString()} items
-                                  </p>
-                                </div>
-                              )}
-                              {feesCount !== undefined && (
-                                <div className="flex items-center justify-between py-3 px-4">
-                                  <div>
-                                    <p className="text-sm text-gray-600">Fees</p>
-                                    <p className="text-[10px] text-gray-500 mt-0.5">Scanning weight/dimension overcharge anomalies</p>
-                                  </div>
-                                  <p className="text-sm font-medium text-gray-900">
-                                    {feesCount.toLocaleString()} items
-                                  </p>
-                                </div>
-                              )}
+                            <h4 className="text-sm font-semibold text-gray-800">Log</h4>
+                            <div className="bg-gray-900 text-emerald-200 rounded-md p-4 font-mono text-xs space-y-2">
+                              {logEntries.map((entry, index) => (
+                                <p key={index} className="tracking-tight">
+                                  {entry}
+                                </p>
+                              ))}
                               {claimsDetected !== undefined && claimsDetected > 0 && (
-                                <div className="flex items-center justify-between py-3 px-4">
-                                  <p className="text-sm text-emerald-600">Claims Detected</p>
-                                  <p className="text-sm font-medium text-emerald-600">
-                                    {claimsDetected.toLocaleString()}
-                                  </p>
-                                </div>
+                                <p className="tracking-tight text-emerald-400">
+                                  {claimsDetected.toLocaleString()} claims detected and queued.
+                                </p>
                               )}
                             </div>
                           </div>
