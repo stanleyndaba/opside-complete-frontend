@@ -298,7 +298,7 @@ export default function SyncStatus() {
             </CardContent>
           </Card>
         )}
-              <Card className="bg-white border border-gray-200 text-gray-900 shadow-sm">
+              <Card className="bg-white border-0 text-gray-900 shadow-none">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               {getStatusIcon()}
@@ -319,6 +319,9 @@ export default function SyncStatus() {
                   <Button onClick={() => navigate('/sync')}>
                     Sync now
                   </Button>
+                  <p className="mt-3 text-xs text-gray-500">
+                    Clario only requests permissions to read historical financial reports, inventory logs, and performance data from the SP-API.
+                  </p>
                 </div>
               </div>
             ) : (
