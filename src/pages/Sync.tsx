@@ -10,6 +10,63 @@ import { RefreshCw, XCircle, CheckCircle2, AlertCircle, Loader2 } from 'lucide-r
 import { useToast } from '@/hooks/use-toast';
 import { useDetectionUpdates } from '@/hooks/use-detection-updates';
 
+const LOG_SEQUENCE = [
+  {
+    id: 'inventory',
+    status: 'Syncing inventory history...',
+    lines: [
+      'Fetching last 18 months of Inventory History...',
+      'Buffering 48 ledger exports...',
+      'Normalizing FNSKU-level quantities...'
+    ]
+  },
+  {
+    id: 'transactions',
+    status: 'Scanning transaction ledgers...',
+    lines: [
+      '14,205 Transactions Found...',
+      'Auditing settlements vs payouts...',
+      'Tagging reimbursable events...'
+    ]
+  },
+  {
+    id: 'shipments',
+    status: 'Syncing shipment receipts...',
+    lines: [
+      'Cross-referencing Shipment IDs...',
+      'Verifying inbound shortages & damages...',
+      'Matching FC receiving logs...'
+    ]
+  },
+  {
+    id: 'returns',
+    status: 'Auditing returns & refunds...',
+    lines: [
+      'Pairing customer refunds with units returned...',
+      'Checking “refunded but never received” anomalies...',
+      'Tracking refurbishment deductions...'
+    ]
+  },
+  {
+    id: 'settlements',
+    status: 'Reconciling settlements & fees...',
+    lines: [
+      'Reconciling deposit statements...',
+      'Scanning weight & dimension fee swings...',
+      'Matching reimbursements to deposit ledger...'
+    ]
+  },
+  {
+    id: 'claims',
+    status: 'Queuing claims & alerts...',
+    lines: [
+      'Flagging variance thresholds...',
+      'Generating claim packets...',
+      'Awaiting final push to dashboard...'
+    ]
+  }
+];
+
 export default function Sync() {
   const navigate = useNavigate();
   const [params] = useSearchParams();
@@ -24,6 +81,14 @@ export default function Sync() {
   const { toast } = useToast();
   const previousStatusRef = useRef<'idle' | 'running' | 'completed' | 'failed' | 'cancelled'>('idle');
   const toastShownRef = useRef<{ started?: boolean; completed?: boolean; failed?: boolean; cancelled?: boolean }>({});
+  const [logStepIndex, setLogStepIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setLogStepIndex((prev) => (prev + 1) % LOG_SEQUENCE.length);
+    }, 3200);
+    return () => window.clearInterval(interval);
+  }, []);
   
   // Phase 3: Detection updates SSE - connect when sync completes
   useDetectionUpdates(
@@ -518,23 +583,22 @@ export default function Sync() {
                         );
                       }
                       
-                      const logEntries = [
-                        'Fetching last 18 months of Inventory History...',
-                        '14,205 Transactions Found...',
-                        'Cross-referencing Shipment IDs...'
-                      ];
+                      const currentLog = LOG_SEQUENCE[logStepIndex];
 
                       return (
                         <div className="space-y-4 pt-4 border-t border-gray-100">
                           <div className="space-y-3">
-                            <h4 className="text-sm font-semibold text-gray-800">Log</h4>
+                            <div>
+                              <h4 className="text-sm font-semibold text-gray-800">Log</h4>
+                              <p className="text-xs text-gray-500">{currentLog.status}</p>
+                            </div>
                             <div className="bg-gray-900 text-emerald-200 rounded-md p-4 font-mono text-xs space-y-2">
-                              {logEntries.map((entry, index) => (
-                                <p key={index} className="tracking-tight">
+                              {currentLog.lines.map((entry, index) => (
+                                <p key={`${currentLog.id}-${index}`} className="tracking-tight">
                                   {entry}
                                 </p>
                               ))}
-                              {claimsDetected !== undefined && claimsDetected > 0 && (
+                              {currentLog.id === 'claims' && claimsDetected !== undefined && claimsDetected > 0 && (
                                 <p className="tracking-tight text-emerald-400">
                                   {claimsDetected.toLocaleString()} claims detected and queued.
                                 </p>
