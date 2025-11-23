@@ -43,7 +43,12 @@ export function PageLayout({
           <div className="container max-w-full p-4 lg:p-6 animate-fade-in">
               {(hideNavbar && hideSidebar) && (
                 <div className="fixed top-3 left-4 z-50 pointer-events-none">
-                  <span className="font-black tracking-tight text-gray-400 text-xl select-none">CLARIO</span>
+                  <span
+                    className="font-black tracking-tight text-gray-400 text-xl select-none"
+                    style={{ fontWeight: 900 }}
+                  >
+                    CLARIO
+                  </span>
                 </div>
               )}
             {children}
