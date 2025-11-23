@@ -82,13 +82,71 @@ export default function Sync() {
   const previousStatusRef = useRef<'idle' | 'running' | 'completed' | 'failed' | 'cancelled'>('idle');
   const toastShownRef = useRef<{ started?: boolean; completed?: boolean; failed?: boolean; cancelled?: boolean }>({});
   const [logStepIndex, setLogStepIndex] = useState(0);
+  const logIntervalRef = useRef<number | null>(null);
+  const [showConnectCard, setShowConnectCard] = useState(false);
+  const connectCardTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
-    const interval = window.setInterval(() => {
-      setLogStepIndex((prev) => (prev + 1) % LOG_SEQUENCE.length);
-    }, 3200);
-    return () => window.clearInterval(interval);
-  }, []);
+    if (typeof window === 'undefined') return undefined;
+
+    const clearLogInterval = () => {
+      if (logIntervalRef.current) {
+        window.clearInterval(logIntervalRef.current);
+        logIntervalRef.current = null;
+      }
+    };
+
+    if (status === 'running') {
+      setLogStepIndex(0);
+      clearLogInterval();
+      logIntervalRef.current = window.setInterval(() => {
+        setLogStepIndex((prev) => {
+          if (prev >= LOG_SEQUENCE.length - 1) {
+            clearLogInterval();
+            return LOG_SEQUENCE.length - 1;
+          }
+          return prev + 1;
+        });
+      }, 3200);
+    } else if (status === 'completed') {
+      clearLogInterval();
+      setLogStepIndex(LOG_SEQUENCE.length - 1);
+    } else if (status === 'idle') {
+      clearLogInterval();
+      setLogStepIndex(0);
+    } else if (status === 'failed' || status === 'cancelled') {
+      clearLogInterval();
+    }
+
+    return () => {
+      clearLogInterval();
+    };
+  }, [status]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    if (status === 'completed') {
+      if (connectCardTimeoutRef.current) {
+        window.clearTimeout(connectCardTimeoutRef.current);
+      }
+      connectCardTimeoutRef.current = window.setTimeout(() => {
+        setShowConnectCard(true);
+      }, 500);
+    } else {
+      if (connectCardTimeoutRef.current) {
+        window.clearTimeout(connectCardTimeoutRef.current);
+        connectCardTimeoutRef.current = null;
+      }
+      setShowConnectCard(false);
+    }
+
+    return () => {
+      if (connectCardTimeoutRef.current) {
+        window.clearTimeout(connectCardTimeoutRef.current);
+        connectCardTimeoutRef.current = null;
+      }
+    };
+  }, [status]);
   
   // Phase 3: Detection updates SSE - connect when sync completes
   useDetectionUpdates(
@@ -627,11 +685,7 @@ export default function Sync() {
                       </div>
                     )}
 
-                    <div className="mt-4 p-3 rounded border border-blue-200 bg-blue-50 text-xs text-blue-700">
-                      Connect Gmail, Outlook, Dropbox or Google Drive so Clario will start.
-                    </div>
-
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       {status === 'running' && (
                         <Button
                           variant="outline"
@@ -664,16 +718,29 @@ export default function Sync() {
                         </Button>
                       )}
 
-                      {status === 'completed' && (
-                        <Button
-                          variant="outline"
-                          onClick={() => navigate('/app')}
-                          className="bg-gray-900 text-white border-gray-900 hover:bg-gray-800"
-                        >
-                          Go to Dashboard
-                        </Button>
-                      )}
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          if (status === 'completed') {
+                            navigate('/app');
+                          }
+                        }}
+                        disabled={status !== 'completed'}
+                        className={
+                          status === 'completed'
+                            ? 'bg-gray-900 text-white border-gray-900 hover:bg-gray-800'
+                            : 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
+                        }
+                      >
+                        Go to Dashboard
+                      </Button>
                     </div>
+
+                    {showConnectCard && (
+                      <div className="mt-4 p-3 rounded border border-blue-200 bg-blue-50 text-xs text-blue-700">
+                        Connect Gmail, Outlook, Dropbox or Google Drive so Clario will start.
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
