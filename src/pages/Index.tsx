@@ -528,12 +528,10 @@ const Index = () => {
                         <div className="flex flex-col gap-1">
                           <p className="text-xs text-gray-500 font-semibold">{metric.label}</p>
                           <div className="flex items-center gap-3">
+                            <span className="h-10 w-px bg-black/80 rounded-full" aria-hidden="true" />
                             <div className="text-[50px] font-extralight text-gray-900">
                               {displayValue}
                             </div>
-                            {index < HERO_METRICS.length - 1 && (
-                              <span className="h-10 w-px bg-black/80 rounded-full" aria-hidden="true" />
-                            )}
                           </div>
                         </div>
                       </React.Fragment>
