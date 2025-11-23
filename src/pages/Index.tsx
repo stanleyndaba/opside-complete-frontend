@@ -208,21 +208,21 @@ const Index = () => {
       <Dialog open={showPermissionNotice} onOpenChange={setShowPermissionNotice}>
         <DialogContent className="w-[calc(100vw-2rem)] max-w-md bg-white p-6 sm:p-8">
           <DialogHeader className="space-y-4 text-center">
-            <div className="relative flex items-center justify-center">
-              <span className="absolute left-0 text-xs font-black tracking-tight text-gray-400 sm:text-sm">
+            <div className="text-left">
+              <span className="text-xs font-black tracking-tight text-gray-400 sm:text-sm">
                 CLARIO
               </span>
-              <DialogTitle className="text-base font-semibold text-gray-900 sm:text-lg">
-                Permissions
-              </DialogTitle>
             </div>
+            <DialogTitle className="text-base font-semibold text-gray-900 text-center sm:text-lg">
+              Permissions
+            </DialogTitle>
             <DialogDescription className="text-sm text-gray-600">
               Read-only access to your ledger and inventory. We cannot change prices or delete listings—only analyze activity.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="pt-2">
             <Button className="w-full" onClick={() => setShowPermissionNotice(false)}>
-              Proceed
+              Proceed now
             </Button>
           </DialogFooter>
         </DialogContent>
