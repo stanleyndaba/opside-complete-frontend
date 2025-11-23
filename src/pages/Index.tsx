@@ -214,10 +214,10 @@ const Index = () => {
               </span>
             </div>
             <DialogTitle className="text-base font-semibold text-gray-900 text-center sm:text-lg">
-              Authorize Clario Access
+              Authorize Read-Only Access
             </DialogTitle>
             <DialogDescription className="text-sm text-gray-600">
-              Read-only access to your ledger and inventory. We cannot change prices or delete listings—only analyze activity.
+              Clario requires permission to scan your historical ledgers. We cannot change prices or delete inventory.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="pt-2">
