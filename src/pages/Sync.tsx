@@ -418,22 +418,44 @@ export default function Sync() {
                     
                     <Progress value={progress} className="h-1" />
                     
-                    <div className="flex items-center justify-between text-xs text-gray-600">
-                      <span>{progress}%</span>
-                      {syncData && (
-                        <div className="flex items-center gap-4 text-xs">
-                          {syncData.ordersProcessed !== undefined && syncData.totalOrders !== undefined && (
-                            <span className="text-xs">
-                              {syncData.ordersProcessed.toLocaleString()} / {syncData.totalOrders.toLocaleString()} orders
-                            </span>
-                          )}
-                          {syncData.claimsDetected !== undefined && (
-                            <span className="text-emerald-600 font-medium text-xs">
-                              {syncData.claimsDetected.toLocaleString()} claims detected
-                            </span>
-                          )}
-                        </div>
-                      )}
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center justify-between text-xs text-gray-600">
+                        <span>{progress}%</span>
+                        {syncData && (
+                          <div className="flex items-center gap-4 text-xs">
+                            {syncData.ordersProcessed !== undefined && syncData.totalOrders !== undefined && (
+                              <span className="text-xs">
+                                {syncData.ordersProcessed.toLocaleString()} / {syncData.totalOrders.toLocaleString()} orders
+                              </span>
+                            )}
+                            {syncData.claimsDetected !== undefined && (
+                              <span className="text-emerald-600 font-medium text-xs">
+                                {syncData.claimsDetected.toLocaleString()} claims detected
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                      {syncData && status === 'completed' && (() => {
+                        const ordersProcessed = syncData.ordersProcessed || 0;
+                        const inventoryCount = syncData.inventoryCount || 0;
+                        const shipmentsCount = syncData.shipmentsCount || 0;
+                        const returnsCount = syncData.returnsCount || 0;
+                        const settlementsCount = syncData.settlementsCount || 0;
+                        const feesCount = syncData.feesCount || 0;
+                        const totalItemsSynced =
+                          ordersProcessed +
+                          inventoryCount +
+                          shipmentsCount +
+                          returnsCount +
+                          settlementsCount +
+                          feesCount;
+                        return (
+                          <span className="text-xs text-gray-500">
+                            {totalItemsSynced.toLocaleString()} items synced
+                          </span>
+                        );
+                      })()}
                     </div>
 
                     {/* Sync Details Breakdown - Calculate total items synced */}
@@ -498,14 +520,6 @@ export default function Sync() {
                       
                       return (
                         <div className="space-y-4 pt-4 border-t border-gray-100">
-                          <div>
-                            <p className="text-sm font-medium text-gray-700">
-                              {ordersProcessed.toLocaleString()} / {syncData.totalOrders?.toLocaleString() || '0'} orders
-                            </p>
-                            <p className="text-sm text-gray-600">
-                              {totalItemsSynced.toLocaleString()} items synced
-                            </p>
-                          </div>
                           <div className="bg-emerald-50 border border-emerald-200 rounded-md p-4">
                             <p className="text-xs text-emerald-700 mb-1">Inventory Value</p>
                             <p className="text-lg font-bold text-emerald-700">
