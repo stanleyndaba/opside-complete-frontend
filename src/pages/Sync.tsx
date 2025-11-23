@@ -498,20 +498,19 @@ export default function Sync() {
                       
                       return (
                         <div className="space-y-4 pt-4 border-t border-gray-100">
-                          {/* Total Items Synced */}
-                          <div className="grid gap-3 md:grid-cols-2">
-                            <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
-                              <p className="text-xs text-blue-700 mb-1">Total Items Synced</p>
-                              <p className="text-lg font-bold text-blue-700">
-                                {totalItemsSynced.toLocaleString()} items
-                              </p>
-                            </div>
-                            <div className="bg-emerald-50 border border-emerald-200 rounded-md p-4">
-                              <p className="text-xs text-emerald-700 mb-1">Inventory Value</p>
-                              <p className="text-lg font-bold text-emerald-700">
-                                {syncData?.inventoryValue ? syncData.inventoryValue.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) : '$0'}
-                              </p>
-                            </div>
+                          <div>
+                            <p className="text-sm font-medium text-gray-700">
+                              {ordersProcessed.toLocaleString()} / {syncData.totalOrders?.toLocaleString() || '0'} orders
+                            </p>
+                            <p className="text-sm text-gray-600">
+                              {totalItemsSynced.toLocaleString()} items synced
+                            </p>
+                          </div>
+                          <div className="bg-emerald-50 border border-emerald-200 rounded-md p-4">
+                            <p className="text-xs text-emerald-700 mb-1">Inventory Value</p>
+                            <p className="text-lg font-bold text-emerald-700">
+                              {syncData?.inventoryValue ? syncData.inventoryValue.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) : '$0'}
+                            </p>
                           </div>
                           
                           {/* Data Type Breakdown */}
