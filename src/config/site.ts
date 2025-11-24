@@ -46,7 +46,7 @@ export const AGENT_HIGHLIGHTS = [
 
 export const SITE_META = {
   title: 'Clario | AI Agents for Amazon FBA',
-  description: 'Clario's 11-agent system finds, files, and tracks Amazon FBA reimbursements automatically with 99.2% accuracy.',
+  description: "Clario's 11-agent system finds, files, and tracks Amazon FBA reimbursements automatically with 99.2% accuracy.",
   url: 'https://clario.app',
   image: '/og-image.png',
   preloadImages: ['/gmailicon.png', '/outlookicon.webp', '/gd.png']
