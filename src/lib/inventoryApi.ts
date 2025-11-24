@@ -21,6 +21,7 @@ export interface SyncStatusResponse {
   settlementsCount?: number;     // ⭐ NEW - Settlements synced
   feesCount?: number;            // ⭐ NEW - Fees synced
   claimsDetected?: number;       // ⭐ NEW - Claims detected
+  inventoryValue?: number;       // ⭐ NEW - Total value of inventory synced
   error?: string | null;
 }
 

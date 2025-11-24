@@ -19,7 +19,7 @@ function buildApiUrl(path: string): string {
   // List of deprecated/old backend URLs that should be rejected
   const deprecatedBackends = [
     'clario-complete-backend-y5cd.onrender.com',
-    'https://clario-complete-backend-y5cd.onrender.com',
+    'https://opside-node-api-woco.onrender.com',
   ];
 
   // Check for environment variable override (Vite exposes VITE_ prefixed vars via import.meta.env)
