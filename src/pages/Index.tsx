@@ -55,6 +55,8 @@ const Index = () => {
   const [showPermissionNotice, setShowPermissionNotice] = useState(true);
   const [metricValues, setMetricValues] = useState<number[]>(() => HERO_METRICS.map(() => 0));
   const metricIntervals = React.useRef<number[]>([]);
+  const metricsRef = React.useRef<HTMLDivElement>(null);
+  const [metricsInView, setMetricsInView] = useState(false);
   useEffect(() => {
     if (typeof document === 'undefined') return;
     const previousBodyBg = document.body.style.backgroundColor;
@@ -154,13 +156,52 @@ const Index = () => {
     );
   }, [langQuery]);
 
+  // Intersection Observer to detect when metrics section scrolls into view
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || !metricsRef.current) return;
+    
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // Reset and trigger animation when scrolling into view
+            setMetricsInView(false);
+            // Small delay to ensure state resets before re-animating
+            setTimeout(() => setMetricsInView(true), 50);
+          }
+        });
+      },
+      { 
+        threshold: 0.3, // Trigger when 30% of the element is visible
+        rootMargin: '0px'
+      }
+    );
+    
+    observer.observe(metricsRef.current);
+    
+    // Trigger initial animation
+    setMetricsInView(true);
+    
+    return () => observer.disconnect();
+  }, []);
+
+  // Animate metrics when they come into view
+  useEffect(() => {
+    if (typeof window === 'undefined' || !metricsInView) return;
+    
+    // Clear any existing intervals
     metricIntervals.current.forEach(id => window.clearInterval(id));
+    
+    // Reset values to 0
     setMetricValues(HERO_METRICS.map(() => 0));
+    
+    // Start counting up animations
     metricIntervals.current = HERO_METRICS.map((metric, index) => {
-      const steps = metric.label === 'monitoring' ? metric.target : 100;
-      const increment = metric.target / Math.max(1, steps);
+      const duration = 1500; // 1.5 seconds for the animation
+      const steps = 60; // 60 steps for smooth animation
+      const increment = metric.target / steps;
+      const stepDuration = duration / steps;
+      
       const intervalId = window.setInterval(() => {
         setMetricValues(prev => {
           const next = [...prev];
@@ -171,14 +212,14 @@ const Index = () => {
           }
           return next;
         });
-      }, 1);
+      }, stepDuration);
       return intervalId;
     });
 
     return () => {
       metricIntervals.current.forEach(id => window.clearInterval(id));
     };
-  }, []);
+  }, [metricsInView]);
 
   const currentYear = new Date().getFullYear();
 
@@ -474,7 +515,7 @@ const Index = () => {
                   <span className="text-gray-700 text-sm md:text-base">Cancel anytime</span>
                 </div>
               </div>
-              <div className="mt-5 w-full text-gray-700">
+              <div ref={metricsRef} className="mt-5 w-full text-gray-700">
                 <div className="flex flex-col items-start gap-6 text-left md:hidden">
                   {HERO_METRICS.map((metric, index) => {
                     const currentValue = metricValues[index];
