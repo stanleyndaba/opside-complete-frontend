@@ -7,7 +7,11 @@ import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { startSync, getSyncStatus, cancelSync, subscribeSyncProgress, type SyncStatusResponse } from '@/lib/inventoryApi';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { RefreshCw, XCircle, CheckCircle2, AlertCircle, Loader2, Search, Package, Truck, RotateCcw, DollarSign, Archive, Target, Clock, Mail, Cloud, FileText, HardDrive } from 'lucide-react';
+import { RefreshCw, XCircle, CheckCircle2, AlertCircle, Loader2, Search, Package, Truck, RotateCcw, DollarSign, Archive, Target, Clock } from 'lucide-react';
+import GmailIcon from '/G.png';
+import OutlookIcon from '/OL.png';
+import GoogleDriveIcon from '/gd.png';
+import DropboxIcon from '/Dropbox_Icon.svg.png';
 import { useToast } from '@/hooks/use-toast';
 import { useDetectionUpdates } from '@/hooks/use-detection-updates';
 
@@ -648,7 +652,7 @@ export default function Sync() {
   };
 
   return (
-    <PageLayout title="Sync Log" hideNavbar hideSidebar plainBackground>
+    <PageLayout title="Sync Log" hideNavbar hideSidebar plainBackground logoFontFamily='"Nunito Sans", sans-serif'>
       <div className="bg-white min-h-screen">
         <div className="container mx-auto px-6 py-10 text-gray-900">
           <div className="max-w-4xl mx-auto space-y-6">
@@ -859,25 +863,24 @@ export default function Sync() {
 
               {/* Document Sources Modal */}
               <Dialog open={showSourcesModal} onOpenChange={setShowSourcesModal}>
-                <DialogContent className="sm:max-w-md">
-                  <DialogHeader>
+                <DialogContent className="sm:max-w-md bg-white">
+                  <DialogHeader className="pb-3">
                     <DialogTitle className="text-lg font-semibold">Link Sources for Document Ingestion</DialogTitle>
                     <DialogDescription className="text-sm text-gray-500">
                       Read-only access. No writing or sending permissions.
                     </DialogDescription>
                   </DialogHeader>
                   
-                  <div className="grid grid-cols-2 gap-3 py-4">
+                  <div className="grid grid-cols-2 gap-3 py-2">
                     <button
                       onClick={() => {
                         setShowSourcesModal(false);
-                        // Navigate to integrations or handle Gmail connection
                         navigate('/integrations');
                       }}
-                      className="flex flex-col items-center gap-2 p-4 rounded-lg border border-gray-200 hover:border-red-300 hover:bg-red-50 transition-colors group"
+                      className="flex flex-col items-center gap-1.5 p-2.5 rounded-lg border border-gray-200 hover:border-red-300 hover:bg-red-50 transition-colors group"
                     >
-                      <Mail className="h-8 w-8 text-red-500 group-hover:scale-110 transition-transform" />
-                      <span className="text-sm font-medium text-gray-700">Gmail</span>
+                      <img src={GmailIcon} alt="Gmail" className="h-10 w-10 object-contain group-hover:scale-105 transition-transform" />
+                      <span className="text-xs font-medium text-gray-700">Gmail</span>
                     </button>
                     
                     <button
@@ -885,10 +888,10 @@ export default function Sync() {
                         setShowSourcesModal(false);
                         navigate('/integrations');
                       }}
-                      className="flex flex-col items-center gap-2 p-4 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors group"
+                      className="flex flex-col items-center gap-1.5 p-2.5 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors group"
                     >
-                      <Mail className="h-8 w-8 text-blue-500 group-hover:scale-110 transition-transform" />
-                      <span className="text-sm font-medium text-gray-700">Outlook</span>
+                      <img src={OutlookIcon} alt="Outlook" className="h-10 w-10 object-contain group-hover:scale-105 transition-transform" />
+                      <span className="text-xs font-medium text-gray-700">Outlook</span>
                     </button>
                     
                     <button
@@ -896,10 +899,10 @@ export default function Sync() {
                         setShowSourcesModal(false);
                         navigate('/integrations');
                       }}
-                      className="flex flex-col items-center gap-2 p-4 rounded-lg border border-gray-200 hover:border-green-300 hover:bg-green-50 transition-colors group"
+                      className="flex flex-col items-center gap-1.5 p-2.5 rounded-lg border border-gray-200 hover:border-green-300 hover:bg-green-50 transition-colors group"
                     >
-                      <HardDrive className="h-8 w-8 text-green-500 group-hover:scale-110 transition-transform" />
-                      <span className="text-sm font-medium text-gray-700">Google Drive</span>
+                      <img src={GoogleDriveIcon} alt="Google Drive" className="h-10 w-10 object-contain group-hover:scale-105 transition-transform" />
+                      <span className="text-xs font-medium text-gray-700">Google Drive</span>
                     </button>
                     
                     <button
@@ -907,14 +910,14 @@ export default function Sync() {
                         setShowSourcesModal(false);
                         navigate('/integrations');
                       }}
-                      className="flex flex-col items-center gap-2 p-4 rounded-lg border border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-colors group"
+                      className="flex flex-col items-center gap-1.5 p-2.5 rounded-lg border border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-colors group"
                     >
-                      <Cloud className="h-8 w-8 text-blue-600 group-hover:scale-110 transition-transform" />
-                      <span className="text-sm font-medium text-gray-700">Dropbox</span>
+                      <img src={DropboxIcon} alt="Dropbox" className="h-10 w-10 object-contain group-hover:scale-105 transition-transform" />
+                      <span className="text-xs font-medium text-gray-700">Dropbox</span>
                     </button>
                   </div>
                   
-                  <div className="flex justify-center pt-2">
+                  <div className="flex justify-center pt-1">
                     <Button
                       variant="ghost"
                       onClick={() => setShowSourcesModal(false)}

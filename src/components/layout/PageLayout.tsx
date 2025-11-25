@@ -9,6 +9,7 @@ interface PageLayoutProps {
   forceTransparent?: boolean;
   midnight?: boolean;
   plainBackground?: boolean;
+  logoFontFamily?: string;
 }
 export function PageLayout({
   children,
@@ -17,7 +18,8 @@ export function PageLayout({
   hideSidebar,
   forceTransparent,
   midnight,
-  plainBackground
+  plainBackground,
+  logoFontFamily
 }: PageLayoutProps) {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
   const toggleSidebar = () => {
@@ -45,7 +47,7 @@ export function PageLayout({
                 <div className="fixed top-3 left-4 z-50 pointer-events-none">
                   <span
                     className="font-black tracking-tight text-xl select-none bg-gradient-to-r from-[#1e3a5f] via-[#4a90a4] to-[#2d5a7b] bg-clip-text text-transparent"
-                    style={{ fontWeight: 900 }}
+                    style={{ fontWeight: 900, fontFamily: logoFontFamily || 'inherit' }}
                   >
                     CLARIO
                   </span>
