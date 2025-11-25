@@ -296,6 +296,13 @@
   .platform .font-bold { font-weight: 700 !important; }
   .platform .font-semibold { font-weight: 600 !important; }
   .platform .font-medium { font-weight: 500 !important; }
+  
+  /* CLARIO logo with Nunito Sans - override global font */
+  .clario-logo-nunito {
+    font-family: "Nunito Sans", sans-serif !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+  }
 }
 
 /* Slightly lighter typography on landing page */

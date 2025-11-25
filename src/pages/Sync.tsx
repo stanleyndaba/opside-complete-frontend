@@ -865,7 +865,7 @@ export default function Sync() {
               <Dialog open={showSourcesModal} onOpenChange={setShowSourcesModal}>
                 <DialogContent className="sm:max-w-md bg-white">
                   <DialogHeader className="pb-3">
-                    <DialogTitle className="text-lg font-semibold">Link Sources for Document Ingestion</DialogTitle>
+                    <DialogTitle className="text-lg font-semibold text-gray-900">Link Sources for Document Ingestion</DialogTitle>
                     <DialogDescription className="text-sm text-gray-500">
                       Read-only access. No writing or sending permissions.
                     </DialogDescription>
