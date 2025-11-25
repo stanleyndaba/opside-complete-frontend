@@ -355,9 +355,9 @@ export default function EvidenceLocker() {
 
   return <PageLayout title="Doc Locker">
       <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
-          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-300 space-y-8">
+        <div className="relative w-full bg-gray-50 min-h-[calc(100vh+96px)] -mt-24 pt-24">
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-gray-50 to-white" />
+          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-900 space-y-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <GmailConnectionStatus onStatusChange={setGmailConnected} />
           <EvidenceIngestion gmailConnected={gmailConnected} onIngestionComplete={() => {
@@ -373,7 +373,7 @@ export default function EvidenceLocker() {
             });
           }} />
         </div>
-        <Card className="bg-white/5 border-white/10 text-gray-300">
+        <Card className="bg-white border-gray-200 text-gray-900">
           <CardHeader>
             <CardTitle>Upload Documents</CardTitle>
             <CardDescription>
@@ -381,10 +381,10 @@ export default function EvidenceLocker() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className={`border-2 border-dashed rounded-lg p-8 text-center transition-all ${dragActive ? 'border-emerald-500/50 bg-white/5' : 'border-white/20 hover:border-emerald-400/50'}`} onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}>
-              <Upload className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+            <div className={`border-2 border-dashed rounded-lg p-8 text-center transition-all ${dragActive ? 'border-emerald-500 bg-emerald-50' : 'border-gray-200 hover:border-emerald-400'}`} onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}>
+              <Upload className="h-12 w-12 mx-auto mb-4 text-gray-500" />
               <h3 className="text-lg font-semibold mb-2">Drag & Drop Your Invoices or Purchase Orders Here</h3>
-              <p className="text-gray-400 mb-4">
+              <p className="text-gray-600 mb-4">
                 Supports PDF, JPG, PNG files up to 10MB
               </p>
               
@@ -523,40 +523,40 @@ export default function EvidenceLocker() {
                   }
                 }} />
                 
-                <div className="flex items-center gap-2 text-sm text-gray-400">
+                <div className="flex items-center gap-2 text-sm text-gray-600">
                   <Mail className="w-4 h-4" />
                   <span>or email to:</span>
-                  <code className="bg-white/5 border border-white/10 px-2 py-1 rounded text-gray-100">
+                  <code className="bg-gray-50 border border-gray-200 px-2 py-1 rounded text-gray-900">
                     store@invoices.opside.ai
                   </code>
-                  <Link to="/integrations-hub" className="ml-3 inline-flex items-center gap-1 text-blue-300 hover:text-blue-200">
+                  <Link to="/integrations-hub" className="ml-3 inline-flex items-center gap-1 text-blue-600 hover:text-blue-700">
                     Connect Sources <ExternalLink className="h-3 w-3" />
                   </Link>
                 </div>
                 <Button variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={exportCsv}>Export CSV</Button>
-                <div className="text-xs text-gray-400 ml-2">{selectedIds.size > 0 ? `${selectedIds.size} selected` : ''}</div>
+                <div className="text-xs text-gray-600 ml-2">{selectedIds.size > 0 ? `${selectedIds.size} selected` : ''}</div>
               </div>
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-white/5 border-white/10 text-gray-300">
+        <Card className="bg-white border-gray-200 text-gray-900">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-gray-200">Document Library</CardTitle>
-                <CardDescription className="text-gray-400">All uploaded evidence documents</CardDescription>
+                <CardTitle className="text-black">Document Library</CardTitle>
+                <CardDescription className="text-gray-600">All uploaded evidence documents</CardDescription>
               </div>
               <div className="flex flex-wrap items-center gap-2">
                 <div className="relative">
                   <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500 stroke-[2]" />
-                  <Input placeholder="Search supplier, invoice #, claim ID…" value={q} onChange={(e) => setQ(e.target.value)} className="pl-8 w-72 border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" />
+                  <Input placeholder="Search supplier, invoice #, claim ID…" value={q} onChange={(e) => setQ(e.target.value)} className="pl-8 w-72 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
                 </div>
-                <Input placeholder="Supplier" value={supplier} onChange={(e) => setSupplier(e.target.value)} className="w-40 border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" />
-                <Input placeholder="Type (invoice/receipt/shipping)" value={type} onChange={(e) => setType(e.target.value)} className="w-56 border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" />
-                <Input placeholder="Amount min" value={amountMin} onChange={(e) => setAmountMin(e.target.value)} className="w-28 border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" />
-                <Input placeholder="Amount max" value={amountMax} onChange={(e) => setAmountMax(e.target.value)} className="w-28 border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" />
-                <Input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500 [color-scheme:dark]" />
-                <Input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500 [color-scheme:dark]" />
+                <Input placeholder="Supplier" value={supplier} onChange={(e) => setSupplier(e.target.value)} className="w-40 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
+                <Input placeholder="Type (invoice/receipt/shipping)" value={type} onChange={(e) => setType(e.target.value)} className="w-56 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
+                <Input placeholder="Amount min" value={amountMin} onChange={(e) => setAmountMin(e.target.value)} className="w-28 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
+                <Input placeholder="Amount max" value={amountMax} onChange={(e) => setAmountMax(e.target.value)} className="w-28 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
+                <Input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
+                <Input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
               </div>
             </div>
           </CardHeader>
@@ -567,7 +567,7 @@ export default function EvidenceLocker() {
               <Table className="min-w-[1150px]">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="text-gray-300 whitespace-nowrap">
+                    <TableHead className="text-gray-700 whitespace-nowrap">
                       <Checkbox checked={selectedIds.size>0 && selectedIds.size===pageData.length} onCheckedChange={(c) => {
                         if (c) setSelectedIds(new Set(pageData.map(d=>d.id))); else setSelectedIds(new Set());
                       }} />
@@ -582,7 +582,7 @@ export default function EvidenceLocker() {
                     <TableHead className="text-gray-300 whitespace-nowrap cursor-pointer" onClick={() => toggleSort('amount')}>Amount</TableHead>
                     <TableHead className="text-gray-300 whitespace-nowrap cursor-pointer" onClick={() => toggleSort('matchedClaims')}>Matched Claims</TableHead>
                     <TableHead className="text-gray-300 whitespace-nowrap cursor-pointer" onClick={() => toggleSort('linkedSKUs')}>Linked SKUs</TableHead>
-                    <TableHead className="text-gray-300 whitespace-nowrap">Actions</TableHead>
+                    <TableHead className="text-gray-700 whitespace-nowrap">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -595,7 +595,7 @@ export default function EvidenceLocker() {
                       <TableCell className="whitespace-nowrap">
                         <div className="flex items-center gap-2">
                           <FileText className="h-4 w-4 text-gray-400" />
-                          <span className="font-medium text-gray-100">{doc.name}</span>
+                          <span className="font-medium text-black">{doc.name}</span>
                         </div>
                       </TableCell>
                       <TableCell className="whitespace-nowrap">{doc.supplier || '—'}</TableCell>

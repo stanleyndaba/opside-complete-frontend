@@ -127,12 +127,12 @@ export default function Help() {
   return (
     <PageLayout title="Seller Support">
       <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
-          <div className="relative container max-w-4xl mx-auto px-6 pt-6 pb-10 text-gray-300">
+        <div className="relative w-full bg-gray-50 min-h-[calc(100vh+96px)] -mt-24 pt-24">
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-gray-50 to-white" />
+          <div className="relative container max-w-4xl mx-auto px-6 pt-6 pb-10 text-gray-900">
         {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-100 mb-2">Seller Support</h1>
+            <h1 className="text-3xl font-bold text-black mb-2">Seller Support</h1>
           <p className="text-muted-foreground text-lg">Get the help you need, when you need it</p>
         </div>
 
@@ -154,13 +154,13 @@ export default function Help() {
           </div>
 
           {/* FAQs */}
-          <Card className="bg-white/5 border-white/10 text-gray-300">
+          <Card className="bg-white border-gray-200 text-gray-900">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-gray-200">
+              <CardTitle className="flex items-center gap-2 text-black">
                 <HelpCircle className="h-5 w-5" />
                 Frequently Asked Questions
               </CardTitle>
-              <CardDescription className="text-gray-400">Quick answers to the most common questions</CardDescription>
+              <CardDescription className="text-gray-600">Quick answers to the most common questions</CardDescription>
             </CardHeader>
             <CardContent>
               <Accordion type="single" collapsible className="w-full">
@@ -169,7 +169,7 @@ export default function Help() {
                     <AccordionTrigger className="text-left hover:no-underline">
                       {faq.question}
                     </AccordionTrigger>
-                    <AccordionContent className="text-gray-400 leading-relaxed">
+                    <AccordionContent className="text-gray-600 leading-relaxed">
                       {faq.answer}
                     </AccordionContent>
                   </AccordionItem>
@@ -194,24 +194,24 @@ export default function Help() {
 
           <div className="grid md:grid-cols-2 gap-6">
             {/* Getting Started Guide */}
-            <Card className="bg-white/5 border-white/10 text-gray-300">
+            <Card className="bg-white border-gray-200 text-gray-900">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-gray-200">
+                <CardTitle className="flex items-center gap-2 text-black">
                   <BookOpen className="h-5 w-5" />
                   Getting Started Guide
                 </CardTitle>
-                <CardDescription className="text-gray-400">New to Opside? Start here for a complete walkthrough</CardDescription>
+                <CardDescription className="text-gray-600">New to Opside? Start here for a complete walkthrough</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {gettingStartedSteps.map((step, index) => (
-                  <div key={index} className="flex items-start gap-3 p-3 rounded-lg border border-white/10 bg-white/5">
+                  <div key={index} className="flex items-start gap-3 p-3 rounded-lg border border-gray-200 bg-gray-50">
                     <div className="flex items-center justify-center w-6 h-6 bg-primary text-primary-foreground rounded-full text-sm font-medium flex-shrink-0">
                       {index + 1}
                     </div>
                     <div className="flex-1">
                       <h4 className="font-medium text-sm">{step.title}</h4>
-                      <p className="text-xs text-gray-400 mt-1">{step.description}</p>
-                      <Badge variant="secondary" className="mt-2 text-xs bg-white/10 text-white">
+                      <p className="text-xs text-gray-600 mt-1">{step.description}</p>
+                      <Badge variant="secondary" className="mt-2 text-xs bg-gray-100 text-gray-900">
                         {step.duration}
                       </Badge>
                     </div>
@@ -226,33 +226,33 @@ export default function Help() {
             </Card>
 
             {/* Understanding Dashboard */}
-            <Card className="bg-white/5 border-white/10 text-gray-300">
+            <Card className="bg-white border-gray-200 text-gray-900">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-gray-200">
+                <CardTitle className="flex items-center gap-2 text-black">
                   <MessageSquare className="h-5 w-5" />
                   Understanding Your Dashboard
                 </CardTitle>
-                <CardDescription className="text-gray-400">Learn what each metric means and how it's calculated</CardDescription>
+                <CardDescription className="text-gray-600">Learn what each metric means and how it's calculated</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
-                  <div className="p-3 rounded-lg border border-white/10 bg-white/5">
+                  <div className="p-3 rounded-lg border border-gray-200 bg-gray-50">
                     <h4 className="font-medium text-sm">Total Guaranteed</h4>
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-gray-600 mt-1">
                       The total amount we've committed to recover for active claims
                     </p>
                   </div>
                   
-                  <div className="p-3 rounded-lg border border-white/10 bg-white/5">
+                  <div className="p-3 rounded-lg border border-gray-200 bg-gray-50">
                     <h4 className="font-medium text-sm">Recovery Success Rate</h4>
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-gray-600 mt-1">
                       Percentage of submitted claims that result in successful payouts
                     </p>
                   </div>
                   
-                  <div className="p-3 rounded-lg border border-white/10 bg-white/5">
+                  <div className="p-3 rounded-lg border border-gray-200 bg-gray-50">
                     <h4 className="font-medium text-sm">Average Processing Time</h4>
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-gray-600 mt-1">
                       Typical time from claim submission to payout completion
                     </p>
                   </div>
@@ -267,7 +267,7 @@ export default function Help() {
           </div>
         </section>
 
-        <Separator className="my-12 border-white/10" />
+        <Separator className="my-12 border-gray-200" />
 
         {/* Tier 3: Human Assistance */}
         <section>
@@ -278,13 +278,13 @@ export default function Help() {
 
           <div className="grid md:grid-cols-2 gap-6">
             {/* Email Support */}
-            <Card className="bg-white/5 border-white/10 text-gray-300">
+            <Card className="bg-white border-gray-200 text-gray-900">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-gray-200">
+                <CardTitle className="flex items-center gap-2 text-black">
                   <Mail className="h-5 w-5" />
                   Email Support
                 </CardTitle>
-                <CardDescription className="text-gray-400">Get detailed help via email - we respond within 24 hours</CardDescription>
+                <CardDescription className="text-gray-600">Get detailed help via email - we respond within 24 hours</CardDescription>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleContactSubmit} className="space-y-4">
