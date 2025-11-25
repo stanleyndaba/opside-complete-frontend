@@ -1420,7 +1420,7 @@ export default function Recoveries() {
 
               {/* Claim Type Filter */}
               <Select>
-                <SelectTrigger className="w-[180px] text-slate-800 placeholder:text-slate-800">
+                <SelectTrigger className="w-[180px] text-white placeholder:text-white">
                   <SelectValue placeholder="Filter by Claim Type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -1432,7 +1432,7 @@ export default function Recoveries() {
 
               {/* Status Filter */}
               <Select>
-                <SelectTrigger className="w-[180px] text-slate-800 placeholder:text-slate-800">
+                <SelectTrigger className="w-[180px] text-white placeholder:text-white">
                   <SelectValue placeholder="Filter by Status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -1446,11 +1446,11 @@ export default function Recoveries() {
               <Select value={filterSource} onValueChange={(value: 'all' | 'detected' | 'synced') => {
                 setFilterSource(value);
               }}>
-                <SelectTrigger className="w-[180px] text-slate-800 placeholder:text-slate-800">
+                <SelectTrigger className="w-[180px] text-white placeholder:text-white">
                   <SelectValue placeholder="Filter by Source" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Sources</SelectItem>
+                  <SelectItem value="all" className="text-white">All Sources</SelectItem>
                   <SelectItem value="detected">Detected (Phase 3)</SelectItem>
                   <SelectItem value="synced">Synced from Amazon</SelectItem>
                 </SelectContent>
@@ -1515,18 +1515,18 @@ export default function Recoveries() {
                       else setSelectedIds(new Set());
                     }} />
                   </TableHead>
-                  <TableHead>Source</TableHead>
-                  <TableHead>Claim ID</TableHead>
-                  <TableHead>Created</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Confidence</TableHead>
-                  <TableHead>Evidence</TableHead>
-                  <TableHead>Details</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Days Remaining</TableHead>
-                  <TableHead>Guaranteed Amount</TableHead>
-                  <TableHead>Expected Payout</TableHead>
-                  <TableHead>Actions</TableHead>
+                  <TableHead className="text-[#36454F]">Source</TableHead>
+                  <TableHead className="text-[#36454F]">Claim ID</TableHead>
+                  <TableHead className="text-[#36454F]">Created</TableHead>
+                  <TableHead className="text-[#36454F]">Type</TableHead>
+                  <TableHead className="text-[#36454F]">Confidence</TableHead>
+                  <TableHead className="text-[#36454F]">Evidence</TableHead>
+                  <TableHead className="text-[#36454F]">Details</TableHead>
+                  <TableHead className="text-[#36454F]">Status</TableHead>
+                  <TableHead className="text-[#36454F]">Days Remaining</TableHead>
+                  <TableHead className="text-[#36454F]">Guaranteed Amount</TableHead>
+                  <TableHead className="text-[#36454F]">Expected Payout</TableHead>
+                  <TableHead className="text-[#36454F]">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -1584,7 +1584,7 @@ export default function Recoveries() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <span className="text-xs text-gray-300">{claim._evidence}</span>
+                      <span className="text-xs text-[#36454F]">{claim._evidence}</span>
                     </TableCell>
                     <TableCell className="max-w-xs">
                       <div className="truncate" title={claim.details}>
@@ -1601,11 +1601,11 @@ export default function Recoveries() {
                     </TableCell>
                     <TableCell>
                       {claim.days_remaining !== null && claim.days_remaining !== undefined ? (
-                        <span className={claim.days_remaining <= 7 ? 'text-amber-400 font-semibold' : 'text-gray-300'}>
+                        <span className={claim.days_remaining <= 7 ? 'text-amber-400 font-semibold' : 'text-[#36454F]'}>
                           {claim.days_remaining} days
                         </span>
                       ) : (
-                        <span className="text-gray-500">-</span>
+                        <span className="text-[#36454F]">-</span>
                       )}
                     </TableCell>
                     <TableCell className="font-medium">{formatCurrency(claim.guaranteedAmount, claim.currency || 'USD')}</TableCell>

@@ -76,8 +76,9 @@ export function Navbar({
                   variant={isTransparent ? 'dark' : 'default'}
                   className={cn(
                     "pl-9 h-9 rounded-md",
-                    isDashboard && "!bg-white/5 !border-white/10 !text-gray-200 !placeholder:text-gray-400 backdrop-blur-sm",
-                    isTransparent && !isDashboard && "!bg-white/10 !border-white/20 !text-gray-200 !placeholder:text-gray-400 backdrop-blur-sm"
+                    isDashboard && "!bg-white/5 !border-gray-300 !text-gray-200 !placeholder:text-gray-400 backdrop-blur-sm",
+                    isTransparent && !isDashboard && "!bg-white/10 !border-gray-300 !text-gray-200 !placeholder:text-gray-400 backdrop-blur-sm",
+                    !isDashboard && !isTransparent && "!border-gray-300"
                   )}
                 />
               </div>
