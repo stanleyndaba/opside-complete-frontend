@@ -194,7 +194,7 @@ export function EvidenceIngestion({ onIngestionComplete, gmailConnected = false 
   return (
     <Card className="bg-white/5 border-white/10">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-gray-200">
+        <CardTitle className="flex items-center gap-2 text-[#36454F]">
           <Cloud className="h-5 w-5" />
           Evidence Ingestion
         </CardTitle>

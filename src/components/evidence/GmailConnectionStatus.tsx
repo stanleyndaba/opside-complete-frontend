@@ -140,8 +140,8 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
   return (
     <Card className="bg-white/5 border-white/10">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-gray-200">
-          <Mail className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 text-[#36454F]">
+          <img src="/G.png" alt="Gmail" className="h-5 w-5" />
           Gmail Connection
         </CardTitle>
         <CardDescription className="text-gray-400">

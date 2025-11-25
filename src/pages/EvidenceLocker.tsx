@@ -572,16 +572,16 @@ export default function EvidenceLocker() {
                         if (c) setSelectedIds(new Set(pageData.map(d=>d.id))); else setSelectedIds(new Set());
                       }} />
                     </TableHead>
-                    <TableHead className="text-gray-300 whitespace-nowrap cursor-pointer" onClick={() => toggleSort('name')}>Document Name</TableHead>
-                    <TableHead className="text-gray-300 whitespace-nowrap cursor-pointer" onClick={() => toggleSort('supplier')}>Supplier</TableHead>
-                    <TableHead className="text-gray-300 whitespace-nowrap cursor-pointer" onClick={() => toggleSort('invoice')}>Invoice #</TableHead>
-                    <TableHead className="text-gray-300 whitespace-nowrap cursor-pointer" onClick={() => toggleSort('uploadDate')}>Upload Date</TableHead>
-                    <TableHead className="text-gray-300 whitespace-nowrap cursor-pointer" onClick={() => toggleSort('status')}>Status</TableHead>
-                    <TableHead className="text-gray-300 whitespace-nowrap cursor-pointer" onClick={() => toggleSort('parser_status')}>Parsing Status</TableHead>
-                    <TableHead className="text-gray-300 whitespace-nowrap cursor-pointer" onClick={() => toggleSort('parsedVia')}>Parsed Via</TableHead>
-                    <TableHead className="text-gray-300 whitespace-nowrap cursor-pointer" onClick={() => toggleSort('amount')}>Amount</TableHead>
-                    <TableHead className="text-gray-300 whitespace-nowrap cursor-pointer" onClick={() => toggleSort('matchedClaims')}>Matched Claims</TableHead>
-                    <TableHead className="text-gray-300 whitespace-nowrap cursor-pointer" onClick={() => toggleSort('linkedSKUs')}>Linked SKUs</TableHead>
+                    <TableHead className="text-[#36454F] whitespace-nowrap cursor-pointer" onClick={() => toggleSort('name')}>Document Name</TableHead>
+                    <TableHead className="text-[#36454F] whitespace-nowrap cursor-pointer" onClick={() => toggleSort('supplier')}>Supplier</TableHead>
+                    <TableHead className="text-[#36454F] whitespace-nowrap cursor-pointer" onClick={() => toggleSort('invoice')}>Invoice #</TableHead>
+                    <TableHead className="text-[#36454F] whitespace-nowrap cursor-pointer" onClick={() => toggleSort('uploadDate')}>Upload Date</TableHead>
+                    <TableHead className="text-[#36454F] whitespace-nowrap cursor-pointer" onClick={() => toggleSort('status')}>Status</TableHead>
+                    <TableHead className="text-[#36454F] whitespace-nowrap cursor-pointer" onClick={() => toggleSort('parser_status')}>Parsing Status</TableHead>
+                    <TableHead className="text-[#36454F] whitespace-nowrap cursor-pointer" onClick={() => toggleSort('parsedVia')}>Parsed Via</TableHead>
+                    <TableHead className="text-[#36454F] whitespace-nowrap cursor-pointer" onClick={() => toggleSort('amount')}>Amount</TableHead>
+                    <TableHead className="text-[#36454F] whitespace-nowrap cursor-pointer" onClick={() => toggleSort('matchedClaims')}>Matched Claims</TableHead>
+                    <TableHead className="text-[#36454F] whitespace-nowrap cursor-pointer" onClick={() => toggleSort('linkedSKUs')}>Linked SKUs</TableHead>
                     <TableHead className="text-gray-700 whitespace-nowrap">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
