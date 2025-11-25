@@ -148,7 +148,7 @@ export default function Help() {
                 placeholder='Search for help (e.g., "How is my bill calculated?")'
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-12 py-6 text-lg border-2 focus:border-primary"
+                className="pl-12 py-6 text-lg border-2 focus:border-primary bg-gray-100 text-[#36454F] placeholder:text-gray-500"
               />
             </div>
           </div>
@@ -311,7 +311,7 @@ export default function Help() {
                   <div>
                     <Label htmlFor="category">Issue Category</Label>
                     <Select value={contactForm.category} onValueChange={(value) => setContactForm({ ...contactForm, category: value })}>
-                      <SelectTrigger className="placeholder:text-black text-black">
+                      <SelectTrigger className="placeholder:text-gray-400 text-black">
                         <SelectValue placeholder="Select issue type" />
                       </SelectTrigger>
                       <SelectContent>
@@ -346,7 +346,7 @@ export default function Help() {
             {/* Book a Call */}
             <Card className="bg-white/5 border-white/10 text-gray-300">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-gray-200">
+                <CardTitle className="flex items-center gap-2 text-black">
                   <Calendar className="h-5 w-5" />
                   Book a 15-Minute Call
                 </CardTitle>
@@ -357,7 +357,7 @@ export default function Help() {
                   <div className="flex items-center gap-3 p-3 rounded-lg border border-white/10 bg-white/5">
                     <Phone className="h-4 w-4 text-gray-400" />
                     <div>
-                      <p className="text-sm font-medium">Direct Access</p>
+                      <p className="text-sm font-medium text-black">Direct Access</p>
                       <p className="text-xs text-gray-400">Speak with a recovery specialist</p>
                     </div>
                   </div>
@@ -365,7 +365,7 @@ export default function Help() {
                   <div className="flex items-center gap-3 p-3 rounded-lg border border-white/10 bg-white/5">
                     <Calendar className="h-4 w-4 text-gray-400" />
                     <div>
-                      <p className="text-sm font-medium">Flexible Scheduling</p>
+                      <p className="text-sm font-medium text-black">Flexible Scheduling</p>
                       <p className="text-xs text-gray-400">Choose a time that works for you</p>
                     </div>
                   </div>
@@ -373,7 +373,7 @@ export default function Help() {
                   <div className="flex items-center gap-3 p-3 rounded-lg border border-white/10 bg-white/5">
                     <Video className="h-4 w-4 text-gray-400" />
                     <div>
-                      <p className="text-sm font-medium">Screen Sharing</p>
+                      <p className="text-sm font-medium text-black">Screen Sharing</p>
                       <p className="text-xs text-gray-400">We can walk through your dashboard together</p>
                     </div>
                   </div>
