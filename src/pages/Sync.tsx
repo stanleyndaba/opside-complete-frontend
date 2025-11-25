@@ -1,71 +1,56 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { startSync, getSyncStatus, cancelSync, getSyncHistory, subscribeSyncProgress, type SyncStatusResponse } from '@/lib/inventoryApi';
+import { Input } from '@/components/ui/input';
+import { startSync, getSyncStatus, cancelSync, subscribeSyncProgress, type SyncStatusResponse } from '@/lib/inventoryApi';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { RefreshCw, XCircle, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import { RefreshCw, XCircle, CheckCircle2, AlertCircle, Loader2, Search, Package, Truck, RotateCcw, DollarSign, Archive, Target, Clock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useDetectionUpdates } from '@/hooks/use-detection-updates';
 
-const LOG_SEQUENCE = [
-  {
-    id: 'inventory',
-    status: 'Syncing inventory history...',
-    lines: [
-      'Fetching last 18 months of Inventory History...',
-      'Buffering 48 ledger exports...',
-      'Normalizing FNSKU-level quantities...'
-    ]
-  },
-  {
-    id: 'transactions',
-    status: 'Scanning transaction ledgers...',
-    lines: [
-      '14,205 Transactions Found...',
-      'Auditing settlements vs payouts...',
-      'Tagging reimbursable events...'
-    ]
-  },
-  {
-    id: 'shipments',
-    status: 'Syncing shipment receipts...',
-    lines: [
-      'Cross-referencing Shipment IDs...',
-      'Verifying inbound shortages & damages...',
-      'Matching FC receiving logs...'
-    ]
-  },
-  {
-    id: 'returns',
-    status: 'Auditing returns & refunds...',
-    lines: [
-      'Pairing customer refunds with units returned...',
-      'Checking “refunded but never received” anomalies...',
-      'Tracking refurbishment deductions...'
-    ]
-  },
-  {
-    id: 'settlements',
-    status: 'Reconciling settlements & fees...',
-    lines: [
-      'Reconciling deposit statements...',
-      'Scanning weight & dimension fee swings...',
-      'Matching reimbursements to deposit ledger...'
-    ]
-  },
-  {
-    id: 'claims',
-    status: 'Queuing claims & alerts...',
-    lines: [
-      'Flagging variance thresholds...',
-      'Generating claim packets...',
-      'Awaiting final push to dashboard...'
-    ]
+// Log entry type
+interface LogEntry {
+  id: string;
+  timestamp: Date;
+  type: 'info' | 'success' | 'warning' | 'error' | 'progress';
+  category: 'orders' | 'inventory' | 'shipments' | 'returns' | 'settlements' | 'fees' | 'claims' | 'detection' | 'system';
+  message: string;
+  count?: number;
+}
+
+// Data type tracking
+interface DataTypeStatus {
+  orders: { syncing: boolean; completed: boolean; count: number };
+  inventory: { syncing: boolean; completed: boolean; count: number };
+  shipments: { syncing: boolean; completed: boolean; count: number };
+  returns: { syncing: boolean; completed: boolean; count: number };
+  settlements: { syncing: boolean; completed: boolean; count: number };
+  fees: { syncing: boolean; completed: boolean; count: number };
+  claims: { syncing: boolean; completed: boolean; count: number };
+}
+
+// Category icons
+const getCategoryIcon = (category: LogEntry['category']) => {
+  switch (category) {
+    case 'orders': return <Package className="h-3.5 w-3.5" />;
+    case 'inventory': return <Archive className="h-3.5 w-3.5" />;
+    case 'shipments': return <Truck className="h-3.5 w-3.5" />;
+    case 'returns': return <RotateCcw className="h-3.5 w-3.5" />;
+    case 'settlements': return <DollarSign className="h-3.5 w-3.5" />;
+    case 'fees': return <DollarSign className="h-3.5 w-3.5" />;
+    case 'claims': return <Target className="h-3.5 w-3.5" />;
+    case 'detection': return <Target className="h-3.5 w-3.5" />;
+    case 'system': return <Clock className="h-3.5 w-3.5" />;
   }
-];
+};
+
+// Format timestamp like Render logs
+const formatTimestamp = (date: Date) => {
+  return date.toISOString().replace('T', ' ').slice(0, 23);
+};
 
 export default function Sync() {
   const navigate = useNavigate();
@@ -81,47 +66,131 @@ export default function Sync() {
   const { toast } = useToast();
   const previousStatusRef = useRef<'idle' | 'running' | 'completed' | 'failed' | 'cancelled'>('idle');
   const toastShownRef = useRef<{ started?: boolean; completed?: boolean; failed?: boolean; cancelled?: boolean }>({});
-  const [logStepIndex, setLogStepIndex] = useState(0);
-  const logIntervalRef = useRef<number | null>(null);
   const [showConnectCard, setShowConnectCard] = useState(false);
   const connectCardTimeoutRef = useRef<number | null>(null);
+  
+  // Log system state
+  const [logs, setLogs] = useState<LogEntry[]>([]);
+  const [logSearch, setLogSearch] = useState('');
+  const logContainerRef = useRef<HTMLDivElement>(null);
+  const previousDataRef = useRef<DataTypeStatus>({
+    orders: { syncing: false, completed: false, count: 0 },
+    inventory: { syncing: false, completed: false, count: 0 },
+    shipments: { syncing: false, completed: false, count: 0 },
+    returns: { syncing: false, completed: false, count: 0 },
+    settlements: { syncing: false, completed: false, count: 0 },
+    fees: { syncing: false, completed: false, count: 0 },
+    claims: { syncing: false, completed: false, count: 0 },
+  });
 
+  // Add a log entry
+  const addLog = (entry: Omit<LogEntry, 'id' | 'timestamp'>) => {
+    const newEntry: LogEntry = {
+      ...entry,
+      id: `log_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      timestamp: new Date(),
+    };
+    setLogs(prev => [...prev, newEntry]);
+  };
+
+  // Scroll to bottom of logs
   useEffect(() => {
-    if (typeof window === 'undefined') return undefined;
-
-    const clearLogInterval = () => {
-      if (logIntervalRef.current) {
-        window.clearInterval(logIntervalRef.current);
-        logIntervalRef.current = null;
-      }
-    };
-
-    if (status === 'running') {
-      setLogStepIndex(0);
-      clearLogInterval();
-      logIntervalRef.current = window.setInterval(() => {
-        setLogStepIndex((prev) => {
-          if (prev >= LOG_SEQUENCE.length - 1) {
-            clearLogInterval();
-            return LOG_SEQUENCE.length - 1;
-          }
-          return prev + 1;
-        });
-      }, 3200);
-    } else if (status === 'completed') {
-      clearLogInterval();
-      setLogStepIndex(LOG_SEQUENCE.length - 1);
-    } else if (status === 'idle') {
-      clearLogInterval();
-      setLogStepIndex(0);
-    } else if (status === 'failed' || status === 'cancelled') {
-      clearLogInterval();
+    if (logContainerRef.current) {
+      logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;
     }
+  }, [logs]);
 
-    return () => {
-      clearLogInterval();
-    };
-  }, [status]);
+  // Filter logs based on search
+  const filteredLogs = useMemo(() => {
+    if (!logSearch.trim()) return logs;
+    const searchLower = logSearch.toLowerCase();
+    return logs.filter(log => 
+      log.message.toLowerCase().includes(searchLower) ||
+      log.category.toLowerCase().includes(searchLower)
+    );
+  }, [logs, logSearch]);
+
+  // Update logs based on sync data changes
+  const updateLogsFromSyncData = (data: SyncStatusResponse) => {
+    const prev = previousDataRef.current;
+    
+    // Check orders
+    if (data.ordersProcessed && data.ordersProcessed > 0 && !prev.orders.completed) {
+      if (!prev.orders.syncing) {
+        addLog({ type: 'progress', category: 'orders', message: 'Syncing orders from Amazon SP-API...' });
+        prev.orders.syncing = true;
+      }
+      if (data.ordersProcessed >= (data.totalOrders || data.ordersProcessed)) {
+        addLog({ type: 'success', category: 'orders', message: `✓ Orders synced: ${data.ordersProcessed.toLocaleString()} orders processed`, count: data.ordersProcessed });
+        prev.orders.completed = true;
+        prev.orders.count = data.ordersProcessed;
+      }
+    }
+    
+    // Check inventory
+    if (data.inventoryCount && data.inventoryCount > 0 && !prev.inventory.completed) {
+      if (!prev.inventory.syncing) {
+        addLog({ type: 'progress', category: 'inventory', message: 'Syncing inventory levels...' });
+        prev.inventory.syncing = true;
+      }
+      addLog({ type: 'success', category: 'inventory', message: `✓ Inventory synced: ${data.inventoryCount.toLocaleString()} items`, count: data.inventoryCount });
+      prev.inventory.completed = true;
+      prev.inventory.count = data.inventoryCount;
+    }
+    
+    // Check shipments
+    if (data.shipmentsCount && data.shipmentsCount > 0 && !prev.shipments.completed) {
+      if (!prev.shipments.syncing) {
+        addLog({ type: 'progress', category: 'shipments', message: 'Syncing inbound shipments...' });
+        prev.shipments.syncing = true;
+      }
+      addLog({ type: 'success', category: 'shipments', message: `✓ Shipments synced: ${data.shipmentsCount.toLocaleString()} shipments`, count: data.shipmentsCount });
+      prev.shipments.completed = true;
+      prev.shipments.count = data.shipmentsCount;
+    }
+    
+    // Check returns
+    if (data.returnsCount && data.returnsCount > 0 && !prev.returns.completed) {
+      if (!prev.returns.syncing) {
+        addLog({ type: 'progress', category: 'returns', message: 'Syncing customer returns...' });
+        prev.returns.syncing = true;
+      }
+      addLog({ type: 'success', category: 'returns', message: `✓ Returns synced: ${data.returnsCount.toLocaleString()} returns`, count: data.returnsCount });
+      prev.returns.completed = true;
+      prev.returns.count = data.returnsCount;
+    }
+    
+    // Check settlements
+    if (data.settlementsCount && data.settlementsCount > 0 && !prev.settlements.completed) {
+      if (!prev.settlements.syncing) {
+        addLog({ type: 'progress', category: 'settlements', message: 'Syncing settlement reports...' });
+        prev.settlements.syncing = true;
+      }
+      addLog({ type: 'success', category: 'settlements', message: `✓ Settlements synced: ${data.settlementsCount.toLocaleString()} settlements`, count: data.settlementsCount });
+      prev.settlements.completed = true;
+      prev.settlements.count = data.settlementsCount;
+    }
+    
+    // Check fees
+    if (data.feesCount && data.feesCount > 0 && !prev.fees.completed) {
+      if (!prev.fees.syncing) {
+        addLog({ type: 'progress', category: 'fees', message: 'Syncing FBA fees...' });
+        prev.fees.syncing = true;
+      }
+      addLog({ type: 'success', category: 'fees', message: `✓ Fees synced: ${data.feesCount.toLocaleString()} fee records`, count: data.feesCount });
+      prev.fees.completed = true;
+      prev.fees.count = data.feesCount;
+    }
+    
+    // Check claims detected
+    if (data.claimsDetected && data.claimsDetected > 0 && !prev.claims.completed) {
+      addLog({ type: 'success', category: 'claims', message: `✓ Claims detected: ${data.claimsDetected.toLocaleString()} potential recoveries found`, count: data.claimsDetected });
+      prev.claims.completed = true;
+      prev.claims.count = data.claimsDetected;
+    }
+    
+    previousDataRef.current = prev;
+  };
 
   useEffect(() => {
     if (typeof window === 'undefined') return undefined;
@@ -154,12 +223,14 @@ export default function Sync() {
     (event) => {
       // Handle detection updates
       if (event.status === 'complete') {
+        addLog({ type: 'success', category: 'detection', message: `Detection complete: ${event.total_detections || 0} anomalies identified` });
         toast({
           title: 'Detection Complete',
           description: event.message || `Detection completed. ${event.total_detections || 0} anomalies found.`,
           duration: 6000,
         });
       } else if (event.new_detections_count && event.new_detections_count > 0) {
+        addLog({ type: 'info', category: 'detection', message: `New detection: ${event.new_detections_count} anomalies found` });
         toast({
           title: 'New Detections',
           description: `${event.new_detections_count} new anomaly${event.new_detections_count !== 1 ? 'ies' : ''} detected`,
@@ -174,6 +245,9 @@ export default function Sync() {
     if (typeof s.progress === 'number') setProgress(s.progress);
     if (s.message) setMessage(s.message);
     
+    // Update logs based on sync data
+    updateLogsFromSyncData(s);
+    
     // Map status values to match documentation
     const mappedStatus = s.status === 'idle' ? 'idle' :
                         s.status === 'running' ? 'running' :
@@ -183,16 +257,12 @@ export default function Sync() {
     
     // Show toast notifications on status changes
     if (mappedStatus !== previousStatusRef.current) {
-      const previousStatus = previousStatusRef.current;
       previousStatusRef.current = mappedStatus;
       
       // Show toast for status transitions
       if (mappedStatus === 'completed' && !toastShownRef.current.completed) {
         toastShownRef.current.completed = true;
-        const claimsCount = s.claimsDetected ?? 0;
-        const ordersProcessed = s.ordersProcessed ?? 0;
-        const totalOrders = s.totalOrders ?? 0;
-        
+        addLog({ type: 'success', category: 'system', message: `Sync completed successfully` });
         toast({
           title: 'Sync Complete',
           description: 'Complete successfully. See dashboard.',
@@ -200,6 +270,7 @@ export default function Sync() {
         });
       } else if (mappedStatus === 'failed' && !toastShownRef.current.failed) {
         toastShownRef.current.failed = true;
+        addLog({ type: 'error', category: 'system', message: `Sync failed: ${s.error || s.message || 'Unknown error'}` });
         toast({
           title: 'Sync Failed',
           description: s.error || s.message || 'The sync encountered an error. Please try again.',
@@ -207,9 +278,8 @@ export default function Sync() {
           duration: 6000,
         });
       } else if (mappedStatus === 'cancelled' && !toastShownRef.current.cancelled) {
-        // Show toast for cancelled status (only if not already shown)
-        // This handles cancellation from SSE/polling, not just from handleCancelSync button
         toastShownRef.current.cancelled = true;
+        addLog({ type: 'warning', category: 'system', message: 'Sync cancelled by user' });
         toast({
           title: 'Sync Cancelled',
           description: s.message || 'The sync has been cancelled.',
@@ -240,6 +310,20 @@ export default function Sync() {
     async function ensureSync() {
       if (!syncId) {
         try {
+          // Clear logs for new sync
+          setLogs([]);
+          previousDataRef.current = {
+            orders: { syncing: false, completed: false, count: 0 },
+            inventory: { syncing: false, completed: false, count: 0 },
+            shipments: { syncing: false, completed: false, count: 0 },
+            returns: { syncing: false, completed: false, count: 0 },
+            settlements: { syncing: false, completed: false, count: 0 },
+            fees: { syncing: false, completed: false, count: 0 },
+            claims: { syncing: false, completed: false, count: 0 },
+          };
+          
+          addLog({ type: 'info', category: 'system', message: 'Initializing Amazon data sync...' });
+          
           const start = await startSync();
           if (cancelled) return;
           const newSyncId = start.syncId;
@@ -249,14 +333,15 @@ export default function Sync() {
           previousStatusRef.current = 'running';
           toastShownRef.current = { started: true };
           
-          // Show toast for sync start
+          addLog({ type: 'info', category: 'system', message: `Sync started (ID: ${newSyncId.slice(0, 20)}...)` });
+          addLog({ type: 'info', category: 'system', message: 'Fetching data from last 18 months...' });
+          
           toast({
             title: 'Sync Started',
             description: 'Your Amazon data sync has started. This may take a few minutes.',
             duration: 4000,
           });
           
-          // Update URL with syncId (use replace to avoid adding to history)
           navigate(`/sync?id=${newSyncId}`, { replace: true });
         } catch (e: any) {
           if (cancelled) return;
@@ -264,8 +349,8 @@ export default function Sync() {
           setMessage(e?.message || 'Failed to start sync');
           setError(e?.message || 'Failed to start sync');
           previousStatusRef.current = 'failed';
+          addLog({ type: 'error', category: 'system', message: `Failed to start sync: ${e?.message || 'Unknown error'}` });
           
-          // Show error toast
           toast({
             title: 'Failed to Start Sync',
             description: e?.message || 'Failed to start sync. Please try again.',
@@ -277,30 +362,17 @@ export default function Sync() {
       } else {
         // Load existing sync status
         try {
+          addLog({ type: 'info', category: 'system', message: `Loading sync status...` });
           const s = await getSyncStatus(syncId);
           if (cancelled) return;
           
-          // Debug: Log what we received
-          console.log('[Sync] Received sync status:', {
-            syncId: s.syncId,
-            status: s.status,
-            ordersProcessed: s.ordersProcessed,
-            totalOrders: s.totalOrders,
-            inventoryCount: s.inventoryCount,
-            shipmentsCount: s.shipmentsCount,
-            returnsCount: s.returnsCount,
-            settlementsCount: s.settlementsCount,
-            feesCount: s.feesCount,
-            claimsDetected: s.claimsDetected
-          });
-          
+          console.log('[Sync] Received sync status:', s);
           updateSyncState(s);
         } catch (e: any) {
           if (cancelled) return;
           console.error('Failed to load sync status:', e);
           const errorMessage = e?.message || 'Failed to load sync status';
           
-          // If sync not found, clear the syncId and state
           if (errorMessage.includes('not found') || errorMessage.includes('Sync not found')) {
             setSyncId(undefined);
             setSyncData(null);
@@ -308,7 +380,6 @@ export default function Sync() {
             setProgress(0);
             setMessage('Sync not found. Please start a new sync.');
             setError(null);
-            // Clear syncId from URL
             navigate('/sync', { replace: true });
             
             toast({
@@ -318,6 +389,7 @@ export default function Sync() {
             });
           } else {
             setError(errorMessage);
+            addLog({ type: 'error', category: 'system', message: `Error: ${errorMessage}` });
             toast({
               title: 'Error Loading Sync Status',
               description: errorMessage || 'Failed to load sync status. Please refresh the page.',
@@ -337,33 +409,40 @@ export default function Sync() {
         unsubscribe = subscribeSyncProgress(syncId, (s: any) => {
           if (cancelled) return;
           
+          // Handle log events from backend
+          if (s.type === 'log' && s.log) {
+            console.log('[Sync] Log event received:', s.log);
+            addLog({
+              type: s.log.type || 'info',
+              category: s.log.category || 'system',
+              message: s.log.message,
+              count: s.log.count
+            });
+            return;
+          }
+          
           // Handle detection.completed event (sent after sync completes)
           if (s.type === 'detection' && s.status === 'completed') {
             console.log('[Sync] Detection completed event received:', s);
-            // Update claimsDetected in syncData
             setSyncData(prev => prev ? {
               ...prev,
               claimsDetected: s.claimsDetected ?? prev.claimsDetected
             } : prev);
             
-            // Show toast notification
             if (s.claimsDetected > 0) {
+              addLog({ type: 'success', category: 'detection', message: `✓ Detection complete: ${s.claimsDetected} claims detected and ready for review`, count: s.claimsDetected });
               toast({
                 title: 'Detection Complete',
                 description: `${s.claimsDetected} claims detected and ready for review.`,
                 duration: 5000,
               });
             }
-            return; // Don't update full sync state for detection events
+            return;
           }
           
           updateSyncState(s);
           
-          if (s.status === 'completed') {
-            setMessage(s.message || 'Sync completed successfully');
-            // Don't stop interval immediately - keep polling briefly for detection results
-            // Detection runs async and may complete shortly after sync
-          } else if (s.status === 'failed' || s.status === 'cancelled') {
+          if (s.status === 'failed' || s.status === 'cancelled') {
             if (interval) {
               clearInterval(interval);
               interval = null;
@@ -375,10 +454,9 @@ export default function Sync() {
       }
     }
 
-    // Polling fallback (runs in parallel with SSE)
-    // Track how many polls after completion to catch detection results
+    // Polling fallback
     let pollsAfterComplete = 0;
-    const MAX_POLLS_AFTER_COMPLETE = 5; // Poll up to 5 more times (15 seconds) after sync completes
+    const MAX_POLLS_AFTER_COMPLETE = 5;
     
     interval = setInterval(async () => {
       if (!syncId || cancelled) return;
@@ -390,21 +468,15 @@ export default function Sync() {
         if (s.status === 'completed' || s.status === 'failed' || s.status === 'cancelled') {
           pollsAfterComplete++;
           
-          // Continue polling briefly after completion to catch detection results
-          // Detection runs async and updates claimsDetected after sync completes
           if (pollsAfterComplete >= MAX_POLLS_AFTER_COMPLETE || s.status === 'failed' || s.status === 'cancelled') {
             if (interval) {
               clearInterval(interval);
               interval = null;
             }
-            console.log('[Sync] Stopped polling after', pollsAfterComplete, 'polls post-completion');
-          } else {
-            console.log('[Sync] Continuing poll', pollsAfterComplete, 'of', MAX_POLLS_AFTER_COMPLETE, 'to catch detection results');
           }
         }
       } catch (err: any) {
         console.error('Polling error:', err);
-        // If sync not found during polling, stop polling and clear state
         if (err?.message?.includes('not found') || err?.message?.includes('Sync not found')) {
           if (interval) {
             clearInterval(interval);
@@ -431,12 +503,13 @@ export default function Sync() {
         }
       }
     };
-  }, [syncId, navigate]); // toast is stable and doesn't need to be in dependencies
+  }, [syncId, navigate]);
 
   const handleCancelSync = async () => {
     if (!syncId || status !== 'running') return;
     
     setIsCancelling(true);
+    addLog({ type: 'warning', category: 'system', message: 'Cancelling sync...' });
     try {
       await cancelSync(syncId);
       setStatus('cancelled');
@@ -444,18 +517,17 @@ export default function Sync() {
       previousStatusRef.current = 'cancelled';
       toastShownRef.current.cancelled = true;
       
-      // Show toast immediately for user feedback
       toast({
         title: 'Sync Cancelled',
         description: 'The sync has been cancelled successfully.',
         duration: 4000,
       });
       
-      // Refresh status to get latest state (toast in updateSyncState won't show since we already showed it)
       const s = await getSyncStatus(syncId);
       updateSyncState(s);
     } catch (e: any) {
       setError(e?.message || 'Failed to cancel sync');
+      addLog({ type: 'error', category: 'system', message: `Failed to cancel: ${e?.message}` });
       toast({
         title: 'Failed to Cancel Sync',
         description: e?.message || 'Failed to cancel sync. Please try again.',
@@ -468,24 +540,31 @@ export default function Sync() {
   };
 
   const handleRetry = () => {
-    // Reset state
     setSyncId(undefined);
     setProgress(0);
     setStatus('idle');
     setMessage('Initializing sync...');
     setError(null);
     setSyncData(null);
+    setLogs([]);
     previousStatusRef.current = 'idle';
     toastShownRef.current = {};
+    previousDataRef.current = {
+      orders: { syncing: false, completed: false, count: 0 },
+      inventory: { syncing: false, completed: false, count: 0 },
+      shipments: { syncing: false, completed: false, count: 0 },
+      returns: { syncing: false, completed: false, count: 0 },
+      settlements: { syncing: false, completed: false, count: 0 },
+      fees: { syncing: false, completed: false, count: 0 },
+      claims: { syncing: false, completed: false, count: 0 },
+    };
     
-    // Show toast
     toast({
       title: 'Retrying Sync',
       description: 'Starting a new sync...',
       duration: 3000,
     });
     
-    // Reload to restart sync
     window.location.reload();
   };
 
@@ -519,267 +598,247 @@ export default function Sync() {
     }
   };
 
+  // Get log entry color
+  const getLogColor = (type: LogEntry['type']) => {
+    switch (type) {
+      case 'success': return 'text-emerald-400';
+      case 'error': return 'text-red-400';
+      case 'warning': return 'text-amber-400';
+      case 'progress': return 'text-blue-400';
+      default: return 'text-gray-300';
+    }
+  };
+
+  // Calculate totals
+  const totalItemsSynced = syncData ? (
+    (syncData.ordersProcessed || 0) +
+    (syncData.inventoryCount || 0) +
+    (syncData.shipmentsCount || 0) +
+    (syncData.returnsCount || 0) +
+    (syncData.settlementsCount || 0) +
+    (syncData.feesCount || 0)
+  ) : 0;
+
   return (
     <PageLayout title="Smart Inventory Sync" hideNavbar hideSidebar plainBackground>
       <div className="bg-white">
         <div className="container mx-auto px-6 py-10 text-gray-900">
           <div className="max-w-4xl mx-auto space-y-6">
-              <Card className="bg-white border border-gray-200 text-gray-900 shadow-sm">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    {getStatusIcon()}
-                    Ledgers, Shipments, Returns Syncing.
-                  </CardTitle>
-                  <CardDescription className="text-gray-500">
-                    First run window: last 18 months • Schedule: daily at 02:00 UTC
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        {syncData && status === 'completed' && (() => {
-                          const ordersProcessed = syncData.ordersProcessed || 0;
-                          const inventoryCount = syncData.inventoryCount || 0;
-                          const shipmentsCount = syncData.shipmentsCount || 0;
-                          const returnsCount = syncData.returnsCount || 0;
-                          const settlementsCount = syncData.settlementsCount || 0;
-                          const feesCount = syncData.feesCount || 0;
-                          const totalItemsSynced = 
-                            ordersProcessed +
-                            inventoryCount +
-                            shipmentsCount +
-                            returnsCount +
-                            settlementsCount +
-                            feesCount;
-                          
-                          // Use calculated total if available, otherwise fall back to message
-                          if (totalItemsSynced > 0) {
-                            return (
-                              <p className="text-sm text-gray-600">
-                                Sync completed successfully - {totalItemsSynced.toLocaleString()} items synced
-                              </p>
-                            );
-                          }
-                          return <p className="text-sm text-gray-600">{message}</p>;
-                        })()}
-                        {(!syncData || status !== 'completed') && (
-                          <p className="text-sm text-gray-600">{message}</p>
-                        )}
-                      </div>
-                      {getStatusBadge()}
+            <Card className="bg-white border border-gray-200 text-gray-900 shadow-sm">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  {getStatusIcon()}
+                  Ledgers, Shipments, Returns Syncing
+                </CardTitle>
+                <CardDescription className="text-gray-500">
+                  First run window: last 18 months • Schedule: daily at 02:00 UTC
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <p className="text-sm text-gray-600">
+                        {status === 'completed' && totalItemsSynced > 0
+                          ? `Sync completed successfully - ${totalItemsSynced.toLocaleString()} items synced`
+                          : message}
+                      </p>
                     </div>
-                    
-                    <Progress value={progress} className="h-1" />
-                    
-                    <div className="flex flex-col gap-1">
-                      <div className="flex items-center justify-between text-xs text-gray-600">
-                        <span>{progress}%</span>
-                        {syncData && (
-                          <div className="flex items-center gap-4 text-xs">
-                            {syncData.ordersProcessed !== undefined && syncData.totalOrders !== undefined && (
-                              <span className="text-xs">
-                                {syncData.ordersProcessed.toLocaleString()} / {syncData.totalOrders.toLocaleString()} orders
-                              </span>
-                            )}
-                            {syncData.claimsDetected !== undefined && (
-                              <span className="text-emerald-600 font-medium text-xs">
-                                {syncData.claimsDetected.toLocaleString()} claims detected
-                              </span>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                      {syncData && status === 'completed' && (() => {
-                        const ordersProcessed = syncData.ordersProcessed || 0;
-                        const inventoryCount = syncData.inventoryCount || 0;
-                        const shipmentsCount = syncData.shipmentsCount || 0;
-                        const returnsCount = syncData.returnsCount || 0;
-                        const settlementsCount = syncData.settlementsCount || 0;
-                        const feesCount = syncData.feesCount || 0;
-                        const totalItemsSynced =
-                          ordersProcessed +
-                          inventoryCount +
-                          shipmentsCount +
-                          returnsCount +
-                          settlementsCount +
-                          feesCount;
-                        return (
-                          <span className="text-xs text-gray-500">
-                            {totalItemsSynced.toLocaleString()} items synced
-                          </span>
-                        );
-                      })()}
-                    </div>
-
-                    {/* Sync Details Breakdown - Calculate total items synced */}
-                    {syncData && status === 'completed' && (() => {
-                      const ordersProcessed = syncData.ordersProcessed || 0;
-                      const inventoryCount = syncData.inventoryCount || 0;
-                      const shipmentsCount = syncData.shipmentsCount || 0;
-                      const returnsCount = syncData.returnsCount || 0;
-                      const settlementsCount = syncData.settlementsCount || 0;
-                      const feesCount = syncData.feesCount || 0;
-                      const claimsDetected = syncData.claimsDetected || 0;
-                      
-                      // Check if this is an old sync with incomplete metadata
-                      const isOldSyncFormat = ordersProcessed > 0 && inventoryCount === 0 && shipmentsCount === 0 && 
-                                             returnsCount === 0 && settlementsCount === 0 && feesCount === 0;
-                      
-                      // Calculate total items synced (sum of all data types)
-                      const totalItemsSynced = 
-                        ordersProcessed +
-                        inventoryCount +
-                        shipmentsCount +
-                        returnsCount +
-                        settlementsCount +
-                        feesCount;
-                      
-                      // Only show breakdown if we have data
-                      if (totalItemsSynced === 0 && !inventoryCount && !shipmentsCount && !returnsCount && !settlementsCount) {
-                        return null;
-                      }
-                      
-                      // Show warning if old sync format
-                      if (isOldSyncFormat) {
-                        return (
-                          <div className="space-y-4 pt-4 border-t border-amber-200">
-                            <div className="bg-amber-50 border border-amber-200 rounded-md p-4">
-                              <p className="text-sm font-medium text-amber-800 mb-2">
-                                ⚠️ Old Sync Format Detected
-                              </p>
-                              <p className="text-xs text-amber-700 mb-3">
-                                This sync was created before we added detailed data type counts. The counts shown may be incomplete.
-                              </p>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => {
-                                  setSyncId(undefined);
-                                  navigate('/sync', { replace: true });
-                                  toast({
-                                    title: 'Start New Sync',
-                                    description: 'Please click "Start Sync" to create a new sync with complete data.',
-                                    duration: 5000,
-                                  });
-                                }}
-                                className="border-amber-300 text-amber-800 hover:bg-amber-50"
-                              >
-                                Start New Sync
-                              </Button>
-                            </div>
-                          </div>
-                        );
-                      }
-                      
-                      const currentLog = LOG_SEQUENCE[logStepIndex];
-
-                      return (
-                        <div className="space-y-4 pt-4 border-t border-gray-100">
-                          <div className="space-y-3">
-                            <div>
-                              <h4 className="text-sm font-semibold text-gray-800">Log</h4>
-                              <p className="text-xs text-gray-500">{currentLog.status}</p>
-                            </div>
-                            <div className="bg-gray-900 text-emerald-200 rounded-md p-4 font-mono text-xs space-y-2">
-                              {currentLog.lines.map((entry, index) => (
-                                <p key={`${currentLog.id}-${index}`} className="tracking-tight">
-                                  {entry}
-                                </p>
-                              ))}
-                              {currentLog.id === 'claims' && claimsDetected !== undefined && claimsDetected > 0 && (
-                                <p className="tracking-tight text-emerald-400">
-                                  {claimsDetected.toLocaleString()} claims detected and queued.
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })()}
-
-                    {error && (
-                      <div className="p-3 rounded-md bg-red-50 border border-red-200 text-sm text-red-800">
-                        <strong>Error:</strong> {error}
-                      </div>
-                    )}
-
-                    {syncData?.startedAt && (
-                      <div className="text-xs text-gray-600">
-                        Started: {new Date(syncData.startedAt).toLocaleString()}
-                      </div>
-                    )}
-
-                    {syncData?.completedAt && (
-                      <div className="text-xs text-gray-600">
-                        Completed: {new Date(syncData.completedAt).toLocaleString()}
-                      </div>
-                    )}
-
-                    <div className="flex flex-wrap items-center gap-2">
-                      {status === 'running' && (
-                        <Button
-                          variant="outline"
-                          onClick={handleCancelSync}
-                          disabled={isCancelling}
-                          className="bg-gray-900 text-white border-gray-900 hover:bg-gray-800"
-                        >
-                          {isCancelling ? (
-                            <>
-                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                              Cancelling...
-                            </>
-                          ) : (
-                            <>
-                              <XCircle className="h-4 w-4 mr-2" />
-                              Cancel Sync
-                            </>
+                    {getStatusBadge()}
+                  </div>
+                  
+                  <Progress value={progress} className="h-1" />
+                  
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-center justify-between text-xs text-gray-600">
+                      <span>{progress}%</span>
+                      {syncData && (
+                        <div className="flex items-center gap-4 text-xs">
+                          {syncData.ordersProcessed !== undefined && syncData.totalOrders !== undefined && (
+                            <span>
+                              {syncData.ordersProcessed.toLocaleString()} / {syncData.totalOrders.toLocaleString()} orders
+                            </span>
                           )}
-                        </Button>
+                          {syncData.claimsDetected !== undefined && syncData.claimsDetected > 0 && (
+                            <span className="text-emerald-600 font-medium">
+                              {syncData.claimsDetected.toLocaleString()} claims detected
+                            </span>
+                          )}
+                        </div>
                       )}
-                      
-                      {(status === 'failed' || status === 'cancelled') && (
-                        <Button
-                          variant="outline"
-                          onClick={handleRetry}
-                          className="border-gray-200 text-gray-700 hover:bg-gray-50"
-                        >
-                          <RefreshCw className="h-4 w-4 mr-2" />
-                          Retry Sync
-                        </Button>
-                      )}
-
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          if (status === 'completed') {
-                            navigate('/app');
-                          }
-                        }}
-                        disabled={status !== 'completed'}
-                        className={
-                          status === 'completed'
-                            ? 'bg-gray-900 text-white border-gray-900 hover:bg-gray-800'
-                            : 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
-                        }
-                      >
-                        Go to Dashboard
-                      </Button>
                     </div>
-
-                    {showConnectCard && (
-                      <div className="mt-4 p-3 rounded border border-blue-200 bg-blue-50 text-xs text-blue-700">
-                        Connect Gmail, Outlook, Dropbox or Google Drive so Clario will start.
-                      </div>
+                    {totalItemsSynced > 0 && (
+                      <span className="text-xs text-gray-500">
+                        {totalItemsSynced.toLocaleString()} items synced
+                      </span>
                     )}
                   </div>
-                </CardContent>
-              </Card>
 
-            </div>
+                  {/* Sync Summary Grid */}
+                  {syncData && (status === 'completed' || status === 'running') && (
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 pt-2">
+                      {[
+                        { label: 'Orders', value: syncData.ordersProcessed, icon: Package },
+                        { label: 'Inventory', value: syncData.inventoryCount, icon: Archive },
+                        { label: 'Shipments', value: syncData.shipmentsCount, icon: Truck },
+                        { label: 'Returns', value: syncData.returnsCount, icon: RotateCcw },
+                        { label: 'Settlements', value: syncData.settlementsCount, icon: DollarSign },
+                        { label: 'Fees', value: syncData.feesCount, icon: DollarSign },
+                        { label: 'Claims', value: syncData.claimsDetected, icon: Target, highlight: true },
+                      ].filter(item => item.value !== undefined && item.value > 0).map((item) => (
+                        <div 
+                          key={item.label} 
+                          className={`flex items-center gap-2 px-3 py-2 rounded-md text-xs ${
+                            item.highlight 
+                              ? 'bg-emerald-50 border border-emerald-200 text-emerald-700' 
+                              : 'bg-gray-50 border border-gray-200 text-gray-700'
+                          }`}
+                        >
+                          <item.icon className="h-3.5 w-3.5" />
+                          <span className="font-medium">{item.value?.toLocaleString()}</span>
+                          <span className="text-gray-500">{item.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Real-time Logs Section */}
+                  <div className="space-y-3 pt-4 border-t border-gray-100">
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-sm font-semibold text-gray-800">Sync Logs</h4>
+                      <span className="text-xs text-gray-400">{filteredLogs.length} entries</span>
+                    </div>
+                    
+                    {/* Search Bar */}
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <Input
+                        type="text"
+                        placeholder="Search logs... (shipments, inventory, orders, etc.)"
+                        value={logSearch}
+                        onChange={(e) => setLogSearch(e.target.value)}
+                        className="pl-10 h-9 text-sm bg-gray-50 border-gray-200 focus:bg-white"
+                      />
+                    </div>
+                    
+                    {/* Log Container - Terminal Style */}
+                    <div 
+                      ref={logContainerRef}
+                      className="bg-gray-900 rounded-md p-4 font-mono text-xs h-64 overflow-y-auto scroll-smooth"
+                    >
+                      {filteredLogs.length === 0 ? (
+                        <div className="text-gray-500 flex items-center justify-center h-full">
+                          {logs.length === 0 ? 'Waiting for sync to start...' : 'No logs match your search'}
+                        </div>
+                      ) : (
+                        <div className="space-y-1">
+                          {filteredLogs.map((log) => (
+                            <div key={log.id} className="flex items-start gap-2 hover:bg-gray-800/50 px-1 rounded">
+                              <span className="text-gray-500 shrink-0 select-none">
+                                {formatTimestamp(log.timestamp)}
+                              </span>
+                              <span className={`shrink-0 ${getLogColor(log.type)}`}>
+                                {getCategoryIcon(log.category)}
+                              </span>
+                              <span className={`${getLogColor(log.type)} break-all`}>
+                                {log.message}
+                              </span>
+                            </div>
+                          ))}
+                          {status === 'running' && (
+                            <div className="flex items-center gap-2 text-blue-400 animate-pulse">
+                              <span className="text-gray-500 shrink-0 select-none">
+                                {formatTimestamp(new Date())}
+                              </span>
+                              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                              <span>Processing...</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {error && (
+                    <div className="p-3 rounded-md bg-red-50 border border-red-200 text-sm text-red-800">
+                      <strong>Error:</strong> {error}
+                    </div>
+                  )}
+
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500">
+                    {syncData?.startedAt && (
+                      <span>Started: {new Date(syncData.startedAt).toLocaleString()}</span>
+                    )}
+                    {syncData?.completedAt && (
+                      <>
+                        <span>•</span>
+                        <span>Completed: {new Date(syncData.completedAt).toLocaleString()}</span>
+                      </>
+                    )}
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2">
+                    {status === 'running' && (
+                      <Button
+                        variant="outline"
+                        onClick={handleCancelSync}
+                        disabled={isCancelling}
+                        className="bg-gray-900 text-white border-gray-900 hover:bg-gray-800"
+                      >
+                        {isCancelling ? (
+                          <>
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            Cancelling...
+                          </>
+                        ) : (
+                          <>
+                            <XCircle className="h-4 w-4 mr-2" />
+                            Cancel Sync
+                          </>
+                        )}
+                      </Button>
+                    )}
+                    
+                    {(status === 'failed' || status === 'cancelled') && (
+                      <Button
+                        variant="outline"
+                        onClick={handleRetry}
+                        className="border-gray-200 text-gray-700 hover:bg-gray-50"
+                      >
+                        <RefreshCw className="h-4 w-4 mr-2" />
+                        Retry Sync
+                      </Button>
+                    )}
+
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        if (status === 'completed') {
+                          navigate('/app');
+                        }
+                      }}
+                      disabled={status !== 'completed'}
+                      className={
+                        status === 'completed'
+                          ? 'bg-gray-900 text-white border-gray-900 hover:bg-gray-800'
+                          : 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
+                      }
+                    >
+                      Go to Dashboard
+                    </Button>
+                  </div>
+
+                  {showConnectCard && (
+                    <div className="mt-4 p-3 rounded border border-blue-200 bg-blue-50 text-xs text-blue-700">
+                      Connect Gmail, Outlook, Dropbox or Google Drive so Clario will start.
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
+      </div>
     </PageLayout>
   );
 }
-
