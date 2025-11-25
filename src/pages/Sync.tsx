@@ -62,13 +62,13 @@ export default function Sync() {
   const urlSyncId = params.get('id') || undefined;
   const [syncId, setSyncId] = useState<string | undefined>(urlSyncId);
   const [progress, setProgress] = useState<number>(0);
-  const [status, setStatus] = useState<'idle' | 'running' | 'completed' | 'failed' | 'cancelled'>('idle');
+  const [status, setStatus] = useState<'idle' | 'running' | 'detecting' | 'completed' | 'failed' | 'cancelled'>('idle');
   const [message, setMessage] = useState<string>('Initializing sync...');
   const [syncData, setSyncData] = useState<SyncStatusResponse | null>(null);
   const [isCancelling, setIsCancelling] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
-  const previousStatusRef = useRef<'idle' | 'running' | 'completed' | 'failed' | 'cancelled'>('idle');
+  const previousStatusRef = useRef<'idle' | 'running' | 'detecting' | 'completed' | 'failed' | 'cancelled'>('idle');
   const toastShownRef = useRef<{ started?: boolean; completed?: boolean; failed?: boolean; cancelled?: boolean }>({});
   const [showSourcesModal, setShowSourcesModal] = useState(false);
   const sourcesModalTimeoutRef = useRef<number | null>(null);
@@ -278,11 +278,13 @@ export default function Sync() {
     updateLogsFromSyncData(s);
     
     // Map status values to match documentation
-    const mappedStatus = s.status === 'idle' ? 'idle' :
-                        s.status === 'running' ? 'running' :
-                        s.status === 'completed' ? 'completed' :
-                        s.status === 'failed' ? 'failed' :
-                        s.status === 'cancelled' ? 'cancelled' : 'idle';
+    let mappedStatus: 'idle' | 'running' | 'detecting' | 'completed' | 'failed' | 'cancelled' = 'idle';
+    if (s.status === 'idle') mappedStatus = 'idle';
+    else if (s.status === 'running') mappedStatus = 'running';
+    else if (s.status === 'detecting') mappedStatus = 'detecting';
+    else if (s.status === 'completed' || s.status === 'complete') mappedStatus = 'completed';
+    else if (s.status === 'failed') mappedStatus = 'failed';
+    else if (s.status === 'cancelled') mappedStatus = 'cancelled';
     
     // Show toast notifications on status changes
     if (mappedStatus !== previousStatusRef.current) {
@@ -611,6 +613,8 @@ export default function Sync() {
         return <XCircle className="h-5 w-5 text-red-500" />;
       case 'cancelled':
         return <AlertCircle className="h-5 w-5 text-gray-500" />;
+      case 'detecting':
+        return <Target className="h-5 w-5 text-purple-500 animate-pulse" />;
       case 'running':
         return <Loader2 className="h-5 w-5 text-blue-500 animate-spin" />;
       default:
@@ -626,6 +630,8 @@ export default function Sync() {
         return <Badge variant="outline" className="border-red-500 text-red-500">Failed</Badge>;
       case 'cancelled':
         return <Badge variant="outline" className="border-gray-400 text-gray-400">Cancelled</Badge>;
+      case 'detecting':
+        return <Badge variant="outline" className="border-purple-500 text-purple-500">Detecting Discrepancies</Badge>;
       case 'running':
         return <Badge variant="outline" className="border-blue-500 text-blue-500">Running</Badge>;
       default:
@@ -689,11 +695,24 @@ export default function Sync() {
 
             {/* Main Content - Flat, no card */}
                   <div className="space-y-4">
+              {/* Detecting Phase - Show AI analysis in progress */}
+              {status === 'detecting' && (
+                <div className="py-4 bg-purple-50 rounded-lg px-4 border border-purple-100">
+                  <div className="flex items-center gap-3">
+                    <Target className="h-5 w-5 text-purple-500 animate-pulse" />
+                    <div>
+                      <p className="text-sm font-medium text-purple-700">Analyzing for Discrepancies...</p>
+                      <p className="text-xs text-purple-500">AI-powered detection scanning your data for potential recoveries</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Potential Recovery Value - The Hero Number */}
-              {status === 'completed' && claimsCount > 0 && (
+              {(status === 'completed' || status === 'detecting') && claimsCount > 0 && (
                 <div className="py-4">
                   <p className="text-sm text-gray-500 mb-1">Potential Recovery Identified</p>
-                  <p className="text-xl font-semibold text-gray-900">
+                  <p className={`text-xl font-semibold text-gray-900 ${status === 'detecting' ? 'animate-pulse' : ''}`}>
                     {formatCurrency(totalRecoverableValue)}
                   </p>
                   <p className="text-xs text-gray-400 mt-1">
@@ -705,11 +724,13 @@ export default function Sync() {
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
                               <p className="text-sm text-gray-600">
-                    {status === 'completed' && claimsCount > 0
-                      ? `Analysis complete — ${claimsCount.toLocaleString()} recoverable items found`
-                      : status === 'completed' && totalItemsSynced > 0
-                        ? `Sync completed — ${totalItemsSynced.toLocaleString()} records analyzed`
-                        : message}
+                    {status === 'detecting'
+                      ? 'Running AI detection on synced data...'
+                      : status === 'completed' && claimsCount > 0
+                        ? `Analysis complete — ${claimsCount.toLocaleString()} recoverable items found`
+                        : status === 'completed' && totalItemsSynced > 0
+                          ? `Sync completed — ${totalItemsSynced.toLocaleString()} records analyzed`
+                          : message}
                   </p>
                       </div>
                       {getStatusBadge()}
@@ -733,7 +754,7 @@ export default function Sync() {
                     </div>
 
               {/* Sync Summary Grid - Data Types Only */}
-              {syncData && (status === 'completed' || status === 'running') && (
+              {syncData && (status === 'completed' || status === 'running' || status === 'detecting') && (
                 <div className="flex flex-wrap gap-2 pt-2">
                   {[
                     { label: 'Orders', value: syncData.ordersProcessed, icon: Package },

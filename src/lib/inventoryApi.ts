@@ -2,7 +2,8 @@ import { api } from './api';
 
 // Type definitions matching the documented API responses
 // Note: 'complete' is included for legacy backend compatibility
-export type SyncStatus = 'idle' | 'running' | 'completed' | 'complete' | 'failed' | 'cancelled';
+// 'detecting' is the phase where AI analyzes synced data for discrepancies
+export type SyncStatus = 'idle' | 'running' | 'detecting' | 'completed' | 'complete' | 'failed' | 'cancelled';
 
 export interface SyncStatusResponse {
   success?: boolean;
