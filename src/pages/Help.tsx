@@ -154,35 +154,30 @@ export default function Help() {
           </div>
 
           {/* FAQs */}
-          <Card className="bg-white border-gray-200 text-gray-900">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-black">
-                <HelpCircle className="h-5 w-5" />
-                Frequently Asked Questions
-              </CardTitle>
-              <CardDescription className="text-gray-600">Quick answers to the most common questions</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Accordion type="single" collapsible className="w-full">
-                {filteredFaqs.map((faq) => (
-                  <AccordionItem key={faq.id} value={faq.id}>
-                    <AccordionTrigger className="text-left hover:no-underline">
-                      {faq.question}
-                    </AccordionTrigger>
-                    <AccordionContent className="text-gray-600 leading-relaxed">
-                      {faq.answer}
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-              
-              {filteredFaqs.length === 0 && searchTerm && (
-                <div className="text-center py-8 text-muted-foreground">
-                  <p>No matching questions found. Try a different search term or contact support below.</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+          <div className="mb-12">
+            <div className="mb-4">
+              <h2 className="text-2xl font-semibold text-black mb-2">Frequently Asked Questions</h2>
+              <p className="text-gray-600">Quick answers to the most common questions</p>
+            </div>
+            <Accordion type="single" collapsible className="w-full">
+              {filteredFaqs.map((faq) => (
+                <AccordionItem key={faq.id} value={faq.id} className="border-b border-gray-200">
+                  <AccordionTrigger className="text-left hover:no-underline">
+                    {faq.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-gray-600 leading-relaxed">
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+            
+            {filteredFaqs.length === 0 && searchTerm && (
+              <div className="text-center py-8 text-muted-foreground">
+                <p>No matching questions found. Try a different search term or contact support below.</p>
+              </div>
+            )}
+          </div>
         </section>
 
         {/* Tier 2: Guided Help */}
@@ -344,7 +339,7 @@ export default function Help() {
             </Card>
 
             {/* Book a Call */}
-            <Card className="bg-white/5 border-white/10 text-gray-300">
+            <Card className="bg-white/5 border-gray-300 text-gray-300">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-black">
                   <Calendar className="h-5 w-5" />
