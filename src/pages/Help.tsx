@@ -148,7 +148,7 @@ export default function Help() {
                 placeholder='Search for help (e.g., "How is my bill calculated?")'
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-12 py-6 text-lg border-2 focus:border-primary bg-gray-100 text-[#36454F] placeholder:text-gray-500"
+                className="pl-12 py-6 text-lg border border-gray-300 focus:border-gray-400 bg-gray-100 text-[#36454F] placeholder:text-gray-500"
               />
             </div>
           </div>
@@ -311,7 +311,7 @@ export default function Help() {
                   <div>
                     <Label htmlFor="category">Issue Category</Label>
                     <Select value={contactForm.category} onValueChange={(value) => setContactForm({ ...contactForm, category: value })}>
-                      <SelectTrigger className="placeholder:text-gray-400 text-black">
+                      <SelectTrigger className="placeholder:text-gray-400 text-gray-900">
                         <SelectValue placeholder="Select issue type" />
                       </SelectTrigger>
                       <SelectContent>

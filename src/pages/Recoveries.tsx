@@ -691,8 +691,11 @@ export default function Recoveries() {
   // Real-time recovery status updates; update table rows on the fly
   useStatusStream((evt) => {
     // Handle recovery status updates
-    if (evt.type === 'recovery' || evt.type === 'claim') {
-      setClaims(prev => prev.map(c => c.id === evt.id ? { ...c, status: evt.status } as any : c));
+    if (evt.type === 'claim') {
+      const claimId = evt.data?.id || evt.data?.claimId;
+      if (claimId) {
+        setClaims(prev => prev.map(c => c.id === claimId ? { ...c, status: evt.status } as any : c));
+      }
     }
     
     // Handle detection events - new recoveries detected
