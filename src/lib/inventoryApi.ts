@@ -22,6 +22,7 @@ export interface SyncStatusResponse {
   feesCount?: number;            // ⭐ NEW - Fees synced
   claimsDetected?: number;       // ⭐ NEW - Claims detected
   inventoryValue?: number;       // ⭐ NEW - Total value of inventory synced
+  totalRecoverableValue?: number; // ⭐ NEW - Total $ value of potential recoveries
   error?: string | null;
 }
 

@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
@@ -619,223 +618,239 @@ export default function Sync() {
     (syncData.feesCount || 0)
   ) : 0;
 
+  // Calculate potential recoverable value
+  // Use backend value if available, otherwise estimate based on claims
+  // Average Amazon FBA claim ~$48-75 (conservative estimate)
+  const AVERAGE_CLAIM_VALUE = 48;
+  const claimsCount = syncData?.claimsDetected || 0;
+  const totalRecoverableValue = syncData?.totalRecoverableValue || (claimsCount * AVERAGE_CLAIM_VALUE);
+  
+  // Format currency
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(value);
+  };
+
   return (
-    <PageLayout title="Smart Inventory Sync" hideNavbar hideSidebar plainBackground>
-      <div className="bg-white">
+    <PageLayout title="Sync Log" hideNavbar hideSidebar plainBackground>
+      <div className="bg-white min-h-screen">
         <div className="container mx-auto px-6 py-10 text-gray-900">
           <div className="max-w-4xl mx-auto space-y-6">
-            <Card className="bg-white border border-gray-200 text-gray-900 shadow-sm">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  {getStatusIcon()}
-                  Ledgers, Shipments, Returns Syncing
-                </CardTitle>
-                <CardDescription className="text-gray-500">
-                  First run window: last 18 months • Schedule: daily at 02:00 UTC
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <p className="text-sm text-gray-600">
-                        {status === 'completed' && totalItemsSynced > 0
-                          ? `Sync completed successfully - ${totalItemsSynced.toLocaleString()} items synced`
-                          : message}
-                      </p>
-                    </div>
-                    {getStatusBadge()}
-                  </div>
+            {/* Header Section - No Card, content flows naturally */}
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                {getStatusIcon()}
+                <h1 className="text-xl font-semibold text-gray-900">Sync Log</h1>
+              </div>
+              <p className="text-sm text-gray-500">
+                First run window: last 18 months • Schedule: daily at 02:00 UTC
+              </p>
+            </div>
+
+            {/* Main Content - Flat, no card */}
+            <div className="space-y-4">
+              {/* Potential Recovery Value - The Hero Number */}
+              {status === 'completed' && claimsCount > 0 && (
+                <div className="py-4">
+                  <p className="text-sm text-gray-500 mb-1">Potential Recovery Identified</p>
+                  <p className="text-3xl font-bold text-emerald-600">
+                    {formatCurrency(totalRecoverableValue)}
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    Based on {claimsCount.toLocaleString()} detected discrepancies
+                  </p>
+                </div>
+              )}
+
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <p className="text-sm text-gray-600">
+                    {status === 'completed' && claimsCount > 0
+                      ? `Analysis complete — ${claimsCount.toLocaleString()} recoverable items found`
+                      : status === 'completed' && totalItemsSynced > 0
+                        ? `Sync completed — ${totalItemsSynced.toLocaleString()} records analyzed`
+                        : message}
+                  </p>
+                </div>
+                {getStatusBadge()}
+              </div>
                   
                   <Progress value={progress} className="h-1" />
                   
-                  <div className="flex flex-col gap-1">
-                    <div className="flex items-center justify-between text-xs text-gray-600">
-                      <span>{progress}%</span>
-                      {syncData && (
-                        <div className="flex items-center gap-4 text-xs">
-                          {syncData.ordersProcessed !== undefined && syncData.totalOrders !== undefined && (
-                            <span>
-                              {syncData.ordersProcessed.toLocaleString()} / {syncData.totalOrders.toLocaleString()} orders
-                            </span>
-                          )}
-                          {syncData.claimsDetected !== undefined && syncData.claimsDetected > 0 && (
-                            <span className="text-emerald-600 font-medium">
-                              {syncData.claimsDetected.toLocaleString()} claims detected
-                            </span>
-                          )}
-                        </div>
+              <div className="flex flex-col gap-1">
+                <div className="flex items-center justify-between text-xs text-gray-600">
+                  <span>{progress}%</span>
+                  {syncData && (
+                    <div className="flex items-center gap-4 text-xs">
+                      {syncData.ordersProcessed !== undefined && syncData.totalOrders !== undefined && (
+                        <span>
+                          {syncData.ordersProcessed.toLocaleString()} / {syncData.totalOrders.toLocaleString()} orders
+                        </span>
                       )}
-                    </div>
-                    {totalItemsSynced > 0 && (
-                      <span className="text-xs text-gray-500">
-                        {totalItemsSynced.toLocaleString()} items synced
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Sync Summary Grid */}
-                  {syncData && (status === 'completed' || status === 'running') && (
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 pt-2">
-                      {[
-                        { label: 'Orders', value: syncData.ordersProcessed, icon: Package },
-                        { label: 'Inventory', value: syncData.inventoryCount, icon: Archive },
-                        { label: 'Shipments', value: syncData.shipmentsCount, icon: Truck },
-                        { label: 'Returns', value: syncData.returnsCount, icon: RotateCcw },
-                        { label: 'Settlements', value: syncData.settlementsCount, icon: DollarSign },
-                        { label: 'Fees', value: syncData.feesCount, icon: DollarSign },
-                        { label: 'Claims', value: syncData.claimsDetected, icon: Target, highlight: true },
-                      ].filter(item => item.value !== undefined && item.value > 0).map((item) => (
-                        <div 
-                          key={item.label} 
-                          className={`flex items-center gap-2 px-3 py-2 rounded-md text-xs ${
-                            item.highlight 
-                              ? 'bg-emerald-50 border border-emerald-200 text-emerald-700' 
-                              : 'bg-gray-50 border border-gray-200 text-gray-700'
-                          }`}
-                        >
-                          <item.icon className="h-3.5 w-3.5" />
-                          <span className="font-medium">{item.value?.toLocaleString()}</span>
-                          <span className="text-gray-500">{item.label}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Real-time Logs Section */}
-                  <div className="space-y-3 pt-4 border-t border-gray-100">
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-sm font-semibold text-gray-800">Sync Logs</h4>
-                      <span className="text-xs text-gray-400">{filteredLogs.length} entries</span>
-                    </div>
-                    
-                    {/* Search Bar */}
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                      <Input
-                        type="text"
-                        placeholder="Search logs... (shipments, inventory, orders, etc.)"
-                        value={logSearch}
-                        onChange={(e) => setLogSearch(e.target.value)}
-                        className="pl-10 h-9 text-sm bg-gray-50 border-gray-200 focus:bg-white"
-                      />
-                    </div>
-                    
-                    {/* Log Container - Terminal Style */}
-                    <div 
-                      ref={logContainerRef}
-                      className="bg-gray-900 rounded-md p-4 font-mono text-xs h-64 overflow-y-auto scroll-smooth"
-                    >
-                      {filteredLogs.length === 0 ? (
-                        <div className="text-gray-500 flex items-center justify-center h-full">
-                          {logs.length === 0 ? 'Waiting for sync to start...' : 'No logs match your search'}
-                        </div>
-                      ) : (
-                        <div className="space-y-1">
-                          {filteredLogs.map((log) => (
-                            <div key={log.id} className="flex items-start gap-2 hover:bg-gray-800/50 px-1 rounded">
-                              <span className="text-gray-500 shrink-0 select-none">
-                                {formatTimestamp(log.timestamp)}
-                              </span>
-                              <span className={`shrink-0 ${getLogColor(log.type)}`}>
-                                {getCategoryIcon(log.category)}
-                              </span>
-                              <span className={`${getLogColor(log.type)} break-all`}>
-                                {log.message}
-                              </span>
-                            </div>
-                          ))}
-                          {status === 'running' && (
-                            <div className="flex items-center gap-2 text-blue-400 animate-pulse">
-                              <span className="text-gray-500 shrink-0 select-none">
-                                {formatTimestamp(new Date())}
-                              </span>
-                              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                              <span>Processing...</span>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {error && (
-                    <div className="p-3 rounded-md bg-red-50 border border-red-200 text-sm text-red-800">
-                      <strong>Error:</strong> {error}
-                    </div>
-                  )}
-
-                  <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500">
-                    {syncData?.startedAt && (
-                      <span>Started: {new Date(syncData.startedAt).toLocaleString()}</span>
-                    )}
-                    {syncData?.completedAt && (
-                      <>
-                        <span>•</span>
-                        <span>Completed: {new Date(syncData.completedAt).toLocaleString()}</span>
-                      </>
-                    )}
-                  </div>
-
-                  <div className="flex flex-wrap items-center gap-2">
-                    {status === 'running' && (
-                      <Button
-                        variant="outline"
-                        onClick={handleCancelSync}
-                        disabled={isCancelling}
-                        className="bg-gray-900 text-white border-gray-900 hover:bg-gray-800"
-                      >
-                        {isCancelling ? (
-                          <>
-                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                            Cancelling...
-                          </>
-                        ) : (
-                          <>
-                            <XCircle className="h-4 w-4 mr-2" />
-                            Cancel Sync
-                          </>
-                        )}
-                      </Button>
-                    )}
-                    
-                    {(status === 'failed' || status === 'cancelled') && (
-                      <Button
-                        variant="outline"
-                        onClick={handleRetry}
-                        className="border-gray-200 text-gray-700 hover:bg-gray-50"
-                      >
-                        <RefreshCw className="h-4 w-4 mr-2" />
-                        Retry Sync
-                      </Button>
-                    )}
-
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        if (status === 'completed') {
-                          navigate('/app');
-                        }
-                      }}
-                      disabled={status !== 'completed'}
-                      className={
-                        status === 'completed'
-                          ? 'bg-gray-900 text-white border-gray-900 hover:bg-gray-800'
-                          : 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
-                      }
-                    >
-                      Go to Dashboard
-                    </Button>
-                  </div>
-
-                  {showConnectCard && (
-                    <div className="mt-4 p-3 rounded border border-blue-200 bg-blue-50 text-xs text-blue-700">
-                      Connect Gmail, Outlook, Dropbox or Google Drive so Clario will start.
                     </div>
                   )}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+
+              {/* Sync Summary Grid - Data Types Only */}
+              {syncData && (status === 'completed' || status === 'running') && (
+                <div className="flex flex-wrap gap-2 pt-2">
+                  {[
+                    { label: 'Orders', value: syncData.ordersProcessed, icon: Package },
+                    { label: 'Inventory', value: syncData.inventoryCount, icon: Archive },
+                    { label: 'Shipments', value: syncData.shipmentsCount, icon: Truck },
+                    { label: 'Returns', value: syncData.returnsCount, icon: RotateCcw },
+                    { label: 'Settlements', value: syncData.settlementsCount, icon: DollarSign },
+                    { label: 'Fees', value: syncData.feesCount, icon: DollarSign },
+                  ].filter(item => item.value !== undefined && item.value > 0).map((item) => (
+                    <div 
+                      key={item.label} 
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs bg-gray-100 text-gray-600"
+                    >
+                      <item.icon className="h-3 w-3" />
+                      <span className="font-medium">{item.value?.toLocaleString()}</span>
+                      <span className="text-gray-400">{item.label}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Real-time Logs Section */}
+              <div className="space-y-3 pt-6 mt-4 border-t border-gray-200">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-sm font-semibold text-gray-800">Activity Log</h4>
+                  <span className="text-xs text-gray-400">{filteredLogs.length} entries</span>
+                </div>
+                
+                {/* Search Bar */}
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    type="text"
+                    placeholder="Search logs... (shipments, inventory, orders, etc.)"
+                    value={logSearch}
+                    onChange={(e) => setLogSearch(e.target.value)}
+                    className="pl-10 h-9 text-sm bg-gray-50 border-gray-200 focus:bg-white"
+                  />
+                </div>
+                
+                {/* Log Container - Terminal Style */}
+                <div 
+                  ref={logContainerRef}
+                  className="bg-gray-900 rounded-lg p-4 font-mono text-xs h-72 overflow-y-auto scroll-smooth"
+                >
+                  {filteredLogs.length === 0 ? (
+                    <div className="text-gray-500 flex items-center justify-center h-full">
+                      {logs.length === 0 ? 'Waiting for sync to start...' : 'No logs match your search'}
+                    </div>
+                  ) : (
+                    <div className="space-y-1">
+                      {filteredLogs.map((log) => (
+                        <div key={log.id} className="flex items-start gap-2 hover:bg-gray-800/50 px-1 rounded">
+                          <span className="text-gray-500 shrink-0 select-none">
+                            {formatTimestamp(log.timestamp)}
+                          </span>
+                          <span className={`shrink-0 ${getLogColor(log.type)}`}>
+                            {getCategoryIcon(log.category)}
+                          </span>
+                          <span className={`${getLogColor(log.type)} break-all`}>
+                            {log.message}
+                          </span>
+                        </div>
+                      ))}
+                      {status === 'running' && (
+                        <div className="flex items-center gap-2 text-blue-400 animate-pulse">
+                          <span className="text-gray-500 shrink-0 select-none">
+                            {formatTimestamp(new Date())}
+                          </span>
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                          <span>Processing...</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {error && (
+                <div className="p-3 rounded-md bg-red-50 border border-red-200 text-sm text-red-800">
+                  <strong>Error:</strong> {error}
+                </div>
+              )}
+
+              <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500 pt-2">
+                {syncData?.startedAt && (
+                  <span>Started: {new Date(syncData.startedAt).toLocaleString()}</span>
+                )}
+                {syncData?.completedAt && (
+                  <>
+                    <span>•</span>
+                    <span>Completed: {new Date(syncData.completedAt).toLocaleString()}</span>
+                  </>
+                )}
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2 pt-4">
+                {status === 'running' && (
+                  <Button
+                    variant="outline"
+                    onClick={handleCancelSync}
+                    disabled={isCancelling}
+                    className="bg-gray-900 text-white border-gray-900 hover:bg-gray-800"
+                  >
+                    {isCancelling ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Cancelling...
+                      </>
+                    ) : (
+                      <>
+                        <XCircle className="h-4 w-4 mr-2" />
+                        Cancel Sync
+                      </>
+                    )}
+                  </Button>
+                )}
+                
+                {(status === 'failed' || status === 'cancelled') && (
+                  <Button
+                    variant="outline"
+                    onClick={handleRetry}
+                    className="border-gray-200 text-gray-700 hover:bg-gray-50"
+                  >
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    Retry Sync
+                  </Button>
+                )}
+
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    if (status === 'completed') {
+                      navigate('/app');
+                    }
+                  }}
+                  disabled={status !== 'completed'}
+                  className={
+                    status === 'completed'
+                      ? 'bg-gray-900 text-white border-gray-900 hover:bg-gray-800'
+                      : 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
+                  }
+                >
+                  Go to Dashboard
+                </Button>
+              </div>
+
+              {showConnectCard && (
+                <div className="mt-4 p-3 rounded border border-blue-200 bg-blue-50 text-xs text-blue-700">
+                  Connect Gmail, Outlook, Dropbox or Google Drive so Clario will start.
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
