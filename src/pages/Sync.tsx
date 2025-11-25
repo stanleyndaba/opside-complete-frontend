@@ -336,15 +336,33 @@ export default function Sync() {
       try {
         unsubscribe = subscribeSyncProgress(syncId, (s: any) => {
           if (cancelled) return;
+          
+          // Handle detection.completed event (sent after sync completes)
+          if (s.type === 'detection' && s.status === 'completed') {
+            console.log('[Sync] Detection completed event received:', s);
+            // Update claimsDetected in syncData
+            setSyncData(prev => prev ? {
+              ...prev,
+              claimsDetected: s.claimsDetected ?? prev.claimsDetected
+            } : prev);
+            
+            // Show toast notification
+            if (s.claimsDetected > 0) {
+              toast({
+                title: 'Detection Complete',
+                description: `${s.claimsDetected} claims detected and ready for review.`,
+                duration: 5000,
+              });
+            }
+            return; // Don't update full sync state for detection events
+          }
+          
           updateSyncState(s);
           
           if (s.status === 'completed') {
             setMessage(s.message || 'Sync completed successfully');
-            if (interval) {
-              clearInterval(interval);
-              interval = null;
-            }
-            // Don't auto-navigate, let user see the results
+            // Don't stop interval immediately - keep polling briefly for detection results
+            // Detection runs async and may complete shortly after sync
           } else if (s.status === 'failed' || s.status === 'cancelled') {
             if (interval) {
               clearInterval(interval);
@@ -358,6 +376,10 @@ export default function Sync() {
     }
 
     // Polling fallback (runs in parallel with SSE)
+    // Track how many polls after completion to catch detection results
+    let pollsAfterComplete = 0;
+    const MAX_POLLS_AFTER_COMPLETE = 5; // Poll up to 5 more times (15 seconds) after sync completes
+    
     interval = setInterval(async () => {
       if (!syncId || cancelled) return;
       try {
@@ -366,9 +388,18 @@ export default function Sync() {
         updateSyncState(s);
         
         if (s.status === 'completed' || s.status === 'failed' || s.status === 'cancelled') {
-          if (interval) {
-            clearInterval(interval);
-            interval = null;
+          pollsAfterComplete++;
+          
+          // Continue polling briefly after completion to catch detection results
+          // Detection runs async and updates claimsDetected after sync completes
+          if (pollsAfterComplete >= MAX_POLLS_AFTER_COMPLETE || s.status === 'failed' || s.status === 'cancelled') {
+            if (interval) {
+              clearInterval(interval);
+              interval = null;
+            }
+            console.log('[Sync] Stopped polling after', pollsAfterComplete, 'polls post-completion');
+          } else {
+            console.log('[Sync] Continuing poll', pollsAfterComplete, 'of', MAX_POLLS_AFTER_COMPLETE, 'to catch detection results');
           }
         }
       } catch (err: any) {
