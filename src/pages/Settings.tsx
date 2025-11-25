@@ -364,11 +364,11 @@ const Settings = () => {
             {/* Header Section */}
             <div className="flex items-start justify-between">
               <div>
-                <h2 className="text-2xl font-bold text-gray-200">
+                <h2 className="text-2xl font-bold text-gray-900">
                   {sellerProfile.company_name || 'Unknown Company'}
                 </h2>
                 {sellerProfile.amazon_seller_id && (
-                  <p className="text-sm text-gray-400 mt-1">
+                  <p className="text-sm text-gray-600 mt-1">
                     Seller ID: {sellerProfile.amazon_seller_id}
                   </p>
                 )}
@@ -394,29 +394,29 @@ const Settings = () => {
             </div>
 
             {loadingProfile ? (
-              <Card className="bg-white/5 border-white/10 text-gray-300">
+              <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-center py-8">
-                    <RefreshCw className="h-6 w-6 animate-spin text-gray-400" />
-                    <span className="ml-2 text-gray-400">Loading seller profile...</span>
+                    <RefreshCw className="h-6 w-6 animate-spin text-gray-500" />
+                    <span className="ml-2 text-gray-600">Loading seller profile...</span>
                   </div>
                 </CardContent>
               </Card>
             ) : (
               <>
                 {/* Basic Information Section */}
-                <Card className="bg-white/5 border-white/10 text-gray-300">
+                <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
                   <CardHeader>
-                    <CardTitle className="text-gray-200">Basic Information</CardTitle>
-                    <CardDescription className="text-gray-400">Your account details and activity</CardDescription>
+                    <CardTitle className="text-gray-900">Basic Information</CardTitle>
+                    <CardDescription className="text-gray-600">Your account details and activity</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label className="text-gray-400 text-sm">Company Name</Label>
+                        <Label className="text-gray-600 text-sm">Company Name</Label>
                         <div className="mt-1 flex items-center gap-2">
-                          <Store className="h-4 w-4 text-gray-400" />
-                          <p className="text-gray-200">
+                          <Store className="h-4 w-4 text-gray-500" />
+                          <p className="text-gray-900">
                             {sellerProfile.company_name || 'Not available'}
                           </p>
                         </div>
@@ -424,10 +424,10 @@ const Settings = () => {
                       
                       {sellerProfile.amazon_seller_id && (
                         <div>
-                          <Label className="text-gray-400 text-sm">Amazon Seller ID</Label>
+                          <Label className="text-gray-600 text-sm">Amazon Seller ID</Label>
                           <div className="mt-1 flex items-center gap-2">
-                            <Key className="h-4 w-4 text-gray-400" />
-                            <p className="text-gray-200 font-mono text-sm">
+                            <Key className="h-4 w-4 text-gray-500" />
+                            <p className="text-gray-900 font-mono text-sm">
                               {sellerProfile.amazon_seller_id}
                             </p>
                           </div>
@@ -436,10 +436,10 @@ const Settings = () => {
                       
                       {sellerProfile.created_at && (
                         <div>
-                          <Label className="text-gray-400 text-sm">Member Since</Label>
+                          <Label className="text-gray-600 text-sm">Member Since</Label>
                           <div className="mt-1 flex items-center gap-2">
-                            <Calendar className="h-4 w-4 text-gray-400" />
-                            <p className="text-gray-200">
+                            <Calendar className="h-4 w-4 text-gray-500" />
+                            <p className="text-gray-900">
                               {formatDate(sellerProfile.created_at)}
                             </p>
                           </div>
@@ -448,10 +448,10 @@ const Settings = () => {
                       
                       {sellerProfile.last_login && (
                         <div>
-                          <Label className="text-gray-400 text-sm">Last Active</Label>
+                          <Label className="text-gray-600 text-sm">Last Active</Label>
                           <div className="mt-1 flex items-center gap-2">
-                            <Clock className="h-4 w-4 text-gray-400" />
-                            <p className="text-gray-200">
+                            <Clock className="h-4 w-4 text-gray-500" />
+                            <p className="text-gray-900">
                               {formatDate(sellerProfile.last_login)}
                             </p>
                           </div>
@@ -463,10 +463,10 @@ const Settings = () => {
 
                 {/* Marketplace Information Section */}
                 {marketplaces.length > 0 && (
-                  <Card className="bg-white/5 border-white/10 text-gray-300">
+                  <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
                     <CardHeader>
-                      <CardTitle className="text-gray-200">Marketplace Information</CardTitle>
-                      <CardDescription className="text-gray-400">
+                      <CardTitle className="text-gray-900">Marketplace Information</CardTitle>
+                      <CardDescription className="text-gray-600">
                         Active marketplaces where you sell
                         <Badge variant="secondary" className="ml-2">
                           {marketplaces.length} {marketplaces.length === 1 ? 'Marketplace' : 'Marketplaces'}
@@ -480,10 +480,10 @@ const Settings = () => {
                           return (
                             <div 
                               key={marketplaceId}
-                              className="flex items-center gap-3 p-3 border border-white/10 rounded-lg bg-white/5"
+                              className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg bg-gray-50"
                             >
                               <span className="text-2xl">{display.flag}</span>
-                              <span className="text-gray-200">{display.name}</span>
+                              <span className="text-gray-900">{display.name}</span>
                             </div>
                           );
                         })}
@@ -493,16 +493,16 @@ const Settings = () => {
                 )}
 
                 {/* Integration Status Section */}
-                <Card className="bg-white/5 border-white/10 text-gray-300">
+                <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
                   <CardHeader>
-                    <CardTitle className="text-gray-200">Integration Status</CardTitle>
-                    <CardDescription className="text-gray-400">Manage your platform connections</CardDescription>
+                    <CardTitle className="text-gray-900">Integration Status</CardTitle>
+                    <CardDescription className="text-gray-600">Manage your platform connections</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {/* Amazon Integration */}
-                    <div className="flex items-center justify-between p-4 border border-white/10 rounded-lg bg-white/5">
+                    <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg bg-gray-50">
                       <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-lg bg-white/10 flex items-center justify-center border border-white/10">
+                        <div className="h-10 w-10 rounded-lg bg-white flex items-center justify-center border border-gray-200 shadow-sm">
                           <img 
                             src="/lovable-uploads/14f98d63-9a1a-4128-8021-1d840d778ea5.png" 
                             alt="Amazon Seller Central logo" 
@@ -510,22 +510,22 @@ const Settings = () => {
                           />
                         </div>
                         <div>
-                          <p className="font-medium text-gray-200">Amazon Seller Central</p>
+                          <p className="font-medium text-gray-900">Amazon Seller Central</p>
                           <div className="flex items-center gap-2 mt-1">
                             {isAmazonConnected ? (
                               <>
-                                <CheckCircle className="h-4 w-4 text-green-400" />
-                                <span className="text-sm text-gray-400">Connected</span>
+                                <CheckCircle className="h-4 w-4 text-green-600" />
+                                <span className="text-sm text-gray-600">Connected</span>
                                 {sellerProfile.last_sync_completed_at && (
-                                  <span className="text-sm text-gray-400">
+                                  <span className="text-sm text-gray-600">
                                     • Synced {formatDate(sellerProfile.last_sync_completed_at)}
                                   </span>
                                 )}
                               </>
                             ) : (
                               <>
-                                <XCircle className="h-4 w-4 text-red-400" />
-                                <span className="text-sm text-gray-400">Not Connected</span>
+                                <XCircle className="h-4 w-4 text-red-600" />
+                                <span className="text-sm text-gray-600">Not Connected</span>
                               </>
                             )}
                           </div>
@@ -536,7 +536,7 @@ const Settings = () => {
                           <Button 
                             variant="outline" 
                             size="sm"
-                            className="bg-white/5 border-white/10 text-gray-200 hover:bg-white/10"
+                            className="bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
                             onClick={() => navigate('/integrations-hub')}
                           >
                             Manage
@@ -554,9 +554,9 @@ const Settings = () => {
                     </div>
 
                     {/* Stripe Integration */}
-                    <div className="flex items-center justify-between p-4 border border-white/10 rounded-lg bg-white/5">
+                    <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg bg-gray-50">
                       <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-lg bg-white/10 flex items-center justify-center border border-white/10">
+                        <div className="h-10 w-10 rounded-lg bg-white flex items-center justify-center border border-gray-200 shadow-sm">
                           <img 
                             src="/Stripe-logo.png" 
                             alt="Stripe logo" 
@@ -564,17 +564,17 @@ const Settings = () => {
                           />
                         </div>
                         <div>
-                          <p className="font-medium text-gray-200">Stripe</p>
+                          <p className="font-medium text-gray-900">Stripe</p>
                           <div className="flex items-center gap-2 mt-1">
                             {isStripeConnected ? (
                               <>
-                                <CheckCircle className="h-4 w-4 text-green-400" />
-                                <span className="text-sm text-gray-400">Connected</span>
+                                <CheckCircle className="h-4 w-4 text-green-600" />
+                                <span className="text-sm text-gray-600">Connected</span>
                               </>
                             ) : (
                               <>
-                                <XCircle className="h-4 w-4 text-gray-400" />
-                                <span className="text-sm text-gray-400">Not Connected</span>
+                                <XCircle className="h-4 w-4 text-gray-500" />
+                                <span className="text-sm text-gray-600">Not Connected</span>
                               </>
                             )}
                           </div>
@@ -585,7 +585,7 @@ const Settings = () => {
                           <Button 
                             variant="outline" 
                             size="sm"
-                            className="bg-white/5 border-white/10 text-gray-200 hover:bg-white/10"
+                            className="bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
                             onClick={() => navigate('/billing')}
                           >
                             Manage
@@ -594,7 +594,7 @@ const Settings = () => {
                           <Button 
                             variant="outline"
                             size="sm"
-                            className="bg-white/5 border-white/10 text-gray-200 hover:bg-white/10"
+                            className="bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
                             onClick={() => navigate('/billing')}
                           >
                             Connect Stripe
@@ -607,27 +607,27 @@ const Settings = () => {
 
                 {/* Sync Information Section */}
                 {(sellerProfile.last_sync_attempt_at || sellerProfile.last_sync_completed_at || sellerProfile.last_sync_job_id) && (
-                  <Card className="bg-white/5 border-white/10 text-gray-300">
+                  <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
                     <CardHeader>
-                      <CardTitle className="text-gray-200">Sync Status</CardTitle>
-                      <CardDescription className="text-gray-400">Data synchronization information</CardDescription>
+                      <CardTitle className="text-gray-900">Sync Status</CardTitle>
+                      <CardDescription className="text-gray-600">Data synchronization information</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                       {sellerProfile.last_sync_attempt_at && (
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <RefreshCw className="h-4 w-4 text-gray-400" />
+                            <RefreshCw className="h-4 w-4 text-gray-500" />
                             <div>
-                              <p className="text-sm font-medium text-gray-200">Last Sync Attempt</p>
-                              <p className="text-xs text-gray-400">
+                              <p className="text-sm font-medium text-gray-900">Last Sync Attempt</p>
+                              <p className="text-xs text-gray-600">
                                 {formatDateTime(sellerProfile.last_sync_attempt_at)}
                               </p>
                             </div>
                           </div>
                           {sellerProfile.last_sync_completed_at ? (
-                            <CheckCircle className="h-5 w-5 text-green-400" />
+                            <CheckCircle className="h-5 w-5 text-green-600" />
                           ) : (
-                            <AlertTriangle className="h-5 w-5 text-yellow-400" />
+                            <AlertTriangle className="h-5 w-5 text-yellow-600" />
                           )}
                         </div>
                       )}
@@ -635,10 +635,10 @@ const Settings = () => {
                       {sellerProfile.last_sync_completed_at && (
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <CheckCircle className="h-4 w-4 text-green-400" />
+                            <CheckCircle className="h-4 w-4 text-green-600" />
                             <div>
-                              <p className="text-sm font-medium text-gray-200">Last Successful Sync</p>
-                              <p className="text-xs text-gray-400">
+                              <p className="text-sm font-medium text-gray-900">Last Successful Sync</p>
+                              <p className="text-xs text-gray-600">
                                 {formatDateTime(sellerProfile.last_sync_completed_at)}
                               </p>
                             </div>
@@ -649,10 +649,10 @@ const Settings = () => {
                       {sellerProfile.last_sync_job_id && (
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <RefreshCw className="h-4 w-4 text-gray-400 animate-spin" />
+                            <RefreshCw className="h-4 w-4 text-gray-500 animate-spin" />
                             <div>
-                              <p className="text-sm font-medium text-gray-200">Current Sync Job</p>
-                              <p className="text-xs text-gray-400 font-mono">
+                              <p className="text-sm font-medium text-gray-900">Current Sync Job</p>
+                              <p className="text-xs text-gray-600 font-mono">
                                 {sellerProfile.last_sync_job_id}
                               </p>
                             </div>
@@ -674,16 +674,16 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold text-gray-200">Billing & Value</h2>
-              <p className="text-gray-400">View your ROI and manage billing preferences</p>
+              <h2 className="text-2xl font-bold text-gray-900">Billing & Value</h2>
+              <p className="text-gray-600">View your ROI and manage billing preferences</p>
             </div>
             
-            <Card className="bg-white/5 border-white/10 text-gray-300">
+            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
               <CardContent className="p-6">
                 <div className="text-center py-8">
-                  <CreditCard className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-                  <h3 className="text-lg font-semibold mb-2 text-gray-200">Complete Billing Dashboard</h3>
-                  <p className="text-gray-400 mb-4">
+                  <CreditCard className="h-12 w-12 mx-auto text-gray-500 mb-4" />
+                  <h3 className="text-lg font-semibold mb-2 text-gray-900">Complete Billing Dashboard</h3>
+                  <p className="text-gray-600 mb-4">
                     Access your comprehensive billing & value report with ROI calculations, 
                     invoice history, and plan management.
                   </p>
@@ -694,20 +694,20 @@ const Settings = () => {
               </CardContent>
             </Card>
 
-            <Card className="bg-white/5 border-white/10 text-gray-300">
+            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
               <CardHeader>
-                <CardTitle className="text-gray-200">Auto-Claim (ACG)</CardTitle>
-                <CardDescription className="text-gray-400">Automatically submit approved claims once evidence is verified</CardDescription>
+                <CardTitle className="text-gray-900">Auto-Claim (ACG)</CardTitle>
+                <CardDescription className="text-gray-600">Automatically submit approved claims once evidence is verified</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium text-gray-200">Enable Auto-Claim</p>
-                    <p className="text-sm text-gray-400">Claims are auto-filed to Amazon when evidence is complete</p>
+                    <p className="font-medium text-gray-900">Enable Auto-Claim</p>
+                    <p className="text-sm text-gray-600">Claims are auto-filed to Amazon when evidence is complete</p>
                   </div>
                   <Switch defaultChecked />
                 </div>
-                <div className="text-xs text-gray-400">
+                <div className="text-xs text-gray-600">
                   Note: You can always review individual cases in Recoveries and pause Auto-Claim from here.
                 </div>
               </CardContent>
@@ -719,18 +719,18 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold text-gray-200">API Access</h2>
-              <p className="text-gray-400">Programmatic access to your Clario data for automation and integrations</p>
+              <h2 className="text-2xl font-bold text-gray-900">API Access</h2>
+              <p className="text-gray-600">Programmatic access to your Clario data for automation and integrations</p>
             </div>
 
-            <Card className="bg-white/5 border-white/10 text-gray-300">
+            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
               <CardContent className="p-6">
                 <div className="space-y-3">
-                  <p className="text-sm text-gray-400">
+                  <p className="text-sm text-gray-600">
                     Use Clario APIs to pull recovery data, sync evidence statuses, and reconcile payouts in your own systems.
                     Access tokens are scoped and can be rotated at any time. SDKs and examples are available.
                   </p>
-                  <ul className="list-disc pl-5 text-sm text-gray-400 space-y-1">
+                  <ul className="list-disc pl-5 text-sm text-gray-600 space-y-1">
                     <li>Recoveries, claims, and payout endpoints</li>
                     <li>Webhooks for status changes</li>
                     <li>Fine-grained API keys and scopes</li>
@@ -767,8 +767,8 @@ const Settings = () => {
           return (
             <div className="space-y-6">
               <div>
-                <h2 className="text-2xl font-bold text-gray-200">Integrations</h2>
-                <p className="text-gray-400">Manage your platform connections and data sources</p>
+                <h2 className="text-2xl font-bold text-gray-900">Integrations</h2>
+                <p className="text-gray-600">Manage your platform connections and data sources</p>
               </div>
               <div>
                 <Button className="bg-emerald-500 hover:bg-emerald-400 text-white gap-2" onClick={() => navigate('/integrations-hub')}>
@@ -777,19 +777,19 @@ const Settings = () => {
                 </Button>
               </div>
               
-              <Card className="bg-white/5 border-white/10 text-gray-300">
+              <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
                 <CardHeader />
                 <CardContent className="space-y-4">
-                  <div className="rounded-2xl border border-white/10 bg-white/5 divide-y divide-white/10">
+                  <div className="rounded-2xl border border-gray-200 bg-gray-50 divide-y divide-gray-200">
                     {activePlatforms.map(platform => (
                       <div key={platform.id} className="flex flex-col gap-4 px-4 py-4 md:flex-row md:items-center md:justify-between">
                         <div className="flex items-center gap-3 flex-1">
-                          <div className="h-12 w-12 rounded-xl bg-white/10 flex items-center justify-center border border-white/10">
+                          <div className="h-12 w-12 rounded-xl bg-white flex items-center justify-center border border-gray-200 shadow-sm">
                             <img src={platform.icon} alt={`${platform.name} logo`} className="h-8 w-8 object-contain" />
                           </div>
                           <div>
-                            <p className="font-semibold text-gray-100">{platform.name}</p>
-                            <p className="text-sm text-gray-400">{platform.description}</p>
+                            <p className="font-semibold text-gray-900">{platform.name}</p>
+                            <p className="text-sm text-gray-600">{platform.description}</p>
                             <p className="text-xs text-gray-500 mt-1">Last sync: {platform.lastSync}</p>
                           </div>
                         </div>
@@ -808,29 +808,29 @@ const Settings = () => {
                 </CardContent>
               </Card>
               
-              <Card className="bg-white/5 border-white/10 text-gray-300">
+              <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
                 <CardHeader>
-                  <CardTitle className="text-gray-200">Coming</CardTitle>
-                  <CardDescription className="text-gray-400">Coming soon to expand your recovery capabilities</CardDescription>
+                  <CardTitle className="text-gray-900">Coming</CardTitle>
+                  <CardDescription className="text-gray-600">Coming soon to expand your recovery capabilities</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="rounded-2xl border border-white/10 bg-white/5 divide-y divide-white/10">
+                  <div className="rounded-2xl border border-gray-200 bg-gray-50 divide-y divide-gray-200">
                     {upcomingPlatforms.map(platform => (
                       <div key={platform.id} className="flex flex-col gap-4 px-4 py-4 md:flex-row md:items-center md:justify-between opacity-80">
                         <div className="flex items-center gap-3 flex-1">
-                          <div className="h-12 w-12 rounded-xl bg-white/10 flex items-center justify-center border border-white/10">
+                          <div className="h-12 w-12 rounded-xl bg-white flex items-center justify-center border border-gray-200 shadow-sm">
                             <img src={platform.icon} alt={`${platform.name} logo`} className="h-8 w-8 object-contain" />
                           </div>
                           <div>
-                            <p className="font-semibold text-gray-100">{platform.name}</p>
+                            <p className="font-semibold text-gray-900">{platform.name}</p>
                             <p className="text-sm text-gray-500">Coming soon</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-3">
-                          <Badge variant="outline" className="text-xs border-amber-400/40 text-amber-200">
+                          <Badge variant="outline" className="text-xs border-amber-300 text-amber-700 bg-amber-50">
                             Roadmap
                           </Badge>
-                          <Button size="sm" disabled className="bg-white/5 text-gray-400 border border-white/10 cursor-not-allowed">
+                          <Button size="sm" disabled className="bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed">
                             Connect
                           </Button>
                         </div>
@@ -847,21 +847,21 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold text-gray-200">Notifications</h2>
-              <p className="text-gray-400">Control how and when we communicate with you</p>
+              <h2 className="text-2xl font-bold text-gray-900">Notifications</h2>
+              <p className="text-gray-600">Control how and when we communicate with you</p>
             </div>
             
-            <Card className="bg-white/5 border-white/10 text-gray-300">
+            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
               <CardHeader>
-                <CardTitle className="text-gray-200">Email Notifications</CardTitle>
-                <CardDescription className="text-gray-400">Choose which notifications you'd like to receive</CardDescription>
+                <CardTitle className="text-gray-900">Email Notifications</CardTitle>
+                <CardDescription className="text-gray-600">Choose which notifications you'd like to receive</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 {notificationSettings.map((setting) => (
                   <div key={setting.id} className="flex items-center justify-between">
                     <div className="space-y-1">
-                      <p className="font-medium text-gray-200">{setting.label}</p>
-                      <p className="text-sm text-gray-400">{setting.description}</p>
+                      <p className="font-medium text-gray-900">{setting.label}</p>
+                      <p className="text-sm text-gray-600">{setting.description}</p>
                     </div>
                     <Switch defaultChecked={setting.enabled} />
                   </div>
@@ -875,30 +875,30 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold text-gray-200">Security</h2>
-              <p className="text-gray-400">Manage your account security and access</p>
+              <h2 className="text-2xl font-bold text-gray-900">Security</h2>
+              <p className="text-gray-600">Manage your account security and access</p>
             </div>
             
-            <Card className="bg-white/5 border-white/10 text-gray-300">
+            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
               <CardHeader>
-                <CardTitle className="text-gray-200">Login History</CardTitle>
-                <CardDescription className="text-gray-400">Recent account access activity</CardDescription>
+                <CardTitle className="text-gray-900">Login History</CardTitle>
+                <CardDescription className="text-gray-600">Recent account access activity</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className="text-xs text-gray-400">Export a copy of your recent logins</div>
-                  <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={exportLoginHistory}>Export CSV</Button>
+                  <div className="text-xs text-gray-600">Export a copy of your recent logins</div>
+                  <Button size="sm" variant="outline" className="bg-white text-blue-700 border-blue-300 hover:bg-blue-50" onClick={exportLoginHistory}>Export CSV</Button>
                 </div>
                 {loginHistory.map((login, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 border border-white/10 rounded-lg bg-white/5">
+                  <div key={index} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg bg-gray-50">
                     <div className="flex items-center gap-3">
                       {login.device.includes('iPhone') ? 
-                        <Smartphone className="h-5 w-5 text-gray-400" /> : 
-                        <Monitor className="h-5 w-5 text-gray-400" />
+                        <Smartphone className="h-5 w-5 text-gray-500" /> : 
+                        <Monitor className="h-5 w-5 text-gray-500" />
                       }
                       <div>
-                        <p className="font-medium text-gray-200">{login.device}</p>
-                        <p className="text-sm text-gray-400">
+                        <p className="font-medium text-gray-900">{login.device}</p>
+                        <p className="text-sm text-gray-600">
                           <MapPin className="h-3 w-3 inline mr-1" />
                           {login.location} • {login.time}
                         </p>
@@ -912,33 +912,33 @@ const Settings = () => {
               </CardContent>
             </Card>
             
-            <Card className="bg-white/5 border-white/10 text-gray-300">
+            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
               <CardHeader>
-                <CardTitle className="text-gray-200">Security Actions</CardTitle>
-                <CardDescription className="text-gray-400">Manage your account security</CardDescription>
+                <CardTitle className="text-gray-900">Security Actions</CardTitle>
+                <CardDescription className="text-gray-600">Manage your account security</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="rounded border border-white/10 bg-white/5 p-4">
+                <div className="rounded border border-gray-200 bg-gray-50 p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium text-gray-200">Two‑Factor Authentication (2FA)</p>
-                      <p className="text-sm text-gray-400">Add an extra layer of security to your account</p>
+                      <p className="font-medium text-gray-900">Two‑Factor Authentication (2FA)</p>
+                      <p className="text-sm text-gray-600">Add an extra layer of security to your account</p>
                     </div>
                     <Switch checked={twoFactorEnabled} onCheckedChange={(v)=>{ setTwoFactorEnabled(!!v); persistSecurity({ twoFactorEnabled: !!v }); }} />
                   </div>
                   {twoFactorEnabled && (
                     <div className="mt-3">
-                      <div className="text-sm text-gray-400">Backup Codes</div>
+                      <div className="text-sm text-gray-600">Backup Codes</div>
                       {backupCodes.length === 0 ? (
-                        <Button size="sm" className="mt-2 bg-white text-blue-900 border-blue-200 hover:bg-blue-50" variant="outline" onClick={generateBackupCodes}>Generate Backup Codes</Button>
+                        <Button size="sm" className="mt-2 bg-white text-blue-700 border-blue-300 hover:bg-blue-50" variant="outline" onClick={generateBackupCodes}>Generate Backup Codes</Button>
                       ) : (
                         <div className="mt-2">
                           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-                            {backupCodes.map(c => (<code key={c} className="px-2 py-1 rounded bg-white/5 border border-white/10 text-gray-100">{c}</code>))}
+                            {backupCodes.map(c => (<code key={c} className="px-2 py-1 rounded bg-white border border-gray-200 text-gray-900">{c}</code>))}
                           </div>
                           <div className="mt-2 flex gap-2">
-                            <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={downloadBackupCodes}>Download</Button>
-                            <Button size="sm" variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={generateBackupCodes}>Regenerate</Button>
+                            <Button size="sm" variant="outline" className="bg-white text-blue-700 border-blue-300 hover:bg-blue-50" onClick={downloadBackupCodes}>Download</Button>
+                            <Button size="sm" variant="outline" className="bg-white text-blue-700 border-blue-300 hover:bg-blue-50" onClick={generateBackupCodes}>Regenerate</Button>
                           </div>
                         </div>
                       )}
@@ -946,21 +946,21 @@ const Settings = () => {
                   )}
                 </div>
 
-                <div className="rounded border border-white/10 bg-white/5 p-4">
+                <div className="rounded border border-gray-200 bg-gray-50 p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium text-gray-200">Login Alerts</p>
-                      <p className="text-sm text-gray-400">Email me when a new device logs into my account</p>
+                      <p className="font-medium text-gray-900">Login Alerts</p>
+                      <p className="text-sm text-gray-600">Email me when a new device logs into my account</p>
                     </div>
                     <Switch checked={loginAlertsEnabled} onCheckedChange={(v)=>{ setLoginAlertsEnabled(!!v); persistSecurity({ loginAlertsEnabled: !!v }); }} />
                   </div>
                 </div>
 
-                <div className="rounded border border-white/10 bg-white/5 p-4">
+                <div className="rounded border border-gray-200 bg-gray-50 p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium text-gray-200">Trust this Device</p>
-                      <p className="text-sm text-gray-400">Skip 2FA on this device for faster sign‑in</p>
+                      <p className="font-medium text-gray-900">Trust this Device</p>
+                      <p className="text-sm text-gray-600">Skip 2FA on this device for faster sign‑in</p>
                     </div>
                     <Switch checked={trustedDevice} onCheckedChange={(v)=>{ setTrustedDevice(!!v); persistSecurity({ trustedDevice: !!v }); }} />
                   </div>
@@ -973,16 +973,16 @@ const Settings = () => {
               </CardContent>
             </Card>
             
-            <Card className="bg-red-500/5 border-red-200/20 text-gray-300 mb-10">
+            <Card className="bg-red-50 border-red-200 text-gray-700 mb-10 shadow-sm">
               <CardHeader>
-                <CardTitle className="text-red-300 flex items-center gap-2">
+                <CardTitle className="text-red-700 flex items-center gap-2">
                   <AlertTriangle className="h-5 w-5" />
                   Danger Zone
                 </CardTitle>
-                <CardDescription className="text-gray-400">Permanent actions that cannot be undone</CardDescription>
+                <CardDescription className="text-gray-600">Permanent actions that cannot be undone</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-gray-400 mb-4">
+                <p className="text-sm text-gray-600 mb-4">
                   Deleting your account will permanently remove all data, including recovery history, 
                   team members, and integrations. This action cannot be reversed.
                 </p>
@@ -1014,15 +1014,14 @@ const Settings = () => {
   return (
     <PageLayout title="Account Control Center">
       <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
-          <div className="relative container mx-auto px-6 pt-6 pb-0 text-gray-300">
+        <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24">
+          <div className="relative container mx-auto px-6 pt-6 pb-0 text-gray-700">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
               {/* Navigation Menu */}
               <div className="lg:col-span-1">
-                <Card className="lg:sticky lg:top-6 h-fit bg-white/5 border-white/10 text-gray-300">
+                <Card className="lg:sticky lg:top-6 h-fit bg-white border-gray-200 text-gray-700 shadow-sm">
                   <CardHeader>
-                    <CardTitle className="text-lg text-gray-200">Settings</CardTitle>
+                    <CardTitle className="text-lg text-gray-900">Settings</CardTitle>
                   </CardHeader>
                   <CardContent className="p-0">
                     <nav className="space-y-1 p-2">
@@ -1033,12 +1032,12 @@ const Settings = () => {
                           className={cn(
                             "relative w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md transition-colors text-left",
                             activeSection === item.id
-                              ? "bg-white/10 text-gray-100"
-                              : "text-gray-400 hover:bg-white/5 hover:text-gray-100"
+                              ? "bg-gray-100 text-gray-900"
+                              : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                           )}
                         >
                           {activeSection === item.id && (
-                            <span className="absolute left-0 h-5 w-[3px] rounded-r bg-emerald-400" />
+                            <span className="absolute left-0 h-5 w-[3px] rounded-r bg-emerald-500" />
                           )}
                           <item.icon className="h-4 w-4 shrink-0" />
                           {item.label}

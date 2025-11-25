@@ -193,102 +193,101 @@ export default function Billing() {
   return (
     <PageLayout title="Billing & Invoices">
       <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
-          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-300 space-y-8">
+        <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24">
+          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-700 space-y-8">
         {/* Current Plan & Payment Method */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Your Plan Card */}
-          <Card className="bg-white/5 border-white/10 text-gray-300">
+          <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-gray-200">
-                <Shield className="h-5 w-5 text-emerald-400" />
+              <CardTitle className="flex items-center gap-2 text-gray-900">
+                <Shield className="h-5 w-5 text-emerald-600" />
                 Your Plan
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <h3 className="text-lg font-semibold text-gray-100">
+                <h3 className="text-lg font-semibold text-gray-900">
                   Clario Billing
                 </h3>
-                <div className="mt-3 p-4 rounded-lg border border-white/10 bg-white/5">
-                  <p className="text-sm text-gray-400 leading-relaxed">
-                    We charge a <span className="font-semibold text-gray-200">20% commission only</span> on the funds we successfully recover for you. 
-                    <span className="font-medium text-emerald-400"> No recovery, no fee.</span>
+                <div className="mt-3 p-4 rounded-lg border border-gray-200 bg-gray-50">
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    We charge a <span className="font-semibold text-gray-900">20% commission only</span> on the funds we successfully recover for you. 
+                    <span className="font-medium text-emerald-600"> No recovery, no fee.</span>
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-2 text-sm text-emerald-400">
+              <div className="flex items-center gap-2 text-sm text-emerald-600">
                 <Check className="h-4 w-4" />
-                <span className="text-gray-300">Active and monitoring your account 24/7</span>
+                <span className="text-gray-700">Active and monitoring your account 24/7</span>
               </div>
               <div className="grid grid-cols-3 gap-3 mt-3 text-sm">
-                <div className="rounded border border-white/10 bg-white/5 p-3">
-                  <div className="text-gray-400">Recovered (selected)</div>
-                  <div className="text-gray-100 font-semibold">${periodTotals.totalRecovered.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+                <div className="rounded border border-gray-200 bg-gray-50 p-3">
+                  <div className="text-gray-600">Recovered (selected)</div>
+                  <div className="text-gray-900 font-semibold">${periodTotals.totalRecovered.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
                 </div>
-                <div className="rounded border border-white/10 bg-white/5 p-3">
-                  <div className="text-gray-400">Our Commission (20%)</div>
-                  <div className="text-blue-300 font-semibold">${periodTotals.commission.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+                <div className="rounded border border-gray-200 bg-gray-50 p-3">
+                  <div className="text-gray-600">Our Commission (20%)</div>
+                  <div className="text-blue-600 font-semibold">${periodTotals.commission.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
                 </div>
-                <div className="rounded border border-white/10 bg-white/5 p-3">
-                  <div className="text-gray-400">Net to You</div>
-                  <div className="text-emerald-300 font-semibold">${periodTotals.netToSeller.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+                <div className="rounded border border-gray-200 bg-gray-50 p-3">
+                  <div className="text-gray-600">Net to You</div>
+                  <div className="text-emerald-600 font-semibold">${periodTotals.netToSeller.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
                 </div>
               </div>
             </CardContent>
           </Card>
 
           {/* Payment & Billing Settings Card */}
-          <Card className="bg-white/5 border-white/10 text-gray-300">
+          <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-gray-200">
-                <CreditCard className="h-5 w-5 text-emerald-400" />
+              <CardTitle className="flex items-center gap-2 text-gray-900">
+                <CreditCard className="h-5 w-5 text-emerald-600" />
                 Primary Payment Method
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center justify-between p-4 rounded-lg border border-white/10 bg-white/5">
+              <div className="flex items-center justify-between p-4 rounded-lg border border-gray-200 bg-gray-50">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-black/20 rounded border border-white/10">
-                    <CreditCard className="h-4 w-4 text-gray-400" />
+                  <div className="p-2 bg-gray-100 rounded border border-gray-200">
+                    <CreditCard className="h-4 w-4 text-gray-600" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-200">Visa ending in 4242</p>
-                    <p className="text-sm text-gray-400">Expires 12/2027</p>
+                    <p className="font-medium text-gray-900">Visa ending in 4242</p>
+                    <p className="text-sm text-gray-600">Expires 12/2027</p>
                   </div>
                 </div>
-                <Badge variant="outline" className="border-emerald-300/30 text-emerald-300">
+                <Badge variant="outline" className="border-emerald-300 text-emerald-700 bg-emerald-50">
                   Active
                 </Badge>
               </div>
               <div className="grid grid-cols-1 gap-4">
                 <div>
-                  <div className="text-sm text-gray-400 mb-1">Invoice Recipients</div>
+                  <div className="text-sm text-gray-600 mb-1">Invoice Recipients</div>
                   <div className="flex gap-2">
-                    <Input placeholder="Add recipient email" value={newRecipient} onChange={(e)=>setNewRecipient(e.target.value)} className="border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" />
-                    <Button className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" variant="outline" onClick={() => {
+                    <Input placeholder="Add recipient email" value={newRecipient} onChange={(e)=>setNewRecipient(e.target.value)} className="border-gray-300 bg-white text-gray-900 placeholder:text-gray-500" />
+                    <Button className="bg-white text-blue-700 border-blue-300 hover:bg-blue-50" variant="outline" onClick={() => {
                       const email = newRecipient.trim(); if (!email) return; setInvoiceRecipients(prev => prev.includes(email) ? prev : [...prev, email]); setNewRecipient('');
                     }}>Add</Button>
                   </div>
                   {invoiceRecipients.length > 0 && (
                     <div className="mt-2 flex flex-wrap gap-2">
                       {invoiceRecipients.map((em) => (
-                        <span key={em} className="inline-flex items-center gap-2 px-2 py-1 rounded border border-white/10 bg-white/5 text-xs">
+                        <span key={em} className="inline-flex items-center gap-2 px-2 py-1 rounded border border-gray-200 bg-gray-50 text-xs text-gray-700">
                           {em}
-                          <button className="text-gray-400 hover:text-gray-200" onClick={() => setInvoiceRecipients(prev => prev.filter(x => x !== em))}>×</button>
+                          <button className="text-gray-500 hover:text-gray-900" onClick={() => setInvoiceRecipients(prev => prev.filter(x => x !== em))}>×</button>
                         </span>
                       ))}
                     </div>
                   )}
                 </div>
                 <div>
-                  <div className="text-sm text-gray-400 mb-1">Tax / VAT Number</div>
-                  <Input placeholder="Optional — shown on invoices" value={taxId} onChange={(e)=>setTaxId(e.target.value)} className="border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" />
+                  <div className="text-sm text-gray-600 mb-1">Tax / VAT Number</div>
+                  <Input placeholder="Optional — shown on invoices" value={taxId} onChange={(e)=>setTaxId(e.target.value)} className="border-gray-300 bg-white text-gray-900 placeholder:text-gray-500" />
                 </div>
                 <div className="flex gap-2">
                   <Button className="bg-emerald-500 hover:bg-emerald-400 text-white font-semibold" onClick={saveBillingSettings}>Save Billing Settings</Button>
-                  <Button className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" variant="outline" onClick={() => { window.location.href = '/stripe/callback'; }}>Open Stripe Billing Portal</Button>
+                  <Button className="bg-white text-blue-700 border-blue-300 hover:bg-blue-50" variant="outline" onClick={() => { window.location.href = '/stripe/callback'; }}>Open Stripe Billing Portal</Button>
                 </div>
               </div>
             </CardContent>
@@ -296,16 +295,16 @@ export default function Billing() {
         </div>
 
         {/* Billing History */}
-        <Card className="bg-white/5 border-white/10 text-gray-300">
+        <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
           <CardHeader>
             <div className="flex justify-between items-start">
               <div>
-                <CardTitle className="text-xl font-semibold text-gray-200">Billing History</CardTitle>
-                <p className="text-sm text-gray-400 mt-1">
+                <CardTitle className="text-xl font-semibold text-gray-900">Billing History</CardTitle>
+                <p className="text-sm text-gray-600 mt-1">
                   Complete transparency into every charge and recovery
                 </p>
               </div>
-              <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold" onClick={() => setExportOpen(true)}>
+              <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-white font-semibold" onClick={() => setExportOpen(true)}>
                 <Download className="h-4 w-4 mr-2" />
                 Export All
               </Button>
@@ -314,7 +313,7 @@ export default function Billing() {
           <CardContent>
             <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
               <div className="flex items-center gap-2">
-                <Input placeholder="Search invoices (ID/status)" value={invoiceSearch} onChange={(e)=>{ setInvoiceSearch(e.target.value); setPage(1); }} className="border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500 md:w-72" />
+                <Input placeholder="Search invoices (ID/status)" value={invoiceSearch} onChange={(e)=>{ setInvoiceSearch(e.target.value); setPage(1); }} className="border-gray-300 bg-white text-gray-900 placeholder:text-gray-500 md:w-72" />
                 <UiSelect value={statusFilter === 'All' ? 'All' : statusFilter} onValueChange={(v)=>{ setStatusFilter(v as any); setPage(1); }}>
                   <SelectTrigger className="w-[160px]"><SelectValue placeholder="Status" /></SelectTrigger>
                   <SelectContent>
@@ -325,15 +324,15 @@ export default function Billing() {
                   </SelectContent>
                 </UiSelect>
               </div>
-              <div className="flex items-center gap-2 text-xs text-gray-400">
+              <div className="flex items-center gap-2 text-xs text-gray-600">
                 <span>{filteredInvoices.length} invoices</span>
-                <select className="bg-white/10 border border-white/10 rounded px-2 py-1" value={pageSize} onChange={(e)=>{ setPageSize(Number(e.target.value)); setPage(1); }}>
+                <select className="bg-white border border-gray-300 rounded px-2 py-1 text-gray-700" value={pageSize} onChange={(e)=>{ setPageSize(Number(e.target.value)); setPage(1); }}>
                   <option value={10}>10 / page</option>
                   <option value={25}>25 / page</option>
                   <option value={50}>50 / page</option>
                 </select>
-                <Button variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" disabled={page<=1} onClick={()=>setPage(p=>Math.max(1,p-1))}>Prev</Button>
-                <Button variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" disabled={page>=totalPages} onClick={()=>setPage(p=>Math.min(totalPages,p+1))}>Next</Button>
+                <Button variant="outline" className="bg-white text-blue-700 border-blue-300 hover:bg-blue-50" disabled={page<=1} onClick={()=>setPage(p=>Math.max(1,p-1))}>Prev</Button>
+                <Button variant="outline" className="bg-white text-blue-700 border-blue-300 hover:bg-blue-50" disabled={page>=totalPages} onClick={()=>setPage(p=>Math.min(totalPages,p+1))}>Next</Button>
               </div>
             </div>
             <div className="overflow-x-auto">
@@ -351,11 +350,11 @@ export default function Billing() {
                 </TableHeader>
                 <TableBody>
                   {pageData.map((invoice) => (
-                    <TableRow key={invoice.id} className="hover:bg-white/5">
+                    <TableRow key={invoice.id} className="hover:bg-gray-50">
                       <TableCell>
                         <Link 
                           to={`/billing/invoice/${invoice.id}`}
-                          className="font-mono text-sm text-emerald-400 hover:underline flex items-center gap-1"
+                          className="font-mono text-sm text-emerald-600 hover:underline flex items-center gap-1"
                         >
                           {invoice.id}
                           <ChevronRight className="h-3 w-3" />
@@ -406,10 +405,10 @@ export default function Billing() {
         </Card>
 
         {/* Frequently Asked Billing Questions */}
-        <Card className="bg-white/5 border-white/10 text-gray-300">
+        <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
           <CardHeader>
-            <CardTitle className="text-xl font-semibold text-gray-200">Frequently Asked Billing Questions</CardTitle>
-            <p className="text-sm text-gray-400">
+            <CardTitle className="text-xl font-semibold text-gray-900">Frequently Asked Billing Questions</CardTitle>
+            <p className="text-sm text-gray-600">
               Quick answers to common billing and payment questions
             </p>
           </CardHeader>
@@ -419,7 +418,7 @@ export default function Billing() {
                 <AccordionTrigger className="text-left">
                   When will I be charged?
                 </AccordionTrigger>
-                <AccordionContent className="text-gray-400 leading-relaxed">
+                <AccordionContent className="text-gray-600 leading-relaxed">
                   You are only charged when we successfully recover money for you. We generate invoices monthly for all recoveries completed in that period, with payment automatically processed from your saved payment method within 7 days of invoice generation.
                 </AccordionContent>
               </AccordionItem>
@@ -428,7 +427,7 @@ export default function Billing() {
                 <AccordionTrigger className="text-left">
                   What happens if a recovery is later reversed by Amazon?
                 </AccordionTrigger>
-                <AccordionContent className="text-gray-400 leading-relaxed">
+                <AccordionContent className="text-gray-600 leading-relaxed">
                   In the rare event that Amazon reverses a recovery, we automatically issue you a full credit on your next invoice. If no future invoice exists, we process a direct refund to your payment method within 5-7 business days.
                 </AccordionContent>
               </AccordionItem>
@@ -437,7 +436,7 @@ export default function Billing() {
                 <AccordionTrigger className="text-left">
                   How do I update my company's VAT number?
                 </AccordionTrigger>
-                <AccordionContent className="text-gray-400 leading-relaxed">
+                <AccordionContent className="text-gray-600 leading-relaxed">
                   You can update your VAT number and other billing details by clicking "Update Payment Method" above, or by contacting our support team. Changes will be reflected on your next invoice.
                 </AccordionContent>
               </AccordionItem>
@@ -446,7 +445,7 @@ export default function Billing() {
                 <AccordionTrigger className="text-left">
                   Can I get invoices automatically sent to my accountant?
                 </AccordionTrigger>
-                <AccordionContent className="text-gray-400 leading-relaxed">
+                <AccordionContent className="text-gray-600 leading-relaxed">
                   Yes! Contact our support team to set up automatic invoice forwarding to additional email addresses. You can add multiple recipients and they'll receive a copy of every invoice automatically.
                 </AccordionContent>
               </AccordionItem>
@@ -455,7 +454,7 @@ export default function Billing() {
                 <AccordionTrigger className="text-left">
                   How secure is my payment information?
                 </AccordionTrigger>
-                <AccordionContent className="text-gray-400 leading-relaxed">
+                <AccordionContent className="text-gray-600 leading-relaxed">
                   All payment processing is handled by Stripe, a PCI DSS Level 1 certified payment processor. We never store your full credit card details on our servers - only encrypted tokens that allow us to process payments securely.
                 </AccordionContent>
               </AccordionItem>
@@ -465,14 +464,14 @@ export default function Billing() {
 
         {/* Need More Help */}
         <div className="text-center py-6">
-          <div className="inline-flex items-center gap-2 text-sm text-gray-400">
+          <div className="inline-flex items-center gap-2 text-sm text-gray-600">
             <AlertCircle className="h-4 w-4" />
             <span>Have a specific billing question?</span>
           </div>
           <div className="mt-2">
             <Link 
               to="/help" 
-              className="text-emerald-400 hover:underline font-medium"
+              className="text-emerald-600 hover:underline font-medium"
             >
               Contact our support team
             </Link>
