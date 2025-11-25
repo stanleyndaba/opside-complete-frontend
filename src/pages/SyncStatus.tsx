@@ -4,7 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { RefreshCw, CheckCircle2, XCircle, Loader2, AlertCircle, Clock } from 'lucide-react';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { RefreshCw, CheckCircle2, XCircle, Loader2, AlertCircle, Clock, Gift } from 'lucide-react';
 import { getActiveSyncStatus } from '@/lib/inventoryApi';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
@@ -83,6 +84,7 @@ export default function SyncStatus() {
   const [isLoading, setIsLoading] = useState(true);
   const [isUsingMockData, setIsUsingMockData] = useState(true);
   const [pollingInterval, setPollingInterval] = useState<NodeJS.Timeout | null>(null);
+  const [showReferralPopup, setShowReferralPopup] = useState(false);
 
   // Fetch sync status
   const fetchSyncStatus = async (options?: { useMock?: boolean; showLoading?: boolean }) => {
@@ -300,13 +302,23 @@ export default function SyncStatus() {
         )}
               <Card className="bg-white border-0 text-gray-900 shadow-none">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              {getStatusIcon()}
-              Ledgers Log Sync
-            </CardTitle>
-                  <CardDescription className="text-gray-500">
-              Current synchronization for heavy data
-            </CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  Sync Log
+                </CardTitle>
+                <CardDescription className="text-gray-500">
+                  Current synchronization for heavy data
+                </CardDescription>
+              </div>
+              <button
+                onClick={() => setShowReferralPopup(true)}
+                className="flex items-center gap-2 h-9 px-3 rounded-md text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 transition-colors"
+                aria-label="Referral program"
+              >
+                <Gift className="h-5 w-5" />
+              </button>
+            </div>
           </CardHeader>
           <CardContent>
             {!lastSync ? (
@@ -314,13 +326,13 @@ export default function SyncStatus() {
                 <div className="text-center py-8">
                         <h3 className="text-lg font-semibold mb-2 text-gray-900">Synchronize your data</h3>
                         <p className="text-sm text-gray-600 mb-4">
-                    No sync history yet. Start a sync to see status.
+                    No sync log data available, sync to see log status.
                   </p>
                   <Button onClick={() => navigate('/sync')}>
                     Sync now
                   </Button>
-                  <p className="mt-3 text-xs text-gray-500">
-                    Clario only requests permissions to read historical financial reports, inventory logs, and performance data from the SP-API.
+                  <p className="mt-3 text-xs text-gray-500 max-w-md mx-auto">
+                    Clario only requests read permissions for financial reports, inventory logs, and performance data.
                   </p>
                 </div>
               </div>
@@ -439,6 +451,32 @@ export default function SyncStatus() {
             </div>
           </div>
         </div>
+        {/* Referral Popup */}
+        <Dialog open={showReferralPopup} onOpenChange={setShowReferralPopup}>
+          <DialogContent className="max-w-sm bg-emerald-50/95 border border-emerald-200/80 shadow-lg rounded-lg p-6">
+            <div className="flex flex-col items-center gap-4 text-center">
+              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100">
+                <Gift className="h-6 w-6 text-emerald-600" />
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold text-emerald-900">
+                  No commission on referrals
+                </h3>
+                <p className="text-sm text-emerald-700">
+                  Bring new sellers to Clario and keep 100% of their recovered funds.
+                </p>
+              </div>
+              <Button
+                onClick={() => {
+                  setShowReferralPopup(false);
+                }}
+                className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-md transition-colors shadow-md hover:shadow-lg"
+              >
+                Invite Friend +
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
     </PageLayout>
   );
 }
