@@ -232,11 +232,19 @@ export default function Sync() {
           const estimatedValue = event.estimated_value || (totalDetections * 48);
           const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimatedValue);
           addLog({ type: 'success', category: 'detection', message: `✓ Recoveries identified: ${formattedValue} from ${totalDetections} discrepancies` });
-          toast({
+          
+          // ⭐ UPDATE syncData so "Potential Recovery Identified" shows without refresh
+          setSyncData(prev => prev ? {
+            ...prev,
+            claimsDetected: totalDetections,
+            totalRecoverableValue: estimatedValue
+          } : prev);
+          
+        toast({
             title: 'Recoveries Identified',
             description: `${formattedValue} potential recovery from ${totalDetections} discrepancies`,
-            duration: 6000,
-          });
+          duration: 6000,
+        });
         } else {
           addLog({ type: 'info', category: 'detection', message: 'Detection complete - no discrepancies found' });
         }
@@ -244,6 +252,14 @@ export default function Sync() {
         const estimatedValue = event.estimated_value || (event.new_detections_count * 48);
         const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimatedValue);
         addLog({ type: 'info', category: 'detection', message: `New: +${formattedValue} potential recovery` });
+        
+        // ⭐ UPDATE syncData for incremental updates too
+        setSyncData(prev => prev ? {
+          ...prev,
+          claimsDetected: (prev.claimsDetected || 0) + event.new_detections_count,
+          totalRecoverableValue: (prev.totalRecoverableValue || 0) + estimatedValue
+        } : prev);
+        
         toast({
           title: 'New Recoveries Found',
           description: `+${formattedValue} from ${event.new_detections_count} new discrepancies`,
@@ -437,18 +453,22 @@ export default function Sync() {
           // Handle detection.completed event (sent after sync completes)
           if (s.type === 'detection' && s.status === 'completed') {
             console.log('[Sync] Detection completed event received:', s);
+            const detectedCount = s.claimsDetected || 0;
+            const estimatedValue = detectedCount * 48; // ~$48 avg per claim
+            
+            // ⭐ UPDATE syncData so "Potential Recovery Identified" shows immediately
             setSyncData(prev => prev ? {
               ...prev,
-              claimsDetected: s.claimsDetected ?? prev.claimsDetected
+              claimsDetected: detectedCount,
+              totalRecoverableValue: estimatedValue
             } : prev);
             
-            if (s.claimsDetected > 0) {
-              const estimatedValue = s.claimsDetected * 48; // ~$48 avg per claim
+            if (detectedCount > 0) {
               const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimatedValue);
-              addLog({ type: 'success', category: 'detection', message: `✓ Recoveries identified: ${formattedValue} from ${s.claimsDetected} discrepancies`, count: s.claimsDetected });
+              addLog({ type: 'success', category: 'detection', message: `✓ Recoveries identified: ${formattedValue} from ${detectedCount} discrepancies`, count: detectedCount });
               toast({
                 title: 'Recoveries Identified',
-                description: `${formattedValue} potential recovery from ${s.claimsDetected} discrepancies`,
+                description: `${formattedValue} potential recovery from ${detectedCount} discrepancies`,
                 duration: 5000,
               });
             }
@@ -469,9 +489,9 @@ export default function Sync() {
       }
     }
 
-    // Polling fallback
+    // Polling fallback - continue polling after completion to catch async detection results
     let pollsAfterComplete = 0;
-    const MAX_POLLS_AFTER_COMPLETE = 5;
+    const MAX_POLLS_AFTER_COMPLETE = 12; // 12 polls × 3s = 36 seconds for detection to complete
     
     interval = setInterval(async () => {
       if (!syncId || cancelled) return;
@@ -484,9 +504,9 @@ export default function Sync() {
           pollsAfterComplete++;
           
           if (pollsAfterComplete >= MAX_POLLS_AFTER_COMPLETE || s.status === 'failed' || s.status === 'cancelled') {
-            if (interval) {
-              clearInterval(interval);
-              interval = null;
+          if (interval) {
+            clearInterval(interval);
+            interval = null;
             }
           }
         }
@@ -659,21 +679,21 @@ export default function Sync() {
             {/* Header Section - No Card, content flows naturally */}
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                {getStatusIcon()}
+                    {getStatusIcon()}
                 <h1 className="text-xl font-semibold text-gray-900">Sync Log</h1>
               </div>
               <p className="text-sm text-gray-500">
-                First run window: last 18 months • Schedule: daily at 02:00 UTC
+                    First run window: last 18 months • Schedule: daily at 02:00 UTC
               </p>
             </div>
 
             {/* Main Content - Flat, no card */}
-            <div className="space-y-4">
+                  <div className="space-y-4">
               {/* Potential Recovery Value - The Hero Number */}
               {status === 'completed' && claimsCount > 0 && (
                 <div className="py-4">
                   <p className="text-sm text-gray-500 mb-1">Potential Recovery Identified</p>
-                  <p className="text-3xl font-bold text-emerald-600">
+                  <p className="text-xl font-semibold text-gray-900">
                     {formatCurrency(totalRecoverableValue)}
                   </p>
                   <p className="text-xs text-gray-400 mt-1">
@@ -682,35 +702,35 @@ export default function Sync() {
                 </div>
               )}
 
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <p className="text-sm text-gray-600">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                              <p className="text-sm text-gray-600">
                     {status === 'completed' && claimsCount > 0
                       ? `Analysis complete — ${claimsCount.toLocaleString()} recoverable items found`
                       : status === 'completed' && totalItemsSynced > 0
                         ? `Sync completed — ${totalItemsSynced.toLocaleString()} records analyzed`
                         : message}
                   </p>
-                </div>
-                {getStatusBadge()}
-              </div>
-                  
-                  <Progress value={progress} className="h-1" />
-                  
-              <div className="flex flex-col gap-1">
-                <div className="flex items-center justify-between text-xs text-gray-600">
-                  <span>{progress}%</span>
-                  {syncData && (
-                    <div className="flex items-center gap-4 text-xs">
-                      {syncData.ordersProcessed !== undefined && syncData.totalOrders !== undefined && (
-                        <span>
-                          {syncData.ordersProcessed.toLocaleString()} / {syncData.totalOrders.toLocaleString()} orders
-                        </span>
-                      )}
+                      </div>
+                      {getStatusBadge()}
                     </div>
-                  )}
-                </div>
-              </div>
+                    
+                    <Progress value={progress} className="h-1" />
+                    
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center justify-between text-xs text-gray-600">
+                        <span>{progress}%</span>
+                        {syncData && (
+                          <div className="flex items-center gap-4 text-xs">
+                            {syncData.ordersProcessed !== undefined && syncData.totalOrders !== undefined && (
+                        <span>
+                                {syncData.ordersProcessed.toLocaleString()} / {syncData.totalOrders.toLocaleString()} orders
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
 
               {/* Sync Summary Grid - Data Types Only */}
               {syncData && (status === 'completed' || status === 'running') && (
@@ -730,9 +750,9 @@ export default function Sync() {
                       <item.icon className="h-3 w-3" />
                       <span className="font-medium">{item.value?.toLocaleString()}</span>
                       <span className="text-gray-400">{item.label}</span>
-                    </div>
+                            </div>
                   ))}
-                </div>
+                          </div>
               )}
 
               {/* Real-time Logs Section */}
@@ -752,7 +772,7 @@ export default function Sync() {
                     onChange={(e) => setLogSearch(e.target.value)}
                     className="pl-10 h-9 text-sm bg-gray-50 border-gray-200 focus:bg-white"
                   />
-                </div>
+                            </div>
                 
                 {/* Log Container - Terminal Style */}
                 <div 
@@ -770,96 +790,102 @@ export default function Sync() {
                           <span className="text-gray-500 shrink-0 select-none">
                             {formatTimestamp(log.timestamp)}
                           </span>
+                          <span className="text-cyan-500 shrink-0 select-none font-medium">
+                            sync agent
+                          </span>
                           <span className={`shrink-0 ${getLogColor(log.type)}`}>
                             {getCategoryIcon(log.category)}
                           </span>
                           <span className={`${getLogColor(log.type)} break-all`}>
                             {log.message}
                           </span>
-                        </div>
+                            </div>
                       ))}
                       {status === 'running' && (
                         <div className="flex items-center gap-2 text-blue-400 animate-pulse">
                           <span className="text-gray-500 shrink-0 select-none">
                             {formatTimestamp(new Date())}
                           </span>
+                          <span className="text-cyan-500 shrink-0 select-none font-medium">
+                            sync agent
+                          </span>
                           <Loader2 className="h-3.5 w-3.5 animate-spin" />
                           <span>Processing...</span>
-                        </div>
+                          </div>
                       )}
-                    </div>
-                  )}
-                </div>
-              </div>
+                            </div>
+                              )}
+                          </div>
+                        </div>
 
-              {error && (
-                <div className="p-3 rounded-md bg-red-50 border border-red-200 text-sm text-red-800">
-                  <strong>Error:</strong> {error}
-                </div>
-              )}
+                    {error && (
+                      <div className="p-3 rounded-md bg-red-50 border border-red-200 text-sm text-red-800">
+                        <strong>Error:</strong> {error}
+                      </div>
+                    )}
 
               <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500 pt-2">
-                {syncData?.startedAt && (
+                    {syncData?.startedAt && (
                   <span>Started: {new Date(syncData.startedAt).toLocaleString()}</span>
-                )}
-                {syncData?.completedAt && (
+                    )}
+                    {syncData?.completedAt && (
                   <>
                     <span>•</span>
                     <span>Completed: {new Date(syncData.completedAt).toLocaleString()}</span>
                   </>
                 )}
-              </div>
+                      </div>
 
               <div className="flex flex-wrap items-center gap-2 pt-4">
-                {status === 'running' && (
-                  <Button
-                    variant="outline"
-                    onClick={handleCancelSync}
-                    disabled={isCancelling}
-                    className="bg-gray-900 text-white border-gray-900 hover:bg-gray-800"
-                  >
-                    {isCancelling ? (
-                      <>
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        Cancelling...
-                      </>
-                    ) : (
-                      <>
-                        <XCircle className="h-4 w-4 mr-2" />
-                        Cancel Sync
-                      </>
-                    )}
-                  </Button>
-                )}
-                
-                {(status === 'failed' || status === 'cancelled') && (
-                  <Button
-                    variant="outline"
-                    onClick={handleRetry}
-                    className="border-gray-200 text-gray-700 hover:bg-gray-50"
-                  >
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                    Retry Sync
-                  </Button>
-                )}
+                      {status === 'running' && (
+                        <Button
+                          variant="outline"
+                          onClick={handleCancelSync}
+                          disabled={isCancelling}
+                          className="bg-gray-900 text-white border-gray-900 hover:bg-gray-800"
+                        >
+                          {isCancelling ? (
+                            <>
+                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                              Cancelling...
+                            </>
+                          ) : (
+                            <>
+                              <XCircle className="h-4 w-4 mr-2" />
+                              Cancel Sync
+                            </>
+                          )}
+                        </Button>
+                      )}
+                      
+                      {(status === 'failed' || status === 'cancelled') && (
+                        <Button
+                          variant="outline"
+                          onClick={handleRetry}
+                          className="border-gray-200 text-gray-700 hover:bg-gray-50"
+                        >
+                          <RefreshCw className="h-4 w-4 mr-2" />
+                          Retry Sync
+                        </Button>
+                      )}
 
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    if (status === 'completed') {
-                      navigate('/app');
-                    }
-                  }}
-                  disabled={status !== 'completed'}
-                  className={
-                    status === 'completed'
-                      ? 'bg-gray-900 text-white border-gray-900 hover:bg-gray-800'
-                      : 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
-                  }
-                >
-                  Go to Dashboard
-                </Button>
-              </div>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          if (status === 'completed') {
+                            navigate('/app');
+                          }
+                        }}
+                        disabled={status !== 'completed'}
+                        className={
+                          status === 'completed'
+                            ? 'bg-gray-900 text-white border-gray-900 hover:bg-gray-800'
+                            : 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
+                        }
+                      >
+                        Go to Dashboard
+                      </Button>
+                    </div>
 
               {/* Document Sources Modal */}
               <Dialog open={showSourcesModal} onOpenChange={setShowSourcesModal}>
@@ -915,7 +941,7 @@ export default function Sync() {
                       <img src={DropboxIcon} alt="Dropbox" className="h-10 w-10 object-contain group-hover:scale-105 transition-transform" />
                       <span className="text-xs font-medium text-gray-700">Dropbox</span>
                     </button>
-                  </div>
+                      </div>
                   
                   <div className="flex justify-center pt-1">
                     <Button
@@ -929,9 +955,9 @@ export default function Sync() {
                 </DialogContent>
               </Dialog>
             </div>
+            </div>
           </div>
         </div>
-      </div>
     </PageLayout>
   );
 }
