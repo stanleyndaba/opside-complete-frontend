@@ -786,27 +786,35 @@ export default function Sync() {
                   ) : (
                     <div className="space-y-1">
                       {filteredLogs.map((log) => (
-                        <div key={log.id} className="flex items-start gap-2 hover:bg-gray-800/50 px-1 rounded">
-                          <span className="text-gray-500 shrink-0 select-none">
+                        <div key={log.id} className="flex flex-wrap sm:flex-nowrap items-start gap-1 sm:gap-2 hover:bg-gray-800/50 px-1 rounded">
+                          {/* Timestamp - hidden on mobile, shown on sm+ */}
+                          <span className="hidden sm:inline text-gray-500 shrink-0 select-none">
                             {formatTimestamp(log.timestamp)}
                           </span>
-                          <span className="text-cyan-500 shrink-0 select-none font-medium">
+                          {/* Short time on mobile only */}
+                          <span className="sm:hidden text-gray-500 shrink-0 select-none text-[10px]">
+                            {log.timestamp.toLocaleTimeString()}
+                          </span>
+                          <span className="text-cyan-500 shrink-0 select-none font-medium text-[10px] sm:text-xs">
                             sync agent
                           </span>
                           <span className={`shrink-0 ${getLogColor(log.type)}`}>
                             {getCategoryIcon(log.category)}
                           </span>
-                          <span className={`${getLogColor(log.type)} break-all`}>
+                          <span className={`${getLogColor(log.type)} break-words min-w-0 flex-1`}>
                             {log.message}
                           </span>
                             </div>
                       ))}
                       {status === 'running' && (
-                        <div className="flex items-center gap-2 text-blue-400 animate-pulse">
-                          <span className="text-gray-500 shrink-0 select-none">
+                        <div className="flex flex-wrap sm:flex-nowrap items-center gap-1 sm:gap-2 text-blue-400 animate-pulse">
+                          <span className="hidden sm:inline text-gray-500 shrink-0 select-none">
                             {formatTimestamp(new Date())}
                           </span>
-                          <span className="text-cyan-500 shrink-0 select-none font-medium">
+                          <span className="sm:hidden text-gray-500 shrink-0 select-none text-[10px]">
+                            {new Date().toLocaleTimeString()}
+                          </span>
+                          <span className="text-cyan-500 shrink-0 select-none font-medium text-[10px] sm:text-xs">
                             sync agent
                           </span>
                           <Loader2 className="h-3.5 w-3.5 animate-spin" />
