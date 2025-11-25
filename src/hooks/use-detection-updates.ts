@@ -74,11 +74,20 @@ export const useDetectionUpdates = (
           const data = JSON.parse(event.data) as DetectionUpdateEvent;
           onUpdate?.(data);
 
-          toast({
-            title: 'Detection Complete',
-            description: data.message || `Detection job completed. ${data.total_detections || 0} anomalies found.`,
-            duration: 6000,
-          });
+          // Only show toast if we actually found something
+          const totalDetections = data.total_detections || 0;
+          const estimatedValue = data.estimated_value || (totalDetections * 48); // ~$48 avg per claim
+          
+          if (totalDetections > 0) {
+            toast({
+              title: 'Recoveries Identified',
+              description: `${formatCurrency(estimatedValue)} potential recovery from ${totalDetections} discrepancies`,
+              duration: 6000,
+            });
+          } else {
+            // Silently complete - no toast for 0 detections
+            console.log('[Detection Updates] Detection complete, no discrepancies found');
+          }
 
           // Close connection after completion
           eventSource.close();

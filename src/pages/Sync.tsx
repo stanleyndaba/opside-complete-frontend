@@ -4,9 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { startSync, getSyncStatus, cancelSync, subscribeSyncProgress, type SyncStatusResponse } from '@/lib/inventoryApi';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { RefreshCw, XCircle, CheckCircle2, AlertCircle, Loader2, Search, Package, Truck, RotateCcw, DollarSign, Archive, Target, Clock } from 'lucide-react';
+import { RefreshCw, XCircle, CheckCircle2, AlertCircle, Loader2, Search, Package, Truck, RotateCcw, DollarSign, Archive, Target, Clock, Mail, Cloud, FileText, HardDrive } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useDetectionUpdates } from '@/hooks/use-detection-updates';
 
@@ -65,8 +66,8 @@ export default function Sync() {
   const { toast } = useToast();
   const previousStatusRef = useRef<'idle' | 'running' | 'completed' | 'failed' | 'cancelled'>('idle');
   const toastShownRef = useRef<{ started?: boolean; completed?: boolean; failed?: boolean; cancelled?: boolean }>({});
-  const [showConnectCard, setShowConnectCard] = useState(false);
-  const connectCardTimeoutRef = useRef<number | null>(null);
+  const [showSourcesModal, setShowSourcesModal] = useState(false);
+  const sourcesModalTimeoutRef = useRef<number | null>(null);
   
   // Log system state
   const [logs, setLogs] = useState<LogEntry[]>([]);
@@ -194,24 +195,24 @@ export default function Sync() {
   useEffect(() => {
     if (typeof window === 'undefined') return undefined;
     if (status === 'completed') {
-      if (connectCardTimeoutRef.current) {
-        window.clearTimeout(connectCardTimeoutRef.current);
+      if (sourcesModalTimeoutRef.current) {
+        window.clearTimeout(sourcesModalTimeoutRef.current);
       }
-      connectCardTimeoutRef.current = window.setTimeout(() => {
-        setShowConnectCard(true);
-      }, 500);
+      sourcesModalTimeoutRef.current = window.setTimeout(() => {
+        setShowSourcesModal(true);
+      }, 1500); // Show modal 1.5s after completion
     } else {
-      if (connectCardTimeoutRef.current) {
-        window.clearTimeout(connectCardTimeoutRef.current);
-        connectCardTimeoutRef.current = null;
+      if (sourcesModalTimeoutRef.current) {
+        window.clearTimeout(sourcesModalTimeoutRef.current);
+        sourcesModalTimeoutRef.current = null;
       }
-      setShowConnectCard(false);
+      setShowSourcesModal(false);
     }
 
     return () => {
-      if (connectCardTimeoutRef.current) {
-        window.clearTimeout(connectCardTimeoutRef.current);
-        connectCardTimeoutRef.current = null;
+      if (sourcesModalTimeoutRef.current) {
+        window.clearTimeout(sourcesModalTimeoutRef.current);
+        sourcesModalTimeoutRef.current = null;
       }
     };
   }, [status]);
@@ -222,17 +223,26 @@ export default function Sync() {
     (event) => {
       // Handle detection updates
       if (event.status === 'complete') {
-        addLog({ type: 'success', category: 'detection', message: `Detection complete: ${event.total_detections || 0} anomalies identified` });
-        toast({
-          title: 'Detection Complete',
-          description: event.message || `Detection completed. ${event.total_detections || 0} anomalies found.`,
-          duration: 6000,
-        });
+        const totalDetections = event.total_detections || 0;
+        if (totalDetections > 0) {
+          const estimatedValue = event.estimated_value || (totalDetections * 48);
+          const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimatedValue);
+          addLog({ type: 'success', category: 'detection', message: `✓ Recoveries identified: ${formattedValue} from ${totalDetections} discrepancies` });
+          toast({
+            title: 'Recoveries Identified',
+            description: `${formattedValue} potential recovery from ${totalDetections} discrepancies`,
+            duration: 6000,
+          });
+        } else {
+          addLog({ type: 'info', category: 'detection', message: 'Detection complete - no discrepancies found' });
+        }
       } else if (event.new_detections_count && event.new_detections_count > 0) {
-        addLog({ type: 'info', category: 'detection', message: `New detection: ${event.new_detections_count} anomalies found` });
+        const estimatedValue = event.estimated_value || (event.new_detections_count * 48);
+        const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimatedValue);
+        addLog({ type: 'info', category: 'detection', message: `New: +${formattedValue} potential recovery` });
         toast({
-          title: 'New Detections',
-          description: `${event.new_detections_count} new anomaly${event.new_detections_count !== 1 ? 'ies' : ''} detected`,
+          title: 'New Recoveries Found',
+          description: `+${formattedValue} from ${event.new_detections_count} new discrepancies`,
           duration: 5000,
         });
       }
@@ -429,10 +439,12 @@ export default function Sync() {
             } : prev);
             
             if (s.claimsDetected > 0) {
-              addLog({ type: 'success', category: 'detection', message: `✓ Detection complete: ${s.claimsDetected} claims detected and ready for review`, count: s.claimsDetected });
+              const estimatedValue = s.claimsDetected * 48; // ~$48 avg per claim
+              const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimatedValue);
+              addLog({ type: 'success', category: 'detection', message: `✓ Recoveries identified: ${formattedValue} from ${s.claimsDetected} discrepancies`, count: s.claimsDetected });
               toast({
-                title: 'Detection Complete',
-                description: `${s.claimsDetected} claims detected and ready for review.`,
+                title: 'Recoveries Identified',
+                description: `${formattedValue} potential recovery from ${s.claimsDetected} discrepancies`,
                 duration: 5000,
               });
             }
@@ -845,11 +857,74 @@ export default function Sync() {
                 </Button>
               </div>
 
-              {showConnectCard && (
-                <div className="mt-4 p-3 rounded border border-blue-200 bg-blue-50 text-xs text-blue-700">
-                  Connect Gmail, Outlook, Dropbox or Google Drive so Clario will start.
-                </div>
-              )}
+              {/* Document Sources Modal */}
+              <Dialog open={showSourcesModal} onOpenChange={setShowSourcesModal}>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle className="text-lg font-semibold">Link Sources for Document Ingestion</DialogTitle>
+                    <DialogDescription className="text-sm text-gray-500">
+                      Read-only access. No writing or sending permissions.
+                    </DialogDescription>
+                  </DialogHeader>
+                  
+                  <div className="grid grid-cols-2 gap-3 py-4">
+                    <button
+                      onClick={() => {
+                        setShowSourcesModal(false);
+                        // Navigate to integrations or handle Gmail connection
+                        navigate('/integrations');
+                      }}
+                      className="flex flex-col items-center gap-2 p-4 rounded-lg border border-gray-200 hover:border-red-300 hover:bg-red-50 transition-colors group"
+                    >
+                      <Mail className="h-8 w-8 text-red-500 group-hover:scale-110 transition-transform" />
+                      <span className="text-sm font-medium text-gray-700">Gmail</span>
+                    </button>
+                    
+                    <button
+                      onClick={() => {
+                        setShowSourcesModal(false);
+                        navigate('/integrations');
+                      }}
+                      className="flex flex-col items-center gap-2 p-4 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors group"
+                    >
+                      <Mail className="h-8 w-8 text-blue-500 group-hover:scale-110 transition-transform" />
+                      <span className="text-sm font-medium text-gray-700">Outlook</span>
+                    </button>
+                    
+                    <button
+                      onClick={() => {
+                        setShowSourcesModal(false);
+                        navigate('/integrations');
+                      }}
+                      className="flex flex-col items-center gap-2 p-4 rounded-lg border border-gray-200 hover:border-green-300 hover:bg-green-50 transition-colors group"
+                    >
+                      <HardDrive className="h-8 w-8 text-green-500 group-hover:scale-110 transition-transform" />
+                      <span className="text-sm font-medium text-gray-700">Google Drive</span>
+                    </button>
+                    
+                    <button
+                      onClick={() => {
+                        setShowSourcesModal(false);
+                        navigate('/integrations');
+                      }}
+                      className="flex flex-col items-center gap-2 p-4 rounded-lg border border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-colors group"
+                    >
+                      <Cloud className="h-8 w-8 text-blue-600 group-hover:scale-110 transition-transform" />
+                      <span className="text-sm font-medium text-gray-700">Dropbox</span>
+                    </button>
+                  </div>
+                  
+                  <div className="flex justify-center pt-2">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setShowSourcesModal(false)}
+                      className="text-gray-500 hover:text-gray-700"
+                    >
+                      Not now
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
         </div>
