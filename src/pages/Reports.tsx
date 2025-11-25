@@ -684,19 +684,19 @@ export default function Reports() {
   });
   return <PageLayout title="Reports">
       <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
-          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-300 space-y-8">
+        <div className="relative w-full bg-gray-50 min-h-[calc(100vh+96px)] -mt-24 pt-24">
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-gray-50 to-white" />
+          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-900 space-y-8">
         {/* Page Header & Controls */}
         <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-100 mb-1">Reports</h1>
-            <p className="text-gray-400">Historical clarity and financial reconciliation</p>
+            <h1 className="text-3xl font-bold text-black mb-1">Reports</h1>
+            <p className="text-gray-600">Historical clarity and financial reconciliation</p>
           </div>
           <div className="flex flex-wrap gap-2 items-center">
             <div className="relative">
-              <Input placeholder="Search claims (ID, type, status)" value={search} onChange={(e)=>{ setSearch(e.target.value); setPage(1); }} className="pl-8 md:w-64 border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" />
-              <CalendarIcon className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Input placeholder="Search claims (ID, type, status)" value={search} onChange={(e)=>{ setSearch(e.target.value); setPage(1); }} className="pl-8 md:w-64 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
+              <CalendarIcon className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
             </div>
             <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100" onClick={() => setQuickDateRange('30days')}>Last 30 Days</Button>
             <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100" onClick={() => setQuickDateRange('quarter')}>This Quarter</Button>
@@ -723,12 +723,12 @@ export default function Reports() {
 
         {/* Key Metrics Bar - Enhanced with Phase 3 Detection Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="bg-white/5 border-white/10 text-gray-300">
+          <Card className="bg-white border-gray-200 text-gray-900">
             <CardContent className="p-6">
               <div className="flex items-center">
                 <div className="flex-1">
                   <div className="relative inline-flex items-start">
-                    <p className="text-sm font-medium text-gray-400">Total Recovered</p>
+                    <p className="text-sm font-medium text-gray-600">Total Recovered</p>
                     <div className="absolute -top-0.5 left-full ml-1.5 flex items-center gap-0.5 leading-none">
                       <TrendingDown className="h-2.5 w-2.5 text-red-500" />
                       <span className="text-[8px] text-red-500 font-medium">8%</span>
@@ -745,7 +745,7 @@ export default function Reports() {
                     }
                   </p>
                   {detectionStats?.total_value && keyMetrics.totalRecovered > 0 && (
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-gray-600 mt-1">
                       {formatCurrency(keyMetrics.totalRecovered)} from approved claims
                     </p>
                   )}
@@ -754,12 +754,12 @@ export default function Reports() {
             </CardContent>
           </Card>
           
-          <Card className="bg-white/5 border-white/10 text-gray-300">
+          <Card className="bg-white border-gray-200 text-gray-900">
             <CardContent className="p-6">
               <div className="flex items-center">
                 <div>
-                  <p className="text-sm font-medium text-gray-400">Claims Submitted</p>
-                  <p className="font-bold text-gray-100 text-lg">
+                  <p className="text-sm font-medium text-gray-600">Claims Submitted</p>
+                  <p className="font-bold text-black text-lg">
                     {detectionStats?.total_anomalies 
                       ? detectionStats.total_anomalies
                       : keyMetrics.claimsSubmitted > 0 
@@ -768,7 +768,7 @@ export default function Reports() {
                     }
                   </p>
                   {detectionStats?.total_anomalies && keyMetrics.claimsSubmitted > 0 && (
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-gray-600 mt-1">
                       {keyMetrics.claimsSubmitted} claims filed
                     </p>
                   )}
@@ -777,12 +777,12 @@ export default function Reports() {
             </CardContent>
           </Card>
           
-          <Card className="bg-white/5 border-white/10 text-gray-300">
+          <Card className="bg-white border-gray-200 text-gray-900">
             <CardContent className="p-6">
               <div className="flex items-center">
                 <div className="flex-1">
                   <div className="relative inline-flex items-start">
-                    <p className="text-sm font-medium text-gray-400">Success Rate</p>
+                    <p className="text-sm font-medium text-gray-600">Success Rate</p>
                     <div className="absolute -top-0.5 left-full ml-1.5 flex items-center gap-0.5 leading-none">
                       <TrendingDown className="h-2.5 w-2.5 text-red-500" />
                       <span className="text-[8px] text-red-500 font-medium">8%</span>
@@ -799,7 +799,7 @@ export default function Reports() {
                     }
                   </p>
                   {confidenceDistribution?.average_confidence && keyMetrics.successRate === 0 && (
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-gray-600 mt-1">
                       Avg confidence
                     </p>
                   )}
@@ -808,12 +808,12 @@ export default function Reports() {
             </CardContent>
           </Card>
           
-          <Card className="bg-white/5 border-white/10 text-gray-300">
+          <Card className="bg-white border-gray-200 text-gray-900">
             <CardContent className="p-6">
               <div className="flex items-center">
                 <div>
-                  <p className="text-sm font-medium text-gray-400">Avg. Recovery Time</p>
-                  <p className="font-bold text-gray-100 text-lg">
+                  <p className="text-sm font-medium text-gray-600">Avg. Recovery Time</p>
+                  <p className="font-bold text-black text-lg">
                     {keyMetrics.avgRecoveryTime > 0 
                       ? `${keyMetrics.avgRecoveryTime} Days`
                       : null
@@ -833,9 +833,9 @@ export default function Reports() {
         {/* Key Metrics Summary already shown above */}
 
         {/* Visual Breakdown: Recoveries Over Time */}
-        <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
+        <Card className="mb-8 bg-white border-gray-200 text-gray-900">
           <CardContent className="p-6">
-            <h3 className="text-sm font-semibold text-gray-200 mb-4">Recoveries Over Time</h3>
+            <h3 className="text-sm font-semibold text-black mb-4">Recoveries Over Time</h3>
             <div className="w-full h-64 gpu-accelerated">
               {claimsLoading ? (
                 <ChartSkeleton />
@@ -844,7 +844,7 @@ export default function Reports() {
                   <RecoveryChart data={chartData} />
                 </Suspense>
               ) : (
-                <div className="h-full flex items-center justify-center text-gray-400 text-sm text-center px-4">
+                <div className="h-full flex items-center justify-center text-gray-600 text-sm text-center px-4">
                   {claims.length === 0
                     ? 'No recoveries recorded yet. Sync your account or file claims to populate this view.'
                     : 'No recoveries within the selected date range.'}
@@ -856,17 +856,17 @@ export default function Reports() {
 
         {/* Phase 3: Detection Statistics Charts */}
             {/* Anomaly Type Distribution */}
-              <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
+              <Card className="mb-8 bg-white border-gray-200 text-gray-900">
                 <CardContent className="p-6">
-                  <h3 className="text-sm font-semibold text-gray-200 mb-4">Anomaly Type Distribution</h3>
-                  <p className="text-xs text-gray-400 mb-4">Breakdown of detected anomalies by type, showing count and total value</p>
+                  <h3 className="text-sm font-semibold text-black mb-4">Anomaly Type Distribution</h3>
+                  <p className="text-xs text-gray-600 mb-4">Breakdown of detected anomalies by type, showing count and total value</p>
                   <div className="w-full h-80 gpu-accelerated">
               {anomalyTypeChartData.length > 0 ? (
                     <Suspense fallback={<ChartSkeleton />}>
                       <AnomalyTypeChart data={anomalyTypeChartData} />
                     </Suspense>
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-400">
+                <div className="w-full h-full flex items-center justify-center text-gray-600">
                   <p>No anomaly type data available</p>
                 </div>
               )}
@@ -876,7 +876,7 @@ export default function Reports() {
 
             {/* Severity Distribution */}
         {detectionStats && severityChartData.length > 0 && (
-              <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
+              <Card className="mb-8 bg-white border-gray-200 text-gray-900">
                 <CardContent className="p-6">
                   <h3 className="text-sm font-semibold text-gray-200 mb-4">Severity Distribution</h3>
                   <p className="text-xs text-gray-400 mb-4">Distribution of anomalies by severity level (high, medium, low)</p>

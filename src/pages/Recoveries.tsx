@@ -964,13 +964,13 @@ export default function Recoveries() {
   return (
     <PageLayout title="Recoveries">
       <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
-          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-300 space-y-8">
+        <div className="relative w-full bg-gray-50 min-h-[calc(100vh+96px)] -mt-24 pt-24">
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-gray-50 to-white" />
+          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-900 space-y-8">
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-100 mb-2">Recoveries</h1>
-          <p className="text-gray-400">Comprehensive view of all recovery claims and their current status</p>
+          <h1 className="text-3xl font-bold text-black mb-2">Recoveries</h1>
+          <p className="text-gray-600">Comprehensive view of all recovery claims and their current status</p>
           <div className="mt-4 flex items-center gap-2">
             <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-white" disabled={selectedIds.size === 0 || submittingBulk} onClick={async () => {
               setSubmittingBulk(true);
@@ -996,26 +996,26 @@ export default function Recoveries() {
         {urgentClaimsCount > 0 && (
           <Card className={`mb-6 border-2 ${
             urgentClaims.some(c => c.days_remaining <= 3)
-              ? 'bg-red-500/10 border-red-500/50'
-              : 'bg-amber-500/10 border-amber-500/50'
+              ? 'bg-red-50 border-red-200'
+              : 'bg-amber-50 border-amber-200'
           }`}>
             <CardContent className="p-0">
               {/* Header - Always Visible */}
               <div 
-                className="flex items-center justify-between gap-4 p-4 cursor-pointer hover:bg-white/5 transition-colors"
+                className="flex items-center justify-between gap-4 p-4 cursor-pointer hover:bg-gray-50 transition-colors"
                 onClick={() => setUrgentClaimsExpanded(!urgentClaimsExpanded)}
               >
                 <div className="flex items-center gap-3 flex-1">
                   <AlertTriangle className={`h-5 w-5 ${
                     urgentClaims.some(c => c.days_remaining <= 3)
-                      ? 'text-red-400'
-                      : 'text-amber-400'
+                      ? 'text-red-600'
+                      : 'text-amber-600'
                   }`} />
                   <div className="flex-1">
-                    <h3 className="font-semibold text-gray-100">
+                    <h3 className="font-semibold text-black">
                       {urgentClaimsCount} Claim{urgentClaimsCount !== 1 ? 's' : ''} Expiring Soon
                     </h3>
-                    <p className="text-sm text-gray-300 mt-0.5">
+                    <p className="text-sm text-gray-700 mt-0.5">
                       {urgentClaims.some(c => c.days_remaining <= 3)
                         ? 'Some claims are expiring in less than 3 days. File them immediately to avoid missing the deadline.'
                         : 'These claims are approaching their 60-day Amazon deadline. Review and file them soon.'}
@@ -1054,7 +1054,7 @@ export default function Recoveries() {
 
               {/* Claims List - Collapsible */}
               {urgentClaimsExpanded && (
-                <div className="border-t border-white/10">
+                <div className="border-t border-gray-200">
                   {urgentClaims.map((claim, index) => {
                     const foundClaim = mergedRecoveries?.find(c => c.id === claim.id) || 
                                       claims.find(c => c.id === claim.id);
@@ -1062,33 +1062,33 @@ export default function Recoveries() {
                     
                     return (
                       <div key={claim.id}>
-                        <div className="flex items-center justify-between gap-4 p-4 hover:bg-white/5 transition-colors">
+                        <div className="flex items-center justify-between gap-4 p-4 hover:bg-gray-50 transition-colors">
                           <div className="flex items-center gap-4 flex-1 min-w-0">
                             <Clock className={`h-4 w-4 flex-shrink-0 ${
-                              isUrgent ? 'text-red-300' : 'text-amber-300'
+                              isUrgent ? 'text-red-600' : 'text-amber-600'
                             }`} />
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-3 flex-wrap">
                                 <span className={`text-sm font-medium ${
-                                  isUrgent ? 'text-red-300' : 'text-amber-300'
+                                  isUrgent ? 'text-red-700' : 'text-amber-700'
                                 }`}>
                               {claim.days_remaining} day{claim.days_remaining !== 1 ? 's' : ''} left
                             </span>
-                            <span className="text-xs text-gray-400">•</span>
-                                <span className="text-sm text-gray-200 font-semibold">
+                            <span className="text-xs text-gray-500">•</span>
+                                <span className="text-sm text-black font-semibold">
                               {formatCurrency(claim.estimated_value)}
                             </span>
                                 {claim.anomaly_type && (
                                   <>
-                                    <span className="text-xs text-gray-400">•</span>
-                                    <span className="text-xs text-gray-400 capitalize">
+                                    <span className="text-xs text-gray-500">•</span>
+                                    <span className="text-xs text-gray-600 capitalize">
                                       {claim.anomaly_type.replace(/_/g, ' ')}
                                     </span>
                                   </>
                                 )}
                               </div>
                               {claim.details && (
-                                <p className="text-xs text-gray-400 mt-1 truncate">
+                                <p className="text-xs text-gray-600 mt-1 truncate">
                                   {claim.details}
                                 </p>
                               )}
@@ -1098,8 +1098,8 @@ export default function Recoveries() {
                               size="sm"
                             className={`flex-shrink-0 ${
                               isUrgent
-                                ? 'bg-red-500 hover:bg-red-400 text-white'
-                                : 'bg-amber-500 hover:bg-amber-400 text-white'
+                                ? 'bg-red-600 hover:bg-red-700 text-white'
+                                : 'bg-amber-600 hover:bg-amber-700 text-white'
                             }`}
                               onClick={() => {
                                 if (foundClaim) {
@@ -1120,7 +1120,7 @@ export default function Recoveries() {
                             </Button>
                           </div>
                         {index < urgentClaims.length - 1 && (
-                          <div className="border-b border-white/10 mx-4" />
+                          <div className="border-b border-gray-200 mx-4" />
                       )}
                     </div>
                     );
@@ -1132,19 +1132,19 @@ export default function Recoveries() {
         )}
 
         {/* Opportunity Radar Summary */}
-        <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
+        <Card className="mb-8 bg-white border-gray-200 text-gray-900">
           <CardContent className="p-5 md:p-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="text-sm text-gray-400">Detected Reimbursements</div>
+                  <div className="text-sm text-gray-600">Detected Reimbursements</div>
                   {recoveredTotal != null && recoveredTotal > 0 && (
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <button
                           type="button"
                           aria-label="About recovered value"
-                          className="text-gray-400 hover:text-gray-300 transition-colors"
+                          className="text-gray-500 hover:text-gray-700 transition-colors"
                         >
                           <Info className="h-3 w-3" />
                         </button>
@@ -1155,18 +1155,18 @@ export default function Recoveries() {
                     </Tooltip>
                   )}
                 </div>
-                <div className="text-2xl md:text-3xl font-semibold text-gray-100">
+                <div className="text-2xl md:text-3xl font-semibold text-black">
                   {recoveredTotal != null && recoveredTotal > 0 ? (
                     <>
                       <span className="text-emerald-400">{formatCurrency(recoveredTotal, recoveredCurrency)}</span>
-                      <span className="text-gray-400 text-base font-medium ml-2">
+                      <span className="text-gray-600 text-base font-medium ml-2">
                       recovered from {amazonClaimCount ?? 0} approved claim{amazonClaimCount !== 1 ? 's' : ''}
                     </span>
                     </>
                   ) : (
                     <>
                       <span className="text-gray-100">{formatCurrency(0)}</span>
-                      <span className="text-gray-400 text-base font-medium ml-2">No recoveries yet</span>
+                      <span className="text-gray-600 text-base font-medium ml-2">No recoveries yet</span>
                     </>
                   )}
                 </div>
@@ -1174,10 +1174,10 @@ export default function Recoveries() {
                 {(syncMessage || needsSync || syncTriggered) && (
                   <div className={`mt-3 px-3 py-2 rounded-md text-xs ${
                     syncTriggered 
-                      ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' 
+                      ? 'bg-blue-50 text-blue-700 border border-blue-200' 
                       : needsSync 
-                      ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' 
-                      : 'bg-white/5 text-gray-300 border border-white/10'
+                      ? 'bg-amber-50 text-amber-700 border border-amber-200' 
+                      : 'bg-gray-50 text-gray-700 border border-gray-200'
                   }`}>
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-start gap-2 flex-1">
@@ -1198,13 +1198,13 @@ export default function Recoveries() {
               </div>
               <div className="flex flex-wrap gap-2">
                 {Object.entries(categoryCounts).map(([label, count]) => (
-                  <span key={label} className="text-xs px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-gray-200">
+                    <span key={label} className="text-xs px-2.5 py-1 rounded-full bg-gray-50 border border-gray-200 text-gray-700">
                     {label}: {count}
                   </span>
                 ))}
               </div>
             </div>
-            <div className="mt-4 flex items-center gap-3 text-xs text-gray-400">
+            <div className="mt-4 flex items-center gap-3 text-xs text-gray-600">
               <span>Last scan just now</span>
               <span className="h-1 w-1 rounded-full bg-gray-500"></span>
               <button
@@ -1230,8 +1230,8 @@ export default function Recoveries() {
             <CardContent className="p-6">
               <div className="flex items-center">
                 <div>
-                  <p className="text-sm font-medium text-gray-400">Total Claims Found</p>
-                  <p className="text-2xl font-bold text-gray-100">
+                  <p className="text-sm font-medium text-gray-600">Total Claims Found</p>
+                  <p className="text-2xl font-bold text-black">
                     {detectionStats?.total_anomalies ?? detectionStats?.totalDetections ?? (metrics ? metrics.totalClaimsFound : keyMetrics.totalClaimsFound)}
                     {amazonClaimCount != null && amazonClaimCount > 0 && (
                       <span className="text-sm text-emerald-400 ml-2 font-normal">
@@ -1240,7 +1240,7 @@ export default function Recoveries() {
                     )}
                   </p>
                   {detectionStats?.total_anomalies && (
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-gray-600 mt-1">
                       {detectionStats.by_confidence?.high || 0} high confidence
                     </p>
                   )}
@@ -1253,7 +1253,7 @@ export default function Recoveries() {
             <CardContent className="p-6">
               <div className="flex items-center">
                 <div>
-                  <p className="text-sm font-medium text-gray-400">
+                  <p className="text-sm font-medium text-gray-600">
                     {detectionStats?.total_value ? 'Total Recovery Value' : 'Value in Progress'}
                   </p>
                   <p className="text-2xl font-bold text-white">
@@ -1276,7 +1276,7 @@ export default function Recoveries() {
             <CardContent className="p-6">
               <div className="flex items-center">
                 <div>
-                  <p className="text-sm font-medium text-gray-400">Currently in Progress</p>
+                  <p className="text-sm font-medium text-gray-600">Currently in Progress</p>
                   <p className="text-2xl font-bold text-blue-400">{metrics ? metrics.inProgress : keyMetrics.currentlyInProgress}</p>
                   {detectionStats?.expired_count !== undefined && detectionStats.expired_count > 0 && (
                     <p className="text-xs text-red-400 mt-1">
@@ -1292,10 +1292,10 @@ export default function Recoveries() {
             <CardContent className="p-6">
               <div className="flex items-center">
                 <div>
-                  <p className="text-sm font-medium text-gray-400">30-Day Success Rate</p>
+                  <p className="text-sm font-medium text-gray-600">30-Day Success Rate</p>
                   <p className="text-2xl font-bold text-emerald-400">{metrics ? Math.round(metrics.successRate30d) : keyMetrics.successRate.toFixed(0)}%</p>
                   {detectionStats?.by_confidence && (
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-gray-600 mt-1">
                       {detectionStats.by_confidence.medium + detectionStats.by_confidence.low} medium/low
                     </p>
                   )}
@@ -1307,17 +1307,17 @@ export default function Recoveries() {
 
         {/* Phase 3: Detection Statistics Breakdown */}
         {detectionStats && (detectionStats.by_severity || detectionStats.by_type) && (
-          <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
+          <Card className="mb-8 bg-white border-gray-200 text-gray-900">
             <CardContent className="p-6">
-              <h3 className="text-lg font-semibold text-gray-100 mb-4">Detection Statistics</h3>
+              <h3 className="text-lg font-semibold text-black mb-4">Detection Statistics</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* By Severity */}
                 {detectionStats.by_severity && (
                   <div>
-                    <h4 className="text-sm font-medium text-gray-400 mb-3">By Severity</h4>
+                    <h4 className="text-sm font-medium text-gray-600 mb-3">By Severity</h4>
                     <div className="space-y-2">
                       {Object.entries(detectionStats.by_severity).map(([severity, data]: [string, any]) => (
-                        <div key={severity} className="flex items-center justify-between p-2 rounded bg-white/5">
+                        <div key={severity} className="flex items-center justify-between p-2 rounded bg-gray-50">
                           <div className="flex items-center gap-2">
                             <Badge className={
                               severity === 'high' ? 'bg-red-500/20 text-red-300 border-red-500/30' :
@@ -1326,9 +1326,9 @@ export default function Recoveries() {
                             }>
                               {severity.charAt(0).toUpperCase() + severity.slice(1)}
                             </Badge>
-                            <span className="text-sm text-gray-300">{data.count} claims</span>
+                            <span className="text-sm text-gray-700">{data.count} claims</span>
                           </div>
-                          <span className="text-sm font-semibold text-gray-100">
+                          <span className="text-sm font-semibold text-black">
                             {formatCurrency(data.value)}
                           </span>
                         </div>
@@ -1340,17 +1340,17 @@ export default function Recoveries() {
                 {/* By Type */}
                 {detectionStats.by_type && (
                   <div>
-                    <h4 className="text-sm font-medium text-gray-400 mb-3">By Anomaly Type</h4>
+                    <h4 className="text-sm font-medium text-gray-600 mb-3">By Anomaly Type</h4>
                     <div className="space-y-2 max-h-48 overflow-y-auto">
                       {Object.entries(detectionStats.by_type).slice(0, 5).map(([type, data]: [string, any]) => (
-                        <div key={type} className="flex items-center justify-between p-2 rounded bg-white/5">
+                        <div key={type} className="flex items-center justify-between p-2 rounded bg-gray-50">
                           <div className="flex items-center gap-2">
-                            <span className="text-sm text-gray-300 capitalize">
+                            <span className="text-sm text-gray-700 capitalize">
                               {type.replace(/_/g, ' ')}
                             </span>
-                            <span className="text-xs text-gray-400">({data.count})</span>
+                            <span className="text-xs text-gray-500">({data.count})</span>
                           </div>
-                          <span className="text-sm font-semibold text-gray-100">
+                          <span className="text-sm font-semibold text-black">
                             {formatCurrency(data.value)}
                           </span>
                         </div>
@@ -1364,7 +1364,7 @@ export default function Recoveries() {
         )}
 
         {/* Controls */}
-        <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
+        <Card className="mb-8 bg-white border-gray-200 text-gray-900">
           <CardContent className="p-6">
             <div className="flex flex-wrap gap-4 items-center">
               {/* Search Bar */}
@@ -1374,7 +1374,7 @@ export default function Recoveries() {
                   placeholder="Search by Claim ID, ASIN, or Keyword..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500"
+                  className="pl-10 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500"
                 />
               </div>
 
@@ -1477,7 +1477,7 @@ export default function Recoveries() {
         </Card>
 
         {/* Data Table */}
-        <Card className="bg-white/5 border-white/10 text-gray-300 w-full overflow-hidden">
+        <Card className="bg-white border-gray-200 text-gray-900 w-full overflow-hidden">
           <CardContent className="p-0 w-full">
             {loading && (
               <div className="p-4 text-sm text-muted-foreground">Loading recoveries...</div>
@@ -1486,7 +1486,7 @@ export default function Recoveries() {
               <div className="p-4 text-sm text-red-600">{error}</div>
             )}
             {!loading && !error && rankedClaims.length === 0 && (
-              <div className="p-4 text-sm text-gray-400">
+              <div className="p-4 text-sm text-gray-600">
                 No recoveries found. {((mergedRecoveries === null || (mergedRecoveries && mergedRecoveries.length === 0)) && (!claims || claims.length === 0))
                   ? 'Try syncing your Amazon account or running the detector.' 
                   : 'Try adjusting your filters.'}
@@ -1539,7 +1539,7 @@ export default function Recoveries() {
                     : claim._confidence;
                   
                   return (
-                    <TableRow key={claim.id} className="cursor-pointer hover:bg-white/5">
+                    <TableRow key={claim.id} className="cursor-pointer hover:bg-gray-50">
                     <TableCell>
                       <Checkbox checked={selectedIds.has(claim.id)} onCheckedChange={(checked) => {
                         setSelectedIds(prev => {
