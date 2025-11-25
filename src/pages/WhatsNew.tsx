@@ -80,7 +80,7 @@ export default function WhatsNew() {
         {/* Header */}
         <div>
           <h1 className="text-3xl font-bold text-black mb-2 font-brand">What's New</h1>
-          <p className="text-muted-foreground font-body">
+          <p className="text-[#36454F] font-body">
             We're relentlessly improving our platform to find and recover more for you. Here's a log of our latest updates.
           </p>
         </div>
@@ -116,7 +116,7 @@ export default function WhatsNew() {
                         </p>
                         <div className="space-y-2">
                           <h3 className="font-medium text-black">What's included:</h3>
-                          <ul className="space-y-1 text-sm text-muted-foreground">
+                          <ul className="space-y-1 text-sm text-[#36454F]">
                             {update.content.map((item, index) => (
                               <li key={index} className="flex items-start gap-2">
                                 <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2 shrink-0" />

@@ -14,7 +14,7 @@ import {
   User, Building2, Users, CreditCard, Zap, Bell, Shield, 
   Upload, MapPin, Clock, Monitor, Smartphone, AlertTriangle,
   CheckCircle, Calendar, Globe, Camera, Key, Plug, Briefcase,
-  RefreshCw, XCircle, Store
+  RefreshCw, XCircle, Store, Box
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
@@ -196,8 +196,8 @@ const Settings = () => {
   const menuItems = [
     { id: 'business' as SettingsSection, label: 'Seller Profile', icon: Building2 },
     { id: 'billing' as SettingsSection, label: 'Billing & Value', icon: CreditCard },
-    { id: 'api' as SettingsSection, label: 'API Access', icon: Key },
-    { id: 'integrations' as SettingsSection, label: 'Integrations Hub', icon: Zap },
+    { id: 'api' as SettingsSection, label: 'API Keys', icon: Key },
+    { id: 'integrations' as SettingsSection, label: 'Integrations', icon: Box },
     { id: 'notifications' as SettingsSection, label: 'Notifications', icon: Bell },
     { id: 'security' as SettingsSection, label: 'Security', icon: Shield },
     { id: 'careers' as SettingsSection, label: 'Careers', icon: Briefcase }
@@ -495,7 +495,10 @@ const Settings = () => {
                 {/* Integration Status Section */}
                 <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
                   <CardHeader>
-                    <CardTitle className="text-gray-900">Integration Status</CardTitle>
+                    <CardTitle className="flex items-center gap-2 text-gray-900">
+                      <Box className="h-5 w-5" />
+                      Integrations
+                    </CardTitle>
                     <CardDescription className="text-gray-600">Manage your platform connections</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
@@ -1021,7 +1024,7 @@ const Settings = () => {
               <div className="lg:col-span-1">
                 <Card className="lg:sticky lg:top-6 h-fit bg-white border-gray-200 text-gray-700 shadow-sm">
                   <CardHeader>
-                    <CardTitle className="text-lg text-gray-900">Settings</CardTitle>
+                    <CardTitle className="text-lg text-gray-900">Quick Settings</CardTitle>
                   </CardHeader>
                   <CardContent className="p-0">
                     <nav className="space-y-1 p-2">
