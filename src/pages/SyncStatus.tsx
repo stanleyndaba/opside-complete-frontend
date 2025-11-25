@@ -4,17 +4,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { RefreshCw, CheckCircle2, XCircle, Loader2, AlertCircle, Clock, Gift } from 'lucide-react';
 import { getActiveSyncStatus } from '@/lib/inventoryApi';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
 import { cn } from '@/lib/utils';
-import { api } from '@/lib/api';
-import GmailIcon from '/G.png';
-import OutlookIcon from '/OL.png';
-import GoogleDriveIcon from '/gd.png';
-import DropboxIcon from '/Dropbox_Icon.svg.png';
 
 // Mock data for development (per FRONTEND_AMAZON_OAUTH_SYNC_STATUS.md)
 const MOCK_SYNC_STATUS = {
@@ -90,8 +85,6 @@ export default function SyncStatus() {
   const [isUsingMockData, setIsUsingMockData] = useState(true);
   const [pollingInterval, setPollingInterval] = useState<NodeJS.Timeout | null>(null);
   const [showReferralPopup, setShowReferralPopup] = useState(false);
-  const [showSourcesModal, setShowSourcesModal] = useState(false);
-  const [providerLoading, setProviderLoading] = useState<'gmail' | 'outlook' | 'gdrive' | 'dropbox' | null>(null);
 
   // Fetch sync status
   const fetchSyncStatus = async (options?: { useMock?: boolean; showLoading?: boolean }) => {
@@ -277,40 +270,6 @@ export default function SyncStatus() {
     return Math.floor((now.getTime() - date.getTime()) / 60000);
   };
 
-  // Handle connecting document sources
-  const handleConnectDocSource = async (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox') => {
-    const providerName = provider === 'gdrive' ? 'Google Drive' 
-      : provider === 'gmail' ? 'Gmail' 
-      : provider === 'dropbox' ? 'Dropbox' 
-      : 'Outlook';
-    try {
-      setProviderLoading(provider);
-      const r = await api.connectDocs(provider);
-      if (r.ok && r.data?.auth_url) {
-        toast({
-          title: `Connecting ${providerName}`,
-          description: `Redirecting to ${providerName} authentication...`,
-        });
-        window.location.href = r.data.auth_url;
-      } else {
-        toast({
-          title: 'Connection Failed',
-          description: r.error || `Failed to initiate ${providerName} connection. Please try again.`,
-          variant: 'destructive',
-        });
-      }
-    } catch (error) {
-      console.error(`Failed to connect ${provider}:`, error);
-      toast({
-        title: 'Connection Failed',
-        description: `An error occurred while connecting ${providerName}. Please try again.`,
-        variant: 'destructive',
-      });
-    } finally {
-      setProviderLoading(null);
-    }
-  };
-
   const displayStatus = syncStatus || MOCK_NO_SYNC;
   const lastSync = displayStatus.lastSync;
 
@@ -369,18 +328,9 @@ export default function SyncStatus() {
                         <p className="text-sm text-gray-600 mb-4">
                     No sync log data available, sync to see log status.
                   </p>
-                  <div className="flex flex-col sm:flex-row gap-2 justify-center items-center">
-                    <Button onClick={() => navigate('/sync')}>
-                      Sync now
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      onClick={() => setShowSourcesModal(true)}
-                      className="border-gray-200 text-gray-700 hover:bg-gray-50"
-                    >
-                      Link Document Sources
-                    </Button>
-                  </div>
+                  <Button onClick={() => navigate('/sync')}>
+                    Sync now
+                  </Button>
                   <p className="mt-3 text-xs text-gray-500 max-w-md mx-auto">
                     Clario only requests read permissions for financial reports, inventory logs, and performance data.
                   </p>
@@ -525,87 +475,6 @@ export default function SyncStatus() {
                 Invite Friend +
               </Button>
             </div>
-          </DialogContent>
-        </Dialog>
-
-        {/* Link Sources for Document Ingestion Popup */}
-        <Dialog open={showSourcesModal} onOpenChange={setShowSourcesModal}>
-          <DialogContent className="sm:max-w-md bg-white">
-            <DialogHeader className="pb-3">
-              <DialogTitle className="text-lg font-semibold text-gray-900">Link Sources for Document Ingestion</DialogTitle>
-              <DialogDescription className="text-sm text-gray-500">
-                Read-only access. No writing or sending permissions.
-              </DialogDescription>
-            </DialogHeader>
-            
-            <div className="grid grid-cols-2 gap-3 py-2">
-              <Button
-                className="w-full bg-red-600 hover:bg-red-500 text-white border border-transparent shadow-sm flex items-center justify-center gap-2"
-                onClick={() => handleConnectDocSource('gmail')}
-                disabled={providerLoading === 'gmail'}
-              >
-                {providerLoading === 'gmail' ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <img src={GmailIcon} alt="Gmail" className="h-4 w-4 object-contain" />
-                )}
-                Gmail
-              </Button>
-              
-              <Button
-                className="w-full bg-blue-600 hover:bg-blue-500 text-white border border-transparent shadow-sm flex items-center justify-center gap-2"
-                onClick={() => handleConnectDocSource('outlook')}
-                disabled={providerLoading === 'outlook'}
-              >
-                {providerLoading === 'outlook' ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <img src={OutlookIcon} alt="Outlook" className="h-4 w-4 object-contain" />
-                )}
-                Outlook
-              </Button>
-              
-              <Button
-                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white border border-transparent shadow-sm flex items-center justify-center gap-2"
-                onClick={() => handleConnectDocSource('gdrive')}
-                disabled={providerLoading === 'gdrive'}
-              >
-                {providerLoading === 'gdrive' ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <img src={GoogleDriveIcon} alt="Google Drive" className="h-4 w-4 object-contain" />
-                )}
-                Google Drive
-              </Button>
-              
-              <Button
-                className="w-full bg-sky-600 hover:bg-sky-500 text-white border border-transparent shadow-sm flex items-center justify-center gap-2"
-                onClick={() => handleConnectDocSource('dropbox')}
-                disabled={providerLoading === 'dropbox'}
-              >
-                {providerLoading === 'dropbox' ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <img src={DropboxIcon} alt="Dropbox" className="h-4 w-4 object-contain" />
-                )}
-                Dropbox
-              </Button>
-            </div>
-            
-            <DialogFooter>
-              <Button
-                variant="ghost"
-                onClick={() => {
-                  setShowSourcesModal(false);
-                  try {
-                    localStorage.setItem('clario.evidencePromptDismissed', 'true');
-                  } catch {}
-                }}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                Not now
-              </Button>
-            </DialogFooter>
           </DialogContent>
         </Dialog>
     </PageLayout>
