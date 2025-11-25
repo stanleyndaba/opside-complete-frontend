@@ -115,8 +115,8 @@ export function Sidebar({
                   className={cn(
                   "relative flex items-center justify-center w-10 h-10 rounded-md transition-colors duration-200",
                   isActive
-                    ? "bg-white/10 text-gray-100"
-                    : "text-gray-400 hover:bg-white/10 hover:text-gray-100"
+                    ? "bg-gray-200 text-[#36454F]"
+                    : "text-[#36454F] hover:bg-gray-200 hover:text-[#36454F]"
                 )}
                 style={{ willChange: 'background-color' }}
               >
@@ -137,13 +137,13 @@ export function Sidebar({
           className={cn(
             "relative flex items-center gap-3 w-full px-3 py-1.5 rounded-md transition-colors duration-200",
           isActive
-            ? "bg-white/5 text-gray-100"
-            : "text-gray-400 hover:bg-white/5 hover:text-gray-100"
+            ? "bg-gray-200 text-[#36454F]"
+            : "text-[#36454F] hover:bg-gray-200 hover:text-[#36454F]"
         )}
         style={{ willChange: 'background-color' }}
       >
         {isActive && (
-          <span className="absolute left-0 h-5 w-[3px] rounded-r bg-emerald-400" />
+          <span className="absolute left-0 h-5 w-[3px] rounded-r bg-emerald-500" />
         )}
         <item.icon strokeWidth={1.5} className="h-5 w-5 shrink-0" />
         <span className="text-[13px] font-medium">{item.title}</span>
@@ -155,8 +155,8 @@ export function Sidebar({
         className={cn(
           "fixed left-0 top-0 transition-all duration-300 ease-in-out flex flex-col h-screen z-40 gpu-accelerated",
           isCollapsed ? "w-16" : "w-60",
-          "text-gray-300 border-r border-white/10",
-          "bg-[#0B1220]",
+          "text-[#36454F] border-r border-gray-300",
+          "bg-[#EEEEEE]",
           className
         )}
         style={{ willChange: 'width' }}
@@ -164,22 +164,22 @@ export function Sidebar({
         {/* Branding + Collapse */}
         <div
           className={cn(
-            "border-b border-white/10 flex items-center",
+            "border-b border-gray-300 flex items-center",
             isCollapsed ? "p-2 justify-center" : "p-4 justify-between"
           )}
         >
           {!isCollapsed ? (
             <>
                 <div className="select-none flex items-center gap-2">
-                  <span className="text-[11px] text-emerald-400/90 flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                  <span className="text-[11px] text-[#36454F] flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                     Connected, secured
                   </span>
                 </div>
             </>
           ) : (
             <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" title="Connected, secured" />
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" title="Connected, secured" />
             </div>
           )}
         </div>
@@ -197,7 +197,7 @@ export function Sidebar({
                       <NavItemComponent key={item.title} item={item} />
                     ))}
                   </div>
-                  {!isCollapsed && <div className="h-px bg-white/10 w-full" />}
+                  {!isCollapsed && <div className="h-px bg-gray-300 w-full" />}
                   <div className={cn("w-full flex flex-col", isCollapsed ? "items-center space-y-1" : "items-start space-y-1")}>
                     {secondaryItems.map((item) => (
                       <NavItemComponent key={item.title} item={item} />
@@ -209,7 +209,7 @@ export function Sidebar({
 
       {/* Profile + Status + Logout */}
       {isCollapsed ? (
-        <div className="mt-auto border-t border-white/10 p-2 flex flex-col items-center justify-center gap-2">
+        <div className="mt-auto border-t border-gray-300 p-2 flex flex-col items-center justify-center gap-2">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -218,7 +218,7 @@ export function Sidebar({
                   aria-label="Account"
                   className={cn(
                     "relative flex items-center justify-center w-10 h-10 rounded-md transition-colors",
-                    "text-gray-400 hover:bg-white/10 hover:text-emerald-500"
+                    "text-[#36454F] hover:bg-gray-200 hover:text-emerald-600"
                   )}
                 >
                   <User className="h-5 w-5" />
@@ -234,7 +234,7 @@ export function Sidebar({
                   aria-label="Logout"
                   className={cn(
                     "relative flex items-center justify-center w-10 h-10 rounded-md transition-colors",
-                    "text-gray-400 hover:bg-white/10 hover:text-red-300"
+                    "text-[#36454F] hover:bg-gray-200 hover:text-red-600"
                   )}
                   onClick={async () => {
                     const ok = window.confirm('Log out of Clario?');
@@ -253,12 +253,12 @@ export function Sidebar({
           </TooltipProvider>
         </div>
       ) : (
-        <div className="mt-auto border-t border-white/10 p-4 space-y-3">
+        <div className="mt-auto border-t border-gray-300 p-4 space-y-3">
             <Link
               to="/settings"
               className={cn(
-                "w-full flex items-center gap-2 text-left hover:text-emerald-500 hover:bg-white/5 px-3 py-2 rounded-md transition-colors",
-                "text-gray-400"
+                "w-full flex items-center gap-2 text-left hover:text-emerald-600 hover:bg-gray-200 px-3 py-2 rounded-md transition-colors",
+                "text-[#36454F]"
               )}
             >
               <User className="h-4 w-4" />
@@ -266,8 +266,8 @@ export function Sidebar({
             </Link>
             <button
               className={cn(
-                "w-full flex items-center gap-2 text-left hover:text-red-300 hover:bg-white/5 px-3 py-2 rounded-md",
-                "text-gray-400"
+                "w-full flex items-center gap-2 text-left hover:text-red-600 hover:bg-gray-200 px-3 py-2 rounded-md",
+                "text-[#36454F]"
               )}
             onClick={() => setShowLogout(prev => !prev)}
           >
@@ -293,7 +293,7 @@ export function Sidebar({
         title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         onClick={onToggle}
         className={cn(
-          'absolute top-16 -right-3 z-50 h-8 w-8 rounded-full border border-white/10 bg-white/10 backdrop-blur-sm flex items-center justify-center text-gray-300 hover:bg-white/20',
+          'absolute top-16 -right-3 z-50 h-8 w-8 rounded-full border border-gray-300 bg-white backdrop-blur-sm flex items-center justify-center text-[#36454F] hover:bg-gray-200 shadow-md',
         )}
       >
         {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}

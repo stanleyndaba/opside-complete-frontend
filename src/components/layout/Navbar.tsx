@@ -89,27 +89,23 @@ export function Navbar({
                 className={cn(
                   "group h-9 w-9 flex items-center justify-center rounded-md transition-colors",
                   isDashboard 
-                    ? "text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50"
+                    ? "text-[#36454F] hover:text-[#36454F] hover:bg-gray-100"
                     : isTransparent 
-                      ? "text-gray-200 hover:text-white hover:bg-white/10"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                      ? "text-[#36454F] hover:text-[#36454F] hover:bg-white/10"
+                      : "text-[#36454F] hover:text-[#36454F] hover:bg-muted/50"
                 )}
                 iconClassName={cn(
-                  isDashboard 
-                    ? "text-emerald-500 group-hover:text-emerald-600"
-                    : isTransparent 
-                      ? "text-gray-200 group-hover:text-white"
-                      : ""
+                  "text-[#36454F]"
                 )}
               />
               {/* Gift icon - only on dashboard */}
               {isDashboard && (
                 <button
                   onClick={() => setShowReferralPopup(true)}
-                  className="flex items-center gap-2 h-9 px-3 rounded-md text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 transition-colors"
+                  className="flex items-center gap-2 h-9 px-3 rounded-md text-[#36454F] hover:text-[#36454F] hover:bg-gray-100 transition-colors"
                   aria-label="Referral program"
                 >
-                  <Gift className="h-5 w-5" />
+                  <Gift className="h-5 w-5 text-[#36454F]" />
                 </button>
               )}
             </div>
@@ -121,12 +117,12 @@ export function Navbar({
             variant="ghost"
             className={cn(
               "flex items-center gap-2 h-9 px-3",
-              isDashboard ? 'bg-transparent text-[#F5F5F5] hover:bg-white/10 hover:text-[#F5F5F5]' : 
-              isTransparent ? 'text-gray-200 hover:text-white hover:bg-white/10' : 'text-muted-foreground hover:text-foreground'
+              isDashboard ? 'bg-transparent text-[#36454F] hover:bg-white/10 hover:text-[#36454F]' : 
+              isTransparent ? 'text-[#36454F] hover:text-[#36454F] hover:bg-white/10' : 'text-[#36454F] hover:text-[#36454F]'
             )}
           >
-            <Link2 className={cn("h-4 w-4", isDashboard && "text-[#F5F5F5]")} />
-            <span className="hidden sm:inline">Connect Platform</span>
+            <Link2 className={cn("h-4 w-4 text-[#36454F]")} />
+            <span className="hidden sm:inline text-[#36454F]">Connect Platform</span>
           </Button>
           {isSandbox && (
             <span className={cn(
