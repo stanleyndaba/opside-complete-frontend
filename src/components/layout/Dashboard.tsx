@@ -887,7 +887,7 @@ export function Dashboard() {
                       </div>
                       <div className="border-t border-gray-200 p-4">
                         <Button className="w-full bg-white hover:bg-gray-50 text-gray-900 border border-gray-200" onClick={() => navigate('/notifications')}>
-                          View all messages
+                          View all Logs
                         </Button>
                       </div>
                     </CardContent>
