@@ -20,10 +20,11 @@ import { api } from '@/lib/api';
 interface LogEntry {
   id: string;
   timestamp: Date;
-  type: 'info' | 'success' | 'warning' | 'error' | 'progress';
+  type: 'info' | 'success' | 'warning' | 'error' | 'progress' | 'thinking';
   category: 'orders' | 'inventory' | 'shipments' | 'returns' | 'settlements' | 'fees' | 'claims' | 'detection' | 'system';
   message: string;
   count?: number;
+  thinkingDuration?: number; // seconds for "Thought for Xs" display
 }
 
 // Data type tracking
@@ -116,89 +117,97 @@ export default function Sync() {
     );
   }, [logs, logSearch]);
 
-  // Update logs based on sync data changes - machine dialogue style
+  // Update logs based on sync data changes - machine dialogue style with thinking
   const updateLogsFromSyncData = (data: SyncStatusResponse) => {
     const prev = previousDataRef.current;
     
-    // Check orders - machine dialogue
+    // Check orders - machine dialogue with thinking
     if (data.ordersProcessed && data.ordersProcessed > 0 && !prev.orders.completed) {
       if (!prev.orders.syncing) {
-        addLog({ type: 'progress', category: 'orders', message: 'Accessing Order Ledger... scanning transactions' });
+        addLog({ type: 'progress', category: 'orders', message: 'Accessing Order Ledger... scanning transactions', thinkingDuration: 2 });
         prev.orders.syncing = true;
       }
       if (data.ordersProcessed >= (data.totalOrders || data.ordersProcessed)) {
         addLog({ type: 'success', category: 'orders', message: `[FOUND] ${data.ordersProcessed.toLocaleString()} orders in ledger`, count: data.ordersProcessed });
-        addLog({ type: 'info', category: 'orders', message: 'Cross-referencing order IDs with fulfillment records...' });
+        addLog({ type: 'thinking', category: 'orders', message: `I see... ${data.ordersProcessed.toLocaleString()} transactions to cross-reference` });
+        addLog({ type: 'info', category: 'orders', message: 'Now let me match these against fulfillment records...', thinkingDuration: 3 });
         prev.orders.completed = true;
         prev.orders.count = data.ordersProcessed;
       }
     }
     
-    // Check inventory - machine dialogue
+    // Check inventory - machine dialogue with thinking
     if (data.inventoryCount && data.inventoryCount > 0 && !prev.inventory.completed) {
       if (!prev.inventory.syncing) {
-        addLog({ type: 'progress', category: 'inventory', message: 'Querying FBA Inventory Snapshot...' });
+        addLog({ type: 'progress', category: 'inventory', message: 'Querying FBA Inventory Snapshot...', thinkingDuration: 2 });
         prev.inventory.syncing = true;
       }
       addLog({ type: 'success', category: 'inventory', message: `[FOUND] ${data.inventoryCount.toLocaleString()} active SKUs in warehouse`, count: data.inventoryCount });
-      addLog({ type: 'info', category: 'inventory', message: 'Checking unit counts against inbound shipments...' });
+      addLog({ type: 'thinking', category: 'inventory', message: 'Hmm... checking if unit counts align with what was shipped' });
+      addLog({ type: 'info', category: 'inventory', message: 'Cross-checking against inbound shipment manifests...', thinkingDuration: 4 });
       prev.inventory.completed = true;
       prev.inventory.count = data.inventoryCount;
     }
     
-    // Check shipments - machine dialogue
+    // Check shipments - machine dialogue with thinking
     if (data.shipmentsCount && data.shipmentsCount > 0 && !prev.shipments.completed) {
       if (!prev.shipments.syncing) {
-        addLog({ type: 'progress', category: 'shipments', message: 'Mapping FBA Inbound Shipment history...' });
+        addLog({ type: 'progress', category: 'shipments', message: 'Mapping FBA Inbound Shipment history...', thinkingDuration: 3 });
         prev.shipments.syncing = true;
       }
       addLog({ type: 'success', category: 'shipments', message: `[FOUND] ${data.shipmentsCount.toLocaleString()} shipments to fulfillment centers`, count: data.shipmentsCount });
-      addLog({ type: 'info', category: 'shipments', message: 'Verifying received quantities match shipped quantities...' });
+      addLog({ type: 'thinking', category: 'shipments', message: `Looking at ${data.shipmentsCount} shipments... some quantities might not match` });
+      addLog({ type: 'info', category: 'shipments', message: 'Let me verify received quantities vs shipped quantities...', thinkingDuration: 5 });
       prev.shipments.completed = true;
       prev.shipments.count = data.shipmentsCount;
     }
     
-    // Check returns - machine dialogue
+    // Check returns - machine dialogue with thinking
     if (data.returnsCount && data.returnsCount > 0 && !prev.returns.completed) {
       if (!prev.returns.syncing) {
-        addLog({ type: 'progress', category: 'returns', message: 'Pulling Customer Return records...' });
+        addLog({ type: 'progress', category: 'returns', message: 'Pulling Customer Return records...', thinkingDuration: 2 });
         prev.returns.syncing = true;
       }
       addLog({ type: 'success', category: 'returns', message: `[FOUND] ${data.returnsCount.toLocaleString()} customer returns processed`, count: data.returnsCount });
-      addLog({ type: 'info', category: 'returns', message: 'Checking if returns were properly credited to seller account...' });
+      addLog({ type: 'thinking', category: 'returns', message: 'I see returns that may not have been credited back...' });
+      addLog({ type: 'info', category: 'returns', message: 'Checking if each return was properly reimbursed...', thinkingDuration: 4 });
       prev.returns.completed = true;
       prev.returns.count = data.returnsCount;
     }
     
-    // Check settlements - machine dialogue
+    // Check settlements - machine dialogue with thinking
     if (data.settlementsCount && data.settlementsCount > 0 && !prev.settlements.completed) {
       if (!prev.settlements.syncing) {
-        addLog({ type: 'progress', category: 'settlements', message: 'Downloading Settlement Reports...' });
+        addLog({ type: 'progress', category: 'settlements', message: 'Downloading Settlement Reports...', thinkingDuration: 3 });
         prev.settlements.syncing = true;
       }
       addLog({ type: 'success', category: 'settlements', message: `[FOUND] ${data.settlementsCount.toLocaleString()} settlement periods`, count: data.settlementsCount });
-      addLog({ type: 'info', category: 'settlements', message: 'Reconciling payouts with expected amounts...' });
+      addLog({ type: 'thinking', category: 'settlements', message: 'Now let me reconcile these payouts against expected amounts' });
+      addLog({ type: 'info', category: 'settlements', message: 'Calculating expected vs actual disbursements...', thinkingDuration: 6 });
       prev.settlements.completed = true;
       prev.settlements.count = data.settlementsCount;
     }
     
-    // Check fees - machine dialogue
+    // Check fees - machine dialogue with thinking
     if (data.feesCount && data.feesCount > 0 && !prev.fees.completed) {
       if (!prev.fees.syncing) {
-        addLog({ type: 'progress', category: 'fees', message: 'Extracting FBA Fee breakdown...' });
+        addLog({ type: 'progress', category: 'fees', message: 'Extracting FBA Fee breakdown...', thinkingDuration: 2 });
         prev.fees.syncing = true;
       }
       addLog({ type: 'success', category: 'fees', message: `[FOUND] ${data.feesCount.toLocaleString()} fee line items`, count: data.feesCount });
-      addLog({ type: 'info', category: 'fees', message: 'Analyzing fee calculations for overcharges...' });
+      addLog({ type: 'thinking', category: 'fees', message: 'Interesting... some fee calculations look off' });
+      addLog({ type: 'info', category: 'fees', message: 'Analyzing each fee for potential overcharges...', thinkingDuration: 5 });
       prev.fees.completed = true;
       prev.fees.count = data.feesCount;
     }
     
-    // Check claims detected - machine dialogue with urgency
+    // Check claims detected - machine dialogue with urgency and thinking
     if (data.claimsDetected && data.claimsDetected > 0 && !prev.claims.completed) {
       const estimatedValue = data.claimsDetected * 48;
       const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimatedValue);
+      addLog({ type: 'thinking', category: 'detection', message: 'Finalizing analysis... compiling discrepancies found' });
       addLog({ type: 'warning', category: 'detection', message: '[ALERT] Discrepancies detected in seller data' });
+      addLog({ type: 'thinking', category: 'detection', message: `I found ${data.claimsDetected} items that Amazon owes you for` });
       addLog({ type: 'success', category: 'detection', message: `[RESULT] ${data.claimsDetected.toLocaleString()} recoverable items identified` });
       addLog({ type: 'success', category: 'detection', message: `[ESTIMATED] Potential recovery: ${formattedValue}` });
       prev.claims.completed = true;
@@ -305,7 +314,9 @@ export default function Sync() {
       // Show toast for status transitions
       if (mappedStatus === 'completed' && !toastShownRef.current.completed) {
         toastShownRef.current.completed = true;
-        addLog({ type: 'success', category: 'system', message: 'Sync complete' });
+        addLog({ type: 'thinking', category: 'system', message: 'Finalizing everything... wrapping up the analysis' });
+        addLog({ type: 'success', category: 'system', message: '[COMPLETE] All data synchronized and analyzed' });
+        addLog({ type: 'thinking', category: 'system', message: 'Done. Your potential recoveries are ready for review' });
         toast({
           title: 'Sync Complete',
           description: 'Your data has been synchronized.',
@@ -365,7 +376,7 @@ export default function Sync() {
             claims: { syncing: false, completed: false, count: 0 },
           };
           
-          addLog({ type: 'info', category: 'system', message: 'Connecting to Amazon SP-API Secure Tunnel...' });
+          addLog({ type: 'info', category: 'system', message: 'Connecting to Amazon SP-API Secure Tunnel...', thinkingDuration: 2 });
           
           const start = await startSync();
           if (cancelled) return;
@@ -377,8 +388,11 @@ export default function Sync() {
           toastShownRef.current = { started: true };
           
           addLog({ type: 'success', category: 'system', message: '[CONNECTED] Secure tunnel established' });
-          addLog({ type: 'info', category: 'system', message: 'Requesting access to Seller Central ledger...' });
-          addLog({ type: 'info', category: 'system', message: 'Scanning 18-month transaction window...' });
+          addLog({ type: 'thinking', category: 'system', message: 'Good... connection is stable. Let me access your seller data' });
+          addLog({ type: 'info', category: 'system', message: 'Requesting access to Seller Central ledger...', thinkingDuration: 3 });
+          addLog({ type: 'thinking', category: 'system', message: 'I\'ll need to scan the last 18 months of transactions' });
+          addLog({ type: 'info', category: 'system', message: 'Scanning 18-month transaction window...', thinkingDuration: 4 });
+          addLog({ type: 'thinking', category: 'system', message: 'This is where discrepancies often hide... let me dig in' });
           
           toast({
             title: 'Sync Started',
@@ -659,6 +673,7 @@ export default function Sync() {
       case 'error': return 'text-red-400';
       case 'warning': return 'text-amber-400';
       case 'progress': return 'text-blue-400';
+      case 'thinking': return 'text-gray-500 italic';
       default: return 'text-gray-300';
     }
   };
@@ -820,25 +835,35 @@ export default function Sync() {
                   ) : (
                     <div className="space-y-1">
                       {filteredLogs.map((log) => (
-                        <div key={log.id} className="flex flex-wrap sm:flex-nowrap items-start gap-1 sm:gap-2 hover:bg-gray-800/50 px-1 rounded">
-                          {/* Timestamp - hidden on mobile, shown on sm+ */}
-                          <span className="hidden sm:inline text-gray-500 shrink-0 select-none">
-                            {formatTimestamp(log.timestamp)}
-                          </span>
-                          {/* Short time on mobile only */}
-                          <span className="sm:hidden text-gray-500 shrink-0 select-none text-[10px]">
-                            {log.timestamp.toLocaleTimeString()}
-                          </span>
-                          <span className="text-cyan-500 shrink-0 select-none font-medium text-[10px] sm:text-xs">
-                            sync agent
-                          </span>
-                          <span className={`shrink-0 ${getLogColor(log.type)}`}>
-                            {getCategoryIcon(log.category)}
-                          </span>
-                          <span className={`${getLogColor(log.type)} break-words min-w-0 flex-1`}>
-                            {log.message}
-                          </span>
+                        <div key={log.id} className="flex flex-col">
+                          <div className={`flex flex-wrap sm:flex-nowrap items-start gap-1 sm:gap-2 hover:bg-gray-800/50 px-1 rounded ${log.type === 'thinking' ? 'opacity-70' : ''}`}>
+                            {/* Timestamp - hidden on mobile, shown on sm+ */}
+                            <span className="hidden sm:inline text-gray-500 shrink-0 select-none">
+                              {formatTimestamp(log.timestamp)}
+                            </span>
+                            {/* Short time on mobile only */}
+                            <span className="sm:hidden text-gray-500 shrink-0 select-none text-[10px]">
+                              {log.timestamp.toLocaleTimeString()}
+                            </span>
+                            <span className="text-cyan-500 shrink-0 select-none font-medium text-[10px] sm:text-xs">
+                              sync agent
+                            </span>
+                            <span className={`shrink-0 ${getLogColor(log.type)}`}>
+                              {log.type === 'thinking' ? null : getCategoryIcon(log.category)}
+                            </span>
+                            <span className={`${getLogColor(log.type)} break-words min-w-0 flex-1`}>
+                              {log.message}
+                            </span>
+                          </div>
+                          {/* Thought for Xs indicator - shown after info/progress logs */}
+                          {log.thinkingDuration && (
+                            <div className="ml-1 mt-0.5 mb-1">
+                              <span className="text-[10px] text-gray-600 italic">
+                                Thought for {log.thinkingDuration}s
+                              </span>
                             </div>
+                          )}
+                        </div>
                       ))}
                       {status === 'running' && (
                         <div className="flex flex-wrap sm:flex-nowrap items-center gap-1 sm:gap-2 text-blue-400 animate-pulse">
