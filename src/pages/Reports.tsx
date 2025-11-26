@@ -698,12 +698,12 @@ export default function Reports() {
               <Input placeholder="Search claims (ID, type, status)" value={search} onChange={(e)=>{ setSearch(e.target.value); setPage(1); }} className="pl-8 md:w-64 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
               <CalendarIcon className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
             </div>
-            <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100" onClick={() => setQuickDateRange('30days')}>Last 30 Days</Button>
-            <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100" onClick={() => setQuickDateRange('quarter')}>This Quarter</Button>
-            <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100" onClick={() => setQuickDateRange('year')}>Year to Date</Button>
+            <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-0 hover:bg-blue-100" onClick={() => setQuickDateRange('30days')}>Last 30 Days</Button>
+            <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-0 hover:bg-blue-100" onClick={() => setQuickDateRange('quarter')}>This Quarter</Button>
+            <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-0 hover:bg-blue-100" onClick={() => setQuickDateRange('year')}>Year to Date</Button>
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="outline" className={cn("w-[280px] justify-start text-left font-medium bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100", !dateRange && "text-blue-700") }>
+                <Button variant="outline" className={cn("w-[280px] justify-start text-left font-medium bg-blue-50 text-blue-900 border-0 hover:bg-blue-100", !dateRange && "text-blue-700") }>
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {dateRange?.from ? dateRange.to ? <>
                         {format(dateRange.from, "LLL dd, y")} -{" "}
@@ -859,7 +859,7 @@ export default function Reports() {
               <Card className="mb-8 bg-white border-gray-200 text-gray-900">
                 <CardContent className="p-6">
                   <h3 className="text-sm font-semibold text-black mb-4">Anomaly Type Distribution</h3>
-                  <p className="text-xs text-gray-600 mb-4">Breakdown of detected anomalies by type, showing count and total value</p>
+                  <p className="text-xs text-[#36454F] mb-4">Breakdown of detected anomalies by type, showing count and total value</p>
                   <div className="w-full h-80 gpu-accelerated">
               {anomalyTypeChartData.length > 0 ? (
                     <Suspense fallback={<ChartSkeleton />}>
@@ -878,8 +878,8 @@ export default function Reports() {
         {detectionStats && severityChartData.length > 0 && (
               <Card className="mb-8 bg-white border-gray-200 text-gray-900">
                 <CardContent className="p-6">
-                  <h3 className="text-sm font-semibold text-gray-200 mb-4">Severity Distribution</h3>
-                  <p className="text-xs text-gray-400 mb-4">Distribution of anomalies by severity level (high, medium, low)</p>
+                  <h3 className="text-sm font-semibold text-black mb-4">Severity Distribution</h3>
+                  <p className="text-xs text-[#36454F] mb-4">Distribution of anomalies by severity level (high, medium, low)</p>
                   <div className="w-full h-64 gpu-accelerated">
                     <Suspense fallback={<ChartSkeleton />}>
                       <SeverityChart data={severityChartData} />
@@ -891,10 +891,10 @@ export default function Reports() {
 
             {/* Confidence Distribution */}
         {(detectionStats || confidenceDistribution) && confidenceChartData.length > 0 && (
-              <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
+              <Card className="mb-8 bg-white border-gray-200 text-gray-900">
                 <CardContent className="p-6">
-                  <h3 className="text-sm font-semibold text-gray-200 mb-4">Confidence Distribution</h3>
-                  <p className="text-xs text-gray-400 mb-4">Number of detections by confidence level</p>
+                  <h3 className="text-sm font-semibold text-black mb-4">Confidence Distribution</h3>
+                  <p className="text-xs text-[#36454F] mb-4">Number of detections by confidence level</p>
                   <div className="w-full h-64 gpu-accelerated">
                     <Suspense fallback={<ChartSkeleton />}>
                       <ConfidenceChart data={confidenceChartData} />
@@ -905,10 +905,10 @@ export default function Reports() {
             )}
 
             {/* Recovery Rates by Confidence */}
-              <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
+              <Card className="mb-8 bg-white border-gray-200 text-gray-900">
                 <CardContent className="p-6">
-                  <h3 className="text-sm font-semibold text-gray-200 mb-4">Recovery Rates by Confidence Level</h3>
-                  <p className="text-xs text-gray-400 mb-4">Success rate of recovery claims based on detection confidence</p>
+                  <h3 className="text-sm font-semibold text-black mb-4">Recovery Rates by Confidence Level</h3>
+                  <p className="text-xs text-[#36454F] mb-4">Success rate of recovery claims based on detection confidence</p>
                   <div className="w-full h-64 gpu-accelerated">
               {recoveryRatesChartData.length > 0 ? (
                     <Suspense fallback={<ChartSkeleton />}>
@@ -925,10 +925,10 @@ export default function Reports() {
 
             {/* Confidence Range Histogram */}
         {confidenceDistribution && confidenceHistogramData.length > 0 && (
-              <Card className="mb-8 bg-white/5 border-white/10 text-gray-300">
+              <Card className="mb-8 bg-white border-gray-200 text-gray-900">
                 <CardContent className="p-6">
-                  <h3 className="text-sm font-semibold text-gray-200 mb-4">Confidence Score Distribution</h3>
-                  <p className="text-xs text-gray-400 mb-4">Histogram showing distribution of confidence scores across all detections</p>
+                  <h3 className="text-sm font-semibold text-black mb-4">Confidence Score Distribution</h3>
+                  <p className="text-xs text-[#36454F] mb-4">Histogram showing distribution of confidence scores across all detections</p>
                   <div className="w-full h-64 gpu-accelerated">
                     <Suspense fallback={<ChartSkeleton />}>
                       <ConfidenceHistogram data={confidenceHistogramData} />
@@ -939,16 +939,16 @@ export default function Reports() {
         )}
 
         {/* Detailed Breakdown: Recoveries by Claim Type */}
-        <Card className="bg-white/5 border-white/10 text-gray-300">
+        <Card className="bg-white border-gray-200 text-gray-900">
           <CardContent className="p-6">
-            <h3 className="text-sm font-semibold text-gray-200 mb-4">Recoveries by Claim Type</h3>
+            <h3 className="text-sm font-semibold text-black mb-4">Recoveries by Claim Type</h3>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Claim Type</TableHead>
-                  <TableHead>Claims Filed</TableHead>
-                  <TableHead>Amount Recovered</TableHead>
-                  <TableHead>% of Total</TableHead>
+                  <TableHead className="text-[#36454F]">Claim Type</TableHead>
+                  <TableHead className="text-[#36454F]">Claims Filed</TableHead>
+                  <TableHead className="text-[#36454F]">Amount Recovered</TableHead>
+                  <TableHead className="text-[#36454F]">% of Total</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
