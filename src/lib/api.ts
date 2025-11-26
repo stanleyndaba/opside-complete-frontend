@@ -106,6 +106,8 @@ async function requestJsonWithRetry<T>(
       signal: controller.signal,
       headers: {
         'Content-Type': 'application/json',
+        // Use demo-user for sandbox/development - this matches generated mock data
+        'x-user-id': 'demo-user',
         ...options?.headers,
       },
       ...options,

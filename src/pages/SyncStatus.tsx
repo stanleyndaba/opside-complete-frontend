@@ -371,19 +371,67 @@ export default function SyncStatus() {
                   </div>
                 )}
 
-                {/* Sync Details - Calculate total items synced */}
+                {/* Sync Details - Show all data type counts */}
                 {(() => {
                   const ordersProcessed = lastSync.ordersProcessed || 0;
-                  const totalOrders = lastSync.totalOrders || 0;
+                  const inventoryCount = lastSync.inventoryCount || 0;
+                  const shipmentsCount = lastSync.shipmentsCount || 0;
+                  const returnsCount = lastSync.returnsCount || 0;
+                  const settlementsCount = lastSync.settlementsCount || 0;
+                  const feesCount = lastSync.feesCount || 0;
+                  const claimsDetected = lastSync.claimsDetected || 0;
+                  
+                  // Calculate total items synced (excluding claims which are detected, not synced)
+                  const totalItemsSynced = ordersProcessed + inventoryCount + shipmentsCount + returnsCount + settlementsCount + feesCount;
 
                   return (
                     <div className="space-y-4 pt-4 border-t border-gray-100">
-                      <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
-                        <p className="text-xs text-blue-700 mb-1">Orders Processed</p>
-                        <p className="text-2xl font-bold text-blue-700">
-                          {ordersProcessed.toLocaleString()} / {totalOrders.toLocaleString()}
+                      {/* Total Summary Card */}
+                      <div className="bg-emerald-50 border border-emerald-200 rounded-md p-4">
+                        <p className="text-xs text-emerald-700 mb-1">Total Items Synced</p>
+                        <p className="text-2xl font-bold text-emerald-700">
+                          {totalItemsSynced.toLocaleString()}
                         </p>
                       </div>
+                      
+                      {/* Data Breakdown Grid */}
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
+                          <p className="text-xs text-blue-600 mb-1">Orders</p>
+                          <p className="text-lg font-semibold text-blue-700">{ordersProcessed.toLocaleString()}</p>
+                        </div>
+                        <div className="bg-purple-50 border border-purple-200 rounded-md p-3">
+                          <p className="text-xs text-purple-600 mb-1">Inventory</p>
+                          <p className="text-lg font-semibold text-purple-700">{inventoryCount.toLocaleString()}</p>
+                        </div>
+                        <div className="bg-amber-50 border border-amber-200 rounded-md p-3">
+                          <p className="text-xs text-amber-600 mb-1">Shipments</p>
+                          <p className="text-lg font-semibold text-amber-700">{shipmentsCount.toLocaleString()}</p>
+                        </div>
+                        <div className="bg-orange-50 border border-orange-200 rounded-md p-3">
+                          <p className="text-xs text-orange-600 mb-1">Returns</p>
+                          <p className="text-lg font-semibold text-orange-700">{returnsCount.toLocaleString()}</p>
+                        </div>
+                        <div className="bg-cyan-50 border border-cyan-200 rounded-md p-3">
+                          <p className="text-xs text-cyan-600 mb-1">Settlements</p>
+                          <p className="text-lg font-semibold text-cyan-700">{settlementsCount.toLocaleString()}</p>
+                        </div>
+                        <div className="bg-gray-50 border border-gray-200 rounded-md p-3">
+                          <p className="text-xs text-gray-600 mb-1">Fees</p>
+                          <p className="text-lg font-semibold text-gray-700">{feesCount.toLocaleString()}</p>
+                        </div>
+                      </div>
+                      
+                      {/* Claims Detected - Only show if there are claims */}
+                      {claimsDetected > 0 && (
+                        <div className="bg-rose-50 border border-rose-200 rounded-md p-4">
+                          <p className="text-xs text-rose-600 mb-1">Potential Recoveries Detected</p>
+                          <p className="text-2xl font-bold text-rose-700">{claimsDetected.toLocaleString()}</p>
+                          <p className="text-xs text-rose-500 mt-1">
+                            Estimated value: ${(claimsDetected * 48).toLocaleString()}
+                          </p>
+                        </div>
+                      )}
                     </div>
                   );
                 })()}
