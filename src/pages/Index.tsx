@@ -52,7 +52,6 @@ const Index = () => {
   );
   const [benefitIndex, setBenefitIndex] = useState(0);
   const [precisionCount, setPrecisionCount] = useState(0);
-  const [showPermissionNotice, setShowPermissionNotice] = useState(true);
   const [metricValues, setMetricValues] = useState<number[]>(() => HERO_METRICS.map(() => 0));
   const metricIntervals = React.useRef<number[]>([]);
   const metricsRef = React.useRef<HTMLDivElement>(null);
@@ -228,35 +227,6 @@ const Index = () => {
       className="min-h-screen flex flex-col text-gray-900 relative overflow-x-hidden w-full"
       style={{ width: '100%', maxWidth: '100%', overflowX: 'hidden' }}
     >
-      <Dialog open={showPermissionNotice} onOpenChange={setShowPermissionNotice}>
-        <DialogContent className="w-[calc(100vw-2rem)] max-w-md rounded-2xl bg-white p-4 sm:p-6">
-          <DialogHeader className="space-y-3 text-center">
-            <div className="text-left">
-              <span className="text-xs font-black tracking-tight text-gray-400 sm:text-sm">
-                CLARIO
-              </span>
-            </div>
-            <div className="flex flex-col items-center gap-2">
-              <PadlockIcon />
-              <DialogTitle className="text-base font-semibold text-gray-900 text-center sm:text-lg">
-                Authorize Read-Only Access
-              </DialogTitle>
-            </div>
-            <DialogDescription className="text-sm text-gray-600">
-              Clario requires permission to scan your historical ledgers. We cannot change prices or delete inventory.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="pt-2">
-            <Button
-              className="w-full bg-emerald-500 text-white hover:bg-emerald-600 flex items-center justify-center gap-2"
-              onClick={() => setShowPermissionNotice(false)}
-            >
-              Proceed now
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
       {/* Fixed navbar - stays at top while content scrolls underneath */}
       <header className="fixed top-0 left-0 right-0 z-40 border-transparent bg-transparent" style={{ background: 'transparent' }}>
         <div className="container mx-auto px-6 py-5">
