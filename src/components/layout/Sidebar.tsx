@@ -174,11 +174,19 @@ export function Sidebar({
         >
           {!isCollapsed ? (
             <>
-                <div className="select-none flex items-center gap-2">
-                  <span className="text-[11px] text-[#36454F] flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                    Connected, secured
+                <div className="flex flex-col gap-2">
+                  <span
+                    className="tracking-tight text-xl select-none bg-gradient-to-r from-[#1e3a5f] via-[#4a90a4] to-[#2d5a7b] bg-clip-text text-transparent font-black"
+                    style={{ fontWeight: 900 }}
+                  >
+                    CLARIO
                   </span>
+                  <div className="select-none flex items-center gap-2">
+                    <span className="text-[11px] text-[#36454F] flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                      Connected, secured
+                    </span>
+                  </div>
                 </div>
             </>
           ) : (

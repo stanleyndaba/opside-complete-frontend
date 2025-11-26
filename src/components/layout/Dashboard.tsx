@@ -8,11 +8,17 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
-import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud, ArrowRight, Plus, CheckCircle, RefreshCw, RotateCcw, Download, Bell, Shield, TrendingDown, TrendingUp } from 'lucide-react';
+import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud, ArrowRight, Plus, CheckCircle, RefreshCw, RotateCcw, Download, Bell, Shield, TrendingDown, TrendingUp, Loader2 } from 'lucide-react';
 import { api, detectionApi } from '@/lib/api';
 import { recoveryApi } from '@/lib/recoveryApi';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
+
+// Icon imports for document sources
+const GmailIcon = '/G.png';
+const OutlookIcon = '/OL.png';
+const GoogleDriveIcon = '/gd.png';
+const DropboxIcon = '/Dropbox_Icon.svg.png';
 
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -44,7 +50,8 @@ export function Dashboard() {
   const [successRate, setSuccessRate] = useState<number | null>(null);
   const [lastUpdated, setLastUpdated] = useState<string>('');
   const [approvedClaimsThisMonth, setApprovedClaimsThisMonth] = useState<number | null>(null);
-  const [showEvidencePrompt, setShowEvidencePrompt] = useState<boolean>(false);
+  const [showSourcesModal, setShowSourcesModal] = useState<boolean>(false);
+  const [providerLoading, setProviderLoading] = useState<'gmail' | 'outlook' | 'gdrive' | 'dropbox' | null>(null);
   // Sync status fields from API response
   const [syncMessage, setSyncMessage] = useState<string | null>(null);
   const [needsSync, setNeedsSync] = useState<boolean>(false);
@@ -510,13 +517,13 @@ export function Dashboard() {
         if (s.ok) {
           const prov = (s.data as any)?.providerIngest || {};
           const anyConnected = Boolean(prov.gmail?.connected || prov.outlook?.connected || prov.gdrive?.connected || prov.dropbox?.connected);
-          if (!anyConnected) setShowEvidencePrompt(true);
+          if (!anyConnected) setShowSourcesModal(true);
         } else {
           // If status unknown, still prompt once
-          setShowEvidencePrompt(true);
+          setShowSourcesModal(true);
         }
       } catch {
-        setShowEvidencePrompt(true);
+        setShowSourcesModal(true);
       }
     })();
     hasFetchedRef.current = true;
@@ -598,7 +605,7 @@ export function Dashboard() {
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
-                            <h2 className="font-brand text-lg text-black font-semibold">Your Recovered Value</h2>
+                            <h2 className="font-brand text-lg text-black font-semibold">Recovered Value</h2>
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <button
@@ -614,7 +621,7 @@ export function Dashboard() {
                             </TooltipContent>
                           </Tooltip>
                         </div>
-                          <div className="text-[24px] md:text-[28px] font-semibold mt-1 text-emerald-600">
+                          <div className="text-[24px] md:text-[28px] font-semibold mt-1 text-black">
                           {formatCurrency(recoveredTotal ?? 0, recoveredCurrency)}
                         </div>
                           <div className="text-[11px] text-gray-600 mt-1">
@@ -662,14 +669,6 @@ export function Dashboard() {
                               ? `Estimated on ${new Date(nextPaymentDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
                               : 'No payout scheduled yet'}
                           </div>
-                        <button
-                          type="button"
-                            className="text-xs text-indigo-600 mt-1 underline-offset-2 hover:underline"
-                          onClick={() => navigate('/upcoming-payments')}
-                          aria-label="View upcoming payments"
-                        >
-                          upcoming payments
-                        </button>
                       </div>
                         <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
                           <div className="text-xs text-gray-600">Pending recovery</div>
@@ -760,14 +759,14 @@ export function Dashboard() {
                   <Card className="bg-white border border-gray-200 text-gray-900 shadow-sm">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
-                        <h2 className="font-brand text-lg text-black font-semibold">Quick Actions</h2>
+                        <h2 className="font-brand text-lg text-black font-semibold">Actions</h2>
                         <button aria-label="Customize quick actions" className="text-gray-500 hover:text-gray-700" onClick={() => setQuickActionsEditOpen(true)}>
                         <Plus className="h-4 w-4" />
                       </button>
                     </div>
                     <div className="grid grid-cols-2 gap-4 mt-4">
                       {selectedQuickActions.includes('connect_evidence') && (
-                          <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => setShowEvidencePrompt(true)}>
+                          <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => setShowSourcesModal(true)}>
                           <Mail className="h-4 w-4" />
                           Connect evidence sources
                         </Button>
@@ -854,7 +853,7 @@ export function Dashboard() {
                     <CardContent className="p-0">
                       <div className="p-3 border-b border-gray-200">
                         <div className="flex items-center justify-between">
-                          <h3 className="font-semibold text-sm text-black">Recent Activity</h3>
+                          <h3 className="font-semibold text-sm text-black">Recent Logs</h3>
                           <span className="text-xs rounded px-2 py-0.5 bg-gray-50 text-gray-700 border border-gray-200">4 new</span>
                         </div>
                       </div>
@@ -862,7 +861,7 @@ export function Dashboard() {
                         <div className="relative px-4 max-w-[360px] mx-auto text-[12px] divide-y divide-gray-200">
                           {(() => {
                             const events = [
-                              { id: 'evt-0', unread: true, title: 'Claim Approved', details: 'Good news! Claim approved for $1,200 reimbursement.', time: 'Just now' },
+                              { id: 'evt-0', unread: true, title: 'Claim Approved', details: '🎉 Good news! Claim approved for $1,200 reimbursement.', time: 'Just now' },
                               { id: 'evt-1', unread: true, title: 'Connection Established', details: 'Amazon connection established', time: 'Just now' },
                               { id: 'evt-2', unread: true, title: 'Claims Identified', details: `23 potential claims identified, valued at ~${formatCurrency(14228)}` , time: '2 minutes ago' },
                               { id: 'evt-2.5', unread: true, title: 'Evidence Matched', details: 'Invoices and shipment records matched for 4 new claims.', time: 'Just now' },
@@ -900,48 +899,57 @@ export function Dashboard() {
           </div>
         </main>
       </div>
-      {/* Evidence Connections Prompt on Dashboard as fallback */}
-        <Dialog open={showEvidencePrompt} onOpenChange={setShowEvidencePrompt}>
-          <DialogContent className="max-w-lg bg-white border border-gray-200 text-gray-900 shadow-lg rounded-2xl">
-          <DialogHeader>
-            <DialogTitle className="text-lg text-black">
-              Connect Doc Sources
-            </DialogTitle>
-            <DialogDescription className="text-gray-600">
-              Link your email and cloud storage to automatically collect invoices, receipts, and shipping documents.
-              <span className="block mt-2 text-sm text-gray-600">
-                Read-only access. No writing or sending permissions.
-              </span>
+      {/* Document Sources Modal */}
+      <Dialog open={showSourcesModal} onOpenChange={setShowSourcesModal}>
+        <DialogContent className="sm:max-w-md bg-white rounded-md">
+          <DialogHeader className="pb-3">
+            <DialogTitle className="text-lg font-semibold text-gray-900">Link Sources for Document Ingestion</DialogTitle>
+            <DialogDescription className="text-sm text-gray-500">
+              Read-only access. No writing or sending permissions.
             </DialogDescription>
           </DialogHeader>
-          <div className="grid grid-cols-2 gap-3 pt-2">
-              <Button className="w-full bg-red-600 hover:bg-red-500 text-white border border-transparent shadow-sm" onClick={async () => {
-              try {
-                const r = await api.connectDocs('gmail');
-                if (r.ok && r.data?.auth_url) {
-                  window.location.href = r.data.auth_url;
-                } else {
-                  toast({
-                    title: 'Connection Failed',
-                    description: r.error || 'Failed to initiate Gmail connection. Please try again.',
-                    variant: 'destructive',
-                  });
-                }
-              } catch (error) {
-                console.error('Failed to connect Gmail:', error);
-                toast({
-                  title: 'Connection Failed',
-                  description: 'An error occurred while connecting Gmail. Please try again.',
-                  variant: 'destructive',
-                });
-              }
-            }}>
-              <img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 mr-2 object-contain" /> Gmail
-            </Button>
-            <Button 
-              className="w-full bg-blue-600 hover:bg-blue-500 text-white border border-transparent shadow-sm"
+          
+          <div className="grid grid-cols-2 gap-3 py-2">
+            <button
               onClick={async () => {
                 try {
+                  setProviderLoading('gmail');
+                  const r = await api.connectDocs('gmail');
+                  if (r.ok && r.data?.auth_url) {
+                    window.location.href = r.data.auth_url;
+                  } else {
+                    toast({
+                      title: 'Connection Failed',
+                      description: r.error || 'Failed to initiate Gmail connection. Please try again.',
+                      variant: 'destructive',
+                    });
+                    setProviderLoading(null);
+                  }
+                } catch (error) {
+                  console.error('Failed to connect Gmail:', error);
+                  toast({
+                    title: 'Connection Failed',
+                    description: 'An error occurred while connecting Gmail. Please try again.',
+                    variant: 'destructive',
+                  });
+                  setProviderLoading(null);
+                }
+              }}
+              disabled={providerLoading === 'gmail'}
+              className="flex flex-col items-center gap-1.5 p-2.5 rounded-md border border-gray-200 hover:border-red-300 hover:bg-red-50 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {providerLoading === 'gmail' ? (
+                <Loader2 className="h-10 w-10 animate-spin text-red-500" />
+              ) : (
+                <img src={GmailIcon} alt="Gmail" className="h-10 w-10 object-contain group-hover:scale-105 transition-transform" />
+              )}
+              <span className="text-xs font-medium text-gray-700">Gmail</span>
+            </button>
+            
+            <button
+              onClick={async () => {
+                try {
+                  setProviderLoading('outlook');
                   const r = await api.connectDocs('outlook');
                   if (r.ok && r.data?.auth_url) {
                     window.location.href = r.data.auth_url;
@@ -951,6 +959,7 @@ export function Dashboard() {
                       description: r.error || 'Failed to initiate Outlook connection. Please try again.',
                       variant: 'destructive',
                     });
+                    setProviderLoading(null);
                   }
                 } catch (error) {
                   console.error('Failed to connect Outlook:', error);
@@ -959,15 +968,24 @@ export function Dashboard() {
                     description: 'An error occurred while connecting Outlook. Please try again.',
                     variant: 'destructive',
                   });
+                  setProviderLoading(null);
                 }
               }}
+              disabled={providerLoading === 'outlook'}
+              className="flex flex-col items-center gap-1.5 p-2.5 rounded-md border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <img src="/outlookicon.webp" alt="Outlook" className="h-4 w-4 mr-2 object-contain" /> Outlook
-            </Button>
-            <Button 
-              className="w-full bg-emerald-600 hover:bg-emerald-500 text-white border border-transparent shadow-sm"
+              {providerLoading === 'outlook' ? (
+                <Loader2 className="h-10 w-10 animate-spin text-blue-500" />
+              ) : (
+                <img src={OutlookIcon} alt="Outlook" className="h-10 w-10 object-contain group-hover:scale-105 transition-transform" />
+              )}
+              <span className="text-xs font-medium text-gray-700">Outlook</span>
+            </button>
+            
+            <button
               onClick={async () => {
                 try {
+                  setProviderLoading('gdrive');
                   const r = await api.connectDocs('gdrive');
                   if (r.ok && r.data?.auth_url) {
                     window.location.href = r.data.auth_url;
@@ -977,6 +995,7 @@ export function Dashboard() {
                       description: r.error || 'Failed to initiate Google Drive connection. Please try again.',
                       variant: 'destructive',
                     });
+                    setProviderLoading(null);
                   }
                 } catch (error) {
                   console.error('Failed to connect Google Drive:', error);
@@ -985,15 +1004,24 @@ export function Dashboard() {
                     description: 'An error occurred while connecting Google Drive. Please try again.',
                     variant: 'destructive',
                   });
+                  setProviderLoading(null);
                 }
               }}
+              disabled={providerLoading === 'gdrive'}
+              className="flex flex-col items-center gap-1.5 p-2.5 rounded-md border border-gray-200 hover:border-green-300 hover:bg-green-50 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <img src="/gd.png" alt="Google Drive" className="h-4 w-4 mr-2 object-contain" /> Google Drive
-            </Button>
-            <Button 
-              className="w-full bg-sky-600 hover:bg-sky-500 text-white border border-transparent shadow-sm"
+              {providerLoading === 'gdrive' ? (
+                <Loader2 className="h-10 w-10 animate-spin text-green-500" />
+              ) : (
+                <img src={GoogleDriveIcon} alt="Google Drive" className="h-10 w-10 object-contain group-hover:scale-105 transition-transform" />
+              )}
+              <span className="text-xs font-medium text-gray-700">Google Drive</span>
+            </button>
+            
+            <button
               onClick={async () => {
                 try {
+                  setProviderLoading('dropbox');
                   const r = await api.connectDocs('dropbox');
                   if (r.ok && r.data?.auth_url) {
                     window.location.href = r.data.auth_url;
@@ -1003,6 +1031,7 @@ export function Dashboard() {
                       description: r.error || 'Failed to initiate Dropbox connection. Please try again.',
                       variant: 'destructive',
                     });
+                    setProviderLoading(null);
                   }
                 } catch (error) {
                   console.error('Failed to connect Dropbox:', error);
@@ -1011,18 +1040,30 @@ export function Dashboard() {
                     description: 'An error occurred while connecting Dropbox. Please try again.',
                     variant: 'destructive',
                   });
+                  setProviderLoading(null);
                 }
               }}
+              disabled={providerLoading === 'dropbox'}
+              className="flex flex-col items-center gap-1.5 p-2.5 rounded-md border border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <img src="/db.png" alt="Dropbox" className="h-4 w-4 mr-2 object-contain" /> Dropbox
+              {providerLoading === 'dropbox' ? (
+                <Loader2 className="h-10 w-10 animate-spin text-blue-500" />
+              ) : (
+                <img src={DropboxIcon} alt="Dropbox" className="h-10 w-10 object-contain group-hover:scale-105 transition-transform" />
+              )}
+              <span className="text-xs font-medium text-gray-700">Dropbox</span>
+            </button>
+          </div>
+          
+          <div className="flex justify-center pt-1">
+            <Button
+              variant="ghost"
+              onClick={() => setShowSourcesModal(false)}
+              className="text-gray-500 hover:text-gray-700"
+            >
+              Not now
             </Button>
           </div>
-            <DialogFooter>
-                <Button variant="ghost" className="text-gray-600 hover:text-gray-800" onClick={() => { setShowEvidencePrompt(false); try { localStorage.setItem('clario.evidencePromptDismissed', 'true'); } catch {} }}>Not now</Button>
-                <Button onClick={() => setShowEvidencePrompt(false)} className="gap-2 bg-black hover:bg-gray-800 text-white border border-black">
-              <ArrowRight className="h-4 w-4" /> Continue
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
       {/* Quick Actions Editor */}
