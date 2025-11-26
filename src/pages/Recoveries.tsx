@@ -126,12 +126,10 @@ export default function Recoveries() {
   const [mergedRecoveries, setMergedRecoveries] = useState<any[] | null>(null); // null means not initialized yet
   const [filterSource, setFilterSource] = useState<'all' | 'detected' | 'synced'>('all');
   const [filterConfidence, setFilterConfidence] = useState<'all' | 'high' | 'medium' | 'low'>('all');
+  const [filterUrgent, setFilterUrgent] = useState<'all' | 'urgent' | 'critical'>('all');
   
   // Phase 3: Detection statistics and urgent claims
   const [detectionStats, setDetectionStats] = useState<any>(null);
-  const [urgentClaims, setUrgentClaims] = useState<any[]>([]);
-  const [urgentClaimsCount, setUrgentClaimsCount] = useState<number>(0);
-  const [urgentClaimsExpanded, setUrgentClaimsExpanded] = useState<boolean>(true);
   const [resolveModalOpen, setResolveModalOpen] = useState(false);
   const [statusUpdateModalOpen, setStatusUpdateModalOpen] = useState(false);
   const [selectedDetection, setSelectedDetection] = useState<any | null>(null);
@@ -347,21 +345,14 @@ export default function Recoveries() {
     setMergedRecoveries(merged);
   }, []);
 
-  // Fetch detection statistics and urgent claims
+  // Fetch detection statistics
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const [statsRes, urgentRes] = await Promise.all([
-        detectionApi.getDetectionStatistics().catch(() => ({ ok: false, data: null })),
-        detectionApi.getClaimsApproachingDeadline({ days: 7 }).catch(() => ({ ok: false, data: null })),
-      ]);
+      const statsRes = await detectionApi.getDetectionStatistics().catch(() => ({ ok: false, data: null }));
       if (!cancelled) {
         if (statsRes.ok && statsRes.data?.statistics) {
           setDetectionStats(statsRes.data.statistics);
-        }
-        if (urgentRes.ok && urgentRes.data) {
-          setUrgentClaims(urgentRes.data.claims || []);
-          setUrgentClaimsCount(urgentRes.data.count || 0);
         }
       }
     })();
@@ -840,11 +831,19 @@ export default function Recoveries() {
       // Status filter
       const statusMatch = selectedStatuses.length === 0 || selectedStatuses.includes(claim.status);
       
+      // Urgent filter
+      if (filterUrgent !== 'all') {
+        const daysRemaining = claim.days_remaining;
+        if (daysRemaining === null || daysRemaining === undefined) return false;
+        if (filterUrgent === 'critical' && daysRemaining > 3) return false;
+        if (filterUrgent === 'urgent' && daysRemaining > 7) return false;
+      }
+      
       return searchMatch && dateMatch && typeMatch && statusMatch;
     });
 
     return filtered;
-  }, [mergedRecoveries, claims, filterSource, filterConfidence, searchTerm, dateRange, selectedClaimTypes, selectedStatuses]);
+  }, [mergedRecoveries, claims, filterSource, filterConfidence, filterUrgent, searchTerm, dateRange, selectedClaimTypes, selectedStatuses]);
 
   // Rank opportunities: prioritize by confidence * value
   const rankedClaims = useMemo(() => {
@@ -995,144 +994,6 @@ export default function Recoveries() {
           </div>
         </div>
 
-        {/* Urgent Claims Banner - Collapsible */}
-        {urgentClaimsCount > 0 && (
-          <Card className={`mb-6 border-2 ${
-            urgentClaims.some(c => c.days_remaining <= 3)
-              ? 'bg-red-50 border-red-200'
-              : 'bg-amber-50 border-amber-200'
-          }`}>
-            <CardContent className="p-0">
-              {/* Header - Always Visible */}
-              <div 
-                className="flex items-center justify-between gap-4 p-4 cursor-pointer hover:bg-gray-50 transition-colors"
-                onClick={() => setUrgentClaimsExpanded(!urgentClaimsExpanded)}
-              >
-                <div className="flex items-center gap-3 flex-1">
-                  <AlertTriangle className={`h-5 w-5 ${
-                    urgentClaims.some(c => c.days_remaining <= 3)
-                      ? 'text-red-600'
-                      : 'text-amber-600'
-                  }`} />
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-black">
-                      {urgentClaimsCount} Claim{urgentClaimsCount !== 1 ? 's' : ''} Expiring Soon
-                    </h3>
-                    <p className="text-sm text-gray-700 mt-0.5">
-                      {urgentClaims.some(c => c.days_remaining <= 3)
-                        ? 'Some claims are expiring in less than 3 days. File them immediately to avoid missing the deadline.'
-                        : 'These claims are approaching their 60-day Amazon deadline. Review and file them soon.'}
-                    </p>
-                  </div>
-                </div>
-                          <div className="flex items-center gap-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setUrgentClaimsExpanded(!urgentClaimsExpanded);
-                    }}
-                  >
-                    {urgentClaimsExpanded ? (
-                      <ChevronUp className="h-4 w-4" />
-                    ) : (
-                      <ChevronDown className="h-4 w-4" />
-                    )}
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setUrgentClaimsCount(0);
-                    }}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-
-              {/* Claims List - Collapsible */}
-              {urgentClaimsExpanded && (
-                <div className="border-t border-gray-200">
-                  {urgentClaims.map((claim, index) => {
-                    const foundClaim = mergedRecoveries?.find(c => c.id === claim.id) || 
-                                      claims.find(c => c.id === claim.id);
-                    const isUrgent = claim.days_remaining <= 3;
-                    
-                    return (
-                      <div key={claim.id}>
-                        <div className="flex items-center justify-between gap-4 p-4 hover:bg-gray-50 transition-colors">
-                          <div className="flex items-center gap-4 flex-1 min-w-0">
-                            <Clock className={`h-4 w-4 flex-shrink-0 ${
-                              isUrgent ? 'text-red-600' : 'text-amber-600'
-                            }`} />
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-3 flex-wrap">
-                                <span className={`text-sm font-medium ${
-                                  isUrgent ? 'text-red-700' : 'text-amber-700'
-                                }`}>
-                              {claim.days_remaining} day{claim.days_remaining !== 1 ? 's' : ''} left
-                            </span>
-                            <span className="text-xs text-gray-500">•</span>
-                                <span className="text-sm text-black font-semibold">
-                              {formatCurrency(claim.estimated_value)}
-                            </span>
-                                {claim.anomaly_type && (
-                                  <>
-                                    <span className="text-xs text-gray-500">•</span>
-                                    <span className="text-xs text-gray-600 capitalize">
-                                      {claim.anomaly_type.replace(/_/g, ' ')}
-                                    </span>
-                                  </>
-                                )}
-                              </div>
-                              {claim.details && (
-                                <p className="text-xs text-gray-600 mt-1 truncate">
-                                  {claim.details}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                            <Button
-                              size="sm"
-                            className={`flex-shrink-0 ${
-                              isUrgent
-                                ? 'bg-red-600 hover:bg-red-700 text-white'
-                                : 'bg-amber-600 hover:bg-amber-700 text-white'
-                            }`}
-                              onClick={() => {
-                                if (foundClaim) {
-                                  window.location.href = `/recoveries/${claim.id}`;
-                              } else {
-                                // Fallback: try to submit directly
-                                recoveryApi.submitClaim(claim.id).catch((e: any) => {
-                                  toast({
-                                    title: 'Error',
-                                    description: e?.message || 'Could not file claim',
-                                    variant: 'destructive'
-                                  });
-                                });
-                                }
-                              }}
-                            >
-                              File Claim
-                            </Button>
-                          </div>
-                        {index < urgentClaims.length - 1 && (
-                          <div className="border-b border-gray-200 mx-4" />
-                      )}
-                    </div>
-                    );
-                  })}
-                  </div>
-              )}
-            </CardContent>
-          </Card>
-        )}
 
         {/* Opportunity Radar Summary */}
         <Card className="mb-8 bg-white border-gray-200 text-gray-900">
@@ -1475,6 +1336,20 @@ export default function Recoveries() {
                   </SelectContent>
                 </Select>
               )}
+
+              {/* Urgent Filter */}
+              <Select value={filterUrgent} onValueChange={(value: 'all' | 'urgent' | 'critical') => {
+                setFilterUrgent(value);
+              }}>
+                <SelectTrigger className="w-[180px] text-white placeholder:text-white">
+                  <SelectValue placeholder="Filter by Urgency" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Claims</SelectItem>
+                  <SelectItem value="urgent">Urgent (≤7 days)</SelectItem>
+                  <SelectItem value="critical">Critical (≤3 days)</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </CardContent>
         </Card>
@@ -1541,8 +1416,18 @@ export default function Recoveries() {
                     ? claim.confidence_score
                     : claim._confidence;
                   
+                  const isUrgent = claim.days_remaining !== null && claim.days_remaining !== undefined && claim.days_remaining <= 7;
+                  const isCritical = claim.days_remaining !== null && claim.days_remaining !== undefined && claim.days_remaining <= 3;
+                  
                   return (
-                    <TableRow key={claim.id} className="cursor-pointer hover:bg-gray-50">
+                    <TableRow 
+                      key={claim.id} 
+                      className={cn(
+                        "cursor-pointer hover:bg-gray-50",
+                        isCritical && "bg-red-50/50 border-l-4 border-l-red-500",
+                        isUrgent && !isCritical && "bg-amber-50/50 border-l-4 border-l-amber-500"
+                      )}
+                    >
                     <TableCell>
                       <Checkbox checked={selectedIds.has(claim.id)} onCheckedChange={(checked) => {
                         setSelectedIds(prev => {
@@ -1604,9 +1489,21 @@ export default function Recoveries() {
                     </TableCell>
                     <TableCell>
                       {claim.days_remaining !== null && claim.days_remaining !== undefined ? (
-                        <span className={claim.days_remaining <= 7 ? 'text-amber-400 font-semibold' : 'text-[#36454F]'}>
-                          {claim.days_remaining} days
-                        </span>
+                        <div className="flex items-center gap-2">
+                          {isCritical && (
+                            <AlertTriangle className="h-4 w-4 text-red-600 flex-shrink-0" />
+                          )}
+                          {isUrgent && !isCritical && (
+                            <Clock className="h-4 w-4 text-amber-600 flex-shrink-0" />
+                          )}
+                          <span className={cn(
+                            isCritical && 'text-red-600 font-semibold',
+                            isUrgent && !isCritical && 'text-amber-600 font-semibold',
+                            !isUrgent && 'text-[#36454F]'
+                          )}>
+                            {claim.days_remaining} days
+                          </span>
+                        </div>
                       ) : (
                         <span className="text-[#36454F]">-</span>
                       )}
