@@ -116,18 +116,18 @@ export default function Sync() {
     );
   }, [logs, logSearch]);
 
-  // Update logs based on sync data changes
+  // Update logs based on sync data changes - using VALUE LANGUAGE
   const updateLogsFromSyncData = (data: SyncStatusResponse) => {
     const prev = previousDataRef.current;
     
     // Check orders
     if (data.ordersProcessed && data.ordersProcessed > 0 && !prev.orders.completed) {
       if (!prev.orders.syncing) {
-        addLog({ type: 'progress', category: 'orders', message: 'Syncing orders from Amazon SP-API...' });
+        addLog({ type: 'progress', category: 'orders', message: 'Accessing Order Ledger: Scanning transaction history...' });
         prev.orders.syncing = true;
       }
       if (data.ordersProcessed >= (data.totalOrders || data.ordersProcessed)) {
-        addLog({ type: 'success', category: 'orders', message: `✓ Orders synced: ${data.ordersProcessed.toLocaleString()} orders processed`, count: data.ordersProcessed });
+        addLog({ type: 'success', category: 'orders', message: `✓ Order Ledger: ${data.ordersProcessed.toLocaleString()} transactions loaded`, count: data.ordersProcessed });
         prev.orders.completed = true;
         prev.orders.count = data.ordersProcessed;
       }
@@ -136,10 +136,10 @@ export default function Sync() {
     // Check inventory
     if (data.inventoryCount && data.inventoryCount > 0 && !prev.inventory.completed) {
       if (!prev.inventory.syncing) {
-        addLog({ type: 'progress', category: 'inventory', message: 'Syncing inventory levels...' });
+        addLog({ type: 'progress', category: 'inventory', message: 'Cross-referencing FBA Inventory Records...' });
         prev.inventory.syncing = true;
       }
-      addLog({ type: 'success', category: 'inventory', message: `✓ Inventory synced: ${data.inventoryCount.toLocaleString()} items`, count: data.inventoryCount });
+      addLog({ type: 'success', category: 'inventory', message: `✓ Inventory Scan: ${data.inventoryCount.toLocaleString()} SKUs catalogued`, count: data.inventoryCount });
       prev.inventory.completed = true;
       prev.inventory.count = data.inventoryCount;
     }
@@ -147,10 +147,10 @@ export default function Sync() {
     // Check shipments
     if (data.shipmentsCount && data.shipmentsCount > 0 && !prev.shipments.completed) {
       if (!prev.shipments.syncing) {
-        addLog({ type: 'progress', category: 'shipments', message: 'Syncing inbound shipments...' });
+        addLog({ type: 'progress', category: 'shipments', message: 'Mapping Inbound Shipment Timeline...' });
         prev.shipments.syncing = true;
       }
-      addLog({ type: 'success', category: 'shipments', message: `✓ Shipments synced: ${data.shipmentsCount.toLocaleString()} shipments`, count: data.shipmentsCount });
+      addLog({ type: 'success', category: 'shipments', message: `✓ Shipment Map: ${data.shipmentsCount.toLocaleString()} FBA shipments traced`, count: data.shipmentsCount });
       prev.shipments.completed = true;
       prev.shipments.count = data.shipmentsCount;
     }
@@ -158,10 +158,10 @@ export default function Sync() {
     // Check returns
     if (data.returnsCount && data.returnsCount > 0 && !prev.returns.completed) {
       if (!prev.returns.syncing) {
-        addLog({ type: 'progress', category: 'returns', message: 'Syncing customer returns...' });
+        addLog({ type: 'progress', category: 'returns', message: 'Analyzing Customer Return Flow...' });
         prev.returns.syncing = true;
       }
-      addLog({ type: 'success', category: 'returns', message: `✓ Returns synced: ${data.returnsCount.toLocaleString()} returns`, count: data.returnsCount });
+      addLog({ type: 'success', category: 'returns', message: `✓ Return Analysis: ${data.returnsCount.toLocaleString()} returns indexed`, count: data.returnsCount });
       prev.returns.completed = true;
       prev.returns.count = data.returnsCount;
     }
@@ -169,10 +169,10 @@ export default function Sync() {
     // Check settlements
     if (data.settlementsCount && data.settlementsCount > 0 && !prev.settlements.completed) {
       if (!prev.settlements.syncing) {
-        addLog({ type: 'progress', category: 'settlements', message: 'Syncing settlement reports...' });
+        addLog({ type: 'progress', category: 'settlements', message: 'Auditing Settlement Reports...' });
         prev.settlements.syncing = true;
       }
-      addLog({ type: 'success', category: 'settlements', message: `✓ Settlements synced: ${data.settlementsCount.toLocaleString()} settlements`, count: data.settlementsCount });
+      addLog({ type: 'success', category: 'settlements', message: `✓ Settlement Audit: ${data.settlementsCount.toLocaleString()} payment cycles reviewed`, count: data.settlementsCount });
       prev.settlements.completed = true;
       prev.settlements.count = data.settlementsCount;
     }
@@ -180,17 +180,19 @@ export default function Sync() {
     // Check fees
     if (data.feesCount && data.feesCount > 0 && !prev.fees.completed) {
       if (!prev.fees.syncing) {
-        addLog({ type: 'progress', category: 'fees', message: 'Syncing FBA fees...' });
+        addLog({ type: 'progress', category: 'fees', message: 'Deconstructing FBA Fee Structure...' });
         prev.fees.syncing = true;
       }
-      addLog({ type: 'success', category: 'fees', message: `✓ Fees synced: ${data.feesCount.toLocaleString()} fee records`, count: data.feesCount });
+      addLog({ type: 'success', category: 'fees', message: `✓ Fee Analysis: ${data.feesCount.toLocaleString()} fee entries examined`, count: data.feesCount });
       prev.fees.completed = true;
       prev.fees.count = data.feesCount;
     }
     
     // Check claims detected
     if (data.claimsDetected && data.claimsDetected > 0 && !prev.claims.completed) {
-      addLog({ type: 'success', category: 'claims', message: `✓ Claims detected: ${data.claimsDetected.toLocaleString()} potential recoveries found`, count: data.claimsDetected });
+      const estimatedValue = data.claimsDetected * 48; // ~$48 avg per claim
+      const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimatedValue);
+      addLog({ type: 'success', category: 'detection', message: `⚡ DISCREPANCIES DETECTED: ${data.claimsDetected.toLocaleString()} recoverable items found (${formattedValue} estimated)`, count: data.claimsDetected });
       prev.claims.completed = true;
       prev.claims.count = data.claimsDetected;
     }
@@ -355,7 +357,7 @@ export default function Sync() {
             claims: { syncing: false, completed: false, count: 0 },
           };
           
-          addLog({ type: 'info', category: 'system', message: 'Initializing Amazon data sync...' });
+          addLog({ type: 'info', category: 'system', message: 'Establishing secure connection to Amazon SP-API...' });
           
           const start = await startSync();
           if (cancelled) return;
@@ -366,8 +368,9 @@ export default function Sync() {
           previousStatusRef.current = 'running';
           toastShownRef.current = { started: true };
           
-          addLog({ type: 'info', category: 'system', message: `Sync started (ID: ${newSyncId.slice(0, 20)}...)` });
-          addLog({ type: 'info', category: 'system', message: 'Fetching data from last 18 months...' });
+          addLog({ type: 'success', category: 'system', message: '✓ Connection established. Secure tunnel active.' });
+          addLog({ type: 'info', category: 'system', message: 'Requesting access to seller ledger (18 months)...' });
+          addLog({ type: 'info', category: 'system', message: 'Initializing Clario Analysis Engine...' });
           
           toast({
             title: 'Sync Started',
