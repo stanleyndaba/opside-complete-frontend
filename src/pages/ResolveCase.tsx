@@ -136,82 +136,82 @@ export default function ResolveCase() {
   return (
     <PageLayout title={`Resolve ${effectiveCase?.id || ''}`}>
       <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24 text-gray-300">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+        <div className="relative w-full bg-gray-50 min-h-[calc(100vh+96px)] -mt-24 pt-24 text-gray-900">
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-gray-50 to-white" />
           <div className="relative container mx-auto px-6 pt-6 pb-10 space-y-6">
             <div className="flex items-center gap-4">
-              <Button asChild variant="ghost" size="sm" className="text-gray-200 hover:bg-white/10">
+              <Button asChild variant="ghost" size="sm" className="text-gray-900 hover:bg-gray-100">
                 <Link to="/recoveries"><ArrowLeft className="h-4 w-4 mr-2" /> Back to Cases</Link>
               </Button>
               <h1 ref={headingRef} tabIndex={-1} className="sr-only">Resolve Case {effectiveCase?.id}</h1>
             </div>
 
             {loading ? (
-              <div className="flex items-center gap-2 text-gray-200"><Loader2 className="h-4 w-4 animate-spin" /> Loading…</div>
+              <div className="flex items-center gap-2 text-gray-900"><Loader2 className="h-4 w-4 animate-spin" /> Loading…</div>
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Summary */}
-                <Card className="bg-white/5 border-white/10">
+                <Card className="bg-white border-gray-200">
                   <CardHeader>
-                    <CardTitle className="text-gray-200 flex items-center gap-2"><FileText className="h-5 w-5" /> Case Summary</CardTitle>
+                    <CardTitle className="text-black flex items-center gap-2"><FileText className="h-5 w-5" /> Case Summary</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    {error && <div className="text-sm text-red-500" role="alert">{error}</div>}
+                    {error && <div className="text-sm text-red-600" role="alert">{error}</div>}
                     <div>
-                      <Label className="text-sm text-gray-400">Case ID</Label>
-                      <div className="font-mono text-sm mt-1 text-gray-200">{effectiveCase?.id}</div>
+                      <Label className="text-sm text-gray-600">Case ID</Label>
+                      <div className="font-mono text-sm mt-1 text-gray-900">{effectiveCase?.id}</div>
                     </div>
                     <div>
-                      <Label className="text-sm text-gray-400">Status</Label>
+                      <Label className="text-sm text-gray-600">Status</Label>
                       <div className="mt-1">
-                        <Badge variant="outline" className="text-gray-200 border-white/20">{normalizedStatus(effectiveCase?.status)}</Badge>
+                        <Badge variant="outline" className="text-gray-900 border-gray-300">{normalizedStatus(effectiveCase?.status)}</Badge>
                       </div>
                     </div>
                     <div>
-                      <Label className="text-sm text-gray-400">Guaranteed Value</Label>
-                      <div className="text-lg font-semibold text-emerald-400 mt-1">${(effectiveCase?.guaranteedAmount ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+                      <Label className="text-sm text-gray-600">Guaranteed Value</Label>
+                      <div className="text-lg font-semibold text-emerald-600 mt-1">${(effectiveCase?.guaranteedAmount ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
                     </div>
                     <div>
-                      <Label className="text-sm text-gray-400">Expected Payout</Label>
+                      <Label className="text-sm text-gray-600">Expected Payout</Label>
                       <div className="mt-1 flex items-center gap-2">
-                        <Calendar className="h-4 w-4 text-gray-400" />
-                        <span className="text-gray-200">{effectiveCase?.expectedPayoutDate ? new Date(effectiveCase.expectedPayoutDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '—'}</span>
+                        <Calendar className="h-4 w-4 text-gray-600" />
+                        <span className="text-gray-900">{effectiveCase?.expectedPayoutDate ? new Date(effectiveCase.expectedPayoutDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '—'}</span>
                       </div>
-                      <div className="text-xs text-gray-400 mt-1">Confidence {confidencePct}% • Evidence {evidenceStatus}</div>
+                      <div className="text-xs text-gray-600 mt-1">Confidence {confidencePct}% • Evidence {evidenceStatus}</div>
                     </div>
                   </CardContent>
                 </Card>
 
                 {/* Evidence */}
-                <Card className="bg-white/5 border-white/10">
+                <Card className="bg-white border-gray-200">
                   <CardHeader>
-                    <CardTitle className="text-gray-200 flex items-center gap-2"><Upload className="h-5 w-5" /> Evidence & Documents</CardTitle>
+                    <CardTitle className="text-black flex items-center gap-2"><Upload className="h-5 w-5" /> Evidence & Documents</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div>
-                      <Label htmlFor="doc-upload" className="text-sm text-gray-300">Attach supporting documents (PDF, images)</Label>
+                      <Label htmlFor="doc-upload" className="text-sm text-gray-900">Attach supporting documents (PDF, images)</Label>
                       <input
                         id="doc-upload"
                         type="file"
                         multiple
-                        className="mt-2 block w-full text-sm text-gray-300 file:mr-3 file:rounded-md file:border-0 file:bg-white/10 file:px-3 file:py-2 file:text-sm file:text-gray-100 hover:file:bg-white/20"
+                        className="mt-2 block w-full text-sm text-gray-900 file:mr-3 file:rounded-md file:border-0 file:bg-gray-100 file:px-3 file:py-2 file:text-sm file:text-gray-900 hover:file:bg-gray-200"
                         onChange={async (e) => {
                           const files = Array.from((e.target as HTMLInputElement).files || []);
                           await onUploadFiles(files as File[]);
                         }}
                         aria-describedby="doc-help"
                       />
-                      <div id="doc-help" className="text-xs text-gray-500 mt-1">You can also drag and drop into this field.</div>
+                      <div id="doc-help" className="text-xs text-gray-600 mt-1">You can also drag and drop into this field.</div>
                     </div>
                     {attachedDocs.length > 0 && (
                       <div>
-                        <Label className="text-sm text-gray-400">Attached</Label>
+                        <Label className="text-sm text-gray-600">Attached</Label>
                         <ul className="mt-1 space-y-1 text-sm">
                           {attachedDocs.map((d: any, idx: number) => (
                             <li key={d?.id || idx} className="flex items-center justify-between">
-                              <span className="truncate mr-2">{d?.name || d?.filename || d?.id || 'Document'}</span>
+                              <span className="truncate mr-2 text-gray-900">{d?.name || d?.filename || d?.id || 'Document'}</span>
                               {d?.id && (
-                                <Button variant="ghost" size="sm" onClick={() => window.open(d?.url || '#', '_blank')}>View</Button>
+                                <Button variant="ghost" size="sm" className="text-gray-900 hover:bg-gray-100" onClick={() => window.open(d?.url || '#', '_blank')}>View</Button>
                               )}
                             </li>
                           ))}
@@ -222,35 +222,35 @@ export default function ResolveCase() {
                 </Card>
 
                 {/* Resolution */}
-                <Card className="bg-white/5 border-white/10">
+                <Card className="bg-white border-gray-200">
                   <CardHeader>
-                    <CardTitle className="text-gray-200 flex items-center gap-2"><CheckCircle className="h-5 w-5" /> Resolution</CardTitle>
+                    <CardTitle className="text-black flex items-center gap-2"><CheckCircle className="h-5 w-5" /> Resolution</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <RadioGroup value={choice} onValueChange={(v) => setChoice(v as ResolutionChoice)} aria-label="Choose resolution action">
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="submit" id="r-submit" />
-                        <Label htmlFor="r-submit" className="text-gray-200">Submit to Amazon now</Label>
+                        <Label htmlFor="r-submit" className="text-gray-900">Submit to Amazon now</Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="resubmit" id="r-resubmit" />
-                        <Label htmlFor="r-resubmit" className="text-gray-200">Resubmit with stronger docs</Label>
+                        <Label htmlFor="r-resubmit" className="text-gray-900">Resubmit with stronger docs</Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="review" id="r-review" />
-                        <Label htmlFor="r-review" className="text-gray-200">Request manual review</Label>
+                        <Label htmlFor="r-review" className="text-gray-900">Request manual review</Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="park" id="r-park" />
-                        <Label htmlFor="r-park" className="text-gray-200">Park until more data</Label>
+                        <Label htmlFor="r-park" className="text-gray-900">Park until more data</Label>
                       </div>
                     </RadioGroup>
                     <Separator />
                     <div className="flex items-center justify-between gap-3">
-                      <Button className="bg-emerald-600 hover:bg-emerald-700" onClick={onResolve} disabled={submitting}>
+                      <Button className="bg-emerald-600 hover:bg-emerald-700 text-white" onClick={onResolve} disabled={submitting}>
                         {submitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />} Resolve Case
                       </Button>
-                      <Button variant="ghost" asChild className="text-gray-200 hover:text-white">
+                      <Button variant="ghost" asChild className="text-gray-900 hover:bg-gray-100">
                         <Link to={`/recoveries/${encodeURIComponent(effectiveCase?.id)}`}>View case details</Link>
                       </Button>
                     </div>
