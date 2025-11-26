@@ -14,7 +14,6 @@ const Index = lazy(() => import("./pages/Index"));
 const Dashboard = lazy(() => import("@/components/layout/Dashboard").then(m => ({ default: m.Dashboard })));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Sync = lazy(() => import("./pages/Sync"));
-const SyncStatus = lazy(() => import("./pages/SyncStatus"));
 const Reports = lazy(() => import("./pages/Reports"));
 const Settings = lazy(() => import("./pages/Settings"));
 const IntegrationsHub = lazy(() => import("./pages/IntegrationsHub"));
@@ -100,7 +99,6 @@ const App = () => (
             <Route path="/app" element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} /> {/* Backend redirect compatibility */}
             <Route path="/sync" element={<Sync />} />
-            <Route path="/sync-status" element={<SyncStatus />} />
             {/* Market/Stocks pages removed for FBA MVP focus */}
             <Route path="/settings" element={<Settings />} />
             <Route path="/integrations-hub" element={<IntegrationsHub />} />

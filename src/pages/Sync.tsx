@@ -306,16 +306,11 @@ export default function Sync() {
       if (mappedStatus === 'completed' && !toastShownRef.current.completed) {
         toastShownRef.current.completed = true;
         addLog({ type: 'success', category: 'system', message: 'Sync complete' });
-        addLog({ type: 'info', category: 'system', message: 'Redirecting to summary...' });
         toast({
           title: 'Sync Complete',
-          description: 'Complete successfully. Redirecting...',
-          duration: 3000,
+          description: 'Your data has been synchronized.',
+          duration: 4000,
         });
-        // Auto-redirect to sync-status completion screen after showing logs
-        setTimeout(() => {
-          navigate('/sync-status');
-        }, 2500);
       } else if (mappedStatus === 'failed' && !toastShownRef.current.failed) {
         toastShownRef.current.failed = true;
         addLog({ type: 'error', category: 'system', message: `Sync failed: ${s.error || s.message || 'Unknown error'}` });
