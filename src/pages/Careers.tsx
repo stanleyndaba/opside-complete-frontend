@@ -96,29 +96,6 @@ export default function Careers() {
               </p>
             </header>
 
-            {/* Values Anchor */}
-            <section className="mt-10">
-              <div className="rounded-xl border border-gray-200 bg-gray-50 shadow-lg p-6 md:p-8 space-y-6">
-                <div>
-                  <h3 className="font-brand text-emerald-600 text-xl">Relentless Execution</h3>
-                  <p className="mt-2 text-gray-700 font-body">We value speed and precision. We have a bias for action and a culture of shipping, learning, and iterating.</p>
-                </div>
-                <div>
-                  <h3 className="font-brand text-emerald-600 text-xl">Beautiful Abstractions</h3>
-                  <p className="mt-2 text-gray-700 font-body">We take complex, messy systems and build elegant, simple solutions. Our work is powerful on the inside and effortless on the outside.</p>
-                </div>
-                <div>
-                  <h3 className="font-brand text-emerald-600 text-xl">Win for the Seller</h3>
-                  <p className="mt-2 text-gray-700 font-body">Our success is a byproduct of our users' success. Every decision we make must answer the question: "Does this create more value for our sellers?"</p>
-                </div>
-                <div className="pt-2">
-                  <Button asChild className="bg-emerald-500 hover:bg-emerald-400 text-white font-semibold">
-                    <a href="#open-roles">View Open Roles</a>
-                  </Button>
-                </div>
-              </div>
-            </section>
-
             {/* Open roles */}
             <section id="open-roles" className="mt-12 space-y-6">
               <h2 className="font-body text-xl md:text-2xl font-semibold text-gray-900">Open Roles</h2>

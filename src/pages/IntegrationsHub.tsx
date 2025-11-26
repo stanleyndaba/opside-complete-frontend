@@ -319,8 +319,7 @@ export default function IntegrationsHub() {
             </p>
             <div className="mt-6 flex justify-center">
               <span className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1 text-xs font-medium uppercase tracking-wide text-blue-700 shadow-sm">
-                <Sparkles className="h-4 w-4 text-blue-600" />
-                Works best with work email!
+                WORKS BEST WITH EMAIL
               </span>
             </div>
           </div>
@@ -336,7 +335,7 @@ export default function IntegrationsHub() {
                       <img src="/Amazon-logo.png" alt="Amazon logo" className="h-9 w-9 object-contain" />
                     </div>
                     <div>
-                      <CardTitle className="text-black text-xl">Amazon SP‑API</CardTitle>
+                      <CardTitle className="text-black text-xl">SP‑API</CardTitle>
                       <CardDescription className="text-gray-600">Sync inventory, fees, reimbursements, shipments and returns.</CardDescription>
                     </div>
                   </div>
@@ -518,7 +517,7 @@ export default function IntegrationsHub() {
                     const providerMeta = {
                       outlook: { name: 'Outlook', icon: '/outlookicon.webp' },
                       gdrive: { name: 'Google Drive', icon: '/gd.png' },
-                      dropbox: { name: 'Dropbox', icon: '/db.png' },
+                      dropbox: { name: 'Dropbox', icon: '/Dropbox_Icon.svg.png' },
                     } as const;
                     const providerName = providerMeta[p].name;
                     const providerIcon = providerMeta[p].icon;

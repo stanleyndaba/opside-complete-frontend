@@ -365,7 +365,7 @@ const Settings = () => {
             <div className="flex items-start justify-between">
               <div>
                 <h2 className="text-2xl font-bold text-gray-900">
-                  {sellerProfile.company_name || 'Unknown Company'}
+                  {sellerProfile.company_name || 'Business'}
                 </h2>
                 {sellerProfile.amazon_seller_id && (
                   <p className="text-sm text-gray-600 mt-1">
@@ -407,7 +407,7 @@ const Settings = () => {
                 {/* Basic Information Section */}
                 <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
                   <CardHeader>
-                    <CardTitle className="text-gray-900">Basic Information</CardTitle>
+                    <CardTitle className="text-gray-900">Information</CardTitle>
                     <CardDescription className="text-gray-600">Your account details and activity</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
@@ -677,7 +677,7 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">Billing & Value</h2>
+              <h2 className="text-2xl font-bold text-gray-900">Billing Invoices</h2>
               <p className="text-gray-600">View your ROI and manage billing preferences</p>
             </div>
             
@@ -691,7 +691,7 @@ const Settings = () => {
                     invoice history, and plan management.
                   </p>
                 <Button className="bg-emerald-500 hover:bg-emerald-400 text-white" onClick={() => navigate('/billing')}>
-                    View Billing & Value Report
+                    View Billing Invoices
                   </Button>
                 </div>
               </CardContent>
