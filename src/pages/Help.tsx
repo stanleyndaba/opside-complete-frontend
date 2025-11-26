@@ -306,7 +306,7 @@ export default function Help() {
                   <div>
                     <Label htmlFor="category">Issue Category</Label>
                     <Select value={contactForm.category} onValueChange={(value) => setContactForm({ ...contactForm, category: value })}>
-                      <SelectTrigger className="text-gray-900 [&>span[data-placeholder]]:text-gray-400">
+                      <SelectTrigger className="text-gray-900 data-[placeholder]:text-gray-400">
                         <SelectValue placeholder="Select issue type" />
                       </SelectTrigger>
                       <SelectContent>
