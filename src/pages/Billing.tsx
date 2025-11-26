@@ -202,7 +202,7 @@ export default function Billing() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-gray-900">
                 <Shield className="h-5 w-5 text-emerald-600" />
-                Your Plan
+                Current Plan
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -221,20 +221,6 @@ export default function Billing() {
                 <Check className="h-4 w-4" />
                 <span className="text-gray-700">Active and monitoring your account 24/7</span>
               </div>
-              <div className="grid grid-cols-3 gap-3 mt-3 text-sm">
-                <div className="rounded border border-gray-200 bg-gray-50 p-3">
-                  <div className="text-gray-600">Recovered (selected)</div>
-                  <div className="text-gray-900 font-semibold">${periodTotals.totalRecovered.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
-                </div>
-                <div className="rounded border border-gray-200 bg-gray-50 p-3">
-                  <div className="text-gray-600">Our Commission (20%)</div>
-                  <div className="text-blue-600 font-semibold">${periodTotals.commission.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
-                </div>
-                <div className="rounded border border-gray-200 bg-gray-50 p-3">
-                  <div className="text-gray-600">Net to You</div>
-                  <div className="text-emerald-600 font-semibold">${periodTotals.netToSeller.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
-                </div>
-              </div>
             </CardContent>
           </Card>
 
@@ -243,7 +229,7 @@ export default function Billing() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-gray-900">
                 <CreditCard className="h-5 w-5 text-emerald-600" />
-                Primary Payment Method
+                Payment Method
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -315,7 +301,7 @@ export default function Billing() {
               <div className="flex items-center gap-2">
                 <Input placeholder="Search invoices (ID/status)" value={invoiceSearch} onChange={(e)=>{ setInvoiceSearch(e.target.value); setPage(1); }} className="border-gray-300 bg-white text-gray-900 placeholder:text-gray-500 md:w-72" />
                 <UiSelect value={statusFilter === 'All' ? 'All' : statusFilter} onValueChange={(v)=>{ setStatusFilter(v as any); setPage(1); }}>
-                  <SelectTrigger className="w-[160px]"><SelectValue placeholder="Status" /></SelectTrigger>
+                  <SelectTrigger className="w-[160px] text-white"><SelectValue placeholder="Status" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="All">All</SelectItem>
                     <SelectItem value="Paid">Paid</SelectItem>
@@ -339,18 +325,18 @@ export default function Billing() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Invoice #</TableHead>
-                    <TableHead>Date Issued</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Total Recovered (Period)</TableHead>
-                    <TableHead className="text-right">Our Commission (20%)</TableHead>
-                    <TableHead className="text-right">Amount Charged</TableHead>
-                    <TableHead>Actions</TableHead>
+                    <TableHead className="text-[#36454F]">Invoice #</TableHead>
+                    <TableHead className="text-[#36454F]">Date Issued</TableHead>
+                    <TableHead className="text-[#36454F]">Status</TableHead>
+                    <TableHead className="text-right text-[#36454F]">Total Recovered (Period)</TableHead>
+                    <TableHead className="text-right text-[#36454F]">Our Commission (20%)</TableHead>
+                    <TableHead className="text-right text-[#36454F]">Amount Charged</TableHead>
+                    <TableHead className="text-[#36454F]">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {pageData.map((invoice) => (
-                    <TableRow key={invoice.id} className="hover:bg-gray-50">
+                    <TableRow key={invoice.id} className="hover:bg-gray-50 border-b border-gray-200">
                       <TableCell>
                         <Link 
                           to={`/billing/invoice/${invoice.id}`}
@@ -414,7 +400,7 @@ export default function Billing() {
           </CardHeader>
           <CardContent>
             <Accordion type="single" collapsible className="w-full">
-              <AccordionItem value="when-charged">
+              <AccordionItem value="when-charged" className="border-b border-gray-200">
                 <AccordionTrigger className="text-left">
                   When will I be charged?
                 </AccordionTrigger>
@@ -423,7 +409,7 @@ export default function Billing() {
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="reversed-recovery">
+              <AccordionItem value="reversed-recovery" className="border-b border-gray-200">
                 <AccordionTrigger className="text-left">
                   What happens if a recovery is later reversed by Amazon?
                 </AccordionTrigger>
@@ -432,7 +418,7 @@ export default function Billing() {
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="vat-number">
+              <AccordionItem value="vat-number" className="border-b border-gray-200">
                 <AccordionTrigger className="text-left">
                   How do I update my company's VAT number?
                 </AccordionTrigger>
@@ -441,7 +427,7 @@ export default function Billing() {
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="automatic-invoices">
+              <AccordionItem value="automatic-invoices" className="border-b border-gray-200">
                 <AccordionTrigger className="text-left">
                   Can I get invoices automatically sent to my accountant?
                 </AccordionTrigger>
@@ -450,7 +436,7 @@ export default function Billing() {
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="payment-security">
+              <AccordionItem value="payment-security" className="border-b border-gray-200">
                 <AccordionTrigger className="text-left">
                   How secure is my payment information?
                 </AccordionTrigger>
