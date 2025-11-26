@@ -1445,7 +1445,7 @@ export default function Recoveries() {
                       )}
                     </TableCell>
                     <TableCell>
-                      <Button asChild variant="link" className="p-0 h-auto text-emerald-400 hover:text-emerald-300 font-mono">
+                      <Button asChild variant="link" className="p-0 h-auto text-[#36454F] hover:text-[#36454F] font-mono">
                         <Link to={`/recoveries/${claim.id}`} state={{ claim }}>{claim.id}</Link>
                       </Button>
                     </TableCell>
