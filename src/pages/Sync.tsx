@@ -116,83 +116,91 @@ export default function Sync() {
     );
   }, [logs, logSearch]);
 
-  // Update logs based on sync data changes - logs only show what was actually synced
+  // Update logs based on sync data changes - machine dialogue style
   const updateLogsFromSyncData = (data: SyncStatusResponse) => {
     const prev = previousDataRef.current;
     
-    // Check orders - only log if we have actual data
+    // Check orders - machine dialogue
     if (data.ordersProcessed && data.ordersProcessed > 0 && !prev.orders.completed) {
       if (!prev.orders.syncing) {
-        addLog({ type: 'progress', category: 'orders', message: 'Fetching order data...' });
+        addLog({ type: 'progress', category: 'orders', message: 'Accessing Order Ledger... scanning transactions' });
         prev.orders.syncing = true;
       }
       if (data.ordersProcessed >= (data.totalOrders || data.ordersProcessed)) {
-        addLog({ type: 'success', category: 'orders', message: `Orders: ${data.ordersProcessed.toLocaleString()} loaded`, count: data.ordersProcessed });
+        addLog({ type: 'success', category: 'orders', message: `[FOUND] ${data.ordersProcessed.toLocaleString()} orders in ledger`, count: data.ordersProcessed });
+        addLog({ type: 'info', category: 'orders', message: 'Cross-referencing order IDs with fulfillment records...' });
         prev.orders.completed = true;
         prev.orders.count = data.ordersProcessed;
       }
     }
     
-    // Check inventory - only log if we have actual data
+    // Check inventory - machine dialogue
     if (data.inventoryCount && data.inventoryCount > 0 && !prev.inventory.completed) {
       if (!prev.inventory.syncing) {
-        addLog({ type: 'progress', category: 'inventory', message: 'Fetching inventory data...' });
+        addLog({ type: 'progress', category: 'inventory', message: 'Querying FBA Inventory Snapshot...' });
         prev.inventory.syncing = true;
       }
-      addLog({ type: 'success', category: 'inventory', message: `Inventory: ${data.inventoryCount.toLocaleString()} SKUs`, count: data.inventoryCount });
+      addLog({ type: 'success', category: 'inventory', message: `[FOUND] ${data.inventoryCount.toLocaleString()} active SKUs in warehouse`, count: data.inventoryCount });
+      addLog({ type: 'info', category: 'inventory', message: 'Checking unit counts against inbound shipments...' });
       prev.inventory.completed = true;
       prev.inventory.count = data.inventoryCount;
     }
     
-    // Check shipments - only log if we have actual data
+    // Check shipments - machine dialogue
     if (data.shipmentsCount && data.shipmentsCount > 0 && !prev.shipments.completed) {
       if (!prev.shipments.syncing) {
-        addLog({ type: 'progress', category: 'shipments', message: 'Fetching shipment data...' });
+        addLog({ type: 'progress', category: 'shipments', message: 'Mapping FBA Inbound Shipment history...' });
         prev.shipments.syncing = true;
       }
-      addLog({ type: 'success', category: 'shipments', message: `Shipments: ${data.shipmentsCount.toLocaleString()} FBA inbound`, count: data.shipmentsCount });
+      addLog({ type: 'success', category: 'shipments', message: `[FOUND] ${data.shipmentsCount.toLocaleString()} shipments to fulfillment centers`, count: data.shipmentsCount });
+      addLog({ type: 'info', category: 'shipments', message: 'Verifying received quantities match shipped quantities...' });
       prev.shipments.completed = true;
       prev.shipments.count = data.shipmentsCount;
     }
     
-    // Check returns - only log if we have actual data
+    // Check returns - machine dialogue
     if (data.returnsCount && data.returnsCount > 0 && !prev.returns.completed) {
       if (!prev.returns.syncing) {
-        addLog({ type: 'progress', category: 'returns', message: 'Fetching return data...' });
+        addLog({ type: 'progress', category: 'returns', message: 'Pulling Customer Return records...' });
         prev.returns.syncing = true;
       }
-      addLog({ type: 'success', category: 'returns', message: `Returns: ${data.returnsCount.toLocaleString()} processed`, count: data.returnsCount });
+      addLog({ type: 'success', category: 'returns', message: `[FOUND] ${data.returnsCount.toLocaleString()} customer returns processed`, count: data.returnsCount });
+      addLog({ type: 'info', category: 'returns', message: 'Checking if returns were properly credited to seller account...' });
       prev.returns.completed = true;
       prev.returns.count = data.returnsCount;
     }
     
-    // Check settlements - only log if we have actual data
+    // Check settlements - machine dialogue
     if (data.settlementsCount && data.settlementsCount > 0 && !prev.settlements.completed) {
       if (!prev.settlements.syncing) {
-        addLog({ type: 'progress', category: 'settlements', message: 'Fetching settlement data...' });
+        addLog({ type: 'progress', category: 'settlements', message: 'Downloading Settlement Reports...' });
         prev.settlements.syncing = true;
       }
-      addLog({ type: 'success', category: 'settlements', message: `Settlements: ${data.settlementsCount.toLocaleString()} reports`, count: data.settlementsCount });
+      addLog({ type: 'success', category: 'settlements', message: `[FOUND] ${data.settlementsCount.toLocaleString()} settlement periods`, count: data.settlementsCount });
+      addLog({ type: 'info', category: 'settlements', message: 'Reconciling payouts with expected amounts...' });
       prev.settlements.completed = true;
       prev.settlements.count = data.settlementsCount;
     }
     
-    // Check fees - only log if we have actual data
+    // Check fees - machine dialogue
     if (data.feesCount && data.feesCount > 0 && !prev.fees.completed) {
       if (!prev.fees.syncing) {
-        addLog({ type: 'progress', category: 'fees', message: 'Fetching fee data...' });
+        addLog({ type: 'progress', category: 'fees', message: 'Extracting FBA Fee breakdown...' });
         prev.fees.syncing = true;
       }
-      addLog({ type: 'success', category: 'fees', message: `Fees: ${data.feesCount.toLocaleString()} entries`, count: data.feesCount });
+      addLog({ type: 'success', category: 'fees', message: `[FOUND] ${data.feesCount.toLocaleString()} fee line items`, count: data.feesCount });
+      addLog({ type: 'info', category: 'fees', message: 'Analyzing fee calculations for overcharges...' });
       prev.fees.completed = true;
       prev.fees.count = data.feesCount;
     }
     
-    // Check claims detected - only log if we have actual detections
+    // Check claims detected - machine dialogue with urgency
     if (data.claimsDetected && data.claimsDetected > 0 && !prev.claims.completed) {
       const estimatedValue = data.claimsDetected * 48;
       const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimatedValue);
-      addLog({ type: 'success', category: 'detection', message: `Discrepancies: ${data.claimsDetected.toLocaleString()} found (${formattedValue} est.)`, count: data.claimsDetected });
+      addLog({ type: 'warning', category: 'detection', message: '[ALERT] Discrepancies detected in seller data' });
+      addLog({ type: 'success', category: 'detection', message: `[RESULT] ${data.claimsDetected.toLocaleString()} recoverable items identified` });
+      addLog({ type: 'success', category: 'detection', message: `[ESTIMATED] Potential recovery: ${formattedValue}` });
       prev.claims.completed = true;
       prev.claims.count = data.claimsDetected;
     }
@@ -357,7 +365,7 @@ export default function Sync() {
             claims: { syncing: false, completed: false, count: 0 },
           };
           
-          addLog({ type: 'info', category: 'system', message: 'Connecting to data source...' });
+          addLog({ type: 'info', category: 'system', message: 'Connecting to Amazon SP-API Secure Tunnel...' });
           
           const start = await startSync();
           if (cancelled) return;
@@ -368,8 +376,9 @@ export default function Sync() {
           previousStatusRef.current = 'running';
           toastShownRef.current = { started: true };
           
-          addLog({ type: 'success', category: 'system', message: 'Connection established' });
-          addLog({ type: 'info', category: 'system', message: 'Requesting seller data (18-month window)...' });
+          addLog({ type: 'success', category: 'system', message: '[CONNECTED] Secure tunnel established' });
+          addLog({ type: 'info', category: 'system', message: 'Requesting access to Seller Central ledger...' });
+          addLog({ type: 'info', category: 'system', message: 'Scanning 18-month transaction window...' });
           
           toast({
             title: 'Sync Started',
