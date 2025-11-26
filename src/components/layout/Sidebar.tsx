@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { LayoutDashboard, ShieldCheck, Settings2, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, FileText, LifeBuoy, User } from 'lucide-react';
+import { LayoutDashboard, ShieldCheck, Settings2, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, FileText, LifeBuoy, User, Plug } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -19,6 +19,9 @@ const prefetchRoute = (path: string) => {
 				break;
 			case '/reports':
 				import('@/pages/Reports');
+				break;
+			case '/upcoming-payments':
+				import('@/pages/UpcomingPayments');
 				break;
 			case '/recoveries':
 				import('@/pages/Recoveries');
@@ -68,7 +71,8 @@ export function Sidebar({
     { title: 'Command Center', icon: LayoutDashboard, href: '/app' },
     { title: 'Recoveries', icon: ShieldCheck, href: '/recoveries' },
     { title: 'Doc Locker', icon: FileText, href: '/evidence-locker' },
-    { title: 'Reports', icon: BarChart3, href: '/reports' }
+    { title: 'Reports', icon: BarChart3, href: '/reports' },
+    { title: 'Upcoming payments', icon: Plug, href: '/upcoming-payments' }
   ];
 
   const secondaryItems: NavItem[] = [

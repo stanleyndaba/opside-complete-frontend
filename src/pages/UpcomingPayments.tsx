@@ -149,18 +149,17 @@ export default function UpcomingPayments() {
   return (
     <PageLayout title="Upcoming Payments">
       <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
-          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-300 space-y-8">
+        <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24">
+          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-700 space-y-8">
 
-            <Card className="bg-white/5 border-white/10 text-gray-300">
+            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
               <CardHeader>
-                <CardTitle className="text-gray-200">Upcoming Payments</CardTitle>
-                <CardDescription className="text-gray-400">Projected Amazon payouts based on claim status and expected payout dates</CardDescription>
+                <CardTitle className="text-gray-900">Upcoming Payments</CardTitle>
+                <CardDescription className="text-gray-600">Projected Amazon payouts based on claim status and expected payout dates</CardDescription>
               </CardHeader>
               <CardContent className="p-6">
                 {errorMessage && (
-                  <div className="mb-4 rounded-md border border-amber-500/30 bg-amber-500/10 text-amber-100 text-sm p-3 flex flex-wrap items-center gap-3">
+                  <div className="mb-4 rounded-md border border-amber-500/30 bg-amber-500/10 text-amber-900 text-sm p-3 flex flex-wrap items-center gap-3">
                     <span className="flex-1">{errorMessage}</span>
                     <Button
                       variant="outline"
@@ -174,20 +173,20 @@ export default function UpcomingPayments() {
                   </div>
                 )}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="rounded-md border border-white/10 bg-white/5 p-4">
-                    <div className="text-xs text-gray-400">Next Expected Payout</div>
-                    <div className="text-xl font-semibold text-gray-100 mt-1">{nextPayout ? formatCurrency(nextPayout.gross, currency) : formatCurrency(0, currency)}</div>
-                    <div className="text-[11px] text-gray-400 mt-1">{nextPayout ? nextPayout.label : '—'}</div>
+                  <div className="rounded-md border border-gray-200 bg-gray-50 p-4">
+                    <div className="text-xs text-gray-600">Next Expected Payout</div>
+                    <div className="text-xl font-semibold text-gray-900 mt-1">{nextPayout ? formatCurrency(nextPayout.gross, currency) : formatCurrency(0, currency)}</div>
+                    <div className="text-[11px] text-gray-600 mt-1">{nextPayout ? nextPayout.label : '—'}</div>
                   </div>
-                  <div className="rounded-md border border-white/10 bg-white/5 p-4">
-                    <div className="text-xs text-gray-400">This Month (Projected)</div>
-                    <div className="text-xl font-semibold text-emerald-400 mt-1">{formatCurrency(monthTotals.gross, currency)}</div>
-                    <div className="text-[11px] text-gray-400 mt-1">Across {monthTotals.count} claims</div>
+                  <div className="rounded-md border border-gray-200 bg-gray-50 p-4">
+                    <div className="text-xs text-gray-600">This Month (Projected)</div>
+                    <div className="text-xl font-semibold text-emerald-600 mt-1">{formatCurrency(monthTotals.gross, currency)}</div>
+                    <div className="text-[11px] text-gray-600 mt-1">Across {monthTotals.count} claims</div>
                   </div>
-                  <div className="rounded-md border border-white/10 bg-white/5 p-4">
-                    <div className="text-xs text-gray-400">Net To You (Projected)</div>
-                    <div className="text-xl font-semibold text-[#66ff99] mt-1">{formatCurrency(monthTotals.net, currency)}</div>
-                    <div className="text-[11px] text-gray-400 mt-1">After 20% commission</div>
+                  <div className="rounded-md border border-gray-200 bg-gray-50 p-4">
+                    <div className="text-xs text-gray-600">Net To You (Projected)</div>
+                    <div className="text-xl font-semibold text-emerald-600 mt-1">{formatCurrency(monthTotals.net, currency)}</div>
+                    <div className="text-[11px] text-gray-600 mt-1">After 20% commission</div>
                   </div>
                 </div>
                 <div className="mt-4 flex items-center gap-3">
@@ -196,40 +195,40 @@ export default function UpcomingPayments() {
               </CardContent>
             </Card>
 
-            <Card className="bg-white/5 border-white/10 text-gray-300">
+            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
               <CardHeader>
-                <CardTitle className="text-gray-200">Schedule</CardTitle>
-                <CardDescription className="text-gray-400">Daily rollup of expected payouts; dates may change based on Amazon processing</CardDescription>
+                <CardTitle className="text-gray-900">Schedule</CardTitle>
+                <CardDescription className="text-gray-600">Daily rollup of expected payouts; dates may change based on Amazon processing</CardDescription>
               </CardHeader>
               <CardContent className="p-0">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="text-gray-300">Payout Date</TableHead>
-                      <TableHead className="text-gray-300">Claims</TableHead>
-                      <TableHead className="text-gray-300">Gross</TableHead>
-                      <TableHead className="text-gray-300">Commission (20%)</TableHead>
-                      <TableHead className="text-gray-300">Net To You</TableHead>
+                      <TableHead className="text-[#36454F]">Payout Date</TableHead>
+                      <TableHead className="text-[#36454F]">Claims</TableHead>
+                      <TableHead className="text-[#36454F]">Gross</TableHead>
+                      <TableHead className="text-[#36454F]">Commission (20%)</TableHead>
+                      <TableHead className="text-[#36454F]">Net To You</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {loading && (
                       <TableRow>
-                        <TableCell colSpan={5} className="text-sm text-muted-foreground p-4">Loading…</TableCell>
+                        <TableCell colSpan={5} className="text-sm text-gray-600 p-4">Loading…</TableCell>
                       </TableRow>
                     )}
                     {!loading && upcomingGroups.length === 0 && (
                       <TableRow>
-                        <TableCell colSpan={5} className="text-sm text-gray-400 p-4">No upcoming payments yet. Once claims are approved with payout dates, they will appear here.</TableCell>
+                        <TableCell colSpan={5} className="text-sm text-gray-600 p-4">No upcoming payments yet. Once claims are approved with payout dates, they will appear here.</TableCell>
                       </TableRow>
                     )}
                     {!loading && upcomingGroups.map((g) => (
-                      <TableRow key={g.key} className="hover:bg-white/5">
-                        <TableCell className="whitespace-nowrap font-medium text-gray-100">{g.label}</TableCell>
-                        <TableCell>{g.count}</TableCell>
-                        <TableCell className="font-medium">{formatCurrency(g.gross, currency)}</TableCell>
-                        <TableCell>{formatCurrency(g.commission, currency)}</TableCell>
-                        <TableCell className="text-[#66ff99] font-semibold">{formatCurrency(g.net, currency)}</TableCell>
+                      <TableRow key={g.key} className="hover:bg-gray-50 border-b border-gray-200">
+                        <TableCell className="whitespace-nowrap font-medium text-gray-900">{g.label}</TableCell>
+                        <TableCell className="text-gray-700">{g.count}</TableCell>
+                        <TableCell className="font-medium text-gray-900">{formatCurrency(g.gross, currency)}</TableCell>
+                        <TableCell className="text-gray-700">{formatCurrency(g.commission, currency)}</TableCell>
+                        <TableCell className="text-emerald-600 font-semibold">{formatCurrency(g.net, currency)}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
