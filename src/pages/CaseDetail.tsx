@@ -314,12 +314,12 @@ export default function CaseDetail() {
   return (
     <PageLayout title={`Case ${effectiveCase.id}`}>
       <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
-          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-300 space-y-8">
+        <div className="relative w-full bg-gray-50 min-h-[calc(100vh+96px)] -mt-24 pt-24">
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-gray-50 to-white" />
+          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-900 space-y-8">
             {/* Header */}
             <div className="flex items-center gap-4">
-              <Button asChild variant="ghost" size="sm" className="text-gray-200 hover:bg-white/10">
+              <Button asChild variant="ghost" size="sm" className="text-gray-900 hover:bg-gray-100">
                 <Link to="/recoveries">
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Back to Cases
@@ -330,9 +330,9 @@ export default function CaseDetail() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column - Case Summary */}
           <div className="lg:col-span-1 space-y-6">
-            <Card className="bg-white/5 border-white/10 text-gray-300">
+            <Card className="bg-white border-gray-200 text-gray-900">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-gray-200">
+                <CardTitle className="flex items-center gap-2 text-black">
                   <Package className="h-5 w-5" />
                   Case Summary
                 </CardTitle>
@@ -343,17 +343,17 @@ export default function CaseDetail() {
                 )}
 
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Case ID</label>
-                  <p className="font-mono text-sm mt-1 text-gray-200">{effectiveCase.id}</p>
+                  <label className="text-sm font-medium text-gray-600">Case ID</label>
+                  <p className="font-mono text-sm mt-1 text-gray-900">{effectiveCase.id}</p>
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Current Status</label>
+                  <label className="text-sm font-medium text-gray-600">Current Status</label>
                   <div className="mt-1 flex items-center gap-2">
-                    <Badge variant="outline" className="font-medium text-gray-200 border-white/20">
+                    <Badge variant="outline" className="font-medium text-gray-900 border-gray-300">
                       {normalizeStatus(effectiveCase.status)}
                     </Badge>
-                    <span className="text-xs text-gray-200">({effectiveCase.status})</span>
+                    <span className="text-xs text-gray-600">({effectiveCase.status})</span>
                   </div>
                 </div>
 
@@ -380,25 +380,25 @@ export default function CaseDetail() {
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Expected Payout Date</label>
+                  <label className="text-sm font-medium text-gray-600">Expected Payout Date</label>
                   <p className="mt-1 flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-gray-200">{effectiveCase.expectedPayoutDate ? new Date(effectiveCase.expectedPayoutDate).toLocaleDateString('en-US', {
+                    <Calendar className="h-4 w-4 text-gray-600" />
+                    <span className="text-gray-900">{effectiveCase.expectedPayoutDate ? new Date(effectiveCase.expectedPayoutDate).toLocaleDateString('en-US', {
                       month: 'long',
                       day: 'numeric',
                       year: 'numeric'
                     }) : '—'}</span>
                   </p>
-                  <p className="text-xs text-gray-200 mt-1">
+                  <p className="text-xs text-gray-600 mt-1">
                     {derivedConfidencePct}% Confidence • Evidence: {derivedEvidence}
                   </p>
                 </div>
 
                 {/* Matched docs summary */}
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Matched document(s)</label>
+                  <label className="text-sm font-medium text-gray-600">Matched document(s)</label>
                   <div className="mt-1 flex flex-wrap gap-2">
-                    <Badge variant="outline" className="border-white/20 text-gray-200">{matchedCount} matched</Badge>
+                    <Badge variant="outline" className="border-gray-300 text-gray-900">{matchedCount} matched</Badge>
                     {matchedDocs.slice(0, 3).map((d: any) => (
                       <Button key={d.id} variant="outline" size="sm" className="h-7" onClick={() => window.open(`/documents/${encodeURIComponent(d.id)}`, '_blank')}>
                         <FileText className="h-3.5 w-3.5 mr-1" /> {d.name || d.filename || d.id}
@@ -447,8 +447,8 @@ export default function CaseDetail() {
 
                 {effectiveCase.amazonCaseId && (
                   <div>
-                  <label className="text-sm font-medium text-muted-foreground">Amazon Case</label>
-                  <p className="font-mono text-sm mt-1 inline-flex items-center gap-2">
+                  <label className="text-sm font-medium text-gray-600">Amazon Case</label>
+                  <p className="font-mono text-sm mt-1 inline-flex items-center gap-2 text-gray-900">
                     {effectiveCase.amazonCaseId}
                     {effectiveCase.amazonCaseId && (
                       <a href={`https://sellercentral.amazon.com/case-log/${effectiveCase.amazonCaseId}`} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline inline-flex items-center gap-1">
@@ -461,8 +461,8 @@ export default function CaseDetail() {
 
                 {(effectiveCase.approvalReason || effectiveCase.rejectionReason) && (
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground">Decision Reason</label>
-                    <p className="text-sm mt-1">
+                    <label className="text-sm font-medium text-gray-600">Decision Reason</label>
+                    <p className="text-sm mt-1 text-gray-900">
                       {effectiveCase.approvalReason || effectiveCase.rejectionReason}
                     </p>
                   </div>
@@ -471,27 +471,27 @@ export default function CaseDetail() {
                 <Separator />
 
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Affected Product</label>
-                  <p className="font-medium mt-1">{effectiveCase.productName}</p>
-                  <p className="text-sm text-muted-foreground">SKU: {effectiveCase.sku}</p>
+                  <label className="text-sm font-medium text-gray-600">Affected Product</label>
+                  <p className="font-medium mt-1 text-gray-900">{effectiveCase.productName}</p>
+                  <p className="text-sm text-gray-600">SKU: {effectiveCase.sku}</p>
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Warehouse Location</label>
-                  <p className="mt-1 flex items-center gap-2">
-                    <MapPin className="h-4 w-4 text-muted-foreground" />
+                  <label className="text-sm font-medium text-gray-600">Warehouse Location</label>
+                  <p className="mt-1 flex items-center gap-2 text-gray-900">
+                    <MapPin className="h-4 w-4 text-gray-600" />
                     {effectiveCase.facility ?? '—'}
                   </p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground">Units Lost</label>
-                    <p className="font-semibold mt-1">{effectiveCase.unitsLost ?? '—'}</p>
+                    <label className="text-sm font-medium text-gray-600">Units Lost</label>
+                    <p className="font-semibold mt-1 text-gray-900">{effectiveCase.unitsLost ?? '—'}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground">Unit Cost</label>
-                    <p className="font-semibold mt-1">
+                    <label className="text-sm font-medium text-gray-600">Unit Cost</label>
+                    <p className="font-semibold mt-1 text-gray-900">
                       {typeof effectiveCase.unitCost === 'number' ? `$${effectiveCase.unitCost.toFixed(2)}` : '—'}
                     </p>
                   </div>
@@ -535,13 +535,13 @@ export default function CaseDetail() {
                   </Button>
                 )}
                 {derivedConfidencePct < 60 && (
-                  <div className="w-full mt-2 text-center text-xs text-muted-foreground">
+                  <div className="w-full mt-2 text-center text-xs text-gray-600">
                     <Badge variant="outline" className="border-amber-300/50 text-amber-600">Parked — needs more data</Badge>
                   </div>
                 )}
 
                 {effectiveCase.status === 'Denied' && (
-                  <Button className="w-full mt-2 bg-blue-600 hover:bg-blue-700" onClick={async () => {
+                  <Button className="w-full mt-2 bg-blue-600 hover:bg-blue-700 text-white" onClick={async () => {
                     // Require at least one document attached
                     const hasDocs = Array.isArray(effectiveCase.documents) && effectiveCase.documents.length > 0;
                     if (!hasDocs) {
@@ -563,10 +563,10 @@ export default function CaseDetail() {
 
                 {/* Evidence & Docs */}
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-muted-foreground">Evidence & Docs</label>
-                  <div className="text-xs text-muted-foreground">Evidence Status: <span className="font-medium text-foreground">{effectiveCase.evidenceStatus ?? 'Collecting'}</span></div>
+                  <label className="text-sm font-medium text-gray-600">Evidence & Docs</label>
+                  <div className="text-xs text-gray-600">Evidence Status: <span className="font-medium text-gray-900">{effectiveCase.evidenceStatus ?? 'Collecting'}</span></div>
                   <div className="space-y-2">
-                    <Button variant="outline" className="w-full text-blue-400 hover:text-blue-300 border-blue-400/30 hover:border-blue-400/50" onClick={() => {
+                    <Button variant="outline" className="w-full text-blue-600 hover:text-blue-700 border-blue-300 hover:border-blue-400" onClick={() => {
                       window.open(api.getRecoveryDocumentUrl(effectiveCase.id), '_blank');
                     }}>
                       <FileText className="h-4 w-4 mr-2" />
@@ -576,13 +576,13 @@ export default function CaseDetail() {
                       <div className="space-y-1 text-sm">
                         {effectiveCase.documents.map((doc: any) => (
                           <div key={doc.id} className="flex items-center justify-between">
-                            <span className="truncate">{doc.name}</span>
-                            <Button variant="ghost" size="sm" onClick={() => window.open(doc.url || api.getDocumentViewUrl(doc.id), '_blank')}>View</Button>
+                            <span className="truncate text-gray-900">{doc.name}</span>
+                            <Button variant="ghost" size="sm" className="text-gray-900 hover:bg-gray-100" onClick={() => window.open(doc.url || api.getDocumentViewUrl(doc.id), '_blank')}>View</Button>
                           </div>
                         ))}
                       </div>
                     ) : (
-                      <p className="text-xs text-muted-foreground">No additional documents linked.</p>
+                      <p className="text-xs text-gray-600">No additional documents linked.</p>
                     )}
                   </div>
                 </div>
@@ -596,12 +596,12 @@ export default function CaseDetail() {
 
           {/* Right Column - Chronological Ledger */}
           <div className="lg:col-span-2">
-            <Card className="bg-white/5 border-white/10 text-gray-300">
+            <Card className="bg-white border-gray-200 text-gray-900">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-gray-200">
+                <CardTitle className="flex items-center gap-2 text-black">
                   <Clock className="h-5 w-5" />
                   Claim Timeline
-                  <Badge variant="outline" className="ml-auto text-white border-white/30">
+                  <Badge variant="outline" className="ml-auto text-gray-900 border-gray-300">
                     {typeof effectiveCase.progress === 'number' ? `${Math.round(effectiveCase.progress)}%` : 'Real-time transparency'}
                   </Badge>
                 </CardTitle>
@@ -609,12 +609,12 @@ export default function CaseDetail() {
               <CardContent>
                 <div className="space-y-4">
                   {/* At-a-glance header: confidence, evidence, quick actions */}
-                  <div className="flex flex-wrap items-center gap-3 p-3 rounded-md border border-white/10 bg-white/5">
-                    <Badge variant="outline" className="text-xs text-gray-200 border-white/20">Confidence: {derivedConfidencePct}%</Badge>
-                    <Badge variant="outline" className="text-xs text-gray-200 border-white/20">Evidence: {derivedEvidence}</Badge>
-                    <Badge variant="outline" className="text-xs text-gray-200 border-white/20">Matched docs: {matchedCount}</Badge>
+                  <div className="flex flex-wrap items-center gap-3 p-3 rounded-md border border-gray-200 bg-gray-50">
+                    <Badge variant="outline" className="text-xs text-gray-900 border-gray-300">Confidence: {derivedConfidencePct}%</Badge>
+                    <Badge variant="outline" className="text-xs text-gray-900 border-gray-300">Evidence: {derivedEvidence}</Badge>
+                    <Badge variant="outline" className="text-xs text-gray-900 border-gray-300">Matched docs: {matchedCount}</Badge>
                     <div className="ml-auto flex gap-2">
-                      <Button size="sm" variant="outline" className="text-blue-400 hover:text-blue-300 border-blue-400/30 hover:border-blue-400/50" onClick={async () => {
+                      <Button size="sm" variant="outline" className="text-blue-600 hover:text-blue-700 border-blue-300 hover:border-blue-400" onClick={async () => {
                         const url = api.getRecoveryDocumentUrl(effectiveCase.id);
                         // Try composed proof first; if unavailable, fall back to first matched document
                         try {
@@ -641,8 +641,8 @@ export default function CaseDetail() {
                   </div>
 
                   {/* Timeline: fetch and display audit events */}
-                  <div className="mt-4 p-3 rounded-md border border-white/10 bg-white/5">
-                    <div className="text-sm font-semibold mb-2 text-gray-200">Timeline</div>
+                  <div className="mt-4 p-3 rounded-md border border-gray-200 bg-gray-50">
+                    <div className="text-sm font-semibold mb-2 text-gray-900">Timeline</div>
                     <Timeline claimId={effectiveCase.id} />
                   </div>
 
@@ -657,9 +657,9 @@ export default function CaseDetail() {
                       );
                       return (
                         <div key={step} className="flex items-center gap-3">
-                          <div className={`h-6 w-6 rounded-full flex items-center justify-center border ${active ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white/10 text-gray-300'}`}>{idx+1}</div>
-                          <span className={`${active ? 'text-gray-100 font-medium' : 'text-gray-400'}`}>{step}</span>
-                          {idx < 3 && <div className={`w-10 h-px ${active ? 'bg-emerald-600' : 'bg-white/10'}`} />}
+                          <div className={`h-6 w-6 rounded-full flex items-center justify-center border ${active ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-gray-200 text-gray-600'}`}>{idx+1}</div>
+                          <span className={`${active ? 'text-gray-900 font-medium' : 'text-gray-600'}`}>{step}</span>
+                          {idx < 3 && <div className={`w-10 h-px ${active ? 'bg-emerald-600' : 'bg-gray-200'}`} />}
                         </div>
                       );
                     })}
@@ -672,12 +672,12 @@ export default function CaseDetail() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex-1">
-                            <h4 className="font-medium text-sm">{event.title}</h4>
-                            <p className="text-sm text-muted-foreground mt-1">
+                            <h4 className="font-medium text-sm text-gray-900">{event.title}</h4>
+                            <p className="text-sm text-gray-600 mt-1">
                               {event.description}
                             </p>
                           </div>
-                          <div className="text-xs text-muted-foreground whitespace-nowrap">
+                          <div className="text-xs text-gray-600 whitespace-nowrap">
                             {new Date(event.timestamp).toLocaleString('en-US', {
                               month: 'short',
                               day: 'numeric',
@@ -687,7 +687,7 @@ export default function CaseDetail() {
                           </div>
                         </div>
                         {Array.isArray(effectiveCase.events) && index < effectiveCase.events.length - 1 && (
-                          <div className="border-l border-muted ml-2 h-6 mt-3" />
+                          <div className="border-l border-gray-200 ml-2 h-6 mt-3" />
                         )}
                       </div>
                     </div>
@@ -696,18 +696,18 @@ export default function CaseDetail() {
                   {/* Future events placeholder */}
                   {effectiveCase.status === 'Guaranteed' && (
                     <div className="flex gap-4 opacity-50">
-                      <div className="flex-shrink-0 mt-1 text-gray-400">
+                      <div className="flex-shrink-0 mt-1 text-gray-600">
                         <Package className="h-4 w-4" />
                       </div>
                       <div className="flex-1">
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex-1">
-                            <h4 className="font-medium text-sm text-gray-400">Claim Submitted to Amazon</h4>
-                            <p className="text-sm text-gray-400 mt-1">
+                            <h4 className="font-medium text-sm text-gray-600">Claim Submitted to Amazon</h4>
+                            <p className="text-sm text-gray-600 mt-1">
                               Pending user approval to submit claim documentation to Amazon
                             </p>
                           </div>
-                          <div className="text-xs text-gray-400 whitespace-nowrap">
+                          <div className="text-xs text-gray-600 whitespace-nowrap">
                             Pending
                           </div>
                         </div>
