@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Upload, FileText, Search, Mail, Check, AlertTriangle, Clock, Eye, Download, ExternalLink } from 'lucide-react';
+import { Upload, FileText, Search, Mail, Check, AlertTriangle, Clock, Eye, Download, ExternalLink, Loader2, FolderSearch, ScanLine, FileCheck, Link2 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { api } from '@/lib/api';
 import { Link } from 'react-router-dom';
@@ -14,6 +14,43 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { ParsingStatus } from '@/components/evidence/ParsingStatus';
 import { GmailConnectionStatus } from '@/components/evidence/GmailConnectionStatus';
 import { EvidenceIngestion } from '@/components/evidence/EvidenceIngestion';
+
+// Document Log entry type
+interface DocLogEntry {
+  id: string;
+  timestamp: Date;
+  type: 'info' | 'success' | 'warning' | 'error' | 'progress' | 'thinking';
+  category: 'upload' | 'parse' | 'match' | 'system';
+  message: string;
+  thinkingDuration?: number;
+}
+
+// Category icons for document logs
+const getDocCategoryIcon = (category: DocLogEntry['category']) => {
+  switch (category) {
+    case 'upload': return <Upload className="h-3.5 w-3.5" />;
+    case 'parse': return <ScanLine className="h-3.5 w-3.5" />;
+    case 'match': return <Link2 className="h-3.5 w-3.5" />;
+    case 'system': return <FolderSearch className="h-3.5 w-3.5" />;
+  }
+};
+
+// Get log color
+const getDocLogColor = (type: DocLogEntry['type']) => {
+  switch (type) {
+    case 'success': return 'text-emerald-400';
+    case 'error': return 'text-red-400';
+    case 'warning': return 'text-amber-400';
+    case 'progress': return 'text-blue-400';
+    case 'thinking': return 'text-gray-500 italic';
+    default: return 'text-gray-300';
+  }
+};
+
+// Format timestamp
+const formatDocTimestamp = (date: Date) => {
+  return date.toISOString().replace('T', ' ').slice(0, 23);
+};
 export default function EvidenceLocker() {
   const [dragActive, setDragActive] = useState(false);
 
@@ -35,6 +72,75 @@ export default function EvidenceLocker() {
   const [pageSize, setPageSize] = useState(10);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const { toast } = useToast();
+
+  // Document Activity Log state
+  const [docLogs, setDocLogs] = useState<DocLogEntry[]>([]);
+  const [docLogSearch, setDocLogSearch] = useState('');
+  const docLogContainerRef = useRef<HTMLDivElement>(null);
+  const docLogQueueRef = useRef<Array<{ entry: Omit<DocLogEntry, 'id' | 'timestamp'>; delay: number }>>([]);
+  const isProcessingDocQueueRef = useRef(false);
+
+  // Add a log entry immediately
+  const addDocLogImmediate = (entry: Omit<DocLogEntry, 'id' | 'timestamp'>) => {
+    const newEntry: DocLogEntry = {
+      ...entry,
+      id: `doclog_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      timestamp: new Date(),
+    };
+    setDocLogs(prev => [...prev, newEntry]);
+  };
+
+  // Process the log queue with delays
+  const processDocLogQueue = async () => {
+    if (isProcessingDocQueueRef.current) return;
+    isProcessingDocQueueRef.current = true;
+    
+    while (docLogQueueRef.current.length > 0) {
+      const item = docLogQueueRef.current.shift();
+      if (item) {
+        await new Promise(resolve => setTimeout(resolve, item.delay));
+        addDocLogImmediate(item.entry);
+      }
+    }
+    
+    isProcessingDocQueueRef.current = false;
+  };
+
+  // Add a log entry with optional delay (queued)
+  const addDocLog = (entry: Omit<DocLogEntry, 'id' | 'timestamp'>, delayMs: number = 0) => {
+    if (delayMs === 0 && docLogQueueRef.current.length === 0) {
+      addDocLogImmediate(entry);
+    } else {
+      const baseDelay = entry.type === 'thinking' ? 800 : 400;
+      const thinkingDelay = entry.thinkingDuration ? entry.thinkingDuration * 300 : 0;
+      docLogQueueRef.current.push({ entry, delay: delayMs || baseDelay + thinkingDelay });
+      processDocLogQueue();
+    }
+  };
+
+  // Scroll to bottom of logs
+  useEffect(() => {
+    if (docLogContainerRef.current) {
+      docLogContainerRef.current.scrollTop = docLogContainerRef.current.scrollHeight;
+    }
+  }, [docLogs]);
+
+  // Filter logs based on search
+  const filteredDocLogs = useMemo(() => {
+    if (!docLogSearch.trim()) return docLogs;
+    const searchLower = docLogSearch.toLowerCase();
+    return docLogs.filter(log => 
+      log.message.toLowerCase().includes(searchLower) ||
+      log.category.toLowerCase().includes(searchLower)
+    );
+  }, [docLogs, docLogSearch]);
+
+  // Initialize with welcome logs
+  useEffect(() => {
+    addDocLog({ type: 'info', category: 'system', message: 'Doc Locker initialized...', thinkingDuration: 2 }, 0);
+    addDocLog({ type: 'thinking', category: 'system', message: 'Ready to process invoices, receipts, and purchase orders' }, 1200);
+    addDocLog({ type: 'info', category: 'system', message: 'Waiting for documents to analyze...' }, 1000);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -96,6 +202,7 @@ export default function EvidenceLocker() {
         try {
           const evt = JSON.parse(e.data);
           if (evt?.type === 'evidence' && evt?.status === 'completed') {
+            addDocLog({ type: 'success', category: 'system', message: '[INGESTION] New documents available' }, 500);
             toast({ title: 'Ingestion complete', description: 'New documents are available.' });
             // Refresh documents
             api.getDocuments().then(res => {
@@ -105,10 +212,14 @@ export default function EvidenceLocker() {
             });
           }
           if (evt?.type === 'parsing' && evt?.status === 'completed') {
+            addDocLog({ type: 'success', category: 'parse', message: `[PARSED] Document parsing complete` }, 600);
+            addDocLog({ type: 'thinking', category: 'match', message: 'Checking for claim matches...' }, 900);
             // Refresh document with parsed data
             if (evt?.document_id) {
               api.getDocumentWithParsedData(evt.document_id).then(res => {
                 if (res.ok && res.data) {
+                  const confidence = res.data.parser_confidence ? `${(res.data.parser_confidence * 100).toFixed(0)}%` : 'N/A';
+                  addDocLog({ type: 'info', category: 'parse', message: `Extraction confidence: ${confidence}` }, 800);
                   setDocuments(prev => prev.map(doc => 
                     doc.id === evt.document_id 
                       ? { ...doc, parser_status: res.data!.parser_status, parser_confidence: res.data!.parser_confidence, parsed_metadata: res.data!.parsed_metadata }
@@ -165,8 +276,13 @@ export default function EvidenceLocker() {
         description: 'Please drop valid files to upload.', 
         variant: 'destructive' 
       });
+      addDocLog({ type: 'warning', category: 'upload', message: 'No files detected in drop' }, 0);
       return;
     }
+    
+    // Add upload logs
+    addDocLog({ type: 'info', category: 'upload', message: `Receiving ${files.length} document(s)...`, thinkingDuration: 2 }, 0);
+    addDocLog({ type: 'thinking', category: 'upload', message: `Let me process: ${files.map(f => f.name).join(', ')}` }, 800);
     
     // Show immediate feedback
     toast({ 
@@ -243,6 +359,11 @@ export default function EvidenceLocker() {
       const responseData = await res.json().catch(() => null);
       console.log('[Upload] Success response from', successfulUrl, ':', responseData);
       
+      // Add success logs
+      addDocLog({ type: 'success', category: 'upload', message: `[UPLOADED] ${files.length} document(s) received` }, 600);
+      addDocLog({ type: 'thinking', category: 'parse', message: 'Now let me extract text and metadata...' }, 900);
+      addDocLog({ type: 'progress', category: 'parse', message: 'Running OCR and text extraction...', thinkingDuration: 3 }, 1200);
+      
       // Show success toast
       toast({ 
         title: 'Uploaded Successfully', 
@@ -257,6 +378,9 @@ export default function EvidenceLocker() {
         // Show toast if new documents were added
         if (refresh.data.length > documents.length) {
           const newCount = refresh.data.length - documents.length;
+          addDocLog({ type: 'success', category: 'parse', message: `[PARSED] ${newCount} document(s) added to library` }, 1500);
+          addDocLog({ type: 'thinking', category: 'match', message: 'I\'ll look for matches with your open claims...' }, 1100);
+          addDocLog({ type: 'info', category: 'match', message: 'Cross-referencing invoice numbers and amounts...', thinkingDuration: 4 }, 1300);
           toast({ 
             title: 'Documents Added', 
             description: `${newCount} new document(s) are now in your Doc Locker.`,
@@ -272,6 +396,7 @@ export default function EvidenceLocker() {
       }
     } catch (err: any) {
       console.error('Upload error:', err);
+      addDocLog({ type: 'error', category: 'upload', message: `Upload failed: ${err?.message || 'Unknown error'}` }, 0);
       toast({ 
         title: 'Upload Failed', 
         description: err?.message || 'Failed to upload documents. Please try again.', 
@@ -361,8 +486,17 @@ export default function EvidenceLocker() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <GmailConnectionStatus onStatusChange={setGmailConnected} />
           <EvidenceIngestion gmailConnected={gmailConnected} onIngestionComplete={() => {
+            // Add logs for ingestion
+            addDocLog({ type: 'success', category: 'system', message: '[INGESTION] New documents received' }, 500);
+            addDocLog({ type: 'thinking', category: 'parse', message: 'Let me analyze these documents...' }, 800);
+            
             api.getDocuments().then(res => {
               if (res.ok && Array.isArray(res.data)) {
+                const newCount = res.data.length - documents.length;
+                if (newCount > 0) {
+                  addDocLog({ type: 'success', category: 'parse', message: `[FOUND] ${newCount} new document(s) ready for processing` }, 1200);
+                  addDocLog({ type: 'thinking', category: 'match', message: 'I\'ll match these against your claims...' }, 900);
+                }
                 setDocuments(res.data);
               }
             });
@@ -373,6 +507,88 @@ export default function EvidenceLocker() {
             });
           }} />
         </div>
+
+        {/* Document Activity Log - Terminal Style */}
+        <Card className="bg-white border-gray-200 text-gray-900">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-base font-semibold">Document Activity</CardTitle>
+                <CardDescription className="text-sm">Real-time document processing log</CardDescription>
+              </div>
+              <span className="text-xs text-gray-400">{filteredDocLogs.length} entries</span>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-0">
+            {/* Search Bar */}
+            <div className="relative mb-3">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Input
+                type="text"
+                placeholder="Search logs... (upload, parse, match)"
+                value={docLogSearch}
+                onChange={(e) => setDocLogSearch(e.target.value)}
+                className="pl-10 h-9 text-sm bg-gray-50 border-gray-200 focus:bg-white"
+              />
+            </div>
+            
+            {/* Log Container - Terminal Style */}
+            <div 
+              ref={docLogContainerRef}
+              className="bg-gray-900 rounded-lg p-4 font-mono text-xs h-48 overflow-y-auto scroll-smooth"
+            >
+              {filteredDocLogs.length === 0 ? (
+                <div className="text-gray-500 flex items-center justify-center h-full">
+                  {docLogs.length === 0 ? 'Waiting for document activity...' : 'No logs match your search'}
+                </div>
+              ) : (
+                <div className="space-y-1">
+                  {filteredDocLogs.map((log) => (
+                    <div key={log.id} className="flex flex-col">
+                      <div className={`flex flex-wrap sm:flex-nowrap items-start gap-1 sm:gap-2 hover:bg-gray-800/50 px-1 rounded ${log.type === 'thinking' ? 'opacity-70' : ''}`}>
+                        <span className="hidden sm:inline text-gray-500 shrink-0 select-none">
+                          {formatDocTimestamp(log.timestamp)}
+                        </span>
+                        <span className="sm:hidden text-gray-500 shrink-0 select-none text-[10px]">
+                          {log.timestamp.toLocaleTimeString()}
+                        </span>
+                        <span className="text-cyan-500 shrink-0 select-none font-medium text-[10px] sm:text-xs">
+                          doc agent
+                        </span>
+                        <span className={`shrink-0 ${getDocLogColor(log.type)}`}>
+                          {log.type === 'thinking' ? null : getDocCategoryIcon(log.category)}
+                        </span>
+                        <span className={`${getDocLogColor(log.type)} break-words min-w-0 flex-1`}>
+                          {log.message}
+                        </span>
+                      </div>
+                      {log.thinkingDuration && (
+                        <div className="ml-1 mt-0.5 mb-1">
+                          <span className="text-[10px] text-gray-600 italic">
+                            Thought for {log.thinkingDuration}s
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                  {loading && (
+                    <div className="flex flex-wrap sm:flex-nowrap items-center gap-1 sm:gap-2 text-blue-400 animate-pulse">
+                      <span className="hidden sm:inline text-gray-500 shrink-0 select-none">
+                        {formatDocTimestamp(new Date())}
+                      </span>
+                      <span className="text-cyan-500 shrink-0 select-none font-medium text-[10px] sm:text-xs">
+                        doc agent
+                      </span>
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      <span>Processing...</span>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
         <Card className="bg-white border-gray-200 text-gray-900">
           <CardHeader>
             <CardTitle>Upload Documents</CardTitle>
@@ -401,8 +617,13 @@ export default function EvidenceLocker() {
                       description: 'Please select valid files to upload.', 
                       variant: 'destructive' 
                     });
+                    addDocLog({ type: 'warning', category: 'upload', message: 'No files selected' }, 0);
                     return;
                   }
+                  
+                  // Add upload logs
+                  addDocLog({ type: 'info', category: 'upload', message: `Receiving ${files.length} document(s)...`, thinkingDuration: 2 }, 0);
+                  addDocLog({ type: 'thinking', category: 'upload', message: `Processing: ${files.map(f => f.name).slice(0, 3).join(', ')}${files.length > 3 ? '...' : ''}` }, 800);
                   
                   // Show immediate feedback
                   toast({ 
@@ -479,6 +700,11 @@ export default function EvidenceLocker() {
                     const responseData = await res.json().catch(() => null);
                     console.log('[Upload] Success response from', successfulUrl, ':', responseData);
                     
+                    // Add success logs
+                    addDocLog({ type: 'success', category: 'upload', message: `[UPLOADED] ${files.length} document(s) received` }, 600);
+                    addDocLog({ type: 'thinking', category: 'parse', message: 'Now let me extract text and metadata...' }, 900);
+                    addDocLog({ type: 'progress', category: 'parse', message: 'Running OCR and text extraction...', thinkingDuration: 3 }, 1200);
+                    
                     // Show success toast
                     toast({ 
                       title: 'Uploaded Successfully', 
@@ -494,6 +720,9 @@ export default function EvidenceLocker() {
                       // Show toast if new documents were added
                       if (refresh.data.length > previousCount) {
                         const newCount = refresh.data.length - previousCount;
+                        addDocLog({ type: 'success', category: 'parse', message: `[PARSED] ${newCount} document(s) added to library` }, 1500);
+                        addDocLog({ type: 'thinking', category: 'match', message: 'I\'ll look for matches with your open claims...' }, 1100);
+                        addDocLog({ type: 'info', category: 'match', message: 'Cross-referencing invoice numbers and amounts...', thinkingDuration: 4 }, 1300);
                         toast({ 
                           title: 'Documents Added', 
                           description: `${newCount} new document(s) are now in your Doc Locker.`,
@@ -512,6 +741,7 @@ export default function EvidenceLocker() {
                     e.target.value = '';
                   } catch (err: any) {
                     console.error('Upload error:', err);
+                    addDocLog({ type: 'error', category: 'upload', message: `Upload failed: ${err?.message || 'Unknown error'}` }, 0);
                     toast({ 
                       title: 'Upload Failed', 
                       description: err?.message || 'Failed to upload documents. Please try again.', 
