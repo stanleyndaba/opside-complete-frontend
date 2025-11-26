@@ -566,7 +566,7 @@ export default function CaseDetail() {
                   <label className="text-sm font-medium text-gray-600">Evidence & Docs</label>
                   <div className="text-xs text-gray-600">Evidence Status: <span className="font-medium text-gray-900">{effectiveCase.evidenceStatus ?? 'Collecting'}</span></div>
                   <div className="space-y-2">
-                    <Button variant="outline" className="w-full text-blue-600 hover:text-blue-700 border-blue-300 hover:border-blue-400" onClick={() => {
+                    <Button variant="outline" className="w-full bg-gray-100 text-[#36454F] hover:bg-gray-200 border-gray-300" onClick={() => {
                       window.open(api.getRecoveryDocumentUrl(effectiveCase.id), '_blank');
                     }}>
                       <FileText className="h-4 w-4 mr-2" />
@@ -614,7 +614,7 @@ export default function CaseDetail() {
                     <Badge variant="outline" className="text-xs text-gray-900 border-gray-300">Evidence: {derivedEvidence}</Badge>
                     <Badge variant="outline" className="text-xs text-gray-900 border-gray-300">Matched docs: {matchedCount}</Badge>
                     <div className="ml-auto flex gap-2">
-                      <Button size="sm" variant="outline" className="text-blue-600 hover:text-blue-700 border-blue-300 hover:border-blue-400" onClick={async () => {
+                      <Button size="sm" variant="outline" className="bg-gray-100 text-[#36454F] hover:bg-gray-200 border-gray-300" onClick={async () => {
                         const url = api.getRecoveryDocumentUrl(effectiveCase.id);
                         // Try composed proof first; if unavailable, fall back to first matched document
                         try {
