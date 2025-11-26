@@ -16,9 +16,9 @@ import { cn } from '@/lib/utils';
 
 // Icon imports for document sources
 const GmailIcon = '/G.png';
-const OutlookIcon = '/OL.png';
+const OutlookIcon = '/outlookicon.webp';
 const GoogleDriveIcon = '/gd.png';
-const DropboxIcon = '/Dropbox_Icon.svg.png';
+const DropboxIcon = '/db.png';
 
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
