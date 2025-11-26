@@ -1022,14 +1022,14 @@ export default function Recoveries() {
                 <div className="text-2xl md:text-3xl font-semibold text-black">
                   {recoveredTotal != null && recoveredTotal > 0 ? (
                     <>
-                      <span className="text-emerald-400">{formatCurrency(recoveredTotal, recoveredCurrency)}</span>
+                      <span className="text-black">{formatCurrency(recoveredTotal, recoveredCurrency)}</span>
                       <span className="text-gray-600 text-base font-medium ml-2">
                       recovered from {amazonClaimCount ?? 0} approved claim{amazonClaimCount !== 1 ? 's' : ''}
                     </span>
                     </>
                   ) : (
                     <>
-                      <span className="text-gray-100">{formatCurrency(0)}</span>
+                      <span className="text-black">{formatCurrency(0)}</span>
                       <span className="text-gray-600 text-base font-medium ml-2">No recoveries yet</span>
                     </>
                   )}
@@ -1120,7 +1120,7 @@ export default function Recoveries() {
                   <p className="text-sm font-medium text-gray-600">
                     {detectionStats?.total_value ? 'Total Recovery Value' : 'Value in Progress'}
                   </p>
-                  <p className="text-2xl font-bold text-white">
+                  <p className="text-2xl font-bold text-black">
                     {formatCurrency(
                       detectionStats?.total_value ?? 
                       (metrics ? metrics.valueInProgress : keyMetrics.valueInProgress)
@@ -1141,7 +1141,7 @@ export default function Recoveries() {
               <div className="flex items-center">
                 <div>
                   <p className="text-sm font-medium text-gray-600">Currently in Progress</p>
-                  <p className="text-2xl font-bold text-blue-400">{metrics ? metrics.inProgress : keyMetrics.currentlyInProgress}</p>
+                  <p className="text-2xl font-bold text-black">{metrics ? metrics.inProgress : keyMetrics.currentlyInProgress}</p>
                   {detectionStats?.expired_count !== undefined && detectionStats.expired_count > 0 && (
                     <p className="text-xs text-red-400 mt-1">
                       {detectionStats.expired_count} expired
@@ -1184,9 +1184,9 @@ export default function Recoveries() {
                         <div key={severity} className="flex items-center justify-between p-2 rounded bg-gray-50">
                           <div className="flex items-center gap-2">
                             <Badge className={
-                              severity === 'high' ? 'bg-red-500/20 text-red-300 border-red-500/30' :
-                              severity === 'medium' ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' :
-                              'bg-gray-500/20 text-gray-300 border-gray-500/30'
+                              severity === 'high' ? 'bg-red-500/20 text-red-700 border-0' :
+                              severity === 'medium' ? 'bg-amber-500/20 text-amber-700 border-0' :
+                              'bg-gray-500/20 text-gray-700 border-0'
                             }>
                               {severity.charAt(0).toUpperCase() + severity.slice(1)}
                             </Badge>
@@ -1244,16 +1244,16 @@ export default function Recoveries() {
 
               {/* Quick Date Range Buttons */}
               <div className="flex gap-2">
-                <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100" onClick={() => setQuickDateRange('30days')}>Last 30 Days</Button>
-                <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100" onClick={() => setQuickDateRange('quarter')}>Last Quarter</Button>
-                <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100" onClick={() => setQuickDateRange('year')}>This Year</Button>
-                <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100" onClick={() => setQuickDateRange('all')}>All Time</Button>
+                <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-0 hover:bg-blue-100" onClick={() => setQuickDateRange('30days')}>Last 30 Days</Button>
+                <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-0 hover:bg-blue-100" onClick={() => setQuickDateRange('quarter')}>Last Quarter</Button>
+                <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-0 hover:bg-blue-100" onClick={() => setQuickDateRange('year')}>This Year</Button>
+                <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-0 hover:bg-blue-100" onClick={() => setQuickDateRange('all')}>All Time</Button>
               </div>
 
               {/* Custom Date Range */}
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" className={cn("w-[280px] justify-start text-left font-medium bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100", !dateRange && "text-blue-700")}>
+                  <Button variant="outline" className={cn("w-[280px] justify-start text-left font-medium bg-blue-50 text-blue-900 border-0 hover:bg-blue-100", !dateRange && "text-blue-700")}>
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {dateRange?.from ? (
                       dateRange.to ? (
@@ -1284,7 +1284,7 @@ export default function Recoveries() {
 
               {/* Claim Type Filter */}
               <Select>
-                <SelectTrigger className="w-[180px] text-white placeholder:text-white">
+                <SelectTrigger className="w-[180px] text-white placeholder:text-white border-0">
                   <SelectValue placeholder="Filter by Claim Type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -1296,7 +1296,7 @@ export default function Recoveries() {
 
               {/* Status Filter */}
               <Select>
-                <SelectTrigger className="w-[180px] text-white placeholder:text-white">
+                <SelectTrigger className="w-[180px] text-white placeholder:text-white border-0">
                   <SelectValue placeholder="Filter by Status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -1310,7 +1310,7 @@ export default function Recoveries() {
               <Select value={filterSource} onValueChange={(value: 'all' | 'detected' | 'synced') => {
                 setFilterSource(value);
               }}>
-                <SelectTrigger className="w-[180px] text-white placeholder:text-white">
+                <SelectTrigger className="w-[180px] text-white placeholder:text-white border-0">
                   <SelectValue placeholder="Filter by Source" />
                 </SelectTrigger>
                 <SelectContent>
@@ -1325,7 +1325,7 @@ export default function Recoveries() {
                 <Select value={filterConfidence} onValueChange={(value: 'all' | 'high' | 'medium' | 'low') => {
                   setFilterConfidence(value);
                 }}>
-                  <SelectTrigger className="w-[180px] text-slate-800 placeholder:text-slate-800">
+                  <SelectTrigger className="w-[180px] text-slate-800 placeholder:text-slate-800 border-0">
                     <SelectValue placeholder="Filter by Confidence" />
                   </SelectTrigger>
                   <SelectContent>
@@ -1341,7 +1341,7 @@ export default function Recoveries() {
               <Select value={filterUrgent} onValueChange={(value: 'all' | 'urgent' | 'critical') => {
                 setFilterUrgent(value);
               }}>
-                <SelectTrigger className="w-[180px] text-white placeholder:text-white">
+                <SelectTrigger className="w-[180px] text-white placeholder:text-white border-0">
                   <SelectValue placeholder="Filter by Urgency" />
                 </SelectTrigger>
                 <SelectContent>
@@ -1386,7 +1386,7 @@ export default function Recoveries() {
             >
             <Table style={{ minWidth: '1600px', width: 'max-content' }}>
               <TableHeader>
-                <TableRow>
+                <TableRow className="border-gray-200">
                   <TableHead>
                     <Checkbox checked={selectedIds.size > 0 && selectedIds.size === filteredClaims.length} onCheckedChange={(checked) => {
                       if (checked) setSelectedIds(new Set(filteredClaims.map(c => c.id)));
@@ -1423,7 +1423,7 @@ export default function Recoveries() {
                     <TableRow 
                       key={claim.id} 
                       className={cn(
-                        "cursor-pointer hover:bg-gray-50",
+                        "cursor-pointer hover:bg-gray-50 border-gray-200",
                         isCritical && "bg-red-50/50 border-l-4 border-l-red-500",
                         isUrgent && !isCritical && "bg-amber-50/50 border-l-4 border-l-amber-500"
                       )}
@@ -1439,9 +1439,9 @@ export default function Recoveries() {
                     </TableCell>
                     <TableCell>
                       {claim.source === 'detected' ? (
-                        <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30">Detected</Badge>
+                        <Badge className="bg-gray-100 text-[#36454F] border-0">Detected</Badge>
                       ) : (
-                        <Badge className="bg-gray-500/20 text-gray-300 border-gray-500/30">Synced</Badge>
+                        <Badge className="bg-gray-100 text-[#36454F] border-0">Synced</Badge>
                       )}
                     </TableCell>
                     <TableCell>
