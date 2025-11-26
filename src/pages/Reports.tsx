@@ -730,13 +730,13 @@ export default function Reports() {
                   <div className="relative inline-flex items-start">
                     <p className="text-sm font-medium text-gray-600">Total Recovered</p>
                     <div className="absolute -top-0.5 left-full ml-1.5 flex items-center gap-0.5 leading-none">
-                      <TrendingDown className="h-2.5 w-2.5 text-red-500" />
-                      <span className="text-[8px] text-red-500 font-medium">8%</span>
-                      <TrendingUp className="h-2.5 w-2.5 text-green-600" />
-                      <span className="text-[8px] text-green-600 font-medium">92%</span>
+                      <TrendingDown className="h-3.5 w-3.5 text-red-500" />
+                      <span className="text-[10px] text-red-500 font-medium">8%</span>
+                      <TrendingUp className="h-3.5 w-3.5 text-green-600" />
+                      <span className="text-[10px] text-green-600 font-medium">92%</span>
                     </div>
                   </div>
-                  <p className="font-bold text-emerald-400 text-lg mt-1">
+                  <p className="font-bold text-black text-lg mt-1">
                     {detectionStats?.total_value 
                       ? formatCurrency(detectionStats.total_value)
                       : keyMetrics.totalRecovered > 0 
@@ -784,13 +784,13 @@ export default function Reports() {
                   <div className="relative inline-flex items-start">
                     <p className="text-sm font-medium text-gray-600">Success Rate</p>
                     <div className="absolute -top-0.5 left-full ml-1.5 flex items-center gap-0.5 leading-none">
-                      <TrendingDown className="h-2.5 w-2.5 text-red-500" />
-                      <span className="text-[8px] text-red-500 font-medium">8%</span>
-                      <TrendingUp className="h-2.5 w-2.5 text-green-600" />
-                      <span className="text-[8px] text-green-600 font-medium">92%</span>
+                      <TrendingDown className="h-3.5 w-3.5 text-red-500" />
+                      <span className="text-[10px] text-red-500 font-medium">8%</span>
+                      <TrendingUp className="h-3.5 w-3.5 text-green-600" />
+                      <span className="text-[10px] text-green-600 font-medium">92%</span>
                     </div>
                   </div>
-                  <p className="font-bold text-blue-400 text-lg mt-1">
+                  <p className="font-bold text-black text-lg mt-1">
                     {keyMetrics.successRate > 0 
                       ? `${keyMetrics.successRate.toFixed(1)}%`
                       : confidenceDistribution?.average_confidence
