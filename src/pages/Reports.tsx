@@ -40,7 +40,7 @@ const RecoveryChart = lazy(() =>
       return (
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
             <XAxis dataKey="date" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
             <YAxis tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
             <Tooltip 
@@ -88,7 +88,7 @@ const AnomalyTypeChart = lazy(() =>
                 <stop offset="95%" stopColor="#10B981" stopOpacity={0.1}/>
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
             <XAxis dataKey="type" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" angle={-45} textAnchor="end" height={80} />
             <YAxis yAxisId="left" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
             <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" tickFormatter={(v) => formatCurrency(v)} />
@@ -145,7 +145,7 @@ const SeverityChart = lazy(() =>
                 <stop offset="95%" stopColor="#10B981" stopOpacity={0.1}/>
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
             <XAxis dataKey="severity" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
             <YAxis yAxisId="left" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
             <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" tickFormatter={(v) => formatCurrency(v)} />
@@ -191,7 +191,7 @@ const ConfidenceChart = lazy(() =>
                   <stop offset="95%" stopColor="#60A5FA" stopOpacity={0.1}/>
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
               <XAxis dataKey="level" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
               <YAxis tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
               <Tooltip 
@@ -234,7 +234,7 @@ const RecoveryRatesChart = lazy(() =>
                 <stop offset="95%" stopColor="#10B981" stopOpacity={0.1}/>
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
             <XAxis dataKey="level" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
             <YAxis 
               tick={{ fontSize: 12, fill: '#9CA3AF' }} 
@@ -286,7 +286,7 @@ const ConfidenceHistogram = lazy(() =>
                 <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0.1}/>
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
             <XAxis dataKey="range" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" angle={-45} textAnchor="end" height={80} />
             <YAxis tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
             <Tooltip />
