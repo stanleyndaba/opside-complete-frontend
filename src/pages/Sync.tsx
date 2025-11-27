@@ -798,8 +798,8 @@ export default function Sync() {
                 </div>
               )}
 
-              {/* Potential Recovery Value - The Hero Number */}
-              {(status === 'completed' || status === 'detecting') && claimsCount > 0 && (
+              {/* Potential Recovery Value - The Hero Number - Only show after logs finish */}
+              {((status === 'completed' && logsFinished) || status === 'detecting') && claimsCount > 0 && (
                 <div className="py-4">
                   <p className="text-sm text-gray-500 mb-1">Potential Recovery Identified</p>
                   <p className={`text-xl font-semibold text-gray-900 ${status === 'detecting' ? 'animate-pulse' : ''}`}>
@@ -816,11 +816,13 @@ export default function Sync() {
                               <p className="text-sm text-gray-600">
                     {status === 'detecting'
                       ? 'Running AI detection on synced data...'
-                      : status === 'completed' && claimsCount > 0
+                      : status === 'completed' && logsFinished && claimsCount > 0
                         ? `Analysis complete — ${claimsCount.toLocaleString()} recoverable items found`
-                        : status === 'completed' && totalItemsSynced > 0
+                        : status === 'completed' && logsFinished && totalItemsSynced > 0
                           ? `Sync completed — ${totalItemsSynced.toLocaleString()} records analyzed`
-                          : message}
+                          : status === 'completed' && !logsFinished
+                            ? 'Finalizing analysis...'
+                            : message}
                   </p>
                       </div>
                       {getStatusBadge()}
