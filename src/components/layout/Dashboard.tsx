@@ -825,7 +825,7 @@ export function Dashboard() {
                       <div className="p-3 border-b border-gray-200">
                         <div className="flex items-center justify-between">
                           <h3 className="font-semibold text-sm text-black">Recent Logs</h3>
-                          <span className="text-xs rounded px-2 py-0.5 bg-green-500 text-white">4 new</span>
+                          <span className="text-xs rounded px-2 py-0.5 bg-emerald-500 text-white">4 new</span>
                         </div>
                       </div>
                       <div className="py-2 max-h-[600px] overflow-y-auto">
@@ -874,7 +874,7 @@ export function Dashboard() {
       <Dialog open={showSourcesModal} onOpenChange={setShowSourcesModal}>
         <DialogContent className="sm:max-w-md bg-white rounded-md">
           <DialogHeader className="pb-3">
-            <DialogTitle className="text-lg font-semibold text-gray-900">Sources for Document Ingestion</DialogTitle>
+            <DialogTitle className="text-lg font-semibold text-gray-900">Link sources for document ingestion</DialogTitle>
             <DialogDescription className="text-sm text-gray-500">
               Read-only access. No writing or sending permissions.
             </DialogDescription>
