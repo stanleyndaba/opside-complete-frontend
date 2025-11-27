@@ -1095,11 +1095,11 @@ export default function Recoveries() {
               <div className="flex items-center">
                 <div>
                   <p className="text-sm font-medium text-gray-600">Total Claims Identified</p>
-                  <p className="text-2xl font-bold text-[#1f1f1f]">
+                  <p className="text-2xl font-medium text-[#1f1f1f]">
                     {detectionStats?.total_anomalies ?? detectionStats?.totalDetections ?? (metrics ? metrics.totalClaimsFound : keyMetrics.totalClaimsFound)}
                     {amazonClaimCount != null && amazonClaimCount > 0 && (
                       <span className="text-sm text-emerald-400 ml-2 font-normal">
-                        ({amazonClaimCount} from Amazon)
+                        from Amazon
                       </span>
                     )}
                   </p>
@@ -1120,7 +1120,7 @@ export default function Recoveries() {
                   <p className="text-sm font-medium text-gray-600">
                     {detectionStats?.total_value ? 'Total Recovery Value' : 'Potential Recovery Value'}
                   </p>
-                  <p className="text-2xl font-bold text-[#1f1f1f]">
+                  <p className="text-2xl font-medium text-[#1f1f1f]">
                     {formatCurrency(
                       detectionStats?.total_value ?? 
                       (metrics ? metrics.valueInProgress : keyMetrics.valueInProgress)
@@ -1168,64 +1168,6 @@ export default function Recoveries() {
             </CardContent>
           </Card>
         </div>
-
-        {/* Phase 3: Detection Statistics Breakdown */}
-        {detectionStats && (detectionStats.by_severity || detectionStats.by_type) && (
-          <Card className="mb-8 bg-white border-gray-200 text-gray-900 shadow-sm">
-            <CardContent className="p-6">
-              <h3 className="text-lg font-semibold text-[#1f1f1f] mb-4">Claim Analysis Breakdown</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* By Severity */}
-                {detectionStats.by_severity && (
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-600 mb-3">By Severity</h4>
-                    <div className="space-y-2">
-                      {Object.entries(detectionStats.by_severity).map(([severity, data]: [string, any]) => (
-                        <div key={severity} className="flex items-center justify-between p-2 rounded bg-gray-50">
-                          <div className="flex items-center gap-2">
-                            <Badge className={
-                              severity === 'high' ? 'bg-red-500/20 text-red-700 border-0' :
-                              severity === 'medium' ? 'bg-amber-500/20 text-amber-700 border-0' :
-                              'bg-gray-500/20 text-gray-700 border-0'
-                            }>
-                              {severity.charAt(0).toUpperCase() + severity.slice(1)}
-                            </Badge>
-                            <span className="text-sm text-gray-700">{data.count} claims</span>
-                          </div>
-                          <span className="text-sm font-semibold text-[#1f1f1f]">
-                            {formatCurrency(data.value)}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                
-                {/* By Type */}
-                {detectionStats.by_type && (
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-600 mb-3">By Discrepancy Type</h4>
-                    <div className="space-y-2 max-h-48 overflow-y-auto">
-                      {Object.entries(detectionStats.by_type).slice(0, 5).map(([type, data]: [string, any]) => (
-                        <div key={type} className="flex items-center justify-between p-2 rounded bg-gray-50">
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm text-gray-700 capitalize">
-                              {type.replace(/_/g, ' ')}
-                            </span>
-                            <span className="text-xs text-gray-500">({data.count})</span>
-                          </div>
-                          <span className="text-sm font-semibold text-[#1f1f1f]">
-                            {formatCurrency(data.value)}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        )}
 
         {/* Controls */}
         <Card className="mb-8 bg-white border-gray-200 text-gray-900 shadow-sm">
