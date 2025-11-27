@@ -80,6 +80,7 @@ export default function Sync() {
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [logSearch, setLogSearch] = useState('');
   const [logsFinished, setLogsFinished] = useState(false); // Track when all queued logs have been displayed
+  const logsFinishedRef = useRef(false); // Ref version for async function
   const logContainerRef = useRef<HTMLDivElement>(null);
   const logQueueRef = useRef<Array<{ entry: Omit<LogEntry, 'id' | 'timestamp'>; delay: number }>>([]);
   const isProcessingQueueRef = useRef(false);
@@ -120,14 +121,15 @@ export default function Sync() {
     isProcessingQueueRef.current = false;
     
     // If completion logs were added and queue is now empty, mark logs as finished
-    // Add a small delay to ensure all completion logs have been queued
-    if (completionLogsAddedRef.current && !logsFinished) {
+    // Use ref to check if already finished (avoids stale closure)
+    if (completionLogsAddedRef.current && !logsFinishedRef.current) {
       // Wait a moment to ensure no more logs are being added
-      await new Promise(resolve => setTimeout(resolve, 200));
+      await new Promise(resolve => setTimeout(resolve, 300));
       // Double check queue is still empty
-      if (logQueueRef.current.length === 0) {
+      if (logQueueRef.current.length === 0 && !logsFinishedRef.current) {
+        logsFinishedRef.current = true;
         setLogsFinished(true);
-      } else {
+      } else if (logQueueRef.current.length > 0) {
         // More logs were added, process them
         processLogQueue();
       }
@@ -281,20 +283,7 @@ export default function Sync() {
       const value = syncData?.totalRecoverableValue || (claims * 48);
       const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
       
-      // Now show the toast (after logs are done)
-      if (claims > 0) {
-        toast({
-          title: 'Analysis Complete',
-          description: `${formattedValue} potential recovery from ${claims} discrepancies`,
-          duration: 5000,
-        });
-      } else {
-        toast({
-          title: 'Sync Complete',
-          description: 'Your data has been synchronized.',
-          duration: 4000,
-        });
-      }
+      // No toast here - the UI already shows completion status clearly
       
       // Show modal after a brief pause
       if (sourcesModalTimeoutRef.current) {
@@ -439,6 +428,7 @@ export default function Sync() {
           // Clear logs and reset state for new sync
           setLogs([]);
           setLogsFinished(false);
+          logsFinishedRef.current = false;
           completionLogsAddedRef.current = false;
           previousDataRef.current = {
             orders: { syncing: false, completed: false, count: 0 },
@@ -927,6 +917,14 @@ export default function Sync() {
                               {log.message}
                             </span>
                           </div>
+                          {/* "flagged" indicator after thinking logs */}
+                          {log.type === 'thinking' && (
+                            <div className="ml-1 mt-0.5 mb-1">
+                              <span className="text-[10px] text-yellow-500/70 font-medium">
+                                flagged
+                              </span>
+                            </div>
+                          )}
                           {/* Thought for Xs indicator - shown after info/progress logs */}
                           {log.thinkingDuration && (
                             <div className="ml-1 mt-0.5 mb-1">
