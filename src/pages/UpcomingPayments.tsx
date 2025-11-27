@@ -147,15 +147,15 @@ export default function UpcomingPayments() {
   };
 
   return (
-    <PageLayout title="Upcoming Payments">
+    <PageLayout title="Payment Recoveries">
       <div className="relative -m-4 lg:-m-6">
         <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24">
           <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-700 space-y-8">
 
             <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
               <CardHeader>
-                <CardTitle className="text-gray-900">Upcoming Payments</CardTitle>
-                <CardDescription className="text-gray-600">Projected Amazon payouts based on claim status and expected payout dates</CardDescription>
+                <CardTitle className="text-gray-900">Payment Recoveries</CardTitle>
+                <CardDescription className="text-gray-600">Projected recoveries based on claim status and expected payout dates</CardDescription>
               </CardHeader>
               <CardContent className="p-6">
                 {errorMessage && (

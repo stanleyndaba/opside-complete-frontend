@@ -92,7 +92,7 @@ export function Dashboard() {
     { id: 'run_detector', label: 'Run detector' },
     { id: 'ingest_now', label: 'Ingest documents now' },
     { id: 'smart_sync', label: 'Smart Inventory Sync' },
-    { id: 'upcoming_payments', label: 'Upcoming payments' },
+    { id: 'upcoming_payments', label: 'Payment recoveries' },
     { id: 'export_history', label: 'Export recovery & payout history' },
     { id: 'evidence_locker', label: 'Doc Locker' },
     { id: 'invite_teammate', label: 'Invite a teammate' },
@@ -794,7 +794,7 @@ export function Dashboard() {
                       {selectedQuickActions.includes('upcoming_payments') && (
                           <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => navigate('/upcoming-payments')}>
                           <CircleDollarSign className="h-4 w-4" />
-                          Upcoming payments
+                          Payment recoveries
                         </Button>
                       )}
                       {selectedQuickActions.includes('export_history') && (

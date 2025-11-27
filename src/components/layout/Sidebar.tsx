@@ -69,10 +69,10 @@ export function Sidebar({
 
   const primaryItems: NavItem[] = [
     { title: 'Command Center', icon: LayoutDashboard, href: '/app' },
-    { title: 'Recoveries', icon: ShieldCheck, href: '/recoveries' },
+    { title: 'Claims', icon: ShieldCheck, href: '/recoveries' },
     { title: 'Doc Locker', icon: FileText, href: '/evidence-locker' },
     { title: 'Reports', icon: BarChart3, href: '/reports' },
-    { title: 'Upcoming payments', icon: Plug, href: '/upcoming-payments' }
+    { title: 'Payment recoveries', icon: Plug, href: '/upcoming-payments' }
   ];
 
   const secondaryItems: NavItem[] = [

@@ -964,14 +964,14 @@ export default function Recoveries() {
   };
 
   return (
-    <PageLayout title="Recoveries">
+    <PageLayout title="Claims">
       <div className="relative -m-4 lg:-m-6">
         <div className="relative w-full bg-gray-50 min-h-[calc(100vh+96px)] -mt-24 pt-24">
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-gray-50 to-white" />
           <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-900 space-y-8">
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-black mb-2">Recoveries</h1>
+          <h1 className="text-3xl font-bold text-black mb-2">Claims</h1>
           <p className="text-gray-600">Comprehensive view of all recovery claims and their current status</p>
           <div className="mt-4 flex items-center gap-2">
             <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-white" disabled={selectedIds.size === 0 || submittingBulk} onClick={async () => {
