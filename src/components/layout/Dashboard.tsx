@@ -575,15 +575,11 @@ export function Dashboard() {
           <div className="relative pt-24">
                 <div className="relative container mx-auto px-6 md:px-10 lg:px-12 pb-10 text-gray-900 space-y-8">
               <div className="rounded-2xl bg-white border border-gray-200 shadow-sm p-6 md:p-8">
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold text-[#1f1f1f]">Overview</h2>
+            </div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 h-full">
               <div className="lg:col-span-2 space-y-8">
-                  <Card className="bg-white border border-gray-200 text-gray-900 shadow-sm">
-                  <CardContent className="p-6">
-                      <h2 className="font-brand text-lg text-[#1f1f1f] font-semibold">Get Faster Reimbursements with Clario!</h2>
-                      <p className="text-sm text-gray-600 mt-1">Your Amazon account has been connected successfully.</p>
-                  </CardContent>
-                </Card>
-
                   <Card className="bg-white border border-gray-200 text-gray-900 shadow-sm">
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between gap-4">
@@ -661,15 +657,6 @@ export function Dashboard() {
                           </div>
                           <div className="text-[11px] text-gray-600 mt-1">
                             No. of Claims: {effectivePendingClaims}
-                          </div>
-                          {hasPendingClaimsData && (
-                            <div className="text-[11px] text-gray-600 mt-1">
-                              {effectivePendingClaims === 1 ? '1 claim awaiting payout' : `${effectivePendingClaims} claims awaiting payout`}
-                            </div>
-                          )}
-                          <div className="text-[11px] mt-1">
-                            <span className="text-gray-600">Recovered so far: </span>
-                            <span className="text-[#1f1f1f]">{formatCurrency(recoveredTotal ?? 0, recoveredCurrency)}</span>
                           </div>
                       </div>
                         <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">

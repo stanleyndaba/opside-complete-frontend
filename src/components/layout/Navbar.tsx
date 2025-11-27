@@ -123,7 +123,7 @@ export function Navbar({
             )}
           >
             <Link2 className={cn("h-4 w-4 text-[#36454F]")} />
-            <span className="hidden sm:inline text-[#36454F]">Connect Platform</span>
+            <span className="hidden sm:inline text-[#36454F]">Platform</span>
           </Button>
           {isSandbox && (
             <span className={cn(
@@ -159,7 +159,7 @@ export function Navbar({
             }}
             className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-md transition-colors shadow-md hover:shadow-lg"
           >
-            Invite Friend +
+            Invite seller friend
           </Button>
         </div>
       </DialogContent>
