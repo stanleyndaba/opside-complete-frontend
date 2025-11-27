@@ -888,7 +888,7 @@ export default function Sync() {
                 {/* Log Container - Terminal Style */}
                 <div 
                   ref={logContainerRef}
-                  className="bg-gray-900 rounded-lg p-4 font-mono text-xs h-72 overflow-y-auto scroll-smooth"
+                  className="bg-[#1f1f1f] rounded-lg p-4 font-mono text-xs h-72 overflow-y-auto scroll-smooth"
                 >
                   {filteredLogs.length === 0 ? (
                     <div className="text-gray-500 flex items-center justify-center h-full">
