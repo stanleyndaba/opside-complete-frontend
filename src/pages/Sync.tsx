@@ -79,9 +79,11 @@ export default function Sync() {
   // Log system state
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [logSearch, setLogSearch] = useState('');
+  const [logsFinished, setLogsFinished] = useState(false); // Track when all queued logs have been displayed
   const logContainerRef = useRef<HTMLDivElement>(null);
   const logQueueRef = useRef<Array<{ entry: Omit<LogEntry, 'id' | 'timestamp'>; delay: number }>>([]);
   const isProcessingQueueRef = useRef(false);
+  const completionLogsAddedRef = useRef(false); // Track if completion logs have been queued
   const previousDataRef = useRef<DataTypeStatus>({
     orders: { syncing: false, completed: false, count: 0 },
     inventory: { syncing: false, completed: false, count: 0 },
@@ -116,6 +118,11 @@ export default function Sync() {
     }
     
     isProcessingQueueRef.current = false;
+    
+    // If completion logs were added and queue is now empty, mark logs as finished
+    if (completionLogsAddedRef.current) {
+      setLogsFinished(true);
+    }
   };
 
   // Add a log entry with optional delay (queued)
@@ -138,6 +145,13 @@ export default function Sync() {
       logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;
     }
   }, [logs]);
+
+  // Set progress to 100% when logs finish
+  useEffect(() => {
+    if (logsFinished && status === 'completed') {
+      setProgress(100);
+    }
+  }, [logsFinished, status]);
 
   // Filter logs based on search
   const filteredLogs = useMemo(() => {
@@ -249,16 +263,25 @@ export default function Sync() {
     previousDataRef.current = prev;
   };
 
+  // Show modal and toast only AFTER logs have finished displaying
   useEffect(() => {
     if (typeof window === 'undefined') return undefined;
-    if (status === 'completed') {
+    if (logsFinished && status === 'completed') {
+      // Now show the toast (after logs are done)
+      toast({
+        title: 'Sync Complete',
+        description: 'Your data has been synchronized.',
+        duration: 4000,
+      });
+      
+      // Show modal after a brief pause
       if (sourcesModalTimeoutRef.current) {
         window.clearTimeout(sourcesModalTimeoutRef.current);
       }
       sourcesModalTimeoutRef.current = window.setTimeout(() => {
         setShowSourcesModal(true);
-      }, 1500); // Show modal 1.5s after completion
-    } else {
+      }, 1000); // Show modal 1s after logs finish
+    } else if (status !== 'completed') {
       if (sourcesModalTimeoutRef.current) {
         window.clearTimeout(sourcesModalTimeoutRef.current);
         sourcesModalTimeoutRef.current = null;
@@ -272,7 +295,7 @@ export default function Sync() {
         sourcesModalTimeoutRef.current = null;
       }
     };
-  }, [status]);
+  }, [logsFinished, status, toast]);
   
   // Phase 3: Detection updates SSE - connect when sync completes
   useDetectionUpdates(
@@ -324,7 +347,14 @@ export default function Sync() {
 
   const updateSyncState = (s: SyncStatusResponse) => {
     setSyncData(s);
-    if (typeof s.progress === 'number') setProgress(s.progress);
+    // Hold progress at 98% until logs finish, then show 100%
+    if (typeof s.progress === 'number') {
+      if (s.progress >= 100 && !logsFinished) {
+        setProgress(98); // Hold at 98% while logs are still displaying
+      } else {
+        setProgress(s.progress);
+      }
+    }
     if (s.message) setMessage(s.message);
     
     // Update logs based on sync data
@@ -346,14 +376,12 @@ export default function Sync() {
       // Show toast for status transitions
       if (mappedStatus === 'completed' && !toastShownRef.current.completed) {
         toastShownRef.current.completed = true;
+        // Queue completion logs - toast and modal will show after these finish
         addLog({ type: 'thinking', category: 'system', message: 'Finalizing everything... wrapping up the analysis' }, 800);
         addLog({ type: 'success', category: 'system', message: '[COMPLETE] All data synchronized and analyzed' }, 1500);
         addLog({ type: 'thinking', category: 'system', message: 'Done. Your potential recoveries are ready for review' }, 1200);
-        toast({
-          title: 'Sync Complete',
-          description: 'Your data has been synchronized.',
-          duration: 4000,
-        });
+        // Mark that completion logs have been queued - logsFinished will be set when queue empties
+        completionLogsAddedRef.current = true;
       } else if (mappedStatus === 'failed' && !toastShownRef.current.failed) {
         toastShownRef.current.failed = true;
         addLog({ type: 'error', category: 'system', message: `Sync failed: ${s.error || s.message || 'Unknown error'}` });
@@ -396,8 +424,10 @@ export default function Sync() {
     async function ensureSync() {
       if (!syncId) {
         try {
-          // Clear logs for new sync
+          // Clear logs and reset state for new sync
           setLogs([]);
+          setLogsFinished(false);
+          completionLogsAddedRef.current = false;
           previousDataRef.current = {
             orders: { syncing: false, completed: false, count: 0 },
             inventory: { syncing: false, completed: false, count: 0 },
