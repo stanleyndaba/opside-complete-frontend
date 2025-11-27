@@ -605,7 +605,7 @@ export function Dashboard() {
                             </TooltipContent>
                           </Tooltip>
                         </div>
-                          <div className="text-[24px] md:text-[28px] font-semibold mt-1 text-black">
+                        <div className="text-[20px] md:text-[24px] font-semibold mt-1 text-black">
                           {formatCurrency(recoveredTotal ?? 0, recoveredCurrency)}
                         </div>
                           <div className="text-[11px] text-gray-600 mt-1">

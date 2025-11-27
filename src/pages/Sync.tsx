@@ -1180,9 +1180,9 @@ export default function Sync() {
                     <Button
                       variant="ghost"
                       onClick={() => setShowSourcesModal(false)}
-                      className="text-gray-500 hover:text-gray-700"
+                      className="bg-gray-100 text-gray-700 hover:bg-gray-200"
                     >
-                      Not now
+                      Advanced integrations
                     </Button>
                   </div>
                 </DialogContent>
