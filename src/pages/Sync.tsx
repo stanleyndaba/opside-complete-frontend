@@ -910,11 +910,6 @@ export default function Sync() {
                             <span className="text-cyan-500 shrink-0 select-none font-medium text-[10px] sm:text-xs">
                               sync agent
                             </span>
-                            {log.type !== 'thinking' && (
-                              <span className={`shrink-0 ${getLogColor(log.type)}`}>
-                                {getCategoryIcon(log.category)}
-                              </span>
-                            )}
                             <span className={`${getLogColor(log.type)} break-words min-w-0 flex-1`}>
                               {log.message}
                             </span>
@@ -948,7 +943,6 @@ export default function Sync() {
                           <span className="text-cyan-500 shrink-0 select-none font-medium text-[10px] sm:text-xs">
                             sync agent
                           </span>
-                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
                           <span>Processing...</span>
                           </div>
                       )}
