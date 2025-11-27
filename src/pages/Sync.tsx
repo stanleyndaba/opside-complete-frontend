@@ -910,9 +910,11 @@ export default function Sync() {
                             <span className="text-cyan-500 shrink-0 select-none font-medium text-[10px] sm:text-xs">
                               sync agent
                             </span>
-                            <span className={`shrink-0 ${getLogColor(log.type)}`}>
-                              {log.type === 'thinking' ? null : getCategoryIcon(log.category)}
-                            </span>
+                            {log.type !== 'thinking' && (
+                              <span className={`shrink-0 ${getLogColor(log.type)}`}>
+                                {getCategoryIcon(log.category)}
+                              </span>
+                            )}
                             <span className={`${getLogColor(log.type)} break-words min-w-0 flex-1`}>
                               {log.message}
                             </span>
