@@ -319,7 +319,6 @@ export default function IntegrationsHub() {
             </p>
             <div className="mt-6 flex justify-center">
               <span className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1 text-xs font-medium uppercase tracking-wide text-blue-600 shadow-[0_5px_20px_rgba(59,130,246,0.15)]">
-                <Sparkles className="h-4 w-4 text-blue-500" />
                 Works best with work email!
               </span>
             </div>
@@ -336,7 +335,7 @@ export default function IntegrationsHub() {
                       <img src="/Amazon-logo.png" alt="Amazon logo" className="h-9 w-9 object-contain" />
                     </div>
                     <div>
-                      <CardTitle className="text-gray-900 text-xl">Amazon SP‑API</CardTitle>
+                      <CardTitle className="text-gray-900 text-xl">SP‑API</CardTitle>
                       <CardDescription className="text-gray-600">Sync inventory, fees, reimbursements, shipments and returns.</CardDescription>
                     </div>
                   </div>
@@ -810,7 +809,7 @@ export default function IntegrationsHub() {
                       <div className={`rounded-lg border p-4 ${ingestionResult.success ? 'border-emerald-200 bg-emerald-50' : 'border-red-200 bg-red-50'}`}>
                         <div className="flex items-center justify-between mb-2">
                           <h4 className={`font-semibold ${ingestionResult.success ? 'text-emerald-700' : 'text-red-600'}`}>
-                            {ingestionResult.success ? '✅ Ingestion Complete' : '❌ Ingestion Completed with Errors'}
+                            {ingestionResult.success ? '✅ Ingestion Complete' : 'Ingestion Completed with Errors'}
                           </h4>
                         </div>
                         {ingestionResult.totalDocumentsIngested !== undefined ? (
