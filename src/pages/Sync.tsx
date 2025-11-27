@@ -120,8 +120,17 @@ export default function Sync() {
     isProcessingQueueRef.current = false;
     
     // If completion logs were added and queue is now empty, mark logs as finished
-    if (completionLogsAddedRef.current) {
-      setLogsFinished(true);
+    // Add a small delay to ensure all completion logs have been queued
+    if (completionLogsAddedRef.current && !logsFinished) {
+      // Wait a moment to ensure no more logs are being added
+      await new Promise(resolve => setTimeout(resolve, 200));
+      // Double check queue is still empty
+      if (logQueueRef.current.length === 0) {
+        setLogsFinished(true);
+      } else {
+        // More logs were added, process them
+        processLogQueue();
+      }
     }
   };
 
@@ -267,12 +276,25 @@ export default function Sync() {
   useEffect(() => {
     if (typeof window === 'undefined') return undefined;
     if (logsFinished && status === 'completed') {
+      // Get claims info for toast
+      const claims = syncData?.claimsDetected || 0;
+      const value = syncData?.totalRecoverableValue || (claims * 48);
+      const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+      
       // Now show the toast (after logs are done)
-      toast({
-        title: 'Sync Complete',
-        description: 'Your data has been synchronized.',
-        duration: 4000,
-      });
+      if (claims > 0) {
+        toast({
+          title: 'Analysis Complete',
+          description: `${formattedValue} potential recovery from ${claims} discrepancies`,
+          duration: 5000,
+        });
+      } else {
+        toast({
+          title: 'Sync Complete',
+          description: 'Your data has been synchronized.',
+          duration: 4000,
+        });
+      }
       
       // Show modal after a brief pause
       if (sourcesModalTimeoutRef.current) {
@@ -295,39 +317,34 @@ export default function Sync() {
         sourcesModalTimeoutRef.current = null;
       }
     };
-  }, [logsFinished, status, toast]);
+  }, [logsFinished, status, toast, syncData]);
   
   // Phase 3: Detection updates SSE - connect when sync completes
   useDetectionUpdates(
     status === 'completed' && syncId ? syncId : null,
     (event) => {
-      // Handle detection updates
+      // Handle detection updates - don't show toasts here, main completion flow handles it
       if (event.status === 'complete') {
         const totalDetections = event.total_detections || 0;
         if (totalDetections > 0) {
           const estimatedValue = event.estimated_value || (totalDetections * 48);
           const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimatedValue);
-          addLog({ type: 'success', category: 'detection', message: `Recoveries identified: ${formattedValue} from ${totalDetections} discrepancies` });
+          addLog({ type: 'success', category: 'detection', message: `Recoveries identified: ${formattedValue} from ${totalDetections} discrepancies` }, 1200);
           
-          // ⭐ UPDATE syncData so "Potential Recovery Identified" shows without refresh
+          // ⭐ UPDATE syncData so "Potential Recovery Identified" shows when logsFinished
           setSyncData(prev => prev ? {
             ...prev,
             claimsDetected: totalDetections,
             totalRecoverableValue: estimatedValue
           } : prev);
-          
-        toast({
-            title: 'Recoveries Identified',
-            description: `${formattedValue} potential recovery from ${totalDetections} discrepancies`,
-          duration: 6000,
-        });
+          // Toast will be shown when logsFinished becomes true
         } else {
-          addLog({ type: 'info', category: 'detection', message: 'Detection complete - no discrepancies found' });
+          addLog({ type: 'info', category: 'detection', message: 'Detection complete - no discrepancies found' }, 800);
         }
       } else if (event.new_detections_count && event.new_detections_count > 0) {
         const estimatedValue = event.estimated_value || (event.new_detections_count * 48);
         const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimatedValue);
-        addLog({ type: 'info', category: 'detection', message: `New: +${formattedValue} potential recovery` });
+        addLog({ type: 'info', category: 'detection', message: `New: +${formattedValue} potential recovery` }, 800);
         
         // ⭐ UPDATE syncData for incremental updates too
         setSyncData(prev => prev ? {
@@ -335,12 +352,7 @@ export default function Sync() {
           claimsDetected: (prev.claimsDetected || 0) + event.new_detections_count,
           totalRecoverableValue: (prev.totalRecoverableValue || 0) + estimatedValue
         } : prev);
-        
-        toast({
-          title: 'New Recoveries Found',
-          description: `+${formattedValue} from ${event.new_detections_count} new discrepancies`,
-          duration: 5000,
-        });
+        // Toast will be shown when logsFinished becomes true
       }
     }
   );
@@ -547,7 +559,7 @@ export default function Sync() {
             const detectedCount = s.claimsDetected || 0;
             const estimatedValue = detectedCount * 48; // ~$48 avg per claim
             
-            // ⭐ UPDATE syncData so "Potential Recovery Identified" shows immediately
+            // ⭐ UPDATE syncData - but DON'T show toast here, let the main completion flow handle it
             setSyncData(prev => prev ? {
               ...prev,
               claimsDetected: detectedCount,
@@ -555,13 +567,9 @@ export default function Sync() {
             } : prev);
             
             if (detectedCount > 0) {
-            const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimatedValue);
-            addLog({ type: 'success', category: 'detection', message: `Recoveries: ${formattedValue} from ${detectedCount} discrepancies`, count: detectedCount });
-              toast({
-                title: 'Recoveries Identified',
-                description: `${formattedValue} potential recovery from ${detectedCount} discrepancies`,
-                duration: 5000,
-              });
+              const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimatedValue);
+              addLog({ type: 'success', category: 'detection', message: `Recoveries: ${formattedValue} from ${detectedCount} discrepancies`, count: detectedCount }, 1200);
+              // Toast will be shown when logsFinished becomes true
             }
             return;
           }
