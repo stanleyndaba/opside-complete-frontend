@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
-import { Mail, CheckCircle2, XCircle, RefreshCw, LogOut } from 'lucide-react';
+import { Mail, CheckCircle2, XCircle, RefreshCw, LogOut, Unlink } from 'lucide-react';
 
 interface GmailConnectionStatusProps {
   onStatusChange?: (connected: boolean) => void;
@@ -174,7 +174,7 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
               size="sm"
               onClick={handleDisconnect}
               disabled={disconnecting}
-              className="bg-white/5 border-white/10 text-gray-200 hover:bg-white/10"
+              className="bg-red-500/10 border-red-500/30 text-red-400 hover:bg-red-500/20 hover:border-red-500/50"
             >
               {disconnecting ? (
                 <>
@@ -183,7 +183,7 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
                 </>
               ) : (
                 <>
-                  <LogOut className="w-4 h-4 mr-2" />
+                  <Unlink className="w-4 h-4 mr-2" />
                   Disconnect
                 </>
               )}
