@@ -971,8 +971,8 @@ export default function Recoveries() {
           <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-900 space-y-8">
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-black mb-2">Claims</h1>
-          <p className="text-gray-600">Comprehensive view of all recovery claims and their current status</p>
+          <h1 className="text-3xl font-bold text-[#1f1f1f] mb-2">Claims</h1>
+          <p className="text-gray-600">Monitor and manage all reimbursement opportunities across your FBA operations</p>
           <div className="mt-4 flex items-center gap-2">
             <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-white" disabled={selectedIds.size === 0 || submittingBulk} onClick={async () => {
               setSubmittingBulk(true);
@@ -987,7 +987,7 @@ export default function Recoveries() {
                 }
               }
               setSubmittingBulk(false);
-            }}>Auto-Submit Selected</Button>
+            }}>Submit Selected Claims</Button>
             {selectedIds.size > 0 && (
               <span className="text-xs text-muted-foreground">{selectedIds.size} selected</span>
             )}
@@ -1001,7 +1001,7 @@ export default function Recoveries() {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="text-sm text-gray-600">Detected Reimbursements</div>
+                  <div className="text-sm text-gray-600">Total Recovered Value</div>
                   {recoveredTotal != null && recoveredTotal > 0 && (
                     <Tooltip>
                       <TooltipTrigger asChild>
@@ -1019,17 +1019,17 @@ export default function Recoveries() {
                     </Tooltip>
                   )}
                 </div>
-                <div className="text-2xl md:text-3xl font-semibold text-black">
+                <div className="text-2xl md:text-3xl font-semibold text-[#1f1f1f]">
                   {recoveredTotal != null && recoveredTotal > 0 ? (
                     <>
-                      <span className="text-black">{formatCurrency(recoveredTotal, recoveredCurrency)}</span>
+                      <span className="text-[#1f1f1f]">{formatCurrency(recoveredTotal, recoveredCurrency)}</span>
                       <span className="text-gray-600 text-base font-medium ml-2">
                       recovered from {amazonClaimCount ?? 0} approved claim{amazonClaimCount !== 1 ? 's' : ''}
                     </span>
                     </>
                   ) : (
                     <>
-                      <span className="text-black">{formatCurrency(0)}</span>
+                      <span className="text-[#1f1f1f]">{formatCurrency(0)}</span>
                       <span className="text-gray-600 text-base font-medium ml-2">No recoveries yet</span>
                     </>
                   )}
@@ -1069,20 +1069,20 @@ export default function Recoveries() {
               </div>
             </div>
             <div className="mt-4 flex items-center gap-3 text-xs text-gray-600">
-              <span>Last scan just now</span>
+              <span>Last analysis: {new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
               <span className="h-1 w-1 rounded-full bg-gray-500"></span>
               <button
                 className="inline-flex items-center gap-2 h-8 px-3 rounded-md bg-emerald-500 text-white font-semibold hover:bg-emerald-400"
                 onClick={async () => {
                   try {
                     await api.post('/api/detections/run');
-                    toast({ title: 'Detector started', description: 'Scanning new opportunities…' });
+                    toast({ title: 'Analysis Started', description: 'Scanning your FBA data for new opportunities…' });
                   } catch (e: any) {
-                    toast({ title: 'Could not start detector', description: e?.message || 'Please try again shortly.', variant: 'destructive' });
+                    toast({ title: 'Analysis Failed', description: e?.message || 'Please try again shortly.', variant: 'destructive' });
                   }
                 }}
               >
-                Detect Claims
+                Run Analysis
               </button>
             </div>
           </CardContent>
@@ -1090,12 +1090,12 @@ export default function Recoveries() {
 
         {/* Key Metrics Bar - Enhanced with Phase 3 Statistics */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="bg-white/5 border-white/10 text-gray-300">
+          <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
             <CardContent className="p-6">
               <div className="flex items-center">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Total Claims Found</p>
-                  <p className="text-2xl font-bold text-black">
+                  <p className="text-sm font-medium text-gray-600">Total Claims Identified</p>
+                  <p className="text-2xl font-bold text-[#1f1f1f]">
                     {detectionStats?.total_anomalies ?? detectionStats?.totalDetections ?? (metrics ? metrics.totalClaimsFound : keyMetrics.totalClaimsFound)}
                     {amazonClaimCount != null && amazonClaimCount > 0 && (
                       <span className="text-sm text-emerald-400 ml-2 font-normal">
@@ -1113,14 +1113,14 @@ export default function Recoveries() {
             </CardContent>
           </Card>
           
-          <Card className="bg-white/5 border-white/10 text-gray-300">
+          <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
             <CardContent className="p-6">
               <div className="flex items-center">
                 <div>
                   <p className="text-sm font-medium text-gray-600">
-                    {detectionStats?.total_value ? 'Total Recovery Value' : 'Value in Progress'}
+                    {detectionStats?.total_value ? 'Total Recovery Value' : 'Potential Recovery Value'}
                   </p>
-                  <p className="text-2xl font-bold text-black">
+                  <p className="text-2xl font-bold text-[#1f1f1f]">
                     {formatCurrency(
                       detectionStats?.total_value ?? 
                       (metrics ? metrics.valueInProgress : keyMetrics.valueInProgress)
@@ -1136,12 +1136,12 @@ export default function Recoveries() {
             </CardContent>
           </Card>
           
-          <Card className="bg-white/5 border-white/10 text-gray-300">
+          <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
             <CardContent className="p-6">
               <div className="flex items-center">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Currently in Progress</p>
-                  <p className="text-2xl font-bold text-black">{metrics ? metrics.inProgress : keyMetrics.currentlyInProgress}</p>
+                  <p className="text-sm font-medium text-gray-600">Claims in Progress</p>
+                  <p className="text-2xl font-bold text-[#1f1f1f]">{metrics ? metrics.inProgress : keyMetrics.currentlyInProgress}</p>
                   {detectionStats?.expired_count !== undefined && detectionStats.expired_count > 0 && (
                     <p className="text-xs text-red-400 mt-1">
                       {detectionStats.expired_count} expired
@@ -1152,12 +1152,12 @@ export default function Recoveries() {
             </CardContent>
           </Card>
           
-          <Card className="bg-white/5 border-white/10 text-gray-300">
+          <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
             <CardContent className="p-6">
               <div className="flex items-center">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">30-Day Success Rate</p>
-                  <p className="text-2xl font-bold text-emerald-400">{metrics ? Math.round(metrics.successRate30d) : keyMetrics.successRate.toFixed(0)}%</p>
+                  <p className="text-sm font-medium text-gray-600">30-Day Approval Rate</p>
+                  <p className="text-2xl font-bold text-emerald-600">{metrics ? Math.round(metrics.successRate30d) : keyMetrics.successRate.toFixed(0)}%</p>
                   {detectionStats?.by_confidence && (
                     <p className="text-xs text-gray-600 mt-1">
                       {detectionStats.by_confidence.medium + detectionStats.by_confidence.low} medium/low
@@ -1171,9 +1171,9 @@ export default function Recoveries() {
 
         {/* Phase 3: Detection Statistics Breakdown */}
         {detectionStats && (detectionStats.by_severity || detectionStats.by_type) && (
-          <Card className="mb-8 bg-white border-gray-200 text-gray-900">
+          <Card className="mb-8 bg-white border-gray-200 text-gray-900 shadow-sm">
             <CardContent className="p-6">
-              <h3 className="text-lg font-semibold text-black mb-4">Detection Statistics</h3>
+              <h3 className="text-lg font-semibold text-[#1f1f1f] mb-4">Claim Analysis Breakdown</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* By Severity */}
                 {detectionStats.by_severity && (
@@ -1192,7 +1192,7 @@ export default function Recoveries() {
                             </Badge>
                             <span className="text-sm text-gray-700">{data.count} claims</span>
                           </div>
-                          <span className="text-sm font-semibold text-black">
+                          <span className="text-sm font-semibold text-[#1f1f1f]">
                             {formatCurrency(data.value)}
                           </span>
                         </div>
@@ -1204,7 +1204,7 @@ export default function Recoveries() {
                 {/* By Type */}
                 {detectionStats.by_type && (
                   <div>
-                    <h4 className="text-sm font-medium text-gray-600 mb-3">By Anomaly Type</h4>
+                    <h4 className="text-sm font-medium text-gray-600 mb-3">By Discrepancy Type</h4>
                     <div className="space-y-2 max-h-48 overflow-y-auto">
                       {Object.entries(detectionStats.by_type).slice(0, 5).map(([type, data]: [string, any]) => (
                         <div key={type} className="flex items-center justify-between p-2 rounded bg-gray-50">
@@ -1214,7 +1214,7 @@ export default function Recoveries() {
                             </span>
                             <span className="text-xs text-gray-500">({data.count})</span>
                           </div>
-                          <span className="text-sm font-semibold text-black">
+                          <span className="text-sm font-semibold text-[#1f1f1f]">
                             {formatCurrency(data.value)}
                           </span>
                         </div>
@@ -1228,7 +1228,7 @@ export default function Recoveries() {
         )}
 
         {/* Controls */}
-        <Card className="mb-8 bg-white border-gray-200 text-gray-900">
+        <Card className="mb-8 bg-white border-gray-200 text-gray-900 shadow-sm">
           <CardContent className="p-6">
             <div className="flex flex-wrap gap-4 items-center">
               {/* Search Bar */}
@@ -1244,16 +1244,16 @@ export default function Recoveries() {
 
               {/* Quick Date Range Buttons */}
               <div className="flex gap-2">
-                <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-0 hover:bg-blue-100" onClick={() => setQuickDateRange('30days')}>Last 30 Days</Button>
-                <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-0 hover:bg-blue-100" onClick={() => setQuickDateRange('quarter')}>Last Quarter</Button>
-                <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-0 hover:bg-blue-100" onClick={() => setQuickDateRange('year')}>This Year</Button>
-                <Button variant="outline" size="sm" className="bg-blue-50 text-blue-900 border-0 hover:bg-blue-100" onClick={() => setQuickDateRange('all')}>All Time</Button>
+                <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" onClick={() => setQuickDateRange('30days')}>Last 30 Days</Button>
+                <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" onClick={() => setQuickDateRange('quarter')}>Last Quarter</Button>
+                <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" onClick={() => setQuickDateRange('year')}>This Year</Button>
+                <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" onClick={() => setQuickDateRange('all')}>All Time</Button>
               </div>
 
               {/* Custom Date Range */}
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" className={cn("w-[280px] justify-start text-left font-medium bg-blue-50 text-blue-900 border-0 hover:bg-blue-100", !dateRange && "text-blue-700")}>
+                  <Button variant="outline" className={cn("w-[280px] justify-start text-left font-medium bg-white text-gray-700 border-gray-200 hover:bg-gray-50", !dateRange && "text-gray-500")}>
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {dateRange?.from ? (
                       dateRange.to ? (
@@ -1284,7 +1284,7 @@ export default function Recoveries() {
 
               {/* Claim Type Filter */}
               <Select>
-                <SelectTrigger className="w-[180px] text-white placeholder:text-white border-0">
+                <SelectTrigger className="w-[180px] bg-white text-gray-900 border-gray-200 hover:bg-gray-50">
                   <SelectValue placeholder="Filter by Claim Type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -1296,7 +1296,7 @@ export default function Recoveries() {
 
               {/* Status Filter */}
               <Select>
-                <SelectTrigger className="w-[180px] text-white placeholder:text-white border-0">
+                <SelectTrigger className="w-[180px] bg-white text-gray-900 border-gray-200 hover:bg-gray-50">
                   <SelectValue placeholder="Filter by Status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -1310,12 +1310,12 @@ export default function Recoveries() {
               <Select value={filterSource} onValueChange={(value: 'all' | 'detected' | 'synced') => {
                 setFilterSource(value);
               }}>
-                <SelectTrigger className="w-[180px] text-white placeholder:text-white border-0">
+                <SelectTrigger className="w-[180px] bg-white text-gray-900 border-gray-200 hover:bg-gray-50">
                   <SelectValue placeholder="Filter by Source" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all" className="text-white">All Sources</SelectItem>
-                  <SelectItem value="detected">Detected (Phase 3)</SelectItem>
+                  <SelectItem value="all">All Sources</SelectItem>
+                  <SelectItem value="detected">Detected Claims</SelectItem>
                   <SelectItem value="synced">Synced from Amazon</SelectItem>
                 </SelectContent>
               </Select>
@@ -1325,7 +1325,7 @@ export default function Recoveries() {
                 <Select value={filterConfidence} onValueChange={(value: 'all' | 'high' | 'medium' | 'low') => {
                   setFilterConfidence(value);
                 }}>
-                  <SelectTrigger className="w-[180px] text-slate-800 placeholder:text-slate-800 border-0">
+                  <SelectTrigger className="w-[180px] bg-white text-gray-900 border-gray-200 hover:bg-gray-50">
                     <SelectValue placeholder="Filter by Confidence" />
                   </SelectTrigger>
                   <SelectContent>
@@ -1341,7 +1341,7 @@ export default function Recoveries() {
               <Select value={filterUrgent} onValueChange={(value: 'all' | 'urgent' | 'critical') => {
                 setFilterUrgent(value);
               }}>
-                <SelectTrigger className="w-[180px] text-white placeholder:text-white border-0">
+                <SelectTrigger className="w-[180px] bg-white text-gray-900 border-gray-200 hover:bg-gray-50">
                   <SelectValue placeholder="Filter by Urgency" />
                 </SelectTrigger>
                 <SelectContent>
@@ -1355,19 +1355,23 @@ export default function Recoveries() {
         </Card>
 
         {/* Data Table */}
-        <Card className="bg-white border-gray-200 text-gray-900 w-full overflow-hidden">
+        <Card className="bg-white border-gray-200 text-gray-900 w-full overflow-hidden shadow-sm">
           <CardContent className="p-0 w-full">
             {loading && (
-              <div className="p-4 text-sm text-muted-foreground">Loading recoveries...</div>
+              <div className="p-8 text-center">
+                <p className="text-sm text-gray-600">Loading claims...</p>
+              </div>
             )}
             {error && (
               <div className="p-4 text-sm text-red-600">{error}</div>
             )}
             {!loading && !error && rankedClaims.length === 0 && (
-              <div className="p-4 text-sm text-gray-600">
-                No recoveries found. {((mergedRecoveries === null || (mergedRecoveries && mergedRecoveries.length === 0)) && (!claims || claims.length === 0))
-                  ? 'Try syncing your Amazon account or running the detector.' 
-                  : 'Try adjusting your filters.'}
+              <div className="p-8 text-center">
+                <p className="text-sm text-gray-600 mb-2">
+                  No claims found. {((mergedRecoveries === null || (mergedRecoveries && mergedRecoveries.length === 0)) && (!claims || claims.length === 0))
+                    ? 'Sync your Amazon account or run an analysis to identify recovery opportunities.' 
+                    : 'Try adjusting your filters to see more results.'}
+                </p>
               </div>
             )}
             {!loading && rankedClaims.length > 0 && (
@@ -1393,18 +1397,18 @@ export default function Recoveries() {
                       else setSelectedIds(new Set());
                     }} />
                   </TableHead>
-                  <TableHead className="text-[#36454F]">Source</TableHead>
-                  <TableHead className="text-[#36454F]">Claim ID</TableHead>
-                  <TableHead className="text-[#36454F]">Created</TableHead>
-                  <TableHead className="text-[#36454F]">Type</TableHead>
-                  <TableHead className="text-[#36454F]">Confidence</TableHead>
-                  <TableHead className="text-[#36454F]">Evidence</TableHead>
-                  <TableHead className="text-[#36454F]">Details</TableHead>
-                  <TableHead className="text-[#36454F]">Status</TableHead>
-                  <TableHead className="text-[#36454F]">Days Remaining</TableHead>
-                  <TableHead className="text-[#36454F]">Guaranteed Amount</TableHead>
-                  <TableHead className="text-[#36454F]">Expected Payout</TableHead>
-                  <TableHead className="text-[#36454F]">Actions</TableHead>
+                  <TableHead className="text-[#1f1f1f] font-semibold">Source</TableHead>
+                  <TableHead className="text-[#1f1f1f] font-semibold">Claim ID</TableHead>
+                  <TableHead className="text-[#1f1f1f] font-semibold">Created</TableHead>
+                  <TableHead className="text-[#1f1f1f] font-semibold">Type</TableHead>
+                  <TableHead className="text-[#1f1f1f] font-semibold">Confidence</TableHead>
+                  <TableHead className="text-[#1f1f1f] font-semibold">Evidence</TableHead>
+                  <TableHead className="text-[#1f1f1f] font-semibold">Details</TableHead>
+                  <TableHead className="text-[#1f1f1f] font-semibold">Status</TableHead>
+                  <TableHead className="text-[#1f1f1f] font-semibold">Days Remaining</TableHead>
+                  <TableHead className="text-[#1f1f1f] font-semibold">Guaranteed Amount</TableHead>
+                  <TableHead className="text-[#1f1f1f] font-semibold">Expected Payout</TableHead>
+                  <TableHead className="text-[#1f1f1f] font-semibold">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
