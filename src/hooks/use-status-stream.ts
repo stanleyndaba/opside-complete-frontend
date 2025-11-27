@@ -34,12 +34,11 @@ export const useStatusStream = (onEvent?: (event: StatusEvent) => void) => {
         if (type === 'sync' && status === 'started') {
           toast({ title: 'Data Sync Started', description: 'Syncing Amazon data...' });
         } else if (type === 'sync' && status === 'completed') {
-          toast({ title: 'Sync Complete', description: 'Complete successfully. See dashboard.' });
+          // Toast removed per user request
         } else if (type === 'detection' && status === 'started') {
           toast({ title: 'Claim Detection Started', description: 'Analyzing data for claims...' });
         } else if (type === 'detection' && status === 'completed') {
-          const count = data?.totalDetected || data?.count || 0;
-          toast({ title: 'Claims Detected', description: `${count} claim${count !== 1 ? 's' : ''} found` });
+          // Toast removed per user request - no toast for claims detected
         } else if (type === 'evidence' && status === 'started') {
           toast({ title: 'Evidence Ingestion Started', description: 'Collecting evidence documents...' });
         } else if (type === 'evidence' && status === 'completed') {

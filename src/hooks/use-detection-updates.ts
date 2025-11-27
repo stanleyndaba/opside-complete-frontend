@@ -55,15 +55,7 @@ export const useDetectionUpdates = (
         try {
           const data = JSON.parse(event.data) as DetectionUpdateEvent;
           onUpdate?.(data);
-
-          // Show toast for new detections
-          if (data.new_detections_count && data.new_detections_count > 0) {
-            toast({
-              title: 'New Detections Found',
-              description: `${data.new_detections_count} new anomaly${data.new_detections_count !== 1 ? 'ies' : ''} detected${data.total_detections ? ` (${data.total_detections} total)` : ''}`,
-              duration: 5000,
-            });
-          }
+          // No toasts - removed per user request
         } catch (error) {
           console.error('[Detection Updates] Failed to parse event:', error);
         }
@@ -73,21 +65,7 @@ export const useDetectionUpdates = (
         try {
           const data = JSON.parse(event.data) as DetectionUpdateEvent;
           onUpdate?.(data);
-
-          // Only show toast if we actually found something
-          const totalDetections = data.total_detections || 0;
-          const estimatedValue = data.estimated_value || (totalDetections * 48); // ~$48 avg per claim
-          
-          if (totalDetections > 0) {
-            toast({
-              title: 'Recoveries Identified',
-              description: `${formatCurrency(estimatedValue)} potential recovery from ${totalDetections} discrepancies`,
-              duration: 6000,
-            });
-          } else {
-            // Silently complete - no toast for 0 detections
-            console.log('[Detection Updates] Detection complete, no discrepancies found');
-          }
+          // No toasts - removed per user request
 
           // Close connection after completion
           eventSource.close();

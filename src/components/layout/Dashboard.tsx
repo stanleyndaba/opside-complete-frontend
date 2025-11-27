@@ -296,15 +296,7 @@ export function Dashboard() {
             setNeedsSync(false);
             setSyncMessage(null);
             
-            // Show enhanced toast with claims detected info
-            const claimsDetected = syncStatus.lastSync.claimsDetected ?? 0;
-            const ordersProcessed = syncStatus.lastSync.ordersProcessed ?? 0;
-            
-            toast({
-              title: 'Sync Complete',
-              description: 'Complete successfully. See dashboard.',
-              duration: 5000,
-            });
+            // Toast removed per user request
             
             // Clear polling
             if (syncPollingRef.current) {
@@ -390,15 +382,7 @@ export function Dashboard() {
             setNeedsSync(false);
             setSyncMessage('Sync completed successfully!');
             
-            // Show enhanced toast with claims detected info
-            const claimsDetected = status.claimsDetected ?? 0;
-            const ordersProcessed = status.ordersProcessed ?? 0;
-            
-            toast({
-              title: 'Sync Complete',
-              description: 'Complete successfully. See dashboard.',
-              duration: 5000,
-            });
+            // Toast removed per user request
             
             // Clear polling
             if (syncPollingRef.current) {
