@@ -825,7 +825,7 @@ export function Dashboard() {
                       <div className="p-3 border-b border-gray-200">
                         <div className="flex items-center justify-between">
                           <h3 className="font-semibold text-sm text-black">Recent Logs</h3>
-                          <span className="text-xs rounded px-2 py-0.5 bg-gray-50 text-gray-700 border border-gray-200">4 new</span>
+                          <span className="text-xs rounded px-2 py-0.5 bg-green-500 text-white">4 new</span>
                         </div>
                       </div>
                       <div className="py-2 max-h-[600px] overflow-y-auto">
@@ -874,7 +874,7 @@ export function Dashboard() {
       <Dialog open={showSourcesModal} onOpenChange={setShowSourcesModal}>
         <DialogContent className="sm:max-w-md bg-white rounded-md">
           <DialogHeader className="pb-3">
-            <DialogTitle className="text-lg font-semibold text-gray-900">Link Sources for Document Ingestion</DialogTitle>
+            <DialogTitle className="text-lg font-semibold text-gray-900">Sources for Document Ingestion</DialogTitle>
             <DialogDescription className="text-sm text-gray-500">
               Read-only access. No writing or sending permissions.
             </DialogDescription>
@@ -1026,16 +1026,25 @@ export function Dashboard() {
             </button>
           </div>
           
-          <div className="flex justify-center pt-1">
+          <div className="flex justify-center items-center gap-3 pt-1">
             <Button
               variant="ghost"
               onClick={() => {
                 setShowSourcesModal(false);
                 navigate('/integrations-hub');
               }}
-              className="bg-gray-100 text-gray-700 border-none hover:bg-gray-200"
+              className="bg-gray-200 text-[#1f1f1f] border-none hover:bg-gray-300"
             >
               Advanced integrations
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setShowSourcesModal(false);
+              }}
+              className="bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
+            >
+              Not now
             </Button>
           </div>
         </DialogContent>
