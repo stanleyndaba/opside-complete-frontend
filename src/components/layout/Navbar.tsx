@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ArrowUpDown, ChevronDown, Search, Gift, Link2, Mail } from 'lucide-react';
+import { ArrowUpDown, ChevronDown, Search, Gift, Link2, Mail, Copy, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -49,6 +49,14 @@ export function Navbar({
 
   // State for referral popup
   const [showReferralPopup, setShowReferralPopup] = useState(false);
+  const [showInviteForm, setShowInviteForm] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [linkCopied, setLinkCopied] = useState(false);
+  
+  // Generate referral link (placeholder - in production this would come from backend)
+  const referralLink = typeof window !== 'undefined' 
+    ? `${window.location.origin}/signup?ref=demo-user`
+    : '/signup?ref=demo-user';
 
   // Language preference removed on platform navbar per design
 
@@ -154,12 +162,73 @@ export function Navbar({
           </div>
           <Button
             onClick={() => {
-              // TODO: Implement invite friend functionality
               setShowReferralPopup(false);
+              setShowInviteForm(true);
             }}
             className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-md transition-colors shadow-md hover:shadow-lg"
           >
             Invite seller friend
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+    
+    {/* Invite Form Popup */}
+    <Dialog open={showInviteForm} onOpenChange={setShowInviteForm}>
+      <DialogContent className="max-w-md bg-white border border-gray-200 shadow-lg rounded-lg p-6">
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-1">Invite seller friend</h3>
+            <p className="text-sm text-gray-600">Send an invitation to join Clario</p>
+          </div>
+          
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-700">Email address</label>
+            <Input
+              type="email"
+              placeholder="seller@example.com"
+              value={inviteEmail}
+              onChange={(e) => setInviteEmail(e.target.value)}
+              className="w-full border-gray-200"
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-700">Referral link</label>
+            <div className="flex items-center gap-2 p-3 bg-gray-50 border border-gray-200 rounded-md">
+              <span className="flex-1 text-sm text-gray-700 truncate">{referralLink}</span>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(referralLink);
+                  setLinkCopied(true);
+                  setTimeout(() => setLinkCopied(false), 2000);
+                }}
+                className="flex items-center gap-1.5 px-2 py-1 text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded transition-colors"
+              >
+                {linkCopied ? (
+                  <>
+                    <Check className="h-3.5 w-3.5 text-emerald-600" />
+                    <span className="text-emerald-600">Copied</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="h-3.5 w-3.5" />
+                    <span>Copy</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+          
+          <Button
+            onClick={() => {
+              // TODO: Implement send invite functionality
+              setShowInviteForm(false);
+              setInviteEmail('');
+            }}
+            className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-md transition-colors"
+          >
+            Send
           </Button>
         </div>
       </DialogContent>
