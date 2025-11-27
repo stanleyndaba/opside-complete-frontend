@@ -307,19 +307,19 @@ export default function IntegrationsHub() {
   return (
     <PageLayout title="Integrations">
       <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
-          <div className="relative container mx-auto px-6 pt-6 pb-12 text-gray-300 space-y-8">
+        <div className="relative w-full bg-gray-50 min-h-[calc(100vh+96px)] -mt-24 pt-24">
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white via-transparent to-gray-100" />
+          <div className="relative container mx-auto px-6 pt-6 pb-12 text-gray-900 space-y-8">
 
           {/* Header */}
             <div className="text-center">
-              <h1 className="text-3xl font-bold mb-2 text-gray-100">Integrations</h1>
-            <p className="text-gray-400">
+              <h1 className="text-3xl font-bold mb-2 text-gray-900">Integrations</h1>
+            <p className="text-gray-600">
               Your central command center for all platform connections
             </p>
             <div className="mt-6 flex justify-center">
-              <span className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-500/15 px-4 py-1 text-xs font-medium uppercase tracking-wide text-cyan-200 shadow-[0_0_18px_rgba(6,182,212,0.25)] animate-pulse">
-                <Sparkles className="h-4 w-4 text-cyan-300" />
+              <span className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1 text-xs font-medium uppercase tracking-wide text-blue-600 shadow-[0_5px_20px_rgba(59,130,246,0.15)]">
+                <Sparkles className="h-4 w-4 text-blue-500" />
                 Works best with work email!
               </span>
             </div>
@@ -328,7 +328,7 @@ export default function IntegrationsHub() {
           {/* Core Integrations */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Amazon SP-API */}
-            <Card className="bg-white/5 border-white/10 text-gray-300">
+            <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
               <CardHeader className="space-y-4">
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                   <div className="flex items-center gap-4">
@@ -336,17 +336,17 @@ export default function IntegrationsHub() {
                       <img src="/Amazon-logo.png" alt="Amazon logo" className="h-9 w-9 object-contain" />
                     </div>
                     <div>
-                      <CardTitle className="text-gray-200 text-xl">Amazon SP‑API</CardTitle>
-                      <CardDescription className="text-gray-400">Sync inventory, fees, reimbursements, shipments and returns.</CardDescription>
+                      <CardTitle className="text-gray-900 text-xl">Amazon SP‑API</CardTitle>
+                      <CardDescription className="text-gray-600">Sync inventory, fees, reimbursements, shipments and returns.</CardDescription>
                     </div>
                   </div>
-                  <Badge variant="outline" className={cn('text-xs px-3 py-1 rounded-full', (isSandbox || status?.amazon_connected) ? 'border-emerald-500 text-emerald-400 font-semibold' : 'border-gray-400/50 text-gray-400')}>
+                  <Badge variant="outline" className={cn('text-xs px-3 py-1 rounded-full', (isSandbox || status?.amazon_connected) ? 'border-emerald-500 text-emerald-600 font-semibold' : 'border-gray-300 text-gray-500')}>
                     {(isSandbox || status?.amazon_connected) ? 'Connected' : 'Not connected'}
                   </Badge>
                 </div>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="grid gap-3 text-sm text-gray-300">
+                <div className="grid gap-3 text-sm text-gray-700">
                   <div className="flex items-center justify-between text-xs uppercase tracking-wide text-gray-500">
                     <span>Status</span>
                     <span className={cn('font-semibold', (isSandbox || status?.amazon_connected) ? 'text-emerald-300' : 'text-amber-300')}>
@@ -354,12 +354,12 @@ export default function IntegrationsHub() {
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-400">Last sync</span>
-                    <span className="text-gray-200">{status?.lastSync || lastSyncTime}</span>
+                    <span className="text-gray-500">Last sync</span>
+                    <span className="text-gray-900">{status?.lastSync || lastSyncTime}</span>
                   </div>
                   <div className="flex items-center justify-between text-xs text-gray-400">
                     <span>Scopes</span>
-                    <span className="text-gray-200 text-right">orders.read · inventory.read · transactions.read</span>
+                    <span className="text-gray-700 text-right">orders.read · inventory.read · transactions.read</span>
                   </div>
                 </div>
                 <Button 
@@ -379,30 +379,30 @@ export default function IntegrationsHub() {
             </Card>
 
           {/* Document Source */}
-          <Card className="bg-white/5 border-white/10 text-gray-300">
+          <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
             <CardHeader>
-                <CardTitle className="text-gray-200">Document Source</CardTitle>
-              <CardDescription className="text-gray-400">
+                <CardTitle className="text-gray-900">Document Source</CardTitle>
+              <CardDescription className="text-gray-600">
                 Connect email and cloud to auto‑ingest invoices, receipts and shipping docs. 
-                <span className="block mt-1 text-xs text-emerald-300/80">
+                <span className="block mt-1 text-xs text-emerald-600/80">
                   Gmail is available now. Outlook, Google Drive, and Dropbox coming in a week.
                 </span>
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {evidenceSources.length > 0 && (
-                <div className="mb-4 p-3 rounded border border-white/10 bg-white/5">
-                  <p className="text-xs font-semibold text-gray-400 mb-2">Connected Sources:</p>
+                <div className="mb-4 p-3 rounded border border-gray-200 bg-gray-50">
+                  <p className="text-xs font-semibold text-gray-600 mb-2">Connected Sources:</p>
                   <div className="flex flex-wrap gap-2">
                     {evidenceSources.filter(s => s.status === 'connected').map((source) => (
-                      <Badge key={source.id} variant="outline" className="border-emerald-500/50 text-emerald-300 bg-emerald-500/10">
+                      <Badge key={source.id} variant="outline" className="border-emerald-500/50 text-emerald-700 bg-emerald-50">
                         {source.provider === 'gdrive' ? 'Google Drive' : source.provider}: {source.account_email}
                       </Badge>
                     ))}
                   </div>
                 </div>
               )}
-                <div className="rounded-2xl border border-white/10 bg-white/5 divide-y divide-white/10">
+                <div className="rounded-2xl border border-gray-200 bg-white divide-y divide-gray-100">
                   {(['gmail','outlook','gdrive','dropbox'] as const).map((p) => {
                     if (p === 'gmail') {
                       const isConnected = () => {
@@ -428,20 +428,20 @@ export default function IntegrationsHub() {
                           <div className="flex items-center gap-3 flex-1">
                             <img src="/gmailicon.png" alt="Gmail" className="h-6 w-6 object-contain" />
                             <div>
-                              <p className="text-sm font-semibold text-gray-200">Gmail</p>
-                              <p className="text-xs text-gray-400">
+                              <p className="text-sm font-semibold text-gray-900">Gmail</p>
+                              <p className="text-xs text-gray-600">
                                 {connected ? `Last ingest: ${getLastIngest()}` : 'Connect your Gmail inbox to automatically ingest invoices and receipts.'}
                               </p>
                             </div>
                           </div>
                           <div className="flex flex-col gap-2 md:flex-row md:items-center">
-                            <Badge variant="outline" className={cn('w-fit text-xs', connected ? 'border-emerald-500 text-emerald-400 font-semibold' : hasError() ? 'border-red-400 text-red-300' : 'border-gray-400/40 text-gray-300')}>
+                            <Badge variant="outline" className={cn('w-fit text-xs', connected ? 'border-emerald-500 text-emerald-700 font-semibold' : hasError() ? 'border-red-400 text-red-500' : 'border-gray-300 text-gray-600')}>
                               {connected ? 'Connected' : hasError() ? 'Error' : 'Not connected'}
                             </Badge>
                               <div className="flex gap-2">
                                 <Button 
                                   size="sm" 
-                                  className={cn(connected ? 'bg-emerald-600/10 text-emerald-200 border border-emerald-500/30 hover:bg-emerald-600/20' : 'bg-emerald-500 hover:bg-emerald-400 text-white')} 
+                                  className={cn(connected ? 'bg-emerald-50 text-emerald-600 border border-emerald-100 hover:bg-emerald-100' : 'bg-emerald-500 hover:bg-emerald-400 text-white')} 
                                   onClick={() => handleConnectDocSource(p)}
                                   disabled={providerLoading !== null || disconnectingProvider === p}
                                 >
@@ -458,7 +458,7 @@ export default function IntegrationsHub() {
                                 <Button 
                                   size="sm" 
                                   variant="outline" 
-                                  className="bg-white/5 text-gray-100 border-white/20 hover:bg-white/10" 
+                                  className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" 
                                   onClick={async () => {
                                     if (!confirm('Are you sure you want to disconnect Gmail? This will stop automatic evidence collection from this source.')) {
                                       return;
@@ -524,22 +524,22 @@ export default function IntegrationsHub() {
                     const providerIcon = providerMeta[p].icon;
                     
                     return (
-                      <div key={p} className="flex flex-col gap-4 px-4 py-4 md:flex-row md:items-center md:justify-between opacity-80">
+                      <div key={p} className="flex flex-col gap-4 px-4 py-4 md:flex-row md:items-center md:justify-between opacity-90">
                         <div className="flex items-center gap-3 flex-1">
                           <img src={providerIcon} alt={providerName} className="h-6 w-6 object-contain" />
                           <div>
-                            <p className="text-sm font-semibold text-gray-200">{providerName}</p>
+                            <p className="text-sm font-semibold text-gray-900">{providerName}</p>
                             <p className="text-xs text-gray-500">Coming soon — available in a week.</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-3">
-                          <Badge variant="outline" className="text-xs border-amber-400/40 text-amber-200">
+                          <Badge variant="outline" className="text-xs border-amber-200 text-amber-600 bg-amber-50">
                             Coming soon
                           </Badge>
                           <Button 
                             size="sm" 
                             disabled 
-                            className="bg-white/5 text-gray-400 border border-white/10 cursor-not-allowed"
+                            className="bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed"
                           >
                             Connect
                           </Button>
@@ -548,16 +548,16 @@ export default function IntegrationsHub() {
                     );
                   })}
                 </div>
-                <div className="rounded-2xl border border-white/10 bg-gradient-to-b from-white/5 via-transparent to-transparent p-5 space-y-5">
+                <div className="rounded-2xl border border-gray-200 bg-gradient-to-b from-white via-white to-gray-50 p-5 space-y-5">
                   <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                     <div>
-                      <p className="text-sm font-semibold text-gray-100">Auto‑collect</p>
+                      <p className="text-sm font-semibold text-gray-900">Auto‑collect</p>
                       <p className="text-xs text-gray-500">Automatically sweep connected inboxes for invoices and receipts.</p>
                     </div>
                     <Button 
                       size="sm" 
                       variant="outline" 
-                      className="bg-white/5 text-gray-100 border-white/15 hover:bg-white/10" 
+                      className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" 
                       onClick={async () => {
                         try {
                           setUpdatingAutoCollect(true);
@@ -599,16 +599,16 @@ export default function IntegrationsHub() {
                       )}
                     </Button>
                   </div>
-                  <Separator className="bg-white/10" />
+                  <Separator className="bg-gray-100" />
                   <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                     <div>
-                      <p className="text-sm font-semibold text-gray-100">Schedule</p>
+                      <p className="text-sm font-semibold text-gray-900">Schedule</p>
                       <p className="text-xs text-gray-500">Choose how often evidence is ingested.</p>
                     </div>
                     <Button 
                       size="sm" 
                       variant="outline" 
-                      className="bg-white/5 text-gray-100 border-white/15 hover:bg-white/10" 
+                      className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" 
                       onClick={async () => {
                         try {
                           setUpdatingSchedule(true);
@@ -650,10 +650,10 @@ export default function IntegrationsHub() {
                       )}
                     </Button>
                   </div>
-                  <Separator className="bg-white/10" />
+                  <Separator className="bg-gray-100" />
                   <div>
                     <div className="flex flex-col gap-1 mb-3">
-                      <p className="text-sm font-semibold text-gray-100">Filters</p>
+                      <p className="text-sm font-semibold text-gray-900">Filters</p>
                       <p className="text-xs text-gray-500">
                         include {filters.includeSenders.join(', ') || '—'} • file types {filters.fileTypes.join(', ') || '—'} • folders {filters.folders.join(', ') || '—'}
                       </p>
@@ -663,26 +663,26 @@ export default function IntegrationsHub() {
                         placeholder="Include senders (comma‑separated)" 
                         value={filters.includeSenders.join(', ')} 
                         onChange={(e) => setFilters(f => ({ ...f, includeSenders: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))} 
-                        className="border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" 
+                        className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-400" 
                       />
                       <Input 
                         placeholder="File types (comma‑separated, e.g. pdf, png, jpg)" 
                         value={filters.fileTypes.join(', ')} 
                         onChange={(e) => setFilters(f => ({ ...f, fileTypes: e.target.value.split(',').map(s => s.trim().toLowerCase()).filter(Boolean) }))} 
-                        className="border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" 
+                        className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-400" 
                       />
                       <Input 
                         placeholder="Folders (comma‑separated)" 
                         value={filters.folders.join(', ')} 
                         onChange={(e) => setFilters(f => ({ ...f, folders: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))} 
-                        className="border-white/10 bg-white/5 text-gray-100 placeholder:text-gray-500" 
+                        className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-400" 
                       />
                     </div>
                     <div className="mt-3">
                       <Button 
                         size="sm" 
                         variant="outline" 
-                        className="bg-white/5 text-gray-100 border-white/15 hover:bg-white/10" 
+                        className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" 
                         onClick={async () => {
                           try {
                             setSavingFilters(true);
@@ -723,10 +723,10 @@ export default function IntegrationsHub() {
                       </Button>
                     </div>
                   </div>
-                  <Separator className="bg-white/10" />
+                  <Separator className="bg-gray-100" />
                   <div className="space-y-4">
                     <div>
-                      <p className="text-sm font-semibold text-gray-100">Last ingest</p>
+                      <p className="text-sm font-semibold text-gray-900">Last ingest</p>
                       <p className="text-xs text-gray-500">{status?.lastIngest || 'Just now'}</p>
                     </div>
                     <Button 
@@ -800,34 +800,34 @@ export default function IntegrationsHub() {
                         </>
                       )}
                     </Button>
-                    <p className="text-xs text-gray-400 text-center">
+                    <p className="text-xs text-gray-500 text-center">
                       {evidenceSources.filter(s => s.status === 'connected').length > 0 || 
                        (status?.providerIngest && Object.values(status.providerIngest).some((p: any) => p?.connected === true))
                         ? 'Uses unified orchestrator – processes all connected sources simultaneously in parallel.'
                         : 'Connect at least one evidence source to begin ingestion.'}
                     </p>
                     {ingestionResult && (
-                      <div className={`rounded-lg border p-4 ${ingestionResult.success ? 'border-emerald-500/50 bg-emerald-500/10' : 'border-red-500/50 bg-red-500/10'}`}>
+                      <div className={`rounded-lg border p-4 ${ingestionResult.success ? 'border-emerald-200 bg-emerald-50' : 'border-red-200 bg-red-50'}`}>
                         <div className="flex items-center justify-between mb-2">
-                          <h4 className={`font-semibold ${ingestionResult.success ? 'text-emerald-300' : 'text-red-300'}`}>
+                          <h4 className={`font-semibold ${ingestionResult.success ? 'text-emerald-700' : 'text-red-600'}`}>
                             {ingestionResult.success ? '✅ Ingestion Complete' : '❌ Ingestion Completed with Errors'}
                           </h4>
                         </div>
                         {ingestionResult.totalDocumentsIngested !== undefined ? (
                           <div className="space-y-2 text-sm">
-                            <p className="text-gray-300">
+                            <p className="text-gray-700">
                               <span className="font-semibold">Total Documents:</span> {ingestionResult.totalDocumentsIngested}
                             </p>
-                            <p className="text-gray-300">
+                            <p className="text-gray-700">
                               <span className="font-semibold">Total Items Processed:</span> {ingestionResult.totalItemsProcessed}
                             </p>
                             {ingestionResult.results && (
                               <div className="mt-3 space-y-1">
-                                <p className="text-xs font-semibold text-gray-400 uppercase">Breakdown by Provider:</p>
+                                <p className="text-xs font-semibold text-gray-500 uppercase">Breakdown by Provider:</p>
                                 {Object.entries(ingestionResult.results).map(([provider, result]) => (
                                   <div key={provider} className="flex items-center justify-between text-xs">
-                                    <span className="text-gray-300 capitalize">{provider === 'gdrive' ? 'Google Drive' : provider}:</span>
-                                    <span className="text-gray-200">
+                                    <span className="text-gray-600 capitalize">{provider === 'gdrive' ? 'Google Drive' : provider}:</span>
+                                    <span className="text-gray-800">
                                       {result.documentsIngested} docs from {result.emailsProcessed || result.filesProcessed} items
                                     </span>
                                   </div>
@@ -836,15 +836,15 @@ export default function IntegrationsHub() {
                             )}
                           </div>
                         ) : (
-                          <div className="text-sm text-gray-300">
+                          <div className="text-sm text-gray-700">
                             <p><span className="font-semibold">Documents Ingested:</span> {ingestionResult.documentsIngested || 0}</p>
                             <p><span className="font-semibold">Items Processed:</span> {ingestionResult.emailsProcessed || ingestionResult.filesProcessed || 0}</p>
                           </div>
                         )}
                         {ingestionResult.errors && ingestionResult.errors.length > 0 && (
-                          <div className="mt-3 pt-3 border-t border-red-500/30">
-                            <p className="text-xs font-semibold text-red-300 mb-1">Errors:</p>
-                            <ul className="text-xs text-red-200 space-y-1">
+                          <div className="mt-3 pt-3 border-t border-red-200">
+                            <p className="text-xs font-semibold text-red-600 mb-1">Errors:</p>
+                            <ul className="text-xs text-red-500 space-y-1">
                               {ingestionResult.errors.map((error, i) => (
                                 <li key={i}>• {error}</li>
                               ))}
@@ -857,7 +857,7 @@ export default function IntegrationsHub() {
                       <Button 
                         size="sm" 
                         variant="outline" 
-                        className="bg-white/5 text-gray-300 border-white/10 hover:bg-white/10" 
+                        className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" 
                         onClick={async () => {
                           try {
                             setIngestingGmail(true);
@@ -904,7 +904,7 @@ export default function IntegrationsHub() {
                           'Ingest Gmail Only'
                         )}
                       </Button>
-                      <Button size="sm" variant="ghost" onClick={() => navigate('/evidence-locker')} className="text-gray-400 hover:text-gray-300">
+                      <Button size="sm" variant="ghost" onClick={() => navigate('/evidence-locker')} className="text-gray-500 hover:text-gray-900">
                         Open Evidence Locker
                       </Button>
                     </div>
@@ -915,12 +915,12 @@ export default function IntegrationsHub() {
         </div>
 
         {/* Live status */}
-        <Card className="bg-white/5 border-white/10 text-gray-300">
+        <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
           <CardHeader>
-            <CardTitle className="text-gray-200">Recent Activity</CardTitle>
+            <CardTitle className="text-gray-900">Recent Activity</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-sm text-gray-400">Connected Gmail • Ingested 12 docs • 7 matched to claims • Token refreshed</div>
+            <div className="text-sm text-gray-600">Connected Gmail • Ingested 12 docs • 7 matched to claims • Token refreshed</div>
           </CardContent>
         </Card>
 
