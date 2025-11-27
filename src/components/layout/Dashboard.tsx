@@ -579,7 +579,7 @@ export function Dashboard() {
               <div className="lg:col-span-2 space-y-8">
                   <Card className="bg-white border border-gray-200 text-gray-900 shadow-sm">
                   <CardContent className="p-6">
-                      <h2 className="font-brand text-lg text-black font-semibold">Get Faster Reimbursements with Clario!</h2>
+                      <h2 className="font-brand text-lg text-[#1f1f1f] font-semibold">Get Faster Reimbursements with Clario!</h2>
                       <p className="text-sm text-gray-600 mt-1">Your Amazon account has been connected successfully.</p>
                   </CardContent>
                 </Card>
@@ -589,7 +589,7 @@ export function Dashboard() {
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
-                            <h2 className="font-brand text-lg text-black font-semibold">Recovered Value</h2>
+                            <h2 className="font-brand text-lg text-[#1f1f1f] font-semibold">Recovered Value</h2>
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <button
@@ -605,7 +605,7 @@ export function Dashboard() {
                             </TooltipContent>
                           </Tooltip>
                         </div>
-                        <div className="text-[20px] md:text-[24px] font-semibold mt-1 text-black">
+                        <div className="text-[20px] md:text-[24px] font-semibold mt-1 text-[#1f1f1f]">
                           {formatCurrency(recoveredTotal ?? 0, recoveredCurrency)}
                         </div>
                           <div className="text-[11px] text-gray-600 mt-1">
@@ -645,7 +645,7 @@ export function Dashboard() {
                     <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
                           <div className="text-xs text-gray-600">Next payment</div>
-                          <div className="text-xl font-semibold text-black mt-1">
+                          <div className="text-xl font-semibold text-[#1f1f1f] mt-1">
                             {formatCurrency((nextPaymentAmount ?? 0), recoveredCurrency)}
                           </div>
                           <div className="text-[11px] text-gray-600 mt-1">
@@ -656,7 +656,7 @@ export function Dashboard() {
                       </div>
                         <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
                           <div className="text-xs text-gray-600">Pending recovery</div>
-                          <div className="text-xl font-semibold text-black mt-1">
+                          <div className="text-xl font-semibold text-[#1f1f1f] mt-1">
                             {formatCurrency((pendingRecoveryAmount ?? 0), recoveredCurrency)}
                           </div>
                           <div className="text-[11px] text-gray-600 mt-1">
@@ -669,7 +669,7 @@ export function Dashboard() {
                           )}
                           <div className="text-[11px] mt-1">
                             <span className="text-gray-600">Recovered so far: </span>
-                            <span className="text-black">{formatCurrency(recoveredTotal ?? 0, recoveredCurrency)}</span>
+                            <span className="text-[#1f1f1f]">{formatCurrency(recoveredTotal ?? 0, recoveredCurrency)}</span>
                           </div>
                       </div>
                         <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
@@ -682,10 +682,10 @@ export function Dashboard() {
                               <span className="text-[10px] text-green-600 font-medium">92%</span>
                             </div>
                           </div>
-                          <div className="text-xl font-semibold text-black mt-1">{formatCurrency(computedApproved ?? 0, recoveredCurrency)}</div>
+                          <div className="text-xl font-semibold text-[#1f1f1f] mt-1">{formatCurrency(computedApproved ?? 0, recoveredCurrency)}</div>
                           <div className="text-[11px] mt-1">
                             <span className="text-gray-600">Total this month: </span>
-                            <span className="text-black">$31.4K</span>
+                            <span className="text-[#1f1f1f]">$31.4K</span>
                         </div>
                       </div>
                     </div>
@@ -700,7 +700,7 @@ export function Dashboard() {
                   <Card className="bg-white border border-gray-200 text-gray-900 shadow-sm">
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between mb-4">
-                        <h2 className="font-brand text-lg text-black font-semibold">💰 Detected Claims</h2>
+                        <h2 className="font-brand text-lg text-[#1f1f1f] font-semibold">💰 Detected Claims</h2>
                         <Button
                           variant="outline"
                           size="sm"
@@ -713,7 +713,7 @@ export function Dashboard() {
                       <div className="grid grid-cols-2 gap-4 mb-4">
                         <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
                           <div className="text-xs text-gray-600">Total Detected</div>
-                          <div className="text-xl font-semibold text-black mt-1">{detectionStats.totalDetections}</div>
+                          <div className="text-xl font-semibold text-[#1f1f1f] mt-1">{detectionStats.totalDetections}</div>
                         </div>
                         <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
                           <div className="text-xs text-gray-600">Recovery Potential</div>
@@ -725,15 +725,15 @@ export function Dashboard() {
                       <div className="space-y-2">
                         <div className="flex items-center gap-2 text-sm">
                           <span className="text-emerald-600">⚡</span>
-                          <span className="text-gray-700">High: <span className="font-semibold text-black">{detectionStats.highConfidence}</span> claims</span>
+                          <span className="text-gray-700">High: <span className="font-semibold text-[#1f1f1f]">{detectionStats.highConfidence}</span> claims</span>
                         </div>
                         <div className="flex items-center gap-2 text-sm">
                           <span className="text-amber-600">❓</span>
-                          <span className="text-gray-700">Medium: <span className="font-semibold text-black">{detectionStats.mediumConfidence}</span> claims</span>
+                          <span className="text-gray-700">Medium: <span className="font-semibold text-[#1f1f1f]">{detectionStats.mediumConfidence}</span> claims</span>
                         </div>
                         <div className="flex items-center gap-2 text-sm">
                           <span className="text-gray-500">📋</span>
-                          <span className="text-gray-700">Low: <span className="font-semibold text-black">{detectionStats.lowConfidence}</span> claims</span>
+                          <span className="text-gray-700">Low: <span className="font-semibold text-[#1f1f1f]">{detectionStats.lowConfidence}</span> claims</span>
                         </div>
                       </div>
                     </CardContent>
@@ -743,7 +743,7 @@ export function Dashboard() {
                   <Card className="bg-white border border-gray-200 text-gray-900 shadow-sm">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
-                        <h2 className="font-brand text-lg text-black font-semibold">Actions</h2>
+                        <h2 className="font-brand text-lg text-[#1f1f1f] font-semibold">Actions</h2>
                         <button aria-label="Customize quick actions" className="text-gray-500 hover:text-gray-700" onClick={() => setQuickActionsEditOpen(true)}>
                         <Plus className="h-4 w-4" />
                       </button>
@@ -1042,10 +1042,13 @@ export function Dashboard() {
           <div className="flex justify-center pt-1">
             <Button
               variant="ghost"
-              onClick={() => setShowSourcesModal(false)}
-              className="text-gray-500 hover:text-gray-700"
+              onClick={() => {
+                setShowSourcesModal(false);
+                navigate('/integrations-hub');
+              }}
+              className="bg-gray-100 text-gray-700 border-none hover:bg-gray-200"
             >
-              Not now
+              Advanced integrations
             </Button>
           </div>
         </DialogContent>
@@ -1054,7 +1057,7 @@ export function Dashboard() {
       <Dialog open={quickActionsEditOpen} onOpenChange={setQuickActionsEditOpen}>
         <DialogContent className="max-w-md bg-white border border-gray-200 text-gray-900 shadow-lg rounded-2xl">
           <DialogHeader>
-              <DialogTitle className="text-lg text-black">Customize Quick Actions</DialogTitle>
+      <DialogTitle className="text-lg text-[#1f1f1f]">Customize Quick Actions</DialogTitle>
               <DialogDescription className="text-gray-600">Select which actions to show.</DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
