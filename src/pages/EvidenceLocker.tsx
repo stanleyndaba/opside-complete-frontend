@@ -485,27 +485,23 @@ export default function EvidenceLocker() {
           <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-900 space-y-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <GmailConnectionStatus onStatusChange={setGmailConnected} />
-          <EvidenceIngestion gmailConnected={gmailConnected} onIngestionComplete={() => {
-            // Add logs for ingestion
-            addDocLog({ type: 'success', category: 'system', message: '[INGESTION] New documents received' }, 500);
-            addDocLog({ type: 'thinking', category: 'parse', message: 'Let me analyze these documents...' }, 800);
-            
-            api.getDocuments().then(res => {
-              if (res.ok && Array.isArray(res.data)) {
-                const newCount = res.data.length - documents.length;
-                if (newCount > 0) {
-                  addDocLog({ type: 'success', category: 'parse', message: `[FOUND] ${newCount} new document(s) ready for processing` }, 1200);
-                  addDocLog({ type: 'thinking', category: 'match', message: 'I\'ll match these against your claims...' }, 900);
+          <EvidenceIngestion 
+            gmailConnected={gmailConnected} 
+            onLogEvent={(event, delayMs) => addDocLog(event, delayMs)}
+            onIngestionComplete={() => {
+              // Refresh documents after ingestion
+              api.getDocuments().then(res => {
+                if (res.ok && Array.isArray(res.data)) {
+                  setDocuments(res.data);
                 }
-                setDocuments(res.data);
-              }
-            });
-            api.getEvidenceStatus().then(res => {
-              if (res.ok && res.data) {
-                setEvidenceStatus(res.data);
-              }
-            });
-          }} />
+              });
+              api.getEvidenceStatus().then(res => {
+                if (res.ok && res.data) {
+                  setEvidenceStatus(res.data);
+                }
+              });
+            }} 
+          />
         </div>
 
         {/* Document Activity Log - Terminal Style */}

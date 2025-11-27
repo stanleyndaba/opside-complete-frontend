@@ -7,11 +7,19 @@ import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
 import { Mail, RefreshCw, CheckCircle2, AlertCircle, Cloud, Loader2 } from 'lucide-react';
 
+interface LogEvent {
+  type: 'info' | 'success' | 'warning' | 'error' | 'progress' | 'thinking';
+  category: 'upload' | 'parse' | 'match' | 'system';
+  message: string;
+  thinkingDuration?: number;
+}
+
 interface EvidenceIngestionProps {
   onIngestionComplete?: (result: {
     totalDocumentsIngested: number;
     totalItemsProcessed: number;
   }) => void;
+  onLogEvent?: (event: LogEvent, delayMs?: number) => void;
   gmailConnected?: boolean;
 }
 
@@ -23,7 +31,7 @@ interface EvidenceSource {
   last_sync_at: string | null;
 }
 
-export function EvidenceIngestion({ onIngestionComplete, gmailConnected = false }: EvidenceIngestionProps) {
+export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnected = false }: EvidenceIngestionProps) {
   const [ingesting, setIngesting] = useState(false);
   const [progress, setProgress] = useState(0);
   const [sources, setSources] = useState<EvidenceSource[]>([]);
@@ -105,6 +113,7 @@ export function EvidenceIngestion({ onIngestionComplete, gmailConnected = false 
         description: 'Please connect at least one source (Gmail, Outlook, Google Drive, or Dropbox) to ingest evidence documents.',
         variant: 'destructive',
       });
+      onLogEvent?.({ type: 'warning', category: 'system', message: 'No evidence sources connected' }, 0);
       return;
     }
 
@@ -112,14 +121,52 @@ export function EvidenceIngestion({ onIngestionComplete, gmailConnected = false 
     setProgress(0);
     setResult(null);
 
+    // Log ingestion start
+    const sourceNames = sources.map(s => getProviderName(s.provider)).join(', ');
+    onLogEvent?.({ type: 'info', category: 'system', message: `Connecting to ${sources.length} source(s): ${sourceNames}...`, thinkingDuration: 2 }, 0);
+    onLogEvent?.({ type: 'thinking', category: 'system', message: 'Scanning for invoice attachments and documents...' }, 1000);
+
     try {
       // Use unified ingestion endpoint - processes ALL sources in parallel
+      onLogEvent?.({ type: 'progress', category: 'system', message: 'Ingesting from all connected sources...', thinkingDuration: 3 }, 1200);
+      
       const res = await api.ingestAllEvidence({
         maxResults: 50,
         autoParse: true,
       });
 
       if (res.ok && res.data) {
+        // Log success with details
+        onLogEvent?.({ type: 'success', category: 'system', message: `[CONNECTED] All sources responded` }, 800);
+        
+        if (res.data.totalItemsProcessed > 0) {
+          onLogEvent?.({ type: 'thinking', category: 'parse', message: `Found ${res.data.totalItemsProcessed} items to process...` }, 900);
+        }
+        
+        if (res.data.totalDocumentsIngested > 0) {
+          onLogEvent?.({ type: 'success', category: 'parse', message: `[INGESTED] ${res.data.totalDocumentsIngested} document(s) extracted` }, 1100);
+          onLogEvent?.({ type: 'thinking', category: 'parse', message: 'Running OCR and text extraction on new documents...' }, 1000);
+          onLogEvent?.({ type: 'info', category: 'match', message: 'Queuing documents for claim matching...', thinkingDuration: 4 }, 1300);
+        } else {
+          onLogEvent?.({ type: 'info', category: 'system', message: 'No new documents found in sources' }, 800);
+        }
+
+        // Log per-source results
+        if (res.data.results) {
+          if (res.data.results.gmail?.documentsIngested) {
+            onLogEvent?.({ type: 'success', category: 'parse', message: `Gmail: ${res.data.results.gmail.documentsIngested} docs from ${res.data.results.gmail.emailsProcessed} emails` }, 600);
+          }
+          if (res.data.results.outlook?.documentsIngested) {
+            onLogEvent?.({ type: 'success', category: 'parse', message: `Outlook: ${res.data.results.outlook.documentsIngested} docs from ${res.data.results.outlook.emailsProcessed} emails` }, 600);
+          }
+          if (res.data.results.gdrive?.documentsIngested) {
+            onLogEvent?.({ type: 'success', category: 'parse', message: `Google Drive: ${res.data.results.gdrive.documentsIngested} docs from ${res.data.results.gdrive.filesProcessed} files` }, 600);
+          }
+          if (res.data.results.dropbox?.documentsIngested) {
+            onLogEvent?.({ type: 'success', category: 'parse', message: `Dropbox: ${res.data.results.dropbox.documentsIngested} docs from ${res.data.results.dropbox.filesProcessed} files` }, 600);
+          }
+        }
+
         setResult({
           success: res.data.success,
           totalDocumentsIngested: res.data.totalDocumentsIngested || 0,
@@ -135,19 +182,18 @@ export function EvidenceIngestion({ onIngestionComplete, gmailConnected = false 
         });
 
         if (res.data.errors && res.data.errors.length > 0) {
+          onLogEvent?.({ type: 'warning', category: 'system', message: `Completed with ${res.data.errors.length} error(s)` }, 500);
           toast({
             title: 'Ingestion Completed with Errors',
             description: `${res.data.totalDocumentsIngested || 0} documents ingested. ${res.data.errors.length} error(s) occurred.`,
             variant: 'destructive',
           });
         } else {
-          toast({
-            title: 'Ingestion Completed',
-            description: `Successfully ingested ${res.data.totalDocumentsIngested || 0} documents from ${res.data.totalItemsProcessed || 0} items.`,
-          });
+          onLogEvent?.({ type: 'success', category: 'system', message: '[COMPLETE] Evidence ingestion finished' }, 800);
         }
         setProgress(100);
       } else {
+        onLogEvent?.({ type: 'error', category: 'system', message: `Ingestion failed: ${res.error || 'Unknown error'}` }, 0);
         toast({
           title: 'Ingestion Failed',
           description: res.error || 'Failed to trigger evidence ingestion. Please try again.',
@@ -163,6 +209,7 @@ export function EvidenceIngestion({ onIngestionComplete, gmailConnected = false 
       }
     } catch (error) {
       console.error('Failed to ingest evidence:', error);
+      onLogEvent?.({ type: 'error', category: 'system', message: 'Network error during ingestion' }, 0);
       toast({
         title: 'Ingestion Failed',
         description: 'An error occurred while ingesting evidence. Please try again.',
