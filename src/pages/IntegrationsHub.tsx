@@ -793,10 +793,7 @@ export default function IntegrationsHub() {
                           Ingesting from All Sources…
                         </>
                       ) : (
-                        <>
-                          <Sparkles className="h-4 w-4 mr-2" />
-                          Ingest from All Sources
-                        </>
+                        'Ingest from All Sources'
                       )}
                     </Button>
                     <p className="text-xs text-gray-500 text-center">
