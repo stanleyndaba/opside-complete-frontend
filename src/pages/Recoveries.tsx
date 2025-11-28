@@ -28,75 +28,28 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { EvidenceMatchingTable } from '@/components/evidence/EvidenceMatchingTable';
 import { DisputeCasesTable } from '@/components/disputes/DisputeCasesTable';
 
-// Fallback mock data when API is unavailable
-const mockClaims = [
-  {
-    id: 'CLM-001',
-    created: '2024-01-15',
-    type: 'Lost Inventory',
-    details: '5 units of Premium Wireless Headphones lost at FTW1',
-    status: 'New',
-    guaranteedAmount: 450.00,
-    expectedPayoutDate: '2024-02-15',
-    sku: 'WH-PREM-001',
-    asin: 'B08K2XR456'
-  },
-  {
-    id: 'CLM-002',
-    created: '2024-01-22',
-    type: 'Fee Dispute',
-    details: 'Incorrect FBA fulfillment fee charged',
-    status: 'Pending',
-    guaranteedAmount: 125.50,
-    expectedPayoutDate: '2024-02-22',
-    sku: 'COF-ORG-500',
-    asin: 'B07G3XN789'
-  },
-  {
-    id: 'CLM-003',
-    created: '2024-02-01',
-    type: 'Damaged Goods',
-    details: '12 units of Organic Coffee Beans damaged at LAX7',
-    status: 'Submitted',
-    guaranteedAmount: 850.75,
-    expectedPayoutDate: '2024-03-01',
-    sku: 'SH-SEC-PRO',
-    asin: 'B09M1ST234'
-  },
-  {
-    id: 'CLM-004',
-    created: '2024-02-10',
-    type: 'Lost Inventory',
-    details: '3 units of Smart Home Security System lost at ATL2',
-    status: 'Paid',
-    guaranteedAmount: 320.00,
-    expectedPayoutDate: '2024-03-10',
-    sku: 'FIT-TRK-001',
-    asin: 'B06H4RT567'
-  },
-  {
-    id: 'CLM-005',
-    created: '2024-02-15',
-    type: 'Fee Dispute',
-    details: 'Storage fee overcharge detected',
-    status: 'Denied',
-    guaranteedAmount: 75.25,
-    expectedPayoutDate: null,
-    sku: 'KIT-BAM-SET',
-    asin: 'B05K7YU890'
-  },
-  {
-    id: 'CLM-006',
-    created: '2024-03-01',
-    type: 'Damaged Goods',
-    details: '8 units of Fitness Tracker Band damaged at PHX3',
-    status: 'Submitted',
-    guaranteedAmount: 1200.25,
-    expectedPayoutDate: '2024-03-25',
-    sku: 'WH-PREM-002',
-    asin: 'B08L3XR789'
-  }
-];
+// Claim type definition
+interface RecoveryClaim {
+  id: string;
+  created?: string;
+  created_at?: string;
+  discovery_date?: string;
+  type?: string;
+  anomaly_type?: string;
+  details?: string;
+  status: string;
+  guaranteedAmount?: number;
+  amount?: number;
+  expectedPayoutDate?: string | null;
+  expected_payout_date?: string | null;
+  sku?: string;
+  asin?: string;
+  confidence_score?: number;
+  estimated_value?: number;
+  matchedDocs?: any[];
+  matchedCount?: number;
+  [key: string]: any; // Allow additional properties
+}
 
 const claimTypes = ['Lost Inventory', 'Fee Dispute', 'Damaged Goods', 'Overcharge'];
 const statusOptions = ['New', 'Pending', 'Submitted', 'Paid', 'Denied'];
@@ -109,7 +62,7 @@ export default function Recoveries() {
     from: subDays(new Date(), 30),
     to: new Date(),
   });
-  const [claims, setClaims] = useState<typeof mockClaims>(mockClaims);
+  const [claims, setClaims] = useState<RecoveryClaim[]>([]);
   const [metricsLoaded, setMetricsLoaded] = useState(false);
   const [metricsError, setMetricsError] = useState<string | null>(null);
   const [metrics, setMetrics] = useState<{ totalClaimsFound: number; inProgress: number; valueInProgress: number; successRate30d: number } | null>(null);
@@ -436,24 +389,26 @@ export default function Recoveries() {
             mergeRecoveries(newClaims, []);
           }
         } else {
-          // No synced recoveries from API - keep existing claims (might be mock data)
-          console.log('[Recoveries] No API data, using existing claims:', claims.length);
+          // No synced recoveries from API - show empty state or merge with detection results only
+          console.log('[Recoveries] No API data from recoveryApi.getRecoveries()');
+          setClaims([]); // Clear any previous data
+          
           // Only merge if we have detection results
           if (detectionRes.ok && detectionRes.data?.results) {
-            console.log('[Recoveries] Merging detection results with existing claims');
+            console.log('[Recoveries] Merging detection results only (no synced recoveries)');
             setDetectionResults(detectionRes.data.results);
-            // Merge detection results with existing claims (or empty if no claims)
-            mergeRecoveries(claims.length > 0 ? claims : [], detectionRes.data.results);
+            // Merge detection results with empty claims array
+            mergeRecoveries([], detectionRes.data.results);
           } else {
-            // No detection results either - just ensure mergedRecoveries reflects current claims
-            console.log('[Recoveries] No detection results, merging existing claims only');
+            // No detection results either - show empty state
+            console.log('[Recoveries] No data available - showing empty state');
             setDetectionResults([]);
-            // If we have claims, merge them (even if empty detection), otherwise set empty
-            if (claims.length > 0) {
-              mergeRecoveries(claims, []);
+            mergeRecoveries([], []);
+            // Set error only if API call actually failed (not just empty response)
+            if (resData === null) {
+              setError('Failed to load recoveries. Please try again.');
             } else {
-              console.warn('[Recoveries] No claims available at all!');
-              mergeRecoveries([], []);
+              setError(null); // Empty response is OK, just no data yet
             }
           }
         }
