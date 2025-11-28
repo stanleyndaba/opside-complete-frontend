@@ -73,27 +73,27 @@ export default function Admin() {
   };
 
   return (
-    <PageLayout title="Admin" forceTransparent midnight>
-      <div className="relative -m-4 lg:-m-6 min-h-screen">
-        <div className="container mx-auto px-6 md:px-10 lg:px-12">
-        <Card className="bg-white/10 backdrop-blur-xl border-white/10 rounded-2xl text-gray-300">
+    <PageLayout title="Admin">
+      <div className="relative -m-4 lg:-m-6 min-h-screen bg-gray-50">
+        <div className="container mx-auto px-6 md:px-10 lg:px-12 py-6">
+        <Card className="bg-white border-gray-200 shadow-sm">
           <CardHeader>
-            <CardTitle className="text-gray-100">Admin Mode</CardTitle>
-            <CardDescription>Enable admin access to internal tools.</CardDescription>
+            <CardTitle className="text-gray-900">Admin Mode</CardTitle>
+            <CardDescription className="text-gray-600">Enable admin access to internal tools.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between py-2">
               <div>
-                <div className="text-gray-100 font-medium">Admin access</div>
-                <div className="text-gray-400 text-sm">Controls visibility of internal pages e.g. revenue model.</div>
+                <div className="text-gray-900 font-medium">Admin access</div>
+                <div className="text-gray-600 text-sm">Controls visibility of internal pages e.g. revenue model.</div>
               </div>
               <Switch checked={isAdmin} onCheckedChange={toggle} />
             </div>
             <div className="pt-4 flex gap-3 flex-wrap">
-              <Button asChild className="bg-white/10 hover:bg-white/20 border border-white/10 text-gray-100">
+              <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
                 <a href="/revenue-model">Open Revenue Model</a>
               </Button>
-              <Button asChild className="bg-white/10 hover:bg-white/20 border border-white/10 text-gray-100">
+              <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
                 <a href="/admin/users-integrations">Users & Integrations</a>
               </Button>
             </div>
@@ -102,19 +102,19 @@ export default function Admin() {
 
         {/* Learning & Analytics Section (Admin Only) */}
         {isAdmin && (
-          <Card className="bg-white/10 backdrop-blur-xl border-white/10 rounded-2xl text-gray-300 mt-6">
+          <Card className="bg-white border-gray-200 shadow-sm mt-6">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-gray-100 flex items-center gap-2">
-                    <Brain className="h-5 w-5 text-emerald-400" />
+                  <CardTitle className="text-gray-900 flex items-center gap-2">
+                    <Brain className="h-5 w-5 text-emerald-600" />
                     System Performance & Learning Analytics
                   </CardTitle>
-                  <CardDescription>Track agent performance, model accuracy, and system optimization insights</CardDescription>
+                  <CardDescription className="text-gray-600">Track agent performance, model accuracy, and system optimization insights</CardDescription>
                 </div>
                 <div className="flex items-center gap-3">
                   <Select value={timeWindow} onValueChange={(v) => setTimeWindow(v as '7d' | '30d' | '90d')}>
-                    <SelectTrigger className="w-[120px] bg-white/5 border-white/10 text-gray-100">
+                    <SelectTrigger className="w-[120px] bg-white text-gray-900 border-gray-200">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -128,7 +128,7 @@ export default function Admin() {
                     size="sm"
                     onClick={refreshMetrics}
                     disabled={loadingMetrics}
-                    className="bg-white/5 border-white/10 text-gray-100 hover:bg-white/10"
+                    className="bg-white text-gray-900 border-gray-200 hover:bg-gray-50"
                   >
                     {loadingMetrics ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
@@ -141,20 +141,20 @@ export default function Admin() {
             </CardHeader>
             <CardContent>
               {loadingMetrics && (
-                <div className="text-center py-8 text-gray-400">
-                  <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2" />
+                <div className="text-center py-8 text-gray-600">
+                  <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2 text-gray-400" />
                   <p>Loading system metrics...</p>
                 </div>
               )}
 
               {metricsError && !loadingMetrics && (
                 <div className="text-center py-8">
-                  <AlertCircle className="h-6 w-6 text-red-400 mx-auto mb-2" />
-                  <p className="text-red-400 mb-2">{metricsError}</p>
+                  <AlertCircle className="h-6 w-6 text-red-600 mx-auto mb-2" />
+                  <p className="text-red-600 mb-2">{metricsError}</p>
                   <Button
                     variant="outline"
                     onClick={refreshMetrics}
-                    className="bg-white/5 border-white/10 text-gray-100"
+                    className="bg-white text-gray-900 border-gray-200 hover:bg-gray-50"
                   >
                     Retry
                   </Button>
@@ -165,49 +165,49 @@ export default function Admin() {
                 <div className="space-y-6">
                   {/* Overall Metrics */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Card className="bg-white/5 border-white/10">
+                    <Card className="bg-gray-50 border-gray-200">
                       <CardContent className="pt-6">
                         <div className="flex items-center justify-between">
                           <div>
-                            <p className="text-sm text-gray-400 mb-1">Total Events</p>
-                            <p className="text-2xl font-semibold text-gray-100">
+                            <p className="text-sm text-gray-600 mb-1">Total Events</p>
+                            <p className="text-2xl font-semibold text-gray-900">
                               {learningMetrics.total_events?.toLocaleString() || 0}
                             </p>
                           </div>
-                          <Activity className="h-8 w-8 text-blue-400" />
+                          <Activity className="h-8 w-8 text-blue-600" />
                         </div>
                       </CardContent>
                     </Card>
 
-                    <Card className="bg-white/5 border-white/10">
+                    <Card className="bg-gray-50 border-gray-200">
                       <CardContent className="pt-6">
                         <div className="flex items-center justify-between">
                           <div>
-                            <p className="text-sm text-gray-400 mb-1">Success Rate</p>
-                            <p className="text-2xl font-semibold text-gray-100">
+                            <p className="text-sm text-gray-600 mb-1">Success Rate</p>
+                            <p className="text-2xl font-semibold text-gray-900">
                               {learningMetrics.success_rate 
                                 ? `${(learningMetrics.success_rate * 100).toFixed(1)}%`
                                 : 'N/A'}
                             </p>
                           </div>
-                          <Target className="h-8 w-8 text-emerald-400" />
+                          <Target className="h-8 w-8 text-emerald-600" />
                         </div>
                       </CardContent>
                     </Card>
 
-                    <Card className="bg-white/5 border-white/10">
+                    <Card className="bg-gray-50 border-gray-200">
                       <CardContent className="pt-6">
                         <div className="flex items-center justify-between">
                           <div>
-                            <p className="text-sm text-gray-400 mb-1">Improvement Rate</p>
-                            <p className="text-2xl font-semibold text-gray-100 flex items-center gap-2">
+                            <p className="text-sm text-gray-600 mb-1">Improvement Rate</p>
+                            <p className="text-2xl font-semibold text-gray-900 flex items-center gap-2">
                               {learningMetrics.improvement_rate 
                                 ? (
                                   <>
                                     {learningMetrics.improvement_rate > 0 ? (
-                                      <TrendingUp className="h-5 w-5 text-emerald-400" />
+                                      <TrendingUp className="h-5 w-5 text-emerald-600" />
                                     ) : (
-                                      <TrendingDown className="h-5 w-5 text-red-400" />
+                                      <TrendingDown className="h-5 w-5 text-red-600" />
                                     )}
                                     {Math.abs(learningMetrics.improvement_rate * 100).toFixed(1)}%
                                   </>
@@ -215,7 +215,7 @@ export default function Admin() {
                                 : 'N/A'}
                             </p>
                           </div>
-                          <Brain className="h-8 w-8 text-purple-400" />
+                          <Brain className="h-8 w-8 text-purple-600" />
                         </div>
                       </CardContent>
                     </Card>
@@ -223,20 +223,20 @@ export default function Admin() {
 
                   {/* Agent Performance Table */}
                   {learningMetrics.by_agent && Object.keys(learningMetrics.by_agent).length > 0 && (
-                    <Card className="bg-white/5 border-white/10">
+                    <Card className="bg-white border-gray-200">
                       <CardHeader>
-                        <CardTitle className="text-gray-100 text-lg">Agent Performance</CardTitle>
-                        <CardDescription>Success rates and event counts by agent</CardDescription>
+                        <CardTitle className="text-gray-900 text-lg">Agent Performance</CardTitle>
+                        <CardDescription className="text-gray-600">Success rates and event counts by agent</CardDescription>
                       </CardHeader>
                       <CardContent>
                         <div className="overflow-x-auto">
                           <Table>
                             <TableHeader>
-                              <TableRow className="border-white/10">
-                                <TableHead className="text-gray-300">Agent</TableHead>
-                                <TableHead className="text-gray-300">Events</TableHead>
-                                <TableHead className="text-gray-300">Success Rate</TableHead>
-                                <TableHead className="text-gray-300">Status</TableHead>
+                              <TableRow className="border-gray-200">
+                                <TableHead className="text-gray-900">Agent</TableHead>
+                                <TableHead className="text-gray-900">Events</TableHead>
+                                <TableHead className="text-gray-900">Success Rate</TableHead>
+                                <TableHead className="text-gray-900">Status</TableHead>
                               </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -246,14 +246,14 @@ export default function Admin() {
                                 const isWarning = successRate >= 0.5 && successRate < 0.8;
                                 
                                 return (
-                                  <TableRow key={agent} className="border-white/5">
-                                    <TableCell className="text-gray-200 font-medium">
+                                  <TableRow key={agent} className="border-gray-200 hover:bg-gray-50">
+                                    <TableCell className="text-gray-900 font-medium">
                                       {agent.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                                     </TableCell>
-                                    <TableCell className="text-gray-300">
+                                    <TableCell className="text-gray-700">
                                       {data.events?.toLocaleString() || 0}
                                     </TableCell>
-                                    <TableCell className="text-gray-300">
+                                    <TableCell className="text-gray-700">
                                       {successRate > 0 ? `${(successRate * 100).toFixed(1)}%` : 'N/A'}
                                     </TableCell>
                                     <TableCell>
@@ -261,10 +261,10 @@ export default function Admin() {
                                         <Badge 
                                           className={
                                             isHealthy 
-                                              ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+                                              ? 'bg-emerald-100 text-emerald-800 border-emerald-200'
                                               : isWarning
-                                              ? 'bg-amber-500/20 text-amber-300 border-amber-500/30'
-                                              : 'bg-red-500/20 text-red-300 border-red-500/30'
+                                              ? 'bg-amber-100 text-amber-800 border-amber-200'
+                                              : 'bg-red-100 text-red-800 border-red-200'
                                           }
                                         >
                                           {isHealthy ? 'Healthy' : isWarning ? 'Warning' : 'Critical'}
@@ -283,25 +283,25 @@ export default function Admin() {
 
                   {/* Learning Insights */}
                   {learningInsights && learningInsights.length > 0 && (
-                    <Card className="bg-white/5 border-white/10">
+                    <Card className="bg-white border-gray-200">
                       <CardHeader>
-                        <CardTitle className="text-gray-100 text-lg">Optimization Insights</CardTitle>
-                        <CardDescription>AI-generated recommendations for system improvement</CardDescription>
+                        <CardTitle className="text-gray-900 text-lg">Optimization Insights</CardTitle>
+                        <CardDescription className="text-gray-600">AI-generated recommendations for system improvement</CardDescription>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-3">
                           {learningInsights.slice(0, 10).map((insight: any) => (
                             <div
                               key={insight.id}
-                              className="p-4 rounded-lg bg-white/5 border border-white/10"
+                              className="p-4 rounded-lg bg-gray-50 border border-gray-200"
                             >
                               <div className="flex items-start gap-3">
-                                <Brain className="h-5 w-5 text-purple-400 mt-0.5 flex-shrink-0" />
+                                <Brain className="h-5 w-5 text-purple-600 mt-0.5 flex-shrink-0" />
                                 <div className="flex-1">
-                                  <h4 className="text-sm font-medium text-gray-100 mb-1">
+                                  <h4 className="text-sm font-medium text-gray-900 mb-1">
                                     {insight.title || 'Optimization Insight'}
                                   </h4>
-                                  <p className="text-sm text-gray-400">
+                                  <p className="text-sm text-gray-600">
                                     {insight.description || 'No description available'}
                                   </p>
                                   {insight.impact && (
@@ -313,10 +313,10 @@ export default function Admin() {
                                     <Badge 
                                       className={`mt-2 ${
                                         insight.priority === 'high'
-                                          ? 'bg-red-500/20 text-red-300 border-red-500/30'
+                                          ? 'bg-red-100 text-red-800 border-red-200'
                                           : insight.priority === 'medium'
-                                          ? 'bg-amber-500/20 text-amber-300 border-amber-500/30'
-                                          : 'bg-blue-500/20 text-blue-300 border-blue-500/30'
+                                          ? 'bg-amber-100 text-amber-800 border-amber-200'
+                                          : 'bg-blue-100 text-blue-800 border-blue-200'
                                       }`}
                                     >
                                       {insight.priority} priority
@@ -333,9 +333,9 @@ export default function Admin() {
 
                   {(!learningMetrics.by_agent || Object.keys(learningMetrics.by_agent).length === 0) && 
                    (!learningInsights || learningInsights.length === 0) && (
-                    <div className="text-center py-8 text-gray-400">
+                    <div className="text-center py-8 text-gray-600">
                       <p>No learning data available yet.</p>
-                      <p className="text-sm mt-1">Data will appear as agents process events.</p>
+                      <p className="text-sm mt-1 text-gray-500">Data will appear as agents process events.</p>
                     </div>
                   )}
                 </div>
