@@ -1079,11 +1079,12 @@ export const api = {
     method: 'POST',
     body: userId ? JSON.stringify({ userId }) : undefined,
   }),
-  getMatchingResults: (params?: { userId?: string; claimId?: string; limit?: number }) => {
+  getMatchingResults: (params?: { userId?: string; claimId?: string; limit?: number; offset?: number }) => {
     const queryParams = new URLSearchParams();
     if (params?.userId) queryParams.append('userId', params.userId);
     if (params?.claimId) queryParams.append('claimId', params.claimId);
     if (params?.limit) queryParams.append('limit', params.limit.toString());
+    if (params?.offset) queryParams.append('offset', params.offset.toString());
     const query = queryParams.toString();
     return requestJson<{
       success: boolean;
@@ -1094,9 +1095,29 @@ export const api = {
         confidence_score: number;
         match_type: string;
         action_taken: string;
+        matched_fields?: string[];
+        reasoning?: string;
+        created_at?: string;
       }>;
       total: number;
     }>(`/api/evidence/matching/results${query ? `?${query}` : ''}`);
+  },
+  getDocumentMatchingResults: (documentId: string) => {
+    return requestJson<{
+      success: boolean;
+      results: Array<{
+        id: string;
+        claim_id: string;
+        document_id: string;
+        confidence_score: number;
+        match_type: string;
+        action_taken: string;
+        matched_fields?: string[];
+        reasoning?: string;
+        created_at?: string;
+      }>;
+      document_id: string;
+    }>(`/api/evidence/matching/results/by-document/${encodeURIComponent(documentId)}`);
   },
   getMatchingStatus: (jobId: string) => requestJson<{
     success: boolean;

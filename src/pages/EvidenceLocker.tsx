@@ -156,15 +156,17 @@ export default function EvidenceLocker() {
       
       if (!cancelled) {
         if (docRes.ok && Array.isArray(docRes.data)) {
-          // Enhance documents with parsed data
+          // Enhance documents with parsed data and matching results
           const enhancedDocs = await Promise.all(
             docRes.data.map(async (doc: any) => {
+              let enhancedDoc = { ...doc };
+              
               // Try to get parsed data for each document
               try {
                 const parsedRes = await api.getDocumentWithParsedData(doc.id);
                 if (parsedRes.ok && parsedRes.data) {
-                  return {
-                    ...doc,
+                  enhancedDoc = {
+                    ...enhancedDoc,
                     parser_status: parsedRes.data.parser_status,
                     parser_confidence: parsedRes.data.parser_confidence,
                     parsed_metadata: parsedRes.data.parsed_metadata,
@@ -173,7 +175,22 @@ export default function EvidenceLocker() {
               } catch (e) {
                 // Ignore errors for individual documents
               }
-              return doc;
+              
+              // Try to get matching results for each document
+              try {
+                const matchRes = await api.getDocumentMatchingResults(doc.id);
+                if (matchRes.ok && matchRes.data?.results) {
+                  const claimIds = matchRes.data.results.map((r: any) => r.claim_id);
+                  enhancedDoc = {
+                    ...enhancedDoc,
+                    matchedClaims: claimIds,
+                  };
+                }
+              } catch (e) {
+                // Ignore errors for matching results
+              }
+              
+              return enhancedDoc;
             })
           );
           setDocuments(enhancedDocs);
@@ -229,8 +246,98 @@ export default function EvidenceLocker() {
               });
             }
           }
+          // Handle matching completion event
+          if (evt?.type === 'matching' && evt?.status === 'completed') {
+            const matches = evt.matches || 0;
+            const autoSubmitted = evt.autoSubmitted || 0;
+            const smartPrompts = evt.smartPromptsCreated || 0;
+            const held = evt.held || 0;
+            
+            addDocLog({ type: 'success', category: 'match', message: `[MATCHED] Found ${matches} claim-document match(es)` }, 600);
+            
+            if (autoSubmitted > 0) {
+              addDocLog({ type: 'success', category: 'match', message: `${autoSubmitted} claim(s) auto-submitted with high confidence` }, 800);
+            }
+            if (smartPrompts > 0) {
+              addDocLog({ type: 'info', category: 'match', message: `${smartPrompts} smart prompt(s) created for review` }, 800);
+            }
+            if (held > 0) {
+              addDocLog({ type: 'warning', category: 'match', message: `${held} match(es) held for manual review (low confidence)` }, 800);
+            }
+            
+            // Refresh documents to show updated matched claims
+            api.getDocuments().then(res => {
+              if (res.ok && Array.isArray(res.data)) {
+                // Fetch matching results for each document to populate matchedClaims
+                Promise.all(
+                  res.data.map(async (doc: any) => {
+                    try {
+                      const matchRes = await api.getDocumentMatchingResults(doc.id);
+                      if (matchRes.ok && matchRes.data?.results) {
+                        const claimIds = matchRes.data.results.map((r: any) => r.claim_id);
+                        return { ...doc, matchedClaims: claimIds };
+                      }
+                      return doc;
+                    } catch {
+                      return doc;
+                    }
+                  })
+                ).then(enhancedDocs => {
+                  setDocuments(enhancedDocs);
+                });
+              }
+            });
+          }
         } catch {}
       };
+      
+      // Listen for specific matching_completed event
+      es.addEventListener('matching_completed', (e: MessageEvent) => {
+        try {
+          const evt = JSON.parse(e.data);
+          if (evt?.type === 'matching' && evt?.status === 'completed') {
+            const matches = evt.matches || 0;
+            const autoSubmitted = evt.autoSubmitted || 0;
+            const smartPrompts = evt.smartPromptsCreated || 0;
+            const held = evt.held || 0;
+            
+            addDocLog({ type: 'success', category: 'match', message: `[MATCHED] Found ${matches} claim-document match(es)` }, 600);
+            
+            if (autoSubmitted > 0) {
+              addDocLog({ type: 'success', category: 'match', message: `${autoSubmitted} claim(s) auto-submitted with high confidence` }, 800);
+            }
+            if (smartPrompts > 0) {
+              addDocLog({ type: 'info', category: 'match', message: `${smartPrompts} smart prompt(s) created for review` }, 800);
+            }
+            if (held > 0) {
+              addDocLog({ type: 'warning', category: 'match', message: `${held} match(es) held for manual review (low confidence)` }, 800);
+            }
+            
+            // Refresh documents to show updated matched claims
+            api.getDocuments().then(res => {
+              if (res.ok && Array.isArray(res.data)) {
+                // Fetch matching results for each document to populate matchedClaims
+                Promise.all(
+                  res.data.map(async (doc: any) => {
+                    try {
+                      const matchRes = await api.getDocumentMatchingResults(doc.id);
+                      if (matchRes.ok && matchRes.data?.results) {
+                        const claimIds = matchRes.data.results.map((r: any) => r.claim_id);
+                        return { ...doc, matchedClaims: claimIds };
+                      }
+                      return doc;
+                    } catch {
+                      return doc;
+                    }
+                  })
+                ).then(enhancedDocs => {
+                  setDocuments(enhancedDocs);
+                });
+              }
+            });
+          }
+        } catch {}
+      });
     } catch {}
     
     return () => { cancelled = true; if (es) es.close(); };
