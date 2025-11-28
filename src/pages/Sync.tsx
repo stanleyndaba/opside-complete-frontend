@@ -1,8 +1,6 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { startSync, getSyncStatus, cancelSync, subscribeSyncProgress, type SyncStatusResponse } from '@/lib/inventoryApi';
@@ -709,22 +707,6 @@ export default function Sync() {
     }
   };
 
-  const getStatusBadge = () => {
-    switch (status) {
-      case 'completed':
-        return <Badge variant="outline" className="border-emerald-500 text-emerald-500">Completed</Badge>;
-      case 'failed':
-        return <Badge variant="outline" className="border-red-500 text-red-500">Failed</Badge>;
-      case 'cancelled':
-        return <Badge variant="outline" className="border-gray-400 text-gray-400">Cancelled</Badge>;
-      case 'detecting':
-        return <Badge variant="outline" className="border-purple-500 text-purple-500">Detecting Discrepancies</Badge>;
-      case 'running':
-        return <Badge variant="outline" className="border-blue-500 text-blue-500">Running</Badge>;
-      default:
-        return <Badge variant="outline" className="border-gray-400 text-gray-400">Idle</Badge>;
-    }
-  };
 
   // Get log entry color
   const getLogColor = (type: LogEntry['type']) => {
@@ -809,62 +791,6 @@ export default function Sync() {
                 </div>
               )}
 
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                              <p className="text-sm text-gray-600">
-                    {status === 'detecting'
-                      ? 'Running AI detection on synced data...'
-                      : status === 'completed' && logsFinished && claimsCount > 0
-                        ? `Analysis complete — ${claimsCount.toLocaleString()} recoverable items found`
-                        : status === 'completed' && logsFinished && totalItemsSynced > 0
-                          ? `Sync completed — ${totalItemsSynced.toLocaleString()} records analyzed`
-                          : status === 'completed' && !logsFinished
-                            ? 'Finalizing analysis...'
-                            : message}
-                  </p>
-                      </div>
-                      {getStatusBadge()}
-                    </div>
-                    
-                    <Progress value={progress} className="h-1" />
-                    
-                    <div className="flex flex-col gap-1">
-                      <div className="flex items-center justify-between text-xs text-gray-600">
-                        <span>{progress}%</span>
-                        {syncData && (
-                          <div className="flex items-center gap-4 text-xs">
-                            {syncData.ordersProcessed !== undefined && syncData.totalOrders !== undefined && (
-                        <span>
-                                {syncData.ordersProcessed.toLocaleString()} / {syncData.totalOrders.toLocaleString()} orders
-                              </span>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-              {/* Sync Summary Grid - Data Types Only */}
-              {syncData && (status === 'completed' || status === 'running' || status === 'detecting') && (
-                <div className="flex flex-wrap gap-2 pt-2">
-                  {[
-                    { label: 'Orders', value: syncData.ordersProcessed, icon: Package },
-                    { label: 'Inventory', value: syncData.inventoryCount, icon: Archive },
-                    { label: 'Shipments', value: syncData.shipmentsCount, icon: Truck },
-                    { label: 'Returns', value: syncData.returnsCount, icon: RotateCcw },
-                    { label: 'Settlements', value: syncData.settlementsCount, icon: DollarSign },
-                    { label: 'Fees', value: syncData.feesCount, icon: DollarSign },
-                  ].filter(item => item.value !== undefined && item.value > 0).map((item) => (
-                    <div 
-                      key={item.label} 
-                      className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs bg-gray-100 text-gray-600"
-                    >
-                      <item.icon className="h-3 w-3" />
-                      <span className="font-medium">{item.value?.toLocaleString()}</span>
-                      <span className="text-gray-400">{item.label}</span>
-                            </div>
-                  ))}
-                          </div>
-              )}
 
               {/* Real-time Logs Section */}
               <div className="space-y-3 pt-6 mt-4 border-t border-gray-200">
