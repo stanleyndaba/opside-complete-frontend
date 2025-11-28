@@ -747,6 +747,18 @@ export default function Sync() {
     }).format(value);
   };
 
+  // Calculate duration in seconds
+  const calculateDuration = (): number | null => {
+    if (syncData?.startedAt && syncData?.completedAt) {
+      const started = new Date(syncData.startedAt).getTime();
+      const completed = new Date(syncData.completedAt).getTime();
+      return Math.round((completed - started) / 1000);
+    }
+    return null;
+  };
+
+  const durationSeconds = calculateDuration();
+
   return (
     <PageLayout title="" hideNavbar hideSidebar plainBackground logoFontFamily='"Nunito Sans", sans-serif'>
       <div className="bg-white min-h-screen">
@@ -778,20 +790,6 @@ export default function Sync() {
                   </div>
                 </div>
               )}
-
-              {/* Potential Recovery Value - The Hero Number - Only show after logs finish */}
-              {((status === 'completed' && logsFinished) || status === 'detecting') && claimsCount > 0 && (
-                <div className="py-4">
-                  <p className="text-sm text-gray-500 mb-1">Potential Recovery Identified</p>
-                  <p className={`text-xl font-semibold text-gray-900 ${status === 'detecting' ? 'animate-pulse' : ''}`}>
-                    {formatCurrency(totalRecoverableValue)}
-                  </p>
-                  <p className="text-xs text-gray-400 mt-1">
-                    Based on {claimsCount.toLocaleString()} detected discrepancies
-                  </p>
-                </div>
-              )}
-
 
               {/* Real-time Logs Section */}
               <div className="space-y-3 pt-6 mt-4 border-t border-gray-200">
@@ -895,6 +893,20 @@ export default function Sync() {
                   </>
                 )}
                       </div>
+
+              {/* Potential Recovery Value - The Hero Number - Only show after logs finish */}
+              {((status === 'completed' && logsFinished) || status === 'detecting') && claimsCount > 0 && (
+                <div className="py-4">
+                  <p className="text-sm text-gray-500 mb-1">Potential Recovery Identified</p>
+                  <p className={`text-xl font-semibold text-gray-900 ${status === 'detecting' ? 'animate-pulse' : ''}`}>
+                    {formatCurrency(totalRecoverableValue)}
+                    {durationSeconds !== null && ` in ${durationSeconds}s`}
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    Based on {claimsCount.toLocaleString()} detected discrepancies
+                  </p>
+                </div>
+              )}
 
               <div className="flex flex-wrap items-center gap-2 pt-4">
                       {status === 'running' && (
