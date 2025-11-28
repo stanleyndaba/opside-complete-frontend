@@ -900,10 +900,13 @@ export default function Sync() {
                   <p className="text-sm text-gray-500 mb-1">Potential Recovery Identified</p>
                   <p className={`text-xl font-semibold text-gray-900 ${status === 'detecting' ? 'animate-pulse' : ''}`}>
                     {formatCurrency(totalRecoverableValue)}
-                    {durationSeconds !== null && ` in ${durationSeconds}s`}
+                    {durationSeconds !== null && <span className="text-sm font-normal"> in {durationSeconds}s</span>}
                   </p>
                   <p className="text-xs text-gray-400 mt-1">
                     Based on {claimsCount.toLocaleString()} detected discrepancies
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1 italic">
+                    Connect, Gmail, Outlook, Dropbox or Google Drive for document parsing and matching
                   </p>
                 </div>
               )}
@@ -951,7 +954,7 @@ export default function Sync() {
                         disabled={status !== 'completed'}
                         className={
                           status === 'completed'
-                            ? 'bg-emerald-500 text-white border-emerald-500 hover:bg-emerald-600'
+                            ? 'bg-blue-900 text-white border-blue-900 hover:bg-blue-800'
                             : 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
                         }
                       >
