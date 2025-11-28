@@ -766,10 +766,10 @@ export default function Sync() {
           <div className="max-w-4xl mx-auto space-y-6">
             {/* Header Section - Security Information */}
             <div className="space-y-3">
-              <h1 className="text-base font-bold text-[#36454F]">
-                Clario connects via a secure, Read-Only integration.
+              <h1 className="text-sm font-bold text-[#36454F]">
+                Clario connects via a secure, read-only integration.
               </h1>
-              <ul className="space-y-2 text-sm text-gray-500">
+              <ul className="space-y-2 text-[10px] text-gray-500">
                 <li>• We ONLY see: Settlement reports, inventory ledgers, and shipment logs.</li>
                 <li>• We CANNOT: Change prices, edit listings, reply to customers, or move stock.</li>
                 <li>• Your data is encrypted and used strictly to assess reimbursement opportunities.</li>
