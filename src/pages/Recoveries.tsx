@@ -24,6 +24,9 @@ import { recoveryApi } from '@/lib/recoveryApi';
 import type { DateRange } from 'react-day-picker';
 import { useStatusStream } from '@/hooks/use-status-stream';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { EvidenceMatchingTable } from '@/components/evidence/EvidenceMatchingTable';
+import { DisputeCasesTable } from '@/components/disputes/DisputeCasesTable';
 
 // Fallback mock data when API is unavailable
 const mockClaims = [
@@ -139,6 +142,7 @@ export default function Recoveries() {
   const [selectedStatus, setSelectedStatus] = useState<string>('pending');
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [detectionDetails, setDetectionDetails] = useState<any | null>(null);
+  const [activeTab, setActiveTab] = useState<'claims' | 'matching' | 'cases'>('claims');
   
   // Table drag-to-scroll functionality
   const tableScrollRef = useRef<HTMLDivElement>(null);
@@ -1169,8 +1173,18 @@ export default function Recoveries() {
           </Card>
         </div>
 
-        {/* Controls */}
-        <Card className="mb-8 bg-white border-gray-200 text-gray-900 shadow-sm">
+        {/* Tabs for Claims, Evidence Matching, and Cases */}
+        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'claims' | 'matching' | 'cases')} className="w-full">
+          <TabsList className="mb-6 bg-white border border-gray-200">
+            <TabsTrigger value="claims" className="data-[state=active]:bg-gray-100">Claims</TabsTrigger>
+            <TabsTrigger value="matching" className="data-[state=active]:bg-gray-100">Evidence Matching</TabsTrigger>
+            <TabsTrigger value="cases" className="data-[state=active]:bg-gray-100">Dispute Cases</TabsTrigger>
+          </TabsList>
+
+          {/* Claims Tab (Existing Content) */}
+          <TabsContent value="claims" className="mt-0">
+            {/* Controls */}
+            <Card className="mb-8 bg-white border-gray-200 text-gray-900 shadow-sm">
           <CardContent className="p-6">
             <div className="flex flex-wrap gap-4 items-center">
               {/* Search Bar */}
@@ -2032,6 +2046,18 @@ export default function Recoveries() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+          </TabsContent>
+
+          {/* Evidence Matching Tab (Agent 6) */}
+          <TabsContent value="matching" className="mt-0">
+            <EvidenceMatchingTable />
+          </TabsContent>
+
+          {/* Dispute Cases Tab (Agent 7) */}
+          <TabsContent value="cases" className="mt-0">
+            <DisputeCasesTable />
+          </TabsContent>
+        </Tabs>
           </div>
         </div>
       </div>
