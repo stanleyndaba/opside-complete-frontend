@@ -794,7 +794,7 @@ export default function Sync() {
               {/* Real-time Logs Section */}
               <div className="space-y-3 pt-6 mt-4 border-t border-gray-200">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-sm font-semibold text-gray-800">Activity Log</h4>
+                  <h4 className="text-sm font-semibold text-gray-800">Real-Time Log</h4>
                   <span className="text-xs text-gray-400">{filteredLogs.length} entries</span>
                 </div>
                 
@@ -904,6 +904,10 @@ export default function Sync() {
                   </p>
                   <p className="text-xs text-gray-400 mt-1">
                     Based on {claimsCount.toLocaleString()} detected discrepancies
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    Action Needed: The Doc parser needs evidence to file the claim.<br />
+                    Blocker: Gmail Connection: Not Connected.
                   </p>
                   <p className="text-xs text-gray-400 mt-1 italic">
                     Connect, Gmail, Outlook, Dropbox or Google Drive for document parsing and matching
