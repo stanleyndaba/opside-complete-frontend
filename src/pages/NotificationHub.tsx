@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { 
   DollarSign, 
   CheckCircle, 
@@ -11,9 +12,14 @@ import {
   FileCheck, 
   Shield, 
   TrendingUp, 
-  Sparkles
+  Sparkles,
+  RefreshCw,
+  Loader2
 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { api } from '@/lib/api';
+import { useToast } from '@/hooks/use-toast';
+import { formatDistanceToNow } from 'date-fns';
 
 interface Notification {
   id: string;
@@ -35,54 +41,148 @@ interface NotificationPreference {
   inApp: boolean;
 }
 
+// Map notification type to icon component
+const getNotificationIcon = (type: string): React.ElementType => {
+  const typeLower = type.toLowerCase();
+  if (typeLower.includes('payout') || typeLower.includes('payment')) return DollarSign;
+  if (typeLower.includes('recovery') || typeLower.includes('claim')) return CheckCircle;
+  if (typeLower.includes('document') || typeLower.includes('invoice') || typeLower.includes('file')) return FileCheck;
+  if (typeLower.includes('team') || typeLower.includes('user')) return Users;
+  if (typeLower.includes('security') || typeLower.includes('login')) return Shield;
+  if (typeLower.includes('performance') || typeLower.includes('summary')) return TrendingUp;
+  if (typeLower.includes('update') || typeLower.includes('feature')) return Sparkles;
+  return FileText; // Default icon
+};
+
+// Format timestamp to relative time
+const formatTimestamp = (createdAt: string): string => {
+  try {
+    const date = new Date(createdAt);
+    return formatDistanceToNow(date, { addSuffix: true });
+  } catch {
+    return 'Recently';
+  }
+};
+
 export default function NotificationHub() {
-  const [notifications] = useState<Notification[]>([
-    {
-      id: '1',
-      type: 'payout',
-      icon: DollarSign,
-      message: 'Payout of $75.50 for Case #OPS-12345 has been confirmed by Amazon',
-      timestamp: '2 hours ago',
-      channels: ['Email', 'In-App'],
-      read: false
-    },
-    {
-      id: '2',
-      type: 'recovery',
-      icon: CheckCircle,
-      message: 'New recovery guaranteed: $125.00 for damaged inventory claim',
-      timestamp: '1 day ago',
-      channels: ['Email', 'In-App'],
-      read: true
-    },
-    {
-      id: '3',
-      type: 'document',
-      icon: FileCheck,
-      message: 'Invoice "Q3-Amazon-Fees.pdf" has been successfully processed',
-      timestamp: '2 days ago',
-      channels: ['In-App'],
-      read: true
-    },
-    {
-      id: '4',
-      type: 'team',
-      icon: Users,
-      message: 'Sarah Johnson has joined your team',
-      timestamp: '3 days ago',
-      channels: ['Email', 'In-App'],
-      read: true
-    },
-    {
-      id: '5',
-      type: 'invoice',
-      icon: FileText,
-      message: 'New invoice issued: $37.50 performance fee for October recoveries',
-      timestamp: '1 week ago',
-      channels: ['Email', 'In-App'],
-      read: true
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
+
+  // Load notifications from API
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await api.getNotifications({ limit: 100 });
+        if (!cancelled) {
+          if (response.ok && response.data?.notifications) {
+            // Map API response to frontend format
+            const mappedNotifications: Notification[] = response.data.notifications.map((notif: any) => {
+              const icon = getNotificationIcon(notif.type || '');
+              const timestamp = formatTimestamp(notif.created_at || new Date().toISOString());
+              
+              // Determine channels based on notification data
+              // Default to In-App, add Email if email_sent is true
+              const channels: string[] = ['In-App'];
+              if (notif.email_sent || notif.sent_via_email) {
+                channels.push('Email');
+              }
+
+              return {
+                id: notif.id,
+                type: notif.type || 'general',
+                icon,
+                message: notif.message || notif.title || 'New notification',
+                timestamp,
+                channels,
+                read: notif.read || false
+              };
+            });
+            setNotifications(mappedNotifications);
+            setError(null);
+          } else {
+            setNotifications([]);
+            setError(response.error || 'Failed to load notifications');
+          }
+        }
+      } catch (err: any) {
+        if (!cancelled) {
+          console.error('Failed to load notifications:', err);
+          setNotifications([]);
+          setError(err.message || 'Failed to load notifications');
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  // Mark notification as read
+  const handleMarkAsRead = async (notificationId: string) => {
+    try {
+      const response = await api.markNotificationRead(notificationId);
+      if (response.ok) {
+        // Update local state
+        setNotifications(prev => prev.map(n => 
+          n.id === notificationId ? { ...n, read: true } : n
+        ));
+      } else {
+        toast({
+          title: 'Failed to mark as read',
+          description: response.error || 'Could not update notification',
+          variant: 'destructive'
+        });
+      }
+    } catch (err: any) {
+      toast({
+        title: 'Error',
+        description: err.message || 'Failed to mark notification as read',
+        variant: 'destructive'
+      });
     }
-  ]);
+  };
+
+  // Refresh notifications
+  const handleRefresh = () => {
+    setLoading(true);
+    api.getNotifications({ limit: 100 }).then(response => {
+      if (response.ok && response.data?.notifications) {
+        const mappedNotifications: Notification[] = response.data.notifications.map((notif: any) => {
+          const icon = getNotificationIcon(notif.type || '');
+          const timestamp = formatTimestamp(notif.created_at || new Date().toISOString());
+          const channels: string[] = ['In-App'];
+          if (notif.email_sent || notif.sent_via_email) {
+            channels.push('Email');
+          }
+          return {
+            id: notif.id,
+            type: notif.type || 'general',
+            icon,
+            message: notif.message || notif.title || 'New notification',
+            timestamp,
+            channels,
+            read: notif.read || false
+          };
+        });
+        setNotifications(mappedNotifications);
+        setError(null);
+        toast({ title: 'Refreshed', description: 'Notifications updated' });
+      } else {
+        setError(response.error || 'Failed to refresh notifications');
+      }
+      setLoading(false);
+    }).catch(err => {
+      setError(err.message || 'Failed to refresh notifications');
+      setLoading(false);
+    });
+  };
 
   const [preferences, setPreferences] = useState<NotificationPreference[]>([
     {
@@ -186,7 +286,8 @@ export default function NotificationHub() {
           <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-700 space-y-8">
         {/* Notification Log */}
         <Card className="p-6 bg-white border-gray-200 text-gray-700 shadow-sm">
-          <div className="mb-6">
+          <div className="mb-6 flex items-center justify-between">
+            <div>
             <h2 className="text-xl font-semibold text-gray-900 mb-2">
               Notification Log
             </h2>
@@ -194,18 +295,62 @@ export default function NotificationHub() {
               Complete history of all notifications sent to you. Nothing hidden.
             </p>
           </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRefresh}
+              disabled={loading}
+              className="bg-white text-blue-700 border-blue-300 hover:bg-blue-50"
+            >
+              {loading ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <RefreshCw className="h-4 w-4 mr-2" />
+              )}
+              Refresh
+            </Button>
+          </div>
 
+          {loading && (
+            <div className="text-center py-8 text-gray-600">
+              <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2" />
+              <p>Loading notifications...</p>
+            </div>
+          )}
+
+          {error && !loading && (
+            <div className="text-center py-8">
+              <p className="text-red-600 mb-2">{error}</p>
+              <Button 
+                variant="outline" 
+                onClick={handleRefresh}
+                className="bg-white text-blue-700 border-blue-300 hover:bg-blue-50"
+              >
+                Retry
+              </Button>
+            </div>
+          )}
+
+          {!loading && !error && notifications.length === 0 && (
+            <div className="text-center py-8 text-gray-600">
+              <p className="mb-2">No notifications found.</p>
+              <p className="text-sm">Notifications will appear here as events occur.</p>
+            </div>
+          )}
+
+          {!loading && !error && notifications.length > 0 && (
           <div className="space-y-4">
             {notifications.map((notification) => {
               const IconComponent = notification.icon;
               return (
                 <div
                   key={notification.id}
-                  className={`flex items-start gap-4 p-4 rounded-lg border transition-colors ${
+                  className={`flex items-start gap-4 p-4 rounded-lg border transition-colors cursor-pointer ${
                     !notification.read 
                       ? 'bg-gray-50 border-gray-200' 
                       : 'bg-white hover:bg-gray-50 border-gray-200'
                   }`}
+                  onClick={() => !notification.read && handleMarkAsRead(notification.id)}
                 >
                   <div className="flex-shrink-0 mt-0.5">
                     <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center">
@@ -233,7 +378,8 @@ export default function NotificationHub() {
                 </div>
               );
             })}
-          </div>
+            </div>
+          )}
         </Card>
 
         {/* Notification Preferences */}
