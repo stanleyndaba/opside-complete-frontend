@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { api } from '@/lib/api';
 
 interface InvoiceRecord {
   id: string;
@@ -28,57 +29,8 @@ interface InvoiceRecord {
   totalRecovered: number;
   commission: number;
   amountCharged: number;
-  recoveryClaimIds: string[];
+  recoveryClaimIds?: string[];
 }
-
-// Mock data for billing history
-const mockInvoices: InvoiceRecord[] = [
-  {
-    id: 'INV-2025-003',
-    dateIssued: '2025-01-15',
-    status: 'Paid',
-    totalRecovered: 2450.89,
-    commission: 490.18,
-    amountCharged: 490.18,
-    recoveryClaimIds: ['REC-2025-0087', 'REC-2025-0088', 'REC-2025-0089']
-  },
-  {
-    id: 'INV-2025-002', 
-    dateIssued: '2024-12-30',
-    status: 'Paid',
-    totalRecovered: 1876.32,
-    commission: 375.26,
-    amountCharged: 375.26,
-    recoveryClaimIds: ['REC-2024-0156', 'REC-2024-0157']
-  },
-  {
-    id: 'INV-2025-001',
-    dateIssued: '2024-12-15', 
-    status: 'Paid',
-    totalRecovered: 3421.67,
-    commission: 684.33,
-    amountCharged: 684.33,
-    recoveryClaimIds: ['REC-2024-0142', 'REC-2024-0143', 'REC-2024-0144', 'REC-2024-0145']
-  },
-  {
-    id: 'INV-2024-012',
-    dateIssued: '2024-11-28',
-    status: 'Paid', 
-    totalRecovered: 5632.45,
-    commission: 1126.49,
-    amountCharged: 1126.49,
-    recoveryClaimIds: ['REC-2024-0123', 'REC-2024-0124', 'REC-2024-0125']
-  },
-  {
-    id: 'INV-2024-011',
-    dateIssued: '2024-11-15',
-    status: 'Paid',
-    totalRecovered: 987.23,
-    commission: 197.45,
-    amountCharged: 197.45,
-    recoveryClaimIds: ['REC-2024-0098']
-  }
-];
 
 const getStatusColor = (status: InvoiceRecord['status']) => {
   switch (status) {
@@ -102,12 +54,16 @@ export default function Billing() {
   const [exportOpen, setExportOpen] = useState(false);
   const [exportFormat, setExportFormat] = useState<'csv' | 'pdf'>('csv');
   const { toast } = useToast();
+  const [invoices, setInvoices] = useState<InvoiceRecord[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Billing settings
   const [invoiceRecipients, setInvoiceRecipients] = useState<string[]>([]);
   const [newRecipient, setNewRecipient] = useState('');
   const [taxId, setTaxId] = useState('');
 
+  // Load billing settings from localStorage
   useEffect(() => {
     try {
       const saved = JSON.parse(localStorage.getItem('clario.billing') || 'null');
@@ -116,6 +72,62 @@ export default function Billing() {
         setTaxId(saved.taxId || '');
       }
     } catch {}
+  }, []);
+
+  // Load billing invoices from API
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await api.getBillingInvoices({ limit: 100 });
+        if (!cancelled) {
+          if (response.ok && response.data?.invoices) {
+            // Map API response to frontend format
+            const mappedInvoices: InvoiceRecord[] = response.data.invoices.map((inv: any) => {
+              // Determine status based on API response
+              let status: 'Paid' | 'Due' | 'Overdue' = 'Paid';
+              if (inv.status) {
+                const statusLower = inv.status.toLowerCase();
+                if (statusLower === 'due' || statusLower === 'pending') status = 'Due';
+                else if (statusLower === 'overdue') status = 'Overdue';
+                else if (statusLower === 'paid' || statusLower === 'completed') status = 'Paid';
+              }
+
+              // Use period_end as dateIssued (invoice date)
+              const dateIssued = inv.period_end || inv.created_at || inv.date_issued || new Date().toISOString();
+
+              return {
+                id: inv.id || inv.invoice_id || `INV-${Date.now()}`,
+                dateIssued: dateIssued.split('T')[0], // Extract date part
+                status,
+                totalRecovered: inv.total_amount || inv.total_recovered || 0,
+                commission: inv.platform_fee || inv.commission || 0,
+                amountCharged: inv.platform_fee || inv.amount_charged || 0,
+                recoveryClaimIds: inv.recovery_claim_ids || inv.recovery_ids || []
+              };
+            });
+            setInvoices(mappedInvoices);
+            setError(null);
+          } else {
+            setInvoices([]);
+            setError(response.error || 'Failed to load billing invoices');
+          }
+        }
+      } catch (err: any) {
+        if (!cancelled) {
+          console.error('Failed to load billing invoices:', err);
+          setInvoices([]);
+          setError(err.message || 'Failed to load billing invoices');
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    })();
+    return () => { cancelled = true; };
   }, []);
 
   const saveBillingSettings = () => {
@@ -133,14 +145,14 @@ export default function Billing() {
       'Amount Charged',
       'Recovery Claim IDs'
     ];
-    const rows = mockInvoices.map(inv => [
+    const rows = invoices.map(inv => [
       inv.id,
       inv.dateIssued,
       inv.status,
       inv.totalRecovered,
       inv.commission,
       inv.amountCharged,
-      inv.recoveryClaimIds.join('|')
+      (inv.recoveryClaimIds || []).join('|')
     ].join(','));
     const csvContent = [headers.join(','), ...rows].join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv' });
@@ -152,6 +164,7 @@ export default function Billing() {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+    toast({ title: 'Export Complete', description: 'Billing history exported to CSV' });
   };
 
   const exportAction = () => {
@@ -168,14 +181,14 @@ export default function Billing() {
 
   const filteredInvoices = useMemo(() => {
     const term = invoiceSearch.trim().toLowerCase();
-    return mockInvoices
+    return invoices
       .filter(inv => {
         const matchesSearch = !term || inv.id.toLowerCase().includes(term) || inv.status.toLowerCase().includes(term);
         const matchesStatus = statusFilter === 'All' || inv.status === statusFilter;
         return matchesSearch && matchesStatus;
       })
       .sort((a, b) => new Date(b.dateIssued).getTime() - new Date(a.dateIssued).getTime());
-  }, [invoiceSearch, statusFilter]);
+  }, [invoices, invoiceSearch, statusFilter]);
 
   const totalPages = Math.max(1, Math.ceil(filteredInvoices.length / pageSize));
   const pageData = useMemo(() => {
@@ -321,21 +334,45 @@ export default function Billing() {
                 <Button variant="outline" className="bg-white text-blue-700 border-blue-300 hover:bg-blue-50" disabled={page>=totalPages} onClick={()=>setPage(p=>Math.min(totalPages,p+1))}>Next</Button>
               </div>
             </div>
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="text-[#36454F]">Invoice #</TableHead>
-                    <TableHead className="text-[#36454F]">Date Issued</TableHead>
-                    <TableHead className="text-[#36454F]">Status</TableHead>
-                    <TableHead className="text-right text-[#36454F]">Total Recovered (Period)</TableHead>
-                    <TableHead className="text-right text-[#36454F]">Our Commission (20%)</TableHead>
-                    <TableHead className="text-right text-[#36454F]">Amount Charged</TableHead>
-                    <TableHead className="text-[#36454F]">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {pageData.map((invoice) => (
+            {loading && (
+              <div className="text-center py-8 text-gray-600">
+                Loading billing invoices...
+              </div>
+            )}
+            {error && !loading && (
+              <div className="text-center py-8">
+                <p className="text-red-600 mb-2">{error}</p>
+                <Button 
+                  variant="outline" 
+                  onClick={() => window.location.reload()}
+                  className="bg-white text-blue-700 border-blue-300 hover:bg-blue-50"
+                >
+                  Retry
+                </Button>
+              </div>
+            )}
+            {!loading && !error && pageData.length === 0 && (
+              <div className="text-center py-8 text-gray-600">
+                <p className="mb-2">No billing invoices found.</p>
+                <p className="text-sm">Invoices will appear here once recoveries are processed.</p>
+              </div>
+            )}
+            {!loading && !error && pageData.length > 0 && (
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="text-[#36454F]">Invoice #</TableHead>
+                      <TableHead className="text-[#36454F]">Date Issued</TableHead>
+                      <TableHead className="text-[#36454F]">Status</TableHead>
+                      <TableHead className="text-right text-[#36454F]">Total Recovered (Period)</TableHead>
+                      <TableHead className="text-right text-[#36454F]">Our Commission (20%)</TableHead>
+                      <TableHead className="text-right text-[#36454F]">Amount Charged</TableHead>
+                      <TableHead className="text-[#36454F]">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {pageData.map((invoice) => (
                     <TableRow key={invoice.id} className="hover:bg-gray-50 border-b border-gray-200">
                       <TableCell>
                         <Link 
@@ -383,10 +420,11 @@ export default function Billing() {
                         </Button>
                       </TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
           </CardContent>
         </Card>
 
