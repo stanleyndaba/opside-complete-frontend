@@ -748,19 +748,20 @@ export default function Sync() {
   };
 
   return (
-    <PageLayout title="Sync Log" hideNavbar hideSidebar plainBackground logoFontFamily='"Nunito Sans", sans-serif'>
+    <PageLayout title="" hideNavbar hideSidebar plainBackground logoFontFamily='"Nunito Sans", sans-serif'>
       <div className="bg-white min-h-screen">
         <div className="container mx-auto px-6 py-10 text-gray-900">
           <div className="max-w-4xl mx-auto space-y-6">
-            {/* Header Section - No Card, content flows naturally */}
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                    {getStatusIcon()}
-                <h1 className="text-xl font-semibold text-gray-900">Sync Log</h1>
-              </div>
-              <p className="text-sm text-gray-500">
-                    First run window: last 18 months • Schedule: daily at 02:00 UTC
-              </p>
+            {/* Header Section - Security Information */}
+            <div className="space-y-3">
+              <h1 className="text-base font-bold text-gray-900">
+                Clario connects via a secure, Read-Only integration.
+              </h1>
+              <ul className="space-y-2 text-sm text-[#1f1f1f]">
+                <li>• We ONLY see: Settlement reports, inventory ledgers, and shipment logs.</li>
+                <li>• We CANNOT: Change prices, edit listings, reply to customers, or move stock.</li>
+                <li>• Your data is encrypted and used strictly to assess reimbursement opportunities.</li>
+              </ul>
             </div>
 
             {/* Main Content - Flat, no card */}
@@ -938,11 +939,11 @@ export default function Sync() {
                         disabled={status !== 'completed'}
                         className={
                           status === 'completed'
-                            ? 'bg-gray-900 text-white border-gray-900 hover:bg-gray-800'
+                            ? 'bg-emerald-500 text-white border-emerald-500 hover:bg-emerald-600'
                             : 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
                         }
                       >
-                        Go to Dashboard
+                        Dashboard
                       </Button>
                     </div>
 
