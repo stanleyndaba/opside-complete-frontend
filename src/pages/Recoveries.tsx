@@ -1174,11 +1174,28 @@ export default function Recoveries() {
         </div>
 
         {/* Tabs for Claims, Evidence Matching, and Cases */}
-        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'claims' | 'matching' | 'cases')} className="w-full">
-          <TabsList className="mb-6 bg-white border border-gray-200">
-            <TabsTrigger value="claims" className="data-[state=active]:bg-gray-100">Claims</TabsTrigger>
-            <TabsTrigger value="matching" className="data-[state=active]:bg-gray-100">Evidence Matching</TabsTrigger>
-            <TabsTrigger value="cases" className="data-[state=active]:bg-gray-100">Dispute Cases</TabsTrigger>
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Recovery Management</h2>
+          <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'claims' | 'matching' | 'cases')} className="w-full">
+          <TabsList className="mb-6 inline-flex h-10 items-center justify-center rounded-md bg-white border border-gray-200 p-1 text-gray-600">
+            <TabsTrigger 
+              value="claims" 
+              className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:shadow-sm"
+            >
+              Claims
+            </TabsTrigger>
+            <TabsTrigger 
+              value="matching" 
+              className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:shadow-sm"
+            >
+              Evidence Matching
+            </TabsTrigger>
+            <TabsTrigger 
+              value="cases" 
+              className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:shadow-sm"
+            >
+              Dispute Cases
+            </TabsTrigger>
           </TabsList>
 
           {/* Claims Tab (Existing Content) */}
@@ -2057,7 +2074,8 @@ export default function Recoveries() {
           <TabsContent value="cases" className="mt-0">
             <DisputeCasesTable />
           </TabsContent>
-        </Tabs>
+          </Tabs>
+        </div>
           </div>
         </div>
       </div>
