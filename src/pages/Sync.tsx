@@ -876,6 +876,79 @@ export default function Sync() {
                           </div>
                         </div>
 
+                    {/* Run Button - Below Real-Time Log */}
+                    <div className="pt-4">
+                      <Button
+                        onClick={async () => {
+                          try {
+                            // Clear logs and reset state for new sync
+                            setLogs([]);
+                            setLogsFinished(false);
+                            logsFinishedRef.current = false;
+                            completionLogsAddedRef.current = false;
+                            setStatus('idle');
+                            setSyncId(undefined);
+                            setError(null);
+                            previousDataRef.current = {
+                              orders: { syncing: false, completed: false, count: 0 },
+                              inventory: { syncing: false, completed: false, count: 0 },
+                              shipments: { syncing: false, completed: false, count: 0 },
+                              returns: { syncing: false, completed: false, count: 0 },
+                              settlements: { syncing: false, completed: false, count: 0 },
+                              fees: { syncing: false, completed: false, count: 0 },
+                              claims: { syncing: false, completed: false, count: 0 },
+                            };
+                            
+                            addLog({ type: 'info', category: 'system', message: 'Connecting to Amazon SP-API Secure Tunnel...', thinkingDuration: 2 }, 0);
+                            
+                            const start = await startSync();
+                            const newSyncId = start.syncId;
+                            setSyncId(newSyncId);
+                            setStatus('running');
+                            setMessage(start.message || 'Sync started successfully');
+                            previousStatusRef.current = 'running';
+                            toastShownRef.current = { started: true };
+                            
+                            addLog({ type: 'success', category: 'system', message: '[CONNECTED] Secure tunnel established' }, 1500);
+                            addLog({ type: 'thinking', category: 'system', message: 'Good... connection is stable. Let me access your seller data' }, 1200);
+                            addLog({ type: 'info', category: 'system', message: 'Requesting access to Seller Central ledger...', thinkingDuration: 3 }, 1400);
+                            
+                            toast({
+                              title: 'Sync Started',
+                              description: 'Your Amazon data sync has started. This may take a few minutes.',
+                              duration: 4000,
+                            });
+                            
+                            navigate(`/sync?id=${newSyncId}`, { replace: true });
+                          } catch (e: any) {
+                            setStatus('failed');
+                            setMessage(e?.message || 'Failed to start sync');
+                            setError(e?.message || 'Failed to start sync');
+                            toast({
+                              title: 'Sync Failed',
+                              description: e?.message || 'Failed to start sync. Please try again.',
+                              variant: 'destructive',
+                              duration: 5000,
+                            });
+                          }
+                        }}
+                        disabled={status === 'running'}
+                        className="bg-gray-700 text-white border-gray-700 hover:bg-gray-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                      >
+                        {status === 'running' ? (
+                          <>
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            Syncing...
+                          </>
+                        ) : (
+                          <>
+                            <RefreshCw className="h-4 w-4 mr-2" />
+                            Run
+                          </>
+                        )}
+                      </Button>
+                    </div>
+
                     {error && (
                       <div className="p-3 rounded-md bg-red-50 border border-red-200 text-sm text-red-800">
                         <strong>Error:</strong> {error}
@@ -958,7 +1031,7 @@ export default function Sync() {
                         disabled={status !== 'completed'}
                         className={
                           status === 'completed'
-                            ? 'bg-[#001f3f] text-white border-[#001f3f] hover:bg-[#001529]'
+                            ? 'bg-gray-700 text-white border-gray-700 hover:bg-gray-600'
                             : 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
                         }
                       >
