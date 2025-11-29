@@ -877,7 +877,7 @@ export default function Sync() {
                         </div>
 
                     {/* Run Button - Below Real-Time Log */}
-                    <div className="pt-4">
+                    <div className="pt-4 flex justify-end">
                       <Button
                         onClick={async () => {
                           try {
@@ -933,7 +933,7 @@ export default function Sync() {
                           }
                         }}
                         disabled={status === 'running'}
-                        className="bg-gray-700 text-white border-gray-700 hover:bg-gray-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                        className="bg-gray-900 text-white border-gray-900 hover:bg-gray-800 disabled:bg-gray-600 disabled:cursor-not-allowed"
                       >
                         {status === 'running' ? (
                           <>
@@ -1031,7 +1031,7 @@ export default function Sync() {
                         disabled={status !== 'completed'}
                         className={
                           status === 'completed'
-                            ? 'bg-gray-700 text-white border-gray-700 hover:bg-gray-600'
+                            ? 'bg-gray-900 text-white border-gray-900 hover:bg-gray-800'
                             : 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
                         }
                       >

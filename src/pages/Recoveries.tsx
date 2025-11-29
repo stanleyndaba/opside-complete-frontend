@@ -403,7 +403,7 @@ export default function Recoveries() {
             // No detection results either - show empty state
             console.log('[Recoveries] No data available - showing empty state');
             setDetectionResults([]);
-            mergeRecoveries([], []);
+              mergeRecoveries([], []);
             // Set error only if API call actually failed (not just empty response)
             if (resData === null) {
               setError('Failed to load recoveries. Please try again.');
@@ -1155,8 +1155,8 @@ export default function Recoveries() {
 
           {/* Claims Tab (Existing Content) */}
           <TabsContent value="claims" className="mt-0">
-            {/* Controls */}
-            <Card className="mb-8 bg-white border-gray-200 text-gray-900 shadow-sm">
+        {/* Controls */}
+        <Card className="mb-8 bg-white border-gray-200 text-gray-900 shadow-sm">
           <CardContent className="p-6">
             <div className="flex flex-wrap gap-4 items-center">
               {/* Search Bar */}
