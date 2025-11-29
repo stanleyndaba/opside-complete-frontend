@@ -22,7 +22,6 @@ interface LogEntry {
   category: 'orders' | 'inventory' | 'shipments' | 'returns' | 'settlements' | 'fees' | 'claims' | 'detection' | 'system';
   message: string;
   count?: number;
-  thinkingDuration?: number; // seconds for "Thought for Xs" display
 }
 
 // Data type tracking
@@ -73,7 +72,7 @@ export default function Sync() {
   const [showSourcesModal, setShowSourcesModal] = useState(false);
   const sourcesModalTimeoutRef = useRef<number | null>(null);
   const [providerLoading, setProviderLoading] = useState<'gmail' | 'outlook' | 'gdrive' | 'dropbox' | null>(null);
-  
+
   // Log system state
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [logSearch, setLogSearch] = useState('');
@@ -107,7 +106,7 @@ export default function Sync() {
   const processLogQueue = async () => {
     if (isProcessingQueueRef.current) return;
     isProcessingQueueRef.current = true;
-    
+
     while (logQueueRef.current.length > 0) {
       const item = logQueueRef.current.shift();
       if (item) {
@@ -115,9 +114,9 @@ export default function Sync() {
         addLogImmediate(item.entry);
       }
     }
-    
+
     isProcessingQueueRef.current = false;
-    
+
     // If completion logs were added and queue is now empty, mark logs as finished
     // Use ref to check if already finished (avoids stale closure)
     if (completionLogsAddedRef.current && !logsFinishedRef.current) {
@@ -142,8 +141,7 @@ export default function Sync() {
     } else {
       // Queue the log with delay
       const baseDelay = entry.type === 'thinking' ? 800 : 400; // thinking logs appear slower
-      const thinkingDelay = entry.thinkingDuration ? entry.thinkingDuration * 300 : 0;
-      logQueueRef.current.push({ entry, delay: delayMs || baseDelay + thinkingDelay });
+      logQueueRef.current.push({ entry, delay: delayMs || baseDelay });
       processLogQueue();
     }
   };
@@ -166,109 +164,53 @@ export default function Sync() {
   const filteredLogs = useMemo(() => {
     if (!logSearch.trim()) return logs;
     const searchLower = logSearch.toLowerCase();
-    return logs.filter(log => 
+    return logs.filter(log =>
       log.message.toLowerCase().includes(searchLower) ||
       log.category.toLowerCase().includes(searchLower)
     );
   }, [logs, logSearch]);
 
   // Update logs based on sync data changes - machine dialogue style with thinking and delays
+  // Update logs based on sync data changes - now using real backend SSE events instead of mock dialogue
   const updateLogsFromSyncData = (data: SyncStatusResponse) => {
     const prev = previousDataRef.current;
-    
-    // Check orders - machine dialogue with thinking
-    if (data.ordersProcessed && data.ordersProcessed > 0 && !prev.orders.completed) {
-      if (!prev.orders.syncing) {
-        addLog({ type: 'progress', category: 'orders', message: 'Accessing Order Ledger... scanning transactions', thinkingDuration: 2 }, 500);
-        prev.orders.syncing = true;
-      }
-      if (data.ordersProcessed >= (data.totalOrders || data.ordersProcessed)) {
-        addLog({ type: 'success', category: 'orders', message: `[FOUND] ${data.ordersProcessed.toLocaleString()} orders in ledger`, count: data.ordersProcessed }, 1200);
-        addLog({ type: 'thinking', category: 'orders', message: `I see... ${data.ordersProcessed.toLocaleString()} transactions to cross-reference` }, 900);
-        addLog({ type: 'info', category: 'orders', message: 'Now let me match these against fulfillment records...', thinkingDuration: 3 }, 1100);
-        prev.orders.completed = true;
-        prev.orders.count = data.ordersProcessed;
-      }
+
+    // Only track counts/state, NOT logs - all logs come from backend SSE events
+    if (data.ordersProcessed && data.ordersProcessed > 0) {
+      prev.orders.count = data.ordersProcessed;
+      prev.orders.completed = data.ordersProcessed >= (data.totalOrders || data.ordersProcessed);
     }
-    
-    // Check inventory - machine dialogue with thinking
-    if (data.inventoryCount && data.inventoryCount > 0 && !prev.inventory.completed) {
-      if (!prev.inventory.syncing) {
-        addLog({ type: 'progress', category: 'inventory', message: 'Querying FBA Inventory Snapshot...', thinkingDuration: 2 }, 600);
-        prev.inventory.syncing = true;
-      }
-      addLog({ type: 'success', category: 'inventory', message: `[FOUND] ${data.inventoryCount.toLocaleString()} active SKUs in warehouse`, count: data.inventoryCount }, 1400);
-      addLog({ type: 'thinking', category: 'inventory', message: 'Hmm... checking if unit counts align with what was shipped' }, 800);
-      addLog({ type: 'info', category: 'inventory', message: 'Cross-checking against inbound shipment manifests...', thinkingDuration: 4 }, 1300);
-      prev.inventory.completed = true;
+
+    if (data.inventoryCount && data.inventoryCount > 0) {
       prev.inventory.count = data.inventoryCount;
+      prev.inventory.completed = true;
     }
-    
-    // Check shipments - machine dialogue with thinking
-    if (data.shipmentsCount && data.shipmentsCount > 0 && !prev.shipments.completed) {
-      if (!prev.shipments.syncing) {
-        addLog({ type: 'progress', category: 'shipments', message: 'Mapping FBA Inbound Shipment history...', thinkingDuration: 3 }, 700);
-        prev.shipments.syncing = true;
-      }
-      addLog({ type: 'success', category: 'shipments', message: `[FOUND] ${data.shipmentsCount.toLocaleString()} shipments to fulfillment centers`, count: data.shipmentsCount }, 1500);
-      addLog({ type: 'thinking', category: 'shipments', message: `Looking at ${data.shipmentsCount} shipments... some quantities might not match` }, 1000);
-      addLog({ type: 'info', category: 'shipments', message: 'Let me verify received quantities vs shipped quantities...', thinkingDuration: 5 }, 1400);
-      prev.shipments.completed = true;
+
+    if (data.shipmentsCount && data.shipmentsCount > 0) {
       prev.shipments.count = data.shipmentsCount;
+      prev.shipments.completed = true;
     }
-    
-    // Check returns - machine dialogue with thinking
-    if (data.returnsCount && data.returnsCount > 0 && !prev.returns.completed) {
-      if (!prev.returns.syncing) {
-        addLog({ type: 'progress', category: 'returns', message: 'Pulling Customer Return records...', thinkingDuration: 2 }, 600);
-        prev.returns.syncing = true;
-      }
-      addLog({ type: 'success', category: 'returns', message: `[FOUND] ${data.returnsCount.toLocaleString()} customer returns processed`, count: data.returnsCount }, 1300);
-      addLog({ type: 'thinking', category: 'returns', message: 'I see returns that may not have been credited back...' }, 900);
-      addLog({ type: 'info', category: 'returns', message: 'Checking if each return was properly reimbursed...', thinkingDuration: 4 }, 1200);
-      prev.returns.completed = true;
+
+    if (data.returnsCount && data.returnsCount > 0) {
       prev.returns.count = data.returnsCount;
+      prev.returns.completed = true;
     }
-    
-    // Check settlements - machine dialogue with thinking
-    if (data.settlementsCount && data.settlementsCount > 0 && !prev.settlements.completed) {
-      if (!prev.settlements.syncing) {
-        addLog({ type: 'progress', category: 'settlements', message: 'Downloading Settlement Reports...', thinkingDuration: 3 }, 800);
-        prev.settlements.syncing = true;
-      }
-      addLog({ type: 'success', category: 'settlements', message: `[FOUND] ${data.settlementsCount.toLocaleString()} settlement periods`, count: data.settlementsCount }, 1600);
-      addLog({ type: 'thinking', category: 'settlements', message: 'Now let me reconcile these payouts against expected amounts' }, 1000);
-      addLog({ type: 'info', category: 'settlements', message: 'Calculating expected vs actual disbursements...', thinkingDuration: 6 }, 1500);
-      prev.settlements.completed = true;
+
+    if (data.settlementsCount && data.settlementsCount > 0) {
       prev.settlements.count = data.settlementsCount;
+      prev.settlements.completed = true;
     }
-    
-    // Check fees - machine dialogue with thinking
-    if (data.feesCount && data.feesCount > 0 && !prev.fees.completed) {
-      if (!prev.fees.syncing) {
-        addLog({ type: 'progress', category: 'fees', message: 'Extracting FBA Fee breakdown...', thinkingDuration: 2 }, 600);
-        prev.fees.syncing = true;
-      }
-      addLog({ type: 'success', category: 'fees', message: `[FOUND] ${data.feesCount.toLocaleString()} fee line items`, count: data.feesCount }, 1400);
-      addLog({ type: 'thinking', category: 'fees', message: 'Interesting... some fee calculations look off' }, 900);
-      addLog({ type: 'info', category: 'fees', message: 'Analyzing each fee for potential overcharges...', thinkingDuration: 5 }, 1300);
-      prev.fees.completed = true;
+
+    if (data.feesCount && data.feesCount > 0) {
       prev.fees.count = data.feesCount;
+      prev.fees.completed = true;
     }
-    
-    // Check claims detected - machine dialogue with urgency and thinking
-    if (data.claimsDetected && data.claimsDetected > 0 && !prev.claims.completed) {
-      const estimatedValue = data.claimsDetected * 48;
-      const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimatedValue);
-      addLog({ type: 'thinking', category: 'detection', message: 'Finalizing analysis... compiling discrepancies found' }, 1000);
-      addLog({ type: 'warning', category: 'detection', message: '[ALERT] Discrepancies detected in seller data' }, 1200);
-      addLog({ type: 'thinking', category: 'detection', message: `I found ${data.claimsDetected} items that Amazon owes you for` }, 1100);
-      addLog({ type: 'success', category: 'detection', message: `[RESULT] ${data.claimsDetected.toLocaleString()} recoverable items identified` }, 1300);
-      addLog({ type: 'success', category: 'detection', message: `[ESTIMATED] Potential recovery: ${formattedValue}` }, 800);
-      prev.claims.completed = true;
+
+    if (data.claimsDetected && data.claimsDetected > 0) {
       prev.claims.count = data.claimsDetected;
+      prev.claims.completed = true;
     }
-    
+
     previousDataRef.current = prev;
   };
 
@@ -280,9 +222,9 @@ export default function Sync() {
       const claims = syncData?.claimsDetected || 0;
       const value = syncData?.totalRecoverableValue || (claims * 48);
       const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
-      
+
       // No toast here - the UI already shows completion status clearly
-      
+
       // Show modal after a brief pause
       if (sourcesModalTimeoutRef.current) {
         window.clearTimeout(sourcesModalTimeoutRef.current);
@@ -305,7 +247,7 @@ export default function Sync() {
       }
     };
   }, [logsFinished, status, toast, syncData]);
-  
+
   // Phase 3: Detection updates SSE - connect when sync completes
   useDetectionUpdates(
     status === 'completed' && syncId ? syncId : null,
@@ -317,7 +259,7 @@ export default function Sync() {
           const estimatedValue = event.estimated_value || (totalDetections * 48);
           const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimatedValue);
           addLog({ type: 'success', category: 'detection', message: `Recoveries identified: ${formattedValue} from ${totalDetections} discrepancies` }, 1200);
-          
+
           // ⭐ UPDATE syncData so "Potential Recovery Identified" shows when logsFinished
           setSyncData(prev => prev ? {
             ...prev,
@@ -332,7 +274,7 @@ export default function Sync() {
         const estimatedValue = event.estimated_value || (event.new_detections_count * 48);
         const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimatedValue);
         addLog({ type: 'info', category: 'detection', message: `New: +${formattedValue} potential recovery` }, 800);
-        
+
         // ⭐ UPDATE syncData for incremental updates too
         setSyncData(prev => prev ? {
           ...prev,
@@ -355,10 +297,10 @@ export default function Sync() {
       }
     }
     if (s.message) setMessage(s.message);
-    
+
     // Update logs based on sync data
     updateLogsFromSyncData(s);
-    
+
     // Map status values to match documentation
     let mappedStatus: 'idle' | 'running' | 'detecting' | 'completed' | 'failed' | 'cancelled' = 'idle';
     if (s.status === 'idle') mappedStatus = 'idle';
@@ -367,20 +309,17 @@ export default function Sync() {
     else if (s.status === 'completed' || s.status === 'complete') mappedStatus = 'completed';
     else if (s.status === 'failed') mappedStatus = 'failed';
     else if (s.status === 'cancelled') mappedStatus = 'cancelled';
-    
+
     // Show toast notifications on status changes
     if (mappedStatus !== previousStatusRef.current) {
       previousStatusRef.current = mappedStatus;
-      
+
       // Show toast for status transitions
       if (mappedStatus === 'completed' && !toastShownRef.current.completed) {
         toastShownRef.current.completed = true;
-        // Queue completion logs - toast and modal will show after these finish
-        addLog({ type: 'thinking', category: 'system', message: 'Finalizing everything... wrapping up the analysis' }, 800);
-        addLog({ type: 'success', category: 'system', message: '[COMPLETE] All data synchronized and analyzed' }, 1500);
-        addLog({ type: 'thinking', category: 'system', message: 'Done. Your potential recoveries are ready for review' }, 1200);
-        // Mark that completion logs have been queued - logsFinished will be set when queue empties
+        // Mark completion - backend should send completion logs via SSE
         completionLogsAddedRef.current = true;
+        // Logs will be marked as finished when queue empties
       } else if (mappedStatus === 'failed' && !toastShownRef.current.failed) {
         toastShownRef.current.failed = true;
         addLog({ type: 'error', category: 'system', message: `Sync failed: ${s.error || s.message || 'Unknown error'}` });
@@ -400,9 +339,9 @@ export default function Sync() {
         });
       }
     }
-    
+
     setStatus(mappedStatus);
-    
+
     if (s.error) {
       setError(s.error);
     } else {
@@ -437,9 +376,9 @@ export default function Sync() {
             fees: { syncing: false, completed: false, count: 0 },
             claims: { syncing: false, completed: false, count: 0 },
           };
-          
-          addLog({ type: 'info', category: 'system', message: 'Connecting to Amazon SP-API Secure Tunnel...', thinkingDuration: 2 }, 0);
-          
+
+          addLog({ type: 'info', category: 'system', message: 'Initializing sync...' }, 0);
+
           const start = await startSync();
           if (cancelled) return;
           const newSyncId = start.syncId;
@@ -448,20 +387,13 @@ export default function Sync() {
           setMessage(start.message || 'Sync started successfully');
           previousStatusRef.current = 'running';
           toastShownRef.current = { started: true };
-          
-          addLog({ type: 'success', category: 'system', message: '[CONNECTED] Secure tunnel established' }, 1500);
-          addLog({ type: 'thinking', category: 'system', message: 'Good... connection is stable. Let me access your seller data' }, 1200);
-          addLog({ type: 'info', category: 'system', message: 'Requesting access to Seller Central ledger...', thinkingDuration: 3 }, 1400);
-          addLog({ type: 'thinking', category: 'system', message: 'I\'ll need to scan the last 18 months of transactions' }, 1100);
-          addLog({ type: 'info', category: 'system', message: 'Scanning 18-month transaction window...', thinkingDuration: 4 }, 1600);
-          addLog({ type: 'thinking', category: 'system', message: 'This is where discrepancies often hide... let me dig in' }, 1300);
-          
+
           toast({
             title: 'Sync Started',
             description: 'Your Amazon data sync has started. This may take a few minutes.',
             duration: 4000,
           });
-          
+
           navigate(`/sync?id=${newSyncId}`, { replace: true });
         } catch (e: any) {
           if (cancelled) return;
@@ -470,7 +402,7 @@ export default function Sync() {
           setError(e?.message || 'Failed to start sync');
           previousStatusRef.current = 'failed';
           addLog({ type: 'error', category: 'system', message: `Failed to start sync: ${e?.message || 'Unknown error'}` });
-          
+
           toast({
             title: 'Failed to Start Sync',
             description: e?.message || 'Failed to start sync. Please try again.',
@@ -485,14 +417,14 @@ export default function Sync() {
           addLog({ type: 'info', category: 'system', message: `Loading sync status...` });
           const s = await getSyncStatus(syncId);
           if (cancelled) return;
-          
+
           console.log('[Sync] Received sync status:', s);
           updateSyncState(s);
         } catch (e: any) {
           if (cancelled) return;
           console.error('Failed to load sync status:', e);
           const errorMessage = e?.message || 'Failed to load sync status';
-          
+
           if (errorMessage.includes('not found') || errorMessage.includes('Sync not found')) {
             setSyncId(undefined);
             setSyncData(null);
@@ -501,7 +433,7 @@ export default function Sync() {
             setMessage('Sync not found. Please start a new sync.');
             setError(null);
             navigate('/sync', { replace: true });
-            
+
             toast({
               title: 'Sync Not Found',
               description: 'The sync you were viewing no longer exists. Please start a new sync.',
@@ -528,7 +460,7 @@ export default function Sync() {
       try {
         unsubscribe = subscribeSyncProgress(syncId, (s: any) => {
           if (cancelled) return;
-          
+
           // Handle log events from backend
           if (s.type === 'log' && s.log) {
             console.log('[Sync] Log event received:', s.log);
@@ -540,20 +472,20 @@ export default function Sync() {
             });
             return;
           }
-          
+
           // Handle detection.completed event (sent after sync completes)
           if (s.type === 'detection' && s.status === 'completed') {
             console.log('[Sync] Detection completed event received:', s);
             const detectedCount = s.claimsDetected || 0;
             const estimatedValue = detectedCount * 48; // ~$48 avg per claim
-            
+
             // ⭐ UPDATE syncData - but DON'T show toast here, let the main completion flow handle it
             setSyncData(prev => prev ? {
               ...prev,
               claimsDetected: detectedCount,
               totalRecoverableValue: estimatedValue
             } : prev);
-            
+
             if (detectedCount > 0) {
               const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimatedValue);
               addLog({ type: 'success', category: 'detection', message: `Recoveries: ${formattedValue} from ${detectedCount} discrepancies`, count: detectedCount }, 1200);
@@ -561,9 +493,9 @@ export default function Sync() {
             }
             return;
           }
-          
+
           updateSyncState(s);
-          
+
           if (s.status === 'failed' || s.status === 'cancelled') {
             if (interval) {
               clearInterval(interval);
@@ -579,21 +511,21 @@ export default function Sync() {
     // Polling fallback - continue polling after completion to catch async detection results
     let pollsAfterComplete = 0;
     const MAX_POLLS_AFTER_COMPLETE = 12; // 12 polls × 3s = 36 seconds for detection to complete
-    
+
     interval = setInterval(async () => {
       if (!syncId || cancelled) return;
       try {
         const s = await getSyncStatus(syncId);
         if (cancelled) return;
         updateSyncState(s);
-        
+
         if (s.status === 'completed' || s.status === 'failed' || s.status === 'cancelled') {
           pollsAfterComplete++;
-          
+
           if (pollsAfterComplete >= MAX_POLLS_AFTER_COMPLETE || s.status === 'failed' || s.status === 'cancelled') {
-          if (interval) {
-            clearInterval(interval);
-            interval = null;
+            if (interval) {
+              clearInterval(interval);
+              interval = null;
             }
           }
         }
@@ -629,7 +561,7 @@ export default function Sync() {
 
   const handleCancelSync = async () => {
     if (!syncId || status !== 'running') return;
-    
+
     setIsCancelling(true);
     addLog({ type: 'warning', category: 'system', message: 'Cancelling sync...' });
     try {
@@ -638,13 +570,13 @@ export default function Sync() {
       setMessage('Sync cancelled');
       previousStatusRef.current = 'cancelled';
       toastShownRef.current.cancelled = true;
-      
+
       toast({
         title: 'Sync Cancelled',
         description: 'The sync has been cancelled successfully.',
         duration: 4000,
       });
-      
+
       const s = await getSyncStatus(syncId);
       updateSyncState(s);
     } catch (e: any) {
@@ -680,13 +612,13 @@ export default function Sync() {
       fees: { syncing: false, completed: false, count: 0 },
       claims: { syncing: false, completed: false, count: 0 },
     };
-    
+
     toast({
       title: 'Retrying Sync',
       description: 'Starting a new sync...',
       duration: 3000,
     });
-    
+
     window.location.reload();
   };
 
@@ -707,6 +639,44 @@ export default function Sync() {
     }
   };
 
+
+  // Get agent-specific color based on category
+  const getAgentColor = (category: string) => {
+    switch (category) {
+      case 'agent1': return 'text-blue-500';
+      case 'agent2': return 'text-cyan-500';
+      case 'agent3': return 'text-purple-500';
+      case 'agent4': return 'text-green-500';
+      case 'agent5': return 'text-yellow-500';
+      case 'agent6': return 'text-pink-500';
+      case 'agent7': return 'text-orange-500';
+      case 'agent8': return 'text-teal-500';
+      case 'agent9': return 'text-indigo-500';
+      case 'agent10': return 'text-red-500';
+      case 'agent11': return 'text-violet-500';
+      case 'system': return 'text-gray-500';
+      default: return 'text-cyan-500'; // Default to cyan for unknown categories
+    }
+  };
+
+  // Get agent label based on category
+  const getAgentLabel = (category: string) => {
+    switch (category) {
+      case 'agent1': return '[Agent 1: OAuth]';
+      case 'agent2': return '[Agent 2: Sync]';
+      case 'agent3': return '[Agent 3: Detection]';
+      case 'agent4': return '[Agent 4: Evidence]';
+      case 'agent5': return '[Agent 5: Parsing]';
+      case 'agent6': return '[Agent 6: Matching]';
+      case 'agent7': return '[Agent 7: Filing]';
+      case 'agent8': return '[Agent 8: Recovery]';
+      case 'agent9': return '[Agent 9: Billing]';
+      case 'agent10': return '[Agent 10: Notify]';
+      case 'agent11': return '[Agent 11: Learning]';
+      case 'system': return '[System]';
+      default: return `[${category}]`;
+    }
+  };
 
   // Get log entry color
   const getLogColor = (type: LogEntry['type']) => {
@@ -736,7 +706,7 @@ export default function Sync() {
   const AVERAGE_CLAIM_VALUE = 48;
   const claimsCount = syncData?.claimsDetected || 0;
   const totalRecoverableValue = syncData?.totalRecoverableValue || (claimsCount * AVERAGE_CLAIM_VALUE);
-  
+
   // Format currency
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -777,7 +747,7 @@ export default function Sync() {
             </div>
 
             {/* Main Content - Flat, no card */}
-                  <div className="space-y-4">
+            <div className="space-y-4">
               {/* Detecting Phase - Show AI analysis in progress */}
               {status === 'detecting' && (
                 <div className="py-4 bg-purple-50 rounded-lg px-4 border border-purple-100">
@@ -797,7 +767,7 @@ export default function Sync() {
                   <h4 className="text-sm font-semibold text-gray-800">Real-Time Log</h4>
                   <span className="text-xs text-gray-400">{filteredLogs.length} entries</span>
                 </div>
-                
+
                 {/* Search Bar */}
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -808,10 +778,10 @@ export default function Sync() {
                     onChange={(e) => setLogSearch(e.target.value)}
                     className="pl-10 h-9 text-sm bg-gray-50 border-gray-200 focus:bg-white"
                   />
-                            </div>
-                
+                </div>
+
                 {/* Log Container - Terminal Style */}
-                <div 
+                <div
                   ref={logContainerRef}
                   className="bg-[#1f1f1f] rounded-lg p-4 font-mono text-xs h-72 overflow-y-auto scroll-smooth"
                 >
@@ -832,29 +802,16 @@ export default function Sync() {
                             <span className="sm:hidden text-gray-500 shrink-0 select-none text-[10px]">
                               {log.timestamp.toLocaleTimeString()}
                             </span>
-                            <span className="text-cyan-500 shrink-0 select-none font-medium text-[10px] sm:text-xs">
-                              sync agent
+                            {/* Agent label with agent-specific color */}
+                            <span className={`${getAgentColor(log.category)} shrink-0 font-medium text-[10px] sm:text-xs select-none`}>
+                              {getAgentLabel(log.category)}
                             </span>
                             <span className={`${getLogColor(log.type)} break-words min-w-0 flex-1`}>
                               {log.message}
                             </span>
                           </div>
-                          {/* "flagged" indicator after thinking logs */}
-                          {log.type === 'thinking' && (
-                            <div className="ml-1 mt-0.5 mb-1">
-                              <span className="text-[10px] text-yellow-500/70 font-medium">
-                                flagged
-                              </span>
-                            </div>
-                          )}
-                          {/* Thought for Xs indicator - shown after info/progress logs */}
-                          {log.thinkingDuration && (
-                            <div className="ml-1 mt-0.5 mb-1">
-                              <span className="text-[10px] text-gray-600 italic">
-                                Thought for {log.thinkingDuration}s
-                              </span>
-                            </div>
-                          )}
+                          {/* Remove "flagged" indicator - it was part of mock dialogue */}
+                          {/* Remove "Thought for Xs" indicator - it was part of mock dialogue */}
                         </div>
                       ))}
                       {status === 'running' && (
@@ -865,107 +822,105 @@ export default function Sync() {
                           <span className="sm:hidden text-gray-500 shrink-0 select-none text-[10px]">
                             {new Date().toLocaleTimeString()}
                           </span>
-                          <span className="text-cyan-500 shrink-0 select-none font-medium text-[10px] sm:text-xs">
-                            sync agent
+                          <span className="text-cyan-500 shrink-0 font-medium text-[10px] sm:text-xs select-none">
+                            [System]
                           </span>
-                          <span>Processing...</span>
-                          </div>
-                      )}
-                            </div>
-                              )}
-                          </div>
+                          <span className="break-words min-w-0 flex-1">
+                            Processing...
+                          </span>
                         </div>
-
-                    {/* Run Button - Below Real-Time Log */}
-                    <div className="pt-4 flex justify-end">
-                      <Button
-                        onClick={async () => {
-                          try {
-                            // Clear logs and reset state for new sync
-                            setLogs([]);
-                            setLogsFinished(false);
-                            logsFinishedRef.current = false;
-                            completionLogsAddedRef.current = false;
-                            setStatus('idle');
-                            setSyncId(undefined);
-                            setError(null);
-                            previousDataRef.current = {
-                              orders: { syncing: false, completed: false, count: 0 },
-                              inventory: { syncing: false, completed: false, count: 0 },
-                              shipments: { syncing: false, completed: false, count: 0 },
-                              returns: { syncing: false, completed: false, count: 0 },
-                              settlements: { syncing: false, completed: false, count: 0 },
-                              fees: { syncing: false, completed: false, count: 0 },
-                              claims: { syncing: false, completed: false, count: 0 },
-                            };
-                            
-                            addLog({ type: 'info', category: 'system', message: 'Connecting to Amazon SP-API Secure Tunnel...', thinkingDuration: 2 }, 0);
-                            
-                            const start = await startSync();
-                            const newSyncId = start.syncId;
-                            setSyncId(newSyncId);
-                            setStatus('running');
-                            setMessage(start.message || 'Sync started successfully');
-                            previousStatusRef.current = 'running';
-                            toastShownRef.current = { started: true };
-                            
-                            addLog({ type: 'success', category: 'system', message: '[CONNECTED] Secure tunnel established' }, 1500);
-                            addLog({ type: 'thinking', category: 'system', message: 'Good... connection is stable. Let me access your seller data' }, 1200);
-                            addLog({ type: 'info', category: 'system', message: 'Requesting access to Seller Central ledger...', thinkingDuration: 3 }, 1400);
-                            
-                            toast({
-                              title: 'Sync Started',
-                              description: 'Your Amazon data sync has started. This may take a few minutes.',
-                              duration: 4000,
-                            });
-                            
-                            navigate(`/sync?id=${newSyncId}`, { replace: true });
-                          } catch (e: any) {
-                            setStatus('failed');
-                            setMessage(e?.message || 'Failed to start sync');
-                            setError(e?.message || 'Failed to start sync');
-                            toast({
-                              title: 'Sync Failed',
-                              description: e?.message || 'Failed to start sync. Please try again.',
-                              variant: 'destructive',
-                              duration: 5000,
-                            });
-                          }
-                        }}
-                        disabled={status === 'running'}
-                        className="bg-gray-900 text-white border-gray-900 hover:bg-gray-800 disabled:bg-gray-600 disabled:cursor-not-allowed"
-                      >
-                        {status === 'running' ? (
-                          <>
-                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                            Syncing...
-                          </>
-                        ) : (
-                          <>
-                            <RefreshCw className="h-4 w-4 mr-2" />
-                            Run
-                          </>
-                        )}
-                      </Button>
+                      )}
                     </div>
+                  )}
+                </div>
+              </div>
 
-                    {error && (
-                      <div className="p-3 rounded-md bg-red-50 border border-red-200 text-sm text-red-800">
-                        <strong>Error:</strong> {error}
-                      </div>
-                    )}
+              {/* Run Button - Below Real-Time Log */}
+              <div className="pt-4 flex justify-end">
+                <Button
+                  onClick={async () => {
+                    try {
+                      // Clear logs and reset state for new sync
+                      setLogs([]);
+                      setLogsFinished(false);
+                      logsFinishedRef.current = false;
+                      completionLogsAddedRef.current = false;
+                      setStatus('idle');
+                      setSyncId(undefined);
+                      setError(null);
+                      previousDataRef.current = {
+                        orders: { syncing: false, completed: false, count: 0 },
+                        inventory: { syncing: false, completed: false, count: 0 },
+                        shipments: { syncing: false, completed: false, count: 0 },
+                        returns: { syncing: false, completed: false, count: 0 },
+                        settlements: { syncing: false, completed: false, count: 0 },
+                        fees: { syncing: false, completed: false, count: 0 },
+                        claims: { syncing: false, completed: false, count: 0 },
+                      };
+
+                      addLog({ type: 'info', category: 'system', message: 'Initializing sync...' }, 0);
+
+                      const start = await startSync();
+                      const newSyncId = start.syncId;
+                      setSyncId(newSyncId);
+                      setStatus('running');
+                      setMessage(start.message || 'Sync started successfully');
+                      previousStatusRef.current = 'running';
+                      toastShownRef.current = { started: true };
+
+                      toast({
+                        title: 'Sync Started',
+                        description: 'Your Amazon data sync has started. This may take a few minutes.',
+                        duration: 4000,
+                      });
+
+                      navigate(`/sync?id=${newSyncId}`, { replace: true });
+                    } catch (e: any) {
+                      setStatus('failed');
+                      setMessage(e?.message || 'Failed to start sync');
+                      setError(e?.message || 'Failed to start sync');
+                      toast({
+                        title: 'Sync Failed',
+                        description: e?.message || 'Failed to start sync. Please try again.',
+                        variant: 'destructive',
+                        duration: 5000,
+                      });
+                    }
+                  }}
+                  disabled={status === 'running'}
+                  className="bg-gray-900 text-white border-gray-900 hover:bg-gray-800 disabled:bg-gray-600 disabled:cursor-not-allowed"
+                >
+                  {status === 'running' ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Syncing...
+                    </>
+                  ) : (
+                    <>
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                      Run
+                    </>
+                  )}
+                </Button>
+              </div>
+
+              {error && (
+                <div className="p-3 rounded-md bg-red-50 border border-red-200 text-sm text-red-800">
+                  <strong>Error:</strong> {error}
+                </div>
+              )}
 
               <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500 pt-2">
-                    {syncData?.startedAt && (
+                {syncData?.startedAt && (
                   <span>Started: {new Date(syncData.startedAt).toLocaleString()}</span>
-                    )}
-                    {syncData?.completedAt && (
+                )}
+                {syncData?.completedAt && (
                   <>
                     <span>•</span>
                     <span>Completed: {new Date(syncData.completedAt).toLocaleString()}</span>
                   </>
                 )}
-                      </div>
+              </div>
 
               {/* Potential Recovery Value - The Hero Number - Only show after logs finish */}
               {((status === 'completed' && logsFinished) || status === 'detecting') && claimsCount > 0 && (
@@ -989,55 +944,55 @@ export default function Sync() {
               )}
 
               <div className="flex flex-wrap items-center gap-2 pt-4">
-                      {status === 'running' && (
-                        <Button
-                          variant="outline"
-                          onClick={handleCancelSync}
-                          disabled={isCancelling}
-                          className="bg-gray-900 text-white border-gray-900 hover:bg-gray-800"
-                        >
-                          {isCancelling ? (
-                            <>
-                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                              Cancelling...
-                            </>
-                          ) : (
-                            <>
-                              <XCircle className="h-4 w-4 mr-2" />
-                              Cancel Sync
-                            </>
-                          )}
-                        </Button>
-                      )}
-                      
-                      {(status === 'failed' || status === 'cancelled') && (
-                        <Button
-                          variant="outline"
-                          onClick={handleRetry}
-                          className="border-gray-200 text-gray-700 hover:bg-gray-50"
-                        >
-                          <RefreshCw className="h-4 w-4 mr-2" />
-                          Retry Sync
-                        </Button>
-                      )}
+                {status === 'running' && (
+                  <Button
+                    variant="outline"
+                    onClick={handleCancelSync}
+                    disabled={isCancelling}
+                    className="bg-gray-900 text-white border-gray-900 hover:bg-gray-800"
+                  >
+                    {isCancelling ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Cancelling...
+                      </>
+                    ) : (
+                      <>
+                        <XCircle className="h-4 w-4 mr-2" />
+                        Cancel Sync
+                      </>
+                    )}
+                  </Button>
+                )}
 
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          if (status === 'completed') {
-                            navigate('/app');
-                          }
-                        }}
-                        disabled={status !== 'completed'}
-                        className={
-                          status === 'completed'
-                            ? 'bg-gray-900 text-white border-gray-900 hover:bg-gray-800'
-                            : 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
-                        }
-                      >
-                        Dashboard
-                      </Button>
-                    </div>
+                {(status === 'failed' || status === 'cancelled') && (
+                  <Button
+                    variant="outline"
+                    onClick={handleRetry}
+                    className="border-gray-200 text-gray-700 hover:bg-gray-50"
+                  >
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    Retry Sync
+                  </Button>
+                )}
+
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    if (status === 'completed') {
+                      navigate('/app');
+                    }
+                  }}
+                  disabled={status !== 'completed'}
+                  className={
+                    status === 'completed'
+                      ? 'bg-gray-900 text-white border-gray-900 hover:bg-gray-800'
+                      : 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
+                  }
+                >
+                  Dashboard
+                </Button>
+              </div>
 
               {/* Document Sources Modal */}
               <Dialog open={showSourcesModal} onOpenChange={setShowSourcesModal}>
@@ -1048,7 +1003,7 @@ export default function Sync() {
                       Read-only access. No writing or sending permissions.
                     </DialogDescription>
                   </DialogHeader>
-                  
+
                   <div className="grid grid-cols-2 gap-3 py-2">
                     <button
                       onClick={async () => {
@@ -1085,7 +1040,7 @@ export default function Sync() {
                       )}
                       <span className="text-xs font-medium text-gray-700">Gmail</span>
                     </button>
-                    
+
                     <button
                       onClick={async () => {
                         try {
@@ -1121,7 +1076,7 @@ export default function Sync() {
                       )}
                       <span className="text-xs font-medium text-gray-700">Outlook</span>
                     </button>
-                    
+
                     <button
                       onClick={async () => {
                         try {
@@ -1157,7 +1112,7 @@ export default function Sync() {
                       )}
                       <span className="text-xs font-medium text-gray-700">Google Drive</span>
                     </button>
-                    
+
                     <button
                       onClick={async () => {
                         try {
@@ -1193,8 +1148,8 @@ export default function Sync() {
                       )}
                       <span className="text-xs font-medium text-gray-700">Dropbox</span>
                     </button>
-                      </div>
-                  
+                  </div>
+
                   <div className="flex justify-center pt-1">
                     <Button
                       variant="ghost"
@@ -1207,9 +1162,9 @@ export default function Sync() {
                 </DialogContent>
               </Dialog>
             </div>
-            </div>
           </div>
         </div>
-    </PageLayout>
+      </div >
+    </PageLayout >
   );
 }
