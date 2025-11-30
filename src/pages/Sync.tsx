@@ -1048,26 +1048,7 @@ export default function Sync() {
               )}
             </div>
 
-            {/* Potential Recovery Value - The Hero Number - Only show after logs finish */}
-            {((status === 'completed' && logsFinished) || status === 'detecting') && claimsCount > 0 && (
-              <div className="py-4">
-                <p className="text-sm text-gray-500 mb-1">Potential Recovery Identified</p>
-                <p className={`text-xl font-semibold text-gray-900 ${status === 'detecting' ? 'animate-pulse' : ''}`}>
-                  {formatCurrency(totalRecoverableValue)}
-                  {durationSeconds !== null && <span className="text-sm font-normal"> in {durationSeconds}s</span>}
-                </p>
-                <p className="text-xs text-gray-400 mt-1">
-                  Based on {claimsCount.toLocaleString()} detected discrepancies
-                </p>
-                <p className="text-xs text-gray-400 mt-1">
-                  Action Needed: The Doc parser needs evidence to file the claim.<br />
-                  Blocker: Gmail Connection: Not Connected.
-                </p>
-                <p className="text-xs text-gray-400 mt-1 italic">
-                  Connect, Gmail, Outlook, Dropbox or Google Drive for document parsing and matching
-                </p>
-              </div>
-            )}
+
 
             <div className="flex flex-wrap items-center gap-2 pt-4">
               {status === 'running' && (
