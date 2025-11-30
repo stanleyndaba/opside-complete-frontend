@@ -22,6 +22,10 @@ interface LogEntry {
   category: 'orders' | 'inventory' | 'shipments' | 'returns' | 'settlements' | 'fees' | 'claims' | 'detection' | 'system';
   message: string;
   count?: number;
+  context?: {
+    details?: string[];
+    estimatedTime?: string;
+  };
 }
 
 // Data type tracking
@@ -869,15 +873,28 @@ export default function Sync() {
                                 </span>
 
                                 {/* Message */}
-                                <span className={`break-all leading-relaxed ${getLogColor(log.type)}`}>
-                                  <span className="opacity-50 mr-1.5 text-[10px] uppercase tracking-wider text-gray-500 select-none">
-                                    {getAgentLabel(log.category)}
-                                  </span>
-                                  {highlightContent(log.message)}
-                                  {isLast && (status === 'running' || status === 'detecting') && (
-                                    <span className="inline-block w-1.5 h-3 bg-cyan-500 ml-1 animate-pulse align-middle"></span>
+                                <div className={`break-all leading-relaxed ${getLogColor(log.type)} flex-1`}>
+                                  <div>
+                                    <span className="opacity-50 mr-1.5 text-[10px] uppercase tracking-wider text-gray-500 select-none">
+                                      {getAgentLabel(log.category)}
+                                    </span>
+                                    {highlightContent(log.message)}
+                                    {isLast && (status === 'running' || status === 'detecting') && (
+                                      <span className="inline-block w-1.5 h-3 bg-cyan-500 ml-1 animate-pulse align-middle"></span>
+                                    )}
+                                  </div>
+
+                                  {/* Context Details */}
+                                  {log.context?.details && log.context.details.length > 0 && (
+                                    <div className="text-[10px] pl-4 mt-1 space-y-0.5 opacity-60">
+                                      {log.context.details.map((detail, i) => (
+                                        <div key={i} className="leading-relaxed">
+                                          → {detail}
+                                        </div>
+                                      ))}
+                                    </div>
                                   )}
-                                </span>
+                                </div>
                               </div>
                             </div>
                           );
