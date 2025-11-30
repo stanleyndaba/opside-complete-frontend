@@ -779,13 +779,18 @@ export default function Sync() {
 
               {/* Audit Complete (completed) */}
               {status === 'completed' && (
-                <div className="space-y-1">
+                <div className="space-y-2">
                   <h1 className="text-sm font-semibold text-gray-700">
                     Audit Complete
                   </h1>
                   <p className="text-xs text-gray-500">
                     {syncData?.claimsDetected || 0} claims found. ${((syncData?.claimsDetected || 0) * 48).toLocaleString()} in potential recoveries • Completed in {durationSeconds !== null ? `${durationSeconds}s` : 'N/A'}
                   </p>
+                  <div className="text-xs text-gray-400 space-y-1 pt-2">
+                    <p className="font-medium">Action Needed: The Doc parser needs evidence to file the claim.</p>
+                    <p><span className="font-medium">Blocker:</span> Gmail Connection: Not Connected.</p>
+                    <p className="pt-1">Connect Gmail, Outlook, Dropbox or Google Drive for document parsing and matching</p>
+                  </div>
                 </div>
               )}
 
