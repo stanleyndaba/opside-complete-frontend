@@ -832,9 +832,28 @@ export default function Sync() {
 
               {/* Real-time Logs Section */}
               <div className="space-y-3 pt-6 mt-4 border-t border-gray-200">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-sm font-semibold text-gray-800">Real-Time Log</h4>
-                  <span className="text-xs text-gray-400">{filteredLogs.length} entries</span>
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-sm font-semibold text-gray-800">Real-Time Logs</h4>
+                    <span className="text-xs text-gray-400">{filteredLogs.length} entries</span>
+                  </div>
+                  {syncData?.completedAt && (
+                    <p className="text-xs text-gray-400">
+                      Last synced: {(() => {
+                        const completedTime = new Date(syncData.completedAt).getTime();
+                        const now = Date.now();
+                        const diffMs = now - completedTime;
+                        const diffMins = Math.floor(diffMs / (1000 * 60));
+                        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+                        if (diffMins < 1) return 'just now';
+                        if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
+                        if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+                        return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+                      })()}
+                    </p>
+                  )}
                 </div>
 
                 {/* Search Bar */}
