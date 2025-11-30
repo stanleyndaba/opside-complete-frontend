@@ -868,15 +868,6 @@ export default function Sync() {
                                   {formatTimestamp(log.timestamp).split(' ')[1]}
                                 </span>
 
-                                {/* Icon */}
-                                <span className={`shrink-0 pt-0.5 ${getAgentColor(log.category)}`}>
-                                  {log.type === 'thinking' ? (
-                                    <Loader2 className="h-3 w-3 animate-spin" />
-                                  ) : (
-                                    getCategoryIcon(log.category)
-                                  )}
-                                </span>
-
                                 {/* Message */}
                                 <span className={`break-all leading-relaxed ${getLogColor(log.type)}`}>
                                   <span className="opacity-50 mr-1.5 text-[10px] uppercase tracking-wider text-gray-500 select-none">
