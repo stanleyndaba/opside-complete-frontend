@@ -1228,9 +1228,8 @@ export default function Sync() {
               </DialogContent>
             </Dialog>
           </div>
-        </div >
-      </div >
-    </div >
-    </PageLayout >
+        </div>
+      </div>
+    </PageLayout>
   );
 }
