@@ -215,24 +215,35 @@ const Index = () => {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
+    let lastScrollTop = 0;
+
     const handleScroll = () => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
       
-      // Show banner when near bottom (within 100px of bottom)
-      // Hide when near top (within 200px of top)
-      const isNearBottom = scrollTop + windowHeight >= documentHeight - 100;
-      const isNearTop = scrollTop <= 200;
+      // Check if at the bottom (within 50px of bottom)
+      const isAtBottom = scrollTop + windowHeight >= documentHeight - 50;
       
-      if (isNearBottom) {
+      // Check if scrolling up towards top
+      const isScrollingUp = scrollTop < lastScrollTop;
+      const isNearTop = scrollTop <= 100;
+      
+      if (isAtBottom) {
+        // Show when at bottom
         setShowBanner(true);
-      } else if (isNearTop) {
+      } else if (isScrollingUp && isNearTop) {
+        // Hide when scrolling up towards top
+        setShowBanner(false);
+      } else if (!isAtBottom) {
+        // Hide when not at bottom (scrolling down or in middle)
         setShowBanner(false);
       }
+      
+      lastScrollTop = scrollTop;
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     // Check initial position
     handleScroll();
     
@@ -862,17 +873,17 @@ const Index = () => {
       <BrandFooter selectedLanguageLabel={selectedLanguage.language} />
       
       {/* Founders Council Banner */}
-      <div 
-        className={`fixed bottom-0 left-0 right-0 z-50 px-4 py-4 md:px-6 md:py-5 transition-transform duration-300 ease-in-out ${
-          showBanner ? 'translate-y-0' : 'translate-y-full'
-        }`}
-        style={{
-          background: 'linear-gradient(to top, #1f4037 0%, #99f2c8 100%)'
-        }}
-      >
+      {showBanner && (
+        <div 
+          className="w-full px-4 py-4 md:px-6 md:py-5"
+          style={{
+            backgroundColor: '#1f4037',
+            fontFamily: 'Inter, sans-serif'
+          }}
+        >
           <div className="container mx-auto max-w-6xl">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
-              <p className="text-white text-sm md:text-base font-medium text-center md:text-left flex-1">
+              <p className="text-white text-sm md:text-base font-medium text-center md:text-left flex-1" style={{ fontFamily: 'Inter, sans-serif' }}>
                 Join the exclusive group of 20 high-volume sellers stress-testing our 7-second AI Audit. Lock in a permanent 15% commission rate (vs. the standard 20% public rate) and get direct influence over the Clario roadmap.
               </p>
               <a
@@ -883,6 +894,7 @@ const Index = () => {
               >
                 <Button
                   className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-6 py-2.5 shadow-lg transition-colors whitespace-nowrap"
+                  style={{ fontFamily: 'Inter, sans-serif' }}
                 >
                   Immediate Access →
                 </Button>
@@ -890,6 +902,7 @@ const Index = () => {
             </div>
           </div>
         </div>
+      )}
     </div>
   );
 };
