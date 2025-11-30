@@ -109,7 +109,7 @@ export const getSyncStatus = async (syncId: string): Promise<SyncStatusResponse>
     }
     throw new Error(response.error || 'Failed to get sync status');
   }
-  
+
   // Debug: Log the response
   console.log('[getSyncStatus] API Response:', {
     syncId: response.data?.syncId,
@@ -123,7 +123,7 @@ export const getSyncStatus = async (syncId: string): Promise<SyncStatusResponse>
     feesCount: response.data?.feesCount,
     claimsDetected: response.data?.claimsDetected
   });
-  
+
   return response.data;
 };
 
@@ -139,19 +139,19 @@ export const cancelSync = async (syncId: string): Promise<{ success: boolean; me
 // Get sync history - GET /api/sync/history
 export const getSyncHistory = async (limit = 20, offset = 0): Promise<SyncHistoryResponse> => {
   const response = await api.get<any>(`/api/sync/history?limit=${limit}&offset=${offset}`);
-  
+
   // Debug logging
   console.log('[getSyncHistory] API Response:', response);
   console.log('[getSyncHistory] Response OK?', response.ok);
   console.log('[getSyncHistory] Response data:', response.data);
   console.log('[getSyncHistory] Response data type:', typeof response.data);
   console.log('[getSyncHistory] Is array?', Array.isArray(response.data));
-  
+
   if (!response.ok) {
     console.error('[getSyncHistory] API Error:', response.error);
     throw new Error(response.error || 'Failed to fetch sync history');
   }
-  
+
   // Handle both old format (syncs array) and new format (history array)
   // Also handle direct array response
   if (response.data) {
@@ -164,7 +164,7 @@ export const getSyncHistory = async (limit = 20, offset = 0): Promise<SyncHistor
         total: response.data.length
       };
     }
-    
+
     // Check for syncs array (legacy format)
     if ('syncs' in response.data && Array.isArray((response.data as any).syncs)) {
       console.log('[getSyncHistory] Using syncs array (legacy), length:', (response.data as any).syncs.length);
@@ -174,14 +174,14 @@ export const getSyncHistory = async (limit = 20, offset = 0): Promise<SyncHistor
         total: (response.data as any).syncs.length
       };
     }
-    
+
     // Check for history array (new format)
     if ('history' in response.data && Array.isArray((response.data as any).history)) {
       console.log('[getSyncHistory] Using history array, length:', (response.data as any).history.length);
       return response.data as SyncHistoryResponse;
     }
   }
-  
+
   console.warn('[getSyncHistory] No valid history found, returning empty');
   return { success: true, history: [], total: 0 };
 };
@@ -199,12 +199,13 @@ export const getSyncStatistics = async (): Promise<SyncStatisticsResponse> => {
 export const subscribeSyncProgress = (syncId: string, onUpdate: (data: any) => void) => {
   const url = api.buildApiUrl(`/api/sse/sync-progress/${syncId}`);
   const eventSource = new EventSource(url, { withCredentials: true } as any);
-  
+
+  // Handle default 'message' events (sync status updates)
   eventSource.onmessage = (e) => {
     try {
       const data = JSON.parse(e.data);
       onUpdate(data);
-      
+
       // Close connection if sync is complete or failed
       if (data.status === 'completed' || data.status === 'failed' || data.status === 'cancelled') {
         eventSource.close();
@@ -213,12 +214,24 @@ export const subscribeSyncProgress = (syncId: string, onUpdate: (data: any) => v
       console.error('Error parsing SSE message:', err);
     }
   };
-  
+
+  // Handle custom 'sync.log' events from Agent 2
+  eventSource.addEventListener('sync.log', (e: any) => {
+    try {
+      const data = JSON.parse(e.data);
+      console.log('[SSE] Received sync.log event:', data);
+      onUpdate(data);
+    } catch (err) {
+      console.error('Error parsing sync.log SSE event:', err);
+    }
+  });
+
+  // Handle connection errors
   eventSource.onerror = (error) => {
     console.error('SSE error:', error);
     eventSource.close();
   };
-  
+
   return () => {
     eventSource.close();
   };
