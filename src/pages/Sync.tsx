@@ -751,17 +751,64 @@ export default function Sync() {
       <div className="bg-white min-h-screen">
         <div className="container mx-auto px-6 py-10 text-gray-900">
           <div className="max-w-4xl mx-auto space-y-6">
-            {/* Header Section - Security Information */}
-            <div className="space-y-3">
-              <h1 className="text-sm font-bold text-[#36454F]">
-                Clario connects via a secure, read-only integration.
-              </h1>
-              <ul className="space-y-2 text-[10px] text-gray-500">
-                <li>• We ONLY see: Settlement reports, inventory ledgers, and shipment logs.</li>
-                <li>• We CANNOT: Change prices, edit listings, reply to customers, or move stock.</li>
-                <li>• Your data is encrypted and used strictly to assess reimbursement opportunities.</li>
-              </ul>
+            {/* Dynamic Status Header */}
+            <div className="space-y-2">
+              {/* Analysis in progress (running) */}
+              {status === 'running' && (
+                <div className="space-y-1">
+                  <h1 className="text-sm font-semibold text-gray-700 bg-gradient-to-r from-gray-400 via-gray-600 to-gray-400 bg-[length:200%_100%] animate-[shimmer_2s_ease-in-out_infinite] bg-clip-text text-transparent">
+                    Analysis in progress
+                  </h1>
+                  <p className="text-xs text-gray-500">
+                    Analyzing 18 months of FBA data across 6 data sources...
+                  </p>
+                </div>
+              )}
+
+              {/* Wrapping up report (detecting) */}
+              {status === 'detecting' && (
+                <div className="space-y-1">
+                  <h1 className="text-sm font-semibold text-gray-700 bg-gradient-to-r from-gray-400 via-gray-600 to-gray-400 bg-[length:200%_100%] animate-[shimmer_2s_ease-in-out_infinite] bg-clip-text text-transparent">
+                    Wrapping up report
+                  </h1>
+                  <p className="text-xs text-gray-500">
+                    Found {syncData?.claimsDetected || logs.filter(l => l.category === 'detection').length || 0} potential claims so far • ${((syncData?.claimsDetected || 0) * 48).toLocaleString()} identified
+                  </p>
+                </div>
+              )}
+
+              {/* Audit Complete (completed) */}
+              {status === 'completed' && (
+                <div className="space-y-1">
+                  <h1 className="text-sm font-semibold text-gray-700">
+                    Audit Complete
+                  </h1>
+                  <p className="text-xs text-gray-500">
+                    {syncData?.claimsDetected || 0} claims found. ${((syncData?.claimsDetected || 0) * 48).toLocaleString()} in potential recoveries • Completed in {durationSeconds !== null ? `${durationSeconds}s` : 'N/A'}
+                  </p>
+                </div>
+              )}
+
+              {/* Idle/Error states - show nothing or minimal message */}
+              {(status === 'idle' || status === 'failed') && (
+                <div className="space-y-1">
+                  <h1 className="text-sm font-semibold text-gray-700">
+                    Ready to start audit
+                  </h1>
+                  <p className="text-xs text-gray-500">
+                    Click "Start Sync" below to analyze your FBA data
+                  </p>
+                </div>
+              )}
             </div>
+
+            {/* Add shimmer animation to global styles */}
+            <style>{`
+              @keyframes shimmer {
+                0% { background-position: 200% 0; }
+                100% { background-position: -200% 0; }
+              }
+            `}</style>
 
             {/* Main Content - Flat, no card */}
             <div className="space-y-4">
