@@ -12,6 +12,8 @@ import { BrandFooter } from '@/components/layout/BrandFooter';
 import type { LanguageOption } from '@/config/site';
 import { AGENT_HIGHLIGHTS, HERO_METRICS, LANGUAGE_OPTIONS, SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { api } from '@/lib/api';
+import { useToast } from '@/components/ui/use-toast';
 
 const PadlockIcon: React.FC = () => (
   <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
@@ -33,7 +35,10 @@ const PadlockIcon: React.FC = () => (
 
 const Index = () => {
   usePageMeta(SITE_META);
+  const { toast } = useToast();
   const [showMoreFAQs, setShowMoreFAQs] = useState(false);
+  const [signingIn, setSigningIn] = useState(false);
+  const [showBanner, setShowBanner] = useState(false);
 
   const [selectedLanguageCode, setSelectedLanguageCode] = useState<string>(() =>
     typeof window !== 'undefined' ? localStorage.getItem('clario.langPreference') || 'en' : 'en'
@@ -41,6 +46,83 @@ const Index = () => {
   const [langQuery, setLangQuery] = useState<string>('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [agentHighlightIndex, setAgentHighlightIndex] = useState(0);
+
+  const handleSignIn = async () => {
+    try {
+      setSigningIn(true);
+
+      // Start OAuth flow (same as Connect Amazon Account)
+      const response = await api.connectAmazon();
+
+      if (!response.ok) {
+        console.error('[Index] Failed to get OAuth URL:', response.error);
+
+        // Check if backend returned authUrl in error response (backwards compatibility)
+        const errorData = typeof response.error === 'object' ? response.error as any : {};
+        const authUrl = errorData.authUrl || errorData.auth_url || errorData.redirectTo;
+
+        if (authUrl) {
+          console.log('[Index] Backend returned authUrl in error, redirecting:', authUrl);
+          window.location.href = authUrl;
+          return;
+        }
+
+        toast({
+          title: 'Connection Failed',
+          description: response.error || 'Failed to start Amazon authentication. Please try again.',
+          variant: 'destructive'
+        });
+        setSigningIn(false);
+        return;
+      }
+
+      // Handle both auth_url and authUrl (backend may return either)
+      const authUrl = response.data?.auth_url || response.data?.authUrl;
+      const stateParam = response.data?.state;
+
+      if (stateParam) {
+        try {
+          sessionStorage.setItem('amazon_sandbox_state', stateParam);
+          localStorage.setItem('amazon_sandbox_state', stateParam);
+        } catch {}
+      }
+
+      if (authUrl && authUrl.includes('/auth/amazon-sandbox')) {
+        try {
+          sessionStorage.setItem('amazon_sandbox_mode', 'true');
+          localStorage.setItem('amazon_sandbox_mode', 'true');
+        } catch {}
+      }
+
+      if (authUrl) {
+        // Track the connection attempt
+        await api.trackEvent('amazon_connect_initiated', {
+          timestamp: new Date().toISOString(),
+          source: 'navbar_sign_in'
+        });
+
+        // Redirect user to Amazon
+        window.location.href = authUrl;
+      } else {
+        // No auth URL received
+        console.error('[Index] No auth URL received from backend');
+        toast({
+          title: 'Connection Failed',
+          description: 'No authorization URL received from backend. Please try again.',
+          variant: 'destructive'
+        });
+        setSigningIn(false);
+      }
+    } catch (error: any) {
+      console.error('[Index] Sign in failed:', error);
+      toast({
+        title: 'Connection Error',
+        description: error?.message || 'An unexpected error occurred during authentication.',
+        variant: 'destructive'
+      });
+      setSigningIn(false);
+    }
+  };
   const benefitWords = useMemo(
     () => [
       'Recover Faster',
@@ -128,6 +210,34 @@ const Index = () => {
       localStorage.setItem('clario.langPreference', selectedLanguageCode);
     } catch {}
   }, [selectedLanguageCode]);
+
+  // Scroll detection for banner visibility
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const handleScroll = () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      
+      // Show banner when near bottom (within 100px of bottom)
+      // Hide when near top (within 200px of top)
+      const isNearBottom = scrollTop + windowHeight >= documentHeight - 100;
+      const isNearTop = scrollTop <= 200;
+      
+      if (isNearBottom) {
+        setShowBanner(true);
+      } else if (isNearTop) {
+        setShowBanner(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    // Check initial position
+    handleScroll();
+    
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined') return undefined;
@@ -307,14 +417,14 @@ const Index = () => {
                   </div>
                 </DropdownMenuContent>
               </DropdownMenu>
-                <Link to="/login" className="inline-flex">
-                  <Button
-                    variant="outline"
-                    className="h-9 rounded-full border border-gray-200 bg-gray-100/80 px-4 text-sm font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors"
-                  >
-                    Login
-                  </Button>
-                </Link>
+                <Button
+                  onClick={handleSignIn}
+                  disabled={signingIn}
+                  variant="outline"
+                  className="h-9 rounded-full border border-gray-200 bg-gray-100/80 px-4 text-sm font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors"
+                >
+                  {signingIn ? 'Connecting...' : 'Sign in'}
+                </Button>
             </nav>
             <button
               type="button"
@@ -389,18 +499,17 @@ const Index = () => {
                     </div>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <Link
-                  to="/login"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="mt-1"
+                <Button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    handleSignIn();
+                  }}
+                  disabled={signingIn}
+                  variant="outline"
+                  className="mt-1 w-full justify-center h-9 rounded-full border border-gray-200 bg-gray-100/80 text-sm font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors"
                 >
-                  <Button
-                    variant="outline"
-                    className="w-full justify-center h-9 rounded-full border border-gray-200 bg-gray-100/80 text-sm font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors"
-                  >
-                    Login
-                  </Button>
-                </Link>
+                  {signingIn ? 'Connecting...' : 'Sign in'}
+                </Button>
               </div>
             </div>
           )}
@@ -751,6 +860,36 @@ const Index = () => {
         </section>
       </div>
       <BrandFooter selectedLanguageLabel={selectedLanguage.language} />
+      
+      {/* Founders Council Banner */}
+      <div 
+        className={`fixed bottom-0 left-0 right-0 z-50 px-4 py-4 md:px-6 md:py-5 transition-transform duration-300 ease-in-out ${
+          showBanner ? 'translate-y-0' : 'translate-y-full'
+        }`}
+        style={{
+          background: 'linear-gradient(to top, #1f4037 0%, #99f2c8 100%)'
+        }}
+      >
+          <div className="container mx-auto max-w-6xl">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
+              <p className="text-white text-sm md:text-base font-medium text-center md:text-left flex-1">
+                Join the exclusive group of 20 high-volume sellers stress-testing our 7-second AI Audit. Lock in a permanent 15% commission rate (vs. the standard 20% public rate) and get direct influence over the Clario roadmap.
+              </p>
+              <a
+                href="https://forms.gle/882hpRYWinNzBt2r9"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-shrink-0"
+              >
+                <Button
+                  className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-6 py-2.5 shadow-lg transition-colors whitespace-nowrap"
+                >
+                  Immediate Access →
+                </Button>
+              </a>
+            </div>
+          </div>
+        </div>
     </div>
   );
 };
