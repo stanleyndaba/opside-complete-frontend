@@ -133,8 +133,21 @@ export default function Sync() {
     }
   };
 
+  // Track last log for deduplication
+  const lastLogRef = useRef<{ message: string; time: number } | null>(null);
+
   // Add a log entry with optional delay (queued)
   const addLog = (entry: Omit<LogEntry, 'id' | 'timestamp'>, delayMs: number = 0) => {
+    // Deduplication: Ignore identical messages received within 2000ms
+    const now = Date.now();
+    if (lastLogRef.current &&
+      lastLogRef.current.message === entry.message &&
+      now - lastLogRef.current.time < 2000) {
+      // console.log('Duplicate log ignored:', entry.message);
+      return;
+    }
+    lastLogRef.current = { message: entry.message, time: now };
+
     if (delayMs === 0 && logQueueRef.current.length === 0) {
       // No delay and queue is empty, add immediately
       addLogImmediate(entry);
@@ -780,391 +793,444 @@ export default function Sync() {
                   />
                 </div>
 
-                {/* Log Container - Terminal Style */}
-                <div
-                  ref={logContainerRef}
-                  className="bg-[#1f1f1f] rounded-lg p-4 font-mono text-xs h-72 overflow-y-auto scroll-smooth"
-                >
-                  {filteredLogs.length === 0 ? (
-                    <div className="text-gray-500 flex items-center justify-center h-full">
-                      {logs.length === 0 ? 'Waiting for sync to start...' : 'No logs match your search'}
+                {/* Log Container - Terminal Style with AI Feel */}
+                <div className="relative group">
+                  {/* Glass header effect */}
+                  <div className="absolute top-0 left-0 right-0 h-8 bg-white/5 backdrop-blur-sm rounded-t-lg border-b border-white/10 flex items-center px-4 justify-between z-10">
+                    <div className="flex items-center gap-2">
+                      <div className="flex gap-1.5">
+                        <div className="w-2.5 h-2.5 rounded-full bg-red-500/20 border border-red-500/50"></div>
+                        <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/20 border border-yellow-500/50"></div>
+                        <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/20 border border-emerald-500/50"></div>
+                      </div>
+                      <span className="text-[10px] font-mono text-gray-400 ml-2 flex items-center gap-1.5">
+                        <Target className="h-3 w-3" />
+                        AGENT_ACTIVITY_STREAM
+                      </span>
                     </div>
-                  ) : (
-                    <div className="space-y-1">
-                      {filteredLogs.map((log) => (
-                        <div key={log.id} className="flex flex-col">
-                          <div className={`flex flex-wrap sm:flex-nowrap items-start gap-1 sm:gap-2 hover:bg-gray-800/50 px-1 rounded ${log.type === 'thinking' ? 'opacity-70' : ''}`}>
-                            {/* Timestamp - hidden on mobile, shown on sm+ */}
-                            <span className="hidden sm:inline text-gray-500 shrink-0 select-none">
-                              {formatTimestamp(log.timestamp)}
-                            </span>
-                            {/* Short time on mobile only */}
-                            <span className="sm:hidden text-gray-500 shrink-0 select-none text-[10px]">
-                              {log.timestamp.toLocaleTimeString()}
-                            </span>
-                            {/* Agent label with agent-specific color */}
-                            <span className={`${getAgentColor(log.category)} shrink-0 font-medium text-[10px] sm:text-xs select-none`}>
-                              {getAgentLabel(log.category)}
-                            </span>
-                            <span className={`${getLogColor(log.type)} break-words min-w-0 flex-1`}>
-                              {log.message}
-                            </span>
-                          </div>
-                          {/* Remove "flagged" indicator - it was part of mock dialogue */}
-                          {/* Remove "Thought for Xs" indicator - it was part of mock dialogue */}
+                    <div className="flex items-center gap-2">
+                      {status === 'running' || status === 'detecting' ? (
+                        <div className="flex items-center gap-1.5 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                          <span className="relative flex h-1.5 w-1.5">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                          </span>
+                          <span className="text-[9px] font-medium text-emerald-400 tracking-wider">LIVE</span>
                         </div>
-                      ))}
-                      {status === 'running' && (
-                        <div className="flex flex-wrap sm:flex-nowrap items-center gap-1 sm:gap-2 text-blue-400 animate-pulse">
-                          <span className="hidden sm:inline text-gray-500 shrink-0 select-none">
-                            {formatTimestamp(new Date())}
-                          </span>
-                          <span className="sm:hidden text-gray-500 shrink-0 select-none text-[10px]">
-                            {new Date().toLocaleTimeString()}
-                          </span>
-                          <span className="text-cyan-500 shrink-0 font-medium text-[10px] sm:text-xs select-none">
-                            [System]
-                          </span>
-                          <span className="break-words min-w-0 flex-1">
-                            Processing...
-                          </span>
-                        </div>
+                      ) : (
+                        <span className="text-[9px] text-gray-500">OFFLINE</span>
                       )}
                     </div>
-                  )}
+                  </div>
+
+                  <div
+                    ref={logContainerRef}
+                    className="bg-[#0c0c0c] rounded-lg pt-10 pb-4 px-4 font-mono text-xs h-96 overflow-y-auto scroll-smooth border border-gray-800 shadow-2xl relative"
+                  >
+                    {/* Grid background effect */}
+                    <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none"></div>
+
+                    {filteredLogs.length === 0 ? (
+                      <div className="text-gray-600 flex flex-col items-center justify-center h-full relative z-10">
+                        <Loader2 className="h-8 w-8 mb-2 animate-spin opacity-20" />
+                        <span className="text-xs tracking-widest opacity-40">WAITING FOR SIGNAL...</span>
+                      </div>
+                    ) : (
+                      <div className="space-y-1.5 relative z-10">
+                        {filteredLogs.map((log, index) => {
+                          const isLast = index === filteredLogs.length - 1;
+
+                          // Highlight numbers and currency
+                          const highlightContent = (text: string) => {
+                            const parts = text.split(/(\$[\d,]+\.?\d*|\b\d+\b|\[.*?\])/g);
+                            return parts.map((part, i) => {
+                              if (part.match(/^\$[\d,]+\.?\d*$/)) {
+                                return <span key={i} className="text-emerald-400 font-bold">{part}</span>;
+                              }
+                              if (part.match(/^\d+$/)) {
+                                return <span key={i} className="text-cyan-400 font-bold">{part}</span>;
+                              }
+                              if (part.match(/^\[.*?\]$/)) {
+                                return <span key={i} className="text-purple-400 font-bold">{part}</span>;
+                              }
+                              return part;
+                            });
+                          };
+
+                          return (
+                            <div
+                              key={log.id}
+                              className={`flex flex-col animate-in fade-in slide-in-from-bottom-1 duration-300`}
+                            >
+                              <div className={`flex flex-wrap sm:flex-nowrap items-start gap-2 px-1 rounded hover:bg-white/5 transition-colors ${log.type === 'thinking' ? 'opacity-60' : ''}`}>
+                                {/* Timestamp */}
+                                <span className="hidden sm:inline text-gray-600 shrink-0 select-none text-[10px] pt-0.5">
+                                  {formatTimestamp(log.timestamp).split(' ')[1]}
+                                </span>
+
+                                {/* Icon */}
+                                <span className={`shrink-0 pt-0.5 ${getAgentColor(log.category)}`}>
+                                  {log.type === 'thinking' ? (
+                                    <Loader2 className="h-3 w-3 animate-spin" />
+                                  ) : (
+                                    getCategoryIcon(log.category)
+                                  )}
+                                </span>
+
+                                {/* Message */}
+                                <span className={`break-all leading-relaxed ${getLogColor(log.type)}`}>
+                                  <span className="opacity-50 mr-1.5 text-[10px] uppercase tracking-wider text-gray-500 select-none">
+                                    {getAgentLabel(log.category)}
+                                  </span>
+                                  {highlightContent(log.message)}
+                                  {isLast && (status === 'running' || status === 'detecting') && (
+                                    <span className="inline-block w-1.5 h-3 bg-cyan-500 ml-1 animate-pulse align-middle"></span>
+                                  )}
+                                </span>
+                              </div>
+                            </div>
+                          );
+                        })}
+
+                        {/* Scroll anchor */}
+                        <div className="h-4" />
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
+            </div>
 
-              {/* Run Button - Below Real-Time Log */}
-              <div className="pt-4 flex justify-end">
-                <Button
-                  onClick={async () => {
-                    try {
-                      // Clear logs and reset state for new sync
-                      setLogs([]);
-                      setLogsFinished(false);
-                      logsFinishedRef.current = false;
-                      completionLogsAddedRef.current = false;
-                      setStatus('idle');
-                      setSyncId(undefined);
-                      setError(null);
-                      previousDataRef.current = {
-                        orders: { syncing: false, completed: false, count: 0 },
-                        inventory: { syncing: false, completed: false, count: 0 },
-                        shipments: { syncing: false, completed: false, count: 0 },
-                        returns: { syncing: false, completed: false, count: 0 },
-                        settlements: { syncing: false, completed: false, count: 0 },
-                        fees: { syncing: false, completed: false, count: 0 },
-                        claims: { syncing: false, completed: false, count: 0 },
-                      };
+            {/* Run Button - Below Real-Time Log */}
+            <div className="pt-4 flex justify-end">
+              <Button
+                onClick={async () => {
+                  try {
+                    // Clear logs and reset state for new sync
+                    setLogs([]);
+                    setLogsFinished(false);
+                    logsFinishedRef.current = false;
+                    completionLogsAddedRef.current = false;
+                    setStatus('idle');
+                    setSyncId(undefined);
+                    setError(null);
+                    previousDataRef.current = {
+                      orders: { syncing: false, completed: false, count: 0 },
+                      inventory: { syncing: false, completed: false, count: 0 },
+                      shipments: { syncing: false, completed: false, count: 0 },
+                      returns: { syncing: false, completed: false, count: 0 },
+                      settlements: { syncing: false, completed: false, count: 0 },
+                      fees: { syncing: false, completed: false, count: 0 },
+                      claims: { syncing: false, completed: false, count: 0 },
+                    };
 
-                      addLog({ type: 'info', category: 'system', message: 'Initializing sync...' }, 0);
+                    addLog({ type: 'info', category: 'system', message: 'Initializing sync...' }, 0);
 
-                      const start = await startSync();
-                      const newSyncId = start.syncId;
-                      setSyncId(newSyncId);
-                      setStatus('running');
-                      setMessage(start.message || 'Sync started successfully');
-                      previousStatusRef.current = 'running';
-                      toastShownRef.current = { started: true };
+                    const start = await startSync();
+                    const newSyncId = start.syncId;
+                    setSyncId(newSyncId);
+                    setStatus('running');
+                    setMessage(start.message || 'Sync started successfully');
+                    previousStatusRef.current = 'running';
+                    toastShownRef.current = { started: true };
 
-                      toast({
-                        title: 'Sync Started',
-                        description: 'Your Amazon data sync has started. This may take a few minutes.',
-                        duration: 4000,
-                      });
+                    toast({
+                      title: 'Sync Started',
+                      description: 'Your Amazon data sync has started. This may take a few minutes.',
+                      duration: 4000,
+                    });
 
-                      navigate(`/sync?id=${newSyncId}`, { replace: true });
-                    } catch (e: any) {
-                      setStatus('failed');
-                      setMessage(e?.message || 'Failed to start sync');
-                      setError(e?.message || 'Failed to start sync');
-                      toast({
-                        title: 'Sync Failed',
-                        description: e?.message || 'Failed to start sync. Please try again.',
-                        variant: 'destructive',
-                        duration: 5000,
-                      });
-                    }
-                  }}
-                  disabled={status === 'running'}
-                  className="bg-gray-900 text-white border-gray-900 hover:bg-gray-800 disabled:bg-gray-600 disabled:cursor-not-allowed"
-                >
-                  {status === 'running' ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Syncing...
-                    </>
-                  ) : (
-                    <>
-                      <RefreshCw className="h-4 w-4 mr-2" />
-                      Run
-                    </>
-                  )}
-                </Button>
-              </div>
-
-              {error && (
-                <div className="p-3 rounded-md bg-red-50 border border-red-200 text-sm text-red-800">
-                  <strong>Error:</strong> {error}
-                </div>
-              )}
-
-              <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500 pt-2">
-                {syncData?.startedAt && (
-                  <span>Started: {new Date(syncData.startedAt).toLocaleString()}</span>
-                )}
-                {syncData?.completedAt && (
+                    navigate(`/sync?id=${newSyncId}`, { replace: true });
+                  } catch (e: any) {
+                    setStatus('failed');
+                    setMessage(e?.message || 'Failed to start sync');
+                    setError(e?.message || 'Failed to start sync');
+                    toast({
+                      title: 'Sync Failed',
+                      description: e?.message || 'Failed to start sync. Please try again.',
+                      variant: 'destructive',
+                      duration: 5000,
+                    });
+                  }
+                }}
+                disabled={status === 'running'}
+                className="bg-gray-900 text-white border-gray-900 hover:bg-gray-800 disabled:bg-gray-600 disabled:cursor-not-allowed"
+              >
+                {status === 'running' ? (
                   <>
-                    <span>•</span>
-                    <span>Completed: {new Date(syncData.completedAt).toLocaleString()}</span>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Syncing...
+                  </>
+                ) : (
+                  <>
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    Run
                   </>
                 )}
+              </Button>
+            </div>
+
+            {error && (
+              <div className="p-3 rounded-md bg-red-50 border border-red-200 text-sm text-red-800">
+                <strong>Error:</strong> {error}
               </div>
+            )}
 
-              {/* Potential Recovery Value - The Hero Number - Only show after logs finish */}
-              {((status === 'completed' && logsFinished) || status === 'detecting') && claimsCount > 0 && (
-                <div className="py-4">
-                  <p className="text-sm text-gray-500 mb-1">Potential Recovery Identified</p>
-                  <p className={`text-xl font-semibold text-gray-900 ${status === 'detecting' ? 'animate-pulse' : ''}`}>
-                    {formatCurrency(totalRecoverableValue)}
-                    {durationSeconds !== null && <span className="text-sm font-normal"> in {durationSeconds}s</span>}
-                  </p>
-                  <p className="text-xs text-gray-400 mt-1">
-                    Based on {claimsCount.toLocaleString()} detected discrepancies
-                  </p>
-                  <p className="text-xs text-gray-400 mt-1">
-                    Action Needed: The Doc parser needs evidence to file the claim.<br />
-                    Blocker: Gmail Connection: Not Connected.
-                  </p>
-                  <p className="text-xs text-gray-400 mt-1 italic">
-                    Connect, Gmail, Outlook, Dropbox or Google Drive for document parsing and matching
-                  </p>
-                </div>
+            <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500 pt-2">
+              {syncData?.startedAt && (
+                <span>Started: {new Date(syncData.startedAt).toLocaleString()}</span>
               )}
+              {syncData?.completedAt && (
+                <>
+                  <span>•</span>
+                  <span>Completed: {new Date(syncData.completedAt).toLocaleString()}</span>
+                </>
+              )}
+            </div>
 
-              <div className="flex flex-wrap items-center gap-2 pt-4">
-                {status === 'running' && (
-                  <Button
-                    variant="outline"
-                    onClick={handleCancelSync}
-                    disabled={isCancelling}
-                    className="bg-gray-900 text-white border-gray-900 hover:bg-gray-800"
-                  >
-                    {isCancelling ? (
-                      <>
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        Cancelling...
-                      </>
-                    ) : (
-                      <>
-                        <XCircle className="h-4 w-4 mr-2" />
-                        Cancel Sync
-                      </>
-                    )}
-                  </Button>
-                )}
+            {/* Potential Recovery Value - The Hero Number - Only show after logs finish */}
+            {((status === 'completed' && logsFinished) || status === 'detecting') && claimsCount > 0 && (
+              <div className="py-4">
+                <p className="text-sm text-gray-500 mb-1">Potential Recovery Identified</p>
+                <p className={`text-xl font-semibold text-gray-900 ${status === 'detecting' ? 'animate-pulse' : ''}`}>
+                  {formatCurrency(totalRecoverableValue)}
+                  {durationSeconds !== null && <span className="text-sm font-normal"> in {durationSeconds}s</span>}
+                </p>
+                <p className="text-xs text-gray-400 mt-1">
+                  Based on {claimsCount.toLocaleString()} detected discrepancies
+                </p>
+                <p className="text-xs text-gray-400 mt-1">
+                  Action Needed: The Doc parser needs evidence to file the claim.<br />
+                  Blocker: Gmail Connection: Not Connected.
+                </p>
+                <p className="text-xs text-gray-400 mt-1 italic">
+                  Connect, Gmail, Outlook, Dropbox or Google Drive for document parsing and matching
+                </p>
+              </div>
+            )}
 
-                {(status === 'failed' || status === 'cancelled') && (
-                  <Button
-                    variant="outline"
-                    onClick={handleRetry}
-                    className="border-gray-200 text-gray-700 hover:bg-gray-50"
-                  >
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                    Retry Sync
-                  </Button>
-                )}
-
+            <div className="flex flex-wrap items-center gap-2 pt-4">
+              {status === 'running' && (
                 <Button
                   variant="outline"
-                  onClick={() => {
-                    if (status === 'completed') {
-                      navigate('/app');
-                    }
-                  }}
-                  disabled={status !== 'completed'}
-                  className={
-                    status === 'completed'
-                      ? 'bg-gray-900 text-white border-gray-900 hover:bg-gray-800'
-                      : 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
-                  }
+                  onClick={handleCancelSync}
+                  disabled={isCancelling}
+                  className="bg-gray-900 text-white border-gray-900 hover:bg-gray-800"
                 >
-                  Dashboard
+                  {isCancelling ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Cancelling...
+                    </>
+                  ) : (
+                    <>
+                      <XCircle className="h-4 w-4 mr-2" />
+                      Cancel Sync
+                    </>
+                  )}
                 </Button>
-              </div>
+              )}
 
-              {/* Document Sources Modal */}
-              <Dialog open={showSourcesModal} onOpenChange={setShowSourcesModal}>
-                <DialogContent className="sm:max-w-md bg-white rounded-md">
-                  <DialogHeader className="pb-3">
-                    <DialogTitle className="text-lg font-semibold text-gray-900">Link Sources for Document Ingestion</DialogTitle>
-                    <DialogDescription className="text-sm text-gray-500">
-                      Read-only access. No writing or sending permissions.
-                    </DialogDescription>
-                  </DialogHeader>
+              {(status === 'failed' || status === 'cancelled') && (
+                <Button
+                  variant="outline"
+                  onClick={handleRetry}
+                  className="border-gray-200 text-gray-700 hover:bg-gray-50"
+                >
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Retry Sync
+                </Button>
+              )}
 
-                  <div className="grid grid-cols-2 gap-3 py-2">
-                    <button
-                      onClick={async () => {
-                        try {
-                          setProviderLoading('gmail');
-                          const r = await api.connectDocs('gmail');
-                          if (r.ok && r.data?.auth_url) {
-                            window.location.href = r.data.auth_url;
-                          } else {
-                            toast({
-                              title: 'Connection Failed',
-                              description: r.error || 'Failed to initiate Gmail connection. Please try again.',
-                              variant: 'destructive',
-                            });
-                            setProviderLoading(null);
-                          }
-                        } catch (error) {
-                          console.error('Failed to connect Gmail:', error);
-                          toast({
-                            title: 'Connection Failed',
-                            description: 'An error occurred while connecting Gmail. Please try again.',
-                            variant: 'destructive',
-                          });
-                          setProviderLoading(null);
-                        }
-                      }}
-                      disabled={providerLoading === 'gmail'}
-                      className="flex flex-col items-center gap-1.5 p-2.5 rounded-md border border-gray-200 hover:border-red-300 hover:bg-red-50 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {providerLoading === 'gmail' ? (
-                        <Loader2 className="h-10 w-10 animate-spin text-red-500" />
-                      ) : (
-                        <img src={GmailIcon} alt="Gmail" className="h-10 w-10 object-contain group-hover:scale-105 transition-transform" />
-                      )}
-                      <span className="text-xs font-medium text-gray-700">Gmail</span>
-                    </button>
-
-                    <button
-                      onClick={async () => {
-                        try {
-                          setProviderLoading('outlook');
-                          const r = await api.connectDocs('outlook');
-                          if (r.ok && r.data?.auth_url) {
-                            window.location.href = r.data.auth_url;
-                          } else {
-                            toast({
-                              title: 'Connection Failed',
-                              description: r.error || 'Failed to initiate Outlook connection. Please try again.',
-                              variant: 'destructive',
-                            });
-                            setProviderLoading(null);
-                          }
-                        } catch (error) {
-                          console.error('Failed to connect Outlook:', error);
-                          toast({
-                            title: 'Connection Failed',
-                            description: 'An error occurred while connecting Outlook. Please try again.',
-                            variant: 'destructive',
-                          });
-                          setProviderLoading(null);
-                        }
-                      }}
-                      disabled={providerLoading === 'outlook'}
-                      className="flex flex-col items-center gap-1.5 p-2.5 rounded-md border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {providerLoading === 'outlook' ? (
-                        <Loader2 className="h-10 w-10 animate-spin text-blue-500" />
-                      ) : (
-                        <img src={OutlookIcon} alt="Outlook" className="h-10 w-10 object-contain group-hover:scale-105 transition-transform" />
-                      )}
-                      <span className="text-xs font-medium text-gray-700">Outlook</span>
-                    </button>
-
-                    <button
-                      onClick={async () => {
-                        try {
-                          setProviderLoading('gdrive');
-                          const r = await api.connectDocs('gdrive');
-                          if (r.ok && r.data?.auth_url) {
-                            window.location.href = r.data.auth_url;
-                          } else {
-                            toast({
-                              title: 'Connection Failed',
-                              description: r.error || 'Failed to initiate Google Drive connection. Please try again.',
-                              variant: 'destructive',
-                            });
-                            setProviderLoading(null);
-                          }
-                        } catch (error) {
-                          console.error('Failed to connect Google Drive:', error);
-                          toast({
-                            title: 'Connection Failed',
-                            description: 'An error occurred while connecting Google Drive. Please try again.',
-                            variant: 'destructive',
-                          });
-                          setProviderLoading(null);
-                        }
-                      }}
-                      disabled={providerLoading === 'gdrive'}
-                      className="flex flex-col items-center gap-1.5 p-2.5 rounded-md border border-gray-200 hover:border-green-300 hover:bg-green-50 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {providerLoading === 'gdrive' ? (
-                        <Loader2 className="h-10 w-10 animate-spin text-green-500" />
-                      ) : (
-                        <img src={GoogleDriveIcon} alt="Google Drive" className="h-10 w-10 object-contain group-hover:scale-105 transition-transform" />
-                      )}
-                      <span className="text-xs font-medium text-gray-700">Google Drive</span>
-                    </button>
-
-                    <button
-                      onClick={async () => {
-                        try {
-                          setProviderLoading('dropbox');
-                          const r = await api.connectDocs('dropbox');
-                          if (r.ok && r.data?.auth_url) {
-                            window.location.href = r.data.auth_url;
-                          } else {
-                            toast({
-                              title: 'Connection Failed',
-                              description: r.error || 'Failed to initiate Dropbox connection. Please try again.',
-                              variant: 'destructive',
-                            });
-                            setProviderLoading(null);
-                          }
-                        } catch (error) {
-                          console.error('Failed to connect Dropbox:', error);
-                          toast({
-                            title: 'Connection Failed',
-                            description: 'An error occurred while connecting Dropbox. Please try again.',
-                            variant: 'destructive',
-                          });
-                          setProviderLoading(null);
-                        }
-                      }}
-                      disabled={providerLoading === 'dropbox'}
-                      className="flex flex-col items-center gap-1.5 p-2.5 rounded-md border border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {providerLoading === 'dropbox' ? (
-                        <Loader2 className="h-10 w-10 animate-spin text-blue-500" />
-                      ) : (
-                        <img src={DropboxIcon} alt="Dropbox" className="h-10 w-10 object-contain group-hover:scale-105 transition-transform" />
-                      )}
-                      <span className="text-xs font-medium text-gray-700">Dropbox</span>
-                    </button>
-                  </div>
-
-                  <div className="flex justify-center pt-1">
-                    <Button
-                      variant="ghost"
-                      onClick={() => setShowSourcesModal(false)}
-                      className="bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    >
-                      Advanced integrations
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  if (status === 'completed') {
+                    navigate('/app');
+                  }
+                }}
+                disabled={status !== 'completed'}
+                className={
+                  status === 'completed'
+                    ? 'bg-gray-900 text-white border-gray-900 hover:bg-gray-800'
+                    : 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
+                }
+              >
+                Dashboard
+              </Button>
             </div>
+
+            {/* Document Sources Modal */}
+            <Dialog open={showSourcesModal} onOpenChange={setShowSourcesModal}>
+              <DialogContent className="sm:max-w-md bg-white rounded-md">
+                <DialogHeader className="pb-3">
+                  <DialogTitle className="text-lg font-semibold text-gray-900">Link Sources for Document Ingestion</DialogTitle>
+                  <DialogDescription className="text-sm text-gray-500">
+                    Read-only access. No writing or sending permissions.
+                  </DialogDescription>
+                </DialogHeader>
+
+                <div className="grid grid-cols-2 gap-3 py-2">
+                  <button
+                    onClick={async () => {
+                      try {
+                        setProviderLoading('gmail');
+                        const r = await api.connectDocs('gmail');
+                        if (r.ok && r.data?.auth_url) {
+                          window.location.href = r.data.auth_url;
+                        } else {
+                          toast({
+                            title: 'Connection Failed',
+                            description: r.error || 'Failed to initiate Gmail connection. Please try again.',
+                            variant: 'destructive',
+                          });
+                          setProviderLoading(null);
+                        }
+                      } catch (error) {
+                        console.error('Failed to connect Gmail:', error);
+                        toast({
+                          title: 'Connection Failed',
+                          description: 'An error occurred while connecting Gmail. Please try again.',
+                          variant: 'destructive',
+                        });
+                        setProviderLoading(null);
+                      }
+                    }}
+                    disabled={providerLoading === 'gmail'}
+                    className="flex flex-col items-center gap-1.5 p-2.5 rounded-md border border-gray-200 hover:border-red-300 hover:bg-red-50 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {providerLoading === 'gmail' ? (
+                      <Loader2 className="h-10 w-10 animate-spin text-red-500" />
+                    ) : (
+                      <img src={GmailIcon} alt="Gmail" className="h-10 w-10 object-contain group-hover:scale-105 transition-transform" />
+                    )}
+                    <span className="text-xs font-medium text-gray-700">Gmail</span>
+                  </button>
+
+                  <button
+                    onClick={async () => {
+                      try {
+                        setProviderLoading('outlook');
+                        const r = await api.connectDocs('outlook');
+                        if (r.ok && r.data?.auth_url) {
+                          window.location.href = r.data.auth_url;
+                        } else {
+                          toast({
+                            title: 'Connection Failed',
+                            description: r.error || 'Failed to initiate Outlook connection. Please try again.',
+                            variant: 'destructive',
+                          });
+                          setProviderLoading(null);
+                        }
+                      } catch (error) {
+                        console.error('Failed to connect Outlook:', error);
+                        toast({
+                          title: 'Connection Failed',
+                          description: 'An error occurred while connecting Outlook. Please try again.',
+                          variant: 'destructive',
+                        });
+                        setProviderLoading(null);
+                      }
+                    }}
+                    disabled={providerLoading === 'outlook'}
+                    className="flex flex-col items-center gap-1.5 p-2.5 rounded-md border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {providerLoading === 'outlook' ? (
+                      <Loader2 className="h-10 w-10 animate-spin text-blue-500" />
+                    ) : (
+                      <img src={OutlookIcon} alt="Outlook" className="h-10 w-10 object-contain group-hover:scale-105 transition-transform" />
+                    )}
+                    <span className="text-xs font-medium text-gray-700">Outlook</span>
+                  </button>
+
+                  <button
+                    onClick={async () => {
+                      try {
+                        setProviderLoading('gdrive');
+                        const r = await api.connectDocs('gdrive');
+                        if (r.ok && r.data?.auth_url) {
+                          window.location.href = r.data.auth_url;
+                        } else {
+                          toast({
+                            title: 'Connection Failed',
+                            description: r.error || 'Failed to initiate Google Drive connection. Please try again.',
+                            variant: 'destructive',
+                          });
+                          setProviderLoading(null);
+                        }
+                      } catch (error) {
+                        console.error('Failed to connect Google Drive:', error);
+                        toast({
+                          title: 'Connection Failed',
+                          description: 'An error occurred while connecting Google Drive. Please try again.',
+                          variant: 'destructive',
+                        });
+                        setProviderLoading(null);
+                      }
+                    }}
+                    disabled={providerLoading === 'gdrive'}
+                    className="flex flex-col items-center gap-1.5 p-2.5 rounded-md border border-gray-200 hover:border-green-300 hover:bg-green-50 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {providerLoading === 'gdrive' ? (
+                      <Loader2 className="h-10 w-10 animate-spin text-green-500" />
+                    ) : (
+                      <img src={GoogleDriveIcon} alt="Google Drive" className="h-10 w-10 object-contain group-hover:scale-105 transition-transform" />
+                    )}
+                    <span className="text-xs font-medium text-gray-700">Google Drive</span>
+                  </button>
+
+                  <button
+                    onClick={async () => {
+                      try {
+                        setProviderLoading('dropbox');
+                        const r = await api.connectDocs('dropbox');
+                        if (r.ok && r.data?.auth_url) {
+                          window.location.href = r.data.auth_url;
+                        } else {
+                          toast({
+                            title: 'Connection Failed',
+                            description: r.error || 'Failed to initiate Dropbox connection. Please try again.',
+                            variant: 'destructive',
+                          });
+                          setProviderLoading(null);
+                        }
+                      } catch (error) {
+                        console.error('Failed to connect Dropbox:', error);
+                        toast({
+                          title: 'Connection Failed',
+                          description: 'An error occurred while connecting Dropbox. Please try again.',
+                          variant: 'destructive',
+                        });
+                        setProviderLoading(null);
+                      }
+                    }}
+                    disabled={providerLoading === 'dropbox'}
+                    className="flex flex-col items-center gap-1.5 p-2.5 rounded-md border border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {providerLoading === 'dropbox' ? (
+                      <Loader2 className="h-10 w-10 animate-spin text-blue-500" />
+                    ) : (
+                      <img src={DropboxIcon} alt="Dropbox" className="h-10 w-10 object-contain group-hover:scale-105 transition-transform" />
+                    )}
+                    <span className="text-xs font-medium text-gray-700">Dropbox</span>
+                  </button>
+                </div>
+
+                <div className="flex justify-center pt-1">
+                  <Button
+                    variant="ghost"
+                    onClick={() => setShowSourcesModal(false)}
+                    className="bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  >
+                    Advanced integrations
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
-        </div>
+        </div >
       </div >
+    </div >
     </PageLayout >
   );
 }
