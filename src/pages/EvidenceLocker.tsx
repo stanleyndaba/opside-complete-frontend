@@ -874,12 +874,10 @@ export default function EvidenceLocker() {
         </Card>
         <Card className="bg-white border-gray-200 text-gray-900">
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-black">Document Library</CardTitle>
-                <CardDescription className="text-gray-600">All uploaded evidence documents</CardDescription>
-              </div>
-              <div className="flex flex-wrap items-center gap-2">
+            <div>
+              <CardTitle className="text-black mb-1">Document Library</CardTitle>
+              <CardDescription className="text-gray-600 mb-4">All uploaded evidence documents</CardDescription>
+              <div className="flex flex-wrap items-center gap-2 justify-end">
                 <div className="relative">
                   <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500 stroke-[2]" />
                   <Input placeholder="Search supplier, invoice #, claim ID…" value={q} onChange={(e) => setQ(e.target.value)} className="pl-8 w-72 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
