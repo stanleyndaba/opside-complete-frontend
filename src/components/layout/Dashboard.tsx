@@ -601,7 +601,7 @@ export function Dashboard() {
                             </TooltipContent>
                           </Tooltip>
                         </div>
-                        <div className="text-[20px] md:text-[24px] font-semibold mt-1 text-[#1f1f1f]">
+                        <div className="text-[20px] md:text-[24px] font-medium mt-1 text-[#1f1f1f]">
                           {formatCurrency(recoveredTotal ?? 0, recoveredCurrency)}
                         </div>
                           <div className="text-[11px] text-gray-600 mt-1">
@@ -641,7 +641,7 @@ export function Dashboard() {
                     <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
                           <div className="text-xs text-gray-600">Next payment</div>
-                          <div className="text-xl font-semibold text-[#1f1f1f] mt-1">
+                          <div className="text-xl font-medium text-[#1f1f1f] mt-1">
                             {formatCurrency((nextPaymentAmount ?? 0), recoveredCurrency)}
                           </div>
                           <div className="text-[11px] text-gray-600 mt-1">
@@ -652,7 +652,7 @@ export function Dashboard() {
                       </div>
                         <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
                           <div className="text-xs text-gray-600">Pending recovery</div>
-                          <div className="text-xl font-semibold text-[#1f1f1f] mt-1">
+                          <div className="text-xl font-medium text-[#1f1f1f] mt-1">
                             {formatCurrency((pendingRecoveryAmount ?? 0), recoveredCurrency)}
                           </div>
                           <div className="text-[11px] text-gray-600 mt-1">
@@ -669,7 +669,7 @@ export function Dashboard() {
                               <span className="text-[10px] text-green-600 font-medium">92%</span>
                             </div>
                           </div>
-                          <div className="text-xl font-semibold text-[#1f1f1f] mt-1">{formatCurrency(computedApproved ?? 0, recoveredCurrency)}</div>
+                          <div className="text-xl font-medium text-[#1f1f1f] mt-1">{formatCurrency(computedApproved ?? 0, recoveredCurrency)}</div>
                           <div className="text-[11px] mt-1">
                             <span className="text-gray-600">Total this month: </span>
                             <span className="text-[#1f1f1f]">$31.4K</span>
@@ -700,11 +700,11 @@ export function Dashboard() {
                       <div className="grid grid-cols-2 gap-4 mb-4">
                         <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
                           <div className="text-xs text-gray-600">Total Detected</div>
-                          <div className="text-xl font-semibold text-[#1f1f1f] mt-1">{detectionStats.totalDetections}</div>
+                          <div className="text-xl font-medium text-[#1f1f1f] mt-1">{detectionStats.totalDetections}</div>
                         </div>
                         <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
                           <div className="text-xs text-gray-600">Recovery Potential</div>
-                          <div className="text-xl font-semibold text-emerald-600 mt-1">
+                          <div className="text-xl font-medium text-emerald-600 mt-1">
                             {formatCurrency(detectionStats.estimatedRecovery)}
                           </div>
                         </div>
@@ -712,15 +712,15 @@ export function Dashboard() {
                       <div className="space-y-2">
                         <div className="flex items-center gap-2 text-sm">
                           <span className="text-emerald-600">⚡</span>
-                          <span className="text-gray-700">High: <span className="font-semibold text-[#1f1f1f]">{detectionStats.highConfidence}</span> claims</span>
+                          <span className="text-gray-700">High: <span className="font-medium text-[#1f1f1f]">{detectionStats.highConfidence}</span> claims</span>
                         </div>
                         <div className="flex items-center gap-2 text-sm">
                           <span className="text-amber-600">❓</span>
-                          <span className="text-gray-700">Medium: <span className="font-semibold text-[#1f1f1f]">{detectionStats.mediumConfidence}</span> claims</span>
+                          <span className="text-gray-700">Medium: <span className="font-medium text-[#1f1f1f]">{detectionStats.mediumConfidence}</span> claims</span>
                         </div>
                         <div className="flex items-center gap-2 text-sm">
                           <span className="text-gray-500">📋</span>
-                          <span className="text-gray-700">Low: <span className="font-semibold text-[#1f1f1f]">{detectionStats.lowConfidence}</span> claims</span>
+                          <span className="text-gray-700">Low: <span className="font-medium text-[#1f1f1f]">{detectionStats.lowConfidence}</span> claims</span>
                         </div>
                       </div>
                     </CardContent>
