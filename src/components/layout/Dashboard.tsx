@@ -610,7 +610,7 @@ export function Dashboard() {
               <div className="rounded-2xl bg-white border border-gray-200 shadow-sm p-6 md:p-8">
                 <div className="mb-4">
                   <div className="flex items-center justify-between">
-                    <h2 className="text-lg font-extrabold" style={{ fontFamily: '"Noto Sans", sans-serif', fontWeight: 800, color: '#36454F' }}>Overview Dashboard</h2>
+                    <h2 className="text-2xl" style={{ fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '800', color: '#36454F', letterSpacing: '-0.02em' }}>Overview Board</h2>
                     <Select value={selectedCurrency} onValueChange={setSelectedCurrency}>
                       <SelectTrigger className="w-[140px] bg-white border-gray-300">
                         <SelectValue />
@@ -660,10 +660,10 @@ export function Dashboard() {
                             {/* Sync status message */}
                             {(syncMessage || needsSync || syncTriggered) && (
                               <div className={`mt-3 px-3 py-2 rounded-md text-xs ${syncTriggered
-                                  ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                                  : needsSync
-                                    ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                                    : 'bg-gray-50 text-gray-700 border border-gray-200'
+                                ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                                : needsSync
+                                  ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                                  : 'bg-gray-50 text-gray-700 border border-gray-200'
                                 }`}>
                                 <div className="flex items-start justify-between gap-2">
                                   <div className="flex items-start gap-2 flex-1">
