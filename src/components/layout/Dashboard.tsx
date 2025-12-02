@@ -874,7 +874,7 @@ export function Dashboard() {
       <Dialog open={showSourcesModal} onOpenChange={setShowSourcesModal}>
         <DialogContent className="sm:max-w-md bg-white rounded-md">
           <DialogHeader className="pb-3">
-            <DialogTitle className="text-lg font-semibold text-gray-900">Link sources for document ingestion</DialogTitle>
+            <DialogTitle className="text-lg font-semibold text-gray-900">connect sources for document ingestion</DialogTitle>
             <DialogDescription className="text-sm text-gray-500">
               Read-only access. No writing or sending permissions.
             </DialogDescription>
@@ -1031,18 +1031,8 @@ export function Dashboard() {
               variant="ghost"
               onClick={() => {
                 setShowSourcesModal(false);
-                navigate('/integrations-hub');
               }}
-              className="bg-gray-200 text-[#1f1f1f] border-none hover:bg-gray-300"
-            >
-              Advanced integrations
-            </Button>
-            <Button
-              variant="ghost"
-              onClick={() => {
-                setShowSourcesModal(false);
-              }}
-              className="bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
+              className="bg-emerald-500 text-white border-none hover:bg-emerald-600"
             >
               Not now
             </Button>

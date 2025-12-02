@@ -1035,7 +1035,7 @@ export default function Recoveries() {
                         </Tooltip>
                       )}
                     </div>
-                    <div className="text-2xl md:text-3xl font-medium text-[#1f1f1f]">
+                    <div className="text-xl md:text-2xl font-medium text-[#1f1f1f]">
                       {recoveredTotal != null && recoveredTotal > 0 ? (
                         <>
                           <span className="text-[#1f1f1f]">{formatCurrency(recoveredTotal, recoveredCurrency)}</span>
@@ -1110,7 +1110,7 @@ export default function Recoveries() {
                   <div className="flex items-center">
                     <div>
                       <p className="text-sm font-medium text-gray-600">Total Claims Identified</p>
-                      <p className="text-2xl font-medium text-[#1f1f1f]">
+                      <p className="text-xl font-normal text-[#1f1f1f]">
                         {detectionStats?.total_anomalies ?? detectionStats?.totalDetections ?? (metrics ? metrics.totalClaimsFound : keyMetrics.totalClaimsFound)}
                         {amazonClaimCount != null && amazonClaimCount > 0 && (
                           <span className="text-sm text-emerald-400 ml-2 font-normal">
@@ -1135,7 +1135,7 @@ export default function Recoveries() {
                       <p className="text-sm font-medium text-gray-600">
                         {detectionStats?.total_value ? 'Total Recovery Value' : 'Potential Recovery Value'}
                       </p>
-                      <p className="text-2xl font-medium text-[#1f1f1f]">
+                      <p className="text-xl font-normal text-[#1f1f1f]">
                         {formatCurrency(
                           detectionStats?.total_value ??
                           (metrics ? metrics.valueInProgress : keyMetrics.valueInProgress)
@@ -1156,7 +1156,7 @@ export default function Recoveries() {
                   <div className="flex items-center">
                     <div>
                       <p className="text-sm font-medium text-gray-600">Claims in Progress</p>
-                      <p className="text-2xl font-semibold text-[#1f1f1f]">{metrics ? metrics.inProgress : keyMetrics.currentlyInProgress}</p>
+                      <p className="text-xl font-medium text-[#1f1f1f]">{metrics ? metrics.inProgress : keyMetrics.currentlyInProgress}</p>
                       {detectionStats?.expired_count !== undefined && detectionStats.expired_count > 0 && (
                         <p className="text-xs text-red-400 mt-1">
                           {detectionStats.expired_count} expired
@@ -1172,7 +1172,7 @@ export default function Recoveries() {
                   <div className="flex items-center">
                     <div>
                       <p className="text-sm font-medium text-gray-600">30-Day Approval Rate</p>
-                      <p className="text-2xl font-semibold text-emerald-600">{metrics ? Math.round(metrics.successRate30d) : keyMetrics.successRate.toFixed(0)}%</p>
+                      <p className="text-xl font-medium text-emerald-600">{metrics ? Math.round(metrics.successRate30d) : keyMetrics.successRate.toFixed(0)}%</p>
                       {detectionStats?.by_confidence && (
                         <p className="text-xs text-gray-600 mt-1">
                           {detectionStats.by_confidence.medium + detectionStats.by_confidence.low} medium/low

@@ -204,7 +204,7 @@ export function NotificationBell({
                   </div>
                   
                   {!notification.read && (
-                    <div className="w-2 h-2 bg-[#36454F] rounded-full flex-shrink-0 mt-1.5"></div>
+                    <div className="w-2 h-2 bg-emerald-500 rounded-full flex-shrink-0 mt-1.5"></div>
                   )}
                 </div>
               );
