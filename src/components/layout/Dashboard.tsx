@@ -828,8 +828,8 @@ export function Dashboard() {
                           <span className="text-xs rounded px-2 py-0.5 bg-emerald-500 text-white">4 new</span>
                         </div>
                       </div>
-                      <div className="py-2 max-h-[600px] overflow-y-auto">
-                        <div className="relative px-4 max-w-[360px] mx-auto text-[12px] divide-y divide-gray-200">
+                      <div className="max-h-[600px] overflow-y-auto">
+                        <div className="relative text-[12px] divide-y divide-gray-200">
                           {(() => {
                             const events = [
                               { id: 'evt-0', unread: true, title: 'Claim Approved', details: '🎉 Good news! Claim approved for $1,200 reimbursement.', time: 'Just now' },
@@ -840,7 +840,7 @@ export function Dashboard() {
                               { id: 'evt-4', unread: false, title: 'Funds Recovered', details: `Payout confirmed: ${formatCurrency(850.75)}`, time: '2 days ago' },
                             ];
                             return events.map((evt) => (
-                              <div key={evt.id} className={`group relative flex items-start gap-3 py-3 overflow-hidden ${evt.unread ? 'bg-gray-50' : 'bg-white'}`}>
+                              <div key={evt.id} className={`group relative flex items-start gap-3 py-3 px-4 overflow-hidden ${evt.unread ? 'bg-gray-50' : 'bg-white'}`}>
                                 <div className="min-w-0 flex-1">
                                   <div className="flex items-center justify-between">
                                     <p className={'text-[12px] truncate ' + (evt.unread ? 'text-black font-semibold' : 'text-gray-600 font-medium')}>{evt.title}</p>
