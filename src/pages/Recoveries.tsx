@@ -219,6 +219,39 @@ export default function Recoveries() {
   const [activeSyncId, setActiveSyncId] = useState<string | null>(null);
   const syncPollingRef = useRef<number | null>(null);
   const syncCheckTimeoutRef = useRef<number | null>(null);
+  
+  // Currency selector state
+  const [selectedCurrency, setSelectedCurrency] = useState<string>('USD');
+  const currencies = [
+    { code: 'USD', symbol: '$', name: 'US Dollar', rate: 1 },
+    { code: 'ZAR', symbol: 'R', name: 'South African Rand', rate: 18.5 },
+    { code: 'EUR', symbol: '€', name: 'Euro', rate: 0.92 },
+    { code: 'GBP', symbol: '£', name: 'British Pound', rate: 0.79 },
+    { code: 'INR', symbol: '₹', name: 'Indian Rupee', rate: 83.0 },
+    { code: 'JPY', symbol: '¥', name: 'Japanese Yen', rate: 149.0 },
+    { code: 'CNY', symbol: '¥', name: 'Chinese Yuan', rate: 7.24 },
+    { code: 'AUD', symbol: 'A$', name: 'Australian Dollar', rate: 1.53 },
+    { code: 'CAD', symbol: 'C$', name: 'Canadian Dollar', rate: 1.36 },
+    { code: 'CHF', symbol: 'Fr', name: 'Swiss Franc', rate: 0.88 }
+  ];
+  
+  // Convert currency function
+  const convertCurrency = (amount: number, fromCurrency: string = 'USD') => {
+    const fromRate = currencies.find(c => c.code === fromCurrency)?.rate || 1;
+    const toRate = currencies.find(c => c.code === selectedCurrency)?.rate || 1;
+    return (amount / fromRate) * toRate;
+  };
+  
+  // Format currency with selected currency
+  const formatCurrencyWithSelection = (amount: number, originalCurrency: string = 'USD') => {
+    const convertedAmount = convertCurrency(amount, originalCurrency);
+    const currencyInfo = currencies.find(c => c.code === selectedCurrency);
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: selectedCurrency,
+      currencyDisplay: 'symbol'
+    }).format(convertedAmount);
+  };
 
   // Helper function for currency formatting (defined early so it can be used in useEffect)
   const formatCurrency = (amount: number, currency: string = 'USD') => {
@@ -987,7 +1020,21 @@ export default function Recoveries() {
           <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-900 space-y-8">
             {/* Page Header */}
             <div className="mb-8">
-              <h1 className="text-2xl font-medium text-[#1f1f1f] mb-2">Claim Recoveries</h1>
+              <div className="flex items-center justify-between mb-2">
+                <h1 className="text-2xl font-extrabold text-[#36454F]" style={{ fontFamily: '"Noto Sans", sans-serif', fontWeight: 800 }}>Overview Dashboard</h1>
+                <Select value={selectedCurrency} onValueChange={setSelectedCurrency}>
+                  <SelectTrigger className="w-[140px] bg-white border-gray-300">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {currencies.map(curr => (
+                      <SelectItem key={curr.code} value={curr.code}>
+                        {curr.symbol} {curr.code}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
               <p className="text-gray-600">Monitor and manage all reimbursement opportunities across your FBA operations</p>
               <div className="mt-4 flex items-center gap-2">
                 <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-white" disabled={selectedIds.size === 0 || submittingBulk} onClick={async () => {
@@ -1017,7 +1064,7 @@ export default function Recoveries() {
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
-                      <div className="text-sm text-gray-600">Total Recovered Value</div>
+                      <div className="text-sm font-medium" style={{ color: '#36454F' }}>Recovered Value</div>
                       {recoveredTotal != null && recoveredTotal > 0 && (
                         <Tooltip>
                           <TooltipTrigger asChild>
@@ -1035,17 +1082,17 @@ export default function Recoveries() {
                         </Tooltip>
                       )}
                     </div>
-                    <div className="text-xl md:text-2xl font-medium text-[#1f1f1f]">
+                    <div className="text-xl md:text-2xl font-medium">
                       {recoveredTotal != null && recoveredTotal > 0 ? (
                         <>
-                          <span className="text-[#1f1f1f]">{formatCurrency(recoveredTotal, recoveredCurrency)}</span>
+                          <span className="text-gray-500">{formatCurrencyWithSelection(recoveredTotal, recoveredCurrency)}</span>
                           <span className="text-gray-600 text-base font-medium ml-2">
                             recovered from {amazonClaimCount ?? 0} approved claim{amazonClaimCount !== 1 ? 's' : ''}
                           </span>
                         </>
                       ) : (
                         <>
-                          <span className="text-[#1f1f1f]">{formatCurrency(0)}</span>
+                          <span className="text-gray-500">{formatCurrencyWithSelection(0)}</span>
                           <span className="text-gray-600 text-base font-medium ml-2">No recoveries yet</span>
                         </>
                       )}
