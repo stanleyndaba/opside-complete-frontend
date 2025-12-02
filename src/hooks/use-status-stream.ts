@@ -2,8 +2,8 @@ import { useEffect, useRef } from 'react';
 import { toast } from '@/hooks/use-toast';
 
 export type StatusEvent = {
-  type: 'sync' | 'detection' | 'claim' | 'evidence' | 'refund' | 'filing' | 'status_updated';
-  status: 'started' | 'progress' | 'completed' | 'failed' | 'filed' | 'approved' | 'deposited' | 'denied' | 'linked';
+  type: 'sync' | 'detection' | 'claim' | 'evidence' | 'refund' | 'filing' | 'status_updated' | 'recovery';
+  status: 'started' | 'progress' | 'completed' | 'failed' | 'filed' | 'approved' | 'deposited' | 'denied' | 'linked' | 'payout_detected' | 'matched' | 'reconciled' | 'discrepancy';
   data: any;
   timestamp: string;
 };
@@ -17,12 +17,12 @@ export const useStatusStream = (onEvent?: (event: StatusEvent) => void) => {
     // Build SSE URL using API base URL
     const sseUrl = api.buildApiUrl('/api/sse/status');
     const eventSource = new EventSource(sseUrl, { withCredentials: true } as any);
-    
+
     eventSource.onmessage = (event) => {
       try {
         const statusEvent: StatusEvent = JSON.parse(event.data);
         onEvent?.(statusEvent);
-        
+
         // Map important events to user-friendly toasts
         const { type, status, data } = statusEvent as any;
         const amount = data?.amount;

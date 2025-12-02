@@ -826,7 +826,7 @@ export default function Recoveries() {
 
         toast({
           title: 'Payout Detected',
-          description: `Detected payout${amount ? ` of ${formatCurrency(amount)}` : ''}${caseNumber ? ` for case ${caseNumber}` : ''}`,
+          description: `Detected payout${amount ? ` of ${formatCurrencyWithSelection(amount)}` : ''}${caseNumber ? ` for case ${caseNumber}` : ''}`,
           duration: 5000,
         });
       } else if (evt.status === 'matched') {
@@ -841,7 +841,7 @@ export default function Recoveries() {
 
         toast({
           title: 'Payout Reconciled',
-          description: `Refund of ${amount ? formatCurrency(amount) : '$0.00'} credited. Funds arriving in 3–5 days.`,
+          description: `Refund of ${amount ? formatCurrencyWithSelection(amount) : '$0.00'} credited. Funds arriving in 3–5 days.`,
           duration: 6000,
         });
       } else if (evt.status === 'discrepancy') {
@@ -850,7 +850,7 @@ export default function Recoveries() {
 
         toast({
           title: 'Payout Discrepancy',
-          description: `Expected ${expected ? formatCurrency(expected) : '$0.00'}, received ${actual ? formatCurrency(actual) : '$0.00'}`,
+          description: `Expected ${expected ? formatCurrencyWithSelection(expected) : '$0.00'}, received ${actual ? formatCurrencyWithSelection(actual) : '$0.00'}`,
           variant: 'destructive',
           duration: 8000,
         });
