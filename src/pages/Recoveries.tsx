@@ -219,7 +219,7 @@ export default function Recoveries() {
   const [activeSyncId, setActiveSyncId] = useState<string | null>(null);
   const syncPollingRef = useRef<number | null>(null);
   const syncCheckTimeoutRef = useRef<number | null>(null);
-  
+
   // Currency selector state
   const [selectedCurrency, setSelectedCurrency] = useState<string>('USD');
   const currencies = [
@@ -234,14 +234,14 @@ export default function Recoveries() {
     { code: 'CAD', symbol: 'C$', name: 'Canadian Dollar', rate: 1.36 },
     { code: 'CHF', symbol: 'Fr', name: 'Swiss Franc', rate: 0.88 }
   ];
-  
+
   // Convert currency function
   const convertCurrency = (amount: number, fromCurrency: string = 'USD') => {
     const fromRate = currencies.find(c => c.code === fromCurrency)?.rate || 1;
     const toRate = currencies.find(c => c.code === selectedCurrency)?.rate || 1;
     return (amount / fromRate) * toRate;
   };
-  
+
   // Format currency with selected currency
   const formatCurrencyWithSelection = (amount: number, originalCurrency: string = 'USD') => {
     const convertedAmount = convertCurrency(amount, originalCurrency);
@@ -1021,7 +1021,7 @@ export default function Recoveries() {
             {/* Page Header */}
             <div className="mb-8">
               <div className="flex items-center justify-between mb-2">
-                <h1 className="text-2xl font-extrabold text-[#36454F]" style={{ fontFamily: '"Noto Sans", sans-serif', fontWeight: 800 }}>Overview Dashboard</h1>
+                <h1 className="text-2xl font-medium text-[#1f1f1f]">Claim Recoveries</h1>
                 <Select value={selectedCurrency} onValueChange={setSelectedCurrency}>
                   <SelectTrigger className="w-[140px] bg-white border-gray-300">
                     <SelectValue />
@@ -1100,10 +1100,10 @@ export default function Recoveries() {
                     {/* Sync status message */}
                     {(syncMessage || needsSync || syncTriggered) && (
                       <div className={`mt-3 px-3 py-2 rounded-md text-xs ${syncTriggered
-                          ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                          : needsSync
-                            ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                            : 'bg-gray-50 text-gray-700 border border-gray-200'
+                        ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                        : needsSync
+                          ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                          : 'bg-gray-50 text-gray-700 border border-gray-200'
                         }`}>
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex items-start gap-2 flex-1">
@@ -1490,8 +1490,8 @@ export default function Recoveries() {
                                       <div className="flex items-center gap-2">
                                         {confidenceBadge ? (
                                           <span className={`text-xs px-1.5 py-0.5 rounded border ${confidenceBadge.color === 'green' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' :
-                                              confidenceBadge.color === 'yellow' ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' :
-                                                'bg-gray-500/20 text-gray-300 border-gray-500/30'
+                                            confidenceBadge.color === 'yellow' ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' :
+                                              'bg-gray-500/20 text-gray-300 border-gray-500/30'
                                             }`}>
                                             {confidenceBadge.label} ({(claim.confidence_score * 100).toFixed(0)}%)
                                           </span>
@@ -1917,8 +1917,8 @@ export default function Recoveries() {
                             <div>
                               <Label className="text-gray-300">Severity</Label>
                               <Badge className={`mt-1 ${detectionDetails.severity === 'high' ? 'bg-red-500/20 text-red-300 border-red-500/30' :
-                                  detectionDetails.severity === 'medium' ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' :
-                                    'bg-gray-500/20 text-gray-300 border-gray-500/30'
+                                detectionDetails.severity === 'medium' ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' :
+                                  'bg-gray-500/20 text-gray-300 border-gray-500/30'
                                 }`}>
                                 {detectionDetails.severity?.charAt(0).toUpperCase() + detectionDetails.severity?.slice(1) || 'Unknown'}
                               </Badge>
@@ -1986,8 +1986,8 @@ export default function Recoveries() {
                               <div>
                                 <Label className="text-gray-300">Deadline Date</Label>
                                 <p className={`text-sm font-medium mt-1 ${detectionDetails.days_remaining !== undefined && detectionDetails.days_remaining <= 7
-                                    ? 'text-amber-400'
-                                    : 'text-gray-300'
+                                  ? 'text-amber-400'
+                                  : 'text-gray-300'
                                   }`}>
                                   {detectionDetails.deadline_date
                                     ? format(new Date(detectionDetails.deadline_date), 'MMM dd, yyyy')
@@ -1998,8 +1998,8 @@ export default function Recoveries() {
                                 <div>
                                   <Label className="text-gray-300">Days Remaining</Label>
                                   <p className={`text-sm font-medium mt-1 ${detectionDetails.days_remaining <= 3 ? 'text-red-400' :
-                                      detectionDetails.days_remaining <= 7 ? 'text-amber-400' :
-                                        'text-gray-300'
+                                    detectionDetails.days_remaining <= 7 ? 'text-amber-400' :
+                                      'text-gray-300'
                                     }`}>
                                     {detectionDetails.days_remaining} day{detectionDetails.days_remaining !== 1 ? 's' : ''}
                                   </p>

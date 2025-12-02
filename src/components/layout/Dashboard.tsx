@@ -13,6 +13,7 @@ import { api, detectionApi } from '@/lib/api';
 import { recoveryApi } from '@/lib/recoveryApi';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 // Icon imports for document sources
 const GmailIcon = '/G.png';
@@ -69,6 +70,38 @@ export function Dashboard() {
   const [inviteOpen, setInviteOpen] = useState<boolean>(false);
   const [inviteEmail, setInviteEmail] = useState<string>('');
   const { toast } = useToast();
+
+  // Currency selector state
+  const [selectedCurrency, setSelectedCurrency] = useState<string>('USD');
+  const currencies = [
+    { code: 'USD', symbol: '$', name: 'US Dollar', rate: 1 },
+    { code: 'ZAR', symbol: 'R', name: 'South African Rand', rate: 18.5 },
+    { code: 'EUR', symbol: '€', name: 'Euro', rate: 0.92 },
+    { code: 'GBP', symbol: '£', name: 'British Pound', rate: 0.79 },
+    { code: 'INR', symbol: '₹', name: 'Indian Rupee', rate: 83.0 },
+    { code: 'JPY', symbol: '¥', name: 'Japanese Yen', rate: 149.0 },
+    { code: 'CNY', symbol: '¥', name: 'Chinese Yuan', rate: 7.24 },
+    { code: 'AUD', symbol: 'A$', name: 'Australian Dollar', rate: 1.53 },
+    { code: 'CAD', symbol: 'C$', name: 'Canadian Dollar', rate: 1.36 },
+    { code: 'CHF', symbol: 'Fr', name: 'Swiss Franc', rate: 0.88 }
+  ];
+
+  // Convert currency function
+  const convertCurrency = (amount: number, fromCurrency: string = 'USD') => {
+    const fromRate = currencies.find(c => c.code === fromCurrency)?.rate || 1;
+    const toRate = currencies.find(c => c.code === selectedCurrency)?.rate || 1;
+    return (amount / fromRate) * toRate;
+  };
+
+  // Format currency with selected currency
+  const formatCurrencyWithSelection = useCallback((amount: number, originalCurrency: string = 'USD') => {
+    const convertedAmount = convertCurrency(amount, originalCurrency);
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: selectedCurrency,
+      currencyDisplay: 'symbol'
+    }).format(convertedAmount);
+  }, [selectedCurrency]);
   // Phase 3: Detection statistics
   const [detectionStats, setDetectionStats] = useState<{
     totalDetections: number;
@@ -155,31 +188,31 @@ export function Dashboard() {
 
     const normalizedPayments = Array.isArray(payments)
       ? payments.map((payment) => {
-          const amount =
-            normalizeNumber(payment?.guaranteedAmount) ??
-            normalizeNumber(payment?.amount) ??
-            normalizeNumber(payment?.claim_amount) ??
-            normalizeNumber(payment?.claimAmount) ??
-            normalizeNumber(payment?.expectedAmount) ??
-            (typeof payment?.amount_cents === 'number' ? payment.amount_cents / 100 : undefined) ??
-            0;
+        const amount =
+          normalizeNumber(payment?.guaranteedAmount) ??
+          normalizeNumber(payment?.amount) ??
+          normalizeNumber(payment?.claim_amount) ??
+          normalizeNumber(payment?.claimAmount) ??
+          normalizeNumber(payment?.expectedAmount) ??
+          (typeof payment?.amount_cents === 'number' ? payment.amount_cents / 100 : undefined) ??
+          0;
 
-          const date =
-            payment?.expectedPayoutDate ||
-            payment?.expected_payout_date ||
-            payment?.payoutDate ||
-            payment?.payout_date ||
-            payment?.expectedDate ||
-            payment?.expected_date ||
-            payment?.estimatedPayoutDate ||
-            payment?.estimated_payout_date ||
-            null;
+        const date =
+          payment?.expectedPayoutDate ||
+          payment?.expected_payout_date ||
+          payment?.payoutDate ||
+          payment?.payout_date ||
+          payment?.expectedDate ||
+          payment?.expected_date ||
+          payment?.estimatedPayoutDate ||
+          payment?.estimated_payout_date ||
+          null;
 
-          return {
-            amount: Number.isFinite(amount) ? amount : 0,
-            date: date ? String(date) : null
-          };
-        })
+        return {
+          amount: Number.isFinite(amount) ? amount : 0,
+          date: date ? String(date) : null
+        };
+      })
       : [];
 
     if (normalizedPayments.length === 0) {
@@ -222,14 +255,14 @@ export function Dashboard() {
         setRecoveredTotal(data.totalAmount ?? 0);
         if (data.currency) setRecoveredCurrency(data.currency);
         if (typeof data.claimCount === 'number') setSubmittedClaimsCount(data.claimCount);
-        
+
         // Handle sync-related fields from API response
         if (data.message) setSyncMessage(data.message);
         if (typeof data.needsSync === 'boolean') setNeedsSync(data.needsSync);
         if (typeof data.syncTriggered === 'boolean') setSyncTriggered(data.syncTriggered);
         if (data.dataSource) setDataSource(data.dataSource);
         if (data.source) setRecoverySource(data.source);
-        
+
         // If sync is triggered or needed, check sync status and poll for completion
         if (data.syncTriggered || data.needsSync) {
           // Check if there's an active sync
@@ -245,7 +278,7 @@ export function Dashboard() {
             syncCheckTimeoutRef.current = null;
           }
         }
-        
+
         setLastUpdated(new Date().toLocaleTimeString());
       } else if (res.data) {
         // Handle response even if not fully ok (might have sync info)
@@ -253,39 +286,39 @@ export function Dashboard() {
         if (data.message) setSyncMessage(data.message);
         if (typeof data.needsSync === 'boolean') setNeedsSync(data.needsSync);
         if (typeof data.syncTriggered === 'boolean') setSyncTriggered(data.syncTriggered);
-        
+
         // Check sync status if needed
         if (data.syncTriggered || data.needsSync) {
           checkAndMonitorSync();
         }
       }
     }
-    
+
     // Function to check sync status and monitor completion
     async function checkAndMonitorSync() {
       if (!active) return;
-      
+
       try {
         // Check if there's an active sync using the documented API
         const { getActiveSyncStatus } = await import('@/lib/inventoryApi');
         const syncStatus = await getActiveSyncStatus();
-        
+
         // If there's an active sync, get the syncId
         if (syncStatus.hasActiveSync && syncStatus.lastSync?.syncId) {
           const syncId = syncStatus.lastSync.syncId;
           setActiveSyncId(syncId);
-          
+
           // Update sync message from lastSync data
           if (syncStatus.lastSync.message) {
             setSyncMessage(syncStatus.lastSync.message);
           }
-          
+
           // Start polling for sync completion
           startSyncPolling(syncId);
         } else if (syncStatus.lastSync) {
           // Handle completed/failed syncs
           const lastSyncStatus = syncStatus.lastSync.status;
-          
+
           // Check for completed status (including legacy 'complete' value)
           if (lastSyncStatus === 'completed' || lastSyncStatus === 'complete') {
             // Sync completed, refresh data
@@ -295,9 +328,9 @@ export function Dashboard() {
             setSyncTriggered(false);
             setNeedsSync(false);
             setSyncMessage(null);
-            
+
             // Toast removed per user request
-            
+
             // Clear polling
             if (syncPollingRef.current) {
               clearInterval(syncPollingRef.current);
@@ -308,7 +341,7 @@ export function Dashboard() {
             setSyncTriggered(false);
             setNeedsSync(true); // Still needs sync
             setSyncMessage(syncStatus.lastSync.message || 'Sync failed. Please try again.');
-            
+
             // Show error toast with more details
             toast({
               title: 'Sync Failed',
@@ -316,7 +349,7 @@ export function Dashboard() {
               variant: 'destructive',
               duration: 6000,
             });
-            
+
             // Clear polling
             if (syncPollingRef.current) {
               clearInterval(syncPollingRef.current);
@@ -327,13 +360,13 @@ export function Dashboard() {
             setSyncTriggered(false);
             setNeedsSync(false);
             setSyncMessage('Sync was cancelled.');
-            
+
             toast({
               title: 'Sync Cancelled',
               description: 'The sync was cancelled.',
               duration: 4000,
             });
-            
+
             // Clear polling
             if (syncPollingRef.current) {
               clearInterval(syncPollingRef.current);
@@ -345,17 +378,17 @@ export function Dashboard() {
         console.error('Error checking sync status:', error);
       }
     }
-    
+
     // Function to poll for sync completion
     function startSyncPolling(syncId: string) {
       // Clear any existing polling
       if (syncPollingRef.current) {
         clearInterval(syncPollingRef.current);
       }
-      
+
       let pollCount = 0;
       const maxPolls = 120; // Poll for up to 10 minutes (120 * 5 seconds)
-      
+
       syncPollingRef.current = window.setInterval(async () => {
         if (!active) {
           if (syncPollingRef.current) {
@@ -364,14 +397,14 @@ export function Dashboard() {
           }
           return;
         }
-        
+
         pollCount++;
-        
+
         try {
           // Import getSyncStatus from inventoryApi
           const { getSyncStatus } = await import('@/lib/inventoryApi');
           const status = await getSyncStatus(syncId);
-          
+
           // Check for completed status (including legacy 'complete' value)
           if (status.status === 'completed' || status.status === 'complete') {
             // Sync completed, refresh data
@@ -381,9 +414,9 @@ export function Dashboard() {
             setSyncTriggered(false);
             setNeedsSync(false);
             setSyncMessage('Sync completed successfully!');
-            
+
             // Toast removed per user request
-            
+
             // Clear polling
             if (syncPollingRef.current) {
               clearInterval(syncPollingRef.current);
@@ -395,14 +428,14 @@ export function Dashboard() {
             setNeedsSync(true);
             setSyncMessage('Sync failed. Please try again.');
             await fetchUpcomingPayments();
-            
-              toast({
-                title: 'Sync Failed',
-                description: status.error || status.message || 'The sync encountered an error. Please try again.',
-                variant: 'destructive',
-                duration: 6000,
-              });
-            
+
+            toast({
+              title: 'Sync Failed',
+              description: status.error || status.message || 'The sync encountered an error. Please try again.',
+              variant: 'destructive',
+              duration: 6000,
+            });
+
             // Clear polling
             if (syncPollingRef.current) {
               clearInterval(syncPollingRef.current);
@@ -412,7 +445,7 @@ export function Dashboard() {
           // If still in progress, continue polling
         } catch (error) {
           console.error('Error polling sync status:', error);
-          
+
           // Stop polling after max attempts or if there's an error
           if (pollCount >= maxPolls) {
             if (syncPollingRef.current) {
@@ -423,7 +456,7 @@ export function Dashboard() {
           }
         }
       }, 5000); // Poll every 5 seconds
-      
+
       // Set timeout to stop polling after 10 minutes
       syncCheckTimeoutRef.current = window.setTimeout(() => {
         if (syncPollingRef.current) {
@@ -444,27 +477,27 @@ export function Dashboard() {
         const rate = typeof d.successRate === 'number' ? d.successRate : (typeof d.successRate30d === 'number' ? d.successRate30d : null);
         const approved = (
           typeof d.approvedValue === 'number' ? d.approvedValue :
-          typeof d.valueApproved === 'number' ? d.valueApproved :
-          typeof d.paidValue === 'number' ? d.paidValue :
-          typeof d.valuePaid === 'number' ? d.valuePaid :
-          typeof d.approvedAmount === 'number' ? d.approvedAmount :
-          typeof d.amountApproved === 'number' ? d.amountApproved :
-          null
+            typeof d.valueApproved === 'number' ? d.valueApproved :
+              typeof d.paidValue === 'number' ? d.paidValue :
+                typeof d.valuePaid === 'number' ? d.valuePaid :
+                  typeof d.approvedAmount === 'number' ? d.approvedAmount :
+                    typeof d.amountApproved === 'number' ? d.amountApproved :
+                      null
         );
         const nextPay = (
           typeof d.nextPaymentAmount === 'number' ? d.nextPaymentAmount :
-          typeof d.nextPayoutAmount === 'number' ? d.nextPayoutAmount :
-          typeof d.nextPayout === 'number' ? d.nextPayout :
-          typeof d.expectedPayoutAmount === 'number' ? d.expectedPayoutAmount :
-          typeof d.payoutDue === 'number' ? d.payoutDue :
-          null
+            typeof d.nextPayoutAmount === 'number' ? d.nextPayoutAmount :
+              typeof d.nextPayout === 'number' ? d.nextPayout :
+                typeof d.expectedPayoutAmount === 'number' ? d.expectedPayoutAmount :
+                  typeof d.payoutDue === 'number' ? d.payoutDue :
+                    null
         );
         const approvedClaimsMonth = (
           typeof d.approvedClaimsThisMonth === 'number' ? d.approvedClaimsThisMonth :
-          typeof d.claimsApprovedThisMonth === 'number' ? d.claimsApprovedThisMonth :
-          typeof d.approvedCountThisMonth === 'number' ? d.approvedCountThisMonth :
-          typeof d.claimsApproved === 'number' ? d.claimsApproved :
-          null
+            typeof d.claimsApprovedThisMonth === 'number' ? d.claimsApprovedThisMonth :
+              typeof d.approvedCountThisMonth === 'number' ? d.approvedCountThisMonth :
+                typeof d.claimsApproved === 'number' ? d.claimsApproved :
+                  null
         );
         if (pending !== null && !upcomingPaymentsLoadedRef.current) setPendingRecoveryAmount(pending);
         if (rate !== null) setSuccessRate(rate);
@@ -536,9 +569,9 @@ export function Dashboard() {
             await fetchMetrics();
             await fetchUpcomingPayments();
           }
-        } catch {}
+        } catch { }
       };
-    } catch {}
+    } catch { }
 
     return () => {
       active = false;
@@ -563,306 +596,319 @@ export function Dashboard() {
   const effectivePendingClaims = pendingClaimsCount ?? submittedClaimsCount ?? 0;
   const hasPendingClaimsData = pendingClaimsCount != null || submittedClaimsCount != null;
 
-    return (
-      <div 
-        className="relative min-h-screen flex flex-col h-screen overflow-hidden bg-gray-50"
-      >
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-gray-50 to-white" />
+  return (
+    <div
+      className="relative min-h-screen flex flex-col h-screen overflow-hidden bg-gray-50"
+    >
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-gray-50 to-white" />
       <Navbar sidebarCollapsed={isSidebarCollapsed} forceTransparent />
       <div className="flex-1 flex h-full overflow-hidden">
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
         <main className={'flex-1 transition-all duration-300 overflow-y-auto ' + mainClass}>
           <div className="relative pt-24">
-                <div className="relative container mx-auto px-6 md:px-10 lg:px-12 pb-10 text-gray-900 space-y-8">
+            <div className="relative container mx-auto px-6 md:px-10 lg:px-12 pb-10 text-gray-900 space-y-8">
               <div className="rounded-2xl bg-white border border-gray-200 shadow-sm p-6 md:p-8">
-            <div className="mb-4">
-              <h2 className="text-lg font-semibold text-[#1f1f1f]">Overview</h2>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 h-full">
-              <div className="lg:col-span-2 space-y-8">
-                  <Card className="bg-white border border-gray-200 text-gray-900 shadow-sm">
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                            <h2 className="font-brand text-lg text-[#1f1f1f] font-semibold">Recovered Value</h2>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <button
-                                type="button"
-                                aria-label="About recovered value"
-                                  className="text-gray-500 hover:text-gray-700 transition-colors"
-                              >
-                                <Info className="h-4 w-4" />
-                              </button>
-                            </TooltipTrigger>
-                            <TooltipContent side="top" className="bg-black text-white text-xs">
-                              Your recovered profits from approved/completed claims. {recoverySource && `Source: ${recoverySource}`}
-                            </TooltipContent>
-                          </Tooltip>
-                        </div>
-                        <div className="text-[20px] md:text-[24px] font-medium mt-1 text-[#1f1f1f]">
-                          {formatCurrency(recoveredTotal ?? 0, recoveredCurrency)}
-                        </div>
-                          <div className="text-[11px] text-gray-600 mt-1">
-                            {submittedClaimsCount != null && submittedClaimsCount > 0 
-                              ? `From ${submittedClaimsCount} claim${submittedClaimsCount !== 1 ? 's' : ''} submitted`
-                              : 'From approved claims submitted'
-                            }
-                          </div>
-                          {/* Sync status message */}
-                          {(syncMessage || needsSync || syncTriggered) && (
-                            <div className={`mt-3 px-3 py-2 rounded-md text-xs ${
-                              syncTriggered 
-                                ? 'bg-blue-50 text-blue-700 border border-blue-200' 
-                                : needsSync 
-                                ? 'bg-amber-50 text-amber-700 border border-amber-200' 
-                                : 'bg-gray-50 text-gray-700 border border-gray-200'
-                            }`}>
-                              <div className="flex items-start justify-between gap-2">
-                                <div className="flex items-start gap-2 flex-1">
-                                  {syncTriggered && <RefreshCw className="h-3 w-3 mt-0.5 animate-spin" />}
-                                  <span>{syncMessage || (needsSync ? 'Syncing your Amazon account... Please refresh in a few moments.' : '')}</span>
-                                </div>
-                                {activeSyncId && (
+                <div className="mb-4">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-lg font-extrabold" style={{ fontFamily: '"Noto Sans", sans-serif', fontWeight: 800, color: '#36454F' }}>Overview Dashboard</h2>
+                    <Select value={selectedCurrency} onValueChange={setSelectedCurrency}>
+                      <SelectTrigger className="w-[140px] bg-white border-gray-300">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {currencies.map(curr => (
+                          <SelectItem key={curr.code} value={curr.code}>
+                            {curr.symbol} {curr.code}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 h-full">
+                  <div className="lg:col-span-2 space-y-8">
+                    <Card className="bg-white border border-gray-200 text-gray-900 shadow-sm">
+                      <CardContent className="p-6">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                              <h2 className="font-brand text-lg font-semibold" style={{ color: '#36454F' }}>Recovered Value</h2>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
                                   <button
-                                    onClick={() => navigate(`/sync?id=${activeSyncId}`)}
-                                    className="text-blue-600 hover:text-blue-700 underline text-xs ml-2"
+                                    type="button"
+                                    aria-label="About recovered value"
+                                    className="text-gray-500 hover:text-gray-700 transition-colors"
                                   >
-                                    View progress
+                                    <Info className="h-4 w-4" />
                                   </button>
-                                )}
-                              </div>
+                                </TooltipTrigger>
+                                <TooltipContent side="top" className="bg-black text-white text-xs">
+                                  Your recovered profits from approved/completed claims. {recoverySource && `Source: ${recoverySource}`}
+                                </TooltipContent>
+                              </Tooltip>
                             </div>
-                          )}
-                      </div>
-                    </div>
-
-                    <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
-                          <div className="text-xs text-gray-600">Next payment</div>
-                          <div className="text-xl font-medium text-[#1f1f1f] mt-1">
-                            {formatCurrency((nextPaymentAmount ?? 0), recoveredCurrency)}
-                          </div>
-                          <div className="text-[11px] text-gray-600 mt-1">
-                            {nextPaymentDate
-                              ? `Estimated on ${new Date(nextPaymentDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
-                              : 'No payout scheduled yet'}
-                          </div>
-                      </div>
-                        <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
-                          <div className="text-xs text-gray-600">Pending recovery</div>
-                          <div className="text-xl font-medium text-[#1f1f1f] mt-1">
-                            {formatCurrency((pendingRecoveryAmount ?? 0), recoveredCurrency)}
-                          </div>
-                          <div className="text-[11px] text-gray-600 mt-1">
-                            No. of Claims: {effectivePendingClaims}
-                          </div>
-                      </div>
-                        <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
-                          <div className="flex items-center gap-1.5">
-                            <div className="text-xs text-gray-600">Approved</div>
-                            <div className="flex items-center gap-1">
-                              <TrendingDown className="h-3 w-3 text-red-500" />
-                              <span className="text-[10px] text-red-500 font-medium">8%</span>
-                              <TrendingUp className="h-3 w-3 text-green-600" />
-                              <span className="text-[10px] text-green-600 font-medium">92%</span>
+                            <div className="text-[20px] md:text-[24px] font-medium mt-1 text-gray-500">
+                              {formatCurrencyWithSelection(recoveredTotal ?? 0, recoveredCurrency)}
                             </div>
-                          </div>
-                          <div className="text-xl font-medium text-[#1f1f1f] mt-1">{formatCurrency(computedApproved ?? 0, recoveredCurrency)}</div>
-                          <div className="text-[11px] mt-1">
-                            <span className="text-gray-600">Total this month: </span>
-                            <span className="text-[#1f1f1f]">$31.4K</span>
-                        </div>
-                      </div>
-                    </div>
-
-
-                    {/* Auto-Submit button removed per request */}
-                  </CardContent>
-                </Card>
-
-                {/* Phase 3: Detection Summary Card */}
-                {detectionStats && detectionStats.totalDetections > 0 && (
-                  <Card className="bg-white border border-gray-200 text-gray-900 shadow-sm">
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between mb-4">
-                        <h2 className="font-brand text-lg text-[#1f1f1f] font-semibold">💰 Detected Claims</h2>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="bg-white border border-gray-200 text-gray-900 hover:bg-gray-50"
-                          onClick={() => navigate('/recoveries', { state: { filter: 'detected' } })}
-                        >
-                          View All →
-                        </Button>
-                      </div>
-                      <div className="grid grid-cols-2 gap-4 mb-4">
-                        <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
-                          <div className="text-xs text-gray-600">Total Detected</div>
-                          <div className="text-xl font-medium text-[#1f1f1f] mt-1">{detectionStats.totalDetections}</div>
-                        </div>
-                        <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
-                          <div className="text-xs text-gray-600">Recovery Potential</div>
-                          <div className="text-xl font-medium text-emerald-600 mt-1">
-                            {formatCurrency(detectionStats.estimatedRecovery)}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2 text-sm">
-                          <span className="text-emerald-600">⚡</span>
-                          <span className="text-gray-700">High: <span className="font-medium text-[#1f1f1f]">{detectionStats.highConfidence}</span> claims</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm">
-                          <span className="text-amber-600">❓</span>
-                          <span className="text-gray-700">Medium: <span className="font-medium text-[#1f1f1f]">{detectionStats.mediumConfidence}</span> claims</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm">
-                          <span className="text-gray-500">📋</span>
-                          <span className="text-gray-700">Low: <span className="font-medium text-[#1f1f1f]">{detectionStats.lowConfidence}</span> claims</span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
-
-                  <Card className="bg-white border border-gray-200 text-gray-900 shadow-sm">
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                        <h2 className="font-brand text-lg text-[#1f1f1f] font-semibold">Actions</h2>
-                        <button aria-label="Customize quick actions" className="text-gray-500 hover:text-gray-700" onClick={() => setQuickActionsEditOpen(true)}>
-                        <Plus className="h-4 w-4" />
-                      </button>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4 mt-4">
-                      {selectedQuickActions.includes('connect_evidence') && (
-                          <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => setShowSourcesModal(true)}>
-                          <Mail className="h-4 w-4" />
-                          Connect evidence sources
-                        </Button>
-                      )}
-                      {selectedQuickActions.includes('review_high_conf') && (
-                          <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => navigate('/recoveries', { state: { filter: 'high_confidence' } })}>
-                          <CheckCircle className="h-4 w-4" />
-                          Review high‑confidence cases
-                        </Button>
-                      )}
-                      {selectedQuickActions.includes('resolve_new') && (
-                          <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => navigate('/recoveries', { state: { filter: 'new_pending' } })}>
-                          <RotateCcw className="h-4 w-4" />
-                          Resolve new opportunities
-                        </Button>
-                      )}
-                      {selectedQuickActions.includes('run_detector') && (
-                          <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={async () => {
-                          try { await api.post('/api/detections/run'); toast({ title: 'Detector started', description: 'Scanning new opportunities…' }); } catch(e:any){ toast({ title: 'Detector failed', description: e?.message || 'Please try again.', variant: 'destructive' }); }
-                        }}>
-                          <RefreshCw className="h-4 w-4" />
-                          Run detector
-                        </Button>
-                      )}
-                      {selectedQuickActions.includes('ingest_now') && (
-                          <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={async () => {
-                          const r = await api.startEvidenceIngest();
-                          if ((r as any)?.ok) toast({ title: 'Ingestion started', description: 'We will notify you when new docs arrive.' });
-                          else toast({ title: 'Ingestion failed', description: (r as any)?.error || 'Try again.', variant: 'destructive' }); 
-                        }}>
-                          <Cloud className="h-4 w-4" />
-                          Ingest documents now
-                        </Button>
-                      )}
-                      {selectedQuickActions.includes('smart_sync') && (
-                          <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => navigate('/smart-inventory-sync')}>
-                          <RefreshCw className="h-4 w-4" />
-                          Smart Inventory Sync
-                        </Button>
-                      )}
-                      {selectedQuickActions.includes('upcoming_payments') && (
-                          <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => navigate('/upcoming-payments')}>
-                          <CircleDollarSign className="h-4 w-4" />
-                          Payment recoveries
-                        </Button>
-                      )}
-                      {selectedQuickActions.includes('export_history') && (
-                          <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => navigate('/export-center')}>
-                          <Download className="h-4 w-4" />
-                          Export recovery & payout history
-                        </Button>
-                      )}
-                      {selectedQuickActions.includes('evidence_locker') && (
-                          <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => navigate('/evidence-locker')}>
-                          <FileText className="h-4 w-4" />
-                          Doc Locker
-                        </Button>
-                      )}
-                      {selectedQuickActions.includes('invite_teammate') && (
-                          <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => setInviteOpen(true)}>
-                          <Link2 className="h-4 w-4" />
-                          Invite a teammate
-                        </Button>
-                      )}
-                      {selectedQuickActions.includes('configure_alerts') && (
-                          <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => navigate('/notifications')}>
-                          <Bell className="h-4 w-4" />
-                          Configure alerts
-                        </Button>
-                      )}
-                      {selectedQuickActions.includes('security_setup') && (
-                          <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => navigate('/settings')}>
-                          <Shield className="h-4 w-4" />
-                          Security quick setup
-                        </Button>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-                <div className="lg:col-span-1">
-                  <Card className="h-full bg-white border border-gray-200 text-gray-900 shadow-sm">
-                    <CardContent className="p-0">
-                      <div className="p-3 border-b border-gray-200">
-                        <div className="flex items-center justify-between">
-                          <h3 className="font-semibold text-sm text-black">Recent Logs</h3>
-                          <span className="text-xs rounded px-2 py-0.5 bg-emerald-500 text-white">4 new</span>
-                        </div>
-                      </div>
-                      <div className="max-h-[600px] overflow-y-auto">
-                        <div className="relative text-[12px] divide-y divide-gray-200">
-                          {(() => {
-                            const events = [
-                              { id: 'evt-0', unread: true, title: 'Claim Approved', details: '🎉 Good news! Claim approved for $1,200 reimbursement.', time: 'Just now' },
-                              { id: 'evt-1', unread: true, title: 'Connection Established', details: 'Amazon connection established', time: 'Just now' },
-                              { id: 'evt-2', unread: true, title: 'Claims Identified', details: `23 potential claims identified, valued at ~${formatCurrency(14228)}` , time: '2 minutes ago' },
-                              { id: 'evt-2.5', unread: true, title: 'Evidence Matched', details: 'Invoices and shipment records matched for 4 new claims.', time: 'Just now' },
-                              { id: 'evt-3', unread: false, title: 'Claim Submitted', details: 'Auto-submitted 5 verified claims', time: 'Yesterday' },
-                              { id: 'evt-4', unread: false, title: 'Funds Recovered', details: `Payout confirmed: ${formatCurrency(850.75)}`, time: '2 days ago' },
-                            ];
-                            return events.map((evt) => (
-                              <div key={evt.id} className={`group relative flex items-start gap-3 py-3 px-4 overflow-hidden ${evt.unread ? 'bg-gray-50' : 'bg-white'}`}>
-                                <div className="min-w-0 flex-1">
-                                  <div className="flex items-center justify-between">
-                                    <p className={'text-[12px] truncate ' + (evt.unread ? 'text-black font-semibold' : 'text-gray-600 font-medium')}>{evt.title}</p>
-                                    <span className={'ml-3 shrink-0 text-[11px] ' + (evt.unread ? 'text-gray-700 font-semibold' : 'text-gray-500')}>{evt.time}</span>
+                            <div className="text-[11px] text-gray-600 mt-1">
+                              {submittedClaimsCount != null && submittedClaimsCount > 0
+                                ? `From ${submittedClaimsCount} claim${submittedClaimsCount !== 1 ? 's' : ''} submitted`
+                                : 'From approved claims submitted'
+                              }
+                            </div>
+                            {/* Sync status message */}
+                            {(syncMessage || needsSync || syncTriggered) && (
+                              <div className={`mt-3 px-3 py-2 rounded-md text-xs ${syncTriggered
+                                  ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                                  : needsSync
+                                    ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                                    : 'bg-gray-50 text-gray-700 border border-gray-200'
+                                }`}>
+                                <div className="flex items-start justify-between gap-2">
+                                  <div className="flex items-start gap-2 flex-1">
+                                    {syncTriggered && <RefreshCw className="h-3 w-3 mt-0.5 animate-spin" />}
+                                    <span>{syncMessage || (needsSync ? 'Syncing your Amazon account... Please refresh in a few moments.' : '')}</span>
                                   </div>
-                                  <p className="text-[11px] text-gray-600 mt-0.5 truncate">{evt.details}</p>
+                                  {activeSyncId && (
+                                    <button
+                                      onClick={() => navigate(`/sync?id=${activeSyncId}`)}
+                                      className="text-blue-600 hover:text-blue-700 underline text-xs ml-2"
+                                    >
+                                      View progress
+                                    </button>
+                                  )}
                                 </div>
                               </div>
-                            ));
-                          })()}
+                            )}
+                          </div>
                         </div>
-                      </div>
-                      <div className="border-t border-gray-200 p-4">
-                        <Button className="w-full bg-white hover:bg-gray-50 text-gray-900 border border-gray-200" onClick={() => navigate('/notifications')}>
-                          View all Logs
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
+
+                        <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
+                            <div className="text-xs text-gray-600">Next payment</div>
+                            <div className="text-xl font-medium text-gray-500 mt-1">
+                              {formatCurrencyWithSelection((nextPaymentAmount ?? 0), recoveredCurrency)}
+                            </div>
+                            <div className="text-[11px] text-gray-600 mt-1">
+                              {nextPaymentDate
+                                ? `Estimated on ${new Date(nextPaymentDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
+                                : 'No payout scheduled yet'}
+                            </div>
+                          </div>
+                          <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
+                            <div className="text-xs text-gray-600">Pending recovery</div>
+                            <div className="text-xl font-medium text-gray-500 mt-1">
+                              {formatCurrencyWithSelection((pendingRecoveryAmount ?? 0), recoveredCurrency)}
+                            </div>
+                            <div className="text-[11px] text-gray-600 mt-1">
+                              No. of Claims: {effectivePendingClaims}
+                            </div>
+                          </div>
+                          <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
+                            <div className="flex items-center gap-1.5">
+                              <div className="text-xs text-gray-600">Approved</div>
+                              <div className="flex items-center gap-1">
+                                <TrendingDown className="h-3 w-3 text-red-500" />
+                                <span className="text-[10px] text-red-500 font-medium">8%</span>
+                                <TrendingUp className="h-3 w-3 text-green-600" />
+                                <span className="text-[10px] text-green-600 font-medium">92%</span>
+                              </div>
+                            </div>
+                            <div className="text-xl font-medium text-gray-500 mt-1">{formatCurrencyWithSelection(computedApproved ?? 0, recoveredCurrency)}</div>
+                            <div className="text-[11px] mt-1">
+                              <span className="text-gray-600">Total this month: </span>
+                              <span className="text-[#1f1f1f]">$31.4K</span>
+                            </div>
+                          </div>
+                        </div>
+
+
+                        {/* Auto-Submit button removed per request */}
+                      </CardContent>
+                    </Card>
+
+                    {/* Phase 3: Detection Summary Card */}
+                    {detectionStats && detectionStats.totalDetections > 0 && (
+                      <Card className="bg-white border border-gray-200 text-gray-900 shadow-sm">
+                        <CardContent className="p-6">
+                          <div className="flex items-center justify-between mb-4">
+                            <h2 className="font-brand text-lg text-[#1f1f1f] font-semibold">💰 Detected Claims</h2>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="bg-white border border-gray-200 text-gray-900 hover:bg-gray-50"
+                              onClick={() => navigate('/recoveries', { state: { filter: 'detected' } })}
+                            >
+                              View All →
+                            </Button>
+                          </div>
+                          <div className="grid grid-cols-2 gap-4 mb-4">
+                            <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
+                              <div className="text-xs text-gray-600">Total Detected</div>
+                              <div className="text-xl font-medium text-[#1f1f1f] mt-1">{detectionStats.totalDetections}</div>
+                            </div>
+                            <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
+                              <div className="text-xs text-gray-600">Recovery Potential</div>
+                              <div className="text-xl font-medium text-emerald-600 mt-1">
+                                {formatCurrency(detectionStats.estimatedRecovery)}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2 text-sm">
+                              <span className="text-emerald-600">⚡</span>
+                              <span className="text-gray-700">High: <span className="font-medium text-[#1f1f1f]">{detectionStats.highConfidence}</span> claims</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm">
+                              <span className="text-amber-600">❓</span>
+                              <span className="text-gray-700">Medium: <span className="font-medium text-[#1f1f1f]">{detectionStats.mediumConfidence}</span> claims</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm">
+                              <span className="text-gray-500">📋</span>
+                              <span className="text-gray-700">Low: <span className="font-medium text-[#1f1f1f]">{detectionStats.lowConfidence}</span> claims</span>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
+
+                    <Card className="bg-white border border-gray-200 text-gray-900 shadow-sm">
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between">
+                          <h2 className="font-brand text-lg text-[#1f1f1f] font-semibold">Actions</h2>
+                          <button aria-label="Customize quick actions" className="text-gray-500 hover:text-gray-700" onClick={() => setQuickActionsEditOpen(true)}>
+                            <Plus className="h-4 w-4" />
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4 mt-4">
+                          {selectedQuickActions.includes('connect_evidence') && (
+                            <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => setShowSourcesModal(true)}>
+                              <Mail className="h-4 w-4" />
+                              Connect evidence sources
+                            </Button>
+                          )}
+                          {selectedQuickActions.includes('review_high_conf') && (
+                            <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => navigate('/recoveries', { state: { filter: 'high_confidence' } })}>
+                              <CheckCircle className="h-4 w-4" />
+                              Review high‑confidence cases
+                            </Button>
+                          )}
+                          {selectedQuickActions.includes('resolve_new') && (
+                            <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => navigate('/recoveries', { state: { filter: 'new_pending' } })}>
+                              <RotateCcw className="h-4 w-4" />
+                              Resolve new opportunities
+                            </Button>
+                          )}
+                          {selectedQuickActions.includes('run_detector') && (
+                            <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={async () => {
+                              try { await api.post('/api/detections/run'); toast({ title: 'Detector started', description: 'Scanning new opportunities…' }); } catch (e: any) { toast({ title: 'Detector failed', description: e?.message || 'Please try again.', variant: 'destructive' }); }
+                            }}>
+                              <RefreshCw className="h-4 w-4" />
+                              Run detector
+                            </Button>
+                          )}
+                          {selectedQuickActions.includes('ingest_now') && (
+                            <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={async () => {
+                              const r = await api.startEvidenceIngest();
+                              if ((r as any)?.ok) toast({ title: 'Ingestion started', description: 'We will notify you when new docs arrive.' });
+                              else toast({ title: 'Ingestion failed', description: (r as any)?.error || 'Try again.', variant: 'destructive' });
+                            }}>
+                              <Cloud className="h-4 w-4" />
+                              Ingest documents now
+                            </Button>
+                          )}
+                          {selectedQuickActions.includes('smart_sync') && (
+                            <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => navigate('/smart-inventory-sync')}>
+                              <RefreshCw className="h-4 w-4" />
+                              Smart Inventory Sync
+                            </Button>
+                          )}
+                          {selectedQuickActions.includes('upcoming_payments') && (
+                            <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => navigate('/upcoming-payments')}>
+                              <CircleDollarSign className="h-4 w-4" />
+                              Payment recoveries
+                            </Button>
+                          )}
+                          {selectedQuickActions.includes('export_history') && (
+                            <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => navigate('/export-center')}>
+                              <Download className="h-4 w-4" />
+                              Export recovery & payout history
+                            </Button>
+                          )}
+                          {selectedQuickActions.includes('evidence_locker') && (
+                            <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => navigate('/evidence-locker')}>
+                              <FileText className="h-4 w-4" />
+                              Doc Locker
+                            </Button>
+                          )}
+                          {selectedQuickActions.includes('invite_teammate') && (
+                            <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => setInviteOpen(true)}>
+                              <Link2 className="h-4 w-4" />
+                              Invite a teammate
+                            </Button>
+                          )}
+                          {selectedQuickActions.includes('configure_alerts') && (
+                            <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => navigate('/notifications')}>
+                              <Bell className="h-4 w-4" />
+                              Configure alerts
+                            </Button>
+                          )}
+                          {selectedQuickActions.includes('security_setup') && (
+                            <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => navigate('/settings')}>
+                              <Shield className="h-4 w-4" />
+                              Security quick setup
+                            </Button>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  <div className="lg:col-span-1">
+                    <Card className="h-full bg-white border border-gray-200 text-gray-900 shadow-sm">
+                      <CardContent className="p-0">
+                        <div className="p-3 border-b border-gray-200">
+                          <div className="flex items-center justify-between">
+                            <h3 className="font-semibold text-sm text-black">Recent Logs</h3>
+                            <span className="text-xs rounded px-2 py-0.5 bg-emerald-500 text-white">4 new</span>
+                          </div>
+                        </div>
+                        <div className="max-h-[600px] overflow-y-auto">
+                          <div className="relative text-[12px] divide-y divide-gray-200">
+                            {(() => {
+                              const events = [
+                                { id: 'evt-0', unread: true, title: 'Claim Approved', details: '🎉 Good news! Claim approved for $1,200 reimbursement.', time: 'Just now' },
+                                { id: 'evt-1', unread: true, title: 'Connection Established', details: 'Amazon connection established', time: 'Just now' },
+                                { id: 'evt-2', unread: true, title: 'Claims Identified', details: `23 potential claims identified, valued at ~${formatCurrency(14228)}`, time: '2 minutes ago' },
+                                { id: 'evt-2.5', unread: true, title: 'Evidence Matched', details: 'Invoices and shipment records matched for 4 new claims.', time: 'Just now' },
+                                { id: 'evt-3', unread: false, title: 'Claim Submitted', details: 'Auto-submitted 5 verified claims', time: 'Yesterday' },
+                                { id: 'evt-4', unread: false, title: 'Funds Recovered', details: `Payout confirmed: ${formatCurrency(850.75)}`, time: '2 days ago' },
+                              ];
+                              return events.map((evt) => (
+                                <div key={evt.id} className={`group relative flex items-start gap-3 py-3 px-4 overflow-hidden ${evt.unread ? 'bg-gray-50' : 'bg-white'}`}>
+                                  <div className="min-w-0 flex-1">
+                                    <div className="flex items-center justify-between">
+                                      <p className={'text-[12px] truncate ' + (evt.unread ? 'text-black font-semibold' : 'text-gray-600 font-medium')}>{evt.title}</p>
+                                      <span className={'ml-3 shrink-0 text-[11px] ' + (evt.unread ? 'text-gray-700 font-semibold' : 'text-gray-500')}>{evt.time}</span>
+                                    </div>
+                                    <p className="text-[11px] text-gray-600 mt-0.5 truncate">{evt.details}</p>
+                                  </div>
+                                </div>
+                              ));
+                            })()}
+                          </div>
+                        </div>
+                        <div className="border-t border-gray-200 p-4">
+                          <Button className="w-full bg-white hover:bg-gray-50 text-gray-900 border border-gray-200" onClick={() => navigate('/notifications')}>
+                            View all Logs
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
               </div>
-              </div>
-            </div>
             </div>
           </div>
         </main>
@@ -876,7 +922,7 @@ export function Dashboard() {
               Read-only access. No writing or sending permissions.
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="grid grid-cols-2 gap-3 py-2">
             <button
               onClick={async () => {
@@ -913,7 +959,7 @@ export function Dashboard() {
               )}
               <span className="text-xs font-medium text-gray-700">Gmail</span>
             </button>
-            
+
             <button
               onClick={async () => {
                 try {
@@ -949,7 +995,7 @@ export function Dashboard() {
               )}
               <span className="text-xs font-medium text-gray-700">Outlook</span>
             </button>
-            
+
             <button
               onClick={async () => {
                 try {
@@ -985,7 +1031,7 @@ export function Dashboard() {
               )}
               <span className="text-xs font-medium text-gray-700">Google Drive</span>
             </button>
-            
+
             <button
               onClick={async () => {
                 try {
@@ -1022,7 +1068,7 @@ export function Dashboard() {
               <span className="text-xs font-medium text-gray-700">Dropbox</span>
             </button>
           </div>
-          
+
           <div className="flex justify-center items-center gap-3 pt-1">
             <Button
               variant="ghost"
@@ -1040,8 +1086,8 @@ export function Dashboard() {
       <Dialog open={quickActionsEditOpen} onOpenChange={setQuickActionsEditOpen}>
         <DialogContent className="max-w-md bg-white border border-gray-200 text-gray-900 shadow-lg rounded-2xl">
           <DialogHeader>
-      <DialogTitle className="text-lg text-[#1f1f1f]">Customize Quick Actions</DialogTitle>
-              <DialogDescription className="text-gray-600">Select which actions to show.</DialogDescription>
+            <DialogTitle className="text-lg text-[#1f1f1f]">Customize Quick Actions</DialogTitle>
+            <DialogDescription className="text-gray-600">Select which actions to show.</DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
             {QUICK_ACTIONS.map(a => (
@@ -1059,7 +1105,7 @@ export function Dashboard() {
           </div>
           <DialogFooter>
             <Button variant="ghost" className="text-gray-600 hover:text-gray-800" onClick={() => setQuickActionsEditOpen(false)}>Cancel</Button>
-            <Button className="bg-black hover:bg-gray-800 text-white border border-black" onClick={() => { try { localStorage.setItem('clario.quickActions', JSON.stringify(selectedQuickActions)); toast({ title: 'Saved', description: 'Quick actions updated.' }); } catch {} setQuickActionsEditOpen(false); }}>Save</Button>
+            <Button className="bg-black hover:bg-gray-800 text-white border border-black" onClick={() => { try { localStorage.setItem('clario.quickActions', JSON.stringify(selectedQuickActions)); toast({ title: 'Saved', description: 'Quick actions updated.' }); } catch { } setQuickActionsEditOpen(false); }}>Save</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
