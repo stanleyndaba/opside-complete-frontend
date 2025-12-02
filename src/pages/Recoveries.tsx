@@ -817,6 +817,52 @@ export default function Recoveries() {
         }
       }
     }
+
+    // Agent 8: Recovery events (payout detection and reconciliation)
+    if (evt.type === 'recovery') {
+      if (evt.status === 'payout_detected') {
+        const amount = evt.data?.amount || evt.data?.actual_amount;
+        const caseNumber = evt.data?.case_number || evt.data?.case_id;
+
+        toast({
+          title: 'Payout Detected',
+          description: `Detected payout${amount ? ` of ${formatCurrency(amount)}` : ''}${caseNumber ? ` for case ${caseNumber}` : ''}`,
+          duration: 5000,
+        });
+      } else if (evt.status === 'matched') {
+        toast({
+          title: 'Payout Matched',
+          description: `Payout matched to claim ${evt.data?.case_number || ''}`,
+          duration: 4000,
+        });
+      } else if (evt.status === 'reconciled') {
+        const amount = evt.data?.amount || evt.data?.actual_amount;
+        const caseNumber = evt.data?.case_number || evt.data?.case_id;
+
+        toast({
+          title: 'Payout Reconciled ✅',
+          description: `Refund of ${amount ? formatCurrency(amount) : '$0.00'} credited. Funds arriving in 3–5 days.`,
+          duration: 6000,
+        });
+      } else if (evt.status === 'discrepancy') {
+        const expected = evt.data?.expected_amount || evt.data?.expected;
+        const actual = evt.data?.actual_amount || evt.data?.actual;
+
+        toast({
+          title: '⚠️ Payout Discrepancy',
+          description: `Expected ${expected ? formatCurrency(expected) : '$0.00'}, received ${actual ? formatCurrency(actual) : '$0.00'}`,
+          variant: 'destructive',
+          duration: 8000,
+        });
+      } else if (evt.status === 'failed') {
+        toast({
+          title: 'Recovery Detection Failed',
+          description: evt.data?.error || 'Unable to detect payout',
+          variant: 'destructive',
+          duration: 6000,
+        });
+      }
+    }
   });
 
   // Filter data based on search and filters - use mergedRecoveries if available
