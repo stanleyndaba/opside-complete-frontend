@@ -543,7 +543,7 @@ export default function CaseDetail() {
                               )}
                               <div className="flex items-center gap-2 text-sm">
                                 <Clock className="h-4 w-4 text-amber-600" />
-                                <span className="text-amber-700 font-medium">💰 Funds arriving in 3–5 business days</span>
+                                <span className="text-amber-700 font-medium">Funds arriving in 3–5 business days</span>
                               </div>
                             </div>
                           )}

@@ -840,7 +840,7 @@ export default function Recoveries() {
         const caseNumber = evt.data?.case_number || evt.data?.case_id;
 
         toast({
-          title: 'Payout Reconciled ✅',
+          title: 'Payout Reconciled',
           description: `Refund of ${amount ? formatCurrency(amount) : '$0.00'} credited. Funds arriving in 3–5 days.`,
           duration: 6000,
         });
@@ -849,7 +849,7 @@ export default function Recoveries() {
         const actual = evt.data?.actual_amount || evt.data?.actual;
 
         toast({
-          title: '⚠️ Payout Discrepancy',
+          title: 'Payout Discrepancy',
           description: `Expected ${expected ? formatCurrency(expected) : '$0.00'}, received ${actual ? formatCurrency(actual) : '$0.00'}`,
           variant: 'destructive',
           duration: 8000,
