@@ -169,7 +169,7 @@ export function NotificationBell({
           </div>
         </div>
 
-        <div className="py-1">
+        <div>
           {notifications.length === 0 ? (
             <div className="p-4 text-center text-sm text-gray-500">
               No notifications yet
@@ -180,7 +180,7 @@ export function NotificationBell({
               const content = (
                 <div 
                   className={`flex items-start gap-3 p-3 hover:bg-gray-50 transition-colors cursor-pointer ${
-                    !notification.read ? 'bg-gray-50' : ''
+                    !notification.read ? 'bg-gray-50' : 'bg-white'
                   }`}
                   onClick={handleNotificationClick}
                 >
