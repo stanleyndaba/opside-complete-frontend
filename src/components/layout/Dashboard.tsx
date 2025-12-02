@@ -842,7 +842,7 @@ export function Dashboard() {
                             return events.map((evt) => (
                               <div key={evt.id} className="group relative flex items-start gap-3 py-3 overflow-hidden">
                                 <div className="pt-1">
-                                  <span className={'inline-block h-2 w-2 rounded-full ' + (evt.unread ? 'bg-blue-300' : 'bg-gray-400')} />
+                                  <span className={'inline-block h-2 w-2 rounded-full ' + (evt.unread ? 'bg-gray-400' : 'bg-gray-300')} />
                                 </div>
                                 <div className="min-w-0 flex-1">
                                   <div className="flex items-center justify-between">
