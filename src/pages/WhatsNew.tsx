@@ -79,7 +79,7 @@ export default function WhatsNew() {
           <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-900 space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-black mb-2 font-brand">What's New</h1>
+          <h1 className="text-3xl font-semibold text-black mb-2 font-brand">What's New</h1>
           <p className="text-[#36454F] font-body">
             We're relentlessly improving our platform to find and recover more for you. Here's a log of our latest updates.
           </p>
@@ -106,7 +106,7 @@ export default function WhatsNew() {
                             {update.tag}
                           </Badge>
                         </div>
-                        <h2 className="text-xl font-semibold text-black font-brand">
+                        <h2 className="text-xl font-medium text-black font-brand">
                           {update.title}
                         </h2>
                       </CardHeader>

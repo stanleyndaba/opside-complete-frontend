@@ -140,7 +140,7 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
   return (
     <Card className="bg-white/5 border-white/10">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-[#36454F]">
+        <CardTitle className="flex items-center gap-2 text-[#36454F] font-medium">
           <img src="/G.png" alt="Gmail" className="h-5 w-5" />
           Gmail Connection
         </CardTitle>
@@ -153,7 +153,7 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
           <div className="flex items-center gap-3">
             {status?.connected ? (
               <>
-                <Badge className="bg-blue-500 text-white border-blue-500 font-semibold">
+                <Badge className="bg-blue-500 text-white border-blue-500 font-medium">
                   <CheckCircle2 className="w-3 h-3 mr-1" />
                   Connected
                 </Badge>

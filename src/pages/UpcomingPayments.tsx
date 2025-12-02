@@ -188,7 +188,7 @@ export default function UpcomingPayments() {
 
             <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
               <CardHeader>
-                <CardTitle className="text-gray-900">Payment Recoveries</CardTitle>
+                <CardTitle className="text-gray-900 font-medium">Payment Recoveries</CardTitle>
                 <CardDescription className="text-gray-600">Projected recoveries based on claim status and expected payout dates</CardDescription>
               </CardHeader>
               <CardContent className="p-6">
@@ -209,17 +209,17 @@ export default function UpcomingPayments() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="rounded-md border border-gray-200 bg-gray-50 p-4">
                     <div className="text-xs text-gray-600">Next Expected Payout</div>
-                    <div className="text-xl font-semibold text-gray-900 mt-1">{nextPayout ? formatCurrency(nextPayout.gross, currency) : formatCurrency(0, currency)}</div>
+                    <div className="text-xl font-medium text-gray-900 mt-1">{nextPayout ? formatCurrency(nextPayout.gross, currency) : formatCurrency(0, currency)}</div>
                     <div className="text-[11px] text-gray-600 mt-1">{nextPayout ? nextPayout.label : '—'}</div>
                   </div>
                   <div className="rounded-md border border-gray-200 bg-gray-50 p-4">
                     <div className="text-xs text-gray-600">This Month (Projected)</div>
-                    <div className="text-xl font-semibold text-emerald-600 mt-1">{formatCurrency(monthTotals.gross, currency)}</div>
+                    <div className="text-xl font-medium text-emerald-600 mt-1">{formatCurrency(monthTotals.gross, currency)}</div>
                     <div className="text-[11px] text-gray-600 mt-1">Across {monthTotals.count} claims</div>
                   </div>
                   <div className="rounded-md border border-gray-200 bg-gray-50 p-4">
                     <div className="text-xs text-gray-600">Net To You (Projected)</div>
-                    <div className="text-xl font-semibold text-emerald-600 mt-1">{formatCurrency(monthTotals.net, currency)}</div>
+                    <div className="text-xl font-medium text-emerald-600 mt-1">{formatCurrency(monthTotals.net, currency)}</div>
                     <div className="text-[11px] text-gray-600 mt-1">After 20% commission</div>
                   </div>
                 </div>
@@ -231,7 +231,7 @@ export default function UpcomingPayments() {
 
             <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
               <CardHeader>
-                <CardTitle className="text-gray-900">Schedule</CardTitle>
+                <CardTitle className="text-gray-900 font-medium">Schedule</CardTitle>
                 <CardDescription className="text-gray-600">Daily rollup of expected payouts; dates may change based on Amazon processing</CardDescription>
               </CardHeader>
               <CardContent className="p-0">
@@ -264,7 +264,7 @@ export default function UpcomingPayments() {
                         <TableCell className="text-gray-700">{g.count}</TableCell>
                         <TableCell className="font-medium text-gray-900">{formatCurrency(g.gross, currency)}</TableCell>
                         <TableCell className="text-gray-700">{formatCurrency(g.commission, currency)}</TableCell>
-                        <TableCell className="text-emerald-600 font-semibold">{formatCurrency(g.net, currency)}</TableCell>
+                        <TableCell className="text-emerald-600 font-medium">{formatCurrency(g.net, currency)}</TableCell>
                         <TableCell>
                           {g.claims.length > 0 && (
                             <div className="flex flex-col gap-1">

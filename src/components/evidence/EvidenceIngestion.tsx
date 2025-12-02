@@ -241,7 +241,7 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
   return (
     <Card className="bg-white/5 border-white/10">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-[#36454F]">
+        <CardTitle className="flex items-center gap-2 text-[#36454F] font-medium">
           <Cloud className="h-5 w-5" />
           Evidence Ingestion
         </CardTitle>
@@ -259,7 +259,7 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
           <>
             {sources.length > 0 && (
               <div className="p-3 rounded-lg bg-white/5 border border-white/10">
-                <div className="text-xs font-semibold text-gray-400 mb-2">Connected Sources:</div>
+                <div className="text-xs font-medium text-gray-400 mb-2">Connected Sources:</div>
                 <div className="flex flex-wrap gap-2">
                   {sources.map((source) => (
                     <Badge key={source.id} className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-xs">
@@ -324,16 +324,16 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <span className="text-gray-400">Documents Ingested:</span>
-                    <span className="ml-2 font-semibold text-gray-200">{result.totalDocumentsIngested}</span>
+                    <span className="ml-2 font-medium text-gray-200">{result.totalDocumentsIngested}</span>
                   </div>
                   <div>
                     <span className="text-gray-400">Items Processed:</span>
-                    <span className="ml-2 font-semibold text-gray-200">{result.totalItemsProcessed}</span>
+                    <span className="ml-2 font-medium text-gray-200">{result.totalItemsProcessed}</span>
                   </div>
                 </div>
                 {result.results && (
                   <div className="pt-2 border-t border-white/10">
-                    <div className="text-xs font-semibold text-gray-400 mb-2">Breakdown by Source:</div>
+                    <div className="text-xs font-medium text-gray-400 mb-2">Breakdown by Source:</div>
                     <div className="grid grid-cols-2 gap-2 text-xs">
                       {result.results.gmail && (
                         <div className="text-gray-300">
@@ -360,7 +360,7 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
                 )}
                 {result.errors && result.errors.length > 0 && (
                   <div className="mt-2 p-2 rounded bg-red-500/10 border border-red-500/20">
-                    <div className="text-xs font-semibold text-red-400 mb-1">Errors:</div>
+                    <div className="text-xs font-medium text-red-400 mb-1">Errors:</div>
                     <ul className="text-xs text-red-300 list-disc list-inside">
                       {result.errors.map((error, idx) => (
                         <li key={idx}>{error}</li>

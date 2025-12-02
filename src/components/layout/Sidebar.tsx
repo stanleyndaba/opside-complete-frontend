@@ -68,7 +68,7 @@ export function Sidebar({
   const isDashboard = location.pathname === '/dashboard' || location.pathname === '/app' || location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/app');
 
   const primaryItems: NavItem[] = [
-    { title: 'Command Center', icon: LayoutDashboard, href: '/app' },
+    { title: 'Overview', icon: LayoutDashboard, href: '/app' },
     { title: 'Claims', icon: ShieldCheck, href: '/recoveries' },
     { title: 'Doc Locker', icon: FileText, href: '/evidence-locker' },
     { title: 'Reports', icon: BarChart3, href: '/reports' },

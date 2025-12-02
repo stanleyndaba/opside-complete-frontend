@@ -22,7 +22,7 @@ import { api } from '@/lib/api';
 import { detectionApi } from '@/lib/api';
 import { recoveryApi } from '@/lib/recoveryApi';
 import type { DateRange } from 'react-day-picker';
-import { useStatusStream } from '@/hooks/use-status-stream';
+import { useStatusStream, type StatusEvent } from '@/hooks/use-status-stream';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { EvidenceMatchingTable } from '@/components/evidence/EvidenceMatchingTable';
@@ -639,7 +639,7 @@ export default function Recoveries() {
   }, [toast]);
 
   // Real-time recovery status updates; update table rows on the fly
-  useStatusStream((evt) => {
+  useStatusStream((evt: StatusEvent) => {
     // Handle recovery status updates
     if (evt.type === 'claim') {
       const claimId = evt.data?.id || evt.data?.claimId;
@@ -987,7 +987,7 @@ export default function Recoveries() {
           <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-900 space-y-8">
             {/* Page Header */}
             <div className="mb-8">
-              <h1 className="text-3xl font-bold text-[#1f1f1f] mb-2">Claims</h1>
+              <h1 className="text-3xl font-semibold text-[#1f1f1f] mb-2">Claims</h1>
               <p className="text-gray-600">Monitor and manage all reimbursement opportunities across your FBA operations</p>
               <div className="mt-4 flex items-center gap-2">
                 <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-white" disabled={selectedIds.size === 0 || submittingBulk} onClick={async () => {
@@ -1035,7 +1035,7 @@ export default function Recoveries() {
                         </Tooltip>
                       )}
                     </div>
-                    <div className="text-2xl md:text-3xl font-semibold text-[#1f1f1f]">
+                    <div className="text-2xl md:text-3xl font-medium text-[#1f1f1f]">
                       {recoveredTotal != null && recoveredTotal > 0 ? (
                         <>
                           <span className="text-[#1f1f1f]">{formatCurrency(recoveredTotal, recoveredCurrency)}</span>
@@ -1087,7 +1087,7 @@ export default function Recoveries() {
                   <span>Last analysis: {new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
                   <span className="h-1 w-1 rounded-full bg-gray-500"></span>
                   <button
-                    className="inline-flex items-center gap-2 h-8 px-3 rounded-md bg-emerald-500 text-white font-semibold hover:bg-emerald-400"
+                    className="inline-flex items-center gap-2 h-8 px-3 rounded-md bg-emerald-500 text-white font-medium hover:bg-emerald-400"
                     onClick={async () => {
                       try {
                         await api.post('/api/detections/run');
@@ -1156,7 +1156,7 @@ export default function Recoveries() {
                   <div className="flex items-center">
                     <div>
                       <p className="text-sm font-medium text-gray-600">Claims in Progress</p>
-                      <p className="text-2xl font-bold text-[#1f1f1f]">{metrics ? metrics.inProgress : keyMetrics.currentlyInProgress}</p>
+                      <p className="text-2xl font-semibold text-[#1f1f1f]">{metrics ? metrics.inProgress : keyMetrics.currentlyInProgress}</p>
                       {detectionStats?.expired_count !== undefined && detectionStats.expired_count > 0 && (
                         <p className="text-xs text-red-400 mt-1">
                           {detectionStats.expired_count} expired
@@ -1172,7 +1172,7 @@ export default function Recoveries() {
                   <div className="flex items-center">
                     <div>
                       <p className="text-sm font-medium text-gray-600">30-Day Approval Rate</p>
-                      <p className="text-2xl font-bold text-emerald-600">{metrics ? Math.round(metrics.successRate30d) : keyMetrics.successRate.toFixed(0)}%</p>
+                      <p className="text-2xl font-semibold text-emerald-600">{metrics ? Math.round(metrics.successRate30d) : keyMetrics.successRate.toFixed(0)}%</p>
                       {detectionStats?.by_confidence && (
                         <p className="text-xs text-gray-600 mt-1">
                           {detectionStats.by_confidence.medium + detectionStats.by_confidence.low} medium/low
@@ -1186,7 +1186,7 @@ export default function Recoveries() {
 
             {/* Tabs for Claims, Evidence Matching, and Cases */}
             <div className="mb-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Recovery Management</h2>
+              <h2 className="text-xl font-medium text-gray-900 mb-4">Recovery Management</h2>
               <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'claims' | 'matching' | 'cases')} className="w-full">
                 <TabsList className="mb-6 inline-flex h-10 items-center justify-center rounded-md bg-white border border-gray-200 p-1 text-gray-600">
                   <TabsTrigger
@@ -1381,18 +1381,18 @@ export default function Recoveries() {
                                     else setSelectedIds(new Set());
                                   }} />
                                 </TableHead>
-                                <TableHead className="text-[#1f1f1f] font-semibold">Source</TableHead>
-                                <TableHead className="text-[#1f1f1f] font-semibold">Claim ID</TableHead>
-                                <TableHead className="text-[#1f1f1f] font-semibold">Created</TableHead>
-                                <TableHead className="text-[#1f1f1f] font-semibold">Type</TableHead>
-                                <TableHead className="text-[#1f1f1f] font-semibold">Confidence</TableHead>
-                                <TableHead className="text-[#1f1f1f] font-semibold">Evidence</TableHead>
-                                <TableHead className="text-[#1f1f1f] font-semibold">Details</TableHead>
-                                <TableHead className="text-[#1f1f1f] font-semibold">Status</TableHead>
-                                <TableHead className="text-[#1f1f1f] font-semibold">Days Remaining</TableHead>
-                                <TableHead className="text-[#1f1f1f] font-semibold">Guaranteed Amount</TableHead>
-                                <TableHead className="text-[#1f1f1f] font-semibold">Expected Payout</TableHead>
-                                <TableHead className="text-[#1f1f1f] font-semibold">Actions</TableHead>
+                                <TableHead className="text-[#1f1f1f] font-medium">Source</TableHead>
+                                <TableHead className="text-[#1f1f1f] font-medium">Claim ID</TableHead>
+                                <TableHead className="text-[#1f1f1f] font-medium">Created</TableHead>
+                                <TableHead className="text-[#1f1f1f] font-medium">Type</TableHead>
+                                <TableHead className="text-[#1f1f1f] font-medium">Confidence</TableHead>
+                                <TableHead className="text-[#1f1f1f] font-medium">Evidence</TableHead>
+                                <TableHead className="text-[#1f1f1f] font-medium">Details</TableHead>
+                                <TableHead className="text-[#1f1f1f] font-medium">Status</TableHead>
+                                <TableHead className="text-[#1f1f1f] font-medium">Days Remaining</TableHead>
+                                <TableHead className="text-[#1f1f1f] font-medium">Guaranteed Amount</TableHead>
+                                <TableHead className="text-[#1f1f1f] font-medium">Expected Payout</TableHead>
+                                <TableHead className="text-[#1f1f1f] font-medium">Actions</TableHead>
                               </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -1450,7 +1450,7 @@ export default function Recoveries() {
                                           </span>
                                         ) : (
                                           <>
-                                            <span className={`text-xs font-semibold ${getConfidenceColor(displayConfidence)}`}>{displayConfidence.toFixed(2)}</span>
+                                            <span className={`text-xs font-medium ${getConfidenceColor(displayConfidence)}`}>{displayConfidence.toFixed(2)}</span>
                                             <span className="text-[10px] px-1.5 py-0.5 rounded border border-white/10 bg-white/5 text-gray-300">
                                               {getConfidenceBadge(displayConfidence)}
                                             </span>
@@ -1484,8 +1484,8 @@ export default function Recoveries() {
                                             <Clock className="h-4 w-4 text-amber-600 flex-shrink-0" />
                                           )}
                                           <span className={cn(
-                                            isCritical && 'text-red-600 font-semibold',
-                                            isUrgent && !isCritical && 'text-amber-600 font-semibold',
+                                            isCritical && 'text-red-600 font-medium',
+                                            isUrgent && !isCritical && 'text-amber-600 font-medium',
                                             !isUrgent && 'text-[#36454F]'
                                           )}>
                                             {claim.days_remaining} days
@@ -1887,7 +1887,7 @@ export default function Recoveries() {
                               <div className="flex items-center gap-2 mt-1">
                                 {detectionDetails.confidence_score !== null && detectionDetails.confidence_score !== undefined ? (
                                   <>
-                                    <span className="text-sm font-semibold text-gray-300">
+                                    <span className="text-sm font-medium text-gray-300">
                                       {(detectionDetails.confidence_score * 100).toFixed(1)}%
                                     </span>
                                     <Badge className={
@@ -1907,11 +1907,11 @@ export default function Recoveries() {
 
                           {/* Financial Information */}
                           <div className="border-t border-white/10 pt-4">
-                            <h4 className="text-sm font-semibold text-gray-200 mb-3">Financial Information</h4>
+                            <h4 className="text-sm font-medium text-gray-200 mb-3">Financial Information</h4>
                             <div className="grid grid-cols-2 gap-4">
                               <div>
                                 <Label className="text-gray-300">Estimated Value</Label>
-                                <p className="text-lg font-semibold text-emerald-400 mt-1">
+                                <p className="text-lg font-medium text-emerald-400 mt-1">
                                   {formatCurrency(detectionDetails.estimated_value || detectionDetails.guaranteedAmount || 0, detectionDetails.currency || 'USD')}
                                 </p>
                               </div>
@@ -1924,7 +1924,7 @@ export default function Recoveries() {
 
                           {/* Dates & Deadlines */}
                           <div className="border-t border-white/10 pt-4">
-                            <h4 className="text-sm font-semibold text-gray-200 mb-3">Dates & Deadlines</h4>
+                            <h4 className="text-sm font-medium text-gray-200 mb-3">Dates & Deadlines</h4>
                             <div className="grid grid-cols-2 gap-4">
                               <div>
                                 <Label className="text-gray-300">Discovery Date</Label>
@@ -1938,7 +1938,7 @@ export default function Recoveries() {
                               </div>
                               <div>
                                 <Label className="text-gray-300">Deadline Date</Label>
-                                <p className={`text-sm font-semibold mt-1 ${detectionDetails.days_remaining !== undefined && detectionDetails.days_remaining <= 7
+                                <p className={`text-sm font-medium mt-1 ${detectionDetails.days_remaining !== undefined && detectionDetails.days_remaining <= 7
                                     ? 'text-amber-400'
                                     : 'text-gray-300'
                                   }`}>
@@ -1950,7 +1950,7 @@ export default function Recoveries() {
                               {detectionDetails.days_remaining !== undefined && (
                                 <div>
                                   <Label className="text-gray-300">Days Remaining</Label>
-                                  <p className={`text-sm font-semibold mt-1 ${detectionDetails.days_remaining <= 3 ? 'text-red-400' :
+                                  <p className={`text-sm font-medium mt-1 ${detectionDetails.days_remaining <= 3 ? 'text-red-400' :
                                       detectionDetails.days_remaining <= 7 ? 'text-amber-400' :
                                         'text-gray-300'
                                     }`}>
@@ -1972,7 +1972,7 @@ export default function Recoveries() {
                           {/* Evidence */}
                           {detectionDetails.evidence && (
                             <div className="border-t border-white/10 pt-4">
-                              <h4 className="text-sm font-semibold text-gray-200 mb-3">Evidence</h4>
+                              <h4 className="text-sm font-medium text-gray-200 mb-3">Evidence</h4>
                               <div className="bg-white/5 border border-white/10 rounded-md p-4">
                                 <pre className="text-xs text-gray-300 overflow-x-auto">
                                   {JSON.stringify(detectionDetails.evidence, null, 2)}
@@ -1984,7 +1984,7 @@ export default function Recoveries() {
                           {/* Related Event IDs */}
                           {detectionDetails.related_event_ids && detectionDetails.related_event_ids.length > 0 && (
                             <div className="border-t border-white/10 pt-4">
-                              <h4 className="text-sm font-semibold text-gray-200 mb-3">Related Event IDs</h4>
+                              <h4 className="text-sm font-medium text-gray-200 mb-3">Related Event IDs</h4>
                               <div className="flex flex-wrap gap-2">
                                 {detectionDetails.related_event_ids.map((eventId: string, idx: number) => (
                                   <Badge key={idx} variant="outline" className="font-mono text-xs">
@@ -1998,7 +1998,7 @@ export default function Recoveries() {
                           {/* Product Information */}
                           {(detectionDetails.sku || detectionDetails.asin) && (
                             <div className="border-t border-white/10 pt-4">
-                              <h4 className="text-sm font-semibold text-gray-200 mb-3">Product Information</h4>
+                              <h4 className="text-sm font-medium text-gray-200 mb-3">Product Information</h4>
                               <div className="grid grid-cols-2 gap-4">
                                 {detectionDetails.sku && (
                                   <div>
@@ -2019,7 +2019,7 @@ export default function Recoveries() {
                           {/* Details/Description */}
                           {detectionDetails.details && (
                             <div className="border-t border-white/10 pt-4">
-                              <h4 className="text-sm font-semibold text-gray-200 mb-3">Description</h4>
+                              <h4 className="text-sm font-medium text-gray-200 mb-3">Description</h4>
                               <p className="text-sm text-gray-300">{detectionDetails.details}</p>
                             </div>
                           )}

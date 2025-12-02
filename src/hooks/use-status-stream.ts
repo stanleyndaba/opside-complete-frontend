@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { toast } from '@/hooks/use-toast';
 
 export type StatusEvent = {
-  type: 'sync' | 'detection' | 'claim' | 'evidence' | 'refund';
+  type: 'sync' | 'detection' | 'claim' | 'evidence' | 'refund' | 'filing' | 'status_updated';
   status: 'started' | 'progress' | 'completed' | 'failed' | 'filed' | 'approved' | 'deposited' | 'denied' | 'linked';
   data: any;
   timestamp: string;

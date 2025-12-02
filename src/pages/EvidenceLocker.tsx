@@ -705,7 +705,7 @@ export default function EvidenceLocker() {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-base font-semibold">Document Activity</CardTitle>
+                  <CardTitle className="text-base font-medium">Document Activity</CardTitle>
                   <CardDescription className="text-sm">Real-time document processing log</CardDescription>
                 </div>
                 <span className="text-xs text-gray-400">{filteredDocLogs.length} entries</span>
@@ -783,7 +783,7 @@ export default function EvidenceLocker() {
 
           <Card className="bg-white border-gray-200 text-gray-900">
             <CardHeader>
-              <CardTitle>Upload Documents</CardTitle>
+              <CardTitle className="font-medium">Upload Documents</CardTitle>
               <CardDescription>
                 Upload invoices, purchase orders, and receipts to verify your product costs
               </CardDescription>
@@ -791,13 +791,13 @@ export default function EvidenceLocker() {
             <CardContent>
               <div className={`border-2 border-dashed rounded-lg p-8 text-center transition-all ${dragActive ? 'border-emerald-500 bg-emerald-50' : 'border-gray-200 hover:border-emerald-400'}`} onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}>
                 <Upload className="h-12 w-12 mx-auto mb-4 text-gray-500" />
-                <h3 className="text-lg font-semibold mb-2">Drag & Drop Your Invoices or Purchase Orders Here</h3>
+                <h3 className="text-lg font-medium mb-2">Drag & Drop Your Invoices or Purchase Orders Here</h3>
                 <p className="text-gray-600 mb-4">
                   Supports PDF, JPG, PNG files up to 10MB
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                  <Button className="bg-emerald-500 hover:bg-emerald-400 text-white font-semibold" onClick={() => document.getElementById('doc-file-input')?.click()}>
+                  <Button className="bg-emerald-500 hover:bg-emerald-400 text-white font-medium" onClick={() => document.getElementById('doc-file-input')?.click()}>
                     <Upload className="w-4 h-4 mr-2" />
                     Browse Files
                   </Button>
@@ -964,7 +964,7 @@ export default function EvidenceLocker() {
           <Card className="bg-white border-gray-200 text-gray-900">
             <CardHeader>
               <div>
-                <CardTitle className="text-black mb-1">Document Library</CardTitle>
+                <CardTitle className="text-black mb-1 font-medium">Document Library</CardTitle>
                 <CardDescription className="text-gray-600 mb-4">All uploaded evidence documents</CardDescription>
                 <div className="flex flex-wrap items-center gap-2 justify-end">
                   <div className="relative">

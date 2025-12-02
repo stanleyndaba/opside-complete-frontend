@@ -690,7 +690,7 @@ export default function Reports() {
         {/* Page Header & Controls */}
         <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-[#1f1f1f] mb-1">Reports</h1>
+            <h1 className="text-3xl font-semibold text-[#1f1f1f] mb-1">Reports</h1>
             <p className="text-gray-600">Financial analytics and recovery performance insights</p>
           </div>
           <div className="flex flex-wrap gap-2 items-center">

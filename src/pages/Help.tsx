@@ -132,14 +132,14 @@ export default function Help() {
           <div className="relative container max-w-4xl mx-auto px-6 pt-6 pb-10 text-gray-900">
         {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-black mb-2">Seller Support</h1>
+            <h1 className="text-3xl font-semibold text-black mb-2">Seller Support</h1>
           <p className="text-muted-foreground text-lg">Get the help you need, when you need it</p>
         </div>
 
         {/* Tier 1: Instant Answers */}
         <section className="mb-12">
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Find Answers Instantly</h2>
+            <h2 className="text-2xl font-medium mb-4">Find Answers Instantly</h2>
             
             {/* Prominent Search Bar */}
             <div className="relative max-w-2xl mx-auto">
@@ -156,7 +156,7 @@ export default function Help() {
           {/* FAQs */}
           <div className="mb-12">
             <div className="mb-4">
-              <h2 className="text-2xl font-semibold text-black mb-2">Frequently Asked Questions</h2>
+              <h2 className="text-2xl font-medium text-black mb-2">Frequently Asked Questions</h2>
               <p className="text-gray-600">Quick answers to the most common questions</p>
             </div>
             <Accordion type="single" collapsible className="w-full">
@@ -183,7 +183,7 @@ export default function Help() {
         {/* Tier 2: Guided Help */}
         <section className="mb-12">
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Learn More</h2>
+            <h2 className="text-2xl font-medium mb-4">Learn More</h2>
             <p className="text-muted-foreground">Comprehensive guides and tutorials</p>
           </div>
 
@@ -191,7 +191,7 @@ export default function Help() {
             {/* Getting Started Guide */}
             <Card className="bg-white border-gray-200 text-gray-900">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-black">
+                <CardTitle className="flex items-center gap-2 text-black font-medium">
                   <BookOpen className="h-5 w-5" />
                   Getting Started Guide
                 </CardTitle>
@@ -213,7 +213,7 @@ export default function Help() {
                   </div>
                 ))}
                 
-                <Button className="w-full mt-4 bg-emerald-500 hover:bg-emerald-400 text-white font-semibold">
+                <Button className="w-full mt-4 bg-emerald-500 hover:bg-emerald-400 text-white font-medium">
                   <Video className="h-4 w-4 mr-2" />
                   Watch Video Tutorial
                 </Button>
@@ -223,7 +223,7 @@ export default function Help() {
             {/* Understanding Dashboard */}
             <Card className="bg-white border-gray-200 text-gray-900">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-black">
+                <CardTitle className="flex items-center gap-2 text-black font-medium">
                   <MessageSquare className="h-5 w-5" />
                   Understanding Your Dashboard
                 </CardTitle>
@@ -253,7 +253,7 @@ export default function Help() {
                   </div>
                 </div>
                 
-                <Button className="w-full mt-4 bg-emerald-500 hover:bg-emerald-400 text-white font-semibold">
+                <Button className="w-full mt-4 bg-emerald-500 hover:bg-emerald-400 text-white font-medium">
                   <ExternalLink className="h-4 w-4 mr-2" />
                   Read Full Guide
                 </Button>
@@ -267,7 +267,7 @@ export default function Help() {
         {/* Tier 3: Human Assistance */}
         <section>
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Still need help?</h2>
+            <h2 className="text-2xl font-medium mb-4">Still need help?</h2>
             <p className="text-muted-foreground">Our support team is here to assist you</p>
           </div>
 
@@ -275,7 +275,7 @@ export default function Help() {
             {/* Email Support */}
             <Card className="bg-white border-gray-200 text-gray-900">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-black">
+                <CardTitle className="flex items-center gap-2 text-black font-medium">
                   <Mail className="h-5 w-5" />
                   Email Support
                 </CardTitle>
@@ -330,7 +330,7 @@ export default function Help() {
                     />
                   </div>
                   
-                  <Button type="submit" className="w-full bg-emerald-500 hover:bg-emerald-400 text-white font-semibold">
+                  <Button type="submit" className="w-full bg-emerald-500 hover:bg-emerald-400 text-white font-medium">
                     <Mail className="h-4 w-4 mr-2" />
                     Send Message
                   </Button>
@@ -341,7 +341,7 @@ export default function Help() {
             {/* Book a Call */}
             <Card className="bg-white/5 border-gray-300 text-gray-300">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-black">
+                <CardTitle className="flex items-center gap-2 text-black font-medium">
                   <Calendar className="h-5 w-5" />
                   Book a 15-Minute Call
                 </CardTitle>
@@ -374,7 +374,7 @@ export default function Help() {
                   </div>
                 </div>
                 
-                <Button className="w-full bg-emerald-500 hover:bg-emerald-400 text-white font-semibold">
+                <Button className="w-full bg-emerald-500 hover:bg-emerald-400 text-white font-medium">
                   <Calendar className="h-4 w-4 mr-2" />
                   Schedule Call
                 </Button>

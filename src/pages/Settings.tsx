@@ -364,7 +364,7 @@ const Settings = () => {
             {/* Header Section */}
             <div className="flex items-start justify-between">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">
+                <h2 className="text-2xl font-semibold text-gray-900">
                   {sellerProfile.company_name || 'Business'}
                 </h2>
                 {sellerProfile.amazon_seller_id && (
@@ -407,7 +407,7 @@ const Settings = () => {
                 {/* Basic Information Section */}
                 <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
                   <CardHeader>
-                    <CardTitle className="text-gray-900">Information</CardTitle>
+                    <CardTitle className="text-gray-900 font-medium">Information</CardTitle>
                     <CardDescription className="text-gray-600">Your account details and activity</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
@@ -465,7 +465,7 @@ const Settings = () => {
                 {marketplaces.length > 0 && (
                   <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
                     <CardHeader>
-                      <CardTitle className="text-gray-900">Marketplace Information</CardTitle>
+                      <CardTitle className="text-gray-900 font-medium">Marketplace Information</CardTitle>
                       <CardDescription className="text-gray-600">
                         Active marketplaces where you sell
                         <Badge variant="secondary" className="ml-2">
@@ -495,7 +495,7 @@ const Settings = () => {
                 {/* Integration Status Section */}
                 <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-gray-900">
+                    <CardTitle className="flex items-center gap-2 text-gray-900 font-medium">
                       <Box className="h-5 w-5" />
                       Integrations
                     </CardTitle>
@@ -612,7 +612,7 @@ const Settings = () => {
                 {(sellerProfile.last_sync_attempt_at || sellerProfile.last_sync_completed_at || sellerProfile.last_sync_job_id) && (
                   <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
                     <CardHeader>
-                      <CardTitle className="text-gray-900">Sync Status</CardTitle>
+                      <CardTitle className="text-gray-900 font-medium">Sync Status</CardTitle>
                       <CardDescription className="text-gray-600">Data synchronization information</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
@@ -677,7 +677,7 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">Billing Invoices</h2>
+              <h2 className="text-2xl font-semibold text-gray-900">Billing Invoices</h2>
               <p className="text-gray-600">View your ROI and manage billing preferences</p>
             </div>
             
@@ -685,7 +685,7 @@ const Settings = () => {
               <CardContent className="p-6">
                 <div className="text-center py-8">
                   <CreditCard className="h-12 w-12 mx-auto text-gray-500 mb-4" />
-                  <h3 className="text-lg font-semibold mb-2 text-gray-900">Complete Billing Dashboard</h3>
+                  <h3 className="text-lg font-medium mb-2 text-gray-900">Complete Billing Dashboard</h3>
                   <p className="text-gray-600 mb-4">
                     Access your comprehensive billing & value report with ROI calculations, 
                     invoice history, and plan management.
@@ -699,7 +699,7 @@ const Settings = () => {
 
             <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
               <CardHeader>
-                <CardTitle className="text-gray-900">Auto-Claim (ACG)</CardTitle>
+                <CardTitle className="text-gray-900 font-medium">Auto-Claim (ACG)</CardTitle>
                 <CardDescription className="text-gray-600">Automatically submit approved claims once evidence is verified</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -722,7 +722,7 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">API Access</h2>
+              <h2 className="text-2xl font-semibold text-gray-900">API Access</h2>
               <p className="text-gray-600">Programmatic access to your Clario data for automation and integrations</p>
             </div>
 
@@ -770,7 +770,7 @@ const Settings = () => {
           return (
             <div className="space-y-6">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">Integrations</h2>
+                <h2 className="text-2xl font-semibold text-gray-900">Integrations</h2>
                 <p className="text-gray-600">Manage your platform connections and data sources</p>
               </div>
               <div>
@@ -791,7 +791,7 @@ const Settings = () => {
                             <img src={platform.icon} alt={`${platform.name} logo`} className="h-8 w-8 object-contain" />
                           </div>
                           <div>
-                            <p className="font-semibold text-gray-900">{platform.name}</p>
+                            <p className="font-medium text-gray-900">{platform.name}</p>
                             <p className="text-sm text-gray-600">{platform.description}</p>
                             <p className="text-xs text-gray-500 mt-1">Last sync: {platform.lastSync}</p>
                           </div>
@@ -813,7 +813,7 @@ const Settings = () => {
               
               <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
                 <CardHeader>
-                  <CardTitle className="text-gray-900">Coming</CardTitle>
+                  <CardTitle className="text-gray-900 font-medium">Coming</CardTitle>
                   <CardDescription className="text-gray-600">Coming soon to expand your recovery capabilities</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -825,7 +825,7 @@ const Settings = () => {
                             <img src={platform.icon} alt={`${platform.name} logo`} className="h-8 w-8 object-contain" />
                           </div>
                           <div>
-                            <p className="font-semibold text-gray-900">{platform.name}</p>
+                            <p className="font-medium text-gray-900">{platform.name}</p>
                             <p className="text-sm text-gray-500">Coming soon</p>
                           </div>
                         </div>
@@ -850,13 +850,13 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">Notifications</h2>
+              <h2 className="text-2xl font-semibold text-gray-900">Notifications</h2>
               <p className="text-gray-600">Control how and when we communicate with you</p>
             </div>
             
             <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
               <CardHeader>
-                <CardTitle className="text-gray-900">Email Notifications</CardTitle>
+                <CardTitle className="text-gray-900 font-medium">Email Notifications</CardTitle>
                 <CardDescription className="text-gray-600">Choose which notifications you'd like to receive</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -878,13 +878,13 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">Security</h2>
+              <h2 className="text-2xl font-semibold text-gray-900">Security</h2>
               <p className="text-gray-600">Manage your account security and access</p>
             </div>
             
             <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
               <CardHeader>
-                <CardTitle className="text-gray-900">Login History</CardTitle>
+                <CardTitle className="text-gray-900 font-medium">Login History</CardTitle>
                 <CardDescription className="text-gray-600">Recent account access activity</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -917,7 +917,7 @@ const Settings = () => {
             
             <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
               <CardHeader>
-                <CardTitle className="text-gray-900">Security Actions</CardTitle>
+                <CardTitle className="text-gray-900 font-medium">Security Actions</CardTitle>
                 <CardDescription className="text-gray-600">Manage your account security</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -978,7 +978,7 @@ const Settings = () => {
             
             <Card className="bg-red-50 border-red-200 text-gray-700 mb-10 shadow-sm">
               <CardHeader>
-                <CardTitle className="text-red-700 flex items-center gap-2">
+                <CardTitle className="text-red-700 flex items-center gap-2 font-medium">
                   <AlertTriangle className="h-5 w-5" />
                   Danger Zone
                 </CardTitle>
@@ -1024,7 +1024,7 @@ const Settings = () => {
               <div className="lg:col-span-1">
                 <Card className="lg:sticky lg:top-6 h-fit bg-white border-gray-200 text-gray-700 shadow-sm">
                   <CardHeader>
-                    <CardTitle className="text-lg text-gray-900">Quick Settings</CardTitle>
+                    <CardTitle className="text-lg text-gray-900 font-medium">Quick Settings</CardTitle>
                   </CardHeader>
                   <CardContent className="p-0">
                     <nav className="space-y-1 p-2">
