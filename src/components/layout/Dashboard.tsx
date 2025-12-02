@@ -840,10 +840,7 @@ export function Dashboard() {
                               { id: 'evt-4', unread: false, title: 'Funds Recovered', details: `Payout confirmed: ${formatCurrency(850.75)}`, time: '2 days ago' },
                             ];
                             return events.map((evt) => (
-                              <div key={evt.id} className="group relative flex items-start gap-3 py-3 overflow-hidden">
-                                <div className="pt-1">
-                                  <span className={'inline-block h-2 w-2 rounded-full ' + (evt.unread ? 'bg-gray-400' : 'bg-gray-300')} />
-                                </div>
+                              <div key={evt.id} className={`group relative flex items-start gap-3 py-3 overflow-hidden ${evt.unread ? 'bg-gray-50' : 'bg-white'}`}>
                                 <div className="min-w-0 flex-1">
                                   <div className="flex items-center justify-between">
                                     <p className={'text-[12px] truncate ' + (evt.unread ? 'text-black font-semibold' : 'text-gray-600 font-medium')}>{evt.title}</p>
