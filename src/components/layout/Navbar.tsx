@@ -57,6 +57,26 @@ export function Navbar({
   const referralLink = typeof window !== 'undefined' 
     ? `${window.location.origin}/signup?ref=demo-user`
     : '/signup?ref=demo-user';
+  
+  // Create a shortened display version of the link
+  const getShortLink = (link: string) => {
+    try {
+      const url = new URL(link);
+      // Extract just the domain and path, remove protocol
+      const domain = url.hostname.replace('www.', '');
+      const path = url.pathname + url.search;
+      // If domain is very long, show just the essential part
+      if (domain.length > 20) {
+        return `...${domain.slice(-15)}${path}`;
+      }
+      return `${domain}${path}`;
+    } catch {
+      // Fallback if URL parsing fails
+      return link.length > 30 ? `...${link.slice(-25)}` : link;
+    }
+  };
+  
+  const shortLink = getShortLink(referralLink);
 
   // Language preference removed on platform navbar per design
 
@@ -131,7 +151,7 @@ export function Navbar({
             )}
           >
             <Link2 className={cn("h-4 w-4 text-[#36454F]")} />
-            <span className="hidden sm:inline text-[#36454F]">Platform</span>
+            <span className="hidden sm:inline text-[#36454F]">Connect</span>
           </Button>
           {isSandbox && (
             <span className={cn(
@@ -196,7 +216,7 @@ export function Navbar({
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700">Referral link</label>
             <div className="flex items-center gap-2 p-3 bg-gray-50 border border-gray-200 rounded-md">
-              <span className="flex-1 text-sm text-gray-700 truncate">{referralLink}</span>
+              <span className="flex-1 text-sm text-gray-700 break-all">{shortLink}</span>
               <button
                 onClick={() => {
                   navigator.clipboard.writeText(referralLink);

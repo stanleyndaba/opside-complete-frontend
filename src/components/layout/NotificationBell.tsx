@@ -156,13 +156,13 @@ export function NotificationBell({
       
       <DropdownMenuContent 
         align="end" 
-        className="w-80 max-h-96 overflow-y-auto bg-[#0B1220]/95 backdrop-blur-md border border-white/10 shadow-xl z-50 text-gray-200"
+        className="w-80 max-h-96 overflow-y-auto bg-white backdrop-blur-md border border-gray-200 shadow-xl z-50 text-[#36454F]"
       >
-        <div className="p-3 border-b border-white/10">
+        <div className="p-3 border-b border-gray-200">
           <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-sm text-gray-100">{label}</h3>
+            <h3 className="font-semibold text-sm text-[#36454F]">{label}</h3>
             {unreadCount > 0 && (
-              <Badge variant="outline" className="text-[10px] border-white/20 text-gray-200">
+              <Badge variant="outline" className="text-[10px] border-gray-300 text-[#36454F] bg-gray-50">
                 {unreadCount} new
               </Badge>
             )}
@@ -171,7 +171,7 @@ export function NotificationBell({
 
         <div className="py-1">
           {notifications.length === 0 ? (
-            <div className="p-4 text-center text-sm text-gray-400">
+            <div className="p-4 text-center text-sm text-gray-500">
               No notifications yet
             </div>
           ) : (
@@ -179,22 +179,22 @@ export function NotificationBell({
               const IconComponent = notification.icon;
               const content = (
                 <div 
-                  className={`flex items-start gap-3 p-3 hover:bg-white/5 transition-colors cursor-pointer ${
-                    !notification.read ? 'bg-white/5' : ''
+                  className={`flex items-start gap-3 p-3 hover:bg-gray-50 transition-colors cursor-pointer ${
+                    !notification.read ? 'bg-gray-50' : ''
                   }`}
                   onClick={handleNotificationClick}
                 >
                   <div className={`flex-shrink-0 mt-0.5 w-6 h-6 rounded-full flex items-center justify-center ${
-                    !notification.read ? 'bg-emerald-500/15' : 'bg-white/10'
+                    !notification.read ? 'bg-gray-200' : 'bg-gray-100'
                   }`}>
                     <IconComponent className={`w-3 h-3 ${
-                      !notification.read ? 'text-emerald-400' : 'text-gray-300'
+                      !notification.read ? 'text-[#36454F]' : 'text-gray-400'
                     }`} />
                   </div>
                   
                   <div className="flex-1 min-w-0">
                     <p className={`text-xs leading-relaxed ${
-                      !notification.read ? 'font-medium text-gray-100' : 'text-gray-400'
+                      !notification.read ? 'font-medium text-[#36454F]' : 'text-gray-600'
                     }`}>
                       {notification.message}
                     </p>
@@ -204,7 +204,7 @@ export function NotificationBell({
                   </div>
                   
                   {!notification.read && (
-                    <div className="w-2 h-2 bg-emerald-400 rounded-full flex-shrink-0 mt-1.5"></div>
+                    <div className="w-2 h-2 bg-[#36454F] rounded-full flex-shrink-0 mt-1.5"></div>
                   )}
                 </div>
               );
@@ -219,7 +219,7 @@ export function NotificationBell({
                     <div>{content}</div>
                   )}
                   {index < notifications.length - 1 && (
-                    <DropdownMenuSeparator className="my-0 bg-white/10" />
+                    <DropdownMenuSeparator className="my-0 bg-gray-200" />
                   )}
                 </React.Fragment>
               );
@@ -227,13 +227,13 @@ export function NotificationBell({
           )}
         </div>
 
-        <DropdownMenuSeparator className="bg-white/10" />
+        <DropdownMenuSeparator className="bg-gray-200" />
         
         <div className="p-2">
           <Link to="/notifications" onClick={handleNotificationClick} reloadDocument>
             <Button 
               variant="ghost" 
-              className="w-full justify-center text-xs h-8 hover:bg-white/10 text-gray-200"
+              className="w-full justify-center text-xs h-8 hover:bg-gray-50 text-[#36454F]"
             >
               View all {label.toLowerCase()}
             </Button>
