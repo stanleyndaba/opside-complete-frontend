@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import Timeline from '@/components/layout/Timeline';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, AlertCircle, Calendar, RefreshCw, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, AlertCircle, Calendar, RefreshCw, ExternalLink, Receipt } from 'lucide-react';
 // duplicate Link import removed
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -545,6 +545,14 @@ export default function CaseDetail() {
                                 <Clock className="h-4 w-4 text-amber-600" />
                                 <span className="text-amber-700 font-medium">Funds arriving in 3–5 business days</span>
                               </div>
+                              {effectiveCase.billingStatus === 'charged' && (
+                                <div className="flex items-center gap-2 text-sm mt-2 pt-2 border-t border-gray-100">
+                                  <Receipt className="h-4 w-4 text-emerald-600" />
+                                  <span className="text-gray-700 font-medium">
+                                    Invoice #{effectiveCase.billingTransactionId?.slice(0, 8) || 'PAID'} paid. Receipt sent.
+                                  </span>
+                                </div>
+                              )}
                             </div>
                           )}
                         </div>
