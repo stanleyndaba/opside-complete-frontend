@@ -3,8 +3,11 @@ import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { recoveryApi } from '@/lib/recoveryApi';
+import { api } from '@/lib/api';
+import { Link } from 'react-router-dom';
 
 interface RecoveryClaim {
   id: string;
@@ -14,15 +17,29 @@ interface RecoveryClaim {
   guaranteedAmount: number;
   expectedPayoutDate: string | null;
   currency?: string;
+  filing_status?: string;
+  amazon_case_id?: string;
+  case_id?: string;
 }
 
 function formatCurrency(amount: number, currency: string = 'USD') {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(amount);
 }
 
+function getFilingStatusBadge(status?: string) {
+  if (!status) return <span className="text-gray-400 text-sm">—</span>;
+
+  if (status === 'filed') return <Badge className="bg-blue-50 text-blue-700 border-blue-200">Filed</Badge>;
+  if (status === 'filing') return <Badge className="bg-amber-50 text-amber-700 border-amber-200">Filing...</Badge>;
+  if (status === 'retrying') return <Badge className="bg-purple-50 text-purple-700 border-purple-200">Retrying</Badge>;
+  if (status === 'failed') return <Badge className="bg-red-50 text-red-700 border-red-200">Failed</Badge>;
+  return <Badge className="bg-gray-50 text-gray-700 border-gray-200">Pending</Badge>;
+}
+
 export default function UpcomingPayments() {
   const { toast } = useToast();
   const [claims, setClaims] = useState<RecoveryClaim[]>([]);
+  const [disputeCases, setDisputeCases] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [currency, setCurrency] = useState<string>('USD');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -33,23 +50,40 @@ export default function UpcomingPayments() {
     (async () => {
       setLoading(true);
       try {
-        const res = await recoveryApi.getRecoveries();
+        // Fetch both recoveries and dispute cases
+        const [res, casesRes] = await Promise.all([
+          recoveryApi.getRecoveries(),
+          api.getDisputeCases({ limit: 100 }).catch(() => ({ ok: false, data: null }))
+        ]);
+
         if (!cancelled) {
+          // Store dispute cases
+          if (casesRes.ok && casesRes.data?.cases) {
+            setDisputeCases(casesRes.data.cases);
+          }
+
           if (Array.isArray(res) && res.length > 0) {
             // Map API response to frontend format
-            // API returns: amount, expected_payout_date, created_at
-            // Frontend expects: guaranteedAmount, expectedPayoutDate, created
-            const mapped = (res as any[]).map((c) => ({
-              id: c.id || c.claim_id,
-              created: c.created || c.created_at,
-              type: c.type || c.dispute_type || 'unknown',
-              status: c.status,
-              // Map amount fields (API may use 'amount' or 'guaranteedAmount')
-              guaranteedAmount: c.guaranteedAmount ?? c.amount ?? 0,
-              // Map payout date fields (API may use 'expected_payout_date' or 'expectedPayoutDate')
-              expectedPayoutDate: (c.expectedPayoutDate ?? c.expected_payout_date ?? null) as string | null,
-              currency: (c.currency ?? 'USD') as string,
-            })) as RecoveryClaim[];
+            const mapped = (res as any[]).map((c) => {
+              // Find matching dispute case
+              const disputeCase = casesRes.ok && casesRes.data?.cases
+                ? casesRes.data.cases.find((dc: any) => dc.claim_id === c.id)
+                : null;
+
+              return {
+                id: c.id || c.claim_id,
+                created: c.created || c.created_at,
+                type: c.type || c.dispute_type || 'unknown',
+                status: c.status,
+                guaranteedAmount: c.guaranteedAmount ?? c.amount ?? 0,
+                expectedPayoutDate: (c.expectedPayoutDate ?? c.expected_payout_date ?? null) as string | null,
+                currency: (c.currency ?? 'USD') as string,
+                // Add dispute case data
+                filing_status: disputeCase?.filing_status,
+                amazon_case_id: disputeCase?.amazon_case_id,
+                case_id: disputeCase?.id,
+              };
+            }) as RecoveryClaim[];
             setClaims(mapped);
             const firstWithCurrency = (mapped.find(c => !!c.currency)?.currency) || 'USD';
             setCurrency(firstWithCurrency);
@@ -66,9 +100,9 @@ export default function UpcomingPayments() {
           if (status === 401) {
             setErrorMessage('Session expired. Please refresh or reconnect your Amazon account to see upcoming payouts.');
           } else {
-            toast({ 
-              title: 'Could not load upcoming payments', 
-              description: error?.message || 'Please try again later.' 
+            toast({
+              title: 'Could not load upcoming payments',
+              description: error?.message || 'Please try again later.'
             });
             setErrorMessage(error?.message || 'We could not load upcoming payouts. Please try again shortly.');
           }
@@ -209,17 +243,19 @@ export default function UpcomingPayments() {
                       <TableHead className="text-[#36454F]">Gross</TableHead>
                       <TableHead className="text-[#36454F]">Commission (20%)</TableHead>
                       <TableHead className="text-[#36454F]">Net To You</TableHead>
+                      <TableHead className="text-[#36454F]">Filing Status</TableHead>
+                      <TableHead className="text-[#36454F]">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {loading && (
                       <TableRow>
-                        <TableCell colSpan={5} className="text-sm text-gray-600 p-4">Loading…</TableCell>
+                        <TableCell colSpan={7} className="text-sm text-gray-600 p-4">Loading…</TableCell>
                       </TableRow>
                     )}
                     {!loading && upcomingGroups.length === 0 && (
                       <TableRow>
-                        <TableCell colSpan={5} className="text-sm text-gray-600 p-4">No upcoming payments yet. Once claims are approved with payout dates, they will appear here.</TableCell>
+                        <TableCell colSpan={7} className="text-sm text-gray-600 p-4">No upcoming payments yet. Once claims are approved with payout dates, they will appear here.</TableCell>
                       </TableRow>
                     )}
                     {!loading && upcomingGroups.map((g) => (
@@ -229,6 +265,23 @@ export default function UpcomingPayments() {
                         <TableCell className="font-medium text-gray-900">{formatCurrency(g.gross, currency)}</TableCell>
                         <TableCell className="text-gray-700">{formatCurrency(g.commission, currency)}</TableCell>
                         <TableCell className="text-emerald-600 font-semibold">{formatCurrency(g.net, currency)}</TableCell>
+                        <TableCell>
+                          {g.claims.length > 0 && (
+                            <div className="flex flex-col gap-1">
+                              {g.claims.slice(0, 2).map((claim: RecoveryClaim) => (
+                                <div key={claim.id}>{getFilingStatusBadge(claim.filing_status)}</div>
+                              ))}
+                              {g.claims.length > 2 && <span className="text-xs text-gray-500">+{g.claims.length - 2} more</span>}
+                            </div>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {g.claims.length > 0 && g.claims[0].case_id && (
+                            <Button asChild variant="outline" size="sm">
+                              <Link to={`/recoveries?tab=cases`}>View Cases</Link>
+                            </Button>
+                          )}
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

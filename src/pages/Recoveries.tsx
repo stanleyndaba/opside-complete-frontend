@@ -76,14 +76,14 @@ export default function Recoveries() {
   const [smartPromptOpen, setSmartPromptOpen] = useState(false);
   const [promptClaim, setPromptClaim] = useState<any | null>(null);
   const autoSubmittedRef = useRef<Set<string>>(new Set());
-  
+
   // Phase 3: Detection results integration
   const [detectionResults, setDetectionResults] = useState<any[]>([]);
   const [mergedRecoveries, setMergedRecoveries] = useState<any[] | null>(null); // null means not initialized yet
   const [filterSource, setFilterSource] = useState<'all' | 'detected' | 'synced'>('all');
   const [filterConfidence, setFilterConfidence] = useState<'all' | 'high' | 'medium' | 'low'>('all');
   const [filterUrgent, setFilterUrgent] = useState<'all' | 'urgent' | 'critical'>('all');
-  
+
   // Phase 3: Detection statistics and urgent claims
   const [detectionStats, setDetectionStats] = useState<any>(null);
   const [resolveModalOpen, setResolveModalOpen] = useState(false);
@@ -96,7 +96,7 @@ export default function Recoveries() {
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [detectionDetails, setDetectionDetails] = useState<any | null>(null);
   const [activeTab, setActiveTab] = useState<'claims' | 'matching' | 'cases'>('claims');
-  
+
   // Table drag-to-scroll functionality
   const tableScrollRef = useRef<HTMLDivElement>(null);
   const isDraggingRef = useRef<boolean>(false);
@@ -104,7 +104,7 @@ export default function Recoveries() {
   const startXRef = useRef<number>(0);
   const scrollLeftRef = useRef<number>(0);
   const [isDragging, setIsDragging] = useState(false);
-  
+
   // Handle mouse down for drag scrolling
   const handleMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!tableScrollRef.current) return;
@@ -120,7 +120,7 @@ export default function Recoveries() {
     startXRef.current = e.pageX - rect.left;
     scrollLeftRef.current = tableScrollRef.current.scrollLeft;
   }, []);
-  
+
   // Handle mouse up to stop dragging
   const handleMouseUp = useCallback(() => {
     if (!tableScrollRef.current) return;
@@ -137,7 +137,7 @@ export default function Recoveries() {
       tableScrollRef.current.style.cursor = 'grab';
     }
   }, []);
-  
+
   // Handle mouse leave to stop dragging
   const handleMouseLeave = useCallback(() => {
     if (!tableScrollRef.current) return;
@@ -148,18 +148,18 @@ export default function Recoveries() {
       tableScrollRef.current.style.cursor = 'grab';
     }
   }, []);
-  
+
   // Global mouse handlers for drag scrolling (works even if mouse leaves the table)
   useEffect(() => {
     const handleGlobalMouseMove = (e: MouseEvent) => {
       if (!tableScrollRef.current) return;
-      
+
       // Check if we should start dragging (after mouse moved a bit)
       if (!isDraggingRef.current && startXRef.current !== 0) {
         const rect = tableScrollRef.current.getBoundingClientRect();
         const x = e.pageX - rect.left;
         const deltaX = Math.abs(x - startXRef.current);
-        
+
         // Start dragging only if mouse moved more than 5 pixels (drag threshold)
         if (deltaX > 5) {
           isDraggingRef.current = true;
@@ -169,7 +169,7 @@ export default function Recoveries() {
           document.body.style.userSelect = 'none';
         }
       }
-      
+
       // Perform scrolling if dragging
       if (isDraggingRef.current && tableScrollRef.current) {
         e.preventDefault();
@@ -179,7 +179,7 @@ export default function Recoveries() {
         tableScrollRef.current.scrollLeft = scrollLeftRef.current - walk;
       }
     };
-    
+
     const handleGlobalMouseUp = () => {
       if (isDraggingRef.current && tableScrollRef.current) {
         isDraggingRef.current = false;
@@ -190,10 +190,10 @@ export default function Recoveries() {
       document.body.style.cursor = '';
       document.body.style.userSelect = '';
     };
-    
+
     document.addEventListener('mousemove', handleGlobalMouseMove);
     document.addEventListener('mouseup', handleGlobalMouseUp);
-    
+
     return () => {
       document.removeEventListener('mousemove', handleGlobalMouseMove);
       document.removeEventListener('mouseup', handleGlobalMouseUp);
@@ -201,7 +201,7 @@ export default function Recoveries() {
       document.body.style.userSelect = '';
     };
   }, []);
-  
+
   // Amazon recoveries integration (from DASHBOARD_CLAIMS_INTEGRATION.md)
   const [recoveredTotal, setRecoveredTotal] = useState<number | null>(null);
   const [recoveredCurrency, setRecoveredCurrency] = useState<string>('USD');
@@ -211,7 +211,7 @@ export default function Recoveries() {
   const [syncTriggered, setSyncTriggered] = useState<boolean>(false);
   const [recoverySource, setRecoverySource] = useState<string | null>(null);
   const [dataSource, setDataSource] = useState<string | null>(null);
-  
+
   // Track previous claims to detect new recoveries
   const previousClaimIdsRef = useRef<Set<string>>(new Set());
   const hasInitializedRef = useRef<boolean>(false);
@@ -255,7 +255,7 @@ export default function Recoveries() {
       syncedCount: syncedRecoveries?.length || 0,
       detectedCount: detectedClaims?.length || 0
     });
-    
+
     // Transform detection results to match recovery format
     const detected = (detectedClaims || []).map(det => ({
       id: det.id,
@@ -278,7 +278,7 @@ export default function Recoveries() {
       _evidence: det.days_remaining && det.days_remaining <= 7 ? 'Ready' : 'Collecting',
       _matchedCount: 0,
     }));
-    
+
     // Mark synced recoveries
     const synced = (syncedRecoveries || []).map(rec => ({
       ...rec,
@@ -290,14 +290,14 @@ export default function Recoveries() {
       _evidence: getEvidenceStatus(rec.id),
       _matchedCount: Array.isArray((rec as any).matchedDocs) ? (rec as any).matchedDocs.length : ((rec as any).matchedCount ?? 0),
     }));
-    
+
     // Combine and sort (don't apply filters here - let filteredClaims handle that)
     const merged = [...detected, ...synced].sort((a, b) => {
       const dateA = new Date(a.discovery_date || a.created || a.created_at || 0).getTime();
       const dateB = new Date(b.discovery_date || b.created || b.created_at || 0).getTime();
       return dateB - dateA;
     });
-    
+
     console.log('[Recoveries] mergeRecoveries result:', merged.length, 'items');
     setMergedRecoveries(merged);
   }, []);
@@ -339,19 +339,19 @@ export default function Recoveries() {
         if (resData && Array.isArray(resData)) {
           const newClaims = resData as any[];
           console.log('[Recoveries] Got recoveries from API:', newClaims.length);
-          
+
           // Detect new recoveries by comparing with previous claims
           if (hasInitializedRef.current) {
             const currentClaimIds = new Set(newClaims.map(c => c.id));
             const previousClaimIds = previousClaimIdsRef.current;
-            
+
             // Find new claims that weren't in the previous set
             const newClaimIds = Array.from(currentClaimIds).filter(id => !previousClaimIds.has(id));
-            
+
             if (newClaimIds.length > 0) {
               const newClaimsData = newClaims.filter(c => newClaimIds.includes(c.id));
               const totalNewAmount = newClaimsData.reduce((sum, c) => sum + (c.guaranteedAmount || 0), 0);
-              
+
               // Show toast for new recoveries detected
               if (newClaimIds.length === 1) {
                 const newClaim = newClaimsData[0];
@@ -369,14 +369,14 @@ export default function Recoveries() {
               }
             }
           }
-          
+
           // Update previous claim IDs
           previousClaimIdsRef.current = new Set(newClaims.map(c => c.id));
           hasInitializedRef.current = true;
-          
+
           setClaims(newClaims);
           setError(null);
-          
+
           // Merge with detection results
           if (detectionRes.ok && detectionRes.data?.results) {
             console.log('[Recoveries] Merging with detection results:', detectionRes.data.results.length);
@@ -392,7 +392,7 @@ export default function Recoveries() {
           // No synced recoveries from API - show empty state or merge with detection results only
           console.log('[Recoveries] No API data from recoveryApi.getRecoveries()');
           setClaims([]); // Clear any previous data
-          
+
           // Only merge if we have detection results
           if (detectionRes.ok && detectionRes.data?.results) {
             console.log('[Recoveries] Merging detection results only (no synced recoveries)');
@@ -403,7 +403,7 @@ export default function Recoveries() {
             // No detection results either - show empty state
             console.log('[Recoveries] No data available - showing empty state');
             setDetectionResults([]);
-              mergeRecoveries([], []);
+            mergeRecoveries([], []);
             // Set error only if API call actually failed (not just empty response)
             if (resData === null) {
               setError('Failed to load recoveries. Please try again.');
@@ -420,26 +420,26 @@ export default function Recoveries() {
           setMetricsError(metricsRes.error || null);
           setMetricsLoaded(true);
         }
-        
+
         // Handle Amazon recoveries data
         if (amazonRecoveriesRes?.ok && amazonRecoveriesRes.data) {
           const data = amazonRecoveriesRes.data as any;
           const newTotal = data.totalAmount ?? 0;
           const previousTotal = previousRecoveredTotalRef.current;
-          
+
           setRecoveredTotal(newTotal);
           previousRecoveredTotalRef.current = newTotal;
-          
+
           if (data.currency) setRecoveredCurrency(data.currency);
           if (typeof data.claimCount === 'number') setAmazonClaimCount(data.claimCount);
-          
+
           // Handle sync-related fields
           if (data.message) setSyncMessage(data.message);
           if (typeof data.needsSync === 'boolean') setNeedsSync(data.needsSync);
           if (typeof data.syncTriggered === 'boolean') setSyncTriggered(data.syncTriggered);
           if (data.dataSource) setDataSource(data.dataSource);
           if (data.source) setRecoverySource(data.source);
-          
+
           // If sync is triggered or needed, check sync status and poll for completion
           if (data.syncTriggered || data.needsSync) {
             checkAndMonitorSync();
@@ -460,28 +460,28 @@ export default function Recoveries() {
           if (data.message) setSyncMessage(data.message);
           if (typeof data.needsSync === 'boolean') setNeedsSync(data.needsSync);
           if (typeof data.syncTriggered === 'boolean') setSyncTriggered(data.syncTriggered);
-          
+
           // Check sync status if needed
           if (data.syncTriggered || data.needsSync) {
             checkAndMonitorSync();
           }
         }
-        
+
         // Function to check sync status and monitor completion
         async function checkAndMonitorSync() {
           if (cancelled) return;
-          
+
           try {
             // Check if there's an active sync
             const syncStatusRes = await api.getSyncStatus();
             if (syncStatusRes.ok && syncStatusRes.data) {
               const syncStatus = syncStatusRes.data as any;
-              
+
               // If there's an active sync, get the syncId
               if (syncStatus.hasActiveSync && syncStatus.lastSync?.syncId) {
                 const syncId = syncStatus.lastSync.syncId;
                 setActiveSyncId(syncId);
-                
+
                 // Start polling for sync completion
                 startSyncPolling(syncId);
               } else if (syncStatus.lastSync?.status === 'complete') {
@@ -498,7 +498,7 @@ export default function Recoveries() {
                 setSyncTriggered(false);
                 setNeedsSync(false);
                 setSyncMessage(null);
-                
+
                 // Clear polling
                 if (syncPollingRef.current) {
                   clearInterval(syncPollingRef.current);
@@ -509,7 +509,7 @@ export default function Recoveries() {
                 setSyncTriggered(false);
                 setNeedsSync(true);
                 setSyncMessage('Sync failed. Please try again.');
-                
+
                 // Clear polling
                 if (syncPollingRef.current) {
                   clearInterval(syncPollingRef.current);
@@ -521,17 +521,17 @@ export default function Recoveries() {
             console.error('Error checking sync status:', error);
           }
         }
-        
+
         // Function to poll for sync completion
         function startSyncPolling(syncId: string) {
           // Clear any existing polling
           if (syncPollingRef.current) {
             clearInterval(syncPollingRef.current);
           }
-          
+
           let pollCount = 0;
           const maxPolls = 120; // Poll for up to 10 minutes
-          
+
           syncPollingRef.current = window.setInterval(async () => {
             if (cancelled) {
               if (syncPollingRef.current) {
@@ -540,41 +540,41 @@ export default function Recoveries() {
               }
               return;
             }
-            
+
             pollCount++;
-            
+
             try {
               const { getSyncStatus } = await import('@/lib/inventoryApi');
               const status = await getSyncStatus(syncId);
-              
+
               if (status.status === 'complete') {
                 // Sync completed, refresh data
                 const [newRecoveriesRes, newClaimsRes] = await Promise.all([
                   api.getAmazonRecoveries().catch(() => null),
                   recoveryApi.getRecoveries().catch(() => null),
                 ]);
-                
+
                 if (newRecoveriesRes?.ok && newRecoveriesRes.data) {
                   const newData = newRecoveriesRes.data as any;
                   setRecoveredTotal(newData.totalAmount ?? 0);
                   if (newData.currency) setRecoveredCurrency(newData.currency);
                   if (typeof newData.claimCount === 'number') setAmazonClaimCount(newData.claimCount);
                 }
-                
+
                 if (newClaimsRes && Array.isArray(newClaimsRes)) {
                   setClaims(newClaimsRes as any);
                 }
-                
+
                 setSyncTriggered(false);
                 setNeedsSync(false);
                 setSyncMessage('Sync completed successfully!');
-                
+
                 toast({
                   title: 'Sync Complete',
                   description: 'Complete successfully. See dashboard.',
                   duration: 5000,
                 });
-                
+
                 // Clear polling
                 if (syncPollingRef.current) {
                   clearInterval(syncPollingRef.current);
@@ -585,14 +585,14 @@ export default function Recoveries() {
                 setSyncTriggered(false);
                 setNeedsSync(true);
                 setSyncMessage('Sync failed. Please try again.');
-                
+
                 toast({
                   title: 'Sync Failed',
                   description: 'The sync encountered an error. Please try again.',
                   variant: 'destructive',
                   duration: 5000,
                 });
-                
+
                 // Clear polling
                 if (syncPollingRef.current) {
                   clearInterval(syncPollingRef.current);
@@ -601,7 +601,7 @@ export default function Recoveries() {
               }
             } catch (error) {
               console.error('Error polling sync status:', error);
-              
+
               if (pollCount >= maxPolls) {
                 if (syncPollingRef.current) {
                   clearInterval(syncPollingRef.current);
@@ -611,7 +611,7 @@ export default function Recoveries() {
               }
             }
           }, 5000); // Poll every 5 seconds
-          
+
           // Set timeout to stop polling after 10 minutes
           syncCheckTimeoutRef.current = window.setTimeout(() => {
             if (syncPollingRef.current) {
@@ -621,11 +621,11 @@ export default function Recoveries() {
             setSyncMessage('Sync is taking longer than expected. Please check the sync page for details.');
           }, 600000); // 10 minutes
         }
-        
+
         setLoading(false);
       }
     })();
-    return () => { 
+    return () => {
       cancelled = true;
       if (syncPollingRef.current) {
         clearInterval(syncPollingRef.current);
@@ -647,22 +647,22 @@ export default function Recoveries() {
         setClaims(prev => prev.map(c => c.id === claimId ? { ...c, status: evt.status } as any : c));
       }
     }
-    
+
     // Handle detection events - new recoveries detected
     if (evt.type === 'detection') {
       // Show toast for detection events
       const detectionData = (evt as any).data;
       const claimCount = detectionData?.claimCount || detectionData?.count || detectionData?.newClaims;
       const totalAmount = detectionData?.totalAmount || detectionData?.amount;
-      
+
       if (claimCount || totalAmount) {
         toast({
           title: 'New Recoveries Detected!',
-          description: claimCount 
+          description: claimCount
             ? `${claimCount} new recovery${claimCount !== 1 ? 'ies' : ''} detected${totalAmount ? ` totaling ${formatCurrency(totalAmount)}` : ''}`
-            : totalAmount 
-            ? `New recoveries totaling ${formatCurrency(totalAmount)} detected`
-            : 'New recoveries have been detected',
+            : totalAmount
+              ? `New recoveries totaling ${formatCurrency(totalAmount)} detected`
+              : 'New recoveries have been detected',
           duration: 6000,
         });
       } else {
@@ -672,17 +672,17 @@ export default function Recoveries() {
           duration: 5000,
         });
       }
-      
+
       // Refresh claims list to show new recoveries
       recoveryApi.getRecoveries().then(res => {
         if (Array.isArray(res)) {
           const newClaims = res as any[];
           const currentClaimIds = new Set(newClaims.map(c => c.id));
           const previousClaimIds = previousClaimIdsRef.current;
-          
+
           // Find new claims
           const newClaimIds = Array.from(currentClaimIds).filter(id => !previousClaimIds.has(id));
-          
+
           if (newClaimIds.length > 0) {
             // Update previous claim IDs
             previousClaimIdsRef.current = currentClaimIds;
@@ -693,7 +693,7 @@ export default function Recoveries() {
         // Silently fail
       });
     }
-    
+
     // Refresh Amazon recoveries when sync/detection events occur
     if (evt.type === 'sync' || evt.type === 'detection') {
       api.getAmazonRecoveries().then(res => {
@@ -701,10 +701,10 @@ export default function Recoveries() {
           const data = res.data as any;
           const previousTotal = previousRecoveredTotalRef.current;
           const newTotal = data.totalAmount ?? 0;
-          
+
           setRecoveredTotal(newTotal);
           previousRecoveredTotalRef.current = newTotal;
-          
+
           if (data.currency) setRecoveredCurrency(data.currency);
           if (typeof data.claimCount === 'number') setAmazonClaimCount(data.claimCount);
           if (data.message) setSyncMessage(data.message);
@@ -712,7 +712,7 @@ export default function Recoveries() {
           if (typeof data.syncTriggered === 'boolean') setSyncTriggered(data.syncTriggered);
           if (data.source) setRecoverySource(data.source);
           if (data.dataSource) setDataSource(data.dataSource);
-          
+
           // Show toast if recovered amount increased
           if (newTotal > previousTotal && previousTotal > 0) {
             const increase = newTotal - previousTotal;
@@ -726,6 +726,63 @@ export default function Recoveries() {
       }).catch(() => {
         // Silently fail - don't disrupt user experience
       });
+    }
+
+    // Handle filing events (Agent 7)
+    if (evt.type === 'filing') {
+      if (evt.status === 'started') {
+        toast({
+          title: 'Filing Dispute',
+          description: `Submitting case ${evt.data?.case_number || evt.data?.case_id || ''} to Amazon...`,
+          duration: 4000,
+        });
+      } else if (evt.status === 'completed') {
+        const amazonCaseId = evt.data?.amazon_case_id;
+        const caseNumber = evt.data?.case_number;
+
+        toast({
+          title: 'Case Filed Successfully',
+          description: `Case ${caseNumber || ''} filed with Amazon${amazonCaseId ? `: ${amazonCaseId}` : ''}`,
+          duration: 6000,
+        });
+      } else if (evt.status === 'failed') {
+        toast({
+          title: 'Filing Failed',
+          description: evt.data?.error || 'Please check case details',
+          variant: 'destructive',
+          duration: 6000,
+        });
+      }
+    }
+
+    // Handle status updates from Amazon (Agent 7 polling)
+    if (evt.type === 'status_updated') {
+      const status = evt.data?.status;
+      const caseId = evt.data?.case_id || evt.data?.case_number;
+
+      if (status && caseId) {
+        // Show toast for important status changes
+        if (status === 'approved') {
+          toast({
+            title: 'Case Approved!',
+            description: `Amazon approved case ${caseId}`,
+            duration: 6000,
+          });
+        } else if (status === 'denied') {
+          toast({
+            title: 'Case Denied',
+            description: `Amazon denied case ${caseId}. Retry will be attempted with stronger evidence.`,
+            variant: 'destructive',
+            duration: 6000,
+          });
+        } else if (status === 'in_progress') {
+          toast({
+            title: 'Case In Progress',
+            description: `Amazon is reviewing case ${caseId}`,
+            duration: 4000,
+          });
+        }
+      }
     }
   });
 
@@ -747,7 +804,7 @@ export default function Recoveries() {
       // mergedRecoveries not initialized yet, use claims
       sourceData = (claims && claims.length > 0) ? claims : [];
     }
-    
+
     // Debug logging
     console.log('[Recoveries] Filtering data:', {
       sourceDataLength: sourceData.length,
@@ -757,13 +814,13 @@ export default function Recoveries() {
       filterConfidence,
       loading
     });
-    
+
     let filtered = sourceData.filter(claim => {
       // Source filter (Phase 3)
       if (filterSource !== 'all') {
         if (claim.source !== filterSource) return false;
       }
-      
+
       // Confidence filter (Phase 3) - only for detected claims
       if (filterConfidence !== 'all' && filterSource === 'detected') {
         if (!claim.confidence_score) return false;
@@ -771,25 +828,25 @@ export default function Recoveries() {
         if (filterConfidence === 'medium' && (claim.confidence_score < 0.50 || claim.confidence_score >= 0.85)) return false;
         if (filterConfidence === 'low' && claim.confidence_score >= 0.50) return false;
       }
-      
+
       // Search filter
-      const searchMatch = !searchTerm || 
+      const searchMatch = !searchTerm ||
         claim.id?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         claim.sku?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         claim.asin?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         claim.details?.toLowerCase().includes(searchTerm.toLowerCase());
-      
+
       // Date filter
       const claimDate = new Date(claim.created || claim.discovery_date || claim.created_at || 0);
-      const dateMatch = (!dateRange?.from || claimDate >= dateRange.from) && 
-                       (!dateRange?.to || claimDate <= dateRange.to);
-      
+      const dateMatch = (!dateRange?.from || claimDate >= dateRange.from) &&
+        (!dateRange?.to || claimDate <= dateRange.to);
+
       // Claim type filter
       const typeMatch = selectedClaimTypes.length === 0 || selectedClaimTypes.includes(claim.type);
-      
+
       // Status filter
       const statusMatch = selectedStatuses.length === 0 || selectedStatuses.includes(claim.status);
-      
+
       // Urgent filter
       if (filterUrgent !== 'all') {
         const daysRemaining = claim.days_remaining;
@@ -797,7 +854,7 @@ export default function Recoveries() {
         if (filterUrgent === 'critical' && daysRemaining > 3) return false;
         if (filterUrgent === 'urgent' && daysRemaining > 7) return false;
       }
-      
+
       return searchMatch && dateMatch && typeMatch && statusMatch;
     });
 
@@ -821,13 +878,13 @@ export default function Recoveries() {
   // Calculate key metrics
   const keyMetrics = useMemo(() => {
     const totalClaimsFound = filteredClaims.length;
-    const currentlyInProgress = filteredClaims.filter(claim => 
+    const currentlyInProgress = filteredClaims.filter(claim =>
       ['New', 'Pending', 'Submitted'].includes(claim.status)
     ).length;
     const valueInProgress = filteredClaims
       .filter(claim => ['New', 'Pending', 'Submitted'].includes(claim.status))
       .reduce((sum, claim) => sum + claim.guaranteedAmount, 0);
-    
+
     // Calculate 30-day success rate from all claims (use mergedRecoveries if available)
     const dataSource = mergedRecoveries !== null ? mergedRecoveries : claims;
     const thirtyDaysAgo = subDays(new Date(), 30);
@@ -836,8 +893,8 @@ export default function Recoveries() {
       return claimDate >= thirtyDaysAgo;
     });
     const successfulClaims = recentClaims.filter(claim => claim.status === 'Paid');
-    const successRate = recentClaims.length > 0 
-      ? (successfulClaims.length / recentClaims.length) * 100 
+    const successRate = recentClaims.length > 0
+      ? (successfulClaims.length / recentClaims.length) * 100
       : 0;
 
     return {
@@ -856,7 +913,7 @@ export default function Recoveries() {
       const openCount = (metrics as any).openCount ?? (metrics as any).openClaims ?? 0;
       return { totalOwed, openCount };
     }
-    
+
     // Use mergedRecoveries (includes Agent 3 detections) if available, otherwise fall back to claims
     const dataSource = mergedRecoveries !== null ? mergedRecoveries : claims;
     const openStatuses = new Set(['New', 'Pending', 'Submitted']);
@@ -928,1109 +985,1104 @@ export default function Recoveries() {
         <div className="relative w-full bg-gray-50 min-h-[calc(100vh+96px)] -mt-24 pt-24">
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-gray-50 to-white" />
           <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-900 space-y-8">
-        {/* Page Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#1f1f1f] mb-2">Claims</h1>
-          <p className="text-gray-600">Monitor and manage all reimbursement opportunities across your FBA operations</p>
-          <div className="mt-4 flex items-center gap-2">
-            <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-white" disabled={selectedIds.size === 0 || submittingBulk} onClick={async () => {
-              setSubmittingBulk(true);
-              const ids = Array.from(selectedIds);
-              for (const id of ids) {
-                try {
-                  await recoveryApi.submitClaim(id);
-                  toast({ title: `Submitted ${id}`, description: 'Claim submitted successfully.' });
-                  setClaims(prev => prev.map(c => c.id === id ? { ...c, status: 'Submitted' } : c));
-                } catch (e: any) {
-                  toast({ title: `Failed to submit ${id}`, description: e?.message || 'Please try again.' });
-                }
-              }
-              setSubmittingBulk(false);
-            }}>Submit Selected Claims</Button>
-            {selectedIds.size > 0 && (
-              <span className="text-xs text-muted-foreground">{selectedIds.size} selected</span>
-            )}
-          </div>
-        </div>
+            {/* Page Header */}
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold text-[#1f1f1f] mb-2">Claims</h1>
+              <p className="text-gray-600">Monitor and manage all reimbursement opportunities across your FBA operations</p>
+              <div className="mt-4 flex items-center gap-2">
+                <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-white" disabled={selectedIds.size === 0 || submittingBulk} onClick={async () => {
+                  setSubmittingBulk(true);
+                  const ids = Array.from(selectedIds);
+                  for (const id of ids) {
+                    try {
+                      await recoveryApi.submitClaim(id);
+                      toast({ title: `Submitted ${id}`, description: 'Claim submitted successfully.' });
+                      setClaims(prev => prev.map(c => c.id === id ? { ...c, status: 'Submitted' } : c));
+                    } catch (e: any) {
+                      toast({ title: `Failed to submit ${id}`, description: e?.message || 'Please try again.' });
+                    }
+                  }
+                  setSubmittingBulk(false);
+                }}>Submit Selected Claims</Button>
+                {selectedIds.size > 0 && (
+                  <span className="text-xs text-muted-foreground">{selectedIds.size} selected</span>
+                )}
+              </div>
+            </div>
 
 
-        {/* Opportunity Radar Summary */}
-        <Card className="mb-8 bg-white border-gray-200 text-gray-900">
-          <CardContent className="p-5 md:p-6">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="text-sm text-gray-600">Total Recovered Value</div>
-                  {recoveredTotal != null && recoveredTotal > 0 && (
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button
-                          type="button"
-                          aria-label="About recovered value"
-                          className="text-gray-500 hover:text-gray-700 transition-colors"
-                        >
-                          <Info className="h-3 w-3" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent side="top" className="bg-black text-white text-xs">
-                        Recovered from approved/completed claims. {recoverySource && `Source: ${recoverySource}`}
-                      </TooltipContent>
-                    </Tooltip>
-                  )}
-                </div>
-                <div className="text-2xl md:text-3xl font-semibold text-[#1f1f1f]">
-                  {recoveredTotal != null && recoveredTotal > 0 ? (
-                    <>
-                      <span className="text-[#1f1f1f]">{formatCurrency(recoveredTotal, recoveredCurrency)}</span>
-                      <span className="text-gray-600 text-base font-medium ml-2">
-                      recovered from {amazonClaimCount ?? 0} approved claim{amazonClaimCount !== 1 ? 's' : ''}
-                    </span>
-                    </>
-                  ) : (
-                    <>
-                      <span className="text-[#1f1f1f]">{formatCurrency(0)}</span>
-                      <span className="text-gray-600 text-base font-medium ml-2">No recoveries yet</span>
-                    </>
-                  )}
-                </div>
-                                {/* Sync status message */}
-                {(syncMessage || needsSync || syncTriggered) && (
-                  <div className={`mt-3 px-3 py-2 rounded-md text-xs ${
-                    syncTriggered 
-                      ? 'bg-blue-50 text-blue-700 border border-blue-200' 
-                      : needsSync 
-                      ? 'bg-amber-50 text-amber-700 border border-amber-200' 
-                      : 'bg-gray-50 text-gray-700 border border-gray-200'
-                  }`}>
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex items-start gap-2 flex-1">
-                        {syncTriggered && <RefreshCw className="h-3 w-3 mt-0.5 animate-spin" />}
-                        <span>{syncMessage || (needsSync ? 'Syncing your Amazon account... Please refresh in a few moments.' : '')}</span>
+            {/* Opportunity Radar Summary */}
+            <Card className="mb-8 bg-white border-gray-200 text-gray-900">
+              <CardContent className="p-5 md:p-6">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="text-sm text-gray-600">Total Recovered Value</div>
+                      {recoveredTotal != null && recoveredTotal > 0 && (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              type="button"
+                              aria-label="About recovered value"
+                              className="text-gray-500 hover:text-gray-700 transition-colors"
+                            >
+                              <Info className="h-3 w-3" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent side="top" className="bg-black text-white text-xs">
+                            Recovered from approved/completed claims. {recoverySource && `Source: ${recoverySource}`}
+                          </TooltipContent>
+                        </Tooltip>
+                      )}
+                    </div>
+                    <div className="text-2xl md:text-3xl font-semibold text-[#1f1f1f]">
+                      {recoveredTotal != null && recoveredTotal > 0 ? (
+                        <>
+                          <span className="text-[#1f1f1f]">{formatCurrency(recoveredTotal, recoveredCurrency)}</span>
+                          <span className="text-gray-600 text-base font-medium ml-2">
+                            recovered from {amazonClaimCount ?? 0} approved claim{amazonClaimCount !== 1 ? 's' : ''}
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="text-[#1f1f1f]">{formatCurrency(0)}</span>
+                          <span className="text-gray-600 text-base font-medium ml-2">No recoveries yet</span>
+                        </>
+                      )}
+                    </div>
+                    {/* Sync status message */}
+                    {(syncMessage || needsSync || syncTriggered) && (
+                      <div className={`mt-3 px-3 py-2 rounded-md text-xs ${syncTriggered
+                          ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                          : needsSync
+                            ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                            : 'bg-gray-50 text-gray-700 border border-gray-200'
+                        }`}>
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="flex items-start gap-2 flex-1">
+                            {syncTriggered && <RefreshCw className="h-3 w-3 mt-0.5 animate-spin" />}
+                            <span>{syncMessage || (needsSync ? 'Syncing your Amazon account... Please refresh in a few moments.' : '')}</span>
+                          </div>
+                          {activeSyncId && (
+                            <Link
+                              to={`/sync?id=${activeSyncId}`}
+                              className="text-blue-400 hover:text-blue-300 underline text-xs ml-2"
+                            >
+                              View progress
+                            </Link>
+                          )}
+                        </div>
                       </div>
-                      {activeSyncId && (
-                        <Link
-                          to={`/sync?id=${activeSyncId}`}
-                          className="text-blue-400 hover:text-blue-300 underline text-xs ml-2"
-                        >
-                          View progress
-                        </Link>
+                    )}
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {Object.entries(categoryCounts).map(([label, count]) => (
+                      <span key={label} className="text-xs px-2.5 py-1 rounded-full bg-gray-50 border border-gray-200 text-gray-700">
+                        {label}: {count}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div className="mt-4 flex items-center gap-3 text-xs text-gray-600">
+                  <span>Last analysis: {new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                  <span className="h-1 w-1 rounded-full bg-gray-500"></span>
+                  <button
+                    className="inline-flex items-center gap-2 h-8 px-3 rounded-md bg-emerald-500 text-white font-semibold hover:bg-emerald-400"
+                    onClick={async () => {
+                      try {
+                        await api.post('/api/detections/run');
+                        toast({ title: 'Analysis Started', description: 'Scanning your FBA data for new opportunities…' });
+                      } catch (e: any) {
+                        toast({ title: 'Analysis Failed', description: e?.message || 'Please try again shortly.', variant: 'destructive' });
+                      }
+                    }}
+                  >
+                    Run Analysis
+                  </button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Key Metrics Bar - Enhanced with Phase 3 Statistics */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
+                <CardContent className="p-6">
+                  <div className="flex items-center">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Total Claims Identified</p>
+                      <p className="text-2xl font-medium text-[#1f1f1f]">
+                        {detectionStats?.total_anomalies ?? detectionStats?.totalDetections ?? (metrics ? metrics.totalClaimsFound : keyMetrics.totalClaimsFound)}
+                        {amazonClaimCount != null && amazonClaimCount > 0 && (
+                          <span className="text-sm text-emerald-400 ml-2 font-normal">
+                            from Amazon
+                          </span>
+                        )}
+                      </p>
+                      {detectionStats?.total_anomalies && (
+                        <p className="text-xs text-gray-600 mt-1">
+                          {detectionStats.by_confidence?.high || 0} high confidence
+                        </p>
                       )}
                     </div>
                   </div>
-                )}
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {Object.entries(categoryCounts).map(([label, count]) => (
-                    <span key={label} className="text-xs px-2.5 py-1 rounded-full bg-gray-50 border border-gray-200 text-gray-700">
-                    {label}: {count}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div className="mt-4 flex items-center gap-3 text-xs text-gray-600">
-              <span>Last analysis: {new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
-              <span className="h-1 w-1 rounded-full bg-gray-500"></span>
-              <button
-                className="inline-flex items-center gap-2 h-8 px-3 rounded-md bg-emerald-500 text-white font-semibold hover:bg-emerald-400"
-                onClick={async () => {
-                  try {
-                    await api.post('/api/detections/run');
-                    toast({ title: 'Analysis Started', description: 'Scanning your FBA data for new opportunities…' });
-                  } catch (e: any) {
-                    toast({ title: 'Analysis Failed', description: e?.message || 'Please try again shortly.', variant: 'destructive' });
-                  }
-                }}
-              >
-                Run Analysis
-              </button>
-            </div>
-          </CardContent>
-        </Card>
+                </CardContent>
+              </Card>
 
-        {/* Key Metrics Bar - Enhanced with Phase 3 Statistics */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Total Claims Identified</p>
-                  <p className="text-2xl font-medium text-[#1f1f1f]">
-                    {detectionStats?.total_anomalies ?? detectionStats?.totalDetections ?? (metrics ? metrics.totalClaimsFound : keyMetrics.totalClaimsFound)}
-                    {amazonClaimCount != null && amazonClaimCount > 0 && (
-                      <span className="text-sm text-emerald-400 ml-2 font-normal">
-                        from Amazon
-                      </span>
-                    )}
-                  </p>
-                  {detectionStats?.total_anomalies && (
-                    <p className="text-xs text-gray-600 mt-1">
-                      {detectionStats.by_confidence?.high || 0} high confidence
-                    </p>
-                  )}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">
-                    {detectionStats?.total_value ? 'Total Recovery Value' : 'Potential Recovery Value'}
-                  </p>
-                  <p className="text-2xl font-medium text-[#1f1f1f]">
-                    {formatCurrency(
-                      detectionStats?.total_value ?? 
-                      (metrics ? metrics.valueInProgress : keyMetrics.valueInProgress)
-                    )}
-                  </p>
-                  {detectionStats?.expiring_soon !== undefined && detectionStats.expiring_soon > 0 && (
-                    <p className="text-xs text-amber-400 mt-1">
-                      {detectionStats.expiring_soon} expiring soon
-                    </p>
-                  )}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Claims in Progress</p>
-                  <p className="text-2xl font-bold text-[#1f1f1f]">{metrics ? metrics.inProgress : keyMetrics.currentlyInProgress}</p>
-                  {detectionStats?.expired_count !== undefined && detectionStats.expired_count > 0 && (
-                    <p className="text-xs text-red-400 mt-1">
-                      {detectionStats.expired_count} expired
-                    </p>
-                  )}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">30-Day Approval Rate</p>
-                  <p className="text-2xl font-bold text-emerald-600">{metrics ? Math.round(metrics.successRate30d) : keyMetrics.successRate.toFixed(0)}%</p>
-                  {detectionStats?.by_confidence && (
-                    <p className="text-xs text-gray-600 mt-1">
-                      {detectionStats.by_confidence.medium + detectionStats.by_confidence.low} medium/low
-                    </p>
-                  )}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Tabs for Claims, Evidence Matching, and Cases */}
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Recovery Management</h2>
-          <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'claims' | 'matching' | 'cases')} className="w-full">
-          <TabsList className="mb-6 inline-flex h-10 items-center justify-center rounded-md bg-white border border-gray-200 p-1 text-gray-600">
-            <TabsTrigger 
-              value="claims" 
-              className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:shadow-sm"
-            >
-              Claims
-            </TabsTrigger>
-            <TabsTrigger 
-              value="matching" 
-              className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:shadow-sm"
-            >
-              Evidence Matching
-            </TabsTrigger>
-            <TabsTrigger 
-              value="cases" 
-              className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:shadow-sm"
-            >
-              Dispute Cases
-            </TabsTrigger>
-          </TabsList>
-
-          {/* Claims Tab (Existing Content) */}
-          <TabsContent value="claims" className="mt-0">
-        {/* Controls */}
-        <Card className="mb-8 bg-white border-gray-200 text-gray-900 shadow-sm">
-          <CardContent className="p-6">
-            <div className="flex flex-wrap gap-4 items-center">
-              {/* Search Bar */}
-              <div className="relative flex-1 min-w-64">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500 stroke-[2]" />
-                <Input
-                  placeholder="Search by Claim ID, ASIN, or Keyword..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500"
-                />
-              </div>
-
-              {/* Quick Date Range Buttons */}
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" onClick={() => setQuickDateRange('30days')}>Last 30 Days</Button>
-                <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" onClick={() => setQuickDateRange('quarter')}>Last Quarter</Button>
-                <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" onClick={() => setQuickDateRange('year')}>This Year</Button>
-                <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" onClick={() => setQuickDateRange('all')}>All Time</Button>
-              </div>
-
-              {/* Custom Date Range */}
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" className={cn("w-[280px] justify-start text-left font-medium bg-white text-gray-700 border-gray-200 hover:bg-gray-50", !dateRange && "text-gray-500")}>
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {dateRange?.from ? (
-                      dateRange.to ? (
-                        <>
-                          {format(dateRange.from, "LLL dd, y")} -{" "}
-                          {format(dateRange.to, "LLL dd, y")}
-                        </>
-                      ) : (
-                        format(dateRange.from, "LLL dd, y")
-                      )
-                    ) : (
-                      <span>Pick a date range</span>
-                    )}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    initialFocus
-                    mode="range"
-                    defaultMonth={dateRange?.from}
-                    selected={dateRange}
-                    onSelect={setDateRange}
-                    numberOfMonths={2}
-                    className="pointer-events-auto"
-                  />
-                </PopoverContent>
-              </Popover>
-
-              {/* Claim Type Filter */}
-              <Select>
-                <SelectTrigger className="w-[180px] bg-white text-gray-900 border-gray-200 hover:bg-gray-50">
-                  <SelectValue placeholder="Filter by Claim Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  {claimTypes.map(type => (
-                    <SelectItem key={type} value={type}>{type}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              {/* Status Filter */}
-              <Select>
-                <SelectTrigger className="w-[180px] bg-white text-gray-900 border-gray-200 hover:bg-gray-50">
-                  <SelectValue placeholder="Filter by Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  {statusOptions.map(status => (
-                    <SelectItem key={status} value={status}>{status}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              {/* Source Filter (Phase 3) */}
-              <Select value={filterSource} onValueChange={(value: 'all' | 'detected' | 'synced') => {
-                setFilterSource(value);
-              }}>
-                <SelectTrigger className="w-[180px] bg-white text-gray-900 border-gray-200 hover:bg-gray-50">
-                  <SelectValue placeholder="Filter by Source" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Sources</SelectItem>
-                  <SelectItem value="detected">Detected Claims</SelectItem>
-                  <SelectItem value="synced">Synced from Amazon</SelectItem>
-                </SelectContent>
-              </Select>
-
-              {/* Confidence Filter (Phase 3) - only show when filtering by detected */}
-              {filterSource === 'detected' && (
-                <Select value={filterConfidence} onValueChange={(value: 'all' | 'high' | 'medium' | 'low') => {
-                  setFilterConfidence(value);
-                }}>
-                  <SelectTrigger className="w-[180px] bg-white text-gray-900 border-gray-200 hover:bg-gray-50">
-                    <SelectValue placeholder="Filter by Confidence" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Confidence Levels</SelectItem>
-                    <SelectItem value="high">High (≥85%)</SelectItem>
-                    <SelectItem value="medium">Medium (50-85%)</SelectItem>
-                    <SelectItem value="low">Low (&lt;50%)</SelectItem>
-                  </SelectContent>
-                </Select>
-              )}
-
-              {/* Urgent Filter */}
-              <Select value={filterUrgent} onValueChange={(value: 'all' | 'urgent' | 'critical') => {
-                setFilterUrgent(value);
-              }}>
-                <SelectTrigger className="w-[180px] bg-white text-gray-900 border-gray-200 hover:bg-gray-50">
-                  <SelectValue placeholder="Filter by Urgency" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Claims</SelectItem>
-                  <SelectItem value="urgent">Urgent (≤7 days)</SelectItem>
-                  <SelectItem value="critical">Critical (≤3 days)</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Data Table */}
-        <Card className="bg-white border-gray-200 text-gray-900 w-full overflow-hidden shadow-sm">
-          <CardContent className="p-0 w-full">
-            {loading && (
-              <div className="p-8 text-center">
-                <p className="text-sm text-gray-600">Loading claims...</p>
-              </div>
-            )}
-            {error && (
-              <div className="p-4 text-sm text-red-600">{error}</div>
-            )}
-            {!loading && !error && rankedClaims.length === 0 && (
-              <div className="p-8 text-center">
-                <p className="text-sm text-gray-600 mb-2">
-                  No claims found. {((mergedRecoveries === null || (mergedRecoveries && mergedRecoveries.length === 0)) && (!claims || claims.length === 0))
-                    ? 'Sync your Amazon account or run an analysis to identify recovery opportunities.' 
-                    : 'Try adjusting your filters to see more results.'}
-                </p>
-              </div>
-            )}
-            {!loading && rankedClaims.length > 0 && (
-            <div 
-              ref={tableScrollRef}
-              className="w-full overflow-x-auto overflow-y-visible recoveries-table-scroll" 
-              style={{ 
-                scrollBehavior: 'smooth', 
-                WebkitOverflowScrolling: 'touch',
-                width: '100%',
-                maxWidth: '100%',
-                cursor: isDragging ? 'grabbing' : 'grab'
-              }}
-              onMouseDown={handleMouseDown}
-              onMouseLeave={handleMouseLeave}
-            >
-            <Table style={{ minWidth: '1600px', width: 'max-content' }}>
-              <TableHeader>
-                <TableRow className="border-gray-200">
-                  <TableHead>
-                    <Checkbox checked={selectedIds.size > 0 && selectedIds.size === filteredClaims.length} onCheckedChange={(checked) => {
-                      if (checked) setSelectedIds(new Set(filteredClaims.map(c => c.id)));
-                      else setSelectedIds(new Set());
-                    }} />
-                  </TableHead>
-                  <TableHead className="text-[#1f1f1f] font-semibold">Source</TableHead>
-                  <TableHead className="text-[#1f1f1f] font-semibold">Claim ID</TableHead>
-                  <TableHead className="text-[#1f1f1f] font-semibold">Created</TableHead>
-                  <TableHead className="text-[#1f1f1f] font-semibold">Type</TableHead>
-                  <TableHead className="text-[#1f1f1f] font-semibold">Confidence</TableHead>
-                  <TableHead className="text-[#1f1f1f] font-semibold">Evidence</TableHead>
-                  <TableHead className="text-[#1f1f1f] font-semibold">Details</TableHead>
-                  <TableHead className="text-[#1f1f1f] font-semibold">Status</TableHead>
-                  <TableHead className="text-[#1f1f1f] font-semibold">Days Remaining</TableHead>
-                  <TableHead className="text-[#1f1f1f] font-semibold">Guaranteed Amount</TableHead>
-                  <TableHead className="text-[#1f1f1f] font-semibold">Expected Payout</TableHead>
-                  <TableHead className="text-[#1f1f1f] font-semibold">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {rankedClaims.map((claim: any) => {
-                  const confidenceBadge = claim.confidence_score !== null && claim.confidence_score !== undefined
-                    ? (claim.confidence_score >= 0.85 ? { label: 'High', color: 'green' } : claim.confidence_score >= 0.50 ? { label: 'Medium', color: 'yellow' } : { label: 'Low', color: 'gray' })
-                    : null;
-                  const displayConfidence = claim.confidence_score !== null && claim.confidence_score !== undefined
-                    ? claim.confidence_score
-                    : claim._confidence;
-                  
-                  const isUrgent = claim.days_remaining !== null && claim.days_remaining !== undefined && claim.days_remaining <= 7;
-                  const isCritical = claim.days_remaining !== null && claim.days_remaining !== undefined && claim.days_remaining <= 3;
-                  
-                  return (
-                    <TableRow 
-                      key={claim.id} 
-                      className={cn(
-                        "cursor-pointer hover:bg-gray-50 border-gray-200",
-                        isCritical && "bg-red-50/50 border-l-4 border-l-red-500",
-                        isUrgent && !isCritical && "bg-amber-50/50 border-l-4 border-l-amber-500"
-                      )}
-                    >
-                    <TableCell>
-                      <Checkbox checked={selectedIds.has(claim.id)} onCheckedChange={(checked) => {
-                        setSelectedIds(prev => {
-                          const next = new Set(prev);
-                          if (checked) next.add(claim.id); else next.delete(claim.id);
-                          return next;
-                        });
-                      }} />
-                    </TableCell>
-                    <TableCell>
-                      {claim.source === 'detected' ? (
-                        <Badge className="bg-gray-100 text-[#36454F] border-0">Detected</Badge>
-                      ) : (
-                        <Badge className="bg-gray-100 text-[#36454F] border-0">Synced</Badge>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <Button asChild variant="link" className="p-0 h-auto text-[#36454F] hover:text-[#36454F] font-mono">
-                        <Link to={`/recoveries/${claim.id}`} state={{ claim }}>{claim.id}</Link>
-                      </Button>
-                    </TableCell>
-                    <TableCell>{format(new Date(claim.created || claim.discovery_date || claim.created_at), 'MMM dd, yyyy')}</TableCell>
-                    <TableCell>{claim.type}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        {confidenceBadge ? (
-                          <span className={`text-xs px-1.5 py-0.5 rounded border ${
-                            confidenceBadge.color === 'green' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' :
-                            confidenceBadge.color === 'yellow' ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' :
-                            'bg-gray-500/20 text-gray-300 border-gray-500/30'
-                          }`}>
-                            {confidenceBadge.label} ({(claim.confidence_score * 100).toFixed(0)}%)
-                          </span>
-                        ) : (
-                          <>
-                            <span className={`text-xs font-semibold ${getConfidenceColor(displayConfidence)}`}>{displayConfidence.toFixed(2)}</span>
-                            <span className="text-[10px] px-1.5 py-0.5 rounded border border-white/10 bg-white/5 text-gray-300">
-                              {getConfidenceBadge(displayConfidence)}
-                            </span>
-                          </>
+              <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
+                <CardContent className="p-6">
+                  <div className="flex items-center">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">
+                        {detectionStats?.total_value ? 'Total Recovery Value' : 'Potential Recovery Value'}
+                      </p>
+                      <p className="text-2xl font-medium text-[#1f1f1f]">
+                        {formatCurrency(
+                          detectionStats?.total_value ??
+                          (metrics ? metrics.valueInProgress : keyMetrics.valueInProgress)
                         )}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <span className="text-xs text-[#36454F]">{claim._evidence}</span>
-                    </TableCell>
-                    <TableCell className="max-w-xs">
-                      <div className="truncate" title={claim.details}>
-                        {claim.details}
-                      </div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        SKU: {claim.sku} • ASIN: {claim.asin}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge className={getStatusColor(claim.status)}>
-                        {claim.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      {claim.days_remaining !== null && claim.days_remaining !== undefined ? (
-                        <div className="flex items-center gap-2">
-                          {isCritical && (
-                            <AlertTriangle className="h-4 w-4 text-red-600 flex-shrink-0" />
-                          )}
-                          {isUrgent && !isCritical && (
-                            <Clock className="h-4 w-4 text-amber-600 flex-shrink-0" />
-                          )}
-                          <span className={cn(
-                            isCritical && 'text-red-600 font-semibold',
-                            isUrgent && !isCritical && 'text-amber-600 font-semibold',
-                            !isUrgent && 'text-[#36454F]'
-                          )}>
-                            {claim.days_remaining} days
-                          </span>
-                        </div>
-                      ) : (
-                        <span className="text-[#36454F]">-</span>
+                      </p>
+                      {detectionStats?.expiring_soon !== undefined && detectionStats.expiring_soon > 0 && (
+                        <p className="text-xs text-amber-400 mt-1">
+                          {detectionStats.expiring_soon} expiring soon
+                        </p>
                       )}
-                    </TableCell>
-                    <TableCell className="font-medium">{formatCurrency(claim.guaranteedAmount, claim.currency || 'USD')}</TableCell>
-                    <TableCell>
-                      {claim.expectedPayoutDate ? format(new Date(claim.expectedPayoutDate), 'MMM dd, yyyy') : '-'}
-                    </TableCell>
-                    <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          {claim.status === 'Denied' && (
-                            <DropdownMenuItem onClick={async () => {
-                              const hasDocs = true; // Backend should validate; UI assumes action allowed
-                              if (!hasDocs) return;
-                              try {
-                                await api.resubmitClaim(claim.id);
-                                toast({ title: 'Resubmitted', description: `${claim.id} resubmitted with stronger docs.` });
-                                setClaims(prev => prev.map(c => c.id === claim.id ? { ...c, status: 'Submitted' } as any : c));
-                              } catch (e: any) {
-                                toast({ title: 'Resubmission failed', description: e?.message || 'Please try again.' });
-                              }
-                            }}>
-                              Resubmit with stronger docs
-                            </DropdownMenuItem>
-                          )}
-                          {((claim.confidence_score !== null && claim.confidence_score !== undefined && claim.confidence_score >= 0.85) || getConfidenceTier(claim._confidence) === 'high') && (
-                            <DropdownMenuItem onClick={async () => {
-                              try {
-                                await recoveryApi.submitClaim(claim.id);
-                                setClaims(prev => prev.map(c => c.id === claim.id ? { ...c, status: 'Submitted' } : c));
-                                setMergedRecoveries(prev => prev.map(c => c.id === claim.id ? { ...c, status: 'Submitted' } : c));
-                                toast({ title: 'Auto-submitted', description: `${claim.id} submitted automatically.` });
-                              } catch (e: any) {
-                                toast({ title: 'Submit failed', description: e?.message || 'Please try again.' });
-                              }
-                            }}>
-                              Auto-Submit (High Confidence)
-                            </DropdownMenuItem>
-                          )}
-                          {getConfidenceTier(claim._confidence) === 'medium' && (
-                          <DropdownMenuItem asChild>
-                            <Link to={`/recoveries/${claim.id}`} state={{ claim }} className="flex items-center gap-2">
-                                Review Opportunity
-                              </Link>
-                            </DropdownMenuItem>
-                          )}
-                          {/* Phase 3: Status Update - only for detected claims */}
-                          {claim.source === 'detected' && claim.status !== 'resolved' && (
-                            <DropdownMenuItem onClick={() => {
-                              setSelectedDetection(claim);
-                              setSelectedStatus(claim.status || 'pending');
-                              setStatusUpdateNotes('');
-                              setStatusUpdateModalOpen(true);
-                            }}>
-                              <CheckCircle2 className="h-4 w-4 mr-2" />
-                              Update Status
-                            </DropdownMenuItem>
-                          )}
-                          {/* Phase 3: Resolve Detection - only for detected claims */}
-                          {claim.source === 'detected' && claim.status !== 'resolved' && (
-                            <DropdownMenuItem onClick={() => {
-                              setSelectedDetection(claim);
-                              setResolveNotes('');
-                              setResolveAmount(claim.guaranteedAmount?.toString() || '');
-                              setResolveModalOpen(true);
-                            }}>
-                              <CheckCircle2 className="h-4 w-4 mr-2" />
-                              Mark as Resolved
-                            </DropdownMenuItem>
-                          )}
-                          {/* Phase 3: View Details - open modal for detected claims, navigate for synced */}
-                          {claim.source === 'detected' ? (
-                            <DropdownMenuItem onClick={() => {
-                              setDetectionDetails(claim);
-                              setDetailsModalOpen(true);
-                            }}>
-                              <Eye className="h-4 w-4 mr-2" />
-                              View Details
-                            </DropdownMenuItem>
-                          ) : (
-                            <DropdownMenuItem asChild>
-                              <Link to={`/recoveries/${claim.id}`} state={{ claim }} className="flex items-center gap-2">
-                                <Eye className="h-4 w-4" />
-                                View Details
-                              </Link>
-                            </DropdownMenuItem>
-                          )}
-                          {claim.source !== 'detected' && (
-                            <DropdownMenuItem asChild>
-                              <Link to={`/recoveries/${encodeURIComponent(claim.id)}/resolve`} state={{ claim }} className="flex items-center gap-2">
-                                <FileText className="h-4 w-4" />
-                                Resolve Case
-                              </Link>
-                            </DropdownMenuItem>
-                          )}
-                          <DropdownMenuItem className="text-blue-400 focus:text-blue-300 focus:bg-blue-400/10" onClick={async () => {
-                            const url = api.getRecoveryDocumentUrl(claim.id);
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
+                <CardContent className="p-6">
+                  <div className="flex items-center">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Claims in Progress</p>
+                      <p className="text-2xl font-bold text-[#1f1f1f]">{metrics ? metrics.inProgress : keyMetrics.currentlyInProgress}</p>
+                      {detectionStats?.expired_count !== undefined && detectionStats.expired_count > 0 && (
+                        <p className="text-xs text-red-400 mt-1">
+                          {detectionStats.expired_count} expired
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
+                <CardContent className="p-6">
+                  <div className="flex items-center">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">30-Day Approval Rate</p>
+                      <p className="text-2xl font-bold text-emerald-600">{metrics ? Math.round(metrics.successRate30d) : keyMetrics.successRate.toFixed(0)}%</p>
+                      {detectionStats?.by_confidence && (
+                        <p className="text-xs text-gray-600 mt-1">
+                          {detectionStats.by_confidence.medium + detectionStats.by_confidence.low} medium/low
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Tabs for Claims, Evidence Matching, and Cases */}
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">Recovery Management</h2>
+              <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'claims' | 'matching' | 'cases')} className="w-full">
+                <TabsList className="mb-6 inline-flex h-10 items-center justify-center rounded-md bg-white border border-gray-200 p-1 text-gray-600">
+                  <TabsTrigger
+                    value="claims"
+                    className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:shadow-sm"
+                  >
+                    Claims
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="matching"
+                    className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:shadow-sm"
+                  >
+                    Evidence Matching
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="cases"
+                    className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:shadow-sm"
+                  >
+                    Dispute Cases
+                  </TabsTrigger>
+                </TabsList>
+
+                {/* Claims Tab (Existing Content) */}
+                <TabsContent value="claims" className="mt-0">
+                  {/* Controls */}
+                  <Card className="mb-8 bg-white border-gray-200 text-gray-900 shadow-sm">
+                    <CardContent className="p-6">
+                      <div className="flex flex-wrap gap-4 items-center">
+                        {/* Search Bar */}
+                        <div className="relative flex-1 min-w-64">
+                          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500 stroke-[2]" />
+                          <Input
+                            placeholder="Search by Claim ID, ASIN, or Keyword..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="pl-10 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500"
+                          />
+                        </div>
+
+                        {/* Quick Date Range Buttons */}
+                        <div className="flex gap-2">
+                          <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" onClick={() => setQuickDateRange('30days')}>Last 30 Days</Button>
+                          <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" onClick={() => setQuickDateRange('quarter')}>Last Quarter</Button>
+                          <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" onClick={() => setQuickDateRange('year')}>This Year</Button>
+                          <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" onClick={() => setQuickDateRange('all')}>All Time</Button>
+                        </div>
+
+                        {/* Custom Date Range */}
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button variant="outline" className={cn("w-[280px] justify-start text-left font-medium bg-white text-gray-700 border-gray-200 hover:bg-gray-50", !dateRange && "text-gray-500")}>
+                              <CalendarIcon className="mr-2 h-4 w-4" />
+                              {dateRange?.from ? (
+                                dateRange.to ? (
+                                  <>
+                                    {format(dateRange.from, "LLL dd, y")} -{" "}
+                                    {format(dateRange.to, "LLL dd, y")}
+                                  </>
+                                ) : (
+                                  format(dateRange.from, "LLL dd, y")
+                                )
+                              ) : (
+                                <span>Pick a date range</span>
+                              )}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              initialFocus
+                              mode="range"
+                              defaultMonth={dateRange?.from}
+                              selected={dateRange}
+                              onSelect={setDateRange}
+                              numberOfMonths={2}
+                              className="pointer-events-auto"
+                            />
+                          </PopoverContent>
+                        </Popover>
+
+                        {/* Claim Type Filter */}
+                        <Select>
+                          <SelectTrigger className="w-[180px] bg-white text-gray-900 border-gray-200 hover:bg-gray-50">
+                            <SelectValue placeholder="Filter by Claim Type" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {claimTypes.map(type => (
+                              <SelectItem key={type} value={type}>{type}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+
+                        {/* Status Filter */}
+                        <Select>
+                          <SelectTrigger className="w-[180px] bg-white text-gray-900 border-gray-200 hover:bg-gray-50">
+                            <SelectValue placeholder="Filter by Status" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {statusOptions.map(status => (
+                              <SelectItem key={status} value={status}>{status}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+
+                        {/* Source Filter (Phase 3) */}
+                        <Select value={filterSource} onValueChange={(value: 'all' | 'detected' | 'synced') => {
+                          setFilterSource(value);
+                        }}>
+                          <SelectTrigger className="w-[180px] bg-white text-gray-900 border-gray-200 hover:bg-gray-50">
+                            <SelectValue placeholder="Filter by Source" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">All Sources</SelectItem>
+                            <SelectItem value="detected">Detected Claims</SelectItem>
+                            <SelectItem value="synced">Synced from Amazon</SelectItem>
+                          </SelectContent>
+                        </Select>
+
+                        {/* Confidence Filter (Phase 3) - only show when filtering by detected */}
+                        {filterSource === 'detected' && (
+                          <Select value={filterConfidence} onValueChange={(value: 'all' | 'high' | 'medium' | 'low') => {
+                            setFilterConfidence(value);
+                          }}>
+                            <SelectTrigger className="w-[180px] bg-white text-gray-900 border-gray-200 hover:bg-gray-50">
+                              <SelectValue placeholder="Filter by Confidence" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">All Confidence Levels</SelectItem>
+                              <SelectItem value="high">High (≥85%)</SelectItem>
+                              <SelectItem value="medium">Medium (50-85%)</SelectItem>
+                              <SelectItem value="low">Low (&lt;50%)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        )}
+
+                        {/* Urgent Filter */}
+                        <Select value={filterUrgent} onValueChange={(value: 'all' | 'urgent' | 'critical') => {
+                          setFilterUrgent(value);
+                        }}>
+                          <SelectTrigger className="w-[180px] bg-white text-gray-900 border-gray-200 hover:bg-gray-50">
+                            <SelectValue placeholder="Filter by Urgency" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">All Claims</SelectItem>
+                            <SelectItem value="urgent">Urgent (≤7 days)</SelectItem>
+                            <SelectItem value="critical">Critical (≤3 days)</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Data Table */}
+                  <Card className="bg-white border-gray-200 text-gray-900 w-full overflow-hidden shadow-sm">
+                    <CardContent className="p-0 w-full">
+                      {loading && (
+                        <div className="p-8 text-center">
+                          <p className="text-sm text-gray-600">Loading claims...</p>
+                        </div>
+                      )}
+                      {error && (
+                        <div className="p-4 text-sm text-red-600">{error}</div>
+                      )}
+                      {!loading && !error && rankedClaims.length === 0 && (
+                        <div className="p-8 text-center">
+                          <p className="text-sm text-gray-600 mb-2">
+                            No claims found. {((mergedRecoveries === null || (mergedRecoveries && mergedRecoveries.length === 0)) && (!claims || claims.length === 0))
+                              ? 'Sync your Amazon account or run an analysis to identify recovery opportunities.'
+                              : 'Try adjusting your filters to see more results.'}
+                          </p>
+                        </div>
+                      )}
+                      {!loading && rankedClaims.length > 0 && (
+                        <div
+                          ref={tableScrollRef}
+                          className="w-full overflow-x-auto overflow-y-visible recoveries-table-scroll"
+                          style={{
+                            scrollBehavior: 'smooth',
+                            WebkitOverflowScrolling: 'touch',
+                            width: '100%',
+                            maxWidth: '100%',
+                            cursor: isDragging ? 'grabbing' : 'grab'
+                          }}
+                          onMouseDown={handleMouseDown}
+                          onMouseLeave={handleMouseLeave}
+                        >
+                          <Table style={{ minWidth: '1600px', width: 'max-content' }}>
+                            <TableHeader>
+                              <TableRow className="border-gray-200">
+                                <TableHead>
+                                  <Checkbox checked={selectedIds.size > 0 && selectedIds.size === filteredClaims.length} onCheckedChange={(checked) => {
+                                    if (checked) setSelectedIds(new Set(filteredClaims.map(c => c.id)));
+                                    else setSelectedIds(new Set());
+                                  }} />
+                                </TableHead>
+                                <TableHead className="text-[#1f1f1f] font-semibold">Source</TableHead>
+                                <TableHead className="text-[#1f1f1f] font-semibold">Claim ID</TableHead>
+                                <TableHead className="text-[#1f1f1f] font-semibold">Created</TableHead>
+                                <TableHead className="text-[#1f1f1f] font-semibold">Type</TableHead>
+                                <TableHead className="text-[#1f1f1f] font-semibold">Confidence</TableHead>
+                                <TableHead className="text-[#1f1f1f] font-semibold">Evidence</TableHead>
+                                <TableHead className="text-[#1f1f1f] font-semibold">Details</TableHead>
+                                <TableHead className="text-[#1f1f1f] font-semibold">Status</TableHead>
+                                <TableHead className="text-[#1f1f1f] font-semibold">Days Remaining</TableHead>
+                                <TableHead className="text-[#1f1f1f] font-semibold">Guaranteed Amount</TableHead>
+                                <TableHead className="text-[#1f1f1f] font-semibold">Expected Payout</TableHead>
+                                <TableHead className="text-[#1f1f1f] font-semibold">Actions</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {rankedClaims.map((claim: any) => {
+                                const confidenceBadge = claim.confidence_score !== null && claim.confidence_score !== undefined
+                                  ? (claim.confidence_score >= 0.85 ? { label: 'High', color: 'green' } : claim.confidence_score >= 0.50 ? { label: 'Medium', color: 'yellow' } : { label: 'Low', color: 'gray' })
+                                  : null;
+                                const displayConfidence = claim.confidence_score !== null && claim.confidence_score !== undefined
+                                  ? claim.confidence_score
+                                  : claim._confidence;
+
+                                const isUrgent = claim.days_remaining !== null && claim.days_remaining !== undefined && claim.days_remaining <= 7;
+                                const isCritical = claim.days_remaining !== null && claim.days_remaining !== undefined && claim.days_remaining <= 3;
+
+                                return (
+                                  <TableRow
+                                    key={claim.id}
+                                    className={cn(
+                                      "cursor-pointer hover:bg-gray-50 border-gray-200",
+                                      isCritical && "bg-red-50/50 border-l-4 border-l-red-500",
+                                      isUrgent && !isCritical && "bg-amber-50/50 border-l-4 border-l-amber-500"
+                                    )}
+                                  >
+                                    <TableCell>
+                                      <Checkbox checked={selectedIds.has(claim.id)} onCheckedChange={(checked) => {
+                                        setSelectedIds(prev => {
+                                          const next = new Set(prev);
+                                          if (checked) next.add(claim.id); else next.delete(claim.id);
+                                          return next;
+                                        });
+                                      }} />
+                                    </TableCell>
+                                    <TableCell>
+                                      {claim.source === 'detected' ? (
+                                        <Badge className="bg-gray-100 text-[#36454F] border-0">Detected</Badge>
+                                      ) : (
+                                        <Badge className="bg-gray-100 text-[#36454F] border-0">Synced</Badge>
+                                      )}
+                                    </TableCell>
+                                    <TableCell>
+                                      <Button asChild variant="link" className="p-0 h-auto text-[#36454F] hover:text-[#36454F] font-mono">
+                                        <Link to={`/recoveries/${claim.id}`} state={{ claim }}>{claim.id}</Link>
+                                      </Button>
+                                    </TableCell>
+                                    <TableCell>{format(new Date(claim.created || claim.discovery_date || claim.created_at), 'MMM dd, yyyy')}</TableCell>
+                                    <TableCell>{claim.type}</TableCell>
+                                    <TableCell>
+                                      <div className="flex items-center gap-2">
+                                        {confidenceBadge ? (
+                                          <span className={`text-xs px-1.5 py-0.5 rounded border ${confidenceBadge.color === 'green' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' :
+                                              confidenceBadge.color === 'yellow' ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' :
+                                                'bg-gray-500/20 text-gray-300 border-gray-500/30'
+                                            }`}>
+                                            {confidenceBadge.label} ({(claim.confidence_score * 100).toFixed(0)}%)
+                                          </span>
+                                        ) : (
+                                          <>
+                                            <span className={`text-xs font-semibold ${getConfidenceColor(displayConfidence)}`}>{displayConfidence.toFixed(2)}</span>
+                                            <span className="text-[10px] px-1.5 py-0.5 rounded border border-white/10 bg-white/5 text-gray-300">
+                                              {getConfidenceBadge(displayConfidence)}
+                                            </span>
+                                          </>
+                                        )}
+                                      </div>
+                                    </TableCell>
+                                    <TableCell>
+                                      <span className="text-xs text-[#36454F]">{claim._evidence}</span>
+                                    </TableCell>
+                                    <TableCell className="max-w-xs">
+                                      <div className="truncate" title={claim.details}>
+                                        {claim.details}
+                                      </div>
+                                      <div className="text-xs text-muted-foreground mt-1">
+                                        SKU: {claim.sku} • ASIN: {claim.asin}
+                                      </div>
+                                    </TableCell>
+                                    <TableCell>
+                                      <Badge className={getStatusColor(claim.status)}>
+                                        {claim.status}
+                                      </Badge>
+                                    </TableCell>
+                                    <TableCell>
+                                      {claim.days_remaining !== null && claim.days_remaining !== undefined ? (
+                                        <div className="flex items-center gap-2">
+                                          {isCritical && (
+                                            <AlertTriangle className="h-4 w-4 text-red-600 flex-shrink-0" />
+                                          )}
+                                          {isUrgent && !isCritical && (
+                                            <Clock className="h-4 w-4 text-amber-600 flex-shrink-0" />
+                                          )}
+                                          <span className={cn(
+                                            isCritical && 'text-red-600 font-semibold',
+                                            isUrgent && !isCritical && 'text-amber-600 font-semibold',
+                                            !isUrgent && 'text-[#36454F]'
+                                          )}>
+                                            {claim.days_remaining} days
+                                          </span>
+                                        </div>
+                                      ) : (
+                                        <span className="text-[#36454F]">-</span>
+                                      )}
+                                    </TableCell>
+                                    <TableCell className="font-medium">{formatCurrency(claim.guaranteedAmount, claim.currency || 'USD')}</TableCell>
+                                    <TableCell>
+                                      {claim.expectedPayoutDate ? format(new Date(claim.expectedPayoutDate), 'MMM dd, yyyy') : '-'}
+                                    </TableCell>
+                                    <TableCell>
+                                      <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                          <Button variant="ghost" size="sm">
+                                            <MoreHorizontal className="h-4 w-4" />
+                                          </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end">
+                                          {claim.status === 'Denied' && (
+                                            <DropdownMenuItem onClick={async () => {
+                                              const hasDocs = true; // Backend should validate; UI assumes action allowed
+                                              if (!hasDocs) return;
+                                              try {
+                                                await api.resubmitClaim(claim.id);
+                                                toast({ title: 'Resubmitted', description: `${claim.id} resubmitted with stronger docs.` });
+                                                setClaims(prev => prev.map(c => c.id === claim.id ? { ...c, status: 'Submitted' } as any : c));
+                                              } catch (e: any) {
+                                                toast({ title: 'Resubmission failed', description: e?.message || 'Please try again.' });
+                                              }
+                                            }}>
+                                              Resubmit with stronger docs
+                                            </DropdownMenuItem>
+                                          )}
+                                          {((claim.confidence_score !== null && claim.confidence_score !== undefined && claim.confidence_score >= 0.85) || getConfidenceTier(claim._confidence) === 'high') && (
+                                            <DropdownMenuItem onClick={async () => {
+                                              try {
+                                                await recoveryApi.submitClaim(claim.id);
+                                                setClaims(prev => prev.map(c => c.id === claim.id ? { ...c, status: 'Submitted' } : c));
+                                                setMergedRecoveries(prev => prev.map(c => c.id === claim.id ? { ...c, status: 'Submitted' } : c));
+                                                toast({ title: 'Auto-submitted', description: `${claim.id} submitted automatically.` });
+                                              } catch (e: any) {
+                                                toast({ title: 'Submit failed', description: e?.message || 'Please try again.' });
+                                              }
+                                            }}>
+                                              Auto-Submit (High Confidence)
+                                            </DropdownMenuItem>
+                                          )}
+                                          {getConfidenceTier(claim._confidence) === 'medium' && (
+                                            <DropdownMenuItem asChild>
+                                              <Link to={`/recoveries/${claim.id}`} state={{ claim }} className="flex items-center gap-2">
+                                                Review Opportunity
+                                              </Link>
+                                            </DropdownMenuItem>
+                                          )}
+                                          {/* Phase 3: Status Update - only for detected claims */}
+                                          {claim.source === 'detected' && claim.status !== 'resolved' && (
+                                            <DropdownMenuItem onClick={() => {
+                                              setSelectedDetection(claim);
+                                              setSelectedStatus(claim.status || 'pending');
+                                              setStatusUpdateNotes('');
+                                              setStatusUpdateModalOpen(true);
+                                            }}>
+                                              <CheckCircle2 className="h-4 w-4 mr-2" />
+                                              Update Status
+                                            </DropdownMenuItem>
+                                          )}
+                                          {/* Phase 3: Resolve Detection - only for detected claims */}
+                                          {claim.source === 'detected' && claim.status !== 'resolved' && (
+                                            <DropdownMenuItem onClick={() => {
+                                              setSelectedDetection(claim);
+                                              setResolveNotes('');
+                                              setResolveAmount(claim.guaranteedAmount?.toString() || '');
+                                              setResolveModalOpen(true);
+                                            }}>
+                                              <CheckCircle2 className="h-4 w-4 mr-2" />
+                                              Mark as Resolved
+                                            </DropdownMenuItem>
+                                          )}
+                                          {/* Phase 3: View Details - open modal for detected claims, navigate for synced */}
+                                          {claim.source === 'detected' ? (
+                                            <DropdownMenuItem onClick={() => {
+                                              setDetectionDetails(claim);
+                                              setDetailsModalOpen(true);
+                                            }}>
+                                              <Eye className="h-4 w-4 mr-2" />
+                                              View Details
+                                            </DropdownMenuItem>
+                                          ) : (
+                                            <DropdownMenuItem asChild>
+                                              <Link to={`/recoveries/${claim.id}`} state={{ claim }} className="flex items-center gap-2">
+                                                <Eye className="h-4 w-4" />
+                                                View Details
+                                              </Link>
+                                            </DropdownMenuItem>
+                                          )}
+                                          {claim.source !== 'detected' && (
+                                            <DropdownMenuItem asChild>
+                                              <Link to={`/recoveries/${encodeURIComponent(claim.id)}/resolve`} state={{ claim }} className="flex items-center gap-2">
+                                                <FileText className="h-4 w-4" />
+                                                Resolve Case
+                                              </Link>
+                                            </DropdownMenuItem>
+                                          )}
+                                          <DropdownMenuItem className="text-blue-400 focus:text-blue-300 focus:bg-blue-400/10" onClick={async () => {
+                                            const url = api.getRecoveryDocumentUrl(claim.id);
+                                            try {
+                                              const head = await fetch(url, { method: 'HEAD', credentials: 'include' });
+                                              if (head.ok) {
+                                                window.open(url, '_blank');
+                                                return;
+                                              }
+                                            } catch { }
+                                            try {
+                                              const res = await api.getRecoveryDetail(claim.id);
+                                              const docs = (res && res.ok && Array.isArray((res as any).data?.documents)) ? (res as any).data!.documents : [];
+                                              if (docs.length > 0 && docs[0]?.id) {
+                                                window.open(`/documents/${encodeURIComponent(docs[0].id)}`, '_blank');
+                                              } else {
+                                                toast({ title: 'No proof available yet', description: 'Evidence is still being collected for this case.' });
+                                              }
+                                            } catch (e: any) {
+                                              toast({ title: 'Proof unavailable', description: e?.message || 'Please try again later.' });
+                                            }
+                                          }}>
+                                            <FileText className="h-4 w-4 mr-2" />
+                                            Proof Document
+                                          </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                      </DropdownMenu>
+                                    </TableCell>
+                                  </TableRow>
+                                );
+                              })}
+                            </TableBody>
+                          </Table>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+
+                  {/* Phase 3: Resolve Detection Modal */}
+                  <Dialog open={resolveModalOpen} onOpenChange={setResolveModalOpen}>
+                    <DialogContent className="bg-[#0B1220] border-white/10 text-gray-300">
+                      <DialogHeader>
+                        <DialogTitle>Mark Detection as Resolved</DialogTitle>
+                        <DialogDescription className="text-gray-400">
+                          Mark this detection as resolved and record the resolution details.
+                        </DialogDescription>
+                      </DialogHeader>
+                      {selectedDetection && (
+                        <div className="space-y-4 py-4">
+                          <div>
+                            <Label className="text-gray-300">Detection ID</Label>
+                            <p className="text-sm text-gray-400 font-mono">{selectedDetection.id}</p>
+                          </div>
+                          <div>
+                            <Label className="text-gray-300">Anomaly Type</Label>
+                            <p className="text-sm text-gray-400 capitalize">
+                              {selectedDetection.type?.replace(/_/g, ' ') || selectedDetection.anomaly_type?.replace(/_/g, ' ')}
+                            </p>
+                          </div>
+                          <div>
+                            <Label htmlFor="resolve-amount" className="text-gray-300">Resolution Amount</Label>
+                            <Input
+                              id="resolve-amount"
+                              type="number"
+                              step="0.01"
+                              value={resolveAmount}
+                              onChange={(e) => setResolveAmount(e.target.value)}
+                              placeholder="0.00"
+                              className="bg-white/5 border-white/10 text-gray-100"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="resolve-notes" className="text-gray-300">Notes</Label>
+                            <Textarea
+                              id="resolve-notes"
+                              value={resolveNotes}
+                              onChange={(e) => setResolveNotes(e.target.value)}
+                              placeholder="Enter resolution notes (e.g., 'Resolved via Amazon reimbursement')"
+                              className="bg-white/5 border-white/10 text-gray-100 min-h-[100px]"
+                            />
+                          </div>
+                        </div>
+                      )}
+                      <DialogFooter>
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            setResolveModalOpen(false);
+                            setSelectedDetection(null);
+                            setResolveNotes('');
+                            setResolveAmount('');
+                          }}
+                          className="border-white/10"
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          onClick={async () => {
+                            if (!selectedDetection) return;
                             try {
-                              const head = await fetch(url, { method: 'HEAD', credentials: 'include' });
-                              if (head.ok) {
-                                window.open(url, '_blank');
-                                return;
-                              }
-                            } catch {}
-                            try {
-                              const res = await api.getRecoveryDetail(claim.id);
-                              const docs = (res && res.ok && Array.isArray((res as any).data?.documents)) ? (res as any).data!.documents : [];
-                              if (docs.length > 0 && docs[0]?.id) {
-                                window.open(`/documents/${encodeURIComponent(docs[0].id)}`, '_blank');
+                              const res = await detectionApi.resolveDetection(selectedDetection.id, {
+                                notes: resolveNotes,
+                                resolution_amount: resolveAmount ? parseFloat(resolveAmount) : undefined,
+                              });
+                              if (res.ok) {
+                                toast({
+                                  title: 'Detection Resolved',
+                                  description: res.data?.message || 'Detection marked as resolved successfully.',
+                                });
+                                // Update the detection in state
+                                setDetectionResults(prev => prev.map(d =>
+                                  d.id === selectedDetection.id ? { ...d, status: 'resolved' } : d
+                                ));
+                                setMergedRecoveries(prev => prev?.map(c =>
+                                  c.id === selectedDetection.id ? { ...c, status: 'resolved' } : c
+                                ));
+                                setResolveModalOpen(false);
+                                setSelectedDetection(null);
+                                setResolveNotes('');
+                                setResolveAmount('');
+                                // Refresh statistics
+                                const statsRes = await detectionApi.getDetectionStatistics();
+                                if (statsRes.ok && statsRes.data?.statistics) {
+                                  setDetectionStats(statsRes.data.statistics);
+                                }
                               } else {
-                                toast({ title: 'No proof available yet', description: 'Evidence is still being collected for this case.' });
+                                toast({
+                                  title: 'Failed to Resolve',
+                                  description: res.error || 'Please try again.',
+                                  variant: 'destructive',
+                                });
                               }
                             } catch (e: any) {
-                              toast({ title: 'Proof unavailable', description: e?.message || 'Please try again later.' });
+                              toast({
+                                title: 'Error',
+                                description: e?.message || 'Failed to resolve detection.',
+                                variant: 'destructive',
+                              });
                             }
-                          }}>
-                            <FileText className="h-4 w-4 mr-2" />
-                            Proof Document
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
+                          }}
+                          className="bg-emerald-500 hover:bg-emerald-400 text-white"
+                        >
+                          Mark as Resolved
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+
+                  {/* Phase 3: Status Update Modal */}
+                  <Dialog open={statusUpdateModalOpen} onOpenChange={setStatusUpdateModalOpen}>
+                    <DialogContent className="bg-[#0B1220] border-white/10 text-gray-300">
+                      <DialogHeader>
+                        <DialogTitle>Update Detection Status</DialogTitle>
+                        <DialogDescription className="text-gray-400">
+                          Update the status of this detection through the workflow: Pending → Reviewed → Disputed → Resolved
+                        </DialogDescription>
+                      </DialogHeader>
+                      {selectedDetection && (
+                        <div className="space-y-4 py-4">
+                          <div>
+                            <Label className="text-gray-300">Detection ID</Label>
+                            <p className="text-sm text-gray-400 font-mono">{selectedDetection.id}</p>
+                          </div>
+                          <div>
+                            <Label htmlFor="status-select" className="text-gray-300">Status</Label>
+                            <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                              <SelectTrigger id="status-select" className="bg-white/5 border-white/10 text-gray-100">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="pending">Pending</SelectItem>
+                                <SelectItem value="reviewed">Reviewed</SelectItem>
+                                <SelectItem value="disputed">Disputed</SelectItem>
+                                <SelectItem value="resolved">Resolved</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <Label htmlFor="status-notes" className="text-gray-300">Notes</Label>
+                            <Textarea
+                              id="status-notes"
+                              value={statusUpdateNotes}
+                              onChange={(e) => setStatusUpdateNotes(e.target.value)}
+                              placeholder="Enter notes for this status change (e.g., 'Reviewed and verified')"
+                              className="bg-white/5 border-white/10 text-gray-100 min-h-[100px]"
+                            />
+                          </div>
+                        </div>
+                      )}
+                      <DialogFooter>
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            setStatusUpdateModalOpen(false);
+                            setSelectedDetection(null);
+                            setStatusUpdateNotes('');
+                            setSelectedStatus('pending');
+                          }}
+                          className="border-white/10"
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          onClick={async () => {
+                            if (!selectedDetection) return;
+                            try {
+                              const res = await detectionApi.updateDetectionStatus(selectedDetection.id, {
+                                status: selectedStatus,
+                                notes: statusUpdateNotes,
+                              });
+                              if (res.ok) {
+                                toast({
+                                  title: 'Status Updated',
+                                  description: res.data?.message || 'Detection status updated successfully.',
+                                });
+                                // Update the detection in state
+                                setDetectionResults(prev => prev.map(d =>
+                                  d.id === selectedDetection.id ? { ...d, status: selectedStatus } : d
+                                ));
+                                setMergedRecoveries(prev => prev?.map(c =>
+                                  c.id === selectedDetection.id ? { ...c, status: selectedStatus } : c
+                                ));
+                                setStatusUpdateModalOpen(false);
+                                setSelectedDetection(null);
+                                setStatusUpdateNotes('');
+                                setSelectedStatus('pending');
+                              } else {
+                                toast({
+                                  title: 'Failed to Update Status',
+                                  description: res.error || 'Please try again.',
+                                  variant: 'destructive',
+                                });
+                              }
+                            } catch (e: any) {
+                              toast({
+                                title: 'Error',
+                                description: e?.message || 'Failed to update status.',
+                                variant: 'destructive',
+                              });
+                            }
+                          }}
+                          className="bg-blue-500 hover:bg-blue-400 text-white"
+                        >
+                          Update Status
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+
+                  {/* Phase 3: Detection Details Modal */}
+                  <Dialog open={detailsModalOpen} onOpenChange={setDetailsModalOpen}>
+                    <DialogContent className="bg-[#0B1220] border-white/10 text-gray-300 max-w-4xl max-h-[90vh] overflow-y-auto">
+                      <DialogHeader>
+                        <DialogTitle>Detection Details</DialogTitle>
+                        <DialogDescription className="text-gray-400">
+                          Complete information about this detected anomaly
+                        </DialogDescription>
+                      </DialogHeader>
+                      {detectionDetails && (
+                        <div className="space-y-6 py-4">
+                          {/* Basic Information */}
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <Label className="text-gray-300">Detection ID</Label>
+                              <p className="text-sm text-gray-400 font-mono mt-1">{detectionDetails.id}</p>
+                            </div>
+                            <div>
+                              <Label className="text-gray-300">Sync ID</Label>
+                              <p className="text-sm text-gray-400 font-mono mt-1">{detectionDetails.sync_id || 'N/A'}</p>
+                            </div>
+                            <div>
+                              <Label className="text-gray-300">Anomaly Type</Label>
+                              <p className="text-sm text-gray-300 capitalize mt-1">
+                                {detectionDetails.type?.replace(/_/g, ' ') || detectionDetails.anomaly_type?.replace(/_/g, ' ') || 'Unknown'}
+                              </p>
+                            </div>
+                            <div>
+                              <Label className="text-gray-300">Severity</Label>
+                              <Badge className={`mt-1 ${detectionDetails.severity === 'high' ? 'bg-red-500/20 text-red-300 border-red-500/30' :
+                                  detectionDetails.severity === 'medium' ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' :
+                                    'bg-gray-500/20 text-gray-300 border-gray-500/30'
+                                }`}>
+                                {detectionDetails.severity?.charAt(0).toUpperCase() + detectionDetails.severity?.slice(1) || 'Unknown'}
+                              </Badge>
+                            </div>
+                            <div>
+                              <Label className="text-gray-300">Status</Label>
+                              <Badge className={cn('mt-1', getStatusColor(detectionDetails.status))}>
+                                {detectionDetails.status}
+                              </Badge>
+                            </div>
+                            <div>
+                              <Label className="text-gray-300">Confidence Score</Label>
+                              <div className="flex items-center gap-2 mt-1">
+                                {detectionDetails.confidence_score !== null && detectionDetails.confidence_score !== undefined ? (
+                                  <>
+                                    <span className="text-sm font-semibold text-gray-300">
+                                      {(detectionDetails.confidence_score * 100).toFixed(1)}%
+                                    </span>
+                                    <Badge className={
+                                      detectionDetails.confidence_score >= 0.85 ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' :
+                                        detectionDetails.confidence_score >= 0.50 ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' :
+                                          'bg-gray-500/20 text-gray-300 border-gray-500/30'
+                                    }>
+                                      {detectionDetails.confidence_score >= 0.85 ? 'High' : detectionDetails.confidence_score >= 0.50 ? 'Medium' : 'Low'}
+                                    </Badge>
+                                  </>
+                                ) : (
+                                  <span className="text-sm text-gray-400">N/A</span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Financial Information */}
+                          <div className="border-t border-white/10 pt-4">
+                            <h4 className="text-sm font-semibold text-gray-200 mb-3">Financial Information</h4>
+                            <div className="grid grid-cols-2 gap-4">
+                              <div>
+                                <Label className="text-gray-300">Estimated Value</Label>
+                                <p className="text-lg font-semibold text-emerald-400 mt-1">
+                                  {formatCurrency(detectionDetails.estimated_value || detectionDetails.guaranteedAmount || 0, detectionDetails.currency || 'USD')}
+                                </p>
+                              </div>
+                              <div>
+                                <Label className="text-gray-300">Currency</Label>
+                                <p className="text-sm text-gray-300 mt-1">{detectionDetails.currency || 'USD'}</p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Dates & Deadlines */}
+                          <div className="border-t border-white/10 pt-4">
+                            <h4 className="text-sm font-semibold text-gray-200 mb-3">Dates & Deadlines</h4>
+                            <div className="grid grid-cols-2 gap-4">
+                              <div>
+                                <Label className="text-gray-300">Discovery Date</Label>
+                                <p className="text-sm text-gray-300 mt-1">
+                                  {detectionDetails.discovery_date
+                                    ? format(new Date(detectionDetails.discovery_date), 'MMM dd, yyyy HH:mm')
+                                    : detectionDetails.created
+                                      ? format(new Date(detectionDetails.created), 'MMM dd, yyyy HH:mm')
+                                      : 'N/A'}
+                                </p>
+                              </div>
+                              <div>
+                                <Label className="text-gray-300">Deadline Date</Label>
+                                <p className={`text-sm font-semibold mt-1 ${detectionDetails.days_remaining !== undefined && detectionDetails.days_remaining <= 7
+                                    ? 'text-amber-400'
+                                    : 'text-gray-300'
+                                  }`}>
+                                  {detectionDetails.deadline_date
+                                    ? format(new Date(detectionDetails.deadline_date), 'MMM dd, yyyy')
+                                    : 'N/A'}
+                                </p>
+                              </div>
+                              {detectionDetails.days_remaining !== undefined && (
+                                <div>
+                                  <Label className="text-gray-300">Days Remaining</Label>
+                                  <p className={`text-sm font-semibold mt-1 ${detectionDetails.days_remaining <= 3 ? 'text-red-400' :
+                                      detectionDetails.days_remaining <= 7 ? 'text-amber-400' :
+                                        'text-gray-300'
+                                    }`}>
+                                    {detectionDetails.days_remaining} day{detectionDetails.days_remaining !== 1 ? 's' : ''}
+                                  </p>
+                                </div>
+                              )}
+                              <div>
+                                <Label className="text-gray-300">Created At</Label>
+                                <p className="text-sm text-gray-300 mt-1">
+                                  {detectionDetails.created_at
+                                    ? format(new Date(detectionDetails.created_at), 'MMM dd, yyyy HH:mm')
+                                    : 'N/A'}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Evidence */}
+                          {detectionDetails.evidence && (
+                            <div className="border-t border-white/10 pt-4">
+                              <h4 className="text-sm font-semibold text-gray-200 mb-3">Evidence</h4>
+                              <div className="bg-white/5 border border-white/10 rounded-md p-4">
+                                <pre className="text-xs text-gray-300 overflow-x-auto">
+                                  {JSON.stringify(detectionDetails.evidence, null, 2)}
+                                </pre>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Related Event IDs */}
+                          {detectionDetails.related_event_ids && detectionDetails.related_event_ids.length > 0 && (
+                            <div className="border-t border-white/10 pt-4">
+                              <h4 className="text-sm font-semibold text-gray-200 mb-3">Related Event IDs</h4>
+                              <div className="flex flex-wrap gap-2">
+                                {detectionDetails.related_event_ids.map((eventId: string, idx: number) => (
+                                  <Badge key={idx} variant="outline" className="font-mono text-xs">
+                                    {eventId}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Product Information */}
+                          {(detectionDetails.sku || detectionDetails.asin) && (
+                            <div className="border-t border-white/10 pt-4">
+                              <h4 className="text-sm font-semibold text-gray-200 mb-3">Product Information</h4>
+                              <div className="grid grid-cols-2 gap-4">
+                                {detectionDetails.sku && (
+                                  <div>
+                                    <Label className="text-gray-300">SKU</Label>
+                                    <p className="text-sm text-gray-300 font-mono mt-1">{detectionDetails.sku}</p>
+                                  </div>
+                                )}
+                                {detectionDetails.asin && (
+                                  <div>
+                                    <Label className="text-gray-300">ASIN</Label>
+                                    <p className="text-sm text-gray-300 font-mono mt-1">{detectionDetails.asin}</p>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Details/Description */}
+                          {detectionDetails.details && (
+                            <div className="border-t border-white/10 pt-4">
+                              <h4 className="text-sm font-semibold text-gray-200 mb-3">Description</h4>
+                              <p className="text-sm text-gray-300">{detectionDetails.details}</p>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                      <DialogFooter>
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            setDetailsModalOpen(false);
+                            setDetectionDetails(null);
+                          }}
+                          className="border-white/10"
+                        >
+                          Close
+                        </Button>
+                        {detectionDetails && (
+                          <>
+                            {detectionDetails.status !== 'resolved' && (
+                              <Button
+                                onClick={() => {
+                                  setDetailsModalOpen(false);
+                                  setSelectedDetection(detectionDetails);
+                                  setSelectedStatus(detectionDetails.status || 'pending');
+                                  setStatusUpdateModalOpen(true);
+                                }}
+                                className="bg-blue-500 hover:bg-blue-400 text-white"
+                              >
+                                Update Status
+                              </Button>
+                            )}
+                            {detectionDetails.status !== 'resolved' && (
+                              <Button
+                                onClick={() => {
+                                  setDetailsModalOpen(false);
+                                  setSelectedDetection(detectionDetails);
+                                  setResolveNotes('');
+                                  setResolveAmount((detectionDetails.estimated_value || detectionDetails.guaranteedAmount || 0).toString());
+                                  setResolveModalOpen(true);
+                                }}
+                                className="bg-emerald-500 hover:bg-emerald-400 text-white"
+                              >
+                                Mark as Resolved
+                              </Button>
+                            )}
+                          </>
+                        )}
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </TabsContent>
+
+                {/* Evidence Matching Tab (Agent 6) */}
+                <TabsContent value="matching" className="mt-0">
+                  <EvidenceMatchingTable />
+                </TabsContent>
+
+                {/* Dispute Cases Tab (Agent 7) */}
+                <TabsContent value="cases" className="mt-0">
+                  <DisputeCasesTable />
+                </TabsContent>
+              </Tabs>
             </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Phase 3: Resolve Detection Modal */}
-        <Dialog open={resolveModalOpen} onOpenChange={setResolveModalOpen}>
-          <DialogContent className="bg-[#0B1220] border-white/10 text-gray-300">
-            <DialogHeader>
-              <DialogTitle>Mark Detection as Resolved</DialogTitle>
-              <DialogDescription className="text-gray-400">
-                Mark this detection as resolved and record the resolution details.
-              </DialogDescription>
-            </DialogHeader>
-            {selectedDetection && (
-              <div className="space-y-4 py-4">
-                <div>
-                  <Label className="text-gray-300">Detection ID</Label>
-                  <p className="text-sm text-gray-400 font-mono">{selectedDetection.id}</p>
-                </div>
-                <div>
-                  <Label className="text-gray-300">Anomaly Type</Label>
-                  <p className="text-sm text-gray-400 capitalize">
-                    {selectedDetection.type?.replace(/_/g, ' ') || selectedDetection.anomaly_type?.replace(/_/g, ' ')}
-                  </p>
-                </div>
-                <div>
-                  <Label htmlFor="resolve-amount" className="text-gray-300">Resolution Amount</Label>
-                  <Input
-                    id="resolve-amount"
-                    type="number"
-                    step="0.01"
-                    value={resolveAmount}
-                    onChange={(e) => setResolveAmount(e.target.value)}
-                    placeholder="0.00"
-                    className="bg-white/5 border-white/10 text-gray-100"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="resolve-notes" className="text-gray-300">Notes</Label>
-                  <Textarea
-                    id="resolve-notes"
-                    value={resolveNotes}
-                    onChange={(e) => setResolveNotes(e.target.value)}
-                    placeholder="Enter resolution notes (e.g., 'Resolved via Amazon reimbursement')"
-                    className="bg-white/5 border-white/10 text-gray-100 min-h-[100px]"
-                  />
-                </div>
-              </div>
-            )}
-            <DialogFooter>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setResolveModalOpen(false);
-                  setSelectedDetection(null);
-                  setResolveNotes('');
-                  setResolveAmount('');
-                }}
-                className="border-white/10"
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={async () => {
-                  if (!selectedDetection) return;
-                  try {
-                    const res = await detectionApi.resolveDetection(selectedDetection.id, {
-                      notes: resolveNotes,
-                      resolution_amount: resolveAmount ? parseFloat(resolveAmount) : undefined,
-                    });
-                    if (res.ok) {
-                      toast({
-                        title: 'Detection Resolved',
-                        description: res.data?.message || 'Detection marked as resolved successfully.',
-                      });
-                      // Update the detection in state
-                      setDetectionResults(prev => prev.map(d => 
-                        d.id === selectedDetection.id ? { ...d, status: 'resolved' } : d
-                      ));
-                      setMergedRecoveries(prev => prev?.map(c => 
-                        c.id === selectedDetection.id ? { ...c, status: 'resolved' } : c
-                      ));
-                      setResolveModalOpen(false);
-                      setSelectedDetection(null);
-                      setResolveNotes('');
-                      setResolveAmount('');
-                      // Refresh statistics
-                      const statsRes = await detectionApi.getDetectionStatistics();
-                      if (statsRes.ok && statsRes.data?.statistics) {
-                        setDetectionStats(statsRes.data.statistics);
-                      }
-                    } else {
-                      toast({
-                        title: 'Failed to Resolve',
-                        description: res.error || 'Please try again.',
-                        variant: 'destructive',
-                      });
-                    }
-                  } catch (e: any) {
-                    toast({
-                      title: 'Error',
-                      description: e?.message || 'Failed to resolve detection.',
-                      variant: 'destructive',
-                    });
-                  }
-                }}
-                className="bg-emerald-500 hover:bg-emerald-400 text-white"
-              >
-                Mark as Resolved
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-
-        {/* Phase 3: Status Update Modal */}
-        <Dialog open={statusUpdateModalOpen} onOpenChange={setStatusUpdateModalOpen}>
-          <DialogContent className="bg-[#0B1220] border-white/10 text-gray-300">
-            <DialogHeader>
-              <DialogTitle>Update Detection Status</DialogTitle>
-              <DialogDescription className="text-gray-400">
-                Update the status of this detection through the workflow: Pending → Reviewed → Disputed → Resolved
-              </DialogDescription>
-            </DialogHeader>
-            {selectedDetection && (
-              <div className="space-y-4 py-4">
-                <div>
-                  <Label className="text-gray-300">Detection ID</Label>
-                  <p className="text-sm text-gray-400 font-mono">{selectedDetection.id}</p>
-                </div>
-                <div>
-                  <Label htmlFor="status-select" className="text-gray-300">Status</Label>
-                  <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                    <SelectTrigger id="status-select" className="bg-white/5 border-white/10 text-gray-100">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="pending">Pending</SelectItem>
-                      <SelectItem value="reviewed">Reviewed</SelectItem>
-                      <SelectItem value="disputed">Disputed</SelectItem>
-                      <SelectItem value="resolved">Resolved</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label htmlFor="status-notes" className="text-gray-300">Notes</Label>
-                  <Textarea
-                    id="status-notes"
-                    value={statusUpdateNotes}
-                    onChange={(e) => setStatusUpdateNotes(e.target.value)}
-                    placeholder="Enter notes for this status change (e.g., 'Reviewed and verified')"
-                    className="bg-white/5 border-white/10 text-gray-100 min-h-[100px]"
-                  />
-                </div>
-              </div>
-            )}
-            <DialogFooter>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setStatusUpdateModalOpen(false);
-                  setSelectedDetection(null);
-                  setStatusUpdateNotes('');
-                  setSelectedStatus('pending');
-                }}
-                className="border-white/10"
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={async () => {
-                  if (!selectedDetection) return;
-                  try {
-                    const res = await detectionApi.updateDetectionStatus(selectedDetection.id, {
-                      status: selectedStatus,
-                      notes: statusUpdateNotes,
-                    });
-                    if (res.ok) {
-                      toast({
-                        title: 'Status Updated',
-                        description: res.data?.message || 'Detection status updated successfully.',
-                      });
-                      // Update the detection in state
-                      setDetectionResults(prev => prev.map(d => 
-                        d.id === selectedDetection.id ? { ...d, status: selectedStatus } : d
-                      ));
-                      setMergedRecoveries(prev => prev?.map(c => 
-                        c.id === selectedDetection.id ? { ...c, status: selectedStatus } : c
-                      ));
-                      setStatusUpdateModalOpen(false);
-                      setSelectedDetection(null);
-                      setStatusUpdateNotes('');
-                      setSelectedStatus('pending');
-                    } else {
-                      toast({
-                        title: 'Failed to Update Status',
-                        description: res.error || 'Please try again.',
-                        variant: 'destructive',
-                      });
-                    }
-                  } catch (e: any) {
-                    toast({
-                      title: 'Error',
-                      description: e?.message || 'Failed to update status.',
-                      variant: 'destructive',
-                    });
-                  }
-                }}
-                className="bg-blue-500 hover:bg-blue-400 text-white"
-              >
-                Update Status
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-
-        {/* Phase 3: Detection Details Modal */}
-        <Dialog open={detailsModalOpen} onOpenChange={setDetailsModalOpen}>
-          <DialogContent className="bg-[#0B1220] border-white/10 text-gray-300 max-w-4xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>Detection Details</DialogTitle>
-              <DialogDescription className="text-gray-400">
-                Complete information about this detected anomaly
-              </DialogDescription>
-            </DialogHeader>
-            {detectionDetails && (
-              <div className="space-y-6 py-4">
-                {/* Basic Information */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label className="text-gray-300">Detection ID</Label>
-                    <p className="text-sm text-gray-400 font-mono mt-1">{detectionDetails.id}</p>
-                  </div>
-                  <div>
-                    <Label className="text-gray-300">Sync ID</Label>
-                    <p className="text-sm text-gray-400 font-mono mt-1">{detectionDetails.sync_id || 'N/A'}</p>
-                  </div>
-                  <div>
-                    <Label className="text-gray-300">Anomaly Type</Label>
-                    <p className="text-sm text-gray-300 capitalize mt-1">
-                      {detectionDetails.type?.replace(/_/g, ' ') || detectionDetails.anomaly_type?.replace(/_/g, ' ') || 'Unknown'}
-                    </p>
-                  </div>
-                  <div>
-                    <Label className="text-gray-300">Severity</Label>
-                    <Badge className={`mt-1 ${
-                      detectionDetails.severity === 'high' ? 'bg-red-500/20 text-red-300 border-red-500/30' :
-                      detectionDetails.severity === 'medium' ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' :
-                      'bg-gray-500/20 text-gray-300 border-gray-500/30'
-                    }`}>
-                      {detectionDetails.severity?.charAt(0).toUpperCase() + detectionDetails.severity?.slice(1) || 'Unknown'}
-                    </Badge>
-                  </div>
-                  <div>
-                    <Label className="text-gray-300">Status</Label>
-                    <Badge className={cn('mt-1', getStatusColor(detectionDetails.status))}>
-                      {detectionDetails.status}
-                    </Badge>
-                  </div>
-                  <div>
-                    <Label className="text-gray-300">Confidence Score</Label>
-                    <div className="flex items-center gap-2 mt-1">
-                      {detectionDetails.confidence_score !== null && detectionDetails.confidence_score !== undefined ? (
-                        <>
-                          <span className="text-sm font-semibold text-gray-300">
-                            {(detectionDetails.confidence_score * 100).toFixed(1)}%
-                          </span>
-                          <Badge className={
-                            detectionDetails.confidence_score >= 0.85 ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' :
-                            detectionDetails.confidence_score >= 0.50 ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' :
-                            'bg-gray-500/20 text-gray-300 border-gray-500/30'
-                          }>
-                            {detectionDetails.confidence_score >= 0.85 ? 'High' : detectionDetails.confidence_score >= 0.50 ? 'Medium' : 'Low'}
-                          </Badge>
-                        </>
-                      ) : (
-                        <span className="text-sm text-gray-400">N/A</span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Financial Information */}
-                <div className="border-t border-white/10 pt-4">
-                  <h4 className="text-sm font-semibold text-gray-200 mb-3">Financial Information</h4>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label className="text-gray-300">Estimated Value</Label>
-                      <p className="text-lg font-semibold text-emerald-400 mt-1">
-                        {formatCurrency(detectionDetails.estimated_value || detectionDetails.guaranteedAmount || 0, detectionDetails.currency || 'USD')}
-                      </p>
-                    </div>
-                    <div>
-                      <Label className="text-gray-300">Currency</Label>
-                      <p className="text-sm text-gray-300 mt-1">{detectionDetails.currency || 'USD'}</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Dates & Deadlines */}
-                <div className="border-t border-white/10 pt-4">
-                  <h4 className="text-sm font-semibold text-gray-200 mb-3">Dates & Deadlines</h4>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label className="text-gray-300">Discovery Date</Label>
-                      <p className="text-sm text-gray-300 mt-1">
-                        {detectionDetails.discovery_date 
-                          ? format(new Date(detectionDetails.discovery_date), 'MMM dd, yyyy HH:mm')
-                          : detectionDetails.created 
-                          ? format(new Date(detectionDetails.created), 'MMM dd, yyyy HH:mm')
-                          : 'N/A'}
-                      </p>
-                    </div>
-                    <div>
-                      <Label className="text-gray-300">Deadline Date</Label>
-                      <p className={`text-sm font-semibold mt-1 ${
-                        detectionDetails.days_remaining !== undefined && detectionDetails.days_remaining <= 7
-                          ? 'text-amber-400'
-                          : 'text-gray-300'
-                      }`}>
-                        {detectionDetails.deadline_date 
-                          ? format(new Date(detectionDetails.deadline_date), 'MMM dd, yyyy')
-                          : 'N/A'}
-                      </p>
-                    </div>
-                    {detectionDetails.days_remaining !== undefined && (
-                      <div>
-                        <Label className="text-gray-300">Days Remaining</Label>
-                        <p className={`text-sm font-semibold mt-1 ${
-                          detectionDetails.days_remaining <= 3 ? 'text-red-400' :
-                          detectionDetails.days_remaining <= 7 ? 'text-amber-400' :
-                          'text-gray-300'
-                        }`}>
-                          {detectionDetails.days_remaining} day{detectionDetails.days_remaining !== 1 ? 's' : ''}
-                        </p>
-                      </div>
-                    )}
-                    <div>
-                      <Label className="text-gray-300">Created At</Label>
-                      <p className="text-sm text-gray-300 mt-1">
-                        {detectionDetails.created_at 
-                          ? format(new Date(detectionDetails.created_at), 'MMM dd, yyyy HH:mm')
-                          : 'N/A'}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Evidence */}
-                {detectionDetails.evidence && (
-                  <div className="border-t border-white/10 pt-4">
-                    <h4 className="text-sm font-semibold text-gray-200 mb-3">Evidence</h4>
-                    <div className="bg-white/5 border border-white/10 rounded-md p-4">
-                      <pre className="text-xs text-gray-300 overflow-x-auto">
-                        {JSON.stringify(detectionDetails.evidence, null, 2)}
-                      </pre>
-                    </div>
-                  </div>
-                )}
-
-                {/* Related Event IDs */}
-                {detectionDetails.related_event_ids && detectionDetails.related_event_ids.length > 0 && (
-                  <div className="border-t border-white/10 pt-4">
-                    <h4 className="text-sm font-semibold text-gray-200 mb-3">Related Event IDs</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {detectionDetails.related_event_ids.map((eventId: string, idx: number) => (
-                        <Badge key={idx} variant="outline" className="font-mono text-xs">
-                          {eventId}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Product Information */}
-                {(detectionDetails.sku || detectionDetails.asin) && (
-                  <div className="border-t border-white/10 pt-4">
-                    <h4 className="text-sm font-semibold text-gray-200 mb-3">Product Information</h4>
-                    <div className="grid grid-cols-2 gap-4">
-                      {detectionDetails.sku && (
-                        <div>
-                          <Label className="text-gray-300">SKU</Label>
-                          <p className="text-sm text-gray-300 font-mono mt-1">{detectionDetails.sku}</p>
-                        </div>
-                      )}
-                      {detectionDetails.asin && (
-                        <div>
-                          <Label className="text-gray-300">ASIN</Label>
-                          <p className="text-sm text-gray-300 font-mono mt-1">{detectionDetails.asin}</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {/* Details/Description */}
-                {detectionDetails.details && (
-                  <div className="border-t border-white/10 pt-4">
-                    <h4 className="text-sm font-semibold text-gray-200 mb-3">Description</h4>
-                    <p className="text-sm text-gray-300">{detectionDetails.details}</p>
-                  </div>
-                )}
-              </div>
-            )}
-            <DialogFooter>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setDetailsModalOpen(false);
-                  setDetectionDetails(null);
-                }}
-                className="border-white/10"
-              >
-                Close
-              </Button>
-              {detectionDetails && (
-                <>
-                  {detectionDetails.status !== 'resolved' && (
-                    <Button
-                      onClick={() => {
-                        setDetailsModalOpen(false);
-                        setSelectedDetection(detectionDetails);
-                        setSelectedStatus(detectionDetails.status || 'pending');
-                        setStatusUpdateModalOpen(true);
-                      }}
-                      className="bg-blue-500 hover:bg-blue-400 text-white"
-                    >
-                      Update Status
-                    </Button>
-                  )}
-                  {detectionDetails.status !== 'resolved' && (
-                    <Button
-                      onClick={() => {
-                        setDetailsModalOpen(false);
-                        setSelectedDetection(detectionDetails);
-                        setResolveNotes('');
-                        setResolveAmount((detectionDetails.estimated_value || detectionDetails.guaranteedAmount || 0).toString());
-                        setResolveModalOpen(true);
-                      }}
-                      className="bg-emerald-500 hover:bg-emerald-400 text-white"
-                    >
-                      Mark as Resolved
-                    </Button>
-                  )}
-                </>
-              )}
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-          </TabsContent>
-
-          {/* Evidence Matching Tab (Agent 6) */}
-          <TabsContent value="matching" className="mt-0">
-            <EvidenceMatchingTable />
-          </TabsContent>
-
-          {/* Dispute Cases Tab (Agent 7) */}
-          <TabsContent value="cases" className="mt-0">
-            <DisputeCasesTable />
-          </TabsContent>
-          </Tabs>
-        </div>
           </div>
         </div>
       </div>
