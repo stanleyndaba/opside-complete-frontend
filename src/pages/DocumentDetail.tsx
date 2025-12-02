@@ -78,24 +78,58 @@ export default function DocumentDetail() {
     0
   );
 
+  if (loading) {
+    return (
+      <PageLayout title="Document Details">
+        <div className="space-y-6 bg-white">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-center">
+              <div className="text-gray-600">Loading document...</div>
+            </div>
+          </div>
+        </div>
+      </PageLayout>
+    );
+  }
+
+  if (error) {
+    return (
+      <PageLayout title="Document Details">
+        <div className="space-y-6 bg-white">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-center">
+              <div className="text-red-600 mb-4">{error}</div>
+              <Link to="/evidence-locker">
+                <Button variant="outline" className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50">
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back to Evidence Locker
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </PageLayout>
+    );
+  }
+
   return (
     <PageLayout title="Document Details">
-      <div className="space-y-6">
+      <div className="space-y-6 bg-white">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between bg-white">
           <div className="flex items-center gap-4">
             <Link to="/evidence-locker">
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Evidence Locker
               </Button>
             </Link>
             <div>
-              <h1 className="text-2xl font-bold flex items-center gap-2">
+              <h1 className="text-2xl font-bold flex items-center gap-2 text-[#36454F]">
                 <FileText className="w-6 h-6" />
                 {documentData?.name || 'Document'}
               </h1>
-              <p className="text-muted-foreground">
+              <p className="text-gray-600">
                 {documentData?.uploadDate ? `Uploaded on ${new Date(documentData.uploadDate).toLocaleDateString()} • ` : ''}
                 {documentData?.processingTime ? `Processed in ${documentData.processingTime} • ` : ''}
                 {documentData?.parsedVia ? `Parsed via ${String(documentData.parsedVia).toUpperCase()}` : ''}
@@ -103,11 +137,11 @@ export default function DocumentDetail() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Badge className="bg-success/10 text-success border-success/20">
+            <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20">
               <Check className="w-3 h-3 mr-1" />
               Verified
             </Badge>
-            <Button variant="outline" size="sm" onClick={() => { if (documentId) window.open(api.getDocumentDownloadUrl(documentId), '_blank'); }}>
+            <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50" onClick={() => { if (docId) window.open(api.getDocumentDownloadUrl(docId), '_blank'); }}>
               <Download className="w-4 h-4 mr-2" />
               Download
             </Button>
@@ -115,15 +149,15 @@ export default function DocumentDetail() {
         </div>
 
         {validationIssues.length > 0 && (
-          <Card>
+          <Card className="bg-white border-gray-200">
             <CardContent className="p-4">
-              <div className="text-sm font-semibold mb-2">Validation Issues</div>
+              <div className="text-sm font-semibold mb-2 text-[#36454F]">Validation Issues</div>
               <ul className="list-disc pl-5 text-sm text-amber-700">
                 {validationIssues.map((v, i) => (
                   <li key={i}>{v.message}</li>
                 ))}
               </ul>
-              <div className="text-xs text-muted-foreground mt-2">
+              <div className="text-xs text-gray-600 mt-2">
                 You can ignore minor missing fields, but filling them improves matching and recovery accuracy.
               </div>
             </CardContent>
@@ -132,44 +166,44 @@ export default function DocumentDetail() {
 
         {/* Summary Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card>
+          <Card className="bg-white border-gray-200">
             <CardContent className="p-4">
-              <div className="text-2xl font-bold">{Array.isArray(documentData?.extractedData) ? documentData!.extractedData.length : 0}</div>
-              <div className="text-sm text-muted-foreground">SKUs Identified</div>
+              <div className="text-2xl font-bold text-[#36454F]">{Array.isArray(documentData?.extractedData) ? documentData!.extractedData.length : 0}</div>
+              <div className="text-sm text-gray-600">SKUs Identified</div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="bg-white border-gray-200">
             <CardContent className="p-4">
-              <div className="text-2xl font-bold">${totalValue.toLocaleString()}</div>
-              <div className="text-sm text-muted-foreground">Total Document Value</div>
+              <div className="text-2xl font-bold text-[#36454F]">${totalValue.toLocaleString()}</div>
+              <div className="text-sm text-gray-600">Total Document Value</div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="bg-white border-gray-200">
             <CardContent className="p-4">
-              <div className="text-2xl font-bold">
+              <div className="text-2xl font-bold text-[#36454F]">
                 {documentData?.parser_confidence !== undefined 
                   ? `${(documentData.parser_confidence * 100).toFixed(0)}%` 
                   : parsedData?.parser_confidence !== undefined
                   ? `${(parsedData.parser_confidence * 100).toFixed(0)}%`
                   : '—'}
               </div>
-              <div className="text-sm text-muted-foreground">Extraction Confidence</div>
+              <div className="text-sm text-gray-600">Extraction Confidence</div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="bg-white border-gray-200">
             <CardContent className="p-4">
-              <div className="text-2xl font-bold">{documentData?.supplier || '—'}</div>
-              <div className="text-sm text-muted-foreground">Supplier</div>
+              <div className="text-2xl font-bold text-[#36454F]">{documentData?.supplier || '—'}</div>
+              <div className="text-sm text-gray-600">Supplier</div>
             </CardContent>
           </Card>
         </div>
 
         {/* Parsing Status */}
         {docId && (
-          <Card>
+          <Card className="bg-white border-gray-200">
             <CardHeader>
-              <CardTitle>Parsing Status</CardTitle>
-              <CardDescription>Document parsing and extraction status</CardDescription>
+              <CardTitle className="text-[#36454F]">Parsing Status</CardTitle>
+              <CardDescription className="text-gray-600">Document parsing and extraction status</CardDescription>
             </CardHeader>
             <CardContent>
               <ParsingStatus documentId={docId} autoPoll={true} />
@@ -179,37 +213,37 @@ export default function DocumentDetail() {
 
         {/* Parsed Metadata Display */}
         {parsedData?.parsed_metadata && (
-          <Card>
+          <Card className="bg-white border-gray-200">
             <CardHeader>
-              <CardTitle>Parsed Invoice Data</CardTitle>
-              <CardDescription>Structured data extracted from the document</CardDescription>
+              <CardTitle className="text-[#36454F]">Parsed Invoice Data</CardTitle>
+              <CardDescription className="text-gray-600">Structured data extracted from the document</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                 {parsedData.parsed_metadata.supplier_name && (
                   <div>
-                    <div className="text-sm text-muted-foreground">Supplier</div>
-                    <div className="text-lg font-semibold">{parsedData.parsed_metadata.supplier_name}</div>
+                    <div className="text-sm text-gray-600">Supplier</div>
+                    <div className="text-lg font-semibold text-[#36454F]">{parsedData.parsed_metadata.supplier_name}</div>
                   </div>
                 )}
                 {parsedData.parsed_metadata.invoice_number && (
                   <div>
-                    <div className="text-sm text-muted-foreground">Invoice #</div>
-                    <div className="text-lg font-semibold">{parsedData.parsed_metadata.invoice_number}</div>
+                    <div className="text-sm text-gray-600">Invoice #</div>
+                    <div className="text-lg font-semibold text-[#36454F]">{parsedData.parsed_metadata.invoice_number}</div>
                   </div>
                 )}
                 {parsedData.parsed_metadata.invoice_date && (
                   <div>
-                    <div className="text-sm text-muted-foreground">Date</div>
-                    <div className="text-lg font-semibold">
+                    <div className="text-sm text-gray-600">Date</div>
+                    <div className="text-lg font-semibold text-[#36454F]">
                       {new Date(parsedData.parsed_metadata.invoice_date).toLocaleDateString()}
                     </div>
                   </div>
                 )}
                 {parsedData.parsed_metadata.total_amount !== undefined && (
                   <div>
-                    <div className="text-sm text-muted-foreground">Total</div>
-                    <div className="text-lg font-semibold">
+                    <div className="text-sm text-gray-600">Total</div>
+                    <div className="text-lg font-semibold text-[#36454F]">
                       {parsedData.parsed_metadata.currency || '$'}{parsedData.parsed_metadata.total_amount.toFixed(2)}
                     </div>
                   </div>
@@ -218,18 +252,18 @@ export default function DocumentDetail() {
               
               {parsedData.parsed_metadata.line_items && parsedData.parsed_metadata.line_items.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-semibold mb-2">Line Items</h4>
+                  <h4 className="text-sm font-semibold mb-2 text-[#36454F]">Line Items</h4>
                   <div className="space-y-2">
                     {parsedData.parsed_metadata.line_items.map((item: any, idx: number) => (
-                      <div key={idx} className="p-3 rounded-lg border bg-muted/50">
+                      <div key={idx} className="p-3 rounded-lg border border-gray-200 bg-gray-50">
                         <div className="flex justify-between items-start">
                           <div>
-                            <div className="font-medium">{item.description || 'Item'}</div>
-                            <div className="text-sm text-muted-foreground">
+                            <div className="font-medium text-[#36454F]">{item.description || 'Item'}</div>
+                            <div className="text-sm text-gray-600">
                               Qty: {item.quantity} × {parsedData.parsed_metadata.currency || '$'}{item.unit_price?.toFixed(2)}
                             </div>
                           </div>
-                          <div className="font-semibold">
+                          <div className="font-semibold text-[#36454F]">
                             {parsedData.parsed_metadata.currency || '$'}{item.total?.toFixed(2)}
                           </div>
                         </div>
@@ -245,30 +279,30 @@ export default function DocumentDetail() {
         {/* Main Content - Document View */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Left Panel - Document Preview */}
-          <Card>
+          <Card className="bg-white border-gray-200">
             <CardHeader>
-              <CardTitle>Document Preview</CardTitle>
-              <CardDescription>
+              <CardTitle className="text-[#36454F]">Document Preview</CardTitle>
+              <CardDescription className="text-gray-600">
                 Hover over extracted data to see highlighted source
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="relative bg-gray-50 rounded-lg p-4 min-h-[600px]">
                 {/* Mock invoice preview */}
-                <div className="bg-white shadow-sm rounded border p-6 relative">
+                <div className="bg-white shadow-sm rounded border border-gray-200 p-6 relative">
                   <div className="text-center mb-6">
-                    <h3 className="text-lg font-bold">SUPPLIER INVOICE</h3>
+                    <h3 className="text-lg font-bold text-[#36454F]">SUPPLIER INVOICE</h3>
                     <p className="text-sm text-gray-600">Invoice #INV-2024-0715</p>
                   </div>
                   
                   <div className="space-y-4">
-                    <div className="border-b pb-2">
-                      <h4 className="font-semibold">Bill To:</h4>
-                      <p className="text-sm">Your Company Name</p>
+                    <div className="border-b border-gray-200 pb-2">
+                      <h4 className="font-semibold text-[#36454F]">Bill To:</h4>
+                      <p className="text-sm text-gray-600">Your Company Name</p>
                     </div>
                     
                     <div className="space-y-2">
-                      <div className="grid grid-cols-4 gap-2 text-sm font-semibold border-b pb-1">
+                      <div className="grid grid-cols-4 gap-2 text-sm font-semibold border-b border-gray-200 pb-1 text-[#36454F]">
                         <span>Item</span>
                         <span>Qty</span>
                         <span>Unit Price</span>
@@ -289,10 +323,10 @@ export default function DocumentDetail() {
                             height: item.coordinates.height,
                           }}
                         >
-                          <span className="truncate">{item.productName}</span>
-                          <span>{item.quantity}</span>
-                          <span>${item.unitCost}</span>
-                          <span>${(item.unitCost * item.quantity).toFixed(2)}</span>
+                          <span className="truncate text-gray-600">{item.productName}</span>
+                          <span className="text-gray-600">{item.quantity}</span>
+                          <span className="text-gray-600">${item.unitCost}</span>
+                          <span className="text-[#36454F] font-semibold">${(item.unitCost * item.quantity).toFixed(2)}</span>
                         </div>
                       ))}
                     </div>
@@ -303,11 +337,11 @@ export default function DocumentDetail() {
           </Card>
 
           {/* Right Panel - Extracted Data */}
-          <Card>
+          <Card className="bg-white border-gray-200">
             <CardHeader>
-              <CardTitle>Extracted Data</CardTitle>
-              <CardDescription>
-                Supplier: <span className="font-medium">{documentData?.supplier || '—'}</span> • Invoice #: <span className="font-medium">{documentData?.invoice || '—'}</span>
+              <CardTitle className="text-[#36454F]">Extracted Data</CardTitle>
+              <CardDescription className="text-gray-600">
+                Supplier: <span className="font-medium text-[#36454F]">{documentData?.supplier || '—'}</span> • Invoice #: <span className="font-medium text-[#36454F]">{documentData?.invoice || '—'}</span>
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -317,36 +351,36 @@ export default function DocumentDetail() {
                     key={item.sku}
                     className={`p-4 rounded-lg border transition-all cursor-pointer ${
                       hoveredSKU === item.sku 
-                        ? 'border-primary bg-primary/5 shadow-md' 
-                        : 'border-border hover:border-primary/50'
+                        ? 'border-emerald-500 bg-emerald-50 shadow-md' 
+                        : 'border-gray-200 hover:border-gray-300 bg-white'
                     }`}
                     onMouseEnter={() => setHoveredSKU(item.sku)}
                     onMouseLeave={() => setHoveredSKU(null)}
                   >
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
-                        <h4 className="font-semibold text-sm">{item.sku}</h4>
-                        <p className="text-sm text-muted-foreground">{item.productName}</p>
+                        <h4 className="font-semibold text-sm text-[#36454F]">{item.sku}</h4>
+                        <p className="text-sm text-gray-600">{item.productName}</p>
                       </div>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900">
                         <Edit2 className="w-3 h-3" />
                       </Button>
                     </div>
                     
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
-                        <span className="text-muted-foreground">Unit Cost:</span>
-                        <span className="font-semibold ml-2">${item.unitCost}</span>
+                        <span className="text-gray-600">Unit Cost:</span>
+                        <span className="font-semibold ml-2 text-[#36454F]">${item.unitCost}</span>
                       </div>
                       <div>
-                        <span className="text-muted-foreground">Quantity:</span>
-                        <span className="font-semibold ml-2">{item.quantity}</span>
+                        <span className="text-gray-600">Quantity:</span>
+                        <span className="font-semibold ml-2 text-[#36454F]">{item.quantity}</span>
                       </div>
                     </div>
                     
-                    <div className="mt-2 pt-2 border-t border-border/50">
-                      <span className="text-muted-foreground text-xs">Line Total:</span>
-                      <span className="font-semibold ml-2">${(item.unitCost * item.quantity).toFixed(2)}</span>
+                    <div className="mt-2 pt-2 border-t border-gray-200">
+                      <span className="text-gray-600 text-xs">Line Total:</span>
+                      <span className="font-semibold ml-2 text-[#36454F]">${(item.unitCost * item.quantity).toFixed(2)}</span>
                     </div>
                   </div>
                 ))}
