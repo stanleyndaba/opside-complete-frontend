@@ -617,7 +617,7 @@ export function Dashboard() {
                       className="text-xl"
                       style={{
                         fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, sans-serif',
-                        fontWeight: '800',
+                        fontWeight: '400',
                         color: '#36454F',
                         letterSpacing: '-0.02em',
                       }}
