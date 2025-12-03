@@ -24,7 +24,7 @@ export function Toaster() {
                 <ToastTitle className="text-[#22C55E] font-semibold">{title}</ToastTitle>
               )}
               {description && (
-                <ToastDescription className="text-white font-normal">{description}</ToastDescription>
+                <ToastDescription className="text-[#36454F] font-normal">{description}</ToastDescription>
               )}
             </div>
             {action}
