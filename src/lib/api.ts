@@ -15,7 +15,7 @@ function buildApiUrl(path: string): string {
   // Production backend URL - use the new consolidated Node.js API
   // IMPORTANT: This is the correct backend URL. Do not change unless migrating to a new backend.
   const productionBackend = 'https://opside-node-api-woco.onrender.com';
-  
+
   // List of deprecated/old backend URLs that should be rejected
   const deprecatedBackends = [
     'clario-complete-backend-y5cd.onrender.com',
@@ -26,24 +26,24 @@ function buildApiUrl(path: string): string {
   // In Vite, environment variables are available at build time and are injected into the bundle
   // Support both VITE_INTEGRATIONS_URL (for Vite) and NEXT_PUBLIC_INTEGRATIONS_URL (for compatibility)
   let envBase: string | undefined;
-  
+
   if (typeof import.meta !== 'undefined' && import.meta.env) {
     // Vite environment variables are directly on import.meta.env
     // Check for integrations URL first (Phase 1 requirement), then fall back to API base URL
-    envBase = import.meta.env.VITE_INTEGRATIONS_URL || 
-              import.meta.env.NEXT_PUBLIC_INTEGRATIONS_URL || 
-              import.meta.env.VITE_API_BASE_URL;
+    envBase = import.meta.env.VITE_INTEGRATIONS_URL ||
+      import.meta.env.NEXT_PUBLIC_INTEGRATIONS_URL ||
+      import.meta.env.VITE_API_BASE_URL;
   }
 
   // If environment variable is set, validate it before using
   if (envBase && envBase.trim() !== '') {
     const baseUrl = String(envBase).trim().replace(/\/$/, '');
-    
+
     // Reject deprecated/old backend URLs
-    const isDeprecated = deprecatedBackends.some(deprecated => 
+    const isDeprecated = deprecatedBackends.some(deprecated =>
       baseUrl.includes(deprecated)
     );
-    
+
     if (isDeprecated) {
       console.warn(
         `[API] Rejected deprecated backend URL from VITE_API_BASE_URL: ${baseUrl}. ` +
@@ -58,7 +58,7 @@ function buildApiUrl(path: string): string {
 
   // In development, check for localhost override
   const isDev = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-  
+
   if (isDev) {
     // In development, use localhost:3001 (backend port) or env var override
     const devBackend = envBase && envBase.includes('localhost') ? envBase : 'http://localhost:3001';
@@ -84,15 +84,15 @@ async function requestJsonWithRetry<T>(
 ): Promise<ApiResponse<T>> {
   const requestStartTime = performance.now();
   const url = buildApiUrl(path);
-  
+
   // Use a longer timeout for the first request to allow backend wake-up time
   // Render free tier can take 30-60 seconds to wake up, so we need generous timeouts
   // But we also want to avoid hanging the UI when backend is responsive
   const timeout = retryCount === 0 ? 45000 : 20000; // 45s first request (allows full wake-up), 20s retries
-  
+
   try {
     console.log(`[API] Requesting: ${url}${retryCount > 0 ? ` (retry ${retryCount}/${maxRetries})` : ''} - Timeout: ${timeout}ms`);
-    
+
     const fetchStartTime = performance.now();
     const controller = new AbortController();
     const timeoutId = setTimeout(() => {
@@ -100,7 +100,7 @@ async function requestJsonWithRetry<T>(
       console.warn(`[API] Request timeout after ${Math.round(elapsed)}ms for ${url}`);
       controller.abort();
     }, timeout);
-    
+
     const res = await fetch(url, {
       credentials: 'include',
       signal: controller.signal,
@@ -112,11 +112,11 @@ async function requestJsonWithRetry<T>(
       },
       ...options,
     });
-    
+
     clearTimeout(timeoutId);
     const fetchDuration = performance.now() - fetchStartTime;
     console.log(`[API] Fetch completed in ${Math.round(fetchDuration)}ms - Status: ${res.status} for ${url}`);
-    
+
     // Log response details for debugging
     if (!res.ok) {
       console.warn(`[API] Backend responded with error status ${res.status} for ${url}`, {
@@ -141,7 +141,7 @@ async function requestJsonWithRetry<T>(
 
     if (!res.ok) {
       const errorMsg = data?.error || data?.message || res.statusText || 'Request failed';
-      
+
       // Provide specific error messages based on status code
       let userFriendlyError = errorMsg;
       if (res.status === 404) {
@@ -153,7 +153,7 @@ async function requestJsonWithRetry<T>(
       } else if (res.status >= 500) {
         userFriendlyError = `Server error (${res.status}): ${errorMsg}`;
       }
-      
+
       // Log 404s as warnings (not errors) since they're often expected (endpoint not implemented)
       // Log other errors as errors
       if (res.status === 404) {
@@ -161,7 +161,7 @@ async function requestJsonWithRetry<T>(
       } else {
         console.error(`[API] HTTP ${res.status} error for ${url}: ${errorMsg}`);
       }
-      
+
       // For HTTP errors (401, 403, 404, 500, etc.), the backend IS responding
       // These are not network errors and should not be retried
       // Return immediately with the error, but include data in case it has useful info (e.g., existingSyncId for 409)
@@ -182,25 +182,25 @@ async function requestJsonWithRetry<T>(
   } catch (error) {
     const url = buildApiUrl(path);
     const errorMsg = error instanceof Error ? error.message : 'Network error';
-    
+
     // Check error type to determine if retry is appropriate
     const isAbortError = error instanceof DOMException && error.name === 'AbortError';
-    
+
     // CORS errors are network errors but retrying won't help - they need backend configuration fix
     // CORS errors typically show as "Failed to fetch" or "NetworkError" but are actually CORS preflight failures
-    const isCorsError = 
-      errorMsg.includes('CORS') || 
+    const isCorsError =
+      errorMsg.includes('CORS') ||
       errorMsg.includes('cors') ||
       errorMsg.includes('Access-Control') ||
       errorMsg.includes('Cross-Origin') ||
-      (errorMsg.includes('Failed to fetch') && typeof window !== 'undefined' && 
-       // Additional CORS detection: if we get "Failed to fetch" but it's likely CORS
-       // (we can't perfectly detect this, but we can check if it's a common pattern)
-       window.location.origin !== new URL(url).origin);
-    
+      (errorMsg.includes('Failed to fetch') && typeof window !== 'undefined' &&
+        // Additional CORS detection: if we get "Failed to fetch" but it's likely CORS
+        // (we can't perfectly detect this, but we can check if it's a common pattern)
+        window.location.origin !== new URL(url).origin);
+
     // Network errors that might benefit from retry (backend might be waking up)
     // But NOT CORS errors - those need backend configuration, not retries
-    const isRetryableNetworkError = 
+    const isRetryableNetworkError =
       !isCorsError && (
         error instanceof TypeError || // Fetch failed (network error)
         (errorMsg.includes('fetch') && !errorMsg.includes('CORS')) ||
@@ -208,20 +208,20 @@ async function requestJsonWithRetry<T>(
         (errorMsg.includes('Failed to fetch') && !isCorsError) ||
         isAbortError // Timeout - backend might be waking up
       );
-    
+
     // Only retry on retryable network errors (not CORS, not HTTP errors)
     if (isRetryableNetworkError && retryCount < maxRetries) {
       const delay = Math.min(1000 * Math.pow(2, retryCount), 10000); // Exponential backoff: 1s, 2s, 4s, max 10s
       const retryType = isAbortError ? 'timeout' : 'network error';
       console.warn(`[API] ${retryType}, retrying in ${delay}ms... (${retryCount + 1}/${maxRetries})`);
-      
+
       await new Promise(resolve => setTimeout(resolve, delay));
       return requestJsonWithRetry<T>(path, options, retryCount + 1, maxRetries);
     }
-    
+
     // Provide detailed error information
     let details: string;
-    
+
     if (isCorsError) {
       // CORS is a configuration issue on the backend, not a network problem
       details = `CORS error: The backend at ${url} is not configured to allow requests from ${typeof window !== 'undefined' ? window.location.origin : 'this origin'}. This is a backend configuration issue - the backend needs to allow your frontend domain in its CORS settings.`;
@@ -229,23 +229,23 @@ async function requestJsonWithRetry<T>(
       // Calculate approximate total wait time
       const totalTime = timeout + (retryCount * 20000) + (1000 * (Math.pow(2, retryCount) - 1));
       if (isAbortError) {
-        details = `Request timed out after ${Math.round(timeout/1000)}s. The backend may be sleeping (Render free tier can take 30-60 seconds to wake up). Please wait 30-60 seconds and refresh the page, or try again in a moment.`;
+        details = `Request timed out after ${Math.round(timeout / 1000)}s. The backend may be sleeping (Render free tier can take 30-60 seconds to wake up). Please wait 30-60 seconds and refresh the page, or try again in a moment.`;
       } else if (isRetryableNetworkError) {
-        details = `Cannot connect to backend at ${url} after ${maxRetries} retries (total wait time: ~${Math.round(totalTime/1000)}s). The backend may be sleeping (Render free tier can take 30-60 seconds to wake up). Please wait 30-60 seconds and refresh the page, or try again in a moment.`;
+        details = `Cannot connect to backend at ${url} after ${maxRetries} retries (total wait time: ~${Math.round(totalTime / 1000)}s). The backend may be sleeping (Render free tier can take 30-60 seconds to wake up). Please wait 30-60 seconds and refresh the page, or try again in a moment.`;
       } else {
         details = `Cannot connect to backend at ${url}. Error: ${errorMsg}. Check your internet connection and verify the backend is running.`;
       }
     } else {
       details = `Cannot connect to backend at ${url}. Error: ${errorMsg}`;
     }
-    
+
     console.error(`[API] Request failed for ${path}:`, {
       error: errorMsg,
       url,
       details,
       retryCount
     });
-    
+
     return {
       ok: false,
       status: 0,
@@ -268,7 +268,7 @@ function getFrontendUrl(): string {
     // Use current browser location
     return window.location.origin;
   }
-  
+
   // Fallback: Check for Vercel's VERCEL_URL environment variable (includes protocol)
   if (typeof import.meta !== 'undefined' && import.meta.env) {
     const vercelUrl = import.meta.env.VERCEL_URL;
@@ -276,14 +276,14 @@ function getFrontendUrl(): string {
       // VERCEL_URL doesn't include protocol, so add https
       return `https://${vercelUrl}`;
     }
-    
+
     // Check for custom frontend URL env var
     const customUrl = import.meta.env.VITE_FRONTEND_URL;
     if (customUrl) {
       return String(customUrl).trim().replace(/\/$/, '');
     }
   }
-  
+
   // Last resort: use a default (this shouldn't happen in production)
   return 'https://opside.com';
 }
@@ -291,14 +291,14 @@ function getFrontendUrl(): string {
 export const api = {
   // Export buildApiUrl for use in other modules
   buildApiUrl,
-  
+
   // Export getFrontendUrl for use in other modules
   getFrontendUrl,
-  
+
   // Generic helpers
   get: <T = any>(path: string) => requestJson<T>(path, { method: 'GET' }),
   post: <T = any>(path: string, body?: unknown) => requestJson<T>(path, { method: 'POST', body: body !== undefined ? JSON.stringify(body) : undefined }),
-  
+
   // Helper for OAuth connection endpoints that need redirect_uri
   connectIntegration: (provider: string) => {
     const frontendUrl = getFrontendUrl();
@@ -357,7 +357,7 @@ export const api = {
     // (This happens automatically - frontend shouldn't call this)
     return response;
   },
-  
+
   // Use existing Amazon connection (bypass OAuth if refresh token exists)
   useExistingAmazonConnection: async () => {
     // Call the OAuth start endpoint with bypass=true to use existing refresh token
@@ -371,7 +371,7 @@ export const api = {
       bypassed?: boolean;
       redirectUrl?: string;
     }>(`/api/v1/integrations/amazon/auth/start?redirect_uri=${encodeURIComponent(frontendUrl)}/auth/callback&frontend_url=${encodeURIComponent(frontendUrl)}&bypass=true`);
-    
+
     // If bypass worked, backend returns JSON with bypassed: true and redirectUrl
     // If not, we'll get the OAuth URL as fallback
     if (response.ok && response.data) {
@@ -379,7 +379,7 @@ export const api = {
       if (response.data.bypassed && response.data.redirectUrl) {
         return response;
       }
-      
+
       // Handle OAuth URL fallback
       const normalizedAuthUrl = response.data.auth_url ?? response.data.authUrl;
       if (normalizedAuthUrl) {
@@ -408,14 +408,14 @@ export const api = {
   },
   getAmazonRecoveries: async () => {
     const startTime = performance.now();
-    
+
     // Check if we're in sandbox mode FIRST (for faster response)
     // Sandbox mode is detected if:
     // 1. We're on localhost
     // 2. VITE_SANDBOX env var is set to 'true'
     // 3. We're in development mode
     // 4. We came from sandbox auth flow (check sessionStorage/localStorage)
-    const isSandbox = 
+    const isSandbox =
       (typeof window !== 'undefined' && (
         window.location.hostname.includes('localhost') ||
         window.location.hostname.includes('127.0.0.1') ||
@@ -427,24 +427,24 @@ export const api = {
         import.meta.env.MODE === 'development' ||
         import.meta.env.DEV === true
       ));
-    
+
     console.log(`[API] getAmazonRecoveries - Sandbox mode: ${isSandbox}, Time: ${performance.now() - startTime}ms`);
-    
+
     // In sandbox mode, try backend but don't wait too long - use mock data quickly
     if (isSandbox) {
       console.log('[API] Sandbox mode detected - will use mock data if backend is slow');
-      
+
       // Try backend with shorter timeout in sandbox mode (3 seconds)
       const backendStartTime = performance.now();
       try {
-        const timeoutPromise = new Promise((_, reject) => 
+        const timeoutPromise = new Promise((_, reject) =>
           setTimeout(() => reject(new Error('Backend timeout - using mock data')), 3000)
         );
-        
+
         console.log(`[API] Starting backend request at ${backendStartTime}ms`);
         console.log(`[API] Backend URL: ${buildApiUrl('/api/v1/integrations/amazon/recoveries')}`);
         const backendPromise = requestJson<{ totalAmount: number; currency: string; claimCount: number }>('/api/v1/integrations/amazon/recoveries');
-        
+
         let response: any;
         try {
           response = await Promise.race([backendPromise, timeoutPromise]);
@@ -457,10 +457,10 @@ export const api = {
         }
         const backendEndTime = performance.now();
         const backendDuration = backendEndTime - backendStartTime;
-        
+
         console.log(`[API] Backend request completed in ${backendDuration}ms`);
         console.log(`[API] Backend response:`, response);
-        
+
         // Backend returns {success: true, recoveries: {...}} - extract recoveries
         // Handle both structures: {recoveries: {...}} or direct {...}
         let recoveryData = response?.data;
@@ -469,7 +469,7 @@ export const api = {
           recoveryData = recoveryData.recoveries;
           console.log(`[API] Extracted recoveries from nested structure:`, recoveryData);
         }
-        
+
         // Always use backend data if available, even if zeros (to show sync messages)
         // Only fall back to mock data if backend request failed
         if (response?.ok && recoveryData) {
@@ -505,38 +505,38 @@ export const api = {
           statusText: error?.statusText
         });
         console.error(`[API] Full error object:`, error);
-        
+
         // If it's a timeout, show that clearly
         if (error?.message?.includes('timeout')) {
           console.error(`[API] ⏱️ BACKEND TIMEOUT: Backend took longer than 3 seconds to respond`);
           console.error(`[API] 💡 SOLUTION: Backend needs to respond faster or increase timeout`);
         }
-        
+
         // If it's a network error
         if (error?.name === 'TypeError' || error?.message?.includes('fetch')) {
           console.error(`[API] 🌐 NETWORK ERROR: Cannot reach backend`);
           console.error(`[API] 💡 SOLUTION: Check backend URL and CORS configuration`);
         }
-        
+
         // If it's a 401
         if (error?.status === 401 || error?.response?.status === 401) {
           console.error(`[API] 🔒 AUTH ERROR: Backend returned 401 Unauthorized`);
           console.error(`[API] 💡 SOLUTION: Check authentication cookie/session`);
         }
-        
+
         // If it's a 404
         if (error?.status === 404 || error?.response?.status === 404) {
           console.error(`[API] 📍 NOT FOUND: Endpoint /api/v1/integrations/amazon/recoveries doesn't exist`);
           console.error(`[API] 💡 SOLUTION: Backend needs to implement this endpoint`);
         }
-        
+
         // If it's a 500
         if (error?.status === 500 || error?.response?.status === 500) {
           console.error(`[API] 💥 SERVER ERROR: Backend returned 500 Internal Server Error`);
           console.error(`[API] 💡 SOLUTION: Check backend logs for error details`);
         }
       }
-      
+
       // Only use mock data if backend request completely failed (not just zeros)
       // If backend returned zeros with sync info, we should show that instead
       const mockStartTime = performance.now();
@@ -559,7 +559,7 @@ export const api = {
         },
       };
     }
-    
+
     // Production mode: try backend normally with timing
     const prodStartTime = performance.now();
     console.log('[API] Production mode - calling backend');
@@ -585,7 +585,7 @@ export const api = {
     }>('/api/v1/integrations/amazon/recoveries');
     const prodDuration = performance.now() - prodStartTime;
     console.log(`[API] Production backend request took ${prodDuration}ms`);
-    
+
     // Backend returns {success: true, recoveries: {...}} - extract recoveries
     // Handle both structures: {recoveries: {...}} or direct {...}
     let recoveryData = response?.data;
@@ -594,7 +594,7 @@ export const api = {
       recoveryData = recoveryData.recoveries;
       console.log(`[API] Extracted recoveries from nested structure:`, recoveryData);
     }
-    
+
     // Always return backend data if available (even if zeros), to show sync messages
     if (response.ok && recoveryData) {
       // Pass through all fields from backend (including message, needsSync, syncTriggered, source, dataSource)
@@ -612,7 +612,7 @@ export const api = {
         }
       };
     }
-    
+
     // Return the original response (even if it failed or returned zeros)
     if (recoveryData && recoveryData !== response.data) {
       // We extracted recoveries, normalize the response with all fields
@@ -645,7 +645,7 @@ export const api = {
       { method: 'POST' }
     );
   },
-  startAmazonSync: () => requestJson<{ 
+  startAmazonSync: () => requestJson<{
     syncId?: string;
     sync_id?: string;
     status?: string;
@@ -672,7 +672,7 @@ export const api = {
   getDocuments: () => requestJson<any[]>('/api/documents'),
   getDocument: (id: string) => requestJson<any>(`/api/documents/${encodeURIComponent(id)}`),
   getDocumentDownloadUrl: (id: string) => buildApiUrl(`/api/documents/${encodeURIComponent(id)}/download`),
-  
+
   // PHASE4: Evidence ingestion endpoints (Node.js backend)
   // Gmail ingestion
   ingestGmailEvidence: (options?: { query?: string; maxResults?: number; autoParse?: boolean }) =>
@@ -816,7 +816,7 @@ export const api = {
       status: 'disconnected';
     };
   }>(`/api/evidence/sources/${encodeURIComponent(id)}`, { method: 'DELETE' }),
-  
+
   // PHASE3: Gmail integration endpoints
   getGmailStatus: () => requestJson<{
     connected: boolean;
@@ -824,7 +824,7 @@ export const api = {
     email?: string;
   }>('/api/v1/integrations/gmail/status'),
   disconnectGmail: () => requestJson<any>('/api/v1/integrations/gmail/disconnect', { method: 'DELETE' }),
-  
+
   // PHASE3: Document parsing endpoints (Python API)
   triggerDocumentParse: (documentId: string) =>
     requestJson<{
@@ -1426,13 +1426,13 @@ export const api = {
     // Uses session-based authentication via cookies
     // If backend requires body, we'll send minimal body
     const hasParams = params?.userId || params?.syncTypes;
-    const body = hasParams 
+    const body = hasParams
       ? JSON.stringify({
-          ...(params?.userId && { userId: params.userId }),
-          ...(params?.syncTypes && { syncTypes: params.syncTypes }),
-        })
+        ...(params?.userId && { userId: params.userId }),
+        ...(params?.syncTypes && { syncTypes: params.syncTypes }),
+      })
       : JSON.stringify({}); // Send empty body as per Phase 1 requirements
-    
+
     return requestJson<{
       success: boolean;
       syncId?: string;
@@ -1612,4 +1612,18 @@ export const detectionApi = {
       threshold_days: number;
     }>(`/api/detections/deadlines${query ? `?${query}` : ''}`);
   },
+
+  // Notifications
+  getNotifications: (params?: { unread_only?: boolean; limit?: number; offset?: number }) => {
+    const query = new URLSearchParams();
+    if (params?.unread_only) query.append('unread_only', 'true');
+    if (params?.limit) query.append('limit', params.limit.toString());
+    if (params?.offset) query.append('offset', params.offset.toString());
+    return requestJson<{ success: boolean; data: any[]; meta: any }>(`/api/notifications?${query.toString()}`);
+  },
+  markNotificationsRead: (notificationIds: string[]) =>
+    requestJson<{ success: boolean; data: any[] }>('/api/notifications/mark-read', {
+      method: 'POST',
+      body: JSON.stringify({ notificationIds })
+    }),
 };

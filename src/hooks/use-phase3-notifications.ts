@@ -1,13 +1,14 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import { toast } from '@/hooks/use-toast';
 import { api } from '@/lib/api';
 
-export type Phase3NotificationEvent = 
+export type Phase3NotificationEvent =
   | { type: 'claim_expiring'; data: Phase3ClaimExpiringEvent }
   | { type: 'detection_resolved'; data: Phase3DetectionResolvedEvent }
   | { type: 'detection_status_changed'; data: Phase3DetectionStatusChangedEvent }
   | { type: 'sync_complete'; data: Phase3SyncCompleteEvent }
   | { type: 'sync_failed'; data: Phase3SyncFailedEvent }
+  | { type: 'notification'; data: any }
   | { type: 'heartbeat'; data: { timestamp: string } };
 
 export interface Phase3ClaimExpiringEvent {
@@ -54,6 +55,7 @@ export interface Phase3SyncFailedEvent {
 }
 
 export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent) => void) => {
+  const [lastEvent, setLastEvent] = useState<Phase3NotificationEvent | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
   const reconnectTimeoutRef = useRef<number | null>(null);
   const reconnectAttemptsRef = useRef(0);
@@ -76,7 +78,7 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
     try {
       const url = api.buildApiUrl('/api/sse/notifications');
       const eventSource = new EventSource(url, { withCredentials: true } as any);
-      
+
       eventSource.onopen = () => {
         console.log('[Phase3 Notifications] SSE connection opened');
         reconnectAttemptsRef.current = 0;
@@ -86,7 +88,7 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
         try {
           const data = JSON.parse(event.data);
           const eventType = event.type || data.type || 'unknown';
-          
+
           let notificationEvent: Phase3NotificationEvent | null = null;
 
           // Handle different event types
@@ -121,6 +123,12 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
                 data: data as Phase3SyncFailedEvent
               };
               break;
+            case 'notification':
+              notificationEvent = {
+                type: 'notification',
+                data: data
+              };
+              break;
             case 'heartbeat':
               notificationEvent = {
                 type: 'heartbeat',
@@ -143,6 +151,7 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
           }
 
           if (notificationEvent) {
+            setLastEvent(notificationEvent);
             onEvent?.(notificationEvent);
 
             // Show toast notifications
@@ -193,6 +202,16 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
                 });
                 break;
 
+              case 'notification':
+                const notifData = notificationEvent.data;
+                toast({
+                  title: notifData.title,
+                  description: notifData.message,
+                  variant: notifData.type === 'error' ? 'destructive' : 'default',
+                  duration: 5000,
+                });
+                break;
+
               case 'heartbeat':
                 // Silent - just keep connection alive
                 break;
@@ -205,12 +224,12 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
 
       eventSource.onerror = (error) => {
         console.error('[Phase3 Notifications] SSE error:', error);
-        
+
         // Attempt to reconnect
         if (reconnectAttemptsRef.current < maxReconnectAttempts) {
           reconnectAttemptsRef.current++;
           console.log(`[Phase3 Notifications] Reconnecting... (attempt ${reconnectAttemptsRef.current}/${maxReconnectAttempts})`);
-          
+
           reconnectTimeoutRef.current = window.setTimeout(() => {
             connect();
           }, reconnectDelay * reconnectAttemptsRef.current); // Exponential backoff
@@ -258,7 +277,7 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
     reconnect: () => {
       reconnectAttemptsRef.current = 0;
       connect();
-    }
+    },
+    lastEvent
   };
 };
-

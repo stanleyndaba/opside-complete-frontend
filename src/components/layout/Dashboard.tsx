@@ -14,6 +14,8 @@ import { recoveryApi } from '@/lib/recoveryApi';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useNotifications } from '@/components/providers/NotificationsProvider';
+import { formatDistanceToNow } from 'date-fns';
 
 // Icon imports for document sources
 const GmailIcon = '/G.png';
@@ -70,6 +72,7 @@ export function Dashboard() {
   const [inviteOpen, setInviteOpen] = useState<boolean>(false);
   const [inviteEmail, setInviteEmail] = useState<string>('');
   const { toast } = useToast();
+  const { notifications, unreadCount } = useNotifications();
 
   // Currency selector state
   const [selectedCurrency, setSelectedCurrency] = useState<string>('USD');
@@ -871,36 +874,57 @@ export function Dashboard() {
                         <div className="p-3 border-b border-gray-200">
                           <div className="flex items-center justify-between">
                             <h3 className="font-semibold text-sm text-black">Recent Logs</h3>
-                            <span className="text-xs rounded px-2 py-0.5 bg-emerald-500 text-white">4 new</span>
+                            {unreadCount > 0 && (
+                              <span className="text-xs rounded px-2 py-0.5 bg-emerald-500 text-white">
+                                {unreadCount} new
+                              </span>
+                            )}
                           </div>
                         </div>
                         <div className="max-h-[600px] overflow-y-auto">
                           <div className="relative text-[12px] divide-y divide-gray-200">
-                            {(() => {
-                              const events = [
-                                { id: 'evt-0', unread: true, title: 'Claim Approved', details: '🎉 Good news! Claim approved for $1,200 reimbursement.', time: 'Just now' },
-                                { id: 'evt-1', unread: true, title: 'Connection Established', details: 'Amazon connection established', time: 'Just now' },
-                                { id: 'evt-2', unread: true, title: 'Claims Identified', details: `23 potential claims identified, valued at ~${formatCurrency(14228)}`, time: '2 minutes ago' },
-                                { id: 'evt-2.5', unread: true, title: 'Evidence Matched', details: 'Invoices and shipment records matched for 4 new claims.', time: 'Just now' },
-                                { id: 'evt-3', unread: false, title: 'Claim Submitted', details: 'Auto-submitted 5 verified claims', time: 'Yesterday' },
-                                { id: 'evt-4', unread: false, title: 'Funds Recovered', details: `Payout confirmed: ${formatCurrency(850.75)}`, time: '2 days ago' },
-                              ];
-                              return events.map((evt) => (
-                                <div key={evt.id} className={`group relative flex items-start gap-3 py-3 px-4 overflow-hidden ${evt.unread ? 'bg-gray-50' : 'bg-white'}`}>
-                                  <div className="min-w-0 flex-1">
-                                    <div className="flex items-center justify-between">
-                                      <p className={'text-[12px] truncate ' + (evt.unread ? 'text-black font-semibold' : 'text-gray-600 font-medium')}>{evt.title}</p>
-                                      <span className={'ml-3 shrink-0 text-[11px] ' + (evt.unread ? 'text-gray-700 font-semibold' : 'text-gray-500')}>{evt.time}</span>
+                            {notifications.length === 0 ? (
+                              <div className="p-8 text-center text-gray-500">
+                                <Bell className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                                <p className="text-sm">No notifications yet</p>
+                              </div>
+                            ) : (
+                              notifications.slice(0, 10).map((notification) => {
+                                const isUnread = notification.status !== 'read';
+                                const timeAgo = formatDistanceToNow(new Date(notification.created_at), { addSuffix: true });
+
+                                return (
+                                  <div
+                                    key={notification.id}
+                                    className={`group relative flex items-start gap-3 py-3 px-4 overflow-hidden ${isUnread ? 'bg-gray-50' : 'bg-white'
+                                      }`}
+                                  >
+                                    <div className="min-w-0 flex-1">
+                                      <div className="flex items-center justify-between">
+                                        <p className={`text-[12px] truncate ${isUnread ? 'text-black font-semibold' : 'text-gray-600 font-medium'
+                                          }`}>
+                                          {notification.title}
+                                        </p>
+                                        <span className={`ml-3 shrink-0 text-[11px] ${isUnread ? 'text-gray-700 font-semibold' : 'text-gray-500'
+                                          }`}>
+                                          {timeAgo}
+                                        </span>
+                                      </div>
+                                      <p className="text-[11px] text-gray-600 mt-0.5 truncate">
+                                        {notification.message}
+                                      </p>
                                     </div>
-                                    <p className="text-[11px] text-gray-600 mt-0.5 truncate">{evt.details}</p>
                                   </div>
-                                </div>
-                              ));
-                            })()}
+                                );
+                              })
+                            )}
                           </div>
                         </div>
                         <div className="border-t border-gray-200 p-4">
-                          <Button className="w-full bg-white hover:bg-gray-50 text-gray-900 border border-gray-200" onClick={() => navigate('/notifications')}>
+                          <Button
+                            className="w-full bg-white hover:bg-gray-50 text-gray-900 border border-gray-200"
+                            onClick={() => navigate('/notifications')}
+                          >
                             View all Logs
                           </Button>
                         </div>

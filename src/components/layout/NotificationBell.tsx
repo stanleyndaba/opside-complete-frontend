@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Bell, DollarSign, CheckCircle, FileCheck, Users } from 'lucide-react';
+import { Bell, DollarSign, CheckCircle, FileCheck, Users, Info, AlertTriangle, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -11,15 +11,8 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-
-interface RecentNotification {
-  id: string;
-  icon: React.ElementType;
-  message: string;
-  timestamp: string;
-  href?: string;
-  read: boolean;
-}
+import { useNotifications } from '@/components/providers/NotificationsProvider';
+import { formatDistanceToNow } from 'date-fns';
 
 interface NotificationBellProps {
   label?: string;
@@ -39,6 +32,9 @@ export function NotificationBell({
   iconClassName
 }: NotificationBellProps) {
   const location = useLocation();
+  const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
+  const [isOpen, setIsOpen] = useState(false);
+
   const isTransparentNavbar = (
     location.pathname === '/' ||
     location.pathname.startsWith('/app') ||
@@ -53,49 +49,47 @@ export function NotificationBell({
     location.pathname.startsWith('/whats-new') ||
     location.pathname.startsWith('/help')
   );
-  const [isOpen, setIsOpen] = useState(false);
-  const [notifications] = useState<RecentNotification[]>([
-    {
-      id: '1',
-      icon: DollarSign,
-      message: 'Payout of $75.50 confirmed',
-      timestamp: '2h ago',
-      href: '/recoveries',
-      read: false
-    },
-    {
-      id: '2',
-      icon: CheckCircle,
-      message: 'New recovery guaranteed: $125.00',
-      timestamp: '1d ago',
-      href: '/recoveries',
-      read: false
-    },
-    {
-      id: '3',
-      icon: FileCheck,
-      message: 'Invoice processed successfully',
-      timestamp: '2d ago',
-      href: '/evidence-locker',
-      read: true
-    },
-    {
-      id: '4',
-      icon: Users,
-      message: 'Sarah Johnson joined your team',
-      timestamp: '3d ago',
-      href: '/team-management',
-      read: true
-    }
-  ]);
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const getIconForType = (type: string) => {
+    if (type.includes('payment') || type.includes('funds')) return DollarSign;
+    if (type.includes('refund') || type.includes('approved')) return CheckCircle;
+    if (type.includes('claim') || type.includes('detected')) return AlertCircle;
+    if (type.includes('integration')) return FileCheck;
+    if (type.includes('discrepancy')) return AlertTriangle;
+    if (type.includes('user') || type.includes('team')) return Users;
+    return Bell;
+  };
+
+  const getHrefForType = (type: string) => {
+    if (type.includes('claim') || type.includes('refund') || type.includes('funds')) return '/recoveries';
+    if (type.includes('integration')) return '/integrations-hub';
+    if (type.includes('payment') || type.includes('billing')) return '/billing';
+    if (type.includes('evidence')) return '/evidence-locker';
+    return '/notifications';
+  };
+
+  const displayNotifications = notifications.slice(0, 10).map(n => ({
+    id: n.id,
+    icon: getIconForType(n.type),
+    message: n.message,
+    timestamp: formatDistanceToNow(new Date(n.created_at), { addSuffix: true }),
+    href: getHrefForType(n.type),
+    read: n.status === 'read'
+  }));
+
   const IconComponent = iconOverride ?? Bell;
   const isSidebarStyle = forceCountStyle === 'sidebar';
   const shouldShowLabel = isSidebarStyle && showLabel;
 
-  const handleNotificationClick = () => {
+  const handleNotificationClick = (id: string) => {
+    markAsRead(id);
     setIsOpen(false);
+  };
+
+  const handleMarkAllRead = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    markAllAsRead();
   };
 
   const baseSidebarClass = showLabel
@@ -153,56 +147,64 @@ export function NotificationBell({
           {isSidebarStyle && !shouldShowLabel && badge}
         </Button>
       </DropdownMenuTrigger>
-      
-      <DropdownMenuContent 
-        align="end" 
+
+      <DropdownMenuContent
+        align="end"
         className="w-80 max-h-96 overflow-y-auto bg-white backdrop-blur-md border border-gray-200 shadow-xl z-50 text-[#36454F]"
       >
         <div className="p-3 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-sm text-[#36454F]">{label}</h3>
-            {unreadCount > 0 && (
-              <Badge variant="outline" className="text-[10px] border-gray-300 text-[#36454F] bg-gray-50">
-                {unreadCount} new
-              </Badge>
-            )}
+            <div className="flex items-center gap-2">
+              {unreadCount > 0 && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 text-[10px] px-2 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
+                  onClick={handleMarkAllRead}
+                >
+                  Mark all read
+                </Button>
+              )}
+              {unreadCount > 0 && (
+                <Badge variant="outline" className="text-[10px] border-gray-300 text-[#36454F] bg-gray-50">
+                  {unreadCount} new
+                </Badge>
+              )}
+            </div>
           </div>
         </div>
 
         <div>
-          {notifications.length === 0 ? (
+          {displayNotifications.length === 0 ? (
             <div className="p-4 text-center text-sm text-gray-500">
               No notifications yet
             </div>
           ) : (
-            notifications.map((notification, index) => {
+            displayNotifications.map((notification, index) => {
               const IconComponent = notification.icon;
               const content = (
-                <div 
-                  className={`flex items-start gap-3 p-3 hover:bg-gray-50 transition-colors cursor-pointer ${
-                    !notification.read ? 'bg-gray-50' : 'bg-white'
-                  }`}
-                  onClick={handleNotificationClick}
+                <div
+                  className={`flex items-start gap-3 p-3 hover:bg-gray-50 transition-colors cursor-pointer ${!notification.read ? 'bg-gray-50' : 'bg-white'
+                    }`}
+                  onClick={() => handleNotificationClick(notification.id)}
                 >
-                  <div className={`flex-shrink-0 mt-0.5 w-6 h-6 rounded-full flex items-center justify-center ${
-                    !notification.read ? 'bg-gray-200' : 'bg-gray-100'
-                  }`}>
-                    <IconComponent className={`w-3 h-3 ${
-                      !notification.read ? 'text-[#36454F]' : 'text-gray-400'
-                    }`} />
-                  </div>
-                  
-                  <div className="flex-1 min-w-0">
-                    <p className={`text-xs leading-relaxed ${
-                      !notification.read ? 'font-medium text-[#36454F]' : 'text-gray-600'
+                  <div className={`flex-shrink-0 mt-0.5 w-6 h-6 rounded-full flex items-center justify-center ${!notification.read ? 'bg-gray-200' : 'bg-gray-100'
                     }`}>
+                    <IconComponent className={`w-3 h-3 ${!notification.read ? 'text-[#36454F]' : 'text-gray-400'
+                      }`} />
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <p className={`text-xs leading-relaxed ${!notification.read ? 'font-medium text-[#36454F]' : 'text-gray-600'
+                      }`}>
                       {notification.message}
                     </p>
                     <p className="text-xs text-gray-500 mt-1">
                       {notification.timestamp}
                     </p>
                   </div>
-                  
+
                   {!notification.read && (
                     <div className="w-2 h-2 bg-emerald-500 rounded-full flex-shrink-0 mt-1.5"></div>
                   )}
@@ -218,7 +220,7 @@ export function NotificationBell({
                   ) : (
                     <div>{content}</div>
                   )}
-                  {index < notifications.length - 1 && (
+                  {index < displayNotifications.length - 1 && (
                     <DropdownMenuSeparator className="my-0 bg-gray-200" />
                   )}
                 </React.Fragment>
@@ -228,11 +230,11 @@ export function NotificationBell({
         </div>
 
         <DropdownMenuSeparator className="bg-gray-200" />
-        
+
         <div className="p-2">
-          <Link to="/notifications" onClick={handleNotificationClick} reloadDocument>
-            <Button 
-              variant="ghost" 
+          <Link to="/notifications" onClick={() => setIsOpen(false)} reloadDocument>
+            <Button
+              variant="ghost"
               className="w-full justify-center text-xs h-8 hover:bg-gray-50 text-[#36454F]"
             >
               View all {label.toLowerCase()}
