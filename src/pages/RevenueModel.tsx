@@ -125,133 +125,133 @@ export default function RevenueModel() {
   };
 
   return (
-    <PageLayout title="Revenue Model (2026)" forceTransparent midnight>
-      <div className="relative -m-4 lg:-m-6 min-h-screen">
-        <div className="container mx-auto px-6 md:px-10 lg:px-12">
+    <PageLayout title="Revenue Model (2026)">
+      <div className="relative -m-4 lg:-m-6 min-h-screen bg-gray-50">
+        <div className="container mx-auto px-6 md:px-10 lg:px-12 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="bg-white/10 backdrop-blur-xl border-white/10 rounded-2xl text-gray-300 lg:col-span-1">
+          <Card className="bg-white border-gray-200 shadow-sm lg:col-span-1">
             <CardHeader>
-              <CardTitle className="text-gray-100">Inputs</CardTitle>
-              <CardDescription>Adjust to simulate your funnel and ARPS.</CardDescription>
+              <CardTitle className="text-base font-normal text-gray-700">Inputs</CardTitle>
+              <CardDescription className="text-gray-500">Adjust to simulate your funnel and ARPS.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-5">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="startSellers">Start Sellers (Jan)</Label>
-                  <Input id="startSellers" type="number" value={startActiveSellers} variant="dark"
-                         onChange={e => setStartActiveSellers(clamp(parseInt(e.target.value || '0', 10), 0, 200000))} />
+                  <Label htmlFor="startSellers" className="text-gray-600">Start Sellers (Jan)</Label>
+                  <Input id="startSellers" type="number" value={startActiveSellers}
+                         onChange={e => setStartActiveSellers(clamp(parseInt(e.target.value || '0', 10), 0, 200000))} className="bg-white border-gray-200 text-gray-700" />
                 </div>
                 <div>
-                  <Label htmlFor="retention">Monthly Retention %</Label>
-                  <Input id="retention" type="number" value={monthlyRetentionPct} variant="dark"
-                         onChange={e => setMonthlyRetentionPct(clamp(parseFloat(e.target.value || '0'), 0, 100))} />
+                  <Label htmlFor="retention" className="text-gray-600">Monthly Retention %</Label>
+                  <Input id="retention" type="number" value={monthlyRetentionPct}
+                         onChange={e => setMonthlyRetentionPct(clamp(parseFloat(e.target.value || '0'), 0, 100))} className="bg-white border-gray-200 text-gray-700" />
                 </div>
                 <div>
-                  <Label htmlFor="sessions">Sessions (Jan)</Label>
-                  <Input id="sessions" type="number" value={monthlySessions} variant="dark"
-                         onChange={e => setMonthlySessions(clamp(parseInt(e.target.value || '0', 10), 0, 10_000_000))} />
+                  <Label htmlFor="sessions" className="text-gray-600">Sessions (Jan)</Label>
+                  <Input id="sessions" type="number" value={monthlySessions}
+                         onChange={e => setMonthlySessions(clamp(parseInt(e.target.value || '0', 10), 0, 10_000_000))} className="bg-white border-gray-200 text-gray-700" />
                 </div>
                 <div>
-                  <Label htmlFor="sessionsGrowth">Sessions Growth % /mo</Label>
-                  <Input id="sessionsGrowth" type="number" value={monthlySessionsGrowthPct} variant="dark"
-                         onChange={e => setMonthlySessionsGrowthPct(clamp(parseFloat(e.target.value || '0'), 0, 200))} />
+                  <Label htmlFor="sessionsGrowth" className="text-gray-600">Sessions Growth % /mo</Label>
+                  <Input id="sessionsGrowth" type="number" value={monthlySessionsGrowthPct}
+                         onChange={e => setMonthlySessionsGrowthPct(clamp(parseFloat(e.target.value || '0'), 0, 200))} className="bg-white border-gray-200 text-gray-700" />
                 </div>
               </div>
 
               <div>
-                <div className="text-sm font-medium text-gray-200 mb-2">Funnel %</div>
+                <div className="text-sm font-normal text-gray-600 mb-2">Funnel %</div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="v2s">Visit → Signup %</Label>
-                    <Input id="v2s" type="number" value={visitToSignupPct} variant="dark"
-                           onChange={e => setVisitToSignupPct(clamp(parseFloat(e.target.value || '0'), 0, 100))} />
+                    <Label htmlFor="v2s" className="text-gray-600">Visit → Signup %</Label>
+                    <Input id="v2s" type="number" value={visitToSignupPct}
+                           onChange={e => setVisitToSignupPct(clamp(parseFloat(e.target.value || '0'), 0, 100))} className="bg-white border-gray-200 text-gray-700" />
                   </div>
                   <div>
-                    <Label htmlFor="s2a">Signup → Amazon %</Label>
-                    <Input id="s2a" type="number" value={signupToAmazonPct} variant="dark"
-                           onChange={e => setSignupToAmazonPct(clamp(parseFloat(e.target.value || '0'), 0, 100))} />
+                    <Label htmlFor="s2a" className="text-gray-600">Signup → Amazon %</Label>
+                    <Input id="s2a" type="number" value={signupToAmazonPct}
+                           onChange={e => setSignupToAmazonPct(clamp(parseFloat(e.target.value || '0'), 0, 100))} className="bg-white border-gray-200 text-gray-700" />
                   </div>
                   <div>
-                    <Label htmlFor="a2e">Amazon → Evidence %</Label>
-                    <Input id="a2e" type="number" value={amazonToEvidencePct} variant="dark"
-                           onChange={e => setAmazonToEvidencePct(clamp(parseFloat(e.target.value || '0'), 0, 100))} />
+                    <Label htmlFor="a2e" className="text-gray-600">Amazon → Evidence %</Label>
+                    <Input id="a2e" type="number" value={amazonToEvidencePct}
+                           onChange={e => setAmazonToEvidencePct(clamp(parseFloat(e.target.value || '0'), 0, 100))} className="bg-white border-gray-200 text-gray-700" />
                   </div>
                   <div>
-                    <Label htmlFor="e2f">Evidence → Findings %</Label>
-                    <Input id="e2f" type="number" value={evidenceToFindingsPct} variant="dark"
-                           onChange={e => setEvidenceToFindingsPct(clamp(parseFloat(e.target.value || '0'), 0, 100))} />
+                    <Label htmlFor="e2f" className="text-gray-600">Evidence → Findings %</Label>
+                    <Input id="e2f" type="number" value={evidenceToFindingsPct}
+                           onChange={e => setEvidenceToFindingsPct(clamp(parseFloat(e.target.value || '0'), 0, 100))} className="bg-white border-gray-200 text-gray-700" />
                   </div>
                   <div>
-                    <Label htmlFor="f2p">Findings → Payout %</Label>
-                    <Input id="f2p" type="number" value={findingsToPayoutPct} variant="dark"
-                           onChange={e => setFindingsToPayoutPct(clamp(parseFloat(e.target.value || '0'), 0, 100))} />
+                    <Label htmlFor="f2p" className="text-gray-600">Findings → Payout %</Label>
+                    <Input id="f2p" type="number" value={findingsToPayoutPct}
+                           onChange={e => setFindingsToPayoutPct(clamp(parseFloat(e.target.value || '0'), 0, 100))} className="bg-white border-gray-200 text-gray-700" />
                   </div>
                   <div>
-                    <Label>Overall conversion</Label>
-                    <div className="text-sm text-gray-300">{(conversionFactor * 100).toFixed(2)}%</div>
+                    <Label className="text-gray-600">Overall conversion</Label>
+                    <div className="text-sm text-gray-600">{(conversionFactor * 100).toFixed(2)}%</div>
                   </div>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="recovered">Avg Recovered / Seller / Mo ($)</Label>
-                  <Input id="recovered" type="number" value={avgRecoveredPerSeller} variant="dark"
-                         onChange={e => setAvgRecoveredPerSeller(clamp(parseFloat(e.target.value || '0'), 0, 1_000_000))} />
+                  <Label htmlFor="recovered" className="text-gray-600">Avg Recovered / Seller / Mo ($)</Label>
+                  <Input id="recovered" type="number" value={avgRecoveredPerSeller}
+                         onChange={e => setAvgRecoveredPerSeller(clamp(parseFloat(e.target.value || '0'), 0, 1_000_000))} className="bg-white border-gray-200 text-gray-700" />
                 </div>
                 <div>
-                  <Label htmlFor="take">Take Rate %</Label>
-                  <Input id="take" type="number" value={takeRatePct} variant="dark"
-                         onChange={e => setTakeRatePct(clamp(parseFloat(e.target.value || '0'), 0, 100))} />
+                  <Label htmlFor="take" className="text-gray-600">Take Rate %</Label>
+                  <Input id="take" type="number" value={takeRatePct}
+                         onChange={e => setTakeRatePct(clamp(parseFloat(e.target.value || '0'), 0, 100))} className="bg-white border-gray-200 text-gray-700" />
                 </div>
                 <div>
-                  <Label>ARPS (rev/seller/mo)</Label>
-                  <div className="text-sm text-gray-300">${arps.toFixed(2)}</div>
+                  <Label className="text-gray-600">ARPS (rev/seller/mo)</Label>
+                  <div className="text-sm text-gray-600">${arps.toFixed(2)}</div>
                 </div>
               </div>
 
               <div className="flex gap-3 pt-2">
-                <Button onClick={reset} variant="outline" className="bg-white/5 text-gray-100 border-white/10">Reset to defaults</Button>
-                <Button onClick={exportCsv} className="gap-2 bg-white/10 text-gray-100 border border-white/10 hover:bg-white/20">Export CSV</Button>
+                <Button onClick={reset} variant="outline" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50">Reset to defaults</Button>
+                <Button onClick={exportCsv} className="bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200">Export CSV</Button>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/10 backdrop-blur-xl border-white/10 rounded-2xl text-gray-300 lg:col-span-2">
+          <Card className="bg-white border-gray-200 shadow-sm lg:col-span-2">
             <CardHeader>
-              <CardTitle className="text-gray-100">Projection (2026)</CardTitle>
-              <CardDescription>Active sellers and revenue per month.</CardDescription>
+              <CardTitle className="text-base font-normal text-gray-700">Projection (2026)</CardTitle>
+              <CardDescription className="text-gray-500">Active sellers and revenue per month.</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
                 <table className="min-w-full text-sm">
-                  <thead className="text-left text-gray-400 border-b border-white/10">
+                  <thead className="text-left text-gray-500 border-b border-gray-200">
                     <tr>
-                      <th className="py-2 pr-4">Month</th>
-                      <th className="py-2 pr-4">Sessions</th>
-                      <th className="py-2 pr-4">New paid</th>
-                      <th className="py-2 pr-4">Active sellers</th>
-                      <th className="py-2 pr-4">Revenue (USD)</th>
-                      <th className="py-2">Revenue (ZAR)</th>
+                      <th className="py-2 pr-4 font-normal">Month</th>
+                      <th className="py-2 pr-4 font-normal">Sessions</th>
+                      <th className="py-2 pr-4 font-normal">New paid</th>
+                      <th className="py-2 pr-4 font-normal">Active sellers</th>
+                      <th className="py-2 pr-4 font-normal">Revenue (USD)</th>
+                      <th className="py-2 font-normal">Revenue (ZAR)</th>
                     </tr>
                   </thead>
                   <tbody>
                     {rows.map((r) => (
-                      <tr key={r.month} className="border-b border-white/5">
-                        <td className="py-2 pr-4 text-gray-200">{r.month}</td>
-                        <td className="py-2 pr-4 text-gray-300">{r.sessions.toLocaleString()}</td>
-                        <td className="py-2 pr-4 text-gray-300">{r.newPaid.toLocaleString()}</td>
-                        <td className="py-2 pr-4 text-gray-300">{r.activeSellers.toLocaleString()}</td>
-                        <td className="py-2 pr-4 text-emerald-300">${r.revenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                        <td className="py-2 text-emerald-300">R {r.revenueZar.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                      <tr key={r.month} className="border-b border-gray-100">
+                        <td className="py-2 pr-4 text-gray-600">{r.month}</td>
+                        <td className="py-2 pr-4 text-gray-600">{r.sessions.toLocaleString()}</td>
+                        <td className="py-2 pr-4 text-gray-600">{r.newPaid.toLocaleString()}</td>
+                        <td className="py-2 pr-4 text-gray-600">{r.activeSellers.toLocaleString()}</td>
+                        <td className="py-2 pr-4 text-gray-700">${r.revenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                        <td className="py-2 text-gray-700">R {r.revenueZar.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                       </tr>
                     ))}
                   </tbody>
                   <tfoot>
                     <tr>
-                      <td className="pt-3 text-gray-400" colSpan={4}>Total</td>
-                      <td className="pt-3 pr-4 text-emerald-300 font-semibold">${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                      <td className="pt-3 text-emerald-300 font-semibold">R {totalRevenueZar.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                      <td className="pt-3 text-gray-500" colSpan={4}>Total</td>
+                      <td className="pt-3 pr-4 text-gray-700 font-normal">${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                      <td className="pt-3 text-gray-700 font-normal">R {totalRevenueZar.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                     </tr>
                   </tfoot>
                 </table>

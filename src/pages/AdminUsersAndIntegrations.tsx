@@ -61,46 +61,46 @@ export default function AdminUsersAndIntegrations() {
 
   return (
     <AdminOnly>
-      <PageLayout title="Admin · Users & Integrations" forceTransparent midnight>
-        <div className="relative -m-4 lg:-m-6 min-h-screen">
-          <div className="container mx-auto px-6 md:px-10 lg:px-12">
+      <PageLayout title="Admin · Users & Integrations">
+        <div className="relative -m-4 lg:-m-6 min-h-screen bg-gray-50">
+          <div className="container mx-auto px-6 md:px-10 lg:px-12 py-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card className="bg-white/10 backdrop-blur-xl border-white/10 rounded-2xl text-gray-300">
+              <Card className="bg-white border-gray-200 shadow-sm">
                 <CardHeader>
-                  <CardTitle className="text-gray-100">Users & Access</CardTitle>
-                  <CardDescription>Manage roles and lock or impersonate users.</CardDescription>
+                  <CardTitle className="text-base font-normal text-gray-700">Users & Access</CardTitle>
+                  <CardDescription className="text-gray-500">Manage roles and lock or impersonate users.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <Label htmlFor="userFilter">Search users</Label>
-                    <Input id="userFilter" variant="dark" placeholder="email@company.com" value={filter} onChange={e => setFilter(e.target.value)} />
+                    <Label htmlFor="userFilter" className="text-gray-600">Search users</Label>
+                    <Input id="userFilter" placeholder="email@company.com" value={filter} onChange={e => setFilter(e.target.value)} className="bg-white border-gray-200 text-gray-700" />
                   </div>
                   <div className="overflow-x-auto">
                     <table className="min-w-full text-sm">
-                      <thead className="text-left text-gray-400 border-b border-white/10">
+                      <thead className="text-left text-gray-500 border-b border-gray-200">
                         <tr>
-                          <th className="py-2 pr-4">Email</th>
-                          <th className="py-2 pr-4">Role</th>
-                          <th className="py-2 pr-4">Status</th>
-                          <th className="py-2">Actions</th>
+                          <th className="py-2 pr-4 font-normal">Email</th>
+                          <th className="py-2 pr-4 font-normal">Role</th>
+                          <th className="py-2 pr-4 font-normal">Status</th>
+                          <th className="py-2 font-normal">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
                         {filtered.map(u => (
-                          <tr key={u.id} className="border-b border-white/5">
-                            <td className="py-2 pr-4 text-gray-200">{u.email}</td>
+                          <tr key={u.id} className="border-b border-gray-100">
+                            <td className="py-2 pr-4 text-gray-600">{u.email}</td>
                             <td className="py-2 pr-4">
-                              <select className="bg-white/5 border-white/10 text-gray-100 rounded px-2 py-1" value={u.role} onChange={e => updateUser(u.id, { role: e.target.value as any })}>
+                              <select className="bg-white border-gray-200 text-gray-700 rounded px-2 py-1 text-sm" value={u.role} onChange={e => updateUser(u.id, { role: e.target.value as any })}>
                                 <option value="user">user</option>
                                 <option value="admin">admin</option>
                               </select>
                             </td>
                             <td className="py-2 pr-4">
-                              <span className={`px-2 py-0.5 rounded text-xs ${u.status === 'active' ? 'bg-emerald-500/10 text-emerald-300' : 'bg-amber-500/10 text-amber-300'}`}>{u.status}</span>
+                              <span className={`px-2 py-0.5 rounded text-xs ${u.status === 'active' ? 'bg-gray-100 text-gray-600' : 'bg-gray-100 text-gray-500'}`}>{u.status}</span>
                             </td>
                             <td className="py-2 flex gap-2">
-                              <Button size="sm" variant="outline" className="bg-white/5 text-gray-100 border-white/10">Impersonate</Button>
-                              <Button size="sm" className="bg-white/10 text-gray-100 border border-white/10">{u.status === 'active' ? 'Lock' : 'Unlock'}</Button>
+                              <Button size="sm" variant="outline" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50">Impersonate</Button>
+                              <Button size="sm" className="bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200">{u.status === 'active' ? 'Lock' : 'Unlock'}</Button>
                             </td>
                           </tr>
                         ))}
@@ -110,42 +110,42 @@ export default function AdminUsersAndIntegrations() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-white/10 backdrop-blur-xl border-white/10 rounded-2xl text-gray-300">
+              <Card className="bg-white border-gray-200 shadow-sm">
                 <CardHeader>
-                  <CardTitle className="text-gray-100">Evidence & Integrations</CardTitle>
-                  <CardDescription>Connection status and ingestion settings.</CardDescription>
+                  <CardTitle className="text-base font-normal text-gray-700">Evidence & Integrations</CardTitle>
+                  <CardDescription className="text-gray-500">Connection status and ingestion settings.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-5">
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     {['gmail','outlook','gdrive','dropbox'].map(p => {
                       const ps = provider(p);
                       return (
-                        <div key={p} className="rounded-lg border border-white/10 bg-white/5 p-3">
+                        <div key={p} className="rounded-lg border border-gray-200 bg-gray-50 p-3">
                           <div className="flex items-center justify-between">
-                            <div className="text-gray-100 font-medium">{p}</div>
-                            <span className={`text-xs px-2 py-0.5 rounded ${ps.connected ? 'bg-emerald-500/10 text-emerald-300' : 'bg-red-500/10 text-red-300'}`}>{ps.connected ? 'connected' : 'disconnected'}</span>
+                            <div className="text-gray-700 font-normal capitalize">{p}</div>
+                            <span className={`text-xs px-2 py-0.5 rounded ${ps.connected ? 'bg-gray-100 text-gray-600' : 'bg-gray-100 text-gray-500'}`}>{ps.connected ? 'connected' : 'disconnected'}</span>
                           </div>
-                          <div className="text-gray-400 text-xs mt-1">Last sync: {ps.lastSync || '—'}</div>
-                          <div className="text-gray-400 text-xs">Token age: {ps.tokenAgeDays ?? '—'} days</div>
+                          <div className="text-gray-500 text-xs mt-1">Last sync: {ps.lastSync || '—'}</div>
+                          <div className="text-gray-500 text-xs">Token age: {ps.tokenAgeDays ?? '—'} days</div>
                           <div className="mt-2 flex gap-2">
-                            <Button size="sm" className="bg-white/10 text-gray-100 border border-white/10" onClick={() => reconnect(p)}>Reconnect</Button>
-                            <Button size="sm" variant="outline" className="bg-white/5 text-gray-100 border-white/10" onClick={async () => { await api.disconnectIntegration(p, true); window.location.reload(); }}>Disconnect & purge</Button>
+                            <Button size="sm" className="bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200" onClick={() => reconnect(p)}>Reconnect</Button>
+                            <Button size="sm" variant="outline" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" onClick={async () => { await api.disconnectIntegration(p, true); window.location.reload(); }}>Disconnect & purge</Button>
                           </div>
                         </div>
                       );
                     })}
                   </div>
-                  <div className="border-t border-white/10 pt-4 grid grid-cols-2 gap-4">
+                  <div className="border-t border-gray-200 pt-4 grid grid-cols-2 gap-4">
                     <div className="flex items-center justify-between">
                       <div>
-                        <div className="text-gray-100">Auto-collect evidence</div>
-                        <div className="text-gray-400 text-xs">Read-only ingestion from email and drives.</div>
+                        <div className="text-gray-700 font-normal">Auto-collect evidence</div>
+                        <div className="text-gray-500 text-xs">Read-only ingestion from email and drives.</div>
                       </div>
                       <Switch checked={autoCollect} onCheckedChange={async (v) => { setAutoCollect(v); await api.setEvidenceAutoCollect(v); }} />
                     </div>
                     <div>
-                      <Label htmlFor="sched">Schedule</Label>
-                      <Input id="sched" variant="dark" value={schedule} onChange={e => setSchedule(e.target.value)} onBlur={async () => { await api.setEvidenceSchedule(schedule); }} />
+                      <Label htmlFor="sched" className="text-gray-600">Schedule</Label>
+                      <Input id="sched" value={schedule} onChange={e => setSchedule(e.target.value)} onBlur={async () => { await api.setEvidenceSchedule(schedule); }} className="bg-white border-gray-200 text-gray-700" />
                     </div>
                   </div>
                 </CardContent>

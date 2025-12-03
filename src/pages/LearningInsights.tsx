@@ -3,7 +3,6 @@ import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { TrendingUp, TrendingDown, Brain, Target, RefreshCw, AlertCircle, CheckCircle } from 'lucide-react';
 import { api } from '@/lib/api';
 
 interface ModelPerformance {
@@ -70,7 +69,7 @@ export function LearningInsights() {
         return (
             <PageLayout title="Learning Insights">
                 <div className="flex items-center justify-center h-64">
-                    <RefreshCw className="h-8 w-8 animate-spin text-gray-400" />
+                    <div className="text-sm text-gray-400">Loading...</div>
                 </div>
             </PageLayout>
         );
@@ -79,11 +78,10 @@ export function LearningInsights() {
     if (error) {
         return (
             <PageLayout title="Learning Insights">
-                <Card>
+                <Card className="bg-white">
                     <CardContent className="p-6">
-                        <div className="flex items-center gap-2 text-red-600">
-                            <AlertCircle className="h-5 w-5" />
-                            <span>{error}</span>
+                        <div className="text-red-600 text-sm">
+                            {error}
                         </div>
                     </CardContent>
                 </Card>
@@ -100,13 +98,12 @@ export function LearningInsights() {
                 {/* Header with refresh button */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900">Self-Improving Brain</h1>
-                        <p className="text-sm text-gray-600 mt-1">
+                        <h1 className="text-lg font-normal text-gray-700">Self-Improving Brain</h1>
+                        <p className="text-sm text-gray-500 mt-1">
                             Automated learning makes recoveries bigger and faster over time
                         </p>
                     </div>
-                    <Button onClick={fetchData} variant="outline" size="sm">
-                        <RefreshCw className="h-4 w-4 mr-2" />
+                    <Button onClick={fetchData} variant="outline" size="sm" className="bg-white text-gray-700">
                         Refresh
                     </Button>
                 </div>
@@ -114,10 +111,9 @@ export function LearningInsights() {
                 {/* Top metrics cards */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {/* Model Performance */}
-                    <Card className="bg-white">
+                    <Card className="bg-white border-gray-200">
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-black">
-                                <Brain className="h-5 w-5 text-purple-600" />
+                            <CardTitle className="text-base font-normal text-gray-700">
                                 Model Performance
                             </CardTitle>
                         </CardHeader>
@@ -125,31 +121,31 @@ export function LearningInsights() {
                             {performance ? (
                                 <div className="space-y-4">
                                     <div>
-                                        <div className="text-3xl font-bold text-purple-600">
+                                        <div className="text-2xl font-normal text-gray-700">
                                             {(performance.accuracy * 100).toFixed(1)}%
                                         </div>
-                                        <div className="text-sm text-gray-600">Accuracy</div>
-                                        <div className="text-xs text-gray-500 mt-1">
+                                        <div className="text-sm text-gray-500">Accuracy</div>
+                                        <div className="text-xs text-gray-400 mt-1">
                                             Model v{performance.modelVersion}
                                         </div>
                                     </div>
-                                    <div className="space-y-2 pt-2 border-t">
+                                    <div className="space-y-2 pt-2 border-t border-gray-200">
                                         <div className="flex justify-between text-sm">
-                                            <span className="text-gray-600">Precision</span>
-                                            <span className="font-medium">{(performance.precision * 100).toFixed(1)}%</span>
+                                            <span className="text-gray-500">Precision</span>
+                                            <span className="font-normal text-gray-600">{(performance.precision * 100).toFixed(1)}%</span>
                                         </div>
                                         <div className="flex justify-between text-sm">
-                                            <span className="text-gray-600">Recall</span>
-                                            <span className="font-medium">{(performance.recall * 100).toFixed(1)}%</span>
+                                            <span className="text-gray-500">Recall</span>
+                                            <span className="font-normal text-gray-600">{(performance.recall * 100).toFixed(1)}%</span>
                                         </div>
                                         <div className="flex justify-between text-sm">
-                                            <span className="text-gray-600">F1 Score</span>
-                                            <span className="font-medium">{(performance.f1Score * 100).toFixed(1)}%</span>
+                                            <span className="text-gray-500">F1 Score</span>
+                                            <span className="font-normal text-gray-600">{(performance.f1Score * 100).toFixed(1)}%</span>
                                         </div>
                                     </div>
                                 </div>
                             ) : (
-                                <div className="text-sm text-gray-500">
+                                <div className="text-sm text-gray-400">
                                     No performance data available yet
                                 </div>
                             )}
@@ -157,10 +153,9 @@ export function LearningInsights() {
                     </Card>
 
                     {/* Success Rates */}
-                    <Card className="bg-white">
+                    <Card className="bg-white border-gray-200">
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-black">
-                                <TrendingUp className="h-5 w-5 text-emerald-600" />
+                            <CardTitle className="text-base font-normal text-gray-700">
                                 Agent Success Rates
                             </CardTitle>
                         </CardHeader>
@@ -172,25 +167,18 @@ export function LearningInsights() {
                                         const isGood = rate > 0.7;
                                         return (
                                             <div key={agent} className="flex justify-between items-center text-sm">
-                                                <span className="text-gray-700 capitalize">
+                                                <span className="text-gray-600 capitalize">
                                                     {agent.replace(/_/g, ' ')}
                                                 </span>
-                                                <div className="flex items-center gap-2">
-                                                    <span className={`font-medium ${isGood ? 'text-emerald-600' : 'text-amber-600'}`}>
-                                                        {percentage}%
-                                                    </span>
-                                                    {isGood ? (
-                                                        <CheckCircle className="h-3.5 w-3.5 text-emerald-600" />
-                                                    ) : (
-                                                        <AlertCircle className="h-3.5 w-3.5 text-amber-600" />
-                                                    )}
-                                                </div>
+                                                <span className={`font-normal ${isGood ? 'text-gray-600' : 'text-gray-500'}`}>
+                                                    {percentage}%
+                                                </span>
                                             </div>
                                         );
                                     })}
                                 </div>
                             ) : (
-                                <div className="text-sm text-gray-500">
+                                <div className="text-sm text-gray-400">
                                     Collecting data...
                                 </div>
                             )}
@@ -198,31 +186,29 @@ export function LearningInsights() {
                     </Card>
 
                     {/* Threshold Optimizations */}
-                    <Card className="bg-white">
+                    <Card className="bg-white border-gray-200">
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-black">
-                                <Target className="h-5 w-5 text-blue-600" />
+                            <CardTitle className="text-base font-normal text-gray-700">
                                 Auto-Optimizations
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-4">
                                 <div>
-                                    <div className="text-3xl font-bold text-blue-600">
+                                    <div className="text-2xl font-normal text-gray-700">
                                         {thresholds.length}
                                     </div>
-                                    <div className="text-sm text-gray-600">Threshold adjustments</div>
-                                    <div className="text-xs text-gray-500 mt-1">Last 30 days</div>
+                                    <div className="text-sm text-gray-500">Threshold adjustments</div>
+                                    <div className="text-xs text-gray-400 mt-1">Last 30 days</div>
                                 </div>
                                 {thresholds.length > 0 && (
-                                    <div className="pt-2 border-t">
-                                        <div className="text-xs text-gray-600">Most recent:</div>
-                                        <div className="text-sm font-medium text-gray-900 mt-1">
+                                    <div className="pt-2 border-t border-gray-200">
+                                        <div className="text-xs text-gray-500">Most recent:</div>
+                                        <div className="text-sm font-normal text-gray-600 mt-1">
                                             {thresholds[0].threshold_type.replace(/_/g, ' ')}
                                         </div>
-                                        <div className="text-xs text-gray-500 mt-0.5 flex items-center gap-1">
+                                        <div className="text-xs text-gray-400 mt-0.5">
                                             {thresholds[0].old_value} → {thresholds[0].new_value}
-                                            <TrendingUp className="h-3 w-3 text-emerald-600" />
                                         </div>
                                     </div>
                                 )}
@@ -233,37 +219,32 @@ export function LearningInsights() {
 
                 {/* Threshold History */}
                 {thresholds.length > 0 && (
-                    <Card className="bg-white">
+                    <Card className="bg-white border-gray-200">
                         <CardHeader>
-                            <CardTitle className="text-black">Threshold Optimization History</CardTitle>
+                            <CardTitle className="text-base font-normal text-gray-700">Threshold Optimization History</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-3">
                                 {thresholds.map((threshold, index) => {
                                     const isIncrease = threshold.new_value > threshold.old_value;
                                     return (
-                                        <div key={index} className="flex items-start justify-between p-3 border rounded-lg bg-gray-50">
+                                        <div key={index} className="flex items-start justify-between p-3 border border-gray-200 rounded-lg bg-gray-50">
                                             <div className="flex-1">
                                                 <div className="flex items-center gap-2">
-                                                    <Badge variant="outline" className="capitalize">
+                                                    <Badge variant="outline" className="capitalize bg-white text-gray-600 border-gray-300">
                                                         {threshold.threshold_type.replace(/_/g, ' ')}
                                                     </Badge>
-                                                    <span className="text-sm text-gray-500">
+                                                    <span className="text-sm text-gray-400">
                                                         {new Date(threshold.applied_at).toLocaleDateString()}
                                                     </span>
                                                 </div>
-                                                <div className="text-sm text-gray-700 mt-2">{threshold.reason}</div>
+                                                <div className="text-sm text-gray-600 mt-2">{threshold.reason}</div>
                                             </div>
                                             <div className="flex items-center gap-2 ml-4">
-                                                {isIncrease ? (
-                                                    <TrendingUp className="h-4 w-4 text-emerald-600" />
-                                                ) : (
-                                                    <TrendingDown className="h-4 w-4 text-blue-600" />
-                                                )}
-                                                <div className="text-sm font-medium">
+                                                <div className="text-sm font-normal">
                                                     <span className="text-gray-500">{threshold.old_value}</span>
-                                                    <span className="mx-1">→</span>
-                                                    <span className={isIncrease ? 'text-emerald-600' : 'text-blue-600'}>
+                                                    <span className="mx-1 text-gray-400">→</span>
+                                                    <span className="text-gray-600">
                                                         {threshold.new_value}
                                                     </span>
                                                 </div>
@@ -278,24 +259,18 @@ export function LearningInsights() {
 
                 {/* Rejection Patterns */}
                 {insights?.patterns?.rejectionPatterns && Object.keys(insights.patterns.rejectionPatterns).length > 0 && (
-                    <Card className="bg-white">
+                    <Card className="bg-white border-gray-200">
                         <CardHeader>
-                            <CardTitle className="text-black">Rejection Pattern Analysis</CardTitle>
+                            <CardTitle className="text-base font-normal text-gray-700">Rejection Pattern Analysis</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-2">
                                 {Object.entries(insights.patterns.rejectionPatterns).map(([reason, data]: [string, any]) => (
-                                    <div key={reason} className="flex justify-between items-center p-3 border rounded-lg">
-                                        <span className="text-sm font-medium text-gray-900">{reason}</span>
+                                    <div key={reason} className="flex justify-between items-center p-3 border border-gray-200 rounded-lg bg-gray-50">
+                                        <span className="text-sm font-normal text-gray-600">{reason}</span>
                                         <div className="flex gap-4 text-sm">
-                                            <div className="flex items-center gap-1">
-                                                <CheckCircle className="h-3.5 w-3.5 text-emerald-600" />
-                                                <span className="text-emerald-600">Fixable: {data.fixable}</span>
-                                            </div>
-                                            <div className="flex items-center gap-1">
-                                                <AlertCircle className="h-3.5 w-3.5 text-red-600" />
-                                                <span className="text-red-600">Unclaimable: {data.unclaimable}</span>
-                                            </div>
+                                            <span className="text-gray-600">Fixable: {data.fixable}</span>
+                                            <span className="text-gray-500">Unclaimable: {data.unclaimable}</span>
                                         </div>
                                     </div>
                                 ))}
@@ -305,18 +280,15 @@ export function LearningInsights() {
                 )}
 
                 {/* Info banner */}
-                <Card className="bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
+                <Card className="bg-gray-50 border-gray-200">
                     <CardContent className="p-6">
-                        <div className="flex items-start gap-3">
-                            <Brain className="h-6 w-6 text-purple-600 mt-0.5" />
-                            <div>
-                                <h3 className="font-semibold text-gray-900">How Learning Works</h3>
-                                <p className="text-sm text-gray-700 mt-1">
-                                    Your AI analyzes every claim outcome—approvals, rejections, and payouts. It automatically adjusts
-                                    matching thresholds, learns from policy changes, and retrains models to maximize recovery rates.
-                                    The system runs every 30 minutes, continuously improving without any manual intervention.
-                                </p>
-                            </div>
+                        <div>
+                            <h3 className="text-base font-normal text-gray-700">How Learning Works</h3>
+                            <p className="text-sm text-gray-500 mt-1">
+                                Your AI analyzes every claim outcome—approvals, rejections, and payouts. It automatically adjusts
+                                matching thresholds, learns from policy changes, and retrains models to maximize recovery rates.
+                                The system runs every 30 minutes, continuously improving without any manual intervention.
+                            </p>
                         </div>
                     </CardContent>
                 </Card>

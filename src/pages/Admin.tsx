@@ -6,13 +6,33 @@ import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { api } from '@/lib/api';
-import { Loader2, TrendingUp, TrendingDown, Activity, Brain, Target, AlertCircle } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+
+interface ModelPerformance {
+  modelVersion: string;
+  accuracy: number;
+  precision: number;
+  recall: number;
+  f1Score: number;
+  lastUpdated: string;
+}
+
+interface ThresholdHistory {
+  threshold_type: string;
+  old_value: number;
+  new_value: number;
+  reason: string;
+  expected_improvement: number;
+  applied_at: string;
+}
 
 export default function Admin() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [learningMetrics, setLearningMetrics] = useState<any>(null);
   const [learningInsights, setLearningInsights] = useState<any>(null);
+  const [modelPerformance, setModelPerformance] = useState<ModelPerformance | null>(null);
+  const [thresholds, setThresholds] = useState<ThresholdHistory[]>([]);
   const [loadingMetrics, setLoadingMetrics] = useState(false);
   const [metricsError, setMetricsError] = useState<string | null>(null);
   const [timeWindow, setTimeWindow] = useState<'7d' | '30d' | '90d'>('30d');
@@ -33,9 +53,11 @@ export default function Admin() {
       setLoadingMetrics(true);
       setMetricsError(null);
       try {
-        const [metricsRes, insightsRes] = await Promise.all([
+        const [metricsRes, insightsRes, perfRes, thresholdRes] = await Promise.all([
           api.getLearningMetrics({ window: timeWindow }),
-          api.getLearningInsights({ limit: 20 })
+          api.getLearningInsights({ limit: 20 }),
+          api.get('/api/learning/model-performance').catch(() => ({ ok: false })),
+          api.get('/api/learning/threshold-history?limit=10').catch(() => ({ ok: false }))
         ]);
         
         if (!cancelled) {
@@ -47,6 +69,14 @@ export default function Admin() {
           
           if (insightsRes.ok && insightsRes.data) {
             setLearningInsights(insightsRes.data.insights);
+          }
+
+          if (perfRes.ok && 'data' in perfRes && perfRes.data) {
+            setModelPerformance((perfRes.data as any).performance);
+          }
+
+          if (thresholdRes.ok && 'data' in thresholdRes && thresholdRes.data) {
+            setThresholds((thresholdRes.data as any).thresholds || []);
           }
         }
       } catch (err: any) {
@@ -106,8 +136,7 @@ export default function Admin() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-gray-900 flex items-center gap-2">
-                    <Brain className="h-5 w-5 text-emerald-600" />
+                  <CardTitle className="text-base font-normal text-gray-700">
                     System Performance & Learning Analytics
                   </CardTitle>
                   <CardDescription className="text-gray-600">Track agent performance, model accuracy, and system optimization insights</CardDescription>
@@ -149,12 +178,11 @@ export default function Admin() {
 
               {metricsError && !loadingMetrics && (
                 <div className="text-center py-8">
-                  <AlertCircle className="h-6 w-6 text-red-600 mx-auto mb-2" />
                   <p className="text-red-600 mb-2">{metricsError}</p>
                   <Button
                     variant="outline"
                     onClick={refreshMetrics}
-                    className="bg-white text-gray-900 border-gray-200 hover:bg-gray-50"
+                    className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
                   >
                     Retry
                   </Button>
@@ -163,18 +191,56 @@ export default function Admin() {
 
               {!loadingMetrics && !metricsError && learningMetrics && (
                 <div className="space-y-6">
-                  {/* Overall Metrics */}
+                  {/* Model Performance & Detailed Metrics */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Model Performance */}
+                    {modelPerformance && (
+                      <Card className="bg-white border-gray-200">
+                        <CardHeader>
+                          <CardTitle className="text-base font-normal text-gray-700">
+                            Model Performance
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-4">
+                            <div>
+                              <div className="text-2xl font-normal text-gray-700">
+                                {(modelPerformance.accuracy * 100).toFixed(1)}%
+                              </div>
+                              <div className="text-sm text-gray-500">Accuracy</div>
+                              <div className="text-xs text-gray-400 mt-1">
+                                Model v{modelPerformance.modelVersion}
+                              </div>
+                            </div>
+                            <div className="space-y-2 pt-2 border-t border-gray-200">
+                              <div className="flex justify-between text-sm">
+                                <span className="text-gray-500">Precision</span>
+                                <span className="font-normal text-gray-600">{(modelPerformance.precision * 100).toFixed(1)}%</span>
+                              </div>
+                              <div className="flex justify-between text-sm">
+                                <span className="text-gray-500">Recall</span>
+                                <span className="font-normal text-gray-600">{(modelPerformance.recall * 100).toFixed(1)}%</span>
+                              </div>
+                              <div className="flex justify-between text-sm">
+                                <span className="text-gray-500">F1 Score</span>
+                                <span className="font-normal text-gray-600">{(modelPerformance.f1Score * 100).toFixed(1)}%</span>
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
+                    
+                    {/* Overall Metrics */}
                     <Card className="bg-gray-50 border-gray-200">
                       <CardContent className="pt-6">
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="text-sm text-gray-600 mb-1">Total Events</p>
-                            <p className="text-2xl font-semibold text-gray-900">
+                            <p className="text-2xl font-normal text-gray-700">
                               {learningMetrics.total_events?.toLocaleString() || 0}
                             </p>
                           </div>
-                          <Activity className="h-8 w-8 text-blue-600" />
                         </div>
                       </CardContent>
                     </Card>
@@ -184,13 +250,12 @@ export default function Admin() {
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="text-sm text-gray-600 mb-1">Success Rate</p>
-                            <p className="text-2xl font-semibold text-gray-900">
+                            <p className="text-2xl font-normal text-gray-700">
                               {learningMetrics.success_rate 
                                 ? `${(learningMetrics.success_rate * 100).toFixed(1)}%`
                                 : 'N/A'}
                             </p>
                           </div>
-                          <Target className="h-8 w-8 text-emerald-600" />
                         </div>
                       </CardContent>
                     </Card>
@@ -200,22 +265,12 @@ export default function Admin() {
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="text-sm text-gray-600 mb-1">Improvement Rate</p>
-                            <p className="text-2xl font-semibold text-gray-900 flex items-center gap-2">
+                            <p className="text-2xl font-normal text-gray-700">
                               {learningMetrics.improvement_rate 
-                                ? (
-                                  <>
-                                    {learningMetrics.improvement_rate > 0 ? (
-                                      <TrendingUp className="h-5 w-5 text-emerald-600" />
-                                    ) : (
-                                      <TrendingDown className="h-5 w-5 text-red-600" />
-                                    )}
-                                    {Math.abs(learningMetrics.improvement_rate * 100).toFixed(1)}%
-                                  </>
-                                )
+                                ? `${Math.abs(learningMetrics.improvement_rate * 100).toFixed(1)}%`
                                 : 'N/A'}
                             </p>
                           </div>
-                          <Brain className="h-8 w-8 text-purple-600" />
                         </div>
                       </CardContent>
                     </Card>
@@ -225,7 +280,7 @@ export default function Admin() {
                   {learningMetrics.by_agent && Object.keys(learningMetrics.by_agent).length > 0 && (
                     <Card className="bg-white border-gray-200">
                       <CardHeader>
-                        <CardTitle className="text-gray-900 text-lg">Agent Performance</CardTitle>
+                        <CardTitle className="text-base font-normal text-gray-700">Agent Performance</CardTitle>
                         <CardDescription className="text-gray-600">Success rates and event counts by agent</CardDescription>
                       </CardHeader>
                       <CardContent>
@@ -233,10 +288,10 @@ export default function Admin() {
                           <Table>
                             <TableHeader>
                               <TableRow className="border-gray-200">
-                                <TableHead className="text-gray-900">Agent</TableHead>
-                                <TableHead className="text-gray-900">Events</TableHead>
-                                <TableHead className="text-gray-900">Success Rate</TableHead>
-                                <TableHead className="text-gray-900">Status</TableHead>
+                                <TableHead className="text-gray-700 font-normal">Agent</TableHead>
+                                <TableHead className="text-gray-700 font-normal">Events</TableHead>
+                                <TableHead className="text-gray-700 font-normal">Success Rate</TableHead>
+                                <TableHead className="text-gray-700 font-normal">Status</TableHead>
                               </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -247,13 +302,13 @@ export default function Admin() {
                                 
                                 return (
                                   <TableRow key={agent} className="border-gray-200 hover:bg-gray-50">
-                                    <TableCell className="text-gray-900 font-medium">
+                                    <TableCell className="text-gray-700 font-normal">
                                       {agent.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                                     </TableCell>
-                                    <TableCell className="text-gray-700">
+                                    <TableCell className="text-gray-600">
                                       {data.events?.toLocaleString() || 0}
                                     </TableCell>
-                                    <TableCell className="text-gray-700">
+                                    <TableCell className="text-gray-600">
                                       {successRate > 0 ? `${(successRate * 100).toFixed(1)}%` : 'N/A'}
                                     </TableCell>
                                     <TableCell>
@@ -281,47 +336,34 @@ export default function Admin() {
                     </Card>
                   )}
 
-                  {/* Learning Insights */}
-                  {learningInsights && learningInsights.length > 0 && (
+                  {/* Threshold Optimization History */}
+                  {thresholds.length > 0 && (
                     <Card className="bg-white border-gray-200">
                       <CardHeader>
-                        <CardTitle className="text-gray-900 text-lg">Optimization Insights</CardTitle>
-                        <CardDescription className="text-gray-600">AI-generated recommendations for system improvement</CardDescription>
+                        <CardTitle className="text-base font-normal text-gray-700">Threshold Optimization History</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-3">
-                          {learningInsights.slice(0, 10).map((insight: any) => (
-                            <div
-                              key={insight.id}
-                              className="p-4 rounded-lg bg-gray-50 border border-gray-200"
-                            >
-                              <div className="flex items-start gap-3">
-                                <Brain className="h-5 w-5 text-purple-600 mt-0.5 flex-shrink-0" />
-                                <div className="flex-1">
-                                  <h4 className="text-sm font-medium text-gray-900 mb-1">
-                                    {insight.title || 'Optimization Insight'}
-                                  </h4>
-                                  <p className="text-sm text-gray-600">
-                                    {insight.description || 'No description available'}
-                                  </p>
-                                  {insight.impact && (
-                                    <p className="text-xs text-gray-500 mt-1">
-                                      Impact: {insight.impact}
-                                    </p>
-                                  )}
-                                  {insight.priority && (
-                                    <Badge 
-                                      className={`mt-2 ${
-                                        insight.priority === 'high'
-                                          ? 'bg-red-100 text-red-800 border-red-200'
-                                          : insight.priority === 'medium'
-                                          ? 'bg-amber-100 text-amber-800 border-amber-200'
-                                          : 'bg-blue-100 text-blue-800 border-blue-200'
-                                      }`}
-                                    >
-                                      {insight.priority} priority
-                                    </Badge>
-                                  )}
+                          {thresholds.map((threshold, index) => (
+                            <div key={index} className="flex items-start justify-between p-3 border border-gray-200 rounded-lg bg-gray-50">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2">
+                                  <Badge variant="outline" className="capitalize bg-white text-gray-600 border-gray-300">
+                                    {threshold.threshold_type.replace(/_/g, ' ')}
+                                  </Badge>
+                                  <span className="text-sm text-gray-400">
+                                    {new Date(threshold.applied_at).toLocaleDateString()}
+                                  </span>
+                                </div>
+                                <div className="text-sm text-gray-600 mt-2">{threshold.reason}</div>
+                              </div>
+                              <div className="flex items-center gap-2 ml-4">
+                                <div className="text-sm font-normal">
+                                  <span className="text-gray-500">{threshold.old_value}</span>
+                                  <span className="mx-1 text-gray-400">→</span>
+                                  <span className="text-gray-600">
+                                    {threshold.new_value}
+                                  </span>
                                 </div>
                               </div>
                             </div>
@@ -331,8 +373,65 @@ export default function Admin() {
                     </Card>
                   )}
 
+                  {/* Rejection Pattern Analysis */}
+                  {learningInsights?.patterns?.rejectionPatterns && Object.keys(learningInsights.patterns.rejectionPatterns).length > 0 && (
+                    <Card className="bg-white border-gray-200">
+                      <CardHeader>
+                        <CardTitle className="text-base font-normal text-gray-700">Rejection Pattern Analysis</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-2">
+                          {Object.entries(learningInsights.patterns.rejectionPatterns).map(([reason, data]: [string, any]) => (
+                            <div key={reason} className="flex justify-between items-center p-3 border border-gray-200 rounded-lg bg-gray-50">
+                              <span className="text-sm font-normal text-gray-600">{reason}</span>
+                              <div className="flex gap-4 text-sm">
+                                <span className="text-gray-600">Fixable: {data.fixable}</span>
+                                <span className="text-gray-500">Unclaimable: {data.unclaimable}</span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  {/* Learning Insights */}
+                  {learningInsights && learningInsights.length > 0 && (
+                    <Card className="bg-white border-gray-200">
+                      <CardHeader>
+                        <CardTitle className="text-base font-normal text-gray-700">Optimization Insights</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-3">
+                          {learningInsights.slice(0, 10).map((insight: any) => (
+                            <div
+                              key={insight.id}
+                              className="p-4 rounded-lg bg-gray-50 border border-gray-200"
+                            >
+                              <div className="flex-1">
+                                <h4 className="text-sm font-normal text-gray-700 mb-1">
+                                  {insight.title || 'Optimization Insight'}
+                                </h4>
+                                <p className="text-sm text-gray-500">
+                                  {insight.description || 'No description available'}
+                                </p>
+                                {insight.impact && (
+                                  <p className="text-xs text-gray-400 mt-1">
+                                    Impact: {insight.impact}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
+
                   {(!learningMetrics.by_agent || Object.keys(learningMetrics.by_agent).length === 0) && 
-                   (!learningInsights || learningInsights.length === 0) && (
+                   (!learningInsights || learningInsights.length === 0) &&
+                   (!modelPerformance) &&
+                   (thresholds.length === 0) && (
                     <div className="text-center py-8 text-gray-600">
                       <p>No learning data available yet.</p>
                       <p className="text-sm mt-1 text-gray-500">Data will appear as agents process events.</p>

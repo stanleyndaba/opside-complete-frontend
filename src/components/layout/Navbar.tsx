@@ -34,8 +34,6 @@ export function Navbar({
     location.pathname.startsWith('/recoveries') ||
     location.pathname.startsWith('/reports') ||
     location.pathname.startsWith('/upcoming-payments') ||
-    location.pathname.startsWith('/revenue-model') ||
-    location.pathname.startsWith('/admin') ||
     location.pathname.startsWith('/notifications') ||
     location.pathname.startsWith('/whats-new') ||
     location.pathname.startsWith('/help') ||
