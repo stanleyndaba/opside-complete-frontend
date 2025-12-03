@@ -613,7 +613,17 @@ export function Dashboard() {
               <div className="rounded-2xl bg-white border border-gray-200 shadow-sm p-6 md:p-8">
                 <div className="mb-4">
                   <div className="flex items-center justify-between">
-                    <h2 className="text-2xl" style={{ fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '800', color: '#36454F', letterSpacing: '-0.02em' }}>Overview Board</h2>
+                    <h2
+                      className="text-xl"
+                      style={{
+                        fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, sans-serif',
+                        fontWeight: '800',
+                        color: '#36454F',
+                        letterSpacing: '-0.02em',
+                      }}
+                    >
+                      Overview Board
+                    </h2>
                     <Select value={selectedCurrency} onValueChange={setSelectedCurrency}>
                       <SelectTrigger className="w-[140px] bg-white border-gray-300">
                         <SelectValue />
