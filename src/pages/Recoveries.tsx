@@ -1724,7 +1724,7 @@ export default function Recoveries() {
 
                   {/* Phase 3: Resolve Detection Modal */}
                   <Dialog open={resolveModalOpen} onOpenChange={setResolveModalOpen}>
-                    <DialogContent className="bg-[#0B1220] border-white/10 text-gray-300">
+                    <DialogContent className="bg-white border-gray-200 text-gray-700">
                       <DialogHeader>
                         <DialogTitle>Mark Detection as Resolved</DialogTitle>
                         <DialogDescription className="text-gray-400">
@@ -1834,7 +1834,7 @@ export default function Recoveries() {
 
                   {/* Phase 3: Status Update Modal */}
                   <Dialog open={statusUpdateModalOpen} onOpenChange={setStatusUpdateModalOpen}>
-                    <DialogContent className="bg-[#0B1220] border-white/10 text-gray-300">
+                    <DialogContent className="bg-white border-gray-200 text-gray-700">
                       <DialogHeader>
                         <DialogTitle>Update Detection Status</DialogTitle>
                         <DialogDescription className="text-gray-400">
@@ -1935,7 +1935,7 @@ export default function Recoveries() {
 
                   {/* Phase 3: Detection Details Modal */}
                   <Dialog open={detailsModalOpen} onOpenChange={setDetailsModalOpen}>
-                    <DialogContent className="bg-[#0B1220] border-white/10 text-gray-300 max-w-4xl max-h-[90vh] overflow-y-auto">
+                    <DialogContent className="bg-white border-gray-200 text-gray-700 max-w-4xl max-h-[90vh] overflow-y-auto">
                       <DialogHeader>
                         <DialogTitle>Detection Details</DialogTitle>
                         <DialogDescription className="text-gray-400">

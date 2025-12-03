@@ -67,7 +67,7 @@ export default function AdminUsersAndIntegrations() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Card className="bg-white border-gray-200 shadow-sm">
                 <CardHeader>
-                  <CardTitle className="text-base font-normal text-gray-700">Users & Access</CardTitle>
+                  <CardTitle className="text-base font-normal text-gray-700">Users and Access</CardTitle>
                   <CardDescription className="text-gray-500">Manage roles and lock or impersonate users.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -112,11 +112,11 @@ export default function AdminUsersAndIntegrations() {
 
               <Card className="bg-white border-gray-200 shadow-sm">
                 <CardHeader>
-                  <CardTitle className="text-base font-normal text-gray-700">Evidence & Integrations</CardTitle>
+                  <CardTitle className="text-base font-normal text-gray-700">Document Ingestion</CardTitle>
                   <CardDescription className="text-gray-500">Connection status and ingestion settings.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-5">
-                  <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div className="space-y-3 text-sm">
                     {['gmail','outlook','gdrive','dropbox'].map(p => {
                       const ps = provider(p);
                       return (
@@ -135,7 +135,7 @@ export default function AdminUsersAndIntegrations() {
                       );
                     })}
                   </div>
-                  <div className="border-t border-gray-200 pt-4 grid grid-cols-2 gap-4">
+                  <div className="border-t border-gray-200 pt-4 space-y-4">
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="text-gray-700 font-normal">Auto-collect evidence</div>
