@@ -17,7 +17,7 @@ export function Toaster() {
         return (
           <Toast key={id} {...props}>
             <div className="grid gap-1">
-              <div className="select-none font-black uppercase tracking-[0.4em] text-[11px] text-gray-500">
+              <div className="select-none font-black uppercase text-[11px] text-[#36454F]">
                 CLARIO
               </div>
               {title && title !== 'CLARIO' && (
