@@ -684,6 +684,43 @@ export function Dashboard() {
                               </div>
                             )}
                           </div>
+
+                          {/* Manual sync trigger */}
+                          <div className="mt-4">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="bg-white border border-gray-200 text-gray-900 hover:bg-gray-50"
+                              onClick={async () => {
+                                try {
+                                  const { startSync } = await import('@/lib/inventoryApi');
+                                  setSyncTriggered(true);
+                                  setNeedsSync(false);
+                                  setSyncMessage('Sync started. We are fetching your latest Amazon data…');
+                                  const res = await startSync();
+                                  if (res?.syncId) {
+                                    setActiveSyncId(res.syncId);
+                                    // Ongoing polling is handled by fetchRecoveriesOnce/checkAndMonitorSync
+                                  }
+                                  toast({
+                                    title: 'Sync started',
+                                    description: res?.message || 'We are syncing your Amazon account now.',
+                                  });
+                                } catch (error: any) {
+                                  console.error('Failed to start sync from dashboard:', error);
+                                  setSyncTriggered(false);
+                                  setNeedsSync(true);
+                                  toast({
+                                    title: 'Sync failed',
+                                    description: error?.message || 'Unable to start sync. Please try again.',
+                                    variant: 'destructive',
+                                  });
+                                }
+                              }}
+                            >
+                              Run
+                            </Button>
+                          </div>
                         </div>
 
                         <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
