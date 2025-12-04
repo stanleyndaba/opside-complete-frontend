@@ -1105,7 +1105,7 @@ export default function Recoveries() {
 
 
             {/* Opportunity Radar Summary */}
-            <Card className="mb-8 bg-white border-gray-200 text-gray-900">
+            <Card className="mb-8 bg-gray-50 border-gray-200 text-gray-900 rounded-xl">
               <CardContent className="p-5 md:p-6">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div className="flex-1">
@@ -1198,13 +1198,16 @@ export default function Recoveries() {
 
             {/* Key Metrics Bar - Enhanced with Phase 3 Statistics */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
+              <Card className="bg-gray-50 border-gray-200 text-gray-900 shadow-sm rounded-xl">
                 <CardContent className="p-6">
                   <div className="flex items-center">
                     <div>
                       <p className="text-sm font-medium text-gray-600">Total Claims Identified</p>
                       <p className="text-xl font-normal text-[#1f1f1f]">
-                        {detectionStats?.total_anomalies ?? detectionStats?.totalDetections ?? (metrics ? metrics.totalClaimsFound : keyMetrics.totalClaimsFound)}
+                        {(() => {
+                          const value = detectionStats?.total_anomalies ?? detectionStats?.totalDetections ?? (metrics ? metrics.totalClaimsFound : keyMetrics.totalClaimsFound);
+                          return value > 0 ? value : null;
+                        })()}
                         {amazonClaimCount != null && amazonClaimCount > 0 && (
                           <span className="text-sm text-emerald-400 ml-2 font-normal">
                             from Amazon
@@ -1221,7 +1224,7 @@ export default function Recoveries() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
+              <Card className="bg-gray-50 border-gray-200 text-gray-900 shadow-sm rounded-xl">
                 <CardContent className="p-6">
                   <div className="flex items-center">
                     <div>
@@ -1244,7 +1247,7 @@ export default function Recoveries() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
+              <Card className="bg-gray-50 border-gray-200 text-gray-900 shadow-sm rounded-xl">
                 <CardContent className="p-6">
                   <div className="flex items-center">
                     <div>
@@ -1260,17 +1263,12 @@ export default function Recoveries() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
+              <Card className="bg-gray-50 border-gray-200 text-gray-900 shadow-sm rounded-xl">
                 <CardContent className="p-6">
                   <div className="flex items-center">
                     <div>
                       <p className="text-sm font-medium text-gray-600">30-Day Approval Rate</p>
                       <p className="text-xl font-medium text-emerald-600">{metrics ? Math.round(metrics.successRate30d) : keyMetrics.successRate.toFixed(0)}%</p>
-                      {detectionStats?.by_confidence && (
-                        <p className="text-xs text-gray-600 mt-1">
-                          {detectionStats.by_confidence.medium + detectionStats.by_confidence.low} medium/low
-                        </p>
-                      )}
                     </div>
                   </div>
                 </CardContent>
@@ -1305,7 +1303,7 @@ export default function Recoveries() {
                 {/* Claims Tab (Existing Content) */}
                 <TabsContent value="claims" className="mt-0">
                   {/* Controls */}
-                  <Card className="mb-8 bg-white border-gray-200 text-gray-900 shadow-sm">
+                  <Card className="mb-8 bg-gray-50 border-gray-200 text-gray-900 shadow-sm rounded-xl">
                     <CardContent className="p-6">
                       <div className="flex flex-wrap gap-4 items-center">
                         {/* Search Bar */}
@@ -1432,7 +1430,7 @@ export default function Recoveries() {
                   </Card>
 
                   {/* Data Table */}
-                  <Card className="bg-white border-gray-200 text-gray-900 w-full overflow-hidden shadow-sm">
+                  <Card className="bg-gray-50 border-gray-200 text-gray-900 w-full overflow-hidden shadow-sm rounded-xl">
                     <CardContent className="p-0 w-full">
                       {loading && (
                         <div className="p-8 text-center">

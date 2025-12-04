@@ -678,7 +678,7 @@ export default function EvidenceLocker() {
     <div className="relative w-full">
       <div className="relative w-full bg-gray-50 min-h-screen">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-gray-50 to-white" />
-        <div className="relative w-full max-w-full mx-auto px-6 pt-6 pb-10 text-gray-900 space-y-8">
+        <div className="relative w-full max-w-full mx-auto px-4 sm:px-6 pt-6 pb-10 text-gray-900 space-y-8 overflow-x-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <GmailConnectionStatus onStatusChange={setGmailConnected} />
             <EvidenceIngestion
@@ -701,7 +701,7 @@ export default function EvidenceLocker() {
           </div>
 
           {/* Document Activity Log - Terminal Style */}
-          <Card className="bg-white border-gray-200 text-gray-900">
+          <Card className="bg-gray-50 border-gray-200 text-gray-900 overflow-hidden rounded-xl">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <div>
@@ -781,7 +781,7 @@ export default function EvidenceLocker() {
             </CardContent>
           </Card>
 
-          <Card className="bg-white border-gray-200 text-gray-900">
+          <Card className="bg-gray-50 border-gray-200 text-gray-900 overflow-hidden rounded-xl">
             <CardHeader>
               <CardTitle className="font-medium">Upload Documents</CardTitle>
               <CardDescription>
@@ -789,7 +789,7 @@ export default function EvidenceLocker() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className={`border-2 border-dashed rounded-lg p-8 text-center transition-all ${dragActive ? 'border-emerald-500 bg-emerald-50' : 'border-gray-200 hover:border-emerald-400'}`} onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}>
+              <div className={`border-2 border-dashed rounded-xl p-8 text-center transition-all ${dragActive ? 'border-emerald-500 bg-emerald-50' : 'border-gray-200 hover:border-emerald-400'}`} onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}>
                 <Upload className="h-12 w-12 mx-auto mb-4 text-gray-500" />
                 <h3 className="text-lg font-medium mb-2">Drag & Drop Your Invoices or Purchase Orders Here</h3>
                 <p className="text-gray-600 mb-4">
@@ -961,7 +961,7 @@ export default function EvidenceLocker() {
               </div>
             </CardContent>
           </Card>
-          <Card className="bg-white border-gray-200 text-gray-900">
+          <Card className="bg-gray-50 border-gray-200 text-gray-900 overflow-hidden rounded-xl">
             <CardHeader>
               <div>
                 <CardTitle className="text-black mb-1 font-medium">Document Library</CardTitle>
@@ -969,7 +969,7 @@ export default function EvidenceLocker() {
                 <div className="flex flex-wrap items-center gap-2 justify-end">
                   <div className="relative">
                     <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500 stroke-[2]" />
-                    <Input placeholder="Search supplier, invoice #, claim ID…" value={q} onChange={(e) => setQ(e.target.value)} className="pl-8 w-72 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
+                    <Input placeholder="Search supplier, invoice #, claim ID…" value={q} onChange={(e) => setQ(e.target.value)} className="pl-8 w-full max-w-xs border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
                   </div>
                   <Input placeholder="Supplier" value={supplier} onChange={(e) => setSupplier(e.target.value)} className="w-40 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
                   <Input placeholder="Type (invoice/receipt/shipping)" value={type} onChange={(e) => setType(e.target.value)} className="w-56 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
@@ -980,10 +980,10 @@ export default function EvidenceLocker() {
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-6">
               {loading && <div className="text-sm text-muted-foreground">Loading documents…</div>}
               {error && <div className="text-sm text-red-600">{error}</div>}
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto -mx-4 sm:-mx-6 px-4 sm:px-6">
                 <Table className="min-w-[1150px]">
                   <TableHeader>
                     <TableRow>
