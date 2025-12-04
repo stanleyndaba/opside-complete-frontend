@@ -226,6 +226,28 @@ export const subscribeSyncProgress = (syncId: string, onUpdate: (data: any) => v
     }
   });
 
+  // Handle 'sync_progress' events from sseLogEmitter (Agents 2, 3, etc.)
+  eventSource.addEventListener('sync_progress', (e: any) => {
+    try {
+      const data = JSON.parse(e.data);
+      console.log('[SSE] Received sync_progress event:', data);
+      onUpdate(data);
+    } catch (err) {
+      console.error('Error parsing sync_progress SSE event:', err);
+    }
+  });
+
+  // Handle 'message' events (backward compatibility)
+  eventSource.addEventListener('message', (e: any) => {
+    try {
+      const data = JSON.parse(e.data);
+      console.log('[SSE] Received message event:', data);
+      onUpdate(data);
+    } catch (err) {
+      console.error('Error parsing message SSE event:', err);
+    }
+  });
+
   // Handle connection errors
   eventSource.onerror = (error) => {
     console.error('SSE error:', error);
