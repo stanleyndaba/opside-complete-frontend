@@ -93,6 +93,13 @@
     width: 100%;
     max-width: 100%;
     overflow-x: hidden;
+    min-height: 100vh;
+  }
+  
+  /* Ensure main content uses full width */
+  main {
+    width: 100%;
+    max-width: 100%;
   }
 
   body {

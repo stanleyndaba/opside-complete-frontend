@@ -42,7 +42,7 @@ export function PageLayout({
         )}
 
         <main className={`flex-1 transition-all duration-300 ${mainIndent}`}>
-          <div className="container max-w-full p-4 lg:p-6 animate-fade-in">
+          <div className="w-full max-w-full mx-auto p-4 lg:p-6 animate-fade-in">
               {(hideNavbar && hideSidebar) && (
                 <div className="fixed top-3 left-4 z-50 pointer-events-none">
                   <span

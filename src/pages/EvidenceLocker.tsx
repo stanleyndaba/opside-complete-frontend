@@ -675,10 +675,10 @@ export default function EvidenceLocker() {
   };
 
   return <PageLayout title="Doc Locker">
-    <div className="relative -m-4 lg:-m-6">
-      <div className="relative w-full bg-gray-50 min-h-[calc(100vh+96px)] -mt-24 pt-24">
+    <div className="relative w-full">
+      <div className="relative w-full bg-gray-50 min-h-screen">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-gray-50 to-white" />
-        <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-900 space-y-8">
+        <div className="relative w-full max-w-full mx-auto px-6 pt-6 pb-10 text-gray-900 space-y-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <GmailConnectionStatus onStatusChange={setGmailConnected} />
             <EvidenceIngestion

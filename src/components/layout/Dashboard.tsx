@@ -609,7 +609,7 @@ export function Dashboard() {
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
         <main className={'flex-1 transition-all duration-300 overflow-y-auto ' + mainClass}>
           <div className="relative pt-24">
-            <div className="relative container mx-auto px-6 md:px-10 lg:px-12 pb-10 text-gray-900 space-y-8">
+            <div className="relative w-full max-w-full mx-auto px-6 md:px-10 lg:px-12 pb-10 text-gray-900 space-y-8">
               <div className="rounded-2xl bg-white border border-gray-200 shadow-sm p-6 md:p-8">
                 <div className="mb-4">
                   <div className="flex items-center justify-end">
