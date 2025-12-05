@@ -10,8 +10,8 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { 
-  User, Building2, Users, CreditCard, Zap, Bell, Shield, 
+import {
+  User, Building2, Users, CreditCard, Zap, Bell, Shield,
   Upload, MapPin, Clock, Monitor, Smartphone, AlertTriangle,
   CheckCircle, Calendar, Globe, Camera, Key, Plug, Briefcase,
   RefreshCw, XCircle, Store, Box
@@ -70,7 +70,7 @@ const Settings = () => {
         setEmail(savedProfile.email || '');
         setAvatarSrc(savedProfile.avatarSrc || '');
       }
-    } catch {}
+    } catch { }
     try {
       const savedBiz = JSON.parse(localStorage.getItem('clario.business') || 'null');
       if (savedBiz) {
@@ -78,7 +78,7 @@ const Settings = () => {
         setBusinessAddress(savedBiz.businessAddress || '');
         setTimezone(savedBiz.timezone || 'Pacific Standard Time (PST) - San Francisco, Bay Area');
       }
-    } catch {}
+    } catch { }
     (async () => {
       // Best-effort: hydrate from backend if available
       const res = await api.get<any>('/api/auth/me');
@@ -94,7 +94,7 @@ const Settings = () => {
         setAvatarSrc(av || avatarSrc);
       }
     })();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Load seller profile data
@@ -233,7 +233,7 @@ const Settings = () => {
         setLoginAlertsEnabled(sec.loginAlertsEnabled !== false);
         setTrustedDevice(sec.trustedDevice !== false);
       }
-    } catch {}
+    } catch { }
   }, []);
 
   const persistSecurity = (next?: Partial<{ twoFactorEnabled: boolean; backupCodes: string[]; loginAlertsEnabled: boolean; trustedDevice: boolean }>) => {
@@ -263,7 +263,7 @@ const Settings = () => {
   };
 
   const exportLoginHistory = () => {
-    const headers = ['Device','Location','Time','Current'];
+    const headers = ['Device', 'Location', 'Time', 'Current'];
     const rows = loginHistory.map(l => [l.device, l.location, l.time, l.current ? 'Yes' : 'No'].join(','));
     const csv = [headers.join(','), ...rows].join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
@@ -314,7 +314,7 @@ const Settings = () => {
       if (diffMins < 60) return `${diffMins} ${diffMins === 1 ? 'minute' : 'minutes'} ago`;
       if (diffHours < 24) return `${diffHours} ${diffHours === 1 ? 'hour' : 'hours'} ago`;
       if (diffDays < 30) return `${diffDays} ${diffDays === 1 ? 'day' : 'days'} ago`;
-      
+
       return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
     } catch {
       return dateString;
@@ -326,9 +326,9 @@ const Settings = () => {
     if (!dateString) return 'Never';
     try {
       const date = new Date(dateString);
-      return date.toLocaleString('en-US', { 
-        year: 'numeric', 
-        month: 'long', 
+      return date.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'long',
         day: 'numeric',
         hour: 'numeric',
         minute: '2-digit',
@@ -358,7 +358,7 @@ const Settings = () => {
         const marketplaces = sellerProfile.linked_marketplaces || amazonSellersInfo?.marketplaces?.map((m: any) => m.id) || [];
         const isAmazonConnected = sellerProfile.amazon_connected || false;
         const isStripeConnected = sellerProfile.stripe_connected || false;
-        
+
         return (
           <div className="space-y-6">
             {/* Header Section */}
@@ -373,9 +373,9 @@ const Settings = () => {
                   </p>
                 )}
               </div>
-              <Badge 
-                className={isAmazonConnected 
-                  ? "bg-green-500/20 text-green-300 border-green-500/30" 
+              <Badge
+                className={isAmazonConnected
+                  ? "bg-green-500/20 text-green-300 border-green-500/30"
                   : "bg-red-500/20 text-red-300 border-red-500/30"
                 }
               >
@@ -421,7 +421,7 @@ const Settings = () => {
                           </p>
                         </div>
                       </div>
-                      
+
                       {sellerProfile.amazon_seller_id && (
                         <div>
                           <Label className="text-gray-600 text-sm">Amazon Seller ID</Label>
@@ -433,7 +433,7 @@ const Settings = () => {
                           </div>
                         </div>
                       )}
-                      
+
                       {sellerProfile.created_at && (
                         <div>
                           <Label className="text-gray-600 text-sm">Member Since</Label>
@@ -445,7 +445,7 @@ const Settings = () => {
                           </div>
                         </div>
                       )}
-                      
+
                       {sellerProfile.last_login && (
                         <div>
                           <Label className="text-gray-600 text-sm">Last Active</Label>
@@ -478,7 +478,7 @@ const Settings = () => {
                         {marketplaces.map((marketplaceId: string) => {
                           const display = getMarketplaceDisplay(marketplaceId);
                           return (
-                            <div 
+                            <div
                               key={marketplaceId}
                               className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg bg-gray-50"
                             >
@@ -506,10 +506,10 @@ const Settings = () => {
                     <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg bg-gray-50">
                       <div className="flex items-center gap-3">
                         <div className="h-10 w-10 rounded-lg bg-white flex items-center justify-center border border-gray-200 shadow-sm">
-                          <img 
-                            src="/lovable-uploads/14f98d63-9a1a-4128-8021-1d840d778ea5.png" 
-                            alt="Amazon Seller Central logo" 
-                            className="h-7 w-7 object-contain" 
+                          <img
+                            src="/lovable-uploads/14f98d63-9a1a-4128-8021-1d840d778ea5.png"
+                            alt="Amazon Seller Central logo"
+                            className="h-7 w-7 object-contain"
                           />
                         </div>
                         <div>
@@ -536,8 +536,8 @@ const Settings = () => {
                       </div>
                       <div>
                         {isAmazonConnected ? (
-                          <Button 
-                            variant="outline" 
+                          <Button
+                            variant="outline"
                             size="sm"
                             className="bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
                             onClick={() => navigate('/integrations-hub')}
@@ -545,7 +545,7 @@ const Settings = () => {
                             Manage
                           </Button>
                         ) : (
-                          <Button 
+                          <Button
                             size="sm"
                             className="bg-emerald-500 hover:bg-emerald-400 text-white"
                             onClick={() => navigate('/integrations-hub')}
@@ -560,10 +560,10 @@ const Settings = () => {
                     <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg bg-gray-50">
                       <div className="flex items-center gap-3">
                         <div className="h-10 w-10 rounded-lg bg-white flex items-center justify-center border border-gray-200 shadow-sm">
-                          <img 
-                            src="/Stripe-logo.png" 
-                            alt="Stripe logo" 
-                            className="h-7 w-7 object-contain" 
+                          <img
+                            src="/Stripe-logo.png"
+                            alt="Stripe logo"
+                            className="h-7 w-7 object-contain"
                           />
                         </div>
                         <div>
@@ -585,8 +585,8 @@ const Settings = () => {
                       </div>
                       <div>
                         {isStripeConnected ? (
-                          <Button 
-                            variant="outline" 
+                          <Button
+                            variant="outline"
                             size="sm"
                             className="bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
                             onClick={() => navigate('/billing')}
@@ -594,7 +594,7 @@ const Settings = () => {
                             Manage
                           </Button>
                         ) : (
-                          <Button 
+                          <Button
                             variant="outline"
                             size="sm"
                             className="bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
@@ -634,7 +634,7 @@ const Settings = () => {
                           )}
                         </div>
                       )}
-                      
+
                       {sellerProfile.last_sync_completed_at && (
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
@@ -648,7 +648,7 @@ const Settings = () => {
                           </div>
                         </div>
                       )}
-                      
+
                       {sellerProfile.last_sync_job_id && (
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
@@ -671,7 +671,7 @@ const Settings = () => {
           </div>
         );
 
-      
+
 
       case 'billing':
         return (
@@ -680,17 +680,17 @@ const Settings = () => {
               <h2 className="text-2xl font-semibold text-gray-900">Billing Invoices</h2>
               <p className="text-gray-600">View your ROI and manage billing preferences</p>
             </div>
-            
+
             <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
               <CardContent className="p-6">
                 <div className="text-center py-8">
                   <CreditCard className="h-12 w-12 mx-auto text-gray-500 mb-4" />
                   <h3 className="text-lg font-medium mb-2 text-gray-900">Complete Billing Dashboard</h3>
                   <p className="text-gray-600 mb-4">
-                    Access your comprehensive billing & value report with ROI calculations, 
+                    Access your comprehensive billing and value report with ROI calculations,
                     invoice history, and plan management.
                   </p>
-                <Button className="bg-emerald-500 hover:bg-emerald-400 text-white" onClick={() => navigate('/billing')}>
+                  <Button className="bg-emerald-500 hover:bg-emerald-400 text-white" onClick={() => navigate('/billing')}>
                     View Billing Invoices
                   </Button>
                 </div>
@@ -740,7 +740,7 @@ const Settings = () => {
                   </ul>
                 </div>
                 <div className="mt-6">
-                <Button className="bg-emerald-500 hover:bg-emerald-400 text-white" onClick={() => navigate('/api-access')}>
+                  <Button className="bg-emerald-500 hover:bg-emerald-400 text-white" onClick={() => navigate('/api-access')}>
                     Clario APIs
                   </Button>
                 </div>
@@ -749,102 +749,102 @@ const Settings = () => {
           </div>
         );
 
-        case 'integrations': {
-          const activePlatforms = [
-            {
-              id: 'amazon',
-              name: 'Amazon Seller Central',
-              icon: '/lovable-uploads/14f98d63-9a1a-4128-8021-1d840d778ea5.png',
-              description: 'SP‑API sync for reimbursements, shipments, and claims.',
-              connected: sellerProfile.amazon_connected ?? true,
-              lastSync: sellerProfile.last_sync_completed_at ? formatDate(sellerProfile.last_sync_completed_at) : '5 mins ago'
-            }
-          ];
-          const upcomingPlatforms = [
-            { id: 'shopify', name: 'Shopify', icon: '/lovable-uploads/8efb84ba-e777-4413-ae5a-f7f54bfa6cab.png' },
-            { id: 'walmart', name: 'Walmart Marketplace', icon: '/lovable-uploads/cef56367-b57b-46cc-b0cb-a2ffad47fb03.png' },
-            { id: 'quickbooks', name: 'QuickBooks', icon: '/lovable-uploads/02ff2e6e-9e67-4481-99a8-4b9caead4540.png' },
-            { id: 'xero', name: 'Xero', icon: '/lovable-uploads/ac3dc504-c896-4f73-9e7e-aefc77dd6e9f.png' },
-            { id: 'ebay', name: 'eBay', icon: '/lovable-uploads/f894a44c-fd04-4ec2-8af3-a7235951d82d.png' },
-          ];
-          return (
-            <div className="space-y-6">
-              <div>
-                <h2 className="text-2xl font-semibold text-gray-900">Integrations</h2>
-                <p className="text-gray-600">Manage your platform connections and data sources</p>
-              </div>
-              <div>
-                <Button className="bg-emerald-500 hover:bg-emerald-400 text-white gap-2" onClick={() => navigate('/integrations-hub')}>
-                  <Plug className="h-4 w-4" />
-                  Clario Integrations
-                </Button>
-              </div>
-              
-              <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
-                <CardHeader />
-                <CardContent className="space-y-4">
-                  <div className="rounded-2xl border border-gray-200 bg-gray-50 divide-y divide-gray-200">
-                    {activePlatforms.map(platform => (
-                      <div key={platform.id} className="flex flex-col gap-4 px-4 py-4 md:flex-row md:items-center md:justify-between">
-                        <div className="flex items-center gap-3 flex-1">
-                          <div className="h-12 w-12 rounded-xl bg-white flex items-center justify-center border border-gray-200 shadow-sm">
-                            <img src={platform.icon} alt={`${platform.name} logo`} className="h-8 w-8 object-contain" />
-                          </div>
-                          <div>
-                            <p className="font-medium text-gray-900">{platform.name}</p>
-                            <p className="text-sm text-gray-600">{platform.description}</p>
-                            <p className="text-xs text-gray-500 mt-1">Last sync: {platform.lastSync}</p>
-                          </div>
-                        </div>
-                          <div className="flex flex-col gap-2 md:items-end">
-                          <Button 
-                            size="sm" 
-                            className="bg-emerald-500 hover:bg-emerald-400 text-white" 
-                            onClick={() => navigate('/integrations-hub')}
-                          >
-                            {platform.connected ? 'Manage' : 'Connect'}
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
-                <CardHeader>
-                  <CardTitle className="text-gray-900 font-medium">Coming</CardTitle>
-                  <CardDescription className="text-gray-600">Coming soon to expand your recovery capabilities</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="rounded-2xl border border-gray-200 bg-gray-50 divide-y divide-gray-200">
-                    {upcomingPlatforms.map(platform => (
-                      <div key={platform.id} className="flex flex-col gap-4 px-4 py-4 md:flex-row md:items-center md:justify-between opacity-80">
-                        <div className="flex items-center gap-3 flex-1">
-                          <div className="h-12 w-12 rounded-xl bg-white flex items-center justify-center border border-gray-200 shadow-sm">
-                            <img src={platform.icon} alt={`${platform.name} logo`} className="h-8 w-8 object-contain" />
-                          </div>
-                          <div>
-                            <p className="font-medium text-gray-900">{platform.name}</p>
-                            <p className="text-sm text-gray-500">Coming soon</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <Badge variant="outline" className="text-xs border-amber-300 text-amber-700 bg-amber-50">
-                            Roadmap
-                          </Badge>
-                          <Button size="sm" disabled className="bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed">
-                            Connect
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+      case 'integrations': {
+        const activePlatforms = [
+          {
+            id: 'amazon',
+            name: 'Amazon Seller Central',
+            icon: '/lovable-uploads/14f98d63-9a1a-4128-8021-1d840d778ea5.png',
+            description: 'SP‑API sync for reimbursements, shipments, and claims.',
+            connected: sellerProfile.amazon_connected ?? true,
+            lastSync: sellerProfile.last_sync_completed_at ? formatDate(sellerProfile.last_sync_completed_at) : '5 mins ago'
+          }
+        ];
+        const upcomingPlatforms = [
+          { id: 'shopify', name: 'Shopify', icon: '/lovable-uploads/8efb84ba-e777-4413-ae5a-f7f54bfa6cab.png' },
+          { id: 'walmart', name: 'Walmart Marketplace', icon: '/lovable-uploads/cef56367-b57b-46cc-b0cb-a2ffad47fb03.png' },
+          { id: 'quickbooks', name: 'QuickBooks', icon: '/lovable-uploads/02ff2e6e-9e67-4481-99a8-4b9caead4540.png' },
+          { id: 'xero', name: 'Xero', icon: '/lovable-uploads/ac3dc504-c896-4f73-9e7e-aefc77dd6e9f.png' },
+          { id: 'ebay', name: 'eBay', icon: '/lovable-uploads/f894a44c-fd04-4ec2-8af3-a7235951d82d.png' },
+        ];
+        return (
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-semibold text-gray-900">Integrations</h2>
+              <p className="text-gray-600">Manage your platform connections and data sources</p>
             </div>
-          );
-        }
+            <div>
+              <Button className="bg-emerald-500 hover:bg-emerald-400 text-white gap-2" onClick={() => navigate('/integrations-hub')}>
+                <Plug className="h-4 w-4" />
+                Clario Integrations
+              </Button>
+            </div>
+
+            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
+              <CardHeader />
+              <CardContent className="space-y-4">
+                <div className="rounded-2xl border border-gray-200 bg-gray-50 divide-y divide-gray-200">
+                  {activePlatforms.map(platform => (
+                    <div key={platform.id} className="flex flex-col gap-4 px-4 py-4 md:flex-row md:items-center md:justify-between">
+                      <div className="flex items-center gap-3 flex-1">
+                        <div className="h-12 w-12 rounded-xl bg-white flex items-center justify-center border border-gray-200 shadow-sm">
+                          <img src={platform.icon} alt={`${platform.name} logo`} className="h-8 w-8 object-contain" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-900">{platform.name}</p>
+                          <p className="text-sm text-gray-600">{platform.description}</p>
+                          <p className="text-xs text-gray-500 mt-1">Last sync: {platform.lastSync}</p>
+                        </div>
+                      </div>
+                      <div className="flex flex-col gap-2 md:items-end">
+                        <Button
+                          size="sm"
+                          className="bg-emerald-500 hover:bg-emerald-400 text-white"
+                          onClick={() => navigate('/integrations-hub')}
+                        >
+                          {platform.connected ? 'Manage' : 'Connect'}
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
+              <CardHeader>
+                <CardTitle className="text-gray-900 font-medium">Coming</CardTitle>
+                <CardDescription className="text-gray-600">Coming soon to expand your recovery capabilities</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="rounded-2xl border border-gray-200 bg-gray-50 divide-y divide-gray-200">
+                  {upcomingPlatforms.map(platform => (
+                    <div key={platform.id} className="flex flex-col gap-4 px-4 py-4 md:flex-row md:items-center md:justify-between opacity-80">
+                      <div className="flex items-center gap-3 flex-1">
+                        <div className="h-12 w-12 rounded-xl bg-white flex items-center justify-center border border-gray-200 shadow-sm">
+                          <img src={platform.icon} alt={`${platform.name} logo`} className="h-8 w-8 object-contain" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-900">{platform.name}</p>
+                          <p className="text-sm text-gray-500">Coming soon</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Badge variant="outline" className="text-xs border-amber-300 text-amber-700 bg-amber-50">
+                          Roadmap
+                        </Badge>
+                        <Button size="sm" disabled className="bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed">
+                          Connect
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        );
+      }
 
       case 'notifications':
         return (
@@ -853,7 +853,7 @@ const Settings = () => {
               <h2 className="text-2xl font-semibold text-gray-900">Notifications</h2>
               <p className="text-gray-600">Control how and when we communicate with you</p>
             </div>
-            
+
             <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
               <CardHeader>
                 <CardTitle className="text-gray-900 font-medium">Email Notifications</CardTitle>
@@ -881,7 +881,7 @@ const Settings = () => {
               <h2 className="text-2xl font-semibold text-gray-900">Security</h2>
               <p className="text-gray-600">Manage your account security and access</p>
             </div>
-            
+
             <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
               <CardHeader>
                 <CardTitle className="text-gray-900 font-medium">Login History</CardTitle>
@@ -895,8 +895,8 @@ const Settings = () => {
                 {loginHistory.map((login, index) => (
                   <div key={index} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg bg-gray-50">
                     <div className="flex items-center gap-3">
-                      {login.device.includes('iPhone') ? 
-                        <Smartphone className="h-5 w-5 text-gray-500" /> : 
+                      {login.device.includes('iPhone') ?
+                        <Smartphone className="h-5 w-5 text-gray-500" /> :
                         <Monitor className="h-5 w-5 text-gray-500" />
                       }
                       <div>
@@ -914,7 +914,7 @@ const Settings = () => {
                 ))}
               </CardContent>
             </Card>
-            
+
             <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
               <CardHeader>
                 <CardTitle className="text-gray-900 font-medium">Security Actions</CardTitle>
@@ -927,7 +927,7 @@ const Settings = () => {
                       <p className="font-medium text-gray-900">Two‑Factor Authentication (2FA)</p>
                       <p className="text-sm text-gray-600">Add an extra layer of security to your account</p>
                     </div>
-                    <Switch checked={twoFactorEnabled} onCheckedChange={(v)=>{ setTwoFactorEnabled(!!v); persistSecurity({ twoFactorEnabled: !!v }); }} />
+                    <Switch checked={twoFactorEnabled} onCheckedChange={(v) => { setTwoFactorEnabled(!!v); persistSecurity({ twoFactorEnabled: !!v }); }} />
                   </div>
                   {twoFactorEnabled && (
                     <div className="mt-3">
@@ -955,7 +955,7 @@ const Settings = () => {
                       <p className="font-medium text-gray-900">Login Alerts</p>
                       <p className="text-sm text-gray-600">Email me when a new device logs into my account</p>
                     </div>
-                    <Switch checked={loginAlertsEnabled} onCheckedChange={(v)=>{ setLoginAlertsEnabled(!!v); persistSecurity({ loginAlertsEnabled: !!v }); }} />
+                    <Switch checked={loginAlertsEnabled} onCheckedChange={(v) => { setLoginAlertsEnabled(!!v); persistSecurity({ loginAlertsEnabled: !!v }); }} />
                   </div>
                 </div>
 
@@ -965,7 +965,7 @@ const Settings = () => {
                       <p className="font-medium text-gray-900">Trust this Device</p>
                       <p className="text-sm text-gray-600">Skip 2FA on this device for faster sign‑in</p>
                     </div>
-                    <Switch checked={trustedDevice} onCheckedChange={(v)=>{ setTrustedDevice(!!v); persistSecurity({ trustedDevice: !!v }); }} />
+                    <Switch checked={trustedDevice} onCheckedChange={(v) => { setTrustedDevice(!!v); persistSecurity({ trustedDevice: !!v }); }} />
                   </div>
                 </div>
 
@@ -975,7 +975,7 @@ const Settings = () => {
                 </Button>
               </CardContent>
             </Card>
-            
+
             <Card className="bg-red-50 border-red-200 text-gray-700 mb-10 shadow-sm">
               <CardHeader>
                 <CardTitle className="text-red-700 flex items-center gap-2 font-medium">
@@ -986,10 +986,10 @@ const Settings = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-gray-600 mb-4">
-                  Deleting your account will permanently remove all data, including recovery history, 
+                  Deleting your account will permanently remove all data, including recovery history,
                   team members, and integrations. This action cannot be reversed.
                 </p>
-                <Button variant="destructive" size="sm" onClick={()=>setDeleteOpen(true)}>
+                <Button variant="destructive" size="sm" onClick={() => setDeleteOpen(true)}>
                   Delete Account
                 </Button>
               </CardContent>
@@ -1001,8 +1001,8 @@ const Settings = () => {
                   <DialogDescription>This will permanently remove your account and all associated data.</DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
-                  <Button variant="outline" onClick={()=>setDeleteOpen(false)}>Cancel</Button>
-                  <Button variant="destructive" onClick={()=>{ setDeleteOpen(false); toast({ title: 'Account deletion requested', description: 'Our support will contact you to confirm.' }); }}>Delete</Button>
+                  <Button variant="outline" onClick={() => setDeleteOpen(false)}>Cancel</Button>
+                  <Button variant="destructive" onClick={() => { setDeleteOpen(false); toast({ title: 'Account deletion requested', description: 'Our support will contact you to confirm.' }); }}>Delete</Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
@@ -1018,7 +1018,7 @@ const Settings = () => {
     <PageLayout title="Account Control Center">
       <div className="relative -m-4 lg:-m-6">
         <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24">
-          <div className="relative container mx-auto px-6 pt-6 pb-0 text-gray-700">
+          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-700">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
               {/* Navigation Menu */}
               <div className="lg:col-span-1">
