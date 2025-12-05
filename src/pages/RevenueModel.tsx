@@ -4,6 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Slider } from '@/components/ui/slider';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { ArrowRight, RefreshCw, Download, DollarSign, TrendingUp, Users, Percent } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface MonthRow {
   month: string;
@@ -16,15 +21,15 @@ interface MonthRow {
 
 const DEFAULTS = {
   startActiveSellers: 150,
-  monthlyRetentionPct: 94, // % retained each month
+  monthlyRetentionPct: 94,
   monthlySessions: 2600,
-  monthlySessionsGrowthPct: 8, // % growth in sessions/mo
+  monthlySessionsGrowthPct: 8,
   visitToSignupPct: 6,
   signupToAmazonPct: 70,
   amazonToEvidencePct: 60,
   evidenceToFindingsPct: 75,
   findingsToPayoutPct: 55,
-  avgRecoveredPerSeller: 800, // USD
+  avgRecoveredPerSeller: 800,
   takeRatePct: 20,
 };
 
@@ -69,7 +74,6 @@ export default function RevenueModel() {
     for (let i = 0; i < 12; i++) {
       const newPaid = Math.floor(sessions * conversionFactor);
       if (i === 0) {
-        // January already has starters; add new paid on top
         sellers = sellers + newPaid;
       } else {
         sellers = Math.floor(sellers * retentionFactor) + newPaid;
@@ -96,7 +100,7 @@ export default function RevenueModel() {
   const totalRevenueZar = useMemo(() => rows.reduce((sum, r) => sum + r.revenueZar, 0), [rows]);
 
   const exportCsv = () => {
-    const headers = ['Month','Sessions','NewPaid','ActiveSellers','RevenueUSD','RevenueZAR'];
+    const headers = ['Month', 'Sessions', 'NewPaid', 'ActiveSellers', 'RevenueUSD', 'RevenueZAR'];
     const lines = rows.map(r => [r.month, r.sessions, r.newPaid, r.activeSellers, r.revenue.toFixed(2), r.revenueZar.toFixed(2)].join(','));
     const csv = [headers.join(','), ...lines, '', `Total,, , ,${totalRevenue.toFixed(2)},${totalRevenueZar.toFixed(2)}`].join('\n');
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -126,141 +130,246 @@ export default function RevenueModel() {
 
   return (
     <PageLayout title="Revenue Model (2026)">
-      <div className="relative -m-4 lg:-m-6 min-h-screen bg-gray-50">
-        <div className="container mx-auto px-6 md:px-10 lg:px-12 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="bg-white border-gray-200 shadow-sm lg:col-span-1">
-            <CardHeader>
-              <CardTitle className="text-base font-normal text-gray-700">Inputs</CardTitle>
-              <CardDescription className="text-gray-500">Adjust to simulate your funnel and ARPS.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-5">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="startSellers" className="text-gray-600">Start Sellers (Jan)</Label>
-                  <Input id="startSellers" type="number" value={startActiveSellers}
-                         onChange={e => setStartActiveSellers(clamp(parseInt(e.target.value || '0', 10), 0, 200000))} className="bg-white border-gray-200 text-gray-700" />
-                </div>
-                <div>
-                  <Label htmlFor="retention" className="text-gray-600">Monthly Retention %</Label>
-                  <Input id="retention" type="number" value={monthlyRetentionPct}
-                         onChange={e => setMonthlyRetentionPct(clamp(parseFloat(e.target.value || '0'), 0, 100))} className="bg-white border-gray-200 text-gray-700" />
-                </div>
-                <div>
-                  <Label htmlFor="sessions" className="text-gray-600">Sessions (Jan)</Label>
-                  <Input id="sessions" type="number" value={monthlySessions}
-                         onChange={e => setMonthlySessions(clamp(parseInt(e.target.value || '0', 10), 0, 10_000_000))} className="bg-white border-gray-200 text-gray-700" />
-                </div>
-                <div>
-                  <Label htmlFor="sessionsGrowth" className="text-gray-600">Sessions Growth % /mo</Label>
-                  <Input id="sessionsGrowth" type="number" value={monthlySessionsGrowthPct}
-                         onChange={e => setMonthlySessionsGrowthPct(clamp(parseFloat(e.target.value || '0'), 0, 200))} className="bg-white border-gray-200 text-gray-700" />
-                </div>
-              </div>
+      <div className="relative -m-4 lg:-m-6 min-h-screen bg-gray-50/50">
+        <div className="container mx-auto px-4 md:px-6 lg:px-8 py-8">
+          <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
 
-              <div>
-                <div className="text-sm font-normal text-gray-600 mb-2">Funnel %</div>
-                <div className="grid grid-cols-2 gap-4">
+            {/* INPUTS CARD */}
+            <Card className="xl:col-span-4 h-fit border-gray-200 shadow-sm bg-white">
+              <CardHeader className="pb-4">
+                <div className="flex items-center justify-between">
                   <div>
-                    <Label htmlFor="v2s" className="text-gray-600">Visit → Signup %</Label>
-                    <Input id="v2s" type="number" value={visitToSignupPct}
-                           onChange={e => setVisitToSignupPct(clamp(parseFloat(e.target.value || '0'), 0, 100))} className="bg-white border-gray-200 text-gray-700" />
+                    <CardTitle className="text-lg font-medium text-gray-900">Model Inputs</CardTitle>
+                    <CardDescription className="text-gray-500 mt-1">Adjust funnel & economics</CardDescription>
                   </div>
-                  <div>
-                    <Label htmlFor="s2a" className="text-gray-600">Signup → Amazon %</Label>
-                    <Input id="s2a" type="number" value={signupToAmazonPct}
-                           onChange={e => setSignupToAmazonPct(clamp(parseFloat(e.target.value || '0'), 0, 100))} className="bg-white border-gray-200 text-gray-700" />
-                  </div>
-                  <div>
-                    <Label htmlFor="a2e" className="text-gray-600">Amazon → Evidence %</Label>
-                    <Input id="a2e" type="number" value={amazonToEvidencePct}
-                           onChange={e => setAmazonToEvidencePct(clamp(parseFloat(e.target.value || '0'), 0, 100))} className="bg-white border-gray-200 text-gray-700" />
-                  </div>
-                  <div>
-                    <Label htmlFor="e2f" className="text-gray-600">Evidence → Findings %</Label>
-                    <Input id="e2f" type="number" value={evidenceToFindingsPct}
-                           onChange={e => setEvidenceToFindingsPct(clamp(parseFloat(e.target.value || '0'), 0, 100))} className="bg-white border-gray-200 text-gray-700" />
-                  </div>
-                  <div>
-                    <Label htmlFor="f2p" className="text-gray-600">Findings → Payout %</Label>
-                    <Input id="f2p" type="number" value={findingsToPayoutPct}
-                           onChange={e => setFindingsToPayoutPct(clamp(parseFloat(e.target.value || '0'), 0, 100))} className="bg-white border-gray-200 text-gray-700" />
-                  </div>
-                  <div>
-                    <Label className="text-gray-600">Overall conversion</Label>
-                    <div className="text-sm text-gray-600">{(conversionFactor * 100).toFixed(2)}%</div>
-                  </div>
+                  <Button variant="ghost" size="icon" onClick={reset} title="Reset to defaults">
+                    <RefreshCw className="h-4 w-4 text-gray-400 hover:text-gray-700" />
+                  </Button>
                 </div>
-              </div>
+              </CardHeader>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="recovered" className="text-gray-600">Avg Recovered / Seller / Mo ($)</Label>
-                  <Input id="recovered" type="number" value={avgRecoveredPerSeller}
-                         onChange={e => setAvgRecoveredPerSeller(clamp(parseFloat(e.target.value || '0'), 0, 1_000_000))} className="bg-white border-gray-200 text-gray-700" />
-                </div>
-                <div>
-                  <Label htmlFor="take" className="text-gray-600">Take Rate %</Label>
-                  <Input id="take" type="number" value={takeRatePct}
-                         onChange={e => setTakeRatePct(clamp(parseFloat(e.target.value || '0'), 0, 100))} className="bg-white border-gray-200 text-gray-700" />
-                </div>
-                <div>
-                  <Label className="text-gray-600">ARPS (rev/seller/mo)</Label>
-                  <div className="text-sm text-gray-600">${arps.toFixed(2)}</div>
-                </div>
-              </div>
+              <CardContent className="space-y-6">
+                <Tabs defaultValue="growth" className="w-full">
+                  <TabsList className="grid w-full grid-cols-3 mb-6">
+                    <TabsTrigger value="growth">Growth</TabsTrigger>
+                    <TabsTrigger value="funnel">Funnel</TabsTrigger>
+                    <TabsTrigger value="economics">Economics</TabsTrigger>
+                  </TabsList>
 
-              <div className="flex gap-3 pt-2">
-                <Button onClick={reset} variant="outline" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50">Reset to defaults</Button>
-                <Button onClick={exportCsv} className="bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200">Export CSV</Button>
-              </div>
-            </CardContent>
-          </Card>
+                  {/* TAB 1: MARKET & GROWTH */}
+                  <TabsContent value="growth" className="space-y-6">
+                    <div className="space-y-4">
+                      <h3 className="text-sm font-medium text-gray-900 flex items-center gap-2">
+                        <Users className="h-4 w-4 text-gray-500" />
+                        Market Dynamics
+                      </h3>
 
-          <Card className="bg-white border-gray-200 shadow-sm lg:col-span-2">
-            <CardHeader>
-              <CardTitle className="text-base font-normal text-gray-700">Projection (2026)</CardTitle>
-              <CardDescription className="text-gray-500">Active sellers and revenue per month.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="overflow-x-auto">
-                <table className="min-w-full text-sm">
-                  <thead className="text-left text-gray-500 border-b border-gray-200">
-                    <tr>
-                      <th className="py-2 pr-4 font-normal">Month</th>
-                      <th className="py-2 pr-4 font-normal">Sessions</th>
-                      <th className="py-2 pr-4 font-normal">New paid</th>
-                      <th className="py-2 pr-4 font-normal">Active sellers</th>
-                      <th className="py-2 pr-4 font-normal">Revenue (USD)</th>
-                      <th className="py-2 font-normal">Revenue (ZAR)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {rows.map((r) => (
-                      <tr key={r.month} className="border-b border-gray-100">
-                        <td className="py-2 pr-4 text-gray-600">{r.month}</td>
-                        <td className="py-2 pr-4 text-gray-600">{r.sessions.toLocaleString()}</td>
-                        <td className="py-2 pr-4 text-gray-600">{r.newPaid.toLocaleString()}</td>
-                        <td className="py-2 pr-4 text-gray-600">{r.activeSellers.toLocaleString()}</td>
-                        <td className="py-2 pr-4 text-gray-700">${r.revenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                        <td className="py-2 text-gray-700">R {r.revenueZar.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                      <div className="grid gap-5">
+                        <div className="space-y-2">
+                          <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Start Active Sellers</Label>
+                          <Input
+                            type="number"
+                            value={startActiveSellers}
+                            onChange={e => setStartActiveSellers(clamp(parseInt(e.target.value || '0', 10), 0, 200000))}
+                            className="font-mono"
+                          />
+                        </div>
+
+                        <div className="space-y-3">
+                          <div className="flex justify-between items-center">
+                            <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Monthly Retention</Label>
+                            <span className="text-sm font-medium text-gray-900">{monthlyRetentionPct}%</span>
+                          </div>
+                          <Slider
+                            value={[monthlyRetentionPct]}
+                            max={100}
+                            step={1}
+                            onValueChange={(vals) => setMonthlyRetentionPct(vals[0])}
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Monthly Sessions</Label>
+                          <Input
+                            type="number"
+                            value={monthlySessions}
+                            onChange={e => setMonthlySessions(clamp(parseInt(e.target.value || '0', 10), 0, 10_000_000))}
+                            className="font-mono"
+                          />
+                        </div>
+
+                        <div className="space-y-3">
+                          <div className="flex justify-between items-center">
+                            <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Mo. Growth Rate</Label>
+                            <span className="text-sm font-medium text-gray-900">{monthlySessionsGrowthPct}%</span>
+                          </div>
+                          <Slider
+                            value={[monthlySessionsGrowthPct]}
+                            max={50}
+                            step={0.5}
+                            onValueChange={(vals) => setMonthlySessionsGrowthPct(vals[0])}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </TabsContent>
+
+                  {/* TAB 2: FUNNEL */}
+                  <TabsContent value="funnel" className="space-y-6">
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-sm font-medium text-gray-900 flex items-center gap-2">
+                          <TrendingUp className="h-4 w-4 text-gray-500" />
+                          Conversion Steps
+                        </h3>
+                        <span className="text-xs font-medium text-gray-500 bg-gray-50 px-2 py-1 rounded border border-gray-100">
+                          Total: <span className="text-gray-900 ml-1 font-mono">{(conversionFactor * 100).toFixed(2)}%</span>
+                        </span>
+                      </div>
+
+                      <div className="space-y-6 pt-2">
+                        {[
+                          { l: 'Visit → Signup', v: visitToSignupPct, s: setVisitToSignupPct },
+                          { l: 'Signup → Amazon', v: signupToAmazonPct, s: setSignupToAmazonPct },
+                          { l: 'Amazon → Evidence', v: amazonToEvidencePct, s: setAmazonToEvidencePct },
+                          { l: 'Evidence → Findings', v: evidenceToFindingsPct, s: setEvidenceToFindingsPct },
+                          { l: 'Findings → Payout', v: findingsToPayoutPct, s: setFindingsToPayoutPct }
+                        ].map((item, idx) => (
+                          <div key={idx} className="space-y-2">
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm text-gray-600">{item.l}</span>
+                              <span className="text-sm font-medium text-gray-900 w-12 text-right">{item.v}%</span>
+                            </div>
+                            <Slider
+                              value={[item.v]}
+                              max={100}
+                              step={1}
+                              onValueChange={(vals) => item.s(vals[0])}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </TabsContent>
+
+                  {/* TAB 3: ECONOMICS */}
+                  <TabsContent value="economics" className="space-y-6">
+                    <div className="space-y-4">
+                      <h3 className="text-sm font-medium text-gray-900 flex items-center gap-2">
+                        <DollarSign className="h-4 w-4 text-gray-500" />
+                        Unit Economics
+                      </h3>
+
+                      <div className="space-y-6 pt-2">
+                        <div className="space-y-2">
+                          <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Recovered / Seller / Mo ($)</Label>
+                          <Input
+                            type="number"
+                            value={avgRecoveredPerSeller}
+                            onChange={e => setAvgRecoveredPerSeller(clamp(parseFloat(e.target.value || '0'), 0, 1_000_000))}
+                            className="font-mono bg-emerald-50/30"
+                          />
+                        </div>
+
+                        <div className="space-y-3">
+                          <div className="flex justify-between items-center">
+                            <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Take Rate</Label>
+                            <span className="text-sm font-medium text-gray-900">{takeRatePct}%</span>
+                          </div>
+                          <Slider
+                            value={[takeRatePct]}
+                            max={100}
+                            step={1}
+                            onValueChange={(vals) => setTakeRatePct(vals[0])}
+                          />
+                        </div>
+
+                        <Separator />
+
+                        <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-600 font-medium">ARPS (Rev/Seller/Mo)</span>
+                            <span className="font-mono text-lg font-semibold text-emerald-700">${arps.toFixed(2)}</span>
+                          </div>
+                          <p className="text-xs text-gray-400 mt-1">Average Revenue Per Seller based on recovery and take rate.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </TabsContent>
+                </Tabs>
+              </CardContent>
+            </Card>
+
+
+            {/* PROJECTION TABLE */}
+            <Card className="xl:col-span-8 border-gray-200 shadow-sm bg-white h-fit">
+              <CardHeader className="flex flex-row items-center justify-between pb-4">
+                <div>
+                  <CardTitle className="text-lg font-medium text-gray-900">Revenue Projection (2026)</CardTitle>
+                  <CardDescription className="text-gray-500 mt-1">Based on current inputs</CardDescription>
+                </div>
+                <Button variant="outline" size="sm" onClick={exportCsv} className="gap-2 text-gray-700 border-gray-200">
+                  <Download className="h-4 w-4" />
+                  Export CSV
+                </Button>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto rounded-lg border border-gray-100">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="bg-gray-50/50 border-b border-gray-200">
+                        <th className="py-3 px-4 text-left font-medium text-gray-500">Month</th>
+                        <th className="py-3 px-4 text-right font-medium text-gray-500">Traffic</th>
+                        <th className="py-3 px-4 text-right font-medium text-gray-500">New Paid</th>
+                        <th className="py-3 px-4 text-right font-medium text-gray-500">Active</th>
+                        <th className="py-3 px-4 text-right font-medium text-gray-700">Revenue (USD)</th>
                       </tr>
-                    ))}
-                  </tbody>
-                  <tfoot>
-                    <tr>
-                      <td className="pt-3 text-gray-500" colSpan={4}>Total</td>
-                      <td className="pt-3 pr-4 text-gray-700 font-normal">${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                      <td className="pt-3 text-gray-700 font-normal">R {totalRevenueZar.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
-            </CardContent>
-          </Card>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                      {rows.map((r, i) => (
+                        <tr key={r.month} className="hover:bg-gray-50/50 transition-colors">
+                          <td className="py-3 px-4 text-gray-900 font-medium">{r.month}</td>
+                          <td className="py-3 px-4 text-right text-gray-600 font-mono">{r.sessions.toLocaleString()}</td>
+                          <td className="py-3 px-4 text-right text-emerald-600 font-mono">+{r.newPaid.toLocaleString()}</td>
+                          <td className="py-3 px-4 text-right text-gray-700 font-mono">{r.activeSellers.toLocaleString()}</td>
+                          <td className="py-3 px-4 text-right text-gray-900 font-mono font-medium">
+                            ${r.revenue.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                    <tfoot className="bg-gray-50 font-medium">
+                      <tr>
+                        <td className="py-4 px-4 text-gray-900" colSpan={4}>Total Projected Revenue</td>
+                        <td className="py-4 px-4 text-right text-lg text-emerald-700">
+                          ${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+
+                <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="p-4 rounded-lg bg-blue-50 border border-blue-100">
+                    <div className="text-xs text-blue-600 uppercase tracking-wider font-semibold mb-1">Total Active Sellers (Dec)</div>
+                    <div className="text-2xl text-blue-900 font-light">{rows[11].activeSellers.toLocaleString()}</div>
+                  </div>
+                  <div className="p-4 rounded-lg bg-emerald-50 border border-emerald-100">
+                    <div className="text-xs text-emerald-600 uppercase tracking-wider font-semibold mb-1">Annual Revenue (USD)</div>
+                    <div className="text-2xl text-emerald-900 font-light">${totalRevenue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
+                  </div>
+                  <div className="p-4 rounded-lg bg-purple-50 border border-purple-100">
+                    <div className="text-xs text-purple-600 uppercase tracking-wider font-semibold mb-1">Annual Revenue (ZAR)</div>
+                    <div className="text-2xl text-purple-900 font-light">R {totalRevenueZar.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
+                  </div>
+                </div>
+
+              </CardContent>
+            </Card>
+          </div>
         </div>
-      </div>
       </div>
     </PageLayout>
   );
 }
+
