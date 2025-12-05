@@ -672,6 +672,7 @@ export const api = {
   getDocuments: () => requestJson<any[]>('/api/documents'),
   getDocument: (id: string) => requestJson<any>(`/api/documents/${encodeURIComponent(id)}`),
   getDocumentDownloadUrl: (id: string) => buildApiUrl(`/api/documents/${encodeURIComponent(id)}/download`),
+  getDocumentDownload: (id: string) => requestJson<{ success: boolean; url: string; filename: string }>(`/api/documents/${encodeURIComponent(id)}/download`),
 
   // PHASE4: Evidence ingestion endpoints (Node.js backend)
   // Gmail ingestion
