@@ -140,7 +140,7 @@ export default function RevenueModel() {
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle className="text-lg font-medium text-gray-900">Model Inputs</CardTitle>
-                    <CardDescription className="text-gray-500 mt-1">Adjust funnel & economics</CardDescription>
+                    <CardDescription className="text-gray-500 mt-1">Adjust funnel and economics</CardDescription>
                   </div>
                   <Button variant="ghost" size="icon" onClick={reset} title="Reset to defaults">
                     <RefreshCw className="h-4 w-4 text-gray-400 hover:text-gray-700" />
@@ -256,7 +256,6 @@ export default function RevenueModel() {
                   <TabsContent value="economics" className="space-y-6">
                     <div className="space-y-4">
                       <h3 className="text-sm font-medium text-gray-900 flex items-center gap-2">
-                        <DollarSign className="h-4 w-4 text-gray-500" />
                         Unit Economics
                       </h3>
 
@@ -344,32 +343,7 @@ export default function RevenueModel() {
                         <td className="py-4 px-4 text-right text-lg text-emerald-700">
                           ${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                         </td>
-                      </tr>
-                    </tfoot>
-                  </table>
-                </div>
-
-                <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="p-4 rounded-lg bg-blue-50 border border-blue-100">
-                    <div className="text-xs text-blue-600 uppercase tracking-wider font-semibold mb-1">Total Active Sellers (Dec)</div>
-                    <div className="text-2xl text-blue-900 font-light">{rows[11].activeSellers.toLocaleString()}</div>
-                  </div>
-                  <div className="p-4 rounded-lg bg-emerald-50 border border-emerald-100">
-                    <div className="text-xs text-emerald-600 uppercase tracking-wider font-semibold mb-1">Annual Revenue (USD)</div>
-                    <div className="text-2xl text-emerald-900 font-light">${totalRevenue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
-                  </div>
-                  <div className="p-4 rounded-lg bg-purple-50 border border-purple-100">
-                    <div className="text-xs text-purple-600 uppercase tracking-wider font-semibold mb-1">Annual Revenue (ZAR)</div>
-                    <div className="text-2xl text-purple-900 font-light">R {totalRevenueZar.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
-                  </div>
-                </div>
-
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </div>
-    </PageLayout>
-  );
+                      </PageLayout>
+                      );
 }
 
