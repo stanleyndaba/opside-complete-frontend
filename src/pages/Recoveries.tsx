@@ -1059,7 +1059,7 @@ export default function Recoveries() {
   };
 
   return (
-    <PageLayout title="Claim Recoveries">
+    <PageLayout title="Refund Recoveries">
       <div className="relative w-full">
         <div className="relative w-full bg-gray-50 min-h-screen">
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-gray-50 to-white" />
@@ -1067,7 +1067,7 @@ export default function Recoveries() {
             {/* Page Header */}
             <div className="mb-8">
               <div className="flex items-center justify-between mb-2">
-                <h1 className="text-2xl font-medium text-[#1f1f1f]">Claim Recoveries</h1>
+                <h1 className="text-2xl font-medium text-[#1f1f1f]">Refund Recoveries</h1>
                 <Select value={selectedCurrency} onValueChange={setSelectedCurrency}>
                   <SelectTrigger className="w-[140px] bg-white border-gray-300">
                     <SelectValue />
@@ -1209,7 +1209,7 @@ export default function Recoveries() {
                           return value > 0 ? value : null;
                         })()}
                         {amazonClaimCount != null && amazonClaimCount > 0 && (
-                          <span className="text-sm text-emerald-400 ml-2 font-normal">
+                          <span className="text-xs text-emerald-400 ml-2 font-normal">
                             from Amazon
                           </span>
                         )}

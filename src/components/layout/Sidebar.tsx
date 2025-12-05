@@ -12,58 +12,58 @@ import { api } from '@/lib/api';
 
 // Lightweight prefetch using dynamic import hints matching route chunks
 const prefetchRoute = (path: string) => {
-	try {
-		switch (path) {
-			case '/app':
-				import('@/components/layout/Dashboard');
-				break;
-			case '/reports':
-				import('@/pages/Reports');
-				break;
-			case '/upcoming-payments':
-				import('@/pages/UpcomingPayments');
-				break;
-			case '/recoveries':
-				import('@/pages/Recoveries');
-				break;
-			case '/settings':
-				import('@/pages/Settings');
-				break;
-			case '/help':
-				import('@/pages/Help');
-				break;
-			case '/whats-new':
-				import('@/pages/WhatsNew');
-				break;
-			default:
-				break;
-		}
-	} catch {}
+  try {
+    switch (path) {
+      case '/app':
+        import('@/components/layout/Dashboard');
+        break;
+      case '/reports':
+        import('@/pages/Reports');
+        break;
+      case '/upcoming-payments':
+        import('@/pages/UpcomingPayments');
+        break;
+      case '/recoveries':
+        import('@/pages/Recoveries');
+        break;
+      case '/settings':
+        import('@/pages/Settings');
+        break;
+      case '/help':
+        import('@/pages/Help');
+        break;
+      case '/whats-new':
+        import('@/pages/WhatsNew');
+        break;
+      default:
+        break;
+    }
+  } catch { }
 };
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 interface SidebarProps {
-	isCollapsed: boolean;
-	onToggle: () => void;
-	className?: string;
+  isCollapsed: boolean;
+  onToggle: () => void;
+  className?: string;
 }
 interface NavItem {
-	title: string;
-	icon: React.ElementType;
-	href: string;
+  title: string;
+  icon: React.ElementType;
+  href: string;
 }
 interface NavSection {
-	title: string;
-	items: NavItem[];
+  title: string;
+  items: NavItem[];
 }
 export function Sidebar({
-    isCollapsed,
-    onToggle,
-    className
+  isCollapsed,
+  onToggle,
+  className
 }: SidebarProps) {
-	const location = useLocation();
+  const location = useLocation();
   const queryClient = useQueryClient();
   const [showLogout, setShowLogout] = useState(false);
-  
+
   // Check if we're on the Dashboard (Command Center) page
   const isDashboard = location.pathname === '/dashboard' || location.pathname === '/app' || location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/app');
 
@@ -72,7 +72,7 @@ export function Sidebar({
     { title: 'Claims', icon: ShieldCheck, href: '/recoveries' },
     { title: 'Doc Locker', icon: FileText, href: '/evidence-locker' },
     { title: 'Reports', icon: BarChart3, href: '/reports' },
-    { title: 'Payment recoveries', icon: Plug, href: '/upcoming-payments' }
+    { title: 'Refund Recoveries', icon: Plug, href: '/upcoming-payments' }
   ];
 
   const secondaryItems: NavItem[] = [
@@ -80,32 +80,38 @@ export function Sidebar({
     { title: 'Help Centre', icon: LifeBuoy, href: '/help' },
     { title: "What's New", icon: Sparkles, href: '/whats-new' }
   ];
-	const NavItemComponent = React.memo(({
-		item
-	}: {
-		item: NavItem;
-	}) => {
-		const isActive = location.pathname === item.href;
+  const NavItemComponent = React.memo(({
+    item
+  }: {
+    item: NavItem;
+  }) => {
+    const isActive = location.pathname === item.href;
     const handlePrefetch = useCallback(() => {
       prefetchRoute(item.href);
       if (item.href === '/app') {
-        queryClient.prefetchQuery({ queryKey: ['dashboard-aggregates', '30d'], queryFn: async () => {
-          const r = await api.getDashboardAggregates('30d');
-          if (!r.ok || !r.data) throw new Error('aggregate prefetch');
-          return r.data;
-        }});
-        queryClient.prefetchQuery({ queryKey: ['recoveries-metrics'], queryFn: async () => {
-          const r = await api.getRecoveriesMetrics();
-          if (!r.ok || !r.data) throw new Error('metrics prefetch');
-          return r.data;
-        }});
+        queryClient.prefetchQuery({
+          queryKey: ['dashboard-aggregates', '30d'], queryFn: async () => {
+            const r = await api.getDashboardAggregates('30d');
+            if (!r.ok || !r.data) throw new Error('aggregate prefetch');
+            return r.data;
+          }
+        });
+        queryClient.prefetchQuery({
+          queryKey: ['recoveries-metrics'], queryFn: async () => {
+            const r = await api.getRecoveriesMetrics();
+            if (!r.ok || !r.data) throw new Error('metrics prefetch');
+            return r.data;
+          }
+        });
       }
       if (item.href === '/recoveries') {
-        queryClient.prefetchQuery({ queryKey: ['recoveries-metrics'], queryFn: async () => {
-          const r = await api.getRecoveriesMetrics();
-          if (!r.ok || !r.data) throw new Error('metrics prefetch');
-          return r.data;
-        }});
+        queryClient.prefetchQuery({
+          queryKey: ['recoveries-metrics'], queryFn: async () => {
+            const r = await api.getRecoveriesMetrics();
+            if (!r.ok || !r.data) throw new Error('metrics prefetch');
+            return r.data;
+          }
+        });
       }
     }, [item.href, queryClient]);
     if (isCollapsed) {
@@ -116,7 +122,7 @@ export function Sidebar({
               <Link
                 to={item.href}
                 onMouseEnter={handlePrefetch}
-                  className={cn(
+                className={cn(
                   "relative flex items-center justify-center w-10 h-10 rounded-md transition-colors duration-200",
                   isActive
                     ? "bg-gray-200 text-[#36454F]"
@@ -135,11 +141,11 @@ export function Sidebar({
       );
     }
     return (
-        <Link
-          to={item.href}
-          onMouseEnter={handlePrefetch}
-          className={cn(
-            "relative flex items-center gap-3 w-full px-3 py-1.5 rounded-md transition-colors duration-200",
+      <Link
+        to={item.href}
+        onMouseEnter={handlePrefetch}
+        className={cn(
+          "relative flex items-center gap-3 w-full px-3 py-1.5 rounded-md transition-colors duration-200",
           isActive
             ? "bg-gray-200 text-[#36454F]"
             : "text-[#36454F] hover:bg-gray-200 hover:text-[#36454F]"
@@ -153,71 +159,71 @@ export function Sidebar({
         <span className="text-[13px] font-medium">{item.title}</span>
       </Link>
     );
-	});
-    return (
-      <aside
+  });
+  return (
+    <aside
+      className={cn(
+        "fixed left-0 top-0 transition-all duration-300 ease-in-out flex flex-col h-screen z-40 gpu-accelerated",
+        isCollapsed ? "w-16" : "w-60",
+        "text-[#36454F] border-r border-gray-300",
+        "bg-[#EEEEEE]",
+        className
+      )}
+      style={{ willChange: 'width' }}
+    >
+      {/* Branding + Collapse */}
+      <div
         className={cn(
-          "fixed left-0 top-0 transition-all duration-300 ease-in-out flex flex-col h-screen z-40 gpu-accelerated",
-          isCollapsed ? "w-16" : "w-60",
-          "text-[#36454F] border-r border-gray-300",
-          "bg-[#EEEEEE]",
-          className
+          "border-b border-gray-300 flex items-center",
+          isCollapsed ? "p-2 justify-center" : "p-4 justify-between"
         )}
-        style={{ willChange: 'width' }}
       >
-        {/* Branding + Collapse */}
+        {!isCollapsed ? (
+          <>
+            <div className="flex flex-col gap-2">
+              <span
+                className="tracking-tight text-xl select-none bg-gradient-to-r from-[#1e3a5f] via-[#4a90a4] to-[#2d5a7b] bg-clip-text text-transparent font-black"
+                style={{ fontWeight: 900 }}
+              >
+                CLARIO
+              </span>
+              <div className="select-none flex items-center gap-2">
+                <span className="text-[11px] text-[#36454F] flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                  Connected, secured
+                </span>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" title="Connected, secured" />
+          </div>
+        )}
+      </div>
+
+      <ScrollArea className="flex-1">
         <div
           className={cn(
-            "border-b border-gray-300 flex items-center",
-            isCollapsed ? "p-2 justify-center" : "p-4 justify-between"
+            "h-full flex",
+            isCollapsed ? "px-1.5" : "px-2"
           )}
         >
-          {!isCollapsed ? (
-            <>
-                <div className="flex flex-col gap-2">
-                  <span
-                    className="tracking-tight text-xl select-none bg-gradient-to-r from-[#1e3a5f] via-[#4a90a4] to-[#2d5a7b] bg-clip-text text-transparent font-black"
-                    style={{ fontWeight: 900 }}
-                  >
-                    CLARIO
-                  </span>
-                  <div className="select-none flex items-center gap-2">
-                    <span className="text-[11px] text-[#36454F] flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                      Connected, secured
-                    </span>
-                  </div>
-                </div>
-            </>
-          ) : (
-            <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" title="Connected, secured" />
+          <nav className={cn("w-full flex flex-col items-center pt-8 pb-4 space-y-1", isCollapsed ? "space-y-1" : "space-y-4")}>
+            <div className={cn("w-full flex flex-col", isCollapsed ? "items-center space-y-1" : "items-start space-y-1")}>
+              {primaryItems.map((item) => (
+                <NavItemComponent key={item.title} item={item} />
+              ))}
             </div>
-          )}
+            {!isCollapsed && <div className="h-px bg-gray-300 w-full" />}
+            <div className={cn("w-full flex flex-col", isCollapsed ? "items-center space-y-1" : "items-start space-y-1")}>
+              {secondaryItems.map((item) => (
+                <NavItemComponent key={item.title} item={item} />
+              ))}
+            </div>
+          </nav>
         </div>
-
-          <ScrollArea className="flex-1">
-            <div
-              className={cn(
-                "h-full flex",
-                isCollapsed ? "px-1.5" : "px-2"
-              )}
-            >
-                <nav className={cn("w-full flex flex-col items-center pt-8 pb-4 space-y-1", isCollapsed ? "space-y-1" : "space-y-4")}>
-                  <div className={cn("w-full flex flex-col", isCollapsed ? "items-center space-y-1" : "items-start space-y-1")}>
-                    {primaryItems.map((item) => (
-                      <NavItemComponent key={item.title} item={item} />
-                    ))}
-                  </div>
-                  {!isCollapsed && <div className="h-px bg-gray-300 w-full" />}
-                  <div className={cn("w-full flex flex-col", isCollapsed ? "items-center space-y-1" : "items-start space-y-1")}>
-                    {secondaryItems.map((item) => (
-                      <NavItemComponent key={item.title} item={item} />
-                    ))}
-                  </div>
-                </nav>
-            </div>
-          </ScrollArea>
+      </ScrollArea>
 
       {/* Profile + Status + Logout */}
       {isCollapsed ? (
@@ -251,7 +257,7 @@ export function Sidebar({
                   onClick={async () => {
                     const ok = window.confirm('Log out of Clario?');
                     if (!ok) return;
-                    try { await api.logout(); } catch (_) {}
+                    try { await api.logout(); } catch (_) { }
                     window.location.href = '/';
                   }}
                 >
@@ -266,21 +272,21 @@ export function Sidebar({
         </div>
       ) : (
         <div className="mt-auto border-t border-gray-300 p-4 space-y-3">
-            <Link
-              to="/settings"
-              className={cn(
-                "w-full flex items-center gap-2 text-left hover:text-emerald-600 hover:bg-gray-200 px-3 py-2 rounded-md transition-colors",
-                "text-[#36454F]"
-              )}
-            >
-              <User className="h-4 w-4" />
-              <span className="text-sm">Account</span>
-            </Link>
-            <button
-              className={cn(
-                "w-full flex items-center gap-2 text-left hover:text-red-600 hover:bg-gray-200 px-3 py-2 rounded-md",
-                "text-[#36454F]"
-              )}
+          <Link
+            to="/settings"
+            className={cn(
+              "w-full flex items-center gap-2 text-left hover:text-emerald-600 hover:bg-gray-200 px-3 py-2 rounded-md transition-colors",
+              "text-[#36454F]"
+            )}
+          >
+            <User className="h-4 w-4" />
+            <span className="text-sm">Account</span>
+          </Link>
+          <button
+            className={cn(
+              "w-full flex items-center gap-2 text-left hover:text-red-600 hover:bg-gray-200 px-3 py-2 rounded-md",
+              "text-[#36454F]"
+            )}
             onClick={() => setShowLogout(prev => !prev)}
           >
             <LogOut className="h-4 w-4" />
@@ -290,7 +296,7 @@ export function Sidebar({
             <div className="mt-1 rounded-md border border-red-200/20 bg-red-500/5 p-3">
               <button
                 className="w-full inline-flex items-center justify-center gap-2 text-sm text-white bg-red-600 hover:bg-red-700 px-3 py-2 rounded"
-                onClick={async () => { try { await api.logout(); } catch (_) {} window.location.href = '/'; }}
+                onClick={async () => { try { await api.logout(); } catch (_) { } window.location.href = '/'; }}
               >
                 <LogOut className="h-4 w-4" />
                 <span>Log out</span>
