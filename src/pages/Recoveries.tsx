@@ -1060,7 +1060,7 @@ export default function Recoveries() {
 
   return (
     <PageLayout title="Refund Recoveries">
-      <div className="relative w-full">
+      <div className="relative w-full overflow-x-hidden">
         <div className="relative w-full bg-gray-50 min-h-screen">
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-gray-50 to-white" />
           <div className="relative w-full max-w-full mx-auto px-6 pt-6 pb-10 text-gray-900 space-y-8">
