@@ -343,7 +343,31 @@ export default function RevenueModel() {
                         <td className="py-4 px-4 text-right text-lg text-emerald-700">
                           ${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                         </td>
-                      </PageLayout>
-                      );
-}
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
 
+                <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="px-1">
+                    <div className="text-sm text-gray-500 font-medium mb-1">Total Active Sellers (Dec)</div>
+                    <div className="text-lg text-gray-900 font-normal">{rows[11].activeSellers.toLocaleString()}</div>
+                  </div>
+                  <div className="px-1">
+                    <div className="text-sm text-gray-500 font-medium mb-1">Annual Revenue (USD)</div>
+                    <div className="text-lg text-gray-900 font-normal">${totalRevenue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
+                  </div>
+                  <div className="px-1">
+                    <div className="text-sm text-gray-500 font-medium mb-1">Annual Revenue (ZAR)</div>
+                    <div className="text-lg text-gray-900 font-normal">R {totalRevenueZar.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
+                  </div>
+                </div>
+
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </PageLayout>
+  );
+}
