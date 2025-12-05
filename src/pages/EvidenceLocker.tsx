@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Upload, FileText, Search, Mail, Check, AlertTriangle, Clock, Eye, Download, ExternalLink, Loader2, FolderSearch, ScanLine, FileCheck, Link2 } from 'lucide-react';
+import { Upload, FileText, Search, Mail, Check, AlertTriangle, Clock, Eye, Download, ExternalLink, Loader2, FolderSearch, ScanLine, FileCheck, Link2, Trash2 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { api } from '@/lib/api';
 import { Link } from 'react-router-dom';
@@ -1162,6 +1162,28 @@ export default function EvidenceLocker() {
                               Parse
                             </Button>
                           )}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                            onClick={async () => {
+                              if (!confirm('Are you sure you want to delete this document?')) return;
+                              try {
+                                const res = await api.deleteDocument(doc.id);
+                                if (res.ok) {
+                                  toast({ title: 'Document Deleted', description: 'Document has been removed.' });
+                                  setDocuments(prev => prev.filter(d => d.id !== doc.id));
+                                } else {
+                                  toast({ title: 'Delete Failed', description: res.error || 'Failed to delete document.', variant: 'destructive' });
+                                }
+                              } catch (error: any) {
+                                toast({ title: 'Delete Failed', description: error.message || 'An error occurred.', variant: 'destructive' });
+                              }
+                            }}
+                            title="Delete Document"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
                         </div>
                       </TableCell>
                     </TableRow>)}

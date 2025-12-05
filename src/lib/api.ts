@@ -673,6 +673,8 @@ export const api = {
   getDocument: (id: string) => requestJson<any>(`/api/documents/${encodeURIComponent(id)}`),
   getDocumentDownloadUrl: (id: string) => buildApiUrl(`/api/documents/${encodeURIComponent(id)}/download`),
   getDocumentDownload: (id: string) => requestJson<{ success: boolean; url: string; filename: string }>(`/api/documents/${encodeURIComponent(id)}/download`),
+  deleteDocument: (id: string) => requestJson<{ success: boolean; message: string }>(`/api/documents/${encodeURIComponent(id)}`, { method: 'DELETE' }),
+  reparseDocument: (id: string) => requestJson<{ success: boolean; message: string }>(`/api/documents/${encodeURIComponent(id)}/reparse`, { method: 'POST' }),
 
   // PHASE4: Evidence ingestion endpoints (Node.js backend)
   // Gmail ingestion
