@@ -41,21 +41,29 @@ export function Navbar({
     location.pathname.startsWith('/smart-inventory-sync') ||
     location.pathname.startsWith('/sync');
   const isTransparent = !!forceTransparent || pathTransparent;
-  
+
   // Check if we're on the Dashboard (Command Center) page
   const isDashboard = location.pathname === '/dashboard' || location.pathname === '/app' || location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/app');
+
+  // Pages that should have soft grey navbar background to match page bg
+  const isGreyBgPage =
+    location.pathname.startsWith('/whats-new') ||
+    location.pathname.startsWith('/help') ||
+    location.pathname.startsWith('/reports') ||
+    location.pathname.startsWith('/evidence-locker') ||
+    location.pathname.startsWith('/recoveries');
 
   // State for referral popup
   const [showReferralPopup, setShowReferralPopup] = useState(false);
   const [showInviteForm, setShowInviteForm] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
   const [linkCopied, setLinkCopied] = useState(false);
-  
+
   // Generate referral link (placeholder - in production this would come from backend)
-  const referralLink = typeof window !== 'undefined' 
+  const referralLink = typeof window !== 'undefined'
     ? `${window.location.origin}/signup?ref=demo-user`
     : '/signup?ref=demo-user';
-  
+
   // Create a shortened display version of the link
   const getShortLink = (link: string) => {
     try {
@@ -73,7 +81,7 @@ export function Navbar({
       return link.length > 30 ? `...${link.slice(-25)}` : link;
     }
   };
-  
+
   const shortLink = getShortLink(referralLink);
 
   // Language preference removed on platform navbar per design
@@ -84,85 +92,86 @@ export function Navbar({
   return <header className={cn(
     "sticky top-0 z-30 transition-all duration-300",
     sidebarCollapsed ? "ml-16" : "ml-60",
-    isTransparent ? "!bg-transparent !border-transparent backdrop-blur-none shadow-none" : "bg-background/60 backdrop-blur-sm border-b",
+    isGreyBgPage ? "bg-gray-50 border-b border-gray-200" :
+      isTransparent ? "!bg-transparent !border-transparent backdrop-blur-none shadow-none" : "bg-background/60 backdrop-blur-sm border-b",
     className
   )}>
-        <div className="container flex items-center h-16 px-4 font-body">
-          {/* Center - Search */}
-          <div className="flex-1 max-w-xl hidden md:block md:mx-4">
-            <div className="relative flex items-center gap-2">
-              <div className="relative flex-1">
-                <Search className={cn(
-                  'absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 stroke-[2]',
-                  isDashboard ? 'text-gray-400' : (isTransparent ? 'text-gray-400' : 'text-gray-600')
-                )} />
-                <Input
-                  aria-label="Search"
-                  placeholder="search invoices, products, documents, and more"
-                  variant={isTransparent ? 'dark' : 'default'}
-                  className={cn(
-                    "pl-9 h-9 rounded-md",
-                    isDashboard && "!bg-white/5 !border-gray-300 !text-gray-200 !placeholder:text-gray-400 backdrop-blur-sm",
-                    isTransparent && !isDashboard && "!bg-white/10 !border-gray-300 !text-gray-200 !placeholder:text-gray-400 backdrop-blur-sm",
-                    !isDashboard && !isTransparent && "!border-gray-300"
-                  )}
-                />
-              </div>
-              {/* Message icon - visible on all pages */}
-              <NotificationBell
-                label="Messages"
-                iconOverride={Mail}
-                showLabel={false}
-                className={cn(
-                  "group h-9 w-9 flex items-center justify-center rounded-md transition-colors",
-                  isDashboard 
-                    ? "text-[#36454F] hover:text-[#36454F] hover:bg-gray-100"
-                    : isTransparent 
-                      ? "text-[#36454F] hover:text-[#36454F] hover:bg-white/10"
-                      : "text-[#36454F] hover:text-[#36454F] hover:bg-muted/50"
-                )}
-                iconClassName={cn(
-                  "text-[#36454F]"
-                )}
-              />
-              {/* Gift icon - only on dashboard */}
-              {isDashboard && (
-                <button
-                  onClick={() => setShowReferralPopup(true)}
-                  className="flex items-center gap-2 h-9 px-3 rounded-md text-[#36454F] hover:text-[#36454F] hover:bg-gray-100 transition-colors"
-                  aria-label="Referral program"
-                >
-                  <Gift className="h-5 w-5 text-[#36454F]" />
-                </button>
+    <div className="container flex items-center h-16 px-4 font-body">
+      {/* Center - Search */}
+      <div className="flex-1 max-w-xl hidden md:block md:mx-4">
+        <div className="relative flex items-center gap-2">
+          <div className="relative flex-1">
+            <Search className={cn(
+              'absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 stroke-[2]',
+              isDashboard ? 'text-gray-400' : (isTransparent ? 'text-gray-400' : 'text-gray-600')
+            )} />
+            <Input
+              aria-label="Search"
+              placeholder="search invoices, products, documents, and more"
+              variant={isTransparent ? 'dark' : 'default'}
+              className={cn(
+                "pl-9 h-9 rounded-md",
+                isDashboard && "!bg-white/5 !border-gray-300 !text-gray-200 !placeholder:text-gray-400 backdrop-blur-sm",
+                isTransparent && !isDashboard && "!bg-white/10 !border-gray-300 !text-gray-200 !placeholder:text-gray-400 backdrop-blur-sm",
+                !isDashboard && !isTransparent && "!border-gray-300"
               )}
-            </div>
+            />
           </div>
-          {/* Right side - Connect Platform button and Sandbox badge */}
-          <div className="flex items-center gap-4 ml-auto">
-          <Button
-            onClick={() => navigate('/integrations-hub')}
-            variant="ghost"
+          {/* Message icon - visible on all pages */}
+          <NotificationBell
+            label="Messages"
+            iconOverride={Mail}
+            showLabel={false}
             className={cn(
-              "flex items-center gap-2 h-9 px-3",
-              isDashboard ? 'bg-transparent text-[#36454F] hover:bg-white/10 hover:text-[#36454F]' : 
-              isTransparent ? 'text-[#36454F] hover:text-[#36454F] hover:bg-white/10' : 'text-[#36454F] hover:text-[#36454F]'
+              "group h-9 w-9 flex items-center justify-center rounded-md transition-colors",
+              isDashboard
+                ? "text-[#36454F] hover:text-[#36454F] hover:bg-gray-100"
+                : isTransparent
+                  ? "text-[#36454F] hover:text-[#36454F] hover:bg-white/10"
+                  : "text-[#36454F] hover:text-[#36454F] hover:bg-muted/50"
             )}
-          >
-            <Link2 className={cn("h-4 w-4 text-[#36454F]")} />
-            <span className="hidden sm:inline text-[#36454F]">Connect</span>
-          </Button>
-          {isSandbox && (
-            <span className={cn(
-              'text-xs px-2 py-0.5 rounded border',
-              isTransparent ? 'border-amber-300/30 text-amber-200 bg-amber-500/10' : 'border-amber-600/30 text-amber-700 bg-amber-50'
-            )}>
-              Sandbox
-            </span>
+            iconClassName={cn(
+              "text-[#36454F]"
+            )}
+          />
+          {/* Gift icon - only on dashboard */}
+          {isDashboard && (
+            <button
+              onClick={() => setShowReferralPopup(true)}
+              className="flex items-center gap-2 h-9 px-3 rounded-md text-[#36454F] hover:text-[#36454F] hover:bg-gray-100 transition-colors"
+              aria-label="Referral program"
+            >
+              <Gift className="h-5 w-5 text-[#36454F]" />
+            </button>
+          )}
+        </div>
+      </div>
+      {/* Right side - Connect Platform button and Sandbox badge */}
+      <div className="flex items-center gap-4 ml-auto">
+        <Button
+          onClick={() => navigate('/integrations-hub')}
+          variant="ghost"
+          className={cn(
+            "flex items-center gap-2 h-9 px-3",
+            isDashboard ? 'bg-transparent text-[#36454F] hover:bg-white/10 hover:text-[#36454F]' :
+              isTransparent ? 'text-[#36454F] hover:text-[#36454F] hover:bg-white/10' : 'text-[#36454F] hover:text-[#36454F]'
+          )}
+        >
+          <Link2 className={cn("h-4 w-4 text-[#36454F]")} />
+          <span className="hidden sm:inline text-[#36454F]">Connect</span>
+        </Button>
+        {isSandbox && (
+          <span className={cn(
+            'text-xs px-2 py-0.5 rounded border',
+            isTransparent ? 'border-amber-300/30 text-amber-200 bg-amber-500/10' : 'border-amber-600/30 text-amber-700 bg-amber-50'
+          )}>
+            Sandbox
+          </span>
         )}
-          {/* Language selector removed */}
+        {/* Language selector removed */}
       </div>
     </div>
-    
+
     {/* Referral Popup */}
     <Dialog open={showReferralPopup} onOpenChange={setShowReferralPopup}>
       <DialogContent className="max-w-sm bg-emerald-50/95 border border-emerald-200/80 shadow-lg rounded-lg p-6">
@@ -190,7 +199,7 @@ export function Navbar({
         </div>
       </DialogContent>
     </Dialog>
-    
+
     {/* Invite Form Popup */}
     <Dialog open={showInviteForm} onOpenChange={setShowInviteForm}>
       <DialogContent className="max-w-md bg-white border border-gray-200 shadow-lg rounded-lg p-6">
@@ -199,7 +208,7 @@ export function Navbar({
             <h3 className="text-lg font-semibold text-gray-900 mb-1">Invite seller friend</h3>
             <p className="text-sm text-gray-600">Send an invitation to join Clario</p>
           </div>
-          
+
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700">Email address</label>
             <Input
@@ -210,7 +219,7 @@ export function Navbar({
               className="w-full border-gray-200"
             />
           </div>
-          
+
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700">Referral link</label>
             <div className="flex items-center gap-2 p-3 bg-gray-50 border border-gray-200 rounded-md">
@@ -237,7 +246,7 @@ export function Navbar({
               </button>
             </div>
           </div>
-          
+
           <Button
             onClick={() => {
               // TODO: Implement send invite functionality
