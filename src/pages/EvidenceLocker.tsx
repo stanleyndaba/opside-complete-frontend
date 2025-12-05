@@ -961,7 +961,7 @@ export default function EvidenceLocker() {
               </div>
             </CardContent>
           </Card>
-          <Card className="bg-white border-gray-200 text-gray-900">
+          <Card className="bg-white border-gray-200 text-gray-900 overflow-hidden">
             <CardHeader>
               <div>
                 <CardTitle className="text-black mb-1 font-medium">Document Library</CardTitle>
