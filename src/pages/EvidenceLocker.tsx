@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Upload, FileText, Search, Mail, Check, AlertTriangle, Clock, Eye, Download, ExternalLink, Loader2, FolderSearch, ScanLine, FileCheck, Link2, Trash2 } from 'lucide-react';
+import { Upload, FileText, Search, Mail, Check, AlertTriangle, Clock, Eye, Download, ExternalLink, Loader2, FolderSearch, ScanLine, FileCheck, Link2 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { api } from '@/lib/api';
 import { Link } from 'react-router-dom';
@@ -670,33 +670,15 @@ export default function EvidenceLocker() {
   };
 
   const downloadDoc = async (id: string) => {
-    try {
-      // Fetch the signed URL from the download endpoint
-      const response = await api.getDocumentDownload(id);
-      if (response.ok && response.data?.url) {
-        // Open the signed URL in a new tab to trigger download
-        window.open(response.data.url, '_blank');
-      } else {
-        toast({
-          title: 'Download Failed',
-          description: response.error || 'Could not get download URL',
-          variant: 'destructive'
-        });
-      }
-    } catch (err: any) {
-      toast({
-        title: 'Download Error',
-        description: err.message || 'Failed to download document',
-        variant: 'destructive'
-      });
-    }
+    const url = api.getDocumentDownloadUrl(id);
+    window.open(url, '_blank');
   };
 
   return <PageLayout title="Doc Locker">
-    <div className="relative w-full">
-      <div className="relative w-full bg-gray-50 min-h-screen">
+    <div className="relative -m-4 lg:-m-6 overflow-x-hidden">
+      <div className="relative w-full bg-gray-50 min-h-[calc(100vh+96px)] -mt-24 pt-24">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-gray-50 to-white" />
-        <div className="relative w-full max-w-full mx-auto px-4 sm:px-6 pt-6 pb-10 text-gray-900 space-y-8 overflow-x-hidden">
+        <div className="relative w-full max-w-full mx-auto px-6 pt-6 pb-10 text-gray-900 space-y-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <GmailConnectionStatus onStatusChange={setGmailConnected} />
             <EvidenceIngestion
@@ -719,7 +701,7 @@ export default function EvidenceLocker() {
           </div>
 
           {/* Document Activity Log - Terminal Style */}
-          <Card className="bg-gray-50 border-gray-200 text-gray-900 overflow-hidden rounded-xl">
+          <Card className="bg-white border-gray-200 text-gray-900">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <div>
@@ -799,7 +781,7 @@ export default function EvidenceLocker() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-50 border-gray-200 text-gray-900 overflow-hidden rounded-xl">
+          <Card className="bg-white border-gray-200 text-gray-900">
             <CardHeader>
               <CardTitle className="font-medium">Upload Documents</CardTitle>
               <CardDescription>
@@ -807,7 +789,7 @@ export default function EvidenceLocker() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className={`border-2 border-dashed rounded-xl p-8 text-center transition-all ${dragActive ? 'border-emerald-500 bg-emerald-50' : 'border-gray-200 hover:border-emerald-400'}`} onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}>
+              <div className={`border-2 border-dashed rounded-lg p-8 text-center transition-all ${dragActive ? 'border-emerald-500 bg-emerald-50' : 'border-gray-200 hover:border-emerald-400'}`} onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}>
                 <Upload className="h-12 w-12 mx-auto mb-4 text-gray-500" />
                 <h3 className="text-lg font-medium mb-2">Drag & Drop Your Invoices or Purchase Orders Here</h3>
                 <p className="text-gray-600 mb-4">
@@ -979,7 +961,7 @@ export default function EvidenceLocker() {
               </div>
             </CardContent>
           </Card>
-          <Card className="bg-gray-50 border-gray-200 text-gray-900 overflow-hidden rounded-xl">
+          <Card className="bg-white border-gray-200 text-gray-900">
             <CardHeader>
               <div>
                 <CardTitle className="text-black mb-1 font-medium">Document Library</CardTitle>
@@ -987,7 +969,7 @@ export default function EvidenceLocker() {
                 <div className="flex flex-wrap items-center gap-2 justify-end">
                   <div className="relative">
                     <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500 stroke-[2]" />
-                    <Input placeholder="Search supplier, invoice #, claim ID…" value={q} onChange={(e) => setQ(e.target.value)} className="pl-8 w-full max-w-xs border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
+                    <Input placeholder="Search supplier, invoice #, claim ID…" value={q} onChange={(e) => setQ(e.target.value)} className="pl-8 w-72 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
                   </div>
                   <Input placeholder="Supplier" value={supplier} onChange={(e) => setSupplier(e.target.value)} className="w-40 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
                   <Input placeholder="Type (invoice/receipt/shipping)" value={type} onChange={(e) => setType(e.target.value)} className="w-56 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
@@ -998,10 +980,10 @@ export default function EvidenceLocker() {
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6">
+            <CardContent className="p-6">
               {loading && <div className="text-sm text-muted-foreground">Loading documents…</div>}
               {error && <div className="text-sm text-red-600">{error}</div>}
-              <div className="overflow-x-auto -mx-4 sm:-mx-6 px-4 sm:px-6">
+              <div className="overflow-x-auto">
                 <Table className="min-w-[1150px]">
                   <TableHeader>
                     <TableRow>
@@ -1113,26 +1095,6 @@ export default function EvidenceLocker() {
                           <Button variant="ghost" size="sm" onClick={() => downloadDoc(doc.id)}>
                             <Download className="w-4 h-4 mr-1" />
                           </Button>
-                          {doc.parser_status === 'completed' && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={async () => {
-                                try {
-                                  // Open PDF generation URL in new tab
-                                  const pdfUrl = api.buildApiUrl(`/api/documents/${encodeURIComponent(doc.id)}/generate-pdf`);
-                                  window.open(pdfUrl, '_blank');
-                                  toast({ title: 'Generating PDF', description: 'Invoice PDF will open in a new tab.' });
-                                } catch (err: any) {
-                                  toast({ title: 'PDF Generation Failed', description: err.message, variant: 'destructive' });
-                                }
-                              }}
-                              title="Generate Invoice PDF"
-                            >
-                              <FileText className="w-4 h-4 mr-1" />
-                              PDF
-                            </Button>
-                          )}
                           {doc.parser_status && doc.parser_status !== 'completed' && doc.parser_status !== 'processing' && (
                             <Button
                               variant="ghost"
@@ -1162,28 +1124,6 @@ export default function EvidenceLocker() {
                               Parse
                             </Button>
                           )}
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
-                            onClick={async () => {
-                              if (!confirm('Are you sure you want to delete this document?')) return;
-                              try {
-                                const res = await api.deleteDocument(doc.id);
-                                if (res.ok) {
-                                  toast({ title: 'Document Deleted', description: 'Document has been removed.' });
-                                  setDocuments(prev => prev.filter(d => d.id !== doc.id));
-                                } else {
-                                  toast({ title: 'Delete Failed', description: res.error || 'Failed to delete document.', variant: 'destructive' });
-                                }
-                              } catch (error: any) {
-                                toast({ title: 'Delete Failed', description: error.message || 'An error occurred.', variant: 'destructive' });
-                              }
-                            }}
-                            title="Delete Document"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
                         </div>
                       </TableCell>
                     </TableRow>)}
