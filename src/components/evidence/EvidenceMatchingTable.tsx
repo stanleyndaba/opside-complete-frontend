@@ -1,14 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { api } from '@/lib/api';
 import { Link } from 'react-router-dom';
-import { Eye, RefreshCw, CheckCircle2, AlertCircle, Clock, FileText } from 'lucide-react';
+import {
+  Eye,
+  RefreshCw,
+  CheckCircle2,
+  AlertCircle,
+  Clock,
+  FileText,
+  AlertTriangle,
+  Sparkles,
+  Loader2,
+  XCircle,
+  FileSearch
+} from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { SmartPromptCard } from './SmartPromptCard';
 
 interface MatchingResult {
   id: string;
@@ -16,8 +30,23 @@ interface MatchingResult {
   document_id: string;
   confidence_score: number;
   match_type: string;
-  action_taken: 'auto_submit' | 'smart_prompt' | 'no_action';
+  action_taken: 'auto_submit' | 'smart_prompt' | 'no_action' | 'approved' | 'rejected';
+  matched_fields?: string[];
+  reasoning?: string;
   created_at?: string;
+  claim_details?: {
+    type?: string;
+    amount?: number;
+    currency?: string;
+    sku?: string;
+    asin?: string;
+  };
+  document_details?: {
+    filename?: string;
+    supplier?: string;
+    invoice_number?: string;
+    amount?: number;
+  };
 }
 
 export function EvidenceMatchingTable() {
@@ -25,6 +54,8 @@ export function EvidenceMatchingTable() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [activeTab, setActiveTab] = useState('smart-prompts');
+  const [processingIds, setProcessingIds] = useState<Set<string>>(new Set());
   const { toast } = useToast();
 
   const fetchMatchingResults = async () => {
@@ -32,7 +63,7 @@ export function EvidenceMatchingTable() {
       setLoading(true);
       setError(null);
       const response = await api.getMatchingResults({ limit: 100 });
-      
+
       if (response.ok && response.data?.results) {
         setMatchingResults(response.data.results);
       } else {
@@ -51,7 +82,7 @@ export function EvidenceMatchingTable() {
     try {
       setRefreshing(true);
       const response = await api.runEvidenceMatching();
-      
+
       if (response.ok) {
         toast({
           title: 'Evidence Matching Started',
@@ -79,9 +110,127 @@ export function EvidenceMatchingTable() {
     }
   };
 
+  // Smart Prompt actions
+  const handleApproveSmartPrompt = async (matchId: string) => {
+    setProcessingIds(prev => new Set(prev).add(matchId));
+    try {
+      const response = await api.approveSmartPrompt(matchId);
+      if (response.ok) {
+        toast({
+          title: 'Match Approved',
+          description: 'Claim has been submitted for filing.',
+        });
+        // Update local state - move to approved
+        setMatchingResults(prev => prev.map(r =>
+          r.id === matchId ? { ...r, action_taken: 'approved' as const } : r
+        ));
+      } else {
+        toast({
+          title: 'Approval Failed',
+          description: response.error || 'Could not approve match',
+          variant: 'destructive',
+        });
+      }
+    } catch (err: any) {
+      toast({
+        title: 'Error',
+        description: err.message || 'Failed to approve match',
+        variant: 'destructive',
+      });
+    } finally {
+      setProcessingIds(prev => {
+        const next = new Set(prev);
+        next.delete(matchId);
+        return next;
+      });
+    }
+  };
+
+  const handleRejectSmartPrompt = async (matchId: string, reason?: string) => {
+    setProcessingIds(prev => new Set(prev).add(matchId));
+    try {
+      const response = await api.rejectSmartPrompt(matchId, reason);
+      if (response.ok) {
+        toast({
+          title: 'Match Rejected',
+          description: 'This match has been marked as rejected.',
+        });
+        // Update local state - move to rejected
+        setMatchingResults(prev => prev.map(r =>
+          r.id === matchId ? { ...r, action_taken: 'rejected' as const } : r
+        ));
+      } else {
+        toast({
+          title: 'Rejection Failed',
+          description: response.error || 'Could not reject match',
+          variant: 'destructive',
+        });
+      }
+    } catch (err: any) {
+      toast({
+        title: 'Error',
+        description: err.message || 'Failed to reject match',
+        variant: 'destructive',
+      });
+    } finally {
+      setProcessingIds(prev => {
+        const next = new Set(prev);
+        next.delete(matchId);
+        return next;
+      });
+    }
+  };
+
+  const handleRequestMoreEvidence = async (matchId: string) => {
+    setProcessingIds(prev => new Set(prev).add(matchId));
+    try {
+      const response = await api.requestMoreEvidence(matchId);
+      if (response.ok) {
+        toast({
+          title: 'More Evidence Requested',
+          description: 'This match has been flagged for additional evidence collection.',
+        });
+      } else {
+        toast({
+          title: 'Request Failed',
+          description: response.error || 'Could not request more evidence',
+          variant: 'destructive',
+        });
+      }
+    } catch (err: any) {
+      toast({
+        title: 'Error',
+        description: err.message || 'Failed to request more evidence',
+        variant: 'destructive',
+      });
+    } finally {
+      setProcessingIds(prev => {
+        const next = new Set(prev);
+        next.delete(matchId);
+        return next;
+      });
+    }
+  };
+
   useEffect(() => {
     fetchMatchingResults();
   }, []);
+
+  // Filter results by action type
+  const smartPrompts = useMemo(() =>
+    matchingResults.filter(r => r.action_taken === 'smart_prompt'),
+    [matchingResults]
+  );
+
+  const autoSubmitted = useMemo(() =>
+    matchingResults.filter(r => r.action_taken === 'auto_submit' || r.action_taken === 'approved'),
+    [matchingResults]
+  );
+
+  const heldForReview = useMemo(() =>
+    matchingResults.filter(r => r.action_taken === 'no_action' || r.action_taken === 'rejected'),
+    [matchingResults]
+  );
 
   const getConfidenceBadge = (score: number) => {
     if (score >= 0.85) {
@@ -97,10 +246,14 @@ export function EvidenceMatchingTable() {
     switch (action) {
       case 'auto_submit':
         return <Badge className="bg-blue-100 text-blue-800 border-blue-200"><CheckCircle2 className="w-3 h-3 mr-1" />Auto-Submitted</Badge>;
+      case 'approved':
+        return <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200"><CheckCircle2 className="w-3 h-3 mr-1" />Approved</Badge>;
       case 'smart_prompt':
-        return <Badge className="bg-purple-100 text-purple-800 border-purple-200"><Clock className="w-3 h-3 mr-1" />Smart Prompt</Badge>;
+        return <Badge className="bg-purple-100 text-purple-800 border-purple-200"><Clock className="w-3 h-3 mr-1" />Needs Review</Badge>;
+      case 'rejected':
+        return <Badge className="bg-red-100 text-red-800 border-red-200"><XCircle className="w-3 h-3 mr-1" />Rejected</Badge>;
       case 'no_action':
-        return <Badge className="bg-gray-100 text-gray-800 border-gray-200"><AlertCircle className="w-3 h-3 mr-1" />Held for Review</Badge>;
+        return <Badge className="bg-gray-100 text-gray-800 border-gray-200"><AlertCircle className="w-3 h-3 mr-1" />Held</Badge>;
       default:
         return <Badge className="bg-gray-100 text-gray-800 border-gray-200">{action}</Badge>;
     }
@@ -114,14 +267,112 @@ export function EvidenceMatchingTable() {
       'supplier_match': 'Supplier Match',
       'date_match': 'Date Match',
       'amount_match': 'Amount Match',
+      'fuzzy_match': 'Fuzzy Match',
     };
-    return labels[matchType] || matchType;
+    return labels[matchType] || matchType.replace(/_/g, ' ');
   };
+
+  const renderResultsTable = (results: MatchingResult[], showActions: boolean = false) => (
+    <div className="overflow-x-auto">
+      <Table>
+        <TableHeader>
+          <TableRow className="border-gray-200">
+            <TableHead className="text-gray-900 font-semibold">Claim ID</TableHead>
+            <TableHead className="text-gray-900 font-semibold">Document ID</TableHead>
+            <TableHead className="text-gray-900 font-semibold">Match Type</TableHead>
+            <TableHead className="text-gray-900 font-semibold">Confidence</TableHead>
+            <TableHead className="text-gray-900 font-semibold">Status</TableHead>
+            <TableHead className="text-gray-900 font-semibold">Matched At</TableHead>
+            <TableHead className="text-gray-900 font-semibold">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {results.map((result) => (
+            <TableRow key={result.id} className="border-gray-200 hover:bg-gray-50">
+              <TableCell>
+                <Button asChild variant="link" className="p-0 h-auto text-gray-900 hover:text-gray-900 font-mono">
+                  <Link to={`/recoveries/${result.claim_id}`}>
+                    {result.claim_id.substring(0, 12)}...
+                  </Link>
+                </Button>
+              </TableCell>
+              <TableCell>
+                <Button asChild variant="link" className="p-0 h-auto text-gray-900 hover:text-gray-900 font-mono">
+                  <Link to={`/documents/${result.document_id}`}>
+                    {result.document_id.substring(0, 12)}...
+                  </Link>
+                </Button>
+              </TableCell>
+              <TableCell>
+                <span className="text-sm text-gray-700">{getMatchTypeLabel(result.match_type)}</span>
+              </TableCell>
+              <TableCell>
+                {getConfidenceBadge(result.confidence_score)}
+              </TableCell>
+              <TableCell>
+                {getActionBadge(result.action_taken)}
+              </TableCell>
+              <TableCell>
+                {result.created_at ? (
+                  <span className="text-sm text-gray-600">
+                    {format(new Date(result.created_at), 'MMM dd, yyyy HH:mm')}
+                  </span>
+                ) : (
+                  <span className="text-sm text-gray-400">—</span>
+                )}
+              </TableCell>
+              <TableCell>
+                <div className="flex gap-2">
+                  {showActions && result.action_taken === 'smart_prompt' && (
+                    <>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => handleApproveSmartPrompt(result.id)}
+                        disabled={processingIds.has(result.id)}
+                        className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
+                      >
+                        {processingIds.has(result.id) ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <CheckCircle2 className="w-4 h-4" />
+                        )}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => handleRejectSmartPrompt(result.id)}
+                        disabled={processingIds.has(result.id)}
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      >
+                        <XCircle className="w-4 h-4" />
+                      </Button>
+                    </>
+                  )}
+                  <Button asChild variant="ghost" size="sm">
+                    <Link to={`/recoveries/${result.claim_id}`}>
+                      <Eye className="w-4 h-4" />
+                    </Link>
+                  </Button>
+                  <Button asChild variant="ghost" size="sm">
+                    <Link to={`/documents/${result.document_id}`}>
+                      <FileText className="w-4 h-4" />
+                    </Link>
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
 
   if (loading && matchingResults.length === 0) {
     return (
       <Card className="bg-white border-gray-200">
         <CardContent className="p-8 text-center">
+          <Loader2 className="w-8 h-8 mx-auto text-gray-400 mb-4 animate-spin" />
           <p className="text-sm text-gray-600">Loading matching results...</p>
         </CardContent>
       </Card>
@@ -149,20 +400,27 @@ export function EvidenceMatchingTable() {
       {/* Header with Run Matching Button */}
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">Evidence Matching Results</h3>
+          <h3 className="text-lg font-semibold text-gray-900">Evidence Matching</h3>
           <p className="text-sm text-gray-600">
             {matchingResults.length} {matchingResults.length === 1 ? 'match' : 'matches'} found
+            {smartPrompts.length > 0 && (
+              <span className="ml-2 text-amber-600 font-medium">
+                • {smartPrompts.length} need{smartPrompts.length === 1 ? 's' : ''} review
+              </span>
+            )}
           </p>
         </div>
         <div className="flex gap-2">
           <Button
             onClick={handleRunMatching}
             disabled={refreshing}
-            variant="outline"
-            size="sm"
-            className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+            className="bg-emerald-500 hover:bg-emerald-600 text-white"
           >
-            <RefreshCw className={cn("w-4 h-4 mr-2", refreshing && "animate-spin")} />
+            {refreshing ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <Sparkles className="w-4 h-4 mr-2" />
+            )}
             {refreshing ? 'Running...' : 'Run Matching'}
           </Button>
           <Button
@@ -171,99 +429,147 @@ export function EvidenceMatchingTable() {
             size="sm"
             className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
           >
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Refresh
+            <RefreshCw className="w-4 h-4" />
           </Button>
         </div>
       </div>
 
-      {/* Matching Results Table */}
-      <Card className="bg-white border-gray-200">
-        <CardContent className="p-0">
-          {matchingResults.length === 0 ? (
-            <div className="p-8 text-center">
-              <FileText className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-              <p className="text-sm text-gray-600 mb-2">No matching results found</p>
-              <p className="text-xs text-gray-500 mb-4">
-                Run evidence matching to match evidence documents to claims
-              </p>
-              <Button onClick={handleRunMatching} variant="outline" size="sm">
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Run Matching
-              </Button>
-            </div>
+      {/* Tabs for different match categories */}
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="bg-gray-100">
+          <TabsTrigger value="smart-prompts" className="data-[state=active]:bg-white">
+            <AlertTriangle className="w-4 h-4 mr-2 text-amber-500" />
+            Needs Review
+            {smartPrompts.length > 0 && (
+              <Badge className="ml-2 bg-amber-100 text-amber-800">{smartPrompts.length}</Badge>
+            )}
+          </TabsTrigger>
+          <TabsTrigger value="auto-submitted" className="data-[state=active]:bg-white">
+            <CheckCircle2 className="w-4 h-4 mr-2 text-emerald-500" />
+            Auto-Submitted
+            {autoSubmitted.length > 0 && (
+              <Badge className="ml-2 bg-emerald-100 text-emerald-800">{autoSubmitted.length}</Badge>
+            )}
+          </TabsTrigger>
+          <TabsTrigger value="held" className="data-[state=active]:bg-white">
+            <AlertCircle className="w-4 h-4 mr-2 text-gray-500" />
+            Held / Rejected
+            {heldForReview.length > 0 && (
+              <Badge className="ml-2 bg-gray-100 text-gray-800">{heldForReview.length}</Badge>
+            )}
+          </TabsTrigger>
+          <TabsTrigger value="all" className="data-[state=active]:bg-white">
+            All Matches
+            <Badge className="ml-2 bg-gray-100 text-gray-800">{matchingResults.length}</Badge>
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Smart Prompts Tab - Card View */}
+        <TabsContent value="smart-prompts" className="mt-4">
+          {smartPrompts.length === 0 ? (
+            <Card className="bg-white border-gray-200">
+              <CardContent className="p-8 text-center">
+                <CheckCircle2 className="w-12 h-12 mx-auto text-emerald-400 mb-4" />
+                <p className="text-lg font-medium text-gray-800 mb-2">All caught up!</p>
+                <p className="text-sm text-gray-600 mb-4">
+                  No matches need your review. High-confidence matches are auto-submitted.
+                </p>
+                <Button onClick={handleRunMatching} variant="outline" size="sm">
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Run Matching
+                </Button>
+              </CardContent>
+            </Card>
           ) : (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow className="border-gray-200">
-                    <TableHead className="text-gray-900 font-semibold">Claim ID</TableHead>
-                    <TableHead className="text-gray-900 font-semibold">Document ID</TableHead>
-                    <TableHead className="text-gray-900 font-semibold">Match Type</TableHead>
-                    <TableHead className="text-gray-900 font-semibold">Confidence</TableHead>
-                    <TableHead className="text-gray-900 font-semibold">Action Taken</TableHead>
-                    <TableHead className="text-gray-900 font-semibold">Matched At</TableHead>
-                    <TableHead className="text-gray-900 font-semibold">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {matchingResults.map((result) => (
-                    <TableRow key={result.id} className="border-gray-200 hover:bg-gray-50">
-                      <TableCell>
-                        <Button asChild variant="link" className="p-0 h-auto text-gray-900 hover:text-gray-900 font-mono">
-                          <Link to={`/recoveries/${result.claim_id}`}>
-                            {result.claim_id.substring(0, 12)}...
-                          </Link>
-                        </Button>
-                      </TableCell>
-                      <TableCell>
-                        <Button asChild variant="link" className="p-0 h-auto text-gray-900 hover:text-gray-900 font-mono">
-                          <Link to={`/documents/${result.document_id}`}>
-                            {result.document_id.substring(0, 12)}...
-                          </Link>
-                        </Button>
-                      </TableCell>
-                      <TableCell>
-                        <span className="text-sm text-gray-700">{getMatchTypeLabel(result.match_type)}</span>
-                      </TableCell>
-                      <TableCell>
-                        {getConfidenceBadge(result.confidence_score)}
-                      </TableCell>
-                      <TableCell>
-                        {getActionBadge(result.action_taken)}
-                      </TableCell>
-                      <TableCell>
-                        {result.created_at ? (
-                          <span className="text-sm text-gray-600">
-                            {format(new Date(result.created_at), 'MMM dd, yyyy HH:mm')}
-                          </span>
-                        ) : (
-                          <span className="text-sm text-gray-400">—</span>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex gap-2">
-                          <Button asChild variant="ghost" size="sm">
-                            <Link to={`/recoveries/${result.claim_id}`}>
-                              <Eye className="w-4 h-4" />
-                            </Link>
-                          </Button>
-                          <Button asChild variant="ghost" size="sm">
-                            <Link to={`/documents/${result.document_id}`}>
-                              <FileText className="w-4 h-4" />
-                            </Link>
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+            <div className="space-y-4">
+              <Card className="bg-amber-50 border-amber-200">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base text-amber-800 flex items-center gap-2">
+                    <AlertTriangle className="w-5 h-5" />
+                    {smartPrompts.length} Match{smartPrompts.length !== 1 ? 'es' : ''} Need Your Review
+                  </CardTitle>
+                  <CardDescription className="text-amber-700">
+                    These matches have medium confidence (50-85%) and need your approval before filing.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              {smartPrompts.map(match => (
+                <SmartPromptCard
+                  key={match.id}
+                  match={match}
+                  onApprove={handleApproveSmartPrompt}
+                  onReject={handleRejectSmartPrompt}
+                  onRequestMoreEvidence={handleRequestMoreEvidence}
+                />
+              ))}
             </div>
           )}
-        </CardContent>
-      </Card>
+        </TabsContent>
+
+        {/* Auto-Submitted Tab */}
+        <TabsContent value="auto-submitted" className="mt-4">
+          <Card className="bg-white border-gray-200">
+            <CardContent className="p-0">
+              {autoSubmitted.length === 0 ? (
+                <div className="p-8 text-center">
+                  <FileText className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+                  <p className="text-sm text-gray-600 mb-2">No auto-submitted matches yet</p>
+                  <p className="text-xs text-gray-500">
+                    High-confidence matches (≥85%) will appear here
+                  </p>
+                </div>
+              ) : (
+                renderResultsTable(autoSubmitted)
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Held / Rejected Tab */}
+        <TabsContent value="held" className="mt-4">
+          <Card className="bg-white border-gray-200">
+            <CardContent className="p-0">
+              {heldForReview.length === 0 ? (
+                <div className="p-8 text-center">
+                  <AlertCircle className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+                  <p className="text-sm text-gray-600 mb-2">No held or rejected matches</p>
+                  <p className="text-xs text-gray-500">
+                    Low-confidence matches (&lt;50%) and rejections will appear here
+                  </p>
+                </div>
+              ) : (
+                renderResultsTable(heldForReview)
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* All Matches Tab */}
+        <TabsContent value="all" className="mt-4">
+          <Card className="bg-white border-gray-200">
+            <CardContent className="p-0">
+              {matchingResults.length === 0 ? (
+                <div className="p-8 text-center">
+                  <FileText className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+                  <p className="text-sm text-gray-600 mb-2">No matching results found</p>
+                  <p className="text-xs text-gray-500 mb-4">
+                    Run evidence matching to match documents to claims
+                  </p>
+                  <Button onClick={handleRunMatching} variant="outline" size="sm">
+                    <RefreshCw className="w-4 h-4 mr-2" />
+                    Run Matching
+                  </Button>
+                </div>
+              ) : (
+                renderResultsTable(matchingResults, true)
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
 
+export default EvidenceMatchingTable;

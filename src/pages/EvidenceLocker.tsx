@@ -300,6 +300,22 @@ export default function EvidenceLocker() {
                   ));
                 }
               });
+
+              // Auto-trigger evidence matching after parsing completes
+              addDocLog({ type: 'progress', category: 'match', message: 'Running evidence matching...', thinkingDuration: 2 }, 1200);
+              api.runEvidenceMatching().then(matchRes => {
+                if (matchRes.ok) {
+                  addDocLog({ type: 'info', category: 'match', message: 'Matching engine analyzing document-claim correlations...' }, 1500);
+                  toast({
+                    title: 'Evidence Matching Started',
+                    description: 'Looking for claims that match this document...'
+                  });
+                } else {
+                  addDocLog({ type: 'warning', category: 'match', message: 'Could not start matching - will retry later' }, 1500);
+                }
+              }).catch(() => {
+                addDocLog({ type: 'warning', category: 'match', message: 'Matching service unavailable - will retry later' }, 1500);
+              });
             }
           }
           // Handle matching completion event (this is a general message handler, specific event listener below is preferred)

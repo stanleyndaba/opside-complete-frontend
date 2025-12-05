@@ -1130,6 +1130,63 @@ export const api = {
     smartPromptsCreated?: number;
   }>(`/api/evidence/matching/status/${encodeURIComponent(jobId)}`),
 
+  // Agent 6: Smart Prompt actions for medium-confidence matches
+  getSmartPrompts: (params?: { userId?: string; limit?: number }) => {
+    const queryParams = new URLSearchParams();
+    if (params?.userId) queryParams.append('userId', params.userId);
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    queryParams.append('actionTaken', 'smart_prompt'); // Filter only smart prompts
+    const query = queryParams.toString();
+    return requestJson<{
+      success: boolean;
+      results: Array<{
+        id: string;
+        claim_id: string;
+        document_id: string;
+        confidence_score: number;
+        match_type: string;
+        action_taken: 'smart_prompt';
+        matched_fields?: string[];
+        reasoning?: string;
+        created_at?: string;
+        claim_details?: {
+          type?: string;
+          amount?: number;
+          currency?: string;
+          sku?: string;
+          asin?: string;
+        };
+        document_details?: {
+          filename?: string;
+          supplier?: string;
+          invoice_number?: string;
+          amount?: number;
+        };
+      }>;
+      total: number;
+    }>(`/api/evidence/matching/results${query ? `?${query}` : ''}`);
+  },
+  approveSmartPrompt: (matchId: string) => requestJson<{
+    success: boolean;
+    message: string;
+    caseId?: string;
+  }>(`/api/evidence/matching/${encodeURIComponent(matchId)}/approve`, {
+    method: 'POST',
+  }),
+  rejectSmartPrompt: (matchId: string, reason?: string) => requestJson<{
+    success: boolean;
+    message: string;
+  }>(`/api/evidence/matching/${encodeURIComponent(matchId)}/reject`, {
+    method: 'POST',
+    body: JSON.stringify({ reason }),
+  }),
+  requestMoreEvidence: (matchId: string) => requestJson<{
+    success: boolean;
+    message: string;
+  }>(`/api/evidence/matching/${encodeURIComponent(matchId)}/request-more-evidence`, {
+    method: 'POST',
+  }),
+
   // Agent 7: Refund Filing endpoints (dispute cases)
   getDisputeCases: (params?: { userId?: string; status?: string; limit?: number }) => {
     const queryParams = new URLSearchParams();
