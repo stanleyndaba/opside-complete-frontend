@@ -1113,6 +1113,26 @@ export default function EvidenceLocker() {
                           <Button variant="ghost" size="sm" onClick={() => downloadDoc(doc.id)}>
                             <Download className="w-4 h-4 mr-1" />
                           </Button>
+                          {doc.parser_status === 'completed' && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={async () => {
+                                try {
+                                  // Open PDF generation URL in new tab
+                                  const pdfUrl = api.buildApiUrl(`/api/documents/${encodeURIComponent(doc.id)}/generate-pdf`);
+                                  window.open(pdfUrl, '_blank');
+                                  toast({ title: 'Generating PDF', description: 'Invoice PDF will open in a new tab.' });
+                                } catch (err: any) {
+                                  toast({ title: 'PDF Generation Failed', description: err.message, variant: 'destructive' });
+                                }
+                              }}
+                              title="Generate Invoice PDF"
+                            >
+                              <FileText className="w-4 h-4 mr-1" />
+                              PDF
+                            </Button>
+                          )}
                           {doc.parser_status && doc.parser_status !== 'completed' && doc.parser_status !== 'processing' && (
                             <Button
                               variant="ghost"
