@@ -237,7 +237,7 @@ export default function Sync() {
     if (logsFinished && status === 'completed') {
       // Get claims info for toast
       const claims = syncData?.claimsDetected || 0;
-      const value = syncData?.totalRecoverableValue || (claims * 48);
+      const value = syncData?.totalRecoverableValue || 0; // No fallback - use backend value only
       const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
 
       // No toast here - the UI already shows completion status clearly
@@ -770,7 +770,7 @@ export default function Sync() {
                     Wrapping up report
                   </h1>
                   <p className="text-xs text-gray-500">
-                    Found {syncData?.claimsDetected || logs.filter(l => l.category === 'detection').length || 0} potential claims so far • ${((syncData?.claimsDetected || 0) * 48).toLocaleString()} identified
+                    Found {syncData?.claimsDetected || logs.filter(l => l.category === 'detection').length || 0} potential claims so far • ${(syncData?.totalRecoverableValue || 0).toLocaleString()} identified
                   </p>
                 </div>
               )}
@@ -782,7 +782,7 @@ export default function Sync() {
                     Audit Complete
                   </h1>
                   <p className="text-xs text-gray-500">
-                    {syncData?.claimsDetected || 0} claims found. ${((syncData?.claimsDetected || 0) * 48).toLocaleString()} in potential recoveries • Completed in {durationSeconds !== null ? `${durationSeconds}s` : 'N/A'}
+                    {syncData?.claimsDetected || 0} claims found. ${(syncData?.totalRecoverableValue || 0).toLocaleString()} in potential recoveries • Completed in {durationSeconds !== null ? `${durationSeconds}s` : 'N/A'}
                   </p>
                   <div className="text-xs text-gray-400 space-y-1 pt-2">
                     <p className="font-medium">Action Needed: The Doc parser needs evidence to file the claim.</p>
