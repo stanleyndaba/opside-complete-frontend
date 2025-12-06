@@ -268,45 +268,30 @@ export default function Sync() {
   }, [logsFinished, status, toast, syncData]);
 
   // Phase 3: Detection updates SSE - connect when sync completes
+  // NOTE: This hook ONLY updates syncData state - logs are already handled by main SSE handler
+  // to avoid duplicate log messages
   useDetectionUpdates(
     status === 'completed' && syncId ? syncId : null,
     (event) => {
-      // Handle detection updates - don't show toasts here, main completion flow handles it
+      // Handle detection updates - DON'T add logs here, main SSE handler does that
       if (event.status === 'complete') {
         const totalDetections = event.total_detections ?? null;
         const estimatedValue = event.estimated_value ?? event.totalRecoverableValue ?? null;
 
         if (totalDetections !== null && totalDetections > 0) {
-          // Only log if we have real values from backend
-          if (estimatedValue !== null) {
-            const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimatedValue);
-            addLog({ type: 'success', category: 'detection', message: `Recoveries identified: ${formattedValue} from ${totalDetections} discrepancies` }, 1200);
-          } else {
-            addLog({ type: 'success', category: 'detection', message: `${totalDetections} recoveries identified (awaiting value calculation)` }, 1200);
-          }
-
           // ⭐ UPDATE syncData so "Potential Recovery Identified" shows when logsFinished
+          // No addLog here - main SSE handler at line 500+ already handles logs
           setSyncData(prev => prev ? {
             ...prev,
             claimsDetected: totalDetections,
             totalRecoverableValue: estimatedValue ?? prev.totalRecoverableValue
           } : prev);
-          // Toast will be shown when logsFinished becomes true
-        } else {
-          addLog({ type: 'info', category: 'detection', message: 'Detection complete - no discrepancies found' }, 800);
         }
       } else if (event.new_detections_count && event.new_detections_count > 0) {
         const estimatedValue = event.estimated_value ?? null;
 
-        // Only log value if backend provides it
-        if (estimatedValue !== null) {
-          const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimatedValue);
-          addLog({ type: 'info', category: 'detection', message: `New: +${formattedValue} potential recovery` }, 800);
-        } else {
-          addLog({ type: 'info', category: 'detection', message: `New: +${event.new_detections_count} potential recoveries found` }, 800);
-        }
-
         // ⭐ UPDATE syncData for incremental updates too
+        // No addLog here - avoid duplicate logs
         setSyncData(prev => prev ? {
           ...prev,
           claimsDetected: (prev.claimsDetected ?? 0) + event.new_detections_count,
@@ -314,7 +299,6 @@ export default function Sync() {
             ? (prev.totalRecoverableValue ?? 0) + estimatedValue
             : prev.totalRecoverableValue
         } : prev);
-        // Toast will be shown when logsFinished becomes true
       }
     }
   );
