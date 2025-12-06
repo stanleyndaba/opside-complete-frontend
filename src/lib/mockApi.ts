@@ -1,14 +1,15 @@
 // Mock Amazon SP-API responses for demo workflow
+// NOTE: Real recovery data should come from backend sync, not from these mocks
 export const mockAmazonApi = {
-  // Mock recovery data - realistic amounts for demo
+  // Mock recovery data - returns nulls; actual values come from sync
   getRecoveries: () => ({
-    totalAmount: 2847.32,
+    totalAmount: null,  // Real value comes from backend sync
     currency: 'USD',
-    claimCount: 12,
+    claimCount: null,   // Real value comes from backend sync
     breakdown: {
-      lostInventory: 1708.39,
-      feeErrors: 854.20,
-      shipmentIssues: 284.73
+      lostInventory: null,
+      feeErrors: null,
+      shipmentIssues: null
     }
   }),
 
