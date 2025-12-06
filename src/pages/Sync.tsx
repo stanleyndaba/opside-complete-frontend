@@ -717,12 +717,10 @@ export default function Sync() {
     (syncData.feesCount || 0)
   ) : 0;
 
-  // Calculate potential recoverable value
-  // Use backend value if available, otherwise estimate based on claims
-  // Average Amazon FBA claim ~$48-75 (conservative estimate)
-  const AVERAGE_CLAIM_VALUE = 48;
+  // Get actual recoverable value from backend - NO FALLBACK
+  // Backend now calculates real values from detection_results.amount
   const claimsCount = syncData?.claimsDetected || 0;
-  const totalRecoverableValue = syncData?.totalRecoverableValue || (claimsCount * AVERAGE_CLAIM_VALUE);
+  const totalRecoverableValue = syncData?.totalRecoverableValue || 0;
 
   // Format currency
   const formatCurrency = (value: number) => {
