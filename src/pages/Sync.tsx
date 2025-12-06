@@ -271,32 +271,46 @@ export default function Sync() {
     (event) => {
       // Handle detection updates - don't show toasts here, main completion flow handles it
       if (event.status === 'complete') {
-        const totalDetections = event.total_detections || 0;
-        if (totalDetections > 0) {
-          const estimatedValue = event.estimated_value || event.totalRecoverableValue || 0;
-          const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimatedValue);
-          addLog({ type: 'success', category: 'detection', message: `Recoveries identified: ${formattedValue} from ${totalDetections} discrepancies` }, 1200);
+        const totalDetections = event.total_detections ?? null;
+        const estimatedValue = event.estimated_value ?? event.totalRecoverableValue ?? null;
+
+        if (totalDetections !== null && totalDetections > 0) {
+          // Only log if we have real values from backend
+          if (estimatedValue !== null) {
+            const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimatedValue);
+            addLog({ type: 'success', category: 'detection', message: `Recoveries identified: ${formattedValue} from ${totalDetections} discrepancies` }, 1200);
+          } else {
+            addLog({ type: 'success', category: 'detection', message: `${totalDetections} recoveries identified (awaiting value calculation)` }, 1200);
+          }
 
           // ⭐ UPDATE syncData so "Potential Recovery Identified" shows when logsFinished
           setSyncData(prev => prev ? {
             ...prev,
             claimsDetected: totalDetections,
-            totalRecoverableValue: estimatedValue
+            totalRecoverableValue: estimatedValue ?? prev.totalRecoverableValue
           } : prev);
           // Toast will be shown when logsFinished becomes true
         } else {
           addLog({ type: 'info', category: 'detection', message: 'Detection complete - no discrepancies found' }, 800);
         }
       } else if (event.new_detections_count && event.new_detections_count > 0) {
-        const estimatedValue = event.estimated_value || 0;
-        const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimatedValue);
-        addLog({ type: 'info', category: 'detection', message: `New: +${formattedValue} potential recovery` }, 800);
+        const estimatedValue = event.estimated_value ?? null;
+
+        // Only log value if backend provides it
+        if (estimatedValue !== null) {
+          const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimatedValue);
+          addLog({ type: 'info', category: 'detection', message: `New: +${formattedValue} potential recovery` }, 800);
+        } else {
+          addLog({ type: 'info', category: 'detection', message: `New: +${event.new_detections_count} potential recoveries found` }, 800);
+        }
 
         // ⭐ UPDATE syncData for incremental updates too
         setSyncData(prev => prev ? {
           ...prev,
-          claimsDetected: (prev.claimsDetected || 0) + event.new_detections_count,
-          totalRecoverableValue: (prev.totalRecoverableValue || 0) + estimatedValue
+          claimsDetected: (prev.claimsDetected ?? 0) + event.new_detections_count,
+          totalRecoverableValue: estimatedValue !== null
+            ? (prev.totalRecoverableValue ?? 0) + estimatedValue
+            : prev.totalRecoverableValue
         } : prev);
         // Toast will be shown when logsFinished becomes true
       }
@@ -493,19 +507,24 @@ export default function Sync() {
           // Handle detection.completed event (sent after sync completes)
           if (s.type === 'detection' && s.status === 'completed') {
             console.log('[Sync] Detection completed event received:', s);
-            const detectedCount = s.claimsDetected || 0;
-            const estimatedValue = s.totalRecoverableValue || 0; // Use actual backend value
+            const detectedCount = s.claimsDetected ?? null;
+            const estimatedValue = s.totalRecoverableValue ?? null;
 
             // ⭐ UPDATE syncData - but DON'T show toast here, let the main completion flow handle it
             setSyncData(prev => prev ? {
               ...prev,
-              claimsDetected: detectedCount,
-              totalRecoverableValue: estimatedValue
+              claimsDetected: detectedCount ?? prev.claimsDetected,
+              totalRecoverableValue: estimatedValue ?? prev.totalRecoverableValue
             } : prev);
 
-            if (detectedCount > 0) {
-              const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimatedValue);
-              addLog({ type: 'success', category: 'detection', message: `Recoveries: ${formattedValue} from ${detectedCount} discrepancies`, count: detectedCount }, 1200);
+            if (detectedCount !== null && detectedCount > 0) {
+              // Only log value if backend provides it
+              if (estimatedValue !== null) {
+                const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimatedValue);
+                addLog({ type: 'success', category: 'detection', message: `Recoveries: ${formattedValue} from ${detectedCount} discrepancies`, count: detectedCount }, 1200);
+              } else {
+                addLog({ type: 'success', category: 'detection', message: `${detectedCount} recoveries found (awaiting value)`, count: detectedCount }, 1200);
+              }
               // Toast will be shown when logsFinished becomes true
             }
             return;
@@ -719,11 +738,12 @@ export default function Sync() {
 
   // Get actual recoverable value from backend - NO FALLBACK
   // Backend now calculates real values from detection_results.amount
-  const claimsCount = syncData?.claimsDetected || 0;
-  const totalRecoverableValue = syncData?.totalRecoverableValue || 0;
+  const claimsCount = syncData?.claimsDetected ?? null;
+  const totalRecoverableValue = syncData?.totalRecoverableValue ?? null;
 
-  // Format currency
-  const formatCurrency = (value: number) => {
+  // Format currency - returns '--' if value is null/undefined (no fallback)
+  const formatCurrency = (value: number | null | undefined): string => {
+    if (value === null || value === undefined) return '--';
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
@@ -770,7 +790,7 @@ export default function Sync() {
                     Wrapping up report
                   </h1>
                   <p className="text-xs text-gray-500">
-                    Found {syncData?.claimsDetected || logs.filter(l => l.category === 'detection').length || 0} potential claims so far • ${(syncData?.totalRecoverableValue || 0).toLocaleString()} identified
+                    Found {claimsCount !== null ? claimsCount : '--'} potential claims so far • {formatCurrency(totalRecoverableValue)} identified
                   </p>
                 </div>
               )}
@@ -782,7 +802,7 @@ export default function Sync() {
                     Audit Complete
                   </h1>
                   <p className="text-xs text-gray-500">
-                    {syncData?.claimsDetected || 0} claims found. ${(syncData?.totalRecoverableValue || 0).toLocaleString()} in potential recoveries • Completed in {durationSeconds !== null ? `${durationSeconds}s` : 'N/A'}
+                    {claimsCount !== null ? claimsCount : '--'} claims found. {formatCurrency(totalRecoverableValue)} in potential recoveries • Completed in {durationSeconds !== null ? `${durationSeconds}s` : 'N/A'}
                   </p>
                   <div className="text-xs text-gray-400 space-y-1 pt-2">
                     <p className="font-medium">Action Needed: The Doc parser needs evidence to file the claim.</p>
