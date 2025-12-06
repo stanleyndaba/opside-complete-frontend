@@ -7,6 +7,7 @@ export interface DetectionUpdateEvent {
   detection_id?: string;
   anomaly_type?: string;
   estimated_value?: number;
+  totalRecoverableValue?: number; // Actual calculated value from backend
   confidence_score?: number;
   status?: 'in_progress' | 'complete' | 'failed';
   message?: string;
@@ -45,7 +46,7 @@ export const useDetectionUpdates = (
     try {
       const url = api.buildApiUrl(`/api/sse/detection-updates/${syncId}`);
       const eventSource = new EventSource(url, { withCredentials: true } as any);
-      
+
       eventSource.onopen = () => {
         console.log(`[Detection Updates] SSE connection opened for sync ${syncId}`);
         reconnectAttemptsRef.current = 0;
@@ -85,12 +86,12 @@ export const useDetectionUpdates = (
 
       eventSource.onerror = (error) => {
         console.error('[Detection Updates] SSE error:', error);
-        
+
         // Attempt to reconnect
         if (reconnectAttemptsRef.current < maxReconnectAttempts) {
           reconnectAttemptsRef.current++;
           console.log(`[Detection Updates] Reconnecting... (attempt ${reconnectAttemptsRef.current}/${maxReconnectAttempts})`);
-          
+
           reconnectTimeoutRef.current = window.setTimeout(() => {
             connect();
           }, reconnectDelay * reconnectAttemptsRef.current);
