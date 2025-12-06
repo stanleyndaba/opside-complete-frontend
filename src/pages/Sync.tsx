@@ -235,10 +235,12 @@ export default function Sync() {
   useEffect(() => {
     if (typeof window === 'undefined') return undefined;
     if (logsFinished && status === 'completed') {
-      // Get claims info for toast
-      const claims = syncData?.claimsDetected || 0;
-      const value = syncData?.totalRecoverableValue || 0; // No fallback - use backend value only
-      const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+      // Get claims info (no fallback - use actual backend values)
+      const claims = syncData?.claimsDetected ?? null;
+      const value = syncData?.totalRecoverableValue ?? null;
+      const formattedValue = value !== null
+        ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value)
+        : '--';
 
       // No toast here - the UI already shows completion status clearly
 
