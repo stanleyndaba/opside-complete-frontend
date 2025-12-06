@@ -384,7 +384,7 @@ export default function IntegrationsHub() {
                   <CardDescription className="text-gray-600">
                     Connect email and cloud to auto‑ingest invoices, receipts and shipping docs.
                     <span className="block mt-1 text-xs text-emerald-600/80">
-                      Gmail is available now. Outlook, Google Drive, and Dropbox coming in a week.
+                      Gmail, Outlook, Google Drive, and Dropbox are available!
                     </span>
                   </CardDescription>
                 </CardHeader>
@@ -522,26 +522,116 @@ export default function IntegrationsHub() {
                       const providerName = providerMeta[p].name;
                       const providerIcon = providerMeta[p].icon;
 
+                      // Check connection status for this provider
+                      const isConnected = () => {
+                        if (status?.providerIngest?.[p]?.connected === true) return true;
+                        const capitalized = p.charAt(0).toUpperCase() + p.slice(1);
+                        if (status?.providerIngest?.[capitalized]?.connected === true) return true;
+                        if (status?.providers?.[p] === true) return true;
+                        if (status?.providers?.[capitalized] === true) return true;
+                        const providerConnectedKey = `${p}_connected` as keyof typeof status;
+                        if (status && (status as any)[providerConnectedKey] === true) return true;
+                        // Also check evidenceSources
+                        if (evidenceSources.some(s => s.provider === p && s.status === 'connected')) return true;
+                        return false;
+                      };
+                      const hasError = () => {
+                        return status?.providerIngest?.[p]?.error || status?.providerIngest?.[p.charAt(0).toUpperCase() + p.slice(1)]?.error;
+                      };
+                      const getLastIngest = () => {
+                        const source = evidenceSources.find(s => s.provider === p && s.status === 'connected');
+                        if (source?.last_sync_at) return new Date(source.last_sync_at).toLocaleString();
+                        return status?.providerIngest?.[p]?.lastIngest || status?.providerIngest?.[p.charAt(0).toUpperCase() + p.slice(1)]?.lastIngest || '—';
+                      };
+                      const connected = isConnected();
+
                       return (
-                        <div key={p} className="flex flex-col gap-4 px-4 py-4 md:flex-row md:items-center md:justify-between opacity-90">
+                        <div key={p} className="flex flex-col gap-4 px-4 py-4 md:flex-row md:items-center md:justify-between">
                           <div className="flex items-center gap-3 flex-1">
                             <img src={providerIcon} alt={providerName} className="h-6 w-6 object-contain" />
                             <div>
                               <p className="text-sm font-semibold text-gray-900">{providerName}</p>
-                              <p className="text-xs text-gray-500">Coming soon — available in a week.</p>
+                              <p className="text-xs text-gray-600">
+                                {connected ? `Last ingest: ${getLastIngest()}` : `Connect your ${providerName} to automatically ingest invoices and receipts.`}
+                              </p>
                             </div>
                           </div>
-                          <div className="flex items-center gap-3">
-                            <Badge variant="outline" className="text-xs border-amber-200 text-amber-600 bg-amber-50">
-                              Coming soon
+                          <div className="flex flex-col gap-2 md:flex-row md:items-center">
+                            <Badge variant="outline" className={cn('w-fit text-xs', connected ? 'border-emerald-500 text-emerald-700 font-semibold' : hasError() ? 'border-red-400 text-red-500' : 'border-gray-300 text-gray-600')}>
+                              {connected ? 'Connected' : hasError() ? 'Error' : 'Not connected'}
                             </Badge>
-                            <Button
-                              size="sm"
-                              disabled
-                              className="bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed"
-                            >
-                              Connect
-                            </Button>
+                            <div className="flex gap-2">
+                              <Button
+                                size="sm"
+                                className={cn(connected ? 'bg-emerald-50 text-emerald-600 border border-emerald-100 hover:bg-emerald-100' : 'bg-emerald-500 hover:bg-emerald-400 text-white')}
+                                onClick={() => handleConnectDocSource(p)}
+                                disabled={providerLoading !== null || disconnectingProvider === p}
+                              >
+                                {providerLoading === p ? (
+                                  <>
+                                    <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
+                                    Connecting…
+                                  </>
+                                ) : (
+                                  connected ? 'Reconnect' : 'Connect'
+                                )}
+                              </Button>
+                              {connected && (
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+                                  onClick={async () => {
+                                    if (!confirm(`Are you sure you want to disconnect ${providerName}? This will stop automatic evidence collection from this source.`)) {
+                                      return;
+                                    }
+                                    try {
+                                      setDisconnectingProvider(p);
+                                      const r = await api.disconnectIntegration(p, true);
+                                      if (r.ok) {
+                                        toast({
+                                          title: 'Disconnected',
+                                          description: `${providerName} integration has been disconnected successfully.`,
+                                        });
+                                        const s = await api.getIntegrationsStatus();
+                                        if (s.ok && s.data) {
+                                          setStatus(s.data);
+                                        }
+                                        const sources = await api.getEvidenceSources();
+                                        if (sources.ok && sources.data) {
+                                          setEvidenceSources(sources.data.sources || []);
+                                        }
+                                      } else {
+                                        toast({
+                                          title: 'Disconnect Failed',
+                                          description: r.error || 'Failed to disconnect. Please try again.',
+                                          variant: 'destructive',
+                                        });
+                                      }
+                                    } catch (error) {
+                                      console.error(`Failed to disconnect ${p}:`, error);
+                                      toast({
+                                        title: 'Disconnect Failed',
+                                        description: 'An error occurred while disconnecting. Please try again.',
+                                        variant: 'destructive',
+                                      });
+                                    } finally {
+                                      setDisconnectingProvider(null);
+                                    }
+                                  }}
+                                  disabled={providerLoading === p || disconnectingProvider === p}
+                                >
+                                  {disconnectingProvider === p ? (
+                                    <>
+                                      <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
+                                      Disconnecting…
+                                    </>
+                                  ) : (
+                                    'Disconnect'
+                                  )}
+                                </Button>
+                              )}
+                            </div>
                           </div>
                         </div>
                       );

@@ -635,15 +635,23 @@ export const api = {
 
   // Auth-adjacent helpers for flows
   connectDocs: (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox') => {
-    // Use the same connectIntegration pattern which works for all providers
-    // This uses POST /api/v1/integrations/{provider}/connect
-    // The backend should handle Gmail, Outlook, Google Drive, and Dropbox through this endpoint
+    // Use the /auth endpoint for OAuth initiation
+    // Backend routes: /api/v1/integrations/{provider}/auth returns { authUrl, state }
     const frontendUrl = getFrontendUrl();
-    const redirectUri = `${frontendUrl}/auth/callback`;
-    return requestJson<{ auth_url?: string; redirect_url?: string }>(
-      `/api/v1/integrations/${encodeURIComponent(provider)}/connect?redirect_uri=${encodeURIComponent(redirectUri)}`,
-      { method: 'POST' }
-    );
+    return requestJson<{ success?: boolean; authUrl?: string; auth_url?: string; state?: string; message?: string; sandbox?: boolean }>(
+      `/api/v1/integrations/${encodeURIComponent(provider)}/auth?frontend_url=${encodeURIComponent(frontendUrl)}`,
+      { method: 'GET' }
+    ).then(response => {
+      // Normalize auth_url to authUrl for consistency
+      if (response.ok && response.data) {
+        const authUrl = response.data.authUrl || response.data.auth_url;
+        return {
+          ...response,
+          data: { ...response.data, auth_url: authUrl, authUrl }
+        };
+      }
+      return response;
+    });
   },
   startAmazonSync: () => requestJson<{
     syncId?: string;
