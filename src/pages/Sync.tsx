@@ -273,7 +273,7 @@ export default function Sync() {
       if (event.status === 'complete') {
         const totalDetections = event.total_detections || 0;
         if (totalDetections > 0) {
-          const estimatedValue = event.estimated_value || (totalDetections * 48);
+          const estimatedValue = event.estimated_value || event.totalRecoverableValue || 0;
           const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimatedValue);
           addLog({ type: 'success', category: 'detection', message: `Recoveries identified: ${formattedValue} from ${totalDetections} discrepancies` }, 1200);
 
@@ -288,7 +288,7 @@ export default function Sync() {
           addLog({ type: 'info', category: 'detection', message: 'Detection complete - no discrepancies found' }, 800);
         }
       } else if (event.new_detections_count && event.new_detections_count > 0) {
-        const estimatedValue = event.estimated_value || (event.new_detections_count * 48);
+        const estimatedValue = event.estimated_value || 0;
         const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimatedValue);
         addLog({ type: 'info', category: 'detection', message: `New: +${formattedValue} potential recovery` }, 800);
 
@@ -494,7 +494,7 @@ export default function Sync() {
           if (s.type === 'detection' && s.status === 'completed') {
             console.log('[Sync] Detection completed event received:', s);
             const detectedCount = s.claimsDetected || 0;
-            const estimatedValue = detectedCount * 48; // ~$48 avg per claim
+            const estimatedValue = s.totalRecoverableValue || 0; // Use actual backend value
 
             // ⭐ UPDATE syncData - but DON'T show toast here, let the main completion flow handle it
             setSyncData(prev => prev ? {
