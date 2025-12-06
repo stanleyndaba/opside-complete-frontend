@@ -304,7 +304,15 @@ export default function Sync() {
   );
 
   const updateSyncState = (s: SyncStatusResponse) => {
-    setSyncData(s);
+    // Merge new state with previous, preserving claimsDetected and totalRecoverableValue
+    // to avoid race condition where sync completion overwrites detection values
+    setSyncData(prev => ({
+      ...prev,
+      ...s,
+      // Preserve detection values if new event doesn't have them
+      claimsDetected: s.claimsDetected ?? prev?.claimsDetected,
+      totalRecoverableValue: s.totalRecoverableValue ?? prev?.totalRecoverableValue
+    }));
     // Hold progress at 98% until logs finish, then show 100%
     if (typeof s.progress === 'number') {
       if (s.progress >= 100 && !logsFinished) {
