@@ -1694,4 +1694,56 @@ export const detectionApi = {
       method: 'POST',
       body: JSON.stringify({ notificationIds })
     }),
+
+  // Admin: Evidence collection settings
+  getEvidenceSummary: () => requestJson<{
+    success: boolean;
+    autoCollect: boolean;
+    schedule: string;
+    lastRun?: string;
+    totalDocuments?: number;
+  }>('/api/admin/evidence/settings'),
+
+  setEvidenceAutoCollect: (enabled: boolean) => requestJson<{
+    success: boolean;
+    message: string;
+  }>('/api/admin/evidence/auto-collect', {
+    method: 'POST',
+    body: JSON.stringify({ enabled })
+  }),
+
+  setEvidenceSchedule: (schedule: string) => requestJson<{
+    success: boolean;
+    message: string;
+  }>('/api/admin/evidence/schedule', {
+    method: 'POST',
+    body: JSON.stringify({ schedule })
+  }),
+
+  // Admin: Users management
+  getAdminUsers: () => requestJson<{
+    success: boolean;
+    users: Array<{
+      id: string;
+      email: string;
+      role: 'user' | 'admin';
+      status: 'active' | 'locked';
+      created_at: string;
+      last_login?: string;
+    }>;
+  }>('/api/admin/users'),
+
+  updateAdminUser: (userId: string, updates: { role?: string; status?: string }) => requestJson<{
+    success: boolean;
+    message: string;
+  }>(`/api/admin/users/${encodeURIComponent(userId)}`, {
+    method: 'PATCH',
+    body: JSON.stringify(updates)
+  }),
+
+  impersonateUser: (userId: string) => requestJson<{
+    success: boolean;
+    token?: string;
+    message: string;
+  }>(`/api/admin/users/${encodeURIComponent(userId)}/impersonate`, { method: 'POST' }),
 };
