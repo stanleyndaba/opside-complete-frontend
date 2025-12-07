@@ -1396,7 +1396,7 @@ export const api = {
         created_at: string;
       }>;
       total: number;
-    }>(`/api/learning/thresholds${query ? `?${query}` : ''}`);
+    }>(`/api/learning/threshold-history${query ? `?${query}` : ''}`);
   },
 
   // Phase 2: Orders, Shipments, Returns, Settlements endpoints
