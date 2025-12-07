@@ -84,14 +84,14 @@ const Index = () => {
         try {
           sessionStorage.setItem('amazon_sandbox_state', stateParam);
           localStorage.setItem('amazon_sandbox_state', stateParam);
-        } catch {}
+        } catch { }
       }
 
       if (authUrl && authUrl.includes('/auth/amazon-sandbox')) {
         try {
           sessionStorage.setItem('amazon_sandbox_mode', 'true');
           localStorage.setItem('amazon_sandbox_mode', 'true');
-        } catch {}
+        } catch { }
       }
 
       if (authUrl) {
@@ -190,25 +190,25 @@ const Index = () => {
     const steps = 60; // 60 steps for smooth animation
     const increment = targetValue / steps;
     const stepDuration = duration / steps;
-    
+
     let currentStep = 0;
     const interval = window.setInterval(() => {
       currentStep++;
       const newValue = Math.min(increment * currentStep, targetValue);
       setPrecisionCount(parseFloat(newValue.toFixed(2)));
-      
+
       if (newValue >= targetValue) {
         clearInterval(interval);
       }
     }, stepDuration);
-    
+
     return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
     try {
       localStorage.setItem('clario.langPreference', selectedLanguageCode);
-    } catch {}
+    } catch { }
   }, [selectedLanguageCode]);
 
   // Scroll detection for banner visibility
@@ -219,34 +219,22 @@ const Index = () => {
 
     const handleScroll = () => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
-      
-      // Check if at the bottom (within 50px of bottom)
-      const isAtBottom = scrollTop + windowHeight >= documentHeight - 50;
-      
-      // Check if scrolling up towards top
-      const isScrollingUp = scrollTop < lastScrollTop;
-      const isNearTop = scrollTop <= 100;
-      
-      if (isAtBottom) {
-        // Show when at bottom
+
+      // Scrolling down = show banner
+      // Scrolling up = hide banner
+      if (scrollTop > lastScrollTop) {
+        // Scrolling DOWN toward footer - show banner
         setShowBanner(true);
-      } else if (isScrollingUp && isNearTop) {
-        // Hide when scrolling up towards top
-        setShowBanner(false);
-      } else if (!isAtBottom) {
-        // Hide when not at bottom (scrolling down or in middle)
+      } else {
+        // Scrolling UP toward top - hide banner
         setShowBanner(false);
       }
-      
-      lastScrollTop = scrollTop;
+
+      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    // Check initial position
-    handleScroll();
-    
+
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -279,7 +267,7 @@ const Index = () => {
   // Intersection Observer to detect when metrics section scrolls into view
   useEffect(() => {
     if (typeof window === 'undefined' || !metricsRef.current) return;
-    
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -291,37 +279,37 @@ const Index = () => {
           }
         });
       },
-      { 
+      {
         threshold: 0.3, // Trigger when 30% of the element is visible
         rootMargin: '0px'
       }
     );
-    
+
     observer.observe(metricsRef.current);
-    
+
     // Trigger initial animation
     setMetricsInView(true);
-    
+
     return () => observer.disconnect();
   }, []);
 
   // Animate metrics when they come into view
   useEffect(() => {
     if (typeof window === 'undefined' || !metricsInView) return;
-    
+
     // Clear any existing intervals
     metricIntervals.current.forEach(id => window.clearInterval(id));
-    
+
     // Reset values to 0
     setMetricValues(HERO_METRICS.map(() => 0));
-    
+
     // Start counting up animations
     metricIntervals.current = HERO_METRICS.map((metric, index) => {
       const duration = 1500; // 1.5 seconds for the animation
       const steps = 60; // 60 steps for smooth animation
       const increment = metric.target / steps;
       const stepDuration = duration / steps;
-      
+
       const intervalId = window.setInterval(() => {
         setMetricValues(prev => {
           const next = [...prev];
@@ -344,7 +332,7 @@ const Index = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <div 
+    <div
       className="min-h-screen flex flex-col text-gray-900 relative overflow-x-hidden w-full"
       style={{ width: '100%', maxWidth: '100%', overflowX: 'hidden' }}
     >
@@ -352,50 +340,50 @@ const Index = () => {
       <header className="fixed top-0 left-0 right-0 z-40 border-transparent bg-transparent" style={{ background: 'transparent' }}>
         <div className="container mx-auto px-6 py-5">
           <div className="flex items-center justify-between gap-6 px-6 py-4 rounded-[25px] border border-white/40 bg-white/25 supports-[backdrop-filter]:bg-white/25 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_25px_60px_rgba(15,23,42,0.12)] transition-colors">
-              <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3">
               <Link to="/" className="inline-flex items-center px-3 py-1.5 rounded-[16px] transition-colors hover:bg-gray-100">
-                      <span
-                        className="font-black text-[#b3b3b3] tracking-tight"
-                      >
-                        CLARIO
-                      </span>
-                      </Link>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <button
-                      type="button"
-                      className="inline-flex items-center justify-center rounded-full p-2 text-emerald-600 transition-colors hover:text-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-                      aria-label="No commission on referrals"
-                    >
-                      <Gift className="h-5 w-5" aria-hidden="true" />
-                      <span className="sr-only">No commission on referrals</span>
-                    </button>
-                  </PopoverTrigger>
-                  <PopoverContent side="bottom" align="start" className="w-80 p-0 border-0 shadow-xl">
-                    <div className="bg-emerald-50 rounded-lg p-5 space-y-4">
-                      <div className="space-y-2">
-                        <h3 className="font-semibold text-emerald-900 text-base">No commission on referrals</h3>
-                        <p className="text-sm text-emerald-800">
-                          Sellers who bring new sellers to Clario keep 100% value of their recovered funds
-                        </p>
-                      </div>
-                      <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium">
-                        Invite Friend +
-                      </Button>
-              </div>
-                  </PopoverContent>
-                </Popover>
-            </div>
-              <nav className="hidden md:flex items-center gap-4 text-sm text-gray-700">
-                {primaryLinks.map((link) => (
-                  <Link
-                    key={link.label}
-                    to={link.href}
-                    className="px-3 py-1.5 rounded-md hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                <span
+                  className="font-black text-[#b3b3b3] tracking-tight"
+                >
+                  CLARIO
+                </span>
+              </Link>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button
+                    type="button"
+                    className="inline-flex items-center justify-center rounded-full p-2 text-emerald-600 transition-colors hover:text-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                    aria-label="No commission on referrals"
                   >
-                    {link.label}
-                  </Link>
-                ))}
+                    <Gift className="h-5 w-5" aria-hidden="true" />
+                    <span className="sr-only">No commission on referrals</span>
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent side="bottom" align="start" className="w-80 p-0 border-0 shadow-xl">
+                  <div className="bg-emerald-50 rounded-lg p-5 space-y-4">
+                    <div className="space-y-2">
+                      <h3 className="font-semibold text-emerald-900 text-base">No commission on referrals</h3>
+                      <p className="text-sm text-emerald-800">
+                        Sellers who bring new sellers to Clario keep 100% value of their recovered funds
+                      </p>
+                    </div>
+                    <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium">
+                      Invite Friend +
+                    </Button>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
+            <nav className="hidden md:flex items-center gap-4 text-sm text-gray-700">
+              {primaryLinks.map((link) => (
+                <Link
+                  key={link.label}
+                  to={link.href}
+                  className="px-3 py-1.5 rounded-md hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                >
+                  {link.label}
+                </Link>
+              ))}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
@@ -406,7 +394,7 @@ const Index = () => {
                     <ChevronDown className="h-4 w-4 opacity-70" />
                   </button>
                 </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="min-w-[240px] bg-white/80 supports-[backdrop-filter]:bg-white/70 backdrop-blur-xl border border-white/30 text-gray-900 shadow-2xl p-0">
+                <DropdownMenuContent align="end" className="min-w-[240px] bg-white/80 supports-[backdrop-filter]:bg-white/70 backdrop-blur-xl border border-white/30 text-gray-900 shadow-2xl p-0">
                   <div className="p-2 sticky top-0 bg-white border-b border-black/5" onKeyDown={(e) => e.stopPropagation()}>
                     <Input
                       value={langQuery}
@@ -428,14 +416,14 @@ const Index = () => {
                   </div>
                 </DropdownMenuContent>
               </DropdownMenu>
-                <Button
-                  onClick={handleSignIn}
-                  disabled={signingIn}
-                  variant="outline"
-                  className="h-9 rounded-full border border-gray-200 bg-gray-100/80 px-4 text-sm font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors"
-                >
-                  {signingIn ? 'Connecting...' : 'Sign in'}
-                </Button>
+              <Button
+                onClick={handleSignIn}
+                disabled={signingIn}
+                variant="outline"
+                className="h-9 rounded-full border border-gray-200 bg-gray-100/80 px-4 text-sm font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors"
+              >
+                {signingIn ? 'Connecting...' : 'Sign in'}
+              </Button>
             </nav>
             <button
               type="button"
@@ -452,15 +440,15 @@ const Index = () => {
           {mobileMenuOpen && (
             <div className="mt-4 md:hidden relative z-50">
               <div className="flex flex-col gap-2 rounded-[20px] border border-white/40 bg-white/80 supports-[backdrop-filter]:bg-white/70 backdrop-blur-2xl p-4 shadow-2xl">
-                  <div className="rounded-[18px] border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700 shadow-sm">
-                    <div className="flex items-center gap-2">
-                      <Gift className="h-4 w-4" aria-hidden="true" />
-                      <span>No commission on referrals</span>
-                    </div>
-                    <p className="mt-1 text-xs font-normal text-emerald-700/80">
-                      Sellers who bring new sellers to Clario keep 100% value of their recovered funds
-                    </p>
+                <div className="rounded-[18px] border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700 shadow-sm">
+                  <div className="flex items-center gap-2">
+                    <Gift className="h-4 w-4" aria-hidden="true" />
+                    <span>No commission on referrals</span>
                   </div>
+                  <p className="mt-1 text-xs font-normal text-emerald-700/80">
+                    Sellers who bring new sellers to Clario keep 100% value of their recovered funds
+                  </p>
+                </div>
                 {primaryLinks.map((link) => (
                   <Link
                     key={link.label}
@@ -528,12 +516,12 @@ const Index = () => {
       </header>
       <div className="relative z-10" style={{ background: 'white' }}>
         <main className="flex-1 relative z-10" style={{ background: 'white' }}>
-          <section 
+          <section
             className="relative container mx-auto px-6 pt-32 md:pt-36 pb-12 md:pb-16 overflow-hidden"
           >
-          {/* Content */}
-          <div className="relative z-10 max-w-4xl mx-auto text-center space-y-6">
-            {/* Trust chip removed per request */}
+            {/* Content */}
+            <div className="relative z-10 max-w-4xl mx-auto text-center space-y-6">
+              {/* Trust chip removed per request */}
               <div className="relative inline-flex items-center gap-2 md:gap-4 rounded-[20px] md:rounded-[25px] border border-emerald-100 bg-white/85 px-3 py-1.5 md:px-5 md:py-2 shadow-[0_12px_45px_rgba(16,185,129,0.25)] backdrop-blur supports-[backdrop-filter]:bg-white/70 mx-auto overflow-hidden">
                 <span className="pointer-events-none absolute inset-0 rounded-[20px] md:rounded-[25px] bg-gradient-to-r from-emerald-200/40 via-white/10 to-sky-200/40 blur-xl" aria-hidden="true" />
                 <span className="pointer-events-none absolute inset-0 rounded-[20px] md:rounded-[25px] border border-white/40" aria-hidden="true" />
@@ -542,119 +530,119 @@ const Index = () => {
                     <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-75"></span>
                   </span>
                 </span>
-                  <div className="relative flex items-center gap-1.5 md:gap-3 text-xs md:text-sm font-medium text-gray-700">
-                    <span>Links seamlessly with</span>
-                    <span className="inline-flex items-center gap-1.5 md:gap-3">
-                      <span className="relative inline-flex h-5 w-5 md:h-7 md:w-7 items-center justify-center rounded-full bg-transparent">
-                        <img
-                          src="/gmailicon.png"
-                          alt="Gmail"
-                          width={28}
-                          height={28}
-                          loading="lazy"
-                          decoding="async"
-                          className="h-5 w-5 md:h-7 md:w-7 object-contain"
-                        />
-                      </span>
-                      <span className="relative inline-flex h-5 w-5 md:h-7 md:w-7 items-center justify-center rounded-full bg-transparent">
-                        <img
-                          src="/outlookicon.webp"
-                          alt="Outlook"
-                          width={28}
-                          height={28}
-                          loading="lazy"
-                          decoding="async"
-                          className="h-5 w-5 md:h-7 md:w-7 object-contain"
-                        />
-                      </span>
-                      <span className="text-emerald-500 font-bold text-sm md:text-lg">+</span>
-                      <span className="relative inline-flex h-5 w-5 md:h-7 md:w-7 items-center justify-center rounded-full bg-transparent">
-                        <img
-                          src="/gd.png"
-                          alt="Google Drive"
-                          width={28}
-                          height={28}
-                          loading="lazy"
-                          decoding="async"
-                          className="h-5 w-5 md:h-7 md:w-7 object-contain"
-                        />
-                      </span>
+                <div className="relative flex items-center gap-1.5 md:gap-3 text-xs md:text-sm font-medium text-gray-700">
+                  <span>Links seamlessly with</span>
+                  <span className="inline-flex items-center gap-1.5 md:gap-3">
+                    <span className="relative inline-flex h-5 w-5 md:h-7 md:w-7 items-center justify-center rounded-full bg-transparent">
+                      <img
+                        src="/gmailicon.png"
+                        alt="Gmail"
+                        width={28}
+                        height={28}
+                        loading="lazy"
+                        decoding="async"
+                        className="h-5 w-5 md:h-7 md:w-7 object-contain"
+                      />
                     </span>
+                    <span className="relative inline-flex h-5 w-5 md:h-7 md:w-7 items-center justify-center rounded-full bg-transparent">
+                      <img
+                        src="/outlookicon.webp"
+                        alt="Outlook"
+                        width={28}
+                        height={28}
+                        loading="lazy"
+                        decoding="async"
+                        className="h-5 w-5 md:h-7 md:w-7 object-contain"
+                      />
+                    </span>
+                    <span className="text-emerald-500 font-bold text-sm md:text-lg">+</span>
+                    <span className="relative inline-flex h-5 w-5 md:h-7 md:w-7 items-center justify-center rounded-full bg-transparent">
+                      <img
+                        src="/gd.png"
+                        alt="Google Drive"
+                        width={28}
+                        height={28}
+                        loading="lazy"
+                        decoding="async"
+                        className="h-5 w-5 md:h-7 md:w-7 object-contain"
+                      />
+                    </span>
+                  </span>
                 </div>
               </div>
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-gray-900 text-left md:text-center">
-              FBA Reimbursements on{" "}
-              <span className="bg-gradient-to-r from-[#1f4037] to-[#99f2c8] bg-clip-text text-transparent">
-                Autopilot
-              </span>
-            </h1>
+              <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-gray-900 text-left md:text-center">
+                FBA Reimbursements on{" "}
+                <span className="bg-gradient-to-r from-[#1f4037] to-[#99f2c8] bg-clip-text text-transparent">
+                  Autopilot
+                </span>
+              </h1>
               <p className="font-body text-sm md:text-base text-gray-700 font-normal max-w-3xl text-left md:text-center md:mx-auto">
                 Think AI Agents for Finance. Clario automates the entire reimbursement process, recovering lost revenue from Amazon FBA errors in minutes—not months.
-            </p>
-            <div className="pt-2">
+              </p>
+              <div className="pt-2">
                 <div className="max-w-md mx-auto flex justify-center">
                   <AmazonConnect className="w-full" />
                 </div>
-              <div className="mt-4 flex flex-wrap items-center justify-center gap-4">
-                <div className="inline-flex items-center gap-2">
-                  <span className="inline-flex h-2 w-2 rounded-full bg-gray-400" aria-hidden="true" />
-                  <span className="text-gray-700 text-sm md:text-base">No credit cards</span>
+                <div className="mt-4 flex flex-wrap items-center justify-center gap-4">
+                  <div className="inline-flex items-center gap-2">
+                    <span className="inline-flex h-2 w-2 rounded-full bg-gray-400" aria-hidden="true" />
+                    <span className="text-gray-700 text-sm md:text-base">No credit cards</span>
+                  </div>
+                  <div className="inline-flex items-center gap-2">
+                    <span className="inline-flex h-2 w-2 rounded-full bg-gray-400" aria-hidden="true" />
+                    <span className="text-gray-700 text-sm md:text-base">Cancel anytime</span>
+                  </div>
                 </div>
-                <div className="inline-flex items-center gap-2">
-                  <span className="inline-flex h-2 w-2 rounded-full bg-gray-400" aria-hidden="true" />
-                  <span className="text-gray-700 text-sm md:text-base">Cancel anytime</span>
-                </div>
-              </div>
-              <div ref={metricsRef} className="mt-5 w-full text-gray-700">
-                <div className="flex flex-col items-start gap-6 text-left md:hidden">
-                  {HERO_METRICS.map((metric, index) => {
-                    const currentValue = metricValues[index];
-                    const displayValue =
-                      metric.label === 'monitoring'
-                        ? `${Math.min(Math.round(currentValue), metric.target)}/7`
-                        : `${currentValue.toFixed(metric.decimals)}${metric.suffix}`;
-                    return (
-                      <React.Fragment key={`mobile-${metric.label}`}>
-                        <div className="flex flex-col gap-1">
-                          <p className="text-xs text-gray-500 font-semibold">{metric.label}</p>
-                          <div className="flex items-center gap-3">
-                            <span className="h-10 w-px bg-black/80 rounded-full" aria-hidden="true" />
+                <div ref={metricsRef} className="mt-5 w-full text-gray-700">
+                  <div className="flex flex-col items-start gap-6 text-left md:hidden">
+                    {HERO_METRICS.map((metric, index) => {
+                      const currentValue = metricValues[index];
+                      const displayValue =
+                        metric.label === 'monitoring'
+                          ? `${Math.min(Math.round(currentValue), metric.target)}/7`
+                          : `${currentValue.toFixed(metric.decimals)}${metric.suffix}`;
+                      return (
+                        <React.Fragment key={`mobile-${metric.label}`}>
+                          <div className="flex flex-col gap-1">
+                            <p className="text-xs text-gray-500 font-semibold">{metric.label}</p>
+                            <div className="flex items-center gap-3">
+                              <span className="h-10 w-px bg-black/80 rounded-full" aria-hidden="true" />
+                              <div className="text-[50px] font-extralight text-gray-900">
+                                {displayValue}
+                              </div>
+                            </div>
+                          </div>
+                        </React.Fragment>
+                      );
+                    })}
+                  </div>
+                  <div className="hidden md:flex md:flex-row md:items-center md:justify-center md:gap-8 text-center">
+                    {HERO_METRICS.map((metric, index) => {
+                      const currentValue = metricValues[index];
+                      const displayValue =
+                        metric.label === 'monitoring'
+                          ? `${Math.min(Math.round(currentValue), metric.target)}/7`
+                          : `${currentValue.toFixed(metric.decimals)}${metric.suffix}`;
+                      return (
+                        <React.Fragment key={`desktop-${metric.label}`}>
+                          <div className="text-center">
                             <div className="text-[50px] font-extralight text-gray-900">
                               {displayValue}
                             </div>
+                            <p className="text-xs text-gray-500 font-semibold">{metric.label}</p>
                           </div>
-                        </div>
-                      </React.Fragment>
-                    );
-                  })}
+                          {index < HERO_METRICS.length - 1 && (
+                            <span className="h-10 w-px bg-black/80 rounded-full mx-2" aria-hidden="true" />
+                          )}
+                        </React.Fragment>
+                      );
+                    })}
+                  </div>
                 </div>
-                <div className="hidden md:flex md:flex-row md:items-center md:justify-center md:gap-8 text-center">
-                  {HERO_METRICS.map((metric, index) => {
-                    const currentValue = metricValues[index];
-                    const displayValue =
-                      metric.label === 'monitoring'
-                        ? `${Math.min(Math.round(currentValue), metric.target)}/7`
-                        : `${currentValue.toFixed(metric.decimals)}${metric.suffix}`;
-                    return (
-                      <React.Fragment key={`desktop-${metric.label}`}>
-                        <div className="text-center">
-                          <div className="text-[50px] font-extralight text-gray-900">
-                            {displayValue}
-                          </div>
-                          <p className="text-xs text-gray-500 font-semibold">{metric.label}</p>
-                        </div>
-                        {index < HERO_METRICS.length - 1 && (
-                          <span className="h-10 w-px bg-black/80 rounded-full mx-2" aria-hidden="true" />
-                        )}
-                      </React.Fragment>
-                    );
-                  })}
-                </div>
+                {/* Email capture moved to bottom-left above the legal footer */}
               </div>
-              {/* Email capture moved to bottom-left above the legal footer */}
             </div>
-          </div>
-        </section>
+          </section>
         </main>
       </div>
       {/* End of background image area - white content starts here */}
@@ -679,9 +667,8 @@ const Index = () => {
                   {AGENT_HIGHLIGHTS.map((item, index) => (
                     <div
                       key={item.title}
-                      className={`absolute inset-0 flex flex-col items-center justify-center gap-3 px-6 text-center transition-all duration-500 ${
-                        agentHighlightIndex === index ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
-                      }`}
+                      className={`absolute inset-0 flex flex-col items-center justify-center gap-3 px-6 text-center transition-all duration-500 ${agentHighlightIndex === index ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
+                        }`}
                       aria-hidden={agentHighlightIndex !== index}
                     >
                       <div>
@@ -769,112 +756,112 @@ const Index = () => {
                 )}
                 {showMoreFAQs && (
                   <Accordion type="single" collapsible className="space-y-2 mt-2">
-                  <AccordionItem value="roi" className="border-b border-gray-200 py-4">
-                    <AccordionTrigger className="text-left text-lg font-semibold text-gray-900 hover:no-underline">
-                      How much money will I actually get back?
-                    </AccordionTrigger>
-                    <AccordionContent className="pt-3 text-sm text-gray-600 space-y-3">
-                      <p>
-                        On average, FBA sellers lose 1–3% of annual revenue to “small” errors. For a seller doing $1M a year, that&apos;s $10,000 to $30,000 in lost profit.
-                      </p>
-                      <p>
-                        We can&apos;t guarantee an exact amount, but our AI audits 18 months of data to find every dollar Amazon owes you.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-                  <AccordionItem value="onboarding" className="border-b border-gray-200 py-4">
-                    <AccordionTrigger className="text-left text-lg font-semibold text-gray-900 hover:no-underline">
-                      What do I have to do to get started?
-                    </AccordionTrigger>
-                    <AccordionContent className="pt-3 text-sm text-gray-600 space-y-3">
-                      <p>It takes about two minutes:</p>
-                      <ul className="list-disc space-y-2 pl-5 text-gray-600">
-                        <li>Sign up for a Clario account.</li>
-                        <li>Securely connect your Amazon Seller Central account via the SP-API.</li>
-                        <li>(Optional) Grant read-only access to your email or Google Drive so our AI can gather invoices.</li>
-                      </ul>
-                      <p>That&apos;s it. Clario begins auditing immediately.</p>
-                    </AccordionContent>
-                  </AccordionItem>
-                  <AccordionItem value="coexist" className="border-b border-gray-200 py-4">
-                    <AccordionTrigger className="text-left text-lg font-semibold text-gray-900 hover:no-underline">
-                      What if I already use another reimbursement service?
-                    </AccordionTrigger>
-                    <AccordionContent className="pt-3 text-sm text-gray-600 space-y-3">
-                      <p>
-                        No problem. Run Clario alongside your current tool. We&apos;re confident our AI Evidence Engine will find dollars that manual audits missed. You only pay us for the new funds we recover.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-                  <AccordionItem value="cancel" className="border-b border-gray-200 py-4">
-                    <AccordionTrigger className="text-left text-lg font-semibold text-gray-900 hover:no-underline">
-                      What if I want to cancel?
-                    </AccordionTrigger>
-                    <AccordionContent className="pt-3 text-sm text-gray-600 space-y-3">
-                      <p>
-                        You can cancel anytime. Disconnect Clario from Seller Central and you&apos;re done—no lock-in contracts. We&apos;ll only invoice the 20% commission on claims that were successfully paid out before you canceled.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
+                    <AccordionItem value="roi" className="border-b border-gray-200 py-4">
+                      <AccordionTrigger className="text-left text-lg font-semibold text-gray-900 hover:no-underline">
+                        How much money will I actually get back?
+                      </AccordionTrigger>
+                      <AccordionContent className="pt-3 text-sm text-gray-600 space-y-3">
+                        <p>
+                          On average, FBA sellers lose 1–3% of annual revenue to “small” errors. For a seller doing $1M a year, that&apos;s $10,000 to $30,000 in lost profit.
+                        </p>
+                        <p>
+                          We can&apos;t guarantee an exact amount, but our AI audits 18 months of data to find every dollar Amazon owes you.
+                        </p>
+                      </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="onboarding" className="border-b border-gray-200 py-4">
+                      <AccordionTrigger className="text-left text-lg font-semibold text-gray-900 hover:no-underline">
+                        What do I have to do to get started?
+                      </AccordionTrigger>
+                      <AccordionContent className="pt-3 text-sm text-gray-600 space-y-3">
+                        <p>It takes about two minutes:</p>
+                        <ul className="list-disc space-y-2 pl-5 text-gray-600">
+                          <li>Sign up for a Clario account.</li>
+                          <li>Securely connect your Amazon Seller Central account via the SP-API.</li>
+                          <li>(Optional) Grant read-only access to your email or Google Drive so our AI can gather invoices.</li>
+                        </ul>
+                        <p>That&apos;s it. Clario begins auditing immediately.</p>
+                      </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="coexist" className="border-b border-gray-200 py-4">
+                      <AccordionTrigger className="text-left text-lg font-semibold text-gray-900 hover:no-underline">
+                        What if I already use another reimbursement service?
+                      </AccordionTrigger>
+                      <AccordionContent className="pt-3 text-sm text-gray-600 space-y-3">
+                        <p>
+                          No problem. Run Clario alongside your current tool. We&apos;re confident our AI Evidence Engine will find dollars that manual audits missed. You only pay us for the new funds we recover.
+                        </p>
+                      </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="cancel" className="border-b border-gray-200 py-4">
+                      <AccordionTrigger className="text-left text-lg font-semibold text-gray-900 hover:no-underline">
+                        What if I want to cancel?
+                      </AccordionTrigger>
+                      <AccordionContent className="pt-3 text-sm text-gray-600 space-y-3">
+                        <p>
+                          You can cancel anytime. Disconnect Clario from Seller Central and you&apos;re done—no lock-in contracts. We&apos;ll only invoice the 20% commission on claims that were successfully paid out before you canceled.
+                        </p>
+                      </AccordionContent>
+                    </AccordionItem>
                   </Accordion>
                 )}
               </div>
             </div>
           </div>
         </section>
-          <section className="relative bg-white py-20 w-full overflow-x-hidden" style={{ width: '100%', maxWidth: '100%' }}>
+        <section className="relative bg-white py-20 w-full overflow-x-hidden" style={{ width: '100%', maxWidth: '100%' }}>
           <div className="container mx-auto px-6 w-full" style={{ width: '100%', maxWidth: '100%' }}>
-              <div className="relative overflow-hidden rounded-[36px] border border-gray-100 bg-gradient-to-br from-white via-slate-50 to-gray-100 text-slate-900 shadow-[0_30px_80px_rgba(148,163,184,0.25)]">
-                <div
-                  className="pointer-events-none absolute inset-0 opacity-70"
-                  aria-hidden="true"
-                  style={{
-                    backgroundImage:
-                      'radial-gradient(rgba(148,163,184,0.35) 1px, transparent 1px), radial-gradient(rgba(226,232,240,0.45) 1px, transparent 1px)',
-                    backgroundSize: '26px 26px',
-                    backgroundPosition: '0 0, 13px 13px'
-                  }}
-                />
-                <div className="relative z-10 flex flex-col gap-10 px-10 py-14 md:flex-row md:items-center md:justify-between">
-                  <div className="max-w-2xl space-y-5">
-                    <span className="inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/80 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
-                      <span className="relative flex items-center gap-2">
-                        <span className="relative h-2 w-2 rounded-full bg-emerald-800">
-                          <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-75"></span>
-                        </span>
+            <div className="relative overflow-hidden rounded-[36px] border border-gray-100 bg-gradient-to-br from-white via-slate-50 to-gray-100 text-slate-900 shadow-[0_30px_80px_rgba(148,163,184,0.25)]">
+              <div
+                className="pointer-events-none absolute inset-0 opacity-70"
+                aria-hidden="true"
+                style={{
+                  backgroundImage:
+                    'radial-gradient(rgba(148,163,184,0.35) 1px, transparent 1px), radial-gradient(rgba(226,232,240,0.45) 1px, transparent 1px)',
+                  backgroundSize: '26px 26px',
+                  backgroundPosition: '0 0, 13px 13px'
+                }}
+              />
+              <div className="relative z-10 flex flex-col gap-10 px-10 py-14 md:flex-row md:items-center md:justify-between">
+                <div className="max-w-2xl space-y-5">
+                  <span className="inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/80 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
+                    <span className="relative flex items-center gap-2">
+                      <span className="relative h-2 w-2 rounded-full bg-emerald-800">
+                        <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-75"></span>
                       </span>
-                      Try Clario
                     </span>
-                    <h2 className="text-4xl font-black tracking-tight text-slate-900 md:text-5xl">
-                      Run reimbursements with{' '}
-                      <span className="bg-gradient-to-r from-[#1f4037] to-[#99f2c8] bg-clip-text text-transparent">
-                        confident control
-                      </span>
-                      .
-                    </h2>
-                    <p className="text-base text-slate-600 md:text-lg">
-                      Switch on automated Amazon claims, surface evidence instantly, and keep your team ahead of every discrepancy.
-                    </p>
-                    <p className="text-base text-navy-900 italic" style={{ color: '#001f3f' }}>
-                      Clario will never request your credit card
-                    </p>
-                  </div>
-                  <div className="flex w-full max-w-sm flex-col items-stretch gap-4 md:items-end">
-                    <AmazonConnect showUseExisting={false} className="w-full md:w-auto bg-emerald-500 text-white hover:bg-emerald-400 hover:text-white shadow-[0_18px_45px_rgba(147,197,253,0.35)]" />
-                    <span className="text-sm text-slate-500 md:text-right">
-                      Connect your Amazon account in minutes and see recoveries in motion.
+                    Try Clario
+                  </span>
+                  <h2 className="text-4xl font-black tracking-tight text-slate-900 md:text-5xl">
+                    Run reimbursements with{' '}
+                    <span className="bg-gradient-to-r from-[#1f4037] to-[#99f2c8] bg-clip-text text-transparent">
+                      confident control
                     </span>
-                  </div>
+                    .
+                  </h2>
+                  <p className="text-base text-slate-600 md:text-lg">
+                    Switch on automated Amazon claims, surface evidence instantly, and keep your team ahead of every discrepancy.
+                  </p>
+                  <p className="text-base text-navy-900 italic" style={{ color: '#001f3f' }}>
+                    Clario will never request your credit card
+                  </p>
+                </div>
+                <div className="flex w-full max-w-sm flex-col items-stretch gap-4 md:items-end">
+                  <AmazonConnect showUseExisting={false} className="w-full md:w-auto bg-emerald-500 text-white hover:bg-emerald-400 hover:text-white shadow-[0_18px_45px_rgba(147,197,253,0.35)]" />
+                  <span className="text-sm text-slate-500 md:text-right">
+                    Connect your Amazon account in minutes and see recoveries in motion.
+                  </span>
                 </div>
               </div>
+            </div>
           </div>
         </section>
       </div>
       <BrandFooter selectedLanguageLabel={selectedLanguage.language} />
-      
+
       {/* Founders Council Banner */}
       {showBanner && (
-        <div 
+        <div
           className="w-full px-4 py-4 md:px-6 md:py-5"
           style={{
             backgroundColor: '#1f4037',
