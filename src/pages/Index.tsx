@@ -38,7 +38,7 @@ const Index = () => {
   const { toast } = useToast();
   const [showMoreFAQs, setShowMoreFAQs] = useState(false);
   const [signingIn, setSigningIn] = useState(false);
-  const [showBanner, setShowBanner] = useState(false);
+  const [showBanner, setShowBanner] = useState(true);
 
   const [selectedLanguageCode, setSelectedLanguageCode] = useState<string>(() =>
     typeof window !== 'undefined' ? localStorage.getItem('clario.langPreference') || 'en' : 'en'
