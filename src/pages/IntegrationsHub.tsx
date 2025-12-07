@@ -517,7 +517,7 @@ export default function IntegrationsHub() {
                       const providerMeta = {
                         outlook: { name: 'Outlook', icon: '/outlookicon.webp' },
                         gdrive: { name: 'Google Drive', icon: '/gd.png' },
-                        dropbox: { name: 'Dropbox', icon: '/db.png' },
+                        dropbox: { name: 'Dropbox', icon: '/Dropbox_Icon.svg.png' },
                       } as const;
                       const providerName = providerMeta[p].name;
                       const providerIcon = providerMeta[p].icon;
