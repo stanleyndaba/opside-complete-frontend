@@ -186,13 +186,13 @@ export function Sidebar({
           <img
             src="/logoimagetwo.png"
             alt="Clario"
-            className="h-8 w-auto object-contain"
+            className="h-6 w-auto object-contain"
           />
         ) : (
           <img
             src="/logoimagetwo.png"
             alt="Clario"
-            className="h-6 w-auto object-contain"
+            className="h-5 w-auto object-contain"
           />
         )}
       </div>
