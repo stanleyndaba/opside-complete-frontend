@@ -634,7 +634,7 @@ export function Dashboard() {
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex-1">
                             <div className="flex items-center gap-2">
-                              <h2 className="font-brand text-lg font-semibold" style={{ color: '#36454F' }}>Recovered Value</h2>
+                              <h2 className="font-brand text-lg font-semibold" style={{ color: '#A9A9A9' }}>Recovered Value</h2>
                               <Tooltip>
                                 <TooltipTrigger asChild>
                                   <button
@@ -650,7 +650,7 @@ export function Dashboard() {
                                 </TooltipContent>
                               </Tooltip>
                             </div>
-                            <div className="text-[20px] md:text-[24px] font-medium mt-1 text-gray-500">
+                            <div className="text-[20px] md:text-[24px] font-extrabold mt-1 text-black">
                               {formatCurrencyWithSelection(recoveredTotal ?? 0, recoveredCurrency)}
                             </div>
                             <div className="text-[11px] text-gray-600 mt-1">
@@ -725,8 +725,8 @@ export function Dashboard() {
 
                         <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
-                            <div className="text-xs text-gray-600">Next payment</div>
-                            <div className="text-xl font-medium text-gray-500 mt-1">
+                            <div className="text-xs" style={{ color: '#A9A9A9' }}>Next payment</div>
+                            <div className="text-xl font-extrabold text-black mt-1">
                               {formatCurrencyWithSelection((nextPaymentAmount ?? 0), recoveredCurrency)}
                             </div>
                             <div className="text-[11px] text-gray-600 mt-1">
@@ -736,8 +736,8 @@ export function Dashboard() {
                             </div>
                           </div>
                           <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
-                            <div className="text-xs text-gray-600">Pending recovery</div>
-                            <div className="text-xl font-medium text-gray-500 mt-1">
+                            <div className="text-xs" style={{ color: '#A9A9A9' }}>Pending recovery</div>
+                            <div className="text-xl font-extrabold text-black mt-1">
                               {formatCurrencyWithSelection((pendingRecoveryAmount ?? 0), recoveredCurrency)}
                             </div>
                             <div className="text-[11px] text-gray-600 mt-1">
@@ -746,7 +746,7 @@ export function Dashboard() {
                           </div>
                           <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
                             <div className="flex items-center gap-1.5">
-                              <div className="text-xs text-gray-600">Approved</div>
+                              <div className="text-xs" style={{ color: '#A9A9A9' }}>Approved</div>
                               <div className="flex items-center gap-1">
                                 <TrendingDown className="h-3 w-3 text-red-500" />
                                 <span className="text-[10px] text-red-500 font-medium">8%</span>
@@ -754,7 +754,7 @@ export function Dashboard() {
                                 <span className="text-[10px] text-green-600 font-medium">92%</span>
                               </div>
                             </div>
-                            <div className="text-xl font-medium text-gray-500 mt-1">{formatCurrencyWithSelection(computedApproved ?? 0, recoveredCurrency)}</div>
+                            <div className="text-xl font-extrabold text-black mt-1">{formatCurrencyWithSelection(computedApproved ?? 0, recoveredCurrency)}</div>
                             <div className="text-[11px] mt-1">
                               <span className="text-gray-600">Total this month: </span>
                               <span className="text-[#1f1f1f]">$31.4K</span>
@@ -972,9 +972,9 @@ export function Dashboard() {
             </div>
           </div>
         </main>
-      </div>
+      </div >
       {/* Document Sources Modal */}
-      <Dialog open={showSourcesModal} onOpenChange={setShowSourcesModal}>
+      < Dialog open={showSourcesModal} onOpenChange={setShowSourcesModal} >
         <DialogContent className="sm:max-w-md bg-white rounded-md">
           <DialogHeader className="pb-3">
             <DialogTitle className="text-lg font-semibold text-gray-900">connect sources for document ingestion</DialogTitle>
@@ -1141,9 +1141,9 @@ export function Dashboard() {
             </Button>
           </div>
         </DialogContent>
-      </Dialog>
+      </Dialog >
       {/* Quick Actions Editor */}
-      <Dialog open={quickActionsEditOpen} onOpenChange={setQuickActionsEditOpen}>
+      < Dialog open={quickActionsEditOpen} onOpenChange={setQuickActionsEditOpen} >
         <DialogContent className="max-w-md bg-white border border-gray-200 text-gray-900 shadow-lg rounded-2xl">
           <DialogHeader>
             <DialogTitle className="text-lg text-[#1f1f1f]">Customize Quick Actions</DialogTitle>
@@ -1168,10 +1168,10 @@ export function Dashboard() {
             <Button className="bg-black hover:bg-gray-800 text-white border border-black" onClick={() => { try { localStorage.setItem('clario.quickActions', JSON.stringify(selectedQuickActions)); toast({ title: 'Saved', description: 'Quick actions updated.' }); } catch { } setQuickActionsEditOpen(false); }}>Save</Button>
           </DialogFooter>
         </DialogContent>
-      </Dialog>
+      </Dialog >
 
       {/* Invite teammate dialog */}
-      <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
+      < Dialog open={inviteOpen} onOpenChange={setInviteOpen} >
         <DialogContent className="max-w-sm">
           <DialogHeader>
             <DialogTitle>Invite a Teammate</DialogTitle>
@@ -1185,7 +1185,7 @@ export function Dashboard() {
             <Button onClick={async () => { if (!inviteEmail) return; try { await api.post('/api/team/invite', { email: inviteEmail }); toast({ title: 'Invite sent', description: inviteEmail }); } catch (e: any) { toast({ title: 'Invite failed', description: e?.message || 'Please try again.', variant: 'destructive' }); } setInviteOpen(false); setInviteEmail(''); }}>Send Invite</Button>
           </DialogFooter>
         </DialogContent>
-      </Dialog>
-    </div>
+      </Dialog >
+    </div >
   );
 }
