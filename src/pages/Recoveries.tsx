@@ -1305,23 +1305,7 @@ export default function Recoveries() {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
-                <div className="mt-4 flex items-center gap-3 text-xs text-gray-600">
-                  <span>Last analysis: {new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
-                  <span className="h-1 w-1 rounded-full bg-gray-500"></span>
-                  <button
-                    className="inline-flex items-center gap-2 h-8 px-3 rounded-md bg-emerald-500 text-white font-medium hover:bg-emerald-400"
-                    onClick={async () => {
-                      try {
-                        await api.post('/api/detections/run');
-                        toast({ title: 'Analysis Started', description: 'Scanning your FBA data for new opportunities…' });
-                      } catch (e: any) {
-                        toast({ title: 'Analysis Failed', description: e?.message || 'Please try again shortly.', variant: 'destructive' });
-                      }
-                    }}
-                  >
-                    Run Analysis
-                  </button>
-                </div>
+
               </CardContent>
             </Card>
 
