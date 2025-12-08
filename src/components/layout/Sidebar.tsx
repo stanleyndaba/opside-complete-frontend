@@ -183,11 +183,14 @@ export function Sidebar({
         )}
       >
         {!isCollapsed ? (
-          <img
-            src="/logoimagetwo.png"
-            alt="Clario"
-            className="h-6 w-auto object-contain"
-          />
+          <div className="flex items-center gap-2">
+            <img
+              src="/logoimagetwo.png"
+              alt="Clario"
+              className="h-6 w-auto object-contain"
+            />
+            <span className="text-[#36454F] font-normal text-base">Clario</span>
+          </div>
         ) : (
           <img
             src="/logoimagetwo.png"
