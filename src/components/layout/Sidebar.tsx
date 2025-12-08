@@ -189,7 +189,6 @@ export function Sidebar({
               alt="Clario"
               className="h-4 w-auto object-contain"
             />
-            <span className="text-[#36454F] font-normal text-base">Clario</span>
           </div>
         ) : (
           <img
