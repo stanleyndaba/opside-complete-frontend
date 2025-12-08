@@ -1,38 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Clario</title>
-    <meta name="description" content="Clario automatically finds, files, and tracks every eligible FBA claim with full transparency. No upfront costs — our success is tied to yours." />
-    <meta name="author" content="" />
-    <meta property="og:image" content="/og-image.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Stack+Sans+Text:wght@200..700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="preload" as="style" href="/src/index.css">
-    <link rel="preload" as="image" href="/horizon.jpg" fetchpriority="high" type="image/jpeg">
-    <link rel="preload" as="image" href="/donelogo.png" fetchpriority="high">
-      <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-      <link rel="alternate icon" href="/donelogo.png" type="image/png">
-  </head>
 
-  <body>
-    <div id="root"></div>
-    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
-    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
-    <script type="module" src="/src/main.tsx"></script>
-    
-    <script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.getRegistrations().then(function(registrations) {
-    for (let registration of registrations) {
-      registration.unregister();
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clario</title>
+  <meta name="description"
+    content="Clario automatically finds, files, and tracks every eligible FBA claim with full transparency. No upfront costs — our success is tied to yours." />
+  <meta name="author" content="" />
+  <meta property="og:image" content="/og-image.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Stack+Sans+Text:wght@200..700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preload" as="style" href="/src/index.css">
+  <link rel="preload" as="image" href="/horizon.jpg" fetchpriority="high" type="image/jpeg">
+  <link rel="preload" as="image" href="/donelogo.png" fetchpriority="high">
+  <link rel="icon" href="/logoimagetwo.png" type="image/png">
+  <link rel="alternate icon" href="/logoimagetwo.png" type="image/png">
+</head>
+
+<body>
+  <div id="root"></div>
+  <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+  <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+  <script type="module" src="/src/main.tsx"></script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function (registrations) {
+        for (let registration of registrations) {
+          registration.unregister();
+        }
+      });
     }
-  });
-}
-</script>
-  </body>
+  </script>
+</body>
+
 </html>
