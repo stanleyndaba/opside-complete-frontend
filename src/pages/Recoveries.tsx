@@ -1178,7 +1178,7 @@ export default function Recoveries() {
             {/* Page Header */}
             <div className="mb-8">
               <div className="flex items-center justify-between mb-2">
-                <h1 className="text-lg font-medium text-[#1f1f1f]">Refunds</h1>
+                <h1 className="text-xl font-medium text-[#1f1f1f]">Refunds</h1>
                 <Select value={selectedCurrency} onValueChange={setSelectedCurrency}>
                   <SelectTrigger className="w-[140px] bg-white border-gray-300">
                     <SelectValue />
@@ -1406,7 +1406,7 @@ export default function Recoveries() {
 
             {/* Tabs for Claims, Evidence Matching, and Cases */}
             <div className="mb-6">
-              <h2 className="text-sm font-medium text-gray-900 mb-4">Claim Recoveries</h2>
+              <h2 className="text-base font-medium text-gray-900 mb-4">Claim Recoveries</h2>
               <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'claims' | 'matching' | 'cases')} className="w-full">
                 <TabsList className="mb-6 inline-flex h-10 items-center justify-center rounded-md bg-white border border-gray-200 p-1 text-gray-600">
                   <TabsTrigger
