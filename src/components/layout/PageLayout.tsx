@@ -45,11 +45,11 @@ export function PageLayout({
         <div className="w-full max-w-full mx-auto p-4 lg:p-6 animate-fade-in overflow-x-hidden">
           {(hideNavbar && hideSidebar) && (
             <div className="fixed top-3 left-4 z-50 pointer-events-none">
-              <span
-                className={`tracking-tight text-xl select-none bg-gradient-to-r from-[#1e3a5f] via-[#4a90a4] to-[#2d5a7b] bg-clip-text text-transparent ${logoFontFamily ? 'clario-logo-nunito' : ''}`}
-              >
-                CLARIO
-              </span>
+              <img
+                src="/logoimagetwo.png"
+                alt="Clario"
+                className="h-8 w-auto object-contain"
+              />
             </div>
           )}
           {children}
