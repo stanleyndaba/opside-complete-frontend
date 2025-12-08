@@ -1295,7 +1295,7 @@ export default function Recoveries() {
                         .map(([label, count]) => (
                           <DropdownMenuItem
                             key={label}
-                            className="flex justify-between items-center px-2 py-1.5 text-xs rounded hover:bg-gray-50 cursor-default"
+                            className="flex justify-between items-center px-2 py-1.5 text-xs rounded hover:bg-gray-100 hover:text-[#36454F] focus:bg-gray-100 focus:text-[#36454F] cursor-default"
                           >
                             <span className="text-gray-700 truncate">{label}</span>
                             <span className={`font-medium ml-2 ${count > 0 ? 'text-gray-700' : 'text-gray-400'}`}>{count}</span>
