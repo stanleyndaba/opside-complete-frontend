@@ -31,6 +31,7 @@ import { DisputeCasesTable } from '@/components/disputes/DisputeCasesTable';
 // Claim type definition
 interface RecoveryClaim {
   id: string;
+  claim_number?: string; // Human-readable claim ID (e.g., LI-2412-0001)
   created?: string;
   created_at?: string;
   discovery_date?: string;
@@ -1652,9 +1653,18 @@ export default function Recoveries() {
                                       )}
                                     </TableCell>
                                     <TableCell>
-                                      <Button asChild variant="link" className="p-0 h-auto text-[#36454F] hover:text-[#36454F] font-mono">
-                                        <Link to={`/recoveries/${claim.id}`} state={{ claim }}>{claim.id}</Link>
-                                      </Button>
+                                      <Tooltip>
+                                        <TooltipTrigger asChild>
+                                          <Button asChild variant="link" className="p-0 h-auto text-[#36454F] hover:text-[#36454F] font-medium">
+                                            <Link to={`/recoveries/${claim.id}`} state={{ claim }}>
+                                              {claim.claim_number || claim.id.slice(0, 8)}
+                                            </Link>
+                                          </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent side="top" className="bg-black text-white text-xs font-mono">
+                                          {claim.id}
+                                        </TooltipContent>
+                                      </Tooltip>
                                     </TableCell>
                                     <TableCell>{format(new Date(claim.created || claim.discovery_date || claim.created_at), 'MMM dd, yyyy')}</TableCell>
                                     <TableCell>{claim.type}</TableCell>
