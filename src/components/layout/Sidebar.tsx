@@ -187,7 +187,7 @@ export function Sidebar({
             <img
               src="/logoimagetwo.png"
               alt="Clario"
-              className="h-6 w-auto object-contain"
+              className="h-4 w-auto object-contain"
             />
             <span className="text-[#36454F] font-normal text-base">Clario</span>
           </div>
@@ -195,7 +195,7 @@ export function Sidebar({
           <img
             src="/logoimagetwo.png"
             alt="Clario"
-            className="h-5 w-auto object-contain"
+            className="h-3 w-auto object-contain"
           />
         )}
       </div>
