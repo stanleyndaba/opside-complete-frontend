@@ -634,7 +634,7 @@ export function Dashboard() {
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex-1">
                             <div className="flex items-center gap-2">
-                              <h2 className="font-brand text-lg font-semibold" style={{ color: '#A9A9A9' }}>Recovered Value</h2>
+                              <h2 className="font-brand text-lg font-semibold text-gray-600">Recovered Value</h2>
                               <Tooltip>
                                 <TooltipTrigger asChild>
                                   <button
@@ -718,14 +718,14 @@ export function Dashboard() {
                                 }
                               }}
                             >
-                              Run
+                              Scan
                             </Button>
                           </div>
                         </div>
 
                         <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
-                            <div className="text-xs" style={{ color: '#A9A9A9' }}>Next payment</div>
+                            <div className="text-xs text-gray-600">Next payment</div>
                             <div className="text-xl font-extrabold text-black mt-1">
                               {formatCurrencyWithSelection((nextPaymentAmount ?? 0), recoveredCurrency)}
                             </div>
@@ -736,7 +736,7 @@ export function Dashboard() {
                             </div>
                           </div>
                           <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
-                            <div className="text-xs" style={{ color: '#A9A9A9' }}>Pending recovery</div>
+                            <div className="text-xs text-gray-600">Pending recovery</div>
                             <div className="text-xl font-extrabold text-black mt-1">
                               {formatCurrencyWithSelection((pendingRecoveryAmount ?? 0), recoveredCurrency)}
                             </div>
@@ -746,7 +746,7 @@ export function Dashboard() {
                           </div>
                           <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
                             <div className="flex items-center gap-1.5">
-                              <div className="text-xs" style={{ color: '#A9A9A9' }}>Approved</div>
+                              <div className="text-xs text-gray-600">Approved</div>
                               <div className="flex items-center gap-1">
                                 <TrendingDown className="h-3 w-3 text-red-500" />
                                 <span className="text-[10px] text-red-500 font-medium">8%</span>
