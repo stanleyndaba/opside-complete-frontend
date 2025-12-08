@@ -345,7 +345,7 @@ const Index = () => {
                 <img
                   src="/logoimageone.png"
                   alt="Clario"
-                  className="h-8 w-auto object-contain"
+                  className="h-5 w-auto object-contain"
                 />
               </Link>
               <Popover>

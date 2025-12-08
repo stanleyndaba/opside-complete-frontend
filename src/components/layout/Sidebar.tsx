@@ -179,29 +179,21 @@ export function Sidebar({
       <div
         className={cn(
           "border-b border-gray-300 flex items-center",
-          isCollapsed ? "p-2 justify-center" : "p-4 justify-between"
+          isCollapsed ? "p-2 justify-center" : "p-4 justify-start"
         )}
       >
         {!isCollapsed ? (
-          <>
-            <div className="flex flex-col gap-2">
-              <img
-                src="/logoimagetwo.png"
-                alt="Clario"
-                className="h-8 w-auto object-contain"
-              />
-              <div className="select-none flex items-center gap-2">
-                <span className="text-[11px] text-[#36454F] flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                  Connected, secured
-                </span>
-              </div>
-            </div>
-          </>
+          <img
+            src="/logoimagetwo.png"
+            alt="Clario"
+            className="h-8 w-auto object-contain"
+          />
         ) : (
-          <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" title="Connected, secured" />
-          </div>
+          <img
+            src="/logoimagetwo.png"
+            alt="Clario"
+            className="h-6 w-auto object-contain"
+          />
         )}
       </div>
 
@@ -278,12 +270,18 @@ export function Sidebar({
           <Link
             to="/settings"
             className={cn(
-              "w-full flex items-center gap-2 text-left hover:text-emerald-600 hover:bg-gray-200 px-3 py-2 rounded-md transition-colors",
+              "w-full flex flex-col text-left hover:text-emerald-600 hover:bg-gray-200 px-3 py-2 rounded-md transition-colors",
               "text-[#36454F]"
             )}
           >
-            <User className="h-4 w-4" />
-            <span className="text-sm">Account</span>
+            <div className="flex items-center gap-2">
+              <User className="h-4 w-4" />
+              <span className="text-sm">Account</span>
+            </div>
+            <div className="select-none flex items-center gap-1 mt-1 ml-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              <span className="text-[11px] text-[#36454F]">Connected, secured</span>
+            </div>
           </Link>
           <button
             className={cn(
