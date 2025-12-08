@@ -356,7 +356,7 @@ export default function Recoveries() {
     return Math.round((v + 500) / 100) / 100; // 0.5 .. 4.99 -> 0.5 .. 4.99, then /? ensure two decimals
   };
   const getConfidenceTier = (c: number) => c >= 0.85 ? 'high' : c >= 0.6 ? 'medium' : 'low';
-  const getConfidenceColor = (c: number) => c >= 0.85 ? 'text-emerald-400' : c >= 0.6 ? 'text-amber-400' : 'text-gray-400';
+  const getConfidenceColor = (c: number) => c >= 0.85 ? 'text-emerald-400' : c >= 0.6 ? 'text-amber-400' : 'text-[#36454F]';
   const getConfidenceBadge = (c: number) => c >= 0.85 ? 'High' : c >= 0.6 ? 'Medium' : 'Low';
   const getEvidenceStatus = (id: string): 'Ready' | 'Needs Docs' | 'Collecting' => {
     const v = stableHash(id) % 100;
@@ -1298,7 +1298,7 @@ export default function Recoveries() {
                             className="flex justify-between items-center px-2 py-1.5 text-xs rounded hover:bg-gray-100 hover:text-[#36454F] focus:bg-gray-100 focus:text-[#36454F] cursor-default"
                           >
                             <span className="text-gray-700 truncate">{label}</span>
-                            <span className={`font-medium ml-2 ${count > 0 ? 'text-gray-700' : 'text-gray-400'}`}>{count}</span>
+                            <span className={`font-medium ml-2 ${count > 0 ? 'text-gray-700' : 'text-[#36454F]'}`}>{count}</span>
                           </DropdownMenuItem>
                         ))}
                     </DropdownMenuContent>
@@ -1663,14 +1663,14 @@ export default function Recoveries() {
                                         {confidenceBadge ? (
                                           <span className={`text-xs px-1.5 py-0.5 rounded border ${confidenceBadge.color === 'green' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' :
                                             confidenceBadge.color === 'yellow' ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' :
-                                              'bg-gray-500/20 text-gray-300 border-gray-500/30'
+                                              'bg-gray-500/20 text-[#36454F] border-gray-500/30'
                                             }`}>
                                             {confidenceBadge.label} ({(claim.confidence_score * 100).toFixed(0)}%)
                                           </span>
                                         ) : (
                                           <>
                                             <span className={`text-xs font-medium ${getConfidenceColor(displayConfidence)}`}>{displayConfidence.toFixed(2)}</span>
-                                            <span className="text-[10px] px-1.5 py-0.5 rounded border border-white/10 bg-white/5 text-gray-300">
+                                            <span className="text-[10px] px-1.5 py-0.5 rounded border border-white/10 bg-white/5 text-[#36454F]">
                                               {getConfidenceBadge(displayConfidence)}
                                             </span>
                                           </>
@@ -1853,24 +1853,24 @@ export default function Recoveries() {
                     <DialogContent className="bg-white border-gray-200 text-gray-700">
                       <DialogHeader>
                         <DialogTitle>Mark Detection as Resolved</DialogTitle>
-                        <DialogDescription className="text-gray-400">
+                        <DialogDescription className="text-[#36454F]">
                           Mark this detection as resolved and record the resolution details.
                         </DialogDescription>
                       </DialogHeader>
                       {selectedDetection && (
                         <div className="space-y-4 py-4">
                           <div>
-                            <Label className="text-gray-300">Detection ID</Label>
-                            <p className="text-sm text-gray-400 font-mono">{selectedDetection.id}</p>
+                            <Label className="text-[#36454F]">Detection ID</Label>
+                            <p className="text-sm text-[#36454F] font-mono">{selectedDetection.id}</p>
                           </div>
                           <div>
-                            <Label className="text-gray-300">Anomaly Type</Label>
-                            <p className="text-sm text-gray-400 capitalize">
+                            <Label className="text-[#36454F]">Anomaly Type</Label>
+                            <p className="text-sm text-[#36454F] capitalize">
                               {selectedDetection.type?.replace(/_/g, ' ') || selectedDetection.anomaly_type?.replace(/_/g, ' ')}
                             </p>
                           </div>
                           <div>
-                            <Label htmlFor="resolve-amount" className="text-gray-300">Resolution Amount</Label>
+                            <Label htmlFor="resolve-amount" className="text-[#36454F]">Resolution Amount</Label>
                             <Input
                               id="resolve-amount"
                               type="number"
@@ -1882,7 +1882,7 @@ export default function Recoveries() {
                             />
                           </div>
                           <div>
-                            <Label htmlFor="resolve-notes" className="text-gray-300">Notes</Label>
+                            <Label htmlFor="resolve-notes" className="text-[#36454F]">Notes</Label>
                             <Textarea
                               id="resolve-notes"
                               value={resolveNotes}
@@ -1963,18 +1963,18 @@ export default function Recoveries() {
                     <DialogContent className="bg-white border-gray-200 text-gray-700">
                       <DialogHeader>
                         <DialogTitle>Update Detection Status</DialogTitle>
-                        <DialogDescription className="text-gray-400">
+                        <DialogDescription className="text-[#36454F]">
                           Update the status of this detection through the workflow: Pending → Reviewed → Disputed → Resolved
                         </DialogDescription>
                       </DialogHeader>
                       {selectedDetection && (
                         <div className="space-y-4 py-4">
                           <div>
-                            <Label className="text-gray-300">Detection ID</Label>
-                            <p className="text-sm text-gray-400 font-mono">{selectedDetection.id}</p>
+                            <Label className="text-[#36454F]">Detection ID</Label>
+                            <p className="text-sm text-[#36454F] font-mono">{selectedDetection.id}</p>
                           </div>
                           <div>
-                            <Label htmlFor="status-select" className="text-gray-300">Status</Label>
+                            <Label htmlFor="status-select" className="text-[#36454F]">Status</Label>
                             <Select value={selectedStatus} onValueChange={setSelectedStatus}>
                               <SelectTrigger id="status-select" className="bg-white/5 border-white/10 text-gray-100">
                                 <SelectValue />
@@ -1988,7 +1988,7 @@ export default function Recoveries() {
                             </Select>
                           </div>
                           <div>
-                            <Label htmlFor="status-notes" className="text-gray-300">Notes</Label>
+                            <Label htmlFor="status-notes" className="text-[#36454F]">Notes</Label>
                             <Textarea
                               id="status-notes"
                               value={statusUpdateNotes}
@@ -2064,7 +2064,7 @@ export default function Recoveries() {
                     <DialogContent className="bg-white border-gray-200 text-gray-700 max-w-4xl max-h-[90vh] overflow-y-auto">
                       <DialogHeader>
                         <DialogTitle>Detection Details</DialogTitle>
-                        <DialogDescription className="text-gray-400">
+                        <DialogDescription className="text-[#36454F]">
                           Complete information about this detected anomaly
                         </DialogDescription>
                       </DialogHeader>
@@ -2073,52 +2073,52 @@ export default function Recoveries() {
                           {/* Basic Information */}
                           <div className="grid grid-cols-2 gap-4">
                             <div>
-                              <Label className="text-gray-300">Detection ID</Label>
-                              <p className="text-sm text-gray-400 font-mono mt-1">{detectionDetails.id}</p>
+                              <Label className="text-[#36454F]">Detection ID</Label>
+                              <p className="text-sm text-[#36454F] font-mono mt-1">{detectionDetails.id}</p>
                             </div>
                             <div>
-                              <Label className="text-gray-300">Sync ID</Label>
-                              <p className="text-sm text-gray-400 font-mono mt-1">{detectionDetails.sync_id || 'N/A'}</p>
+                              <Label className="text-[#36454F]">Sync ID</Label>
+                              <p className="text-sm text-[#36454F] font-mono mt-1">{detectionDetails.sync_id || 'N/A'}</p>
                             </div>
                             <div>
-                              <Label className="text-gray-300">Anomaly Type</Label>
-                              <p className="text-sm text-gray-300 capitalize mt-1">
+                              <Label className="text-[#36454F]">Anomaly Type</Label>
+                              <p className="text-sm text-[#36454F] capitalize mt-1">
                                 {detectionDetails.type?.replace(/_/g, ' ') || detectionDetails.anomaly_type?.replace(/_/g, ' ') || 'Unknown'}
                               </p>
                             </div>
                             <div>
-                              <Label className="text-gray-300">Severity</Label>
+                              <Label className="text-[#36454F]">Severity</Label>
                               <Badge className={`mt-1 ${detectionDetails.severity === 'high' ? 'bg-red-500/20 text-red-300 border-red-500/30' :
                                 detectionDetails.severity === 'medium' ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' :
-                                  'bg-gray-500/20 text-gray-300 border-gray-500/30'
+                                  'bg-gray-500/20 text-[#36454F] border-gray-500/30'
                                 }`}>
                                 {detectionDetails.severity?.charAt(0).toUpperCase() + detectionDetails.severity?.slice(1) || 'Unknown'}
                               </Badge>
                             </div>
                             <div>
-                              <Label className="text-gray-300">Status</Label>
+                              <Label className="text-[#36454F]">Status</Label>
                               <Badge className={cn('mt-1', getStatusColor(detectionDetails.status))}>
                                 {detectionDetails.status}
                               </Badge>
                             </div>
                             <div>
-                              <Label className="text-gray-300">Confidence Score</Label>
+                              <Label className="text-[#36454F]">Confidence Score</Label>
                               <div className="flex items-center gap-2 mt-1">
                                 {detectionDetails.confidence_score !== null && detectionDetails.confidence_score !== undefined ? (
                                   <>
-                                    <span className="text-sm font-medium text-gray-300">
+                                    <span className="text-sm font-medium text-[#36454F]">
                                       {(detectionDetails.confidence_score * 100).toFixed(1)}%
                                     </span>
                                     <Badge className={
                                       detectionDetails.confidence_score >= 0.85 ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' :
                                         detectionDetails.confidence_score >= 0.50 ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' :
-                                          'bg-gray-500/20 text-gray-300 border-gray-500/30'
+                                          'bg-gray-500/20 text-[#36454F] border-gray-500/30'
                                     }>
                                       {detectionDetails.confidence_score >= 0.85 ? 'High' : detectionDetails.confidence_score >= 0.50 ? 'Medium' : 'Low'}
                                     </Badge>
                                   </>
                                 ) : (
-                                  <span className="text-sm text-gray-400">N/A</span>
+                                  <span className="text-sm text-[#36454F]">N/A</span>
                                 )}
                               </div>
                             </div>
@@ -2129,14 +2129,14 @@ export default function Recoveries() {
                             <h4 className="text-sm font-medium text-gray-200 mb-3">Financial Information</h4>
                             <div className="grid grid-cols-2 gap-4">
                               <div>
-                                <Label className="text-gray-300">Estimated Value</Label>
+                                <Label className="text-[#36454F]">Estimated Value</Label>
                                 <p className="text-lg font-medium text-emerald-400 mt-1">
                                   {formatCurrency(detectionDetails.estimated_value || detectionDetails.guaranteedAmount || 0, detectionDetails.currency || 'USD')}
                                 </p>
                               </div>
                               <div>
-                                <Label className="text-gray-300">Currency</Label>
-                                <p className="text-sm text-gray-300 mt-1">{detectionDetails.currency || 'USD'}</p>
+                                <Label className="text-[#36454F]">Currency</Label>
+                                <p className="text-sm text-[#36454F] mt-1">{detectionDetails.currency || 'USD'}</p>
                               </div>
                             </div>
                           </div>
@@ -2146,8 +2146,8 @@ export default function Recoveries() {
                             <h4 className="text-sm font-medium text-gray-200 mb-3">Dates & Deadlines</h4>
                             <div className="grid grid-cols-2 gap-4">
                               <div>
-                                <Label className="text-gray-300">Discovery Date</Label>
-                                <p className="text-sm text-gray-300 mt-1">
+                                <Label className="text-[#36454F]">Discovery Date</Label>
+                                <p className="text-sm text-[#36454F] mt-1">
                                   {detectionDetails.discovery_date
                                     ? format(new Date(detectionDetails.discovery_date), 'MMM dd, yyyy HH:mm')
                                     : detectionDetails.created
@@ -2156,10 +2156,10 @@ export default function Recoveries() {
                                 </p>
                               </div>
                               <div>
-                                <Label className="text-gray-300">Deadline Date</Label>
+                                <Label className="text-[#36454F]">Deadline Date</Label>
                                 <p className={`text-sm font-medium mt-1 ${detectionDetails.days_remaining !== undefined && detectionDetails.days_remaining <= 7
                                   ? 'text-amber-400'
-                                  : 'text-gray-300'
+                                  : 'text-[#36454F]'
                                   }`}>
                                   {detectionDetails.deadline_date
                                     ? format(new Date(detectionDetails.deadline_date), 'MMM dd, yyyy')
@@ -2168,18 +2168,18 @@ export default function Recoveries() {
                               </div>
                               {detectionDetails.days_remaining !== undefined && (
                                 <div>
-                                  <Label className="text-gray-300">Days Remaining</Label>
+                                  <Label className="text-[#36454F]">Days Remaining</Label>
                                   <p className={`text-sm font-medium mt-1 ${detectionDetails.days_remaining <= 3 ? 'text-red-400' :
                                     detectionDetails.days_remaining <= 7 ? 'text-amber-400' :
-                                      'text-gray-300'
+                                      'text-[#36454F]'
                                     }`}>
                                     {detectionDetails.days_remaining} day{detectionDetails.days_remaining !== 1 ? 's' : ''}
                                   </p>
                                 </div>
                               )}
                               <div>
-                                <Label className="text-gray-300">Created At</Label>
-                                <p className="text-sm text-gray-300 mt-1">
+                                <Label className="text-[#36454F]">Created At</Label>
+                                <p className="text-sm text-[#36454F] mt-1">
                                   {detectionDetails.created_at
                                     ? format(new Date(detectionDetails.created_at), 'MMM dd, yyyy HH:mm')
                                     : 'N/A'}
@@ -2193,7 +2193,7 @@ export default function Recoveries() {
                             <div className="border-t border-white/10 pt-4">
                               <h4 className="text-sm font-medium text-gray-200 mb-3">Evidence</h4>
                               <div className="bg-white/5 border border-white/10 rounded-md p-4">
-                                <pre className="text-xs text-gray-300 overflow-x-auto">
+                                <pre className="text-xs text-[#36454F] overflow-x-auto">
                                   {JSON.stringify(detectionDetails.evidence, null, 2)}
                                 </pre>
                               </div>
@@ -2221,14 +2221,14 @@ export default function Recoveries() {
                               <div className="grid grid-cols-2 gap-4">
                                 {detectionDetails.sku && (
                                   <div>
-                                    <Label className="text-gray-300">SKU</Label>
-                                    <p className="text-sm text-gray-300 font-mono mt-1">{detectionDetails.sku}</p>
+                                    <Label className="text-[#36454F]">SKU</Label>
+                                    <p className="text-sm text-[#36454F] font-mono mt-1">{detectionDetails.sku}</p>
                                   </div>
                                 )}
                                 {detectionDetails.asin && (
                                   <div>
-                                    <Label className="text-gray-300">ASIN</Label>
-                                    <p className="text-sm text-gray-300 font-mono mt-1">{detectionDetails.asin}</p>
+                                    <Label className="text-[#36454F]">ASIN</Label>
+                                    <p className="text-sm text-[#36454F] font-mono mt-1">{detectionDetails.asin}</p>
                                   </div>
                                 )}
                               </div>
@@ -2239,7 +2239,7 @@ export default function Recoveries() {
                           {detectionDetails.details && (
                             <div className="border-t border-white/10 pt-4">
                               <h4 className="text-sm font-medium text-gray-200 mb-3">Description</h4>
-                              <p className="text-sm text-gray-300">{detectionDetails.details}</p>
+                              <p className="text-sm text-[#36454F]">{detectionDetails.details}</p>
                             </div>
                           )}
                         </div>
