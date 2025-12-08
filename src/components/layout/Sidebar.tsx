@@ -66,6 +66,22 @@ export function Sidebar({
   const location = useLocation();
   const queryClient = useQueryClient();
   const [showLogout, setShowLogout] = useState(false);
+  const [connectedEmail, setConnectedEmail] = useState<string | null>(null);
+
+  // Fetch connected email from evidence sources
+  React.useEffect(() => {
+    (async () => {
+      try {
+        const r = await api.getEvidenceSources();
+        if (r.ok && r.data?.sources) {
+          const gmailSource = r.data.sources.find((s: any) => s.provider === 'gmail' && s.status === 'connected');
+          if (gmailSource?.account_email) {
+            setConnectedEmail(gmailSource.account_email);
+          }
+        }
+      } catch { }
+    })();
+  }, []);
 
   // Check if we're on the Dashboard (Command Center) page
   const isDashboard = location.pathname === '/dashboard' || location.pathname === '/app' || location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/app');
@@ -280,9 +296,16 @@ export function Sidebar({
               <User className="h-4 w-4" />
               <span className="text-sm">Account</span>
             </div>
-            <div className="select-none flex items-center gap-1 mt-1 ml-6">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-              <span className="text-[11px] text-[#36454F]">Connected, secured</span>
+            <div className="select-none flex flex-col mt-1 ml-6">
+              <div className="flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                <span className="text-[11px] text-[#36454F]">Connected, secured</span>
+              </div>
+              {connectedEmail && (
+                <span className="text-[10px] text-gray-500 ml-2.5 truncate max-w-[140px]" title={connectedEmail}>
+                  {connectedEmail}
+                </span>
+              )}
             </div>
           </Link>
           <button
