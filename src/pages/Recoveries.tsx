@@ -1291,7 +1291,6 @@ export default function Recoveries() {
                         Amazon Financial Event Types
                       </div>
                       {Object.entries(categoryCounts)
-                        .filter(([_, count]) => count > 0)
                         .sort((a, b) => b[1] - a[1])
                         .map(([label, count]) => (
                           <DropdownMenuItem
@@ -1299,14 +1298,9 @@ export default function Recoveries() {
                             className="flex justify-between items-center px-2 py-1.5 text-xs rounded hover:bg-gray-50 cursor-default"
                           >
                             <span className="text-gray-700 truncate">{label}</span>
-                            <span className="text-gray-500 font-medium ml-2">{count}</span>
+                            <span className={`font-medium ml-2 ${count > 0 ? 'text-gray-700' : 'text-gray-400'}`}>{count}</span>
                           </DropdownMenuItem>
                         ))}
-                      {Object.values(categoryCounts).every(count => count === 0) && (
-                        <div className="px-2 py-3 text-xs text-gray-400 text-center">
-                          No event types detected yet
-                        </div>
-                      )}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
