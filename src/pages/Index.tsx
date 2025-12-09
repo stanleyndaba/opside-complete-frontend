@@ -577,7 +577,7 @@ const Index = () => {
                 </span>
               </h1>
               <p className="font-body text-sm md:text-base text-gray-700 font-normal max-w-3xl text-left md:text-center md:mx-auto">
-                Think AI Agents for Finance. Clario automates the entire reimbursement process, recovering lost revenue from Amazon FBA errors in minutes—not months.
+                The world's first autonomous 11-Agent Audit Engine. Clario detects, matches, and recovers lost revenue from Amazon FBA errors in minutes—not months.
               </p>
               <div className="pt-2">
                 <div className="max-w-md mx-auto flex justify-center">
