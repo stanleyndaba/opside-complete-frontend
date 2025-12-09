@@ -294,8 +294,14 @@
 
 /* Typography tuning across the platform (excludes landing page) */
 @layer base {
-  /* Slightly smaller base, slightly heavier weights */
-  .platform { font-size: 0.95rem; }
+  /* Platform uses Montserrat Regular 400 */
+  .platform { 
+    font-family: 'Montserrat', system-ui, sans-serif !important;
+    font-size: 0.95rem; 
+  }
+  .platform * {
+    font-family: 'Montserrat', system-ui, sans-serif !important;
+  }
   .platform :where(h1, h2, h3, h4, h5, h6) { font-weight: 600; }
   .platform :where(p, span, li, label, input, textarea, select, button, small, strong, em) { font-weight: 400; }
   .platform .font-black { font-weight: 900 !important; }
