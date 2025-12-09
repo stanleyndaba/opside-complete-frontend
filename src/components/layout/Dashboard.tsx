@@ -70,10 +70,6 @@ export function Dashboard() {
   const [evidenceStatus, setEvidenceStatus] = useState<{ documentsCount: number; processingCount: number } | null>(null);
   const [gmailConnected, setGmailConnected] = useState<boolean>(false);
   const [inviteOpen, setInviteOpen] = useState<boolean>(false);
-  // Audit Complete Dialog state
-  const [showAuditComplete, setShowAuditComplete] = useState<boolean>(false);
-  const [auditResults, setAuditResults] = useState<{ claimsCount: number; potentialValue: number; durationSecs: number } | null>(null);
-  const syncStartTimeRef = useRef<number | null>(null);
   const [inviteEmail, setInviteEmail] = useState<string>('');
   const { toast } = useToast();
   const { notifications, unreadCount } = useNotifications();
@@ -422,18 +418,6 @@ export function Dashboard() {
             setNeedsSync(false);
             setSyncMessage('Sync completed successfully!');
 
-            // Calculate duration and show Audit Complete dialog
-            const durationSecs = syncStartTimeRef.current
-              ? Math.round((Date.now() - syncStartTimeRef.current) / 1000)
-              : 0;
-            setAuditResults({
-              claimsCount: status.detections_count || status.total_detections || pendingClaimsCount || 0,
-              potentialValue: status.total_value || pendingRecoveryAmount || 0,
-              durationSecs
-            });
-            setShowAuditComplete(true);
-            syncStartTimeRef.current = null;
-
             // Clear polling
             if (syncPollingRef.current) {
               clearInterval(syncPollingRef.current);
@@ -708,7 +692,6 @@ export function Dashboard() {
                               onClick={async () => {
                                 try {
                                   const { startSync } = await import('@/lib/inventoryApi');
-                                  syncStartTimeRef.current = Date.now();
                                   setSyncTriggered(true);
                                   setNeedsSync(false);
                                   setSyncMessage('Sync started. We are fetching your latest Amazon data…');
@@ -1201,40 +1184,6 @@ export function Dashboard() {
           </DialogFooter>
         </DialogContent>
       </Dialog >
-
-      {/* Audit Complete Dialog */}
-      <Dialog open={showAuditComplete} onOpenChange={setShowAuditComplete}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <CheckCircle className="h-5 w-5 text-emerald-500" />
-              Audit Complete
-            </DialogTitle>
-            <DialogDescription className="text-base pt-2">
-              <span className="font-semibold text-gray-900">{auditResults?.claimsCount || 0} claims</span> found.
-              <span className="text-emerald-600 font-semibold"> {formatCurrency(auditResults?.potentialValue || 0, selectedCurrency)}</span> in potential recoveries
-              {auditResults?.durationSecs ? (
-                <span className="text-gray-500"> • Completed in {auditResults.durationSecs}s</span>
-              ) : null}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="bg-blue-50 rounded-lg p-4 mt-2">
-            <p className="text-sm text-blue-800 font-medium">Next action:</p>
-            <p className="text-sm text-blue-700 mt-1">
-              Connect Gmail, Outlook, Google Drive, or Dropbox for document parsing to build airtight evidence for your claims.
-            </p>
-          </div>
-          <DialogFooter className="mt-4">
-            <Button variant="ghost" onClick={() => setShowAuditComplete(false)}>Dismiss</Button>
-            <Button
-              onClick={() => { setShowAuditComplete(false); navigate('/integrations-hub'); }}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white"
-            >
-              Connect Documents
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div >
   );
 }
