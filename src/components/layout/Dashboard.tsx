@@ -690,7 +690,7 @@ export function Dashboard() {
                             <Button
                               variant="outline"
                               size="sm"
-                              className="bg-white border border-gray-200 text-gray-900 hover:bg-gray-50"
+                              className="bg-blue-50 border-0 text-[#1e3a5f] hover:bg-blue-100 rounded-lg"
                               onClick={async () => {
                                 try {
                                   const { startSync } = await import('@/lib/inventoryApi');
