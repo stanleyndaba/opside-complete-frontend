@@ -798,11 +798,6 @@ export default function Sync() {
                   <p className="text-xs text-gray-500">
                     {claimsCount !== null ? claimsCount : '--'} claims found. {formatCurrency(totalRecoverableValue)} in potential recoveries • Completed in {durationSeconds !== null ? `${durationSeconds}s` : 'N/A'}
                   </p>
-                  <div className="text-xs text-gray-400 space-y-1 pt-2">
-                    <p className="font-medium">Action Needed: The Doc parser needs evidence to file the claim.</p>
-                    <p><span className="font-medium">Blocker:</span> Gmail Connection: Not Connected.</p>
-                    <p className="pt-1">Connect Gmail, Outlook, Dropbox or Google Drive for document parsing and matching</p>
-                  </div>
                 </div>
               )}
 
