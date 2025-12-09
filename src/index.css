@@ -1,13 +1,24 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer utilities {
-  .font-heading { font-family: "Stack Sans Text", system-ui, sans-serif; }
-  .font-body { font-family: "Stack Sans Text", system-ui, sans-serif; }
-  .font-brand { font-family: "Stack Sans Text", system-ui, sans-serif; }
-  .font-logo { font-family: "Stack Sans Text", system-ui, sans-serif; font-weight: 900; }
+  .font-heading {
+    font-family: 'Montserrat', system-ui, sans-serif;
+  }
+
+  .font-body {
+    font-family: 'Montserrat', system-ui, sans-serif;
+  }
+
+  .font-brand {
+    font-family: 'Montserrat', system-ui, sans-serif;
+  }
+
+  .font-logo {
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-weight: 900;
+  }
 }
 
 @layer base {
@@ -70,10 +81,12 @@
   * {
     @apply border-border;
   }
-  
-  /* Global font stack - Stack Sans Text for entire platform */
-  html, body, #root {
-    font-family: "Stack Sans Text", system-ui, sans-serif !important;
+
+  /* Global font stack - Montserrat for entire platform */
+  html,
+  body,
+  #root {
+    font-family: 'Montserrat', system-ui, sans-serif !important;
   }
 
   html {
@@ -88,14 +101,14 @@
     max-width: 100%;
     overflow-x: hidden !important;
   }
-  
+
   #root {
     width: 100%;
     max-width: 100%;
     overflow-x: hidden;
     min-height: 100vh;
   }
-  
+
   /* Ensure main content uses full width */
   main {
     width: 100%;
@@ -106,21 +119,67 @@
     /* Default body font - Stack Sans Text for entire platform */
     @apply bg-background text-foreground text-[15px];
   }
-  
-  /* All text elements use Stack Sans Text - comprehensive coverage */
-  *, *::before, *::after,
-  h1, h2, h3, h4, h5, h6, 
-  p, label, input, textarea, select, button, 
-  span, div, a, li, td, th, 
-  code, pre, small, strong, em, b, i, u, sub, sup,
-  table, thead, tbody, tfoot, tr, 
-  nav, header, footer, aside, section, article, main,
-  ul, ol, dl, dt, dd,
-  form, fieldset, legend,
-  blockquote, cite, q,
-  abbr, acronym, address,
+
+  /* All text elements use Montserrat - comprehensive coverage */
+  *,
+  *::before,
+  *::after,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  label,
+  input,
+  textarea,
+  select,
+  button,
+  span,
+  div,
+  a,
+  li,
+  td,
+  th,
+  code,
+  pre,
+  small,
+  strong,
+  em,
+  b,
+  i,
+  u,
+  sub,
+  sup,
+  table,
+  thead,
+  tbody,
+  tfoot,
+  tr,
+  nav,
+  header,
+  footer,
+  aside,
+  section,
+  article,
+  main,
+  ul,
+  ol,
+  dl,
+  dt,
+  dd,
+  form,
+  fieldset,
+  legend,
+  blockquote,
+  cite,
+  q,
+  abbr,
+  acronym,
+  address,
   [class*="font-"] {
-    font-family: "Stack Sans Text", system-ui, sans-serif !important;
+    font-family: 'Montserrat', system-ui, sans-serif !important;
   }
 
   /* Override for code snippets - use programming fonts */
@@ -165,21 +224,21 @@
     backface-visibility: hidden;
     perspective: 1000px;
   }
-  
+
   /* Custom scrollbar for webkit browsers */
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
   }
-  
+
   ::-webkit-scrollbar-track {
     background: transparent;
   }
-  
+
   ::-webkit-scrollbar-thumb {
     @apply bg-muted rounded-full;
   }
-  
+
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-muted-foreground/50;
   }
@@ -224,7 +283,7 @@
   .trend-up {
     @apply text-success;
   }
-  
+
   .trend-down {
     @apply text-danger;
   }
@@ -236,12 +295,18 @@
 
   /* Subtle brand sheen animation for sidebar logo */
   @keyframes brandSheen {
-    0% { background-position-x: -200%; }
-    100% { background-position-x: 200%; }
+    0% {
+      background-position-x: -200%;
+    }
+
+    100% {
+      background-position-x: 200%;
+    }
   }
+
   .brand-sheen {
     position: relative;
-    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0) 100%);
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.12) 50%, rgba(255, 255, 255, 0) 100%);
     background-size: 200% 100%;
     -webkit-background-clip: text;
     background-clip: text;
@@ -251,12 +316,14 @@
 
   /* Subtle animated gradient text for light grey copy */
   .text-sheen-subtle {
-    background: linear-gradient(
-      90deg,
-      rgba(156,163,175,0.85) 0%,       /* gray-400 */
-      rgba(99,102,241,0.55) 50%,       /* indigo-500 */
-      rgba(156,163,175,0.85) 100%      /* gray-400 */
-    );
+    background: linear-gradient(90deg,
+        rgba(156, 163, 175, 0.85) 0%,
+        /* gray-400 */
+        rgba(99, 102, 241, 0.55) 50%,
+        /* indigo-500 */
+        rgba(156, 163, 175, 0.85) 100%
+        /* gray-400 */
+      );
     background-size: 200% 100%;
     -webkit-background-clip: text;
     background-clip: text;
@@ -264,29 +331,35 @@
     animation: brandSheen 6s linear infinite;
   }
 
-    @keyframes wordDrift {
-      0% {
-        opacity: 0;
-        transform: translateY(24px) scale(0.96);
-      }
-      20% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-      80% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-      100% {
-        opacity: 0;
-        transform: translateY(-24px) scale(0.96);
-      }
+  @keyframes wordDrift {
+    0% {
+      opacity: 0;
+      transform: translateY(24px) scale(0.96);
     }
+
+    20% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    80% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    100% {
+      opacity: 0;
+      transform: translateY(-24px) scale(0.96);
+    }
+  }
 
   /* Slow spin utility for loaders */
   @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+      transform: rotate(360deg);
+    }
   }
+
   .animate-spin-slow {
     animation: spin 2.5s linear infinite;
   }
@@ -294,22 +367,45 @@
 
 /* Typography tuning across the platform (excludes landing page) */
 @layer base {
+
   /* Platform uses Montserrat Regular 400 */
-  .platform { 
+  .platform {
     font-family: 'Montserrat', system-ui, sans-serif !important;
-    font-size: 0.95rem; 
+    font-size: 0.95rem;
   }
+
   .platform * {
     font-family: 'Montserrat', system-ui, sans-serif !important;
   }
-  .platform :where(h1, h2, h3, h4, h5, h6) { font-weight: 600; }
-  .platform :where(p, span, li, label, input, textarea, select, button, small, strong, em) { font-weight: 400; }
-  .platform .font-black { font-weight: 900 !important; }
-  .platform .font-extrabold { font-weight: 800 !important; }
-  .platform .font-bold { font-weight: 700 !important; }
-  .platform .font-semibold { font-weight: 600 !important; }
-  .platform .font-medium { font-weight: 500 !important; }
-  
+
+  .platform :where(h1, h2, h3, h4, h5, h6) {
+    font-weight: 600;
+  }
+
+  .platform :where(p, span, li, label, input, textarea, select, button, small, strong, em) {
+    font-weight: 400;
+  }
+
+  .platform .font-black {
+    font-weight: 900 !important;
+  }
+
+  .platform .font-extrabold {
+    font-weight: 800 !important;
+  }
+
+  .platform .font-bold {
+    font-weight: 700 !important;
+  }
+
+  .platform .font-semibold {
+    font-weight: 600 !important;
+  }
+
+  .platform .font-medium {
+    font-weight: 500 !important;
+  }
+
   /* CLARIO logo with Nunito Sans - override global font */
   .clario-logo-nunito {
     font-family: "Nunito Sans", sans-serif !important;
@@ -320,6 +416,11 @@
 
 /* Slightly lighter typography on landing page */
 @layer base {
-  .landing :where(h1, h2, h3, h4, h5, h6) { font-weight: 600; }
-  .landing :where(p, span, li, label, input, textarea, select, button, small, strong, em) { font-weight: 400; }
+  .landing :where(h1, h2, h3, h4, h5, h6) {
+    font-weight: 600;
+  }
+
+  .landing :where(p, span, li, label, input, textarea, select, button, small, strong, em) {
+    font-weight: 400;
+  }
 }
