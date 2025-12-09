@@ -1140,22 +1140,21 @@ export default function Sync() {
             <Dialog open={showSourcesModal} onOpenChange={setShowSourcesModal}>
               <DialogContent className="sm:max-w-md bg-white rounded-md">
                 <DialogHeader className="pb-3">
-                  <DialogTitle className="flex items-center gap-2 text-lg font-semibold text-gray-900">
-                    <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+                  <DialogTitle className="text-lg font-semibold text-gray-900">
                     Audit Complete
                   </DialogTitle>
                   <DialogDescription className="text-base pt-2 text-gray-700">
                     <span className="font-semibold text-gray-900">{claimsCount !== null ? claimsCount : 0} claims</span> found.
-                    <span className="text-emerald-600 font-semibold"> {formatCurrency(totalRecoverableValue)}</span> in potential recoveries
+                    <span className="text-blue-600 font-semibold"> {formatCurrency(totalRecoverableValue)}</span> in potential recoveries
                     {durationSeconds !== null && (
                       <span className="text-gray-500"> • Completed in {durationSeconds}s</span>
                     )}
                   </DialogDescription>
                 </DialogHeader>
 
-                <div className="bg-blue-50 rounded-lg p-4 mb-3">
-                  <p className="text-sm text-blue-800 font-medium">Next action:</p>
-                  <p className="text-sm text-blue-700 mt-1">
+                <div className="bg-gray-100 rounded-lg p-4 mb-3">
+                  <p className="text-sm text-gray-700 font-medium">Next action:</p>
+                  <p className="text-sm text-gray-600 mt-1">
                     Connect Gmail, Outlook, Google Drive, or Dropbox for document parsing.
                   </p>
                 </div>
@@ -1312,7 +1311,7 @@ export default function Sync() {
                     onClick={() => setShowSourcesModal(false)}
                     className="bg-gray-100 text-gray-700 hover:bg-gray-200"
                   >
-                    Advanced integrations
+                    Connect Platform
                   </Button>
                 </div>
               </DialogContent>
