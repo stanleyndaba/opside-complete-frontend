@@ -344,7 +344,16 @@ export default function Sync() {
         toastShownRef.current.completed = true;
         // Mark completion - backend should send completion logs via SSE
         completionLogsAddedRef.current = true;
-        // Logs will be marked as finished when queue empties
+
+        // If queue is already empty, mark logs as finished immediately
+        if (logQueueRef.current.length === 0 && !logsFinishedRef.current) {
+          setTimeout(() => {
+            if (logQueueRef.current.length === 0 && !logsFinishedRef.current) {
+              logsFinishedRef.current = true;
+              setLogsFinished(true);
+            }
+          }, 500); // Brief delay to catch any last-moment logs
+        }
       } else if (mappedStatus === 'failed' && !toastShownRef.current.failed) {
         toastShownRef.current.failed = true;
         addLog({ type: 'error', category: 'system', message: `Sync failed: ${s.error || s.message || 'Unknown error'}` });
