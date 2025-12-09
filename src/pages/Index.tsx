@@ -348,6 +348,17 @@ const Index = () => {
                   className="h-5 w-auto object-contain"
                 />
               </Link>
+            </div>
+            <nav className="hidden md:flex items-center gap-4 text-sm text-gray-700">
+              {primaryLinks.map((link) => (
+                <Link
+                  key={link.label}
+                  to={link.href}
+                  className="px-3 py-1.5 rounded-md hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                >
+                  {link.label}
+                </Link>
+              ))}
               <Popover>
                 <PopoverTrigger asChild>
                   <button
@@ -373,17 +384,6 @@ const Index = () => {
                   </div>
                 </PopoverContent>
               </Popover>
-            </div>
-            <nav className="hidden md:flex items-center gap-4 text-sm text-gray-700">
-              {primaryLinks.map((link) => (
-                <Link
-                  key={link.label}
-                  to={link.href}
-                  className="px-3 py-1.5 rounded-md hover:bg-gray-100 hover:text-gray-900 transition-colors"
-                >
-                  {link.label}
-                </Link>
-              ))}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
