@@ -482,7 +482,7 @@ export default function Recoveries() {
     return Math.round((v + 500) / 100) / 100; // 0.5 .. 4.99 -> 0.5 .. 4.99, then /? ensure two decimals
   };
   const getConfidenceTier = (c: number) => c >= 0.85 ? 'high' : c >= 0.6 ? 'medium' : 'low';
-  const getConfidenceColor = (c: number) => c >= 0.85 ? 'text-emerald-400' : c >= 0.6 ? 'text-amber-400' : 'text-[#36454F]';
+  const getConfidenceColor = (c: number) => c >= 0.85 ? 'text-emerald-600' : c >= 0.6 ? 'text-amber-500' : 'text-blue-500';
   const getConfidenceBadge = (c: number) => c >= 0.85 ? 'High' : c >= 0.6 ? 'Medium' : 'Low';
   const getEvidenceStatus = (id: string): 'Ready' | 'Needs Docs' | 'Collecting' => {
     const v = stableHash(id) % 100;
@@ -1798,19 +1798,16 @@ export default function Recoveries() {
                                     <TableCell>
                                       <div className="flex items-center gap-2">
                                         {confidenceBadge ? (
-                                          <span className={`text-xs px-1.5 py-0.5 rounded border ${confidenceBadge.color === 'green' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' :
-                                            confidenceBadge.color === 'yellow' ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' :
-                                              'bg-gray-500/20 text-[#36454F] border-gray-500/30'
+                                          <span className={`text-xs font-semibold ${confidenceBadge.color === 'green' ? 'text-emerald-600' :
+                                            confidenceBadge.color === 'yellow' ? 'text-amber-500' :
+                                              'text-blue-500'
                                             }`}>
                                             {confidenceBadge.label} ({(claim.confidence_score * 100).toFixed(0)}%)
                                           </span>
                                         ) : (
-                                          <>
-                                            <span className={`text-xs font-medium ${getConfidenceColor(displayConfidence)}`}>{displayConfidence.toFixed(2)}</span>
-                                            <span className="text-[10px] px-1.5 py-0.5 rounded border border-white/10 bg-white/5 text-[#36454F]">
-                                              {getConfidenceBadge(displayConfidence)}
-                                            </span>
-                                          </>
+                                          <span className={`text-xs font-semibold ${getConfidenceColor(displayConfidence)}`}>
+                                            {getConfidenceBadge(displayConfidence)} ({(displayConfidence * 100).toFixed(0)}%)
+                                          </span>
                                         )}
                                       </div>
                                     </TableCell>
@@ -2015,7 +2012,7 @@ export default function Recoveries() {
                               value={resolveAmount}
                               onChange={(e) => setResolveAmount(e.target.value)}
                               placeholder="0.00"
-                              className="bg-white/5 border-white/10 text-gray-100"
+                              className="bg-gray-100 border-gray-300 text-[#36454F]"
                             />
                           </div>
                           <div>
@@ -2025,7 +2022,7 @@ export default function Recoveries() {
                               value={resolveNotes}
                               onChange={(e) => setResolveNotes(e.target.value)}
                               placeholder="Enter resolution notes (e.g., 'Resolved via Amazon reimbursement')"
-                              className="bg-white/5 border-white/10 text-gray-100 min-h-[100px]"
+                              className="bg-gray-100 border-gray-300 text-[#36454F] min-h-[100px]"
                             />
                           </div>
                         </div>
@@ -2113,7 +2110,7 @@ export default function Recoveries() {
                           <div>
                             <Label htmlFor="status-select" className="text-[#36454F]">Status</Label>
                             <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                              <SelectTrigger id="status-select" className="bg-white/5 border-white/10 text-gray-100">
+                              <SelectTrigger id="status-select" className="bg-gray-100 border-gray-300 text-[#36454F]">
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
@@ -2131,7 +2128,7 @@ export default function Recoveries() {
                               value={statusUpdateNotes}
                               onChange={(e) => setStatusUpdateNotes(e.target.value)}
                               placeholder="Enter notes for this status change (e.g., 'Reviewed and verified')"
-                              className="bg-white/5 border-white/10 text-gray-100 min-h-[100px]"
+                              className="bg-gray-100 border-gray-300 text-[#36454F] min-h-[100px]"
                             />
                           </div>
                         </div>
