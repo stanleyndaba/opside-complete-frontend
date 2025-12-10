@@ -724,8 +724,25 @@ export default function EvidenceLocker() {
   };
 
   const downloadDoc = async (id: string) => {
-    const url = api.getDocumentDownloadUrl(id);
-    window.open(url, '_blank');
+    try {
+      const response = await api.getDocumentDownload(id);
+      if (response.ok && response.data?.url) {
+        // Open the signed URL directly to download the file
+        window.open(response.data.url, '_blank');
+      } else {
+        toast({
+          title: 'Download Failed',
+          description: response.error || 'Could not get download URL',
+          variant: 'destructive'
+        });
+      }
+    } catch (error: any) {
+      toast({
+        title: 'Download Error',
+        description: error?.message || 'Failed to download document',
+        variant: 'destructive'
+      });
+    }
   };
 
   // Delete a single document
