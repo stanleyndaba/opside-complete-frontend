@@ -17,9 +17,11 @@ export function Toaster() {
         return (
           <Toast key={id} {...props}>
             <div className="grid gap-1">
-              <div className="select-none font-black uppercase text-[11px] text-[#36454F]">
-                CLARIO
-              </div>
+              <img
+                src="/logoimagetwo.png"
+                alt="Clario"
+                className="h-3 w-auto object-contain"
+              />
               {title && title !== 'CLARIO' && (
                 <ToastTitle className="text-[#22C55E] font-semibold">{title}</ToastTitle>
               )}
