@@ -198,26 +198,30 @@ export function DisputeCasesTable() {
                 </TableHeader>
                 <TableBody>
                   {cases.map((caseItem) => (
-                    <TableRow key={caseItem.id} className="border-gray-200 hover:bg-gray-50">
+                    <TableRow key={caseItem.id || Math.random()} className="border-gray-200 hover:bg-gray-50">
                       <TableCell>
-                        <span className="font-mono text-sm text-gray-900">{caseItem.case_number}</span>
+                        <span className="font-mono text-sm text-gray-900">{caseItem.case_number || '—'}</span>
                       </TableCell>
                       <TableCell>
-                        <Button asChild variant="link" className="p-0 h-auto text-gray-900 hover:text-gray-900 font-mono">
-                          <Link to={`/recoveries/${caseItem.claim_id}`}>
-                            {caseItem.claim_id.substring(0, 12)}...
-                          </Link>
-                        </Button>
+                        {caseItem.claim_id ? (
+                          <Button asChild variant="link" className="p-0 h-auto text-gray-900 hover:text-gray-900 font-mono">
+                            <Link to={`/recoveries/${caseItem.claim_id}`}>
+                              {caseItem.claim_id.substring(0, 12)}...
+                            </Link>
+                          </Button>
+                        ) : (
+                          <span className="text-sm text-gray-400">—</span>
+                        )}
                       </TableCell>
                       <TableCell>
-                        {getStatusBadge(caseItem.status)}
+                        {getStatusBadge(caseItem.status || 'unknown')}
                       </TableCell>
                       <TableCell>
                         {getFilingStatusBadge(caseItem.filing_status)}
                       </TableCell>
                       <TableCell>
                         <span className="font-semibold text-gray-900">
-                          {formatCurrency(caseItem.amount, caseItem.currency)}
+                          {formatCurrency(caseItem.amount || 0, caseItem.currency || 'USD')}
                         </span>
                       </TableCell>
                       <TableCell>
@@ -243,15 +247,19 @@ export function DisputeCasesTable() {
                       </TableCell>
                       <TableCell>
                         <span className="text-sm text-gray-600">
-                          {format(new Date(caseItem.created_at), 'MMM dd, yyyy')}
+                          {caseItem.created_at ? format(new Date(caseItem.created_at), 'MMM dd, yyyy') : '—'}
                         </span>
                       </TableCell>
                       <TableCell>
-                        <Button asChild variant="ghost" size="sm">
-                          <Link to={`/recoveries/${caseItem.claim_id}`}>
-                            <Eye className="w-4 h-4" />
-                          </Link>
-                        </Button>
+                        {caseItem.claim_id ? (
+                          <Button asChild variant="ghost" size="sm">
+                            <Link to={`/recoveries/${caseItem.claim_id}`}>
+                              <Eye className="w-4 h-4" />
+                            </Link>
+                          </Button>
+                        ) : (
+                          <span className="text-sm text-gray-400">—</span>
+                        )}
                       </TableCell>
                     </TableRow>
                   ))}
