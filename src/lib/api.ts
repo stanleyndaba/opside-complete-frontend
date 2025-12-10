@@ -884,7 +884,38 @@ export const api = {
         }>;
         confidence_score?: number;
       };
+      // Agent 5 extracted data from PDF/OCR
+      extracted?: {
+        order_ids?: string[];
+        asins?: string[];
+        skus?: string[];
+        fnskus?: string[];
+        tracking_numbers?: string[];
+        amounts?: string[];
+        invoice_numbers?: string[];
+        dates?: string[];
+        extraction_method?: string;
+        extracted_at?: string;
+      };
+      raw_text_preview?: string;
     }>(`/api/v1/evidence/documents/${encodeURIComponent(documentId)}`),
+
+  // Delete a single document
+  deleteDocument: (documentId: string) =>
+    requestJson<{
+      success: boolean;
+      message: string;
+      documentId: string;
+    }>(`/api/v1/evidence/documents/${encodeURIComponent(documentId)}`, { method: 'DELETE' }),
+
+  // Delete all documents for the current user
+  deleteAllDocuments: () =>
+    requestJson<{
+      success: boolean;
+      message: string;
+      deletedCount: number;
+    }>('/api/v1/evidence/documents', { method: 'DELETE' }),
+
   searchDocuments: (filters?: {
     supplier_name?: string;
     invoice_number?: string;

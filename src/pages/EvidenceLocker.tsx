@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Upload, FileText, Search, Mail, Check, AlertTriangle, Clock, Eye, Download, ExternalLink, Loader2, FolderSearch, ScanLine, FileCheck, Link2 } from 'lucide-react';
+import { Upload, FileText, Search, Mail, Check, AlertTriangle, Clock, Eye, Download, ExternalLink, Loader2, FolderSearch, ScanLine, FileCheck, Link2, Trash2 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { api } from '@/lib/api';
 import { Link } from 'react-router-dom';
@@ -53,8 +53,40 @@ const formatDocTimestamp = (date: Date) => {
 };
 export default function EvidenceLocker() {
   const [dragActive, setDragActive] = useState(false);
+  const [expandedDocId, setExpandedDocId] = useState<string | null>(null);
 
-  const [documents, setDocuments] = useState<Array<{ id: string; name: string; uploadDate: string; status: string; linkedSKUs?: number; supplier?: string; invoice?: string; amount?: number; parsedVia?: 'regex' | 'ocr' | 'ml'; matchedClaims?: string[]; type?: string; parser_status?: string; parser_confidence?: number; parsed_metadata?: any; match_confidence?: number; match_status?: 'auto_submit' | 'smart_prompt' | 'hold' | null }>>([]);
+  const [documents, setDocuments] = useState<Array<{
+    id: string;
+    name: string;
+    uploadDate: string;
+    status: string;
+    linkedSKUs?: number;
+    supplier?: string;
+    invoice?: string;
+    amount?: number;
+    parsedVia?: 'regex' | 'ocr' | 'ml';
+    matchedClaims?: string[];
+    type?: string;
+    parser_status?: string;
+    parser_confidence?: number;
+    parsed_metadata?: any;
+    match_confidence?: number;
+    match_status?: 'auto_submit' | 'smart_prompt' | 'hold' | null;
+    // Agent 5 extracted data
+    extracted?: {
+      order_ids?: string[];
+      asins?: string[];
+      skus?: string[];
+      fnskus?: string[];
+      tracking_numbers?: string[];
+      amounts?: string[];
+      invoice_numbers?: string[];
+      dates?: string[];
+      extraction_method?: string;
+    };
+    match_reasoning?: string;
+    matched_fields?: string[];
+  }>>([]);
 
   // Helper: Get match status based on confidence threshold
   const getMatchStatus = (confidence?: number): 'auto_submit' | 'smart_prompt' | 'hold' | null => {
@@ -221,6 +253,8 @@ export default function EvidenceLocker() {
                     parser_status: parsedRes.data.parser_status,
                     parser_confidence: parsedRes.data.parser_confidence,
                     parsed_metadata: parsedRes.data.parsed_metadata,
+                    // Include extracted data from Agent 5
+                    extracted: parsedRes.data.extracted,
                   };
                 }
               } catch (e) {
@@ -235,11 +269,15 @@ export default function EvidenceLocker() {
                   const highestConfidence = matchRes.data.results.length > 0
                     ? Math.max(...matchRes.data.results.map((r: any) => r.confidence || 0))
                     : 0;
+                  // Get match details from best match
+                  const bestMatch = matchRes.data.results.find((r: any) => (r.confidence || 0) === highestConfidence);
                   enhancedDoc = {
                     ...enhancedDoc,
                     matchedClaims: claimIds,
                     match_confidence: highestConfidence,
                     match_status: getMatchStatus(highestConfidence),
+                    match_reasoning: bestMatch?.reasoning,
+                    matched_fields: bestMatch?.matched_fields,
                   };
                 }
               } catch (e) {
@@ -690,6 +728,50 @@ export default function EvidenceLocker() {
     window.open(url, '_blank');
   };
 
+  // Delete a single document
+  const handleDeleteDocument = async (docId: string, docName: string) => {
+    if (!confirm(`Are you sure you want to delete "${docName}"?`)) {
+      return;
+    }
+
+    try {
+      addDocLog({ type: 'progress', category: 'system', message: `Deleting document: ${docName}...` }, 0);
+      const res = await api.deleteDocument(docId);
+      if (res.ok) {
+        setDocuments(prev => prev.filter(d => d.id !== docId));
+        addDocLog({ type: 'success', category: 'system', message: `Document deleted: ${docName}` }, 400);
+        toast({ title: 'Document Deleted', description: `"${docName}" has been deleted.` });
+      } else {
+        throw new Error(res.error || 'Failed to delete document');
+      }
+    } catch (error: any) {
+      addDocLog({ type: 'error', category: 'system', message: `Delete failed: ${error.message}` }, 0);
+      toast({ title: 'Delete Failed', description: error.message, variant: 'destructive' });
+    }
+  };
+
+  // Delete all documents
+  const handleDeleteAllDocuments = async () => {
+    if (!confirm(`Are you sure you want to delete ALL ${documents.length} document(s)? This cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      addDocLog({ type: 'progress', category: 'system', message: `Deleting all ${documents.length} documents...` }, 0);
+      const res = await api.deleteAllDocuments();
+      if (res.ok) {
+        setDocuments([]);
+        addDocLog({ type: 'success', category: 'system', message: `Deleted ${res.data?.deletedCount || documents.length} document(s)` }, 400);
+        toast({ title: 'All Documents Deleted', description: `${res.data?.deletedCount || documents.length} document(s) have been deleted.` });
+      } else {
+        throw new Error(res.error || 'Failed to delete documents');
+      }
+    } catch (error: any) {
+      addDocLog({ type: 'error', category: 'system', message: `Delete all failed: ${error.message}` }, 0);
+      toast({ title: 'Delete Failed', description: error.message, variant: 'destructive' });
+    }
+  };
+
   return <PageLayout title="Doc Locker">
     <div className="relative -m-4 lg:-m-6 overflow-x-hidden">
       <div className="relative w-full bg-gray-50 min-h-[calc(100vh+96px)] -mt-24 pt-24">
@@ -972,6 +1054,16 @@ export default function EvidenceLocker() {
                     </Link>
                   </div>
                   <Button variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={exportCsv}>Export CSV</Button>
+                  {documents.length > 0 && (
+                    <Button
+                      variant="outline"
+                      className="bg-white text-red-600 border-red-200 hover:bg-red-50"
+                      onClick={handleDeleteAllDocuments}
+                    >
+                      <Trash2 className="w-4 h-4 mr-1" />
+                      Delete All
+                    </Button>
+                  )}
                   <div className="text-xs text-gray-600 ml-2">{selectedIds.size > 0 ? `${selectedIds.size} selected` : ''}</div>
                 </div>
               </div>
@@ -1016,6 +1108,7 @@ export default function EvidenceLocker() {
                       <TableHead className="text-[#36454F] whitespace-nowrap cursor-pointer" onClick={() => toggleSort('parser_status')}>Parsing Status</TableHead>
                       <TableHead className="text-[#36454F] whitespace-nowrap cursor-pointer" onClick={() => toggleSort('parsedVia')}>Parsed Via</TableHead>
                       <TableHead className="text-[#36454F] whitespace-nowrap cursor-pointer" onClick={() => toggleSort('amount')}>Amount</TableHead>
+                      <TableHead className="text-[#36454F] whitespace-nowrap">Extracted Data</TableHead>
                       <TableHead className="text-[#36454F] whitespace-nowrap cursor-pointer" onClick={() => toggleSort('matchedClaims')}>Matched Claims</TableHead>
                       <TableHead className="text-[#36454F] whitespace-nowrap cursor-pointer" onClick={() => toggleSort('match_confidence')}>Match Confidence</TableHead>
                       <TableHead className="text-[#36454F] whitespace-nowrap">Match Status</TableHead>
@@ -1082,6 +1175,35 @@ export default function EvidenceLocker() {
                         {doc.parsedVia && <Badge variant="outline" className="text-xs capitalize border-white/20 text-gray-200">{doc.parsedVia}</Badge>}
                       </TableCell>
                       <TableCell className="whitespace-nowrap">{typeof doc.amount === 'number' ? `$${doc.amount.toFixed(2)}` : '—'}</TableCell>
+                      {/* Extracted Data from Agent 5 PDF parsing */}
+                      <TableCell className="max-w-[200px]">
+                        {doc.extracted && (
+                          <div className="flex flex-wrap gap-1">
+                            {(doc.extracted.order_ids || []).slice(0, 2).map((id, i) => (
+                              <Badge key={`order-${i}`} className="bg-blue-500/10 text-blue-400 border-blue-500/20 text-xs truncate max-w-[120px]" title={id}>
+                                📦 {id.length > 12 ? id.slice(0, 12) + '...' : id}
+                              </Badge>
+                            ))}
+                            {(doc.extracted.tracking_numbers || []).slice(0, 1).map((tn, i) => (
+                              <Badge key={`track-${i}`} className="bg-purple-500/10 text-purple-400 border-purple-500/20 text-xs truncate max-w-[100px]" title={tn}>
+                                🚚 {tn.length > 10 ? tn.slice(0, 10) + '...' : tn}
+                              </Badge>
+                            ))}
+                            {(doc.extracted.asins || []).slice(0, 1).map((asin, i) => (
+                              <Badge key={`asin-${i}`} className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-xs">
+                                ASIN: {asin}
+                              </Badge>
+                            ))}
+                            {/* Show count if more items */}
+                            {((doc.extracted.order_ids?.length || 0) + (doc.extracted.tracking_numbers?.length || 0) + (doc.extracted.asins?.length || 0)) > 4 && (
+                              <Badge className="bg-gray-500/10 text-gray-400 border-gray-500/20 text-xs">
+                                +{(doc.extracted.order_ids?.length || 0) + (doc.extracted.tracking_numbers?.length || 0) + (doc.extracted.asins?.length || 0) - 4} more
+                              </Badge>
+                            )}
+                          </div>
+                        )}
+                        {!doc.extracted && <span className="text-gray-400 text-xs">—</span>}
+                      </TableCell>
                       <TableCell>
                         <div className="flex flex-wrap gap-1">
                           {(doc.matchedClaims || []).map(id => (
@@ -1089,6 +1211,12 @@ export default function EvidenceLocker() {
                               {id}
                             </Link>
                           ))}
+                          {/* Show match reasoning if available */}
+                          {doc.match_reasoning && (
+                            <span className="text-xs text-gray-400 italic" title={doc.match_reasoning}>
+                              ({doc.matched_fields?.join(', ') || 'matched'})
+                            </span>
+                          )}
                         </div>
                       </TableCell>
                       <TableCell className="whitespace-nowrap">
@@ -1140,6 +1268,15 @@ export default function EvidenceLocker() {
                               Parse
                             </Button>
                           )}
+                          {/* Delete button */}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                            onClick={() => handleDeleteDocument(doc.id, doc.name)}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
                         </div>
                       </TableCell>
                     </TableRow>)}

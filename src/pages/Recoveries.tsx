@@ -2263,7 +2263,7 @@ export default function Recoveries() {
 
                           {/* Financial Information */}
                           <div className="border-t border-white/10 pt-4">
-                            <h4 className="text-sm font-medium text-gray-200 mb-3">Financial Information</h4>
+                            <h4 className="text-sm font-medium text-[#36454F] mb-3">Financial Information</h4>
                             <div className="grid grid-cols-2 gap-4">
                               <div>
                                 <Label className="text-[#36454F]">Estimated Value</Label>
@@ -2280,7 +2280,7 @@ export default function Recoveries() {
 
                           {/* Dates & Deadlines */}
                           <div className="border-t border-white/10 pt-4">
-                            <h4 className="text-sm font-medium text-gray-200 mb-3">Dates & Deadlines</h4>
+                            <h4 className="text-sm font-medium text-[#36454F] mb-3">Dates & Deadlines</h4>
                             <div className="grid grid-cols-2 gap-4">
                               <div>
                                 <Label className="text-[#36454F]">Discovery Date</Label>
@@ -2328,7 +2328,7 @@ export default function Recoveries() {
                           {/* Evidence */}
                           {detectionDetails.evidence && (
                             <div className="border-t border-white/10 pt-4">
-                              <h4 className="text-sm font-medium text-gray-200 mb-3">Evidence</h4>
+                              <h4 className="text-sm font-medium text-[#36454F] mb-3">Evidence</h4>
                               <div className="bg-white/5 border border-white/10 rounded-md p-4">
                                 <pre className="text-xs text-[#36454F] overflow-x-auto">
                                   {JSON.stringify(detectionDetails.evidence, null, 2)}
@@ -2340,7 +2340,7 @@ export default function Recoveries() {
                           {/* Related Event IDs */}
                           {detectionDetails.related_event_ids && detectionDetails.related_event_ids.length > 0 && (
                             <div className="border-t border-white/10 pt-4">
-                              <h4 className="text-sm font-medium text-gray-200 mb-3">Related Event IDs</h4>
+                              <h4 className="text-sm font-medium text-[#36454F] mb-3">Related Event IDs</h4>
                               <div className="flex flex-wrap gap-2">
                                 {detectionDetails.related_event_ids.map((eventId: string, idx: number) => (
                                   <Badge key={idx} variant="outline" className="font-mono text-xs">
@@ -2354,7 +2354,7 @@ export default function Recoveries() {
                           {/* Product Information */}
                           {(detectionDetails.sku || detectionDetails.asin) && (
                             <div className="border-t border-white/10 pt-4">
-                              <h4 className="text-sm font-medium text-gray-200 mb-3">Product Information</h4>
+                              <h4 className="text-sm font-medium text-[#36454F] mb-3">Product Information</h4>
                               <div className="grid grid-cols-2 gap-4">
                                 {detectionDetails.sku && (
                                   <div>
@@ -2375,23 +2375,13 @@ export default function Recoveries() {
                           {/* Details/Description */}
                           {detectionDetails.details && (
                             <div className="border-t border-white/10 pt-4">
-                              <h4 className="text-sm font-medium text-gray-200 mb-3">Description</h4>
+                              <h4 className="text-sm font-medium text-[#36454F] mb-3">Description</h4>
                               <p className="text-sm text-[#36454F]">{detectionDetails.details}</p>
                             </div>
                           )}
                         </div>
                       )}
                       <DialogFooter>
-                        <Button
-                          variant="outline"
-                          onClick={() => {
-                            setDetailsModalOpen(false);
-                            setDetectionDetails(null);
-                          }}
-                          className="border-white/10"
-                        >
-                          Close
-                        </Button>
                         {detectionDetails && (
                           <>
                             {detectionDetails.status !== 'resolved' && (
@@ -2416,7 +2406,7 @@ export default function Recoveries() {
                                   setResolveAmount((detectionDetails.estimated_value || detectionDetails.guaranteedAmount || 0).toString());
                                   setResolveModalOpen(true);
                                 }}
-                                className="bg-emerald-500 hover:bg-emerald-400 text-white"
+                                className="bg-gray-200 hover:bg-gray-300 text-[#36454F]"
                               >
                                 Mark as Resolved
                               </Button>
