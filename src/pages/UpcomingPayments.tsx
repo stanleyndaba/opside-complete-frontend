@@ -162,6 +162,46 @@ export default function UpcomingPayments() {
     return { gross, count, commission: gross * 0.2, net: Math.max(gross * 0.8, 0) };
   }, [upcomingGroups]);
 
+  // Pipeline stage calculations for Financial Gravity retention
+  const pipelineStages = useMemo(() => {
+    const stages = {
+      detected: { count: 0, amount: 0, label: 'Detected' },
+      ready: { count: 0, amount: 0, label: 'Ready to File' },
+      pending: { count: 0, amount: 0, label: 'Pending Amazon' },
+      approved: { count: 0, amount: 0, label: 'Approved' },
+      paid: { count: 0, amount: 0, label: 'Paid' },
+    };
+
+    for (const c of claims) {
+      const status = (c.status || '').toLowerCase();
+      const filingStatus = (c.filing_status || '').toLowerCase();
+      const amount = c.guaranteedAmount || 0;
+
+      if (status === 'paid' || status === 'paid out') {
+        stages.paid.count++;
+        stages.paid.amount += amount;
+      } else if (status === 'approved') {
+        stages.approved.count++;
+        stages.approved.amount += amount;
+      } else if (status === 'submitted' || status === 'under review' || filingStatus === 'filed') {
+        stages.pending.count++;
+        stages.pending.amount += amount;
+      } else if (filingStatus === 'ready' || status === 'guaranteed' || status === 'ready') {
+        stages.ready.count++;
+        stages.ready.amount += amount;
+      } else {
+        // Open, new, or no status = detected
+        stages.detected.count++;
+        stages.detected.amount += amount;
+      }
+    }
+
+    // Calculate total in pipeline (not yet paid)
+    const totalInPipeline = stages.detected.amount + stages.ready.amount + stages.pending.amount + stages.approved.amount;
+
+    return { ...stages, totalInPipeline };
+  }, [claims]);
+
   const exportCsv = () => {
     const rows = upcomingGroups.map(g => ({
       payoutDate: g.label,
@@ -223,8 +263,99 @@ export default function UpcomingPayments() {
                     <div className="text-[11px] text-gray-600 mt-1">After 20% commission</div>
                   </div>
                 </div>
+
+                {/* Pipeline Summary - Total in Processing */}
+                {pipelineStages.totalInPipeline > 0 && (
+                  <div className="mt-6 rounded-md border border-gray-300 bg-gray-50 p-4">
+                    <div className="text-sm text-gray-700 mb-1">Total Currently Processing</div>
+                    <div className="text-2xl font-semibold text-gray-900">{formatCurrency(pipelineStages.totalInPipeline, currency)}</div>
+                    <div className="text-xs text-gray-500 mt-1">across {pipelineStages.detected.count + pipelineStages.ready.count + pipelineStages.pending.count + pipelineStages.approved.count} claims in various stages</div>
+                  </div>
+                )}
+
+                {/* Pipeline Stage Cards */}
+                <div className="mt-6 grid grid-cols-2 md:grid-cols-5 gap-4">
+                  <div className="rounded-md border border-gray-200 p-3">
+                    <div className="text-xs text-gray-500">Detected</div>
+                    <div className="text-lg font-medium text-gray-900 mt-1">{formatCurrency(pipelineStages.detected.amount, currency)}</div>
+                    <div className="text-[11px] text-gray-500">{pipelineStages.detected.count} claims</div>
+                  </div>
+                  <div className="rounded-md border border-gray-200 p-3">
+                    <div className="text-xs text-gray-500">Ready to File</div>
+                    <div className="text-lg font-medium text-gray-900 mt-1">{formatCurrency(pipelineStages.ready.amount, currency)}</div>
+                    <div className="text-[11px] text-gray-500">{pipelineStages.ready.count} claims</div>
+                  </div>
+                  <div className="rounded-md border border-gray-200 p-3">
+                    <div className="text-xs text-gray-500">Pending Amazon</div>
+                    <div className="text-lg font-medium text-gray-900 mt-1">{formatCurrency(pipelineStages.pending.amount, currency)}</div>
+                    <div className="text-[11px] text-gray-500">{pipelineStages.pending.count} claims</div>
+                  </div>
+                  <div className="rounded-md border border-gray-200 p-3">
+                    <div className="text-xs text-gray-500">Approved</div>
+                    <div className="text-lg font-medium text-gray-900 mt-1">{formatCurrency(pipelineStages.approved.amount, currency)}</div>
+                    <div className="text-[11px] text-gray-500">{pipelineStages.approved.count} claims</div>
+                  </div>
+                  <div className="rounded-md border border-gray-200 p-3 bg-emerald-50">
+                    <div className="text-xs text-gray-600">Paid</div>
+                    <div className="text-lg font-medium text-emerald-700 mt-1">{formatCurrency(pipelineStages.paid.amount, currency)}</div>
+                    <div className="text-[11px] text-gray-500">{pipelineStages.paid.count} claims</div>
+                  </div>
+                </div>
+
+                {/* Professional Text Timeline */}
+                <div className="mt-6 border-t border-gray-200 pt-6">
+                  <div className="text-sm font-medium text-gray-700 mb-4">Pipeline Status</div>
+                  <div className="space-y-3 text-sm">
+                    <div className="flex items-start gap-3">
+                      <span className="w-28 text-gray-500 flex-shrink-0">Detected</span>
+                      <span className="text-gray-400">→</span>
+                      <span className="text-gray-700">
+                        {pipelineStages.detected.count > 0
+                          ? `${pipelineStages.detected.count} claims (${formatCurrency(pipelineStages.detected.amount, currency)}) awaiting evidence`
+                          : 'No claims at this stage'}
+                      </span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <span className="w-28 text-gray-500 flex-shrink-0">Ready to File</span>
+                      <span className="text-gray-400">→</span>
+                      <span className="text-gray-700">
+                        {pipelineStages.ready.count > 0
+                          ? `${pipelineStages.ready.count} claims (${formatCurrency(pipelineStages.ready.amount, currency)}) ready for submission`
+                          : 'No claims at this stage'}
+                      </span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <span className="w-28 text-gray-500 flex-shrink-0">Pending</span>
+                      <span className="text-gray-400">→</span>
+                      <span className="text-gray-700">
+                        {pipelineStages.pending.count > 0
+                          ? `${pipelineStages.pending.count} claims (${formatCurrency(pipelineStages.pending.amount, currency)}) awaiting Amazon response`
+                          : 'No claims at this stage'}
+                      </span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <span className="w-28 text-gray-500 flex-shrink-0">Approved</span>
+                      <span className="text-gray-400">→</span>
+                      <span className="text-gray-700">
+                        {pipelineStages.approved.count > 0
+                          ? `${pipelineStages.approved.count} claims (${formatCurrency(pipelineStages.approved.amount, currency)}) payment processing`
+                          : 'No claims at this stage'}
+                      </span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <span className="w-28 text-gray-500 flex-shrink-0">Paid</span>
+                      <span className="text-gray-400">→</span>
+                      <span className="text-gray-700">
+                        {pipelineStages.paid.count > 0
+                          ? `${pipelineStages.paid.count} claims (${formatCurrency(pipelineStages.paid.amount, currency)}) recovered`
+                          : 'No payments received yet'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="mt-4 flex items-center gap-3">
-                  <Button variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={exportCsv}>Export CSV</Button>
+                  <Button variant="outline" className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50" onClick={exportCsv}>Export CSV</Button>
                 </div>
               </CardContent>
             </Card>
