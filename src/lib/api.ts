@@ -828,6 +828,62 @@ export const api = {
     };
   }>(`/api/evidence/sources/${encodeURIComponent(id)}`, { method: 'DELETE' }),
 
+  // Evidence Matching (Agent 6) endpoints
+  runEvidenceMatching: () =>
+    requestJson<{
+      success: boolean;
+      message: string;
+      matches: number;
+      auto_submits: number;
+      smart_prompts: number;
+      results?: any[];
+    }>('/api/evidence/matching/run', { method: 'POST' }),
+
+  getMatchingResults: (options?: { limit?: number; status?: string }) =>
+    requestJson<{
+      success: boolean;
+      results: any[];
+      total: number;
+    }>(`/api/evidence/matching/results${options ? `?${new URLSearchParams(options as any).toString()}` : ''}`),
+
+  approveSmartPrompt: (matchId: string) =>
+    requestJson<{
+      success: boolean;
+      message: string;
+      matchId: string;
+    }>(`/api/evidence/matching/${encodeURIComponent(matchId)}/approve`, { method: 'POST' }),
+
+  rejectSmartPrompt: (matchId: string, reason?: string) =>
+    requestJson<{
+      success: boolean;
+      message: string;
+      matchId: string;
+    }>(`/api/evidence/matching/${encodeURIComponent(matchId)}/reject`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ reason })
+    }),
+
+  requestMoreEvidence: (matchId: string) =>
+    requestJson<{
+      success: boolean;
+      message: string;
+      matchId: string;
+    }>(`/api/evidence/matching/${encodeURIComponent(matchId)}/request-more`, { method: 'POST' }),
+
+  getMatchingMetrics: (days?: number) =>
+    requestJson<{
+      success: boolean;
+      metrics: {
+        total_matches: number;
+        auto_submitted: number;
+        smart_prompts: number;
+        approved: number;
+        rejected: number;
+        pending: number;
+      };
+    }>(`/api/evidence/matching/metrics${days ? `?days=${days}` : ''}`),
+
   // PHASE3: Gmail integration endpoints
   getGmailStatus: () => requestJson<{
     connected: boolean;
