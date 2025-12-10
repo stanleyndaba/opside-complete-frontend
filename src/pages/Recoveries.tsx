@@ -138,84 +138,86 @@ const claimTypes = allEventTypes.map(e => e.name);
 const statusOptions = ['New', 'Pending', 'Submitted', 'Paid', 'Denied'];
 
 // Comprehensive mapping for all 64 Amazon detection types -> human-readable names
+// Keys are lowercase with colons/dashes replaced by underscores (to match getTypeDisplay transformation)
 const detectionTypeNames: Record<string, { name: string; category: string; icon?: string }> = {
-  // Core Reimbursement Events
+  // === BATCH 1: Core Reimbursement Events (12 types) ===
   'lost_warehouse': { name: 'Lost in Warehouse', category: 'Reimbursement', icon: '📦' },
   'damaged_warehouse': { name: 'Damaged in Warehouse', category: 'Reimbursement', icon: '💔' },
   'lost_inbound': { name: 'Lost at Inbound', category: 'Reimbursement', icon: '🚚' },
   'damaged_inbound': { name: 'Damaged at Inbound', category: 'Reimbursement', icon: '📬' },
-  'carrier_claim': { name: 'Carrier Claim', category: 'Reimbursement', icon: '🛡️' },
-  'customer_return': { name: 'Customer Return', category: 'Reimbursement', icon: '↩️' },
-  'reimbursement_reversal': { name: 'Reimbursement Reversal', category: 'Reimbursement', icon: '🔄' },
-  'warehousing_error': { name: 'Warehousing Error', category: 'Reimbursement', icon: '🏭' },
-  'customer_service_issue': { name: 'Customer Service Issue', category: 'Reimbursement', icon: '🎧' },
-  'general_adjustment': { name: 'General Adjustment', category: 'Reimbursement', icon: '⚙️' },
-  'fba_inventory_reimbursement': { name: 'FBA Inventory Reimbursement', category: 'Reimbursement', icon: '💰' },
+  'carrierclaim': { name: 'Carrier Claim', category: 'Reimbursement', icon: '🛡️' },
+  'customerreturn': { name: 'Customer Return', category: 'Reimbursement', icon: '↩️' },
+  'fbainventoryreimbursementreversal': { name: 'Reimbursement Reversal', category: 'Reimbursement', icon: '🔄' },
+  'reimbursementreversal': { name: 'Reimbursement Reversal', category: 'Reimbursement', icon: '🔄' },
+  'warehousingerror': { name: 'Warehousing Error', category: 'Reimbursement', icon: '🏭' },
+  'customerserviceissue': { name: 'Customer Service Issue', category: 'Reimbursement', icon: '🎧' },
+  'generaladjustment': { name: 'General Adjustment', category: 'Reimbursement', icon: '⚙️' },
+  'fbainventoryreimbursement': { name: 'FBA Inventory Reimbursement', category: 'Reimbursement', icon: '💰' },
 
-  // Fee Overcharges
-  'weight_fee_overcharge': { name: 'Weight/Size Fee Overcharge', category: 'Fee', icon: '⚖️' },
-  'fulfillment_fee_error': { name: 'Fulfillment Fee Error', category: 'Fee', icon: '📦' },
-  'order_fulfillment_error': { name: 'Order Fulfillment Error', category: 'Fee', icon: '🛒' },
-  'transportation_fee_error': { name: 'Transportation Fee Error', category: 'Fee', icon: '🚛' },
-  'inbound_defect_fee': { name: 'Inbound Defect Fee', category: 'Fee', icon: '⚠️' },
-  'convenience_fee_error': { name: 'Convenience Fee Error', category: 'Fee', icon: '🎁' },
-  'network_fee_error': { name: 'Network Fee Error', category: 'Fee', icon: '🌐' },
-  'commission_overcharge': { name: 'Commission Overcharge', category: 'Fee', icon: '💳' },
-  'closing_fee_error': { name: 'Closing Fee Error', category: 'Fee', icon: '🔐' },
-  'variable_closing_error': { name: 'Variable Closing Error', category: 'Fee', icon: '📊' },
+  // === BATCH 2: Fee Overcharges (10 types) ===
+  'fbaweightbasedfee': { name: 'Weight-Based Fee', category: 'Fee', icon: '⚖️' },
+  'fbaperunitfulfillmentfee': { name: 'Per-Unit Fulfillment Fee', category: 'Fee', icon: '📦' },
+  'fbaperorderfulfillmentfee': { name: 'Per-Order Fulfillment Fee', category: 'Fee', icon: '🛒' },
+  'fbatransportationfee': { name: 'Transportation Fee', category: 'Fee', icon: '🚛' },
+  'fbainbounddefectfee': { name: 'Inbound Defect Fee', category: 'Fee', icon: '⚠️' },
+  'fbainboundconveniencefee': { name: 'Inbound Convenience Fee', category: 'Fee', icon: '🎁' },
+  'fulfillmentnetworkfee': { name: 'Fulfillment Network Fee', category: 'Fee', icon: '🌐' },
+  'commission': { name: 'Commission', category: 'Fee', icon: '💳' },
+  'fixedclosingfee': { name: 'Fixed Closing Fee', category: 'Fee', icon: '🔐' },
+  'variableclosingfee': { name: 'Variable Closing Fee', category: 'Fee', icon: '📊' },
 
-  // Storage & Inventory Fees
-  'storage_overcharge': { name: 'Storage Overcharge', category: 'Storage', icon: '🏢' },
-  'lts_overcharge': { name: 'Long-Term Storage Overcharge', category: 'Storage', icon: '📅' },
-  'storage_overage_error': { name: 'Storage Overage Error', category: 'Storage', icon: '📈' },
-  'extra_large_storage_error': { name: 'Extra Large Storage Error', category: 'Storage', icon: '📦' },
-  'removal_fee_error': { name: 'Removal Fee Error', category: 'Storage', icon: '🚪' },
-  'disposal_fee_error': { name: 'Disposal Fee Error', category: 'Storage', icon: '🗑️' },
-  'liquidation_fee_error': { name: 'Liquidation Fee Error', category: 'Storage', icon: '💧' },
-  'return_processing_error': { name: 'Return Processing Error', category: 'Storage', icon: '↩️' },
-  'unplanned_prep_error': { name: 'Unplanned Prep Error', category: 'Storage', icon: '🎁' },
+  // === BATCH 3: Storage & Inventory Fees (9 types) ===
+  'fbastoragefee': { name: 'Storage Fee', category: 'Storage', icon: '🏢' },
+  'fbalongtermstoragefee': { name: 'Long-Term Storage Fee', category: 'Storage', icon: '📅' },
+  'fbainventorystorageoveragefee': { name: 'Storage Overage Fee', category: 'Storage', icon: '📈' },
+  'fbaextralargestoragefee': { name: 'Extra Large Storage Fee', category: 'Storage', icon: '📦' },
+  'fbaremovalfee': { name: 'Removal Fee', category: 'Storage', icon: '🚪' },
+  'fbadisposalfee': { name: 'Disposal Fee', category: 'Storage', icon: '🗑️' },
+  'fbaliquidationfee': { name: 'Liquidation Fee', category: 'Storage', icon: '💧' },
+  'fbareturnprocessingfee': { name: 'Return Processing Fee', category: 'Storage', icon: '↩️' },
+  'fbaunplannedprepfee': { name: 'Unplanned Prep Fee', category: 'Storage', icon: '🎁' },
 
-  // Refunds & Returns
-  'refund_no_return': { name: 'Refund Without Return', category: 'Refund', icon: '💸' },
-  'refund_commission_error': { name: 'Refund Commission Error', category: 'Refund', icon: '💳' },
-  'restocking_missed': { name: 'Restocking Fee Missed', category: 'Refund', icon: '📦' },
-  'gift_wrap_tax_error': { name: 'Gift Wrap Tax Error', category: 'Refund', icon: '🎁' },
-  'shipping_tax_error': { name: 'Shipping Tax Error', category: 'Refund', icon: '🚛' },
-  'goodwill_unfair': { name: 'Unfair Goodwill Charge', category: 'Refund', icon: '❤️' },
-  'retrocharge': { name: 'Retrocharge', category: 'Refund', icon: '⏪' },
-  'high_volume_listing_error': { name: 'High Volume Listing Error', category: 'Refund', icon: '📋' },
-  'service_provider_credit': { name: 'Service Provider Credit', category: 'Refund', icon: '🏷️' },
+  // === BATCH 4: Refunds & Returns (9 types) ===
+  'refundevent': { name: 'Refund Event', category: 'Refund', icon: '💸' },
+  'refundcommission': { name: 'Refund Commission', category: 'Refund', icon: '💳' },
+  'restockingfee': { name: 'Restocking Fee', category: 'Refund', icon: '📦' },
+  'giftwraptax': { name: 'Gift Wrap Tax', category: 'Refund', icon: '🎁' },
+  'shippingtax': { name: 'Shipping Tax', category: 'Refund', icon: '🚛' },
+  'goodwill': { name: 'Goodwill', category: 'Refund', icon: '❤️' },
+  'retrochargeevent': { name: 'Retrocharge', category: 'Refund', icon: '⏪' },
+  'highvolumelistingfee': { name: 'High Volume Listing Fee', category: 'Refund', icon: '📋' },
+  'serviceprovidercreditevent': { name: 'Service Provider Credit', category: 'Refund', icon: '🏷️' },
 
-  // Claims & Chargebacks
-  'atoz_claim': { name: 'A-to-Z Guarantee Claim', category: 'Claim', icon: '🛡️' },
-  'chargeback': { name: 'Chargeback', category: 'Claim', icon: '💳' },
-  'safet_claim': { name: 'SAFE-T Claim', category: 'Claim', icon: '🔒' },
-  'debt_recovery': { name: 'Debt Recovery', category: 'Claim', icon: '💰' },
-  'loan_servicing': { name: 'Loan Servicing', category: 'Claim', icon: '🏦' },
-  'pay_with_amazon': { name: 'Pay with Amazon', category: 'Claim', icon: '🛒' },
-  'rental_transaction': { name: 'Rental Transaction', category: 'Claim', icon: '📅' },
-  'fba_liquidation': { name: 'FBA Liquidation', category: 'Claim', icon: '💧' },
-  'tax_withholding': { name: 'Tax Withholding', category: 'Claim', icon: '🏛️' },
+  // === BATCH 5: Claims & Chargebacks (9 types) ===
+  'guaranteeclaimevent': { name: 'A-to-Z Guarantee Claim', category: 'Claim', icon: '🛡️' },
+  'chargebackevent': { name: 'Chargeback', category: 'Claim', icon: '💳' },
+  'safetreimbursementevent': { name: 'SAFE-T Reimbursement', category: 'Claim', icon: '🔒' },
+  'debtrecoveryevent': { name: 'Debt Recovery', category: 'Claim', icon: '💰' },
+  'loanservicingevent': { name: 'Loan Servicing', category: 'Claim', icon: '🏦' },
+  'paywithamazonevent': { name: 'Pay with Amazon', category: 'Claim', icon: '🛒' },
+  'rentaltransactionevent': { name: 'Rental Transaction', category: 'Claim', icon: '📅' },
+  'fbaliquidationevent': { name: 'FBA Liquidation', category: 'Claim', icon: '💧' },
+  'taxwithholdingevent': { name: 'Tax Withholding', category: 'Claim', icon: '🏛️' },
 
-  // Advertising & Other
-  'product_ads_error': { name: 'Product Ads Error', category: 'Advertising', icon: '📢' },
-  'service_fee_error': { name: 'Service Fee Error', category: 'Advertising', icon: '🔧' },
-  'seller_deal_error': { name: 'Seller Deal Error', category: 'Advertising', icon: '🏷️' },
-  'coupon_payment_error': { name: 'Coupon Payment Error', category: 'Advertising', icon: '🎫' },
-  'coupon_redemption_error': { name: 'Coupon Redemption Error', category: 'Advertising', icon: '🎟️' },
-  'lightning_deal_error': { name: 'Lightning Deal Error', category: 'Advertising', icon: '⚡' },
-  'vine_enrollment_error': { name: 'Vine Enrollment Error', category: 'Advertising', icon: '🍇' },
-  'imaging_services_error': { name: 'Imaging Services Error', category: 'Advertising', icon: '📷' },
-  'early_reviewer_error': { name: 'Early Reviewer Error', category: 'Advertising', icon: '⭐' },
-  'coupon_clip_fee': { name: 'Coupon Clip Fee', category: 'Advertising', icon: '✂️' },
-  'seller_review_enrollment': { name: 'Seller Review Enrollment', category: 'Advertising', icon: '📝' },
+  // === BATCH 6: Advertising & Other (11 types) ===
+  'productadspaymentevent': { name: 'Product Ads Payment', category: 'Advertising', icon: '📢' },
+  'servicefeeevent': { name: 'Service Fee', category: 'Advertising', icon: '🔧' },
+  'sellerdealpaymentevent': { name: 'Seller Deal Payment', category: 'Advertising', icon: '🏷️' },
+  'couponpaymentevent': { name: 'Coupon Payment', category: 'Advertising', icon: '🎫' },
+  'couponredemptionfee': { name: 'Coupon Redemption Fee', category: 'Advertising', icon: '🎟️' },
+  'runlightningdealfee': { name: 'Lightning Deal Fee', category: 'Advertising', icon: '⚡' },
+  'vineenrollmentfee': { name: 'Vine Enrollment Fee', category: 'Advertising', icon: '🍇' },
+  'imagingservicesfeeevent': { name: 'Imaging Services Fee', category: 'Advertising', icon: '📷' },
+  'earlyreviewerprogramfee': { name: 'Early Reviewer Program Fee', category: 'Advertising', icon: '⭐' },
+  'couponclipfee': { name: 'Coupon Clip Fee', category: 'Advertising', icon: '✂️' },
+  'sellerreviewenrollmentpaymentevent': { name: 'Seller Review Enrollment', category: 'Advertising', icon: '📝' },
 
-  // Tax Collection at Source (International)
+  // === Tax Collection at Source - International (3 types) ===
   'tcs_cgst': { name: 'TCS-CGST (Central)', category: 'Tax', icon: '🇮🇳' },
   'tcs_sgst': { name: 'TCS-SGST (State)', category: 'Tax', icon: '🇮🇳' },
   'tcs_igst': { name: 'TCS-IGST (Integrated)', category: 'Tax', icon: '🇮🇳' },
 
-  // Legacy types
+  // === Legacy/fallback types ===
   'missing_unit': { name: 'Missing Unit', category: 'Reimbursement', icon: '❓' },
   'overcharge': { name: 'Overcharge', category: 'Fee', icon: '💸' },
   'damaged_stock': { name: 'Damaged Stock', category: 'Reimbursement', icon: '💔' },
@@ -223,6 +225,9 @@ const detectionTypeNames: Record<string, { name: string; category: string; icon?
   'duplicate_charge': { name: 'Duplicate Charge', category: 'Fee', icon: '2️⃣' },
   'adjustment_reimbursement': { name: 'Adjustment', category: 'Reimbursement', icon: '⚙️' },
   'liquidation_reimbursement': { name: 'Liquidation', category: 'Reimbursement', icon: '💧' },
+  'fee_error': { name: 'Fee Error', category: 'Fee', icon: '⚠️' },
+  'inventory_loss': { name: 'Inventory Loss', category: 'Reimbursement', icon: '📦' },
+  'return_discrepancy': { name: 'Return Discrepancy', category: 'Refund', icon: '↩️' },
 };
 
 // Helper function to get human-readable type name
