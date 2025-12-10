@@ -683,6 +683,14 @@ export const api = {
   getDocumentDownload: (id: string) => requestJson<{ success: boolean; url: string; filename: string }>(`/api/documents/${encodeURIComponent(id)}/download`),
   deleteDocument: (id: string) => requestJson<{ success: boolean; message: string }>(`/api/documents/${encodeURIComponent(id)}`, { method: 'DELETE' }),
   reparseDocument: (id: string) => requestJson<{ success: boolean; message: string }>(`/api/documents/${encodeURIComponent(id)}/reparse`, { method: 'POST' }),
+  // Get document with all parsed data (same as getDocument, backend now returns everything)
+  getDocumentWithParsedData: (id: string) => requestJson<any>(`/api/documents/${encodeURIComponent(id)}`),
+  // Get matching results for a specific document
+  getDocumentMatchingResults: (documentId: string) =>
+    requestJson<{
+      success: boolean;
+      results: any[];
+    }>(`/api/evidence/matching/results?document_id=${encodeURIComponent(documentId)}`),
 
   // PHASE4: Evidence ingestion endpoints (Node.js backend)
   // Gmail ingestion
