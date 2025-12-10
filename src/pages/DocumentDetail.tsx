@@ -222,7 +222,7 @@ export default function DocumentDetail() {
               onClick={handleTriggerParsing}
               disabled={triggeringParse}
             >
-              {triggeringParse ? <RefreshCw className="w-4 h-4 mr-2 animate-spin" /> : <Sparkles className="w-4 h-4 mr-2" />}
+              {triggeringParse ? <RefreshCw className="w-4 h-4 mr-2 animate-spin" /> : null}
               {triggeringParse ? 'Parsing...' : 'Re-Parse'}
             </Button>
             <Button
@@ -242,7 +242,7 @@ export default function DocumentDetail() {
           <Card className="bg-gray-50 border-gray-200">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 mb-1">
-                <Package className="w-4 h-4 text-blue-500" />
+                <Package className="w-4 h-4 text-[#36454F]" />
                 <span className="text-xs text-gray-600">Order IDs</span>
               </div>
               <div className="text-lg font-bold text-[#36454F]">
@@ -253,7 +253,7 @@ export default function DocumentDetail() {
           <Card className="bg-gray-50 border-gray-200">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 mb-1">
-                <Hash className="w-4 h-4 text-emerald-500" />
+                <Hash className="w-4 h-4 text-[#36454F]" />
                 <span className="text-xs text-gray-600">ASINs</span>
               </div>
               <div className="text-lg font-bold text-[#36454F]">
@@ -264,7 +264,7 @@ export default function DocumentDetail() {
           <Card className="bg-gray-50 border-gray-200">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 mb-1">
-                <Truck className="w-4 h-4 text-purple-500" />
+                <Truck className="w-4 h-4 text-[#36454F]" />
                 <span className="text-xs text-gray-600">Tracking #s</span>
               </div>
               <div className="text-lg font-bold text-[#36454F]">
@@ -275,7 +275,7 @@ export default function DocumentDetail() {
           <Card className="bg-gray-50 border-gray-200">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 mb-1">
-                <DollarSign className="w-4 h-4 text-amber-500" />
+                <DollarSign className="w-4 h-4 text-[#36454F]" />
                 <span className="text-xs text-gray-600">Amounts</span>
               </div>
               <div className="text-lg font-bold text-[#36454F]">
@@ -286,7 +286,7 @@ export default function DocumentDetail() {
           <Card className="bg-gray-50 border-gray-200">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 mb-1">
-                <Link2 className="w-4 h-4 text-indigo-500" />
+                <Link2 className="w-4 h-4 text-[#36454F]" />
                 <span className="text-xs text-gray-600">Matched Claims</span>
               </div>
               <div className="text-lg font-bold text-[#36454F]">
@@ -297,7 +297,7 @@ export default function DocumentDetail() {
           <Card className="bg-gray-50 border-gray-200">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 mb-1">
-                <Check className="w-4 h-4 text-emerald-500" />
+                <Check className="w-4 h-4 text-[#36454F]" />
                 <span className="text-xs text-gray-600">Confidence</span>
               </div>
               <div className="text-lg font-bold text-[#36454F]">
@@ -333,7 +333,7 @@ export default function DocumentDetail() {
               <Card className="bg-white border-gray-200">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base text-[#36454F] flex items-center gap-2">
-                    <Package className="w-5 h-5 text-blue-500" />
+                    <Package className="w-5 h-5 text-[#36454F]" />
                     Order IDs
                   </CardTitle>
                 </CardHeader>
@@ -355,7 +355,7 @@ export default function DocumentDetail() {
               <Card className="bg-white border-gray-200">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base text-[#36454F] flex items-center gap-2">
-                    <Hash className="w-5 h-5 text-emerald-500" />
+                    <Hash className="w-5 h-5 text-[#36454F]" />
                     ASINs / SKUs
                   </CardTitle>
                 </CardHeader>
@@ -383,7 +383,7 @@ export default function DocumentDetail() {
               <Card className="bg-white border-gray-200">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base text-[#36454F] flex items-center gap-2">
-                    <Truck className="w-5 h-5 text-purple-500" />
+                    <Truck className="w-5 h-5 text-[#36454F]" />
                     Tracking Numbers
                   </CardTitle>
                 </CardHeader>
@@ -406,7 +406,7 @@ export default function DocumentDetail() {
               <Card className="bg-white border-gray-200">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base text-[#36454F] flex items-center gap-2">
-                    <DollarSign className="w-5 h-5 text-amber-500" />
+                    <DollarSign className="w-5 h-5 text-[#36454F]" />
                     Financial Amounts
                   </CardTitle>
                 </CardHeader>
@@ -429,7 +429,7 @@ export default function DocumentDetail() {
               <Card className="bg-white border-gray-200">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base text-[#36454F] flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-gray-500" />
+                    <FileText className="w-5 h-5 text-[#36454F]" />
                     Invoice Numbers
                   </CardTitle>
                 </CardHeader>
@@ -452,7 +452,7 @@ export default function DocumentDetail() {
               <Card className="bg-white border-gray-200">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base text-[#36454F] flex items-center gap-2">
-                    <Calendar className="w-5 h-5 text-indigo-500" />
+                    <Calendar className="w-5 h-5 text-[#36454F]" />
                     Dates Found
                   </CardTitle>
                 </CardHeader>
