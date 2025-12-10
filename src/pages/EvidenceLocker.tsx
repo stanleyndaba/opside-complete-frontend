@@ -1245,7 +1245,7 @@ export default function EvidenceLocker() {
                               size="sm"
                               onClick={async () => {
                                 try {
-                                  const res = await api.triggerDocumentParse(doc.id);
+                                  const res = await api.reparseDocument(doc.id);
                                   if (res.ok) {
                                     toast({ title: 'Parsing Started', description: 'Document parsing has been triggered.' });
                                     // Refresh document status

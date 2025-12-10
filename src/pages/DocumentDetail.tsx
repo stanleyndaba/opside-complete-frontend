@@ -99,7 +99,7 @@ export default function DocumentDetail() {
     if (!docId) return;
     setTriggeringParse(true);
     try {
-      const res = await api.triggerDocumentParsing(docId);
+      const res = await api.reparseDocument(docId);
       if (res.ok) {
         toast({
           title: 'Parsing Triggered',
