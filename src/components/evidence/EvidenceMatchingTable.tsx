@@ -418,9 +418,7 @@ export function EvidenceMatchingTable() {
           >
             {refreshing ? (
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-            ) : (
-              <Sparkles className="w-4 h-4 mr-2" />
-            )}
+            ) : null}
             {refreshing ? 'Running...' : 'Run Matching'}
           </Button>
           <Button
@@ -438,21 +436,18 @@ export function EvidenceMatchingTable() {
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="bg-gray-100">
           <TabsTrigger value="smart-prompts" className="data-[state=active]:bg-white">
-            <AlertTriangle className="w-4 h-4 mr-2 text-amber-500" />
             Needs Review
             {smartPrompts.length > 0 && (
               <Badge className="ml-2 bg-amber-100 text-amber-800">{smartPrompts.length}</Badge>
             )}
           </TabsTrigger>
           <TabsTrigger value="auto-submitted" className="data-[state=active]:bg-white">
-            <CheckCircle2 className="w-4 h-4 mr-2 text-emerald-500" />
             Auto-Submitted
             {autoSubmitted.length > 0 && (
               <Badge className="ml-2 bg-emerald-100 text-emerald-800">{autoSubmitted.length}</Badge>
             )}
           </TabsTrigger>
           <TabsTrigger value="held" className="data-[state=active]:bg-white">
-            <AlertCircle className="w-4 h-4 mr-2 text-gray-500" />
             Held / Rejected
             {heldForReview.length > 0 && (
               <Badge className="ml-2 bg-gray-100 text-gray-800">{heldForReview.length}</Badge>
