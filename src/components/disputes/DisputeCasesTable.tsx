@@ -35,18 +35,28 @@ export function DisputeCasesTable() {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.getDisputeCases({ 
+      console.log('[DisputeCasesTable] Fetching dispute cases...', { status });
+      const response = await api.getDisputeCases({
         status: status && status !== 'all' ? status : undefined,
-        limit: 100 
+        limit: 100
       });
-      
+
+      console.log('[DisputeCasesTable] API response:', response);
+
       if (response.ok && response.data?.cases) {
         setCases(response.data.cases);
+        console.log('[DisputeCasesTable] Loaded', response.data.cases.length, 'cases');
+      } else if (response.ok && Array.isArray(response.data)) {
+        // Handle case where data is an array directly
+        setCases(response.data);
+        console.log('[DisputeCasesTable] Loaded', response.data.length, 'cases (array format)');
       } else {
+        console.warn('[DisputeCasesTable] Failed to fetch:', response.error);
         setError(response.error || 'Failed to fetch dispute cases');
         setCases([]);
       }
     } catch (err: any) {
+      console.error('[DisputeCasesTable] Error:', err);
       setError(err.message || 'Failed to fetch dispute cases');
       setCases([]);
     } finally {
@@ -75,7 +85,7 @@ export function DisputeCasesTable() {
 
   const getFilingStatusBadge = (filingStatus?: string) => {
     if (!filingStatus) return null;
-    
+
     const statusLower = filingStatus.toLowerCase();
     if (statusLower === 'filed') {
       return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Filed</Badge>;
