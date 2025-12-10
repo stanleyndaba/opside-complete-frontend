@@ -48,32 +48,21 @@ export default function DocumentDetail() {
       if (!docId) return;
       setLoading(true);
       try {
-        // Fetch document data with parsed data
-        const [docRes, parsedRes] = await Promise.all([
-          api.getDocument(docId),
-          api.getDocumentWithParsedData(docId).catch(() => ({ ok: false, data: null })),
-        ]);
+        // Fetch document data (backend now returns all parsed data in one call)
+        console.log('[DocumentDetail] Fetching document:', docId);
+        const docRes = await api.getDocument(docId);
+
+        console.log('[DocumentDetail] Response:', docRes);
 
         if (!cancelled) {
-          if (docRes.ok) {
+          if (docRes.ok && docRes.data) {
+            console.log('[DocumentDetail] Document data:', docRes.data);
             setDocumentData(docRes.data as any);
+            setParsedData(docRes.data); // Same data now includes parsed fields
             setError(null);
           } else {
+            console.error('[DocumentDetail] Failed to load document:', docRes.error);
             setError(docRes.error || 'Failed to load document');
-          }
-
-          if (parsedRes.ok && parsedRes.data) {
-            setParsedData(parsedRes.data);
-            // Merge extracted data into document
-            if (parsedRes.data.extracted) {
-              setDocumentData((prev: any) => ({
-                ...prev,
-                extracted: parsedRes.data!.extracted,
-                raw_text_preview: parsedRes.data!.raw_text_preview,
-                parser_status: parsedRes.data!.parser_status,
-                parser_confidence: parsedRes.data!.parser_confidence,
-              }));
-            }
           }
 
           // Fetch matched claims for this document
@@ -229,7 +218,19 @@ export default function DocumentDetail() {
               variant="outline"
               size="sm"
               className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-              onClick={() => { if (docId) window.open(api.getDocumentDownloadUrl(docId), '_blank'); }}
+              onClick={async () => {
+                if (!docId) return;
+                try {
+                  const response = await api.getDocumentDownload(docId);
+                  if (response.ok && response.data?.url) {
+                    window.open(response.data.url, '_blank');
+                  } else {
+                    toast({ title: 'Download Failed', description: response.error || 'Could not get download URL', variant: 'destructive' });
+                  }
+                } catch (err: any) {
+                  toast({ title: 'Download Error', description: err?.message || 'Failed to download', variant: 'destructive' });
+                }
+              }}
             >
               <Download className="w-4 h-4 mr-2" />
               Download
