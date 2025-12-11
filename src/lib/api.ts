@@ -106,8 +106,10 @@ async function requestJsonWithRetry<T>(
       signal: controller.signal,
       headers: {
         'Content-Type': 'application/json',
-        // Use demo-user for sandbox/development - this matches generated mock data
-        'x-user-id': 'demo-user',
+        // TODO: Replace with proper auth - get user ID from Supabase session
+        // Using real test user ID to verify matching works
+        // Proper auth integration needed to get actual logged-in user
+        'x-user-id': '07b4f03d-352e-473f-a316-af97d9017d69',
         ...options?.headers,
       },
       ...options,
