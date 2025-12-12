@@ -89,7 +89,7 @@ export default function Help() {
     <PageLayout title="Help">
       <div className="relative -m-4 lg:-m-6">
         <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24">
-          <div className="relative mx-auto max-w-3xl px-6 pt-12 md:pt-16 pb-16">
+          <div className="relative container mx-auto px-6 pt-12 md:pt-16 pb-16">
 
             {/* Header */}
             <header className="mb-12">

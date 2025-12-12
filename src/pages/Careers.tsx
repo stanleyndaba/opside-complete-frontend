@@ -70,7 +70,7 @@ export default function Careers() {
         <div className="relative w-full bg-gray-50 min-h-[calc(100vh+96px)] -mt-24 pt-24">
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white via-transparent to-gray-100" />
 
-          <div className="relative mx-auto max-w-4xl px-6 pt-12 md:pt-16 pb-16">
+          <div className="relative container mx-auto px-6 pt-12 md:pt-16 pb-16">
             {/* Header */}
             <header className="mb-12">
               <h1 className="text-3xl md:text-4xl font-semibold text-gray-900 tracking-tight">
