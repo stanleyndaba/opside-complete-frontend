@@ -362,31 +362,33 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             {/* Header Section */}
-            <div className="flex items-start justify-between">
+            <div className="flex items-start justify-between pb-4 border-b border-gray-100">
               <div>
-                <h2 className="text-2xl font-semibold text-gray-900">
-                  {sellerProfile.company_name || 'Business'}
+                <h2 className="text-2xl font-semibold text-gray-900 tracking-tight">
+                  {sellerProfile.company_name || 'Seller Profile'}
                 </h2>
                 {sellerProfile.amazon_seller_id && (
-                  <p className="text-sm text-gray-600 mt-1">
-                    Seller ID: {sellerProfile.amazon_seller_id}
+                  <p className="text-sm text-gray-500 mt-1 font-mono">
+                    {sellerProfile.amazon_seller_id}
                   </p>
                 )}
               </div>
               <Badge
-                className={isAmazonConnected
-                  ? "bg-green-500/20 text-green-300 border-green-500/30"
-                  : "bg-red-500/20 text-red-300 border-red-500/30"
-                }
+                className={cn(
+                  'px-3 py-1.5 text-xs font-medium rounded-full',
+                  isAmazonConnected
+                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                    : 'bg-gray-100 text-gray-600 border border-gray-200'
+                )}
               >
                 {isAmazonConnected ? (
                   <>
-                    <CheckCircle className="h-3 w-3 mr-1" />
+                    <CheckCircle className="h-3 w-3 mr-1.5" />
                     Connected
                   </>
                 ) : (
                   <>
-                    <XCircle className="h-3 w-3 mr-1" />
+                    <XCircle className="h-3 w-3 mr-1.5" />
                     Not Connected
                   </>
                 )}
@@ -394,40 +396,35 @@ const Settings = () => {
             </div>
 
             {loadingProfile ? (
-              <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-center py-8">
-                    <RefreshCw className="h-6 w-6 animate-spin text-gray-500" />
-                    <span className="ml-2 text-gray-600">Loading seller profile...</span>
-                  </div>
-                </CardContent>
-              </Card>
+              <div className="flex items-center justify-center py-12">
+                <RefreshCw className="h-5 w-5 animate-spin text-gray-400" />
+                <span className="ml-3 text-sm text-gray-500">Loading profile...</span>
+              </div>
             ) : (
               <>
-                {/* Basic Information Section */}
-                <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
-                  <CardHeader>
-                    <CardTitle className="text-gray-900 font-medium">Information</CardTitle>
-                    <CardDescription className="text-gray-600">Your account details and activity</CardDescription>
+                {/* Account Information */}
+                <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
+                  <CardHeader className="bg-gray-50/50 border-b border-gray-100 py-4">
+                    <CardTitle className="text-base font-semibold text-gray-900">Account Information</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label className="text-gray-600 text-sm">Company Name</Label>
-                        <div className="mt-1 flex items-center gap-2">
-                          <Store className="h-4 w-4 text-gray-500" />
-                          <p className="text-gray-900">
-                            {sellerProfile.company_name || 'Not available'}
+                  <CardContent className="p-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                      <div className="space-y-1">
+                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Company</p>
+                        <div className="flex items-center gap-2">
+                          <Store className="h-4 w-4 text-gray-400" />
+                          <p className="text-sm text-gray-900 font-medium">
+                            {sellerProfile.company_name || 'Not set'}
                           </p>
                         </div>
                       </div>
 
                       {sellerProfile.amazon_seller_id && (
-                        <div>
-                          <Label className="text-gray-600 text-sm">Amazon Seller ID</Label>
-                          <div className="mt-1 flex items-center gap-2">
-                            <Key className="h-4 w-4 text-gray-500" />
-                            <p className="text-gray-900 font-mono text-sm">
+                        <div className="space-y-1">
+                          <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Seller ID</p>
+                          <div className="flex items-center gap-2">
+                            <Key className="h-4 w-4 text-gray-400" />
+                            <p className="text-sm text-gray-900 font-mono">
                               {sellerProfile.amazon_seller_id}
                             </p>
                           </div>
@@ -435,11 +432,11 @@ const Settings = () => {
                       )}
 
                       {sellerProfile.created_at && (
-                        <div>
-                          <Label className="text-gray-600 text-sm">Member Since</Label>
-                          <div className="mt-1 flex items-center gap-2">
-                            <Calendar className="h-4 w-4 text-gray-500" />
-                            <p className="text-gray-900">
+                        <div className="space-y-1">
+                          <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Member Since</p>
+                          <div className="flex items-center gap-2">
+                            <Calendar className="h-4 w-4 text-gray-400" />
+                            <p className="text-sm text-gray-900">
                               {formatDate(sellerProfile.created_at)}
                             </p>
                           </div>
@@ -447,11 +444,11 @@ const Settings = () => {
                       )}
 
                       {sellerProfile.last_login && (
-                        <div>
-                          <Label className="text-gray-600 text-sm">Last Active</Label>
-                          <div className="mt-1 flex items-center gap-2">
-                            <Clock className="h-4 w-4 text-gray-500" />
-                            <p className="text-gray-900">
+                        <div className="space-y-1">
+                          <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Last Active</p>
+                          <div className="flex items-center gap-2">
+                            <Clock className="h-4 w-4 text-gray-400" />
+                            <p className="text-sm text-gray-900">
                               {formatDate(sellerProfile.last_login)}
                             </p>
                           </div>
@@ -461,29 +458,28 @@ const Settings = () => {
                   </CardContent>
                 </Card>
 
-                {/* Marketplace Information Section */}
+                {/* Marketplaces */}
                 {marketplaces.length > 0 && (
-                  <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
-                    <CardHeader>
-                      <CardTitle className="text-gray-900 font-medium">Marketplace Information</CardTitle>
-                      <CardDescription className="text-gray-600">
-                        Active marketplaces where you sell
-                        <Badge variant="secondary" className="ml-2">
-                          {marketplaces.length} {marketplaces.length === 1 ? 'Marketplace' : 'Marketplaces'}
+                  <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
+                    <CardHeader className="bg-gray-50/50 border-b border-gray-100 py-4">
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="text-base font-semibold text-gray-900">Marketplaces</CardTitle>
+                        <Badge variant="secondary" className="bg-gray-100 text-gray-600 text-xs">
+                          {marketplaces.length} active
                         </Badge>
-                      </CardDescription>
+                      </div>
                     </CardHeader>
-                    <CardContent>
-                      <div className="space-y-2">
+                    <CardContent className="p-5">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                         {marketplaces.map((marketplaceId: string) => {
                           const display = getMarketplaceDisplay(marketplaceId);
                           return (
                             <div
                               key={marketplaceId}
-                              className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg bg-gray-50"
+                              className="flex items-center gap-2.5 p-3 bg-gray-50 rounded-lg border border-gray-100"
                             >
-                              <span className="text-2xl">{display.flag}</span>
-                              <span className="text-gray-900">{display.name}</span>
+                              <span className="text-xl">{display.flag}</span>
+                              <span className="text-sm text-gray-800 font-medium">{display.name}</span>
                             </div>
                           );
                         })}
@@ -492,177 +488,134 @@ const Settings = () => {
                   </Card>
                 )}
 
-                {/* Integration Status Section */}
-                <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-gray-900 font-medium">
-                      <Box className="h-5 w-5" />
-                      Integrations
-                    </CardTitle>
-                    <CardDescription className="text-gray-600">Manage your platform connections</CardDescription>
+                {/* Connected Platforms */}
+                <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
+                  <CardHeader className="bg-gray-50/50 border-b border-gray-100 py-4">
+                    <CardTitle className="text-base font-semibold text-gray-900">Connected Platforms</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    {/* Amazon Integration */}
-                    <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg bg-gray-50">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-lg bg-white flex items-center justify-center border border-gray-200 shadow-sm">
+                  <CardContent className="p-0 divide-y divide-gray-100">
+                    {/* Amazon */}
+                    <div className="flex items-center justify-between p-5">
+                      <div className="flex items-center gap-4">
+                        <div className="h-11 w-11 rounded-xl bg-[#FF9900]/10 flex items-center justify-center">
                           <img
-                            src="/lovable-uploads/14f98d63-9a1a-4128-8021-1d840d778ea5.png"
-                            alt="Amazon Seller Central logo"
-                            className="h-7 w-7 object-contain"
+                            src="/Amazon-logo.png"
+                            alt="Amazon"
+                            className="h-6 w-6 object-contain"
                           />
                         </div>
                         <div>
-                          <p className="font-medium text-gray-900">Amazon Seller Central</p>
-                          <div className="flex items-center gap-2 mt-1">
+                          <p className="text-sm font-semibold text-gray-900">Amazon Seller Central</p>
+                          <div className="flex items-center gap-1.5 mt-0.5">
                             {isAmazonConnected ? (
                               <>
-                                <CheckCircle className="h-4 w-4 text-green-600" />
-                                <span className="text-sm text-gray-600">Connected</span>
+                                <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                                <span className="text-xs text-emerald-600 font-medium">Connected</span>
                                 {sellerProfile.last_sync_completed_at && (
-                                  <span className="text-sm text-gray-600">
-                                    • Synced {formatDate(sellerProfile.last_sync_completed_at)}
+                                  <span className="text-xs text-gray-400 ml-1">
+                                    — synced {formatDate(sellerProfile.last_sync_completed_at)}
                                   </span>
                                 )}
                               </>
                             ) : (
                               <>
-                                <XCircle className="h-4 w-4 text-red-600" />
-                                <span className="text-sm text-gray-600">Not Connected</span>
+                                <div className="h-1.5 w-1.5 rounded-full bg-gray-300" />
+                                <span className="text-xs text-gray-500">Not connected</span>
                               </>
                             )}
                           </div>
                         </div>
                       </div>
-                      <div>
-                        {isAmazonConnected ? (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
-                            onClick={() => navigate('/integrations-hub')}
-                          >
-                            Manage
-                          </Button>
-                        ) : (
-                          <Button
-                            size="sm"
-                            className="bg-emerald-500 hover:bg-emerald-400 text-white"
-                            onClick={() => navigate('/integrations-hub')}
-                          >
-                            Connect Amazon
-                          </Button>
+                      <Button
+                        variant={isAmazonConnected ? 'outline' : 'default'}
+                        size="sm"
+                        className={cn(
+                          isAmazonConnected
+                            ? 'border-gray-200 text-gray-700 hover:bg-gray-50'
+                            : 'bg-emerald-500 hover:bg-emerald-600 text-white'
                         )}
-                      </div>
+                        onClick={() => navigate('/integrations-hub')}
+                      >
+                        {isAmazonConnected ? 'Manage' : 'Connect'}
+                      </Button>
                     </div>
 
-                    {/* Stripe Integration */}
-                    <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg bg-gray-50">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-lg bg-white flex items-center justify-center border border-gray-200 shadow-sm">
+                    {/* Stripe */}
+                    <div className="flex items-center justify-between p-5">
+                      <div className="flex items-center gap-4">
+                        <div className="h-11 w-11 rounded-xl bg-[#635BFF]/10 flex items-center justify-center">
                           <img
                             src="/Stripe-logo.png"
-                            alt="Stripe logo"
-                            className="h-7 w-7 object-contain"
+                            alt="Stripe"
+                            className="h-6 w-6 object-contain"
                           />
                         </div>
                         <div>
-                          <p className="font-medium text-gray-900">Stripe</p>
-                          <div className="flex items-center gap-2 mt-1">
+                          <p className="text-sm font-semibold text-gray-900">Stripe</p>
+                          <div className="flex items-center gap-1.5 mt-0.5">
                             {isStripeConnected ? (
                               <>
-                                <CheckCircle className="h-4 w-4 text-green-600" />
-                                <span className="text-sm text-gray-600">Connected</span>
+                                <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                                <span className="text-xs text-emerald-600 font-medium">Connected</span>
                               </>
                             ) : (
                               <>
-                                <XCircle className="h-4 w-4 text-gray-500" />
-                                <span className="text-sm text-gray-600">Not Connected</span>
+                                <div className="h-1.5 w-1.5 rounded-full bg-gray-300" />
+                                <span className="text-xs text-gray-500">Not connected</span>
                               </>
                             )}
                           </div>
                         </div>
                       </div>
-                      <div>
-                        {isStripeConnected ? (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
-                            onClick={() => navigate('/billing')}
-                          >
-                            Manage
-                          </Button>
-                        ) : (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
-                            onClick={() => navigate('/billing')}
-                          >
-                            Connect Stripe
-                          </Button>
-                        )}
-                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-gray-200 text-gray-700 hover:bg-gray-50"
+                        onClick={() => navigate('/billing')}
+                      >
+                        {isStripeConnected ? 'Manage' : 'Connect'}
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
 
-                {/* Sync Information Section */}
-                {(sellerProfile.last_sync_attempt_at || sellerProfile.last_sync_completed_at || sellerProfile.last_sync_job_id) && (
-                  <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
-                    <CardHeader>
-                      <CardTitle className="text-gray-900 font-medium">Sync Status</CardTitle>
-                      <CardDescription className="text-gray-600">Data synchronization information</CardDescription>
+                {/* Sync Status */}
+                {(sellerProfile.last_sync_attempt_at || sellerProfile.last_sync_completed_at) && (
+                  <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
+                    <CardHeader className="bg-gray-50/50 border-b border-gray-100 py-4">
+                      <CardTitle className="text-base font-semibold text-gray-900">Sync Status</CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-4">
-                      {sellerProfile.last_sync_attempt_at && (
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <RefreshCw className="h-4 w-4 text-gray-500" />
-                            <div>
-                              <p className="text-sm font-medium text-gray-900">Last Sync Attempt</p>
-                              <p className="text-xs text-gray-600">
-                                {formatDateTime(sellerProfile.last_sync_attempt_at)}
-                              </p>
+                    <CardContent className="p-5">
+                      <div className="space-y-4">
+                        {sellerProfile.last_sync_completed_at && (
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <div className="h-8 w-8 rounded-full bg-emerald-50 flex items-center justify-center">
+                                <CheckCircle className="h-4 w-4 text-emerald-500" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium text-gray-900">Last Successful Sync</p>
+                                <p className="text-xs text-gray-500">{formatDateTime(sellerProfile.last_sync_completed_at)}</p>
+                              </div>
                             </div>
                           </div>
-                          {sellerProfile.last_sync_completed_at ? (
-                            <CheckCircle className="h-5 w-5 text-green-600" />
-                          ) : (
-                            <AlertTriangle className="h-5 w-5 text-yellow-600" />
-                          )}
-                        </div>
-                      )}
+                        )}
 
-                      {sellerProfile.last_sync_completed_at && (
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <CheckCircle className="h-4 w-4 text-green-600" />
-                            <div>
-                              <p className="text-sm font-medium text-gray-900">Last Successful Sync</p>
-                              <p className="text-xs text-gray-600">
-                                {formatDateTime(sellerProfile.last_sync_completed_at)}
-                              </p>
+                        {sellerProfile.last_sync_job_id && (
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <div className="h-8 w-8 rounded-full bg-blue-50 flex items-center justify-center">
+                                <RefreshCw className="h-4 w-4 text-blue-500 animate-spin" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium text-gray-900">Sync in Progress</p>
+                                <p className="text-xs text-gray-500 font-mono">{sellerProfile.last_sync_job_id}</p>
+                              </div>
                             </div>
+                            <Badge className="bg-blue-50 text-blue-600 border-blue-100">Running</Badge>
                           </div>
-                        </div>
-                      )}
-
-                      {sellerProfile.last_sync_job_id && (
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <RefreshCw className="h-4 w-4 text-gray-500 animate-spin" />
-                            <div>
-                              <p className="text-sm font-medium text-gray-900">Current Sync Job</p>
-                              <p className="text-xs text-gray-600 font-mono">
-                                {sellerProfile.last_sync_job_id}
-                              </p>
-                            </div>
-                          </div>
-                          <Badge variant="secondary">In Progress</Badge>
-                        </div>
-                      )}
+                        )}
+                      </div>
                     </CardContent>
                   </Card>
                 )}
