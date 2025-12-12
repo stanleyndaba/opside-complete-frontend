@@ -1295,7 +1295,7 @@ export default function Recoveries() {
   };
 
   return (
-    <PageLayout title="Refunds">
+    <PageLayout title="Reimbursements">
       <div className="relative w-full overflow-x-hidden -m-4 lg:-m-6">
         <div className="relative w-full bg-gray-50 min-h-[calc(100vh+48px)]">
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-gray-50 to-white" />
@@ -1303,7 +1303,7 @@ export default function Recoveries() {
             {/* Page Header */}
             <div className="mb-8">
               <div className="flex items-center justify-between mb-2">
-                <h1 className="text-xl font-medium text-[#1f1f1f]">Refunds</h1>
+                <h1 className="text-xl font-medium text-[#1f1f1f]">Reimbursements</h1>
                 <Select value={selectedCurrency} onValueChange={setSelectedCurrency}>
                   <SelectTrigger className="w-[140px] bg-white border-gray-300">
                     <SelectValue />

@@ -89,7 +89,7 @@ export function Sidebar({
   const primaryItems: NavItem[] = [
     { title: 'Overview', icon: LayoutDashboard, href: '/app' },
     { title: 'Claims', icon: ShieldCheck, href: '/recoveries' },
-    { title: 'Doc Locker', icon: FileText, href: '/evidence-locker' },
+    { title: 'Documents and Files', icon: FileText, href: '/evidence-locker' },
     // { title: 'Reports', icon: BarChart3, href: '/reports' }, // Hidden for MVP
     { title: 'Refund Recoveries', icon: Plug, href: '/upcoming-payments' },
     { title: 'Integrations', icon: Box, href: '/integrations-hub' }
