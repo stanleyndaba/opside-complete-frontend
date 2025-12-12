@@ -798,15 +798,13 @@ export default function Sync() {
                 </div>
               )}
 
-              {/* Audit Complete (completed) */}
+              {/* Audit Complete - now shows minimal confirmation */}
               {status === 'completed' && (
-                <div className="space-y-2">
-                  <h1 className="text-sm font-semibold text-gray-700">
+                <div className="space-y-1">
+                  <h1 className="text-sm font-semibold text-emerald-600 flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4" />
                     Audit Complete
                   </h1>
-                  <p className="text-xs text-gray-500">
-                    {claimsCount !== null ? claimsCount : '--'} claims found. {formatCurrency(totalRecoverableValue)} in potential recoveries • Completed in {durationSeconds !== null ? `${durationSeconds}s` : 'N/A'}
-                  </p>
                 </div>
               )}
 
