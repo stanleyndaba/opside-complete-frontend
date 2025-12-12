@@ -4,19 +4,19 @@
 
 @layer utilities {
   .font-heading {
-    font-family: 'Montserrat', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
   }
 
   .font-body {
-    font-family: 'Montserrat', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
   }
 
   .font-brand {
-    font-family: 'Montserrat', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
   }
 
   .font-logo {
-    font-family: 'Montserrat', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     font-weight: 900;
   }
 }
@@ -82,11 +82,11 @@
     @apply border-border;
   }
 
-  /* Global font stack - Montserrat for entire platform */
+  /* Global font stack - Inter for entire platform */
   html,
   body,
   #root {
-    font-family: 'Montserrat', system-ui, sans-serif !important;
+    font-family: 'Inter', system-ui, sans-serif !important;
   }
 
   html {
@@ -120,7 +120,7 @@
     @apply bg-background text-foreground text-[15px];
   }
 
-  /* All text elements use Montserrat - comprehensive coverage */
+  /* All text elements use Inter - comprehensive coverage */
   *,
   *::before,
   *::after,
@@ -179,7 +179,7 @@
   acronym,
   address,
   [class*="font-"] {
-    font-family: 'Montserrat', system-ui, sans-serif !important;
+    font-family: 'Inter', system-ui, sans-serif !important;
   }
 
   /* Override for code snippets - use programming fonts */
@@ -368,14 +368,14 @@
 /* Typography tuning across the platform (excludes landing page) */
 @layer base {
 
-  /* Platform uses Montserrat Regular 400 */
+  /* Platform uses Inter Regular 400 */
   .platform {
-    font-family: 'Montserrat', system-ui, sans-serif !important;
+    font-family: 'Inter', system-ui, sans-serif !important;
     font-size: 0.95rem;
   }
 
   .platform * {
-    font-family: 'Montserrat', system-ui, sans-serif !important;
+    font-family: 'Inter', system-ui, sans-serif !important;
   }
 
   .platform :where(h1, h2, h3, h4, h5, h6) {
