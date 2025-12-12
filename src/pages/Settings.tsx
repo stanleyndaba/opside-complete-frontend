@@ -802,28 +802,80 @@ const Settings = () => {
       case 'notifications':
         return (
           <div className="space-y-6">
-            <div>
-              <h2 className="text-2xl font-semibold text-gray-900">Notifications</h2>
-              <p className="text-gray-600">Control how and when we communicate with you</p>
+            {/* Header */}
+            <div className="pb-4 border-b border-gray-100">
+              <h2 className="text-2xl font-semibold text-gray-900 tracking-tight">Notifications</h2>
+              <p className="text-sm text-gray-500 mt-1">Control how and when we communicate with you</p>
             </div>
 
-            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
-              <CardHeader>
-                <CardTitle className="text-gray-900 font-medium">Email Notifications</CardTitle>
-                <CardDescription className="text-gray-600">Choose which notifications you'd like to receive</CardDescription>
+            {/* Email Notifications */}
+            <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
+              <CardHeader className="bg-gray-50/50 border-b border-gray-100 py-4">
+                <CardTitle className="text-base font-semibold text-gray-900">Email Notifications</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
-                {notificationSettings.map((setting) => (
-                  <div key={setting.id} className="flex items-center justify-between">
-                    <div className="space-y-1">
-                      <p className="font-medium text-gray-900">{setting.label}</p>
-                      <p className="text-sm text-gray-600">{setting.description}</p>
+              <CardContent className="p-0 divide-y divide-gray-100">
+                {/* Recovery Alerts */}
+                <div className="flex items-center justify-between p-5">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-lg bg-emerald-50 flex items-center justify-center">
+                      <CheckCircle className="h-5 w-5 text-emerald-600" />
                     </div>
-                    <Switch defaultChecked={setting.enabled} />
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">New Recovery Guaranteed</p>
+                      <p className="text-xs text-gray-500">Get notified when a new recovery is confirmed</p>
+                    </div>
                   </div>
-                ))}
+                  <Switch defaultChecked={true} />
+                </div>
+
+                {/* Monthly Summary */}
+                <div className="flex items-center justify-between p-5">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-lg bg-blue-50 flex items-center justify-center">
+                      <BarChart3 className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">Monthly Performance Summary</p>
+                      <p className="text-xs text-gray-500">Receive monthly reports on your account performance</p>
+                    </div>
+                  </div>
+                  <Switch defaultChecked={true} />
+                </div>
+
+                {/* Invoice Alerts */}
+                <div className="flex items-center justify-between p-5">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-lg bg-amber-50 flex items-center justify-center">
+                      <CreditCard className="h-5 w-5 text-amber-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">New Invoice Issued</p>
+                      <p className="text-xs text-gray-500">Get alerts when new invoices are generated</p>
+                    </div>
+                  </div>
+                  <Switch defaultChecked={true} />
+                </div>
+
+                {/* Product Updates */}
+                <div className="flex items-center justify-between p-5">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-lg bg-purple-50 flex items-center justify-center">
+                      <Bell className="h-5 w-5 text-purple-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">Product News & Updates</p>
+                      <p className="text-xs text-gray-500">Stay informed about new features and improvements</p>
+                    </div>
+                  </div>
+                  <Switch defaultChecked={false} />
+                </div>
               </CardContent>
             </Card>
+
+            {/* Preferences Note */}
+            <p className="text-xs text-gray-400 text-center">
+              You can update these preferences at any time. We'll never share your email.
+            </p>
           </div>
         );
 
