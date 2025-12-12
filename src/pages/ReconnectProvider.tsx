@@ -95,44 +95,45 @@ export default function ReconnectProvider() {
   }, [provider]);
 
   return (
-    <PageLayout title={`Reconnect ${meta.label}`}>
+    <PageLayout title={`Connect ${meta.label}`}>
       <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-[#0B1220] min-h-[calc(100vh+96px)] -mt-24 pt-24 text-gray-300">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.10),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.10),transparent_35%)]" />
+        <div className="relative w-full bg-gray-50 min-h-[calc(100vh+96px)] -mt-24 pt-24">
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white via-transparent to-gray-100" />
           <div className="relative container mx-auto px-6 pt-6 pb-10 space-y-6">
             <div className="flex items-center gap-4">
-              <Button asChild variant="ghost" size="sm" className="text-gray-200 hover:bg-white/10">
+              <Button asChild variant="ghost" size="sm" className="text-gray-600 hover:bg-gray-100">
                 <Link to="/integrations-hub"><ArrowLeft className="h-4 w-4 mr-2" /> Back to Integrations</Link>
               </Button>
             </div>
 
-            <Card className="bg-white/5 border-white/10">
+            <Card className="bg-white border-gray-200 shadow-sm">
               <CardHeader>
-                <CardTitle className="text-gray-200 flex items-center gap-2">
-                  {meta.icon}
-                  Reconnect {meta.label}
+                <CardTitle className="text-gray-900 flex items-center gap-3">
+                  {provider === 'amazon' && <img src="/Amazon-logo.png" alt="Amazon" className="h-8 w-8 object-contain" />}
+                  {provider !== 'amazon' && meta.icon}
+                  {provider === 'amazon' ? 'Amazon SP-API' : meta.label}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <p className="text-sm text-gray-300">
-                  You’re about to securely reconnect {meta.label}. We’ll request only the minimum permissions required to ingest evidence and keep your recoveries flowing.
+                <p className="text-sm text-gray-600">
+                  You're about to securely connect {meta.label}. We'll request only the minimum permissions required to sync your data and find recoveries.
                 </p>
                 <div className="flex flex-wrap items-center gap-2 text-xs">
-                  <span className="text-gray-400">Requested scopes:</span>
+                  <span className="text-gray-500">Requested permissions:</span>
                   {meta.scopes.map((s) => (
-                    <Badge key={s} variant="outline" className="border-white/20 text-gray-200">{s}</Badge>
+                    <Badge key={s} variant="outline" className="border-gray-300 text-gray-700 bg-gray-50">{s}</Badge>
                   ))}
                 </div>
-                <Separator />
+                <Separator className="bg-gray-200" />
                 <div className="flex flex-col sm:flex-row items-center gap-3">
-                  <Button onClick={begin} className={`${meta.colorClass} w-full sm:w-auto`} disabled={loading}>
+                  <Button onClick={begin} className="bg-emerald-500 hover:bg-emerald-600 text-white w-full sm:w-auto" disabled={loading}>
                     {loading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />} Continue to {meta.label}
                     <ExternalLink className="h-4 w-4 ml-2" />
                   </Button>
-                  <Button variant="outline" className="w-full sm:w-auto" onClick={() => navigate('/integrations-hub')}>Cancel</Button>
+                  <Button variant="outline" className="w-full sm:w-auto border-gray-200 text-gray-700 hover:bg-gray-50" onClick={() => navigate('/integrations-hub')}>Cancel</Button>
                 </div>
                 <p className="text-xs text-gray-500">
-                  You can revoke access and purge data at any time from Integrations. Tokens are stored securely and are never shared.
+                  You can revoke access at any time from Integrations. Tokens are stored securely and never shared.
                 </p>
               </CardContent>
             </Card>

@@ -326,53 +326,48 @@ export default function IntegrationsHub() {
 
             {/* Core Integrations */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Amazon SP-API */}
-              <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
-                <CardHeader className="space-y-4">
-                  <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              {/* Amazon SP-API - Clean Design */}
+              <Card className="bg-white border-gray-200 shadow-sm overflow-hidden">
+                <CardHeader className="pb-4">
+                  <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                      <div className="flex items-center justify-center">
-                        <img src="/Amazon-logo.png" alt="Amazon logo" className="h-9 w-9 object-contain" />
+                      <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center shadow-sm">
+                        <img src="/Amazon-logo.png" alt="Amazon" className="h-7 w-7 object-contain brightness-0 invert" />
                       </div>
                       <div>
-                        <CardTitle className="text-gray-900 text-xl">SP‑API</CardTitle>
-                        <CardDescription className="text-gray-600">Sync inventory, fees, reimbursements, shipments and returns.</CardDescription>
+                        <CardTitle className="text-gray-900 text-lg">Amazon SP-API</CardTitle>
+                        <CardDescription className="text-gray-500 text-sm">Sync inventory, orders, fees & returns</CardDescription>
                       </div>
                     </div>
-                    <Badge variant="outline" className={cn('text-xs px-3 py-1 rounded-full', (isSandbox || status?.amazon_connected) ? 'border-emerald-500 text-emerald-600 font-semibold' : 'border-gray-300 text-gray-500')}>
-                      {(isSandbox || status?.amazon_connected) ? 'Connected' : 'Not connected'}
+                    <Badge
+                      variant="outline"
+                      className={cn(
+                        'text-xs px-3 py-1 rounded-full font-medium',
+                        (isSandbox || status?.amazon_connected)
+                          ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+                          : 'border-gray-200 bg-gray-50 text-gray-500'
+                      )}
+                    >
+                      {(isSandbox || status?.amazon_connected) ? '● Connected' : 'Not connected'}
                     </Badge>
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="grid gap-3 text-sm text-gray-700">
-                    <div className="flex items-center justify-between text-xs uppercase tracking-wide text-gray-500">
-                      <span>Status</span>
-                      <span className={cn('font-semibold', (isSandbox || status?.amazon_connected) ? 'text-emerald-300' : 'text-amber-300')}>
-                        {(isSandbox || status?.amazon_connected) ? 'Active' : 'Awaiting Connection'}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500">Last sync</span>
-                      <span className="text-gray-900">{status?.lastSync || lastSyncTime}</span>
-                    </div>
-                    <div className="flex items-center justify-between text-xs text-gray-400">
-                      <span>Scopes</span>
-                      <span className="text-gray-700 text-right">orders.read · inventory.read · transactions.read</span>
-                    </div>
+                <CardContent className="pt-0 space-y-4">
+                  <div className="flex items-center justify-between text-sm border-t border-gray-100 pt-4">
+                    <span className="text-gray-500">Last sync</span>
+                    <span className="text-gray-900 font-medium">{status?.lastSync || lastSyncTime}</span>
                   </div>
                   <Button
-                    size="default"
-                    className="bg-emerald-500 hover:bg-emerald-400 text-white font-semibold w-full md:w-auto px-6"
+                    className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium"
                     onClick={() => {
                       toast({
-                        title: (isSandbox || status?.amazon_connected) ? 'Configure Amazon Connection' : 'Connect Amazon',
-                        description: 'Redirecting to Amazon SP‑API flow…',
+                        title: (isSandbox || status?.amazon_connected) ? 'Configure Amazon' : 'Connect Amazon',
+                        description: 'Redirecting to Amazon SP-API...',
                       });
                       navigate('/integrations/reconnect/amazon');
                     }}
                   >
-                    {(isSandbox || status?.amazon_connected) ? 'Configure' : 'Connect Amazon'}
+                    {(isSandbox || status?.amazon_connected) ? 'Manage Connection' : 'Connect Amazon'}
                   </Button>
                 </CardContent>
               </Card>
