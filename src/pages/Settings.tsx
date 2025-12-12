@@ -830,132 +830,215 @@ const Settings = () => {
       case 'security':
         return (
           <div className="space-y-6">
-            <div>
-              <h2 className="text-2xl font-semibold text-gray-900">Security</h2>
-              <p className="text-gray-600">Manage your account security and access</p>
+            {/* Header */}
+            <div className="pb-4 border-b border-gray-100">
+              <h2 className="text-2xl font-semibold text-gray-900 tracking-tight">Security</h2>
+              <p className="text-sm text-gray-500 mt-1">Manage your account security and access</p>
             </div>
 
-            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
-              <CardHeader>
-                <CardTitle className="text-gray-900 font-medium">Login History</CardTitle>
-                <CardDescription className="text-gray-600">Recent account access activity</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
+            {/* Login History */}
+            <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
+              <CardHeader className="bg-gray-50/50 border-b border-gray-100 py-4">
                 <div className="flex items-center justify-between">
-                  <div className="text-xs text-gray-600">Export a copy of your recent logins</div>
-                  <Button size="sm" variant="outline" className="bg-white text-blue-700 border-blue-300 hover:bg-blue-50" onClick={exportLoginHistory}>Export CSV</Button>
+                  <CardTitle className="text-base font-semibold text-gray-900">Login History</CardTitle>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="border-gray-200 text-gray-600 hover:bg-gray-50 text-xs"
+                    onClick={exportLoginHistory}
+                  >
+                    Export CSV
+                  </Button>
                 </div>
+              </CardHeader>
+              <CardContent className="p-0 divide-y divide-gray-100">
                 {loginHistory.map((login, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg bg-gray-50">
+                  <div key={index} className="flex items-center justify-between p-4">
                     <div className="flex items-center gap-3">
-                      {login.device.includes('iPhone') ?
-                        <Smartphone className="h-5 w-5 text-gray-500" /> :
-                        <Monitor className="h-5 w-5 text-gray-500" />
-                      }
+                      <div className={cn(
+                        'h-10 w-10 rounded-lg flex items-center justify-center',
+                        login.device.includes('iPhone') ? 'bg-blue-50' : 'bg-gray-100'
+                      )}>
+                        {login.device.includes('iPhone') ?
+                          <Smartphone className="h-5 w-5 text-blue-600" /> :
+                          <Monitor className="h-5 w-5 text-gray-600" />
+                        }
+                      </div>
                       <div>
-                        <p className="font-medium text-gray-900">{login.device}</p>
-                        <p className="text-sm text-gray-600">
-                          <MapPin className="h-3 w-3 inline mr-1" />
-                          {login.location} • {login.time}
+                        <p className="text-sm font-medium text-gray-900">{login.device}</p>
+                        <p className="text-xs text-gray-500">
+                          {login.location} · {login.time}
                         </p>
                       </div>
                     </div>
                     {login.current && (
-                      <Badge className="bg-green-100 text-green-800">Current Session</Badge>
+                      <Badge className="bg-emerald-50 text-emerald-700 border-emerald-100 text-xs">
+                        Current
+                      </Badge>
                     )}
                   </div>
                 ))}
               </CardContent>
             </Card>
 
-            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
-              <CardHeader>
-                <CardTitle className="text-gray-900 font-medium">Security Actions</CardTitle>
-                <CardDescription className="text-gray-600">Manage your account security</CardDescription>
+            {/* Two-Factor Authentication */}
+            <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
+              <CardHeader className="bg-gray-50/50 border-b border-gray-100 py-4">
+                <CardTitle className="text-base font-semibold text-gray-900">Two-Factor Authentication</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="rounded border border-gray-200 bg-gray-50 p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-gray-900">Two‑Factor Authentication (2FA)</p>
-                      <p className="text-sm text-gray-600">Add an extra layer of security to your account</p>
+              <CardContent className="p-5 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className={cn(
+                      'h-10 w-10 rounded-lg flex items-center justify-center',
+                      twoFactorEnabled ? 'bg-emerald-50' : 'bg-gray-100'
+                    )}>
+                      <Shield className={cn('h-5 w-5', twoFactorEnabled ? 'text-emerald-600' : 'text-gray-500')} />
                     </div>
-                    <Switch checked={twoFactorEnabled} onCheckedChange={(v) => { setTwoFactorEnabled(!!v); persistSecurity({ twoFactorEnabled: !!v }); }} />
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">Enable 2FA</p>
+                      <p className="text-xs text-gray-500">Add an extra layer of security</p>
+                    </div>
                   </div>
-                  {twoFactorEnabled && (
-                    <div className="mt-3">
-                      <div className="text-sm text-gray-600">Backup Codes</div>
-                      {backupCodes.length === 0 ? (
-                        <Button size="sm" className="mt-2 bg-white text-blue-700 border-blue-300 hover:bg-blue-50" variant="outline" onClick={generateBackupCodes}>Generate Backup Codes</Button>
-                      ) : (
-                        <div className="mt-2">
-                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-                            {backupCodes.map(c => (<code key={c} className="px-2 py-1 rounded bg-white border border-gray-200 text-gray-900">{c}</code>))}
-                          </div>
-                          <div className="mt-2 flex gap-2">
-                            <Button size="sm" variant="outline" className="bg-white text-blue-700 border-blue-300 hover:bg-blue-50" onClick={downloadBackupCodes}>Download</Button>
-                            <Button size="sm" variant="outline" className="bg-white text-blue-700 border-blue-300 hover:bg-blue-50" onClick={generateBackupCodes}>Regenerate</Button>
-                          </div>
+                  <Switch
+                    checked={twoFactorEnabled}
+                    onCheckedChange={(v) => { setTwoFactorEnabled(!!v); persistSecurity({ twoFactorEnabled: !!v }); }}
+                  />
+                </div>
+
+                {twoFactorEnabled && (
+                  <div className="pt-4 border-t border-gray-100">
+                    <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-3">Backup Codes</p>
+                    {backupCodes.length === 0 ? (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="border-gray-200 text-gray-700 hover:bg-gray-50"
+                        onClick={generateBackupCodes}
+                      >
+                        Generate Backup Codes
+                      </Button>
+                    ) : (
+                      <div className="space-y-3">
+                        <div className="grid grid-cols-4 gap-2">
+                          {backupCodes.map(c => (
+                            <code key={c} className="px-2 py-1.5 rounded-md bg-gray-50 border border-gray-200 text-xs font-mono text-gray-800 text-center">
+                              {c}
+                            </code>
+                          ))}
                         </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-
-                <div className="rounded border border-gray-200 bg-gray-50 p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-gray-900">Login Alerts</p>
-                      <p className="text-sm text-gray-600">Email me when a new device logs into my account</p>
-                    </div>
-                    <Switch checked={loginAlertsEnabled} onCheckedChange={(v) => { setLoginAlertsEnabled(!!v); persistSecurity({ loginAlertsEnabled: !!v }); }} />
+                        <div className="flex gap-2">
+                          <Button size="sm" variant="outline" className="border-gray-200 text-gray-600 hover:bg-gray-50" onClick={downloadBackupCodes}>
+                            Download
+                          </Button>
+                          <Button size="sm" variant="outline" className="border-gray-200 text-gray-600 hover:bg-gray-50" onClick={generateBackupCodes}>
+                            Regenerate
+                          </Button>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                </div>
-
-                <div className="rounded border border-gray-200 bg-gray-50 p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-gray-900">Trust this Device</p>
-                      <p className="text-sm text-gray-600">Skip 2FA on this device for faster sign‑in</p>
-                    </div>
-                    <Switch checked={trustedDevice} onCheckedChange={(v) => { setTrustedDevice(!!v); persistSecurity({ trustedDevice: !!v }); }} />
-                  </div>
-                </div>
-
-                <Button className="w-full bg-emerald-500 hover:bg-emerald-400 text-white" disabled={loggingOutOthers} onClick={logoutOtherDevices}>
-                  <Shield className="h-4 w-4 mr-2" />
-                  {loggingOutOthers ? 'Logging out…' : 'Log Out of All Other Devices'}
-                </Button>
+                )}
               </CardContent>
             </Card>
 
-            <Card className="bg-red-50 border-red-200 text-gray-700 mb-10 shadow-sm">
-              <CardHeader>
-                <CardTitle className="text-red-700 flex items-center gap-2 font-medium">
-                  <AlertTriangle className="h-5 w-5" />
+            {/* Security Settings */}
+            <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
+              <CardHeader className="bg-gray-50/50 border-b border-gray-100 py-4">
+                <CardTitle className="text-base font-semibold text-gray-900">Security Settings</CardTitle>
+              </CardHeader>
+              <CardContent className="p-0 divide-y divide-gray-100">
+                <div className="flex items-center justify-between p-5">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-lg bg-blue-50 flex items-center justify-center">
+                      <Bell className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">Login Alerts</p>
+                      <p className="text-xs text-gray-500">Email me when a new device logs in</p>
+                    </div>
+                  </div>
+                  <Switch
+                    checked={loginAlertsEnabled}
+                    onCheckedChange={(v) => { setLoginAlertsEnabled(!!v); persistSecurity({ loginAlertsEnabled: !!v }); }}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between p-5">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-lg bg-purple-50 flex items-center justify-center">
+                      <Monitor className="h-5 w-5 text-purple-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">Trust this Device</p>
+                      <p className="text-xs text-gray-500">Skip 2FA on this device for faster sign-in</p>
+                    </div>
+                  </div>
+                  <Switch
+                    checked={trustedDevice}
+                    onCheckedChange={(v) => { setTrustedDevice(!!v); persistSecurity({ trustedDevice: !!v }); }}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Session Management */}
+            <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
+              <CardContent className="p-5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">Log Out All Devices</p>
+                    <p className="text-xs text-gray-500 mt-0.5">Sign out from all other active sessions</p>
+                  </div>
+                  <Button
+                    size="sm"
+                    className="bg-gray-900 hover:bg-gray-800 text-white"
+                    disabled={loggingOutOthers}
+                    onClick={logoutOtherDevices}
+                  >
+                    {loggingOutOthers ? 'Signing out...' : 'Log Out Others'}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Danger Zone */}
+            <Card className="bg-white border border-red-200 shadow-sm rounded-xl overflow-hidden">
+              <CardHeader className="bg-red-50/50 border-b border-red-100 py-4">
+                <CardTitle className="text-base font-semibold text-red-700 flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4" />
                   Danger Zone
                 </CardTitle>
-                <CardDescription className="text-gray-600">Permanent actions that cannot be undone</CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-5">
                 <p className="text-sm text-gray-600 mb-4">
-                  Deleting your account will permanently remove all data, including recovery history,
-                  team members, and integrations. This action cannot be reversed.
+                  Permanently delete your account and all associated data. This action cannot be undone.
                 </p>
                 <Button variant="destructive" size="sm" onClick={() => setDeleteOpen(true)}>
                   Delete Account
                 </Button>
               </CardContent>
             </Card>
+
             <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
-              <DialogContent>
+              <DialogContent className="bg-white">
                 <DialogHeader>
-                  <DialogTitle>Confirm account deletion</DialogTitle>
-                  <DialogDescription>This will permanently remove your account and all associated data.</DialogDescription>
+                  <DialogTitle className="text-gray-900">Delete your account?</DialogTitle>
+                  <DialogDescription className="text-gray-600">
+                    This will permanently remove your account and all associated data including recovery history, team members, and integrations.
+                  </DialogDescription>
                 </DialogHeader>
-                <DialogFooter>
+                <DialogFooter className="gap-2">
                   <Button variant="outline" onClick={() => setDeleteOpen(false)}>Cancel</Button>
-                  <Button variant="destructive" onClick={() => { setDeleteOpen(false); toast({ title: 'Account deletion requested', description: 'Our support will contact you to confirm.' }); }}>Delete</Button>
+                  <Button
+                    variant="destructive"
+                    onClick={() => {
+                      setDeleteOpen(false);
+                      toast({ title: 'Account deletion requested', description: 'Our support will contact you to confirm.' });
+                    }}
+                  >
+                    Delete Account
+                  </Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
