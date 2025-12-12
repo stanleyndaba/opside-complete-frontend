@@ -137,44 +137,48 @@ export default function Careers() {
               </div>
             </section>
 
-            {/* Hiring Process */}
-            <section className="mb-12">
-              <h2 className="text-lg font-semibold text-gray-900 mb-6">Hiring Process</h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {process.map((item) => (
-                  <Card key={item.step} className="bg-white border-gray-200 shadow-sm rounded-xl">
-                    <CardContent className="p-4 text-center">
-                      <div className="h-8 w-8 rounded-full bg-gray-900 text-white text-sm font-medium flex items-center justify-center mx-auto mb-3">
+            {/* Hiring Process - Timeline */}
+            <section className="mb-16">
+              <h2 className="text-lg font-semibold text-gray-900 mb-8">Hiring Process</h2>
+              <div className="relative">
+                {/* Timeline line */}
+                <div className="absolute left-4 top-0 bottom-0 w-px bg-gray-200" />
+
+                <div className="space-y-8">
+                  {process.map((item) => (
+                    <div key={item.step} className="relative pl-12">
+                      {/* Step number */}
+                      <div className="absolute left-0 h-8 w-8 rounded-full bg-gray-900 text-white text-sm font-medium flex items-center justify-center">
                         {item.step}
                       </div>
-                      <h3 className="font-medium text-gray-900 text-sm mb-1">{item.title}</h3>
-                      <p className="text-xs text-gray-500">{item.description}</p>
-                    </CardContent>
-                  </Card>
-                ))}
+                      {/* Content */}
+                      <div>
+                        <h3 className="font-medium text-gray-900">{item.title}</h3>
+                        <p className="text-sm text-gray-500 mt-0.5">{item.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </section>
 
-            {/* Contact CTA */}
-            <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-0 shadow-lg rounded-xl">
-              <CardContent className="p-8 text-center">
-                <h3 className="text-lg font-semibold text-white mb-2">
-                  Not sure which role fits?
-                </h3>
-                <p className="text-sm text-gray-400 mb-5">
-                  We value a fast, respectful process. Reach out and let's talk.
-                </p>
-                <Button
-                  asChild
-                  className="bg-emerald-500 hover:bg-emerald-400 text-white font-medium"
-                >
-                  <a href="mailto:careers@getclario.com">
-                    Contact Us
-                    <ArrowRight className="h-4 w-4 ml-2" />
-                  </a>
-                </Button>
-              </CardContent>
-            </Card>
+            {/* Contact CTA - Simple */}
+            <section className="pt-8 border-t border-gray-100">
+              <h3 className="text-base font-medium text-gray-900 mb-1">
+                Not sure which role fits?
+              </h3>
+              <p className="text-sm text-gray-500 mb-4">
+                We value a fast, respectful process. Reach out and let's talk.
+              </p>
+              <Button
+                asChild
+                className="bg-gray-900 hover:bg-gray-800 text-white font-medium"
+              >
+                <a href="mailto:careers@getclario.com">
+                  Contact Us
+                </a>
+              </Button>
+            </section>
           </div>
         </div>
       </div>
