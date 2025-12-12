@@ -14,7 +14,7 @@ import {
   User, Building2, Users, CreditCard, Zap, Bell, Shield,
   Upload, MapPin, Clock, Monitor, Smartphone, AlertTriangle,
   CheckCircle, Calendar, Globe, Camera, Key, Plug, Briefcase,
-  RefreshCw, XCircle, Store, Box
+  RefreshCw, XCircle, Store, Box, BarChart3
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';

@@ -72,16 +72,13 @@ export default function Careers() {
 
           <div className="relative mx-auto max-w-4xl px-6 pt-12 md:pt-16 pb-16">
             {/* Header */}
-            <header className="text-center mb-12">
-              <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-emerald-50 mb-4">
-                <Briefcase className="h-6 w-6 text-emerald-600" />
-              </div>
+            <header className="mb-12">
               <h1 className="text-3xl md:text-4xl font-semibold text-gray-900 tracking-tight">
-                Join Clario
+                Build the Future of E-Commerce Finance
               </h1>
-              <p className="mt-4 text-base text-gray-600 max-w-lg mx-auto leading-relaxed">
-                We're building the intelligent financial layer for e-commerce.
-                Join a small, elite team solving hard problems with real impact.
+              <p className="mt-4 text-lg text-gray-600 max-w-2xl leading-relaxed">
+                We're a small team building the intelligent financial recovery layer for e-commerce.
+                We hire for impact, ownership, and solving hard problems.
               </p>
             </header>
 
