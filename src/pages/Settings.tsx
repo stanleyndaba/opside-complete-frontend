@@ -817,8 +817,8 @@ const Settings = () => {
                 {/* Recovery Alerts */}
                 <div className="flex items-center justify-between p-5">
                   <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-lg bg-emerald-50 flex items-center justify-center">
-                      <CheckCircle className="h-5 w-5 text-emerald-600" />
+                    <div className="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center">
+                      <CheckCircle className="h-5 w-5 text-gray-500" />
                     </div>
                     <div>
                       <p className="text-sm font-medium text-gray-900">New Recovery Guaranteed</p>
@@ -831,8 +831,8 @@ const Settings = () => {
                 {/* Monthly Summary */}
                 <div className="flex items-center justify-between p-5">
                   <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-lg bg-blue-50 flex items-center justify-center">
-                      <BarChart3 className="h-5 w-5 text-blue-600" />
+                    <div className="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center">
+                      <BarChart3 className="h-5 w-5 text-gray-500" />
                     </div>
                     <div>
                       <p className="text-sm font-medium text-gray-900">Monthly Performance Summary</p>
@@ -845,8 +845,8 @@ const Settings = () => {
                 {/* Invoice Alerts */}
                 <div className="flex items-center justify-between p-5">
                   <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-lg bg-amber-50 flex items-center justify-center">
-                      <CreditCard className="h-5 w-5 text-amber-600" />
+                    <div className="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center">
+                      <CreditCard className="h-5 w-5 text-gray-500" />
                     </div>
                     <div>
                       <p className="text-sm font-medium text-gray-900">New Invoice Issued</p>
@@ -859,8 +859,8 @@ const Settings = () => {
                 {/* Product Updates */}
                 <div className="flex items-center justify-between p-5">
                   <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-lg bg-purple-50 flex items-center justify-center">
-                      <Bell className="h-5 w-5 text-purple-600" />
+                    <div className="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center">
+                      <Bell className="h-5 w-5 text-gray-500" />
                     </div>
                     <div>
                       <p className="text-sm font-medium text-gray-900">Product News & Updates</p>
