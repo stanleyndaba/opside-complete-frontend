@@ -19,6 +19,14 @@
     font-family: 'Inter', system-ui, sans-serif;
     font-weight: 900;
   }
+
+  .font-montserrat {
+    font-family: 'Montserrat', sans-serif !important;
+  }
+
+  .font-code {
+    font-family: 'Fira Code', 'JetBrains Mono', 'Consolas', 'Monaco', monospace !important;
+  }
 }
 
 @layer base {

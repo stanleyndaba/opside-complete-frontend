@@ -28,38 +28,37 @@ const ApiAccess = () => {
                   <span className="h-3 w-3 rounded-full bg-red-500" />
                   <span className="h-3 w-3 rounded-full bg-yellow-500" />
                   <span className="h-3 w-3 rounded-full bg-green-500" />
-                  <span className="ml-3 text-xs text-gray-500" style={{ fontFamily: 'Fira Code, Consolas, Monaco, monospace' }}>example.py</span>
+                  <span className="ml-3 text-xs text-gray-500 font-code">example.py</span>
                 </div>
                 <CardContent className="p-0">
-                  <pre
-                    className="p-6 overflow-x-auto text-sm md:text-base leading-relaxed text-gray-300"
-                    style={{ fontFamily: 'Fira Code, JetBrains Mono, Consolas, Monaco, monospace' }}
-                  >
-                    {`import opside
-from datetime import datetime, timedelta
-
-# Initialize the Opside client
-client = opside.Client(api_key="os_live_xxxxxxxxxxxxxxxx")
-
-# Fetch all recoverable claims from the last 30 days
-claims = client.claims.list(
-    status="recoverable",
-    created_after=datetime.now() - timedelta(days=30),
-    marketplace="amazon_us",
-    limit=50
-)
-
-print(f"Found {len(claims)} recoverable claims")
-
-# Get estimated recovery value
-total_value = sum(claim.amount for claim in claims)
-print(f"Total estimated recovery: $" + f"{total_value:,.2f}")
-
-# Submit claims for recovery
-for claim in claims:
-    if claim.confidence >= 0.85:
-        result = client.claims.submit(claim.id)
-        print(f"Submitted claim {claim.id}: {result.status}")`}
+                  <pre className="font-code p-6 overflow-x-auto text-sm md:text-base leading-relaxed">
+                    <code>
+                      <span className="text-purple-400">import</span> <span className="text-blue-300">opside</span>{'\n'}
+                      <span className="text-purple-400">from</span> <span className="text-blue-300">datetime</span> <span className="text-purple-400">import</span> <span className="text-yellow-300">datetime</span>, <span className="text-yellow-300">timedelta</span>{'\n'}
+                      {'\n'}
+                      <span className="text-gray-500"># Initialize the Opside client</span>{'\n'}
+                      <span className="text-gray-300">client</span> <span className="text-pink-400">=</span> <span className="text-blue-300">opside</span>.<span className="text-yellow-300">Client</span>(<span className="text-orange-400">api_key</span><span className="text-pink-400">=</span><span className="text-green-400">"os_live_xxxxxxxxxxxxxxxx"</span>){'\n'}
+                      {'\n'}
+                      <span className="text-gray-500"># Fetch all recoverable claims from the last 30 days</span>{'\n'}
+                      <span className="text-gray-300">claims</span> <span className="text-pink-400">=</span> <span className="text-gray-300">client</span>.<span className="text-gray-300">claims</span>.<span className="text-yellow-300">list</span>({'\n'}
+                      {'    '}<span className="text-orange-400">status</span><span className="text-pink-400">=</span><span className="text-green-400">"recoverable"</span>,{'\n'}
+                      {'    '}<span className="text-orange-400">created_after</span><span className="text-pink-400">=</span><span className="text-yellow-300">datetime</span>.<span className="text-yellow-300">now</span>() <span className="text-pink-400">-</span> <span className="text-yellow-300">timedelta</span>(<span className="text-orange-400">days</span><span className="text-pink-400">=</span><span className="text-cyan-400">30</span>),{'\n'}
+                      {'    '}<span className="text-orange-400">marketplace</span><span className="text-pink-400">=</span><span className="text-green-400">"amazon_us"</span>,{'\n'}
+                      {'    '}<span className="text-orange-400">limit</span><span className="text-pink-400">=</span><span className="text-cyan-400">50</span>{'\n'}
+                      ){'\n'}
+                      {'\n'}
+                      <span className="text-yellow-300">print</span>(<span className="text-green-400">f"Found </span><span className="text-cyan-300">{'{'}<span className="text-gray-300">len</span>(<span className="text-gray-300">claims</span>){'}'}</span><span className="text-green-400"> recoverable claims"</span>){'\n'}
+                      {'\n'}
+                      <span className="text-gray-500"># Get estimated recovery value</span>{'\n'}
+                      <span className="text-gray-300">total_value</span> <span className="text-pink-400">=</span> <span className="text-yellow-300">sum</span>(<span className="text-gray-300">claim</span>.<span className="text-gray-300">amount</span> <span className="text-purple-400">for</span> <span className="text-gray-300">claim</span> <span className="text-purple-400">in</span> <span className="text-gray-300">claims</span>){'\n'}
+                      <span className="text-yellow-300">print</span>(<span className="text-green-400">f"Total estimated recovery: $</span><span className="text-cyan-300">{'{'}<span className="text-gray-300">total_value</span>:,.2f{'}'}</span><span className="text-green-400">"</span>){'\n'}
+                      {'\n'}
+                      <span className="text-gray-500"># Submit claims for recovery</span>{'\n'}
+                      <span className="text-purple-400">for</span> <span className="text-gray-300">claim</span> <span className="text-purple-400">in</span> <span className="text-gray-300">claims</span>:{'\n'}
+                      {'    '}<span className="text-purple-400">if</span> <span className="text-gray-300">claim</span>.<span className="text-gray-300">confidence</span> <span className="text-pink-400">&gt;=</span> <span className="text-cyan-400">0.85</span>:{'\n'}
+                      {'        '}<span className="text-gray-300">result</span> <span className="text-pink-400">=</span> <span className="text-gray-300">client</span>.<span className="text-gray-300">claims</span>.<span className="text-yellow-300">submit</span>(<span className="text-gray-300">claim</span>.<span className="text-gray-300">id</span>){'\n'}
+                      {'        '}<span className="text-yellow-300">print</span>(<span className="text-green-400">f"Submitted claim </span><span className="text-cyan-300">{'{'}<span className="text-gray-300">claim</span>.<span className="text-gray-300">id</span>{'}'}</span><span className="text-green-400">: </span><span className="text-cyan-300">{'{'}<span className="text-gray-300">result</span>.<span className="text-gray-300">status</span>{'}'}</span><span className="text-green-400">"</span>)
+                    </code>
                   </pre>
                 </CardContent>
               </Card>
@@ -74,72 +73,53 @@ for claim in claims:
                 <div className="border-l-2 border-gray-200 pl-6">
                   <h3 className="font-medium text-gray-900 mb-1">Sync Recovery Data</h3>
                   <p className="text-gray-600">
-                    Pull all detected claims, their statuses, and their financial value directly into your own internal dashboards, data warehouses, or ERP systems.
-                  </p>
-                </div>
-                <div className="border-l-2 border-gray-200 pl-6">
-                  <h3 className="font-medium text-gray-900 mb-1">Build Custom Reporting</h3>
-                  <p className="text-gray-600">
-                    Create bespoke financial reports and analytics for your team or your clients, leveraging real-time data from the Clario engine.
+                    Programmatically pull recovery totals, claim statuses, and payout timelines into your dashboards or accounting tools.
                   </p>
                 </div>
                 <div className="border-l-2 border-gray-200 pl-6">
                   <h3 className="font-medium text-gray-900 mb-1">Automate Workflows</h3>
                   <p className="text-gray-600">
-                    Programmatically approve claims, trigger scans, and manage your recovery pipeline without ever needing to log into the Clario UI.
+                    Trigger claim submissions, approve matches, or fetch evidence documents via simple REST endpoints.
+                  </p>
+                </div>
+                <div className="border-l-2 border-gray-200 pl-6">
+                  <h3 className="font-medium text-gray-900 mb-1">Build Custom Integrations</h3>
+                  <p className="text-gray-600">
+                    Embed recovery alerts, performance metrics, or recovery insights directly into your own client portals.
                   </p>
                 </div>
               </div>
             </section>
 
-            {/* How It Works */}
+            {/* Coming Soon */}
             <section className="mb-16">
-              <h2 className="text-xl md:text-2xl font-semibold text-gray-900 mb-6">
-                How It Will Work
-              </h2>
-              <div className="space-y-6">
-                <div className="border-l-2 border-gray-200 pl-6">
-                  <h3 className="font-medium text-gray-900 mb-1">Modern REST Architecture</h3>
-                  <p className="text-gray-600">
-                    A clean, predictable, and well-documented REST API that is easy to integrate with.
+              <Card className="bg-gray-50 border-gray-200 shadow-sm rounded-xl">
+                <CardContent className="p-8 text-center">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    Coming Soon
+                  </h3>
+                  <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                    We're finalizing our developer documentation and authentication flows.
+                    Be among the first to get access when we launch.
                   </p>
-                </div>
-                <div className="border-l-2 border-gray-200 pl-6">
-                  <h3 className="font-medium text-gray-900 mb-1">Real-Time Webhooks</h3>
-                  <p className="text-gray-600">
-                    Receive real-time push notifications to your own services for key events like{' '}
-                    <code className="font-mono bg-gray-100 px-1.5 py-0.5 rounded text-sm">claim.detected</code>,{' '}
-                    <code className="font-mono bg-gray-100 px-1.5 py-0.5 rounded text-sm">claim.submitted</code>, and{' '}
-                    <code className="font-mono bg-gray-100 px-1.5 py-0.5 rounded text-sm">funds.recovered</code>.
-                  </p>
-                </div>
-                <div className="border-l-2 border-gray-200 pl-6">
-                  <h3 className="font-medium text-gray-900 mb-1">Secure and Scalable</h3>
-                  <p className="text-gray-600">
-                    Built with the same enterprise-grade security and reliability as our core platform, ensuring your data is always safe and accessible.
-                  </p>
-                </div>
-              </div>
+                  <Button className="bg-gray-900 hover:bg-gray-800 text-white">
+                    Join Waitlist
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </CardContent>
+              </Card>
             </section>
 
-            {/* CTA */}
-            <section className="pt-8 border-t border-gray-100">
-              <h2 className="text-xl md:text-2xl font-semibold text-gray-900 mb-4">
-                Get Notified
-              </h2>
-              <p className="text-gray-600 mb-6">
-                Our developer API is currently in a private beta with select partners. If you are an enterprise brand, an agency, or a developer interested in building on the Clario platform, please contact us to be added to the early access list.
-              </p>
-              <Button
-                asChild
-                className="bg-gray-900 hover:bg-gray-800 text-white font-medium"
-              >
-                <a href="mailto:hello@getclario.com?subject=Clario%20API%20Early%20Access">
-                  Request Early Access
-                  <ArrowRight className="h-4 w-4 ml-2" />
+            {/* Footer Note */}
+            <footer className="text-center">
+              <p className="text-sm text-gray-500">
+                Questions about API access?{' '}
+                <a href="mailto:api@opside.com" className="text-gray-900 hover:text-gray-600 font-medium">
+                  Contact our team
                 </a>
-              </Button>
-            </section>
+              </p>
+            </footer>
+
           </div>
         </div>
       </div>
