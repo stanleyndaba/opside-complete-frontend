@@ -681,16 +681,7 @@ export const api = {
   getDocument: (id: string) => requestJson<any>(`/api/documents/${encodeURIComponent(id)}`),
   getDocumentDownloadUrl: (id: string) => buildApiUrl(`/api/documents/${encodeURIComponent(id)}/download`),
   getDocumentDownload: (id: string) => requestJson<{ success: boolean; url: string; filename: string }>(`/api/documents/${encodeURIComponent(id)}/download`),
-  deleteDocument: (id: string) => requestJson<{ success: boolean; message: string }>(`/api/documents/${encodeURIComponent(id)}`, { method: 'DELETE' }),
   reparseDocument: (id: string) => requestJson<{ success: boolean; message: string }>(`/api/documents/${encodeURIComponent(id)}/reparse`, { method: 'POST' }),
-  // Get document with all parsed data (same as getDocument, backend now returns everything)
-  getDocumentWithParsedData: (id: string) => requestJson<any>(`/api/documents/${encodeURIComponent(id)}`),
-  // Get matching results for a specific document
-  getDocumentMatchingResults: (documentId: string) =>
-    requestJson<{
-      success: boolean;
-      results: any[];
-    }>(`/api/evidence/matching/results?document_id=${encodeURIComponent(documentId)}`),
 
   // PHASE4: Evidence ingestion endpoints (Node.js backend)
   // Gmail ingestion
@@ -835,49 +826,6 @@ export const api = {
       status: 'disconnected';
     };
   }>(`/api/evidence/sources/${encodeURIComponent(id)}`, { method: 'DELETE' }),
-
-  // Evidence Matching (Agent 6) endpoints
-  runEvidenceMatching: () =>
-    requestJson<{
-      success: boolean;
-      message: string;
-      matches: number;
-      auto_submits: number;
-      smart_prompts: number;
-      results?: any[];
-    }>('/api/evidence/matching/run', { method: 'POST' }),
-
-  getMatchingResults: (options?: { limit?: number; status?: string }) =>
-    requestJson<{
-      success: boolean;
-      results: any[];
-      total: number;
-    }>(`/api/evidence/matching/results${options ? `?${new URLSearchParams(options as any).toString()}` : ''}`),
-
-  approveSmartPrompt: (matchId: string) =>
-    requestJson<{
-      success: boolean;
-      message: string;
-      matchId: string;
-    }>(`/api/evidence/matching/${encodeURIComponent(matchId)}/approve`, { method: 'POST' }),
-
-  rejectSmartPrompt: (matchId: string, reason?: string) =>
-    requestJson<{
-      success: boolean;
-      message: string;
-      matchId: string;
-    }>(`/api/evidence/matching/${encodeURIComponent(matchId)}/reject`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ reason })
-    }),
-
-  requestMoreEvidence: (matchId: string) =>
-    requestJson<{
-      success: boolean;
-      message: string;
-      matchId: string;
-    }>(`/api/evidence/matching/${encodeURIComponent(matchId)}/request-more`, { method: 'POST' }),
 
   getMatchingMetrics: (days?: number) =>
     requestJson<{

@@ -53,13 +53,13 @@ print(f"Found {len(claims)} recoverable claims")
 
 # Get estimated recovery value
 total_value = sum(claim.amount for claim in claims)
-print(f"Total estimated recovery: ${total_value:,.2f}")
+print(f"Total estimated recovery: $" + f"{total_value:,.2f}")
 
-                    # Submit claims for recovery
-                    for claim in claims:
+# Submit claims for recovery
+for claim in claims:
     if claim.confidence >= 0.85:
-                    result = client.claims.submit(claim.id)
-                    print(f"Submitted claim {claim.id}: {result.status}")`}
+        result = client.claims.submit(claim.id)
+        print(f"Submitted claim {claim.id}: {result.status}")`}
                   </pre>
                 </CardContent>
               </Card>
