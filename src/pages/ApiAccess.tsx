@@ -14,10 +14,10 @@ const ApiAccess = () => {
             {/* Header */}
             <header className="mb-16">
               <h1 className="text-3xl md:text-4xl font-semibold text-gray-900 leading-tight tracking-tight">
-                The Clario API: The Financial Engine for Modern Commerce
+                The Opside API: The Financial Engine for Modern Commerce
               </h1>
               <p className="mt-6 text-lg text-gray-600 leading-relaxed">
-                At Clario, we are building more than a dashboard. We are building the intelligent financial recovery layer for e-commerce. Our future-facing API will allow developers, agencies, and enterprise brands to programmatically access the full power of our platform, integrating automated reimbursement data and workflows directly into their own systems.
+                At Opside, we are building more than a dashboard. We are building the intelligent financial recovery layer for e-commerce. Our future-facing API will allow developers, agencies, and enterprise brands to programmatically access the full power of our platform, integrating automated reimbursement data and workflows directly into their own systems.
               </p>
             </header>
 
@@ -25,25 +25,41 @@ const ApiAccess = () => {
             <section className="mb-16">
               <Card className="bg-gray-900 border-gray-800 shadow-xl rounded-xl overflow-hidden">
                 <div className="flex items-center gap-2 px-4 py-3 bg-gray-800/50 border-b border-gray-700/50">
-                  <span className="h-2.5 w-2.5 rounded-full bg-gray-600" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-gray-600" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-gray-600" />
-                  <span className="ml-3 text-xs text-gray-500 font-mono">example.py</span>
+                  <span className="h-3 w-3 rounded-full bg-red-500" />
+                  <span className="h-3 w-3 rounded-full bg-yellow-500" />
+                  <span className="h-3 w-3 rounded-full bg-green-500" />
+                  <span className="ml-3 text-xs text-gray-500" style={{ fontFamily: 'Fira Code, Consolas, Monaco, monospace' }}>example.py</span>
                 </div>
                 <CardContent className="p-0">
-                  <pre className="p-6 overflow-x-auto text-sm md:text-base leading-relaxed font-mono text-gray-300">
-                    {`# Get the latest recovered claims
-from clario import Clario
+                  <pre
+                    className="p-6 overflow-x-auto text-sm md:text-base leading-relaxed text-gray-300"
+                    style={{ fontFamily: 'Fira Code, JetBrains Mono, Consolas, Monaco, monospace' }}
+                  >
+                    {`import opside
+from datetime import datetime, timedelta
 
-client = Clario(api_key="YOUR_API_KEY")
+# Initialize the Opside client
+client = opside.Client(api_key="os_live_xxxxxxxxxxxxxxxx")
 
+# Fetch all recoverable claims from the last 30 days
 claims = client.claims.list(
-    status="recovered",
-    limit=10
+    status="recoverable",
+    created_after=datetime.now() - timedelta(days=30),
+    marketplace="amazon_us",
+    limit=50
 )
 
-for claim in claims:
-    print(f"Recovered {claim.amount} for {claim.id}")`}
+print(f"Found {len(claims)} recoverable claims")
+
+# Get estimated recovery value
+total_value = sum(claim.amount for claim in claims)
+print(f"Total estimated recovery: ${total_value:,.2f}")
+
+                    # Submit claims for recovery
+                    for claim in claims:
+    if claim.confidence >= 0.85:
+                    result = client.claims.submit(claim.id)
+                    print(f"Submitted claim {claim.id}: {result.status}")`}
                   </pre>
                 </CardContent>
               </Card>
