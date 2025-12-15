@@ -205,7 +205,7 @@ export function Sidebar({
               alt="Clario"
               className="h-4 w-auto object-contain"
             />
-            <span className="font-montserrat text-gray-900 text-base" style={{ fontWeight: 350 }}>
+            <span className="font-montserrat text-gray-900 text-base" style={{ fontWeight: 600 }}>
               Opside
             </span>
           </div>
