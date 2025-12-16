@@ -1302,7 +1302,7 @@ export default function Recoveries() {
           <div className="relative w-full max-w-full mx-auto px-6 pt-6 pb-10 text-gray-900 space-y-8">
             <div className="mb-8">
               <div className="flex items-center justify-between mb-2">
-                <h1 className="text-2xl text-gray-900 font-normal">All Reimbursements</h1>
+                <h1 className="text-xl text-gray-900 font-semibold">Cases</h1>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button className="flex items-center gap-1 text-sm text-gray-700 hover:text-gray-900 bg-transparent border-0 cursor-pointer">
@@ -1518,7 +1518,7 @@ export default function Recoveries() {
 
             {/* Tabs for Claims, Evidence Matching, and Cases */}
             <div className="mb-6">
-              <h2 className="text-xl text-gray-900 font-semibold mb-4 text-right">Claims Management</h2>
+              <h2 className="text-base text-gray-900 font-semibold mb-4 text-left">Revenue Recovery</h2>
               <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'claims' | 'matching' | 'cases')} className="w-full">
                 <TabsList className="mb-6 inline-flex h-auto items-center justify-start gap-6 bg-transparent border-b border-gray-200 rounded-none p-0">
                   <TabsTrigger
