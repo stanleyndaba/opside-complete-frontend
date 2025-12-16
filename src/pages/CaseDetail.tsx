@@ -145,6 +145,53 @@ const deriveEvidence = (id: string): 'Ready' | 'Needs Docs' | 'Collecting' => {
   return 'Collecting';
 };
 
+// Get required documents based on claim type
+const getRequiredDocsForClaimType = (claimType?: string): string[] => {
+  const type = (claimType || '').toLowerCase();
+
+  if (type.includes('lost') || type.includes('missing')) {
+    return [
+      'Inventory report showing missing units',
+      'Shipment confirmation or BOL',
+      'Proof of purchase/invoice for lost items'
+    ];
+  }
+  if (type.includes('damaged') || type.includes('damage')) {
+    return [
+      'Photos of damaged products',
+      'Original invoice/receipt',
+      'Carrier damage report (if applicable)'
+    ];
+  }
+  if (type.includes('return') || type.includes('refund')) {
+    return [
+      'Return tracking confirmation',
+      'Original order invoice',
+      'Proof of item condition before return'
+    ];
+  }
+  if (type.includes('fee') || type.includes('overcharge')) {
+    return [
+      'Fee breakdown statement',
+      'Product dimension/weight documentation',
+      'Original listing details'
+    ];
+  }
+  if (type.includes('inbound') || type.includes('shipment')) {
+    return [
+      'Shipment tracking/BOL',
+      'Packing list with quantities',
+      'Supplier invoice'
+    ];
+  }
+  // Default fallback
+  return [
+    'Invoice or receipt for affected items',
+    'Proof of shipment or delivery',
+    'Any supporting documentation'
+  ];
+};
+
 export default function CaseDetail() {
   const { caseId } = useParams<{ caseId: string }>();
   const location = useLocation() as any;
@@ -739,11 +786,13 @@ export default function CaseDetail() {
                     ) : (
                       <div className="text-center py-6">
                         <FileText className="h-8 w-8 mx-auto text-gray-300 mb-3" />
-                        <p className="text-sm text-amber-600 font-medium mb-2">Documents needed for 90% success rate:</p>
+                        <p className="text-sm text-amber-600 font-medium mb-2">
+                          Documents needed for this {effectiveCase.type || effectiveCase.anomaly_type || 'claim'}:
+                        </p>
                         <div className="space-y-1 text-xs text-gray-600">
-                          <p>• Invoice matching order ID</p>
-                          <p>• Packing slip or receipt</p>
-                          <p>• Shipping confirmation</p>
+                          {getRequiredDocsForClaimType(effectiveCase.type || effectiveCase.anomaly_type).map((doc, idx) => (
+                            <p key={idx}>• {doc}</p>
+                          ))}
                         </div>
                         <Button
                           variant="outline"
