@@ -238,58 +238,36 @@ export default function DocumentDetail() {
           </div>
         </div>
 
-        {/* Summary Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          <Card className="bg-gray-50 border-gray-200">
-            <CardContent className="p-4">
-              <div className="text-xs text-gray-600 mb-1">Order IDs</div>
-              <div className="text-lg font-bold text-[#36454F]">
-                {extracted.order_ids?.length || 0}
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="bg-gray-50 border-gray-200">
-            <CardContent className="p-4">
-              <div className="text-xs text-gray-600 mb-1">ASINs</div>
-              <div className="text-lg font-bold text-[#36454F]">
-                {extracted.asins?.length || 0}
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="bg-gray-50 border-gray-200">
-            <CardContent className="p-4">
-              <div className="text-xs text-gray-600 mb-1">Tracking #s</div>
-              <div className="text-lg font-bold text-[#36454F]">
-                {extracted.tracking_numbers?.length || 0}
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="bg-gray-50 border-gray-200">
-            <CardContent className="p-4">
-              <div className="text-xs text-gray-600 mb-1">Amounts</div>
-              <div className="text-lg font-bold text-[#36454F]">
-                {extracted.amounts?.length || 0}
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="bg-gray-50 border-gray-200">
-            <CardContent className="p-4">
-              <div className="text-xs text-gray-600 mb-1">Matched Claims</div>
-              <div className="text-lg font-bold text-[#36454F]">
-                {matchedClaims.length}
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="bg-gray-50 border-gray-200">
-            <CardContent className="p-4">
-              <div className="text-xs text-gray-600 mb-1">Confidence</div>
-              <div className="text-lg font-bold text-[#36454F]">
-                {documentData?.parser_confidence !== undefined
-                  ? `${(documentData.parser_confidence * 100).toFixed(0)}%`
-                  : '—'}
-              </div>
-            </CardContent>
-          </Card>
+        {/* Summary Badges */}
+        <div className="flex flex-wrap gap-6 mb-6">
+          <div className="text-sm">
+            <span className="text-gray-500">Order IDs: </span>
+            <span className="font-medium text-[#36454F]">{extracted.order_ids?.length || 0}</span>
+          </div>
+          <div className="text-sm">
+            <span className="text-gray-500">ASINs: </span>
+            <span className="font-medium text-[#36454F]">{extracted.asins?.length || 0}</span>
+          </div>
+          <div className="text-sm">
+            <span className="text-gray-500">Tracking #s: </span>
+            <span className="font-medium text-[#36454F]">{extracted.tracking_numbers?.length || 0}</span>
+          </div>
+          <div className="text-sm">
+            <span className="text-gray-500">Amounts: </span>
+            <span className="font-medium text-[#36454F]">{extracted.amounts?.length || 0}</span>
+          </div>
+          <div className="text-sm">
+            <span className="text-gray-500">Matched Claims: </span>
+            <span className="font-medium text-[#36454F]">{matchedClaims.length}</span>
+          </div>
+          <div className="text-sm">
+            <span className="text-gray-500">Confidence: </span>
+            <span className="font-medium text-blue-600">
+              {documentData?.parser_confidence !== undefined
+                ? `${(documentData.parser_confidence * 100).toFixed(0)}%`
+                : '—'}
+            </span>
+          </div>
         </div>
 
         {/* Main Content Tabs */}
