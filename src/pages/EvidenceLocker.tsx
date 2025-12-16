@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Upload, FileText, Search, Mail, Check, AlertTriangle, Clock, Eye, Download, ExternalLink, Loader2, FolderSearch, ScanLine, FileCheck, Link2, Trash2 } from 'lucide-react';
+import { Upload, FileText, Search, Mail, Check, AlertTriangle, Clock, Eye, Download, ExternalLink, Loader2, FolderSearch, ScanLine, FileCheck, Link2, Trash2, MoreHorizontal, RefreshCw } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { api } from '@/lib/api';
 import { Link } from 'react-router-dom';
@@ -14,6 +14,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { ParsingStatus } from '@/components/evidence/ParsingStatus';
 import { GmailConnectionStatus } from '@/components/evidence/GmailConnectionStatus';
 import { EvidenceIngestion } from '@/components/evidence/EvidenceIngestion';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 // Document Log entry type
 interface DocLogEntry {
@@ -1188,7 +1189,7 @@ export default function EvidenceLocker() {
                               </Badge>
                             )}
                             {doc.parser_confidence !== undefined && (
-                              <span className="text-xs text-gray-400">
+                              <span className="text-xs text-[#36454F]">
                                 {(doc.parser_confidence * 100).toFixed(0)}%
                               </span>
                             )}
@@ -1196,7 +1197,7 @@ export default function EvidenceLocker() {
                         )}
                       </TableCell>
                       <TableCell className="whitespace-nowrap">
-                        {doc.parsedVia && <Badge variant="outline" className="text-xs capitalize border-white/20 text-gray-200">{doc.parsedVia}</Badge>}
+                        {doc.parsedVia && <Badge variant="outline" className="text-xs capitalize border-gray-300 text-[#36454F]">{doc.parsedVia}</Badge>}
                       </TableCell>
                       <TableCell className="whitespace-nowrap">{typeof doc.amount === 'number' ? `$${doc.amount.toFixed(2)}` : '—'}</TableCell>
                       {/* Extracted Data from Agent 5 PDF parsing */}
@@ -1220,13 +1221,13 @@ export default function EvidenceLocker() {
                             ))}
                             {/* Show count if more items */}
                             {((doc.extracted.order_ids?.length || 0) + (doc.extracted.tracking_numbers?.length || 0) + (doc.extracted.asins?.length || 0)) > 4 && (
-                              <Badge className="bg-gray-500/10 text-gray-400 border-gray-500/20 text-xs">
+                              <Badge className="bg-gray-100 text-[#36454F] border-gray-200 text-xs">
                                 +{(doc.extracted.order_ids?.length || 0) + (doc.extracted.tracking_numbers?.length || 0) + (doc.extracted.asins?.length || 0) - 4} more
                               </Badge>
                             )}
                           </div>
                         )}
-                        {!doc.extracted && <span className="text-gray-400 text-xs">—</span>}
+                        {!doc.extracted && <span className="text-[#36454F] text-xs">—</span>}
                       </TableCell>
                       <TableCell>
                         <div className="flex flex-wrap gap-1">
@@ -1237,7 +1238,7 @@ export default function EvidenceLocker() {
                           ))}
                           {/* Show match reasoning if available */}
                           {doc.match_reasoning && (
-                            <span className="text-xs text-gray-400 italic" title={doc.match_reasoning}>
+                            <span className="text-xs text-[#36454F] italic" title={doc.match_reasoning}>
                               ({doc.matched_fields?.join(', ') || 'matched'})
                             </span>
                           )}
@@ -1250,68 +1251,74 @@ export default function EvidenceLocker() {
                         {getMatchStatusBadge(doc.match_confidence)}
                       </TableCell>
                       <TableCell className="whitespace-nowrap">
-                        <span className="font-medium text-gray-100">{doc.linkedSKUs}</span>
-                        {doc.linkedSKUs > 0 && <span className="text-sm text-gray-400 ml-1">SKUs</span>}
+                        <span className="font-medium text-[#36454F]">{doc.linkedSKUs}</span>
+                        {doc.linkedSKUs > 0 && <span className="text-sm text-[#36454F] ml-1">SKUs</span>}
                       </TableCell>
                       <TableCell className="whitespace-nowrap">
-                        <div className="flex items-center gap-2">
-                          <Button variant="ghost" size="sm" asChild>
-                            <Link to={`/documents/${encodeURIComponent(doc.id)}`}>
-                              View
-                            </Link>
-                          </Button>
-                          <Button variant="ghost" size="sm" onClick={() => downloadDoc(doc.id)}>
-                            <Download className="w-4 h-4 mr-1" />
-                          </Button>
-                          {doc.parser_status && doc.parser_status !== 'completed' && doc.parser_status !== 'processing' && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={async () => {
-                                try {
-                                  const res = await api.reparseDocument(doc.id);
-                                  if (res.ok) {
-                                    toast({ title: 'Parsing Started', description: 'Document parsing has been triggered.' });
-                                    // Refresh document status
-                                    const parsedRes = await api.getDocumentWithParsedData(doc.id);
-                                    if (parsedRes.ok && parsedRes.data) {
-                                      setDocuments(prev => prev.map(d =>
-                                        d.id === doc.id
-                                          ? { ...d, parser_status: parsedRes.data!.parser_status }
-                                          : d
-                                      ));
-                                    }
-                                  } else {
-                                    toast({ title: 'Parse Failed', description: res.error || 'Failed to trigger parsing.', variant: 'destructive' });
-                                  }
-                                } catch (error) {
-                                  toast({ title: 'Parse Failed', description: 'An error occurred.', variant: 'destructive' });
-                                }
-                              }}
-                            >
-                              Parse
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                              <MoreHorizontal className="h-4 w-4" />
                             </Button>
-                          )}
-                          {/* Delete button */}
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                            onClick={() => handleDeleteDocument(doc.id, doc.name)}
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="bg-white">
+                            <DropdownMenuItem asChild>
+                              <Link to={`/documents/${encodeURIComponent(doc.id)}`} className="flex items-center gap-2">
+                                <Eye className="w-4 h-4" />
+                                View
+                              </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => downloadDoc(doc.id)} className="flex items-center gap-2">
+                              <Download className="w-4 h-4" />
+                              Download
+                            </DropdownMenuItem>
+                            {doc.parser_status && doc.parser_status !== 'completed' && doc.parser_status !== 'processing' && (
+                              <DropdownMenuItem
+                                onClick={async () => {
+                                  try {
+                                    const res = await api.reparseDocument(doc.id);
+                                    if (res.ok) {
+                                      toast({ title: 'Parsing Started', description: 'Document parsing has been triggered.' });
+                                      const parsedRes = await api.getDocumentWithParsedData(doc.id);
+                                      if (parsedRes.ok && parsedRes.data) {
+                                        setDocuments(prev => prev.map(d =>
+                                          d.id === doc.id
+                                            ? { ...d, parser_status: parsedRes.data!.parser_status }
+                                            : d
+                                        ));
+                                      }
+                                    } else {
+                                      toast({ title: 'Parse Failed', description: res.error || 'Failed to trigger parsing.', variant: 'destructive' });
+                                    }
+                                  } catch (error) {
+                                    toast({ title: 'Parse Failed', description: 'An error occurred.', variant: 'destructive' });
+                                  }
+                                }}
+                                className="flex items-center gap-2"
+                              >
+                                <RefreshCw className="w-4 h-4" />
+                                Parse
+                              </DropdownMenuItem>
+                            )}
+                            <DropdownMenuItem
+                              onClick={() => handleDeleteDocument(doc.id, doc.name)}
+                              className="flex items-center gap-2 text-red-600 focus:text-red-600"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </TableCell>
                     </TableRow>)}
                   </TableBody>
                 </Table>
               </div>
               {pageData.length === 0 && !loading && (
-                <div className="text-center text-sm text-gray-400 py-6">No documents found. Try adjusting filters or <Link to="/integrations-hub" className="underline">connect evidence sources</Link>.</div>
+                <div className="text-center text-sm text-[#36454F] py-6">No documents found. Try adjusting filters or <Link to="/integrations-hub" className="underline">connect evidence sources</Link>.</div>
               )}
               <div className="mt-4 flex items-center justify-between">
-                <div className="text-xs text-gray-400">Page {page} of {totalPages} • {sorted.length} items</div>
+                <div className="text-xs text-[#36454F]">Page {page} of {totalPages} • {sorted.length} items</div>
                 <div className="flex items-center gap-3">
                   <select className="bg-white/10 border border-white/10 rounded px-2 py-1 text-sm" value={pageSize} onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1); }}>
                     <option value={10}>10 / page</option>
