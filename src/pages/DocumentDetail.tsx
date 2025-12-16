@@ -242,10 +242,7 @@ export default function DocumentDetail() {
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
           <Card className="bg-gray-50 border-gray-200">
             <CardContent className="p-4">
-              <div className="flex items-center gap-2 mb-1">
-                <Package className="w-4 h-4 text-[#36454F]" />
-                <span className="text-xs text-gray-600">Order IDs</span>
-              </div>
+              <div className="text-xs text-gray-600 mb-1">Order IDs</div>
               <div className="text-lg font-bold text-[#36454F]">
                 {extracted.order_ids?.length || 0}
               </div>
@@ -253,10 +250,7 @@ export default function DocumentDetail() {
           </Card>
           <Card className="bg-gray-50 border-gray-200">
             <CardContent className="p-4">
-              <div className="flex items-center gap-2 mb-1">
-                <Hash className="w-4 h-4 text-[#36454F]" />
-                <span className="text-xs text-gray-600">ASINs</span>
-              </div>
+              <div className="text-xs text-gray-600 mb-1">ASINs</div>
               <div className="text-lg font-bold text-[#36454F]">
                 {extracted.asins?.length || 0}
               </div>
@@ -264,10 +258,7 @@ export default function DocumentDetail() {
           </Card>
           <Card className="bg-gray-50 border-gray-200">
             <CardContent className="p-4">
-              <div className="flex items-center gap-2 mb-1">
-                <Truck className="w-4 h-4 text-[#36454F]" />
-                <span className="text-xs text-gray-600">Tracking #s</span>
-              </div>
+              <div className="text-xs text-gray-600 mb-1">Tracking #s</div>
               <div className="text-lg font-bold text-[#36454F]">
                 {extracted.tracking_numbers?.length || 0}
               </div>
@@ -275,10 +266,7 @@ export default function DocumentDetail() {
           </Card>
           <Card className="bg-gray-50 border-gray-200">
             <CardContent className="p-4">
-              <div className="flex items-center gap-2 mb-1">
-                <DollarSign className="w-4 h-4 text-[#36454F]" />
-                <span className="text-xs text-gray-600">Amounts</span>
-              </div>
+              <div className="text-xs text-gray-600 mb-1">Amounts</div>
               <div className="text-lg font-bold text-[#36454F]">
                 {extracted.amounts?.length || 0}
               </div>
@@ -286,10 +274,7 @@ export default function DocumentDetail() {
           </Card>
           <Card className="bg-gray-50 border-gray-200">
             <CardContent className="p-4">
-              <div className="flex items-center gap-2 mb-1">
-                <Link2 className="w-4 h-4 text-[#36454F]" />
-                <span className="text-xs text-gray-600">Matched Claims</span>
-              </div>
+              <div className="text-xs text-gray-600 mb-1">Matched Claims</div>
               <div className="text-lg font-bold text-[#36454F]">
                 {matchedClaims.length}
               </div>
@@ -297,10 +282,7 @@ export default function DocumentDetail() {
           </Card>
           <Card className="bg-gray-50 border-gray-200">
             <CardContent className="p-4">
-              <div className="flex items-center gap-2 mb-1">
-                <Check className="w-4 h-4 text-[#36454F]" />
-                <span className="text-xs text-gray-600">Confidence</span>
-              </div>
+              <div className="text-xs text-gray-600 mb-1">Confidence</div>
               <div className="text-lg font-bold text-[#36454F]">
                 {documentData?.parser_confidence !== undefined
                   ? `${(documentData.parser_confidence * 100).toFixed(0)}%`
@@ -312,17 +294,17 @@ export default function DocumentDetail() {
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="extracted" className="w-full">
-          <TabsList className="bg-gray-100 mb-4">
-            <TabsTrigger value="extracted" className="data-[state=active]:bg-white">
+          <TabsList className="bg-transparent border-b border-gray-200 mb-4 p-0 h-auto">
+            <TabsTrigger value="extracted" className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent bg-transparent px-4 py-2 text-gray-600 hover:text-gray-900">
               Extracted Data
             </TabsTrigger>
-            <TabsTrigger value="matches" className="data-[state=active]:bg-white">
+            <TabsTrigger value="matches" className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent bg-transparent px-4 py-2 text-gray-600 hover:text-gray-900">
               Matched Claims ({matchedClaims.length})
             </TabsTrigger>
-            <TabsTrigger value="raw" className="data-[state=active]:bg-white">
+            <TabsTrigger value="raw" className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent bg-transparent px-4 py-2 text-gray-600 hover:text-gray-900">
               Raw Text
             </TabsTrigger>
-            <TabsTrigger value="parsing" className="data-[state=active]:bg-white">
+            <TabsTrigger value="parsing" className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent bg-transparent px-4 py-2 text-gray-600 hover:text-gray-900">
               Parsing Status
             </TabsTrigger>
           </TabsList>
@@ -333,8 +315,7 @@ export default function DocumentDetail() {
               {/* Order IDs & ASINs */}
               <Card className="bg-white border-gray-200">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-base text-[#36454F] flex items-center gap-2">
-                    <Package className="w-5 h-5 text-[#36454F]" />
+                  <CardTitle className="text-base text-[#36454F]">
                     Order IDs
                   </CardTitle>
                 </CardHeader>
@@ -355,8 +336,7 @@ export default function DocumentDetail() {
 
               <Card className="bg-white border-gray-200">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-base text-[#36454F] flex items-center gap-2">
-                    <Hash className="w-5 h-5 text-[#36454F]" />
+                  <CardTitle className="text-base text-[#36454F]">
                     ASINs / SKUs
                   </CardTitle>
                 </CardHeader>
@@ -383,8 +363,7 @@ export default function DocumentDetail() {
               {/* Tracking Numbers */}
               <Card className="bg-white border-gray-200">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-base text-[#36454F] flex items-center gap-2">
-                    <Truck className="w-5 h-5 text-[#36454F]" />
+                  <CardTitle className="text-base text-[#36454F]">
                     Tracking Numbers
                   </CardTitle>
                 </CardHeader>
@@ -406,8 +385,7 @@ export default function DocumentDetail() {
               {/* Amounts */}
               <Card className="bg-white border-gray-200">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-base text-[#36454F] flex items-center gap-2">
-                    <DollarSign className="w-5 h-5 text-[#36454F]" />
+                  <CardTitle className="text-base text-[#36454F]">
                     Financial Amounts
                   </CardTitle>
                 </CardHeader>
@@ -429,8 +407,7 @@ export default function DocumentDetail() {
               {/* Invoice Numbers */}
               <Card className="bg-white border-gray-200">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-base text-[#36454F] flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-[#36454F]" />
+                  <CardTitle className="text-base text-[#36454F]">
                     Invoice Numbers
                   </CardTitle>
                 </CardHeader>
@@ -452,8 +429,7 @@ export default function DocumentDetail() {
               {/* Dates */}
               <Card className="bg-white border-gray-200">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-base text-[#36454F] flex items-center gap-2">
-                    <Calendar className="w-5 h-5 text-[#36454F]" />
+                  <CardTitle className="text-base text-[#36454F]">
                     Dates Found
                   </CardTitle>
                 </CardHeader>

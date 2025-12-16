@@ -1257,7 +1257,7 @@ export default function EvidenceLocker() {
                         <div className="flex items-center gap-2">
                           <Button variant="ghost" size="sm" asChild>
                             <Link to={`/documents/${encodeURIComponent(doc.id)}`}>
-                              <Eye className="w-4 h-4 mr-1" /> View
+                              View
                             </Link>
                           </Button>
                           <Button variant="ghost" size="sm" onClick={() => downloadDoc(doc.id)}>
