@@ -1300,22 +1300,28 @@ export default function Recoveries() {
         <div className="relative w-full bg-gray-50 min-h-[calc(100vh+48px)]">
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-gray-50 to-white" />
           <div className="relative w-full max-w-full mx-auto px-6 pt-6 pb-10 text-gray-900 space-y-8">
-            {/* Page Header */}
             <div className="mb-8">
               <div className="flex items-center justify-between mb-2">
-                <h1 className="text-2xl text-gray-900 font-semibold">Reimbursements</h1>
-                <Select value={selectedCurrency} onValueChange={setSelectedCurrency}>
-                  <SelectTrigger className="w-[140px] bg-white border-gray-300">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
+                <h1 className="text-2xl text-gray-900 font-normal">All Reimbursements</h1>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="flex items-center gap-1 text-sm text-gray-700 hover:text-gray-900 bg-transparent border-0 cursor-pointer">
+                      {currencies.find(c => c.code === selectedCurrency)?.symbol} {selectedCurrency}
+                      <ChevronDown className="h-4 w-4" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="bg-white">
                     {currencies.map(curr => (
-                      <SelectItem key={curr.code} value={curr.code}>
+                      <DropdownMenuItem
+                        key={curr.code}
+                        onClick={() => setSelectedCurrency(curr.code)}
+                        className={selectedCurrency === curr.code ? 'bg-gray-100' : ''}
+                      >
                         {curr.symbol} {curr.code}
-                      </SelectItem>
+                      </DropdownMenuItem>
                     ))}
-                  </SelectContent>
-                </Select>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
               <p className="text-gray-600">Monitor and manage all reimbursement opportunities across your FBA operations</p>
               <div className="mt-4 flex items-center gap-2">
@@ -1341,98 +1347,95 @@ export default function Recoveries() {
 
 
             {/* Opportunity Radar Summary */}
-            <Card className="mb-8 bg-gray-50 border-gray-200 text-gray-900 rounded-xl">
-              <CardContent className="p-5 md:p-6">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="text-sm font-medium" style={{ color: '#36454F' }}>Recovered Value</div>
-                      {recoveredTotal != null && recoveredTotal > 0 && (
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <button
-                              type="button"
-                              aria-label="About recovered value"
-                              className="text-gray-500 hover:text-gray-700 transition-colors"
-                            >
-                              <Info className="h-3 w-3" />
-                            </button>
-                          </TooltipTrigger>
-                          <TooltipContent side="top" className="bg-black text-white text-xs">
-                            Recovered from approved/completed claims. {recoverySource && `Source: ${recoverySource}`}
-                          </TooltipContent>
-                        </Tooltip>
-                      )}
-                    </div>
-                    <div className="text-xl md:text-2xl font-medium">
-                      {recoveredTotal != null && recoveredTotal > 0 ? (
-                        <>
-                          <span className="text-gray-500">{formatCurrencyWithSelection(recoveredTotal, recoveredCurrency)}</span>
-                          <span className="text-gray-600 text-base font-medium ml-2">
-                            recovered from {amazonClaimCount ?? 0} approved claim{amazonClaimCount !== 1 ? 's' : ''}
-                          </span>
-                        </>
-                      ) : (
-                        <>
-                          <span className="text-gray-500">{formatCurrencyWithSelection(0)}</span>
-                          <span className="text-gray-600 text-base font-medium ml-2">No recoveries yet</span>
-                        </>
-                      )}
-                    </div>
-                    {/* Sync status message */}
-                    {(syncMessage || needsSync || syncTriggered) && (
-                      <div className={`mt-3 px-3 py-2 rounded-md text-xs ${syncTriggered
-                        ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                        : needsSync
-                          ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                          : 'bg-gray-50 text-gray-700 border border-gray-200'
-                        }`}>
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="flex items-start gap-2 flex-1">
-                            {syncTriggered && <RefreshCw className="h-3 w-3 mt-0.5 animate-spin" />}
-                            <span>{syncMessage || (needsSync ? 'Syncing your Amazon account... Please refresh in a few moments.' : '')}</span>
-                          </div>
-                          {activeSyncId && (
-                            <Link
-                              to={`/sync?id=${activeSyncId}`}
-                              className="text-blue-400 hover:text-blue-300 underline text-xs ml-2"
-                            >
-                              View progress
-                            </Link>
-                          )}
-                        </div>
-                      </div>
+            <div className="mb-8">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="text-sm font-medium" style={{ color: '#36454F' }}>Recovered Value</div>
+                    {recoveredTotal != null && recoveredTotal > 0 && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            type="button"
+                            aria-label="About recovered value"
+                            className="text-gray-500 hover:text-gray-700 transition-colors"
+                          >
+                            <Info className="h-3 w-3" />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent side="top" className="bg-black text-white text-xs">
+                          Recovered from approved/completed claims. {recoverySource && `Source: ${recoverySource}`}
+                        </TooltipContent>
+                      </Tooltip>
                     )}
                   </div>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <button className="flex items-center gap-2 text-xs px-3 py-1.5 rounded-md bg-gray-50 border border-gray-200 text-gray-700 hover:bg-gray-100 transition-colors">
-                        <span className="font-medium">Event Types</span>
-                        <span className="text-gray-500">({Object.values(categoryCounts).reduce((a, b) => a + b, 0)} total)</span>
-                        <ChevronDown className="h-3 w-3 text-gray-500" />
-                      </button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start" className="w-72 max-h-80 overflow-y-auto bg-white border border-gray-200 shadow-lg rounded-lg p-2">
-                      <div className="text-xs font-medium text-gray-500 px-2 py-1.5 border-b border-gray-100 mb-1">
-                        Amazon Financial Event Types
-                      </div>
-                      {Object.entries(categoryCounts)
-                        .sort((a, b) => b[1] - a[1])
-                        .map(([label, count]) => (
-                          <DropdownMenuItem
-                            key={label}
-                            className="flex justify-between items-center px-2 py-1.5 text-xs rounded hover:bg-gray-100 hover:text-[#36454F] focus:bg-gray-100 focus:text-[#36454F] cursor-default"
+                  <div className="text-xl md:text-2xl font-medium">
+                    {recoveredTotal != null && recoveredTotal > 0 ? (
+                      <>
+                        <span className="text-gray-500">{formatCurrencyWithSelection(recoveredTotal, recoveredCurrency)}</span>
+                        <span className="text-gray-600 text-base font-medium ml-2">
+                          recovered from {amazonClaimCount ?? 0} approved claim{amazonClaimCount !== 1 ? 's' : ''}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-gray-500">{formatCurrencyWithSelection(0)}</span>
+                        <span className="text-gray-600 text-base font-medium ml-2">No recoveries yet</span>
+                      </>
+                    )}
+                  </div>
+                  {/* Sync status message */}
+                  {(syncMessage || needsSync || syncTriggered) && (
+                    <div className={`mt-3 px-3 py-2 rounded-md text-xs ${syncTriggered
+                      ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                      : needsSync
+                        ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                        : 'bg-gray-50 text-gray-700 border border-gray-200'
+                      }`}>
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-start gap-2 flex-1">
+                          {syncTriggered && <RefreshCw className="h-3 w-3 mt-0.5 animate-spin" />}
+                          <span>{syncMessage || (needsSync ? 'Syncing your Amazon account... Please refresh in a few moments.' : '')}</span>
+                        </div>
+                        {activeSyncId && (
+                          <Link
+                            to={`/sync?id=${activeSyncId}`}
+                            className="text-blue-400 hover:text-blue-300 underline text-xs ml-2"
                           >
-                            <span className="text-gray-700 truncate">{label}</span>
-                            <span className={`font-medium ml-2 ${count > 0 ? 'text-gray-700' : 'text-[#36454F]'}`}>{count}</span>
-                          </DropdownMenuItem>
-                        ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                            View progress
+                          </Link>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
-
-              </CardContent>
-            </Card>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="flex items-center gap-2 text-xs px-3 py-1.5 rounded-md bg-gray-50 border border-gray-200 text-gray-700 hover:bg-gray-100 transition-colors">
+                      <span className="font-medium">Event Types</span>
+                      <span className="text-gray-500">({Object.values(categoryCounts).reduce((a, b) => a + b, 0)} total)</span>
+                      <ChevronDown className="h-3 w-3 text-gray-500" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="w-72 max-h-80 overflow-y-auto bg-white border border-gray-200 shadow-lg rounded-lg p-2">
+                    <div className="text-xs font-medium text-gray-500 px-2 py-1.5 border-b border-gray-100 mb-1">
+                      Amazon Financial Event Types
+                    </div>
+                    {Object.entries(categoryCounts)
+                      .sort((a, b) => b[1] - a[1])
+                      .map(([label, count]) => (
+                        <DropdownMenuItem
+                          key={label}
+                          className="flex justify-between items-center px-2 py-1.5 text-xs rounded hover:bg-gray-100 hover:text-[#36454F] focus:bg-gray-100 focus:text-[#36454F] cursor-default"
+                        >
+                          <span className="text-gray-700 truncate">{label}</span>
+                          <span className={`font-medium ml-2 ${count > 0 ? 'text-gray-700' : 'text-[#36454F]'}`}>{count}</span>
+                        </DropdownMenuItem>
+                      ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
 
             {/* Key Metrics Bar - Enhanced with Phase 3 Statistics */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -1520,19 +1523,19 @@ export default function Recoveries() {
                 <TabsList className="mb-6 inline-flex h-auto items-center justify-start gap-6 bg-transparent border-b border-gray-200 rounded-none p-0">
                   <TabsTrigger
                     value="claims"
-                    className="relative px-1 pb-3 pt-1 text-sm font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-0.5 data-[state=active]:after:bg-gray-900"
+                    className="relative px-1 pb-3 pt-1 text-sm font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-blue-600 data-[state=active]:text-blue-600 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-0.5 data-[state=active]:after:bg-blue-600"
                   >
                     Claims
                   </TabsTrigger>
                   <TabsTrigger
                     value="matching"
-                    className="relative px-1 pb-3 pt-1 text-sm font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-0.5 data-[state=active]:after:bg-gray-900"
+                    className="relative px-1 pb-3 pt-1 text-sm font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-blue-600 data-[state=active]:text-blue-600 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-0.5 data-[state=active]:after:bg-blue-600"
                   >
                     Evidence Matching
                   </TabsTrigger>
                   <TabsTrigger
                     value="cases"
-                    className="relative px-1 pb-3 pt-1 text-sm font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-0.5 data-[state=active]:after:bg-gray-900"
+                    className="relative px-1 pb-3 pt-1 text-sm font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-blue-600 data-[state=active]:text-blue-600 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-0.5 data-[state=active]:after:bg-blue-600"
                   >
                     Dispute Cases
                   </TabsTrigger>
@@ -1713,8 +1716,6 @@ export default function Recoveries() {
                                 <TableHead className="text-[#1f1f1f] font-medium">Source</TableHead>
                                 <TableHead className="text-[#1f1f1f] font-medium">Claim ID</TableHead>
                                 <TableHead className="text-[#1f1f1f] font-medium">Created</TableHead>
-                                <TableHead className="text-[#1f1f1f] font-medium">Type</TableHead>
-                                <TableHead className="text-[#1f1f1f] font-medium">Confidence</TableHead>
                                 <TableHead className="text-[#1f1f1f] font-medium">Evidence</TableHead>
                                 <TableHead className="text-[#1f1f1f] font-medium">Details</TableHead>
                                 <TableHead className="text-[#1f1f1f] font-medium">Status</TableHead>
@@ -1776,41 +1777,6 @@ export default function Recoveries() {
                                       </Tooltip>
                                     </TableCell>
                                     <TableCell>{format(new Date(claim.created || claim.discovery_date || claim.created_at), 'MMM dd, yyyy')}</TableCell>
-                                    <TableCell>
-                                      {(() => {
-                                        const typeInfo = getTypeDisplay(claim.type, claim.anomaly_type);
-                                        return (
-                                          <Tooltip>
-                                            <TooltipTrigger asChild>
-                                              <div className="flex items-center gap-1.5">
-                                                <span className="text-sm">{typeInfo.icon}</span>
-                                                <span className="font-medium text-[#36454F]">{typeInfo.name}</span>
-                                              </div>
-                                            </TooltipTrigger>
-                                            <TooltipContent side="top" className="bg-black text-white text-xs">
-                                              <div>Category: {typeInfo.category}</div>
-                                              {claim.anomaly_type && <div>Code: {claim.anomaly_type}</div>}
-                                            </TooltipContent>
-                                          </Tooltip>
-                                        );
-                                      })()}
-                                    </TableCell>
-                                    <TableCell>
-                                      <div className="flex items-center gap-2">
-                                        {confidenceBadge ? (
-                                          <span className={`text-xs font-semibold ${confidenceBadge.color === 'green' ? 'text-emerald-600' :
-                                            confidenceBadge.color === 'yellow' ? 'text-amber-500' :
-                                              'text-blue-500'
-                                            }`}>
-                                            {confidenceBadge.label} ({(claim.confidence_score * 100).toFixed(0)}%)
-                                          </span>
-                                        ) : (
-                                          <span className={`text-xs font-semibold ${getConfidenceColor(displayConfidence)}`}>
-                                            {getConfidenceBadge(displayConfidence)} ({(displayConfidence * 100).toFixed(0)}%)
-                                          </span>
-                                        )}
-                                      </div>
-                                    </TableCell>
                                     <TableCell>
                                       <span className="text-xs text-[#36454F]">{claim._evidence}</span>
                                     </TableCell>
