@@ -902,6 +902,9 @@ export default function EvidenceLocker() {
               <CardDescription>
                 Upload invoices, purchase orders, and receipts to verify your product costs
               </CardDescription>
+              <p className="text-xs text-amber-600 mt-1.5 font-medium">
+                Amazon rejects 82% of claims without an Invoice.
+              </p>
             </CardHeader>
             <CardContent>
               <div className={`border-2 border-dashed rounded-lg p-8 text-center transition-all ${dragActive ? 'border-emerald-500 bg-emerald-50' : 'border-gray-200 hover:border-emerald-400'}`} onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}>
