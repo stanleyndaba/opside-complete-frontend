@@ -374,36 +374,30 @@ export default function CaseDetail() {
                     )}
 
                     {/* Financial Overview */}
-                    <div className="bg-gradient-to-br from-emerald-50 to-green-50 rounded-xl p-4 border border-emerald-100">
-                      <div className="text-xs font-medium text-emerald-600 uppercase tracking-wide mb-2">Guaranteed Value</div>
-                      <div className="text-2xl font-bold text-emerald-700">
+                    <div className="mb-4">
+                      <div className="text-xs text-gray-500 mb-1">Guaranteed Value</div>
+                      <div className="text-lg font-medium text-emerald-600">
                         ${effectiveCase.guaranteedAmount?.toLocaleString('en-US', { minimumFractionDigits: 2 }) || '0.00'}
                       </div>
 
                       {effectiveCase.actual_payout_amount && (
-                        <div className="mt-3 pt-3 border-t border-emerald-200">
-                          <div className="flex justify-between items-center">
-                            <span className="text-xs text-gray-600">Actual Payout</span>
-                            <span className="font-semibold text-blue-600">
-                              ${effectiveCase.actual_payout_amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                            </span>
-                          </div>
+                        <div className="mt-2 flex items-center gap-2">
+                          <span className="text-xs text-gray-500">Actual Payout:</span>
+                          <span className="text-sm font-medium text-blue-600">
+                            ${effectiveCase.actual_payout_amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                          </span>
                           {effectiveCase.recovery_status === 'reconciled' && (
-                            <div className="flex items-center gap-1 mt-1 text-xs text-green-600">
+                            <span className="text-xs text-green-600 flex items-center gap-1">
                               <CheckCircle className="h-3 w-3" /> Reconciled
-                            </div>
+                            </span>
                           )}
                         </div>
                       )}
 
                       {effectiveCase.recovery_status === 'discrepancy' && effectiveCase.actual_payout_amount && (
-                        <div className="mt-3 p-2 bg-red-50 rounded-lg border border-red-200">
-                          <div className="text-xs font-medium text-red-700 flex items-center gap-1">
-                            <AlertCircle className="h-3 w-3" /> Payout Discrepancy
-                          </div>
-                          <div className="text-xs text-red-600 mt-1">
-                            Difference: ${Math.abs(effectiveCase.guaranteedAmount - effectiveCase.actual_payout_amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                          </div>
+                        <div className="mt-2 text-xs text-red-600">
+                          <AlertCircle className="h-3 w-3 inline mr-1" />
+                          Discrepancy: ${Math.abs(effectiveCase.guaranteedAmount - effectiveCase.actual_payout_amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                         </div>
                       )}
                     </div>
@@ -643,16 +637,20 @@ export default function CaseDetail() {
                   </CardContent>
                 </Card>
 
-                {/* Linked Evidence Section - Shows the proof chain */}
+                {/* Found Documents Section */}
                 <Card className="bg-white border-gray-200 text-gray-900">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-black">
-                      <FileText className="h-5 w-5" />
-                      Linked Evidence
-                      <Badge variant="outline" className="ml-2 border-gray-300 text-gray-600">
+                  <CardHeader className="pb-2">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle className="text-sm font-medium text-gray-700">
+                          Found Documents
+                        </CardTitle>
+                        <p className="text-xs text-amber-600 mt-1">Amazon rejects 82% of claims without an Invoice.</p>
+                      </div>
+                      <span className="text-xs text-gray-500">
                         {matchedDocs.length} document{matchedDocs.length !== 1 ? 's' : ''}
-                      </Badge>
-                    </CardTitle>
+                      </span>
+                    </div>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {matchedDocs.length > 0 ? (
@@ -740,18 +738,20 @@ export default function CaseDetail() {
                       </div>
                     ) : (
                       <div className="text-center py-6">
-                        <FileText className="h-10 w-10 mx-auto text-gray-300 mb-3" />
-                        <p className="text-sm text-gray-600 mb-1">No evidence linked yet</p>
-                        <p className="text-xs text-gray-500">
-                          Run Evidence Matching or upload documents to link proof to this claim
-                        </p>
+                        <FileText className="h-8 w-8 mx-auto text-gray-300 mb-3" />
+                        <p className="text-sm text-amber-600 font-medium mb-2">Documents needed for 90% success rate:</p>
+                        <div className="space-y-1 text-xs text-gray-600">
+                          <p>• Invoice matching order ID</p>
+                          <p>• Packing slip or receipt</p>
+                          <p>• Shipping confirmation</p>
+                        </div>
                         <Button
                           variant="outline"
                           size="sm"
-                          className="mt-3 text-[#36454F] border-gray-300"
+                          className="mt-4 text-[#36454F] border-gray-300"
                           asChild
                         >
-                          <Link to="/evidence-locker">Go to Evidence Locker</Link>
+                          <Link to="/evidence-locker">All documents</Link>
                         </Button>
                       </div>
                     )}
