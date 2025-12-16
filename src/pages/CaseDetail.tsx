@@ -350,130 +350,198 @@ export default function CaseDetail() {
               {/* Left Column - Case Summary */}
               <div className="lg:col-span-1 space-y-6">
                 <Card className="bg-white border-gray-200 text-gray-900">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-black">
-                      <Package className="h-5 w-5" />
-                      Case Summary
-                    </CardTitle>
+                  <CardHeader className="pb-4">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-lg font-semibold text-[#36454F]">
+                        Case Summary
+                      </CardTitle>
+                      <Badge variant="outline" className={cn(
+                        "font-medium",
+                        normalizeStatus(effectiveCase.status) === 'Approved' && "bg-green-50 text-green-700 border-green-200",
+                        normalizeStatus(effectiveCase.status) === 'In Progress' && "bg-blue-50 text-blue-700 border-blue-200",
+                        normalizeStatus(effectiveCase.status) === 'Open' && "bg-amber-50 text-amber-700 border-amber-200",
+                        normalizeStatus(effectiveCase.status) === 'Denied' && "bg-red-50 text-red-700 border-red-200",
+                      )}>
+                        {normalizeStatus(effectiveCase.status)}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-gray-500 font-mono mt-1">{effectiveCase.id}</p>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+
+                  <CardContent className="space-y-6">
                     {error && (
-                      <div className="text-sm text-red-600">{error}</div>
+                      <div className="text-sm text-red-600 p-3 bg-red-50 rounded-lg border border-red-100">{error}</div>
                     )}
 
-                    <div>
-                      <label className="text-sm font-medium text-gray-600">Case ID</label>
-                      <p className="font-mono text-sm mt-1 text-gray-900">{effectiveCase.id}</p>
-                    </div>
-
-                    <div>
-                      <label className="text-sm font-medium text-gray-600">Current Status</label>
-                      <div className="mt-1 flex items-center gap-2">
-                        <Badge variant="outline" className="font-medium text-gray-900 border-gray-300">
-                          {normalizeStatus(effectiveCase.status)}
-                        </Badge>
-                        <span className="text-xs text-gray-600">({effectiveCase.status})</span>
+                    {/* Financial Overview */}
+                    <div className="bg-gradient-to-br from-emerald-50 to-green-50 rounded-xl p-4 border border-emerald-100">
+                      <div className="text-xs font-medium text-emerald-600 uppercase tracking-wide mb-2">Guaranteed Value</div>
+                      <div className="text-2xl font-bold text-emerald-700">
+                        ${effectiveCase.guaranteedAmount?.toLocaleString('en-US', { minimumFractionDigits: 2 }) || '0.00'}
                       </div>
-                    </div>
 
-                    {effectiveCase.submissionStatus && (
-                      <div>
-                        <label className="text-sm font-medium text-muted-foreground">Submission Status</label>
-                        <div className="mt-1">
-                          <Badge variant="outline" className="font-medium">
-                            {effectiveCase.submissionStatus === 'draft' && 'Draft'}
-                            {effectiveCase.submissionStatus === 'submitted' && 'Submitted'}
-                            {effectiveCase.submissionStatus === 'approved' && 'Approved'}
-                            {effectiveCase.submissionStatus === 'paid' && 'Paid'}
-                            {effectiveCase.submissionStatus === 'denied' && 'Denied'}
-                          </Badge>
+                      {effectiveCase.actual_payout_amount && (
+                        <div className="mt-3 pt-3 border-t border-emerald-200">
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-gray-600">Actual Payout</span>
+                            <span className="font-semibold text-blue-600">
+                              ${effectiveCase.actual_payout_amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                            </span>
+                          </div>
+                          {effectiveCase.recovery_status === 'reconciled' && (
+                            <div className="flex items-center gap-1 mt-1 text-xs text-green-600">
+                              <CheckCircle className="h-3 w-3" /> Reconciled
+                            </div>
+                          )}
                         </div>
-                      </div>
-                    )}
+                      )}
 
-                    <div>
-                      <label className="text-sm font-medium text-muted-foreground">Guaranteed Value</label>
-                      <p className="text-lg font-semibold text-emerald-600 mt-1">
-                        ${effectiveCase.guaranteedAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                      </p>
-                    </div>
-
-                    {/* Agent 8: Actual Payout Amount */}
-                    {effectiveCase.actual_payout_amount && (
-                      <div>
-                        <label className="text-sm font-medium text-muted-foreground">Actual Payout</label>
-                        <p className="text-lg font-semibold text-blue-600 mt-1">
-                          ${effectiveCase.actual_payout_amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                        </p>
-                        {effectiveCase.recovery_status === 'reconciled' && (
-                          <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
-                            <CheckCircle className="h-3 w-3" /> Reconciled
-                          </p>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Agent 8: Discrepancy Alert */}
-                    {effectiveCase.recovery_status === 'discrepancy' && effectiveCase.actual_payout_amount && (
-                      <div className="rounded-md border border-red-200 bg-red-50 p-3">
-                        <div className="flex items-center gap-2 text-red-800 font-medium text-sm">
-                          <AlertCircle className="h-4 w-4" />
-                          Payout Discrepancy Detected
-                        </div>
-                        <div className="mt-2 space-y-1 text-xs text-red-700">
-                          <div>Expected: ${effectiveCase.guaranteedAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
-                          <div>Actual: ${effectiveCase.actual_payout_amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
-                          <div className="font-medium">
+                      {effectiveCase.recovery_status === 'discrepancy' && effectiveCase.actual_payout_amount && (
+                        <div className="mt-3 p-2 bg-red-50 rounded-lg border border-red-200">
+                          <div className="text-xs font-medium text-red-700 flex items-center gap-1">
+                            <AlertCircle className="h-3 w-3" /> Payout Discrepancy
+                          </div>
+                          <div className="text-xs text-red-600 mt-1">
                             Difference: ${Math.abs(effectiveCase.guaranteedAmount - effectiveCase.actual_payout_amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                            ({effectiveCase.actual_payout_amount < effectiveCase.guaranteedAmount ? 'Underpaid' : 'Overpaid'})
                           </div>
                         </div>
+                      )}
+                    </div>
+
+                    {/* Key Details Grid */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-gray-50 rounded-lg p-3">
+                        <div className="text-xs text-gray-500 mb-1">Expected Payout</div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {effectiveCase.expectedPayoutDate ? new Date(effectiveCase.expectedPayoutDate).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric'
+                          }) : '—'}
+                        </div>
+                      </div>
+                      <div className="bg-gray-50 rounded-lg p-3">
+                        <div className="text-xs text-gray-500 mb-1">Confidence</div>
+                        <div className="text-sm font-medium text-gray-900">{derivedConfidencePct}%</div>
+                      </div>
+                      <div className="bg-gray-50 rounded-lg p-3">
+                        <div className="text-xs text-gray-500 mb-1">Units Lost</div>
+                        <div className="text-sm font-medium text-gray-900">{effectiveCase.unitsLost ?? '—'}</div>
+                      </div>
+                      <div className="bg-gray-50 rounded-lg p-3">
+                        <div className="text-xs text-gray-500 mb-1">Unit Cost</div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {typeof effectiveCase.unitCost === 'number' ? `$${effectiveCase.unitCost.toFixed(2)}` : '—'}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Product Info */}
+                    <div className="border border-gray-100 rounded-lg p-4 space-y-3">
+                      <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">Product Details</div>
+                      <div>
+                        <div className="font-medium text-gray-900">{effectiveCase.productName}</div>
+                        <div className="text-sm text-gray-500">SKU: {effectiveCase.sku}</div>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <MapPin className="h-4 w-4 text-gray-400" />
+                        {effectiveCase.facility ?? '—'}
+                      </div>
+                    </div>
+
+                    {/* Evidence Status */}
+                    <div className="border border-gray-100 rounded-lg p-4 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">Evidence</div>
+                        <Badge variant="outline" className="text-xs border-gray-200">{matchedCount} docs</Badge>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-500">Status:</span>
+                        <Badge variant="outline" className={cn(
+                          "text-xs",
+                          derivedEvidence === 'Ready' && "bg-green-50 text-green-700 border-green-200",
+                          derivedEvidence === 'Collecting' && "bg-blue-50 text-blue-700 border-blue-200",
+                          derivedEvidence === 'Needs Docs' && "bg-amber-50 text-amber-700 border-amber-200",
+                        )}>
+                          {derivedEvidence}
+                        </Badge>
+                      </div>
+
+                      {matchedDocs.length > 0 && (
+                        <div className="flex flex-wrap gap-2 pt-2">
+                          {matchedDocs.slice(0, 2).map((d: any) => (
+                            <Button key={d.id} variant="outline" size="sm" className="h-7 text-xs" onClick={() => window.open(`/documents/${encodeURIComponent(d.id)}`, '_blank')}>
+                              {d.name || d.filename || d.id}
+                            </Button>
+                          ))}
+                          {matchedDocs.length > 2 && (
+                            <Button variant="ghost" size="sm" className="h-7 text-xs text-gray-500" asChild>
+                              <Link to="/evidence-locker">+{matchedDocs.length - 2} more</Link>
+                            </Button>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Amazon Case ID if available */}
+                    {effectiveCase.amazonCaseId && (
+                      <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-100">
+                        <div>
+                          <div className="text-xs text-blue-600">Amazon Case ID</div>
+                          <div className="font-mono text-sm text-blue-900">{effectiveCase.amazonCaseId}</div>
+                        </div>
+                        <a href={`https://sellercentral.amazon.com/case-log/${effectiveCase.amazonCaseId}`} target="_blank" rel="noreferrer" className="text-blue-600 hover:text-blue-800">
+                          <ExternalLink className="h-4 w-4" />
+                        </a>
                       </div>
                     )}
 
-                    <div>
-                      <label className="text-sm font-medium text-gray-600">Expected Payout Date</label>
-                      <p className="mt-1 flex items-center gap-2">
-                        <Calendar className="h-4 w-4 text-gray-600" />
-                        <span className="text-gray-900">{effectiveCase.expectedPayoutDate ? new Date(effectiveCase.expectedPayoutDate).toLocaleDateString('en-US', {
-                          month: 'long',
-                          day: 'numeric',
-                          year: 'numeric'
-                        }) : '—'}</span>
-                      </p>
-                      <p className="text-xs text-gray-600 mt-1">
-                        {derivedConfidencePct}% Confidence • Evidence: {derivedEvidence}
-                      </p>
-                    </div>
-
-                    {/* Matched docs summary */}
-                    <div>
-                      <label className="text-sm font-medium text-gray-600">Matched document(s)</label>
-                      <div className="mt-1 flex flex-wrap gap-2">
-                        <Badge variant="outline" className="border-gray-300 text-gray-900">{matchedCount} matched</Badge>
-                        {matchedDocs.slice(0, 3).map((d: any) => (
-                          <Button key={d.id} variant="outline" size="sm" className="h-7" onClick={() => window.open(`/documents/${encodeURIComponent(d.id)}`, '_blank')}>
-                            <FileText className="h-3.5 w-3.5 mr-1" /> {d.name || d.filename || d.id}
-                          </Button>
-                        ))}
+                    {/* Payment Status if available */}
+                    {effectiveCase.recovery_status && effectiveCase.recovery_status !== 'detecting' && (
+                      <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
+                        <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Payment Status</div>
+                        <div className="space-y-2">
+                          {effectiveCase.recovery_status === 'reconciled' && (
+                            <>
+                              <div className="flex items-center gap-2 text-sm text-green-600">
+                                <CheckCircle className="h-4 w-4" /> Payout reconciled
+                              </div>
+                              <div className="flex items-center gap-2 text-sm text-amber-600">
+                                <Clock className="h-4 w-4" /> Funds arriving in 3–5 business days
+                              </div>
+                            </>
+                          )}
+                          {effectiveCase.recovery_status === 'matched' && (
+                            <div className="flex items-center gap-2 text-sm text-purple-600">
+                              <CheckCircle className="h-4 w-4" /> Payout matched
+                            </div>
+                          )}
+                          {effectiveCase.billingStatus === 'charged' && (
+                            <div className="flex items-center gap-2 text-sm text-emerald-600 pt-2 border-t border-gray-200">
+                              <Receipt className="h-4 w-4" />
+                              Invoice #{effectiveCase.billingTransactionId?.slice(0, 8) || 'PAID'} paid
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
+                    )}
 
-                    {/* Missing-docs Smart Prompt (if backend flags a gap) */}
+                    {/* Missing Docs Prompt */}
                     {effectiveCase?.missingDocumentPrompt && (
-                      <div className="rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900 space-y-2">
-                        <div>{effectiveCase.missingDocumentPrompt}</div>
+                      <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
+                        <div className="text-sm text-amber-900 mb-3">{effectiveCase.missingDocumentPrompt}</div>
                         {Array.isArray(effectiveCase.missingDocumentOptions) && (
-                          <div className="flex flex-wrap gap-2">
+                          <div className="flex flex-wrap gap-2 mb-3">
                             {effectiveCase.missingDocumentOptions.map((opt: string) => (
-                              <Button key={opt} size="sm" variant="outline" onClick={() => {
+                              <Button key={opt} size="sm" variant="outline" className="text-amber-800 border-amber-300 hover:bg-amber-100" onClick={() => {
                                 recoveryApi.submitRecoveryAnswer(effectiveCase.id, { answer: opt }).catch(() => { });
                               }}>{opt}</Button>
                             ))}
                           </div>
                         )}
                         <div
-                          className="mt-2 p-4 border border-dashed border-amber-300 rounded bg-white/60 text-amber-900"
+                          className="p-3 border border-dashed border-amber-300 rounded-lg bg-white/60 text-center text-xs text-amber-700"
                           onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
                           onDrop={async (e) => {
                             e.preventDefault();
@@ -482,224 +550,96 @@ export default function CaseDetail() {
                             await recoveryApi.uploadRecoveryDocuments(effectiveCase.id, files as any).catch(() => { });
                           }}
                         >
-                          <div className="text-xs">Drag and drop supplier invoice here, or click to select.</div>
-                          <input
-                            type="file"
-                            multiple
-                            className="hidden"
-                            onChange={async (e) => {
-                              const files = Array.from((e.target as HTMLInputElement).files || []);
-                              if (!files.length) return;
-                              await recoveryApi.uploadRecoveryDocuments(effectiveCase.id, files as any).catch(() => { });
-                            }}
-                          />
+                          Drag and drop invoice here
                         </div>
                       </div>
                     )}
 
-                    {effectiveCase.amazonCaseId && (
-                      <div>
-                        <label className="text-sm font-medium text-gray-600">Amazon Case</label>
-                        <p className="font-mono text-sm mt-1 inline-flex items-center gap-2 text-gray-900">
-                          {effectiveCase.amazonCaseId}
-                          {effectiveCase.amazonCaseId && (
-                            <a href={`https://sellercentral.amazon.com/case-log/${effectiveCase.amazonCaseId}`} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline inline-flex items-center gap-1">
-                              View <ExternalLink className="h-3 w-3" />
-                            </a>
-                          )}
-                        </p>
-                      </div>
-                    )}
-
+                    {/* Decision Reason */}
                     {(effectiveCase.approvalReason || effectiveCase.rejectionReason) && (
-                      <div>
-                        <label className="text-sm font-medium text-gray-600">Decision Reason</label>
-                        <p className="text-sm mt-1 text-gray-900">
-                          {effectiveCase.approvalReason || effectiveCase.rejectionReason}
-                        </p>
+                      <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
+                        <div className="text-xs text-gray-500 mb-1">Decision Reason</div>
+                        <div className="text-sm text-gray-900">{effectiveCase.approvalReason || effectiveCase.rejectionReason}</div>
                       </div>
                     )}
 
-                    {/* Agent 8: Payment Timeline */}
-                    {effectiveCase.recovery_status && (
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-600">Payment Status</label>
-                        <div className="space-y-2">
-                          {effectiveCase.status?.toLowerCase().includes('approved') && (
-                            <div className="flex items-center gap-2 text-sm">
-                              <CheckCircle className="h-4 w-4 text-green-600" />
-                              <span className="text-gray-700">Approved by Amazon</span>
-                            </div>
-                          )}
-                          {effectiveCase.recovery_status === 'detecting' && (
-                            <div className="flex items-center gap-2 text-sm">
-                              <RefreshCw className="h-4 w-4 text-blue-600 animate-spin" />
-                              <span className="text-gray-700">Detecting payout...</span>
-                            </div>
-                          )}
-                          {effectiveCase.recovery_status === 'matched' && (
-                            <div className="flex items-center gap-2 text-sm">
-                              <CheckCircle className="h-4 w-4 text-purple-600" />
-                              <span className="text-gray-700">Payout matched</span>
-                            </div>
-                          )}
-                          {effectiveCase.recovery_status === 'reconciled' && (
-                            <div className="space-y-2">
-                              <div className="flex items-center gap-2 text-sm">
-                                <CheckCircle className="h-4 w-4 text-emerald-600" />
-                                <span className="text-gray-700 font-medium">Payout reconciled</span>
-                              </div>
-                              {effectiveCase.reconciled_at && (
-                                <div className="text-xs text-gray-600">
-                                  {new Date(effectiveCase.reconciled_at).toLocaleString('en-US', {
-                                    month: 'short',
-                                    day: 'numeric',
-                                    year: 'numeric',
-                                    hour: '2-digit',
-                                    minute: '2-digit'
-                                  })}
-                                </div>
-                              )}
-                              <div className="flex items-center gap-2 text-sm">
-                                <Clock className="h-4 w-4 text-amber-600" />
-                                <span className="text-amber-700 font-medium">Funds arriving in 3–5 business days</span>
-                              </div>
-                              {effectiveCase.billingStatus === 'charged' && (
-                                <div className="flex items-center gap-2 text-sm mt-2 pt-2 border-t border-gray-100">
-                                  <Receipt className="h-4 w-4 text-emerald-600" />
-                                  <span className="text-gray-700 font-medium">
-                                    Invoice #{effectiveCase.billingTransactionId?.slice(0, 8) || 'PAID'} paid. Receipt sent.
-                                  </span>
-                                </div>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    <Separator />
-
-                    <div>
-                      <label className="text-sm font-medium text-gray-600">Affected Product</label>
-                      <p className="font-medium mt-1 text-gray-900">{effectiveCase.productName}</p>
-                      <p className="text-sm text-gray-600">SKU: {effectiveCase.sku}</p>
-                    </div>
-
-                    <div>
-                      <label className="text-sm font-medium text-gray-600">Warehouse Location</label>
-                      <p className="mt-1 flex items-center gap-2 text-gray-900">
-                        <MapPin className="h-4 w-4 text-gray-600" />
-                        {effectiveCase.facility ?? '—'}
-                      </p>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-sm font-medium text-gray-600">Units Lost</label>
-                        <p className="font-semibold mt-1 text-gray-900">{effectiveCase.unitsLost ?? '—'}</p>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-gray-600">Unit Cost</label>
-                        <p className="font-semibold mt-1 text-gray-900">
-                          {typeof effectiveCase.unitCost === 'number' ? `$${effectiveCase.unitCost.toFixed(2)}` : '—'}
-                        </p>
-                      </div>
-                    </div>
-
-                    <Separator />
-
-                    <Button className="w-full bg-emerald-600 hover:bg-emerald-700" disabled={effectiveCase.status === 'Paid Out'} onClick={async () => {
-                      const res = await api.submitClaim(effectiveCase.id);
-                      if (res.ok) {
-                        setCaseData((prev: any) => ({ ...(prev || {}), status: 'Submitted', submissionStatus: 'submitted' }));
-                        toast({ title: 'Claim submitted to Amazon', description: 'We will update you with the Amazon Case ID shortly.' });
-                      } else {
-                        toast({ title: 'Submission failed', description: res.error || 'Please try again.' });
-                      }
-                    }}>
-                      <CheckCircle className="h-4 w-4 mr-2" />
-                      Resolve Case
-                    </Button>
-
-                    {/* Contextual actions based on confidence */}
-                    {derivedConfidencePct >= 85 && (
-                      <Button className="w-full mt-2 bg-emerald-500 hover:bg-emerald-400 text-white" onClick={async () => {
-                        try {
-                          await recoveryApi.submitClaim(effectiveCase.id);
-                          toast({ title: 'Auto-submitted', description: `${effectiveCase.id} submitted automatically (high confidence).` });
-                          setCaseData((prev: any) => ({ ...(prev || {}), status: 'Submitted' }));
-                        } catch (e: any) {
-                          toast({ title: 'Auto-submit failed', description: e?.message || 'Please try again.' });
-                        }
-                      }}>
-                        Auto-submit now
+                    {/* Actions */}
+                    <div className="space-y-2 pt-2">
+                      <Button
+                        className="w-full bg-emerald-600 hover:bg-emerald-700"
+                        disabled={effectiveCase.status === 'Paid Out'}
+                        onClick={async () => {
+                          const res = await api.submitClaim(effectiveCase.id);
+                          if (res.ok) {
+                            setCaseData((prev: any) => ({ ...(prev || {}), status: 'Submitted', submissionStatus: 'submitted' }));
+                            toast({ title: 'Claim submitted to Amazon', description: 'We will update you with the Amazon Case ID shortly.' });
+                          } else {
+                            toast({ title: 'Submission failed', description: res.error || 'Please try again.' });
+                          }
+                        }}
+                      >
+                        Resolve Case
                       </Button>
-                    )}
-                    {derivedConfidencePct >= 60 && derivedConfidencePct < 85 && matchedCount > 0 && (
-                      <Button className="w-full mt-2 bg-blue-600 hover:bg-blue-700 text-white" onClick={() => {
-                        toast({ title: 'Confirm invoice', description: 'Invoice confirmed and ready to submit.' });
-                        setCaseData((prev: any) => ({ ...(prev || {}), submissionStatus: 'submitted' }));
-                      }}>
-                        Confirm invoice
-                      </Button>
-                    )}
-                    {derivedConfidencePct < 60 && (
-                      <div className="w-full mt-2 text-center text-xs text-gray-600">
-                        <Badge variant="outline" className="border-amber-300/50 text-amber-600">Parked — needs more data</Badge>
-                      </div>
-                    )}
 
-                    {effectiveCase.status === 'Denied' && (
-                      <Button className="w-full mt-2 bg-blue-600 hover:bg-blue-700 text-white" onClick={async () => {
-                        // Require at least one document attached
-                        const hasDocs = Array.isArray(effectiveCase.documents) && effectiveCase.documents.length > 0;
-                        if (!hasDocs) {
-                          toast({ title: 'Attach evidence first', description: 'Add at least one supporting document before resubmitting.' });
-                          return;
-                        }
-                        const res = await api.resubmitClaim(effectiveCase.id);
-                        if (res.ok) {
-                          toast({ title: 'Resubmitted with stronger docs', description: 'We will keep you posted on the decision.' });
-                          setCaseData((prev: any) => ({ ...(prev || {}), status: 'Submitted' }));
-                        } else {
-                          toast({ title: 'Resubmission failed', description: res.error || 'Please try again.' });
-                        }
-                      }}>
-                        <RefreshCw className="h-4 w-4 mr-2" />
-                        Resubmit with stronger docs
-                      </Button>
-                    )}
-
-                    {/* Evidence & Docs */}
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-600">Evidence & Docs</label>
-                      <div className="text-xs text-gray-600">Evidence Status: <span className="font-medium text-gray-900">{effectiveCase.evidenceStatus ?? 'Collecting'}</span></div>
-                      <div className="space-y-2">
-                        <Button variant="outline" className="w-full bg-gray-100 text-[#36454F] hover:bg-gray-200 border-gray-300" onClick={() => {
-                          window.open(api.getRecoveryDocumentUrl(effectiveCase.id), '_blank');
+                      {derivedConfidencePct >= 85 && (
+                        <Button className="w-full bg-emerald-500 hover:bg-emerald-400 text-white" onClick={async () => {
+                          try {
+                            await recoveryApi.submitClaim(effectiveCase.id);
+                            toast({ title: 'Auto-submitted', description: `${effectiveCase.id} submitted automatically (high confidence).` });
+                            setCaseData((prev: any) => ({ ...(prev || {}), status: 'Submitted' }));
+                          } catch (e: any) {
+                            toast({ title: 'Auto-submit failed', description: e?.message || 'Please try again.' });
+                          }
                         }}>
-                          <FileText className="h-4 w-4 mr-2" />
-                          Download Proof Document
+                          Auto-submit (High Confidence)
                         </Button>
-                        {Array.isArray(effectiveCase.documents) && effectiveCase.documents.length > 0 ? (
-                          <div className="space-y-1 text-sm">
-                            {effectiveCase.documents.map((doc: any) => (
-                              <div key={doc.id} className="flex items-center justify-between">
-                                <span className="truncate text-gray-900">{doc.name}</span>
-                                <Button variant="ghost" size="sm" className="text-gray-900 hover:bg-gray-100" onClick={() => window.open(doc.url || api.getDocumentViewUrl(doc.id), '_blank')}>View</Button>
-                              </div>
-                            ))}
-                          </div>
-                        ) : (
-                          <p className="text-xs text-gray-600">No additional documents linked.</p>
-                        )}
-                      </div>
-                    </div>
+                      )}
 
-                    <Button variant="ghost" className="w-full" asChild>
-                      <Link to="/evidence-locker">Open Evidence Locker</Link>
-                    </Button>
+                      {derivedConfidencePct >= 60 && derivedConfidencePct < 85 && matchedCount > 0 && (
+                        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white" onClick={() => {
+                          toast({ title: 'Confirm invoice', description: 'Invoice confirmed and ready to submit.' });
+                          setCaseData((prev: any) => ({ ...(prev || {}), submissionStatus: 'submitted' }));
+                        }}>
+                          Confirm Invoice
+                        </Button>
+                      )}
+
+                      {derivedConfidencePct < 60 && (
+                        <div className="text-center py-2">
+                          <Badge variant="outline" className="border-amber-200 text-amber-600">Parked — needs more data</Badge>
+                        </div>
+                      )}
+
+                      {effectiveCase.status === 'Denied' && (
+                        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white" onClick={async () => {
+                          const hasDocs = Array.isArray(effectiveCase.documents) && effectiveCase.documents.length > 0;
+                          if (!hasDocs) {
+                            toast({ title: 'Attach evidence first', description: 'Add at least one supporting document before resubmitting.' });
+                            return;
+                          }
+                          const res = await api.resubmitClaim(effectiveCase.id);
+                          if (res.ok) {
+                            toast({ title: 'Resubmitted with stronger docs', description: 'We will keep you posted on the decision.' });
+                            setCaseData((prev: any) => ({ ...(prev || {}), status: 'Submitted' }));
+                          } else {
+                            toast({ title: 'Resubmission failed', description: res.error || 'Please try again.' });
+                          }
+                        }}>
+                          Resubmit with Stronger Docs
+                        </Button>
+                      )}
+
+                      <Button variant="outline" className="w-full text-gray-600 border-gray-200 hover:bg-gray-50" onClick={() => {
+                        window.open(api.getRecoveryDocumentUrl(effectiveCase.id), '_blank');
+                      }}>
+                        <FileText className="h-4 w-4 mr-2" />
+                        Download Proof Document
+                      </Button>
+
+                      <Button variant="ghost" className="w-full text-gray-500 hover:text-gray-700" asChild>
+                        <Link to="/evidence-locker">Open Evidence Locker</Link>
+                      </Button>
+                    </div>
                   </CardContent>
                 </Card>
 
