@@ -898,13 +898,17 @@ export default function EvidenceLocker() {
 
           <Card className="bg-white border-gray-200 text-gray-900">
             <CardHeader>
-              <CardTitle className="font-medium">Upload Documents</CardTitle>
-              <CardDescription>
-                Upload invoices, purchase orders, and receipts to verify your product costs
-              </CardDescription>
-              <p className="text-xs text-amber-600 mt-1.5 font-medium">
-                Amazon rejects 82% of claims without an Invoice.
-              </p>
+              <div className="flex items-start justify-between">
+                <div>
+                  <CardTitle className="font-medium">Upload Documents</CardTitle>
+                  <CardDescription>
+                    Upload invoices, purchase orders, and receipts to verify your product costs
+                  </CardDescription>
+                </div>
+                <p className="text-xs text-amber-600 font-medium whitespace-nowrap">
+                  Amazon rejects 82% of claims without an Invoice.
+                </p>
+              </div>
             </CardHeader>
             <CardContent>
               <div className={`border-2 border-dashed rounded-lg p-8 text-center transition-all ${dragActive ? 'border-emerald-500 bg-emerald-50' : 'border-gray-200 hover:border-emerald-400'}`} onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}>
