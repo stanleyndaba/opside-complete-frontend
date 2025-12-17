@@ -351,6 +351,24 @@ export default function CaseDetail() {
     return () => { cancelled = true; };
   }, [caseId]);
 
+  // Compute effectiveCase BEFORE any early returns (React hooks rule)
+  const effectiveCase = caseData || (mockCaseData as any)[caseId || ''] || passedClaim;
+
+  // useMemo hooks must be called unconditionally before any returns
+  const derivedConfidencePct = useMemo(() => {
+    if (!effectiveCase || !caseId) return 0;
+    const v = typeof effectiveCase?.confidence === 'number' ? effectiveCase.confidence : deriveConfidence(caseId);
+    return Math.max(0, Math.min(100, Math.round(v)));
+  }, [effectiveCase, caseId]);
+
+  const derivedEvidence = useMemo(() => {
+    if (!effectiveCase || !caseId) return 'Collecting';
+    return effectiveCase?.evidenceStatus || deriveEvidence(caseId);
+  }, [effectiveCase, caseId]);
+
+  const matchedCount = matchedDocs.length || (Array.isArray(effectiveCase?.documents) ? effectiveCase.documents.length : 0);
+
+  // Early return guards (all hooks must be called before these)
   if (!caseId) {
     return (
       <PageLayout title="Case Not Found">
@@ -366,8 +384,6 @@ export default function CaseDetail() {
       </PageLayout>
     );
   }
-
-  const effectiveCase = caseData || (mockCaseData as any)[caseId] || passedClaim;
 
   // Guard: show loading or error if no data
   if (!effectiveCase && loading) {
@@ -398,15 +414,6 @@ export default function CaseDetail() {
       </PageLayout>
     );
   }
-
-  const derivedConfidencePct = useMemo(() => {
-    const v = typeof effectiveCase?.confidence === 'number' ? effectiveCase.confidence : deriveConfidence(caseId!);
-    return Math.max(0, Math.min(100, Math.round(v)));
-  }, [effectiveCase, caseId]);
-  const derivedEvidence = useMemo(() => {
-    return effectiveCase?.evidenceStatus || deriveEvidence(caseId!);
-  }, [effectiveCase, caseId]);
-  const matchedCount = matchedDocs.length || (Array.isArray(effectiveCase?.documents) ? effectiveCase.documents.length : 0);
 
   return (
     <PageLayout title={`Case ${effectiveCase.id}`}>
