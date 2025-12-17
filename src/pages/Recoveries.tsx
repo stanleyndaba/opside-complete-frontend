@@ -1246,9 +1246,15 @@ export default function Recoveries() {
       // Map Agent 3 anomaly types to categories
       const type = c.type || c.anomaly_type || '';
 
-      // Check if type matches any Amazon event type
+      // Normalize function: remove all special chars for comparison
+      // This matches Agent 3's snake_case (lost_warehouse) to Amazon's format (Lost:Warehouse)
+      const normalizeType = (t: string) => t.toLowerCase().replace(/[:\-_\s]/g, '');
+      const normalizedType = normalizeType(type);
+
+      // Check if type matches any Amazon event type (normalized comparison)
       const matchedEvent = allEventTypes.find(e =>
-        e.id === type || e.name === type || e.id.toLowerCase() === type.toLowerCase()
+        normalizeType(e.id) === normalizedType ||
+        normalizeType(e.name) === normalizedType
       );
       if (matchedEvent) {
         counts[matchedEvent.name] = (counts[matchedEvent.name] || 0) + 1;
@@ -1306,8 +1312,7 @@ export default function Recoveries() {
   return (
     <PageLayout title="Reimbursements">
       <div className="relative w-full overflow-x-hidden">
-        <div className="relative w-full bg-gray-50 min-h-screen">
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-gray-50 to-white" />
+        <div className="relative w-full bg-white min-h-screen">
           <div className="relative w-full max-w-full px-4 sm:px-6 pt-6 pb-10 text-gray-900 space-y-6">
             <div className="mb-8">
               <div className="flex items-center justify-between mb-2">
