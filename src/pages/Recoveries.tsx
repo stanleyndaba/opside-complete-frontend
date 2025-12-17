@@ -1465,17 +1465,25 @@ export default function Recoveries() {
 
               <span className="hidden sm:block text-gray-300">|</span>
 
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-500">Recovery Value</span>
-                <span className="text-base font-semibold text-emerald-600">
-                  {formatCurrency(
-                    detectionStats?.total_value ??
-                    (metrics ? metrics.valueInProgress : keyMetrics.valueInProgress)
-                  )}
+              <div className="flex flex-col">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-500">Recovered Value</span>
+                  <span className="text-base font-semibold text-emerald-600">
+                    {formatCurrency(
+                      detectionStats?.total_value ??
+                      (metrics ? metrics.valueInProgress : keyMetrics.valueInProgress)
+                    )}
+                  </span>
+                </div>
+                <span className="text-[10px] text-gray-500 mt-0.5">
+                  {(() => {
+                    const value = detectionStats?.total_value ?? (metrics ? metrics.valueInProgress : keyMetrics.valueInProgress);
+                    const approvedCount = detectionStats?.approved_count ?? (metrics ? metrics.paidCount : 0);
+                    if (!value || value === 0) return 'No recoveries yet';
+                    if (approvedCount > 0) return `recovered from ${approvedCount} approved claims`;
+                    return '';
+                  })()}
                 </span>
-                {detectionStats?.expiring_soon > 0 && (
-                  <span className="text-xs text-amber-500">({detectionStats.expiring_soon} expiring)</span>
-                )}
               </div>
 
               <span className="hidden sm:block text-gray-300">|</span>

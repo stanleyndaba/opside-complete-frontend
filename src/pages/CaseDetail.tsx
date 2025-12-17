@@ -817,21 +817,19 @@ export default function CaseDetail() {
                     ) : (
                       <div className="text-center py-6">
                         <FileText className="h-8 w-8 mx-auto text-gray-300 mb-3" />
-                        <p className="text-sm text-amber-600 font-medium mb-2">
-                          Documents needed for this {effectiveCase.type || effectiveCase.anomaly_type || 'claim'}:
+                        <p className="text-sm text-gray-500 mb-2">
+                          No matching documents found yet
                         </p>
-                        <div className="space-y-1 text-xs text-gray-600">
-                          {getRequiredDocsForClaimType(effectiveCase.type || effectiveCase.anomaly_type).map((doc, idx) => (
-                            <p key={idx}>• {doc}</p>
-                          ))}
-                        </div>
+                        <p className="text-xs text-gray-400">
+                          Your matched evidence documents will appear here once the system finds relevant invoices, receipts, or shipping records.
+                        </p>
                         <Button
                           variant="outline"
                           size="sm"
                           className="mt-4 text-[#36454F] border-gray-300"
                           asChild
                         >
-                          <Link to="/evidence-locker">All documents</Link>
+                          <Link to="/evidence-locker">Browse Evidence Locker</Link>
                         </Button>
                       </div>
                     )}

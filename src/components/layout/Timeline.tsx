@@ -52,36 +52,30 @@ export function Timeline({ claimId }: { claimId: string }) {
   if (events.length === 0) return <div className="text-xs text-gray-400">No events yet</div>;
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       {events.map((evt) => {
-        const Icon = iconFor(evt.type, evt.status);
         const money = formatAmount(evt.amount, evt.currency);
         return (
-          <div key={evt.id} className="flex items-start gap-3 text-sm">
-            <div className="mt-0.5 w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-              <Icon className="h-3.5 w-3.5 text-emerald-400" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <div className="font-medium text-gray-200">
-                  {evt.type}{evt.status ? ` • ${evt.status}` : ''}
-                </div>
-                <div className="text-xs text-gray-400">{new Date(evt.at).toLocaleString()}</div>
+          <div key={evt.id} className="flex flex-col gap-1 text-sm border-l-2 border-gray-200 pl-4 py-1">
+            <div className="flex items-center gap-2">
+              <div className="font-medium text-gray-800">
+                {evt.type}{evt.status ? ` • ${evt.status}` : ''}
               </div>
-              {evt.message && <div className="text-xs text-gray-300">{evt.message}</div>}
-              {money && <div className="text-xs text-gray-300">Amount: {money}</div>}
-              {Array.isArray(evt.docIds) && evt.docIds.length > 0 && (
-                <div className="text-xs text-gray-300">
-                  Documents: {evt.docIds.slice(0,3).map((id, i) => (
-                    <React.Fragment key={id}>
-                      <Link to={`/documents/${encodeURIComponent(id)}`} className="underline hover:text-gray-100">{id}</Link>
-                      {i < Math.min(evt.docIds!.length, 3) - 1 ? ', ' : ''}
-                    </React.Fragment>
-                  ))}
-                  {evt.docIds.length > 3 ? '…' : ''}
-                </div>
-              )}
             </div>
+            <div className="text-xs text-gray-600">{new Date(evt.at).toLocaleString()}</div>
+            {evt.message && <div className="text-sm text-gray-700">{evt.message}</div>}
+            {money && <div className="text-sm text-gray-700">Amount: {money}</div>}
+            {Array.isArray(evt.docIds) && evt.docIds.length > 0 && (
+              <div className="text-sm text-gray-700">
+                Documents: {evt.docIds.slice(0, 3).map((id, i) => (
+                  <React.Fragment key={id}>
+                    <Link to={`/documents/${encodeURIComponent(id)}`} className="underline hover:text-gray-900">{id}</Link>
+                    {i < Math.min(evt.docIds!.length, 3) - 1 ? ', ' : ''}
+                  </React.Fragment>
+                ))}
+                {evt.docIds.length > 3 ? '…' : ''}
+              </div>
+            )}
           </div>
         );
       })}
