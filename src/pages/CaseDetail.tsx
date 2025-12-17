@@ -733,7 +733,7 @@ export default function CaseDetail() {
                         <p className="text-xs text-amber-600 mt-1">Amazon rejects 82% of claims without an Invoice.</p>
                       </div>
                       <span className="text-xs text-gray-500">
-                        {matchedDocs.length} document{matchedDocs.length !== 1 ? 's' : ''}
+                        {matchedDocs.length} found
                       </span>
                     </div>
                   </CardHeader>
@@ -858,11 +858,8 @@ export default function CaseDetail() {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      {/* At-a-glance header: confidence, evidence, quick actions */}
-                      <div className="flex flex-wrap items-center gap-3 p-3 rounded-md border border-gray-200 bg-gray-50">
-                        <Badge variant="outline" className="text-xs text-gray-900 border-gray-300">Confidence: {derivedConfidencePct}%</Badge>
-                        <Badge variant="outline" className="text-xs text-gray-900 border-gray-300">Evidence: {derivedEvidence}</Badge>
-                        <Badge variant="outline" className="text-xs text-gray-900 border-gray-300">Matched docs: {matchedCount}</Badge>
+                      {/* Quick actions - clean white container */}
+                      <div className="flex flex-wrap items-center gap-3 p-3 bg-white">
                         <div className="ml-auto flex gap-2">
                           <Button size="sm" variant="outline" className="bg-gray-100 text-[#36454F] hover:bg-gray-200 border-gray-300" onClick={async () => {
                             const url = api.getRecoveryDocumentUrl(effectiveCase.id);
