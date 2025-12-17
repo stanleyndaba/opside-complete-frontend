@@ -368,6 +368,37 @@ export default function CaseDetail() {
   }
 
   const effectiveCase = caseData || (mockCaseData as any)[caseId] || passedClaim;
+
+  // Guard: show loading or error if no data
+  if (!effectiveCase && loading) {
+    return (
+      <PageLayout title="Loading...">
+        <div className="text-center py-12">
+          <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4 text-gray-400" />
+          <p className="text-gray-500">Loading case details...</p>
+        </div>
+      </PageLayout>
+    );
+  }
+
+  if (!effectiveCase) {
+    return (
+      <PageLayout title="Case Not Found">
+        <div className="text-center py-12">
+          <h2 className="text-xl font-semibold mb-4 text-gray-900">Case not found</h2>
+          <p className="text-gray-500 mb-6">Case ID: {caseId}</p>
+          {error && <p className="text-red-500 mb-4">{error}</p>}
+          <Button asChild>
+            <Link to="/recoveries">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Cases
+            </Link>
+          </Button>
+        </div>
+      </PageLayout>
+    );
+  }
+
   const derivedConfidencePct = useMemo(() => {
     const v = typeof effectiveCase?.confidence === 'number' ? effectiveCase.confidence : deriveConfidence(caseId!);
     return Math.max(0, Math.min(100, Math.round(v)));
