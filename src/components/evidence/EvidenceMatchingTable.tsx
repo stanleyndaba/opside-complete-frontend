@@ -434,28 +434,40 @@ export function EvidenceMatchingTable() {
 
       {/* Tabs for different match categories */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="bg-gray-100">
-          <TabsTrigger value="smart-prompts" className="data-[state=active]:bg-white">
+        <TabsList className="inline-flex h-auto items-center justify-start gap-6 bg-transparent border-b border-gray-200 rounded-none p-0">
+          <TabsTrigger
+            value="smart-prompts"
+            className="relative px-1 pb-3 pt-1 text-sm font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-blue-600 data-[state=active]:text-blue-600 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-0.5 data-[state=active]:after:bg-blue-600"
+          >
             Needs Review
             {smartPrompts.length > 0 && (
-              <Badge className="ml-2 bg-amber-100 text-amber-800">{smartPrompts.length}</Badge>
+              <span className="ml-2 text-xs font-semibold text-amber-600">{smartPrompts.length}</span>
             )}
           </TabsTrigger>
-          <TabsTrigger value="auto-submitted" className="data-[state=active]:bg-white">
+          <TabsTrigger
+            value="auto-submitted"
+            className="relative px-1 pb-3 pt-1 text-sm font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-blue-600 data-[state=active]:text-blue-600 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-0.5 data-[state=active]:after:bg-blue-600"
+          >
             Auto-Submitted
             {autoSubmitted.length > 0 && (
-              <Badge className="ml-2 bg-emerald-100 text-emerald-800">{autoSubmitted.length}</Badge>
+              <span className="ml-2 text-xs font-semibold text-emerald-600">{autoSubmitted.length}</span>
             )}
           </TabsTrigger>
-          <TabsTrigger value="held" className="data-[state=active]:bg-white">
+          <TabsTrigger
+            value="held"
+            className="relative px-1 pb-3 pt-1 text-sm font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-blue-600 data-[state=active]:text-blue-600 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-0.5 data-[state=active]:after:bg-blue-600"
+          >
             Held / Rejected
             {heldForReview.length > 0 && (
-              <Badge className="ml-2 bg-gray-100 text-gray-800">{heldForReview.length}</Badge>
+              <span className="ml-2 text-xs font-semibold text-gray-600">{heldForReview.length}</span>
             )}
           </TabsTrigger>
-          <TabsTrigger value="all" className="data-[state=active]:bg-white">
+          <TabsTrigger
+            value="all"
+            className="relative px-1 pb-3 pt-1 text-sm font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-blue-600 data-[state=active]:text-blue-600 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-0.5 data-[state=active]:after:bg-blue-600"
+          >
             All Matches
-            <Badge className="ml-2 bg-gray-100 text-gray-800">{matchingResults.length}</Badge>
+            <span className="ml-2 text-xs font-semibold text-gray-500">{matchingResults.length}</span>
           </TabsTrigger>
         </TabsList>
 

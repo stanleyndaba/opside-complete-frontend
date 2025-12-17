@@ -1446,83 +1446,56 @@ export default function Recoveries() {
               </div>
             </div>
 
-            {/* Key Metrics Bar - Enhanced with Phase 3 Statistics */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <Card className="bg-gray-50 border-gray-200 text-gray-900 shadow-sm rounded-xl">
-                <CardContent className="p-6">
-                  <div className="flex items-center">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Total Claims Identified</p>
-                      <p className="text-xl font-normal text-[#1f1f1f]">
-                        {(() => {
-                          const value = detectionStats?.total_anomalies ?? detectionStats?.totalDetections ?? (metrics ? metrics.totalClaimsFound : keyMetrics.totalClaimsFound);
-                          return value > 0 ? value : null;
-                        })()}
-                        {amazonClaimCount != null && amazonClaimCount > 0 && (
-                          <span className="text-xs text-emerald-400 ml-2 font-normal">
-                            from Amazon
-                          </span>
-                        )}
-                      </p>
-                      {detectionStats?.total_anomalies && (
-                        <p className="text-xs text-gray-600 mt-1">
-                          {detectionStats.by_confidence?.high || 0} high confidence
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+            {/* Key Metrics Strip - Modern Inline Stats */}
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mb-8 py-3 px-4 bg-gray-50 rounded-lg border border-gray-100">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-500">Claims Identified</span>
+                <span className="text-base font-semibold text-blue-600">
+                  {(() => {
+                    const value = detectionStats?.total_anomalies ?? detectionStats?.totalDetections ?? (metrics ? metrics.totalClaimsFound : keyMetrics.totalClaimsFound);
+                    return value > 0 ? value : '0';
+                  })()}
+                </span>
+                {detectionStats?.by_confidence?.high > 0 && (
+                  <span className="text-xs text-gray-400">({detectionStats.by_confidence.high} high confidence)</span>
+                )}
+              </div>
 
-              <Card className="bg-gray-50 border-gray-200 text-gray-900 shadow-sm rounded-xl">
-                <CardContent className="p-6">
-                  <div className="flex items-center">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">
-                        {detectionStats?.total_value ? 'Total Recovery Value' : 'Potential Recovery Value'}
-                      </p>
-                      <p className="text-xl font-normal text-[#1f1f1f]">
-                        {formatCurrency(
-                          detectionStats?.total_value ??
-                          (metrics ? metrics.valueInProgress : keyMetrics.valueInProgress)
-                        )}
-                      </p>
-                      {detectionStats?.expiring_soon !== undefined && detectionStats.expiring_soon > 0 && (
-                        <p className="text-xs text-amber-400 mt-1">
-                          {detectionStats.expiring_soon} expiring soon
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <span className="hidden sm:block text-gray-300">|</span>
 
-              <Card className="bg-gray-50 border-gray-200 text-gray-900 shadow-sm rounded-xl">
-                <CardContent className="p-6">
-                  <div className="flex items-center">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Claims in Progress</p>
-                      <p className="text-xl font-medium text-[#1f1f1f]">{metrics ? metrics.inProgress : keyMetrics.currentlyInProgress}</p>
-                      {detectionStats?.expired_count !== undefined && detectionStats.expired_count > 0 && (
-                        <p className="text-xs text-red-400 mt-1">
-                          {detectionStats.expired_count} expired
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-500">Recovery Value</span>
+                <span className="text-base font-semibold text-emerald-600">
+                  {formatCurrency(
+                    detectionStats?.total_value ??
+                    (metrics ? metrics.valueInProgress : keyMetrics.valueInProgress)
+                  )}
+                </span>
+                {detectionStats?.expiring_soon > 0 && (
+                  <span className="text-xs text-amber-500">({detectionStats.expiring_soon} expiring)</span>
+                )}
+              </div>
 
-              <Card className="bg-gray-50 border-gray-200 text-gray-900 shadow-sm rounded-xl">
-                <CardContent className="p-6">
-                  <div className="flex items-center">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">30-Day Approval Rate</p>
-                      <p className="text-xl font-medium text-emerald-600">{metrics ? Math.round(metrics.successRate30d) : keyMetrics.successRate.toFixed(0)}%</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <span className="hidden sm:block text-gray-300">|</span>
+
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-500">In Progress</span>
+                <span className="text-base font-semibold text-amber-600">
+                  {metrics ? metrics.inProgress : keyMetrics.currentlyInProgress}
+                </span>
+                {detectionStats?.expired_count > 0 && (
+                  <span className="text-xs text-red-500">({detectionStats.expired_count} expired)</span>
+                )}
+              </div>
+
+              <span className="hidden sm:block text-gray-300">|</span>
+
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-500">Approval Rate</span>
+                <span className="text-base font-semibold text-emerald-600">
+                  {metrics ? Math.round(metrics.successRate30d) : keyMetrics.successRate.toFixed(0)}%
+                </span>
+              </div>
             </div>
 
             {/* Tabs for Claims, Evidence Matching, and Cases */}
