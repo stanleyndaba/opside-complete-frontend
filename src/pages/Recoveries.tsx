@@ -1466,16 +1466,14 @@ export default function Recoveries() {
               <span className="hidden sm:block text-gray-300">|</span>
 
               <div className="flex flex-col">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-500">Recovered Value</span>
-                  <span className="text-base font-semibold text-emerald-600">
-                    {formatCurrency(
-                      detectionStats?.total_value ??
-                      (metrics ? metrics.valueInProgress : keyMetrics.valueInProgress)
-                    )}
-                  </span>
-                </div>
-                <span className="text-[10px] text-gray-500 mt-0.5">
+                <span className="text-sm text-gray-500">Recovered Value</span>
+                <span className="text-base font-semibold text-emerald-600">
+                  {formatCurrency(
+                    detectionStats?.total_value ??
+                    (metrics ? metrics.valueInProgress : keyMetrics.valueInProgress)
+                  )}
+                </span>
+                <span className="text-[8px] text-gray-600">
                   {(() => {
                     const value = detectionStats?.total_value ?? (metrics ? metrics.valueInProgress : keyMetrics.valueInProgress);
                     const approvedCount = detectionStats?.approved_count ?? (metrics ? metrics.paidCount : 0);
