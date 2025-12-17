@@ -311,14 +311,6 @@ export function Navbar({
           <Link2 className={cn("h-4 w-4 text-[#36454F]")} />
           <span className="hidden sm:inline text-[#36454F]">Connect</span>
         </Button>
-        {isSandbox && (
-          <span className={cn(
-            'text-xs px-2 py-0.5 rounded border',
-            isTransparent ? 'border-amber-300/30 text-amber-200 bg-amber-500/10' : 'border-amber-600/30 text-amber-700 bg-amber-50'
-          )}>
-            Sandbox
-          </span>
-        )}
         {/* Language selector removed */}
       </div>
     </div>

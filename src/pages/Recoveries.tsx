@@ -1305,10 +1305,10 @@ export default function Recoveries() {
 
   return (
     <PageLayout title="Reimbursements">
-      <div className="relative w-full overflow-x-hidden -m-4 lg:-m-6">
-        <div className="relative w-full bg-gray-50 min-h-[calc(100vh+48px)]">
+      <div className="relative w-full overflow-x-hidden">
+        <div className="relative w-full bg-gray-50 min-h-screen">
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-gray-50 to-white" />
-          <div className="relative w-full max-w-full mx-auto px-6 pt-6 pb-10 text-gray-900 space-y-8">
+          <div className="relative w-full max-w-full px-4 sm:px-6 pt-6 pb-10 text-gray-900 space-y-6">
             <div className="mb-8">
               <div className="flex items-center justify-between mb-2">
                 <h1 className="text-xl text-gray-900 font-semibold">Cases</h1>
@@ -1332,7 +1332,7 @@ export default function Recoveries() {
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
-              <p className="text-gray-600">Monitor and manage all reimbursement opportunities across your FBA operations</p>
+              <p className="text-sm text-gray-500">Track, manage, and resolve FBA claims to recover lost revenue</p>
               <div className="mt-4 flex items-center gap-2">
                 <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-white" disabled={selectedIds.size === 0 || submittingBulk} onClick={async () => {
                   setSubmittingBulk(true);
@@ -1456,9 +1456,6 @@ export default function Recoveries() {
                     return value > 0 ? value : '0';
                   })()}
                 </span>
-                {detectionStats?.by_confidence?.high > 0 && (
-                  <span className="text-xs text-gray-400">({detectionStats.by_confidence.high} high confidence)</span>
-                )}
               </div>
 
               <span className="hidden sm:block text-gray-300">|</span>
