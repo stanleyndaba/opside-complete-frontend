@@ -15,7 +15,7 @@ import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { format, subDays, startOfYear, startOfQuarter } from 'date-fns';
 import { CalendarIcon, Search, MoreHorizontal, FileText, Eye, RefreshCw, Info, AlertTriangle, X, CheckCircle2, Clock, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { api } from '@/lib/api';
@@ -264,6 +264,7 @@ const getTypeDisplay = (type: string | undefined, anomalyType?: string): { name:
 
 
 export default function Recoveries() {
+  const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedClaimTypes, setSelectedClaimTypes] = useState<string[]>([]);
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
@@ -305,6 +306,14 @@ export default function Recoveries() {
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [detectionDetails, setDetectionDetails] = useState<any | null>(null);
   const [activeTab, setActiveTab] = useState<'claims' | 'matching' | 'cases'>('claims');
+
+  // Read search query from URL on mount and when URL changes
+  useEffect(() => {
+    const queryParam = searchParams.get('q');
+    if (queryParam) {
+      setSearchTerm(queryParam);
+    }
+  }, [searchParams]);
 
   // Table drag-to-scroll functionality
   const tableScrollRef = useRef<HTMLDivElement>(null);

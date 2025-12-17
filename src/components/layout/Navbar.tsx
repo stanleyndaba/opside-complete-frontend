@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { ArrowUpDown, ChevronDown, Search, Gift, Link2, Mail, Copy, Check } from 'lucide-react';
+import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
+import { ArrowUpDown, ChevronDown, Search, Gift, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -13,6 +13,16 @@ interface NavbarProps {
   onToggleSidebar?: () => void;
   forceTransparent?: boolean;
 }
+
+// Quick search result type
+interface QuickSearchResult {
+  id: string;
+  type: 'document' | 'claim' | 'product' | 'invoice';
+  title: string;
+  subtitle: string;
+  path: string;
+}
+
 export function Navbar({
   className,
   sidebarCollapsed = false,
@@ -21,6 +31,17 @@ export function Navbar({
 }: NavbarProps) {
   const location = useLocation();
   const navigate = useNavigate();
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
+
+  // Search state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [recentSearches, setRecentSearches] = useState<string[]>(() => {
+    const stored = localStorage.getItem('recentSearches');
+    return stored ? JSON.parse(stored) : [];
+  });
+
   const pathTransparent =
     location.pathname === '/' ||
     location.pathname.startsWith('/settings') ||
@@ -84,7 +105,65 @@ export function Navbar({
 
   const shortLink = getShortLink(referralLink);
 
-  // Language preference removed on platform navbar per design
+  // Handle search submission
+  const handleSearch = useCallback((query: string) => {
+    if (!query.trim()) return;
+
+    // Save to recent searches
+    const updatedRecent = [query, ...recentSearches.filter(s => s !== query)].slice(0, 5);
+    setRecentSearches(updatedRecent);
+    localStorage.setItem('recentSearches', JSON.stringify(updatedRecent));
+
+    // Navigate to appropriate search page based on context
+    setIsSearchFocused(false);
+
+    // Search in Evidence Locker for documents
+    if (query.toLowerCase().includes('invoice') || query.toLowerCase().includes('doc') || query.toLowerCase().includes('receipt')) {
+      navigate(`/evidence-locker?q=${encodeURIComponent(query)}`);
+    }
+    // Search in Recoveries for claims
+    else if (query.toLowerCase().includes('claim') || query.toLowerCase().includes('recovery') || query.toLowerCase().includes('fba')) {
+      navigate(`/recoveries?q=${encodeURIComponent(query)}`);
+    }
+    // Default: search in Recoveries (main page for searching claims)
+    else {
+      navigate(`/recoveries?q=${encodeURIComponent(query)}`);
+    }
+  }, [navigate, recentSearches]);
+
+  // Handle keyboard events
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch(searchQuery);
+    } else if (e.key === 'Escape') {
+      setIsSearchFocused(false);
+      searchInputRef.current?.blur();
+    }
+  }, [handleSearch, searchQuery]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(e.target as Node)) {
+        setIsSearchFocused(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Clear search and recent
+  const clearRecentSearches = () => {
+    setRecentSearches([]);
+    localStorage.removeItem('recentSearches');
+  };
+
+  // Quick links for search dropdown
+  const quickLinks = [
+    { id: 'documents', icon: FileText, label: 'Search Documents', path: '/evidence-locker' },
+    { id: 'claims', icon: DollarSign, label: 'Search Claims', path: '/recoveries' },
+    { id: 'products', icon: Package, label: 'Search Products', path: '/recoveries?tab=products' },
+  ];
 
   // Sandbox badge: show in non-production or when VITE_SANDBOX=true
   const env: any = (typeof import.meta !== 'undefined' ? (import.meta as any).env : undefined) || (typeof process !== 'undefined' ? (process as any).env : undefined) || {};
@@ -99,23 +178,95 @@ export function Navbar({
     <div className="container flex items-center h-16 px-4 font-body">
       {/* Center - Search */}
       <div className="flex-1 max-w-xl hidden md:block md:mx-4">
-        <div className="relative flex items-center gap-2">
+        <div className="relative flex items-center gap-2" ref={searchContainerRef}>
           <div className="relative flex-1">
             <Search className={cn(
               'absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 stroke-[2]',
               isDashboard ? 'text-gray-400' : (isTransparent ? 'text-gray-400' : 'text-gray-600')
             )} />
             <Input
+              ref={searchInputRef}
               aria-label="Search"
               placeholder="search invoices, products, documents, and more"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => setIsSearchFocused(true)}
+              onKeyDown={handleKeyDown}
               variant={isTransparent ? 'dark' : 'default'}
               className={cn(
-                "pl-9 h-9 rounded-md",
+                "pl-9 pr-8 h-9 rounded-md",
                 isDashboard && "!bg-white/5 !border-gray-300 !text-gray-200 !placeholder:text-gray-400 backdrop-blur-sm",
                 isTransparent && !isDashboard && "!bg-white/10 !border-gray-300 !text-gray-200 !placeholder:text-gray-400 backdrop-blur-sm",
                 !isDashboard && !isTransparent && "!border-gray-300"
               )}
             />
+            {/* Clear button */}
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+
+            {/* Search Dropdown */}
+            {isSearchFocused && (
+              <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-hidden">
+                {/* Recent Searches */}
+                {recentSearches.length > 0 && (
+                  <div className="p-2 border-b border-gray-100">
+                    <div className="flex items-center justify-between px-2 mb-1">
+                      <span className="text-xs font-medium text-gray-500">Recent Searches</span>
+                      <button
+                        onClick={clearRecentSearches}
+                        className="text-xs text-gray-400 hover:text-gray-600"
+                      >
+                        Clear
+                      </button>
+                    </div>
+                    {recentSearches.map((search, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => {
+                          setSearchQuery(search);
+                          handleSearch(search);
+                        }}
+                        className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-gray-700 hover:bg-gray-50 rounded"
+                      >
+                        <Clock className="h-3.5 w-3.5 text-gray-400" />
+                        {search}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* Quick Links */}
+                <div className="p-2">
+                  <span className="text-xs font-medium text-gray-500 px-2">Quick Links</span>
+                  {quickLinks.map((link) => (
+                    <button
+                      key={link.id}
+                      onClick={() => {
+                        setIsSearchFocused(false);
+                        navigate(link.path);
+                      }}
+                      className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-gray-700 hover:bg-gray-50 rounded mt-1"
+                    >
+                      <link.icon className="h-4 w-4 text-gray-400" />
+                      {link.label}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Search Tip */}
+                <div className="px-4 py-2 bg-gray-50 border-t border-gray-100">
+                  <p className="text-xs text-gray-500">
+                    Press <kbd className="px-1.5 py-0.5 bg-gray-200 rounded text-gray-600 font-mono">Enter</kbd> to search
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
           {/* Message icon - visible on all pages */}
           <NotificationBell
