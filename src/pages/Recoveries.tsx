@@ -1365,7 +1365,7 @@ export default function Recoveries() {
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
-                    <div className="text-[22px] font-medium" style={{ color: '#36454F' }}>Recovered Value</div>
+                    <div className="text-[18px] font-bold" style={{ color: '#36454F' }}>Recovered Value</div>
                     {recoveredTotal != null && recoveredTotal > 0 && (
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -1387,14 +1387,14 @@ export default function Recoveries() {
                     {recoveredTotal != null && recoveredTotal > 0 ? (
                       <>
                         <span className="text-gray-500">{formatCurrencyWithSelection(recoveredTotal, recoveredCurrency)}</span>
-                        <div className="text-[16px] text-gray-600 mt-1">
+                        <div className="text-[14px] text-gray-600 mt-1">
                           recovered from {amazonClaimCount ?? 0} approved claim{amazonClaimCount !== 1 ? 's' : ''}
                         </div>
                       </>
                     ) : (
                       <>
                         <span className="text-gray-500">{formatCurrencyWithSelection(0)}</span>
-                        <div className="text-[16px] text-gray-600 mt-1">No recoveries yet</div>
+                        <div className="text-[14px] text-gray-600 mt-1">No recoveries yet</div>
                       </>
                     )}
                   </div>
