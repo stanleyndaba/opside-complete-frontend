@@ -75,7 +75,7 @@ export default function UpcomingPayments() {
                 created: c.created || c.created_at,
                 type: c.type || c.dispute_type || 'unknown',
                 status: c.status,
-                guaranteedAmount: c.guaranteedAmount ?? c.amount ?? 0,
+                guaranteedAmount: c.guaranteedAmount ?? c.amount ?? c.claim_amount ?? c.actual_payout_amount ?? c.estimated_value ?? 0,
                 expectedPayoutDate: (c.expectedPayoutDate ?? c.expected_payout_date ?? null) as string | null,
                 currency: (c.currency ?? 'USD') as string,
                 // Add dispute case data

@@ -896,11 +896,13 @@ export default function CaseDetail() {
                       {/* Visual Stepper */}
                       <div className="flex items-center gap-3 mb-2 text-sm">
                         {['Detected', 'Prepared', 'Submitted', 'Paid'].map((step, idx) => {
+                          // Normalize status to lowercase for comparison
+                          const status = (effectiveCase.status || '').toLowerCase();
                           const active = (
                             (step === 'Detected') ||
-                            (step === 'Prepared' && ['Guaranteed', 'Submitted', 'Under Review', 'Paid Out'].includes(effectiveCase.status)) ||
-                            (step === 'Submitted' && ['Submitted', 'Under Review', 'Paid Out'].includes(effectiveCase.status)) ||
-                            (step === 'Paid' && ['Paid Out'].includes(effectiveCase.status))
+                            (step === 'Prepared' && ['guaranteed', 'submitted', 'under review', 'under_review', 'filed', 'pending', 'in progress', 'in_progress', 'paid out', 'paid_out', 'approved', 'paid'].includes(status)) ||
+                            (step === 'Submitted' && ['submitted', 'under review', 'under_review', 'filed', 'paid out', 'paid_out', 'approved', 'paid'].includes(status)) ||
+                            (step === 'Paid' && ['paid out', 'paid_out', 'approved', 'paid', 'completed', 'reconciled'].includes(status))
                           );
                           return (
                             <div key={step} className="flex items-center gap-3">
