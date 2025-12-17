@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { recoveryApi } from '@/lib/recoveryApi';
 import { api } from '@/lib/api';
+import { detectionApi } from '@/lib/detectionApi';
 import { Link } from 'react-router-dom';
 
 interface RecoveryClaim {
@@ -89,8 +90,37 @@ export default function UpcomingPayments() {
             setCurrency(firstWithCurrency);
             setErrorMessage(null);
           } else {
-            setClaims([]);
-            setErrorMessage(null);
+            // Fallback: Try detection results if recoveryApi returns empty
+            console.log('[UpcomingPayments] No data from recoveryApi, trying detectionApi...');
+            try {
+              const detectionRes = await detectionApi.getDetectionResults({ limit: 100 });
+              if (detectionRes?.results && detectionRes.results.length > 0) {
+                console.log('[UpcomingPayments] Fallback: Got', detectionRes.results.length, 'detection results');
+                const mapped = detectionRes.results.map((d: any) => ({
+                  id: d.id,
+                  created: d.created_at || d.discovery_date,
+                  type: d.anomaly_type || 'detection',
+                  status: d.status || 'Open',
+                  guaranteedAmount: parseFloat(String(d.estimated_value ?? 0)) || 0,
+                  expectedPayoutDate: null,
+                  currency: d.currency || 'USD',
+                  filing_status: null,
+                  amazon_case_id: null,
+                  case_id: null,
+                })) as RecoveryClaim[];
+                setClaims(mapped);
+                const firstWithCurrency = (mapped.find(c => !!c.currency)?.currency) || 'USD';
+                setCurrency(firstWithCurrency);
+                setErrorMessage(null);
+              } else {
+                setClaims([]);
+                setErrorMessage(null);
+              }
+            } catch (detectionErr) {
+              console.warn('[UpcomingPayments] Detection fallback also failed:', detectionErr);
+              setClaims([]);
+              setErrorMessage(null);
+            }
           }
         }
       } catch (error: any) {
