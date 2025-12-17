@@ -1387,14 +1387,14 @@ export default function Recoveries() {
                     {recoveredTotal != null && recoveredTotal > 0 ? (
                       <>
                         <span className="text-gray-500">{formatCurrencyWithSelection(recoveredTotal, recoveredCurrency)}</span>
-                        <span className="text-gray-600 text-base font-medium ml-2">
+                        <div className="text-[10px] text-gray-600 mt-1">
                           recovered from {amazonClaimCount ?? 0} approved claim{amazonClaimCount !== 1 ? 's' : ''}
-                        </span>
+                        </div>
                       </>
                     ) : (
                       <>
                         <span className="text-gray-500">{formatCurrencyWithSelection(0)}</span>
-                        <span className="text-gray-600 text-base font-medium ml-2">No recoveries yet</span>
+                        <div className="text-[10px] text-gray-600 mt-1">No recoveries yet</div>
                       </>
                     )}
                   </div>
@@ -1465,22 +1465,13 @@ export default function Recoveries() {
 
               <span className="hidden sm:block text-gray-300">|</span>
 
-              <div className="flex flex-col">
-                <span className="text-sm text-gray-500">Recovered Value</span>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-500">Recovery Value</span>
                 <span className="text-base font-semibold text-emerald-600">
                   {formatCurrency(
                     detectionStats?.total_value ??
                     (metrics ? metrics.valueInProgress : keyMetrics.valueInProgress)
                   )}
-                </span>
-                <span className="text-[8px] text-gray-600">
-                  {(() => {
-                    const value = detectionStats?.total_value ?? (metrics ? metrics.valueInProgress : keyMetrics.valueInProgress);
-                    const approvedCount = detectionStats?.approved_count ?? (metrics ? metrics.paidCount : 0);
-                    if (!value || value === 0) return 'No recoveries yet';
-                    if (approvedCount > 0) return `recovered from ${approvedCount} approved claims`;
-                    return '';
-                  })()}
                 </span>
               </div>
 
