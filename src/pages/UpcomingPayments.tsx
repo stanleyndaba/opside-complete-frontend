@@ -189,8 +189,15 @@ export default function UpcomingPayments() {
         count += g.count;
       }
     }
+
+    // If no claims have dated payouts, use total claims value as projection
+    if (gross === 0 && claims.length > 0) {
+      gross = claims.reduce((sum, c) => sum + parseFloat(String(c.guaranteedAmount ?? 0)) || 0, 0);
+      count = claims.length;
+    }
+
     return { gross, count, commission: gross * 0.2, net: Math.max(gross * 0.8, 0) };
-  }, [upcomingGroups]);
+  }, [upcomingGroups, claims]);
 
   // Pipeline stage calculations for Financial Gravity retention
   const pipelineStages = useMemo(() => {
