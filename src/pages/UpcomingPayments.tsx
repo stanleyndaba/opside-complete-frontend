@@ -175,7 +175,7 @@ export default function UpcomingPayments() {
     for (const c of claims) {
       const status = (c.status || '').toLowerCase();
       const filingStatus = (c.filing_status || '').toLowerCase();
-      const amount = c.guaranteedAmount || 0;
+      const amount = parseFloat(String(c.guaranteedAmount ?? c.amount ?? c.claim_amount ?? c.actual_payout_amount ?? c.estimated_value ?? 0)) || 0;
 
       if (status === 'paid' || status === 'paid out') {
         stages.paid.count++;
