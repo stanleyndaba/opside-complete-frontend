@@ -717,15 +717,15 @@ export default function Sync() {
     }
   };
 
-  // Get log entry color
+  // Get log entry color - keep colorful status types, use charcoal for regular messages
   const getLogColor = (type: LogEntry['type']) => {
     switch (type) {
-      case 'success': return 'text-emerald-400';
-      case 'error': return 'text-red-400';
-      case 'warning': return 'text-amber-400';
-      case 'progress': return 'text-blue-400';
-      case 'thinking': return 'text-gray-500 italic';
-      default: return 'text-gray-300';
+      case 'success': return 'text-emerald-600';
+      case 'error': return 'text-red-600';
+      case 'warning': return 'text-amber-600';
+      case 'progress': return 'text-blue-600';
+      case 'thinking': return 'text-gray-400 italic';
+      default: return 'text-gray-700'; // Mid-dark charcoal for regular messages
     }
   };
 
@@ -835,45 +835,45 @@ export default function Sync() {
                   />
                 </div>
 
-                {/* Log Container - Terminal Style with AI Feel */}
+                {/* Log Container - Clean White Theme */}
                 <div className="relative group">
                   {/* Glass header effect */}
-                  <div className="absolute top-0 left-0 right-0 h-8 bg-white/5 backdrop-blur-sm rounded-t-lg border-b border-white/10 flex items-center px-4 justify-between z-10">
+                  <div className="absolute top-0 left-0 right-0 h-8 bg-gray-50 backdrop-blur-sm rounded-t-lg border-b border-gray-200 flex items-center px-4 justify-between z-10">
                     <div className="flex items-center gap-2">
                       <div className="flex gap-1.5">
-                        <div className="w-2.5 h-2.5 rounded-full bg-red-500/20 border border-red-500/50"></div>
-                        <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/20 border border-yellow-500/50"></div>
-                        <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/20 border border-emerald-500/50"></div>
+                        <div className="w-2.5 h-2.5 rounded-full bg-red-100 border border-red-300"></div>
+                        <div className="w-2.5 h-2.5 rounded-full bg-yellow-100 border border-yellow-300"></div>
+                        <div className="w-2.5 h-2.5 rounded-full bg-emerald-100 border border-emerald-300"></div>
                       </div>
-                      <span className="text-[10px] font-mono text-gray-400 ml-2 flex items-center gap-1.5">
+                      <span className="text-[10px] font-mono text-gray-500 ml-2 flex items-center gap-1.5">
                         <Target className="h-3 w-3" />
                         AGENT_ACTIVITY_STREAM
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
                       {status === 'running' || status === 'detecting' ? (
-                        <div className="flex items-center gap-1.5 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                        <div className="flex items-center gap-1.5 bg-emerald-100 px-2 py-0.5 rounded-full border border-emerald-200">
                           <span className="relative flex h-1.5 w-1.5">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
                           </span>
-                          <span className="text-[9px] font-medium text-emerald-400 tracking-wider">LIVE</span>
+                          <span className="text-[9px] font-medium text-emerald-600 tracking-wider">LIVE</span>
                         </div>
                       ) : (
-                        <span className="text-[9px] text-gray-500">OFFLINE</span>
+                        <span className="text-[9px] text-gray-400">OFFLINE</span>
                       )}
                     </div>
                   </div>
 
                   <div
                     ref={logContainerRef}
-                    className="bg-[#0c0c0c] rounded-lg pt-10 pb-4 px-4 font-mono text-xs h-96 overflow-y-auto scroll-smooth border border-gray-800 shadow-2xl relative"
+                    className="bg-white rounded-lg pt-10 pb-4 px-4 font-mono text-xs h-96 overflow-y-auto scroll-smooth border border-gray-200 shadow-sm relative"
                   >
                     {/* Grid background effect */}
-                    <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none"></div>
+                    <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none"></div>
 
                     {filteredLogs.length === 0 ? (
-                      <div className="text-gray-600 flex flex-col items-center justify-center h-full relative z-10">
+                      <div className="text-gray-400 flex flex-col items-center justify-center h-full relative z-10">
                         <Loader2 className="h-8 w-8 mb-2 animate-spin opacity-20" />
                         <span className="text-xs tracking-widest opacity-40">WAITING FOR SIGNAL...</span>
                       </div>
@@ -887,13 +887,13 @@ export default function Sync() {
                             const parts = text.split(/(\$[\d,]+\.?\d*|\b\d+\b|\[.*?\])/g);
                             return parts.map((part, i) => {
                               if (part.match(/^\$[\d,]+\.?\d*$/)) {
-                                return <span key={i} className="text-emerald-400 font-bold">{part}</span>;
+                                return <span key={i} className="text-emerald-600 font-bold">{part}</span>;
                               }
                               if (part.match(/^\d+$/)) {
-                                return <span key={i} className="text-cyan-400 font-bold">{part}</span>;
+                                return <span key={i} className="text-blue-600 font-bold">{part}</span>;
                               }
                               if (part.match(/^\[.*?\]$/)) {
-                                return <span key={i} className="text-purple-400 font-bold">{part}</span>;
+                                return <span key={i} className="text-purple-600 font-bold">{part}</span>;
                               }
                               return part;
                             });
@@ -918,7 +918,7 @@ export default function Sync() {
                                     </span>
                                     {highlightContent(log.message)}
                                     {isLast && (status === 'running' || status === 'detecting') && (
-                                      <span className="inline-block w-1.5 h-3 bg-cyan-500 ml-1 animate-pulse align-middle"></span>
+                                      <span className="inline-block w-1.5 h-3 bg-blue-500 ml-1 animate-pulse align-middle"></span>
                                     )}
                                   </div>
 
@@ -1010,7 +1010,7 @@ export default function Sync() {
                 ) : (
                   <>
                     <RefreshCw className="h-4 w-4 mr-2" />
-                    Run
+                    Run Again
                   </>
                 )}
               </Button>
