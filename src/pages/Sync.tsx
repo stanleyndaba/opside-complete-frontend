@@ -772,54 +772,7 @@ export default function Sync() {
       <div className="bg-white min-h-screen">
         <div className="container mx-auto px-6 py-10 text-gray-900">
           <div className="max-w-4xl mx-auto space-y-6">
-            {/* Dynamic Status Header */}
-            <div className="space-y-2">
-              {/* Analysis in progress (running) */}
-              {status === 'running' && (
-                <div className="space-y-1">
-                  <h1 className="text-sm font-semibold text-gray-700 bg-gradient-to-r from-gray-400 via-gray-600 to-gray-400 bg-[length:200%_100%] animate-[shimmer_2s_ease-in-out_infinite] bg-clip-text text-transparent">
-                    Analysis in progress
-                  </h1>
-                  <p className="text-xs text-gray-500">
-                    Analyzing 18 months of FBA data across 6 data sources...
-                  </p>
-                </div>
-              )}
-
-              {/* Wrapping up report (detecting) */}
-              {status === 'detecting' && (
-                <div className="space-y-1">
-                  <h1 className="text-sm font-semibold text-gray-700 bg-gradient-to-r from-gray-400 via-gray-600 to-gray-400 bg-[length:200%_100%] animate-[shimmer_2s_ease-in-out_infinite] bg-clip-text text-transparent">
-                    Wrapping up report
-                  </h1>
-                  <p className="text-xs text-gray-500">
-                    Found {claimsCount !== null ? claimsCount : '--'} potential claims so far • {formatCurrency(totalRecoverableValue)} identified
-                  </p>
-                </div>
-              )}
-
-              {/* Audit Complete - now shows minimal confirmation */}
-              {status === 'completed' && (
-                <div className="space-y-1">
-                  <h1 className="text-sm font-semibold text-emerald-600 flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4" />
-                    Audit Complete
-                  </h1>
-                </div>
-              )}
-
-              {/* Idle/Error states - show nothing or minimal message */}
-              {(status === 'idle' || status === 'failed') && (
-                <div className="space-y-1">
-                  <h1 className="text-sm font-semibold text-gray-700">
-                    Ready to start audit
-                  </h1>
-                  <p className="text-xs text-gray-500">
-                    Click "Start Sync" below to analyze your FBA data
-                  </p>
-                </div>
-              )}
-            </div>
+            {/* Dynamic Status Header - REMOVED per user request */}
 
             {/* Add shimmer animation to global styles */}
             <style>{`
@@ -845,7 +798,7 @@ export default function Sync() {
               )}
 
               {/* Real-time Logs Section */}
-              <div className="space-y-3 pt-6 mt-4 border-t border-gray-200">
+              <div className="space-y-3">
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
                     <h4 className="text-sm font-semibold text-gray-800">Real-Time Logs</h4>
@@ -1299,16 +1252,16 @@ export default function Sync() {
                   <Button
                     variant="ghost"
                     onClick={() => setShowSourcesModal(false)}
-                    className="bg-white text-gray-700 hover:bg-gray-50 border-0"
+                    className="bg-gray-100 text-gray-700 hover:bg-gray-200"
                   >
-                    Not Now
+                    Connect Platform
                   </Button>
                   <Button
                     variant="ghost"
                     onClick={() => setShowSourcesModal(false)}
-                    className="bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    className="bg-white text-gray-700 hover:bg-gray-50 border-0"
                   >
-                    Connect Platform
+                    Not Now
                   </Button>
                 </div>
               </DialogContent>
