@@ -1372,9 +1372,9 @@ export default function Recoveries() {
                           <button
                             type="button"
                             aria-label="About recovered value"
-                            className="w-5 h-5 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition-colors"
+                            className="w-4 h-4 rounded-full bg-gray-500 flex items-center justify-center hover:bg-gray-400 transition-colors"
                           >
-                            <Info className="h-3 w-3 text-white" />
+                            <Info className="h-2.5 w-2.5 text-white" />
                           </button>
                         </TooltipTrigger>
                         <TooltipContent side="top" className="bg-black text-white text-xs">

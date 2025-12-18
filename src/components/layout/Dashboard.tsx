@@ -638,7 +638,7 @@ export function Dashboard() {
                                   <button
                                     type="button"
                                     aria-label="About recovered value"
-                                    className="w-4 h-4 rounded-full bg-gray-700 flex items-center justify-center hover:bg-gray-600 transition-colors"
+                                    className="w-4 h-4 rounded-full bg-gray-500 flex items-center justify-center hover:bg-gray-400 transition-colors"
                                   >
                                     <Info className="h-2.5 w-2.5 text-white" />
                                   </button>
@@ -688,7 +688,7 @@ export function Dashboard() {
                             <Button
                               variant="outline"
                               size="sm"
-                              className="bg-blue-50 border-0 text-[#1e3a5f] hover:bg-blue-100 rounded-lg"
+                              className="bg-gray-100 border-0 text-gray-700 hover:bg-gray-200 rounded-lg font-medium"
                               onClick={async () => {
                                 try {
                                   const { startSync } = await import('@/lib/inventoryApi');
