@@ -57,12 +57,6 @@ export default function Careers() {
     },
   ];
 
-  const process = [
-    { step: 1, title: 'Intro Call', description: '30 minute call to discuss mutual fit' },
-    { step: 2, title: 'Technical Review', description: 'Portfolio or code deep-dive' },
-    { step: 3, title: 'Practical Exercise', description: 'Async or live problem-solving' },
-    { step: 4, title: 'Team Meet', description: 'Meet the team, offer within one week' },
-  ];
 
   return (
     <PageLayout title="Careers">
@@ -134,30 +128,6 @@ export default function Careers() {
               </div>
             </section>
 
-            {/* Hiring Process - Timeline */}
-            <section className="mb-16">
-              <h2 className="text-lg font-semibold text-gray-900 mb-8">Hiring Process</h2>
-              <div className="relative">
-                {/* Timeline line */}
-                <div className="absolute left-4 top-0 bottom-0 w-px bg-gray-200" />
-
-                <div className="space-y-8">
-                  {process.map((item) => (
-                    <div key={item.step} className="relative pl-12">
-                      {/* Step number */}
-                      <div className="absolute left-0 h-8 w-8 rounded-full bg-gray-900 text-white text-sm font-medium flex items-center justify-center">
-                        {item.step}
-                      </div>
-                      {/* Content */}
-                      <div>
-                        <h3 className="font-medium text-gray-900">{item.title}</h3>
-                        <p className="text-sm text-gray-500 mt-0.5">{item.description}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
 
             {/* Contact CTA - Simple */}
             <section className="pt-8 border-t border-gray-100">
