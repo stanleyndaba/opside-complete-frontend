@@ -317,13 +317,18 @@ export default function NotificationHub() {
 
     // Save to backend
     try {
+      console.log('[NotificationHub] Saving preferences:', prefsToSave);
       const response = await api.saveNotificationPreferences(prefsToSave);
+      console.log('[NotificationHub] Save response:', response);
       if (response.ok) {
         toast({ title: 'Preferences saved' });
+      } else {
+        console.warn('[NotificationHub] Save failed:', response.error);
+        toast({ title: 'Failed to save', description: response.error || 'Please try again', variant: 'destructive' });
       }
     } catch (err) {
-      console.warn('Failed to save notification preferences:', err);
-      // Preferences are already saved locally, so no need to revert
+      console.error('[NotificationHub] Save error:', err);
+      toast({ title: 'Failed to save', description: 'Network error - preferences saved locally only', variant: 'destructive' });
     }
   };
 
