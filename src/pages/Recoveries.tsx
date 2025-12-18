@@ -1491,7 +1491,7 @@ export default function Recoveries() {
 
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-500">Approval Rate</span>
-                <span className="text-base font-semibold text-emerald-600">
+                <span className="text-base font-semibold text-gray-700">
                   {metrics ? Math.round(metrics.successRate30d) : keyMetrics.successRate.toFixed(0)}%
                 </span>
               </div>
