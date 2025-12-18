@@ -638,9 +638,9 @@ export function Dashboard() {
                                   <button
                                     type="button"
                                     aria-label="About recovered value"
-                                    className="text-gray-500 hover:text-gray-700 transition-colors"
+                                    className="w-5 h-5 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition-colors"
                                   >
-                                    <Info className="h-4 w-4" />
+                                    <Info className="h-3 w-3 text-white" />
                                   </button>
                                 </TooltipTrigger>
                                 <TooltipContent side="top" className="bg-black text-white text-xs">
@@ -648,7 +648,7 @@ export function Dashboard() {
                                 </TooltipContent>
                               </Tooltip>
                             </div>
-                            <div className="text-2xl md:text-3xl font-semibold mt-1 text-blue-600">
+                            <div className="text-2xl md:text-3xl font-semibold mt-1 text-gray-900">
                               {formatCurrencyWithSelection(recoveredTotal ?? 0, recoveredCurrency)}
                             </div>
                             <div className="text-[11px] text-gray-600 mt-1">
