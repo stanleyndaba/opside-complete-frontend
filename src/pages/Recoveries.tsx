@@ -1365,7 +1365,7 @@ export default function Recoveries() {
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
-                    <div className="text-[18px] font-bold" style={{ color: '#36454F' }}>Recovered Value</div>
+                    <div className="text-gray-900 font-medium">Recovered Value</div>
                     {recoveredTotal != null && recoveredTotal > 0 && (
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -1383,7 +1383,7 @@ export default function Recoveries() {
                       </Tooltip>
                     )}
                   </div>
-                  <div className="text-2xl md:text-3xl font-semibold">
+                  <div className="text-xl md:text-2xl font-semibold">
                     {recoveredTotal != null && recoveredTotal > 0 ? (
                       <>
                         <span className="text-gray-900">{formatCurrencyWithSelection(recoveredTotal, recoveredCurrency)}</span>
@@ -1455,7 +1455,7 @@ export default function Recoveries() {
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mb-8 py-3 px-4 bg-gray-50 rounded-lg border border-gray-100">
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-500">Claims Identified</span>
-                <span className="text-base font-semibold text-blue-600">
+                <span className="text-base font-semibold text-gray-700">
                   {(() => {
                     const value = detectionStats?.total_anomalies ?? detectionStats?.totalDetections ?? (metrics ? metrics.totalClaimsFound : keyMetrics.totalClaimsFound);
                     return value > 0 ? value : '0';
@@ -1467,7 +1467,7 @@ export default function Recoveries() {
 
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-500">Recovery Value</span>
-                <span className="text-base font-semibold text-emerald-600">
+                <span className="text-base font-semibold text-gray-700">
                   {formatCurrency(
                     detectionStats?.total_value ??
                     (metrics ? metrics.valueInProgress : keyMetrics.valueInProgress)
