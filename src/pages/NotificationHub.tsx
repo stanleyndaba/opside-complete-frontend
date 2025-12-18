@@ -272,10 +272,59 @@ export default function NotificationHub() {
     }
   ]);
 
-  const updatePreference = (id: string, channel: 'email' | 'inApp', value: boolean) => {
+  // Load preferences from backend on mount
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const response = await api.getNotificationPreferences();
+        if (!cancelled && response.ok && response.data) {
+          // Merge backend preferences with default state
+          setPreferences(prev => prev.map(pref => {
+            const saved = response.data[pref.id];
+            if (saved) {
+              return {
+                ...pref,
+                email: saved.email ?? pref.email,
+                inApp: saved.inApp ?? pref.inApp
+              };
+            }
+            return pref;
+          }));
+        }
+      } catch (err) {
+        console.warn('Failed to load notification preferences:', err);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  const updatePreference = async (id: string, channel: 'email' | 'inApp', value: boolean) => {
+    // Update local state immediately for responsive UI
     setPreferences(prev => prev.map(pref =>
       pref.id === id ? { ...pref, [channel]: value } : pref
     ));
+
+    // Build preferences object to save
+    const prefsToSave: Record<string, { email: boolean; inApp: boolean }> = {};
+    preferences.forEach(pref => {
+      if (pref.id === id) {
+        prefsToSave[pref.id] = { ...{ email: pref.email, inApp: pref.inApp }, [channel]: value };
+      } else {
+        prefsToSave[pref.id] = { email: pref.email, inApp: pref.inApp };
+      }
+    });
+
+    // Save to backend
+    try {
+      const response = await api.saveNotificationPreferences(prefsToSave);
+      if (response.ok) {
+        toast({ title: 'Preferences saved' });
+      }
+    } catch (err) {
+      console.warn('Failed to save notification preferences:', err);
+      // Preferences are already saved locally, so no need to revert
+    }
   };
 
   const categories = [
@@ -359,8 +408,8 @@ export default function NotificationHub() {
                       <div
                         key={notification.id}
                         className={`flex items-start gap-4 p-4 rounded-lg border transition-colors cursor-pointer ${!notification.read
-                            ? 'bg-gray-50 border-gray-200'
-                            : 'bg-white hover:bg-gray-50 border-gray-200'
+                          ? 'bg-gray-50 border-gray-200'
+                          : 'bg-white hover:bg-gray-50 border-gray-200'
                           }`}
                         onClick={() => !notification.read && handleMarkAsRead(notification.id)}
                       >

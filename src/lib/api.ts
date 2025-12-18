@@ -1384,6 +1384,16 @@ export const api = {
       count: number;
     }>(`/api/notifications/unread${query}`);
   },
+  getNotificationPreferences: () => requestJson<{
+    success: boolean;
+    data: Record<string, { email: boolean; inApp: boolean }>;
+  }>('/api/notifications/preferences'),
+  saveNotificationPreferences: (preferences: Record<string, { email: boolean; inApp: boolean }>) =>
+    requestJson<{ success: boolean; message: string }>('/api/notifications/preferences', {
+      method: 'PUT',
+      body: JSON.stringify(preferences),
+    }),
+
 
   // Agent 11: Learning endpoints
   getLearningMetrics: (params?: { userId?: string; window?: '7d' | '30d' | '90d' }) => {
