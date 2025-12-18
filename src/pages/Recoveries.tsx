@@ -1372,9 +1372,9 @@ export default function Recoveries() {
                           <button
                             type="button"
                             aria-label="About recovered value"
-                            className="text-gray-500 hover:text-gray-700 transition-colors"
+                            className="w-5 h-5 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition-colors"
                           >
-                            <Info className="h-3 w-3" />
+                            <Info className="h-3 w-3 text-white" />
                           </button>
                         </TooltipTrigger>
                         <TooltipContent side="top" className="bg-black text-white text-xs">
@@ -1383,18 +1383,18 @@ export default function Recoveries() {
                       </Tooltip>
                     )}
                   </div>
-                  <div className="text-xl md:text-2xl font-medium">
+                  <div className="text-2xl md:text-3xl font-semibold">
                     {recoveredTotal != null && recoveredTotal > 0 ? (
                       <>
-                        <span className="text-gray-500">{formatCurrencyWithSelection(recoveredTotal, recoveredCurrency)}</span>
-                        <div className="text-[14px] text-gray-600 mt-1">
+                        <span className="text-gray-900">{formatCurrencyWithSelection(recoveredTotal, recoveredCurrency)}</span>
+                        <div className="text-[14px] text-gray-600 font-normal mt-1">
                           recovered from {amazonClaimCount ?? 0} approved claim{amazonClaimCount !== 1 ? 's' : ''}
                         </div>
                       </>
                     ) : (
                       <>
-                        <span className="text-gray-500">{formatCurrencyWithSelection(0)}</span>
-                        <div className="text-[14px] text-gray-600 mt-1">No recoveries yet</div>
+                        <span className="text-gray-900">{formatCurrencyWithSelection(0)}</span>
+                        <div className="text-[14px] text-gray-600 font-normal mt-1">No recoveries yet</div>
                       </>
                     )}
                   </div>
