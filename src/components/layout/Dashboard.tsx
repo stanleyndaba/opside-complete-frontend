@@ -640,7 +640,7 @@ export function Dashboard() {
                                     aria-label="About recovered value"
                                     className="w-4 h-4 rounded-full bg-gray-500 flex items-center justify-center hover:bg-gray-400 transition-colors"
                                   >
-                                    <Info className="h-2.5 w-2.5 text-white" />
+                                    <span className="text-white text-[10px] font-serif italic leading-none">i</span>
                                   </button>
                                 </TooltipTrigger>
                                 <TooltipContent side="top" className="bg-black text-white text-xs">
