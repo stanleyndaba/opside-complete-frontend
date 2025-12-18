@@ -724,7 +724,7 @@ export function Dashboard() {
                         <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
                             <div className="text-xs text-gray-600">Next payment</div>
-                            <div className="text-xl font-normal text-emerald-600 mt-1">
+                            <div className="text-2xl font-semibold text-emerald-600 mt-1">
                               {formatCurrencyWithSelection((nextPaymentAmount ?? 0), recoveredCurrency)}
                             </div>
                             <div className="text-[11px] text-gray-600 mt-1">
@@ -735,7 +735,7 @@ export function Dashboard() {
                           </div>
                           <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
                             <div className="text-xs text-gray-600">Pending recovery</div>
-                            <div className="text-xl font-normal text-emerald-600 mt-1">
+                            <div className="text-2xl font-semibold text-emerald-600 mt-1">
                               {formatCurrencyWithSelection((pendingRecoveryAmount ?? 0), recoveredCurrency)}
                             </div>
                             <div className="text-[11px] text-gray-600 mt-1">
@@ -752,7 +752,7 @@ export function Dashboard() {
                                 <span className="text-[10px] text-green-600 font-medium">92%</span>
                               </div>
                             </div>
-                            <div className="text-xl font-normal text-emerald-600 mt-1">{formatCurrencyWithSelection(computedApproved ?? 0, recoveredCurrency)}</div>
+                            <div className="text-2xl font-semibold text-emerald-600 mt-1">{formatCurrencyWithSelection(computedApproved ?? 0, recoveredCurrency)}</div>
                             <div className="text-[11px] mt-1">
                               <span className="text-gray-600">Total this month: </span>
                               <span className="text-[#1f1f1f]">$31.4K</span>
