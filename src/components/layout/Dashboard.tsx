@@ -648,7 +648,7 @@ export function Dashboard() {
                                 </TooltipContent>
                               </Tooltip>
                             </div>
-                            <div className="text-[20px] md:text-[24px] font-normal mt-1 text-blue-600">
+                            <div className="text-2xl md:text-3xl font-semibold mt-1 text-blue-600">
                               {formatCurrencyWithSelection(recoveredTotal ?? 0, recoveredCurrency)}
                             </div>
                             <div className="text-[11px] text-gray-600 mt-1">
