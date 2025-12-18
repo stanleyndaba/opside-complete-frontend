@@ -1138,15 +1138,13 @@ export default function Sync() {
             <Dialog open={showSourcesModal} onOpenChange={setShowSourcesModal}>
               <DialogContent className="sm:max-w-md bg-white rounded-md">
                 <DialogHeader className="pb-3">
-                  <DialogTitle className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                    <CheckCircle2 className="h-5 w-5 text-emerald-500" />
-                    Audit Complete
+                  <DialogTitle className="text-lg font-semibold text-gray-900">
+                    Connect document source
                   </DialogTitle>
                 </DialogHeader>
 
                 <div className="bg-gray-50 rounded-lg p-4 mb-3 border border-gray-100">
-                  <p className="text-sm font-medium text-gray-800">Connect document source</p>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-500">
                     For read-only and ingest purposes
                   </p>
                 </div>
@@ -1297,7 +1295,14 @@ export default function Sync() {
                   </button>
                 </div>
 
-                <div className="flex justify-center pt-1">
+                <div className="flex justify-center gap-3 pt-1">
+                  <Button
+                    variant="ghost"
+                    onClick={() => setShowSourcesModal(false)}
+                    className="bg-white text-gray-700 hover:bg-gray-50 border-0"
+                  >
+                    Not Now
+                  </Button>
                   <Button
                     variant="ghost"
                     onClick={() => setShowSourcesModal(false)}
