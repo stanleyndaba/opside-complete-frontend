@@ -95,6 +95,7 @@ export default function Sync() {
   // Log system state
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [logSearch, setLogSearch] = useState('');
+  const [logFilter, setLogFilter] = useState<'all' | 'money' | 'issues'>('all'); // Filter: All / Money / Issues
   const [expandedStories, setExpandedStories] = useState<Set<string>>(new Set()); // Track expanded story groups
   const [logsFinished, setLogsFinished] = useState(false); // Track when all queued logs have been displayed
   const logsFinishedRef = useRef(false); // Ref version for async function
@@ -193,15 +194,41 @@ export default function Sync() {
     }
   }, [logsFinished, status]);
 
-  // Filter logs based on search
+  // Filter logs based on search AND category filter
   const filteredLogs = useMemo(() => {
-    if (!logSearch.trim()) return logs;
+    // First apply category filter
+    let filtered = logs;
+
+    if (logFilter === 'money') {
+      // Money events: claims, reimbursements, discrepancies, potential value
+      const moneyKeywords = ['claim', 'reimburse', 'recovery', 'discrepanc', 'mismatch', 'potential', 'value', 'amount', '$', 'fee', 'overcharge', 'refund', 'payout', 'anomal'];
+      filtered = logs.filter(log => {
+        const lowerMsg = log.message.toLowerCase();
+        return moneyKeywords.some(k => lowerMsg.includes(k)) ||
+          log.category === 'claims' ||
+          log.type === 'success';
+      });
+    } else if (logFilter === 'issues') {
+      // Issues: errors, warnings, missing permissions, API problems
+      filtered = logs.filter(log =>
+        log.type === 'error' ||
+        log.type === 'warning' ||
+        log.message.toLowerCase().includes('error') ||
+        log.message.toLowerCase().includes('fail') ||
+        log.message.toLowerCase().includes('permission') ||
+        log.message.toLowerCase().includes('missing')
+      );
+    }
+    // 'all' keeps all logs
+
+    // Then apply search filter
+    if (!logSearch.trim()) return filtered;
     const searchLower = logSearch.toLowerCase();
-    return logs.filter(log =>
+    return filtered.filter(log =>
       log.message.toLowerCase().includes(searchLower) ||
       log.category.toLowerCase().includes(searchLower)
     );
-  }, [logs, logSearch]);
+  }, [logs, logSearch, logFilter]);
 
   // Group logs into collapsible story sections
   const logStories = useMemo((): LogStory[] => {
@@ -1105,6 +1132,40 @@ export default function Sync() {
                       })()}
                     </p>
                   )}
+                </div>
+
+                {/* Filter Toggles */}
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-500 mr-1">Filter:</span>
+                  <div className="flex rounded-lg bg-gray-100 p-0.5">
+                    <button
+                      onClick={() => setLogFilter('all')}
+                      className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${logFilter === 'all'
+                          ? 'bg-white text-gray-900 shadow-sm'
+                          : 'text-gray-500 hover:text-gray-700'
+                        }`}
+                    >
+                      All
+                    </button>
+                    <button
+                      onClick={() => setLogFilter('money')}
+                      className={`px-3 py-1 text-xs font-medium rounded-md transition-all flex items-center gap-1 ${logFilter === 'money'
+                          ? 'bg-emerald-500 text-white shadow-sm'
+                          : 'text-gray-500 hover:text-gray-700'
+                        }`}
+                    >
+                      💰 Money
+                    </button>
+                    <button
+                      onClick={() => setLogFilter('issues')}
+                      className={`px-3 py-1 text-xs font-medium rounded-md transition-all flex items-center gap-1 ${logFilter === 'issues'
+                          ? 'bg-amber-500 text-white shadow-sm'
+                          : 'text-gray-500 hover:text-gray-700'
+                        }`}
+                    >
+                      ⚠️ Issues
+                    </button>
+                  </div>
                 </div>
 
                 {/* Search Bar */}
