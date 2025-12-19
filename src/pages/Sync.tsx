@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { startSync, getSyncStatus, cancelSync, subscribeSyncProgress, type SyncStatusResponse } from '@/lib/inventoryApi';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { RefreshCw, XCircle, CheckCircle2, AlertCircle, Loader2, Search, Package, Truck, RotateCcw, DollarSign, Archive, Target, Clock } from 'lucide-react';
+import { RefreshCw, XCircle, CheckCircle2, AlertCircle, Loader2, Search, Package, Truck, RotateCcw, DollarSign, Archive, Target, Clock, ChevronDown, ChevronRight, ExternalLink } from 'lucide-react';
 import GmailIcon from '/G.png';
 import OutlookIcon from '/OL.png';
 import GoogleDriveIcon from '/gd.png';
@@ -37,6 +37,20 @@ interface DataTypeStatus {
   settlements: { syncing: boolean; completed: boolean; count: number };
   fees: { syncing: boolean; completed: boolean; count: number };
   claims: { syncing: boolean; completed: boolean; count: number };
+}
+
+// Log story group - aggregates related logs into collapsible sections
+interface LogStory {
+  id: string;
+  category: string;
+  title: string;           // "Inventory Scan Complete"
+  summary: string;         // "75 active SKUs, 3 anomalies found"
+  potentialValue?: number; // $145 potential
+  anomaliesFound?: number; // 3 issues
+  itemCount?: number;      // 75 items
+  isCompleted: boolean;
+  logs: LogEntry[];        // Detailed logs inside
+  linkTo?: string;         // Navigation link
 }
 
 // Category icons
@@ -80,6 +94,7 @@ export default function Sync() {
   // Log system state
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [logSearch, setLogSearch] = useState('');
+  const [expandedStories, setExpandedStories] = useState<Set<string>>(new Set()); // Track expanded story groups
   const [logsFinished, setLogsFinished] = useState(false); // Track when all queued logs have been displayed
   const logsFinishedRef = useRef(false); // Ref version for async function
   const logContainerRef = useRef<HTMLDivElement>(null);
@@ -186,6 +201,107 @@ export default function Sync() {
       log.category.toLowerCase().includes(searchLower)
     );
   }, [logs, logSearch]);
+
+  // Group logs into collapsible story sections
+  const logStories = useMemo((): LogStory[] => {
+    const storyMap: Record<string, LogStory> = {};
+
+    // Define story configurations
+    const storyConfig: Record<string, { title: string; linkTo?: string }> = {
+      'inventory': { title: 'Inventory Scan', linkTo: '/recoveries' },
+      'orders': { title: 'Order Ledger Check', linkTo: '/recoveries' },
+      'shipments': { title: 'Shipment Verification', linkTo: '/recoveries' },
+      'returns': { title: 'Returns Analysis', linkTo: '/recoveries' },
+      'settlements': { title: 'Settlement Reconciliation', linkTo: '/upcoming-payments' },
+      'fees': { title: 'Fee Audit', linkTo: '/recoveries' },
+      'claims': { title: 'Claim Detection', linkTo: '/recoveries' },
+      'detection': { title: 'Opportunity Detection', linkTo: '/recoveries' },
+      'system': { title: 'System', linkTo: undefined },
+    };
+
+    // Group filtered logs by category
+    for (const log of filteredLogs) {
+      const category = log.category || 'system';
+
+      if (!storyMap[category]) {
+        const config = storyConfig[category] || { title: category, linkTo: undefined };
+        storyMap[category] = {
+          id: `story_${category}`,
+          category,
+          title: config.title,
+          summary: '',
+          isCompleted: false,
+          logs: [],
+          linkTo: config.linkTo,
+          itemCount: 0,
+          anomaliesFound: 0,
+          potentialValue: 0,
+        };
+      }
+
+      storyMap[category].logs.push(log);
+
+      // Extract counts from log messages
+      const countMatch = log.message.match(/(\d+)\s+(orders?|SKUs?|shipments?|returns?|settlements?|periods?|claims?|records?)/i);
+      if (countMatch) {
+        storyMap[category].itemCount = parseInt(countMatch[1], 10);
+      }
+
+      // Extract anomalies/issues from messages
+      const anomalyMatch = log.message.match(/(\d+)\s+(anomal|issue|mismatch|suspicious|discrepanc|opportunit)/i);
+      if (anomalyMatch) {
+        storyMap[category].anomaliesFound = (storyMap[category].anomaliesFound || 0) + parseInt(anomalyMatch[1], 10);
+      }
+
+      // Extract money values from messages
+      const moneyMatch = log.message.match(/\$([0-9,]+(?:\.\d{2})?)/);
+      if (moneyMatch) {
+        const value = parseFloat(moneyMatch[1].replace(/,/g, ''));
+        if (!isNaN(value) && value > (storyMap[category].potentialValue || 0)) {
+          storyMap[category].potentialValue = value;
+        }
+      }
+
+      // Mark as completed if success/complete messages
+      if (log.type === 'success' || log.message.toLowerCase().includes('complete')) {
+        storyMap[category].isCompleted = true;
+      }
+    }
+
+    // Build summaries for each story
+    for (const story of Object.values(storyMap)) {
+      const parts: string[] = [];
+      if (story.itemCount && story.itemCount > 0) {
+        parts.push(`${story.itemCount} items processed`);
+      }
+      if (story.anomaliesFound && story.anomaliesFound > 0) {
+        parts.push(`${story.anomaliesFound} issues found`);
+      }
+      story.summary = parts.length > 0 ? parts.join(', ') : `${story.logs.length} events`;
+    }
+
+    // Sort stories: system first, then by first log timestamp
+    return Object.values(storyMap).sort((a, b) => {
+      if (a.category === 'system') return -1;
+      if (b.category === 'system') return 1;
+      const aTime = a.logs[0]?.timestamp.getTime() || 0;
+      const bTime = b.logs[0]?.timestamp.getTime() || 0;
+      return aTime - bTime;
+    });
+  }, [filteredLogs]);
+
+  // Toggle story expansion
+  const toggleStory = (storyId: string) => {
+    setExpandedStories(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(storyId)) {
+        newSet.delete(storyId);
+      } else {
+        newSet.add(storyId);
+      }
+      return newSet;
+    });
+  };
 
   // Update logs based on sync data changes - machine dialogue style with thinking and delays
   // Update logs based on sync data changes - now using real backend SSE events instead of mock dialogue
@@ -878,11 +994,12 @@ export default function Sync() {
                         <span className="text-xs tracking-widest opacity-40">WAITING FOR SIGNAL...</span>
                       </div>
                     ) : (
-                      <div className="space-y-1.5 relative z-10">
-                        {filteredLogs.map((log, index) => {
-                          const isLast = index === filteredLogs.length - 1;
+                      <div className="space-y-2 relative z-10">
+                        {logStories.map((story) => {
+                          const isExpanded = expandedStories.has(story.id);
+                          const isRunning = !story.isCompleted && (status === 'running' || status === 'detecting');
 
-                          // Highlight numbers and currency
+                          // Highlight function for log content
                           const highlightContent = (text: string) => {
                             const parts = text.split(/(\$[\d,]+\.?\d*|\b\d+\b|\[.*?\])/g);
                             return parts.map((part, i) => {
@@ -900,40 +1017,83 @@ export default function Sync() {
                           };
 
                           return (
-                            <div
-                              key={log.id}
-                              className={`flex flex-col animate-in fade-in slide-in-from-bottom-1 duration-300`}
-                            >
-                              <div className={`flex flex-wrap sm:flex-nowrap items-start gap-2 px-1 rounded hover:bg-white/5 transition-colors ${log.type === 'thinking' ? 'opacity-60' : ''}`}>
-                                {/* Timestamp */}
-                                <span className="hidden sm:inline text-gray-600 shrink-0 select-none text-[10px] pt-0.5">
-                                  {formatTimestamp(log.timestamp).split(' ')[1]}
+                            <div key={story.id} className="animate-in fade-in slide-in-from-bottom-1 duration-300">
+                              {/* Story Header - Clickable */}
+                              <button
+                                onClick={() => toggleStory(story.id)}
+                                className="w-full text-left flex items-center gap-2 py-1.5 px-2 rounded hover:bg-gray-50 transition-colors group"
+                              >
+                                {/* Expand/Collapse Icon */}
+                                <span className="text-gray-400 group-hover:text-gray-600 transition-colors">
+                                  {isExpanded ? (
+                                    <ChevronDown className="h-3.5 w-3.5" />
+                                  ) : (
+                                    <ChevronRight className="h-3.5 w-3.5" />
+                                  )}
                                 </span>
 
-                                {/* Message */}
-                                <div className={`break-all leading-relaxed ${getLogColor(log.type)} flex-1`}>
-                                  <div>
-                                    <span className="opacity-50 mr-1.5 text-[10px] uppercase tracking-wider text-gray-500 select-none">
-                                      {getAgentLabel(log.category)}
-                                    </span>
-                                    {highlightContent(log.message)}
-                                    {isLast && (status === 'running' || status === 'detecting') && (
-                                      <span className="inline-block w-1.5 h-3 bg-blue-500 ml-1 animate-pulse align-middle"></span>
-                                    )}
-                                  </div>
+                                {/* Status Icon */}
+                                {isRunning ? (
+                                  <Loader2 className="h-3.5 w-3.5 text-blue-500 animate-spin" />
+                                ) : story.isCompleted ? (
+                                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
+                                ) : (
+                                  <Clock className="h-3.5 w-3.5 text-gray-400" />
+                                )}
 
-                                  {/* Context Details */}
-                                  {log.context?.details && log.context.details.length > 0 && (
-                                    <div className="text-[10px] pl-4 mt-1 space-y-0.5 opacity-60">
-                                      {log.context.details.map((detail, i) => (
-                                        <div key={i} className="leading-relaxed">
-                                          → {detail}
-                                        </div>
-                                      ))}
+                                {/* Title & Summary */}
+                                <span className="font-medium text-gray-800 text-xs">{story.title}</span>
+                                <span className="text-gray-500 text-xs">— {story.summary}</span>
+
+                                {/* Potential Value Badge */}
+                                {story.potentialValue && story.potentialValue > 0 && (
+                                  <span className="ml-auto text-emerald-600 font-semibold text-xs whitespace-nowrap">
+                                    +${story.potentialValue.toLocaleString()} potential
+                                  </span>
+                                )}
+
+                                {/* Anomalies Badge */}
+                                {story.anomaliesFound && story.anomaliesFound > 0 && !story.potentialValue && (
+                                  <span className="ml-auto bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded text-[10px] font-medium">
+                                    {story.anomaliesFound} issues
+                                  </span>
+                                )}
+                              </button>
+
+                              {/* Expanded Log Details */}
+                              {isExpanded && (
+                                <div className="ml-6 pl-3 border-l-2 border-gray-100 mt-1 space-y-0.5">
+                                  {story.logs.map((log, index) => (
+                                    <div
+                                      key={log.id}
+                                      className={`flex items-start gap-2 py-0.5 text-xs ${log.type === 'thinking' ? 'opacity-50' : ''}`}
+                                    >
+                                      {/* Timestamp */}
+                                      <span className="hidden sm:inline text-gray-400 shrink-0 text-[10px]">
+                                        {formatTimestamp(log.timestamp).split(' ')[1]}
+                                      </span>
+
+                                      {/* Message */}
+                                      <span className={`${getLogColor(log.type)} break-all`}>
+                                        {highlightContent(log.message)}
+                                        {index === story.logs.length - 1 && isRunning && (
+                                          <span className="inline-block w-1.5 h-3 bg-blue-500 ml-1 animate-pulse align-middle"></span>
+                                        )}
+                                      </span>
                                     </div>
+                                  ))}
+
+                                  {/* Link to Claims */}
+                                  {story.linkTo && story.isCompleted && (story.anomaliesFound || 0) > 0 && (
+                                    <button
+                                      onClick={(e) => { e.stopPropagation(); navigate(story.linkTo!); }}
+                                      className="flex items-center gap-1 mt-2 text-xs text-blue-600 hover:text-blue-800 transition-colors"
+                                    >
+                                      View potential claims <ExternalLink className="h-3 w-3" />
+                                    </button>
                                   )}
                                 </div>
-                              </div>
+                              )}
                             </div>
                           );
                         })}
