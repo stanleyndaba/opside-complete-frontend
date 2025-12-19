@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
+import { EvidenceAuditTrail } from './EvidenceAuditTrail';
+import { DocumentChecklist } from './DocumentChecklist';
 
 // Types for Evidence Pack
 interface MatchedDocument {
@@ -638,12 +640,53 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
                             </CardContent>
                         </Card>
                     )}
+
+                    {/* Amazon Proof Requirements Checklist */}
+                    <DocumentChecklist claimId={claim.id} compact={false} />
+
+                    {/* Evidence Audit Trail */}
+                    <EvidenceAuditTrail claimId={claim.id} compact={false} />
                 </div>
 
                 {/* Actions */}
                 <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
                     <Button variant="outline" onClick={onClose}>
                         Close
+                    </Button>
+                    <Button
+                        variant="outline"
+                        onClick={async () => {
+                            try {
+                                toast({ title: 'Generating PDF...', description: 'Please wait while we create your composite document.' });
+                                const response = await fetch(`/api/recoveries/${claim.id}/packet`, {
+                                    method: 'GET',
+                                    headers: { 'Content-Type': 'application/pdf' }
+                                });
+                                if (!response.ok) {
+                                    throw new Error('Failed to generate PDF');
+                                }
+                                const blob = await response.blob();
+                                const url = window.URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = `Claim_Packet_${claim.claim_number || claim.id.slice(0, 8)}.pdf`;
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                                window.URL.revokeObjectURL(url);
+                                toast({ title: 'PDF Downloaded', description: 'Composite claim packet ready.' });
+                            } catch (error) {
+                                toast({
+                                    title: 'PDF Generation Failed',
+                                    description: 'Unable to generate composite PDF. Try Export as PDF instead.',
+                                    variant: 'destructive'
+                                });
+                            }
+                        }}
+                        className="border-purple-200 text-purple-700 hover:bg-purple-50"
+                    >
+                        <Package className="h-4 w-4 mr-2" />
+                        Download Composite PDF
                     </Button>
                     <Button onClick={exportAsPdf} className="bg-blue-600 hover:bg-blue-700 text-white">
                         <Download className="h-4 w-4 mr-2" />

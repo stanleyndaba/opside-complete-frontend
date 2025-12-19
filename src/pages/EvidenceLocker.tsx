@@ -15,6 +15,7 @@ import { ParsingStatus } from '@/components/evidence/ParsingStatus';
 import { GmailConnectionStatus } from '@/components/evidence/GmailConnectionStatus';
 import { EvidenceIngestion } from '@/components/evidence/EvidenceIngestion';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { DocumentReuseInfo } from '@/components/evidence/DocumentReuseInfo';
 
 // Document Log entry type
 interface DocLogEntry {
@@ -1364,12 +1365,18 @@ export default function EvidenceLocker() {
                         {!doc.extracted && <span className="text-[#36454F] text-xs">—</span>}
                       </TableCell>
                       <TableCell>
-                        <div className="flex flex-wrap gap-1">
+                        <div className="flex flex-wrap gap-1 items-center">
                           {(doc.matchedClaims || []).map(id => (
-                            <Link key={id} to={`/recoveries/${id}`} className="text-xs px-2 py-0.5 rounded bg-white/5 border border-white/10 hover:bg-white/10">
-                              {id}
+                            <Link key={id} to={`/recoveries/${id}`} className="text-xs px-2 py-0.5 rounded bg-blue-50 border border-blue-100 text-blue-700 hover:bg-blue-100">
+                              {id.slice(0, 8)}
                             </Link>
                           ))}
+                          {/* Document reuse indicator */}
+                          {(doc.matchedClaims?.length || 0) > 1 && (
+                            <Badge className="bg-purple-100 text-purple-700 border-purple-200 text-xs">
+                              ♻️ Reused
+                            </Badge>
+                          )}
                           {/* Show match reasoning if available */}
                           {doc.match_reasoning && (
                             <span className="text-xs text-[#36454F] italic" title={doc.match_reasoning}>
@@ -1377,6 +1384,12 @@ export default function EvidenceLocker() {
                             </span>
                           )}
                         </div>
+                        {/* Reuse message for multi-claim docs */}
+                        {(doc.matchedClaims?.length || 0) > 1 && (
+                          <p className="text-[10px] text-purple-600 mt-1">
+                            📎 This invoice supports {doc.matchedClaims?.length} claims
+                          </p>
+                        )}
                       </TableCell>
                       <TableCell className="whitespace-nowrap">
                         {getMatchConfidenceBadge(doc.match_confidence)}
