@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { startSync, getSyncStatus, cancelSync, subscribeSyncProgress, type SyncStatusResponse } from '@/lib/inventoryApi';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { RefreshCw, XCircle, CheckCircle2, AlertCircle, Loader2, Search, Package, Truck, RotateCcw, DollarSign, Archive, Target, Clock, ChevronDown, ChevronUp, ChevronRight, ExternalLink } from 'lucide-react';
+import { RefreshCw, XCircle, CheckCircle2, AlertCircle, Loader2, Search, Package, Truck, RotateCcw, DollarSign, Archive, Target, Clock, ChevronDown, ChevronUp, ChevronRight, ExternalLink, Download } from 'lucide-react';
 import GmailIcon from '/G.png';
 import OutlookIcon from '/OL.png';
 import GoogleDriveIcon from '/gd.png';
@@ -1044,6 +1044,39 @@ export default function Sync() {
     window.location.reload();
   };
 
+  // Export logs as text file for support tickets
+  const exportLogs = () => {
+    const header = `Opside Sync Logs
+Exported: ${new Date().toLocaleString()}
+Sync ID: ${syncId || 'N/A'}
+Status: ${status}
+${'='.repeat(60)}
+`;
+
+    const logLines = logs.map(log => {
+      const time = log.timestamp.toLocaleString();
+      const type = log.type.toUpperCase().padEnd(8);
+      const category = log.category.toUpperCase().padEnd(12);
+      return `[${time}] ${type} ${category} ${log.message}`;
+    }).join('\n');
+
+    const blob = new Blob([header + logLines], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `opside-sync-logs-${new Date().toISOString().split('T')[0]}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    toast({
+      title: 'Logs Exported',
+      description: 'Sync logs have been downloaded as a text file.',
+      duration: 3000,
+    });
+  };
+
   const getStatusIcon = () => {
     switch (status) {
       case 'completed':
@@ -1061,6 +1094,20 @@ export default function Sync() {
     }
   };
 
+  // Format timestamp for log display - returns { short: "HH:MM:SS", full: "Dec 19, 2024 3:45:32 PM" }
+  const formatTimestamp = (date: Date) => {
+    const short = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const full = date.toLocaleString([], {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true
+    });
+    return { short, full };
+  };
 
   // Get agent-specific color based on category
   const getAgentColor = (category: string) => {
@@ -1270,6 +1317,18 @@ export default function Sync() {
                       Issues
                     </button>
                   </div>
+
+                  {/* Export Button */}
+                  {logs.length > 0 && (
+                    <button
+                      onClick={exportLogs}
+                      className="ml-auto flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-all"
+                      title="Export logs for support"
+                    >
+                      <Download className="h-3.5 w-3.5" />
+                      Export
+                    </button>
+                  )}
                 </div>
 
                 {/* Search Bar */}
@@ -1415,9 +1474,12 @@ export default function Sync() {
                                         key={log.id}
                                         className={`flex items-start gap-2 py-0.5 text-xs ${log.type === 'thinking' ? 'opacity-50' : ''} ${humanized.isHumanized ? 'bg-gray-800/30 -mx-2 px-2 py-1 rounded' : ''}`}
                                       >
-                                        {/* Timestamp */}
-                                        <span className="hidden sm:inline text-gray-400 shrink-0 text-[10px]">
-                                          {formatTimestamp(log.timestamp).split(' ')[1]}
+                                        {/* Timestamp with hover for exact time */}
+                                        <span
+                                          className="hidden sm:inline text-gray-400 shrink-0 text-[10px] cursor-help"
+                                          title={formatTimestamp(log.timestamp).full}
+                                        >
+                                          {formatTimestamp(log.timestamp).short}
                                         </span>
 
                                         {/* Message - humanized errors get special styling */}
@@ -1441,11 +1503,11 @@ export default function Sync() {
                                     );
                                   })}
 
-                                  {/* Link to Claims */}
-                                  {story.linkTo && story.isCompleted && (story.anomaliesFound || 0) > 0 && (
+                                  {/* Link to Claims - show when there's money potential or anomalies */}
+                                  {story.linkTo && story.isCompleted && ((story.anomaliesFound || 0) > 0 || (story.potentialValue || 0) > 0) && (
                                     <button
                                       onClick={(e) => { e.stopPropagation(); navigate(story.linkTo!); }}
-                                      className="flex items-center gap-1 mt-2 text-xs text-blue-600 hover:text-blue-800 transition-colors"
+                                      className="flex items-center gap-1 mt-2 text-xs text-blue-400 hover:text-blue-300 transition-colors"
                                     >
                                       View potential claims <ExternalLink className="h-3 w-3" />
                                     </button>
