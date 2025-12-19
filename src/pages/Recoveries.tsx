@@ -259,6 +259,152 @@ const DoubleDipBadge = ({ warning }: { warning: DuplicateWarning }) => {
   );
 };
 
+// Generate Casebook PDF for export (audits, CFOs, legal)
+const generateCasebookPDF = (claims: RecoveryClaim[], dateRange: { from: Date; to: Date } | null) => {
+  const periodLabel = dateRange
+    ? `${format(dateRange.from, 'MMM dd, yyyy')} - ${format(dateRange.to, 'MMM dd, yyyy')}`
+    : 'All Time';
+
+  // Calculate summary metrics
+  const totalClaims = claims.length;
+  const totalValue = claims.reduce((sum, c) => sum + (c.guaranteedAmount || c.amount || 0), 0);
+  const approvedClaims = claims.filter(c => ['paid', 'approved', 'reconciled', 'paid_out'].includes((c.status || '').toLowerCase()));
+  const recoveredValue = approvedClaims.reduce((sum, c) => sum + (c.guaranteedAmount || c.amount || 0), 0);
+  const pendingClaims = claims.filter(c => ['submitted', 'pending', 'under review'].includes((c.status || '').toLowerCase()));
+  const deniedClaims = claims.filter(c => ['denied', 'rejected'].includes((c.status || '').toLowerCase()));
+  const successRate = totalClaims > 0 ? ((approvedClaims.length / totalClaims) * 100).toFixed(1) : '0';
+
+  // Group by claim type
+  const byType: Record<string, RecoveryClaim[]> = {};
+  claims.forEach(c => {
+    const type = c.anomaly_type || c.type || 'Other';
+    if (!byType[type]) byType[type] = [];
+    byType[type].push(c);
+  });
+
+  const casebookHTML = `
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Recovery Casebook - ${periodLabel}</title>
+  <style>
+    @page { size: A4; margin: 20mm; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; color: #1f2937; line-height: 1.5; max-width: 800px; margin: 0 auto; padding: 20px; }
+    .header { text-align: center; border-bottom: 2px solid #3b82f6; padding-bottom: 20px; margin-bottom: 30px; }
+    .logo { font-size: 28pt; font-weight: bold; color: #3b82f6; }
+    .period { font-size: 14pt; color: #6b7280; margin-top: 5px; }
+    .generated { font-size: 10pt; color: #9ca3af; margin-top: 5px; }
+    .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px; }
+    .summary-card { background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; }
+    .summary-value { font-size: 20pt; font-weight: bold; color: #1f2937; }
+    .summary-label { font-size: 9pt; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; }
+    .summary-card.green .summary-value { color: #059669; }
+    .summary-card.blue .summary-value { color: #3b82f6; }
+    .summary-card.amber .summary-value { color: #d97706; }
+    .section { margin-bottom: 30px; page-break-inside: avoid; }
+    .section-title { font-size: 14pt; font-weight: 600; color: #1f2937; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; margin-bottom: 15px; }
+    .claim-row { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #f3f4f6; font-size: 10pt; }
+    .claim-row:nth-child(odd) { background: #f9fafb; }
+    .claim-id { font-family: monospace; color: #3b82f6; }
+    .claim-status { padding: 2px 8px; border-radius: 9999px; font-size: 9pt; }
+    .status-approved { background: #d1fae5; color: #065f46; }
+    .status-pending { background: #dbeafe; color: #1e40af; }
+    .status-denied { background: #fee2e2; color: #991b1b; }
+    .status-other { background: #f3f4f6; color: #4b5563; }
+    .amount { font-weight: 600; }
+    .footer { text-align: center; padding-top: 30px; border-top: 1px solid #e5e7eb; font-size: 9pt; color: #9ca3af; }
+    .type-section { margin-left: 20px; margin-bottom: 20px; }
+    .type-header { font-weight: 600; color: #374151; margin-bottom: 10px; display: flex; justify-content: space-between; }
+    @media print { .no-print { display: none; } }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">📋 Recovery Casebook</div>
+    <div class="period">${periodLabel}</div>
+    <div class="generated">Generated ${format(new Date(), 'MMMM dd, yyyy \'at\' h:mm a')}</div>
+  </div>
+
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="summary-value">${totalClaims}</div>
+      <div class="summary-label">Total Claims</div>
+    </div>
+    <div class="summary-card green">
+      <div class="summary-value">$${recoveredValue.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+      <div class="summary-label">Recovered</div>
+    </div>
+    <div class="summary-card blue">
+      <div class="summary-value">${pendingClaims.length}</div>
+      <div class="summary-label">Pending</div>
+    </div>
+    <div class="summary-card amber">
+      <div class="summary-value">${successRate}%</div>
+      <div class="summary-label">Success Rate</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">📊 Summary by Status</div>
+    <div class="claim-row">
+      <span>Approved/Paid</span>
+      <span class="amount" style="color: #059669;">${approvedClaims.length} claims ($${recoveredValue.toLocaleString('en-US', { minimumFractionDigits: 2 })})</span>
+    </div>
+    <div class="claim-row">
+      <span>Pending/Under Review</span>
+      <span class="amount" style="color: #3b82f6;">${pendingClaims.length} claims ($${pendingClaims.reduce((s, c) => s + (c.guaranteedAmount || c.amount || 0), 0).toLocaleString('en-US', { minimumFractionDigits: 2 })})</span>
+    </div>
+    <div class="claim-row">
+      <span>Denied/Rejected</span>
+      <span class="amount" style="color: #dc2626;">${deniedClaims.length} claims ($${deniedClaims.reduce((s, c) => s + (c.guaranteedAmount || c.amount || 0), 0).toLocaleString('en-US', { minimumFractionDigits: 2 })})</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">📁 Claims by Type</div>
+    ${Object.entries(byType).map(([type, typeClaims]) => `
+      <div class="type-section">
+        <div class="type-header">
+          <span>${type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</span>
+          <span>${typeClaims.length} claims • $${typeClaims.reduce((s, c) => s + (c.guaranteedAmount || c.amount || 0), 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+        </div>
+      </div>
+    `).join('')}
+  </div>
+
+  <div class="section">
+    <div class="section-title">📋 Full Claim Ledger</div>
+    ${claims.map(c => {
+    const status = (c.status || 'unknown').toLowerCase();
+    const statusClass = ['paid', 'approved', 'reconciled'].includes(status) ? 'status-approved'
+      : ['submitted', 'pending', 'under review'].includes(status) ? 'status-pending'
+        : ['denied', 'rejected'].includes(status) ? 'status-denied' : 'status-other';
+    return `
+      <div class="claim-row">
+        <span class="claim-id">${c.claim_number || c.id.slice(0, 12)}...</span>
+        <span>${c.anomaly_type?.replace(/_/g, ' ') || c.type || '-'}</span>
+        <span>${c.sku || '-'}</span>
+        <span class="claim-status ${statusClass}">${c.status}</span>
+        <span class="amount">$${(c.guaranteedAmount || c.amount || 0).toFixed(2)}</span>
+      </div>`;
+  }).join('')}
+  </div>
+
+  <div class="footer">
+    <p>This casebook was generated by Opside Recovery System</p>
+    <p>For audit, legal, and accounting purposes</p>
+    <p class="no-print" style="margin-top: 15px;"><strong>Press Ctrl+P (Cmd+P on Mac) to save as PDF</strong></p>
+  </div>
+</body>
+</html>`;
+
+  const printWindow = window.open('', '_blank');
+  if (printWindow) {
+    printWindow.document.write(casebookHTML);
+    printWindow.document.close();
+  }
+};
+
 // Amazon Financial Event Types - Comprehensive List
 const amazonEventCategories = {
   // Core Transaction Groups
@@ -1768,6 +1914,23 @@ export default function Recoveries() {
                           <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" onClick={() => setQuickDateRange('year')}>This Year</Button>
                           <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" onClick={() => setQuickDateRange('all')}>All Time</Button>
                         </div>
+
+                        {/* Export Casebook Button */}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100"
+                          onClick={() => {
+                            const exportRange = dateRange?.from && dateRange?.to
+                              ? { from: dateRange.from, to: dateRange.to }
+                              : null;
+                            generateCasebookPDF(rankedClaims, exportRange);
+                            toast({ title: '📋 Casebook Generated', description: 'Press Ctrl+P to save as PDF for audits and accounting.' });
+                          }}
+                        >
+                          <FileText className="h-4 w-4 mr-2" />
+                          Export Casebook
+                        </Button>
 
                         {/* Custom Date Range */}
                         <Popover>
