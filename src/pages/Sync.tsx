@@ -210,14 +210,11 @@ export default function Sync() {
           log.type === 'success';
       });
     } else if (logFilter === 'issues') {
-      // Issues: errors, warnings, missing permissions, API problems
+      // Issues: only actual errors and warnings by log type
+      // NOT info logs that just mention the word "error" in context
       filtered = logs.filter(log =>
         log.type === 'error' ||
-        log.type === 'warning' ||
-        log.message.toLowerCase().includes('error') ||
-        log.message.toLowerCase().includes('fail') ||
-        log.message.toLowerCase().includes('permission') ||
-        log.message.toLowerCase().includes('missing')
+        log.type === 'warning'
       );
     }
     // 'all' keeps all logs
