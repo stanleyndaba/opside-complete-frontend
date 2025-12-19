@@ -20,6 +20,82 @@ interface CaseEvent {
   type: 'detection' | 'analysis' | 'generation' | 'submission' | 'update' | 'completion';
 }
 
+// Rejection reason classification
+type RejectionReason = 'missing_evidence' | 'wrong_category' | 'expired_window' | 'amount_disputed' | 'generic_denial' | 'duplicate_claim' | 'insufficient_info';
+
+interface EscalationPlaybook {
+  reason: RejectionReason;
+  label: string;
+  description: string;
+  actions: string[];
+  autoTriggerable: boolean;
+}
+
+const escalationPlaybooks: Record<RejectionReason, EscalationPlaybook> = {
+  missing_evidence: {
+    reason: 'missing_evidence',
+    label: 'Missing Evidence',
+    description: 'Amazon needs additional documentation.',
+    actions: ['Check Doc Locker for matching docs', 'Upload invoice, POD, or shipment confirmation', 'Re-submit with complete evidence'],
+    autoTriggerable: true
+  },
+  wrong_category: {
+    reason: 'wrong_category',
+    label: 'Wrong Category',
+    description: 'Claim filed under incorrect type.',
+    actions: ['Review claim type against guidelines', 'Reclassify to appropriate category', 'Re-file with corrected type'],
+    autoTriggerable: true
+  },
+  expired_window: {
+    reason: 'expired_window',
+    label: 'Expired Window',
+    description: 'Filing window has passed.',
+    actions: ['Verify discovery date accuracy', 'Check if exception applies', 'Document Amazon-caused delays'],
+    autoTriggerable: false
+  },
+  amount_disputed: {
+    reason: 'amount_disputed',
+    label: 'Amount Disputed',
+    description: 'Amazon disagrees with claimed amount.',
+    actions: ['Review Amazon\'s calculated value', 'Provide cost documentation', 'Accept adjusted amount or appeal'],
+    autoTriggerable: true
+  },
+  generic_denial: {
+    reason: 'generic_denial',
+    label: 'Generic Denial',
+    description: 'Denied without specific reason.',
+    actions: ['Request clarification', 'Compile comprehensive evidence', 'Re-submit with policy argument'],
+    autoTriggerable: false
+  },
+  duplicate_claim: {
+    reason: 'duplicate_claim',
+    label: 'Duplicate Claim',
+    description: 'Already filed or resolved.',
+    actions: ['Check for previous case IDs', 'Verify if reimbursement issued', 'Appeal only if truly not resolved'],
+    autoTriggerable: false
+  },
+  insufficient_info: {
+    reason: 'insufficient_info',
+    label: 'Insufficient Info',
+    description: 'Lacks required details.',
+    actions: ['Add order IDs, SKUs, dates', 'Include FBA shipment IDs', 'Provide quantity/value breakdown'],
+    autoTriggerable: true
+  }
+};
+
+// Classify rejection reason from status/notes
+const classifyRejection = (status: string, notes?: string): RejectionReason => {
+  const text = `${status} ${notes || ''}`.toLowerCase();
+  if (text.includes('document') || text.includes('evidence') || text.includes('proof')) return 'missing_evidence';
+  if (text.includes('category') || text.includes('type') || text.includes('classif')) return 'wrong_category';
+  if (text.includes('expired') || text.includes('window') || text.includes('late') || text.includes('deadline')) return 'expired_window';
+  if (text.includes('amount') || text.includes('value') || text.includes('price') || text.includes('partial')) return 'amount_disputed';
+  if (text.includes('duplicate') || text.includes('already') || text.includes('previous')) return 'duplicate_claim';
+  if (text.includes('info') || text.includes('detail') || text.includes('incomplete')) return 'insufficient_info';
+  return 'generic_denial';
+};
+
+
 // Mock case data (fallback)
 const mockCaseData = {
   'OPS-12345': {
@@ -689,24 +765,68 @@ export default function CaseDetail() {
                         </div>
                       )}
 
-                      {effectiveCase.status === 'Denied' && (
-                        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white" onClick={async () => {
-                          const hasDocs = Array.isArray(effectiveCase.documents) && effectiveCase.documents.length > 0;
-                          if (!hasDocs) {
-                            toast({ title: 'Attach evidence first', description: 'Add at least one supporting document before resubmitting.' });
-                            return;
-                          }
-                          const res = await api.resubmitClaim(effectiveCase.id);
-                          if (res.ok) {
-                            toast({ title: 'Resubmitted with stronger docs', description: 'We will keep you posted on the decision.' });
-                            setCaseData((prev: any) => ({ ...(prev || {}), status: 'Submitted' }));
-                          } else {
-                            toast({ title: 'Resubmission failed', description: res.error || 'Please try again.' });
-                          }
-                        }}>
-                          Resubmit with Stronger Docs
-                        </Button>
-                      )}
+                      {effectiveCase.status === 'Denied' && (() => {
+                        const rejectionReason = classifyRejection(effectiveCase.status, effectiveCase.rejectionReason);
+                        const playbook = escalationPlaybooks[rejectionReason];
+                        const escalationCount = effectiveCase.escalation_count || 0;
+                        const maxEscalations = 2;
+                        const canEscalate = escalationCount < maxEscalations;
+
+                        return (
+                          <div className="rounded-lg border border-red-200 bg-red-50 p-4 space-y-3">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <AlertCircle className="h-4 w-4 text-red-500" />
+                                <span className="text-sm font-semibold text-red-900">{playbook.label}</span>
+                              </div>
+                              <Badge className="bg-purple-100 text-purple-700 text-xs">
+                                Escalation {escalationCount}/{maxEscalations}
+                              </Badge>
+                            </div>
+                            <p className="text-sm text-red-700">{playbook.description}</p>
+
+                            <div className="bg-white/70 rounded p-3 border border-red-100">
+                              <div className="text-xs text-red-600 font-semibold uppercase tracking-wide mb-2">Escalation Playbook</div>
+                              <ul className="space-y-1">
+                                {playbook.actions.map((action, i) => (
+                                  <li key={i} className="flex items-start gap-2 text-sm text-red-800">
+                                    <span className="text-red-400">→</span>
+                                    {action}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+
+                            {canEscalate ? (
+                              <Button
+                                className={`w-full ${playbook.autoTriggerable ? 'bg-purple-600 hover:bg-purple-700' : 'bg-blue-600 hover:bg-blue-700'} text-white`}
+                                onClick={async () => {
+                                  const hasDocs = Array.isArray(effectiveCase.documents) && effectiveCase.documents.length > 0;
+                                  if (!hasDocs) {
+                                    toast({ title: 'Attach evidence first', description: 'Add at least one supporting document before resubmitting.' });
+                                    return;
+                                  }
+                                  const res = await api.resubmitClaim(effectiveCase.id);
+                                  if (res.ok) {
+                                    toast({ title: playbook.autoTriggerable ? 'Auto-escalated' : 'Escalation submitted', description: 'We will keep you posted on the decision.' });
+                                    setCaseData((prev: any) => ({ ...(prev || {}), status: 'Submitted', escalation_count: (prev?.escalation_count || 0) + 1 }));
+                                  } else {
+                                    toast({ title: 'Escalation failed', description: res.error || 'Please try again.' });
+                                  }
+                                }}
+                              >
+                                <RefreshCw className="h-4 w-4 mr-2" />
+                                {playbook.autoTriggerable ? 'Auto-Escalate' : 'Manual Escalation'} (Round {escalationCount + 1})
+                              </Button>
+                            ) : (
+                              <div className="flex items-center gap-2 p-2 bg-amber-50 rounded text-amber-700 text-sm">
+                                <AlertCircle className="h-4 w-4" />
+                                Max escalations reached. Manual review recommended.
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })()}
 
                       <Button variant="outline" className="w-full text-gray-600 border-gray-200 hover:bg-gray-50" onClick={() => {
                         window.open(api.getRecoveryDocumentUrl(effectiveCase.id), '_blank');
