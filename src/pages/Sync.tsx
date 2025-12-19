@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { startSync, getSyncStatus, cancelSync, subscribeSyncProgress, type SyncStatusResponse } from '@/lib/inventoryApi';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { RefreshCw, XCircle, CheckCircle2, AlertCircle, Loader2, Search, Package, Truck, RotateCcw, DollarSign, Archive, Target, Clock, ChevronDown, ChevronRight, ExternalLink } from 'lucide-react';
+import { RefreshCw, XCircle, CheckCircle2, AlertCircle, Loader2, Search, Package, Truck, RotateCcw, DollarSign, Archive, Target, Clock, ChevronDown, ChevronUp, ChevronRight, ExternalLink } from 'lucide-react';
 import GmailIcon from '/G.png';
 import OutlookIcon from '/OL.png';
 import GoogleDriveIcon from '/gd.png';
@@ -1180,8 +1180,8 @@ export default function Sync() {
                 </div>
               )}
 
-              {/* Health Summary Strip - Seller-facing status at a glance */}
-              {logs.length > 0 && (
+              {/* Health Summary Strip - Only show after sync + detection completes */}
+              {logs.length > 0 && status === 'completed' && (
                 <div className="space-y-2">
                   {/* Compact Summary Row */}
                   <div className="flex items-center justify-between text-xs">
