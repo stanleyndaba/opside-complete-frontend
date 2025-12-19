@@ -339,6 +339,77 @@ export default function Sync() {
     });
   }, [filteredLogs]);
 
+  // Health summary - group 64 detection types into 5 simple system groups
+  const healthGroups = useMemo(() => {
+    // Map categories to health groups
+    const groupMapping: Record<string, string> = {
+      // Data group: auth, tokens, API health
+      'system': 'Data',
+      'detection': 'Data',
+      // Inventory group
+      'inventory': 'Inventory',
+      // Shipments group
+      'shipments': 'Shipments',
+      'orders': 'Shipments',
+      // Returns group
+      'returns': 'Returns',
+      // Billing group
+      'settlements': 'Billing',
+      'fees': 'Billing',
+      'claims': 'Billing',
+    };
+
+    const groups: Record<string, {
+      name: string;
+      status: 'ok' | 'warning' | 'error';
+      issues: string[];
+      categories: string[];
+    }> = {
+      'Data': { name: 'Data', status: 'ok', issues: [], categories: ['system', 'detection'] },
+      'Inventory': { name: 'Inventory', status: 'ok', issues: [], categories: ['inventory'] },
+      'Shipments': { name: 'Shipments', status: 'ok', issues: [], categories: ['shipments', 'orders'] },
+      'Returns': { name: 'Returns', status: 'ok', issues: [], categories: ['returns'] },
+      'Billing': { name: 'Billing', status: 'ok', issues: [], categories: ['settlements', 'fees', 'claims'] },
+    };
+
+    // Analyze logs to determine status for each group
+    for (const log of logs) {
+      const groupName = groupMapping[log.category] || 'Data';
+      const group = groups[groupName];
+      if (!group) continue;
+
+      if (log.type === 'error') {
+        group.status = 'error';
+        // Extract a short description of the issue
+        const shortIssue = log.message.length > 60 ? log.message.slice(0, 60) + '...' : log.message;
+        if (!group.issues.includes(shortIssue)) {
+          group.issues.push(shortIssue);
+        }
+      } else if (log.type === 'warning' && group.status !== 'error') {
+        group.status = 'warning';
+        const shortIssue = log.message.length > 60 ? log.message.slice(0, 60) + '...' : log.message;
+        if (!group.issues.includes(shortIssue)) {
+          group.issues.push(shortIssue);
+        }
+      }
+    }
+
+    return Object.values(groups);
+  }, [logs]);
+
+  // Get the most important issue to surface below the strip
+  const surfacedIssue = useMemo(() => {
+    const errorGroup = healthGroups.find(g => g.status === 'error');
+    if (errorGroup && errorGroup.issues.length > 0) {
+      return { type: 'error' as const, message: errorGroup.issues[0], group: errorGroup.name };
+    }
+    const warningGroup = healthGroups.find(g => g.status === 'warning');
+    if (warningGroup && warningGroup.issues.length > 0) {
+      return { type: 'warning' as const, message: warningGroup.issues[0], group: warningGroup.name };
+    }
+    return null;
+  }, [healthGroups]);
+
   // Toggle story expansion
   const toggleStory = (storyId: string) => {
     setExpandedStories(prev => {
@@ -1105,6 +1176,60 @@ export default function Sync() {
                       <p className="text-xs text-purple-500">AI-powered detection scanning your data for potential recoveries</p>
                     </div>
                   </div>
+                </div>
+              )}
+
+              {/* Health Summary Strip - Seller-facing status at a glance */}
+              {logs.length > 0 && (
+                <div className="space-y-2">
+                  {/* Status Badges Row */}
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs">
+                    {/* Last Sync Time */}
+                    {syncData?.completedAt && (
+                      <span className="text-gray-500">
+                        Last sync: {(() => {
+                          const completedTime = new Date(syncData.completedAt).getTime();
+                          const now = Date.now();
+                          const diffMs = now - completedTime;
+                          const diffMins = Math.floor(diffMs / (1000 * 60));
+                          if (diffMins < 1) return 'just now';
+                          if (diffMins < 60) return `${diffMins} min ago`;
+                          const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                          return `${diffHours}h ago`;
+                        })()}
+                      </span>
+                    )}
+                    {syncData?.completedAt && <span className="text-gray-300">·</span>}
+
+                    {/* Health Group Badges */}
+                    {healthGroups.map((group) => (
+                      <div
+                        key={group.name}
+                        className="flex items-center gap-1"
+                        title={group.issues.length > 0 ? group.issues.join('\n') : 'All checks passed'}
+                      >
+                        <span className="text-gray-600">{group.name}:</span>
+                        <span className={`font-medium px-1.5 py-0.5 rounded ${group.status === 'ok'
+                            ? 'bg-emerald-100 text-emerald-700'
+                            : group.status === 'warning'
+                              ? 'bg-amber-100 text-amber-700'
+                              : 'bg-red-100 text-red-700'
+                          }`}>
+                          {group.status === 'ok' ? 'OK' : group.status === 'warning' ? `${group.issues.length} warning${group.issues.length > 1 ? 's' : ''}` : `${group.issues.length} error${group.issues.length > 1 ? 's' : ''}`}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Surfaced Issue Line */}
+                  {surfacedIssue && (
+                    <div className={`text-xs px-3 py-1.5 rounded-md ${surfacedIssue.type === 'error'
+                        ? 'bg-red-50 text-red-700 border border-red-100'
+                        : 'bg-amber-50 text-amber-700 border border-amber-100'
+                      }`}>
+                      <span className="font-medium">Issues:</span> {surfacedIssue.message.replace(/^\[.*?\]\s*/, '')}
+                    </div>
+                  )}
                 </div>
               )}
 
