@@ -1219,8 +1219,26 @@ export default function Sync() {
 
                     {filteredLogs.length === 0 ? (
                       <div className="text-gray-400 flex flex-col items-center justify-center h-full relative z-10">
-                        <Loader2 className="h-8 w-8 mb-2 animate-spin opacity-20" />
-                        <span className="text-xs tracking-widest opacity-40">WAITING FOR SIGNAL...</span>
+                        {logFilter === 'issues' ? (
+                          <>
+                            <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center mb-3">
+                              <span className="text-2xl">✓</span>
+                            </div>
+                            <span className="text-sm font-medium text-emerald-400 mb-1">All systems running smoothly</span>
+                            <span className="text-xs text-gray-500">No errors or warnings detected during this sync</span>
+                          </>
+                        ) : logFilter === 'money' ? (
+                          <>
+                            <Loader2 className="h-8 w-8 mb-2 animate-spin opacity-20" />
+                            <span className="text-xs tracking-widest opacity-40">NO RECOVERY EVENTS YET...</span>
+                            <span className="text-[10px] text-gray-500 mt-1">Claims and reimbursements will appear here</span>
+                          </>
+                        ) : (
+                          <>
+                            <Loader2 className="h-8 w-8 mb-2 animate-spin opacity-20" />
+                            <span className="text-xs tracking-widest opacity-40">WAITING FOR SIGNAL...</span>
+                          </>
+                        )}
                       </div>
                     ) : (
                       <div className="space-y-2 relative z-10">
