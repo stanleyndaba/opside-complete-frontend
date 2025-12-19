@@ -1181,6 +1181,37 @@ export default function Sync() {
               )}
 
 
+              {/* Simple Status Strip - Last sync + overall status (no dropdown) */}
+              {logs.length > 0 && status === 'completed' && (
+                <div className="flex items-center gap-2 text-xs">
+                  {syncData?.completedAt && (
+                    <span className="text-gray-500">
+                      Last sync: {(() => {
+                        const completedTime = new Date(syncData.completedAt).getTime();
+                        const now = Date.now();
+                        const diffMs = now - completedTime;
+                        const diffMins = Math.floor(diffMs / (1000 * 60));
+                        if (diffMins < 1) return 'just now';
+                        if (diffMins < 60) return `${diffMins} min ago`;
+                        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                        return `${diffHours}h ago`;
+                      })()}
+                    </span>
+                  )}
+                  {/* Overall status - issues show in the Issues filter */}
+                  {(() => {
+                    const hasError = healthGroups.some(g => g.status === 'error');
+                    const hasWarning = healthGroups.some(g => g.status === 'warning');
+                    if (hasError) {
+                      return <span className="bg-red-100 text-red-700 px-2 py-0.5 rounded font-medium">Issues detected</span>;
+                    } else if (hasWarning) {
+                      return <span className="bg-amber-100 text-amber-700 px-2 py-0.5 rounded font-medium">Warnings</span>;
+                    }
+                    return <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded font-medium">All systems OK</span>;
+                  })()}
+                </div>
+              )}
+
               {/* Real-time Logs Section */}
               <div className="space-y-3">
                 <div className="space-y-1">
