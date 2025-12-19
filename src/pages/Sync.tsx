@@ -1236,19 +1236,19 @@ export default function Sync() {
                           <div
                             key={group.name}
                             className={`p-2 rounded-lg border text-center ${group.status === 'ok'
-                                ? 'bg-emerald-50 border-emerald-200'
-                                : group.status === 'warning'
-                                  ? 'bg-amber-50 border-amber-200'
-                                  : 'bg-red-50 border-red-200'
+                              ? 'bg-emerald-50 border-emerald-200'
+                              : group.status === 'warning'
+                                ? 'bg-amber-50 border-amber-200'
+                                : 'bg-red-50 border-red-200'
                               }`}
                             title={group.issues.length > 0 ? group.issues.join('\n') : 'All checks passed'}
                           >
                             <div className="text-xs font-medium text-gray-700 mb-1">{group.name}</div>
                             <div className={`text-sm font-bold ${group.status === 'ok'
-                                ? 'text-emerald-600'
-                                : group.status === 'warning'
-                                  ? 'text-amber-600'
-                                  : 'text-red-600'
+                              ? 'text-emerald-600'
+                              : group.status === 'warning'
+                                ? 'text-amber-600'
+                                : 'text-red-600'
                               }`}>
                               {group.status === 'ok' ? '✓ OK' : group.status === 'warning' ? `⚠ ${group.issues.length}` : `✕ ${group.issues.length}`}
                             </div>
@@ -1259,8 +1259,8 @@ export default function Sync() {
                       {/* Issue details if any */}
                       {surfacedIssue && (
                         <div className={`mt-3 text-xs px-3 py-2 rounded-md ${surfacedIssue.type === 'error'
-                            ? 'bg-red-100 text-red-700 border border-red-200'
-                            : 'bg-amber-100 text-amber-700 border border-amber-200'
+                          ? 'bg-red-100 text-red-700 border border-red-200'
+                          : 'bg-amber-100 text-amber-700 border border-amber-200'
                           }`}>
                           <span className="font-semibold">{surfacedIssue.group}:</span> {surfacedIssue.message.replace(/^\[.*?\]\s*/, '')}
                         </div>
@@ -1346,17 +1346,7 @@ export default function Sync() {
                 <div className="relative group">
                   {/* Glass header effect - dark theme */}
                   <div className="absolute top-0 left-0 right-0 h-8 bg-[#252525] backdrop-blur-sm rounded-t-lg border-b border-gray-700 flex items-center px-4 justify-between z-10">
-                    <div className="flex items-center gap-2">
-                      <div className="flex gap-1.5">
-                        <div className="w-2.5 h-2.5 rounded-full bg-red-100 border border-red-300"></div>
-                        <div className="w-2.5 h-2.5 rounded-full bg-yellow-100 border border-yellow-300"></div>
-                        <div className="w-2.5 h-2.5 rounded-full bg-emerald-100 border border-emerald-300"></div>
-                      </div>
-                      <span className="text-[10px] font-mono text-gray-400 ml-2 flex items-center gap-1.5">
-                        <Target className="h-3 w-3" />
-                        AGENT_ACTIVITY_STREAM
-                      </span>
-                    </div>
+                    <span className="text-[11px] font-medium text-gray-300 tracking-wide">Agent Activity Stream</span>
                     <div className="flex items-center gap-2">
                       {status === 'running' || status === 'detecting' ? (
                         <div className="flex items-center gap-1.5 bg-emerald-100 px-2 py-0.5 rounded-full border border-emerald-200">
@@ -1456,7 +1446,7 @@ export default function Sync() {
 
                                 {/* Potential Value Badge */}
                                 {story.potentialValue && story.potentialValue > 0 && (
-                                  <span className="ml-auto text-emerald-600 font-semibold text-xs whitespace-nowrap">
+                                  <span className="ml-auto text-emerald-400 font-semibold text-xs whitespace-nowrap">
                                     +${story.potentialValue.toLocaleString()} potential
                                   </span>
                                 )}
