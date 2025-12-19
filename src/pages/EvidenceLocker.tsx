@@ -734,7 +734,22 @@ export default function EvidenceLocker() {
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
     return documents.filter(d => {
-      const matchQ = !term || (d.name || '').toLowerCase().includes(term) || (d.supplier || '').toLowerCase().includes(term) || (d.invoice || '').toLowerCase().includes(term) || (d.matchedClaims || []).some(c => c.toLowerCase().includes(term));
+      // Search across all text fields including extracted data
+      const searchableText = [
+        d.name || '',
+        d.supplier || '',
+        d.invoice || '',
+        ...(d.matchedClaims || []),
+        // Extracted fields for comprehensive search
+        ...(d.extracted?.order_ids || []),
+        ...(d.extracted?.asins || []),
+        ...(d.extracted?.skus || []),
+        ...(d.extracted?.fnskus || []),
+        ...(d.extracted?.tracking_numbers || []),
+        ...(d.extracted?.invoice_numbers || []),
+      ].join(' ').toLowerCase();
+
+      const matchQ = !term || searchableText.includes(term);
       const matchSupplier = !supplier || (d.supplier || '').toLowerCase().includes(supplier.toLowerCase());
       const matchType = !type || (d.type || '').toLowerCase() === type.toLowerCase();
       const amt = typeof d.amount === 'number' ? d.amount : undefined;
@@ -1198,7 +1213,15 @@ export default function EvidenceLocker() {
                 <div className="flex flex-wrap items-center gap-2 justify-end">
                   <div className="relative">
                     <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500 stroke-[2]" />
-                    <Input placeholder="Search supplier, invoice #, claim ID…" value={q} onChange={(e) => setQ(e.target.value)} className="pl-8 w-72 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
+                    <Input placeholder="Search ASIN, SKU, tracking #, invoice, claim ID…" value={q} onChange={(e) => setQ(e.target.value)} className="pl-8 w-80 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
+                    {q && (
+                      <button
+                        onClick={() => setQ('')}
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      >
+                        ✕
+                      </button>
+                    )}
                   </div>
                   <Input placeholder="Supplier" value={supplier} onChange={(e) => setSupplier(e.target.value)} className="w-40 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
                   <Input placeholder="Type (invoice/receipt/shipping)" value={type} onChange={(e) => setType(e.target.value)} className="w-56 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
@@ -1301,17 +1324,32 @@ export default function EvidenceLocker() {
                         {doc.extracted && (
                           <div className="flex flex-wrap gap-1">
                             {(doc.extracted.order_ids || []).slice(0, 2).map((id, i) => (
-                              <Badge key={`order-${i}`} className="bg-blue-500/10 text-blue-400 border-blue-500/20 text-xs truncate max-w-[120px]" title={id}>
+                              <Badge
+                                key={`order-${i}`}
+                                className="bg-blue-500/10 text-blue-400 border-blue-500/20 text-xs truncate max-w-[120px] cursor-pointer hover:bg-blue-500/20"
+                                title={`Click to filter by ${id}`}
+                                onClick={() => setQ(id)}
+                              >
                                 📦 {id.length > 12 ? id.slice(0, 12) + '...' : id}
                               </Badge>
                             ))}
                             {(doc.extracted.tracking_numbers || []).slice(0, 1).map((tn, i) => (
-                              <Badge key={`track-${i}`} className="bg-purple-500/10 text-purple-400 border-purple-500/20 text-xs truncate max-w-[100px]" title={tn}>
+                              <Badge
+                                key={`track-${i}`}
+                                className="bg-purple-500/10 text-purple-400 border-purple-500/20 text-xs truncate max-w-[100px] cursor-pointer hover:bg-purple-500/20"
+                                title={`Click to filter by ${tn}`}
+                                onClick={() => setQ(tn)}
+                              >
                                 🚚 {tn.length > 10 ? tn.slice(0, 10) + '...' : tn}
                               </Badge>
                             ))}
                             {(doc.extracted.asins || []).slice(0, 1).map((asin, i) => (
-                              <Badge key={`asin-${i}`} className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-xs">
+                              <Badge
+                                key={`asin-${i}`}
+                                className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-xs cursor-pointer hover:bg-emerald-500/20"
+                                title={`Click to show all docs for ASIN ${asin}`}
+                                onClick={() => setQ(asin)}
+                              >
                                 ASIN: {asin}
                               </Badge>
                             ))}
@@ -1368,6 +1406,19 @@ export default function EvidenceLocker() {
                               <Download className="w-4 h-4" />
                               Download
                             </DropdownMenuItem>
+                            {/* Claim Packet - only show if doc has matched claims */}
+                            {doc.matchedClaims && doc.matchedClaims.length > 0 && (
+                              <DropdownMenuItem asChild>
+                                <Link
+                                  to={`/recoveries/${doc.matchedClaims[0]}?evidence=true`}
+                                  className="flex items-center gap-2"
+                                  title={`View claim packet for ${doc.matchedClaims.length} linked claim(s)`}
+                                >
+                                  <FileText className="w-4 h-4" />
+                                  View Claim Packet
+                                </Link>
+                              </DropdownMenuItem>
+                            )}
                             {doc.parser_status && doc.parser_status !== 'completed' && doc.parser_status !== 'processing' && (
                               <DropdownMenuItem
                                 onClick={async () => {
