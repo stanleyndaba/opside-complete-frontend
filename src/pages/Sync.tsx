@@ -89,6 +89,7 @@ export default function Sync() {
   const toastShownRef = useRef<{ started?: boolean; completed?: boolean; failed?: boolean; cancelled?: boolean }>({});
   const [showSourcesModal, setShowSourcesModal] = useState(false);
   const sourcesModalTimeoutRef = useRef<number | null>(null);
+  const modalDismissedRef = useRef<boolean>(false); // Track if user dismissed modal for this sync session
   const [providerLoading, setProviderLoading] = useState<'gmail' | 'outlook' | 'gdrive' | 'dropbox' | null>(null);
 
   // Log system state
@@ -528,7 +529,10 @@ export default function Sync() {
         window.clearTimeout(sourcesModalTimeoutRef.current);
       }
       sourcesModalTimeoutRef.current = window.setTimeout(() => {
-        setShowSourcesModal(true);
+        // Only show modal if user hasn't dismissed it for this sync session
+        if (!modalDismissedRef.current) {
+          setShowSourcesModal(true);
+        }
       }, 1000); // Show modal 1s after logs finish
     } else if (status !== 'completed') {
       if (sourcesModalTimeoutRef.current) {
@@ -678,6 +682,7 @@ export default function Sync() {
           // Clear logs and reset state for new sync
           setLogs([]);
           setLogsFinished(false);
+          modalDismissedRef.current = false; // Reset modal dismissed flag for new sync
           logsFinishedRef.current = false;
           completionLogsAddedRef.current = false;
           previousDataRef.current = {
@@ -1428,7 +1433,16 @@ export default function Sync() {
             </div>
 
             {/* Audit Complete Modal */}
-            <Dialog open={showSourcesModal} onOpenChange={setShowSourcesModal}>
+            <Dialog
+              open={showSourcesModal}
+              onOpenChange={(open) => {
+                if (!open) {
+                  // User dismissed the modal (clicked X or outside)
+                  modalDismissedRef.current = true;
+                }
+                setShowSourcesModal(open);
+              }}
+            >
               <DialogContent className="sm:max-w-md bg-white rounded-md">
                 <DialogHeader className="pb-3">
                   <DialogTitle className="text-lg font-semibold text-gray-900">
@@ -1598,7 +1612,10 @@ export default function Sync() {
                   </Button>
                   <Button
                     variant="ghost"
-                    onClick={() => setShowSourcesModal(false)}
+                    onClick={() => {
+                      modalDismissedRef.current = true; // Remember user dismissed
+                      setShowSourcesModal(false);
+                    }}
                     className="bg-white text-gray-700 hover:bg-gray-50 border-0"
                   >
                     Not Now
