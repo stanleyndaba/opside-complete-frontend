@@ -898,9 +898,7 @@ export default function EvidenceLocker() {
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle className="text-base font-medium">Document Activity</CardTitle>
-                  <CardDescription className="text-sm">
-                    {showDevLogs ? 'Real-time document processing log' : 'What your documents are doing for your claims'}
-                  </CardDescription>
+                  <CardDescription className="text-sm">Real-time document processing log</CardDescription>
                 </div>
                 <div className="flex items-center gap-4">
                   <label className="flex items-center gap-2 text-xs text-gray-500 cursor-pointer select-none">
@@ -942,60 +940,33 @@ export default function EvidenceLocker() {
                   <div className="space-y-1">
                     {filteredDocLogs.map((log) => (
                       <div key={log.id} className="flex flex-col">
-                        {showDevLogs ? (
-                          /* Dev Mode: Terminal-style log */
-                          <div className={`flex flex-wrap sm:flex-nowrap items-start gap-1 sm:gap-2 hover:bg-gray-800/50 px-1 rounded ${log.type === 'thinking' ? 'opacity-70' : ''}`}>
-                            <span className="hidden sm:inline text-gray-500 shrink-0 select-none">
-                              {formatDocTimestamp(log.timestamp)}
-                            </span>
-                            <span className="sm:hidden text-gray-500 shrink-0 select-none text-[10px]">
-                              {log.timestamp.toLocaleTimeString()}
-                            </span>
-                            <span className="text-cyan-500 shrink-0 select-none font-medium text-[10px] sm:text-xs">
-                              doc agent
-                            </span>
-                            <span className={`shrink-0 ${getDocLogColor(log.type)}`}>
-                              {log.type === 'thinking' ? null : getDocCategoryIcon(log.category)}
-                            </span>
-                            <span className={`${getDocLogColor(log.type)} break-words min-w-0 flex-1`}>
-                              {log.message}
-                            </span>
-                          </div>
-                        ) : (
-                          /* Story Mode: Human-friendly with money tie-in */
-                          <div className={`flex items-start gap-2 py-1.5 px-2 rounded-lg ${log.type === 'success' ? 'bg-emerald-900/20' :
-                            log.type === 'error' ? 'bg-red-900/20' :
-                              log.type === 'warning' ? 'bg-amber-900/20' :
-                                log.type === 'thinking' ? 'bg-gray-800/30' :
-                                  'bg-gray-800/40'
-                            }`}>
-                            <span className="text-gray-500 text-[10px] shrink-0 mt-0.5">
-                              {log.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                            </span>
-                            <div className="flex-1 min-w-0">
-                              <span className={`text-sm ${log.type === 'success' ? 'text-emerald-300' :
-                                log.type === 'error' ? 'text-red-300' :
-                                  log.type === 'warning' ? 'text-amber-300' :
-                                    'text-gray-200'
-                                }`}>
-                                {log.storyMessage || log.message}
-                              </span>
-                              {/* Money impact badge */}
-                              {log.moneyImpact && log.moneyImpact > 0 && (
-                                <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-500/20 text-emerald-400">
-                                  +${log.moneyImpact.toLocaleString()}
-                                </span>
-                              )}
-                              {/* Claims affected badge */}
-                              {log.claimsAffected && log.claimsAffected > 0 && (
-                                <span className="ml-1 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-500/20 text-blue-400">
-                                  {log.claimsAffected} claim{log.claimsAffected !== 1 ? 's' : ''}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        )}
-                        {log.thinkingDuration && showDevLogs && (
+                        <div className={`flex flex-wrap sm:flex-nowrap items-start gap-1 sm:gap-2 hover:bg-gray-800/50 px-1 rounded ${log.type === 'thinking' ? 'opacity-70' : ''}`}>
+                          <span className="hidden sm:inline text-gray-500 shrink-0 select-none">
+                            {formatDocTimestamp(log.timestamp)}
+                          </span>
+                          <span className="sm:hidden text-gray-500 shrink-0 select-none text-[10px]">
+                            {log.timestamp.toLocaleTimeString()}
+                          </span>
+                          <span className="text-cyan-500 shrink-0 select-none font-medium text-[10px] sm:text-xs">
+                            doc agent
+                          </span>
+                          <span className={`shrink-0 ${getDocLogColor(log.type)}`}>
+                            {log.type === 'thinking' ? null : getDocCategoryIcon(log.category)}
+                          </span>
+                          <span className={`${getDocLogColor(log.type)} break-words min-w-0 flex-1`}>
+                            {/* Show story message by default, dev message when toggled */}
+                            {showDevLogs ? log.message : (log.storyMessage || log.message)}
+                            {/* Inline money badge */}
+                            {!showDevLogs && log.moneyImpact && log.moneyImpact > 0 && (
+                              <span className="ml-1.5 text-emerald-400 font-medium">+${log.moneyImpact.toLocaleString()}</span>
+                            )}
+                            {/* Inline claims badge */}
+                            {!showDevLogs && log.claimsAffected && log.claimsAffected > 0 && (
+                              <span className="ml-1 text-blue-400">({log.claimsAffected} claim{log.claimsAffected !== 1 ? 's' : ''})</span>
+                            )}
+                          </span>
+                        </div>
+                        {log.thinkingDuration && (
                           <div className="ml-1 mt-0.5 mb-1">
                             <span className="text-[10px] text-gray-600 italic">
                               Thought for {log.thinkingDuration}s
