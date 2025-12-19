@@ -324,6 +324,107 @@ export default function Sync() {
     });
   };
 
+  // Transform technical errors into human-friendly messages
+  // Format: [TAG] What happened — What's next — Action needed (or "No action required")
+  const humanizeErrorMessage = (message: string, type: LogEntry['type']): { text: string; isHumanized: boolean } => {
+    // Only process error/warning messages
+    if (type !== 'error' && type !== 'warning') {
+      return { text: message, isHumanized: false };
+    }
+
+    const lowerMsg = message.toLowerCase();
+
+    // API Rate Limits
+    if (lowerMsg.includes('rate limit') || lowerMsg.includes('throttl') || lowerMsg.includes('too many requests') || lowerMsg.includes('429')) {
+      return {
+        text: '[AUTO-RETRY] Amazon API limit reached — We\'ll automatically retry in 15 minutes. No action required from you.',
+        isHumanized: true
+      };
+    }
+
+    // Authentication / Permission Issues
+    if (lowerMsg.includes('unauthorized') || lowerMsg.includes('401') || lowerMsg.includes('forbidden') || lowerMsg.includes('403') || lowerMsg.includes('permission')) {
+      return {
+        text: '[PERMISSION NEEDED] We couldn\'t access some data — Your Amazon connection may need to be refreshed. Click "Reconnect Amazon" in Settings if this persists.',
+        isHumanized: true
+      };
+    }
+
+    // Connection / Network Issues
+    if (lowerMsg.includes('timeout') || lowerMsg.includes('econnrefused') || lowerMsg.includes('network') || lowerMsg.includes('connection refused') || lowerMsg.includes('fetch failed')) {
+      return {
+        text: '[CONNECTION ISSUE] Temporary network hiccup — We\'ll automatically retry. If this keeps happening, check your internet connection.',
+        isHumanized: true
+      };
+    }
+
+    // Database / Duplicate Issues
+    if (lowerMsg.includes('duplicate') || lowerMsg.includes('unique constraint') || lowerMsg.includes('already exists')) {
+      return {
+        text: '[SKIPPED] This data was already synced — No action needed, we\'re continuing with new items.',
+        isHumanized: true
+      };
+    }
+
+    // Not Found / Missing Data
+    if (lowerMsg.includes('not found') || lowerMsg.includes('404') || lowerMsg.includes('no data') || lowerMsg.includes('empty response')) {
+      return {
+        text: '[NO DATA] No new data found for this period — This is normal if your account is new or data hasn\'t changed recently.',
+        isHumanized: true
+      };
+    }
+
+    // Server Errors
+    if (lowerMsg.includes('500') || lowerMsg.includes('502') || lowerMsg.includes('503') || lowerMsg.includes('internal server error') || lowerMsg.includes('service unavailable')) {
+      return {
+        text: '[TEMPORARY ISSUE] Amazon\'s servers are busy right now — We\'ll retry automatically. No action required.',
+        isHumanized: true
+      };
+    }
+
+    // Validation Errors
+    if (lowerMsg.includes('validation') || lowerMsg.includes('invalid') || lowerMsg.includes('malformed')) {
+      return {
+        text: '[DATA ISSUE] Some data couldn\'t be processed — We\'ve skipped it and continued. Our team has been notified.',
+        isHumanized: true
+      };
+    }
+
+    // Analysis / Detection Interruption
+    if (lowerMsg.includes('analysis interrupted') || lowerMsg.includes('detection failed')) {
+      return {
+        text: '[PARTIAL ANALYSIS] Analysis was interrupted — We saved what we found so far. You can run another sync to complete.',
+        isHumanized: true
+      };
+    }
+
+    // Expired / Deadline Issues
+    if (lowerMsg.includes('expired') || lowerMsg.includes('deadline') || lowerMsg.includes('past due')) {
+      return {
+        text: '[TIME SENSITIVE] Some claims may have passed their deadline — Check the Recoveries page for urgent items.',
+        isHumanized: true
+      };
+    }
+
+    // Generic fallback for any other error
+    if (type === 'error') {
+      return {
+        text: `[NOTICED] Something unexpected happened — We're handling it automatically. If issues persist, try running sync again. Details: ${message.slice(0, 100)}${message.length > 100 ? '...' : ''}`,
+        isHumanized: true
+      };
+    }
+
+    // Generic warning fallback
+    if (type === 'warning') {
+      return {
+        text: `[HEADS UP] ${message.slice(0, 150)}${message.length > 150 ? '...' : ''} — Usually resolves on its own.`,
+        isHumanized: true
+      };
+    }
+
+    return { text: message, isHumanized: false };
+  };
+
   // Selective log enrichment - add money hints to key lines only
   // NOTE: Only uses REAL data from story.potentialValue - no fake estimates
   const enrichLogMessage = (message: string, story: LogStory): { text: string; hint?: string } => {
@@ -1126,20 +1227,23 @@ export default function Sync() {
                               {isExpanded && (
                                 <div className="ml-6 pl-3 border-l-2 border-gray-100 mt-1 space-y-0.5">
                                   {story.logs.map((log, index) => {
-                                    const enriched = enrichLogMessage(log.message, story);
+                                    // First, humanize any error/warning messages
+                                    const humanized = humanizeErrorMessage(log.message, log.type);
+                                    // Then apply money/action enrichment
+                                    const enriched = enrichLogMessage(humanized.text, story);
 
                                     return (
                                       <div
                                         key={log.id}
-                                        className={`flex items-start gap-2 py-0.5 text-xs ${log.type === 'thinking' ? 'opacity-50' : ''}`}
+                                        className={`flex items-start gap-2 py-0.5 text-xs ${log.type === 'thinking' ? 'opacity-50' : ''} ${humanized.isHumanized ? 'bg-gray-800/30 -mx-2 px-2 py-1 rounded' : ''}`}
                                       >
                                         {/* Timestamp */}
                                         <span className="hidden sm:inline text-gray-400 shrink-0 text-[10px]">
                                           {formatTimestamp(log.timestamp).split(' ')[1]}
                                         </span>
 
-                                        {/* Message */}
-                                        <span className={`${getLogColor(log.type)} break-all flex-1`}>
+                                        {/* Message - humanized errors get special styling */}
+                                        <span className={`${humanized.isHumanized ? 'text-gray-200' : getLogColor(log.type)} break-all flex-1`}>
                                           {highlightContent(enriched.text)}
                                           {index === story.logs.length - 1 && isRunning && (
                                             <span className="inline-block w-1.5 h-3 bg-blue-500 ml-1 animate-pulse align-middle"></span>
