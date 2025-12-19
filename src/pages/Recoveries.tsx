@@ -27,6 +27,8 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { EvidenceMatchingTable } from '@/components/evidence/EvidenceMatchingTable';
 import { DisputeCasesTable } from '@/components/disputes/DisputeCasesTable';
+import { EvidencePackView } from '@/components/evidence/EvidencePackView';
+
 
 interface RecoveryClaim {
   id: string;
@@ -406,6 +408,8 @@ export default function Recoveries() {
   const [showRiskyClaims, setShowRiskyClaims] = useState(false); // Toggle to show low-strength claims
   const [fileAnywayModalOpen, setFileAnywayModalOpen] = useState(false);
   const [claimToFile, setClaimToFile] = useState<RecoveryClaim | null>(null);
+  const [evidencePackOpen, setEvidencePackOpen] = useState(false);
+  const [evidencePackClaim, setEvidencePackClaim] = useState<RecoveryClaim | null>(null);
 
   // Read search query from URL on mount and when URL changes
   useEffect(() => {
@@ -2066,6 +2070,13 @@ export default function Recoveries() {
                                             <FileText className="h-4 w-4 mr-2" />
                                             Proof Document
                                           </DropdownMenuItem>
+                                          <DropdownMenuItem onClick={() => {
+                                            setEvidencePackClaim(claim);
+                                            setEvidencePackOpen(true);
+                                          }} className="text-purple-600 focus:text-purple-500 focus:bg-purple-50">
+                                            <FileText className="h-4 w-4 mr-2" />
+                                            View Evidence Pack
+                                          </DropdownMenuItem>
                                         </DropdownMenuContent>
                                       </DropdownMenu>
                                     </TableCell>
@@ -2579,6 +2590,18 @@ export default function Recoveries() {
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
+
+                {/* Evidence Pack Dossier View */}
+                {evidencePackClaim && (
+                  <EvidencePackView
+                    open={evidencePackOpen}
+                    onClose={() => {
+                      setEvidencePackOpen(false);
+                      setEvidencePackClaim(null);
+                    }}
+                    claim={evidencePackClaim}
+                  />
+                )}
 
                 {/* Evidence Matching Tab (Agent 6) */}
                 <TabsContent value="matching" className="mt-0">
