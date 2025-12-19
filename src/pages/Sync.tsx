@@ -1268,10 +1268,10 @@ export default function Sync() {
                               {/* Story Header - Clickable */}
                               <button
                                 onClick={() => toggleStory(story.id)}
-                                className="w-full text-left flex items-center gap-2 py-1.5 px-2 rounded hover:bg-gray-50 transition-colors group"
+                                className="w-full text-left flex items-center gap-2 py-1.5 px-2 rounded hover:bg-gray-800/50 transition-colors group"
                               >
                                 {/* Expand/Collapse Icon */}
-                                <span className="text-gray-400 group-hover:text-gray-600 transition-colors">
+                                <span className="text-gray-500 group-hover:text-gray-300 transition-colors">
                                   {isExpanded ? (
                                     <ChevronDown className="h-3.5 w-3.5" />
                                   ) : (
@@ -1289,8 +1289,8 @@ export default function Sync() {
                                 )}
 
                                 {/* Title & Summary */}
-                                <span className="font-medium text-gray-800 text-xs">{story.title}</span>
-                                <span className="text-gray-500 text-xs">— {story.summary}</span>
+                                <span className="font-medium text-gray-200 text-xs">{story.title}</span>
+                                <span className="text-gray-400 text-xs">— {story.summary}</span>
 
                                 {/* Potential Value Badge */}
                                 {story.potentialValue && story.potentialValue > 0 && (
