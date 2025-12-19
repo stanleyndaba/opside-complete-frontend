@@ -1044,36 +1044,68 @@ export default function Sync() {
     window.location.reload();
   };
 
-  // Export logs as text file for support tickets
+  // Export logs as styled HTML (printable as PDF) for support tickets
   const exportLogs = () => {
-    const header = `Opside Sync Logs
-Exported: ${new Date().toLocaleString()}
-Sync ID: ${syncId || 'N/A'}
-Status: ${status}
-${'='.repeat(60)}
-`;
+    const exportDate = new Date().toLocaleString();
 
-    const logLines = logs.map(log => {
+    const logRows = logs.map(log => {
       const time = log.timestamp.toLocaleString();
-      const type = log.type.toUpperCase().padEnd(8);
-      const category = log.category.toUpperCase().padEnd(12);
-      return `[${time}] ${type} ${category} ${log.message}`;
-    }).join('\n');
+      const typeColor = log.type === 'error' ? '#dc2626' : log.type === 'warning' ? '#d97706' : log.type === 'success' ? '#059669' : '#6b7280';
+      return `<tr>
+        <td style="padding: 4px 8px; border-bottom: 1px solid #e5e7eb; font-size: 11px; color: #6b7280;">${time}</td>
+        <td style="padding: 4px 8px; border-bottom: 1px solid #e5e7eb; font-size: 11px; color: ${typeColor}; font-weight: 600; text-transform: uppercase;">${log.type}</td>
+        <td style="padding: 4px 8px; border-bottom: 1px solid #e5e7eb; font-size: 11px; color: #374151;">${log.category}</td>
+        <td style="padding: 4px 8px; border-bottom: 1px solid #e5e7eb; font-size: 11px; color: #111827;">${log.message}</td>
+      </tr>`;
+    }).join('');
 
-    const blob = new Blob([header + logLines], { type: 'text/plain' });
+    const html = `<!DOCTYPE html>
+<html>
+<head>
+  <title>Opside Sync Logs - ${exportDate}</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 40px; max-width: 1200px; margin: 0 auto; }
+    h1 { color: #111827; font-size: 24px; margin-bottom: 8px; }
+    .meta { color: #6b7280; font-size: 14px; margin-bottom: 24px; }
+    .meta span { margin-right: 16px; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th { padding: 8px; background: #f9fafb; border-bottom: 2px solid #e5e7eb; text-align: left; font-weight: 600; color: #374151; }
+    @media print { body { padding: 20px; } }
+  </style>
+</head>
+<body>
+  <h1>📋 Opside Sync Logs</h1>
+  <div class="meta">
+    <span><strong>Exported:</strong> ${exportDate}</span>
+    <span><strong>Sync ID:</strong> ${syncId || 'N/A'}</span>
+    <span><strong>Status:</strong> ${status}</span>
+    <span><strong>Total Entries:</strong> ${logs.length}</span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 160px;">Timestamp</th>
+        <th style="width: 80px;">Type</th>
+        <th style="width: 100px;">Category</th>
+        <th>Message</th>
+      </tr>
+    </thead>
+    <tbody>${logRows}</tbody>
+  </table>
+  <p style="margin-top: 24px; font-size: 11px; color: #9ca3af;">
+    To save as PDF: Press Ctrl+P (Cmd+P on Mac) → Select "Save as PDF" as destination → Click Save
+  </p>
+</body>
+</html>`;
+
+    const blob = new Blob([html], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `opside-sync-logs-${new Date().toISOString().split('T')[0]}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    window.open(url, '_blank');
 
     toast({
       title: 'Logs Exported',
-      description: 'Sync logs have been downloaded as a text file.',
-      duration: 3000,
+      description: 'Logs opened in new tab. Press Ctrl+P to save as PDF.',
+      duration: 5000,
     });
   };
 
