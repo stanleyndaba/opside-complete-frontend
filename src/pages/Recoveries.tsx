@@ -152,6 +152,113 @@ const StrengthBadge = ({ strength, showScore = true }: { strength: ClaimStrength
   );
 };
 
+// Double-Dip Guard: Cross-Claim Reconciliation
+interface DuplicateWarning {
+  isDuplicate: boolean;
+  reason: 'prior_reimbursement' | 'inventory_adjustment' | 'already_filed' | 'reconciled';
+  message: string;
+  adjustedAmount?: number;
+  originalAmount?: number;
+  priorCaseId?: string;
+}
+
+// Check for duplicate claims across inventory adjustments, prior reimbursements
+const checkDoubleDip = (claim: RecoveryClaim, allClaims: RecoveryClaim[]): DuplicateWarning | null => {
+  const sku = claim.sku?.toLowerCase();
+  const asin = claim.asin?.toLowerCase();
+  const claimType = (claim.anomaly_type || claim.type || '').toLowerCase();
+  const claimDate = new Date(claim.discovery_date || claim.created || claim.created_at || Date.now());
+  const periodStart = new Date(claimDate.getTime() - 30 * 24 * 60 * 60 * 1000); // 30-day window
+  const periodEnd = new Date(claimDate.getTime() + 30 * 24 * 60 * 60 * 1000);
+
+  // Skip if no SKU/ASIN to match
+  if (!sku && !asin) return null;
+
+  // Check against other claims
+  for (const other of allClaims) {
+    if (other.id === claim.id) continue;
+
+    const otherSku = other.sku?.toLowerCase();
+    const otherAsin = other.asin?.toLowerCase();
+    const otherType = (other.anomaly_type || other.type || '').toLowerCase();
+    const otherDate = new Date(other.discovery_date || other.created || other.created_at || Date.now());
+    const otherStatus = (other.status || '').toLowerCase();
+
+    // Check if same SKU/ASIN and similar time period
+    const skuMatch = sku && otherSku && sku === otherSku;
+    const asinMatch = asin && otherAsin && asin === otherAsin;
+    const typeMatch = claimType === otherType;
+    const inPeriod = otherDate >= periodStart && otherDate <= periodEnd;
+
+    if ((skuMatch || asinMatch) && typeMatch && inPeriod) {
+      // Already paid/approved = prior reimbursement
+      if (['paid', 'approved', 'reconciled', 'paid_out', 'reimbursed'].includes(otherStatus)) {
+        return {
+          isDuplicate: true,
+          reason: 'prior_reimbursement',
+          message: `Prior reimbursement found for ${sku || asin} in this period. Claim auto-adjusted to protect your account.`,
+          priorCaseId: other.id,
+          originalAmount: claim.guaranteedAmount || claim.amount,
+          adjustedAmount: 0
+        };
+      }
+      // Already submitted = already filed
+      if (['submitted', 'under review', 'pending', 'in_progress'].includes(otherStatus)) {
+        return {
+          isDuplicate: true,
+          reason: 'already_filed',
+          message: `This issue was already filed (Case ${other.claim_number || other.id.slice(0, 8)}). Duplicate claim blocked.`,
+          priorCaseId: other.id
+        };
+      }
+    }
+  }
+
+  // Check if claim itself was reconciled (inventory adjustment already processed)
+  if (claim.recovery_status === 'reconciled' || claim.inventory_adjustment_applied) {
+    return {
+      isDuplicate: true,
+      reason: 'inventory_adjustment',
+      message: 'Amazon already processed an inventory adjustment for this issue.',
+      originalAmount: claim.guaranteedAmount || claim.amount,
+      adjustedAmount: 0
+    };
+  }
+
+  return null;
+};
+
+// Double-Dip Guard Badge Component
+const DoubleDipBadge = ({ warning }: { warning: DuplicateWarning }) => {
+  const config = {
+    prior_reimbursement: { bg: 'bg-blue-100', text: 'text-blue-700', border: 'border-blue-200', icon: '✓', label: 'Prior Reimbursement' },
+    inventory_adjustment: { bg: 'bg-purple-100', text: 'text-purple-700', border: 'border-purple-200', icon: '≡', label: 'Adjusted' },
+    already_filed: { bg: 'bg-amber-100', text: 'text-amber-700', border: 'border-amber-200', icon: '⚠', label: 'Duplicate Filed' },
+    reconciled: { bg: 'bg-emerald-100', text: 'text-emerald-700', border: 'border-emerald-200', icon: '✓', label: 'Reconciled' }
+  };
+  const c = config[warning.reason];
+
+  return (
+    <Tooltip>
+      <TooltipTrigger>
+        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-xs font-medium ${c.bg} ${c.text} ${c.border}`}>
+          <span>{c.icon}</span>
+          {c.label}
+        </span>
+      </TooltipTrigger>
+      <TooltipContent className="max-w-xs bg-white text-gray-900 border border-gray-200 p-3">
+        <div className="space-y-1">
+          <div className="font-semibold text-sm">🛡️ Account Protection</div>
+          <p className="text-xs text-gray-600">{warning.message}</p>
+          {warning.priorCaseId && (
+            <p className="text-xs text-gray-500">Prior Case: {warning.priorCaseId.slice(0, 12)}...</p>
+          )}
+        </div>
+      </TooltipContent>
+    </Tooltip>
+  );
+};
+
 // Amazon Financial Event Types - Comprehensive List
 const amazonEventCategories = {
   // Core Transaction Groups
@@ -1923,9 +2030,17 @@ export default function Recoveries() {
                                       </div>
                                     </TableCell>
                                     <TableCell>
-                                      <Badge className={getStatusColor(claim.status)}>
-                                        {claim.status}
-                                      </Badge>
+                                      {(() => {
+                                        const doubleDipWarning = checkDoubleDip(claim, rankedClaims);
+                                        return (
+                                          <div className="flex items-center gap-2">
+                                            <Badge className={getStatusColor(claim.status)}>
+                                              {claim.status}
+                                            </Badge>
+                                            {doubleDipWarning && <DoubleDipBadge warning={doubleDipWarning} />}
+                                          </div>
+                                        );
+                                      })()}
                                     </TableCell>
                                     <TableCell>
                                       {claim.days_remaining !== null && claim.days_remaining !== undefined ? (

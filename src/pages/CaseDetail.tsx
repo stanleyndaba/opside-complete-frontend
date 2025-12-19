@@ -718,6 +718,26 @@ export default function CaseDetail() {
                       </div>
                     )}
 
+                    {/* Double-Dip Protection Alert */}
+                    {(effectiveCase.prior_reimbursement_detected || effectiveCase.inventory_adjustment_applied || effectiveCase.duplicate_blocked) && (
+                      <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                        <div className="flex items-center gap-2 mb-2">
+                          <CheckCircle className="h-5 w-5 text-blue-600" />
+                          <span className="font-semibold text-blue-900">🛡️ Account Protection Active</span>
+                        </div>
+                        <p className="text-sm text-blue-700">
+                          {effectiveCase.prior_reimbursement_detected
+                            ? `We found a prior reimbursement for ${effectiveCase.sku || 'this item'} in this period, so we didn't file a duplicate claim to keep your account safe.`
+                            : effectiveCase.inventory_adjustment_applied
+                              ? 'Amazon already processed an inventory adjustment for this issue. No duplicate claim filed.'
+                              : 'This claim was blocked to prevent duplicate filing and protect your seller account standing.'}
+                        </p>
+                        {effectiveCase.prior_case_id && (
+                          <p className="text-xs text-blue-600 mt-2">Prior Case: {effectiveCase.prior_case_id}</p>
+                        )}
+                      </div>
+                    )}
+
                     {/* Actions */}
                     <div className="space-y-2 pt-2">
                       <Button
