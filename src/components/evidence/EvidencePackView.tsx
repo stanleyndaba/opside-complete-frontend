@@ -54,39 +54,101 @@ interface EvidencePackProps {
     };
 }
 
-// Policy references for different claim types
-const policyReferences: Record<string, { name: string; excerpt: string; deadline: string }> = {
+// Policy references with argument templates for different claim types
+interface PolicyTemplate {
+    name: string;
+    excerpt: string;
+    deadline: string;
+    windowDays: number;
+    argumentTemplate: (daysOld: number, amount: number, sku?: string) => string;
+}
+
+const policyTemplates: Record<string, PolicyTemplate> = {
     'lost_warehouse': {
         name: 'FBA Lost Inventory Policy',
-        excerpt: 'Amazon will reimburse sellers for inventory that is lost or damaged while in Amazon fulfillment centers. Claims must include proof of shipment and inventory records.',
-        deadline: '60 days from discovery'
+        excerpt: 'Amazon will reimburse sellers for inventory that is lost or damaged while in Amazon fulfillment centers.',
+        deadline: '60 days from discovery',
+        windowDays: 60,
+        argumentTemplate: (daysOld, amount, sku) =>
+            `Per Amazon's FBA Lost Inventory reimbursement policy, sellers are entitled to compensation when inventory is lost while under Amazon's custody. This claim was filed ${daysOld} days after discovery, which is within the ${60}-day filing window. ${sku ? `SKU ${sku}` : 'The item'} went missing from Amazon's warehouse with no disposition record, constituting an eligible loss. We respectfully request reimbursement of $${amount.toFixed(2)} in accordance with FBA Terms of Service Section 4.2.`
     },
     'damaged_warehouse': {
         name: 'FBA Damaged Inventory Policy',
-        excerpt: 'Sellers are entitled to reimbursement for items damaged by Amazon during fulfillment operations. Documentation must include product details and damage evidence.',
-        deadline: '60 days from discovery'
+        excerpt: 'Sellers are entitled to reimbursement for items damaged by Amazon during fulfillment operations.',
+        deadline: '60 days from discovery',
+        windowDays: 60,
+        argumentTemplate: (daysOld, amount, sku) =>
+            `According to Amazon's Damaged Inventory Policy, when products are damaged in Amazon fulfillment centers due to handling, storage, or processing, sellers are entitled to fair market value reimbursement. ${sku ? `Item ${sku}` : 'This unit'} was damaged while in Amazon's possession, ${daysOld} days ago. As this claim is filed within the ${60}-day window and damage occurred under Amazon's control, we request reimbursement of $${amount.toFixed(2)}.`
     },
     'customer_return_unreturned': {
         name: 'Customer Return Policy',
-        excerpt: 'When a customer receives a refund but fails to return the item within 45 days, sellers may file for reimbursement of the item value.',
-        deadline: '60-90 days after refund'
+        excerpt: 'When a customer receives a refund but fails to return the item within 45 days, sellers may file for reimbursement.',
+        deadline: '60-90 days after refund',
+        windowDays: 90,
+        argumentTemplate: (daysOld, amount, sku) =>
+            `Per Amazon's Customer Return Policy, when a customer is refunded but fails to return the merchandise within 45 days, the seller is entitled to reimbursement. This refund was issued ${daysOld} days ago with no corresponding return received. ${sku ? `Product ${sku}` : 'The product'} was never returned to inventory despite the customer receiving a full refund. We request reimbursement of $${amount.toFixed(2)} per policy guidelines.`
     },
     'inbound_shipment_lost': {
         name: 'FBA Inbound Shipment Policy',
-        excerpt: 'Amazon reimburses sellers for units confirmed shipped to fulfillment centers but not received or checked in within 30 days.',
-        deadline: '60 days from shipment'
+        excerpt: 'Amazon reimburses sellers for units confirmed shipped to fulfillment centers but not received or checked in.',
+        deadline: '60 days from shipment',
+        windowDays: 60,
+        argumentTemplate: (daysOld, amount, sku) =>
+            `According to Amazon's Inbound Shipment Policy, when units are confirmed shipped via carrier but not checked in to the fulfillment center within 30 days, sellers may claim reimbursement. This shipment was sent ${daysOld} days ago with verified tracking showing delivery, but ${sku ? `SKU ${sku}` : 'these units'} were never received into inventory. We have attached proof of delivery and request reimbursement of $${amount.toFixed(2)}.`
     },
     'fba_fee_error': {
         name: 'FBA Fee Correction Policy',
-        excerpt: 'Sellers can dispute incorrect fulfillment fees, including weight-based and dimension-based charges, with supporting measurement documentation.',
-        deadline: '90 days from charge'
+        excerpt: 'Sellers can dispute incorrect fulfillment fees, including weight-based and dimension-based charges.',
+        deadline: '90 days from charge',
+        windowDays: 90,
+        argumentTemplate: (daysOld, amount, sku) =>
+            `Per Amazon's Fee Correction Policy, sellers may request refunds for incorrect FBA fees when product dimensions or weight are miscategorized. ${sku ? `For SKU ${sku}` : 'For this item'}, the actual measurements differ from Amazon's recorded dimensions, resulting in overcharges. This discrepancy was identified ${daysOld} days ago. We request a fee adjustment of $${amount.toFixed(2)} to reflect accurate product specifications.`
+    },
+    'removal_order_lost': {
+        name: 'Removal Order Policy',
+        excerpt: 'Amazon reimburses sellers when removal orders are lost in transit or not delivered.',
+        deadline: '60 days from order',
+        windowDays: 60,
+        argumentTemplate: (daysOld, amount, sku) =>
+            `According to Amazon's Removal Order Policy, when inventory removed from FBA is lost during the removal process, sellers are entitled to reimbursement. ${sku ? `SKU ${sku}` : 'The removed inventory'} was never received at the designated return address despite ${daysOld} days passing since the removal order. We request reimbursement of $${amount.toFixed(2)} for the lost units.`
+    },
+    'quantity_discrepancy': {
+        name: 'Inventory Discrepancy Policy',
+        excerpt: 'Sellers may claim for units showing inventory count discrepancies not attributed to sales or removals.',
+        deadline: '60 days from discovery',
+        windowDays: 60,
+        argumentTemplate: (daysOld, amount, sku) =>
+            `Per Amazon's Inventory Reconciliation Policy, sellers are entitled to reimbursement when inventory counts show unexplained discrepancies not attributed to sales, returns, or removals. ${sku ? `For SKU ${sku}` : 'For this product'}, our records show a discrepancy identified ${daysOld} days ago. After reconciliation, ${amount > 0 ? `$${amount.toFixed(2)}` : 'units'} remain unaccounted for. We request investigation and appropriate reimbursement.`
     },
     'default': {
         name: 'Amazon Seller Reimbursement Policy',
         excerpt: 'Amazon provides reimbursement for inventory issues that are Amazon responsibility under FBA terms of service.',
-        deadline: '60-90 days from discovery'
+        deadline: '60-90 days from discovery',
+        windowDays: 60,
+        argumentTemplate: (daysOld, amount, sku) =>
+            `According to Amazon's FBA Terms of Service, sellers are entitled to reimbursement when inventory losses or discrepancies occur under Amazon's control. This claim was identified ${daysOld} days ago and is being filed within the allowable window. ${sku ? `SKU ${sku}` : 'The affected inventory'} qualifies for reimbursement of $${amount.toFixed(2)} based on the documented evidence provided.`
     }
 };
+
+// Generate policy argument based on claim data
+const generatePolicyArgument = (claimType: string, discoveryDate: string | undefined, amount: number, sku?: string): { argument: string; daysOld: number; withinWindow: boolean; windowDays: number } => {
+    const typeKey = claimType.toLowerCase().replace(/[:\-\s]/g, '_');
+    const template = policyTemplates[typeKey] || policyTemplates.default;
+
+    const daysOld = discoveryDate
+        ? Math.floor((Date.now() - new Date(discoveryDate).getTime()) / (1000 * 60 * 60 * 24))
+        : 0;
+
+    const withinWindow = daysOld <= template.windowDays;
+    const argument = template.argumentTemplate(daysOld, amount, sku);
+
+    return { argument, daysOld, withinWindow, windowDays: template.windowDays };
+};
+
+// Legacy policy references for backward compatibility
+const policyReferences: Record<string, { name: string; excerpt: string; deadline: string }> = Object.fromEntries(
+    Object.entries(policyTemplates).map(([key, val]) => [key, { name: val.name, excerpt: val.excerpt, deadline: val.deadline }])
+);
 
 // Get status badge color
 const getStatusColor = (status: string) => {
@@ -110,6 +172,15 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
         const typeKey = (claim.anomaly_type || claim.type || '').toLowerCase().replace(/[:\-]/g, '_');
         return policyReferences[typeKey] || policyReferences.default;
     }, [claim.type, claim.anomaly_type]);
+
+    // Generate policy argument
+    const policyArgument = useMemo(() => {
+        const claimType = claim.anomaly_type || claim.type || '';
+        const discoveryDate = claim.created || claim.created_at || claim.discovery_date;
+        const amount = claim.guaranteedAmount || claim.amount || 0;
+        return generatePolicyArgument(claimType, discoveryDate, amount, claim.sku);
+    }, [claim.anomaly_type, claim.type, claim.created, claim.created_at, claim.discovery_date, claim.guaranteedAmount, claim.amount, claim.sku]);
+
 
     // Organize documents by category
     const organizedDocs = useMemo(() => {
@@ -287,11 +358,21 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
   </div>
   
   <div class="section">
-    <div class="section-title">⚖️ Policy Reference</div>
+    <div class="section-title">⚖️ Policy Reference & Argument 
+      <span style="margin-left: auto; padding: 2px 8px; border-radius: 9999px; font-size: 9pt; ${policyArgument.withinWindow ? 'background: #d1fae5; color: #065f46;' : 'background: #fee2e2; color: #991b1b;'}">
+        ${policyArgument.withinWindow ? '✓ Within Window' : '⚠ Outside Window'}
+      </span>
+    </div>
     <div class="policy-box">
       <div class="policy-name">${policy.name}</div>
       <div class="policy-excerpt">${policy.excerpt}</div>
-      <div class="policy-deadline">Filing Deadline: ${policy.deadline}</div>
+      <div class="policy-deadline" style="margin-bottom: 12px;">Filing Deadline: ${policy.deadline} • Claim Age: ${policyArgument.daysOld} days</div>
+      <div style="border-top: 1px solid #bfdbfe; padding-top: 12px; margin-top: 8px;">
+        <div style="font-size: 9pt; color: #3b82f6; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Reimbursement Argument</div>
+        <div style="background: rgba(255,255,255,0.7); padding: 12px; border-radius: 6px; border: 1px solid #bfdbfe;">
+          <p style="font-size: 10pt; color: #1e3a8a; font-style: italic; line-height: 1.6; margin: 0;">"${policyArgument.argument}"</p>
+        </div>
+      </div>
     </div>
   </div>
   
@@ -501,17 +582,36 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
                         </CardContent>
                     </Card>
 
-                    {/* Policy Reference */}
+                    {/* Policy Reference & Legal Argument */}
                     <Card className="border-blue-200 bg-blue-50">
                         <CardHeader className="pb-2">
-                            <CardTitle className="text-base font-semibold text-blue-900">
-                                Policy Reference
+                            <CardTitle className="text-base font-semibold text-blue-900 flex items-center justify-between">
+                                <span>Policy Reference & Argument</span>
+                                <Badge className={policyArgument.withinWindow ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}>
+                                    {policyArgument.withinWindow ? '✓ Within Window' : '⚠ Outside Window'}
+                                </Badge>
                             </CardTitle>
                         </CardHeader>
-                        <CardContent>
-                            <div className="font-semibold text-blue-800">{policy.name}</div>
-                            <p className="text-sm text-blue-700 mt-2">{policy.excerpt}</p>
-                            <p className="text-xs text-blue-600 font-medium mt-3">Filing Deadline: {policy.deadline}</p>
+                        <CardContent className="space-y-4">
+                            {/* Policy Info */}
+                            <div>
+                                <div className="font-semibold text-blue-800">{policy.name}</div>
+                                <p className="text-sm text-blue-700 mt-1">{policy.excerpt}</p>
+                                <div className="flex items-center gap-4 mt-2 text-xs">
+                                    <span className="text-blue-600 font-medium">Filing Deadline: {policy.deadline}</span>
+                                    <span className="text-blue-500">Claim Age: {policyArgument.daysOld} days</span>
+                                </div>
+                            </div>
+
+                            {/* Legal Argument */}
+                            <div className="border-t border-blue-200 pt-4">
+                                <div className="text-xs text-blue-600 uppercase tracking-wide font-semibold mb-2">Reimbursement Argument</div>
+                                <div className="bg-white/70 rounded-lg p-4 border border-blue-100">
+                                    <p className="text-sm text-blue-900 leading-relaxed italic">
+                                        "{policyArgument.argument}"
+                                    </p>
+                                </div>
+                            </div>
                         </CardContent>
                     </Card>
 
