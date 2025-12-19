@@ -895,15 +895,15 @@ export default function Sync() {
     }
   };
 
-  // Get log entry color - keep colorful status types, use charcoal for regular messages
+  // Get log entry color - using lighter colors for dark theme terminal
   const getLogColor = (type: LogEntry['type']) => {
     switch (type) {
-      case 'success': return 'text-emerald-600';
-      case 'error': return 'text-red-600';
-      case 'warning': return 'text-amber-600';
-      case 'progress': return 'text-blue-600';
-      case 'thinking': return 'text-gray-400 italic';
-      default: return 'text-gray-700'; // Mid-dark charcoal for regular messages
+      case 'success': return 'text-emerald-400';
+      case 'error': return 'text-red-400';
+      case 'warning': return 'text-amber-400';
+      case 'progress': return 'text-blue-400';
+      case 'thinking': return 'text-gray-500 italic';
+      default: return 'text-gray-300'; // Light gray for regular messages on dark bg
     }
   };
 
@@ -1015,15 +1015,15 @@ export default function Sync() {
 
                 {/* Log Container - Clean White Theme */}
                 <div className="relative group">
-                  {/* Glass header effect */}
-                  <div className="absolute top-0 left-0 right-0 h-8 bg-gray-50 backdrop-blur-sm rounded-t-lg border-b border-gray-200 flex items-center px-4 justify-between z-10">
+                  {/* Glass header effect - dark theme */}
+                  <div className="absolute top-0 left-0 right-0 h-8 bg-[#252525] backdrop-blur-sm rounded-t-lg border-b border-gray-700 flex items-center px-4 justify-between z-10">
                     <div className="flex items-center gap-2">
                       <div className="flex gap-1.5">
                         <div className="w-2.5 h-2.5 rounded-full bg-red-100 border border-red-300"></div>
                         <div className="w-2.5 h-2.5 rounded-full bg-yellow-100 border border-yellow-300"></div>
                         <div className="w-2.5 h-2.5 rounded-full bg-emerald-100 border border-emerald-300"></div>
                       </div>
-                      <span className="text-[10px] font-mono text-gray-500 ml-2 flex items-center gap-1.5">
+                      <span className="text-[10px] font-mono text-gray-400 ml-2 flex items-center gap-1.5">
                         <Target className="h-3 w-3" />
                         AGENT_ACTIVITY_STREAM
                       </span>
@@ -1045,10 +1045,10 @@ export default function Sync() {
 
                   <div
                     ref={logContainerRef}
-                    className="bg-white rounded-lg pt-10 pb-4 px-4 font-mono text-xs h-96 overflow-y-auto scroll-smooth border border-gray-200 shadow-sm relative"
+                    className="bg-[#1a1a1a] rounded-lg pt-10 pb-4 px-4 font-mono text-xs h-96 overflow-y-auto scroll-smooth border border-gray-700 shadow-lg relative"
                   >
-                    {/* Grid background effect */}
-                    <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none"></div>
+                    {/* Grid background effect - dark theme */}
+                    <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none"></div>
 
                     {filteredLogs.length === 0 ? (
                       <div className="text-gray-400 flex flex-col items-center justify-center h-full relative z-10">
