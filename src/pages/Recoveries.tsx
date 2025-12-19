@@ -61,6 +61,273 @@ interface ClaimStrength {
   factors: { label: string; value: number; max: number; reason: string }[];
 }
 
+// Policy-Aware Document Validator Types
+interface PolicyFieldCheck {
+  field: string;
+  label: string;
+  required: boolean;
+  present: boolean;
+  confidence: number;
+  issue?: string;
+}
+
+interface EvidenceValidation {
+  quality: 'strong' | 'medium' | 'weak';
+  qualityScore: number;
+  recommendation: 'file_now' | 'file_with_caution' | 'wait_for_better_docs';
+  recommendationText: string;
+  fieldChecks: PolicyFieldCheck[];
+  missingRequired: string[];
+  missingOptional: string[];
+  warnings: string[];
+}
+
+// FBA Reimbursement Policy Requirements by Claim Type
+const FBA_POLICY_REQUIREMENTS: Record<string, { required: string[]; optional: string[]; notes: string }> = {
+  // Sourcing cost claims - strictest requirements
+  'sourcing_cost': {
+    required: ['invoice_number', 'invoice_date', 'supplier_name', 'buyer_name', 'sku', 'quantity', 'unit_price', 'total_amount', 'currency'],
+    optional: ['vat_id', 'supplier_address', 'buyer_address', 'po_number'],
+    notes: 'Amazon requires full invoice with document number, date, buyer/seller names, SKU details, quantities, price, and currency'
+  },
+  // Lost inventory
+  'lost_warehouse': {
+    required: ['sku', 'asin', 'quantity', 'shipment_id'],
+    optional: ['tracking_number', 'invoice_number', 'unit_price'],
+    notes: 'Proof of shipment receipt and original product cost strengthens claim'
+  },
+  'lost:warehouse': {
+    required: ['sku', 'asin', 'quantity', 'shipment_id'],
+    optional: ['tracking_number', 'invoice_number', 'unit_price'],
+    notes: 'Proof of shipment receipt and original product cost strengthens claim'
+  },
+  // Damaged inventory
+  'damaged_warehouse': {
+    required: ['sku', 'asin', 'quantity'],
+    optional: ['invoice_number', 'unit_price', 'damage_report'],
+    notes: 'Invoice showing original purchase price increases reimbursement amount'
+  },
+  'damaged:warehouse': {
+    required: ['sku', 'asin', 'quantity'],
+    optional: ['invoice_number', 'unit_price', 'damage_report'],
+    notes: 'Invoice showing original purchase price increases reimbursement amount'
+  },
+  // Customer returns
+  'customer_return_unreturned': {
+    required: ['order_id', 'sku', 'refund_date'],
+    optional: ['tracking_number', 'return_label', 'invoice_number'],
+    notes: 'Claims must be filed within 45 days of refund with no return received'
+  },
+  // Inbound shipments
+  'inbound_shipment_lost': {
+    required: ['shipment_id', 'tracking_number', 'sku', 'quantity'],
+    optional: ['pod', 'invoice_number', 'packing_slip'],
+    notes: 'High-value or international shipments require detailed tracking and POD'
+  },
+  // FBA fee errors
+  'fba_fee_error': {
+    required: ['sku', 'asin', 'fee_type'],
+    optional: ['correct_dimensions', 'correct_weight', 'invoice_number'],
+    notes: 'Product dimension/weight proof may be required for fee disputes'
+  },
+  'fbaweightbasedfee': {
+    required: ['sku', 'asin', 'product_weight'],
+    optional: ['invoice_number', 'manufacturer_specs'],
+    notes: 'Provide manufacturer weight specifications if disputing measured weight'
+  },
+  // Default for unknown types
+  'default': {
+    required: ['sku', 'asin'],
+    optional: ['invoice_number', 'tracking_number', 'order_id'],
+    notes: 'Basic product identification required; additional docs strengthen claim'
+  }
+};
+
+// Validate evidence against FBA policy requirements
+const validateEvidencePolicy = (claim: RecoveryClaim, matchedDocs?: any[]): EvidenceValidation => {
+  const claimType = (claim.anomaly_type || claim.type || '').toLowerCase().replace(/[:\-]/g, '_');
+  const policy = FBA_POLICY_REQUIREMENTS[claimType] || FBA_POLICY_REQUIREMENTS['default'];
+
+  // Collect all available fields from claim and matched documents
+  const availableFields: Record<string, { present: boolean; confidence: number }> = {};
+
+  // From claim data
+  if (claim.sku) availableFields['sku'] = { present: true, confidence: 1.0 };
+  if (claim.asin) availableFields['asin'] = { present: true, confidence: 1.0 };
+  if (claim.order_id) availableFields['order_id'] = { present: true, confidence: 1.0 };
+  if (claim.shipment_id) availableFields['shipment_id'] = { present: true, confidence: 1.0 };
+  if (claim.quantity) availableFields['quantity'] = { present: true, confidence: 1.0 };
+
+  // From matched documents (extracted data)
+  if (matchedDocs && matchedDocs.length > 0) {
+    for (const doc of matchedDocs) {
+      const extracted = doc.extracted || doc.parsed_metadata || {};
+      const confidence = doc.parser_confidence || doc.match_confidence || 0.7;
+
+      if (extracted.invoice_numbers?.length) availableFields['invoice_number'] = { present: true, confidence };
+      if (extracted.invoice_number) availableFields['invoice_number'] = { present: true, confidence };
+      if (extracted.dates?.length) availableFields['invoice_date'] = { present: true, confidence };
+      if (extracted.invoice_date) availableFields['invoice_date'] = { present: true, confidence };
+      if (extracted.supplier_name || doc.supplier) availableFields['supplier_name'] = { present: true, confidence };
+      if (extracted.buyer_name) availableFields['buyer_name'] = { present: true, confidence };
+      if (extracted.amounts?.length || extracted.total_amount) availableFields['total_amount'] = { present: true, confidence };
+      if (extracted.unit_price) availableFields['unit_price'] = { present: true, confidence };
+      if (extracted.quantity) availableFields['quantity'] = { present: true, confidence };
+      if (extracted.currency) availableFields['currency'] = { present: true, confidence };
+      if (extracted.tracking_numbers?.length) availableFields['tracking_number'] = { present: true, confidence };
+      if (extracted.order_ids?.length) availableFields['order_id'] = { present: true, confidence };
+      if (extracted.skus?.length) availableFields['sku'] = { present: true, confidence };
+      if (extracted.asins?.length) availableFields['asin'] = { present: true, confidence };
+      if (extracted.fnskus?.length) availableFields['fnsku'] = { present: true, confidence };
+      if (extracted.vat_id) availableFields['vat_id'] = { present: true, confidence };
+      if (extracted.po_number) availableFields['po_number'] = { present: true, confidence };
+    }
+  }
+
+  // Check required and optional fields
+  const fieldChecks: PolicyFieldCheck[] = [];
+  const missingRequired: string[] = [];
+  const missingOptional: string[] = [];
+  const warnings: string[] = [];
+
+  // Check required fields
+  for (const field of policy.required) {
+    const fieldData = availableFields[field];
+    const check: PolicyFieldCheck = {
+      field,
+      label: field.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+      required: true,
+      present: !!fieldData?.present,
+      confidence: fieldData?.confidence || 0
+    };
+
+    if (!check.present) {
+      missingRequired.push(check.label);
+      check.issue = 'Missing required field';
+    } else if (check.confidence < 0.7) {
+      warnings.push(`${check.label} has low confidence (${(check.confidence * 100).toFixed(0)}%)`);
+      check.issue = 'Low confidence extraction';
+    }
+
+    fieldChecks.push(check);
+  }
+
+  // Check optional fields
+  for (const field of policy.optional) {
+    const fieldData = availableFields[field];
+    const check: PolicyFieldCheck = {
+      field,
+      label: field.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+      required: false,
+      present: !!fieldData?.present,
+      confidence: fieldData?.confidence || 0
+    };
+
+    if (!check.present) {
+      missingOptional.push(check.label);
+    }
+
+    fieldChecks.push(check);
+  }
+
+  // Calculate quality score
+  const requiredPresent = policy.required.filter(f => availableFields[f]?.present).length;
+  const optionalPresent = policy.optional.filter(f => availableFields[f]?.present).length;
+  const requiredRatio = policy.required.length > 0 ? requiredPresent / policy.required.length : 1;
+  const optionalRatio = policy.optional.length > 0 ? optionalPresent / policy.optional.length : 1;
+
+  // Score: 70% from required fields, 30% from optional
+  const qualityScore = Math.round((requiredRatio * 70) + (optionalRatio * 30));
+
+  // Determine quality tier
+  let quality: 'strong' | 'medium' | 'weak';
+  if (qualityScore >= 80 && missingRequired.length === 0) {
+    quality = 'strong';
+  } else if (qualityScore >= 50 || missingRequired.length <= 1) {
+    quality = 'medium';
+  } else {
+    quality = 'weak';
+  }
+
+  // Generate recommendation
+  let recommendation: 'file_now' | 'file_with_caution' | 'wait_for_better_docs';
+  let recommendationText: string;
+
+  if (quality === 'strong') {
+    recommendation = 'file_now';
+    recommendationText = '✅ We recommend filing now. Evidence meets FBA policy requirements.';
+  } else if (quality === 'medium') {
+    recommendation = 'file_with_caution';
+    if (missingRequired.length > 0) {
+      recommendationText = `⚠️ File with caution. Missing: ${missingRequired.join(', ')}. Claim may require follow-up.`;
+    } else {
+      recommendationText = '⚠️ File with caution. Evidence is adequate but could be stronger.';
+    }
+  } else {
+    recommendation = 'wait_for_better_docs';
+    recommendationText = `⏳ Wait for better docs. Missing required: ${missingRequired.join(', ')}. Filing now risks denial.`;
+  }
+
+  // Add policy-specific warnings
+  if (claimType.includes('sourcing') && !availableFields['vat_id']?.present) {
+    warnings.push('VAT/Tax ID recommended for sourcing cost claims');
+  }
+  if (claimType.includes('inbound') && !availableFields['tracking_number']?.present) {
+    warnings.push('Tracking number strongly recommended for inbound shipment claims');
+  }
+  if ((claim.amount || 0) > 500 && !availableFields['invoice_number']?.present) {
+    warnings.push('High-value claim ($500+) - invoice strongly recommended');
+  }
+
+  return {
+    quality,
+    qualityScore,
+    recommendation,
+    recommendationText,
+    fieldChecks,
+    missingRequired,
+    missingOptional,
+    warnings
+  };
+};
+
+// Evidence Quality Badge Component
+const EvidenceQualityBadge = ({ validation }: { validation: EvidenceValidation }) => {
+  const config = {
+    strong: { bg: 'bg-emerald-100', text: 'text-emerald-700', border: 'border-emerald-200', icon: '✓', label: 'Strong' },
+    medium: { bg: 'bg-amber-100', text: 'text-amber-700', border: 'border-amber-200', icon: '◐', label: 'Medium' },
+    weak: { bg: 'bg-red-100', text: 'text-red-700', border: 'border-red-200', icon: '○', label: 'Weak' }
+  };
+  const c = config[validation.quality];
+
+  return (
+    <Tooltip>
+      <TooltipTrigger>
+        <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-xs font-medium ${c.bg} ${c.text} ${c.border}`}>
+          <span>{c.icon}</span>
+          {c.label}
+        </span>
+      </TooltipTrigger>
+      <TooltipContent className="max-w-sm bg-white text-gray-900 border border-gray-200 p-3">
+        <div className="space-y-2">
+          <div className="font-semibold text-sm">{validation.recommendationText}</div>
+          {validation.missingRequired.length > 0 && (
+            <div className="text-xs">
+              <span className="text-red-600 font-medium">Missing required:</span>
+              <span className="text-gray-600 ml-1">{validation.missingRequired.join(', ')}</span>
+            </div>
+          )}
+          {validation.warnings.length > 0 && (
+            <div className="text-xs text-amber-600">
+              ⚠ {validation.warnings[0]}
+            </div>
+          )}
+        </div>
+      </TooltipContent>
+    </Tooltip>
+  );
+};
+
 // Historical win rates by claim type (based on platform data)
 const claimWinRates: Record<string, number> = {
   // High success types (85%+)
@@ -2182,7 +2449,20 @@ export default function Recoveries() {
                                     </TableCell>
                                     <TableCell>{format(new Date(claim.created || claim.discovery_date || claim.created_at), 'MMM dd, yyyy')}</TableCell>
                                     <TableCell>
-                                      <span className="text-xs text-[#36454F]">{claim._evidence}</span>
+                                      {(() => {
+                                        const validation = validateEvidencePolicy(claim, claim.matchedDocs);
+                                        const docCount = claim.matchedDocs?.length || claim.matchedCount || 0;
+                                        return (
+                                          <div className="flex items-center gap-2">
+                                            <EvidenceQualityBadge validation={validation} />
+                                            {docCount > 0 && (
+                                              <span className="text-xs text-gray-500">
+                                                {docCount} doc{docCount !== 1 ? 's' : ''}
+                                              </span>
+                                            )}
+                                          </div>
+                                        );
+                                      })()}
                                     </TableCell>
                                     <TableCell className="max-w-xs">
                                       <div className="truncate" title={claim.details}>
@@ -2630,6 +2910,62 @@ export default function Recoveries() {
                               </div>
                             </div>
                           </div>
+
+                          {/* Evidence Quality & Policy Check */}
+                          {(() => {
+                            const validation = validateEvidencePolicy(detectionDetails, detectionDetails.matchedDocs);
+                            const tierColor =
+                              validation.quality === 'strong' ? 'text-emerald-700 bg-emerald-50 border-emerald-200' :
+                                validation.quality === 'medium' ? 'text-amber-700 bg-amber-50 border-amber-200' :
+                                  'text-red-700 bg-red-50 border-red-200';
+
+                            return (
+                              <div className={cn("rounded-lg border p-4 space-y-4", tierColor)}>
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-2xl">
+                                      {validation.quality === 'strong' ? '✅' : validation.quality === 'medium' ? '⚠️' : '⏳'}
+                                    </span>
+                                    <div>
+                                      <h4 className="font-bold text-sm uppercase tracking-wider">Evidence Quality: {validation.quality}</h4>
+                                      <p className="text-xs font-semibold opacity-90">{validation.recommendationText}</p>
+                                    </div>
+                                  </div>
+                                  <div className="text-right">
+                                    <div className="text-2xl font-bold">{validation.qualityScore}%</div>
+                                    <div className="text-[10px] uppercase opacity-70 font-bold">Policy Score</div>
+                                  </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-black/5">
+                                  <div className="space-y-2">
+                                    <p className="text-[10px] uppercase font-bold opacity-70">Field Verification</p>
+                                    <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+                                      {validation.fieldChecks.map((check, i) => (
+                                        <div key={i} className="flex items-center justify-between text-xs py-0.5">
+                                          <span className="opacity-80">{check.label}</span>
+                                          <span className={cn("font-bold", check.present ? "text-emerald-600" : check.required ? "text-red-600" : "opacity-40")}>
+                                            {check.present ? "✓" : check.required ? "MISSING" : "—"}
+                                          </span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+
+                                  {validation.warnings.length > 0 && (
+                                    <div className="space-y-2">
+                                      <p className="text-[10px] uppercase font-bold opacity-70 text-amber-600">FBA Policy Warnings</p>
+                                      <ul className="text-xs space-y-1 list-disc list-inside">
+                                        {validation.warnings.map((w, i) => (
+                                          <li key={i} className="text-amber-700">{w}</li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })()}
 
                           {/* Financial Information */}
                           <div className="border-t border-white/10 pt-4">
