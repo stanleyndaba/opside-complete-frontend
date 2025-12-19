@@ -24,7 +24,78 @@ interface DocLogEntry {
   category: 'upload' | 'parse' | 'match' | 'system';
   message: string;
   thinkingDuration?: number;
+  // Seller-friendly story fields
+  storyMessage?: string;
+  moneyImpact?: number;
+  claimsAffected?: number;
+  isDevLog?: boolean;
 }
+
+// Story-style message templates for seller-friendly logs
+const generateStoryMessage = (
+  eventType: string,
+  data: {
+    source?: string;
+    count?: number;
+    matched?: number;
+    unmatched?: number;
+    asin?: string;
+    sku?: string;
+    lineItems?: number;
+    claimsLinked?: number;
+    claimType?: string;
+    docsAttached?: number;
+    moneyAtRisk?: number;
+    filename?: string;
+    supplier?: string;
+  }
+): { story: string; money?: number; claims?: number } => {
+  switch (eventType) {
+    case 'gmail_scan':
+      return {
+        story: `📧 Found ${data.count || 0} new invoice${(data.count || 0) !== 1 ? 's' : ''} in ${data.source || 'Gmail'} – ${data.matched || 0} matched to ${data.asin ? `ASIN ${data.asin}` : 'claims'}, ${data.unmatched || 0} unmatched`,
+        claims: data.matched
+      };
+    case 'invoice_parsed':
+      return {
+        story: `📄 Parsed ${data.supplier ? `${data.supplier} invoice` : 'supplier invoice'} – extracted ${data.lineItems || 0} line item${(data.lineItems || 0) !== 1 ? 's' : ''}, ${data.claimsLinked || 0} linked to open claims`,
+        claims: data.claimsLinked
+      };
+    case 'claim_packet':
+      return {
+        story: `📦 Generated claim packet for ${data.claimType || 'Lost Inventory'} – ${data.docsAttached || 0} doc${(data.docsAttached || 0) !== 1 ? 's' : ''} attached`,
+        claims: 1
+      };
+    case 'invoice_linked':
+      return {
+        story: `💰 New invoice linked → strengthens ${data.claimsLinked || 0} claim${(data.claimsLinked || 0) !== 1 ? 's' : ''} (+$${(data.moneyAtRisk || 0).toLocaleString()} at risk if missing)`,
+        money: data.moneyAtRisk,
+        claims: data.claimsLinked
+      };
+    case 'doc_upload':
+      return {
+        story: `📤 Uploaded "${data.filename || 'document'}" – scanning for order IDs, ASINs & amounts...`
+      };
+    case 'match_found':
+      return {
+        story: `✅ Match found! ${data.sku ? `SKU ${data.sku}` : 'Document'} linked to ${data.claimsLinked || 1} claim${(data.claimsLinked || 1) !== 1 ? 's' : ''} (+$${(data.moneyAtRisk || 0).toFixed(0)} recovery potential)`,
+        money: data.moneyAtRisk,
+        claims: data.claimsLinked
+      };
+    case 'no_match':
+      return {
+        story: `⏳ "${data.filename || 'Document'}" parsed but no claim match yet – will auto-link when matching claim detected`
+      };
+    case 'approval_boost':
+      return {
+        story: `📈 Evidence complete! ${data.claimsLinked || 0} claim${(data.claimsLinked || 0) !== 1 ? 's' : ''} now at "Auto-Submit" strength (was "Needs Evidence")`,
+        claims: data.claimsLinked
+      };
+    default:
+      return { story: data.filename || 'Processing...' };
+  }
+};
+
 
 // Category icons for document logs
 const getDocCategoryIcon = (category: DocLogEntry['category']) => {
@@ -160,6 +231,7 @@ export default function EvidenceLocker() {
   // Document Activity Log state
   const [docLogs, setDocLogs] = useState<DocLogEntry[]>([]);
   const [docLogSearch, setDocLogSearch] = useState('');
+  const [showDevLogs, setShowDevLogs] = useState(false); // Toggle for dev-level logs vs human-friendly stories
   const docLogContainerRef = useRef<HTMLDivElement>(null);
   const docLogQueueRef = useRef<Array<{ entry: Omit<DocLogEntry, 'id' | 'timestamp'>; delay: number }>>([]);
   const isProcessingDocQueueRef = useRef(false);
@@ -314,7 +386,8 @@ export default function EvidenceLocker() {
         try {
           const evt = JSON.parse(e.data);
           if (evt?.type === 'evidence' && evt?.status === 'completed') {
-            addDocLog({ type: 'success', category: 'system', message: '[INGESTION] New documents available' }, 500);
+            const story = generateStoryMessage('gmail_scan', { source: 'Gmail', count: evt.count || 1, matched: evt.matched || 0, unmatched: evt.unmatched || 0 });
+            addDocLog({ type: 'success', category: 'system', message: '[INGESTION] New documents available', storyMessage: story.story, claimsAffected: story.claims }, 500);
             toast({ title: 'Ingestion complete', description: 'New documents are available.' });
             // Refresh documents
             api.getDocuments().then(res => {
@@ -324,8 +397,9 @@ export default function EvidenceLocker() {
             });
           }
           if (evt?.type === 'parsing' && evt?.status === 'completed') {
-            addDocLog({ type: 'success', category: 'parse', message: `[PARSED] Document parsing complete` }, 600);
-            addDocLog({ type: 'thinking', category: 'match', message: 'Checking for claim matches...' }, 900);
+            const parseStory = generateStoryMessage('invoice_parsed', { lineItems: evt.lineItems || 0, claimsLinked: evt.claimsLinked || 0, supplier: evt.supplier });
+            addDocLog({ type: 'success', category: 'parse', message: `[PARSED] Document parsing complete`, storyMessage: parseStory.story, claimsAffected: parseStory.claims }, 600);
+            addDocLog({ type: 'thinking', category: 'match', message: 'Checking for claim matches...', storyMessage: '🔍 Analyzing document for matching claims...' }, 900);
             // Refresh document with parsed data
             if (evt?.document_id) {
               api.getDocumentWithParsedData(evt.document_id).then(res => {
@@ -364,16 +438,18 @@ export default function EvidenceLocker() {
             const smartPrompts = evt.smartPromptsCreated || 0;
             const held = evt.held || 0;
 
-            addDocLog({ type: 'success', category: 'match', message: `[MATCHED] Found ${matches} claim-document match(es)` }, 600);
+            const matchStory = generateStoryMessage('match_found', { claimsLinked: matches, moneyAtRisk: evt.moneyAtRisk || 0 });
+            addDocLog({ type: 'success', category: 'match', message: `[MATCHED] Found ${matches} claim-document match(es)`, storyMessage: matchStory.story, moneyImpact: matchStory.money, claimsAffected: matchStory.claims }, 600);
 
             if (autoSubmitted > 0) {
-              addDocLog({ type: 'success', category: 'match', message: `${autoSubmitted} claim(s) auto-submitted with high confidence` }, 800);
+              const boostStory = generateStoryMessage('approval_boost', { claimsLinked: autoSubmitted });
+              addDocLog({ type: 'success', category: 'match', message: `${autoSubmitted} claim(s) auto-submitted with high confidence`, storyMessage: boostStory.story, claimsAffected: autoSubmitted }, 800);
             }
             if (smartPrompts > 0) {
-              addDocLog({ type: 'info', category: 'match', message: `${smartPrompts} smart prompt(s) created for review` }, 800);
+              addDocLog({ type: 'info', category: 'match', message: `${smartPrompts} smart prompt(s) created for review`, storyMessage: `👀 ${smartPrompts} claim${smartPrompts !== 1 ? 's' : ''} need your review before submission` }, 800);
             }
             if (held > 0) {
-              addDocLog({ type: 'warning', category: 'match', message: `${held} match(es) held for manual review (low confidence)` }, 800);
+              addDocLog({ type: 'warning', category: 'match', message: `${held} match(es) held for manual review (low confidence)`, storyMessage: `⏸️ ${held} low-confidence match${held !== 1 ? 'es' : ''} held – may need more evidence` }, 800);
             }
 
             // Refresh documents to show updated matched claims
@@ -822,9 +898,22 @@ export default function EvidenceLocker() {
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle className="text-base font-medium">Document Activity</CardTitle>
-                  <CardDescription className="text-sm">Real-time document processing log</CardDescription>
+                  <CardDescription className="text-sm">
+                    {showDevLogs ? 'Real-time document processing log' : 'What your documents are doing for your claims'}
+                  </CardDescription>
                 </div>
-                <span className="text-xs text-gray-400">{filteredDocLogs.length} entries</span>
+                <div className="flex items-center gap-4">
+                  <label className="flex items-center gap-2 text-xs text-gray-500 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={showDevLogs}
+                      onChange={(e) => setShowDevLogs(e.target.checked)}
+                      className="w-3.5 h-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    />
+                    Dev Logs
+                  </label>
+                  <span className="text-xs text-gray-400">{filteredDocLogs.length} entries</span>
+                </div>
               </div>
             </CardHeader>
             <CardContent className="pt-0">
@@ -853,24 +942,60 @@ export default function EvidenceLocker() {
                   <div className="space-y-1">
                     {filteredDocLogs.map((log) => (
                       <div key={log.id} className="flex flex-col">
-                        <div className={`flex flex-wrap sm:flex-nowrap items-start gap-1 sm:gap-2 hover:bg-gray-800/50 px-1 rounded ${log.type === 'thinking' ? 'opacity-70' : ''}`}>
-                          <span className="hidden sm:inline text-gray-500 shrink-0 select-none">
-                            {formatDocTimestamp(log.timestamp)}
-                          </span>
-                          <span className="sm:hidden text-gray-500 shrink-0 select-none text-[10px]">
-                            {log.timestamp.toLocaleTimeString()}
-                          </span>
-                          <span className="text-cyan-500 shrink-0 select-none font-medium text-[10px] sm:text-xs">
-                            doc agent
-                          </span>
-                          <span className={`shrink-0 ${getDocLogColor(log.type)}`}>
-                            {log.type === 'thinking' ? null : getDocCategoryIcon(log.category)}
-                          </span>
-                          <span className={`${getDocLogColor(log.type)} break-words min-w-0 flex-1`}>
-                            {log.message}
-                          </span>
-                        </div>
-                        {log.thinkingDuration && (
+                        {showDevLogs ? (
+                          /* Dev Mode: Terminal-style log */
+                          <div className={`flex flex-wrap sm:flex-nowrap items-start gap-1 sm:gap-2 hover:bg-gray-800/50 px-1 rounded ${log.type === 'thinking' ? 'opacity-70' : ''}`}>
+                            <span className="hidden sm:inline text-gray-500 shrink-0 select-none">
+                              {formatDocTimestamp(log.timestamp)}
+                            </span>
+                            <span className="sm:hidden text-gray-500 shrink-0 select-none text-[10px]">
+                              {log.timestamp.toLocaleTimeString()}
+                            </span>
+                            <span className="text-cyan-500 shrink-0 select-none font-medium text-[10px] sm:text-xs">
+                              doc agent
+                            </span>
+                            <span className={`shrink-0 ${getDocLogColor(log.type)}`}>
+                              {log.type === 'thinking' ? null : getDocCategoryIcon(log.category)}
+                            </span>
+                            <span className={`${getDocLogColor(log.type)} break-words min-w-0 flex-1`}>
+                              {log.message}
+                            </span>
+                          </div>
+                        ) : (
+                          /* Story Mode: Human-friendly with money tie-in */
+                          <div className={`flex items-start gap-2 py-1.5 px-2 rounded-lg ${log.type === 'success' ? 'bg-emerald-900/20' :
+                            log.type === 'error' ? 'bg-red-900/20' :
+                              log.type === 'warning' ? 'bg-amber-900/20' :
+                                log.type === 'thinking' ? 'bg-gray-800/30' :
+                                  'bg-gray-800/40'
+                            }`}>
+                            <span className="text-gray-500 text-[10px] shrink-0 mt-0.5">
+                              {log.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                            <div className="flex-1 min-w-0">
+                              <span className={`text-sm ${log.type === 'success' ? 'text-emerald-300' :
+                                log.type === 'error' ? 'text-red-300' :
+                                  log.type === 'warning' ? 'text-amber-300' :
+                                    'text-gray-200'
+                                }`}>
+                                {log.storyMessage || log.message}
+                              </span>
+                              {/* Money impact badge */}
+                              {log.moneyImpact && log.moneyImpact > 0 && (
+                                <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-500/20 text-emerald-400">
+                                  +${log.moneyImpact.toLocaleString()}
+                                </span>
+                              )}
+                              {/* Claims affected badge */}
+                              {log.claimsAffected && log.claimsAffected > 0 && (
+                                <span className="ml-1 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-500/20 text-blue-400">
+                                  {log.claimsAffected} claim{log.claimsAffected !== 1 ? 's' : ''}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                        {log.thinkingDuration && showDevLogs && (
                           <div className="ml-1 mt-0.5 mb-1">
                             <span className="text-[10px] text-gray-600 italic">
                               Thought for {log.thinkingDuration}s
