@@ -325,34 +325,29 @@ export default function Sync() {
   };
 
   // Selective log enrichment - add money hints to key lines only
+  // NOTE: Only uses REAL data from story.potentialValue - no fake estimates
   const enrichLogMessage = (message: string, story: LogStory): { text: string; hint?: string } => {
     const lowerMsg = message.toLowerCase();
 
-    // Keywords that deserve money hints
+    // Keywords that deserve money hints (only if we have real data)
     const moneyKeywords = ['discrepanc', 'mismatch', 'suspicious', 'anomal', 'overcharge', 'missing', 'lost', 'damaged'];
     const reviewKeywords = ['flagged', 'escalated', 'detected', 'found issue', 'claim'];
 
     // Check for money-hint-worthy messages
     for (const keyword of moneyKeywords) {
       if (lowerMsg.includes(keyword)) {
-        // Extract a number if present in this message
-        const numMatch = message.match(/(\d+)\s*(unit|item|shipment|return|order|sku|fee)/i);
-        if (numMatch) {
-          const count = parseInt(numMatch[1], 10);
-          // Estimate ~$50-200 per issue as heuristic
-          const estimatedValue = count * (50 + Math.floor(Math.random() * 150));
-          return {
-            text: message,
-            hint: `+$${estimatedValue.toLocaleString()} potential`
-          };
-        }
-        // If story has potential value, use fraction of it
+        // ONLY use real potential value from story if available - no fake estimates
         if (story.potentialValue && story.potentialValue > 0) {
           return {
             text: message,
-            hint: `flagged for claim review`
+            hint: `+$${story.potentialValue.toLocaleString()} potential`
           };
         }
+        // No fake dollar amounts - just flag for review
+        return {
+          text: message,
+          hint: `flagged for claim review`
+        };
       }
     }
 
@@ -1154,8 +1149,8 @@ export default function Sync() {
                                         {/* Enrichment Hint Badge */}
                                         {enriched.hint && (
                                           <span className={`shrink-0 px-1.5 py-0.5 rounded text-[10px] font-medium whitespace-nowrap ${enriched.hint.includes('$')
-                                              ? 'bg-emerald-50 text-emerald-700'
-                                              : 'bg-gray-100 text-gray-600'
+                                            ? 'bg-emerald-50 text-emerald-700'
+                                            : 'bg-gray-100 text-gray-600'
                                             }`}>
                                             {enriched.hint}
                                           </span>
