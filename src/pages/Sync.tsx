@@ -320,14 +320,17 @@ export default function Sync() {
         parts.push(`${story.itemCount} ${label} checked`);
       }
 
-      // If there are issues AND potential value, show combined
-      if (story.anomaliesFound && story.anomaliesFound > 0 && story.potentialValue && story.potentialValue > 0) {
-        parts.push(`${story.anomaliesFound} flagged`);
-      } else if (story.anomaliesFound && story.anomaliesFound > 0) {
+      // Add anomalies if found
+      if (story.anomaliesFound && story.anomaliesFound > 0) {
         parts.push(`${story.anomaliesFound} issues found`);
       }
 
-      story.summary = parts.length > 0 ? parts.join(', ') : `${story.logs.length} events`;
+      // Add potential value inline in summary if present
+      if (story.potentialValue && story.potentialValue > 0) {
+        parts.push(`+$${story.potentialValue.toLocaleString()} potential`);
+      }
+
+      story.summary = parts.length > 0 ? parts.join(' — ') : `${story.logs.length} events`;
     }
 
     // Sort stories: system first, then by first log timestamp
@@ -1473,23 +1476,9 @@ export default function Sync() {
                                   <Clock className="h-3.5 w-3.5 text-gray-400" />
                                 )}
 
-                                {/* Title & Summary */}
+                                {/* Title & Summary (includes potential value inline) */}
                                 <span className="font-medium text-gray-200 text-xs">{story.title}</span>
                                 <span className="text-gray-400 text-xs">— {story.summary}</span>
-
-                                {/* Potential Value Badge */}
-                                {story.potentialValue && story.potentialValue > 0 && (
-                                  <span className="ml-auto text-emerald-400 font-semibold text-xs whitespace-nowrap">
-                                    +${story.potentialValue.toLocaleString()} potential
-                                  </span>
-                                )}
-
-                                {/* Anomalies Badge */}
-                                {story.anomaliesFound && story.anomaliesFound > 0 && !story.potentialValue && (
-                                  <span className="ml-auto bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded text-[10px] font-medium">
-                                    {story.anomaliesFound} issues
-                                  </span>
-                                )}
                               </button>
 
                               {/* Expanded Log Details */}
