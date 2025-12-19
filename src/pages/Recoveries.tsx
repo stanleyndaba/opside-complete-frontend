@@ -28,7 +28,6 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { EvidenceMatchingTable } from '@/components/evidence/EvidenceMatchingTable';
 import { DisputeCasesTable } from '@/components/disputes/DisputeCasesTable';
 
-// Claim type definition
 interface RecoveryClaim {
   id: string;
   claim_number?: string; // Human-readable claim ID (e.g., LI-2412-0001)
@@ -51,6 +50,104 @@ interface RecoveryClaim {
   matchedCount?: number;
   [key: string]: any; // Allow additional properties
 }
+
+// Claim strength scoring types
+interface ClaimStrength {
+  score: number;
+  tier: 'high' | 'medium' | 'low';
+  factors: { label: string; value: number; max: number; reason: string }[];
+}
+
+// Historical win rates by claim type (based on platform data)
+const claimWinRates: Record<string, number> = {
+  // High success types (85%+)
+  'lost_warehouse': 95,
+  'lost:warehouse': 95,
+  'damaged_warehouse': 92,
+  'damaged:warehouse': 92,
+  'inbound_shipment_lost': 90,
+  'customer_return_unreturned': 88,
+  'removal_order_missing': 85,
+  // Medium success types (70-84%)
+  'fba_fee_error': 78,
+  'fbaweightbasedfee': 75,
+  'fbaperunitfulfillmentfee': 72,
+  'duplicate_charge': 70,
+  // Lower success types (below 70%)
+  'general_adjustment': 55,
+  'fee_error': 50,
+  'default': 60,
+};
+
+// Calculate claim strength score (0-100)
+const calculateClaimStrength = (claim: RecoveryClaim): ClaimStrength => {
+  const factors: ClaimStrength['factors'] = [];
+
+  // Factor 1: Evidence Completeness (0-30 points)
+  const matchedDocs = claim.matchedDocs?.length || claim.matchedCount || 0;
+  const evidenceScore = Math.min(30, matchedDocs * 10);
+  factors.push({
+    label: 'Evidence',
+    value: evidenceScore,
+    max: 30,
+    reason: matchedDocs >= 3 ? 'Strong documentation' : matchedDocs >= 1 ? 'Partial evidence' : 'No evidence yet'
+  });
+
+  // Factor 2: Policy Window (0-25 points) - 60-day Amazon window
+  const claimDate = new Date(claim.discovery_date || claim.created || claim.created_at || Date.now());
+  const daysOld = Math.floor((Date.now() - claimDate.getTime()) / (1000 * 60 * 60 * 24));
+  const daysLeft = Math.max(0, 60 - daysOld);
+  const policyScore = daysLeft > 45 ? 25 : daysLeft > 30 ? 20 : daysLeft > 14 ? 15 : daysLeft > 7 ? 10 : daysLeft > 0 ? 5 : 0;
+  factors.push({
+    label: 'Policy Window',
+    value: policyScore,
+    max: 25,
+    reason: daysLeft > 45 ? `${daysLeft} days left` : daysLeft > 14 ? `${daysLeft} days remaining` : daysLeft > 0 ? `Urgent: ${daysLeft} days left!` : 'Window expired'
+  });
+
+  // Factor 3: Historical Win Rate by Type (0-25 points)
+  const typeKey = (claim.anomaly_type || claim.type || '').toLowerCase().replace(/[:\-]/g, '_');
+  const historicalRate = claimWinRates[typeKey] || claimWinRates.default;
+  const historyScore = Math.round((historicalRate / 100) * 25);
+  factors.push({
+    label: 'Win Rate',
+    value: historyScore,
+    max: 25,
+    reason: `${historicalRate}% success rate`
+  });
+
+  // Factor 4: AI Confidence Score (0-20 points)
+  const confidence = claim.confidence_score ?? claim._confidence ?? 0.5;
+  const confidenceScore = Math.round(confidence * 20);
+  factors.push({
+    label: 'AI Confidence',
+    value: confidenceScore,
+    max: 20,
+    reason: confidence >= 0.85 ? 'High certainty' : confidence >= 0.6 ? 'Moderate certainty' : 'Low certainty'
+  });
+
+  const totalScore = factors.reduce((sum, f) => sum + f.value, 0);
+  const tier: ClaimStrength['tier'] = totalScore >= 75 ? 'high' : totalScore >= 45 ? 'medium' : 'low';
+
+  return { score: totalScore, tier, factors };
+};
+
+// Strength Badge Component
+const StrengthBadge = ({ strength, showScore = true }: { strength: ClaimStrength; showScore?: boolean }) => {
+  const config = {
+    high: { bg: 'bg-emerald-100', text: 'text-emerald-700', border: 'border-emerald-200', icon: '●', label: 'Strong' },
+    medium: { bg: 'bg-amber-100', text: 'text-amber-700', border: 'border-amber-200', icon: '●', label: 'Medium' },
+    low: { bg: 'bg-red-100', text: 'text-red-700', border: 'border-red-200', icon: '●', label: 'Weak' }
+  };
+  const c = config[strength.tier];
+
+  return (
+    <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-xs font-medium ${c.bg} ${c.text} ${c.border}`}>
+      <span className="text-[8px]">{c.icon}</span>
+      {showScore ? strength.score : c.label}
+    </span>
+  );
+};
 
 // Amazon Financial Event Types - Comprehensive List
 const amazonEventCategories = {
@@ -306,6 +403,9 @@ export default function Recoveries() {
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [detectionDetails, setDetectionDetails] = useState<any | null>(null);
   const [activeTab, setActiveTab] = useState<'claims' | 'matching' | 'cases'>('claims');
+  const [showRiskyClaims, setShowRiskyClaims] = useState(false); // Toggle to show low-strength claims
+  const [fileAnywayModalOpen, setFileAnywayModalOpen] = useState(false);
+  const [claimToFile, setClaimToFile] = useState<RecoveryClaim | null>(null);
 
   // Read search query from URL on mount and when URL changes
   useEffect(() => {
@@ -1161,16 +1261,26 @@ export default function Recoveries() {
   // Rank opportunities: prioritize by confidence * value
   const rankedClaims = useMemo(() => {
     const base = filteredClaims
-      .map(c => ({
-        ...c,
-        _confidence: getConfidence(c.id),
-        _priority: getConfidence(c.id) * (c.guaranteedAmount || 0),
-        _evidence: getEvidenceStatus(c.id),
-        _matchedCount: Array.isArray((c as any).matchedDocs) ? (c as any).matchedDocs.length : ((c as any).matchedCount ?? 0),
-      }))
+      .map(c => {
+        const strength = calculateClaimStrength(c);
+        return {
+          ...c,
+          _confidence: getConfidence(c.id),
+          _priority: getConfidence(c.id) * (c.guaranteedAmount || 0),
+          _evidence: getEvidenceStatus(c.id),
+          _matchedCount: Array.isArray((c as any).matchedDocs) ? (c as any).matchedDocs.length : ((c as any).matchedCount ?? 0),
+          _strength: strength,
+        };
+      })
       .sort((a, b) => b._priority - a._priority);
-    return showParkedOnly ? base.filter(c => c._confidence < 0.5) : base;
-  }, [filteredClaims, showParkedOnly]);
+
+    // Apply strength filtering: hide low-strength claims unless toggle is on
+    let filtered = showParkedOnly ? base.filter(c => c._confidence < 0.5) : base;
+    if (!showRiskyClaims) {
+      filtered = filtered.filter(c => c._strength.tier !== 'low');
+    }
+    return filtered;
+  }, [filteredClaims, showParkedOnly, showRiskyClaims]);
 
   // Calculate key metrics
   const keyMetrics = useMemo(() => {
@@ -1647,6 +1757,16 @@ export default function Recoveries() {
                             <SelectItem value="critical">Critical (≤3 days)</SelectItem>
                           </SelectContent>
                         </Select>
+
+                        {/* Show risky claims toggle */}
+                        <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer select-none">
+                          <Checkbox
+                            checked={showRiskyClaims}
+                            onCheckedChange={(checked) => setShowRiskyClaims(!!checked)}
+                            className="border-gray-300"
+                          />
+                          Show weak claims
+                        </label>
                       </div>
                     </CardContent>
                   </Card>
@@ -1695,6 +1815,7 @@ export default function Recoveries() {
                                   }} />
                                 </TableHead>
                                 <TableHead className="text-[#1f1f1f] font-medium">Source</TableHead>
+                                <TableHead className="text-[#1f1f1f] font-medium">Strength</TableHead>
                                 <TableHead className="text-[#1f1f1f] font-medium">Claim ID</TableHead>
                                 <TableHead className="text-[#1f1f1f] font-medium">Created</TableHead>
                                 <TableHead className="text-[#1f1f1f] font-medium">Evidence</TableHead>
@@ -1742,6 +1863,33 @@ export default function Recoveries() {
                                       ) : (
                                         <Badge className="bg-gray-100 text-[#36454F] border-0">Synced</Badge>
                                       )}
+                                    </TableCell>
+                                    <TableCell>
+                                      {(() => {
+                                        const strength = calculateClaimStrength(claim);
+                                        return (
+                                          <Tooltip>
+                                            <TooltipTrigger asChild>
+                                              <button className="cursor-help">
+                                                <StrengthBadge strength={strength} />
+                                              </button>
+                                            </TooltipTrigger>
+                                            <TooltipContent side="right" className="bg-white text-gray-900 border border-gray-200 p-3 max-w-xs shadow-lg">
+                                              <div className="space-y-2">
+                                                <div className="font-semibold text-sm border-b border-gray-100 pb-1">
+                                                  Claim Strength: {strength.score}/100
+                                                </div>
+                                                {strength.factors.map((f, i) => (
+                                                  <div key={i} className="flex justify-between items-center text-xs">
+                                                    <span className="text-gray-600">{f.label}</span>
+                                                    <span className="font-medium">{f.value}/{f.max} <span className="text-gray-400">— {f.reason}</span></span>
+                                                  </div>
+                                                ))}
+                                              </div>
+                                            </TooltipContent>
+                                          </Tooltip>
+                                        );
+                                      })()}
                                     </TableCell>
                                     <TableCell>
                                       <Tooltip>
@@ -1822,7 +1970,7 @@ export default function Recoveries() {
                                               Resubmit with stronger docs
                                             </DropdownMenuItem>
                                           )}
-                                          {((claim.confidence_score !== null && claim.confidence_score !== undefined && claim.confidence_score >= 0.85) || getConfidenceTier(claim._confidence) === 'high') && (
+                                          {((claim.confidence_score !== null && claim.confidence_score !== undefined && claim.confidence_score >= 0.85) || claim._strength?.tier === 'high') && (
                                             <DropdownMenuItem onClick={async () => {
                                               try {
                                                 await recoveryApi.submitClaim(claim.id);
@@ -1833,14 +1981,16 @@ export default function Recoveries() {
                                                 toast({ title: 'Submit failed', description: e?.message || 'Please try again.' });
                                               }
                                             }}>
-                                              Auto-Submit (High Confidence)
+                                              Auto-Submit (Strong Claim)
                                             </DropdownMenuItem>
                                           )}
-                                          {getConfidenceTier(claim._confidence) === 'medium' && (
-                                            <DropdownMenuItem asChild>
-                                              <Link to={`/recoveries/${claim.id}`} state={{ claim }} className="flex items-center gap-2">
-                                                Review Opportunity
-                                              </Link>
+                                          {claim._strength?.tier === 'medium' && (
+                                            <DropdownMenuItem onClick={() => {
+                                              setClaimToFile(claim);
+                                              setFileAnywayModalOpen(true);
+                                            }}>
+                                              <AlertTriangle className="h-4 w-4 mr-2 text-amber-500" />
+                                              File Anyway (Medium Strength)
                                             </DropdownMenuItem>
                                           )}
                                           {/* Phase 3: Status Update - only for detected claims */}
@@ -2362,6 +2512,74 @@ export default function Recoveries() {
                   </Dialog>
                 </TabsContent>
 
+                {/* File Anyway Confirmation Modal for Medium-Strength Claims */}
+                <Dialog open={fileAnywayModalOpen} onOpenChange={setFileAnywayModalOpen}>
+                  <DialogContent className="bg-white border-gray-200 text-gray-700 max-w-md">
+                    <DialogHeader>
+                      <DialogTitle className="flex items-center gap-2">
+                        <AlertTriangle className="h-5 w-5 text-amber-500" />
+                        Medium Strength Claim
+                      </DialogTitle>
+                      <DialogDescription className="text-gray-600">
+                        This claim has a lower strength score. Filing weak claims may affect your Amazon account standing.
+                      </DialogDescription>
+                    </DialogHeader>
+                    {claimToFile && (() => {
+                      const strength = calculateClaimStrength(claimToFile);
+                      return (
+                        <div className="space-y-4 py-4">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium text-gray-700">Claim Strength</span>
+                            <StrengthBadge strength={strength} />
+                          </div>
+                          <div className="space-y-2 bg-gray-50 p-3 rounded-lg">
+                            <div className="text-xs font-semibold text-gray-600 mb-2">Score Breakdown</div>
+                            {strength.factors.map((f, i) => (
+                              <div key={i} className="flex justify-between text-sm">
+                                <span className="text-gray-600">{f.label}</span>
+                                <span className="text-gray-900">{f.value}/{f.max} <span className="text-gray-400">({f.reason})</span></span>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm text-amber-800">
+                            <strong>Tip:</strong> Wait for more evidence or consider if this claim is worth the risk to your account.
+                          </div>
+                        </div>
+                      );
+                    })()}
+                    <DialogFooter>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setFileAnywayModalOpen(false);
+                          setClaimToFile(null);
+                        }}
+                        className="border-gray-200"
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={async () => {
+                          if (!claimToFile) return;
+                          try {
+                            await recoveryApi.submitClaim(claimToFile.id);
+                            setClaims(prev => prev.map(c => c.id === claimToFile.id ? { ...c, status: 'Submitted' } : c));
+                            setMergedRecoveries(prev => prev.map(c => c.id === claimToFile.id ? { ...c, status: 'Submitted' } : c));
+                            toast({ title: 'Claim Filed', description: `${claimToFile.id} has been submitted to Amazon.` });
+                            setFileAnywayModalOpen(false);
+                            setClaimToFile(null);
+                          } catch (e: any) {
+                            toast({ title: 'Filing Failed', description: e?.message || 'Please try again.', variant: 'destructive' });
+                          }
+                        }}
+                        className="bg-amber-500 hover:bg-amber-600 text-white"
+                      >
+                        File Anyway
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+
                 {/* Evidence Matching Tab (Agent 6) */}
                 <TabsContent value="matching" className="mt-0">
                   <EvidenceMatchingTable />
@@ -2376,6 +2594,6 @@ export default function Recoveries() {
           </div>
         </div>
       </div>
-    </PageLayout>
+    </PageLayout >
   );
 }
