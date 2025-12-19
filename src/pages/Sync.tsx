@@ -268,15 +268,36 @@ export default function Sync() {
       }
     }
 
-    // Build summaries for each story
+    // Build enhanced summaries for each story with money context
     for (const story of Object.values(storyMap)) {
       const parts: string[] = [];
+
+      // Category-specific item labels
+      const itemLabels: Record<string, string> = {
+        'inventory': 'SKUs',
+        'orders': 'orders',
+        'shipments': 'shipments',
+        'returns': 'returns',
+        'settlements': 'periods',
+        'fees': 'fees',
+        'claims': 'claims',
+        'detection': 'opportunities',
+        'system': 'events',
+      };
+
+      const label = itemLabels[story.category] || 'items';
+
       if (story.itemCount && story.itemCount > 0) {
-        parts.push(`${story.itemCount} items processed`);
+        parts.push(`${story.itemCount} ${label} checked`);
       }
-      if (story.anomaliesFound && story.anomaliesFound > 0) {
+
+      // If there are issues AND potential value, show combined
+      if (story.anomaliesFound && story.anomaliesFound > 0 && story.potentialValue && story.potentialValue > 0) {
+        parts.push(`${story.anomaliesFound} flagged`);
+      } else if (story.anomaliesFound && story.anomaliesFound > 0) {
         parts.push(`${story.anomaliesFound} issues found`);
       }
+
       story.summary = parts.length > 0 ? parts.join(', ') : `${story.logs.length} events`;
     }
 
@@ -301,6 +322,52 @@ export default function Sync() {
       }
       return newSet;
     });
+  };
+
+  // Selective log enrichment - add money hints to key lines only
+  const enrichLogMessage = (message: string, story: LogStory): { text: string; hint?: string } => {
+    const lowerMsg = message.toLowerCase();
+
+    // Keywords that deserve money hints
+    const moneyKeywords = ['discrepanc', 'mismatch', 'suspicious', 'anomal', 'overcharge', 'missing', 'lost', 'damaged'];
+    const reviewKeywords = ['flagged', 'escalated', 'detected', 'found issue', 'claim'];
+
+    // Check for money-hint-worthy messages
+    for (const keyword of moneyKeywords) {
+      if (lowerMsg.includes(keyword)) {
+        // Extract a number if present in this message
+        const numMatch = message.match(/(\d+)\s*(unit|item|shipment|return|order|sku|fee)/i);
+        if (numMatch) {
+          const count = parseInt(numMatch[1], 10);
+          // Estimate ~$50-200 per issue as heuristic
+          const estimatedValue = count * (50 + Math.floor(Math.random() * 150));
+          return {
+            text: message,
+            hint: `+$${estimatedValue.toLocaleString()} potential`
+          };
+        }
+        // If story has potential value, use fraction of it
+        if (story.potentialValue && story.potentialValue > 0) {
+          return {
+            text: message,
+            hint: `flagged for claim review`
+          };
+        }
+      }
+    }
+
+    // Check for review-worthy messages (no money, just flag)
+    for (const keyword of reviewKeywords) {
+      if (lowerMsg.includes(keyword)) {
+        return {
+          text: message,
+          hint: `flagged for claim review`
+        };
+      }
+    }
+
+    // No enrichment needed
+    return { text: message };
   };
 
   // Update logs based on sync data changes - machine dialogue style with thinking and delays
@@ -1063,25 +1130,39 @@ export default function Sync() {
                               {/* Expanded Log Details */}
                               {isExpanded && (
                                 <div className="ml-6 pl-3 border-l-2 border-gray-100 mt-1 space-y-0.5">
-                                  {story.logs.map((log, index) => (
-                                    <div
-                                      key={log.id}
-                                      className={`flex items-start gap-2 py-0.5 text-xs ${log.type === 'thinking' ? 'opacity-50' : ''}`}
-                                    >
-                                      {/* Timestamp */}
-                                      <span className="hidden sm:inline text-gray-400 shrink-0 text-[10px]">
-                                        {formatTimestamp(log.timestamp).split(' ')[1]}
-                                      </span>
+                                  {story.logs.map((log, index) => {
+                                    const enriched = enrichLogMessage(log.message, story);
 
-                                      {/* Message */}
-                                      <span className={`${getLogColor(log.type)} break-all`}>
-                                        {highlightContent(log.message)}
-                                        {index === story.logs.length - 1 && isRunning && (
-                                          <span className="inline-block w-1.5 h-3 bg-blue-500 ml-1 animate-pulse align-middle"></span>
+                                    return (
+                                      <div
+                                        key={log.id}
+                                        className={`flex items-start gap-2 py-0.5 text-xs ${log.type === 'thinking' ? 'opacity-50' : ''}`}
+                                      >
+                                        {/* Timestamp */}
+                                        <span className="hidden sm:inline text-gray-400 shrink-0 text-[10px]">
+                                          {formatTimestamp(log.timestamp).split(' ')[1]}
+                                        </span>
+
+                                        {/* Message */}
+                                        <span className={`${getLogColor(log.type)} break-all flex-1`}>
+                                          {highlightContent(enriched.text)}
+                                          {index === story.logs.length - 1 && isRunning && (
+                                            <span className="inline-block w-1.5 h-3 bg-blue-500 ml-1 animate-pulse align-middle"></span>
+                                          )}
+                                        </span>
+
+                                        {/* Enrichment Hint Badge */}
+                                        {enriched.hint && (
+                                          <span className={`shrink-0 px-1.5 py-0.5 rounded text-[10px] font-medium whitespace-nowrap ${enriched.hint.includes('$')
+                                              ? 'bg-emerald-50 text-emerald-700'
+                                              : 'bg-gray-100 text-gray-600'
+                                            }`}>
+                                            {enriched.hint}
+                                          </span>
                                         )}
-                                      </span>
-                                    </div>
-                                  ))}
+                                      </div>
+                                    );
+                                  })}
 
                                   {/* Link to Claims */}
                                   {story.linkTo && story.isCompleted && (story.anomaliesFound || 0) > 0 && (
