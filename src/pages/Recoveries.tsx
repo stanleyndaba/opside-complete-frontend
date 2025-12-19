@@ -28,6 +28,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { EvidenceMatchingTable } from '@/components/evidence/EvidenceMatchingTable';
 import { DisputeCasesTable } from '@/components/disputes/DisputeCasesTable';
 import { EvidencePackView } from '@/components/evidence/EvidencePackView';
+import { ClaimNegotiationTimeline } from '@/components/claims/ClaimNegotiationTimeline';
 
 
 interface RecoveryClaim {
@@ -2702,6 +2703,22 @@ export default function Recoveries() {
                             </div>
                           </div>
                         )}
+
+                        {/* Claim Timeline & Escalation */}
+                        <div className="border-t border-gray-100 pt-4">
+                          <ClaimNegotiationTimeline
+                            claim={detectionDetails}
+                            maxEscalations={2}
+                            onEscalate={(playbook) => {
+                              toast({
+                                title: `Escalation: ${playbook.label}`,
+                                description: playbook.autoTriggerable
+                                  ? 'Auto-escalation initiated with updated evidence package.'
+                                  : 'Manual review required. Check playbook actions above.',
+                              });
+                            }}
+                          />
+                        </div>
                       </div>
                     )}
                     <DialogFooter>
