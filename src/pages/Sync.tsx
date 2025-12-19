@@ -1141,29 +1141,29 @@ export default function Sync() {
                     <button
                       onClick={() => setLogFilter('all')}
                       className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${logFilter === 'all'
-                          ? 'bg-white text-gray-900 shadow-sm'
-                          : 'text-gray-500 hover:text-gray-700'
+                        ? 'bg-white text-gray-900 shadow-sm'
+                        : 'text-gray-500 hover:text-gray-700'
                         }`}
                     >
                       All
                     </button>
                     <button
                       onClick={() => setLogFilter('money')}
-                      className={`px-3 py-1 text-xs font-medium rounded-md transition-all flex items-center gap-1 ${logFilter === 'money'
-                          ? 'bg-emerald-500 text-white shadow-sm'
-                          : 'text-gray-500 hover:text-gray-700'
+                      className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${logFilter === 'money'
+                        ? 'bg-emerald-500 text-white shadow-sm'
+                        : 'text-gray-500 hover:text-gray-700'
                         }`}
                     >
-                      💰 Money
+                      Recoveries
                     </button>
                     <button
                       onClick={() => setLogFilter('issues')}
-                      className={`px-3 py-1 text-xs font-medium rounded-md transition-all flex items-center gap-1 ${logFilter === 'issues'
-                          ? 'bg-amber-500 text-white shadow-sm'
-                          : 'text-gray-500 hover:text-gray-700'
+                      className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${logFilter === 'issues'
+                        ? 'bg-amber-500 text-white shadow-sm'
+                        : 'text-gray-500 hover:text-gray-700'
                         }`}
                     >
-                      ⚠️ Issues
+                      Issues
                     </button>
                   </div>
                 </div>
