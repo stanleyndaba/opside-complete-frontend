@@ -1974,20 +1974,6 @@ export default function Recoveries() {
                                               Resubmit with stronger docs
                                             </DropdownMenuItem>
                                           )}
-                                          {((claim.confidence_score !== null && claim.confidence_score !== undefined && claim.confidence_score >= 0.85) || claim._strength?.tier === 'high') && (
-                                            <DropdownMenuItem onClick={async () => {
-                                              try {
-                                                await recoveryApi.submitClaim(claim.id);
-                                                setClaims(prev => prev.map(c => c.id === claim.id ? { ...c, status: 'Submitted' } : c));
-                                                setMergedRecoveries(prev => prev.map(c => c.id === claim.id ? { ...c, status: 'Submitted' } : c));
-                                                toast({ title: 'Auto-submitted', description: `${claim.id} submitted automatically.` });
-                                              } catch (e: any) {
-                                                toast({ title: 'Submit failed', description: e?.message || 'Please try again.' });
-                                              }
-                                            }}>
-                                              Auto-Submit (Strong Claim)
-                                            </DropdownMenuItem>
-                                          )}
                                           {claim._strength?.tier === 'medium' && (
                                             <DropdownMenuItem onClick={() => {
                                               setClaimToFile(claim);
@@ -2602,6 +2588,140 @@ export default function Recoveries() {
                     claim={evidencePackClaim}
                   />
                 )}
+
+                {/* Claim Details Modal */}
+                <Dialog open={detailsModalOpen} onOpenChange={setDetailsModalOpen}>
+                  <DialogContent className="bg-white border-gray-200 text-gray-700 max-w-2xl max-h-[90vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle className="text-xl font-semibold text-gray-900 flex items-center gap-2">
+                        <Eye className="h-5 w-5 text-blue-500" />
+                        Claim Details
+                      </DialogTitle>
+                      {detectionDetails && (
+                        <DialogDescription className="text-gray-600">
+                          {detectionDetails.anomaly_type?.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Recovery Claim'}
+                        </DialogDescription>
+                      )}
+                    </DialogHeader>
+                    {detectionDetails && (
+                      <div className="space-y-6 py-4">
+                        {/* Key Metrics Row */}
+                        <div className="grid grid-cols-3 gap-4">
+                          <div className="bg-gray-50 rounded-lg p-4 text-center">
+                            <div className="text-xs text-gray-500 uppercase tracking-wide">Amount</div>
+                            <div className="text-2xl font-bold text-emerald-600 mt-1">
+                              ${(detectionDetails.guaranteedAmount || detectionDetails.amount || 0).toFixed(2)}
+                            </div>
+                          </div>
+                          <div className="bg-gray-50 rounded-lg p-4 text-center">
+                            <div className="text-xs text-gray-500 uppercase tracking-wide">Status</div>
+                            <div className="mt-2">
+                              <Badge className={`${detectionDetails.status?.toLowerCase() === 'resolved' ? 'bg-emerald-100 text-emerald-700' : detectionDetails.status?.toLowerCase() === 'submitted' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'}`}>
+                                {detectionDetails.status || 'Pending'}
+                              </Badge>
+                            </div>
+                          </div>
+                          <div className="bg-gray-50 rounded-lg p-4 text-center">
+                            <div className="text-xs text-gray-500 uppercase tracking-wide">Evidence</div>
+                            <div className="text-2xl font-bold text-gray-900 mt-1">
+                              {detectionDetails.matchedCount || detectionDetails.matchedDocs?.length || 0}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Claim Info Section */}
+                        <div className="border-t border-gray-100 pt-4">
+                          <h4 className="text-sm font-semibold text-gray-900 mb-3">Claim Information</h4>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <div className="text-xs text-gray-500 uppercase tracking-wide">Claim ID</div>
+                              <div className="text-sm font-mono text-gray-900 mt-1">{detectionDetails.id?.slice(0, 12) || '—'}...</div>
+                            </div>
+                            <div>
+                              <div className="text-xs text-gray-500 uppercase tracking-wide">Type</div>
+                              <div className="text-sm text-gray-900 mt-1">
+                                {detectionDetails.anomaly_type?.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || '—'}
+                              </div>
+                            </div>
+                            {detectionDetails.sku && (
+                              <div>
+                                <div className="text-xs text-gray-500 uppercase tracking-wide">SKU</div>
+                                <div className="text-sm font-mono text-gray-900 mt-1">{detectionDetails.sku}</div>
+                              </div>
+                            )}
+                            {detectionDetails.asin && (
+                              <div>
+                                <div className="text-xs text-gray-500 uppercase tracking-wide">ASIN</div>
+                                <div className="text-sm font-mono text-gray-900 mt-1">{detectionDetails.asin}</div>
+                              </div>
+                            )}
+                            {detectionDetails.discovery_date && (
+                              <div>
+                                <div className="text-xs text-gray-500 uppercase tracking-wide">Discovery Date</div>
+                                <div className="text-sm text-gray-900 mt-1">
+                                  {format(new Date(detectionDetails.discovery_date), 'MMM dd, yyyy')}
+                                </div>
+                              </div>
+                            )}
+                            {detectionDetails.confidence_score !== undefined && (
+                              <div>
+                                <div className="text-xs text-gray-500 uppercase tracking-wide">AI Confidence</div>
+                                <div className="text-sm text-gray-900 mt-1">
+                                  {Math.round((detectionDetails.confidence_score || 0) * 100)}%
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Details/Description */}
+                        {detectionDetails.details && (
+                          <div className="border-t border-gray-100 pt-4">
+                            <h4 className="text-sm font-semibold text-gray-900 mb-2">Details</h4>
+                            <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">{detectionDetails.details}</p>
+                          </div>
+                        )}
+
+                        {/* Strength Score if available */}
+                        {detectionDetails._strength && (
+                          <div className="border-t border-gray-100 pt-4">
+                            <h4 className="text-sm font-semibold text-gray-900 mb-3">Claim Strength</h4>
+                            <div className="flex items-center gap-3 mb-3">
+                              <StrengthBadge strength={detectionDetails._strength} />
+                              <span className="text-sm text-gray-600">
+                                Score: {detectionDetails._strength.score}/100
+                              </span>
+                            </div>
+                            <div className="bg-gray-50 rounded-lg p-3 space-y-2">
+                              {detectionDetails._strength.factors?.map((f: any, i: number) => (
+                                <div key={i} className="flex justify-between text-sm">
+                                  <span className="text-gray-600">{f.label}</span>
+                                  <span className="text-gray-900">{f.value}/{f.max}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    <DialogFooter>
+                      <Button variant="outline" onClick={() => setDetailsModalOpen(false)}>
+                        Close
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setEvidencePackClaim(detectionDetails);
+                          setEvidencePackOpen(true);
+                          setDetailsModalOpen(false);
+                        }}
+                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                      >
+                        <FileText className="h-4 w-4 mr-2" />
+                        View Evidence Pack
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
 
                 {/* Evidence Matching Tab (Agent 6) */}
                 <TabsContent value="matching" className="mt-0">

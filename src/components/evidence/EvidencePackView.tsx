@@ -504,8 +504,7 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
                     {/* Policy Reference */}
                     <Card className="border-blue-200 bg-blue-50">
                         <CardHeader className="pb-2">
-                            <CardTitle className="text-base font-semibold text-blue-900 flex items-center gap-2">
-                                <Scale className="h-4 w-4 text-blue-600" />
+                            <CardTitle className="text-base font-semibold text-blue-900">
                                 Policy Reference
                             </CardTitle>
                         </CardHeader>

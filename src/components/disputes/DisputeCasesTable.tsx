@@ -188,7 +188,6 @@ export function DisputeCasesTable() {
                     <TableHead className="text-gray-900 font-semibold">Case Number</TableHead>
                     <TableHead className="text-gray-900 font-semibold">Claim ID</TableHead>
                     <TableHead className="text-gray-900 font-semibold">Status</TableHead>
-                    <TableHead className="text-gray-900 font-semibold">Filing Status</TableHead>
                     <TableHead className="text-gray-900 font-semibold">Amount</TableHead>
                     <TableHead className="text-gray-900 font-semibold">Amazon Case ID</TableHead>
                     <TableHead className="text-gray-900 font-semibold">Retries</TableHead>
@@ -215,9 +214,6 @@ export function DisputeCasesTable() {
                       </TableCell>
                       <TableCell>
                         {getStatusBadge(caseItem.status || 'unknown')}
-                      </TableCell>
-                      <TableCell>
-                        {getFilingStatusBadge(caseItem.filing_status)}
                       </TableCell>
                       <TableCell>
                         <span className="font-semibold text-gray-900">
