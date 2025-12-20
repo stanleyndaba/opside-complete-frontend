@@ -2461,7 +2461,7 @@ export default function Recoveries() {
                                       {(() => {
                                         const doubleDipWarning = checkDoubleDip(claim, rankedClaims);
                                         return (
-                                          <div className="flex items-center gap-2">
+                                          <div className="flex flex-col items-start gap-1">
                                             <Badge className={getStatusColor(claim.status)}>
                                               {claim.status}
                                             </Badge>
