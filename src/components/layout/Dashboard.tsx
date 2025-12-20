@@ -14,6 +14,7 @@ import { recoveryApi } from '@/lib/recoveryApi';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { useNotifications } from '@/components/providers/NotificationsProvider';
 import { formatDistanceToNow } from 'date-fns';
 
@@ -74,37 +75,7 @@ export function Dashboard() {
   const { toast } = useToast();
   const { notifications, unreadCount } = useNotifications();
 
-  // Currency selector state
-  const [selectedCurrency, setSelectedCurrency] = useState<string>('USD');
-  const currencies = [
-    { code: 'USD', symbol: '$', name: 'US Dollar', rate: 1 },
-    { code: 'ZAR', symbol: 'R', name: 'South African Rand', rate: 18.5 },
-    { code: 'EUR', symbol: '€', name: 'Euro', rate: 0.92 },
-    { code: 'GBP', symbol: '£', name: 'British Pound', rate: 0.79 },
-    { code: 'INR', symbol: '₹', name: 'Indian Rupee', rate: 83.0 },
-    { code: 'JPY', symbol: '¥', name: 'Japanese Yen', rate: 149.0 },
-    { code: 'CNY', symbol: '¥', name: 'Chinese Yuan', rate: 7.24 },
-    { code: 'AUD', symbol: 'A$', name: 'Australian Dollar', rate: 1.53 },
-    { code: 'CAD', symbol: 'C$', name: 'Canadian Dollar', rate: 1.36 },
-    { code: 'CHF', symbol: 'Fr', name: 'Swiss Franc', rate: 0.88 }
-  ];
-
-  // Convert currency function
-  const convertCurrency = (amount: number, fromCurrency: string = 'USD') => {
-    const fromRate = currencies.find(c => c.code === fromCurrency)?.rate || 1;
-    const toRate = currencies.find(c => c.code === selectedCurrency)?.rate || 1;
-    return (amount / fromRate) * toRate;
-  };
-
-  // Format currency with selected currency
-  const formatCurrencyWithSelection = useCallback((amount: number, originalCurrency: string = 'USD') => {
-    const convertedAmount = convertCurrency(amount, originalCurrency);
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: selectedCurrency,
-      currencyDisplay: 'symbol'
-    }).format(convertedAmount);
-  }, [selectedCurrency]);
+  const { formatCurrency: formatCurrencyWithSelection } = useCurrency();
   // Phase 3: Detection statistics
   const [detectionStats, setDetectionStats] = useState<{
     totalDetections: number;
@@ -609,22 +580,6 @@ export function Dashboard() {
           <div className="relative pt-24">
             <div className="relative w-full max-w-full mx-auto px-6 md:px-10 lg:px-12 pb-10 text-gray-900 space-y-8">
               <div className="rounded-2xl bg-white border border-gray-200 shadow-sm p-6 md:p-8">
-                <div className="mb-4">
-                  <div className="flex items-center justify-end">
-                    <Select value={selectedCurrency} onValueChange={setSelectedCurrency}>
-                      <SelectTrigger className="w-[140px] bg-white border-gray-300">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {currencies.map(curr => (
-                          <SelectItem key={curr.code} value={curr.code}>
-                            {curr.symbol} {curr.code}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 h-full">
                   <div className="lg:col-span-2 space-y-8">
                     <Card className="bg-white border border-gray-200 text-gray-900 shadow-sm">

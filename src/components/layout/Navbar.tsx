@@ -7,6 +7,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { NotificationBell } from './NotificationBell';
+import { useCurrency, currencies } from '@/components/providers/CurrencyProvider';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 interface NavbarProps {
   className?: string;
   sidebarCollapsed?: boolean;
@@ -79,6 +81,7 @@ export function Navbar({
   const [showInviteForm, setShowInviteForm] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
   const [linkCopied, setLinkCopied] = useState(false);
+  const { selectedCurrency, setSelectedCurrency } = useCurrency();
 
   // Generate referral link (placeholder - in production this would come from backend)
   const referralLink = typeof window !== 'undefined'
@@ -306,12 +309,25 @@ export function Navbar({
         </div>
       </div>
       {/* Right side - Connect Platform button and Sandbox badge */}
-      <div className="flex items-center gap-4 ml-auto">
+      <div className="flex items-center gap-0 bg-transparent border border-gray-200 rounded-md overflow-hidden">
+        <Select value={selectedCurrency} onValueChange={setSelectedCurrency}>
+          <SelectTrigger className="h-9 w-20 bg-transparent border-0 text-[#36454F] focus:ring-0 shadow-none px-2 text-xs font-medium">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {currencies.map(curr => (
+              <SelectItem key={curr.code} value={curr.code} className="text-xs">
+                {curr.symbol} {curr.code}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <div className="h-4 w-px bg-gray-300 mx-0" />
         <Button
           onClick={() => navigate('/integrations-hub')}
           variant="ghost"
           className={cn(
-            "flex items-center gap-2 h-9 px-3",
+            "flex items-center gap-2 h-9 px-3 rounded-none",
             isDashboard ? 'bg-transparent text-[#36454F] hover:bg-white/10 hover:text-[#36454F]' :
               isTransparent ? 'text-[#36454F] hover:text-[#36454F] hover:bg-white/10' : 'text-[#36454F] hover:text-[#36454F]'
           )}
@@ -319,97 +335,99 @@ export function Navbar({
           <Link2 className={cn("h-4 w-4 text-[#36454F]")} />
           <span className="hidden sm:inline text-[#36454F]">Connect</span>
         </Button>
-        {/* Language selector removed */}
       </div>
+      {/* Language selector removed */}
     </div>
+  </div>
 
-    {/* Referral Popup */}
-    <Dialog open={showReferralPopup} onOpenChange={setShowReferralPopup}>
-      <DialogContent className="max-w-sm bg-emerald-50/95 border border-emerald-200/80 shadow-lg rounded-lg p-6">
-        <div className="flex flex-col items-center gap-4 text-center">
-          <div className="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100">
-            <Gift className="h-6 w-6 text-emerald-600" />
-          </div>
-          <div className="space-y-2">
-            <h3 className="text-lg font-semibold text-emerald-900">
-              No commission on referrals
-            </h3>
-            <p className="text-sm text-emerald-700">
-              Bring new sellers to Clario and keep 100% of their recovered funds.
-            </p>
-          </div>
-          <Button
-            onClick={() => {
-              setShowReferralPopup(false);
-              setShowInviteForm(true);
-            }}
-            className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-md transition-colors shadow-md hover:shadow-lg"
-          >
-            Invite seller friend
-          </Button>
+  {/* Referral Popup */ }
+  <Dialog open={showReferralPopup} onOpenChange={setShowReferralPopup}>
+    <DialogContent className="max-w-sm bg-emerald-50/95 border border-emerald-200/80 shadow-lg rounded-lg p-6">
+      <div className="flex flex-col items-center gap-4 text-center">
+        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100">
+          <Gift className="h-6 w-6 text-emerald-600" />
         </div>
-      </DialogContent>
-    </Dialog>
-
-    {/* Invite Form Popup */}
-    <Dialog open={showInviteForm} onOpenChange={setShowInviteForm}>
-      <DialogContent className="max-w-md bg-white border border-gray-200 shadow-lg rounded-lg p-6">
-        <div className="space-y-4">
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-1">Invite seller friend</h3>
-            <p className="text-sm text-gray-600">Send an invitation to join Clario</p>
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">Email address</label>
-            <Input
-              type="email"
-              placeholder="seller@example.com"
-              value={inviteEmail}
-              onChange={(e) => setInviteEmail(e.target.value)}
-              className="w-full border-gray-200"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">Referral link</label>
-            <div className="flex items-center gap-2 p-3 bg-gray-50 border border-gray-200 rounded-md">
-              <span className="flex-1 text-sm text-gray-700 break-all">{shortLink}</span>
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(referralLink);
-                  setLinkCopied(true);
-                  setTimeout(() => setLinkCopied(false), 2000);
-                }}
-                className="flex items-center gap-1.5 px-2 py-1 text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded transition-colors"
-              >
-                {linkCopied ? (
-                  <>
-                    <Check className="h-3.5 w-3.5 text-emerald-600" />
-                    <span className="text-emerald-600">Copied</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="h-3.5 w-3.5" />
-                    <span>Copy</span>
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
-
-          <Button
-            onClick={() => {
-              // TODO: Implement send invite functionality
-              setShowInviteForm(false);
-              setInviteEmail('');
-            }}
-            className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-md transition-colors"
-          >
-            Send
-          </Button>
+        <div className="space-y-2">
+          <h3 className="text-lg font-semibold text-emerald-900">
+            No commission on referrals
+          </h3>
+          <p className="text-sm text-emerald-700">
+            Bring new sellers to Clario and keep 100% of their recovered funds.
+          </p>
         </div>
-      </DialogContent>
-    </Dialog>
-  </header>;
+        <Button
+          onClick={() => {
+            setShowReferralPopup(false);
+            setShowInviteForm(true);
+          }}
+          className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-md transition-colors shadow-md hover:shadow-lg"
+        >
+          Invite seller friend
+        </Button>
+      </div>
+    </DialogContent>
+  </Dialog>
+
+  {/* Invite Form Popup */ }
+  <Dialog open={showInviteForm} onOpenChange={setShowInviteForm}>
+    <DialogContent className="max-w-md bg-white border border-gray-200 shadow-lg rounded-lg p-6">
+      <div className="space-y-4">
+        <div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-1">Invite seller friend</h3>
+          <p className="text-sm text-gray-600">Send an invitation to join Clario</p>
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-gray-700">Email address</label>
+          <Input
+            type="email"
+            placeholder="seller@example.com"
+            value={inviteEmail}
+            onChange={(e) => setInviteEmail(e.target.value)}
+            className="w-full border-gray-200"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-gray-700">Referral link</label>
+          <div className="flex items-center gap-2 p-3 bg-gray-50 border border-gray-200 rounded-md">
+            <span className="flex-1 text-sm text-gray-700 break-all">{shortLink}</span>
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(referralLink);
+                setLinkCopied(true);
+                setTimeout(() => setLinkCopied(false), 2000);
+              }}
+              className="flex items-center gap-1.5 px-2 py-1 text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded transition-colors"
+            >
+              {linkCopied ? (
+                <>
+                  <Check className="h-3.5 w-3.5 text-emerald-600" />
+                  <span className="text-emerald-600">Copied</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="h-3.5 w-3.5" />
+                  <span>Copy</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+
+        <Button
+          onClick={() => {
+            // TODO: Implement send invite functionality
+            setShowInviteForm(false);
+            setInviteEmail('');
+          }}
+          className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-md transition-colors"
+        >
+          Send
+        </Button>
+      </div>
+    </DialogContent>
+  </Dialog>
+  </header>
+  );
 }

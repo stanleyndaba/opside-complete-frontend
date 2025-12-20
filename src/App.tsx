@@ -8,6 +8,7 @@ import NotificationsProvider from '@/components/providers/NotificationsProvider'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import DemoOverlay from "@/components/demo/DemoOverlay";
 import AdminOnly from "@/components/routes/AdminOnly";
+import { CurrencyProvider } from '@/components/providers/CurrencyProvider';
 
 // Route-level code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -90,73 +91,75 @@ const RouteSkeleton = () => (
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <NotificationsProvider>
-          <Suspense fallback={<RouteSkeleton />}>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/app" element={<Dashboard />} />
-              <Route path="/dashboard" element={<Dashboard />} /> {/* Backend redirect compatibility */}
-              <Route path="/sync" element={<Sync />} />
-              {/* Market/Stocks pages removed for FBA MVP focus */}
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/integrations-hub" element={<IntegrationsHub />} />
-              <Route path="/integrations/reconnect/:provider" element={<ReconnectProvider />} />
-              <Route path="/reports" element={<Reports />} />
-              <Route path="/upcoming-payments" element={<UpcomingPayments />} />
-              <Route path="/admin" element={<Admin />} />
-              <Route path="/admin/users-integrations" element={<AdminOnly><AdminUsersAndIntegrations /></AdminOnly>} />
-              <Route path="/admin/amazon-auth-test" element={<AdminOnly><AmazonAuthTest /></AdminOnly>} />
-              <Route path="/test/agent1" element={<Agent1Test />} />
-              <Route path="/revenue-model" element={<AdminOnly><RevenueModel /></AdminOnly>} />
-              <Route path="/recoveries" element={<Recoveries />} />
-              <Route path="/recoveries/:caseId" element={<CaseDetail />} />
-              <Route path="/recoveries/:caseId/resolve" element={<ResolveCase />} />
-              <Route path="/smart-inventory-sync" element={<SmartInventorySync />} />
-              <Route path="/evidence-locker" element={<EvidenceLocker />} />
-              <Route path="/documents/:id" element={<DocumentDetail />} />
-              <Route path="/billing" element={<Billing />} />
-              <Route path="/billing/invoice/:id" element={<InvoiceDetail />} />
-              <Route path="/team" element={<TeamManagement />} />
-              <Route path="/export-center" element={<ExportCenter />} />
-              <Route path="/notifications" element={<NotificationHub />} />
-              <Route path="/learning-insights" element={<LearningInsights />} />
-              <Route path="/api-access" element={<ApiAccess />} />
-              <Route path="/developer-api" element={<ApiLanding />} />
-              <Route path="/help" element={<Help />} />
-              <Route path="/whats-new" element={<WhatsNew />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/careers" element={<Careers />} />
-              <Route path="/docs" element={<Docs />} />
-              <Route path="/privacy" element={<Privacy />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/evidence-onboarding" element={<EvidenceOnboarding />} />
-              <Route path="/evidence-search" element={<EvidenceSearch />} />
+      <CurrencyProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <NotificationsProvider>
+            <Suspense fallback={<RouteSkeleton />}>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/app" element={<Dashboard />} />
+                <Route path="/dashboard" element={<Dashboard />} /> {/* Backend redirect compatibility */}
+                <Route path="/sync" element={<Sync />} />
+                {/* Market/Stocks pages removed for FBA MVP focus */}
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/integrations-hub" element={<IntegrationsHub />} />
+                <Route path="/integrations/reconnect/:provider" element={<ReconnectProvider />} />
+                <Route path="/reports" element={<Reports />} />
+                <Route path="/upcoming-payments" element={<UpcomingPayments />} />
+                <Route path="/admin" element={<Admin />} />
+                <Route path="/admin/users-integrations" element={<AdminOnly><AdminUsersAndIntegrations /></AdminOnly>} />
+                <Route path="/admin/amazon-auth-test" element={<AdminOnly><AmazonAuthTest /></AdminOnly>} />
+                <Route path="/test/agent1" element={<Agent1Test />} />
+                <Route path="/revenue-model" element={<AdminOnly><RevenueModel /></AdminOnly>} />
+                <Route path="/recoveries" element={<Recoveries />} />
+                <Route path="/recoveries/:caseId" element={<CaseDetail />} />
+                <Route path="/recoveries/:caseId/resolve" element={<ResolveCase />} />
+                <Route path="/smart-inventory-sync" element={<SmartInventorySync />} />
+                <Route path="/evidence-locker" element={<EvidenceLocker />} />
+                <Route path="/documents/:id" element={<DocumentDetail />} />
+                <Route path="/billing" element={<Billing />} />
+                <Route path="/billing/invoice/:id" element={<InvoiceDetail />} />
+                <Route path="/team" element={<TeamManagement />} />
+                <Route path="/export-center" element={<ExportCenter />} />
+                <Route path="/notifications" element={<NotificationHub />} />
+                <Route path="/learning-insights" element={<LearningInsights />} />
+                <Route path="/api-access" element={<ApiAccess />} />
+                <Route path="/developer-api" element={<ApiLanding />} />
+                <Route path="/help" element={<Help />} />
+                <Route path="/whats-new" element={<WhatsNew />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/careers" element={<Careers />} />
+                <Route path="/docs" element={<Docs />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/terms" element={<Terms />} />
+                <Route path="/evidence-onboarding" element={<EvidenceOnboarding />} />
+                <Route path="/evidence-search" element={<EvidenceSearch />} />
 
-              {/* Auth & OAuth Routes */}
-              <Route path="/auth/callback" element={<OAuthCallback />} />
-              <Route path="/auth/callback/integrations-hub" element={<OAuthCallbackRedirect />} />
-              <Route path="/auth/success" element={<OAuthSuccess />} />
-              <Route path="/api/v1/integrations/amazon/callback" element={<OAuthCallback />} />
-              <Route path="/stripe/callback" element={<StripeCallback />} />
+                {/* Auth & OAuth Routes */}
+                <Route path="/auth/callback" element={<OAuthCallback />} />
+                <Route path="/auth/callback/integrations-hub" element={<OAuthCallbackRedirect />} />
+                <Route path="/auth/success" element={<OAuthSuccess />} />
+                <Route path="/api/v1/integrations/amazon/callback" element={<OAuthCallback />} />
+                <Route path="/stripe/callback" element={<StripeCallback />} />
 
-              {/* Shock & Awe Flow Routes */}
-              <Route path="/auth/amazon-sandbox" element={<AmazonSandbox />} />
-              <Route path="/auth/analyzing" element={<AnalyzingScreen />} />
-              <Route path="/auth/gmail-sandbox" element={<OAuthProviderSandbox />} />
-              <Route path="/auth/outlook-sandbox" element={<OAuthProviderSandbox />} />
-              <Route path="/auth/gdrive-sandbox" element={<OAuthProviderSandbox />} />
-              <Route path="/auth/dropbox-sandbox" element={<OAuthProviderSandbox />} />
+                {/* Shock & Awe Flow Routes */}
+                <Route path="/auth/amazon-sandbox" element={<AmazonSandbox />} />
+                <Route path="/auth/analyzing" element={<AnalyzingScreen />} />
+                <Route path="/auth/gmail-sandbox" element={<OAuthProviderSandbox />} />
+                <Route path="/auth/outlook-sandbox" element={<OAuthProviderSandbox />} />
+                <Route path="/auth/gdrive-sandbox" element={<OAuthProviderSandbox />} />
+                <Route path="/auth/dropbox-sandbox" element={<OAuthProviderSandbox />} />
 
-              {/* 404 Catch All */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-            <DemoOverlay />
-          </Suspense>
-        </NotificationsProvider>
-      </BrowserRouter>
+                {/* 404 Catch All */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+              <DemoOverlay />
+            </Suspense>
+          </NotificationsProvider>
+        </BrowserRouter>
+      </CurrencyProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

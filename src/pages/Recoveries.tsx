@@ -14,7 +14,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { format, subDays, startOfYear, startOfQuarter } from 'date-fns';
-import { CalendarIcon, Search, MoreHorizontal, FileText, Eye, RefreshCw, Info, AlertTriangle, X, CheckCircle2, Clock, ExternalLink, ChevronDown, ChevronUp, Forward, Upload } from 'lucide-react';
+import { CalendarIcon, Search, MoreHorizontal, FileText, Eye, RefreshCw, Info, AlertTriangle, X, CheckCircle2, Clock, ExternalLink, ChevronDown, ChevronUp, ArrowUpFromLine, Upload } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
@@ -1952,25 +1952,6 @@ export default function Recoveries() {
             <div className="mb-8">
               <div className="flex items-center justify-between mb-2">
                 <h1 className="text-xl text-gray-900 font-medium">Claims and Dispute Cases</h1>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button className="flex items-center gap-1 text-sm text-gray-700 hover:text-gray-900 bg-transparent border-0 cursor-pointer">
-                      {currencies.find(c => c.code === selectedCurrency)?.symbol} {selectedCurrency}
-                      <ChevronDown className="h-4 w-4" />
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="bg-white">
-                    {currencies.map(curr => (
-                      <DropdownMenuItem
-                        key={curr.code}
-                        onClick={() => setSelectedCurrency(curr.code)}
-                        className={selectedCurrency === curr.code ? 'bg-gray-100' : ''}
-                      >
-                        {curr.symbol} {curr.code}
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
               </div>
               <p className="text-sm text-gray-500">Track, manage, and resolve FBA claims to recover lost revenue</p>
               <div className="mt-4 flex items-center gap-2">
@@ -2185,22 +2166,6 @@ export default function Recoveries() {
                           <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" onClick={() => setQuickDateRange('all')}>All Time</Button>
                         </div>
 
-                        {/* Export Casebook Button */}
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="bg-blue-600 text-white border-blue-600 hover:bg-blue-700"
-                          onClick={() => {
-                            const exportRange = dateRange?.from && dateRange?.to
-                              ? { from: dateRange.from, to: dateRange.to }
-                              : null;
-                            generateCasebookPDF(rankedClaims, exportRange);
-                            toast({ title: '📋 Casebook Generated', description: 'Press Ctrl+P to save as PDF for audits and accounting.' });
-                          }}
-                        >
-                          <Forward className="h-4 w-4 mr-2" />
-                          Share
-                        </Button>
 
                         {/* Custom Date Range */}
                         <Popover>
@@ -2271,6 +2236,23 @@ export default function Recoveries() {
                             <SelectItem value="synced">Synced from Amazon</SelectItem>
                           </SelectContent>
                         </Select>
+
+                        {/* Share Button */}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="bg-blue-600 text-white border-blue-600 hover:bg-blue-700"
+                          onClick={() => {
+                            const exportRange = dateRange?.from && dateRange?.to
+                              ? { from: dateRange.from, to: dateRange.to }
+                              : null;
+                            generateCasebookPDF(rankedClaims, exportRange);
+                            toast({ title: '📋 Casebook Generated', description: 'Press Ctrl+P to save as PDF for audits and accounting.' });
+                          }}
+                        >
+                          <ArrowUpFromLine className="h-4 w-4 mr-2" />
+                          Share
+                        </Button>
 
                         {/* Confidence Filter (Phase 3) - only show when filtering by detected */}
                         {filterSource === 'detected' && (
