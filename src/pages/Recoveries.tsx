@@ -2311,6 +2311,7 @@ export default function Recoveries() {
                                 <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Evidence</TableHead>
                                 <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Details</TableHead>
                                 <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Status</TableHead>
+                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Duplicate Warning</TableHead>
                                 <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Days Remaining</TableHead>
                                 <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Guaranteed Amount</TableHead>
                                 <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Expected Payout</TableHead>
@@ -2421,16 +2422,14 @@ export default function Recoveries() {
                                       </div>
                                     </TableCell>
                                     <TableCell className="py-2">
+                                      <Badge className={getStatusColor(claim.status)}>
+                                        {claim.status}
+                                      </Badge>
+                                    </TableCell>
+                                    <TableCell className="py-2">
                                       {(() => {
                                         const doubleDipWarning = checkDoubleDip(claim, rankedClaims);
-                                        return (
-                                          <div className="flex flex-col items-start gap-1">
-                                            <Badge className={getStatusColor(claim.status)}>
-                                              {claim.status}
-                                            </Badge>
-                                            {doubleDipWarning && <DoubleDipBadge warning={doubleDipWarning} />}
-                                          </div>
-                                        );
+                                        return doubleDipWarning ? <DoubleDipBadge warning={doubleDipWarning} /> : <span className="text-xs text-gray-400">—</span>;
                                       })()}
                                     </TableCell>
                                     <TableCell className="py-2">
