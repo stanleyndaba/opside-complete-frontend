@@ -1062,7 +1062,7 @@ export default function Sync() {
     const html = `<!DOCTYPE html>
 <html>
 <head>
-  <title>Opside Sync Logs - ${exportDate}</title>
+  <title>Opside | Sync Logs - ${exportDate}</title>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 40px; max-width: 1200px; margin: 0 auto; }
     h1 { color: #111827; font-size: 24px; margin-bottom: 8px; }
@@ -1074,7 +1074,9 @@ export default function Sync() {
   </style>
 </head>
 <body>
-  <h1>📋 Opside Sync Logs</h1>
+  <div style="margin-bottom: 20px;">
+    <img src="/logoimagetwo.png" alt="Opside Logo" style="height: 48px; object-fit: contain;" />
+  </div>
   <div class="meta">
     <span><strong>Exported:</strong> ${exportDate}</span>
     <span><strong>Sync ID:</strong> ${syncId || 'N/A'}</span>
