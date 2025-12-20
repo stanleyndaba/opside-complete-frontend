@@ -2069,51 +2069,6 @@ export default function Recoveries() {
               </div>
             </div>
 
-            {/* Key Metrics Strip - Modern Inline Stats */}
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mb-8 py-3 px-4 bg-gray-50 rounded-lg border border-gray-100">
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-500">Claims Identified</span>
-                <span className="text-base font-semibold text-gray-700">
-                  {(() => {
-                    const value = detectionStats?.total_anomalies ?? detectionStats?.totalDetections ?? (metrics ? metrics.totalClaimsFound : keyMetrics.totalClaimsFound);
-                    return value > 0 ? value : '0';
-                  })()}
-                </span>
-              </div>
-
-              <span className="hidden sm:block text-gray-300">|</span>
-
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-500">Recovery Value</span>
-                <span className="text-base font-semibold text-gray-700">
-                  {formatCurrency(
-                    detectionStats?.total_value ??
-                    (metrics ? metrics.valueInProgress : keyMetrics.valueInProgress)
-                  )}
-                </span>
-              </div>
-
-              <span className="hidden sm:block text-gray-300">|</span>
-
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-500">In Progress</span>
-                <span className="text-base font-semibold text-amber-600">
-                  {metrics ? metrics.inProgress : keyMetrics.currentlyInProgress}
-                </span>
-                {detectionStats?.expired_count > 0 && (
-                  <span className="text-xs text-red-500">({detectionStats.expired_count} expired)</span>
-                )}
-              </div>
-
-              <span className="hidden sm:block text-gray-300">|</span>
-
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-500">Approval Rate</span>
-                <span className="text-base font-semibold text-gray-700">
-                  {metrics ? Math.round(metrics.successRate30d) : keyMetrics.successRate.toFixed(0)}%
-                </span>
-              </div>
-            </div>
 
             {/* Tabs for Claims, Evidence Matching, and Cases */}
             <div className="mb-6">
