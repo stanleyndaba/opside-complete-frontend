@@ -2841,34 +2841,54 @@ export default function Recoveries() {
                 {/* File Anyway Confirmation Modal for Medium-Strength Claims */}
                 <Dialog open={fileAnywayModalOpen} onOpenChange={setFileAnywayModalOpen}>
                   <DialogContent className="bg-white border-gray-200 text-gray-700 max-w-md">
-                    <DialogHeader>
-                      <DialogTitle className="flex items-center gap-2">
-                        <AlertTriangle className="h-5 w-5 text-amber-500" />
-                        Medium Strength Claim
+                    <DialogHeader className="border-b border-gray-200 pb-3">
+                      <DialogTitle className="text-base font-semibold text-gray-900">
+                        Claim Assessment Review
                       </DialogTitle>
-                      <DialogDescription className="text-gray-600">
-                        This claim has a lower strength score. Filing weak claims may affect your Amazon account standing.
+                      <DialogDescription className="text-xs text-gray-600 mt-1">
+                        Claim strength analysis and filing recommendation
                       </DialogDescription>
                     </DialogHeader>
                     {claimToFile && (() => {
                       const strength = calculateClaimStrength(claimToFile);
                       return (
                         <div className="space-y-4 py-4">
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm font-medium text-gray-700">Claim Strength</span>
-                            <StrengthBadge strength={strength} />
-                          </div>
-                          <div className="space-y-2 bg-gray-50 p-3 rounded-lg">
-                            <div className="text-xs font-semibold text-gray-600 mb-2">Score Breakdown</div>
-                            {strength.factors.map((f, i) => (
-                              <div key={i} className="flex justify-between text-sm">
-                                <span className="text-gray-600">{f.label}</span>
-                                <span className="text-gray-900">{f.value}/{f.max} <span className="text-gray-400">({f.reason})</span></span>
+                          {/* Assessment Summary */}
+                          <div className="border border-gray-200 rounded-lg overflow-hidden">
+                            <div className="bg-gray-50 border-b border-gray-200 px-3 py-2">
+                              <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Claim Strength Assessment</h4>
+                            </div>
+                            <div className="bg-white px-3 py-2">
+                              <div className="flex justify-between items-center">
+                                <span className="text-xs text-gray-600">Overall Score</span>
+                                <span className="text-xs font-semibold text-gray-900">{strength.score}/100</span>
                               </div>
-                            ))}
+                            </div>
                           </div>
-                          <div className="bg-gray-100 rounded-lg p-3 text-sm text-gray-700">
-                            <strong>Tip:</strong> Wait for more evidence or consider if this claim is worth the risk to your account.
+
+                          {/* Detailed Breakdown */}
+                          <div className="border border-gray-200 rounded-lg overflow-hidden">
+                            <div className="bg-gray-50 border-b border-gray-200 px-3 py-2">
+                              <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Component Analysis</h4>
+                            </div>
+                            <div className="bg-white divide-y divide-gray-100">
+                              {strength.factors.map((f, i) => (
+                                <div key={i} className="flex justify-between items-center px-3 py-2">
+                                  <span className="text-xs text-gray-600">{f.label}</span>
+                                  <div className="text-right">
+                                    <span className="text-xs font-medium text-gray-900">{f.value}/{f.max}</span>
+                                    <span className="text-[10px] text-gray-500 ml-2">{f.reason}</span>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Advisory Note */}
+                          <div className="bg-gray-50 rounded-lg px-3 py-2">
+                            <p className="text-xs text-gray-700">
+                              <span className="font-semibold">Advisory:</span> Consider obtaining additional supporting evidence before filing to strengthen claim validity and maintain account standing.
+                            </p>
                           </div>
                         </div>
                       );
