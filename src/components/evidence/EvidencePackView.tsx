@@ -429,95 +429,78 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
     return (
         <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
             <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white">
-                <DialogHeader>
-                    <DialogTitle className="flex items-center gap-2">
-                        <FileText className="h-5 w-5 text-blue-500" />
-                        Evidence Pack
+                <DialogHeader className="border-b border-gray-200 pb-3">
+                    <DialogTitle className="text-base font-semibold text-gray-900">
+                        Evidence Documentation Package
                     </DialogTitle>
-                    <DialogDescription className="text-gray-600">
-                        Structured dossier for claim {claim.claim_number || claim.id.slice(0, 8)}
+                    <DialogDescription className="text-xs text-gray-600 mt-1">
+                        Claim Reference: {claim.claim_number || claim.id.slice(0, 12)}
                     </DialogDescription>
                 </DialogHeader>
 
                 <div className="space-y-6 py-4">
-                    {/* Cover Section */}
-                    <Card className="border-gray-200 bg-gray-50">
-                        <CardHeader className="pb-2">
-                            <CardTitle className="text-lg font-semibold text-gray-900">Claim Summary</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                <div>
-                                    <div className="text-xs text-gray-500 uppercase tracking-wide">Claim Type</div>
-                                    <div className="text-sm font-semibold text-gray-900 mt-1">{claimType}</div>
+                    {/* Summary Information */}
+                    <div className="border border-gray-200 rounded-lg overflow-hidden">
+                        <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
+                            <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Claim Summary</h4>
+                        </div>
+                        <div className="bg-white">
+                            <div className="divide-y divide-gray-100">
+                                <div className="flex justify-between items-center px-4 py-2.5">
+                                    <span className="text-xs text-gray-600">Claim Type</span>
+                                    <span className="text-xs font-medium text-gray-900">{claimType}</span>
                                 </div>
-                                <div>
-                                    <div className="text-xs text-gray-500 uppercase tracking-wide">Status</div>
-                                    <Badge className={`mt-1 ${getStatusColor(claim.status)}`}>{claim.status}</Badge>
+                                <div className="flex justify-between items-center px-4 py-2.5">
+                                    <span className="text-xs text-gray-600">Status</span>
+                                    <span className="text-xs font-medium text-gray-900">{claim.status}</span>
                                 </div>
-                                <div>
-                                    <div className="text-xs text-gray-500 uppercase tracking-wide">Amount</div>
-                                    <div className="text-lg font-bold text-emerald-600 mt-1">{formatCurrency(amount)}</div>
+                                <div className="flex justify-between items-center px-4 py-2.5">
+                                    <span className="text-xs text-gray-600">Amount</span>
+                                    <span className="text-xs font-semibold text-gray-900">{formatCurrency(amount)}</span>
                                 </div>
                                 {claimDate && (
-                                    <div>
-                                        <div className="text-xs text-gray-500 uppercase tracking-wide">Discovery Date</div>
-                                        <div className="text-sm font-medium text-gray-900 mt-1">{format(new Date(claimDate), 'MMM dd, yyyy')}</div>
+                                    <div className="flex justify-between items-center px-4 py-2.5">
+                                        <span className="text-xs text-gray-600">Discovery Date</span>
+                                        <span className="text-xs font-medium text-gray-900">{format(new Date(claimDate), 'MMM dd, yyyy')}</span>
                                     </div>
                                 )}
                                 {claim.sku && (
-                                    <div>
-                                        <div className="text-xs text-gray-500 uppercase tracking-wide">SKU</div>
-                                        <div className="text-sm font-mono text-gray-900 mt-1">{claim.sku}</div>
+                                    <div className="flex justify-between items-center px-4 py-2.5">
+                                        <span className="text-xs text-gray-600">SKU</span>
+                                        <span className="text-xs font-mono text-gray-900">{claim.sku}</span>
                                     </div>
                                 )}
                                 {claim.asin && (
-                                    <div>
-                                        <div className="text-xs text-gray-500 uppercase tracking-wide">ASIN</div>
-                                        <div className="text-sm font-mono text-gray-900 mt-1">{claim.asin}</div>
+                                    <div className="flex justify-between items-center px-4 py-2.5">
+                                        <span className="text-xs text-gray-600">ASIN</span>
+                                        <span className="text-xs font-mono text-gray-900">{claim.asin}</span>
                                     </div>
                                 )}
                             </div>
 
                             {claim.details && (
-                                <div className="mt-4 pt-4 border-t border-gray-200">
-                                    <div className="text-xs text-gray-500 uppercase tracking-wide">Details</div>
-                                    <p className="text-sm text-gray-700 mt-1">{claim.details}</p>
+                                <div className="border-t border-gray-100 px-4 py-3 bg-gray-50">
+                                    <div className="text-xs text-gray-600 font-medium mb-1">Details</div>
+                                    <p className="text-xs text-gray-700">{claim.details}</p>
                                 </div>
                             )}
-
-                            {highlights.length > 0 && (
-                                <div className="mt-4 pt-4 border-t border-gray-200">
-                                    <div className="text-xs text-gray-500 uppercase tracking-wide mb-2">Key Evidence Highlights</div>
-                                    <div className="flex flex-wrap gap-2">
-                                        {highlights.map((h, i) => (
-                                            <span key={i} className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs font-medium">
-                                                {h}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                        </CardContent>
-                    </Card>
+                        </div>
+                    </div>
 
                     {/* Order & Inventory Evidence */}
-                    <Card className="border-gray-200">
-                        <CardHeader className="pb-2">
-                            <CardTitle className="text-base font-semibold text-gray-900 flex items-center gap-2">
-                                <Package className="h-4 w-4 text-blue-500" />
-                                Order & Inventory Evidence
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
+                    <div className="border border-gray-200 rounded-lg overflow-hidden">
+                        <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
+                            <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Order & Inventory Evidence</h4>
+                        </div>
+                        <div className="bg-white">
                             {organizedDocs.orderDocs.length > 0 ? (
-                                <div className="space-y-2">
+                                <div className="divide-y divide-gray-100">
                                     {organizedDocs.orderDocs.map((doc, i) => (
-                                        <div key={doc.id || i} className="p-3 bg-gray-50 rounded-lg border border-gray-100">
+                                        <div key={doc.id || i} className="px-4 py-3">
                                             <div className="flex items-start justify-between">
                                                 <div className="flex-1">
-                                                    <div className="font-medium text-gray-900 text-sm">{doc.name}</div>
-                                                    <div className="text-xs text-gray-500 mt-1">
+                                                    <div className="text-xs font-medium text-gray-900">{doc.name}</div>
+                                                    <div className="text-[10px] text-gray-500 mt-1">
                                                         {doc.supplier && <span>Supplier: {doc.supplier} • </span>}
                                                         {doc.invoice && <span>Invoice: {doc.invoice} • </span>}
                                                         {doc.amount && <span>{formatCurrency(doc.amount)}</span>}
@@ -525,25 +508,25 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
                                                     {doc.extracted?.order_ids && doc.extracted.order_ids.length > 0 && (
                                                         <div className="flex flex-wrap gap-1 mt-2">
                                                             {doc.extracted.order_ids.map((id, j) => (
-                                                                <span key={j} className="px-1.5 py-0.5 bg-yellow-100 text-yellow-800 rounded text-[10px] font-medium">
+                                                                <span key={j} className="px-1.5 py-0.5 bg-gray-100 text-gray-700 rounded text-[10px] font-medium">
                                                                     Order #{id}
                                                                 </span>
                                                             ))}
                                                         </div>
                                                     )}
                                                 </div>
-                                                <Badge className={doc.confidence && doc.confidence >= 0.85 ? 'bg-emerald-100 text-emerald-700' : doc.confidence && doc.confidence >= 0.5 ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-700'}>
-                                                    {Math.round((doc.confidence || 0) * 100)}%
-                                                </Badge>
+                                                <span className="text-[10px] text-gray-600 ml-3">
+                                                    {Math.round((doc.confidence || 0) * 100)}% match
+                                                </span>
                                             </div>
                                         </div>
                                     ))}
                                 </div>
                             ) : (
-                                <p className="text-sm text-gray-500 italic text-center py-4">No order documents matched yet</p>
+                                <p className="text-xs text-gray-500 text-center py-6">No order documents matched yet</p>
                             )}
-                        </CardContent>
-                    </Card>
+                        </div>
+                    </div>
 
                     {/* Shipment & Delivery Evidence */}
                     <Card className="border-gray-200">
