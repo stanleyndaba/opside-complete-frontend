@@ -364,11 +364,11 @@ const Settings = () => {
             {/* Header Section */}
             <div className="flex items-start justify-between pb-4 border-b border-gray-100">
               <div>
-                <h2 className="text-2xl font-semibold text-gray-900 tracking-tight">
+                <h2 className="text-base font-semibold text-gray-900">
                   {sellerProfile.company_name || 'Seller Profile'}
                 </h2>
                 {sellerProfile.amazon_seller_id && (
-                  <p className="text-sm text-gray-500 mt-1 font-mono">
+                  <p className="text-xs text-gray-500 mt-1 font-mono">
                     {sellerProfile.amazon_seller_id}
                   </p>
                 )}
@@ -404,10 +404,10 @@ const Settings = () => {
               <>
                 {/* Account Information */}
                 <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
-                  <CardHeader className="bg-gray-50/50 border-b border-gray-100 py-4">
-                    <CardTitle className="text-base font-semibold text-gray-900">Account Information</CardTitle>
+                  <CardHeader className="bg-gray-50/50 border-b border-gray-200 pb-3">
+                    <CardTitle className="text-sm font-semibold text-gray-900">Account Information</CardTitle>
                   </CardHeader>
-                  <CardContent className="p-5">
+                  <CardContent className="p-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                       <div className="space-y-1">
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Company</p>
@@ -461,15 +461,15 @@ const Settings = () => {
                 {/* Marketplaces */}
                 {marketplaces.length > 0 && (
                   <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
-                    <CardHeader className="bg-gray-50/50 border-b border-gray-100 py-4">
+                    <CardHeader className="bg-gray-50/50 border-b border-gray-200 pb-3">
                       <div className="flex items-center justify-between">
-                        <CardTitle className="text-base font-semibold text-gray-900">Marketplaces</CardTitle>
+                        <CardTitle className="text-sm font-semibold text-gray-900">Marketplaces</CardTitle>
                         <Badge variant="secondary" className="bg-gray-100 text-gray-600 text-xs">
                           {marketplaces.length} active
                         </Badge>
                       </div>
                     </CardHeader>
-                    <CardContent className="p-5">
+                    <CardContent className="p-4">
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                         {marketplaces.map((marketplaceId: string) => {
                           const display = getMarketplaceDisplay(marketplaceId);
@@ -490,12 +490,12 @@ const Settings = () => {
 
                 {/* Connected Platforms */}
                 <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
-                  <CardHeader className="bg-gray-50/50 border-b border-gray-100 py-4">
-                    <CardTitle className="text-base font-semibold text-gray-900">Connected Platforms</CardTitle>
+                  <CardHeader className="bg-gray-50/50 border-b border-gray-200 pb-3">
+                    <CardTitle className="text-sm font-semibold text-gray-900">Connected Platforms</CardTitle>
                   </CardHeader>
                   <CardContent className="p-0 divide-y divide-gray-100">
                     {/* Amazon */}
-                    <div className="flex items-center justify-between p-5">
+                    <div className="flex items-center justify-between p-4">
                       <div className="flex items-center gap-4">
                         <div className="h-11 w-11 rounded-xl bg-[#FF9900]/10 flex items-center justify-center">
                           <img
@@ -541,7 +541,7 @@ const Settings = () => {
                     </div>
 
                     {/* Stripe */}
-                    <div className="flex items-center justify-between p-5">
+                    <div className="flex items-center justify-between p-4">
                       <div className="flex items-center gap-4">
                         <div className="h-11 w-11 rounded-xl bg-[#635BFF]/10 flex items-center justify-center">
                           <img
@@ -582,10 +582,10 @@ const Settings = () => {
                 {/* Sync Status */}
                 {(sellerProfile.last_sync_attempt_at || sellerProfile.last_sync_completed_at) && (
                   <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
-                    <CardHeader className="bg-gray-50/50 border-b border-gray-100 py-4">
-                      <CardTitle className="text-base font-semibold text-gray-900">Sync Status</CardTitle>
+                    <CardHeader className="bg-gray-50/50 border-b border-gray-200 pb-3">
+                      <CardTitle className="text-sm font-semibold text-gray-900">Sync Status</CardTitle>
                     </CardHeader>
-                    <CardContent className="p-5">
+                    <CardContent className="p-4">
                       <div className="space-y-4">
                         {sellerProfile.last_sync_completed_at && (
                           <div className="flex items-center justify-between">
@@ -630,12 +630,12 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-semibold text-gray-900">Billing Invoices</h2>
-              <p className="text-gray-600">View your ROI and manage billing preferences</p>
+              <h2 className="text-base font-semibold text-gray-900">Billing Invoices</h2>
+              <p className="text-xs text-gray-600">View your ROI and manage billing preferences</p>
             </div>
 
             <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
-              <CardContent className="p-6">
+              <CardContent className="p-4">
                 <div className="text-center py-8">
                   <CreditCard className="h-12 w-12 mx-auto text-gray-500 mb-4" />
                   <h3 className="text-lg font-medium mb-2 text-gray-900">Complete Billing Dashboard</h3>
@@ -651,9 +651,9 @@ const Settings = () => {
             </Card>
 
             <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
-              <CardHeader>
-                <CardTitle className="text-gray-900 font-medium">Auto-Claim (ACG)</CardTitle>
-                <CardDescription className="text-gray-600">Automatically submit approved claims once evidence is verified</CardDescription>
+              <CardHeader className="border-b border-gray-200 pb-3">
+                <CardTitle className="text-sm font-semibold text-gray-900">Auto-Claim (ACG)</CardTitle>
+                <CardDescription className="text-xs text-gray-600">Automatically submit approved claims once evidence is verified</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center justify-between">
@@ -675,18 +675,18 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-semibold text-gray-900">API Access</h2>
-              <p className="text-gray-600">Programmatic access to your Clario data for automation and integrations</p>
+              <h2 className="text-base font-semibold text-gray-900">API Access</h2>
+              <p className="text-xs text-gray-600">Programmatic access to your Clario data for automation and integrations</p>
             </div>
 
             <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
-              <CardContent className="p-6">
+              <CardContent className="p-4">
                 <div className="space-y-3">
-                  <p className="text-sm text-gray-600">
+                  <p className="text-xs text-gray-600">
                     Use Clario APIs to pull recovery data, sync evidence statuses, and reconcile payouts in your own systems.
                     Access tokens are scoped and can be rotated at any time. SDKs and examples are available.
                   </p>
-                  <ul className="list-disc pl-5 text-sm text-gray-600 space-y-1">
+                  <ul className="list-disc pl-5 text-xs text-gray-600 space-y-1">
                     <li>Recoveries, claims, and payout endpoints</li>
                     <li>Webhooks for status changes</li>
                     <li>Fine-grained API keys and scopes</li>
@@ -723,8 +723,8 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-semibold text-gray-900">Integrations</h2>
-              <p className="text-gray-600">Manage your platform connections and data sources</p>
+              <h2 className="text-base font-semibold text-gray-900">Integrations</h2>
+              <p className="text-xs text-gray-600">Manage your platform connections and data sources</p>
             </div>
             <div>
               <Button className="bg-emerald-500 hover:bg-emerald-400 text-white gap-2" onClick={() => navigate('/integrations-hub')}>
@@ -738,14 +738,14 @@ const Settings = () => {
               <CardContent className="space-y-4">
                 <div className="rounded-2xl border border-gray-200 bg-gray-50 divide-y divide-gray-200">
                   {activePlatforms.map(platform => (
-                    <div key={platform.id} className="flex flex-col gap-4 px-4 py-4 md:flex-row md:items-center md:justify-between">
+                    <div key={platform.id} className="flex flex-col gap-4 px-4 py-3 md:flex-row md:items-center md:justify-between">
                       <div className="flex items-center gap-3 flex-1">
                         <div className="h-12 w-12 rounded-xl bg-white flex items-center justify-center border border-gray-200 shadow-sm">
                           <img src={platform.icon} alt={`${platform.name} logo`} className="h-8 w-8 object-contain" />
                         </div>
                         <div>
-                          <p className="font-medium text-gray-900">{platform.name}</p>
-                          <p className="text-sm text-gray-600">{platform.description}</p>
+                          <p className="text-sm font-medium text-gray-900">{platform.name}</p>
+                          <p className="text-xs text-gray-600">{platform.description}</p>
                           <p className="text-xs text-gray-500 mt-1">Last sync: {platform.lastSync}</p>
                         </div>
                       </div>
@@ -765,20 +765,20 @@ const Settings = () => {
             </Card>
 
             <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
-              <CardHeader>
-                <CardTitle className="text-gray-900 font-medium">Coming</CardTitle>
-                <CardDescription className="text-gray-600">Coming soon to expand your recovery capabilities</CardDescription>
+              <CardHeader className="border-b border-gray-200 pb-3">
+                <CardTitle className="text-sm font-semibold text-gray-900">Coming</CardTitle>
+                <CardDescription className="text-xs text-gray-600">Coming soon to expand your recovery capabilities</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="rounded-2xl border border-gray-200 bg-gray-50 divide-y divide-gray-200">
                   {upcomingPlatforms.map(platform => (
-                    <div key={platform.id} className="flex flex-col gap-4 px-4 py-4 md:flex-row md:items-center md:justify-between opacity-80">
+                    <div key={platform.id} className="flex flex-col gap-4 px-4 py-3 md:flex-row md:items-center md:justify-between opacity-80">
                       <div className="flex items-center gap-3 flex-1">
                         <div className="h-12 w-12 rounded-xl bg-white flex items-center justify-center border border-gray-200 shadow-sm">
                           <img src={platform.icon} alt={`${platform.name} logo`} className="h-8 w-8 object-contain" />
                         </div>
                         <div>
-                          <p className="font-medium text-gray-900">{platform.name}</p>
+                          <p className="text-sm font-medium text-gray-900">{platform.name}</p>
                           <p className="text-sm text-gray-500">Coming soon</p>
                         </div>
                       </div>
@@ -804,18 +804,18 @@ const Settings = () => {
           <div className="space-y-6">
             {/* Header */}
             <div className="pb-4 border-b border-gray-100">
-              <h2 className="text-2xl font-semibold text-gray-900 tracking-tight">Notifications</h2>
-              <p className="text-sm text-gray-500 mt-1">Control how and when we communicate with you</p>
+              <h2 className="text-base font-semibold text-gray-900">Notifications</h2>
+              <p className="text-xs text-gray-500 mt-1">Control how and when we communicate with you</p>
             </div>
 
             {/* Email Notifications */}
             <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
-              <CardHeader className="bg-gray-50/50 border-b border-gray-100 py-4">
-                <CardTitle className="text-base font-semibold text-gray-900">Email Notifications</CardTitle>
+              <CardHeader className="bg-gray-50/50 border-b border-gray-200 pb-3">
+                <CardTitle className="text-sm font-semibold text-gray-900">Email Notifications</CardTitle>
               </CardHeader>
               <CardContent className="p-0 divide-y divide-gray-100">
                 {/* Recovery Alerts */}
-                <div className="flex items-center justify-between p-5">
+                <div className="flex items-center justify-between p-4">
                   <div className="flex items-center gap-3">
                     <div className="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center">
                       <CheckCircle className="h-5 w-5 text-gray-500" />
@@ -829,7 +829,7 @@ const Settings = () => {
                 </div>
 
                 {/* Monthly Summary */}
-                <div className="flex items-center justify-between p-5">
+                <div className="flex items-center justify-between p-4">
                   <div className="flex items-center gap-3">
                     <div className="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center">
                       <BarChart3 className="h-5 w-5 text-gray-500" />
@@ -843,7 +843,7 @@ const Settings = () => {
                 </div>
 
                 {/* Invoice Alerts */}
-                <div className="flex items-center justify-between p-5">
+                <div className="flex items-center justify-between p-4">
                   <div className="flex items-center gap-3">
                     <div className="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center">
                       <CreditCard className="h-5 w-5 text-gray-500" />
@@ -857,7 +857,7 @@ const Settings = () => {
                 </div>
 
                 {/* Product Updates */}
-                <div className="flex items-center justify-between p-5">
+                <div className="flex items-center justify-between p-4">
                   <div className="flex items-center gap-3">
                     <div className="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center">
                       <Bell className="h-5 w-5 text-gray-500" />
@@ -884,185 +884,184 @@ const Settings = () => {
           <div className="space-y-6">
             {/* Header */}
             <div className="pb-4 border-b border-gray-100">
-              <h2 className="text-2xl font-semibold text-gray-900 tracking-tight">Security</h2>
-              <p className="text-sm text-gray-500 mt-1">Manage your account security and access</p>
+              <h2 className="text-base font-semibold text-gray-900">Security</h2>
+              <p className="text-xs text-gray-500 mt-1">Manage your account security and access</p>
             </div>
 
             {/* Login History */}
             <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
-              <CardHeader className="bg-gray-50/50 border-b border-gray-100 py-4">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-base font-semibold text-gray-900">Login History</CardTitle>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="border-gray-200 text-gray-600 hover:bg-gray-50 text-xs"
-                    onClick={exportLoginHistory}
-                  >
-                    Export CSV
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent className="p-0 divide-y divide-gray-100">
-                {loginHistory.map((login, index) => (
-                  <div key={index} className="flex items-center justify-between p-4">
-                    <div className="flex items-center gap-3">
-                      <div className={cn(
-                        'h-10 w-10 rounded-lg flex items-center justify-center',
-                        login.device.includes('iPhone') ? 'bg-blue-50' : 'bg-gray-100'
-                      )}>
-                        {login.device.includes('iPhone') ?
-                          <Smartphone className="h-5 w-5 text-blue-600" /> :
-                          <Monitor className="h-5 w-5 text-gray-600" />
-                        }
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-gray-900">{login.device}</p>
-                        <p className="text-xs text-gray-500">
-                          {login.location} · {login.time}
-                        </p>
-                      </div>
-                    </div>
-                    {login.current && (
-                      <Badge className="bg-emerald-50 text-emerald-700 border-emerald-100 text-xs">
-                        Current
-                      </Badge>
-                    )}
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-
-            {/* Two-Factor Authentication */}
-            <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
-              <CardHeader className="bg-gray-50/50 border-b border-gray-100 py-4">
-                <CardTitle className="text-base font-semibold text-gray-900">Two-Factor Authentication</CardTitle>
-              </CardHeader>
-              <CardContent className="p-5 space-y-4">
-                <div className="flex items-center justify-between">
+              <CardHeader className="bg-gray-50/50 border-b border-gray-200 pb-3">
+                <CardTitle className="text-sm font-semibold text-gray-900">Login History</CardTitle>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="border-gray-200 text-gray-600 hover:bg-gray-50 text-xs"
+                  onClick={exportLoginHistory}
+                >
+                  Export CSV
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="p-0 divide-y divide-gray-100">
+              {loginHistory.map((login, index) => (
+                <div key={index} className="flex items-center justify-between p-4">
                   <div className="flex items-center gap-3">
                     <div className={cn(
                       'h-10 w-10 rounded-lg flex items-center justify-center',
-                      twoFactorEnabled ? 'bg-emerald-50' : 'bg-gray-100'
+                      login.device.includes('iPhone') ? 'bg-blue-50' : 'bg-gray-100'
                     )}>
-                      <Shield className={cn('h-5 w-5', twoFactorEnabled ? 'text-emerald-600' : 'text-gray-500')} />
+                      {login.device.includes('iPhone') ?
+                        <Smartphone className="h-5 w-5 text-blue-600" /> :
+                        <Monitor className="h-5 w-5 text-gray-600" />
+                      }
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-900">Enable 2FA</p>
-                      <p className="text-xs text-gray-500">Add an extra layer of security</p>
+                      <p className="text-sm font-medium text-gray-900">{login.device}</p>
+                      <p className="text-xs text-gray-500">
+                        {login.location} · {login.time}
+                      </p>
                     </div>
                   </div>
-                  <Switch
-                    checked={twoFactorEnabled}
-                    onCheckedChange={(v) => { setTwoFactorEnabled(!!v); persistSecurity({ twoFactorEnabled: !!v }); }}
-                  />
+                  {login.current && (
+                    <Badge className="bg-emerald-50 text-emerald-700 border-emerald-100 text-xs">
+                      Current
+                    </Badge>
+                  )}
                 </div>
+              ))}
+            </CardContent>
+          </Card>
 
-                {twoFactorEnabled && (
-                  <div className="pt-4 border-t border-gray-100">
-                    <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-3">Backup Codes</p>
-                    {backupCodes.length === 0 ? (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="border-gray-200 text-gray-700 hover:bg-gray-50"
-                        onClick={generateBackupCodes}
-                      >
-                        Generate Backup Codes
-                      </Button>
-                    ) : (
-                      <div className="space-y-3">
-                        <div className="grid grid-cols-4 gap-2">
-                          {backupCodes.map(c => (
-                            <code key={c} className="px-2 py-1.5 rounded-md bg-gray-50 border border-gray-200 text-xs font-mono text-gray-800 text-center">
-                              {c}
-                            </code>
-                          ))}
-                        </div>
-                        <div className="flex gap-2">
-                          <Button size="sm" variant="outline" className="border-gray-200 text-gray-600 hover:bg-gray-50" onClick={downloadBackupCodes}>
-                            Download
-                          </Button>
-                          <Button size="sm" variant="outline" className="border-gray-200 text-gray-600 hover:bg-gray-50" onClick={generateBackupCodes}>
-                            Regenerate
-                          </Button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Security Settings */}
-            <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
-              <CardHeader className="bg-gray-50/50 border-b border-gray-100 py-4">
-                <CardTitle className="text-base font-semibold text-gray-900">Security Settings</CardTitle>
-              </CardHeader>
-              <CardContent className="p-0 divide-y divide-gray-100">
-                <div className="flex items-center justify-between p-5">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-lg bg-blue-50 flex items-center justify-center">
-                      <Bell className="h-5 w-5 text-blue-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">Login Alerts</p>
-                      <p className="text-xs text-gray-500">Email me when a new device logs in</p>
-                    </div>
-                  </div>
-                  <Switch
-                    checked={loginAlertsEnabled}
-                    onCheckedChange={(v) => { setLoginAlertsEnabled(!!v); persistSecurity({ loginAlertsEnabled: !!v }); }}
-                  />
+            {/* Two-Factor Authentication */ }
+        <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
+          <CardHeader className="bg-gray-50/50 border-b border-gray-200 pb-3">
+            <CardTitle className="text-sm font-semibold text-gray-900">Two-Factor Authentication</CardTitle>
+          </CardHeader>
+          <CardContent className="p-4 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className={cn(
+                  'h-10 w-10 rounded-lg flex items-center justify-center',
+                  twoFactorEnabled ? 'bg-emerald-50' : 'bg-gray-100'
+                )}>
+                  <Shield className={cn('h-5 w-5', twoFactorEnabled ? 'text-emerald-600' : 'text-gray-500')} />
                 </div>
-
-                <div className="flex items-center justify-between p-5">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-lg bg-purple-50 flex items-center justify-center">
-                      <Monitor className="h-5 w-5 text-purple-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">Trust this Device</p>
-                      <p className="text-xs text-gray-500">Skip 2FA on this device for faster sign-in</p>
-                    </div>
-                  </div>
-                  <Switch
-                    checked={trustedDevice}
-                    onCheckedChange={(v) => { setTrustedDevice(!!v); persistSecurity({ trustedDevice: !!v }); }}
-                  />
+                <div>
+                  <p className="text-sm font-medium text-gray-900">Enable 2FA</p>
+                  <p className="text-xs text-gray-500">Add an extra layer of security</p>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+              <Switch
+                checked={twoFactorEnabled}
+                onCheckedChange={(v) => { setTwoFactorEnabled(!!v); persistSecurity({ twoFactorEnabled: !!v }); }}
+              />
+            </div>
 
-            {/* Session Management */}
-            <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
-              <CardContent className="p-5">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">Log Out All Devices</p>
-                    <p className="text-xs text-gray-500 mt-0.5">Sign out from all other active sessions</p>
-                  </div>
+            {twoFactorEnabled && (
+              <div className="pt-4 border-t border-gray-100">
+                <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-3">Backup Codes</p>
+                {backupCodes.length === 0 ? (
                   <Button
                     size="sm"
-                    className="bg-gray-900 hover:bg-gray-800 text-white"
-                    disabled={loggingOutOthers}
-                    onClick={logoutOtherDevices}
+                    variant="outline"
+                    className="border-gray-200 text-gray-700 hover:bg-gray-50"
+                    onClick={generateBackupCodes}
                   >
-                    {loggingOutOthers ? 'Signing out...' : 'Log Out Others'}
+                    Generate Backup Codes
                   </Button>
-                </div>
-              </CardContent>
-            </Card>
+                ) : (
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-4 gap-2">
+                      {backupCodes.map(c => (
+                        <code key={c} className="px-2 py-1.5 rounded-md bg-gray-50 border border-gray-200 text-xs font-mono text-gray-800 text-center">
+                          {c}
+                        </code>
+                      ))}
+                    </div>
+                    <div className="flex gap-2">
+                      <Button size="sm" variant="outline" className="border-gray-200 text-gray-600 hover:bg-gray-50" onClick={downloadBackupCodes}>
+                        Download
+                      </Button>
+                      <Button size="sm" variant="outline" className="border-gray-200 text-gray-600 hover:bg-gray-50" onClick={generateBackupCodes}>
+                        Regenerate
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
-            {/* Danger Zone */}
+        {/* Security Settings */ }
+        <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
+          <CardHeader className="bg-gray-50/50 border-b border-gray-200 pb-3">
+            <CardTitle className="text-sm font-semibold text-gray-900">Security Settings</CardTitle>
+          </CardHeader>
+          <CardContent className="p-0 divide-y divide-gray-100">
+            <div className="flex items-center justify-between p-4">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-lg bg-blue-50 flex items-center justify-center">
+                  <Bell className="h-5 w-5 text-blue-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-900">Login Alerts</p>
+                  <p className="text-xs text-gray-500">Email me when a new device logs in</p>
+                </div>
+              </div>
+              <Switch
+                checked={loginAlertsEnabled}
+                onCheckedChange={(v) => { setLoginAlertsEnabled(!!v); persistSecurity({ loginAlertsEnabled: !!v }); }}
+              />
+            </div>
+
+            <div className="flex items-center justify-between p-4">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-lg bg-purple-50 flex items-center justify-center">
+                  <Monitor className="h-5 w-5 text-purple-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-900">Trust this Device</p>
+                  <p className="text-xs text-gray-500">Skip 2FA on this device for faster sign-in</p>
+                </div>
+              </div>
+              <Switch
+                checked={trustedDevice}
+                onCheckedChange={(v) => { setTrustedDevice(!!v); persistSecurity({ trustedDevice: !!v }); }}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Session Management */ }
+        <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-900">Log Out All Devices</p>
+                <p className="text-xs text-gray-500 mt-0.5">Sign out from all other active sessions</p>
+              </div>
+              <Button
+                size="sm"
+                className="bg-gray-900 hover:bg-gray-800 text-white"
+                disabled={loggingOutOthers}
+                onClick={logoutOtherDevices}
+              >
+                {loggingOutOthers ? 'Signing out...' : 'Log Out Others'}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Danger Zone */ }
             <Card className="bg-white border border-red-200 shadow-sm rounded-xl overflow-hidden">
-              <CardHeader className="bg-red-50/50 border-b border-red-100 py-4">
-                <CardTitle className="text-base font-semibold text-red-700 flex items-center gap-2">
+              <CardHeader className="bg-red-50/50 border-b border-red-100 pb-3">
+                <CardTitle className="text-sm font-semibold text-red-700 flex items-center gap-2">
                   <AlertTriangle className="h-4 w-4" />
                   Danger Zone
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-5">
+              <CardContent className="p-4">
                 <p className="text-sm text-gray-600 mb-4">
                   Permanently delete your account and all associated data. This action cannot be undone.
                 </p>
@@ -1094,61 +1093,61 @@ const Settings = () => {
                 </DialogFooter>
               </DialogContent>
             </Dialog>
-          </div>
+          </div >
         );
 
       default:
-        return null;
+return null;
     }
   };
 
-  return (
-    <PageLayout title="Account Control Center">
-      <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24">
-          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-700">
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-              {/* Navigation Menu */}
-              <div className="lg:col-span-1">
-                <Card className="lg:sticky lg:top-6 h-fit bg-white border-gray-200 text-gray-700 shadow-sm">
-                  <CardHeader>
-                    <CardTitle className="text-lg text-gray-900 font-medium">Quick Settings</CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-0">
-                    <nav className="space-y-1 p-2">
-                      {menuItems.map((item) => (
-                        <button
-                          key={item.id}
-                          onClick={() => item.id === 'careers' ? navigate('/careers') : setActiveSection(item.id)}
-                          className={cn(
-                            "relative w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md transition-colors text-left",
-                            activeSection === item.id
-                              ? "bg-gray-100 text-gray-900"
-                              : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                          )}
-                        >
-                          {activeSection === item.id && (
-                            <span className="absolute left-0 h-5 w-[3px] rounded-r bg-emerald-500" />
-                          )}
-                          <item.icon className="h-4 w-4 shrink-0" />
-                          {item.label}
-                        </button>
-                      ))}
-                    </nav>
-                  </CardContent>
-                </Card>
-              </div>
+return (
+  <PageLayout title="Account Control Center">
+    <div className="relative -m-4 lg:-m-6">
+      <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24">
+        <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-700">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            {/* Navigation Menu */}
+            <div className="lg:col-span-1">
+              <Card className="lg:sticky lg:top-6 h-fit bg-white border-gray-200 text-gray-700 shadow-sm">
+                <CardHeader className="border-b border-gray-200 pb-3">
+                  <CardTitle className="text-sm font-semibold text-gray-900">Quick Settings</CardTitle>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <nav className="space-y-1 p-2">
+                    {menuItems.map((item) => (
+                      <button
+                        key={item.id}
+                        onClick={() => item.id === 'careers' ? navigate('/careers') : setActiveSection(item.id)}
+                        className={cn(
+                          "relative w-full flex items-center gap-3 px-3 py-2 text-xs rounded-md transition-colors text-left",
+                          activeSection === item.id
+                            ? "bg-gray-100 text-gray-900"
+                            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                        )}
+                      >
+                        {activeSection === item.id && (
+                          <span className="absolute left-0 h-5 w-[3px] rounded-r bg-emerald-500" />
+                        )}
+                        <item.icon className="h-4 w-4 shrink-0" />
+                        {item.label}
+                      </button>
+                    ))}
+                  </nav>
+                </CardContent>
+              </Card>
+            </div>
 
-              {/* Main Content */}
-              <div className="lg:col-span-3">
-                {renderContent()}
-              </div>
+            {/* Main Content */}
+            <div className="lg:col-span-3">
+              {renderContent()}
             </div>
           </div>
         </div>
       </div>
-    </PageLayout>
-  );
+    </div>
+  </PageLayout>
+);
 };
 
 export default Settings;
