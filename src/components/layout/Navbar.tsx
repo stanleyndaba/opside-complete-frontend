@@ -285,16 +285,21 @@ export function Navbar({
               "text-[#36454F]"
             )}
           />
-          {/* Gift icon - only on dashboard */}
-          {isDashboard && (
-            <button
-              onClick={() => setShowReferralPopup(true)}
-              className="flex items-center gap-2 h-9 px-3 rounded-md text-[#36454F] hover:text-[#36454F] hover:bg-gray-100 transition-colors"
-              aria-label="Referral program"
-            >
-              <Gift className="h-5 w-5 text-[#36454F]" />
-            </button>
-          )}
+          {/* Gift icon - visible on all pages */}
+          <button
+            onClick={() => setShowReferralPopup(true)}
+            className={cn(
+              "flex items-center gap-2 h-9 px-3 rounded-md transition-colors",
+              isDashboard
+                ? "text-[#36454F] hover:text-[#36454F] hover:bg-gray-100"
+                : isTransparent
+                  ? "text-[#36454F] hover:text-[#36454F] hover:bg-white/10"
+                  : "text-[#36454F] hover:text-[#36454F] hover:bg-muted/50"
+            )}
+            aria-label="Referral program"
+          >
+            <Gift className="h-5 w-5 text-[#36454F]" />
+          </button>
         </div>
       </div>
       {/* Right side - Connect Platform button and Sandbox badge */}

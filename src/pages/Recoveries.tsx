@@ -1951,7 +1951,7 @@ export default function Recoveries() {
           <div className="relative w-full max-w-full px-4 sm:px-6 pt-6 pb-10 text-gray-900 space-y-6">
             <div className="mb-8">
               <div className="flex items-center justify-between mb-2">
-                <h1 className="text-xl text-gray-900 font-semibold">Claims and Dispute Cases</h1>
+                <h1 className="text-xl text-gray-900 font-medium">Claims and Dispute Cases</h1>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button className="flex items-center gap-1 text-sm text-gray-700 hover:text-gray-900 bg-transparent border-0 cursor-pointer">
