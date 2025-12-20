@@ -14,7 +14,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { format, subDays, startOfYear, startOfQuarter } from 'date-fns';
-import { CalendarIcon, Search, MoreHorizontal, FileText, Eye, RefreshCw, Info, AlertTriangle, X, CheckCircle2, Clock, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
+import { CalendarIcon, Search, MoreHorizontal, FileText, Eye, RefreshCw, Info, AlertTriangle, X, CheckCircle2, Clock, ExternalLink, ChevronDown, ChevronUp, Forward, Upload } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
@@ -1987,7 +1987,10 @@ export default function Recoveries() {
                     }
                   }
                   setSubmittingBulk(false);
-                }}>Submit Selected Claims</Button>
+                }}>
+                  <Upload className="h-4 w-4 mr-2" />
+                  Submit Selected Claims
+                </Button>
                 {selectedIds.size > 0 && (
                   <span className="text-xs text-muted-foreground">{selectedIds.size} selected</span>
                 )}
@@ -2186,7 +2189,7 @@ export default function Recoveries() {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100"
+                          className="bg-blue-600 text-white border-blue-600 hover:bg-blue-700"
                           onClick={() => {
                             const exportRange = dateRange?.from && dateRange?.to
                               ? { from: dateRange.from, to: dateRange.to }
@@ -2195,8 +2198,8 @@ export default function Recoveries() {
                             toast({ title: '📋 Casebook Generated', description: 'Press Ctrl+P to save as PDF for audits and accounting.' });
                           }}
                         >
-                          <FileText className="h-4 w-4 mr-2" />
-                          Export Casebook
+                          <Forward className="h-4 w-4 mr-2" />
+                          Share
                         </Button>
 
                         {/* Custom Date Range */}
