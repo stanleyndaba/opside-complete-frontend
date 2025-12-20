@@ -2342,24 +2342,24 @@ export default function Recoveries() {
                         >
                           <Table style={{ minWidth: '1600px', width: 'max-content' }}>
                             <TableHeader>
-                              <TableRow className="border-gray-200">
-                                <TableHead>
+                              <TableRow className="border-gray-200 bg-gray-50">
+                                <TableHead className="py-2">
                                   <Checkbox checked={selectedIds.size > 0 && selectedIds.size === filteredClaims.length} onCheckedChange={(checked) => {
                                     if (checked) setSelectedIds(new Set(filteredClaims.map(c => c.id)));
                                     else setSelectedIds(new Set());
                                   }} />
                                 </TableHead>
-                                <TableHead className="text-[#1f1f1f] font-medium">Source</TableHead>
-                                <TableHead className="text-[#1f1f1f] font-medium">Strength</TableHead>
-                                <TableHead className="text-[#1f1f1f] font-medium">Claim ID</TableHead>
-                                <TableHead className="text-[#1f1f1f] font-medium">Created</TableHead>
-                                <TableHead className="text-[#1f1f1f] font-medium">Evidence</TableHead>
-                                <TableHead className="text-[#1f1f1f] font-medium">Details</TableHead>
-                                <TableHead className="text-[#1f1f1f] font-medium">Status</TableHead>
-                                <TableHead className="text-[#1f1f1f] font-medium">Days Remaining</TableHead>
-                                <TableHead className="text-[#1f1f1f] font-medium">Guaranteed Amount</TableHead>
-                                <TableHead className="text-[#1f1f1f] font-medium">Expected Payout</TableHead>
-                                <TableHead className="text-[#1f1f1f] font-medium">Actions</TableHead>
+                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Source</TableHead>
+                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Strength</TableHead>
+                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Claim ID</TableHead>
+                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Created</TableHead>
+                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Evidence</TableHead>
+                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Details</TableHead>
+                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Status</TableHead>
+                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Days Remaining</TableHead>
+                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Guaranteed Amount</TableHead>
+                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Expected Payout</TableHead>
+                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Actions</TableHead>
                               </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -2383,7 +2383,7 @@ export default function Recoveries() {
                                       isUrgent && !isCritical && "bg-amber-50/50 border-l-4 border-l-amber-500"
                                     )}
                                   >
-                                    <TableCell>
+                                    <TableCell className="py-2">
                                       <Checkbox checked={selectedIds.has(claim.id)} onCheckedChange={(checked) => {
                                         setSelectedIds(prev => {
                                           const next = new Set(prev);
@@ -2392,14 +2392,14 @@ export default function Recoveries() {
                                         });
                                       }} />
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell className="text-xs py-2">
                                       {claim.source === 'detected' ? (
-                                        <Badge className="bg-gray-100 text-[#36454F] border-0">Detected</Badge>
+                                        <Badge className="bg-gray-100 text-[#36454F] border-0 text-[10px]">Detected</Badge>
                                       ) : (
-                                        <Badge className="bg-gray-100 text-[#36454F] border-0">Synced</Badge>
+                                        <Badge className="bg-gray-100 text-[#36454F] border-0 text-[10px]">Synced</Badge>
                                       )}
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell className="py-2">
                                       {(() => {
                                         const strength = calculateClaimStrength(claim);
                                         return (
@@ -2411,11 +2411,11 @@ export default function Recoveries() {
                                             </TooltipTrigger>
                                             <TooltipContent side="right" className="bg-white text-gray-900 border border-gray-200 p-3 max-w-xs shadow-lg">
                                               <div className="space-y-2">
-                                                <div className="font-semibold text-sm border-b border-gray-100 pb-1">
+                                                <div className="font-semibold text-xs border-b border-gray-100 pb-1">
                                                   Claim Strength: {strength.score}/100
                                                 </div>
                                                 {strength.factors.map((f, i) => (
-                                                  <div key={i} className="flex justify-between items-center text-xs">
+                                                  <div key={i} className="flex justify-between items-center text-[10px]">
                                                     <span className="text-gray-600">{f.label}</span>
                                                     <span className="font-medium">{f.value}/{f.max} <span className="text-gray-400">— {f.reason}</span></span>
                                                   </div>
@@ -2426,10 +2426,10 @@ export default function Recoveries() {
                                         );
                                       })()}
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell className="text-xs py-2">
                                       <Tooltip>
                                         <TooltipTrigger asChild>
-                                          <Button asChild variant="link" className="p-0 h-auto text-[#36454F] hover:text-[#36454F] font-medium">
+                                          <Button asChild variant="link" className="p-0 h-auto text-xs text-[#36454F] hover:text-[#36454F] font-medium">
                                             <Link to={`/recoveries/${claim.id}`} state={{ claim }}>
                                               {claim.claim_number || claim.id.slice(0, 8)}
                                             </Link>
@@ -2440,8 +2440,8 @@ export default function Recoveries() {
                                         </TooltipContent>
                                       </Tooltip>
                                     </TableCell>
-                                    <TableCell>{format(new Date(claim.created || claim.discovery_date || claim.created_at), 'MMM dd, yyyy')}</TableCell>
-                                    <TableCell>
+                                    <TableCell className="text-xs text-gray-700 py-2">{format(new Date(claim.created || claim.discovery_date || claim.created_at), 'MMM dd, yyyy')}</TableCell>
+                                    <TableCell className="py-2">
                                       {(() => {
                                         const validation = validateEvidencePolicy(claim, claim.matchedDocs);
                                         const docCount = claim.matchedDocs?.length || claim.matchedCount || 0;
@@ -2449,7 +2449,7 @@ export default function Recoveries() {
                                           <div className="flex items-center gap-2">
                                             <EvidenceQualityBadge validation={validation} />
                                             {docCount > 0 && (
-                                              <span className="text-xs text-gray-500">
+                                              <span className="text-[10px] text-gray-500">
                                                 {docCount} doc{docCount !== 1 ? 's' : ''}
                                               </span>
                                             )}
@@ -2457,15 +2457,15 @@ export default function Recoveries() {
                                         );
                                       })()}
                                     </TableCell>
-                                    <TableCell className="max-w-xs">
-                                      <div className="truncate" title={claim.details}>
+                                    <TableCell className="max-w-xs py-2">
+                                      <div className="truncate text-xs text-gray-900" title={claim.details}>
                                         {claim.details}
                                       </div>
-                                      <div className="text-xs text-muted-foreground mt-1">
+                                      <div className="text-[10px] text-gray-500 mt-0.5">
                                         SKU: {claim.sku} • ASIN: {claim.asin}
                                       </div>
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell className="py-2">
                                       {(() => {
                                         const doubleDipWarning = checkDoubleDip(claim, rankedClaims);
                                         return (
@@ -2478,29 +2478,30 @@ export default function Recoveries() {
                                         );
                                       })()}
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell className="py-2">
                                       {claim.days_remaining !== null && claim.days_remaining !== undefined ? (
-                                        <div className="flex items-center gap-2">
+                                        <div className="flex items-center gap-1.5">
                                           {isCritical && (
-                                            <AlertTriangle className="h-4 w-4 text-red-600 flex-shrink-0" />
+                                            <AlertTriangle className="h-3 w-3 text-red-600 flex-shrink-0" />
                                           )}
                                           {isUrgent && !isCritical && (
-                                            <Clock className="h-4 w-4 text-amber-600 flex-shrink-0" />
+                                            <Clock className="h-3 w-3 text-amber-600 flex-shrink-0" />
                                           )}
                                           <span className={cn(
+                                            "text-xs",
                                             isCritical && 'text-red-600 font-medium',
                                             isUrgent && !isCritical && 'text-amber-600 font-medium',
-                                            !isUrgent && 'text-[#36454F]'
+                                            !isUrgent && 'text-gray-700'
                                           )}>
                                             {claim.days_remaining} days
                                           </span>
                                         </div>
                                       ) : (
-                                        <span className="text-[#36454F]">-</span>
+                                        <span className="text-xs text-gray-700">-</span>
                                       )}
                                     </TableCell>
-                                    <TableCell className="font-medium">{formatCurrency(claim.guaranteedAmount, claim.currency || 'USD')}</TableCell>
-                                    <TableCell>
+                                    <TableCell className="text-xs font-medium text-gray-900 py-2">{formatCurrency(claim.guaranteedAmount, claim.currency || 'USD')}</TableCell>
+                                    <TableCell className="text-xs text-gray-700 py-2">
                                       {claim.expectedPayoutDate ? format(new Date(claim.expectedPayoutDate), 'MMM dd, yyyy') : '-'}
                                     </TableCell>
                                     <TableCell>
