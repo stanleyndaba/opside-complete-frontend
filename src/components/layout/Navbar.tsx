@@ -171,263 +171,265 @@ export function Navbar({
   // Sandbox badge: show in non-production or when VITE_SANDBOX=true
   const env: any = (typeof import.meta !== 'undefined' ? (import.meta as any).env : undefined) || (typeof process !== 'undefined' ? (process as any).env : undefined) || {};
   const isSandbox = String(env.VITE_SANDBOX || '') === 'true' || String(env.MODE || env.NODE_ENV || '') !== 'production';
-  return <header className={cn(
-    "sticky top-0 z-30 transition-all duration-300",
-    sidebarCollapsed ? "ml-16" : "ml-60",
-    isGreyBgPage ? "bg-gray-50 border-b border-gray-200" :
-      isTransparent ? "!bg-transparent !border-transparent backdrop-blur-none shadow-none" : "bg-background/60 backdrop-blur-sm border-b",
-    className
-  )}>
-    <div className="container flex items-center h-16 px-4 font-body">
-      {/* Center - Search */}
-      <div className="flex-1 max-w-xl hidden md:block md:mx-4">
-        <div className="relative flex items-center gap-2" ref={searchContainerRef}>
-          <div className="relative flex-1">
-            <Search className={cn(
-              'absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 stroke-[2]',
-              isDashboard ? 'text-gray-400' : (isTransparent ? 'text-gray-400' : 'text-gray-600')
-            )} />
-            <Input
-              ref={searchInputRef}
-              aria-label="Search"
-              placeholder="search invoices, products, documents, and more"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onFocus={() => setIsSearchFocused(true)}
-              onKeyDown={handleKeyDown}
-              variant={isTransparent ? 'dark' : 'default'}
-              className={cn(
-                "pl-9 pr-8 h-9 rounded-md",
-                isDashboard && "!bg-white/5 !border-gray-300 !text-gray-200 !placeholder:text-gray-400 backdrop-blur-sm",
-                isTransparent && !isDashboard && "!bg-white/10 !border-gray-300 !text-gray-200 !placeholder:text-gray-400 backdrop-blur-sm",
-                !isDashboard && !isTransparent && "!border-gray-300"
-              )}
-            />
-            {/* Clear button */}
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            )}
-
-            {/* Search Dropdown */}
-            {isSearchFocused && (
-              <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-hidden">
-                {/* Recent Searches */}
-                {recentSearches.length > 0 && (
-                  <div className="p-2 border-b border-gray-100">
-                    <div className="flex items-center justify-between px-2 mb-1">
-                      <span className="text-xs font-medium text-gray-500">Recent Searches</span>
-                      <button
-                        onClick={clearRecentSearches}
-                        className="text-xs text-gray-400 hover:text-gray-600"
-                      >
-                        Clear
-                      </button>
-                    </div>
-                    {recentSearches.map((search, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => {
-                          setSearchQuery(search);
-                          handleSearch(search);
-                        }}
-                        className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-gray-700 hover:bg-gray-50 rounded"
-                      >
-                        <Clock className="h-3.5 w-3.5 text-gray-400" />
-                        {search}
-                      </button>
-                    ))}
-                  </div>
+  return (
+    <>
+      <header className={cn(
+        "sticky top-0 z-30 transition-all duration-300",
+        sidebarCollapsed ? "ml-16" : "ml-60",
+        isGreyBgPage ? "bg-gray-50 border-b border-gray-200" :
+          isTransparent ? "!bg-transparent !border-transparent backdrop-blur-none shadow-none" : "bg-background/60 backdrop-blur-sm border-b",
+        className
+      )}>
+        <div className="container flex items-center h-16 px-4 font-body">
+          {/* Center - Search */}
+          <div className="flex-1 max-w-xl hidden md:block md:mx-4">
+            <div className="relative flex items-center gap-2" ref={searchContainerRef}>
+              <div className="relative flex-1">
+                <Search className={cn(
+                  'absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 stroke-[2]',
+                  isDashboard ? 'text-gray-400' : (isTransparent ? 'text-gray-400' : 'text-gray-600')
+                )} />
+                <Input
+                  ref={searchInputRef}
+                  aria-label="Search"
+                  placeholder="search invoices, products, documents, and more"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => setIsSearchFocused(true)}
+                  onKeyDown={handleKeyDown}
+                  variant={isTransparent ? 'dark' : 'default'}
+                  className={cn(
+                    "pl-9 pr-8 h-9 rounded-md",
+                    isDashboard && "!bg-white/5 !border-gray-300 !text-gray-200 !placeholder:text-gray-400 backdrop-blur-sm",
+                    isTransparent && !isDashboard && "!bg-white/10 !border-gray-300 !text-gray-200 !placeholder:text-gray-400 backdrop-blur-sm",
+                    !isDashboard && !isTransparent && "!border-gray-300"
+                  )}
+                />
+                {/* Clear button */}
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
                 )}
 
-                {/* Quick Links */}
-                <div className="p-2">
-                  <span className="text-xs font-medium text-gray-500 px-2">Quick Links</span>
-                  {quickLinks.map((link) => (
-                    <button
-                      key={link.id}
-                      onClick={() => {
-                        setIsSearchFocused(false);
-                        navigate(link.path);
-                      }}
-                      className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-gray-700 hover:bg-gray-50 rounded mt-1"
-                    >
-                      <link.icon className="h-4 w-4 text-gray-400" />
-                      {link.label}
-                    </button>
-                  ))}
-                </div>
+                {/* Search Dropdown */}
+                {isSearchFocused && (
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-hidden">
+                    {/* Recent Searches */}
+                    {recentSearches.length > 0 && (
+                      <div className="p-2 border-b border-gray-100">
+                        <div className="flex items-center justify-between px-2 mb-1">
+                          <span className="text-xs font-medium text-gray-500">Recent Searches</span>
+                          <button
+                            onClick={clearRecentSearches}
+                            className="text-xs text-gray-400 hover:text-gray-600"
+                          >
+                            Clear
+                          </button>
+                        </div>
+                        {recentSearches.map((search, idx) => (
+                          <button
+                            key={idx}
+                            onClick={() => {
+                              setSearchQuery(search);
+                              handleSearch(search);
+                            }}
+                            className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-gray-700 hover:bg-gray-50 rounded"
+                          >
+                            <Clock className="h-3.5 w-3.5 text-gray-400" />
+                            {search}
+                          </button>
+                        ))}
+                      </div>
+                    )}
 
-                {/* Search Tip */}
-                <div className="px-4 py-2 bg-gray-50 border-t border-gray-100">
-                  <p className="text-xs text-gray-500">
-                    Press <kbd className="px-1.5 py-0.5 bg-gray-200 rounded text-gray-600 font-mono">Enter</kbd> to search
-                  </p>
-                </div>
+                    {/* Quick Links */}
+                    <div className="p-2">
+                      <span className="text-xs font-medium text-gray-500 px-2">Quick Links</span>
+                      {quickLinks.map((link) => (
+                        <button
+                          key={link.id}
+                          onClick={() => {
+                            setIsSearchFocused(false);
+                            navigate(link.path);
+                          }}
+                          className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-gray-700 hover:bg-gray-50 rounded mt-1"
+                        >
+                          <link.icon className="h-4 w-4 text-gray-400" />
+                          {link.label}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Search Tip */}
+                    <div className="px-4 py-2 bg-gray-50 border-t border-gray-100">
+                      <p className="text-xs text-gray-500">
+                        Press <kbd className="px-1.5 py-0.5 bg-gray-200 rounded text-gray-600 font-mono">Enter</kbd> to search
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-          {/* Message icon - visible on all pages */}
-          <NotificationBell
-            label="Messages"
-            iconOverride={Mail}
-            showLabel={false}
-            className={cn(
-              "group h-9 w-9 flex items-center justify-center rounded-md transition-colors",
-              isDashboard
-                ? "text-[#36454F] hover:text-[#36454F] hover:bg-gray-100"
-                : isTransparent
-                  ? "text-[#36454F] hover:text-[#36454F] hover:bg-white/10"
-                  : "text-[#36454F] hover:text-[#36454F] hover:bg-muted/50"
-            )}
-            iconClassName={cn(
-              "text-[#36454F]"
-            )}
-          />
-          {/* Gift icon - visible on all pages */}
-          <button
-            onClick={() => setShowReferralPopup(true)}
-            className={cn(
-              "flex items-center gap-2 h-9 px-3 rounded-md transition-colors relative",
-              isDashboard
-                ? "text-[#36454F] hover:text-[#36454F] hover:bg-gray-100"
-                : isTransparent
-                  ? "text-[#36454F] hover:text-[#36454F] hover:bg-white/10"
-                  : "text-[#36454F] hover:text-[#36454F] hover:bg-muted/50"
-            )}
-            aria-label="Referral program"
-          >
-            <div className="relative">
-              <Gift className="h-5 w-5 text-[#36454F]" />
-              <span className="absolute -top-1 -right-1 h-2 w-2 bg-blue-600 rounded-full border border-white" />
+              {/* Message icon - visible on all pages */}
+              <NotificationBell
+                label="Messages"
+                iconOverride={Mail}
+                showLabel={false}
+                className={cn(
+                  "group h-9 w-9 flex items-center justify-center rounded-md transition-colors",
+                  isDashboard
+                    ? "text-[#36454F] hover:text-[#36454F] hover:bg-gray-100"
+                    : isTransparent
+                      ? "text-[#36454F] hover:text-[#36454F] hover:bg-white/10"
+                      : "text-[#36454F] hover:text-[#36454F] hover:bg-muted/50"
+                )}
+                iconClassName={cn(
+                  "text-[#36454F]"
+                )}
+              />
+              {/* Gift icon - visible on all pages */}
+              <button
+                onClick={() => setShowReferralPopup(true)}
+                className={cn(
+                  "flex items-center gap-2 h-9 px-3 rounded-md transition-colors relative",
+                  isDashboard
+                    ? "text-[#36454F] hover:text-[#36454F] hover:bg-gray-100"
+                    : isTransparent
+                      ? "text-[#36454F] hover:text-[#36454F] hover:bg-white/10"
+                      : "text-[#36454F] hover:text-[#36454F] hover:bg-muted/50"
+                )}
+                aria-label="Referral program"
+              >
+                <div className="relative">
+                  <Gift className="h-5 w-5 text-[#36454F]" />
+                  <span className="absolute -top-1 -right-1 h-2 w-2 bg-blue-600 rounded-full border border-white" />
+                </div>
+              </button>
             </div>
-          </button>
-        </div>
-      </div>
-      {/* Right side - Connect Platform button and Sandbox badge */}
-      <div className="flex items-center gap-0 bg-transparent border border-gray-200 rounded-md overflow-hidden">
-        <Select value={selectedCurrency} onValueChange={setSelectedCurrency}>
-          <SelectTrigger className="h-9 w-20 bg-transparent border-0 text-[#36454F] focus:ring-0 shadow-none px-2 text-xs font-medium">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {currencies.map(curr => (
-              <SelectItem key={curr.code} value={curr.code} className="text-xs">
-                {curr.symbol} {curr.code}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <div className="h-4 w-px bg-gray-300 mx-0" />
-        <Button
-          onClick={() => navigate('/integrations-hub')}
-          variant="ghost"
-          className={cn(
-            "flex items-center gap-2 h-9 px-3 rounded-none",
-            isDashboard ? 'bg-transparent text-[#36454F] hover:bg-white/10 hover:text-[#36454F]' :
-              isTransparent ? 'text-[#36454F] hover:text-[#36454F] hover:bg-white/10' : 'text-[#36454F] hover:text-[#36454F]'
-          )}
-        >
-          <Link2 className={cn("h-4 w-4 text-[#36454F]")} />
-          <span className="hidden sm:inline text-[#36454F]">Connect</span>
-        </Button>
-      </div>
-      {/* Language selector removed */}
-    </div>
-  </div>
-
-  {/* Referral Popup */ }
-  <Dialog open={showReferralPopup} onOpenChange={setShowReferralPopup}>
-    <DialogContent className="max-w-sm bg-emerald-50/95 border border-emerald-200/80 shadow-lg rounded-lg p-6">
-      <div className="flex flex-col items-center gap-4 text-center">
-        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100">
-          <Gift className="h-6 w-6 text-emerald-600" />
-        </div>
-        <div className="space-y-2">
-          <h3 className="text-lg font-semibold text-emerald-900">
-            No commission on referrals
-          </h3>
-          <p className="text-sm text-emerald-700">
-            Bring new sellers to Clario and keep 100% of their recovered funds.
-          </p>
-        </div>
-        <Button
-          onClick={() => {
-            setShowReferralPopup(false);
-            setShowInviteForm(true);
-          }}
-          className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-md transition-colors shadow-md hover:shadow-lg"
-        >
-          Invite seller friend
-        </Button>
-      </div>
-    </DialogContent>
-  </Dialog>
-
-  {/* Invite Form Popup */ }
-  <Dialog open={showInviteForm} onOpenChange={setShowInviteForm}>
-    <DialogContent className="max-w-md bg-white border border-gray-200 shadow-lg rounded-lg p-6">
-      <div className="space-y-4">
-        <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-1">Invite seller friend</h3>
-          <p className="text-sm text-gray-600">Send an invitation to join Clario</p>
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">Email address</label>
-          <Input
-            type="email"
-            placeholder="seller@example.com"
-            value={inviteEmail}
-            onChange={(e) => setInviteEmail(e.target.value)}
-            className="w-full border-gray-200"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">Referral link</label>
-          <div className="flex items-center gap-2 p-3 bg-gray-50 border border-gray-200 rounded-md">
-            <span className="flex-1 text-sm text-gray-700 break-all">{shortLink}</span>
-            <button
-              onClick={() => {
-                navigator.clipboard.writeText(referralLink);
-                setLinkCopied(true);
-                setTimeout(() => setLinkCopied(false), 2000);
-              }}
-              className="flex items-center gap-1.5 px-2 py-1 text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded transition-colors"
-            >
-              {linkCopied ? (
-                <>
-                  <Check className="h-3.5 w-3.5 text-emerald-600" />
-                  <span className="text-emerald-600">Copied</span>
-                </>
-              ) : (
-                <>
-                  <Copy className="h-3.5 w-3.5" />
-                  <span>Copy</span>
-                </>
-              )}
-            </button>
           </div>
+          {/* Right side - Connect Platform button and Sandbox badge */}
+          <div className="flex items-center gap-0 bg-transparent border border-gray-200 rounded-md overflow-hidden">
+            <Select value={selectedCurrency} onValueChange={setSelectedCurrency}>
+              <SelectTrigger className="h-9 w-20 bg-transparent border-0 text-[#36454F] focus:ring-0 shadow-none px-2 text-xs font-medium">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {currencies.map(curr => (
+                  <SelectItem key={curr.code} value={curr.code} className="text-xs">
+                    {curr.symbol} {curr.code}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <div className="h-4 w-px bg-gray-300 mx-0" />
+            <Button
+              onClick={() => navigate('/integrations-hub')}
+              variant="ghost"
+              className={cn(
+                "flex items-center gap-2 h-9 px-3 rounded-none",
+                isDashboard ? 'bg-transparent text-[#36454F] hover:bg-white/10 hover:text-[#36454F]' :
+                  isTransparent ? 'text-[#36454F] hover:text-[#36454F] hover:bg-white/10' : 'text-[#36454F] hover:text-[#36454F]'
+              )}
+            >
+              <Link2 className={cn("h-4 w-4 text-[#36454F]")} />
+              <span className="hidden sm:inline text-[#36454F]">Connect</span>
+            </Button>
+          </div>
+          {/* Language selector removed */}
         </div>
+      </header>
 
-        <Button
-          onClick={() => {
-            // TODO: Implement send invite functionality
-            setShowInviteForm(false);
-            setInviteEmail('');
-          }}
-          className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-md transition-colors"
-        >
-          Send
-        </Button>
-      </div>
-    </DialogContent>
-  </Dialog>
-  </header>
+      {/* Referral Popup */}
+      <Dialog open={showReferralPopup} onOpenChange={setShowReferralPopup}>
+        <DialogContent className="max-w-sm bg-emerald-50/95 border border-emerald-200/80 shadow-lg rounded-lg p-6">
+          <div className="flex flex-col items-center gap-4 text-center">
+            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100">
+              <Gift className="h-6 w-6 text-emerald-600" />
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-lg font-semibold text-emerald-900">
+                No commission on referrals
+              </h3>
+              <p className="text-sm text-emerald-700">
+                Bring new sellers to Clario and keep 100% of their recovered funds.
+              </p>
+            </div>
+            <Button
+              onClick={() => {
+                setShowReferralPopup(false);
+                setShowInviteForm(true);
+              }}
+              className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-md transition-colors shadow-md hover:shadow-lg"
+            >
+              Invite seller friend
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Invite Form Popup */}
+      <Dialog open={showInviteForm} onOpenChange={setShowInviteForm}>
+        <DialogContent className="max-w-md bg-white border border-gray-200 shadow-lg rounded-lg p-6">
+          <div className="space-y-4">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">Invite seller friend</h3>
+              <p className="text-sm text-gray-600">Send an invitation to join Clario</p>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">Email address</label>
+              <Input
+                type="email"
+                placeholder="seller@example.com"
+                value={inviteEmail}
+                onChange={(e) => setInviteEmail(e.target.value)}
+                className="w-full border-gray-200"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">Referral link</label>
+              <div className="flex items-center gap-2 p-3 bg-gray-50 border border-gray-200 rounded-md">
+                <span className="flex-1 text-sm text-gray-700 break-all">{shortLink}</span>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(referralLink);
+                    setLinkCopied(true);
+                    setTimeout(() => setLinkCopied(false), 2000);
+                  }}
+                  className="flex items-center gap-1.5 px-2 py-1 text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded transition-colors"
+                >
+                  {linkCopied ? (
+                    <>
+                      <Check className="h-3.5 w-3.5 text-emerald-600" />
+                      <span className="text-emerald-600">Copied</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-3.5 w-3.5" />
+                      <span>Copy</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <Button
+              onClick={() => {
+                // TODO: Implement send invite functionality
+                setShowInviteForm(false);
+                setInviteEmail('');
+              }}
+              className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-md transition-colors"
+            >
+              Send
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
