@@ -2868,7 +2868,7 @@ export default function Recoveries() {
                               </div>
                             ))}
                           </div>
-                          <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm text-amber-800">
+                          <div className="bg-gray-100 border border-gray-400 rounded-lg p-3 text-sm text-gray-700">
                             <strong>Tip:</strong> Wait for more evidence or consider if this claim is worth the risk to your account.
                           </div>
                         </div>
@@ -2899,8 +2899,9 @@ export default function Recoveries() {
                             toast({ title: 'Filing Failed', description: e?.message || 'Please try again.', variant: 'destructive' });
                           }
                         }}
-                        className="bg-amber-500 hover:bg-amber-600 text-white"
+                        className="bg-gray-200 hover:bg-gray-300 text-[#36454F]"
                       >
+                        <ArrowUpFromLine className="h-4 w-4 mr-2" />
                         File Anyway
                       </Button>
                     </DialogFooter>
