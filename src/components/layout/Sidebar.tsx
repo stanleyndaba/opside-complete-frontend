@@ -194,27 +194,29 @@ export function Sidebar({
       {/* Branding + Collapse */}
       <div
         className={cn(
-          "border-b border-gray-300 flex items-center",
-          isCollapsed ? "p-2 justify-center" : "p-4 justify-start"
+          "border-b border-gray-300 flex flex-col",
+          isCollapsed ? "p-2 items-center justify-center" : "p-4 items-start justify-center"
         )}
       >
-        {!isCollapsed ? (
-          <div className="flex items-center gap-2">
-            <img
-              src="/logoimagetwo.png"
-              alt="Clario"
-              className="h-4 w-auto object-contain"
-            />
-            <span className="font-montserrat text-gray-900 text-base" style={{ fontWeight: 600 }}>
-              Opside
-            </span>
-          </div>
-        ) : (
+        <div className="flex items-center gap-2">
           <img
             src="/logoimagetwo.png"
             alt="Clario"
-            className="h-3 w-auto object-contain"
+            className={cn(isCollapsed ? "h-3" : "h-4", "w-auto object-contain")}
           />
+          {!isCollapsed && (
+            <span className="font-montserrat text-gray-900 text-base" style={{ fontWeight: 600 }}>
+              Opside
+            </span>
+          )}
+        </div>
+        {!isCollapsed && (
+          <div className="select-none flex flex-col mt-2 ml-0">
+            <div className="flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              <span className="text-[10px] font-medium text-[#36454F] uppercase tracking-wider">Connected, secured</span>
+            </div>
+          </div>
         )}
       </div>
 
@@ -299,13 +301,9 @@ export function Sidebar({
               <User className="h-4 w-4" />
               <span className="text-sm">Account</span>
             </div>
-            <div className="select-none flex flex-col mt-1 ml-6">
-              <div className="flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                <span className="text-[11px] text-[#36454F]">Connected, secured</span>
-              </div>
+            <div className="select-none flex flex-col mt-1">
               {connectedEmail && (
-                <span className="text-[10px] text-gray-500 ml-2.5 truncate max-w-[140px]" title={connectedEmail}>
+                <span className="text-[10px] text-gray-500 truncate max-w-[140px] ml-6" title={connectedEmail}>
                   {connectedEmail}
                 </span>
               )}
