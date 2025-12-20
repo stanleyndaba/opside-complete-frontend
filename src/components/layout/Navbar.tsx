@@ -311,7 +311,7 @@ export function Navbar({
             </div>
           </div>
           {/* Right side - Connect Platform button and Sandbox badge */}
-          <div className="flex items-center gap-0 bg-transparent border border-gray-200 rounded-md overflow-hidden">
+          <div className="flex items-center gap-0 bg-transparent ml-6">
             <Select value={selectedCurrency} onValueChange={setSelectedCurrency}>
               <SelectTrigger className="h-9 w-20 bg-transparent border-0 text-[#36454F] focus:ring-0 shadow-none px-2 text-xs font-medium">
                 <SelectValue />
