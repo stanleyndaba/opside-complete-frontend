@@ -2860,10 +2860,7 @@ export default function Recoveries() {
                             </div>
                             <div>
                               <Label className="text-[#36454F]">Severity</Label>
-                              <Badge className={`mt-1 ${detectionDetails.severity === 'high' ? 'bg-red-500/20 text-red-300 border-red-500/30' :
-                                detectionDetails.severity === 'medium' ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' :
-                                  'bg-gray-500/20 text-[#36454F] border-gray-500/30'
-                                }`}>
+                              <Badge className="mt-1 bg-gray-100 text-[#36454F] border-gray-400">
                                 {detectionDetails.severity?.charAt(0).toUpperCase() + detectionDetails.severity?.slice(1) || 'Unknown'}
                               </Badge>
                             </div>
@@ -2881,11 +2878,7 @@ export default function Recoveries() {
                                     <span className="text-sm font-medium text-[#36454F]">
                                       {(detectionDetails.confidence_score * 100).toFixed(1)}%
                                     </span>
-                                    <Badge className={
-                                      detectionDetails.confidence_score >= 0.85 ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' :
-                                        detectionDetails.confidence_score >= 0.50 ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' :
-                                          'bg-gray-500/20 text-[#36454F] border-gray-500/30'
-                                    }>
+                                    <Badge className="bg-gray-100 text-[#36454F] border-gray-400">
                                       {detectionDetails.confidence_score >= 0.85 ? 'High' : detectionDetails.confidence_score >= 0.50 ? 'Medium' : 'Low'}
                                     </Badge>
                                   </>
