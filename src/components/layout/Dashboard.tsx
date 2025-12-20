@@ -929,14 +929,14 @@ export function Dashboard() {
       {/* Document Sources Modal */}
       < Dialog open={showSourcesModal} onOpenChange={setShowSourcesModal} >
         <DialogContent className="sm:max-w-md bg-white rounded-md">
-          <DialogHeader className="pb-3">
-            <DialogTitle className="text-lg font-semibold text-gray-900">connect sources for document ingestion</DialogTitle>
-            <DialogDescription className="text-sm text-gray-500">
-              Read-only access. No writing or sending permissions.
+          <DialogHeader className="border-b border-gray-200 pb-3">
+            <DialogTitle className="text-sm font-semibold text-gray-900">Connect Document Sources</DialogTitle>
+            <DialogDescription className="text-xs text-gray-500 mt-1">
+              Read-only access for document ingestion.
             </DialogDescription>
           </DialogHeader>
 
-          <div className="grid grid-cols-2 gap-3 py-2">
+          <div className="grid grid-cols-2 gap-3 py-3">
             <button
               onClick={async () => {
                 try {
@@ -963,14 +963,14 @@ export function Dashboard() {
                 }
               }}
               disabled={providerLoading === 'gmail'}
-              className="flex flex-col items-center gap-1.5 p-2.5 rounded-md border border-gray-200 hover:border-red-300 hover:bg-red-50 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex flex-col items-center gap-2 p-4 rounded-lg border border-gray-200 hover:border-red-300 hover:bg-red-50 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {providerLoading === 'gmail' ? (
                 <Loader2 className="h-10 w-10 animate-spin text-red-500" />
               ) : (
                 <img src={GmailIcon} alt="Gmail" className="h-10 w-10 object-contain group-hover:scale-105 transition-transform" />
               )}
-              <span className="text-xs font-medium text-gray-700">Gmail</span>
+              <span className="text-sm font-medium text-gray-700">Gmail</span>
             </button>
 
             <button
@@ -999,14 +999,14 @@ export function Dashboard() {
                 }
               }}
               disabled={providerLoading === 'outlook'}
-              className="flex flex-col items-center gap-1.5 p-2.5 rounded-md border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex flex-col items-center gap-2 p-4 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {providerLoading === 'outlook' ? (
                 <Loader2 className="h-10 w-10 animate-spin text-blue-500" />
               ) : (
                 <img src={OutlookIcon} alt="Outlook" className="h-10 w-10 object-contain group-hover:scale-105 transition-transform" />
               )}
-              <span className="text-xs font-medium text-gray-700">Outlook</span>
+              <span className="text-sm font-medium text-gray-700">Outlook</span>
             </button>
 
             <button
@@ -1035,14 +1035,14 @@ export function Dashboard() {
                 }
               }}
               disabled={providerLoading === 'gdrive'}
-              className="flex flex-col items-center gap-1.5 p-2.5 rounded-md border border-gray-200 hover:border-green-300 hover:bg-green-50 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex flex-col items-center gap-2 p-4 rounded-lg border border-gray-200 hover:border-green-300 hover:bg-green-50 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {providerLoading === 'gdrive' ? (
                 <Loader2 className="h-10 w-10 animate-spin text-green-500" />
               ) : (
                 <img src={GoogleDriveIcon} alt="Google Drive" className="h-10 w-10 object-contain group-hover:scale-105 transition-transform" />
               )}
-              <span className="text-xs font-medium text-gray-700">Google Drive</span>
+              <span className="text-sm font-medium text-gray-700">Google Drive</span>
             </button>
 
             <button
@@ -1071,26 +1071,26 @@ export function Dashboard() {
                 }
               }}
               disabled={providerLoading === 'dropbox'}
-              className="flex flex-col items-center gap-1.5 p-2.5 rounded-md border border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex flex-col items-center gap-2 p-4 rounded-lg border border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {providerLoading === 'dropbox' ? (
                 <Loader2 className="h-10 w-10 animate-spin text-blue-500" />
               ) : (
                 <img src={DropboxIcon} alt="Dropbox" className="h-10 w-10 object-contain group-hover:scale-105 transition-transform" />
               )}
-              <span className="text-xs font-medium text-gray-700">Dropbox</span>
+              <span className="text-sm font-medium text-gray-700">Dropbox</span>
             </button>
           </div>
 
-          <div className="flex justify-center items-center gap-3 pt-1">
+          <div className="flex justify-center items-center gap-3 pt-2">
             <Button
               variant="ghost"
               onClick={() => {
                 setShowSourcesModal(false);
               }}
-              className="bg-white text-[#36454F] border border-gray-200 hover:bg-gray-50"
+              className="bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 text-xs"
             >
-              Not now
+              Skip for Now
             </Button>
           </div>
         </DialogContent>
