@@ -2019,10 +2019,10 @@ export default function Recoveries() {
                   {/* Sync status message */}
                   {(syncMessage || needsSync || syncTriggered) && (
                     <div className={`mt-3 px-3 py-2 rounded-md text-xs ${syncTriggered
-                        ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                        : needsSync
-                          ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                          : 'bg-gray-50 text-gray-700 border border-gray-200'
+                      ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                      : needsSync
+                        ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                        : 'bg-gray-50 text-gray-700 border border-gray-200'
                       }`}>
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex items-start gap-2 flex-1">
@@ -2143,18 +2143,19 @@ export default function Recoveries() {
                 {/* Claims Tab (Existing Content) */}
                 <TabsContent value="claims" className="mt-0">
                   {/* Controls */}
-                  <Card className="mb-8 bg-gray-50 border-gray-200 text-gray-900 shadow-sm rounded-xl">
-                    <CardContent className="p-6">
+                  <Card className="mb-6 bg-white border-gray-200 shadow-sm rounded-lg">
+                    <CardContent className="p-4">
                       {/* Section Heading */}
-                      <div className="mb-6">
-                        <h2 className="text-lg font-semibold text-gray-900 mb-1">Capital Recovery</h2>
-                        <p className="text-sm text-gray-600">Track finalized reimbursements and measure your automated ROI.</p>
+                      <div className="border-b border-gray-200 pb-3 mb-4">
+                        <h2 className="text-sm font-semibold text-gray-900">Capital Recovery</h2>
+                        <p className="text-xs text-gray-600 mt-0.5">Track finalized reimbursements and measure your automated ROI.</p>
                       </div>
 
-                      <div className="flex flex-wrap gap-4 items-center">
+                      {/* Search & Quick Filters */}
+                      <div className="space-y-3">
                         {/* Search Bar */}
-                        <div className="relative flex-1 min-w-64">
-                          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500 stroke-[2]" />
+                        <div className="relative">
+                          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
                           <Input
                             placeholder="Search by Claim ID, ASIN, or Keyword..."
                             value={searchTerm}
@@ -2164,141 +2165,143 @@ export default function Recoveries() {
                         </div>
 
                         {/* Quick Date Range Buttons */}
-                        <div className="flex gap-2">
-                          <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" onClick={() => setQuickDateRange('30days')}>Last 30 Days</Button>
-                          <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" onClick={() => setQuickDateRange('quarter')}>Last Quarter</Button>
-                          <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" onClick={() => setQuickDateRange('year')}>This Year</Button>
-                          <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" onClick={() => setQuickDateRange('all')}>All Time</Button>
+                        <div className="flex flex-wrap gap-2">
+                          <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs" onClick={() => setQuickDateRange('30days')}>Last 30 Days</Button>
+                          <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs" onClick={() => setQuickDateRange('quarter')}>Last Quarter</Button>
+                          <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs" onClick={() => setQuickDateRange('year')}>This Year</Button>
+                          <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs" onClick={() => setQuickDateRange('all')}>All Time</Button>
                         </div>
 
-
-                        {/* Custom Date Range */}
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button variant="outline" className={cn("w-[280px] justify-start text-left font-medium bg-white text-gray-700 border-gray-200 hover:bg-gray-50", !dateRange && "text-gray-500")}>
-                              <CalendarIcon className="mr-2 h-4 w-4" />
-                              {dateRange?.from ? (
-                                dateRange.to ? (
-                                  <>
-                                    {format(dateRange.from, "LLL dd, y")} -{" "}
-                                    {format(dateRange.to, "LLL dd, y")}
-                                  </>
+                        {/* Filter Row */}
+                        <div className="flex flex-wrap gap-2 items-center">
+                          {/* Custom Date Range */}
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button variant="outline" size="sm" className={cn("justify-start text-left font-normal bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs", !dateRange && "text-gray-500")}>
+                                <CalendarIcon className="mr-2 h-3 w-3" />
+                                {dateRange?.from ? (
+                                  dateRange.to ? (
+                                    <>
+                                      {format(dateRange.from, "MMM dd, y")} -{" "}
+                                      {format(dateRange.to, "MMM dd, y")}
+                                    </>
+                                  ) : (
+                                    format(dateRange.from, "MMM dd, y")
+                                  )
                                 ) : (
-                                  format(dateRange.from, "LLL dd, y")
-                                )
-                              ) : (
-                                <span>Pick a date range</span>
-                              )}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              initialFocus
-                              mode="range"
-                              defaultMonth={dateRange?.from}
-                              selected={dateRange}
-                              onSelect={setDateRange}
-                              numberOfMonths={2}
-                              className="pointer-events-auto"
-                            />
-                          </PopoverContent>
-                        </Popover>
+                                  <span>Pick a date range</span>
+                                )}
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                              <Calendar
+                                initialFocus
+                                mode="range"
+                                defaultMonth={dateRange?.from}
+                                selected={dateRange}
+                                onSelect={setDateRange}
+                                numberOfMonths={2}
+                                className="pointer-events-auto"
+                              />
+                            </PopoverContent>
+                          </Popover>
 
-                        {/* Claim Type Filter */}
-                        <Select>
-                          <SelectTrigger className="w-[180px] bg-white text-gray-900 border-gray-200 hover:bg-gray-50">
-                            <SelectValue placeholder="Filter by Claim Type" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {claimTypes.map(type => (
-                              <SelectItem key={type} value={type}>{type}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-
-                        {/* Status Filter */}
-                        <Select>
-                          <SelectTrigger className="w-[180px] bg-white text-gray-900 border-gray-200 hover:bg-gray-50">
-                            <SelectValue placeholder="Filter by Status" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {statusOptions.map(status => (
-                              <SelectItem key={status} value={status}>{status}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-
-                        {/* Source Filter (Phase 3) */}
-                        <Select value={filterSource} onValueChange={(value: 'all' | 'detected' | 'synced') => {
-                          setFilterSource(value);
-                        }}>
-                          <SelectTrigger className="w-[180px] bg-white text-gray-900 border-gray-200 hover:bg-gray-50">
-                            <SelectValue placeholder="Filter by Source" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="all">All Sources</SelectItem>
-                            <SelectItem value="detected">Detected Claims</SelectItem>
-                            <SelectItem value="synced">Synced from Amazon</SelectItem>
-                          </SelectContent>
-                        </Select>
-
-                        {/* Share Button */}
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="bg-blue-600 text-white border-blue-600 hover:bg-blue-700"
-                          onClick={() => {
-                            const exportRange = dateRange?.from && dateRange?.to
-                              ? { from: dateRange.from, to: dateRange.to }
-                              : null;
-                            generateCasebookPDF(rankedClaims, exportRange);
-                            toast({ title: '📋 Casebook Generated', description: 'Press Ctrl+P to save as PDF for audits and accounting.' });
-                          }}
-                        >
-                          <ArrowUpFromLine className="h-4 w-4 mr-2" />
-                          Share
-                        </Button>
-
-                        {/* Confidence Filter (Phase 3) - only show when filtering by detected */}
-                        {filterSource === 'detected' && (
-                          <Select value={filterConfidence} onValueChange={(value: 'all' | 'high' | 'medium' | 'low') => {
-                            setFilterConfidence(value);
-                          }}>
-                            <SelectTrigger className="w-[180px] bg-white text-gray-900 border-gray-200 hover:bg-gray-50">
-                              <SelectValue placeholder="Filter by Confidence" />
+                          {/* Claim Type Filter */}
+                          <Select>
+                            <SelectTrigger className="w-auto min-w-[140px] bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs h-8">
+                              <SelectValue placeholder="Filter by Claim Type" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="all">All Confidence Levels</SelectItem>
-                              <SelectItem value="high">High (≥85%)</SelectItem>
-                              <SelectItem value="medium">Medium (50-85%)</SelectItem>
-                              <SelectItem value="low">Low (&lt;50%)</SelectItem>
+                              {claimTypes.map(type => (
+                                <SelectItem key={type} value={type}>{type}</SelectItem>
+                              ))}
                             </SelectContent>
                           </Select>
-                        )}
 
-                        {/* Urgent Filter */}
-                        <Select value={filterUrgent} onValueChange={(value: 'all' | 'urgent' | 'critical') => {
-                          setFilterUrgent(value);
-                        }}>
-                          <SelectTrigger className="w-[180px] bg-white text-gray-900 border-gray-200 hover:bg-gray-50">
-                            <SelectValue placeholder="Filter by Urgency" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="all">All Claims</SelectItem>
-                            <SelectItem value="urgent">Urgent (≤7 days)</SelectItem>
-                            <SelectItem value="critical">Critical (≤3 days)</SelectItem>
-                          </SelectContent>
-                        </Select>
+                          {/* Status Filter */}
+                          <Select>
+                            <SelectTrigger className="w-auto min-w-[140px] bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs h-8">
+                              <SelectValue placeholder="Filter by Status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {statusOptions.map(status => (
+                                <SelectItem key={status} value={status}>{status}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
 
-                        {/* Show risky claims toggle */}
-                        <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer select-none">
-                          <Checkbox
-                            checked={showRiskyClaims}
-                            onCheckedChange={(checked) => setShowRiskyClaims(!!checked)}
-                            className="border-gray-300"
-                          />
-                          Show weak claims
-                        </label>
+                          {/* Source Filter (Phase 3) */}
+                          <Select value={filterSource} onValueChange={(value: 'all' | 'detected' | 'synced') => {
+                            setFilterSource(value);
+                          }}>
+                            <SelectTrigger className="w-auto min-w-[120px] bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs h-8">
+                              <SelectValue placeholder="All Sources" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">All Sources</SelectItem>
+                              <SelectItem value="detected">Detected Claims</SelectItem>
+                              <SelectItem value="synced">Synced from Amazon</SelectItem>
+                            </SelectContent>
+                          </Select>
+
+                          {/* Confidence Filter (Phase 3) - only show when filtering by detected */}
+                          {filterSource === 'detected' && (
+                            <Select value={filterConfidence} onValueChange={(value: 'all' | 'high' | 'medium' | 'low') => {
+                              setFilterConfidence(value);
+                            }}>
+                              <SelectTrigger className="w-auto min-w-[140px] bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs h-8">
+                                <SelectValue placeholder="All Confidence" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="all">All Confidence Levels</SelectItem>
+                                <SelectItem value="high">High (≥85%)</SelectItem>
+                                <SelectItem value="medium">Medium (50-85%)</SelectItem>
+                                <SelectItem value="low">Low (<50%)</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          )}
+
+                          {/* Urgent Filter */}
+                          <Select value={filterUrgent} onValueChange={(value: 'all' | 'urgent' | 'critical') => {
+                            setFilterUrgent(value);
+                          }}>
+                            <SelectTrigger className="w-auto min-w-[120px] bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs h-8">
+                              <SelectValue placeholder="All Claims" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">All Claims</SelectItem>
+                              <SelectItem value="urgent">Urgent (≤7 days)</SelectItem>
+                              <SelectItem value="critical">Critical (≤3 days)</SelectItem>
+                            </SelectContent>
+                          </Select>
+
+                          {/* Show risky claims toggle */}
+                          <label className="flex items-center gap-2 text-xs text-gray-600 cursor-pointer select-none">
+                            <Checkbox
+                              checked={showRiskyClaims}
+                              onCheckedChange={(checked) => setShowRiskyClaims(!!checked)}
+                              className="border-gray-300"
+                            />
+                            Show weak claims
+                          </label>
+
+                          {/* Share Button */}
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="bg-blue-600 text-white border-blue-600 hover:bg-blue-700 text-xs ml-auto"
+                            onClick={() => {
+                              const exportRange = dateRange?.from && dateRange?.to
+                                ? { from: dateRange.from, to: dateRange.to }
+                                : null;
+                              generateCasebookPDF(rankedClaims, exportRange);
+                              toast({ title: '📋 Casebook Generated', description: 'Press Ctrl+P to save as PDF for audits and accounting.' });
+                            }}
+                          >
+                            <ArrowUpFromLine className="h-3 w-3 mr-2" />
+                            Share
+                          </Button>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
