@@ -2620,10 +2620,10 @@ export default function Recoveries() {
                   {/* Phase 3: Resolve Detection Modal */}
                   <Dialog open={resolveModalOpen} onOpenChange={setResolveModalOpen}>
                     <DialogContent className="bg-white border-gray-200 text-gray-700">
-                      <DialogHeader>
-                        <DialogTitle>Mark Detection as Resolved</DialogTitle>
-                        <DialogDescription className="text-[#36454F]">
-                          Mark this detection as resolved and record the resolution details.
+                      <DialogHeader className="border-b border-gray-200 pb-3">
+                        <DialogTitle className="text-base font-semibold text-gray-900">Resolution Record</DialogTitle>
+                        <DialogDescription className="text-xs text-gray-600 mt-1">
+                          Complete resolution details and mark claim as resolved
                         </DialogDescription>
                       </DialogHeader>
                       {selectedDetection && (
@@ -2719,9 +2719,9 @@ export default function Recoveries() {
                               });
                             }
                           }}
-                          className="bg-emerald-500 hover:bg-emerald-400 text-white"
+                          className="bg-gray-700 hover:bg-gray-600 text-white"
                         >
-                          Mark as Resolved
+                          Complete Resolution
                         </Button>
                       </DialogFooter>
                     </DialogContent>
@@ -2730,10 +2730,10 @@ export default function Recoveries() {
                   {/* Phase 3: Status Update Modal */}
                   <Dialog open={statusUpdateModalOpen} onOpenChange={setStatusUpdateModalOpen}>
                     <DialogContent className="bg-white border-gray-200 text-gray-700">
-                      <DialogHeader>
-                        <DialogTitle>Update Detection Status</DialogTitle>
-                        <DialogDescription className="text-[#36454F]">
-                          Update the status of this detection through the workflow: Pending → Reviewed → Disputed → Resolved
+                      <DialogHeader className="border-b border-gray-200 pb-3">
+                        <DialogTitle className="text-base font-semibold text-gray-900">Status Update</DialogTitle>
+                        <DialogDescription className="text-xs text-gray-600 mt-1">
+                          Update claim status and record change notes
                         </DialogDescription>
                       </DialogHeader>
                       {selectedDetection && (
@@ -2820,7 +2820,7 @@ export default function Recoveries() {
                               });
                             }
                           }}
-                          className="bg-blue-500 hover:bg-blue-400 text-white"
+                          className="bg-gray-700 hover:bg-gray-600 text-white"
                         >
                           Update Status
                         </Button>
