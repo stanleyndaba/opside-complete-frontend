@@ -2256,7 +2256,7 @@ export default function Recoveries() {
                                 <SelectItem value="all">All Confidence Levels</SelectItem>
                                 <SelectItem value="high">High (≥85%)</SelectItem>
                                 <SelectItem value="medium">Medium (50-85%)</SelectItem>
-                                <SelectItem value="low">Low (<50%)</SelectItem>
+                                <SelectItem value="low">Low (&lt;50%)</SelectItem>
                               </SelectContent>
                             </Select>
                           )}
