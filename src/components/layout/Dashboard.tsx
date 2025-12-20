@@ -1133,7 +1133,7 @@ export function Dashboard() {
               onClick={() => {
                 setShowSourcesModal(false);
               }}
-              className="bg-emerald-500 text-white border-none hover:bg-emerald-600"
+              className="bg-white text-[#36454F] border border-gray-200 hover:bg-gray-50"
             >
               Not now
             </Button>
