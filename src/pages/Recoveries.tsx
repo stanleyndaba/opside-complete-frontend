@@ -2936,26 +2936,23 @@ export default function Recoveries() {
                     </DialogHeader>
                     {detectionDetails && (
                       <div className="space-y-6 py-4">
-                        {/* Key Metrics Row */}
-                        <div className="grid grid-cols-3 gap-4">
-                          <div className="bg-gray-50 rounded-lg p-4 text-center">
-                            <div className="text-xs text-gray-500 uppercase tracking-wide">Amount</div>
-                            <div className="text-2xl font-bold text-emerald-600 mt-1">
-                              ${(detectionDetails.guaranteedAmount || detectionDetails.amount || 0).toFixed(2)}
-                            </div>
+                        {/* Summary Information */}
+                        <div className="border border-gray-200 rounded-lg overflow-hidden">
+                          <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
+                            <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Claim Summary</h4>
                           </div>
-                          <div className="bg-gray-50 rounded-lg p-4 text-center">
-                            <div className="text-xs text-gray-500 uppercase tracking-wide">Status</div>
-                            <div className="mt-2">
-                              <Badge className={`${detectionDetails.status?.toLowerCase() === 'resolved' ? 'bg-emerald-100 text-emerald-700' : detectionDetails.status?.toLowerCase() === 'submitted' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'}`}>
-                                {detectionDetails.status || 'Pending'}
-                              </Badge>
+                          <div className="divide-y divide-gray-200">
+                            <div className="flex justify-between items-center px-4 py-3 bg-white">
+                              <span className="text-sm text-gray-600">Amount</span>
+                              <span className="text-sm font-medium text-gray-900">${(detectionDetails.guaranteedAmount || detectionDetails.amount || 0).toFixed(2)}</span>
                             </div>
-                          </div>
-                          <div className="bg-gray-50 rounded-lg p-4 text-center">
-                            <div className="text-xs text-gray-500 uppercase tracking-wide">Evidence</div>
-                            <div className="text-2xl font-bold text-gray-900 mt-1">
-                              {detectionDetails.matchedCount || detectionDetails.matchedDocs?.length || 0}
+                            <div className="flex justify-between items-center px-4 py-3 bg-white">
+                              <span className="text-sm text-gray-600">Status</span>
+                              <span className="text-sm font-medium text-gray-900">{detectionDetails.status || 'Pending'}</span>
+                            </div>
+                            <div className="flex justify-between items-center px-4 py-3 bg-white">
+                              <span className="text-sm text-gray-600">Evidence Documents</span>
+                              <span className="text-sm font-medium text-gray-900">{detectionDetails.matchedCount || detectionDetails.matchedDocs?.length || 0}</span>
                             </div>
                           </div>
                         </div>
@@ -3020,51 +3017,48 @@ export default function Recoveries() {
                         {/* Evidence Quality & Policy Check */}
                         {(() => {
                           const validation = validateEvidencePolicy(detectionDetails, detectionDetails.matchedDocs);
-                          const tierColor =
-                            validation.quality === 'strong' ? 'text-emerald-700 bg-emerald-50 border-emerald-200' :
-                              validation.quality === 'medium' ? 'text-amber-700 bg-amber-50 border-amber-200' :
-                                'text-red-700 bg-red-50 border-red-200';
 
                           return (
                             <div className="border-t border-gray-100 pt-4">
-                              <div className={cn("rounded-lg border p-4 space-y-4", tierColor)}>
-                                <div className="flex items-center justify-between">
-                                  <div className="flex items-center gap-2">
-                                    <span className="text-2xl">
-                                      {validation.quality === 'strong' ? '✅' : validation.quality === 'medium' ? '⚠️' : '⏳'}
-                                    </span>
+                              <div className="border border-gray-200 rounded-lg overflow-hidden">
+                                <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
+                                  <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Evidence Assessment</h4>
+                                </div>
+                                <div className="bg-white p-4 space-y-4">
+                                  {/* Quality Summary */}
+                                  <div className="flex justify-between items-start pb-3 border-b border-gray-100">
                                     <div>
-                                      <h4 className="font-bold text-sm uppercase tracking-wider">Evidence Quality: {validation.quality}</h4>
-                                      <p className="text-xs font-semibold opacity-90">{validation.recommendationText}</p>
+                                      <div className="text-sm font-medium text-gray-900">Quality Level</div>
+                                      <div className="text-xs text-gray-600 mt-1">{validation.recommendationText}</div>
+                                    </div>
+                                    <div className="text-right">
+                                      <div className="text-sm font-semibold text-gray-900">{validation.quality.charAt(0).toUpperCase() + validation.quality.slice(1)}</div>
+                                      <div className="text-xs text-gray-500 mt-1">{validation.qualityScore}% Policy Score</div>
                                     </div>
                                   </div>
-                                  <div className="text-right">
-                                    <div className="text-2xl font-bold">{validation.qualityScore}%</div>
-                                    <div className="text-[10px] uppercase opacity-70 font-bold">Policy Score</div>
-                                  </div>
-                                </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-black/5">
+                                  {/* Field Verification */}
                                   <div className="space-y-2">
-                                    <p className="text-[10px] uppercase font-bold opacity-70">Field Verification</p>
-                                    <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+                                    <p className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Field Verification</p>
+                                    <div className="space-y-1">
                                       {validation.fieldChecks.map((check, i) => (
-                                        <div key={i} className="flex items-center justify-between text-xs py-0.5">
-                                          <span className="opacity-80">{check.label}</span>
-                                          <span className={cn("font-bold", check.present ? "text-emerald-600" : check.required ? "text-red-600" : "opacity-40")}>
-                                            {check.present ? "✓" : check.required ? "MISSING" : "—"}
+                                        <div key={i} className="flex items-center justify-between text-xs py-1 border-b border-gray-50 last:border-0">
+                                          <span className="text-gray-600">{check.label}</span>
+                                          <span className="font-medium text-gray-900">
+                                            {check.present ? "Present" : check.required ? "Required" : "Optional"}
                                           </span>
                                         </div>
                                       ))}
                                     </div>
                                   </div>
 
+                                  {/* Policy Notes */}
                                   {validation.warnings.length > 0 && (
-                                    <div className="space-y-2">
-                                      <p className="text-[10px] uppercase font-bold opacity-70 text-amber-600">FBA Policy Warnings</p>
-                                      <ul className="text-xs space-y-1 list-disc list-inside">
+                                    <div className="space-y-2 pt-2 border-t border-gray-100">
+                                      <p className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Policy Notes</p>
+                                      <ul className="text-xs space-y-1">
                                         {validation.warnings.map((w, i) => (
-                                          <li key={i} className="text-amber-700">{w}</li>
+                                          <li key={i} className="text-gray-600 pl-3 relative before:content-['•'] before:absolute before:left-0">{w}</li>
                                         ))}
                                       </ul>
                                     </div>
