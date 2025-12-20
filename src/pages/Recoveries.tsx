@@ -2146,6 +2146,12 @@ export default function Recoveries() {
                   {/* Controls */}
                   <Card className="mb-8 bg-gray-50 border-gray-200 text-gray-900 shadow-sm rounded-xl">
                     <CardContent className="p-6">
+                      {/* Section Heading */}
+                      <div className="mb-6">
+                        <h2 className="text-lg font-semibold text-gray-900 mb-1">Capital Recovery</h2>
+                        <p className="text-sm text-gray-600">Track finalized reimbursements and measure your automated ROI.</p>
+                      </div>
+
                       <div className="flex flex-wrap gap-4 items-center">
                         {/* Search Bar */}
                         <div className="relative flex-1 min-w-64">
