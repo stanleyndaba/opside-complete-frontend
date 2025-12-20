@@ -170,71 +170,72 @@ export default function DocumentDetail() {
     <PageLayout title="Document Details">
       <div className="space-y-6 bg-white min-h-screen">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <Link to="/evidence-locker">
-              <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back
-              </Button>
-            </Link>
-            <div>
-              <h1 className="text-2xl font-bold flex items-center gap-2 text-[#36454F]">
-                <FileText className="w-6 h-6" />
-                {documentData?.name || documentData?.filename || 'Document'}
-              </h1>
-              <div className="flex items-center gap-3 text-sm text-gray-600 mt-1">
-                {documentData?.source && (
-                  <span className="flex items-center gap-1">
-                    {getSourceIcon(documentData.source)}
-                    {documentData.source}
-                  </span>
-                )}
-                {documentData?.created_at && (
-                  <span className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
-                    {format(new Date(documentData.created_at), 'MMM dd, yyyy')}
-                  </span>
-                )}
-                {documentData?.file_size && (
-                  <span>{(documentData.file_size / 1024).toFixed(1)} KB</span>
-                )}
+        <div className="border-b border-gray-200 pb-4 mb-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Link to="/evidence-locker">
+                <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900 -ml-2">
+                  <ArrowLeft className="w-4 h-4 mr-1" />
+                  Back
+                </Button>
+              </Link>
+              <div className="border-l border-gray-300 pl-3">
+                <h1 className="text-base font-semibold text-gray-900">
+                  {documentData?.name || documentData?.filename || 'Document'}
+                </h1>
+                <div className="flex items-center gap-3 text-xs text-gray-600 mt-0.5">
+                  {documentData?.source && (
+                    <span className="flex items-center gap-1">
+                      {getSourceIcon(documentData.source)}
+                      {documentData.source}
+                    </span>
+                  )}
+                  {documentData?.created_at && (
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
+                      {format(new Date(documentData.created_at), 'MMM dd, yyyy')}
+                    </span>
+                  )}
+                  {documentData?.file_size && (
+                    <span>{(documentData.file_size / 1024).toFixed(1)} KB</span>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-          <div className="flex items-center gap-2">
-            {getParserStatusBadge(documentData?.parser_status || parsedData?.parser_status)}
-            <Button
-              variant="outline"
-              size="sm"
-              className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-              onClick={handleTriggerParsing}
-              disabled={triggeringParse}
-            >
-              {triggeringParse ? <RefreshCw className="w-4 h-4 mr-2 animate-spin" /> : null}
-              {triggeringParse ? 'Parsing...' : 'Re-Parse'}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-              onClick={async () => {
-                if (!docId) return;
-                try {
-                  const response = await api.getDocumentDownload(docId);
-                  if (response.ok && response.data?.url) {
-                    window.open(response.data.url, '_blank');
-                  } else {
-                    toast({ title: 'Download Failed', description: response.error || 'Could not get download URL', variant: 'destructive' });
+            <div className="flex items-center gap-2">
+              {getParserStatusBadge(documentData?.parser_status || parsedData?.parser_status)}
+              <Button
+                variant="outline"
+                size="sm"
+                className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                onClick={handleTriggerParsing}
+                disabled={triggeringParse}
+              >
+                {triggeringParse ? <RefreshCw className="w-4 h-4 mr-2 animate-spin" /> : null}
+                {triggeringParse ? 'Parsing...' : 'Re-Parse'}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                onClick={async () => {
+                  if (!docId) return;
+                  try {
+                    const response = await api.getDocumentDownload(docId);
+                    if (response.ok && response.data?.url) {
+                      window.open(response.data.url, '_blank');
+                    } else {
+                      toast({ title: 'Download Failed', description: response.error || 'Could not get download URL', variant: 'destructive' });
+                    }
+                  } catch (err: any) {
+                    toast({ title: 'Download Error', description: err?.message || 'Failed to download', variant: 'destructive' });
                   }
-                } catch (err: any) {
-                  toast({ title: 'Download Error', description: err?.message || 'Failed to download', variant: 'destructive' });
-                }
-              }}
-            >
-              <Download className="w-4 h-4 mr-2" />
-              Download
-            </Button>
+                }}
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Download
+              </Button>
+            </div>
           </div>
         </div>
 
