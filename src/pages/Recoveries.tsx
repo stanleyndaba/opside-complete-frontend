@@ -499,7 +499,7 @@ const DoubleDipBadge = ({ warning }: { warning: DuplicateWarning }) => {
   const config = {
     prior_reimbursement: { bg: 'bg-blue-100', text: 'text-blue-700', border: 'border-blue-200', icon: '✓', label: 'Prior Reimbursement' },
     inventory_adjustment: { bg: 'bg-purple-100', text: 'text-purple-700', border: 'border-purple-200', icon: '≡', label: 'Adjusted' },
-    already_filed: { bg: 'bg-amber-100', text: 'text-amber-700', border: 'border-amber-200', icon: '⚠', label: 'Duplicate Filed' },
+    already_filed: { bg: 'bg-gray-100', text: 'text-gray-700', border: 'border-gray-300', icon: '⚠', label: 'Duplicate Filed' },
     reconciled: { bg: 'bg-emerald-100', text: 'text-emerald-700', border: 'border-emerald-200', icon: '✓', label: 'Reconciled' }
   };
   const c = config[warning.reason];
