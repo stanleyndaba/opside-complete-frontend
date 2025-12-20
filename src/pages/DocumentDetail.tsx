@@ -289,142 +289,140 @@ export default function DocumentDetail() {
 
           {/* Extracted Data Tab */}
           <TabsContent value="extracted">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Order IDs & ASINs */}
-              <Card className="bg-white border-gray-200">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base text-[#36454F]">
-                    Order IDs
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {extracted.order_ids?.length > 0 ? (
-                    <div className="flex flex-wrap gap-2">
-                      {extracted.order_ids.map((id: string, idx: number) => (
-                        <Badge key={idx} className="bg-blue-100 text-blue-800 border-blue-200 font-mono">
-                          {id}
-                        </Badge>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-sm text-gray-500">No order IDs extracted</p>
-                  )}
-                </CardContent>
-              </Card>
+            <div className="space-y-4">
+              {/* Order IDs & ASINs Row */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                {/* Order IDs */}
+                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                  <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
+                    <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Order IDs</h4>
+                  </div>
+                  <div className="bg-white p-4">
+                    {extracted.order_ids?.length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {extracted.order_ids.map((id: string, idx: number) => (
+                          <Badge key={idx} className="bg-blue-100 text-blue-800 border-blue-200 font-mono">
+                            {id}
+                          </Badge>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-xs text-gray-500">No order IDs extracted</p>
+                    )}
+                  </div>
+                </div>
 
-              <Card className="bg-white border-gray-200">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base text-[#36454F]">
-                    ASINs / SKUs
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {(extracted.asins?.length > 0 || extracted.skus?.length > 0) ? (
-                    <div className="flex flex-wrap gap-2">
-                      {extracted.asins?.map((asin: string, idx: number) => (
-                        <Badge key={`asin-${idx}`} className="bg-emerald-100 text-emerald-800 border-emerald-200 font-mono">
-                          {asin}
-                        </Badge>
-                      ))}
-                      {extracted.skus?.map((sku: string, idx: number) => (
-                        <Badge key={`sku-${idx}`} className="bg-teal-100 text-teal-800 border-teal-200 font-mono">
-                          {sku}
-                        </Badge>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-sm text-gray-500">No ASINs or SKUs extracted</p>
-                  )}
-                </CardContent>
-              </Card>
+                {/* ASINs / SKUs */}
+                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                  <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
+                    <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">ASINs / SKUs</h4>
+                  </div>
+                  <div className="bg-white p-4">
+                    {(extracted.asins?.length > 0 || extracted.skus?.length > 0) ? (
+                      <div className="flex flex-wrap gap-2">
+                        {extracted.asins?.map((asin: string, idx: number) => (
+                          <Badge key={`asin-${idx}`} className="bg-emerald-100 text-emerald-800 border-emerald-200 font-mono">
+                            {asin}
+                          </Badge>
+                        ))}
+                        {extracted.skus?.map((sku: string, idx: number) => (
+                          <Badge key={`sku-${idx}`} className="bg-teal-100 text-teal-800 border-teal-200 font-mono">
+                            {sku}
+                          </Badge>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-xs text-gray-500">No ASINs or SKUs extracted</p>
+                    )}
+                  </div>
+                </div>
+              </div>
 
-              {/* Tracking Numbers */}
-              <Card className="bg-white border-gray-200">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base text-[#36454F]">
-                    Tracking Numbers
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {extracted.tracking_numbers?.length > 0 ? (
-                    <div className="flex flex-wrap gap-2">
-                      {extracted.tracking_numbers.map((num: string, idx: number) => (
-                        <Badge key={idx} className="bg-purple-100 text-purple-800 border-purple-200 font-mono">
-                          {num}
-                        </Badge>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-sm text-gray-500">No tracking numbers extracted</p>
-                  )}
-                </CardContent>
-              </Card>
+              {/* Tracking & Amounts Row */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                {/* Tracking Numbers */}
+                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                  <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
+                    <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Tracking Numbers</h4>
+                  </div>
+                  <div className="bg-white p-4">
+                    {extracted.tracking_numbers?.length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {extracted.tracking_numbers.map((num: string, idx: number) => (
+                          <Badge key={idx} className="bg-purple-100 text-purple-800 border-purple-200 font-mono">
+                            {num}
+                          </Badge>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-xs text-gray-500">No tracking numbers extracted</p>
+                    )}
+                  </div>
+                </div>
 
-              {/* Amounts */}
-              <Card className="bg-white border-gray-200">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base text-[#36454F]">
-                    Financial Amounts
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {extracted.amounts?.length > 0 ? (
-                    <div className="flex flex-wrap gap-2">
-                      {extracted.amounts.map((amt: number | string, idx: number) => (
-                        <Badge key={idx} className="bg-amber-100 text-amber-800 border-amber-200 font-mono">
-                          ${typeof amt === 'number' ? amt.toFixed(2) : amt}
-                        </Badge>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-sm text-gray-500">No amounts extracted</p>
-                  )}
-                </CardContent>
-              </Card>
+                {/* Amounts */}
+                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                  <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
+                    <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Financial Amounts</h4>
+                  </div>
+                  <div className="bg-white p-4">
+                    {extracted.amounts?.length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {extracted.amounts.map((amt: number | string, idx: number) => (
+                          <Badge key={idx} className="bg-amber-100 text-amber-800 border-amber-200 font-mono">
+                            ${typeof amt === 'number' ? amt.toFixed(2) : amt}
+                          </Badge>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-xs text-gray-500">No amounts extracted</p>
+                    )}
+                  </div>
+                </div>
+              </div>
 
-              {/* Invoice Numbers */}
-              <Card className="bg-white border-gray-200">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base text-[#36454F]">
-                    Invoice Numbers
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {extracted.invoice_numbers?.length > 0 ? (
-                    <div className="flex flex-wrap gap-2">
-                      {extracted.invoice_numbers.map((inv: string, idx: number) => (
-                        <Badge key={idx} className="bg-gray-100 text-gray-800 border-gray-200 font-mono">
-                          {inv}
-                        </Badge>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-sm text-gray-500">No invoice numbers extracted</p>
-                  )}
-                </CardContent>
-              </Card>
+              {/* Invoice & Dates Row */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                {/* Invoice Numbers */}
+                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                  <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
+                    <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Invoice Numbers</h4>
+                  </div>
+                  <div className="bg-white p-4">
+                    {extracted.invoice_numbers?.length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {extracted.invoice_numbers.map((inv: string, idx: number) => (
+                          <Badge key={idx} className="bg-gray-100 text-gray-800 border-gray-200 font-mono">
+                            {inv}
+                          </Badge>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-xs text-gray-500">No invoice numbers extracted</p>
+                    )}
+                  </div>
+                </div>
 
-              {/* Dates */}
-              <Card className="bg-white border-gray-200">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base text-[#36454F]">
-                    Dates Found
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {extracted.dates?.length > 0 ? (
-                    <div className="flex flex-wrap gap-2">
-                      {extracted.dates.map((date: string, idx: number) => (
-                        <Badge key={idx} className="bg-indigo-100 text-indigo-800 border-indigo-200">
-                          {date}
-                        </Badge>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-sm text-gray-500">No dates extracted</p>
-                  )}
-                </CardContent>
-              </Card>
+                {/* Dates */}
+                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                  <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
+                    <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Dates Found</h4>
+                  </div>
+                  <div className="bg-white p-4">
+                    {extracted.dates?.length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {extracted.dates.map((date: string, idx: number) => (
+                          <Badge key={idx} className="bg-indigo-100 text-indigo-800 border-indigo-200">
+                            {date}
+                          </Badge>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-xs text-gray-500">No dates extracted</p>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
           </TabsContent>
 

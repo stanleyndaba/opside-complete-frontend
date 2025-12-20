@@ -45,13 +45,13 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
       if (res.ok && res.data) {
         const data = res.data;
         const status = data.parser_status || data.processing_status || 'pending';
-        
+
         setJobStatus({
           status: status as any,
           progress: data.parser_status === 'processing' ? 50 : data.parser_status === 'completed' ? 100 : 0,
           confidence_score: data.parser_confidence,
         });
-        
+
         if (data.parsed_metadata) {
           setParsedData(data.parsed_metadata);
         }
@@ -149,87 +149,101 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
   }
 
   return (
-    <div className="space-y-3">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          {getStatusBadge()}
-          {jobStatus.confidence_score !== undefined && (
-            <span className="text-sm text-gray-400">
-              Confidence: {(jobStatus.confidence_score * 100).toFixed(1)}%
-            </span>
-          )}
+    <div className="space-y-4">
+      {/* Status Overview */}
+      <div className="border border-gray-200 rounded-lg overflow-hidden">
+        <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
+          <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Status Overview</h4>
         </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={fetchParsingStatus}
-          className="text-gray-400 hover:text-gray-200"
-        >
-          <RefreshCw className="w-4 h-4" />
-        </Button>
-      </div>
-
-      {jobStatus.status === 'processing' && jobStatus.progress !== undefined && (
-        <div className="space-y-2">
-          <Progress value={jobStatus.progress} className="h-2" />
-          <div className="text-xs text-gray-400">
-            Parsing document... {jobStatus.progress}%
-          </div>
-        </div>
-      )}
-
-      {jobStatus.status === 'failed' && jobStatus.error && (
-        <div className="p-2 rounded bg-red-500/10 border border-red-500/20 text-sm text-red-400">
-          <AlertTriangle className="w-4 h-4 inline mr-2" />
-          {jobStatus.error}
-        </div>
-      )}
-
-      {parsedData && jobStatus.status === 'completed' && (
-        <div className="mt-4 p-4 rounded-lg bg-white/5 border border-white/10 space-y-3">
-          <h4 className="text-sm font-semibold text-gray-200">Parsed Data</h4>
-          <div className="grid grid-cols-2 gap-3 text-sm">
-            {parsedData.supplier_name && (
-              <div>
-                <span className="text-gray-400">Supplier:</span>
-                <span className="ml-2 font-medium text-gray-200">{parsedData.supplier_name}</span>
-              </div>
-            )}
-            {parsedData.invoice_number && (
-              <div>
-                <span className="text-gray-400">Invoice #:</span>
-                <span className="ml-2 font-medium text-gray-200">{parsedData.invoice_number}</span>
-              </div>
-            )}
-            {parsedData.invoice_date && (
-              <div>
-                <span className="text-gray-400">Date:</span>
-                <span className="ml-2 font-medium text-gray-200">
-                  {new Date(parsedData.invoice_date).toLocaleDateString()}
+        <div className="bg-white p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              {getStatusBadge()}
+              {jobStatus.confidence_score !== undefined && (
+                <span className="text-xs text-gray-600">
+                  Confidence: {(jobStatus.confidence_score * 100).toFixed(1)}%
                 </span>
-              </div>
-            )}
-            {parsedData.total_amount !== undefined && (
-              <div>
-                <span className="text-gray-400">Total:</span>
-                <span className="ml-2 font-medium text-gray-200">
-                  {parsedData.currency || '$'}{parsedData.total_amount.toFixed(2)}
-                </span>
-              </div>
-            )}
+              )}
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={fetchParsingStatus}
+              className="text-gray-600 hover:text-gray-900"
+            >
+              <RefreshCw className="w-4 h-4" />
+            </Button>
           </div>
-          {parsedData.line_items && parsedData.line_items.length > 0 && (
-            <div className="mt-3">
-              <h5 className="text-xs font-semibold text-gray-400 mb-2">Line Items</h5>
-              <div className="space-y-1 max-h-32 overflow-y-auto">
-                {parsedData.line_items.map((item: any, idx: number) => (
-                  <div key={idx} className="text-xs text-gray-300 p-2 rounded bg-white/5">
-                    {item.description} - {item.quantity} x {parsedData.currency || '$'}{item.unit_price?.toFixed(2)} = {parsedData.currency || '$'}{item.total?.toFixed(2)}
-                  </div>
-                ))}
+
+          {jobStatus.status === 'processing' && jobStatus.progress !== undefined && (
+            <div className="space-y-2 mt-3 pt-3 border-t border-gray-100">
+              <Progress value={jobStatus.progress} className="h-2" />
+              <div className="text-xs text-gray-600">
+                Parsing document... {jobStatus.progress}%
               </div>
             </div>
           )}
+
+          {jobStatus.status === 'failed' && jobStatus.error && (
+            <div className="mt-3 pt-3 border-t border-gray-100 p-3 rounded bg-red-50 border border-red-200 text-xs text-red-700">
+              <AlertTriangle className="w-4 h-4 inline mr-2" />
+              {jobStatus.error}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Parsed Data */}
+      {parsedData && jobStatus.status === 'completed' && (
+        <div className="border border-gray-200 rounded-lg overflow-hidden">
+          <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
+            <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Parsed Metadata</h4>
+          </div>
+          <div className="bg-white">
+            <div className="divide-y divide-gray-100">
+              {parsedData.supplier_name && (
+                <div className="flex justify-between items-center px-4 py-2.5">
+                  <span className="text-xs text-gray-600">Supplier</span>
+                  <span className="text-xs font-medium text-gray-900">{parsedData.supplier_name}</span>
+                </div>
+              )}
+              {parsedData.invoice_number && (
+                <div className="flex justify-between items-center px-4 py-2.5">
+                  <span className="text-xs text-gray-600">Invoice #</span>
+                  <span className="text-xs font-medium text-gray-900">{parsedData.invoice_number}</span>
+                </div>
+              )}
+              {parsedData.invoice_date && (
+                <div className="flex justify-between items-center px-4 py-2.5">
+                  <span className="text-xs text-gray-600">Date</span>
+                  <span className="text-xs font-medium text-gray-900">
+                    {new Date(parsedData.invoice_date).toLocaleDateString()}
+                  </span>
+                </div>
+              )}
+              {parsedData.total_amount !== undefined && (
+                <div className="flex justify-between items-center px-4 py-2.5">
+                  <span className="text-xs text-gray-600">Total</span>
+                  <span className="text-xs font-medium text-gray-900">
+                    {parsedData.currency || '$'}{parsedData.total_amount.toFixed(2)}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {parsedData.line_items && parsedData.line_items.length > 0 && (
+              <div className="border-t border-gray-200 p-4">
+                <h5 className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-3">Line Items</h5>
+                <div className="space-y-2 max-h-40 overflow-y-auto">
+                  {parsedData.line_items.map((item: any, idx: number) => (
+                    <div key={idx} className="text-xs text-gray-700 p-2 rounded border border-gray-100 bg-gray-50">
+                      {item.description} - {item.quantity} x {parsedData.currency || '$'}{item.unit_price?.toFixed(2)} = {parsedData.currency || '$'}{item.total?.toFixed(2)}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
