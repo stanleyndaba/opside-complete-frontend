@@ -2953,6 +2953,7 @@ export default function Recoveries() {
                           </div>
                         </div>
 
+
                         {/* Claim Info Section */}
                         <div className="border-t border-gray-100 pt-4">
                           <h4 className="text-sm font-semibold text-gray-900 mb-3">Claim Information</h4>
@@ -2962,10 +2963,20 @@ export default function Recoveries() {
                               <div className="text-sm font-mono text-gray-900 mt-1">{detectionDetails.id?.slice(0, 12) || '—'}...</div>
                             </div>
                             <div>
+                              <div className="text-xs text-gray-500 uppercase tracking-wide">Sync ID</div>
+                              <div className="text-sm font-mono text-gray-900 mt-1">{detectionDetails.sync_id || 'N/A'}</div>
+                            </div>
+                            <div>
                               <div className="text-xs text-gray-500 uppercase tracking-wide">Type</div>
                               <div className="text-sm text-gray-900 mt-1">
                                 {detectionDetails.anomaly_type?.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || '—'}
                               </div>
+                            </div>
+                            <div>
+                              <div className="text-xs text-gray-500 uppercase tracking-wide">Severity</div>
+                              <Badge className="mt-1 bg-gray-100 text-[#36454F] border-gray-400">
+                                {detectionDetails.severity?.charAt(0).toUpperCase() + detectionDetails.severity?.slice(1) || 'Unknown'}
+                              </Badge>
                             </div>
                             {detectionDetails.sku && (
                               <div>
@@ -2979,6 +2990,105 @@ export default function Recoveries() {
                                 <div className="text-sm font-mono text-gray-900 mt-1">{detectionDetails.asin}</div>
                               </div>
                             )}
+                            <div className="col-span-2">
+                              <div className="text-xs text-gray-500 uppercase tracking-wide mb-2">AI Confidence</div>
+                              <div className="flex items-center gap-2">
+                                {detectionDetails.confidence_score !== null && detectionDetails.confidence_score !== undefined ? (
+                                  <>
+                                    <span className="text-sm font-medium text-gray-900">
+                                      {(detectionDetails.confidence_score * 100).toFixed(1)}%
+                                    </span>
+                                    <Badge className="bg-gray-100 text-[#36454F] border-gray-400">
+                                      {detectionDetails.confidence_score >= 0.85 ? 'High' : detectionDetails.confidence_score >= 0.50 ? 'Medium' : 'Low'}
+                                    </Badge>
+                                  </>
+                                ) : (
+                                  <span className="text-sm text-gray-600">N/A</span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Evidence Quality & Policy Check */}
+                        {(() => {
+                          const validation = validateEvidencePolicy(detectionDetails, detectionDetails.matchedDocs);
+                          const tierColor =
+                            validation.quality === 'strong' ? 'text-emerald-700 bg-emerald-50 border-emerald-200' :
+                              validation.quality === 'medium' ? 'text-amber-700 bg-amber-50 border-amber-200' :
+                                'text-red-700 bg-red-50 border-red-200';
+
+                          return (
+                            <div className="border-t border-gray-100 pt-4">
+                              <div className={cn("rounded-lg border p-4 space-y-4", tierColor)}>
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-2xl">
+                                      {validation.quality === 'strong' ? '✅' : validation.quality === 'medium' ? '⚠️' : '⏳'}
+                                    </span>
+                                    <div>
+                                      <h4 className="font-bold text-sm uppercase tracking-wider">Evidence Quality: {validation.quality}</h4>
+                                      <p className="text-xs font-semibold opacity-90">{validation.recommendationText}</p>
+                                    </div>
+                                  </div>
+                                  <div className="text-right">
+                                    <div className="text-2xl font-bold">{validation.qualityScore}%</div>
+                                    <div className="text-[10px] uppercase opacity-70 font-bold">Policy Score</div>
+                                  </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-black/5">
+                                  <div className="space-y-2">
+                                    <p className="text-[10px] uppercase font-bold opacity-70">Field Verification</p>
+                                    <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+                                      {validation.fieldChecks.map((check, i) => (
+                                        <div key={i} className="flex items-center justify-between text-xs py-0.5">
+                                          <span className="opacity-80">{check.label}</span>
+                                          <span className={cn("font-bold", check.present ? "text-emerald-600" : check.required ? "text-red-600" : "opacity-40")}>
+                                            {check.present ? "✓" : check.required ? "MISSING" : "—"}
+                                          </span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+
+                                  {validation.warnings.length > 0 && (
+                                    <div className="space-y-2">
+                                      <p className="text-[10px] uppercase font-bold opacity-70 text-amber-600">FBA Policy Warnings</p>
+                                      <ul className="text-xs space-y-1 list-disc list-inside">
+                                        {validation.warnings.map((w, i) => (
+                                          <li key={i} className="text-amber-700">{w}</li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })()}
+
+                        {/* Financial Information */}
+                        <div className="border-t border-gray-100 pt-4">
+                          <h4 className="text-sm font-semibold text-gray-900 mb-3">Financial Information</h4>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <div className="text-xs text-gray-500 uppercase tracking-wide">Estimated Value</div>
+                              <div className="text-lg font-semibold text-emerald-600 mt-1">
+                                {formatCurrency(detectionDetails.estimated_value || detectionDetails.guaranteedAmount || 0, detectionDetails.currency || 'USD')}
+                              </div>
+                            </div>
+                            <div>
+                              <div className="text-xs text-gray-500 uppercase tracking-wide">Currency</div>
+                              <div className="text-sm text-gray-900 mt-1">{detectionDetails.currency || 'USD'}</div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Dates & Deadlines */}
+                        <div className="border-t border-gray-100 pt-4">
+                          <h4 className="text-sm font-semibold text-gray-900 mb-3">Dates & Deadlines</h4>
+                          <div className="grid grid-cols-2 gap-4">
                             {detectionDetails.discovery_date && (
                               <div>
                                 <div className="text-xs text-gray-500 uppercase tracking-wide">Discovery Date</div>
@@ -2987,16 +3097,64 @@ export default function Recoveries() {
                                 </div>
                               </div>
                             )}
-                            {detectionDetails.confidence_score !== undefined && (
+                            {detectionDetails.deadline_date && (
                               <div>
-                                <div className="text-xs text-gray-500 uppercase tracking-wide">AI Confidence</div>
+                                <div className="text-xs text-gray-500 uppercase tracking-wide">Deadline Date</div>
+                                <div className={`text-sm font-medium mt-1 ${detectionDetails.days_remaining !== undefined && detectionDetails.days_remaining <= 7
+                                  ? 'text-amber-600'
+                                  : 'text-gray-900'
+                                  }`}>
+                                  {format(new Date(detectionDetails.deadline_date), 'MMM dd, yyyy')}
+                                </div>
+                              </div>
+                            )}
+                            {detectionDetails.days_remaining !== undefined && (
+                              <div>
+                                <div className="text-xs text-gray-500 uppercase tracking-wide">Days Remaining</div>
+                                <div className={`text-sm font-medium mt-1 ${detectionDetails.days_remaining <= 3 ? 'text-red-600' :
+                                  detectionDetails.days_remaining <= 7 ? 'text-amber-600' :
+                                    'text-gray-900'
+                                  }`}>
+                                  {detectionDetails.days_remaining} day{detectionDetails.days_remaining !== 1 ? 's' : ''}
+                                </div>
+                              </div>
+                            )}
+                            {detectionDetails.created_at && (
+                              <div>
+                                <div className="text-xs text-gray-500 uppercase tracking-wide">Created At</div>
                                 <div className="text-sm text-gray-900 mt-1">
-                                  {Math.round((detectionDetails.confidence_score || 0) * 100)}%
+                                  {format(new Date(detectionDetails.created_at), 'MMM dd, yyyy HH:mm')}
                                 </div>
                               </div>
                             )}
                           </div>
                         </div>
+
+                        {/* Related Event IDs */}
+                        {detectionDetails.related_event_ids && detectionDetails.related_event_ids.length > 0 && (
+                          <div className="border-t border-gray-100 pt-4">
+                            <h4 className="text-sm font-semibold text-gray-900 mb-3">Related Event IDs</h4>
+                            <div className="flex flex-wrap gap-2">
+                              {detectionDetails.related_event_ids.map((eventId: string, idx: number) => (
+                                <Badge key={idx} variant="outline" className="font-mono text-xs">
+                                  {eventId}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Evidence Data */}
+                        {detectionDetails.evidence && (
+                          <div className="border-t border-gray-100 pt-4">
+                            <h4 className="text-sm font-semibold text-gray-900 mb-3">Evidence Data</h4>
+                            <div className="bg-gray-50 border border-gray-200 rounded-md p-3 max-h-48 overflow-auto">
+                              <pre className="text-xs text-gray-700">
+                                {JSON.stringify(detectionDetails.evidence, null, 2)}
+                              </pre>
+                            </div>
+                          </div>
+                        )}
 
                         {/* Details/Description */}
                         {detectionDetails.details && (
