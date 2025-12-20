@@ -313,12 +313,12 @@ export default function IntegrationsHub() {
 
             {/* Header */}
             <div className="text-center">
-              <h1 className="text-3xl font-bold mb-2 text-gray-900">Integrations</h1>
-              <p className="text-gray-600">
+              <h1 className="text-xl font-semibold mb-1 text-gray-900">Integrations</h1>
+              <p className="text-xs text-gray-600">
                 Your central command center for all platform connections
               </p>
-              <div className="mt-6 flex justify-center">
-                <span className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1 text-xs font-medium uppercase tracking-wide text-blue-600 shadow-[0_5px_20px_rgba(59,130,246,0.15)]">
+              <div className="mt-4 flex justify-center">
+                <span className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-[10px] font-medium uppercase tracking-wide text-blue-600 shadow-[0_5px_20px_rgba(59,130,246,0.15)]">
                   Works best with work email!
                 </span>
               </div>
@@ -328,15 +328,15 @@ export default function IntegrationsHub() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Amazon SP-API - Clean Design */}
               <Card className="bg-white border-gray-200 shadow-sm overflow-hidden">
-                <CardHeader className="pb-4">
+                <CardHeader className="border-b border-gray-200 pb-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center shadow-sm">
                         <img src="/Amazon-logo.png" alt="Amazon" className="h-7 w-7 object-contain brightness-0 invert" />
                       </div>
                       <div>
-                        <CardTitle className="text-gray-900 text-lg">Amazon SP-API</CardTitle>
-                        <CardDescription className="text-gray-500 text-sm">Sync inventory, orders, fees & returns</CardDescription>
+                        <CardTitle className="text-sm font-semibold text-gray-900">Amazon SP-API</CardTitle>
+                        <CardDescription className="text-xs text-gray-500">Sync inventory, orders, fees & returns</CardDescription>
                       </div>
                     </div>
                     <Badge
@@ -374,11 +374,11 @@ export default function IntegrationsHub() {
 
               {/* Document Source */}
               <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
-                <CardHeader>
-                  <CardTitle className="text-gray-900">Document Source</CardTitle>
-                  <CardDescription className="text-gray-600">
+                <CardHeader className="border-b border-gray-200 pb-3">
+                  <CardTitle className="text-sm font-semibold text-gray-900">Document Source</CardTitle>
+                  <CardDescription className="text-xs text-gray-600">
                     Connect email and cloud to auto‑ingest invoices, receipts and shipping docs.
-                    <span className="block mt-1 text-xs text-emerald-600/80">
+                    <span className="block mt-1 text-[10px] text-emerald-600/80">
                       Gmail, Outlook, Google Drive, and Dropbox are available!
                     </span>
                   </CardDescription>
@@ -418,7 +418,7 @@ export default function IntegrationsHub() {
                         const connected = isConnected();
 
                         return (
-                          <div key={p} className="flex flex-col gap-4 px-4 py-4 md:flex-row md:items-center md:justify-between">
+                          <div key={p} className="flex flex-col gap-4 px-4 py-3 md:flex-row md:items-center md:justify-between">
                             <div className="flex items-center gap-3 flex-1">
                               <img src="/gmailicon.png" alt="Gmail" className="h-6 w-6 object-contain" />
                               <div>
@@ -541,7 +541,7 @@ export default function IntegrationsHub() {
                       const connected = isConnected();
 
                       return (
-                        <div key={p} className="flex flex-col gap-4 px-4 py-4 md:flex-row md:items-center md:justify-between">
+                        <div key={p} className="flex flex-col gap-4 px-4 py-3 md:flex-row md:items-center md:justify-between">
                           <div className="flex items-center gap-3 flex-1">
                             <img src={providerIcon} alt={providerName} className="h-6 w-6 object-contain" />
                             <div>
