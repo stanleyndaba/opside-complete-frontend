@@ -661,25 +661,6 @@ const Index = () => {
                   Automated FBA Recovery with <span className="font-semibold text-emerald-500">{precisionCount.toFixed(2)}%</span> Precision. Clario hunts through your data and documents to perform a full scan of all major reimbursement types—lost inventory, bad returns, and fee errors. We build airtight claims automatically, so you never need a spreadsheet or VA again.
                 </p>
               </div>
-              <div className="relative w-full max-w-sm space-y-5 rounded-3xl border border-gray-200 bg-gray-50 p-6 text-sm text-gray-700 justify-self-end overflow-hidden">
-                <div className="text-xs font-semibold uppercase tracking-[0.3em] text-gray-500">Why 11 Clario Agents Beat 1 Human</div>
-                <div className="relative h-44 overflow-hidden">
-                  {AGENT_HIGHLIGHTS.map((item, index) => (
-                    <div
-                      key={item.title}
-                      className={`absolute inset-0 flex flex-col items-center justify-center gap-3 px-6 text-center transition-all duration-500 ${agentHighlightIndex === index ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
-                        }`}
-                      aria-hidden={agentHighlightIndex !== index}
-                    >
-                      <div>
-                        <p className="text-base font-semibold" style={{ color: '#99f2c8' }}>{item.title}</p>
-                        <p className="text-sm text-gray-600">{item.description}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <p className="text-sm text-gray-600">Clario is your Autonomous AI Agent, not your boss. You maintain 100% command over your data, account and recovery processes!</p>
-              </div>
             </div>
           </div>
         </section>
