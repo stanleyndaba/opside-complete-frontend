@@ -1951,9 +1951,9 @@ export default function Recoveries() {
           <div className="relative w-full max-w-full px-4 sm:px-6 pt-6 pb-10 text-gray-900 space-y-6">
             <div className="mb-8">
               <div className="flex items-center justify-between mb-2">
-                <h1 className="text-xl text-gray-900 font-medium">Claims and Dispute Cases</h1>
+                <h1 className="text-xl text-gray-900 font-medium">Audit Ledger</h1>
               </div>
-              <p className="text-sm text-gray-500">Track, manage, and resolve FBA claims to recover lost revenue</p>
+              <p className="text-sm text-gray-500">Track, filter, and analyze every reimbursement event in real-time.</p>
               <div className="mt-4 flex items-center gap-2">
                 <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-white" disabled={selectedIds.size === 0 || submittingBulk} onClick={async () => {
                   setSubmittingBulk(true);
