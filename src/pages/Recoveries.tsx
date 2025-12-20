@@ -2529,7 +2529,7 @@ export default function Recoveries() {
                                               setClaimToFile(claim);
                                               setFileAnywayModalOpen(true);
                                             }}>
-                                              <AlertTriangle className="h-4 w-4 mr-2 text-amber-500" />
+                                              <ArrowUpFromLine className="h-4 w-4 mr-2 text-[#36454F]" />
                                               File Anyway (Medium Strength)
                                             </DropdownMenuItem>
                                           )}
