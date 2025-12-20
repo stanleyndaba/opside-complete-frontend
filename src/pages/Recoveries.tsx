@@ -294,9 +294,9 @@ const validateEvidencePolicy = (claim: RecoveryClaim, matchedDocs?: any[]): Evid
 // Evidence Quality Badge Component
 const EvidenceQualityBadge = ({ validation }: { validation: EvidenceValidation }) => {
   const config = {
-    strong: { bg: 'bg-emerald-100', text: 'text-emerald-700', border: 'border-emerald-200', icon: '✓', label: 'Strong' },
-    medium: { bg: 'bg-amber-100', text: 'text-amber-700', border: 'border-amber-200', icon: '◐', label: 'Medium' },
-    weak: { bg: 'bg-red-100', text: 'text-red-700', border: 'border-red-200', icon: '○', label: 'Weak' }
+    strong: { bg: 'bg-gray-100', text: 'text-[#36454F]', border: 'border-gray-400', icon: '✓', label: 'Strong' },
+    medium: { bg: 'bg-gray-100', text: 'text-[#36454F]', border: 'border-gray-400', icon: '◐', label: 'Medium' },
+    weak: { bg: 'bg-gray-100', text: 'text-[#36454F]', border: 'border-gray-400', icon: '○', label: 'Weak' }
   };
   const c = config[validation.quality];
 
@@ -405,9 +405,9 @@ const calculateClaimStrength = (claim: RecoveryClaim): ClaimStrength => {
 // Strength Badge Component
 const StrengthBadge = ({ strength, showScore = true }: { strength: ClaimStrength; showScore?: boolean }) => {
   const config = {
-    high: { bg: 'bg-emerald-100', text: 'text-emerald-700', border: 'border-emerald-200', icon: '●', label: 'Strong' },
-    medium: { bg: 'bg-amber-100', text: 'text-amber-700', border: 'border-amber-200', icon: '●', label: 'Medium' },
-    low: { bg: 'bg-red-100', text: 'text-red-700', border: 'border-red-200', icon: '●', label: 'Weak' }
+    high: { bg: 'bg-gray-100', text: 'text-[#36454F]', border: 'border-gray-400', icon: '●', label: 'Strong' },
+    medium: { bg: 'bg-gray-100', text: 'text-[#36454F]', border: 'border-gray-400', icon: '●', label: 'Medium' },
+    low: { bg: 'bg-gray-100', text: 'text-[#36454F]', border: 'border-gray-400', icon: '●', label: 'Weak' }
   };
   const c = config[strength.tier];
 
