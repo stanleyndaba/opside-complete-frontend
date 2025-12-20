@@ -413,8 +413,7 @@ const StrengthBadge = ({ strength, showScore = true }: { strength: ClaimStrength
 
   return (
     <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-xs font-medium ${c.bg} ${c.text} ${c.border}`}>
-      <span className="text-[8px]">{c.icon}</span>
-      {showScore ? strength.score : c.label}
+      {showScore ? `${strength.score}/100` : c.label}
     </span>
   );
 };
@@ -2924,8 +2923,7 @@ export default function Recoveries() {
                 <Dialog open={detailsModalOpen} onOpenChange={setDetailsModalOpen}>
                   <DialogContent className="bg-white border-gray-200 text-gray-700 max-w-2xl max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
-                      <DialogTitle className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-                        <Eye className="h-5 w-5 text-blue-500" />
+                      <DialogTitle className="text-xl font-semibold text-gray-900">
                         Claim Details
                       </DialogTitle>
                       {detectionDetails && (
