@@ -289,7 +289,7 @@ export function Navbar({
           <button
             onClick={() => setShowReferralPopup(true)}
             className={cn(
-              "flex items-center gap-2 h-9 px-3 rounded-md transition-colors",
+              "flex items-center gap-2 h-9 px-3 rounded-md transition-colors relative",
               isDashboard
                 ? "text-[#36454F] hover:text-[#36454F] hover:bg-gray-100"
                 : isTransparent
@@ -298,7 +298,10 @@ export function Navbar({
             )}
             aria-label="Referral program"
           >
-            <Gift className="h-5 w-5 text-[#36454F]" />
+            <div className="relative">
+              <Gift className="h-5 w-5 text-[#36454F]" />
+              <span className="absolute -top-1 -right-1 h-2 w-2 bg-emerald-600 rounded-full" />
+            </div>
           </button>
         </div>
       </div>
