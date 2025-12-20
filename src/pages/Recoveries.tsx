@@ -2868,7 +2868,7 @@ export default function Recoveries() {
                               </div>
                             ))}
                           </div>
-                          <div className="bg-gray-100 border border-gray-400 rounded-lg p-3 text-sm text-gray-700">
+                          <div className="bg-gray-100 rounded-lg p-3 text-sm text-gray-700">
                             <strong>Tip:</strong> Wait for more evidence or consider if this claim is worth the risk to your account.
                           </div>
                         </div>
