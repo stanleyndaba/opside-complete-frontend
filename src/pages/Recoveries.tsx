@@ -2528,7 +2528,6 @@ export default function Recoveries() {
                                               setClaimToFile(claim);
                                               setFileAnywayModalOpen(true);
                                             }}>
-                                              <ArrowUpFromLine className="h-4 w-4 mr-2 text-[#36454F]" />
                                               File Anyway (Medium Strength)
                                             </DropdownMenuItem>
                                           )}
@@ -2540,7 +2539,6 @@ export default function Recoveries() {
                                               setStatusUpdateNotes('');
                                               setStatusUpdateModalOpen(true);
                                             }}>
-                                              <CheckCircle2 className="h-4 w-4 mr-2" />
                                               Update Status
                                             </DropdownMenuItem>
                                           )}
@@ -2552,7 +2550,6 @@ export default function Recoveries() {
                                               setResolveAmount(claim.guaranteedAmount?.toString() || '');
                                               setResolveModalOpen(true);
                                             }}>
-                                              <CheckCircle2 className="h-4 w-4 mr-2" />
                                               Mark as Resolved
                                             </DropdownMenuItem>
                                           )}
@@ -2562,26 +2559,23 @@ export default function Recoveries() {
                                               setDetectionDetails(claim);
                                               setDetailsModalOpen(true);
                                             }}>
-                                              <Eye className="h-4 w-4 mr-2" />
                                               View Details
                                             </DropdownMenuItem>
                                           ) : (
                                             <DropdownMenuItem asChild>
-                                              <Link to={`/recoveries/${claim.id}`} state={{ claim }} className="flex items-center gap-2">
-                                                <Eye className="h-4 w-4" />
+                                              <Link to={`/recoveries/${claim.id}`} state={{ claim }}>
                                                 View Details
                                               </Link>
                                             </DropdownMenuItem>
                                           )}
                                           {claim.source !== 'detected' && (
                                             <DropdownMenuItem asChild>
-                                              <Link to={`/recoveries/${encodeURIComponent(claim.id)}/resolve`} state={{ claim }} className="flex items-center gap-2">
-                                                <FileText className="h-4 w-4" />
+                                              <Link to={`/recoveries/${encodeURIComponent(claim.id)}/resolve`} state={{ claim }}>
                                                 Resolve Case
                                               </Link>
                                             </DropdownMenuItem>
                                           )}
-                                          <DropdownMenuItem className="text-blue-400 focus:text-blue-300 focus:bg-blue-400/10" onClick={async () => {
+                                          <DropdownMenuItem onClick={async () => {
                                             const url = api.getRecoveryDocumentUrl(claim.id);
                                             try {
                                               const head = await fetch(url, { method: 'HEAD', credentials: 'include' });
@@ -2602,14 +2596,12 @@ export default function Recoveries() {
                                               toast({ title: 'Proof unavailable', description: e?.message || 'Please try again later.' });
                                             }
                                           }}>
-                                            <FileText className="h-4 w-4 mr-2" />
                                             Proof Document
                                           </DropdownMenuItem>
                                           <DropdownMenuItem onClick={() => {
                                             setEvidencePackClaim(claim);
                                             setEvidencePackOpen(true);
-                                          }} className="text-purple-600 focus:text-purple-500 focus:bg-purple-50">
-                                            <FileText className="h-4 w-4 mr-2" />
+                                          }}>
                                             View Evidence Pack
                                           </DropdownMenuItem>
                                         </DropdownMenuContent>
