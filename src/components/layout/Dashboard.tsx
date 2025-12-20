@@ -632,7 +632,7 @@ export function Dashboard() {
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex-1">
                             <div className="flex items-center gap-2">
-                              <h2 className="font-brand text-lg font-semibold text-gray-600">Recovered Value</h2>
+                              <h2 className="font-brand text-lg font-medium text-gray-900">Recovered Value</h2>
                               <Tooltip>
                                 <TooltipTrigger asChild>
                                   <button

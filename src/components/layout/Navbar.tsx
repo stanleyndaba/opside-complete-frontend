@@ -300,7 +300,7 @@ export function Navbar({
           >
             <div className="relative">
               <Gift className="h-5 w-5 text-[#36454F]" />
-              <span className="absolute -top-1 -right-1 h-2 w-2 bg-emerald-600 rounded-full" />
+              <span className="absolute top-0 right-0 h-2 w-2 bg-lime-500 rounded-full" />
             </div>
           </button>
         </div>
