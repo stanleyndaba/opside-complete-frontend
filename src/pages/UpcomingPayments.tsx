@@ -263,19 +263,19 @@ export default function UpcomingPayments() {
         <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24">
           <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-700 space-y-8">
 
-            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
-              <CardHeader>
-                <CardTitle className="text-gray-900 font-medium">Payment Recoveries</CardTitle>
-                <CardDescription className="text-gray-600">Projected recoveries based on claim status and expected payout dates</CardDescription>
+            <Card className="bg-white border-gray-200 shadow-sm">
+              <CardHeader className="border-b border-gray-200 pb-3">
+                <CardTitle className="text-sm font-semibold text-gray-900">Payment Recoveries</CardTitle>
+                <CardDescription className="text-xs text-gray-600 mt-0.5">Projected recoveries based on claim status and expected payout dates</CardDescription>
               </CardHeader>
-              <CardContent className="p-6">
+              <CardContent className="p-4">
                 {errorMessage && (
-                  <div className="mb-4 rounded-md border border-amber-500/30 bg-amber-500/10 text-amber-900 text-sm p-3 flex flex-wrap items-center gap-3">
+                  <div className="mb-4 rounded-md border border-amber-500/30 bg-amber-500/10 text-amber-900 text-xs p-3 flex flex-wrap items-center gap-3">
                     <span className="flex-1">{errorMessage}</span>
                     <Button
                       variant="outline"
                       size="sm"
-                      className="bg-white text-amber-900 border-amber-200 hover:bg-amber-50"
+                      className="bg-white text-amber-900 border-amber-200 hover:bg-amber-50 text-xs"
                       onClick={() => setReloadToken((token) => token + 1)}
                       disabled={loading}
                     >
@@ -283,59 +283,59 @@ export default function UpcomingPayments() {
                     </Button>
                   </div>
                 )}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="rounded-md border border-gray-200 bg-gray-50 p-4">
-                    <div className="text-xs text-gray-600">Next Expected Payout</div>
-                    <div className="text-xl font-medium text-gray-900 mt-1">{nextPayout ? formatCurrency(nextPayout.gross, currency) : formatCurrency(0, currency)}</div>
-                    <div className="text-[11px] text-gray-600 mt-1">{nextPayout ? nextPayout.label : '—'}</div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="rounded-md border border-gray-200 bg-gray-50 p-3">
+                    <div className="text-[10px] text-gray-600 uppercase tracking-wide">Next Expected Payout</div>
+                    <div className="text-base font-medium text-gray-900 mt-1">{nextPayout ? formatCurrency(nextPayout.gross, currency) : formatCurrency(0, currency)}</div>
+                    <div className="text-[10px] text-gray-600 mt-0.5">{nextPayout ? nextPayout.label : '—'}</div>
                   </div>
-                  <div className="rounded-md border border-gray-200 bg-gray-50 p-4">
-                    <div className="text-xs text-gray-600">This Month (Projected)</div>
-                    <div className="text-xl font-medium text-emerald-600 mt-1">{formatCurrency(monthTotals.gross, currency)}</div>
-                    <div className="text-[11px] text-gray-600 mt-1">Across {monthTotals.count} claims</div>
+                  <div className="rounded-md border border-gray-200 bg-gray-50 p-3">
+                    <div className="text-[10px] text-gray-600 uppercase tracking-wide">This Month (Projected)</div>
+                    <div className="text-base font-medium text-emerald-600 mt-1">{formatCurrency(monthTotals.gross, currency)}</div>
+                    <div className="text-[10px] text-gray-600 mt-0.5">Across {monthTotals.count} claims</div>
                   </div>
-                  <div className="rounded-md border border-gray-200 bg-gray-50 p-4">
-                    <div className="text-xs text-gray-600">Net To You (Projected)</div>
-                    <div className="text-xl font-medium text-emerald-600 mt-1">{formatCurrency(monthTotals.net, currency)}</div>
-                    <div className="text-[11px] text-gray-600 mt-1">After 20% commission</div>
+                  <div className="rounded-md border border-gray-200 bg-gray-50 p-3">
+                    <div className="text-[10px] text-gray-600 uppercase tracking-wide">Net To You (Projected)</div>
+                    <div className="text-base font-medium text-emerald-600 mt-1">{formatCurrency(monthTotals.net, currency)}</div>
+                    <div className="text-[10px] text-gray-600 mt-0.5">After 20% commission</div>
                   </div>
                 </div>
 
                 {/* Pipeline Summary - Total in Processing */}
                 {pipelineStages.totalInPipeline > 0 && (
-                  <div className="mt-6 rounded-md border border-gray-300 bg-gray-50 p-4">
-                    <div className="text-sm text-gray-700 mb-1">Total Currently Processing</div>
-                    <div className="text-2xl font-semibold text-gray-900">{formatCurrency(pipelineStages.totalInPipeline, currency)}</div>
-                    <div className="text-xs text-gray-500 mt-1">across {pipelineStages.detected.count + pipelineStages.ready.count + pipelineStages.pending.count + pipelineStages.approved.count} claims in various stages</div>
+                  <div className="mt-4 rounded-md border border-gray-200 bg-gray-50 p-3">
+                    <div className="text-xs text-gray-700">Total Currently Processing</div>
+                    <div className="text-lg font-semibold text-gray-900 mt-1">{formatCurrency(pipelineStages.totalInPipeline, currency)}</div>
+                    <div className="text-[10px] text-gray-500 mt-0.5">across {pipelineStages.detected.count + pipelineStages.ready.count + pipelineStages.pending.count + pipelineStages.approved.count} claims in various stages</div>
                   </div>
                 )}
 
                 {/* Pipeline Stage Cards */}
-                <div className="mt-6 grid grid-cols-2 md:grid-cols-5 gap-4">
-                  <div className="rounded-md border border-gray-200 p-3">
-                    <div className="text-xs text-gray-500">Detected</div>
-                    <div className="text-lg font-medium text-gray-900 mt-1">{formatCurrency(pipelineStages.detected.amount, currency)}</div>
-                    <div className="text-[11px] text-gray-500">{pipelineStages.detected.count} claims</div>
+                <div className="mt-4 grid grid-cols-2 md:grid-cols-5 gap-3">
+                  <div className="rounded-md border border-gray-200 p-2">
+                    <div className="text-[10px] text-gray-500 uppercase tracking-wide">Detected</div>
+                    <div className="text-sm font-medium text-gray-900 mt-1">{formatCurrency(pipelineStages.detected.amount, currency)}</div>
+                    <div className="text-[10px] text-gray-500 mt-0.5">{pipelineStages.detected.count} claims</div>
                   </div>
-                  <div className="rounded-md border border-gray-200 p-3">
-                    <div className="text-xs text-gray-500">Ready to File</div>
-                    <div className="text-lg font-medium text-gray-900 mt-1">{formatCurrency(pipelineStages.ready.amount, currency)}</div>
-                    <div className="text-[11px] text-gray-500">{pipelineStages.ready.count} claims</div>
+                  <div className="rounded-md border border-gray-200 p-2">
+                    <div className="text-[10px] text-gray-500 uppercase tracking-wide">Ready to File</div>
+                    <div className="text-sm font-medium text-gray-900 mt-1">{formatCurrency(pipelineStages.ready.amount, currency)}</div>
+                    <div className="text-[10px] text-gray-500 mt-0.5">{pipelineStages.ready.count} claims</div>
                   </div>
-                  <div className="rounded-md border border-gray-200 p-3">
-                    <div className="text-xs text-gray-500">Pending Amazon</div>
-                    <div className="text-lg font-medium text-gray-900 mt-1">{formatCurrency(pipelineStages.pending.amount, currency)}</div>
-                    <div className="text-[11px] text-gray-500">{pipelineStages.pending.count} claims</div>
+                  <div className="rounded-md border border-gray-200 p-2">
+                    <div className="text-[10px] text-gray-500 uppercase tracking-wide">Pending Amazon</div>
+                    <div className="text-sm font-medium text-gray-900 mt-1">{formatCurrency(pipelineStages.pending.amount, currency)}</div>
+                    <div className="text-[10px] text-gray-500 mt-0.5">{pipelineStages.pending.count} claims</div>
                   </div>
-                  <div className="rounded-md border border-gray-200 p-3">
-                    <div className="text-xs text-gray-500">Approved</div>
-                    <div className="text-lg font-medium text-gray-900 mt-1">{formatCurrency(pipelineStages.approved.amount, currency)}</div>
-                    <div className="text-[11px] text-gray-500">{pipelineStages.approved.count} claims</div>
+                  <div className="rounded-md border border-gray-200 p-2">
+                    <div className="text-[10px] text-gray-500 uppercase tracking-wide">Approved</div>
+                    <div className="text-sm font-medium text-gray-900 mt-1">{formatCurrency(pipelineStages.approved.amount, currency)}</div>
+                    <div className="text-[10px] text-gray-500 mt-0.5">{pipelineStages.approved.count} claims</div>
                   </div>
-                  <div className="rounded-md border border-gray-200 p-3 bg-emerald-50">
-                    <div className="text-xs text-gray-600">Paid</div>
-                    <div className="text-lg font-medium text-emerald-700 mt-1">{formatCurrency(pipelineStages.paid.amount, currency)}</div>
-                    <div className="text-[11px] text-gray-500">{pipelineStages.paid.count} claims</div>
+                  <div className="rounded-md border border-gray-200 p-2 bg-emerald-50">
+                    <div className="text-[10px] text-gray-600 uppercase tracking-wide">Paid</div>
+                    <div className="text-sm font-medium text-emerald-700 mt-1">{formatCurrency(pipelineStages.paid.amount, currency)}</div>
+                    <div className="text-[10px] text-gray-500 mt-0.5">{pipelineStages.paid.count} claims</div>
                   </div>
                 </div>
 
@@ -397,43 +397,43 @@ export default function UpcomingPayments() {
               </CardContent>
             </Card>
 
-            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
-              <CardHeader>
-                <CardTitle className="text-gray-900 font-medium">Schedule</CardTitle>
-                <CardDescription className="text-gray-600">Daily rollup of expected payouts; dates may change based on Amazon processing</CardDescription>
+            <Card className="bg-white border-gray-200 shadow-sm">
+              <CardHeader className="border-b border-gray-200 pb-3">
+                <CardTitle className="text-sm font-semibold text-gray-900">Schedule</CardTitle>
+                <CardDescription className="text-xs text-gray-600 mt-0.5">Daily rollup of expected payouts; dates may change based on Amazon processing</CardDescription>
               </CardHeader>
               <CardContent className="p-0">
                 <Table>
                   <TableHeader>
-                    <TableRow>
-                      <TableHead className="text-[#36454F]">Payout Date</TableHead>
-                      <TableHead className="text-[#36454F]">Claims</TableHead>
-                      <TableHead className="text-[#36454F]">Gross</TableHead>
-                      <TableHead className="text-[#36454F]">Commission (20%)</TableHead>
-                      <TableHead className="text-[#36454F]">Net To You</TableHead>
-                      <TableHead className="text-[#36454F]">Filing Status</TableHead>
-                      <TableHead className="text-[#36454F]">Actions</TableHead>
+                    <TableRow className="bg-gray-50">
+                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Payout Date</TableHead>
+                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Claims</TableHead>
+                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Gross</TableHead>
+                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Commission (20%)</TableHead>
+                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Net To You</TableHead>
+                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Filing Status</TableHead>
+                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {loading && (
                       <TableRow>
-                        <TableCell colSpan={7} className="text-sm text-gray-600 p-4">Loading…</TableCell>
+                        <TableCell colSpan={7} className="text-xs text-gray-600 p-4">Loading…</TableCell>
                       </TableRow>
                     )}
                     {!loading && upcomingGroups.length === 0 && (
                       <TableRow>
-                        <TableCell colSpan={7} className="text-sm text-gray-600 p-4">No upcoming payments yet. Once claims are approved with payout dates, they will appear here.</TableCell>
+                        <TableCell colSpan={7} className="text-xs text-gray-600 p-4">No upcoming payments yet. Once claims are approved with payout dates, they will appear here.</TableCell>
                       </TableRow>
                     )}
                     {!loading && upcomingGroups.map((g) => (
                       <TableRow key={g.key} className="hover:bg-gray-50 border-b border-gray-200">
-                        <TableCell className="whitespace-nowrap font-medium text-gray-900">{g.label}</TableCell>
-                        <TableCell className="text-gray-700">{g.count}</TableCell>
-                        <TableCell className="font-medium text-gray-900">{formatCurrency(g.gross, currency)}</TableCell>
-                        <TableCell className="text-gray-700">{formatCurrency(g.commission, currency)}</TableCell>
-                        <TableCell className="text-emerald-600 font-medium">{formatCurrency(g.net, currency)}</TableCell>
-                        <TableCell>
+                        <TableCell className="whitespace-nowrap font-medium text-xs text-gray-900 py-2">{g.label}</TableCell>
+                        <TableCell className="text-xs text-gray-700 py-2">{g.count}</TableCell>
+                        <TableCell className="text-xs font-medium text-gray-900 py-2">{formatCurrency(g.gross, currency)}</TableCell>
+                        <TableCell className="text-xs text-gray-700 py-2">{formatCurrency(g.commission, currency)}</TableCell>
+                        <TableCell className="text-xs text-emerald-600 font-medium py-2">{formatCurrency(g.net, currency)}</TableCell>
+                        <TableCell className="py-2">
                           {g.claims.length > 0 && (
                             <div className="flex flex-col gap-1">
                               {g.claims.slice(0, 2).map((claim: RecoveryClaim) => (
