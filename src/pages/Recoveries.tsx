@@ -1947,13 +1947,14 @@ export default function Recoveries() {
     <PageLayout title="Reimbursements">
       <div className="relative w-full overflow-x-hidden">
         <div className="relative w-full bg-white min-h-screen">
-          <div className="relative w-full max-w-full px-4 sm:px-6 pt-6 pb-10 text-gray-900 space-y-6">
-            <div className="mb-8">
-              <div className="flex items-center justify-between mb-2">
-                <h1 className="text-xl text-gray-900 font-medium">Audit Ledger</h1>
-              </div>
-              <p className="text-sm text-gray-500">Track, filter, and analyze every reimbursement event in real-time.</p>
-              <div className="mt-4 flex items-center gap-2">
+          <div className="relative w-full max-w-full px-4 sm:px-6 pt-6 pb-6 text-gray-900">
+            {/* Header Section */}
+            <div className="border-b border-gray-200 pb-4 mb-6">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <h1 className="text-base font-semibold text-gray-900">Audit Ledger</h1>
+                  <p className="text-xs text-gray-600 mt-0.5">Track, filter, and analyze every reimbursement event in real-time.</p>
+                </div>
                 <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-white" disabled={selectedIds.size === 0 || submittingBulk} onClick={async () => {
                   setSubmittingBulk(true);
                   const ids = Array.from(selectedIds);
@@ -1971,28 +1972,27 @@ export default function Recoveries() {
                   <Upload className="h-4 w-4 mr-2" />
                   Submit Selected Claims
                 </Button>
-                {selectedIds.size > 0 && (
-                  <span className="text-xs text-muted-foreground">{selectedIds.size} selected</span>
-                )}
               </div>
+              {selectedIds.size > 0 && (
+                <span className="text-xs text-gray-500">{selectedIds.size} selected</span>
+              )}
             </div>
 
-
-            {/* Opportunity Radar Summary */}
-            <div className="mb-8">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            {/* Recovered Value Section */}
+            <div className="border-b border-gray-200 pb-4 mb-6">
+              <div className="flex items-center justify-between">
                 <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="text-gray-900 font-medium">Recovered Value</div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className="text-xs font-medium text-gray-700 uppercase tracking-wide">Recovered Value</div>
                     {recoveredTotal != null && recoveredTotal > 0 && (
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <button
                             type="button"
                             aria-label="About recovered value"
-                            className="w-4 h-4 rounded-full bg-gray-500 flex items-center justify-center hover:bg-gray-400 transition-colors"
+                            className="w-3 h-3 rounded-full bg-gray-500 flex items-center justify-center hover:bg-gray-400 transition-colors"
                           >
-                            <span className="text-white text-[10px] font-serif italic leading-none">i</span>
+                            <span className="text-white text-[8px] font-serif italic leading-none">i</span>
                           </button>
                         </TooltipTrigger>
                         <TooltipContent side="top" className="bg-black text-white text-xs">
@@ -2001,28 +2001,28 @@ export default function Recoveries() {
                       </Tooltip>
                     )}
                   </div>
-                  <div className="text-xl md:text-2xl font-semibold">
+                  <div className="text-lg font-semibold text-gray-900">
                     {recoveredTotal != null && recoveredTotal > 0 ? (
                       <>
-                        <span className="text-gray-900">{formatCurrencyWithSelection(recoveredTotal, recoveredCurrency)}</span>
-                        <div className="text-[14px] text-gray-600 font-normal mt-1">
+                        {formatCurrencyWithSelection(recoveredTotal, recoveredCurrency)}
+                        <div className="text-xs text-gray-600 font-normal mt-0.5">
                           recovered from {amazonClaimCount ?? 0} approved claim{amazonClaimCount !== 1 ? 's' : ''}
                         </div>
                       </>
                     ) : (
                       <>
-                        <span className="text-gray-900">{formatCurrencyWithSelection(0)}</span>
-                        <div className="text-[14px] text-gray-600 font-normal mt-1">No recoveries yet</div>
+                        {formatCurrencyWithSelection(0)}
+                        <div className="text-xs text-gray-600 font-normal mt-0.5">No recoveries yet</div>
                       </>
                     )}
                   </div>
                   {/* Sync status message */}
                   {(syncMessage || needsSync || syncTriggered) && (
                     <div className={`mt-3 px-3 py-2 rounded-md text-xs ${syncTriggered
-                      ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                      : needsSync
-                        ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                        : 'bg-gray-50 text-gray-700 border border-gray-200'
+                        ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                        : needsSync
+                          ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                          : 'bg-gray-50 text-gray-700 border border-gray-200'
                       }`}>
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex items-start gap-2 flex-1">
