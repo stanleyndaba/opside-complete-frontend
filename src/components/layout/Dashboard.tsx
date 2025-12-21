@@ -16,6 +16,7 @@ import { cn } from '@/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { useNotifications } from '@/components/providers/NotificationsProvider';
+import { SyncLogModal } from '@/components/modals/SyncLogModal';
 import { formatDistanceToNow } from 'date-fns';
 
 // Icon imports for document sources
@@ -55,6 +56,7 @@ export function Dashboard() {
   const [lastUpdated, setLastUpdated] = useState<string>('');
   const [approvedClaimsThisMonth, setApprovedClaimsThisMonth] = useState<number | null>(null);
   const [showSourcesModal, setShowSourcesModal] = useState<boolean>(false);
+  const [showSyncModal, setShowSyncModal] = useState<boolean>(false);
   const [providerLoading, setProviderLoading] = useState<'gmail' | 'outlook' | 'gdrive' | 'dropbox' | null>(null);
   // Sync status fields from API response
   const [syncMessage, setSyncMessage] = useState<string | null>(null);
@@ -638,38 +640,12 @@ export function Dashboard() {
                             )}
                           </div>
 
-                          {/* Manual sync trigger */}
                           <div className="mt-4">
                             <Button
                               variant="outline"
                               size="sm"
                               className="bg-white border-0 text-[#36454F] hover:bg-gray-50 rounded-lg font-medium"
-                              onClick={async () => {
-                                try {
-                                  const { startSync } = await import('@/lib/inventoryApi');
-                                  setSyncTriggered(true);
-                                  setNeedsSync(false);
-                                  setSyncMessage('Sync started. We are fetching your latest Amazon data…');
-                                  const res = await startSync();
-                                  if (res?.syncId) {
-                                    setActiveSyncId(res.syncId);
-                                    // Ongoing polling is handled by fetchRecoveriesOnce/checkAndMonitorSync
-                                  }
-                                  toast({
-                                    title: 'Sync started',
-                                    description: res?.message || 'We are syncing your Amazon account now.',
-                                  });
-                                } catch (error: any) {
-                                  console.error('Failed to start sync from dashboard:', error);
-                                  setSyncTriggered(false);
-                                  setNeedsSync(true);
-                                  toast({
-                                    title: 'Sync failed',
-                                    description: error?.message || 'Unable to start sync. Please try again.',
-                                    variant: 'destructive',
-                                  });
-                                }
-                              }}
+                              onClick={() => setShowSyncModal(true)}
                             >
                               Scan
                             </Button>
@@ -1140,6 +1116,9 @@ export function Dashboard() {
           </DialogFooter>
         </DialogContent>
       </Dialog >
+
+      {/* Sync Log Modal */}
+      <SyncLogModal isOpen={showSyncModal} onClose={() => setShowSyncModal(false)} />
     </div >
   );
 }
