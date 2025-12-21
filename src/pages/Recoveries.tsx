@@ -305,7 +305,6 @@ const EvidenceQualityBadge = ({ validation }: { validation: EvidenceValidation }
       <TooltipTrigger>
         <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-xs font-medium ${c.bg} ${c.text} ${c.border}`}>
           <span>{c.icon}</span>
-          {c.label}
         </span>
       </TooltipTrigger>
       <TooltipContent className="max-w-sm bg-white text-gray-900 border border-gray-200 p-3">
@@ -499,7 +498,7 @@ const DoubleDipBadge = ({ warning }: { warning: DuplicateWarning }) => {
   const config = {
     prior_reimbursement: { bg: 'bg-blue-100', text: 'text-blue-700', border: 'border-blue-200', icon: '✓', label: 'Prior Reimbursement' },
     inventory_adjustment: { bg: 'bg-purple-100', text: 'text-purple-700', border: 'border-purple-200', icon: '≡', label: 'Adjusted' },
-    already_filed: { bg: 'bg-gray-100', text: 'text-gray-700', border: 'border-gray-300', icon: '⚠', label: 'Duplicate Filed' },
+    already_filed: { bg: 'bg-gray-100', text: 'text-gray-700', border: 'border-gray-300', icon: '', label: 'Duplicate Filed' },
     reconciled: { bg: 'bg-emerald-100', text: 'text-emerald-700', border: 'border-emerald-200', icon: '✓', label: 'Reconciled' }
   };
   const c = config[warning.reason];
@@ -508,7 +507,7 @@ const DoubleDipBadge = ({ warning }: { warning: DuplicateWarning }) => {
     <Tooltip>
       <TooltipTrigger>
         <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-xs font-medium ${c.bg} ${c.text} ${c.border}`}>
-          <span>{c.icon}</span>
+          {c.icon && <span>{c.icon}</span>}
           {c.label}
         </span>
       </TooltipTrigger>
