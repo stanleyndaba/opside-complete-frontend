@@ -105,25 +105,67 @@ export default function Admin() {
   return (
     <PageLayout title="Admin">
       <div className="relative -m-4 lg:-m-6 min-h-screen bg-gray-50">
-        <div className="container mx-auto px-6 md:px-10 lg:px-12 py-6">
-          <Card className="bg-white border-gray-200 shadow-sm">
-            <CardHeader>
-              <CardTitle className="text-gray-900">Platform Administration</CardTitle>
-              <CardDescription className="text-gray-600">Enable admin access to internal tools.</CardDescription>
+        <div className="container mx-auto px-6 md:px-10 lg:px-12 py-6 space-y-6">
+          {/* Mission Promise - For Founder Reminder */}
+          <Card className="bg-gradient-to-r from-gray-900 to-gray-800 border-0 shadow-lg">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-semibold text-white uppercase tracking-wide">🎯 The Promise</CardTitle>
+              <CardDescription className="text-gray-300 text-xs">Read this when you drift off mission</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-0">
+              <blockquote className="border-l-2 border-emerald-500 pl-4 py-2">
+                <p className="text-white text-sm font-medium italic leading-relaxed">
+                  "Clario tirelessly finds, proves, and recovers every dollar Amazon owes you, with almost zero work or risk on your side—and shows you exactly how it did it."
+                </p>
+              </blockquote>
+
+              <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="bg-white/5 rounded-lg p-3">
+                  <h4 className="text-[10px] font-semibold text-emerald-400 uppercase tracking-wide mb-2">What We're Actually Doing</h4>
+                  <ul className="text-[10px] text-gray-300 space-y-1">
+                    <li><span className="text-emerald-400">Find everything:</span> Always-on scan for lost/damaged inventory, fee errors, underpaid reimbursements</li>
+                    <li><span className="text-emerald-400">Prove everything:</span> Auto-grab invoices/PODs, build clean claim packets, keep full audit trails</li>
+                    <li><span className="text-emerald-400">Recover safely:</span> Only strong, policy-compliant claims auto-filed; double-dip guard</li>
+                    <li><span className="text-emerald-400">Zero cognitive load:</span> Sellers don't chase docs, fill forms, or project manage tickets</li>
+                    <li><span className="text-emerald-400">Radical transparency:</span> Every claim, amount, status, and payout is visible</li>
+                  </ul>
+                </div>
+
+                <div className="bg-white/5 rounded-lg p-3">
+                  <h4 className="text-[10px] font-semibold text-blue-400 uppercase tracking-wide mb-2">The "Obliterate Competition" Promise</h4>
+                  <p className="text-[10px] text-gray-300 italic mb-2">
+                    "Clario is the one place where your Amazon money is never forgotten, never guessed, and never risky—just automatically found, fought for, and deposited."
+                  </p>
+                  <ul className="text-[10px] text-gray-400 space-y-1">
+                    <li>• Others sell "we file claims"; <span className="text-white">we remove the entire burden</span></li>
+                    <li>• Others show numbers; <span className="text-white">we give certainty + receipts</span></li>
+                    <li>• Others need you to work; <span className="text-white">we're the 24/7 finance agent</span></li>
+                  </ul>
+                  <p className="text-[10px] text-gray-500 mt-2 italic">Keep this promise at scale, and everyone else becomes toys.</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Platform Administration */}
+          <Card className="bg-white border-gray-200 shadow-sm">
+            <CardHeader className="border-b border-gray-200 pb-3">
+              <CardTitle className="text-sm font-semibold text-gray-900">Platform Administration</CardTitle>
+              <CardDescription className="text-xs text-gray-500">Enable admin access to internal tools.</CardDescription>
+            </CardHeader>
+            <CardContent className="pt-4">
               <div className="flex items-center justify-between py-2">
                 <div>
-                  <div className="text-gray-900 font-medium">Admin access</div>
-                  <div className="text-gray-600 text-sm">Controls visibility of internal pages e.g. revenue model.</div>
+                  <div className="text-xs font-medium text-gray-900">Admin access</div>
+                  <div className="text-[10px] text-gray-500">Controls visibility of internal pages e.g. revenue model.</div>
                 </div>
                 <Switch checked={isAdmin} onCheckedChange={toggle} />
               </div>
-              <div className="pt-4 flex gap-3 flex-wrap">
-                <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
+              <div className="pt-3 flex gap-2 flex-wrap">
+                <Button asChild size="sm" className="bg-gray-900 hover:bg-gray-800 text-white text-xs">
                   <a href="/revenue-model">Open Revenue Model</a>
                 </Button>
-                <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
+                <Button asChild size="sm" className="bg-gray-900 hover:bg-gray-800 text-white text-xs">
                   <a href="/admin/users-integrations">Users</a>
                 </Button>
               </div>
@@ -132,14 +174,14 @@ export default function Admin() {
 
           {/* Learning & Analytics Section (Admin Only) */}
           {isAdmin && (
-            <Card className="bg-white border-gray-200 shadow-sm mt-6">
-              <CardHeader>
+            <Card className="bg-white border-gray-200 shadow-sm">
+              <CardHeader className="border-b border-gray-200 pb-3">
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-base font-normal text-gray-700">
+                    <CardTitle className="text-sm font-semibold text-gray-900">
                       System Performance
                     </CardTitle>
-                    <CardDescription className="text-gray-600">Track agent performance, model accuracy, and system optimization insights</CardDescription>
+                    <CardDescription className="text-xs text-gray-500">Track agent performance, model accuracy, and system optimization insights</CardDescription>
                   </div>
                   <div className="flex items-center gap-3">
                     <Select value={timeWindow} onValueChange={(v) => setTimeWindow(v as '7d' | '30d' | '90d')}>
@@ -196,15 +238,15 @@ export default function Admin() {
                       {/* Model Performance */}
                       {modelPerformance && (
                         <Card className="bg-white border-gray-200">
-                          <CardHeader>
-                            <CardTitle className="text-base font-normal text-gray-700">
+                          <CardHeader className="pb-2">
+                            <CardTitle className="text-xs font-semibold text-gray-900 uppercase tracking-wide">
                               Model Performance
                             </CardTitle>
                           </CardHeader>
                           <CardContent>
                             <div className="space-y-4">
                               <div>
-                                <div className="text-2xl font-normal text-gray-700">
+                                <div className="text-xl font-semibold text-gray-900">
                                   {(modelPerformance.accuracy * 100).toFixed(1)}%
                                 </div>
                                 <div className="text-sm text-gray-500">Accuracy</div>
@@ -279,19 +321,19 @@ export default function Admin() {
                     {/* Agent Performance Table */}
                     {learningMetrics.by_agent && Object.keys(learningMetrics.by_agent).length > 0 && (
                       <Card className="bg-white border-gray-200">
-                        <CardHeader>
-                          <CardTitle className="text-base font-normal text-gray-700">Agent Performance</CardTitle>
-                          <CardDescription className="text-gray-600">Success rates and event counts by agent</CardDescription>
+                        <CardHeader className="pb-2">
+                          <CardTitle className="text-xs font-semibold text-gray-900 uppercase tracking-wide">Agent Performance</CardTitle>
+                          <CardDescription className="text-[10px] text-gray-500">Success rates and event counts by agent</CardDescription>
                         </CardHeader>
                         <CardContent>
                           <div className="overflow-x-auto">
                             <Table>
                               <TableHeader>
-                                <TableRow className="border-gray-200">
-                                  <TableHead className="text-gray-700 font-normal">Agent</TableHead>
-                                  <TableHead className="text-gray-700 font-normal">Events</TableHead>
-                                  <TableHead className="text-gray-700 font-normal">Success Rate</TableHead>
-                                  <TableHead className="text-gray-700 font-normal">Status</TableHead>
+                                <TableRow className="border-gray-200 bg-gray-50">
+                                  <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Agent</TableHead>
+                                  <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Events</TableHead>
+                                  <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Success Rate</TableHead>
+                                  <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Status</TableHead>
                                 </TableRow>
                               </TableHeader>
                               <TableBody>
@@ -339,8 +381,8 @@ export default function Admin() {
                     {/* Threshold Optimization History */}
                     {thresholds.length > 0 && (
                       <Card className="bg-white border-gray-200">
-                        <CardHeader>
-                          <CardTitle className="text-base font-normal text-gray-700">Threshold Optimization History</CardTitle>
+                        <CardHeader className="pb-2">
+                          <CardTitle className="text-xs font-semibold text-gray-900 uppercase tracking-wide">Threshold Optimization History</CardTitle>
                         </CardHeader>
                         <CardContent>
                           <div className="space-y-3">
@@ -376,8 +418,8 @@ export default function Admin() {
                     {/* Rejection Pattern Analysis */}
                     {learningInsights?.patterns?.rejectionPatterns && Object.keys(learningInsights.patterns.rejectionPatterns).length > 0 && (
                       <Card className="bg-white border-gray-200">
-                        <CardHeader>
-                          <CardTitle className="text-base font-normal text-gray-700">Rejection Pattern Analysis</CardTitle>
+                        <CardHeader className="pb-2">
+                          <CardTitle className="text-xs font-semibold text-gray-900 uppercase tracking-wide">Rejection Pattern Analysis</CardTitle>
                         </CardHeader>
                         <CardContent>
                           <div className="space-y-2">
@@ -398,8 +440,8 @@ export default function Admin() {
                     {/* Learning Insights */}
                     {learningInsights && learningInsights.length > 0 && (
                       <Card className="bg-white border-gray-200">
-                        <CardHeader>
-                          <CardTitle className="text-base font-normal text-gray-700">Optimization Insights</CardTitle>
+                        <CardHeader className="pb-2">
+                          <CardTitle className="text-xs font-semibold text-gray-900 uppercase tracking-wide">Optimization Insights</CardTitle>
                         </CardHeader>
                         <CardContent>
                           <div className="space-y-3">
