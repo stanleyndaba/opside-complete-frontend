@@ -583,11 +583,11 @@ export function Dashboard() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 h-full">
                   <div className="lg:col-span-2 space-y-8">
                     <Card className="bg-white border border-gray-200 text-gray-900 shadow-sm">
-                      <CardContent className="p-6">
+                      <CardContent className="p-4">
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex-1">
                             <div className="flex items-center gap-2">
-                              <h2 className="font-brand text-lg font-medium text-gray-900">Recovered Value</h2>
+                              <h2 className="text-sm font-semibold text-gray-900">Recovered Value</h2>
                               <Tooltip>
                                 <TooltipTrigger asChild>
                                   <button
@@ -603,10 +603,10 @@ export function Dashboard() {
                                 </TooltipContent>
                               </Tooltip>
                             </div>
-                            <div className="text-xl md:text-2xl font-semibold mt-1 text-gray-900">
+                            <div className="text-lg font-semibold mt-1 text-gray-900">
                               {formatCurrencyWithSelection(recoveredTotal ?? 0, recoveredCurrency)}
                             </div>
-                            <div className="text-[11px] text-gray-600 mt-1">
+                            <div className="text-[10px] text-gray-600 mt-1">
                               {submittedClaimsCount != null && submittedClaimsCount > 0
                                 ? `From ${submittedClaimsCount} claim${submittedClaimsCount !== 1 ? 's' : ''} submitted`
                                 : 'From approved claims submitted'
@@ -677,29 +677,29 @@ export function Dashboard() {
                         </div>
 
                         <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                          <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
-                            <div className="text-xs text-gray-600">Next payment</div>
-                            <div className="text-xl font-semibold text-gray-900 mt-1">
+                          <div className="rounded-md border border-gray-200 bg-gray-50 p-3 shadow-sm">
+                            <div className="text-[10px] font-medium text-gray-600 uppercase tracking-wide">Next payment</div>
+                            <div className="text-base font-semibold text-gray-900 mt-1">
                               {formatCurrencyWithSelection((nextPaymentAmount ?? 0), recoveredCurrency)}
                             </div>
-                            <div className="text-[11px] text-gray-600 mt-1">
+                            <div className="text-[10px] text-gray-600 mt-1">
                               {nextPaymentDate
                                 ? `Estimated on ${new Date(nextPaymentDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
                                 : 'No payout scheduled yet'}
                             </div>
                           </div>
-                          <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
-                            <div className="text-xs text-gray-600">Pending recovery</div>
-                            <div className="text-xl font-semibold text-gray-900 mt-1">
+                          <div className="rounded-md border border-gray-200 bg-gray-50 p-3 shadow-sm">
+                            <div className="text-[10px] font-medium text-gray-600 uppercase tracking-wide">Pending recovery</div>
+                            <div className="text-base font-semibold text-gray-900 mt-1">
                               {formatCurrencyWithSelection((pendingRecoveryAmount ?? 0), recoveredCurrency)}
                             </div>
-                            <div className="text-[11px] text-gray-600 mt-1">
+                            <div className="text-[10px] text-gray-600 mt-1">
                               No. of Claims: {effectivePendingClaims}
                             </div>
                           </div>
-                          <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
+                          <div className="rounded-md border border-gray-200 bg-gray-50 p-3 shadow-sm">
                             <div className="flex items-center gap-1.5">
-                              <div className="text-xs text-gray-600">Approved</div>
+                              <div className="text-[10px] font-medium text-gray-600 uppercase tracking-wide">Approved</div>
                               <div className="flex items-center gap-1">
                                 <TrendingDown className="h-3 w-3 text-red-500" />
                                 <span className="text-[10px] text-red-500 font-medium">8%</span>
@@ -707,8 +707,8 @@ export function Dashboard() {
                                 <span className="text-[10px] text-green-600 font-medium">92%</span>
                               </div>
                             </div>
-                            <div className="text-xl font-semibold text-gray-900 mt-1">{formatCurrencyWithSelection(computedApproved ?? 0, recoveredCurrency)}</div>
-                            <div className="text-[11px] mt-1">
+                            <div className="text-base font-semibold text-gray-900 mt-1">{formatCurrencyWithSelection(computedApproved ?? 0, recoveredCurrency)}</div>
+                            <div className="text-[10px] mt-1">
                               <span className="text-gray-600">Total this month: </span>
                               <span className="text-[#1f1f1f]">$31.4K</span>
                             </div>
@@ -723,9 +723,9 @@ export function Dashboard() {
                     {/* Phase 3: Detection Summary Card */}
                     {detectionStats && detectionStats.totalDetections > 0 && (
                       <Card className="bg-white border border-gray-200 text-gray-900 shadow-sm">
-                        <CardContent className="p-6">
-                          <div className="flex items-center justify-between mb-4">
-                            <h2 className="font-brand text-lg text-[#1f1f1f] font-semibold">💰 Detected Claims</h2>
+                        <CardContent className="p-4">
+                          <div className="flex items-center justify-between mb-3">
+                            <h2 className="text-sm font-semibold text-gray-900">💰 Detected Claims</h2>
                             <Button
                               variant="outline"
                               size="sm"
@@ -735,14 +735,14 @@ export function Dashboard() {
                               View All →
                             </Button>
                           </div>
-                          <div className="grid grid-cols-2 gap-4 mb-4">
-                            <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
-                              <div className="text-xs text-gray-600">Total Detected</div>
-                              <div className="text-xl font-medium text-[#1f1f1f] mt-1">{detectionStats.totalDetections}</div>
+                          <div className="grid grid-cols-2 gap-3 mb-3">
+                            <div className="rounded-md border border-gray-200 bg-gray-50 p-3 shadow-sm">
+                              <div className="text-[10px] font-medium text-gray-600 uppercase tracking-wide">Total Detected</div>
+                              <div className="text-base font-semibold text-gray-900 mt-1">{detectionStats.totalDetections}</div>
                             </div>
-                            <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
-                              <div className="text-xs text-gray-600">Recovery Potential</div>
-                              <div className="text-xl font-medium text-emerald-600 mt-1">
+                            <div className="rounded-md border border-gray-200 bg-gray-50 p-3 shadow-sm">
+                              <div className="text-[10px] font-medium text-gray-600 uppercase tracking-wide">Recovery Potential</div>
+                              <div className="text-base font-semibold text-emerald-600 mt-1">
                                 {formatCurrency(detectionStats.estimatedRecovery)}
                               </div>
                             </div>
@@ -766,14 +766,14 @@ export function Dashboard() {
                     )}
 
                     <Card className="bg-white border border-gray-200 text-gray-900 shadow-sm">
-                      <CardContent className="p-6">
-                        <div className="flex items-center justify-between">
-                          <h2 className="font-brand text-lg text-[#1f1f1f] font-semibold">Actions</h2>
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between border-b border-gray-200 pb-3">
+                          <h2 className="text-sm font-semibold text-gray-900">Actions</h2>
                           <button aria-label="Customize quick actions" className="text-gray-500 hover:text-gray-700" onClick={() => setQuickActionsEditOpen(true)}>
                             <Plus className="h-4 w-4" />
                           </button>
                         </div>
-                        <div className="grid grid-cols-2 gap-4 mt-4">
+                        <div className="grid grid-cols-2 gap-3 mt-3">
                           {selectedQuickActions.includes('connect_evidence') && (
                             <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => setShowSourcesModal(true)}>
                               <Mail className="h-4 w-4" />
@@ -862,7 +862,7 @@ export function Dashboard() {
                       <CardContent className="p-0">
                         <div className="p-3 border-b border-gray-200">
                           <div className="flex items-center justify-between">
-                            <h3 className="font-semibold text-sm text-black">Recent Logs</h3>
+                            <h3 className="text-xs font-semibold text-gray-900 uppercase tracking-wide">Recent Logs</h3>
                             {unreadCount > 0 && (
                               <span className="text-xs rounded px-2 py-0.5 bg-emerald-500 text-white">
                                 {unreadCount} new
@@ -873,9 +873,9 @@ export function Dashboard() {
                         <div className="max-h-[600px] overflow-y-auto">
                           <div className="relative text-[12px] divide-y divide-gray-200">
                             {notifications.length === 0 ? (
-                              <div className="p-8 text-center text-gray-500">
-                                <Bell className="h-8 w-8 mx-auto mb-2 text-gray-400" />
-                                <p className="text-sm">No notifications yet</p>
+                              <div className="p-6 text-center text-gray-500">
+                                <Bell className="h-6 w-6 mx-auto mb-2 text-gray-400" />
+                                <p className="text-xs">No notifications yet</p>
                               </div>
                             ) : (
                               notifications.slice(0, 10).map((notification) => {
@@ -909,9 +909,10 @@ export function Dashboard() {
                             )}
                           </div>
                         </div>
-                        <div className="border-t border-gray-200 p-4">
+                        <div className="border-t border-gray-200 p-3">
                           <Button
-                            className="w-full bg-white hover:bg-gray-50 text-gray-900 border border-gray-200"
+                            size="sm"
+                            className="w-full bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 text-xs"
                             onClick={() => navigate('/notifications')}
                           >
                             View all Logs
