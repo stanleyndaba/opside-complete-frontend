@@ -1860,55 +1860,33 @@ export default function Recoveries() {
     // Use mergedRecoveries (includes Agent 3 detections) if available, otherwise fall back to claims
     const dataSource = mergedRecoveries !== null ? mergedRecoveries : claims;
 
-    // Initialize counts for all Amazon event types
+    // Initialize counts using detection type names (human-readable)
     const counts: Record<string, number> = {};
-    allEventTypes.forEach(eventType => {
-      counts[eventType.name] = 0;
-    });
-
-    // Also keep legacy mappings for backward compatibility
-    counts['Lost Inventory'] = 0;
-    counts['Damaged'] = 0;
-    counts['Uncredited Returns'] = 0;
-    counts['Overcharges'] = 0;
-    counts['Misapplied Fees'] = 0;
 
     for (const c of dataSource) {
-      // Map Agent 3 anomaly types to categories
-      const type = c.type || c.anomaly_type || '';
+      // Get the type from claim - prefer anomaly_type (from Agent 3) over type
+      const rawType = c.anomaly_type || c.type || '';
 
-      // Normalize function: remove all special chars for comparison
-      // This matches Agent 3's snake_case (lost_warehouse) to Amazon's format (Lost:Warehouse)
-      const normalizeType = (t: string) => t.toLowerCase().replace(/[:\-_\s]/g, '');
-      const normalizedType = normalizeType(type);
+      // Use getTypeDisplay to get the human-readable name
+      const typeDisplay = getTypeDisplay(c.type, c.anomaly_type);
+      const displayName = typeDisplay.name;
 
-      // Check if type matches any Amazon event type (normalized comparison)
-      const matchedEvent = allEventTypes.find(e =>
-        normalizeType(e.id) === normalizedType ||
-        normalizeType(e.name) === normalizedType
-      );
-      if (matchedEvent) {
-        counts[matchedEvent.name] = (counts[matchedEvent.name] || 0) + 1;
-      }
-
-      // Legacy mapping for backward compatibility
-      if (type === 'Lost Inventory' || type === 'missing_unit' || type === 'Lost:Warehouse' || type === 'Lost:Inbound') {
-        counts['Lost Inventory'] += 1;
-      }
-      if (type === 'Damaged Goods' || type === 'damaged_stock' || type === 'Damaged:Warehouse' || type === 'Damaged:Inbound') {
-        counts['Damaged'] += 1;
-      }
-      if (type === 'Uncredited Return' || type === 'return_not_credited' || type === 'CustomerReturn') {
-        counts['Uncredited Returns'] += 1;
-      }
-      if (type === 'Overcharge' || type === 'Fee Dispute' || type === 'incorrect_fee' || type === 'overcharge' || type === 'duplicate_charge') {
-        counts['Overcharges'] += 1;
-      }
-      if (type === 'Fee Dispute' || type === 'incorrect_fee' || type === 'RefundCommission') {
-        counts['Misapplied Fees'] += 1;
+      // Count by displayable name (human-readable)
+      if (displayName && displayName !== 'Unknown') {
+        counts[displayName] = (counts[displayName] || 0) + 1;
       }
     }
-    return counts;
+
+    // Sort by count descending and keep only non-zero entries
+    const sortedCounts: Record<string, number> = {};
+    Object.entries(counts)
+      .filter(([_, count]) => count > 0)
+      .sort((a, b) => b[1] - a[1])
+      .forEach(([name, count]) => {
+        sortedCounts[name] = count;
+      });
+
+    return sortedCounts;
   }, [claims, metrics, mergedRecoveries]);
 
   const getStatusColor = (status: string) => {
