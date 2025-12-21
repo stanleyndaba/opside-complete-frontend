@@ -317,6 +317,23 @@ export default function Sync() {
 
     // Build enhanced summaries for each story with money context
     for (const story of Object.values(storyMap)) {
+      // Special handling for detection - use plain language
+      if (story.category === 'detection' && story.anomaliesFound && story.anomaliesFound > 0) {
+        const value = story.potentialValue || 0;
+        const issues = story.anomaliesFound;
+
+        // Calculate duration from first to last log
+        const firstLog = story.logs[0]?.timestamp;
+        const lastLog = story.logs[story.logs.length - 1]?.timestamp;
+        const durationSec = firstLog && lastLog
+          ? Math.round((lastLog.getTime() - firstLog.getTime()) / 1000)
+          : null;
+
+        const durationText = durationSec !== null ? ` • Completed in ${durationSec}s` : '';
+        story.summary = `We found ${issues} issues worth $${value.toLocaleString()}${durationText}`;
+        continue;
+      }
+
       const parts: string[] = [];
 
       // Category-specific item labels
@@ -1558,12 +1575,17 @@ export default function Sync() {
 
                                   {/* Link to Claims - show when there's money potential or anomalies */}
                                   {story.linkTo && story.isCompleted && ((story.anomaliesFound || 0) > 0 || (story.potentialValue || 0) > 0) && (
-                                    <button
-                                      onClick={(e) => { e.stopPropagation(); navigate(story.linkTo!); }}
-                                      className="flex items-center gap-1 mt-2 text-xs text-blue-400 hover:text-blue-300 transition-colors"
-                                    >
-                                      View potential claims <ExternalLink className="h-3 w-3" />
-                                    </button>
+                                    <div className="mt-2">
+                                      <button
+                                        onClick={(e) => { e.stopPropagation(); navigate(story.linkTo!); }}
+                                        className="flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 transition-colors"
+                                      >
+                                        View potential claims <ExternalLink className="h-3 w-3" />
+                                      </button>
+                                      <span className="text-[10px] text-gray-500 mt-1 block">
+                                        Next: review and approve for filing
+                                      </span>
+                                    </div>
                                   )}
                                 </div>
                               )
