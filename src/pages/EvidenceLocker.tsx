@@ -910,11 +910,11 @@ export default function EvidenceLocker() {
 
           {/* Document Activity Log - Terminal Style */}
           <Card className="bg-white border-gray-200 text-gray-900">
-            <CardHeader className="pb-3">
+            <CardHeader className="border-b border-gray-200 pb-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-base font-medium">Document Activity</CardTitle>
-                  <CardDescription className="text-sm">Real-time document processing log</CardDescription>
+                  <CardTitle className="text-sm font-semibold text-gray-900">Document Activity</CardTitle>
+                  <CardDescription className="text-xs text-gray-500">Real-time document processing log</CardDescription>
                 </div>
                 <div className="flex items-center gap-4">
                   <label className="flex items-center gap-2 text-xs text-gray-500 cursor-pointer select-none">
@@ -1010,11 +1010,11 @@ export default function EvidenceLocker() {
           </Card>
 
           <Card className="bg-white border-gray-200 text-gray-900">
-            <CardHeader>
+            <CardHeader className="border-b border-gray-200 pb-3">
               <div className="flex items-start justify-between">
                 <div>
-                  <CardTitle className="font-medium">Upload Documents</CardTitle>
-                  <CardDescription>
+                  <CardTitle className="text-sm font-semibold text-gray-900">Upload Documents</CardTitle>
+                  <CardDescription className="text-xs text-gray-500">
                     Upload invoices, purchase orders, and receipts to verify your product costs
                   </CardDescription>
                 </div>
@@ -1024,16 +1024,16 @@ export default function EvidenceLocker() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className={`border-2 border-dashed rounded-lg p-8 text-center transition-all ${dragActive ? 'border-emerald-500 bg-emerald-50' : 'border-gray-200 hover:border-emerald-400'}`} onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}>
-                <Upload className="h-12 w-12 mx-auto mb-4 text-gray-500" />
-                <h3 className="text-lg font-medium mb-2">Drag & Drop Your Invoices or Purchase Orders Here</h3>
-                <p className="text-gray-600 mb-4">
+              <div className={`border-2 border-dashed rounded-lg p-6 text-center transition-all ${dragActive ? 'border-emerald-500 bg-emerald-50' : 'border-gray-200 hover:border-emerald-400'}`} onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}>
+                <Upload className="h-8 w-8 mx-auto mb-3 text-gray-400" />
+                <h3 className="text-sm font-medium text-gray-900 mb-1">Drag & Drop Invoices or Purchase Orders</h3>
+                <p className="text-xs text-gray-500 mb-3">
                   Supports PDF, JPG, PNG files up to 10MB
                 </p>
 
-                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                  <Button className="bg-emerald-500 hover:bg-emerald-400 text-white font-medium" onClick={() => document.getElementById('doc-file-input')?.click()}>
-                    <Upload className="w-4 h-4 mr-2" />
+                <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+                  <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-white text-xs font-medium" onClick={() => document.getElementById('doc-file-input')?.click()}>
+                    <Upload className="w-3.5 h-3.5 mr-1.5" />
                     Browse Files
                   </Button>
                   <input id="doc-file-input" type="file" multiple className="hidden" onChange={async (e) => {
@@ -1180,13 +1180,13 @@ export default function EvidenceLocker() {
                     }
                   }} />
 
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <Mail className="w-4 h-4" />
+                  <div className="flex items-center gap-2 text-xs text-gray-600">
+                    <Mail className="w-3.5 h-3.5" />
                     <span>or email to:</span>
-                    <code className="bg-gray-50 border border-gray-200 px-2 py-1 rounded text-gray-900">
+                    <code className="bg-gray-50 border border-gray-200 px-1.5 py-0.5 rounded text-[10px] text-gray-900">
                       store@invoices.opside.ai
                     </code>
-                    <Link to="/integrations-hub" className="ml-3 inline-flex items-center gap-1 text-blue-600 hover:text-blue-700">
+                    <Link to="/integrations-hub" className="ml-2 inline-flex items-center gap-1 text-blue-600 hover:text-blue-700 text-xs">
                       Connect Sources <ExternalLink className="h-3 w-3" />
                     </Link>
                   </div>
@@ -1207,10 +1207,10 @@ export default function EvidenceLocker() {
             </CardContent>
           </Card>
           <Card className="bg-white border-gray-200 text-gray-900 overflow-hidden">
-            <CardHeader>
+            <CardHeader className="border-b border-gray-200 pb-3">
               <div>
-                <CardTitle className="text-black mb-1 font-medium">Document Library</CardTitle>
-                <CardDescription className="text-gray-600 mb-4">All uploaded evidence documents</CardDescription>
+                <CardTitle className="text-sm font-semibold text-gray-900 mb-0.5">Document Library</CardTitle>
+                <CardDescription className="text-xs text-gray-500 mb-3">All uploaded evidence documents</CardDescription>
                 <div className="flex flex-wrap items-center gap-2 justify-end">
                   <div className="relative">
                     <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500 stroke-[2]" />
@@ -1233,7 +1233,7 @@ export default function EvidenceLocker() {
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="p-6">
+            <CardContent className="p-4">
               {loading && <div className="text-sm text-muted-foreground">Loading documents…</div>}
               {error && <div className="text-sm text-red-600">{error}</div>}
               <div className="overflow-x-auto">
@@ -1245,20 +1245,20 @@ export default function EvidenceLocker() {
                           if (c) setSelectedIds(new Set(pageData.map(d => d.id))); else setSelectedIds(new Set());
                         }} />
                       </TableHead>
-                      <TableHead className="text-[#36454F] whitespace-nowrap cursor-pointer" onClick={() => toggleSort('name')}>Document Name</TableHead>
-                      <TableHead className="text-[#36454F] whitespace-nowrap cursor-pointer" onClick={() => toggleSort('supplier')}>Supplier</TableHead>
-                      <TableHead className="text-[#36454F] whitespace-nowrap cursor-pointer" onClick={() => toggleSort('invoice')}>Invoice #</TableHead>
-                      <TableHead className="text-[#36454F] whitespace-nowrap cursor-pointer" onClick={() => toggleSort('uploadDate')}>Upload Date</TableHead>
-                      <TableHead className="text-[#36454F] whitespace-nowrap cursor-pointer" onClick={() => toggleSort('status')}>Status</TableHead>
-                      <TableHead className="text-[#36454F] whitespace-nowrap cursor-pointer" onClick={() => toggleSort('parser_status')}>Parsing Status</TableHead>
-                      <TableHead className="text-[#36454F] whitespace-nowrap cursor-pointer" onClick={() => toggleSort('parsedVia')}>Parsed Via</TableHead>
-                      <TableHead className="text-[#36454F] whitespace-nowrap cursor-pointer" onClick={() => toggleSort('amount')}>Amount</TableHead>
-                      <TableHead className="text-[#36454F] whitespace-nowrap">Extracted Data</TableHead>
-                      <TableHead className="text-[#36454F] whitespace-nowrap cursor-pointer" onClick={() => toggleSort('matchedClaims')}>Matched Claims</TableHead>
-                      <TableHead className="text-[#36454F] whitespace-nowrap cursor-pointer" onClick={() => toggleSort('match_confidence')}>Match Confidence</TableHead>
-                      <TableHead className="text-[#36454F] whitespace-nowrap">Match Status</TableHead>
-                      <TableHead className="text-[#36454F] whitespace-nowrap">Linked SKUs</TableHead>
-                      <TableHead className="text-gray-700 whitespace-nowrap">Actions</TableHead>
+                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('name')}>Document Name</TableHead>
+                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('supplier')}>Supplier</TableHead>
+                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('invoice')}>Invoice #</TableHead>
+                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('uploadDate')}>Upload Date</TableHead>
+                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('status')}>Status</TableHead>
+                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('parser_status')}>Parsing Status</TableHead>
+                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('parsedVia')}>Parsed Via</TableHead>
+                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('amount')}>Amount</TableHead>
+                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap py-2">Extracted Data</TableHead>
+                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('matchedClaims')}>Matched Claims</TableHead>
+                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('match_confidence')}>Match Confidence</TableHead>
+                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap py-2">Match Status</TableHead>
+                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap py-2">Linked SKUs</TableHead>
+                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap py-2">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
