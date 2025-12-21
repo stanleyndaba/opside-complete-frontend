@@ -57,59 +57,58 @@ export default function WhatsNew() {
     <PageLayout title="What's New">
       <div className="relative -m-4 lg:-m-6">
         <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24">
-          <div className="relative container mx-auto px-6 pt-12 md:pt-16 pb-16">
+          <div className="relative container mx-auto px-6 pt-8 pb-12">
 
             {/* Header */}
-            <header className="mb-12">
-              <h1 className="text-3xl md:text-4xl font-semibold text-gray-900 tracking-tight">
+            <header className="mb-8">
+              <h1 className="text-xl font-semibold text-gray-900 tracking-tight">
                 What's New
               </h1>
-              <p className="mt-3 text-lg text-gray-600 leading-relaxed">
-                We're constantly improving Clario to find and recover more for you.
-                Here's what we've been working on.
+              <p className="mt-1.5 text-xs text-gray-500">
+                We're constantly improving Opside to find and recover more for you.
               </p>
             </header>
 
             {/* Updates Timeline */}
-            <div className="space-y-12">
+            <div className="space-y-8">
               {orderedMonths.map((month) => (
                 <section key={month}>
-                  <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-6">
+                  <h2 className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-4">
                     {month}
                   </h2>
-                  <div className="space-y-6">
+                  <div className="space-y-4">
                     {groups[month].map((update) => (
                       <Card
                         key={update.id}
-                        className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden hover:shadow-md transition-shadow"
+                        className="bg-white border border-gray-200 shadow-sm rounded-lg overflow-hidden hover:shadow-md transition-shadow"
                       >
-                        <CardContent className="p-6">
+                        <CardContent className="p-4">
                           {/* Top row: Tag + Date */}
-                          <div className="flex items-center justify-between mb-4">
-                            <Badge className={`${update.tagColor} border text-xs font-medium`}>
+                          <div className="flex items-center justify-between mb-3">
+                            <Badge className={`${update.tagColor} border text-[10px] font-medium px-1.5 py-0`}>
                               {update.tag}
                             </Badge>
-                            <div className="flex items-center gap-1.5 text-xs text-gray-400">
-                              <Calendar className="h-3.5 w-3.5" />
+                            <div className="flex items-center gap-1 text-[10px] text-gray-400">
+                              <Calendar className="h-3 w-3" />
                               {update.date}
                             </div>
                           </div>
 
                           {/* Title */}
-                          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                          <h3 className="text-sm font-semibold text-gray-900 mb-1.5">
                             {update.title}
                           </h3>
 
                           {/* Description */}
-                          <p className="text-sm text-gray-600 leading-relaxed mb-4">
+                          <p className="text-xs text-gray-600 leading-relaxed mb-3">
                             {update.description}
                           </p>
 
                           {/* Highlights */}
-                          <div className="space-y-2 mb-4">
+                          <div className="space-y-1.5 mb-3">
                             {update.highlights.map((item, index) => (
-                              <div key={index} className="flex items-center gap-2 text-sm text-gray-700">
-                                <div className="h-1.5 w-1.5 rounded-full bg-gray-300 flex-shrink-0" />
+                              <div key={index} className="flex items-center gap-1.5 text-xs text-gray-700">
+                                <div className="h-1 w-1 rounded-full bg-gray-300 flex-shrink-0" />
                                 {item}
                               </div>
                             ))}
@@ -119,10 +118,10 @@ export default function WhatsNew() {
                           {update.cta && (
                             <a
                               href={update.cta.href}
-                              className="inline-flex items-center gap-1 text-sm font-medium text-gray-900 hover:text-gray-600 transition-colors"
+                              className="inline-flex items-center gap-1 text-xs font-medium text-gray-900 hover:text-gray-600 transition-colors"
                             >
                               {update.cta.text}
-                              <ArrowRight className="h-3.5 w-3.5" />
+                              <ArrowRight className="h-3 w-3" />
                             </a>
                           )}
                         </CardContent>
@@ -134,10 +133,10 @@ export default function WhatsNew() {
             </div>
 
             {/* Feedback Footer */}
-            <footer className="mt-12 pt-8 border-t border-gray-100">
-              <p className="text-sm text-gray-500 text-center">
+            <footer className="mt-8 pt-6 border-t border-gray-100">
+              <p className="text-[10px] text-gray-500">
                 Have a feature request?{' '}
-                <a href="mailto:hello@getclario.com" className="text-gray-900 hover:text-gray-600 font-medium">
+                <a href="mailto:hello@getopside.com" className="text-gray-900 hover:text-gray-600 font-medium">
                   Let us know
                 </a>
               </p>

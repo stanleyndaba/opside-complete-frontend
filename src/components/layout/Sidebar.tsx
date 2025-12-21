@@ -143,7 +143,7 @@ export function Sidebar({
                 to={item.href}
                 onMouseEnter={handlePrefetch}
                 className={cn(
-                  "relative flex items-center justify-center w-10 h-10 rounded-md transition-colors duration-200",
+                  "relative flex items-center justify-center w-9 h-9 rounded-md transition-colors duration-200",
                   isActive
                     ? "bg-gray-200 text-[#36454F]"
                     : "text-[#36454F] hover:bg-gray-200 hover:text-[#36454F]"
@@ -153,7 +153,7 @@ export function Sidebar({
                 <item.icon className="h-4 w-4" strokeWidth={1.5} />
               </Link>
             </TooltipTrigger>
-            <TooltipContent side="right" className="bg-black text-white">
+            <TooltipContent side="right" className="bg-black text-white text-xs">
               {item.title}
             </TooltipContent>
           </Tooltip>
@@ -165,7 +165,7 @@ export function Sidebar({
         to={item.href}
         onMouseEnter={handlePrefetch}
         className={cn(
-          "relative flex items-center gap-3 w-full px-3 py-1.5 rounded-md transition-colors duration-200",
+          "relative flex items-center gap-2.5 w-full px-2.5 py-1.5 rounded-md transition-colors duration-200",
           isActive
             ? "bg-gray-200 text-[#36454F]"
             : "text-[#36454F] hover:bg-gray-200 hover:text-[#36454F]"
@@ -173,10 +173,10 @@ export function Sidebar({
         style={{ willChange: 'background-color' }}
       >
         {isActive && (
-          <span className="absolute left-0 h-5 w-[3px] rounded-r bg-emerald-500" />
+          <span className="absolute left-0 h-4 w-[2px] rounded-r bg-emerald-500" />
         )}
-        <item.icon strokeWidth={1.5} className="h-5 w-5 shrink-0" />
-        <span className="text-[13px] font-medium">{item.title}</span>
+        <item.icon strokeWidth={1.5} className="h-4 w-4 shrink-0" />
+        <span className="text-xs font-medium">{item.title}</span>
       </Link>
     );
   });
@@ -195,26 +195,26 @@ export function Sidebar({
       <div
         className={cn(
           "border-b border-gray-300 flex flex-col",
-          isCollapsed ? "p-2 items-center justify-center" : "p-4 items-start justify-center"
+          isCollapsed ? "p-1.5 items-center justify-center" : "p-3 items-start justify-center"
         )}
       >
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <img
             src="/logoimagetwo.png"
             alt="Clario"
-            className={cn(isCollapsed ? "h-3" : "h-4", "w-auto object-contain")}
+            className={cn(isCollapsed ? "h-2.5" : "h-3.5", "w-auto object-contain")}
           />
           {!isCollapsed && (
-            <span className="font-montserrat text-gray-900 text-base" style={{ fontWeight: 600 }}>
+            <span className="font-montserrat text-gray-900 text-sm" style={{ fontWeight: 600 }}>
               Opside
             </span>
           )}
         </div>
         {!isCollapsed && (
-          <div className="select-none flex flex-col mt-2 ml-0">
+          <div className="select-none flex flex-col mt-1.5 ml-0">
             <div className="flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-              <span className="text-[11px] text-[#36454F]">Connected, secured</span>
+              <span className="w-1 h-1 rounded-full bg-emerald-500" />
+              <span className="text-[9px] text-[#36454F]">Connected, secured</span>
             </div>
           </div>
         )}
@@ -245,7 +245,7 @@ export function Sidebar({
 
       {/* Profile + Status + Logout */}
       {isCollapsed ? (
-        <div className="mt-auto border-t border-gray-300 p-2 flex flex-col items-center justify-center gap-2">
+        <div className="mt-auto border-t border-gray-300 p-1.5 flex flex-col items-center justify-center gap-1.5">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -253,14 +253,14 @@ export function Sidebar({
                   to="/settings"
                   aria-label="Account"
                   className={cn(
-                    "relative flex items-center justify-center w-10 h-10 rounded-md transition-colors",
+                    "relative flex items-center justify-center w-9 h-9 rounded-md transition-colors",
                     "text-[#36454F] hover:bg-gray-200 hover:text-emerald-600"
                   )}
                 >
-                  <User className="h-5 w-5" />
+                  <User className="h-4 w-4" />
                 </Link>
               </TooltipTrigger>
-              <TooltipContent side="right" className="bg-black text-white">
+              <TooltipContent side="right" className="bg-black text-white text-xs">
                 Account
               </TooltipContent>
             </Tooltip>
@@ -269,41 +269,41 @@ export function Sidebar({
                 <button
                   aria-label="Logout"
                   className={cn(
-                    "relative flex items-center justify-center w-10 h-10 rounded-md transition-colors",
+                    "relative flex items-center justify-center w-9 h-9 rounded-md transition-colors",
                     "text-[#36454F] hover:bg-gray-200 hover:text-red-600"
                   )}
                   onClick={async () => {
-                    const ok = window.confirm('Log out of Clario?');
+                    const ok = window.confirm('Log out of Opside?');
                     if (!ok) return;
                     try { await api.logout(); } catch (_) { }
                     window.location.href = '/';
                   }}
                 >
-                  <LogOut className="h-5 w-5" />
+                  <LogOut className="h-4 w-4" />
                 </button>
               </TooltipTrigger>
-              <TooltipContent side="right" className="bg-black text-white">
+              <TooltipContent side="right" className="bg-black text-white text-xs">
                 Logout
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </div>
       ) : (
-        <div className="mt-auto border-t border-gray-300 p-4 space-y-3">
+        <div className="mt-auto border-t border-gray-300 p-3 space-y-2">
           <Link
             to="/settings"
             className={cn(
-              "w-full flex flex-col text-left hover:text-emerald-600 hover:bg-gray-200 px-3 py-2 rounded-md transition-colors",
+              "w-full flex flex-col text-left hover:text-emerald-600 hover:bg-gray-200 px-2 py-1.5 rounded-md transition-colors",
               "text-[#36454F]"
             )}
           >
-            <div className="flex items-center gap-2">
-              <User className="h-4 w-4" />
-              <span className="text-sm">Account</span>
+            <div className="flex items-center gap-1.5">
+              <User className="h-3.5 w-3.5" />
+              <span className="text-xs">Account</span>
             </div>
-            <div className="select-none flex flex-col mt-1">
+            <div className="select-none flex flex-col mt-0.5">
               {connectedEmail && (
-                <span className="text-[10px] text-gray-500 truncate max-w-[140px] ml-6" title={connectedEmail}>
+                <span className="text-[9px] text-gray-500 truncate max-w-[130px] ml-5" title={connectedEmail}>
                   {connectedEmail}
                 </span>
               )}
@@ -311,21 +311,21 @@ export function Sidebar({
           </Link>
           <button
             className={cn(
-              "w-full flex items-center gap-2 text-left hover:text-red-600 hover:bg-gray-200 px-3 py-2 rounded-md",
+              "w-full flex items-center gap-1.5 text-left hover:text-red-600 hover:bg-gray-200 px-2 py-1.5 rounded-md",
               "text-[#36454F]"
             )}
             onClick={() => setShowLogout(prev => !prev)}
           >
-            <LogOut className="h-4 w-4" />
-            <span className="text-sm">Logout</span>
+            <LogOut className="h-3.5 w-3.5" />
+            <span className="text-xs">Logout</span>
           </button>
           {showLogout && (
-            <div className="mt-1 rounded-md border border-red-200/20 bg-red-500/5 p-3">
+            <div className="mt-0.5 rounded-md border border-red-200/20 bg-red-500/5 p-2">
               <button
-                className="w-full inline-flex items-center justify-center gap-2 text-sm text-white bg-red-600 hover:bg-red-700 px-3 py-2 rounded"
+                className="w-full inline-flex items-center justify-center gap-1.5 text-xs text-white bg-red-600 hover:bg-red-700 px-2 py-1.5 rounded"
                 onClick={async () => { try { await api.logout(); } catch (_) { } window.location.href = '/'; }}
               >
-                <LogOut className="h-4 w-4" />
+                <LogOut className="h-3 w-3" />
                 <span>Log out</span>
               </button>
             </div>
@@ -338,10 +338,10 @@ export function Sidebar({
         title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         onClick={onToggle}
         className={cn(
-          'absolute top-16 -right-3 z-50 h-8 w-8 rounded-full border border-gray-300 bg-white backdrop-blur-sm flex items-center justify-center text-[#36454F] hover:bg-gray-200 shadow-md',
+          'absolute top-14 -right-2.5 z-50 h-6 w-6 rounded-full border border-gray-300 bg-white backdrop-blur-sm flex items-center justify-center text-[#36454F] hover:bg-gray-200 shadow-sm',
         )}
       >
-        {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+        {isCollapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
       </button>
     </aside>
   );

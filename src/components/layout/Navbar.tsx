@@ -344,25 +344,27 @@ export function Navbar({
 
       {/* Referral Popup */}
       <Dialog open={showReferralPopup} onOpenChange={setShowReferralPopup}>
-        <DialogContent className="max-w-sm bg-emerald-50/95 border border-emerald-200/80 shadow-lg rounded-lg p-6">
-          <div className="flex flex-col items-center gap-4 text-center">
-            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100">
-              <Gift className="h-6 w-6 text-emerald-600" />
-            </div>
-            <div className="space-y-2">
-              <h3 className="text-lg font-semibold text-emerald-900">
-                No commission on referrals
-              </h3>
-              <p className="text-sm text-emerald-700">
-                Bring new sellers to Clario and keep 100% of their recovered funds.
-              </p>
+        <DialogContent className="max-w-xs bg-white border border-gray-200 shadow-md rounded-lg p-4">
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-2">
+              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100">
+                <Gift className="h-4 w-4 text-gray-700" />
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold text-gray-900">
+                  No commission on referrals
+                </h3>
+                <p className="text-[10px] text-gray-500">
+                  Bring new sellers to Opside and keep 100% of their recovered funds.
+                </p>
+              </div>
             </div>
             <Button
               onClick={() => {
                 setShowReferralPopup(false);
                 setShowInviteForm(true);
               }}
-              className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-md transition-colors shadow-md hover:shadow-lg"
+              className="w-full bg-gray-900 hover:bg-gray-800 text-white text-xs h-8 font-medium"
             >
               Invite seller friend
             </Button>
@@ -372,44 +374,44 @@ export function Navbar({
 
       {/* Invite Form Popup */}
       <Dialog open={showInviteForm} onOpenChange={setShowInviteForm}>
-        <DialogContent className="max-w-md bg-white border border-gray-200 shadow-lg rounded-lg p-6">
-          <div className="space-y-4">
+        <DialogContent className="max-w-sm bg-white border border-gray-200 shadow-md rounded-lg p-4">
+          <div className="space-y-3">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-1">Invite seller friend</h3>
-              <p className="text-sm text-gray-600">Send an invitation to join Clario</p>
+              <h3 className="text-sm font-semibold text-gray-900">Invite seller friend</h3>
+              <p className="text-[10px] text-gray-500">Send an invitation to join Opside</p>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Email address</label>
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Email address</label>
               <Input
                 type="email"
                 placeholder="seller@example.com"
                 value={inviteEmail}
                 onChange={(e) => setInviteEmail(e.target.value)}
-                className="w-full border-gray-200"
+                className="w-full border-gray-200 h-8 text-xs"
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Referral link</label>
-              <div className="flex items-center gap-2 p-3 bg-gray-50 border border-gray-200 rounded-md">
-                <span className="flex-1 text-sm text-gray-700 break-all">{shortLink}</span>
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Referral link</label>
+              <div className="flex items-center gap-1.5 p-2 bg-gray-50 border border-gray-200 rounded-md">
+                <span className="flex-1 text-[10px] text-gray-700 break-all">{shortLink}</span>
                 <button
                   onClick={() => {
                     navigator.clipboard.writeText(referralLink);
                     setLinkCopied(true);
                     setTimeout(() => setLinkCopied(false), 2000);
                   }}
-                  className="flex items-center gap-1.5 px-2 py-1 text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded transition-colors"
+                  className="flex items-center gap-1 px-1.5 py-0.5 text-[10px] text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded transition-colors"
                 >
                   {linkCopied ? (
                     <>
-                      <Check className="h-3.5 w-3.5 text-emerald-600" />
+                      <Check className="h-3 w-3 text-emerald-600" />
                       <span className="text-emerald-600">Copied</span>
                     </>
                   ) : (
                     <>
-                      <Copy className="h-3.5 w-3.5" />
+                      <Copy className="h-3 w-3" />
                       <span>Copy</span>
                     </>
                   )}
