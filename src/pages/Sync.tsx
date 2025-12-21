@@ -1490,36 +1490,48 @@ export default function Sync() {
                                     const enriched = enrichLogMessage(humanized.text, story);
 
                                     return (
-                                      <div
-                                        key={log.id}
-                                        className={`flex items-start gap-2 py-0.5 text-xs ${log.type === 'thinking' ? 'opacity-50' : ''} ${humanized.isHumanized ? 'bg-gray-800/30 -mx-2 px-2 py-1 rounded' : ''}`}
-                                      >
-                                        {/* Timestamp with hover for exact time */}
-                                        <span
-                                          className="hidden sm:inline text-gray-400 shrink-0 text-[10px] cursor-help"
-                                          title={formatTimestamp(log.timestamp).full}
+                                      <>
+                                        <div
+                                          key={log.id}
+                                          className={`flex items-start gap-2 py-0.5 text-xs ${log.type === 'thinking' ? 'opacity-50' : ''} ${humanized.isHumanized ? 'bg-gray-800/30 -mx-2 px-2 py-1 rounded' : ''}`}
                                         >
-                                          {formatTimestamp(log.timestamp).short}
-                                        </span>
-
-                                        {/* Message - humanized errors get special styling */}
-                                        <span className={`${humanized.isHumanized ? 'text-gray-200' : getLogColor(log.type)} break-all flex-1`}>
-                                          {highlightContent(enriched.text)}
-                                          {index === story.logs.length - 1 && isRunning && (
-                                            <span className="inline-block w-1.5 h-3 bg-blue-500 ml-1 animate-pulse align-middle"></span>
-                                          )}
-                                        </span>
-
-                                        {/* Enrichment Hint Badge */}
-                                        {enriched.hint && (
-                                          <span className={`shrink-0 px-1.5 py-0.5 rounded text-[10px] font-medium whitespace-nowrap ${enriched.hint.includes('$')
-                                            ? 'bg-emerald-50 text-emerald-700'
-                                            : 'bg-gray-100 text-gray-600'
-                                            }`}>
-                                            {enriched.hint}
+                                          {/* Timestamp with hover for exact time */}
+                                          <span
+                                            className="hidden sm:inline text-gray-400 shrink-0 text-[10px] cursor-help"
+                                            title={formatTimestamp(log.timestamp).full}
+                                          >
+                                            {formatTimestamp(log.timestamp).short}
                                           </span>
+
+                                          {/* Message - humanized errors get special styling */}
+                                          <span className={`${humanized.isHumanized ? 'text-gray-200' : getLogColor(log.type)} break-all flex-1`}>
+                                            {highlightContent(enriched.text)}
+                                            {index === story.logs.length - 1 && isRunning && (
+                                              <span className="inline-block w-1.5 h-3 bg-blue-500 ml-1 animate-pulse align-middle"></span>
+                                            )}
+                                          </span>
+
+                                          {/* Enrichment Hint Badge */}
+                                          {enriched.hint && (
+                                            <span className={`shrink-0 px-1.5 py-0.5 rounded text-[10px] font-medium whitespace-nowrap ${enriched.hint.includes('$')
+                                              ? 'bg-emerald-50 text-emerald-700'
+                                              : 'bg-gray-100 text-gray-600'
+                                              }`}>
+                                              {enriched.hint}
+                                            </span>
+                                          )}
+                                        </div>
+                                        {/* Render context.details if present */}
+                                        {log.context?.details && log.context.details.length > 0 && (
+                                          <div className="ml-12 mt-1 mb-2 space-y-0.5 text-[11px] text-gray-400">
+                                            {log.context.details.map((detail, i) => (
+                                              <div key={i} className={detail.startsWith('✅') ? 'text-emerald-400' : ''}>
+                                                {detail}
+                                              </div>
+                                            ))}
+                                          </div>
                                         )}
-                                      </div>
+                                      </>
                                     );
                                   })}
 
@@ -1533,7 +1545,8 @@ export default function Sync() {
                                     </button>
                                   )}
                                 </div>
-                              )}
+                              )
+                              }
                             </div>
                           );
                         })}
@@ -1881,6 +1894,6 @@ export default function Sync() {
           </div>
         </div>
       </div>
-    </PageLayout>
+    </PageLayout >
   );
 }
