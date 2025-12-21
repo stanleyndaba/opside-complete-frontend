@@ -13,7 +13,7 @@ import { X, ChevronDown, ChevronRight, Loader2, AlertCircle, CheckCircle2 } from
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { api } from '@/lib/api';
-import { subscribeSyncProgress, unsubscribeSyncProgress } from '@/lib/inventoryApi';
+import { subscribeSyncProgress } from '@/lib/inventoryApi';
 
 interface LogEntry {
     id: string;
@@ -133,10 +133,11 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
             }
         };
 
-        subscribeSyncProgress(syncId, handleEvent);
+        // subscribeSyncProgress returns a cleanup function
+        const unsubscribe = subscribeSyncProgress(syncId, handleEvent);
 
         return () => {
-            unsubscribeSyncProgress(syncId);
+            unsubscribe();
         };
     }, [syncId, addLog]);
 
