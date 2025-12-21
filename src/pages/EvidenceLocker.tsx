@@ -930,7 +930,7 @@ export default function EvidenceLocker() {
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="pt-0">
+            <CardContent className="pt-4">
               {/* Search Bar */}
               <div className="relative mb-3">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -1023,7 +1023,7 @@ export default function EvidenceLocker() {
                 </p>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-4">
               <div className={`border-2 border-dashed rounded-lg p-6 text-center transition-all ${dragActive ? 'border-emerald-500 bg-emerald-50' : 'border-gray-200 hover:border-emerald-400'}`} onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}>
                 <Upload className="h-8 w-8 mx-auto mb-3 text-gray-400" />
                 <h3 className="text-sm font-medium text-gray-900 mb-1">Drag & Drop Invoices or Purchase Orders</h3>

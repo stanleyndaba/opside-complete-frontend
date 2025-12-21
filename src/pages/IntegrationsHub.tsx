@@ -352,7 +352,7 @@ export default function IntegrationsHub() {
                     </Badge>
                   </div>
                 </CardHeader>
-                <CardContent className="pt-0 space-y-4">
+                <CardContent className="pt-4 space-y-4">
                   <div className="flex items-center justify-between text-sm border-t border-gray-100 pt-4">
                     <span className="text-gray-500">Last sync</span>
                     <span className="text-gray-900 font-medium">{status?.lastSync || lastSyncTime}</span>
@@ -383,7 +383,7 @@ export default function IntegrationsHub() {
                     </span>
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="pt-4 space-y-4">
                   {evidenceSources.length > 0 && (
                     <div className="mb-4 p-3 rounded border border-gray-200 bg-gray-50">
                       <p className="text-xs font-semibold text-gray-600 mb-2">Connected Sources:</p>
