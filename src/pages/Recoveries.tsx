@@ -294,18 +294,16 @@ const validateEvidencePolicy = (claim: RecoveryClaim, matchedDocs?: any[]): Evid
 // Evidence Quality Badge Component
 const EvidenceQualityBadge = ({ validation }: { validation: EvidenceValidation }) => {
   const config = {
-    strong: { bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200', label: 'Strong' },
-    medium: { bg: 'bg-gray-50', text: 'text-gray-600', border: 'border-gray-200', label: 'OK' },
-    weak: { bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200', label: 'Weak' }
+    strong: { color: 'text-emerald-600' },
+    medium: { color: 'text-gray-400' },
+    weak: { color: 'text-amber-500' }
   };
   const c = config[validation.quality];
 
   return (
     <Tooltip>
       <TooltipTrigger>
-        <span className={`inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-medium ${c.bg} ${c.text} ${c.border}`}>
-          {c.label}
-        </span>
+        <Info className={`h-4 w-4 ${c.color} cursor-pointer hover:opacity-70 transition-opacity`} />
       </TooltipTrigger>
       <TooltipContent className="max-w-xs bg-white text-gray-900 border border-gray-200 p-2">
         <div className="space-y-1">
