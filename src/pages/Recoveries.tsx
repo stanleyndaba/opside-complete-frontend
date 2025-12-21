@@ -294,17 +294,17 @@ const validateEvidencePolicy = (claim: RecoveryClaim, matchedDocs?: any[]): Evid
 // Evidence Quality Badge Component
 const EvidenceQualityBadge = ({ validation }: { validation: EvidenceValidation }) => {
   const config = {
-    strong: { bg: 'bg-gray-100', text: 'text-[#36454F]', border: 'border-gray-400', icon: '✓', label: 'Strong' },
-    medium: { bg: 'bg-gray-100', text: 'text-[#36454F]', border: 'border-gray-400', icon: '◐', label: 'Medium' },
-    weak: { bg: 'bg-gray-100', text: 'text-[#36454F]', border: 'border-gray-400', icon: '○', label: 'Weak' }
+    strong: { bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200', label: 'Strong' },
+    medium: { bg: 'bg-gray-50', text: 'text-gray-600', border: 'border-gray-200', label: 'OK' },
+    weak: { bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200', label: 'Weak' }
   };
   const c = config[validation.quality];
 
   return (
     <Tooltip>
       <TooltipTrigger>
-        <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-xs font-medium ${c.bg} ${c.text} ${c.border}`}>
-          <span>{c.icon}</span>
+        <span className={`inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-medium ${c.bg} ${c.text} ${c.border}`}>
+          {c.label}
         </span>
       </TooltipTrigger>
       <TooltipContent className="max-w-xs bg-white text-gray-900 border border-gray-200 p-2">
