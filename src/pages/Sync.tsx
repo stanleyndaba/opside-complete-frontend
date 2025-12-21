@@ -343,7 +343,7 @@ export default function Sync() {
 
       // Add potential value inline in summary if present
       if (story.potentialValue && story.potentialValue > 0) {
-        parts.push(`+$${story.potentialValue.toLocaleString()} potential`);
+        parts.push(`— +$${story.potentialValue.toLocaleString()} potential`);
       }
 
       story.summary = parts.length > 0 ? parts.join(' — ') : `${story.logs.length} events`;
