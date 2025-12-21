@@ -255,17 +255,17 @@ const validateEvidencePolicy = (claim: RecoveryClaim, matchedDocs?: any[]): Evid
 
   if (quality === 'strong') {
     recommendation = 'file_now';
-    recommendationText = '✅ We recommend filing now. Evidence meets FBA policy requirements.';
+    recommendationText = 'Strong evidence. Meets FBA requirements.';
   } else if (quality === 'medium') {
     recommendation = 'file_with_caution';
     if (missingRequired.length > 0) {
-      recommendationText = `⚠️ File with caution. Missing: ${missingRequired.join(', ')}. Claim may require follow-up.`;
+      recommendationText = `Adequate evidence. Missing: ${missingRequired.join(', ')}.`;
     } else {
-      recommendationText = '⚠️ File with caution. Evidence is adequate but could be stronger.';
+      recommendationText = 'Adequate evidence. Could be stronger.';
     }
   } else {
     recommendation = 'wait_for_better_docs';
-    recommendationText = `⏳ Wait for better docs. Missing required: ${missingRequired.join(', ')}. Filing now risks denial.`;
+    recommendationText = `Weak evidence. Missing: ${missingRequired.join(', ')}.`;
   }
 
   // Add policy-specific warnings
@@ -307,18 +307,18 @@ const EvidenceQualityBadge = ({ validation }: { validation: EvidenceValidation }
           <span>{c.icon}</span>
         </span>
       </TooltipTrigger>
-      <TooltipContent className="max-w-sm bg-white text-gray-900 border border-gray-200 p-3">
-        <div className="space-y-2">
-          <div className="font-semibold text-sm">{validation.recommendationText}</div>
+      <TooltipContent className="max-w-xs bg-white text-gray-900 border border-gray-200 p-2">
+        <div className="space-y-1">
+          <div className="text-xs font-medium">{validation.recommendationText}</div>
           {validation.missingRequired.length > 0 && (
-            <div className="text-xs">
-              <span className="text-red-600 font-medium">Missing required:</span>
-              <span className="text-gray-600 ml-1">{validation.missingRequired.join(', ')}</span>
+            <div className="text-[10px]">
+              <span className="text-red-600 font-medium">Missing:</span>
+              <span className="text-gray-500 ml-1">{validation.missingRequired.join(', ')}</span>
             </div>
           )}
           {validation.warnings.length > 0 && (
-            <div className="text-xs text-amber-600">
-              ⚠ {validation.warnings[0]}
+            <div className="text-[10px] text-amber-600">
+              {validation.warnings[0]}
             </div>
           )}
         </div>
