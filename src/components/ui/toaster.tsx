@@ -20,13 +20,13 @@ export function Toaster() {
               <img
                 src="/logoimagetwo.png"
                 alt="Clario"
-                className="h-3 w-auto object-contain"
+                className="h-2.5 w-auto object-contain"
               />
               {title && title !== 'CLARIO' && (
-                <ToastTitle className="text-[#22C55E] font-semibold">{title}</ToastTitle>
+                <ToastTitle className="text-xs font-semibold text-gray-900">{title}</ToastTitle>
               )}
               {description && (
-                <ToastDescription className="text-[#36454F] font-normal">{description}</ToastDescription>
+                <ToastDescription className="text-[10px] text-gray-600 font-normal">{description}</ToastDescription>
               )}
             </div>
             {action}

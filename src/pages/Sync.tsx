@@ -1234,8 +1234,8 @@ export default function Sync() {
   return (
     <PageLayout title="" hideNavbar hideSidebar plainBackground logoFontFamily='"Nunito Sans", sans-serif'>
       <div className="bg-white min-h-screen">
-        <div className="container mx-auto px-6 py-10 text-gray-900">
-          <div className="max-w-4xl mx-auto space-y-6">
+        <div className="container mx-auto px-6 py-6 text-gray-900">
+          <div className="max-w-4xl mx-auto space-y-4">
             {/* Dynamic Status Header - REMOVED per user request */}
 
             {/* Add shimmer animation to global styles */}
@@ -1250,12 +1250,12 @@ export default function Sync() {
             <div className="space-y-4">
               {/* Detecting Phase - Show AI analysis in progress */}
               {status === 'detecting' && (
-                <div className="py-4 bg-purple-50 rounded-lg px-4 border border-purple-100">
-                  <div className="flex items-center gap-3">
-                    <Target className="h-5 w-5 text-purple-500 animate-pulse" />
+                <div className="py-3 bg-purple-50 rounded-lg px-3 border border-purple-100">
+                  <div className="flex items-center gap-2">
+                    <Target className="h-4 w-4 text-purple-500 animate-pulse" />
                     <div>
-                      <p className="text-sm font-medium text-purple-700">Analyzing for Discrepancies...</p>
-                      <p className="text-xs text-purple-500">AI-powered detection scanning your data for potential recoveries</p>
+                      <p className="text-xs font-medium text-purple-700">Analyzing for Discrepancies...</p>
+                      <p className="text-[10px] text-purple-500">AI-powered detection scanning your data</p>
                     </div>
                   </div>
                 </div>
@@ -1294,11 +1294,11 @@ export default function Sync() {
               )}
 
               {/* Real-time Logs Section */}
-              <div className="space-y-3">
-                <div className="space-y-1">
+              <div className="space-y-2">
+                <div className="space-y-0.5">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-sm font-semibold text-gray-800">Real-Time Logs</h4>
-                    <span className="text-xs text-gray-400">{filteredLogs.length} entries</span>
+                    <h4 className="text-xs font-semibold text-gray-800 uppercase tracking-wide">Real-Time Logs</h4>
+                    <span className="text-[10px] text-gray-400">{filteredLogs.length} entries</span>
                   </div>
                   {syncData?.completedAt && (
                     <p className="text-xs text-gray-400">
@@ -1380,8 +1380,8 @@ export default function Sync() {
                 {/* Log Container - Clean White Theme */}
                 <div className="relative group">
                   {/* Glass header effect - dark theme */}
-                  <div className="absolute top-0 left-0 right-0 h-8 bg-[#252525] backdrop-blur-sm rounded-t-lg border-b border-gray-700 flex items-center px-4 justify-between z-10">
-                    <span className="text-[11px] font-medium text-gray-300 tracking-wide">Agent Activity Stream</span>
+                  <div className="absolute top-0 left-0 right-0 h-7 bg-[#252525] backdrop-blur-sm rounded-t-lg border-b border-gray-700 flex items-center px-3 justify-between z-10">
+                    <span className="text-[10px] font-semibold text-gray-300 uppercase tracking-wide">Agent Activity</span>
                     <div className="flex items-center gap-2">
                       {status === 'running' || status === 'detecting' ? (
                         <div className="flex items-center gap-1.5 bg-emerald-100 px-2 py-0.5 rounded-full border border-emerald-200">
@@ -1399,7 +1399,7 @@ export default function Sync() {
 
                   <div
                     ref={logContainerRef}
-                    className="bg-[#1a1a1a] rounded-lg pt-10 pb-4 px-4 font-mono text-xs h-96 overflow-y-auto scroll-smooth border border-gray-700 shadow-lg relative"
+                    className="bg-[#1a1a1a] rounded-lg pt-9 pb-3 px-3 font-mono text-[10px] h-80 overflow-y-auto scroll-smooth border border-gray-700 shadow-lg relative"
                   >
                     {/* Grid background effect - dark theme */}
                     <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none"></div>
