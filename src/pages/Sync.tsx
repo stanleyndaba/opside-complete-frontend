@@ -195,26 +195,7 @@ export default function Sync() {
     }
   }, [logsFinished, status]);
 
-  // Auto-expand detection story when it completes to show details immediately
-  const autoExpandedRef = useRef(false);
-  useEffect(() => {
-    if (autoExpandedRef.current) return;
 
-    // Check if detection has finished (indicated by success log or 'complete' message)
-    const detectionComplete = logs.some(log =>
-      log.category === 'detection' &&
-      (log.type === 'success' || log.message.toLowerCase().includes('complete'))
-    );
-
-    if (detectionComplete) {
-      setExpandedStories(prev => {
-        const newSet = new Set(prev);
-        newSet.add('story_detection');
-        return newSet;
-      });
-      autoExpandedRef.current = true;
-    }
-  }, [logs]);
 
   // Filter logs based on search AND category filter
   const filteredLogs = useMemo(() => {
