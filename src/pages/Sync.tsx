@@ -195,6 +195,27 @@ export default function Sync() {
     }
   }, [logsFinished, status]);
 
+  // Auto-expand detection story when it completes to show details immediately
+  const autoExpandedRef = useRef(false);
+  useEffect(() => {
+    if (autoExpandedRef.current) return;
+
+    // Check if detection has finished (indicated by success log or 'complete' message)
+    const detectionComplete = logs.some(log =>
+      log.category === 'detection' &&
+      (log.type === 'success' || log.message.toLowerCase().includes('complete'))
+    );
+
+    if (detectionComplete) {
+      setExpandedStories(prev => {
+        const newSet = new Set(prev);
+        newSet.add('story_detection');
+        return newSet;
+      });
+      autoExpandedRef.current = true;
+    }
+  }, [logs]);
+
   // Filter logs based on search AND category filter
   const filteredLogs = useMemo(() => {
     // First apply category filter
@@ -885,7 +906,8 @@ export default function Sync() {
               type: s.log.type || 'info',
               category: s.log.category || 'system',
               message: s.log.message,
-              count: s.log.count
+              count: s.log.count,
+              context: s.log.context
             });
             return;
           }
@@ -1490,9 +1512,8 @@ export default function Sync() {
                                     const enriched = enrichLogMessage(humanized.text, story);
 
                                     return (
-                                      <>
+                                      <React.Fragment key={log.id}>
                                         <div
-                                          key={log.id}
                                           className={`flex items-start gap-2 py-0.5 text-xs ${log.type === 'thinking' ? 'opacity-50' : ''} ${humanized.isHumanized ? 'bg-gray-800/30 -mx-2 px-2 py-1 rounded' : ''}`}
                                         >
                                           {/* Timestamp with hover for exact time */}
@@ -1523,7 +1544,7 @@ export default function Sync() {
                                         </div>
                                         {/* Render context.details if present */}
                                         {log.context?.details && log.context.details.length > 0 && (
-                                          <div className="ml-12 mt-1 mb-2 space-y-0.5 text-[11px] text-gray-400">
+                                          <div className="ml-12 mt-1 mb-2 space-y-0.5 text-[11px] text-gray-300">
                                             {log.context.details.map((detail, i) => (
                                               <div key={i} className={detail.startsWith('✅') ? 'text-emerald-400' : ''}>
                                                 {detail}
@@ -1531,7 +1552,7 @@ export default function Sync() {
                                             ))}
                                           </div>
                                         )}
-                                      </>
+                                      </React.Fragment>
                                     );
                                   })}
 
