@@ -217,15 +217,15 @@ export function Navbar({
 
                 {/* Search Dropdown */}
                 {isSearchFocused && (
-                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-hidden">
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-md z-50 overflow-hidden">
                     {/* Recent Searches */}
                     {recentSearches.length > 0 && (
-                      <div className="p-2 border-b border-gray-100">
-                        <div className="flex items-center justify-between px-2 mb-1">
-                          <span className="text-xs font-medium text-gray-500">Recent Searches</span>
+                      <div className="p-1.5 border-b border-gray-100">
+                        <div className="flex items-center justify-between px-2 mb-0.5">
+                          <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-wide">Recent</span>
                           <button
                             onClick={clearRecentSearches}
-                            className="text-xs text-gray-400 hover:text-gray-600"
+                            className="text-[10px] text-gray-400 hover:text-gray-600"
                           >
                             Clear
                           </button>
@@ -237,9 +237,9 @@ export function Navbar({
                               setSearchQuery(search);
                               handleSearch(search);
                             }}
-                            className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-gray-700 hover:bg-gray-50 rounded"
+                            className="w-full flex items-center gap-1.5 px-2 py-1 text-xs text-gray-700 hover:bg-gray-50 rounded"
                           >
-                            <Clock className="h-3.5 w-3.5 text-gray-400" />
+                            <Clock className="h-3 w-3 text-gray-400" />
                             {search}
                           </button>
                         ))}
@@ -247,8 +247,8 @@ export function Navbar({
                     )}
 
                     {/* Quick Links */}
-                    <div className="p-2">
-                      <span className="text-xs font-medium text-gray-500 px-2">Quick Links</span>
+                    <div className="p-1.5">
+                      <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-wide px-2">Quick Links</span>
                       {quickLinks.map((link) => (
                         <button
                           key={link.id}
@@ -256,18 +256,18 @@ export function Navbar({
                             setIsSearchFocused(false);
                             navigate(link.path);
                           }}
-                          className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-gray-700 hover:bg-gray-50 rounded mt-1"
+                          className="w-full flex items-center gap-1.5 px-2 py-1 text-xs text-gray-700 hover:bg-gray-50 rounded mt-0.5"
                         >
-                          <link.icon className="h-4 w-4 text-gray-400" />
+                          <link.icon className="h-3.5 w-3.5 text-gray-400" />
                           {link.label}
                         </button>
                       ))}
                     </div>
 
                     {/* Search Tip */}
-                    <div className="px-4 py-2 bg-gray-50 border-t border-gray-100">
-                      <p className="text-xs text-gray-500">
-                        Press <kbd className="px-1.5 py-0.5 bg-gray-200 rounded text-gray-600 font-mono">Enter</kbd> to search
+                    <div className="px-3 py-1.5 bg-gray-50 border-t border-gray-100">
+                      <p className="text-[10px] text-gray-500">
+                        Press <kbd className="px-1 py-0.5 bg-gray-200 rounded text-gray-600 font-mono text-[9px]">Enter</kbd> to search
                       </p>
                     </div>
                   </div>
