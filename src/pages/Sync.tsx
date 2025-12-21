@@ -1167,16 +1167,15 @@ export default function Sync() {
     }
   };
 
-  // Format timestamp for log display - returns { short: "HH:MM:SS", full: "Dec 19, 2024 3:45:32 PM" }
+  // Format timestamp for log display - returns { short: "HH:MM", full: "Dec 19, 2024 3:45 PM" }
   const formatTimestamp = (date: Date) => {
-    const short = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const short = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     const full = date.toLocaleString([], {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
-      second: '2-digit',
       hour12: true
     });
     return { short, full };
