@@ -511,9 +511,9 @@ export default function CaseDetail() {
               {/* Left Column - Case Summary */}
               <div className="lg:col-span-1 space-y-6">
                 <Card className="bg-white border-gray-200 text-gray-900">
-                  <CardHeader className="pb-4">
+                  <CardHeader className="border-b border-gray-200 pb-3">
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg font-semibold text-[#36454F]">
+                      <CardTitle className="text-sm font-semibold text-gray-900">
                         Case Summary
                       </CardTitle>
                       <Badge variant="outline" className={cn(
@@ -529,15 +529,15 @@ export default function CaseDetail() {
                     <p className="text-sm text-gray-500 font-mono mt-1">{effectiveCase.id}</p>
                   </CardHeader>
 
-                  <CardContent className="space-y-6">
+                  <CardContent className="space-y-4 pt-4">
                     {error && (
                       <div className="text-sm text-red-600 p-3 bg-red-50 rounded-lg border border-red-100">{error}</div>
                     )}
 
                     {/* Financial Overview */}
-                    <div className="mb-4">
-                      <div className="text-xs text-gray-500 mb-1">Guaranteed Value</div>
-                      <div className="text-lg font-medium text-emerald-600">
+                    <div className="mb-3">
+                      <div className="text-[10px] font-medium text-gray-500 uppercase tracking-wide mb-1">Guaranteed Value</div>
+                      <div className="text-base font-semibold text-emerald-600">
                         ${effectiveCase.guaranteedAmount?.toLocaleString('en-US', { minimumFractionDigits: 2 }) || '0.00'}
                       </div>
 
@@ -564,10 +564,10 @@ export default function CaseDetail() {
                     </div>
 
                     {/* Key Details Grid */}
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="bg-gray-50 rounded-lg p-3">
-                        <div className="text-xs text-gray-500 mb-1">Expected Payout</div>
-                        <div className="text-sm font-medium text-gray-900">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="bg-gray-50 rounded-lg p-2.5">
+                        <div className="text-[10px] font-medium text-gray-500 uppercase tracking-wide mb-0.5">Expected Payout</div>
+                        <div className="text-xs font-medium text-gray-900">
                           {effectiveCase.expectedPayoutDate ? new Date(effectiveCase.expectedPayoutDate).toLocaleDateString('en-US', {
                             month: 'short',
                             day: 'numeric',
@@ -575,39 +575,39 @@ export default function CaseDetail() {
                           }) : '—'}
                         </div>
                       </div>
-                      <div className="bg-gray-50 rounded-lg p-3">
-                        <div className="text-xs text-gray-500 mb-1">Confidence</div>
-                        <div className="text-sm font-medium text-gray-900">{derivedConfidencePct}%</div>
+                      <div className="bg-gray-50 rounded-lg p-2.5">
+                        <div className="text-[10px] font-medium text-gray-500 uppercase tracking-wide mb-0.5">Confidence</div>
+                        <div className="text-xs font-medium text-gray-900">{derivedConfidencePct}%</div>
                       </div>
-                      <div className="bg-gray-50 rounded-lg p-3">
-                        <div className="text-xs text-gray-500 mb-1">Units Lost</div>
-                        <div className="text-sm font-medium text-gray-900">{effectiveCase.unitsLost ?? '—'}</div>
+                      <div className="bg-gray-50 rounded-lg p-2.5">
+                        <div className="text-[10px] font-medium text-gray-500 uppercase tracking-wide mb-0.5">Units Lost</div>
+                        <div className="text-xs font-medium text-gray-900">{effectiveCase.unitsLost ?? '—'}</div>
                       </div>
-                      <div className="bg-gray-50 rounded-lg p-3">
-                        <div className="text-xs text-gray-500 mb-1">Unit Cost</div>
-                        <div className="text-sm font-medium text-gray-900">
+                      <div className="bg-gray-50 rounded-lg p-2.5">
+                        <div className="text-[10px] font-medium text-gray-500 uppercase tracking-wide mb-0.5">Unit Cost</div>
+                        <div className="text-xs font-medium text-gray-900">
                           {typeof effectiveCase.unitCost === 'number' ? `$${effectiveCase.unitCost.toFixed(2)}` : '—'}
                         </div>
                       </div>
                     </div>
 
                     {/* Product Info */}
-                    <div className="border border-gray-100 rounded-lg p-4 space-y-3">
-                      <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">Product Details</div>
+                    <div className="border border-gray-100 rounded-lg p-3 space-y-2">
+                      <div className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Product Details</div>
                       <div>
-                        <div className="font-medium text-gray-900">{effectiveCase.productName}</div>
-                        <div className="text-sm text-gray-500">SKU: {effectiveCase.sku}</div>
+                        <div className="text-xs font-medium text-gray-900">{effectiveCase.productName}</div>
+                        <div className="text-[10px] text-gray-500">SKU: {effectiveCase.sku}</div>
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <div className="flex items-center gap-2 text-[10px] text-gray-600">
                         <MapPin className="h-4 w-4 text-gray-400" />
                         {effectiveCase.facility ?? '—'}
                       </div>
                     </div>
 
                     {/* Evidence Status */}
-                    <div className="border border-gray-100 rounded-lg p-4 space-y-3">
+                    <div className="border border-gray-100 rounded-lg p-3 space-y-2">
                       <div className="flex items-center justify-between">
-                        <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">Evidence</div>
+                        <div className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Evidence</div>
                         <Badge variant="outline" className="text-xs border-gray-200">{matchedCount} docs</Badge>
                       </div>
 
@@ -864,20 +864,20 @@ export default function CaseDetail() {
 
                 {/* Found Documents Section */}
                 <Card className="bg-white border-gray-200 text-gray-900">
-                  <CardHeader className="pb-2">
+                  <CardHeader className="border-b border-gray-200 pb-3">
                     <div className="flex items-center justify-between">
                       <div>
-                        <CardTitle className="text-sm font-medium text-gray-700">
+                        <CardTitle className="text-sm font-semibold text-gray-900">
                           Found Documents
                         </CardTitle>
-                        <p className="text-xs text-amber-600 mt-1">Amazon rejects 82% of claims without an Invoice.</p>
+                        <p className="text-[10px] text-amber-600 mt-0.5">Amazon rejects 82% of claims without an Invoice.</p>
                       </div>
-                      <span className="text-xs text-gray-500">
+                      <span className="text-[10px] text-gray-500 uppercase tracking-wide">
                         {matchedDocs.length} found
                       </span>
                     </div>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-3 pt-3">
                     {matchedDocs.length > 0 ? (
                       <div className="space-y-3">
                         {matchedDocs.map((doc: any, idx: number) => {
@@ -898,19 +898,19 @@ export default function CaseDetail() {
                           if (matchedFields.length === 0) matchedFields.push('Content Match');
 
                           return (
-                            <div key={doc.id || idx} className="p-4 rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-100 transition-colors">
+                            <div key={doc.id || idx} className="p-3 rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-100 transition-colors">
                               <div className="flex items-start justify-between gap-3">
                                 <div className="flex-1 min-w-0">
                                   <div className="flex items-center gap-2 mb-2">
-                                    <FileText className="h-4 w-4 text-[#36454F] flex-shrink-0" />
-                                    <span className="font-medium text-[#36454F] truncate">
+                                    <FileText className="h-3.5 w-3.5 text-gray-700 flex-shrink-0" />
+                                    <span className="text-xs font-medium text-gray-900 truncate">
                                       {doc.name || doc.filename || doc.original_filename || `Document ${idx + 1}`}
                                     </span>
                                   </div>
 
                                   {/* Match Confidence */}
-                                  <div className="flex items-center gap-2 mb-2">
-                                    <span className="text-xs text-gray-600">Match Confidence:</span>
+                                  <div className="flex items-center gap-2 mb-1.5">
+                                    <span className="text-[10px] text-gray-600">Match Confidence:</span>
                                     <Badge className={cn(
                                       "text-xs",
                                       confidencePct >= 85 ? "bg-emerald-100 text-emerald-800 border-emerald-200" :
@@ -922,10 +922,10 @@ export default function CaseDetail() {
                                   </div>
 
                                   {/* Matched Fields */}
-                                  <div className="flex flex-wrap gap-1 mb-2">
-                                    <span className="text-xs text-gray-600 mr-1">Matched on:</span>
+                                  <div className="flex flex-wrap gap-1 mb-1.5">
+                                    <span className="text-[10px] text-gray-600 mr-1">Matched on:</span>
                                     {matchedFields.map((field, fieldIdx) => (
-                                      <Badge key={fieldIdx} variant="outline" className="text-xs border-gray-300 text-gray-700">
+                                      <Badge key={fieldIdx} variant="outline" className="text-[10px] border-gray-300 text-gray-700">
                                         {field}
                                       </Badge>
                                     ))}
@@ -933,7 +933,7 @@ export default function CaseDetail() {
 
                                   {/* Document Source */}
                                   {doc.source && (
-                                    <div className="text-xs text-gray-500">
+                                    <div className="text-[10px] text-gray-500">
                                       Source: {doc.source}
                                     </div>
                                   )}
@@ -942,7 +942,7 @@ export default function CaseDetail() {
                                 <Button
                                   variant="outline"
                                   size="sm"
-                                  className="flex-shrink-0 text-[#36454F] border-gray-300 hover:bg-gray-200"
+                                  className="flex-shrink-0 text-gray-700 border-gray-300 hover:bg-gray-200 text-xs h-7"
                                   onClick={() => window.open(`/documents/${encodeURIComponent(doc.id)}`, '_blank')}
                                 >
                                   View
@@ -962,9 +962,9 @@ export default function CaseDetail() {
                         })}
                       </div>
                     ) : (
-                      <div className="text-center py-6">
-                        <FileText className="h-8 w-8 mx-auto text-gray-300 mb-3" />
-                        <p className="text-sm text-gray-500 mb-2">
+                      <div className="text-center py-4">
+                        <FileText className="h-6 w-6 mx-auto text-gray-300 mb-2" />
+                        <p className="text-xs text-gray-500 mb-1">
                           No matching documents found yet
                         </p>
                         <p className="text-xs text-gray-400">
@@ -973,7 +973,7 @@ export default function CaseDetail() {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="mt-4 text-[#36454F] border-gray-300"
+                          className="mt-3 text-gray-700 border-gray-300 text-xs"
                           asChild
                         >
                           <Link to="/evidence-locker">Browse Evidence Locker</Link>
@@ -987,17 +987,17 @@ export default function CaseDetail() {
               {/* Right Column - Chronological Ledger */}
               <div className="lg:col-span-2">
                 <Card className="bg-white border-gray-200 text-gray-900">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-black">
-                      <Clock className="h-5 w-5" />
+                  <CardHeader className="border-b border-gray-200 pb-3">
+                    <CardTitle className="flex items-center gap-2 text-sm font-semibold text-gray-900">
+                      <Clock className="h-4 w-4" />
                       Claim Timeline
-                      <Badge variant="outline" className="ml-auto text-gray-900 border-gray-300">
+                      <Badge variant="outline" className="ml-auto text-xs text-gray-700 border-gray-300">
                         {typeof effectiveCase.progress === 'number' ? `${Math.round(effectiveCase.progress)}%` : 'Real-time transparency'}
                       </Badge>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
+                  <CardContent className="pt-4">
+                    <div className="space-y-3">
                       {/* Quick actions - clean white container */}
                       <div className="flex flex-wrap items-center gap-3 p-3 bg-white">
                         <div className="ml-auto flex gap-2">
