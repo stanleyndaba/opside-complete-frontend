@@ -136,37 +136,37 @@ export default function RevenueModel() {
 
             {/* INPUTS CARD */}
             <Card className="xl:col-span-4 h-fit border-gray-200 shadow-sm bg-white">
-              <CardHeader className="pb-4">
+              <CardHeader className="border-b border-gray-200 pb-3">
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-lg font-medium text-gray-900">Model Inputs</CardTitle>
-                    <CardDescription className="text-gray-500 mt-1">Adjust funnel and economics</CardDescription>
+                    <CardTitle className="text-sm font-semibold text-gray-900">Model Inputs</CardTitle>
+                    <CardDescription className="text-xs text-gray-500 mt-0.5">Adjust funnel and economics</CardDescription>
                   </div>
-                  <Button variant="ghost" size="icon" onClick={reset} title="Reset to defaults">
-                    <RefreshCw className="h-4 w-4 text-gray-400 hover:text-gray-700" />
+                  <Button variant="ghost" size="icon" onClick={reset} title="Reset to defaults" className="h-7 w-7">
+                    <RefreshCw className="h-3.5 w-3.5 text-gray-400 hover:text-gray-700" />
                   </Button>
                 </div>
               </CardHeader>
 
-              <CardContent className="space-y-6">
+              <CardContent className="pt-4 space-y-4">
                 <Tabs defaultValue="growth" className="w-full">
-                  <TabsList className="grid w-full grid-cols-3 mb-6">
-                    <TabsTrigger value="growth">Growth</TabsTrigger>
-                    <TabsTrigger value="funnel">Funnel</TabsTrigger>
-                    <TabsTrigger value="economics">Economics</TabsTrigger>
+                  <TabsList className="grid w-full grid-cols-3 mb-4 h-8">
+                    <TabsTrigger value="growth" className="text-xs">Growth</TabsTrigger>
+                    <TabsTrigger value="funnel" className="text-xs">Funnel</TabsTrigger>
+                    <TabsTrigger value="economics" className="text-xs">Economics</TabsTrigger>
                   </TabsList>
 
                   {/* TAB 1: MARKET & GROWTH */}
-                  <TabsContent value="growth" className="space-y-6">
-                    <div className="space-y-4">
-                      <h3 className="text-sm font-medium text-gray-900 flex items-center gap-2">
-                        <Users className="h-4 w-4 text-gray-500" />
+                  <TabsContent value="growth" className="space-y-4">
+                    <div className="space-y-3">
+                      <h3 className="text-[10px] font-semibold text-gray-700 uppercase tracking-wide flex items-center gap-1.5">
+                        <Users className="h-3.5 w-3.5 text-gray-500" />
                         Market Dynamics
                       </h3>
 
-                      <div className="grid gap-5">
-                        <div className="space-y-2">
-                          <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Start Active Sellers</Label>
+                      <div className="grid gap-4">
+                        <div className="space-y-1.5">
+                          <Label className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Start Active Sellers</Label>
                           <Input
                             type="number"
                             value={startActiveSellers}
@@ -175,10 +175,10 @@ export default function RevenueModel() {
                           />
                         </div>
 
-                        <div className="space-y-3">
+                        <div className="space-y-2">
                           <div className="flex justify-between items-center">
-                            <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Monthly Retention</Label>
-                            <span className="text-sm font-medium text-gray-900">{monthlyRetentionPct}%</span>
+                            <Label className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Monthly Retention</Label>
+                            <span className="text-xs font-medium text-gray-900">{monthlyRetentionPct}%</span>
                           </div>
                           <Slider
                             value={[monthlyRetentionPct]}
@@ -188,8 +188,8 @@ export default function RevenueModel() {
                           />
                         </div>
 
-                        <div className="space-y-2">
-                          <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Monthly Sessions</Label>
+                        <div className="space-y-1.5">
+                          <Label className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Monthly Sessions</Label>
                           <Input
                             type="number"
                             value={monthlySessions}
@@ -198,10 +198,10 @@ export default function RevenueModel() {
                           />
                         </div>
 
-                        <div className="space-y-3">
+                        <div className="space-y-2">
                           <div className="flex justify-between items-center">
-                            <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Mo. Growth Rate</Label>
-                            <span className="text-sm font-medium text-gray-900">{monthlySessionsGrowthPct}%</span>
+                            <Label className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Mo. Growth Rate</Label>
+                            <span className="text-xs font-medium text-gray-900">{monthlySessionsGrowthPct}%</span>
                           </div>
                           <Slider
                             value={[monthlySessionsGrowthPct]}
@@ -215,19 +215,19 @@ export default function RevenueModel() {
                   </TabsContent>
 
                   {/* TAB 2: FUNNEL */}
-                  <TabsContent value="funnel" className="space-y-6">
-                    <div className="space-y-4">
+                  <TabsContent value="funnel" className="space-y-4">
+                    <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <h3 className="text-sm font-medium text-gray-900 flex items-center gap-2">
-                          <TrendingUp className="h-4 w-4 text-gray-500" />
+                        <h3 className="text-[10px] font-semibold text-gray-700 uppercase tracking-wide flex items-center gap-1.5">
+                          <TrendingUp className="h-3.5 w-3.5 text-gray-500" />
                           Conversion Steps
                         </h3>
-                        <span className="text-xs font-medium text-gray-500 bg-gray-50 px-2 py-1 rounded border border-gray-100">
-                          Total: <span className="text-gray-900 ml-1 font-mono">{(conversionFactor * 100).toFixed(2)}%</span>
+                        <span className="text-[10px] font-medium text-gray-500 bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">
+                          Total: <span className="text-gray-900 ml-0.5 font-mono">{(conversionFactor * 100).toFixed(2)}%</span>
                         </span>
                       </div>
 
-                      <div className="space-y-6 pt-2">
+                      <div className="space-y-4 pt-1">
                         {[
                           { l: 'Visit → Signup', v: visitToSignupPct, s: setVisitToSignupPct },
                           { l: 'Signup → Amazon', v: signupToAmazonPct, s: setSignupToAmazonPct },
@@ -235,10 +235,10 @@ export default function RevenueModel() {
                           { l: 'Evidence → Findings', v: evidenceToFindingsPct, s: setEvidenceToFindingsPct },
                           { l: 'Findings → Payout', v: findingsToPayoutPct, s: setFindingsToPayoutPct }
                         ].map((item, idx) => (
-                          <div key={idx} className="space-y-2">
+                          <div key={idx} className="space-y-1.5">
                             <div className="flex justify-between items-center">
-                              <span className="text-sm text-gray-600">{item.l}</span>
-                              <span className="text-sm font-medium text-gray-900 w-12 text-right">{item.v}%</span>
+                              <span className="text-xs text-gray-600">{item.l}</span>
+                              <span className="text-xs font-medium text-gray-900 w-10 text-right">{item.v}%</span>
                             </div>
                             <Slider
                               value={[item.v]}
@@ -253,15 +253,15 @@ export default function RevenueModel() {
                   </TabsContent>
 
                   {/* TAB 3: ECONOMICS */}
-                  <TabsContent value="economics" className="space-y-6">
-                    <div className="space-y-4">
-                      <h3 className="text-sm font-medium text-gray-900 flex items-center gap-2">
+                  <TabsContent value="economics" className="space-y-4">
+                    <div className="space-y-3">
+                      <h3 className="text-[10px] font-semibold text-gray-700 uppercase tracking-wide">
                         Unit Economics
                       </h3>
 
-                      <div className="space-y-6 pt-2">
-                        <div className="space-y-2">
-                          <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Recovered / Seller / Mo ($)</Label>
+                      <div className="space-y-4 pt-1">
+                        <div className="space-y-1.5">
+                          <Label className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Recovered / Seller / Mo ($)</Label>
                           <Input
                             type="number"
                             value={avgRecoveredPerSeller}
@@ -270,10 +270,10 @@ export default function RevenueModel() {
                           />
                         </div>
 
-                        <div className="space-y-3">
+                        <div className="space-y-2">
                           <div className="flex justify-between items-center">
-                            <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Take Rate</Label>
-                            <span className="text-sm font-medium text-gray-900">{takeRatePct}%</span>
+                            <Label className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Take Rate</Label>
+                            <span className="text-xs font-medium text-gray-900">{takeRatePct}%</span>
                           </div>
                           <Slider
                             value={[takeRatePct]}
@@ -285,12 +285,12 @@ export default function RevenueModel() {
 
                         <Separator />
 
-                        <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
+                        <div className="bg-gray-50 rounded-lg p-3 border border-gray-100">
                           <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-600 font-medium">ARPS (Rev/Seller/Mo)</span>
-                            <span className="font-mono text-lg font-semibold text-emerald-700">${arps.toFixed(2)}</span>
+                            <span className="text-xs text-gray-600 font-medium">ARPS (Rev/Seller/Mo)</span>
+                            <span className="font-mono text-base font-semibold text-emerald-700">${arps.toFixed(2)}</span>
                           </div>
-                          <p className="text-xs text-gray-400 mt-1">Average Revenue Per Seller based on recovery and take rate.</p>
+                          <p className="text-[10px] text-gray-400 mt-0.5">Average Revenue Per Seller based on recovery and take rate.</p>
                         </div>
                       </div>
                     </div>
@@ -302,36 +302,36 @@ export default function RevenueModel() {
 
             {/* PROJECTION TABLE */}
             <Card className="xl:col-span-8 border-gray-200 shadow-sm bg-white h-fit">
-              <CardHeader className="flex flex-row items-center justify-between pb-4">
+              <CardHeader className="flex flex-row items-center justify-between border-b border-gray-200 pb-3">
                 <div>
-                  <CardTitle className="text-lg font-medium text-gray-900">Revenue Projection (2026)</CardTitle>
-                  <CardDescription className="text-gray-500 mt-1">Based on current inputs</CardDescription>
+                  <CardTitle className="text-sm font-semibold text-gray-900">Revenue Projection (2026)</CardTitle>
+                  <CardDescription className="text-xs text-gray-500 mt-0.5">Based on current inputs</CardDescription>
                 </div>
-                <Button variant="outline" size="sm" onClick={exportCsv} className="gap-2 text-gray-700 border-gray-200">
-                  <Download className="h-4 w-4" />
-                  Export CSV
+                <Button variant="outline" size="sm" onClick={exportCsv} className="gap-1.5 text-gray-700 border-gray-200 text-xs h-7">
+                  <Download className="h-3.5 w-3.5" />
+                  Export
                 </Button>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-4">
                 <div className="overflow-x-auto rounded-lg border border-gray-100">
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="bg-gray-50/50 border-b border-gray-200">
-                        <th className="py-3 px-4 text-left font-medium text-gray-500">Month</th>
-                        <th className="py-3 px-4 text-right font-medium text-gray-500">Traffic</th>
-                        <th className="py-3 px-4 text-right font-medium text-gray-500">New Paid</th>
-                        <th className="py-3 px-4 text-right font-medium text-gray-500">Active</th>
-                        <th className="py-3 px-4 text-right font-medium text-gray-700">Revenue (USD)</th>
+                        <th className="py-2 px-3 text-left text-[10px] font-semibold text-gray-500 uppercase tracking-wide">Month</th>
+                        <th className="py-2 px-3 text-right text-[10px] font-semibold text-gray-500 uppercase tracking-wide">Traffic</th>
+                        <th className="py-2 px-3 text-right text-[10px] font-semibold text-gray-500 uppercase tracking-wide">New Paid</th>
+                        <th className="py-2 px-3 text-right text-[10px] font-semibold text-gray-500 uppercase tracking-wide">Active</th>
+                        <th className="py-2 px-3 text-right text-[10px] font-semibold text-gray-700 uppercase tracking-wide">Revenue (USD)</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
                       {rows.map((r, i) => (
                         <tr key={r.month} className="hover:bg-gray-50/50 transition-colors">
-                          <td className="py-3 px-4 text-gray-900 font-medium">{r.month}</td>
-                          <td className="py-3 px-4 text-right text-gray-600 font-mono">{r.sessions.toLocaleString()}</td>
-                          <td className="py-3 px-4 text-right text-emerald-600 font-mono">+{r.newPaid.toLocaleString()}</td>
-                          <td className="py-3 px-4 text-right text-gray-700 font-mono">{r.activeSellers.toLocaleString()}</td>
-                          <td className="py-3 px-4 text-right text-gray-900 font-mono font-medium">
+                          <td className="py-2 px-3 text-xs text-gray-900 font-medium">{r.month}</td>
+                          <td className="py-2 px-3 text-right text-xs text-gray-600 font-mono">{r.sessions.toLocaleString()}</td>
+                          <td className="py-2 px-3 text-right text-xs text-emerald-600 font-mono">+{r.newPaid.toLocaleString()}</td>
+                          <td className="py-2 px-3 text-right text-xs text-gray-700 font-mono">{r.activeSellers.toLocaleString()}</td>
+                          <td className="py-2 px-3 text-right text-xs text-gray-900 font-mono font-medium">
                             ${r.revenue.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                           </td>
                         </tr>
@@ -339,8 +339,8 @@ export default function RevenueModel() {
                     </tbody>
                     <tfoot className="bg-gray-50 font-medium">
                       <tr>
-                        <td className="py-4 px-4 text-gray-900" colSpan={4}>Total Projected Revenue</td>
-                        <td className="py-4 px-4 text-right text-lg text-emerald-700">
+                        <td className="py-3 px-3 text-xs text-gray-900" colSpan={4}>Total Projected Revenue</td>
+                        <td className="py-3 px-3 text-right text-base font-semibold text-emerald-700">
                           ${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                         </td>
                       </tr>
@@ -348,18 +348,18 @@ export default function RevenueModel() {
                   </table>
                 </div>
 
-                <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="px-1">
-                    <div className="text-sm text-gray-500 font-medium mb-1">Total Active Sellers (Dec)</div>
-                    <div className="text-lg text-gray-900 font-normal">{rows[11].activeSellers.toLocaleString()}</div>
+                    <div className="text-[10px] text-gray-500 font-medium uppercase tracking-wide mb-0.5">Total Active Sellers (Dec)</div>
+                    <div className="text-base text-gray-900 font-semibold">{rows[11].activeSellers.toLocaleString()}</div>
                   </div>
                   <div className="px-1">
-                    <div className="text-sm text-gray-500 font-medium mb-1">Annual Revenue (USD)</div>
-                    <div className="text-lg text-gray-900 font-normal">${totalRevenue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
+                    <div className="text-[10px] text-gray-500 font-medium uppercase tracking-wide mb-0.5">Annual Revenue (USD)</div>
+                    <div className="text-base text-gray-900 font-semibold">${totalRevenue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
                   </div>
                   <div className="px-1">
-                    <div className="text-sm text-gray-500 font-medium mb-1">Annual Revenue (ZAR)</div>
-                    <div className="text-lg text-gray-900 font-normal">R {totalRevenueZar.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
+                    <div className="text-[10px] text-gray-500 font-medium uppercase tracking-wide mb-0.5">Annual Revenue (ZAR)</div>
+                    <div className="text-base text-gray-900 font-semibold">R {totalRevenueZar.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
                   </div>
                 </div>
 

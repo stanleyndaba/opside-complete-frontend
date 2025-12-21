@@ -24,7 +24,7 @@ const ChartSkeleton = () => (
 );
 
 // Lazy-loaded chart components for better code splitting
-const RecoveryChart = lazy(() => 
+const RecoveryChart = lazy(() =>
   import('recharts').then(recharts => ({
     default: ({ data }: { data: Array<{ date: string; value: number }> }) => {
       const { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } = recharts;
@@ -36,24 +36,24 @@ const RecoveryChart = lazy(() =>
           maximumFractionDigits: 0
         }).format(amount);
       };
-      
+
       return (
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
             <XAxis dataKey="date" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
             <YAxis tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
-            <Tooltip 
+            <Tooltip
               formatter={(v: number) => formatCurrency(v)}
-              contentStyle={{ 
-                backgroundColor: 'white', 
+              contentStyle={{
+                backgroundColor: 'white',
                 border: '1px solid #e5e7eb',
                 borderRadius: '6px',
                 color: '#172B4D'
               }}
               labelStyle={{ color: '#172B4D' }}
             />
-            <Bar dataKey="value" fill="#60A5FA" radius={[4,4,0,0]} />
+            <Bar dataKey="value" fill="#60A5FA" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       );
@@ -74,38 +74,38 @@ const AnomalyTypeChart = lazy(() =>
           maximumFractionDigits: 0
         }).format(amount);
       };
-      
+
       return (
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data}>
             <defs>
               <linearGradient id="countGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#60A5FA" stopOpacity={0.8}/>
-                <stop offset="95%" stopColor="#60A5FA" stopOpacity={0.1}/>
+                <stop offset="5%" stopColor="#60A5FA" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#60A5FA" stopOpacity={0.1} />
               </linearGradient>
               <linearGradient id="valueGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10B981" stopOpacity={0.8}/>
-                <stop offset="95%" stopColor="#10B981" stopOpacity={0.1}/>
+                <stop offset="5%" stopColor="#10B981" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#10B981" stopOpacity={0.1} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
             <XAxis dataKey="type" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" angle={-45} textAnchor="end" height={80} />
             <YAxis yAxisId="left" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
             <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" tickFormatter={(v) => formatCurrency(v)} />
-            <Tooltip 
+            <Tooltip
               formatter={(value: number, name: string) => {
                 if (name === 'value') return formatCurrency(value);
                 return value;
               }}
-              contentStyle={{ 
-                backgroundColor: 'white', 
+              contentStyle={{
+                backgroundColor: 'white',
                 border: '1px solid #e5e7eb',
                 borderRadius: '6px',
                 color: '#172B4D'
               }}
               labelStyle={{ color: '#172B4D' }}
             />
-            <Legend 
+            <Legend
               wrapperStyle={{ color: '#172B4D' }}
               iconType="line"
             />
@@ -131,38 +131,38 @@ const SeverityChart = lazy(() =>
           maximumFractionDigits: 0
         }).format(amount);
       };
-      
+
       return (
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data}>
             <defs>
               <linearGradient id="countGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#60A5FA" stopOpacity={0.8}/>
-                <stop offset="95%" stopColor="#60A5FA" stopOpacity={0.1}/>
+                <stop offset="5%" stopColor="#60A5FA" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#60A5FA" stopOpacity={0.1} />
               </linearGradient>
               <linearGradient id="valueGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10B981" stopOpacity={0.8}/>
-                <stop offset="95%" stopColor="#10B981" stopOpacity={0.1}/>
+                <stop offset="5%" stopColor="#10B981" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#10B981" stopOpacity={0.1} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
             <XAxis dataKey="severity" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
             <YAxis yAxisId="left" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
             <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" tickFormatter={(v) => formatCurrency(v)} />
-            <Tooltip 
+            <Tooltip
               formatter={(value: number, name: string) => {
                 if (name === 'value') return formatCurrency(value);
                 return value;
               }}
-              contentStyle={{ 
-                backgroundColor: 'white', 
+              contentStyle={{
+                backgroundColor: 'white',
                 border: '1px solid #e5e7eb',
                 borderRadius: '6px',
                 color: '#172B4D'
               }}
               labelStyle={{ color: '#172B4D' }}
             />
-            <Legend 
+            <Legend
               wrapperStyle={{ color: '#172B4D' }}
               iconType="line"
             />
@@ -179,7 +179,7 @@ const SeverityChart = lazy(() =>
 const ConfidenceChart = lazy(() =>
   import('recharts').then(recharts => {
     const { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Area, AreaChart } = recharts;
-    
+
     return {
       default: ({ data }: { data: Array<{ level: string; count: number }> }) => {
         return (
@@ -187,26 +187,26 @@ const ConfidenceChart = lazy(() =>
             <AreaChart data={data}>
               <defs>
                 <linearGradient id="confidenceGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#60A5FA" stopOpacity={0.8}/>
-                  <stop offset="95%" stopColor="#60A5FA" stopOpacity={0.1}/>
+                  <stop offset="5%" stopColor="#60A5FA" stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="#60A5FA" stopOpacity={0.1} />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
               <XAxis dataKey="level" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
               <YAxis tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: 'white', 
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: 'white',
                   border: '1px solid #e5e7eb',
                   borderRadius: '6px',
                   color: '#172B4D'
                 }}
                 labelStyle={{ color: '#172B4D' }}
               />
-              <Area 
-                type="monotone" 
-                dataKey="count" 
-                stroke="#60A5FA" 
+              <Area
+                type="monotone"
+                dataKey="count"
+                stroke="#60A5FA"
                 fill="url(#confidenceGradient)"
                 strokeWidth={3}
                 dot={{ fill: '#60A5FA', r: 5 }}
@@ -224,41 +224,41 @@ const RecoveryRatesChart = lazy(() =>
   import('recharts').then(recharts => ({
     default: ({ data }: { data: Array<{ level: string; rate: number }> }) => {
       const { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend, Area, AreaChart } = recharts;
-      
+
       return (
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data}>
             <defs>
               <linearGradient id="recoveryGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10B981" stopOpacity={0.8}/>
-                <stop offset="95%" stopColor="#10B981" stopOpacity={0.1}/>
+                <stop offset="5%" stopColor="#10B981" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#10B981" stopOpacity={0.1} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
             <XAxis dataKey="level" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
-            <YAxis 
-              tick={{ fontSize: 12, fill: '#9CA3AF' }} 
+            <YAxis
+              tick={{ fontSize: 12, fill: '#9CA3AF' }}
               stroke="#374151"
               tickFormatter={(value) => `${(value * 100).toFixed(0)}%`}
             />
-            <Tooltip 
+            <Tooltip
               formatter={(value: number) => `${(value * 100).toFixed(1)}%`}
-              contentStyle={{ 
-                backgroundColor: 'white', 
+              contentStyle={{
+                backgroundColor: 'white',
                 border: '1px solid #e5e7eb',
                 borderRadius: '6px',
                 color: '#172B4D'
               }}
               labelStyle={{ color: '#172B4D' }}
             />
-            <Legend 
+            <Legend
               wrapperStyle={{ color: '#172B4D' }}
               iconType="line"
             />
-            <Area 
-              type="monotone" 
-              dataKey="rate" 
-              stroke="#10B981" 
+            <Area
+              type="monotone"
+              dataKey="rate"
+              stroke="#10B981"
               fill="url(#recoveryGradient)"
               strokeWidth={3}
               dot={{ fill: '#10B981', r: 5 }}
@@ -276,24 +276,24 @@ const ConfidenceHistogram = lazy(() =>
   import('recharts').then(recharts => ({
     default: ({ data }: { data: Array<{ range: string; count: number }> }) => {
       const { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Area, AreaChart } = recharts;
-      
+
       return (
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data}>
             <defs>
               <linearGradient id="histogramGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.8}/>
-                <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0.1}/>
+                <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0.1} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
             <XAxis dataKey="range" tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" angle={-45} textAnchor="end" height={80} />
             <YAxis tick={{ fontSize: 12, fill: '#9CA3AF' }} stroke="#374151" />
             <Tooltip />
-            <Area 
-              type="monotone" 
-              dataKey="count" 
-              stroke="#8B5CF6" 
+            <Area
+              type="monotone"
+              dataKey="count"
+              stroke="#8B5CF6"
               fill="url(#histogramGradient)"
               strokeWidth={3}
               dot={{ fill: '#8B5CF6', r: 5 }}
@@ -390,7 +390,7 @@ export default function Reports() {
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  
+
   // Phase 3: Detection statistics state
   const [detectionStats, setDetectionStats] = useState<any>(null);
   const [confidenceDistribution, setConfidenceDistribution] = useState<any>(null);
@@ -618,7 +618,7 @@ export default function Reports() {
     return Object.entries(byType).map(([type, data]: [string, any]) => {
       const dataObj = typeof data === 'object' ? data : { count: 0, value: 0 };
       return {
-      type: type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+        type: type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
         count: dataObj.count || dataObj.total || 0,
         value: dataObj.value || dataObj.amount || dataObj.total_value || 0
       };
@@ -647,16 +647,16 @@ export default function Reports() {
   const recoveryRatesChartData = useMemo(() => {
     if (!confidenceDistribution) return [];
     // Try different possible data structures
-    const recoveryRates = confidenceDistribution.recovery_rates || 
-                         confidenceDistribution.recoveryRates || 
-                         confidenceDistribution.rates || {};
-    
+    const recoveryRates = confidenceDistribution.recovery_rates ||
+      confidenceDistribution.recoveryRates ||
+      confidenceDistribution.rates || {};
+
     const data = [
       { level: 'High', rate: recoveryRates.high || recoveryRates.high_confidence || 0 },
       { level: 'Medium', rate: recoveryRates.medium || recoveryRates.medium_confidence || 0 },
       { level: 'Low', rate: recoveryRates.low || recoveryRates.low_confidence || 0 }
     ];
-    
+
     // Only return if at least one rate is > 0
     return data.some(d => d.rate > 0) ? data : [];
   }, [confidenceDistribution]);
@@ -683,359 +683,359 @@ export default function Reports() {
     return sortDirection === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />;
   });
   return <PageLayout title="Reports">
-      <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-gray-50 min-h-[calc(100vh+96px)] -mt-24 pt-24">
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-gray-50 to-white" />
-          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-900 space-y-8">
-        {/* Page Header & Controls */}
-        <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h1 className="text-3xl font-semibold text-[#1f1f1f] mb-1">Reports</h1>
-            <p className="text-gray-600">Financial analytics and recovery performance insights</p>
-          </div>
-          <div className="flex flex-wrap gap-2 items-center">
-            <div className="relative">
-              <Input placeholder="Search claims (ID, type, status)" value={search} onChange={(e)=>{ setSearch(e.target.value); setPage(1); }} className="pl-8 md:w-64 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
-              <CalendarIcon className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+    <div className="relative -m-4 lg:-m-6">
+      <div className="relative w-full bg-gray-50 min-h-[calc(100vh+96px)] -mt-24 pt-24">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-gray-50 to-white" />
+        <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-900 space-y-8">
+          {/* Page Header & Controls */}
+          <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div>
+              <h1 className="text-xl font-semibold text-gray-900 mb-0.5">Reports</h1>
+              <p className="text-xs text-gray-500">Financial analytics and recovery performance insights</p>
             </div>
-            <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" onClick={() => setQuickDateRange('30days')}>Last 30 Days</Button>
-            <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" onClick={() => setQuickDateRange('quarter')}>This Quarter</Button>
-            <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" onClick={() => setQuickDateRange('year')}>Year to Date</Button>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline" className={cn("w-[280px] justify-start text-left font-medium bg-white text-gray-700 border-gray-200 hover:bg-gray-50", !dateRange && "text-gray-500") }>
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {dateRange?.from ? dateRange.to ? <>
-                        {format(dateRange.from, "LLL dd, y")} -{" "}
-                        {format(dateRange.to, "LLL dd, y")}
-                      </> : format(dateRange.from, "LLL dd, y") : <span>Pick a date range</span>}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar initialFocus mode="range" defaultMonth={dateRange?.from} selected={dateRange} onSelect={setDateRange} numberOfMonths={2} className="pointer-events-auto" />
-              </PopoverContent>
-            </Popover>
-            <Button onClick={() => setExportOpen(true)} className="gap-2 bg-emerald-500 hover:bg-emerald-400 text-white">
-              <Download className="h-4 w-4" /> Export Data
-            </Button>
-          </div>
-        </div>
-
-        {/* Key Metrics Bar - Enhanced with Phase 3 Detection Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <div className="flex-1">
-                  <div className="relative inline-flex items-start">
-                    <p className="text-sm font-medium text-gray-600">Total Recovered</p>
-                    <div className="absolute -top-0.5 left-full ml-1.5 flex items-center gap-0.5 leading-none">
-                      <TrendingDown className="h-3.5 w-3.5 text-red-500" />
-                      <span className="text-[10px] text-red-500 font-medium">8%</span>
-                      <TrendingUp className="h-3.5 w-3.5 text-green-600" />
-                      <span className="text-[10px] text-green-600 font-medium">92%</span>
-                    </div>
-                  </div>
-                  <p className="font-medium text-[#1f1f1f] text-lg mt-1">
-                    {detectionStats?.total_value 
-                      ? formatCurrency(detectionStats.total_value)
-                      : keyMetrics.totalRecovered > 0 
-                        ? formatCurrency(keyMetrics.totalRecovered)
-                        : null
-                    }
-                  </p>
-                  {detectionStats?.total_value && keyMetrics.totalRecovered > 0 && (
-                    <p className="text-xs text-gray-600 mt-1">
-                      {formatCurrency(keyMetrics.totalRecovered)} from approved claims
-                    </p>
-                  )}
-                </div>
+            <div className="flex flex-wrap gap-2 items-center">
+              <div className="relative">
+                <Input placeholder="Search claims..." value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} className="pl-8 md:w-56 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500 text-xs h-8" />
+                <CalendarIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
               </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Claims Submitted</p>
-                  <p className="font-medium text-[#1f1f1f] text-lg">
-                    {detectionStats?.total_anomalies 
-                      ? detectionStats.total_anomalies
-                      : keyMetrics.claimsSubmitted > 0 
-                        ? keyMetrics.claimsSubmitted
-                        : null
-                    }
-                  </p>
-                  {detectionStats?.total_anomalies && keyMetrics.claimsSubmitted > 0 && (
-                    <p className="text-xs text-gray-600 mt-1">
-                      {keyMetrics.claimsSubmitted} claims filed
-                    </p>
-                  )}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <div className="flex-1">
-                  <div className="relative inline-flex items-start">
-                    <p className="text-sm font-medium text-gray-600">Success Rate</p>
-                    <div className="absolute -top-0.5 left-full ml-1.5 flex items-center gap-0.5 leading-none">
-                      <TrendingDown className="h-3.5 w-3.5 text-red-500" />
-                      <span className="text-[10px] text-red-500 font-medium">8%</span>
-                      <TrendingUp className="h-3.5 w-3.5 text-green-600" />
-                      <span className="text-[10px] text-green-600 font-medium">92%</span>
-                    </div>
-                  </div>
-                  <p className="font-medium text-[#1f1f1f] text-lg mt-1">
-                    {keyMetrics.successRate > 0 
-                      ? `${keyMetrics.successRate.toFixed(1)}%`
-                      : confidenceDistribution?.average_confidence
-                        ? `${(confidenceDistribution.average_confidence * 100).toFixed(1)}%`
-                        : null
-                    }
-                  </p>
-                  {confidenceDistribution?.average_confidence && keyMetrics.successRate === 0 && (
-                    <p className="text-xs text-gray-600 mt-1">
-                      Avg confidence
-                    </p>
-                  )}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Avg. Recovery Time</p>
-                  <p className="font-medium text-[#1f1f1f] text-lg">
-                    {keyMetrics.avgRecoveryTime > 0 
-                      ? `${keyMetrics.avgRecoveryTime} Days`
-                      : null
-                    }
-                  </p>
-                  {detectionStats?.expiring_soon !== undefined && detectionStats.expiring_soon > 0 && (
-                    <p className="text-xs text-amber-400 mt-1">
-                      {detectionStats.expiring_soon} expiring soon
-                    </p>
-                  )}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Key Metrics Summary already shown above */}
-
-        {/* Visual Breakdown: Recoveries Over Time */}
-        <Card className="mb-8 bg-white border-gray-200 text-gray-900 shadow-sm">
-          <CardContent className="p-6">
-            <h3 className="text-sm font-semibold text-[#1f1f1f] mb-4">Recoveries Over Time</h3>
-            <div className="w-full h-64 gpu-accelerated">
-              {claimsLoading ? (
-                <ChartSkeleton />
-              ) : chartData.length > 0 ? (
-                <Suspense fallback={<ChartSkeleton />}>
-                  <RecoveryChart data={chartData} />
-                </Suspense>
-              ) : (
-                <div className="h-full flex items-center justify-center text-gray-600 text-sm text-center px-4">
-                  {claims.length === 0
-                    ? 'No recovery data available. Sync your Amazon account to generate reports.'
-                    : 'No recoveries found within the selected date range.'}
-                </div>
-              )}
+              <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs h-7" onClick={() => setQuickDateRange('30days')}>30 Days</Button>
+              <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs h-7" onClick={() => setQuickDateRange('quarter')}>Quarter</Button>
+              <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs h-7" onClick={() => setQuickDateRange('year')}>YTD</Button>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className={cn("w-[280px] justify-start text-left font-medium bg-white text-gray-700 border-gray-200 hover:bg-gray-50", !dateRange && "text-gray-500")}>
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {dateRange?.from ? dateRange.to ? <>
+                      {format(dateRange.from, "LLL dd, y")} -{" "}
+                      {format(dateRange.to, "LLL dd, y")}
+                    </> : format(dateRange.from, "LLL dd, y") : <span>Pick a date range</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar initialFocus mode="range" defaultMonth={dateRange?.from} selected={dateRange} onSelect={setDateRange} numberOfMonths={2} className="pointer-events-auto" />
+                </PopoverContent>
+              </Popover>
+              <Button size="sm" onClick={() => setExportOpen(true)} className="gap-1.5 bg-gray-900 hover:bg-gray-800 text-white text-xs h-7">
+                <Download className="h-3.5 w-3.5" /> Export
+              </Button>
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Phase 3: Detection Statistics Charts */}
-            {/* Anomaly Type Distribution */}
-              <Card className="mb-8 bg-white border-gray-200 text-gray-900 shadow-sm">
-                <CardContent className="p-6">
-                  <h3 className="text-sm font-semibold text-[#1f1f1f] mb-4">Discrepancy Type Distribution</h3>
-                  <p className="text-xs text-gray-600 mb-4">Breakdown of detected discrepancies by type, showing count and total value</p>
-                  <div className="w-full h-80 gpu-accelerated">
-              {anomalyTypeChartData.length > 0 ? (
-                    <Suspense fallback={<ChartSkeleton />}>
-                      <AnomalyTypeChart data={anomalyTypeChartData} />
-                    </Suspense>
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-600 text-sm">
-                  <p>No discrepancy type data available</p>
+          {/* Key Metrics Bar - Enhanced with Phase 3 Detection Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
+              <CardContent className="p-4">
+                <div className="flex items-center">
+                  <div className="flex-1">
+                    <div className="relative inline-flex items-start">
+                      <p className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Total Recovered</p>
+                      <div className="absolute -top-0.5 left-full ml-1 flex items-center gap-0.5 leading-none">
+                        <TrendingDown className="h-3 w-3 text-red-500" />
+                        <span className="text-[9px] text-red-500 font-medium">8%</span>
+                        <TrendingUp className="h-3 w-3 text-green-600" />
+                        <span className="text-[9px] text-green-600 font-medium">92%</span>
+                      </div>
+                    </div>
+                    <p className="font-semibold text-gray-900 text-base mt-1">
+                      {detectionStats?.total_value
+                        ? formatCurrency(detectionStats.total_value)
+                        : keyMetrics.totalRecovered > 0
+                          ? formatCurrency(keyMetrics.totalRecovered)
+                          : null
+                      }
+                    </p>
+                    {detectionStats?.total_value && keyMetrics.totalRecovered > 0 && (
+                      <p className="text-xs text-gray-600 mt-1">
+                        {formatCurrency(keyMetrics.totalRecovered)} from approved claims
+                      </p>
+                    )}
+                  </div>
                 </div>
-              )}
-                  </div>
-                </CardContent>
-              </Card>
+              </CardContent>
+            </Card>
 
-            {/* Severity Distribution */}
-        {detectionStats && severityChartData.length > 0 && (
-              <Card className="mb-8 bg-white border-gray-200 text-gray-900 shadow-sm">
-                <CardContent className="p-6">
-                  <h3 className="text-sm font-semibold text-[#1f1f1f] mb-4">Severity Distribution</h3>
-                  <p className="text-xs text-gray-600 mb-4">Distribution of discrepancies by severity level (high, medium, low)</p>
-                  <div className="w-full h-64 gpu-accelerated">
-                    <Suspense fallback={<ChartSkeleton />}>
-                      <SeverityChart data={severityChartData} />
-                    </Suspense>
+            <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
+              <CardContent className="p-6">
+                <div className="flex items-center">
+                  <div>
+                    <p className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Claims Submitted</p>
+                    <p className="font-semibold text-gray-900 text-base">
+                      {detectionStats?.total_anomalies
+                        ? detectionStats.total_anomalies
+                        : keyMetrics.claimsSubmitted > 0
+                          ? keyMetrics.claimsSubmitted
+                          : null
+                      }
+                    </p>
+                    {detectionStats?.total_anomalies && keyMetrics.claimsSubmitted > 0 && (
+                      <p className="text-xs text-gray-600 mt-1">
+                        {keyMetrics.claimsSubmitted} claims filed
+                      </p>
+                    )}
                   </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Confidence Distribution */}
-        {(detectionStats || confidenceDistribution) && confidenceChartData.length > 0 && (
-              <Card className="mb-8 bg-white border-gray-200 text-gray-900 shadow-sm">
-                <CardContent className="p-6">
-                  <h3 className="text-sm font-semibold text-[#1f1f1f] mb-4">Confidence Distribution</h3>
-                  <p className="text-xs text-gray-600 mb-4">Number of detections by confidence level</p>
-                  <div className="w-full h-64 gpu-accelerated">
-                    <Suspense fallback={<ChartSkeleton />}>
-                      <ConfidenceChart data={confidenceChartData} />
-                    </Suspense>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Recovery Rates by Confidence */}
-              <Card className="mb-8 bg-white border-gray-200 text-gray-900 shadow-sm">
-                <CardContent className="p-6">
-                  <h3 className="text-sm font-semibold text-[#1f1f1f] mb-4">Recovery Rates by Confidence Level</h3>
-                  <p className="text-xs text-gray-600 mb-4">Success rate of recovery claims based on detection confidence</p>
-                  <div className="w-full h-64 gpu-accelerated">
-              {recoveryRatesChartData.length > 0 ? (
-                    <Suspense fallback={<ChartSkeleton />}>
-                      <RecoveryRatesChart data={recoveryRatesChartData} />
-                    </Suspense>
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-400">
-                  <p>No recovery rate data available</p>
                 </div>
-              )}
-                  </div>
-                </CardContent>
-              </Card>
+              </CardContent>
+            </Card>
 
-            {/* Confidence Range Histogram */}
-        {confidenceDistribution && confidenceHistogramData.length > 0 && (
-              <Card className="mb-8 bg-white border-gray-200 text-gray-900 shadow-sm">
-                <CardContent className="p-6">
-                  <h3 className="text-sm font-semibold text-[#1f1f1f] mb-4">Confidence Score Distribution</h3>
-                  <p className="text-xs text-gray-600 mb-4">Histogram showing distribution of confidence scores across all detections</p>
-                  <div className="w-full h-64 gpu-accelerated">
-                    <Suspense fallback={<ChartSkeleton />}>
-                      <ConfidenceHistogram data={confidenceHistogramData} />
-                    </Suspense>
+            <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
+              <CardContent className="p-6">
+                <div className="flex items-center">
+                  <div className="flex-1">
+                    <div className="relative inline-flex items-start">
+                      <p className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Success Rate</p>
+                      <div className="absolute -top-0.5 left-full ml-1 flex items-center gap-0.5 leading-none">
+                        <TrendingDown className="h-3 w-3 text-red-500" />
+                        <span className="text-[9px] text-red-500 font-medium">8%</span>
+                        <TrendingUp className="h-3 w-3 text-green-600" />
+                        <span className="text-[9px] text-green-600 font-medium">92%</span>
+                      </div>
+                    </div>
+                    <p className="font-semibold text-gray-900 text-base mt-1">
+                      {keyMetrics.successRate > 0
+                        ? `${keyMetrics.successRate.toFixed(1)}%`
+                        : confidenceDistribution?.average_confidence
+                          ? `${(confidenceDistribution.average_confidence * 100).toFixed(1)}%`
+                          : null
+                      }
+                    </p>
+                    {confidenceDistribution?.average_confidence && keyMetrics.successRate === 0 && (
+                      <p className="text-xs text-gray-600 mt-1">
+                        Avg confidence
+                      </p>
+                    )}
                   </div>
-                </CardContent>
-              </Card>
-        )}
+                </div>
+              </CardContent>
+            </Card>
 
-        {/* Detailed Breakdown: Recoveries by Claim Type */}
-        <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
-          <CardContent className="p-6">
-            <h3 className="text-sm font-semibold text-[#1f1f1f] mb-4">Recoveries by Claim Type</h3>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="text-[#1f1f1f] font-semibold">Claim Type</TableHead>
-                  <TableHead className="text-[#1f1f1f] font-semibold">Claims Filed</TableHead>
-                  <TableHead className="text-[#1f1f1f] font-semibold">Amount Recovered</TableHead>
-                  <TableHead className="text-[#1f1f1f] font-semibold">% of Total</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {(() => {
-                  const totalsByType: Record<string, { count: number; amount: number }> = {};
-                  filteredClaims.forEach(c => {
-                    totalsByType[c.claimType] = totalsByType[c.claimType] || { count: 0, amount: 0 };
-                    totalsByType[c.claimType].count += 1;
-                    totalsByType[c.claimType].amount += c.amountRecovered;
-                  });
-                  const grandTotal = Object.values(totalsByType).reduce((s, t) => s + t.amount, 0);
-                  const entries = Object.entries(totalsByType);
-                  
-                  if (entries.length === 0) {
-                    return (
-                      <TableRow>
-                        <TableCell colSpan={4} className="text-center text-gray-400 py-8">
-                          No claims data available
-                        </TableCell>
+            <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
+              <CardContent className="p-6">
+                <div className="flex items-center">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Avg. Recovery Time</p>
+                    <p className="font-medium text-[#1f1f1f] text-lg">
+                      {keyMetrics.avgRecoveryTime > 0
+                        ? `${keyMetrics.avgRecoveryTime} Days`
+                        : null
+                      }
+                    </p>
+                    {detectionStats?.expiring_soon !== undefined && detectionStats.expiring_soon > 0 && (
+                      <p className="text-xs text-amber-400 mt-1">
+                        {detectionStats.expiring_soon} expiring soon
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Key Metrics Summary already shown above */}
+
+          {/* Visual Breakdown: Recoveries Over Time */}
+          <Card className="mb-8 bg-white border-gray-200 text-gray-900 shadow-sm">
+            <CardContent className="p-6">
+              <h3 className="text-sm font-semibold text-[#1f1f1f] mb-4">Recoveries Over Time</h3>
+              <div className="w-full h-64 gpu-accelerated">
+                {claimsLoading ? (
+                  <ChartSkeleton />
+                ) : chartData.length > 0 ? (
+                  <Suspense fallback={<ChartSkeleton />}>
+                    <RecoveryChart data={chartData} />
+                  </Suspense>
+                ) : (
+                  <div className="h-full flex items-center justify-center text-gray-600 text-sm text-center px-4">
+                    {claims.length === 0
+                      ? 'No recovery data available. Sync your Amazon account to generate reports.'
+                      : 'No recoveries found within the selected date range.'}
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Phase 3: Detection Statistics Charts */}
+          {/* Anomaly Type Distribution */}
+          <Card className="mb-8 bg-white border-gray-200 text-gray-900 shadow-sm">
+            <CardContent className="p-6">
+              <h3 className="text-sm font-semibold text-[#1f1f1f] mb-4">Discrepancy Type Distribution</h3>
+              <p className="text-xs text-gray-600 mb-4">Breakdown of detected discrepancies by type, showing count and total value</p>
+              <div className="w-full h-80 gpu-accelerated">
+                {anomalyTypeChartData.length > 0 ? (
+                  <Suspense fallback={<ChartSkeleton />}>
+                    <AnomalyTypeChart data={anomalyTypeChartData} />
+                  </Suspense>
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-gray-600 text-sm">
+                    <p>No discrepancy type data available</p>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Severity Distribution */}
+          {detectionStats && severityChartData.length > 0 && (
+            <Card className="mb-8 bg-white border-gray-200 text-gray-900 shadow-sm">
+              <CardContent className="p-6">
+                <h3 className="text-sm font-semibold text-[#1f1f1f] mb-4">Severity Distribution</h3>
+                <p className="text-xs text-gray-600 mb-4">Distribution of discrepancies by severity level (high, medium, low)</p>
+                <div className="w-full h-64 gpu-accelerated">
+                  <Suspense fallback={<ChartSkeleton />}>
+                    <SeverityChart data={severityChartData} />
+                  </Suspense>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Confidence Distribution */}
+          {(detectionStats || confidenceDistribution) && confidenceChartData.length > 0 && (
+            <Card className="mb-8 bg-white border-gray-200 text-gray-900 shadow-sm">
+              <CardContent className="p-6">
+                <h3 className="text-sm font-semibold text-[#1f1f1f] mb-4">Confidence Distribution</h3>
+                <p className="text-xs text-gray-600 mb-4">Number of detections by confidence level</p>
+                <div className="w-full h-64 gpu-accelerated">
+                  <Suspense fallback={<ChartSkeleton />}>
+                    <ConfidenceChart data={confidenceChartData} />
+                  </Suspense>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Recovery Rates by Confidence */}
+          <Card className="mb-8 bg-white border-gray-200 text-gray-900 shadow-sm">
+            <CardContent className="p-6">
+              <h3 className="text-sm font-semibold text-[#1f1f1f] mb-4">Recovery Rates by Confidence Level</h3>
+              <p className="text-xs text-gray-600 mb-4">Success rate of recovery claims based on detection confidence</p>
+              <div className="w-full h-64 gpu-accelerated">
+                {recoveryRatesChartData.length > 0 ? (
+                  <Suspense fallback={<ChartSkeleton />}>
+                    <RecoveryRatesChart data={recoveryRatesChartData} />
+                  </Suspense>
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-gray-400">
+                    <p>No recovery rate data available</p>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Confidence Range Histogram */}
+          {confidenceDistribution && confidenceHistogramData.length > 0 && (
+            <Card className="mb-8 bg-white border-gray-200 text-gray-900 shadow-sm">
+              <CardContent className="p-6">
+                <h3 className="text-sm font-semibold text-[#1f1f1f] mb-4">Confidence Score Distribution</h3>
+                <p className="text-xs text-gray-600 mb-4">Histogram showing distribution of confidence scores across all detections</p>
+                <div className="w-full h-64 gpu-accelerated">
+                  <Suspense fallback={<ChartSkeleton />}>
+                    <ConfidenceHistogram data={confidenceHistogramData} />
+                  </Suspense>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Detailed Breakdown: Recoveries by Claim Type */}
+          <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
+            <CardContent className="p-4">
+              <h3 className="text-sm font-semibold text-[#1f1f1f] mb-4">Recoveries by Claim Type</h3>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-[#1f1f1f] font-semibold">Claim Type</TableHead>
+                    <TableHead className="text-[#1f1f1f] font-semibold">Claims Filed</TableHead>
+                    <TableHead className="text-[#1f1f1f] font-semibold">Amount Recovered</TableHead>
+                    <TableHead className="text-[#1f1f1f] font-semibold">% of Total</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {(() => {
+                    const totalsByType: Record<string, { count: number; amount: number }> = {};
+                    filteredClaims.forEach(c => {
+                      totalsByType[c.claimType] = totalsByType[c.claimType] || { count: 0, amount: 0 };
+                      totalsByType[c.claimType].count += 1;
+                      totalsByType[c.claimType].amount += c.amountRecovered;
+                    });
+                    const grandTotal = Object.values(totalsByType).reduce((s, t) => s + t.amount, 0);
+                    const entries = Object.entries(totalsByType);
+
+                    if (entries.length === 0) {
+                      return (
+                        <TableRow>
+                          <TableCell colSpan={4} className="text-center text-gray-400 py-8">
+                            No claims data available
+                          </TableCell>
+                        </TableRow>
+                      );
+                    }
+
+                    return entries.map(([type, t]) => (
+                      <TableRow key={type}>
+                        <TableCell>{type}</TableCell>
+                        <TableCell>{t.count}</TableCell>
+                        <TableCell className="font-medium">{formatCurrency(t.amount)}</TableCell>
+                        <TableCell>{grandTotal > 0 ? ((t.amount / grandTotal) * 100).toFixed(1) : '0.0'}%</TableCell>
                       </TableRow>
-                    );
-                  }
-                  
-                  return entries.map(([type, t]) => (
-                    <TableRow key={type}>
-                      <TableCell>{type}</TableCell>
-                      <TableCell>{t.count}</TableCell>
-                      <TableCell className="font-medium">{formatCurrency(t.amount)}</TableCell>
-                      <TableCell>{grandTotal > 0 ? ((t.amount / grandTotal) * 100).toFixed(1) : '0.0'}%</TableCell>
-                    </TableRow>
-                  ));
-                })()}
-              </TableBody>
-            </Table>
-            <div className="mt-6 flex items-center justify-between">
-              <div className="text-xs text-gray-400">Page {page} of {totalPages} • {filteredClaims.length} claims</div>
-              <div className="flex items-center gap-3">
-                <select className="bg-white border border-gray-200 rounded px-2 py-1 text-sm text-gray-700" value={pageSize} onChange={(e)=>{ setPageSize(Number(e.target.value)); setPage(1); }}>
-                  <option value={10}>10 / page</option>
-                  <option value={25}>25 / page</option>
-                  <option value={50}>50 / page</option>
-                </select>
-                <Button variant="outline" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" disabled={page<=1} onClick={()=>setPage(p=>Math.max(1,p-1))}>Prev</Button>
-                <Button variant="outline" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" disabled={page>=totalPages} onClick={()=>setPage(p=>Math.min(totalPages,p+1))}>Next</Button>
+                    ));
+                  })()}
+                </TableBody>
+              </Table>
+              <div className="mt-6 flex items-center justify-between">
+                <div className="text-xs text-gray-400">Page {page} of {totalPages} • {filteredClaims.length} claims</div>
+                <div className="flex items-center gap-3">
+                  <select className="bg-white border border-gray-200 rounded px-2 py-1 text-sm text-gray-700" value={pageSize} onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1); }}>
+                    <option value={10}>10 / page</option>
+                    <option value={25}>25 / page</option>
+                    <option value={50}>50 / page</option>
+                  </select>
+                  <Button variant="outline" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" disabled={page <= 1} onClick={() => setPage(p => Math.max(1, p - 1))}>Prev</Button>
+                  <Button variant="outline" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" disabled={page >= totalPages} onClick={() => setPage(p => Math.min(totalPages, p + 1))}>Next</Button>
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-          </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
-      {/* Export Modal */}
-      <Dialog open={exportOpen} onOpenChange={setExportOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Export Data</DialogTitle>
-            <DialogDescription>Select what format you want to export.</DialogDescription>
-          </DialogHeader>
-          <div className="space-y-3">
-            <div>
-              <p className="text-sm font-medium mb-2">Select Report Type</p>
-              <Select value={reportType} onValueChange={(v) => setReportType(v as any)}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Choose a report to export" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="recovery_payout">Recovery and Payout History — Master report for all financial reconciliation</SelectItem>
-                  <SelectItem value="fee_dispute">Fee Dispute History — Value recovered from fee overcharges</SelectItem>
-                  <SelectItem value="evidence_log">Evidence Locker Log — Inventory of all uploaded</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <Select value={exportFormat} onValueChange={(v) => setExportFormat(v as 'csv' | 'pdf')}>
+    </div>
+    {/* Export Modal */}
+    <Dialog open={exportOpen} onOpenChange={setExportOpen}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Export Data</DialogTitle>
+          <DialogDescription>Select what format you want to export.</DialogDescription>
+        </DialogHeader>
+        <div className="space-y-3">
+          <div>
+            <p className="text-sm font-medium mb-2">Select Report Type</p>
+            <Select value={reportType} onValueChange={(v) => setReportType(v as any)}>
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select format" />
+                <SelectValue placeholder="Choose a report to export" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="csv">Detailed CSV</SelectItem>
-                <SelectItem value="pdf">PDF Summary</SelectItem>
+                <SelectItem value="recovery_payout">Recovery and Payout History — Master report for all financial reconciliation</SelectItem>
+                <SelectItem value="fee_dispute">Fee Dispute History — Value recovered from fee overcharges</SelectItem>
+                <SelectItem value="evidence_log">Evidence Locker Log — Inventory of all uploaded</SelectItem>
               </SelectContent>
             </Select>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setExportOpen(false)}>Cancel</Button>
-            <Button onClick={exportAction} disabled={!reportType}>Generate & Download</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </PageLayout>;
+          <Select value={exportFormat} onValueChange={(v) => setExportFormat(v as 'csv' | 'pdf')}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select format" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="csv">Detailed CSV</SelectItem>
+              <SelectItem value="pdf">PDF Summary</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setExportOpen(false)}>Cancel</Button>
+          <Button onClick={exportAction} disabled={!reportType}>Generate & Download</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  </PageLayout>;
 }
