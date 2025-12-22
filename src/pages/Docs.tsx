@@ -351,7 +351,7 @@ const Docs = () => {
                 <h2 className="text-2xl font-semibold text-gray-900">Contact for AUP Violations</h2>
                 <p className="text-gray-600">
                   <strong>Report suspected abuse:</strong>{' '}
-                  <a href="mailto:abuse@clario.app" className="underline text-emerald-600 hover:text-emerald-700">abuse@clario.app</a>
+                  <a href="mailto:clariooai@gmail.com" className="underline text-emerald-600 hover:text-emerald-700">Clario Abuse Report</a>
                 </p>
                 <p className="text-sm text-gray-500 italic">Internal escalation only — not for user support.</p>
               </section>

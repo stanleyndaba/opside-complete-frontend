@@ -343,7 +343,7 @@ const Privacy = () => {
               <section className="space-y-4">
                 <h2 className="text-2xl font-semibold text-gray-900">8. Contact Us</h2>
                 <p>If you have questions about this Privacy Policy or our compliance with the Amazon DPP, contact us at:</p>
-                <p><strong>Email:</strong> <a href="mailto:legal@clario.app" className="underline text-emerald-600 hover:text-emerald-700">legal@clario.app</a></p>
+                <p><strong>Email:</strong> <a href="mailto:clariooai@gmail.com" className="underline text-emerald-600 hover:text-emerald-700">Clario Support</a></p>
               </section>
           </div>
         </main>

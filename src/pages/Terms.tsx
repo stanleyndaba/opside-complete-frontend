@@ -28,7 +28,7 @@ const Terms = () => {
   useEffect(() => {
     try {
       localStorage.setItem('clario.langPreference', selectedLanguageCode);
-    } catch {}
+    } catch { }
   }, [selectedLanguageCode]);
 
   useEffect(() => {
@@ -232,166 +232,166 @@ const Terms = () => {
               <p><strong>Last Updated:</strong> November 17, 2025</p>
             </div>
 
-              <section className="space-y-4">
-                <header className="space-y-3">
-                  <p className="uppercase text-xs tracking-[0.3em] text-emerald-600">Legal</p>
-                  <h1 className="text-3xl md:text-4xl font-semibold text-gray-900">Clario Terms of Service</h1>
-                </header>
-                <p className="leading-relaxed">
-                  These Terms of Service ("TOS") govern your access to and use of Clario ("Clario," "we," "us," or "our"), a SaaS platform that automates the identification, evidence-matching, and submission of FBA reimbursement claims on behalf of Amazon sellers ("User," "you," or "Seller").
-                </p>
-                <p className="leading-relaxed">
-                  By creating an account, connecting your Amazon Seller Central account via OAuth, or using any part of the Service, you agree to be bound by these TOS and the{' '}
-                  <a href="https://clario.app/privacy" className="underline text-emerald-600 hover:text-emerald-700" target="_blank" rel="noreferrer">
-                    Clario Data Privacy Policy
-                  </a>{' '}
-                  (which is incorporated herein by reference).
-                </p>
-              </section>
+            <section className="space-y-4">
+              <header className="space-y-3">
+                <p className="uppercase text-xs tracking-[0.3em] text-emerald-600">Legal</p>
+                <h1 className="text-3xl md:text-4xl font-semibold text-gray-900">Clario Terms of Service</h1>
+              </header>
+              <p className="leading-relaxed">
+                These Terms of Service ("TOS") govern your access to and use of Clario ("Clario," "we," "us," or "our"), a SaaS platform that automates the identification, evidence-matching, and submission of FBA reimbursement claims on behalf of Amazon sellers ("User," "you," or "Seller").
+              </p>
+              <p className="leading-relaxed">
+                By creating an account, connecting your Amazon Seller Central account via OAuth, or using any part of the Service, you agree to be bound by these TOS and the{' '}
+                <a href="https://clario.app/privacy" className="underline text-emerald-600 hover:text-emerald-700" target="_blank" rel="noreferrer">
+                  Clario Data Privacy Policy
+                </a>{' '}
+                (which is incorporated herein by reference).
+              </p>
+            </section>
 
-              <hr className="border-gray-200" />
+            <hr className="border-gray-200" />
 
-                <section className="space-y-4">
-                  <h2 className="text-2xl font-semibold text-gray-900">1. Acceptance and Service Scope</h2>
-                <p className="text-gray-600 leading-relaxed">
-                  <strong>Clario</strong> is a software-as-a-service (SaaS) tool that automates the identification, evidence-matching, and submission of FBA reimbursement claims on the User's behalf.
-                </p>
-                <p className="text-gray-600 leading-relaxed">The Service includes:</p>
-                <ul className="list-disc pl-6 text-gray-600 space-y-2">
-                  <li>Automated analysis of Amazon SP-API data (e.g., inventory adjustments, shipment discrepancies)</li>
-                  <li>Extraction and matching of supporting evidence (e.g., invoices, BOLs) from user-authorized external sources</li>
-                  <li>Preparation and submission of reimbursement claims via Amazon's official channels</li>
-                </ul>
-                <p className="text-gray-700 leading-relaxed font-medium">By using Clario, you agree:</p>
-                <ul className="list-disc pl-6 text-gray-600 space-y-2">
-                  <li>To these TOS and the Clario Data Privacy Policy</li>
-                  <li><strong>To comply with all Amazon Selling Partner Agreements, Policies, and the Amazon Selling Partner API Developer Agreement</strong></li>
-                </ul>
-              </section>
+            <section className="space-y-4">
+              <h2 className="text-2xl font-semibold text-gray-900">1. Acceptance and Service Scope</h2>
+              <p className="text-gray-600 leading-relaxed">
+                <strong>Clario</strong> is a software-as-a-service (SaaS) tool that automates the identification, evidence-matching, and submission of FBA reimbursement claims on the User's behalf.
+              </p>
+              <p className="text-gray-600 leading-relaxed">The Service includes:</p>
+              <ul className="list-disc pl-6 text-gray-600 space-y-2">
+                <li>Automated analysis of Amazon SP-API data (e.g., inventory adjustments, shipment discrepancies)</li>
+                <li>Extraction and matching of supporting evidence (e.g., invoices, BOLs) from user-authorized external sources</li>
+                <li>Preparation and submission of reimbursement claims via Amazon's official channels</li>
+              </ul>
+              <p className="text-gray-700 leading-relaxed font-medium">By using Clario, you agree:</p>
+              <ul className="list-disc pl-6 text-gray-600 space-y-2">
+                <li>To these TOS and the Clario Data Privacy Policy</li>
+                <li><strong>To comply with all Amazon Selling Partner Agreements, Policies, and the Amazon Selling Partner API Developer Agreement</strong></li>
+              </ul>
+            </section>
 
-                <section className="space-y-4">
-                  <h2 className="text-2xl font-semibold text-gray-900">2. User Responsibilities and Conduct</h2>
-                <p className="text-gray-600 leading-relaxed">You are solely responsible for your use of Clario.</p>
-                <p className="text-gray-600 leading-relaxed">You agree to:</p>
-                <ul className="list-disc pl-6 text-gray-600 space-y-2">
-                  <li>Provide accurate, complete, and authorized access to your Amazon Seller Central account and linked data sources (e.g., Gmail, Google Drive)</li>
-                  <li><strong>Not use Clario to file fraudulent, fictitious, or unauthorized reimbursement claims</strong></li>
-                  <li>Maintain the confidentiality and security of your Amazon Seller Central credentials and OAuth tokens</li>
-                  <li>Immediately notify Clario of any unauthorized use of your account</li>
-                </ul>
-                <p className="text-gray-600 leading-relaxed">
-                  <strong>Prohibited Use:</strong> Any attempt to manipulate, falsify, or misrepresent data to generate invalid claims violates these TOS and may result in immediate termination and reporting to Amazon.
-                </p>
-              </section>
+            <section className="space-y-4">
+              <h2 className="text-2xl font-semibold text-gray-900">2. User Responsibilities and Conduct</h2>
+              <p className="text-gray-600 leading-relaxed">You are solely responsible for your use of Clario.</p>
+              <p className="text-gray-600 leading-relaxed">You agree to:</p>
+              <ul className="list-disc pl-6 text-gray-600 space-y-2">
+                <li>Provide accurate, complete, and authorized access to your Amazon Seller Central account and linked data sources (e.g., Gmail, Google Drive)</li>
+                <li><strong>Not use Clario to file fraudulent, fictitious, or unauthorized reimbursement claims</strong></li>
+                <li>Maintain the confidentiality and security of your Amazon Seller Central credentials and OAuth tokens</li>
+                <li>Immediately notify Clario of any unauthorized use of your account</li>
+              </ul>
+              <p className="text-gray-600 leading-relaxed">
+                <strong>Prohibited Use:</strong> Any attempt to manipulate, falsify, or misrepresent data to generate invalid claims violates these TOS and may result in immediate termination and reporting to Amazon.
+              </p>
+            </section>
 
-                <section className="space-y-4">
-                  <h2 className="text-2xl font-semibold text-gray-900">3. Fee Structure and Billing</h2>
-                <p className="text-gray-600 leading-relaxed">Clario operates on a <strong>contingency commission basis</strong>.</p>
-                <ul className="list-disc pl-6 text-gray-600 space-y-2">
-                  <li><strong>Commission Rate</strong>: <strong>20%</strong> of the total reimbursement amount successfully credited to your Amazon account by Amazon</li>
-                  <li><strong>Payment Trigger</strong>: Fees are calculated and invoiced <strong>only when Amazon credits funds</strong> to your Seller Central account as a result of a Clario-submitted claim</li>
-                  <li><strong>No Recovery, No Fee</strong>: If no reimbursement is awarded, you owe nothing</li>
-                </ul>
-                <p className="text-gray-600 leading-relaxed">
-                  <strong>Founder's Council Exemption</strong>: Early-access users enrolled in the Founder's Council program may be exempt from fees for the initial 90-day period from activation. Standard commission applies thereafter.
-                </p>
-                <p className="text-gray-600 leading-relaxed">All fees are final and non-refundable unless required by law.</p>
-                <h3 className="text-xl font-medium text-gray-900">3.1 Payment and Billing</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  To use the Service, you must provide a valid payment method (e.g., credit card via Stripe). You authorize Clario to charge your payment method for all commission fees due under this TOS.
-                </p>
-                <p className="text-gray-600 leading-relaxed">
-                  Invoices will be generated monthly in arrears, based on reimbursements successfully credited to your account. Payment is due upon receipt. Failure to pay may result in suspension or termination of your account.
-                </p>
-              </section>
+            <section className="space-y-4">
+              <h2 className="text-2xl font-semibold text-gray-900">3. Fee Structure and Billing</h2>
+              <p className="text-gray-600 leading-relaxed">Clario operates on a <strong>contingency commission basis</strong>.</p>
+              <ul className="list-disc pl-6 text-gray-600 space-y-2">
+                <li><strong>Commission Rate</strong>: <strong>20%</strong> of the total reimbursement amount successfully credited to your Amazon account by Amazon</li>
+                <li><strong>Payment Trigger</strong>: Fees are calculated and invoiced <strong>only when Amazon credits funds</strong> to your Seller Central account as a result of a Clario-submitted claim</li>
+                <li><strong>No Recovery, No Fee</strong>: If no reimbursement is awarded, you owe nothing</li>
+              </ul>
+              <p className="text-gray-600 leading-relaxed">
+                <strong>Founder's Council Exemption</strong>: Early-access users enrolled in the Founder's Council program may be exempt from fees for the initial 90-day period from activation. Standard commission applies thereafter.
+              </p>
+              <p className="text-gray-600 leading-relaxed">All fees are final and non-refundable unless required by law.</p>
+              <h3 className="text-xl font-medium text-gray-900">3.1 Payment and Billing</h3>
+              <p className="text-gray-600 leading-relaxed">
+                To use the Service, you must provide a valid payment method (e.g., credit card via Stripe). You authorize Clario to charge your payment method for all commission fees due under this TOS.
+              </p>
+              <p className="text-gray-600 leading-relaxed">
+                Invoices will be generated monthly in arrears, based on reimbursements successfully credited to your account. Payment is due upon receipt. Failure to pay may result in suspension or termination of your account.
+              </p>
+            </section>
 
-              <section className="space-y-4">
-                <h2 className="text-2xl font-semibold text-gray-900">4. Intellectual Property (IP)</h2>
-                <p className="text-gray-600 leading-relaxed">Clario retains full ownership of:</p>
-                <ul className="list-disc pl-6 text-gray-600 space-y-2">
-                  <li>The Clario platform, software, and user interface</li>
-                  <li>All algorithms, evidence-matching logic, claim-generation models, and automation workflows</li>
-                  <li>Trademarks, logos, and branding</li>
-                </ul>
-                <p className="text-gray-600 leading-relaxed">
-                  <strong>Limited License</strong>: You are granted a <strong>non-exclusive, non-transferable, revocable license</strong> to use the Service solely for your internal FBA reimbursement operations during the term of your active account.
-                </p>
-                <p className="text-gray-600 leading-relaxed">You may not copy, modify, reverse-engineer, or create derivative works of any part of Clario.</p>
-              </section>
+            <section className="space-y-4">
+              <h2 className="text-2xl font-semibold text-gray-900">4. Intellectual Property (IP)</h2>
+              <p className="text-gray-600 leading-relaxed">Clario retains full ownership of:</p>
+              <ul className="list-disc pl-6 text-gray-600 space-y-2">
+                <li>The Clario platform, software, and user interface</li>
+                <li>All algorithms, evidence-matching logic, claim-generation models, and automation workflows</li>
+                <li>Trademarks, logos, and branding</li>
+              </ul>
+              <p className="text-gray-600 leading-relaxed">
+                <strong>Limited License</strong>: You are granted a <strong>non-exclusive, non-transferable, revocable license</strong> to use the Service solely for your internal FBA reimbursement operations during the term of your active account.
+              </p>
+              <p className="text-gray-600 leading-relaxed">You may not copy, modify, reverse-engineer, or create derivative works of any part of Clario.</p>
+            </section>
 
-              <section className="space-y-4">
-                <h2 className="text-2xl font-semibold text-gray-900">5. Termination and Suspension</h2>
-                <h3 className="text-xl font-medium text-gray-900">Clario's Right to Suspend or Terminate</h3>
-                <p className="text-gray-600 leading-relaxed">We may <strong>immediately suspend or terminate</strong> your access if:</p>
-                <ul className="list-disc pl-6 text-gray-600 space-y-2">
-                  <li>You violate these TOS</li>
-                  <li>We suspect fraudulent or policy-violating activity</li>
-                  <li>Amazon revokes or restricts your SP-API access</li>
-                  <li>Required for legal or security reasons</li>
-                </ul>
-                <p className="text-gray-600 leading-relaxed">
-                  <strong>Self-Policing Commitment</strong>: Clario actively monitors for abuse and will report suspected violations of Amazon policy to Amazon, Inc.
-                </p>
-                <h3 className="text-xl font-medium text-gray-900">Your Right to Cancel</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  You may cancel your Clario account at any time via in-app settings or by emailing{' '}
-                  <a href="mailto:support@clario.app" className="underline text-emerald-600 hover:text-emerald-700">support@clario.app</a>.
-                  {' '}Cancellation takes effect immediately. No further claims will be filed after cancellation.
-                </p>
-                <h3 className="text-xl font-medium text-gray-900">5.1 Effect of Termination</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Upon termination by either party, your license to use the Service ceases immediately. However, you remain liable for all commission fees on claims submitted by Clario prior to termination that are subsequently approved and credited by Amazon. Clario reserves the right to invoice for these post-termination fees.
-                </p>
-              </section>
+            <section className="space-y-4">
+              <h2 className="text-2xl font-semibold text-gray-900">5. Termination and Suspension</h2>
+              <h3 className="text-xl font-medium text-gray-900">Clario's Right to Suspend or Terminate</h3>
+              <p className="text-gray-600 leading-relaxed">We may <strong>immediately suspend or terminate</strong> your access if:</p>
+              <ul className="list-disc pl-6 text-gray-600 space-y-2">
+                <li>You violate these TOS</li>
+                <li>We suspect fraudulent or policy-violating activity</li>
+                <li>Amazon revokes or restricts your SP-API access</li>
+                <li>Required for legal or security reasons</li>
+              </ul>
+              <p className="text-gray-600 leading-relaxed">
+                <strong>Self-Policing Commitment</strong>: Clario actively monitors for abuse and will report suspected violations of Amazon policy to Amazon, Inc.
+              </p>
+              <h3 className="text-xl font-medium text-gray-900">Your Right to Cancel</h3>
+              <p className="text-gray-600 leading-relaxed">
+                You may cancel your Clario account at any time via in-app settings or by emailing{' '}
+                <a href="mailto:clariooai@gmail.com" className="underline text-emerald-600 hover:text-emerald-700">Clario Support</a>.
+                {' '}Cancellation takes effect immediately. No further claims will be filed after cancellation.
+              </p>
+              <h3 className="text-xl font-medium text-gray-900">5.1 Effect of Termination</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Upon termination by either party, your license to use the Service ceases immediately. However, you remain liable for all commission fees on claims submitted by Clario prior to termination that are subsequently approved and credited by Amazon. Clario reserves the right to invoice for these post-termination fees.
+              </p>
+            </section>
 
-              <section className="space-y-4">
-                <h2 className="text-2xl font-semibold text-gray-900">6. Disclaimer of Warranties</h2>
-                <p className="text-gray-600 leading-relaxed"><strong>CLARIO DOES NOT GUARANTEE:</strong></p>
-                <ul className="list-disc pl-6 text-gray-600 space-y-2">
-                  <li>Recovery of any specific reimbursement amount</li>
-                  <li>Approval or successful resolution of any claim submitted</li>
-                  <li>Amazon's processing timeline or decision-making</li>
-                </ul>
-                <p className="text-gray-600 leading-relaxed"><strong>Final authority rests solely with Amazon, Inc.</strong></p>
-                <p className="text-gray-600 leading-relaxed">
-                  The Service is provided <strong>"AS IS"</strong> and <strong>"AS AVAILABLE"</strong> without warranties of any kind, express or implied, including but not limited to merchantability, fitness for a particular purpose, or non-infringement.
-                </p>
-              </section>
+            <section className="space-y-4">
+              <h2 className="text-2xl font-semibold text-gray-900">6. Disclaimer of Warranties</h2>
+              <p className="text-gray-600 leading-relaxed"><strong>CLARIO DOES NOT GUARANTEE:</strong></p>
+              <ul className="list-disc pl-6 text-gray-600 space-y-2">
+                <li>Recovery of any specific reimbursement amount</li>
+                <li>Approval or successful resolution of any claim submitted</li>
+                <li>Amazon's processing timeline or decision-making</li>
+              </ul>
+              <p className="text-gray-600 leading-relaxed"><strong>Final authority rests solely with Amazon, Inc.</strong></p>
+              <p className="text-gray-600 leading-relaxed">
+                The Service is provided <strong>"AS IS"</strong> and <strong>"AS AVAILABLE"</strong> without warranties of any kind, express or implied, including but not limited to merchantability, fitness for a particular purpose, or non-infringement.
+              </p>
+            </section>
 
-              <section className="space-y-4">
-                <h2 className="text-2xl font-semibold text-gray-900">7. Limitation of Liability and Governing Law</h2>
-                <p className="text-gray-600 leading-relaxed">
-                  <strong>Liability Cap</strong>: To the fullest extent permitted by law, Clario's total liability to you shall not exceed the total fees paid by you to Clario in the <strong>12 months</strong> preceding the claim.
-                </p>
-                <p className="text-gray-600 leading-relaxed">
-                  <strong>No Consequential Damages</strong>: In no event shall Clario be liable for indirect, incidental, special, punitive, or consequential damages, including lost profits, data, or business opportunity.
-                </p>
-                <p className="text-gray-600 leading-relaxed">
-                  <strong>Governing Law</strong>: These TOS shall be governed by the laws of the <strong>State of Delaware</strong>, without regard to conflict of law principles. Any disputes shall be resolved exclusively in the state or federal courts located in <strong>New Castle County, Delaware</strong>.
-                </p>
-              </section>
+            <section className="space-y-4">
+              <h2 className="text-2xl font-semibold text-gray-900">7. Limitation of Liability and Governing Law</h2>
+              <p className="text-gray-600 leading-relaxed">
+                <strong>Liability Cap</strong>: To the fullest extent permitted by law, Clario's total liability to you shall not exceed the total fees paid by you to Clario in the <strong>12 months</strong> preceding the claim.
+              </p>
+              <p className="text-gray-600 leading-relaxed">
+                <strong>No Consequential Damages</strong>: In no event shall Clario be liable for indirect, incidental, special, punitive, or consequential damages, including lost profits, data, or business opportunity.
+              </p>
+              <p className="text-gray-600 leading-relaxed">
+                <strong>Governing Law</strong>: These TOS shall be governed by the laws of the <strong>State of Delaware</strong>, without regard to conflict of law principles. Any disputes shall be resolved exclusively in the state or federal courts located in <strong>New Castle County, Delaware</strong>.
+              </p>
+            </section>
 
-              <section className="space-y-4">
-                <h2 className="text-2xl font-semibold text-gray-900">8. Dispute Resolution by Binding Arbitration</h2>
-                <p className="text-gray-600 leading-relaxed">
-                  <strong>PLEASE READ THIS SECTION CAREFULLY AS IT AFFECTS YOUR RIGHTS.</strong>
-                </p>
-                <p className="text-gray-600 leading-relaxed">
-                  Any dispute, claim, or controversy arising out of or relating to these TOS or the breach, termination, enforcement, interpretation, or validity thereof, shall be determined by binding arbitration in New Castle County, Delaware, rather than in court. You agree to waive your right to a trial by jury or to participate in a class action. This arbitration provision shall survive termination of these TOS.
-                </p>
-              </section>
+            <section className="space-y-4">
+              <h2 className="text-2xl font-semibold text-gray-900">8. Dispute Resolution by Binding Arbitration</h2>
+              <p className="text-gray-600 leading-relaxed">
+                <strong>PLEASE READ THIS SECTION CAREFULLY AS IT AFFECTS YOUR RIGHTS.</strong>
+              </p>
+              <p className="text-gray-600 leading-relaxed">
+                Any dispute, claim, or controversy arising out of or relating to these TOS or the breach, termination, enforcement, interpretation, or validity thereof, shall be determined by binding arbitration in New Castle County, Delaware, rather than in court. You agree to waive your right to a trial by jury or to participate in a class action. This arbitration provision shall survive termination of these TOS.
+              </p>
+            </section>
 
-              <section className="space-y-4">
-                <h2 className="text-2xl font-semibold text-gray-900">9. Contact Us</h2>
-                <p className="text-gray-600 leading-relaxed">For support, cancellation, or legal inquiries:</p>
-                  <div className="space-y-2 text-gray-600">
-                    <p><strong>Clario, Inc.</strong></p>
-                  <p><strong>Email</strong>: <a href="mailto:legal@clario.app" className="underline text-emerald-600 hover:text-emerald-700">legal@clario.app</a></p>
-                  <p><strong>Response Time</strong>: Within 48 hours</p>
-                </div>
-              </section>
+            <section className="space-y-4">
+              <h2 className="text-2xl font-semibold text-gray-900">9. Contact Us</h2>
+              <p className="text-gray-600 leading-relaxed">For support, cancellation, or legal inquiries:</p>
+              <div className="space-y-2 text-gray-600">
+                <p><strong>Clario, Inc.</strong></p>
+                <p><strong>Email</strong>: <a href="mailto:clariooai@gmail.com" className="underline text-emerald-600 hover:text-emerald-700">Clario Support</a></p>
+                <p><strong>Response Time</strong>: Within 48 hours</p>
+              </div>
+            </section>
 
-              <p className="text-sm text-gray-500 italic">Clario empowers sellers. Compliance protects us all.</p>
+            <p className="text-sm text-gray-500 italic">Clario empowers sellers. Compliance protects us all.</p>
           </div>
         </main>
         <BrandFooter selectedLanguageLabel={selectedLanguage.language} />
