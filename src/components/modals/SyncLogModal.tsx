@@ -54,6 +54,7 @@ const storyCategories: Record<string, { label: string; order: number }> = {
 export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
     const navigate = useNavigate();
     const [logs, setLogs] = useState<LogEntry[]>([]);
+    const [displayedLogs, setDisplayedLogs] = useState<LogEntry[]>([]); // Logs shown with animation
     const [syncId, setSyncId] = useState<string | null>(null);
     const [status, setStatus] = useState<'idle' | 'syncing' | 'completed' | 'failed'>('idle');
     const [expandedStories, setExpandedStories] = useState<Set<string>>(new Set());
@@ -61,8 +62,27 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
     const [totalValue, setTotalValue] = useState<number>(0);
     const logContainerRef = useRef<HTMLDivElement>(null);
     const hasStartedRef = useRef(false);
+    const displayQueueRef = useRef<LogEntry[]>([]);
+    const isProcessingQueueRef = useRef(false);
 
-    // Add log entry
+    // Process display queue - shows logs one at a time with delay
+    const processDisplayQueue = useCallback(async () => {
+        if (isProcessingQueueRef.current) return;
+        isProcessingQueueRef.current = true;
+
+        while (displayQueueRef.current.length > 0) {
+            const nextLog = displayQueueRef.current.shift();
+            if (nextLog) {
+                setDisplayedLogs(prev => [...prev, nextLog]);
+                // Small delay between each log (150ms feels natural, not slow)
+                await new Promise(resolve => setTimeout(resolve, 150));
+            }
+        }
+
+        isProcessingQueueRef.current = false;
+    }, []);
+
+    // Add log entry and queue for display
     const addLog = useCallback((entry: Omit<LogEntry, 'id' | 'timestamp'>) => {
         const newEntry: LogEntry = {
             ...entry,
@@ -70,7 +90,9 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
             timestamp: new Date(),
         };
         setLogs(prev => [...prev, newEntry]);
-    }, []);
+        displayQueueRef.current.push(newEntry);
+        processDisplayQueue();
+    }, [processDisplayQueue]);
 
     // Start sync when modal opens
     useEffect(() => {
@@ -219,6 +241,9 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
             // Reset after animation
             const timer = setTimeout(() => {
                 setLogs([]);
+                setDisplayedLogs([]);
+                displayQueueRef.current = [];
+                isProcessingQueueRef.current = false;
                 setSyncId(null);
                 setStatus('idle');
                 setExpandedStories(new Set());
@@ -278,10 +303,19 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
                     ref={logContainerRef}
                     className="flex-1 overflow-y-auto px-5 py-3 bg-white"
                 >
-                    {logs.length > 0 ? (
+                    <style>{`
+                        @keyframes fadeSlideIn {
+                            from { opacity: 0; transform: translateY(-4px); }
+                            to { opacity: 1; transform: translateY(0); }
+                        }
+                        .log-entry-animate {
+                            animation: fadeSlideIn 0.2s ease-out forwards;
+                        }
+                    `}</style>
+                    {displayedLogs.length > 0 ? (
                         <div className="space-y-1.5">
-                            {logs.map(log => (
-                                <div key={log.id} className="flex items-start gap-3 text-xs">
+                            {displayedLogs.map(log => (
+                                <div key={log.id} className="flex items-start gap-3 text-xs log-entry-animate">
                                     <span className="text-gray-400 font-mono w-14 flex-shrink-0">
                                         {formatTime(log.timestamp)}
                                     </span>
@@ -296,9 +330,9 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
                                 </div>
                             ))}
                             {/* Show context details inline */}
-                            {logs.filter(l => l.context?.details?.length).map(log =>
+                            {displayedLogs.filter(l => l.context?.details?.length).map(log =>
                                 log.context?.details?.map((detail, i) => (
-                                    <div key={`${log.id}-detail-${i}`} className="flex items-start gap-3 text-xs pl-[68px]">
+                                    <div key={`${log.id}-detail-${i}`} className="flex items-start gap-3 text-xs pl-[68px] log-entry-animate">
                                         <span className="text-gray-500">{detail}</span>
                                     </div>
                                 ))
