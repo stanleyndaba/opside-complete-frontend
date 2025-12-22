@@ -851,7 +851,7 @@ const Index = () => {
         >
           <div className="container mx-auto max-w-6xl">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
-              <p className="text-white text-sm md:text-base font-medium text-center md:text-left flex-1" style={{ fontFamily: 'Inter, sans-serif' }}>
+              <p className="text-white text-sm md:text-base font-normal text-center md:text-left flex-1" style={{ fontFamily: 'Inter, sans-serif' }}>
                 Join the exclusive group of 20 high-volume sellers stress-testing our 7-second AI Audit. Lock in a permanent 15% commission rate (vs. the standard 20% public rate) and get direct influence over the Clario roadmap.
               </p>
               <a
@@ -861,7 +861,7 @@ const Index = () => {
                 className="flex-shrink-0"
               >
                 <Button
-                  className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-6 py-2.5 shadow-lg transition-colors whitespace-nowrap"
+                  className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium px-6 py-2.5 shadow-lg transition-colors whitespace-nowrap"
                   style={{ fontFamily: 'Inter, sans-serif' }}
                 >
                   Immediate Access →
