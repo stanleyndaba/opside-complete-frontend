@@ -255,20 +255,20 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
 
   return (
     <Card className="bg-white border border-gray-200 shadow-sm">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-gray-800 font-medium">
-          <Cloud className="h-5 w-5" />
+      <CardHeader className="pb-3">
+        <CardTitle className="flex items-center gap-2 text-sm font-medium text-gray-800">
+          <Cloud className="h-4 w-4" />
           Evidence Ingestion
         </CardTitle>
-        <CardDescription className="text-gray-500">
+        <CardDescription className="text-xs text-gray-500">
           Collect documents from all connected sources (Gmail, Outlook, Google Drive, Dropbox)
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-3 pt-0">
         {loadingSources ? (
-          <div className="flex items-center justify-center py-4">
-            <Loader2 className="h-5 w-5 animate-spin text-gray-500" />
-            <span className="ml-2 text-sm text-gray-500">Loading sources...</span>
+          <div className="flex items-center justify-center py-3">
+            <Loader2 className="h-4 w-4 animate-spin text-gray-500" />
+            <span className="ml-2 text-xs text-gray-500">Loading sources...</span>
           </div>
         ) : (
           <>
@@ -288,24 +288,24 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
             <Button
               onClick={handleIngest}
               disabled={ingesting || !hasConnectedSources}
-              className="w-full bg-emerald-500 hover:bg-emerald-400 text-white"
+              className="w-full bg-emerald-500 hover:bg-emerald-400 text-white text-sm h-9"
             >
               {ingesting ? (
                 <>
-                  <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                  <RefreshCw className="w-3.5 h-3.5 mr-2 animate-spin" />
                   Ingesting from All Sources...
                 </>
               ) : (
                 <>
-                  <Cloud className="w-4 h-4 mr-2" />
+                  <Cloud className="w-3.5 h-3.5 mr-2" />
                   Ingest from All Sources
                 </>
               )}
             </Button>
 
             {!hasConnectedSources && (
-              <div className="flex items-center gap-2 text-sm text-amber-600">
-                <AlertCircle className="w-4 h-4" />
+              <div className="flex items-center gap-2 text-xs text-amber-600">
+                <AlertCircle className="w-3.5 h-3.5" />
                 <span>Connect at least one source to ingest evidence documents.</span>
               </div>
             )}

@@ -139,30 +139,30 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
 
   return (
     <Card className="bg-white border border-gray-200 shadow-sm">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-gray-800 font-medium">
-          <img src="/G.png" alt="Gmail" className="h-5 w-5" />
+      <CardHeader className="pb-3">
+        <CardTitle className="flex items-center gap-2 text-sm font-medium text-gray-800">
+          <img src="/G.png" alt="Gmail" className="h-4 w-4" />
           Gmail Connection
         </CardTitle>
-        <CardDescription className="text-gray-500">
+        <CardDescription className="text-xs text-gray-500">
           Connect Gmail to automatically ingest evidence documents
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-3 pt-0">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             {status?.connected ? (
               <>
-                <Badge className="bg-emerald-500 text-white border-emerald-500 font-medium">
+                <Badge className="bg-emerald-500 text-white border-emerald-500 font-medium text-xs px-2 py-0.5">
                   <CheckCircle2 className="w-3 h-3 mr-1" />
                   Connected
                 </Badge>
                 {status.email && (
-                  <span className="text-sm text-gray-600">{status.email}</span>
+                  <span className="text-xs text-gray-600">{status.email}</span>
                 )}
               </>
             ) : (
-              <Badge className="bg-amber-500 text-white border-amber-500">
+              <Badge className="bg-amber-500 text-white border-amber-500 text-xs px-2 py-0.5">
                 <XCircle className="w-3 h-3 mr-1" />
                 Not Connected
               </Badge>
@@ -192,13 +192,13 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
         </div>
 
         {status?.connected && status.lastSync && (
-          <div className="text-sm text-gray-500">
+          <div className="text-xs text-gray-500">
             Last sync: {new Date(status.lastSync).toLocaleString()}
           </div>
         )}
 
         {!status?.connected && showActions && (
-          <div className="text-sm text-gray-500">
+          <div className="text-xs text-gray-500">
             Connect Gmail to start automatically collecting evidence documents from your emails.
           </div>
         )}
