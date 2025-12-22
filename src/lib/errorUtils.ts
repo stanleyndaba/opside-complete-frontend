@@ -176,6 +176,14 @@ const authErrors: Record<string, FriendlyError> = {
         severity: 'warning',
         recoverable: true
     },
+    session_paused: {
+        title: 'Session Paused',
+        message: 'For your security, we paused the session.',
+        suggestion: 'Enter your password to resume exactly where you left off.',
+        category: 'authentication',
+        severity: 'info',
+        recoverable: true
+    },
     unauthorized: {
         title: 'Access Denied',
         message: "You don't have permission to access this resource.",
@@ -188,6 +196,14 @@ const authErrors: Record<string, FriendlyError> = {
         title: 'Amazon Connection Lost',
         message: 'Your Amazon account connection has expired.',
         suggestion: 'Please reconnect your Amazon account.',
+        category: 'authentication',
+        severity: 'warning',
+        recoverable: true
+    },
+    amazon_permission_denied: {
+        title: 'Additional Permissions Needed',
+        message: 'We connected to your store, but some permissions are missing.',
+        suggestion: 'Click here to update permissions in Amazon Seller Central.',
         category: 'authentication',
         severity: 'warning',
         recoverable: true
@@ -229,11 +245,11 @@ const networkErrors: Record<string, FriendlyError> = {
  */
 const rateLimitErrors: Record<string, FriendlyError> = {
     rate_limited: {
-        title: 'Too Many Requests',
-        message: "You've made too many requests in a short time.",
+        title: 'Slowing Down',
+        message: "We're processing your requests carefully.",
         suggestion: 'Please wait a moment before trying again.',
         category: 'rate_limit',
-        severity: 'warning',
+        severity: 'info',
         recoverable: true
     },
     amazon_rate_limit: {
@@ -241,6 +257,36 @@ const rateLimitErrors: Record<string, FriendlyError> = {
         message: "Amazon has temporarily limited our requests.",
         suggestion: 'Your sync will resume automatically in a few minutes.',
         category: 'rate_limit',
+        severity: 'info',
+        recoverable: true
+    },
+    claim_queue_active: {
+        title: 'Filing Claims Safely',
+        message: 'We are sending these to Amazon one by one to avoid flagging your account.',
+        suggestion: '',
+        category: 'rate_limit',
+        severity: 'info',
+        recoverable: true
+    }
+};
+
+/**
+ * Sync/Audit success messages (not errors, but positive states)
+ */
+const syncMessages: Record<string, FriendlyError> = {
+    zero_findings: {
+        title: 'Account 100% Reconciled',
+        message: 'We audited your account and found ZERO errors.',
+        suggestion: 'Your operations are excellent. We\'ll keep monitoring.',
+        category: 'sync',
+        severity: 'info',
+        recoverable: true
+    },
+    sync_complete: {
+        title: 'Scan Complete',
+        message: 'Your account has been audited successfully.',
+        suggestion: '',
+        category: 'sync',
         severity: 'info',
         recoverable: true
     }
@@ -255,7 +301,8 @@ const allErrors: Record<string, FriendlyError> = {
     ...paymentErrors,
     ...authErrors,
     ...networkErrors,
-    ...rateLimitErrors
+    ...rateLimitErrors,
+    ...syncMessages
 };
 
 /**
@@ -340,6 +387,9 @@ export function mapErrorMessage(technicalMessage: string): FriendlyError {
     }
     if (lowerMessage.includes('forbidden') || lowerMessage.includes('403')) {
         return getFriendlyError('unauthorized');
+    }
+    if (lowerMessage.includes('accessdenied') || lowerMessage.includes('access denied') || lowerMessage.includes('permission')) {
+        return getFriendlyError('amazon_permission_denied');
     }
 
     // Rate limit
