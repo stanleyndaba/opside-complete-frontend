@@ -341,12 +341,13 @@ const Index = () => {
         <div className="container mx-auto px-6 py-5">
           <div className="flex items-center justify-between gap-6 px-6 py-4 rounded-[25px] border border-white/40 bg-white/25 supports-[backdrop-filter]:bg-white/25 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_25px_60px_rgba(15,23,42,0.12)] transition-colors">
             <div className="flex items-center gap-3">
-              <Link to="/" className="inline-flex items-center px-3 py-1.5 rounded-[16px] transition-colors hover:bg-gray-100">
+              <Link to="/" className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[16px] transition-colors hover:bg-gray-100">
                 <img
-                  src="/logoimageone.png"
-                  alt="Clario"
+                  src="/logoimagetwo.png"
+                  alt="Opside"
                   className="h-5 w-auto object-contain"
                 />
+                <span style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 600 }} className="text-gray-900">Opside</span>
               </Link>
             </div>
             <nav className="hidden md:flex items-center gap-4 text-sm text-gray-700">
