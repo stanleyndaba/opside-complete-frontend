@@ -371,13 +371,17 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
                 )}
 
                 {status === 'completed' && detectionCount === 0 && (
-                    <div className="px-5 py-3 border-t border-gray-200 bg-gray-50">
+                    <div className="px-5 py-3 border-t border-gray-200 bg-emerald-50">
                         <div className="flex items-center justify-between">
-                            <div className="text-xs text-gray-700">
-                                Scan complete. No new issues detected.
+                            <div className="flex items-center gap-2">
+                                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                                <div className="text-xs text-gray-700">
+                                    <span className="font-semibold text-emerald-700">Your account is clean!</span>
+                                    <span className="text-gray-500 ml-1">No money left on the table.</span>
+                                </div>
                             </div>
-                            <Button onClick={onClose} variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-100 text-xs h-8">
-                                Close
+                            <Button onClick={onClose} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs h-8">
+                                Done
                             </Button>
                         </div>
                     </div>

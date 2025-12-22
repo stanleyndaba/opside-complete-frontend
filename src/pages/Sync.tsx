@@ -1302,10 +1302,19 @@ export default function Sync() {
                   {(() => {
                     const hasError = healthGroups.some(g => g.status === 'error');
                     const hasWarning = healthGroups.some(g => g.status === 'warning');
+                    const hasZeroClaims = claimsCount !== null && claimsCount === 0;
+
                     if (hasError) {
                       return <span className="bg-red-100 text-red-700 px-2 py-0.5 rounded font-medium">Issues detected</span>;
                     } else if (hasWarning) {
                       return <span className="bg-amber-100 text-amber-700 px-2 py-0.5 rounded font-medium">Warnings</span>;
+                    } else if (hasZeroClaims) {
+                      return (
+                        <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded font-medium flex items-center gap-1">
+                          <CheckCircle2 className="h-3 w-3" />
+                          Your account is clean! No money left on the table.
+                        </span>
+                      );
                     }
                     return <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded font-medium">All systems OK</span>;
                   })()}
