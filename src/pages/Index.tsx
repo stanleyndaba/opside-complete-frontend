@@ -577,7 +577,7 @@ const Index = () => {
                   Autopilot
                 </span>
               </h1>
-              <p className="font-body text-sm md:text-base text-gray-700 font-normal max-w-3xl text-left md:text-center md:mx-auto">
+              <p className="font-montserrat text-sm md:text-base text-gray-700 font-normal max-w-3xl text-left md:text-center md:mx-auto">
                 The world's first autonomous 11-Agent Audit Engine. Opside detects, matches, and recovers lost revenue from Amazon FBA errors in minutes—not months.
               </p>
               <div className="pt-2">
@@ -587,11 +587,11 @@ const Index = () => {
                 <div className="mt-4 flex flex-wrap items-center justify-center gap-4">
                   <div className="inline-flex items-center gap-2">
                     <span className="inline-flex h-2 w-2 rounded-full bg-gray-400" aria-hidden="true" />
-                    <span className="text-gray-700 text-sm md:text-base">No credit cards</span>
+                    <span className="text-gray-700 text-xs">No credit cards</span>
                   </div>
                   <div className="inline-flex items-center gap-2">
                     <span className="inline-flex h-2 w-2 rounded-full bg-gray-400" aria-hidden="true" />
-                    <span className="text-gray-700 text-sm md:text-base">Cancel anytime</span>
+                    <span className="text-gray-700 text-xs">Cancel anytime</span>
                   </div>
                 </div>
                 <div ref={metricsRef} className="mt-5 w-full text-gray-700">
