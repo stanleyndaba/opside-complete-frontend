@@ -42,9 +42,9 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
           <div className="flex flex-col items-center justify-center text-center space-y-8">
             <h1
               className="text-8xl md:text-9xl lg:text-[12rem] font-black tracking-tight bg-gradient-to-r from-[#1f4037] to-[#99f2c8] bg-clip-text text-transparent drop-shadow-[0_6px_12px_rgba(0,0,0,0.2)]"
-              style={{ letterSpacing: '-0.02em' }}
+              style={{ letterSpacing: '-0.02em', fontFamily: 'Montserrat, sans-serif' }}
             >
-              CLARIO
+              Opside
             </h1>
             <Button
               size="lg"
@@ -102,7 +102,7 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
               </span>
             </div>
             <p className="order-2 text-gray-600 md:order-1">
-              © {new Date().getFullYear()} Clario. Built for operators who need Amazon reimbursements and visibility in real time.
+              © {new Date().getFullYear()} Opside (Pty) Ltd. Built for operators who need Amazon reimbursements and visibility in real time.
             </p>
           </div>
         </div>
