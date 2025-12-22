@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Upload, FileText, Search, Mail, Check, AlertTriangle, Clock, Eye, Download, ExternalLink, Loader2, FolderSearch, ScanLine, FileCheck, Link2, Trash2, MoreHorizontal, RefreshCw } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { useErrorToast } from '@/hooks/use-error-toast';
 import { api } from '@/lib/api';
 import { Link } from 'react-router-dom';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -722,12 +723,38 @@ export default function EvidenceLocker() {
     } catch (err: any) {
       console.error('Upload error:', err);
       addDocLog({ type: 'error', category: 'upload', message: `Upload failed: ${err?.message || 'Unknown error'}` }, 0);
-      toast({
-        title: 'Upload Failed',
-        description: err?.message || 'Failed to upload documents. Please try again.',
-        variant: 'destructive',
-        duration: 5000
-      });
+
+      // Show user-friendly error toast instead of raw error
+      const errorMessage = err?.message?.toLowerCase() || '';
+      if (errorMessage.includes('network') || errorMessage.includes('failed to fetch')) {
+        toast({
+          title: 'Connection Issue',
+          description: "We couldn't reach the server. Please check your internet and try again.",
+          variant: 'destructive',
+          duration: 5000
+        });
+      } else if (errorMessage.includes('too large') || errorMessage.includes('size')) {
+        toast({
+          title: 'File Too Large',
+          description: 'Please upload files under 25MB.',
+          variant: 'destructive',
+          duration: 5000
+        });
+      } else if (errorMessage.includes('format') || errorMessage.includes('type')) {
+        toast({
+          title: 'Unsupported Format',
+          description: 'Please upload PDF, PNG, or JPG files.',
+          variant: 'destructive',
+          duration: 5000
+        });
+      } else {
+        toast({
+          title: 'Upload Issue',
+          description: "We couldn't upload your file. Please try again or contact support.",
+          variant: 'destructive',
+          duration: 5000
+        });
+      }
     } finally {
       setLoading(false);
     }
