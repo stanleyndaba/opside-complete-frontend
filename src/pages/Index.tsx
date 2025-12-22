@@ -41,7 +41,7 @@ const Index = () => {
   const [showBanner, setShowBanner] = useState(true);
 
   const [selectedLanguageCode, setSelectedLanguageCode] = useState<string>(() =>
-    typeof window !== 'undefined' ? localStorage.getItem('clario.langPreference') || 'en' : 'en'
+    typeof window !== 'undefined' ? localStorage.getItem('Opside.langPreference') || 'en' : 'en'
   );
   const [langQuery, setLangQuery] = useState<string>('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -207,7 +207,7 @@ const Index = () => {
 
   useEffect(() => {
     try {
-      localStorage.setItem('clario.langPreference', selectedLanguageCode);
+      localStorage.setItem('Opside.langPreference', selectedLanguageCode);
     } catch { }
   }, [selectedLanguageCode]);
 
@@ -367,7 +367,7 @@ const Index = () => {
                     <div className="space-y-2">
                       <h3 className="font-semibold text-emerald-900 text-base">No commission on referrals</h3>
                       <p className="text-sm text-emerald-800">
-                        Sellers who bring new sellers to Clario keep 100% value of their recovered funds
+                        Sellers who bring new sellers to Opside keep 100% value of their recovered funds
                       </p>
                     </div>
                     <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium">
@@ -447,7 +447,7 @@ const Index = () => {
                     <span>No commission on referrals</span>
                   </div>
                   <p className="mt-1 text-xs font-normal text-emerald-700/80">
-                    Sellers who bring new sellers to Clario keep 100% value of their recovered funds
+                    Sellers who bring new sellers to Opside keep 100% value of their recovered funds
                   </p>
                 </div>
                 {primaryLinks.map((link) => (
@@ -578,7 +578,7 @@ const Index = () => {
                 </span>
               </h1>
               <p className="font-body text-sm md:text-base text-gray-700 font-normal max-w-3xl text-left md:text-center md:mx-auto">
-                The world's first autonomous 11-Agent Audit Engine. Clario detects, matches, and recovers lost revenue from Amazon FBA errors in minutes—not months.
+                The world's first autonomous 11-Agent Audit Engine. Opside detects, matches, and recovers lost revenue from Amazon FBA errors in minutes—not months.
               </p>
               <div className="pt-2">
                 <div className="max-w-md mx-auto flex justify-center">
@@ -659,7 +659,7 @@ const Index = () => {
                   </span>
                 </h2>
                 <p className="text-base md:text-lg text-black max-w-3xl leading-relaxed">
-                  Automated FBA Recovery with <span className="font-semibold text-emerald-500">{precisionCount.toFixed(2)}%</span> Precision. Clario hunts through your data and documents to perform a full scan of all major reimbursement types—lost inventory, bad returns, and fee errors. We build airtight claims automatically, so you never need a spreadsheet or VA again.
+                  Automated FBA Recovery with <span className="font-semibold text-emerald-500">{precisionCount.toFixed(2)}%</span> Precision. Opside hunts through your data and documents to perform a full scan of all major reimbursement types—lost inventory, bad returns, and fee errors. We build airtight claims automatically, so you never need a spreadsheet or VA again.
                 </p>
               </div>
             </div>
@@ -672,7 +672,7 @@ const Index = () => {
               <div className="space-y-4 md:w-1/3">
                 <span className="text-sm font-semibold bg-gradient-to-r from-[#1f4037] to-[#99f2c8] bg-clip-text text-transparent">frequently asked questions</span>
                 <h2 className="text-3xl font-black tracking-tight text-gray-900 md:text-4xl">
-                  Everything you wanted to ask before Clario starts recovering funds.
+                  Everything you wanted to ask before Opside starts recovering funds.
                 </h2>
               </div>
               <div className="space-y-2 md:w-2/3">
@@ -686,7 +686,7 @@ const Index = () => {
                         This is our most important question. Yes, it is 100% safe. We are an officially-verified Amazon developer using the secure Selling Partner API (SP-API).
                       </p>
                       <p>
-                        We only perform actions that are fully compliant with Amazon&apos;s Terms of Service. Clario simply does the work of a manual audit, but 1,000x faster. Your account&apos;s safety is our #1 priority.
+                        We only perform actions that are fully compliant with Amazon&apos;s Terms of Service. Opside simply does the work of a manual audit, but 1,000x faster. Your account&apos;s safety is our #1 priority.
                       </p>
                     </AccordionContent>
                   </AccordionItem>
@@ -705,7 +705,7 @@ const Index = () => {
                   </AccordionItem>
                   <AccordionItem value="cost" className="border-b border-gray-200 py-4">
                     <AccordionTrigger className="text-left text-lg font-semibold text-gray-900 hover:no-underline">
-                      How much does Clario cost?
+                      How much does Opside cost?
                     </AccordionTrigger>
                     <AccordionContent className="pt-3 text-sm text-gray-600 space-y-3">
                       <p>
@@ -719,7 +719,7 @@ const Index = () => {
                     </AccordionTrigger>
                     <AccordionContent className="pt-3 text-sm text-gray-600 space-y-3">
                       <p>
-                        Those tools are dashboards or agencies. They identify problems, but you or their auditors still have to gather evidence and build the case. Clario is an autonomous AI agent.
+                        Those tools are dashboards or agencies. They identify problems, but you or their auditors still have to gather evidence and build the case. Opside is an autonomous AI agent.
                       </p>
                       <p>
                         Our Evidence Engine finds the error, locates the matching invoice from your email, builds the case, and files it for you. It&apos;s zero effort, not just less effort.
@@ -758,11 +758,11 @@ const Index = () => {
                       <AccordionContent className="pt-3 text-sm text-gray-600 space-y-3">
                         <p>It takes about two minutes:</p>
                         <ul className="list-disc space-y-2 pl-5 text-gray-600">
-                          <li>Sign up for a Clario account.</li>
+                          <li>Sign up for a Opside account.</li>
                           <li>Securely connect your Amazon Seller Central account via the SP-API.</li>
                           <li>(Optional) Grant read-only access to your email or Google Drive so our AI can gather invoices.</li>
                         </ul>
-                        <p>That&apos;s it. Clario begins auditing immediately.</p>
+                        <p>That&apos;s it. Opside begins auditing immediately.</p>
                       </AccordionContent>
                     </AccordionItem>
                     <AccordionItem value="coexist" className="border-b border-gray-200 py-4">
@@ -771,7 +771,7 @@ const Index = () => {
                       </AccordionTrigger>
                       <AccordionContent className="pt-3 text-sm text-gray-600 space-y-3">
                         <p>
-                          No problem. Run Clario alongside your current tool. We&apos;re confident our AI Evidence Engine will find dollars that manual audits missed. You only pay us for the new funds we recover.
+                          No problem. Run Opside alongside your current tool. We&apos;re confident our AI Evidence Engine will find dollars that manual audits missed. You only pay us for the new funds we recover.
                         </p>
                       </AccordionContent>
                     </AccordionItem>
@@ -781,7 +781,7 @@ const Index = () => {
                       </AccordionTrigger>
                       <AccordionContent className="pt-3 text-sm text-gray-600 space-y-3">
                         <p>
-                          You can cancel anytime. Disconnect Clario from Seller Central and you&apos;re done—no lock-in contracts. We&apos;ll only invoice the 20% commission on claims that were successfully paid out before you canceled.
+                          You can cancel anytime. Disconnect Opside from Seller Central and you&apos;re done—no lock-in contracts. We&apos;ll only invoice the 20% commission on claims that were successfully paid out before you canceled.
                         </p>
                       </AccordionContent>
                     </AccordionItem>
@@ -812,7 +812,7 @@ const Index = () => {
                         <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-75"></span>
                       </span>
                     </span>
-                    Try Clario
+                    Try Opside
                   </span>
                   <h2 className="text-4xl font-black tracking-tight text-slate-900 md:text-5xl">
                     Run reimbursements with{' '}
@@ -825,7 +825,7 @@ const Index = () => {
                     Switch on automated Amazon claims, surface evidence instantly, and keep your team ahead of every discrepancy.
                   </p>
                   <p className="text-base text-navy-900 italic" style={{ color: '#001f3f' }}>
-                    Clario will never request your credit card
+                    Opside will never request your credit card
                   </p>
                 </div>
                 <div className="flex w-full max-w-sm flex-col items-stretch gap-4 md:items-end">
@@ -853,7 +853,7 @@ const Index = () => {
           <div className="container mx-auto max-w-6xl">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
               <p className="text-white text-sm md:text-base font-normal text-center md:text-left flex-1" style={{ fontFamily: 'Inter, sans-serif' }}>
-                Join the exclusive group of 20 high-volume sellers stress-testing our 7-second AI Audit. Lock in a permanent 15% commission rate (vs. the standard 20% public rate) and get direct influence over the Clario roadmap.
+                Join the exclusive group of 20 high-volume sellers stress-testing our 7-second AI Audit. Lock in a permanent 15% commission rate (vs. the standard 20% public rate) and get direct influence over the Opside roadmap.
               </p>
               <a
                 href="https://forms.gle/882hpRYWinNzBt2r9"

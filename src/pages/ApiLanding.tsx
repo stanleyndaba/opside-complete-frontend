@@ -12,17 +12,17 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 
 const ApiLanding = () => {
   usePageMeta({
-    title: 'Clario API Access',
-    description: 'Explore Clario’s developer-ready endpoints and SP-API integrations.',
+    title: 'Opside API Access',
+    description: 'Explore Opside’s developer-ready endpoints and SP-API integrations.',
     url: `${SITE_META.url}/developer-api`,
     image: SITE_META.image
   });
   const [selectedLanguageCode, setSelectedLanguageCode] = useState<string>(() =>
-    typeof window !== 'undefined' ? localStorage.getItem('clario.langPreference') || 'en' : 'en'
+    typeof window !== 'undefined' ? localStorage.getItem('Opside.langPreference') || 'en' : 'en'
   );
   const [langQuery, setLangQuery] = useState<string>('');
   useEffect(() => {
-    try { localStorage.setItem('clario.langPreference', selectedLanguageCode); } catch {}
+    try { localStorage.setItem('Opside.langPreference', selectedLanguageCode); } catch {}
   }, [selectedLanguageCode]);
   const selectedLanguage: LanguageOption =
     LANGUAGE_OPTIONS.find((o) => o.code === selectedLanguageCode) || LANGUAGE_OPTIONS[0];
@@ -74,7 +74,7 @@ const ApiLanding = () => {
                 <DropdownMenuTrigger asChild>
                   <button className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[16px] transition-colors hover:bg-gray-100">
                     <span className="font-black text-[#b3b3b3] tracking-tight">
-                      CLARIO
+                      Opside
                     </span>
                     <ChevronDown className="h-4 w-4 opacity-70" />
                   </button>
@@ -218,10 +218,10 @@ const ApiLanding = () => {
           <div className="relative mx-auto max-w-3xl px-6 pt-20 md:pt-28 pb-24 text-gray-600">
             <header>
               <h1 className="font-heading text-4xl md:text-5xl leading-tight text-gray-900 font-black">
-                The Clario API: The Financial Engine for Modern Commerce
+                The Opside API: The Financial Engine for Modern Commerce
               </h1>
               <p className="mt-5 text-lg md:text-xl text-gray-600 font-body">
-                At Clario, we are building more than a dashboard. We are building the intelligent financial recovery layer for e-commerce. Our future-facing API will allow developers, agencies, and enterprise brands to programmatically access the full power of our platform, integrating automated reimbursement data and workflows directly into their own systems.
+                At Opside, we are building more than a dashboard. We are building the intelligent financial recovery layer for e-commerce. Our future-facing API will allow developers, agencies, and enterprise brands to programmatically access the full power of our platform, integrating automated reimbursement data and workflows directly into their own systems.
               </p>
             </header>
 
@@ -236,13 +236,13 @@ const ApiLanding = () => {
                 <pre className="p-6 overflow-x-auto text-sm md:text-base leading-relaxed text-gray-200" style={{ fontFamily: "'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Consolas', 'Monaco', 'Menlo', 'Courier New', monospace" }}><code style={{ fontFamily: "'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Consolas', 'Monaco', 'Menlo', 'Courier New', monospace" }}>
                   <span style={{ fontFamily: "'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Consolas', 'Monaco', 'Menlo', 'Courier New', monospace" }} className="text-gray-400"># Get the latest recovered claims</span>
                   <br />
-                  <span style={{ fontFamily: "'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Consolas', 'Monaco', 'Menlo', 'Courier New', monospace" }} className="text-emerald-400">from</span> clario <span style={{ fontFamily: "'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Consolas', 'Monaco', 'Menlo', 'Courier New', monospace" }} className="text-emerald-400">import</span> <span style={{ fontFamily: "'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Consolas', 'Monaco', 'Menlo', 'Courier New', monospace" }} className="text-sky-300">Clario</span>
+                  <span style={{ fontFamily: "'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Consolas', 'Monaco', 'Menlo', 'Courier New', monospace" }} className="text-emerald-400">from</span> Opside <span style={{ fontFamily: "'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Consolas', 'Monaco', 'Menlo', 'Courier New', monospace" }} className="text-emerald-400">import</span> <span style={{ fontFamily: "'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Consolas', 'Monaco', 'Menlo', 'Courier New', monospace" }} className="text-sky-300">Opside</span>
                   <br />
                   <br />
-                  clario <span style={{ fontFamily: "'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Consolas', 'Monaco', 'Menlo', 'Courier New', monospace" }} className="text-emerald-400">=</span> <span style={{ fontFamily: "'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Consolas', 'Monaco', 'Menlo', 'Courier New', monospace" }} className="text-sky-300">Clario</span>(api_key=<span style={{ fontFamily: "'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Consolas', 'Monaco', 'Menlo', 'Courier New', monospace" }} className="text-amber-300">"YOUR_API_KEY"</span>)
+                  Opside <span style={{ fontFamily: "'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Consolas', 'Monaco', 'Menlo', 'Courier New', monospace" }} className="text-emerald-400">=</span> <span style={{ fontFamily: "'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Consolas', 'Monaco', 'Menlo', 'Courier New', monospace" }} className="text-sky-300">Opside</span>(api_key=<span style={{ fontFamily: "'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Consolas', 'Monaco', 'Menlo', 'Courier New', monospace" }} className="text-amber-300">"YOUR_API_KEY"</span>)
                   <br />
                   <br />
-                  recovered_claims <span style={{ fontFamily: "'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Consolas', 'Monaco', 'Menlo', 'Courier New', monospace" }} className="text-emerald-400">=</span> clario.claims.list(
+                  recovered_claims <span style={{ fontFamily: "'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Consolas', 'Monaco', 'Menlo', 'Courier New', monospace" }} className="text-emerald-400">=</span> Opside.claims.list(
                   <br />
                   &nbsp;&nbsp;status=<span style={{ fontFamily: "'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Consolas', 'Monaco', 'Menlo', 'Courier New', monospace" }} className="text-amber-300">"recovered"</span>,
                   <br />
@@ -263,8 +263,8 @@ const ApiLanding = () => {
                 <h2 className="font-body text-xl md:text-2xl font-semibold text-gray-900">What You Will Be Able to Do</h2>
                 <ul className="mt-4 space-y-3 text-gray-600">
                   <li><span className="text-gray-400">Sync Recovery Data:</span> Pull all detected claims, their statuses, and their financial value directly into your own internal dashboards, data warehouses, or ERP systems.</li>
-                  <li><span className="text-gray-400">Build Custom Reporting:</span> Create bespoke financial reports and analytics for your team or your clients, leveraging real-time data from the Clario engine.</li>
-                  <li><span className="text-gray-400">Automate Workflows:</span> Programmatically approve claims, trigger scans, and manage your recovery pipeline without ever needing to log into the Clario UI.</li>
+                  <li><span className="text-gray-400">Build Custom Reporting:</span> Create bespoke financial reports and analytics for your team or your clients, leveraging real-time data from the Opside engine.</li>
+                  <li><span className="text-gray-400">Automate Workflows:</span> Programmatically approve claims, trigger scans, and manage your recovery pipeline without ever needing to log into the Opside UI.</li>
                 </ul>
               </div>
 
@@ -279,10 +279,10 @@ const ApiLanding = () => {
 
               <div>
                 <h2 className="font-body text-xl md:text-2xl font-semibold text-gray-900">Get Notified</h2>
-                <p className="mt-4 text-gray-600">Our developer API is currently in a private beta with select partners. If you are an enterprise brand, an agency, or a developer interested in building on the Clario platform, please contact us to be added to the early access list.</p>
+                <p className="mt-4 text-gray-600">Our developer API is currently in a private beta with select partners. If you are an enterprise brand, an agency, or a developer interested in building on the Opside platform, please contact us to be added to the early access list.</p>
                 <div className="mt-6">
                   <Button asChild className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold">
-                    <a href="mailto:hello@getclario.com?subject=Clario%20API%20Early%20Access">Request Early Access</a>
+                    <a href="mailto:hello@getOpside.com?subject=Opside%20API%20Early%20Access">Request Early Access</a>
                   </Button>
                 </div>
               </div>
