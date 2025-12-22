@@ -7,7 +7,7 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 const Privacy = () => {
   usePageMeta({
     title: 'Opside Privacy Policy',
-    description: 'How Opside secures Amazon SP-API data and seller information.',
+    description: "Privacy Policy for Opside's automated FBA auditing platform.",
     url: `${SITE_META.url}/privacy`,
     image: SITE_META.image
   });
@@ -19,50 +19,52 @@ const Privacy = () => {
       <main className="flex-1 container mx-auto px-6 py-12 md:py-16">
         <article className="max-w-3xl mx-auto">
           <header className="mb-8 pb-8 border-b border-gray-200">
-            <p className="text-sm text-gray-500 mb-6">Last Updated: November 18, 2025</p>
+            <p className="text-sm text-gray-500 mb-6">Last Updated: December 22, 2025</p>
             <h1 className="text-2xl font-medium text-gray-900">Opside Privacy Policy</h1>
           </header>
 
           <div className="space-y-8 text-sm leading-relaxed text-gray-700">
             <p>
-              This Privacy Policy describes our policies on the collection, use, and disclosure of data when you use the Service and explains how we comply with the Amazon Data Protection Policy (the "DPP"). By using the Service, you agree to the collection and use of information in accordance with this Privacy Policy.
+              This Privacy Policy describes our policies on the collection, use, and disclosure of data when you use the Service and explains how we comply with the Amazon Data Protection Policy ("DPP") and the Protection of Personal Information Act ("POPIA"). By using the Service, you agree to the collection and use of information in accordance with this Privacy Policy.
             </p>
 
             <section className="space-y-4">
               <h2 className="text-base font-medium text-gray-900">1. Interpretation and Definitions</h2>
-              <p>For the purposes of this Privacy Policy:</p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li><strong>Company</strong> ("We", "Us", or "Our") refers to Opside, Inc., a Delaware corporation.</li>
-                <li><strong>Service</strong> refers to the Opside application.</li>
-                <li><strong>Personal Data</strong> means any information that relates to an identified or identifiable individual (e.g., your name or email address).</li>
-                <li><strong>Amazon Information</strong> means all data accessed via the Amazon Selling Partner API (SP-API), including Restricted Data and Personally Identifiable Information (PII).</li>
-                <li><strong>DPP</strong> means the Amazon Data Protection Policy.</li>
-                <li><strong>Website</strong> refers to Opside, accessible from https://opside.co.</li>
-                <li><strong>You</strong> means the individual or legal entity accessing or using the Service.</li>
-              </ul>
+              <p>
+                <strong>Company</strong> ("We", "Us", or "Our") refers to Opside (Pty) Ltd, a private company registered in South Africa.
+              </p>
+              <p>
+                <strong>Service</strong> refers to the Opside application accessible from https://opside.co.
+              </p>
+              <p>
+                <strong>Personal Data</strong> means any information that relates to an identified or identifiable individual.
+              </p>
+              <p>
+                <strong>Amazon Information</strong> means all data accessed via the Amazon Selling Partner API (SP-API), including Restricted Data and Personally Identifiable Information (PII).
+              </p>
+              <p>
+                <strong>You</strong> means the individual or legal entity accessing or using the Service.
+              </p>
             </section>
 
             <section className="space-y-4">
               <h2 className="text-base font-medium text-gray-900">2. Collecting and Using Your Data</h2>
 
-              <h3 className="text-sm font-medium text-gray-900">Types of Data Collected</h3>
-
-              <h4 className="text-sm font-medium text-gray-800 mt-3">A. Personal Data</h4>
+              <h3 className="text-sm font-medium text-gray-900">A. Personal Data</h3>
               <p>When you use our Service, we collect limited account information necessary to operate your workspace:</p>
               <ul className="list-disc pl-6 space-y-1">
                 <li>Email address</li>
                 <li>First and last name</li>
-                <li>Payment information (processed securely via Stripe)</li>
+                <li>Payment information (processed securely via Paystack)</li>
               </ul>
 
-              <h4 className="text-sm font-medium text-gray-800 mt-3">B. Amazon Information (Restricted Data)</h4>
+              <h3 className="text-sm font-medium text-gray-900 mt-4">B. Amazon Information (Restricted Data)</h3>
               <p>
-                To perform automated reimbursement analysis, we must access SP-API data. This data is handled in strict compliance with the DPP. We only ingest what is necessary to audit reimbursements, including:
+                To perform automated reimbursement analysis, we must access SP-API data. This data is handled in strict compliance with the Amazon DPP. We only ingest what is necessary to audit reimbursements, including:
               </p>
               <ul className="list-disc pl-6 space-y-1">
                 <li>Inventory adjustment and reconciliation reports</li>
                 <li>Shipment and inbound discrepancy reports</li>
-                <li>FBA customer return reports</li>
                 <li>Financial and settlement reports</li>
                 <li>PII (e.g., order IDs) strictly limited to matching a claim to a reimbursement case</li>
               </ul>
@@ -93,39 +95,54 @@ const Privacy = () => {
             <section className="space-y-4">
               <h2 className="text-base font-medium text-gray-900">4. Data Protection and Security (Amazon DPP Compliance)</h2>
               <p>We implement enterprise-grade technical, physical, and administrative safeguards:</p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li><strong>Encryption at Rest:</strong> All Amazon Information stored in our databases is encrypted using AES-256.</li>
-                <li><strong>Encryption in Transit:</strong> All data traverses HTTPS endpoints secured with TLS 1.2 or higher.</li>
-                <li><strong>Access Control:</strong> We enforce least-privilege access. Only authorized engineers with MFA-protected sessions may access production systems, and every action is logged.</li>
-                <li><strong>Network Security:</strong> Infrastructure is hosted in Amazon Web Services (AWS) within a locked-down Virtual Private Cloud (VPC) protected by strict firewall policies.</li>
-                <li><strong>Incident Response:</strong> We maintain a formal Incident Response Plan and will notify Amazon at 3p-security@amazon.com within 24 hours of any confirmed incident involving Amazon Information, as mandated by the DPP.</li>
-              </ul>
+              <p>
+                <strong>Encryption at Rest:</strong> All Amazon Information stored in our databases is encrypted using AES-256.
+              </p>
+              <p>
+                <strong>Encryption in Transit:</strong> All data traverses HTTPS endpoints secured with TLS 1.2 or higher.
+              </p>
+              <p>
+                <strong>Access Control:</strong> We enforce least-privilege access. Only authorized engineers with MFA-protected sessions may access production systems, and every action is logged.
+              </p>
+              <p>
+                <strong>Network Security:</strong> Infrastructure is hosted in Amazon Web Services (AWS) within a locked-down Virtual Private Cloud (VPC) protected by strict firewall policies.
+              </p>
+              <p>
+                <strong>Incident Response:</strong> We maintain a formal Incident Response Plan and will notify Amazon at 3p-security@amazon.com within 24 hours of any confirmed incident involving Amazon Information, as mandated by the DPP.
+              </p>
             </section>
 
             <section className="space-y-4">
               <h2 className="text-base font-medium text-gray-900">5. Data Retention and Deletion</h2>
               <p>
-                We retain Personal Data only for as long as needed to operate your account. Consistent with the DPP, we permanently delete all Amazon Information within 30 days of account termination or termination of our agreement. You may request deletion at any time by contacting us, and we will comply unless retention is required by law.
+                We retain Personal Data only for as long as needed to operate your account. Consistent with the DPP, we permanently delete all Amazon Information within 30 days of account termination. You may request deletion at any time by contacting us.
               </p>
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-base font-medium text-gray-900">6. Links to Other Websites</h2>
+              <h2 className="text-base font-medium text-gray-900">6. POPIA Compliance (South Africa)</h2>
               <p>
-                The Service may reference other websites. We do not control and are not responsible for the content, privacy practices, or security of those third-party sites. We encourage you to review their policies.
+                In accordance with the Protection of Personal Information Act 4 of 2013 ("POPIA"), Opside is committed to protecting your privacy.
+              </p>
+              <p>
+                <strong>Information Officer:</strong> The Founder of Opside acts as the Information Officer.
+              </p>
+              <p>
+                <strong>Your Rights:</strong> You have the right to request access to, correction of, or deletion of your personal data held by us.
               </p>
             </section>
 
             <section className="space-y-4">
               <h2 className="text-base font-medium text-gray-900">7. Changes to this Privacy Policy</h2>
               <p>
-                We may update this Privacy Policy from time to time. We will post any changes on this page and update the "Last Updated" date. Continued use of the Service after changes become effective constitutes acceptance of the revised policy.
+                We may update this Privacy Policy from time to time. We will post any changes on this page and update the "Last Updated" date.
               </p>
             </section>
 
             <section className="space-y-4">
               <h2 className="text-base font-medium text-gray-900">8. Contact Information</h2>
               <p>If you have questions about this Privacy Policy or our compliance with the Amazon DPP, contact us at:</p>
+              <p>Opside (Pty) Ltd</p>
               <p>Email: support@opside.co</p>
             </section>
           </div>
