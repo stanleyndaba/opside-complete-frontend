@@ -60,7 +60,7 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
       <footer id="core-footer" className="relative bg-white text-gray-900 w-full" style={{ width: '100%', maxWidth: '100%' }}>
         <div className="container mx-auto px-6 py-14 space-y-8">
           <div className="space-y-4">
-            <p className="text-sm text-gray-600 leading-relaxed max-w-sm">
+            <p className="font-montserrat text-sm text-gray-600 leading-relaxed max-w-sm">
               Autonomous reimbursements crafted for modern Amazon operators. Secure data flows, transparent claims,
               and a finance-ready audit trail—no agency overhead.
             </p>

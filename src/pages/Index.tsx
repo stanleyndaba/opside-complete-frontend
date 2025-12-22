@@ -658,7 +658,7 @@ const Index = () => {
                     autopilot.
                   </span>
                 </h2>
-                <p className="text-base md:text-lg text-black max-w-3xl leading-relaxed">
+                <p className="font-montserrat text-base md:text-lg text-black max-w-3xl leading-relaxed">
                   Automated FBA Recovery with <span className="font-semibold text-emerald-500">{precisionCount.toFixed(2)}%</span> Precision. Opside hunts through your data and documents to perform a full scan of all major reimbursement types—lost inventory, bad returns, and fee errors. We build airtight claims automatically, so you never need a spreadsheet or VA again.
                 </p>
               </div>
@@ -821,7 +821,7 @@ const Index = () => {
                     </span>
                     .
                   </h2>
-                  <p className="text-base text-slate-600 md:text-lg">
+                  <p className="font-montserrat text-base text-slate-600 md:text-lg">
                     Switch on automated Amazon claims, surface evidence instantly, and keep your team ahead of every discrepancy.
                   </p>
                   <p className="text-base text-navy-900 italic" style={{ color: '#001f3f' }}>
