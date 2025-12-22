@@ -19,8 +19,8 @@ const Docs = () => {
       <main className="flex-1 container mx-auto px-6 py-12 md:py-16">
         <article className="max-w-3xl mx-auto">
           <header className="mb-8 pb-8 border-b border-gray-200">
-            <p className="text-sm text-gray-500 mb-2">Effective Date: January 1, 2025</p>
-            <p className="text-sm text-gray-500 mb-6">Last Updated: November 4, 2025</p>
+            <p className="text-sm text-gray-500 mb-2">Effective Date: December 22, 2025</p>
+            <p className="text-sm text-gray-500 mb-6">Last Updated: December 22, 2025</p>
             <h1 className="text-2xl font-medium text-gray-900">Acceptable Use Policy</h1>
             <p className="text-sm text-gray-600 mt-2">Part of Opside Terms of Service</p>
           </header>
