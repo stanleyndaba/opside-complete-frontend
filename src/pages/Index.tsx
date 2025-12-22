@@ -347,7 +347,7 @@ const Index = () => {
                   alt="Opside"
                   className="h-5 w-auto object-contain"
                 />
-                <span style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 600 }} className="text-gray-900">Opside</span>
+                <span className="font-montserrat text-gray-900" style={{ fontWeight: 600 }}>Opside</span>
               </Link>
             </div>
             <nav className="hidden md:flex items-center gap-4 text-sm text-gray-700">

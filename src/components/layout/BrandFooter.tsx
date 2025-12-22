@@ -41,8 +41,8 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
         <div className="container mx-auto px-6 w-full" style={{ width: '100%', maxWidth: '100%' }}>
           <div className="flex flex-col items-center justify-center text-center space-y-8">
             <h1
-              className="text-8xl md:text-9xl lg:text-[12rem] font-black tracking-tight bg-gradient-to-r from-[#1f4037] to-[#99f2c8] bg-clip-text text-transparent drop-shadow-[0_6px_12px_rgba(0,0,0,0.2)]"
-              style={{ letterSpacing: '-0.02em', fontFamily: 'Montserrat, sans-serif' }}
+              className="font-montserrat text-8xl md:text-9xl lg:text-[12rem] font-black tracking-tight bg-gradient-to-r from-[#1f4037] to-[#99f2c8] bg-clip-text text-transparent drop-shadow-[0_6px_12px_rgba(0,0,0,0.2)]"
+              style={{ letterSpacing: '-0.02em' }}
             >
               Opside
             </h1>

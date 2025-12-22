@@ -129,23 +129,24 @@
   }
 
   /* All text elements use Inter - comprehensive coverage */
-  *,
+  /* Exception for .font-montserrat which is used for Opside branding */
+  *:not(.font-montserrat),
   *::before,
   *::after,
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  p,
+  h1:not(.font-montserrat),
+  h2:not(.font-montserrat),
+  h3:not(.font-montserrat),
+  h4:not(.font-montserrat),
+  h5:not(.font-montserrat),
+  h6:not(.font-montserrat),
+  p:not(.font-montserrat),
   label,
   input,
   textarea,
   select,
   button,
-  span,
-  div,
+  span:not(.font-montserrat),
+  div:not(.font-montserrat),
   a,
   li,
   td,
@@ -186,8 +187,14 @@
   abbr,
   acronym,
   address,
-  [class*="font-"] {
+  [class*="font-"]:not(.font-montserrat):not(.font-code) {
     font-family: 'Inter', system-ui, sans-serif !important;
+  }
+
+  /* Montserrat for Opside branding - explicitly override */
+  .font-montserrat,
+  .font-montserrat * {
+    font-family: 'Montserrat', sans-serif !important;
   }
 
   /* Override for code snippets - use programming fonts */
