@@ -241,11 +241,11 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
             />
 
             {/* Modal */}
-            <div className="relative bg-[#0B1220] border border-white/10 rounded-xl w-full max-w-2xl max-h-[80vh] flex flex-col shadow-2xl">
+            <div className="relative bg-white border border-gray-200 rounded-xl w-full max-w-3xl max-h-[80vh] flex flex-col shadow-2xl">
                 {/* Header */}
-                <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
+                <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
                     <div className="flex items-center gap-3">
-                        <h2 className="text-lg font-semibold text-white">Sync Logs</h2>
+                        <h2 className="text-lg font-semibold text-gray-900">Sync Logs</h2>
                         {status === 'syncing' && (
                             <div className="flex items-center gap-2 text-sm text-blue-400">
                                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -267,9 +267,9 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
                     </div>
                     <button
                         onClick={onClose}
-                        className="p-1 rounded-lg hover:bg-white/10 transition-colors"
+                        className="p-1 rounded-lg hover:bg-gray-100 transition-colors"
                     >
-                        <X className="h-5 w-5 text-gray-400" />
+                        <X className="h-5 w-5 text-gray-500" />
                     </button>
                 </div>
 
@@ -281,29 +281,29 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
                     {logStories.map(story => {
                         const isExpanded = expandedStories.has(story.id);
                         return (
-                            <div key={story.id} className="rounded-lg border border-white/10 overflow-hidden">
+                            <div key={story.id} className="rounded-lg border border-gray-200 overflow-hidden">
                                 {/* Story header */}
                                 <button
                                     onClick={() => toggleStory(story.id)}
-                                    className="w-full flex items-center justify-between px-4 py-3 bg-white/5 hover:bg-white/10 transition-colors"
+                                    className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors"
                                 >
                                     <div className="flex items-center gap-3">
                                         {isExpanded ? (
-                                            <ChevronDown className="h-4 w-4 text-gray-400" />
+                                            <ChevronDown className="h-4 w-4 text-gray-500" />
                                         ) : (
-                                            <ChevronRight className="h-4 w-4 text-gray-400" />
+                                            <ChevronRight className="h-4 w-4 text-gray-500" />
                                         )}
-                                        <span className="text-sm font-medium text-white">{story.label}</span>
-                                        <span className="text-xs text-gray-400">— {story.logs.length} events</span>
+                                        <span className="text-sm font-medium text-gray-900">{story.label}</span>
+                                        <span className="text-xs text-gray-500">— {story.logs.length} events</span>
                                     </div>
                                     {story.isComplete && (
-                                        <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                                        <CheckCircle2 className="h-4 w-4 text-emerald-500" />
                                     )}
                                 </button>
 
                                 {/* Story logs */}
                                 {isExpanded && (
-                                    <div className="px-4 py-3 space-y-2 bg-black/30">
+                                    <div className="px-4 py-3 space-y-2 bg-[#2D2D2D]">
                                         {story.logs.map(log => (
                                             <div key={log.id} className="flex items-start gap-3 text-sm">
                                                 <span className="text-gray-500 text-xs font-mono w-12 flex-shrink-0">
@@ -340,11 +340,11 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
 
                 {/* Footer with CTA */}
                 {status === 'completed' && detectionCount > 0 && (
-                    <div className="px-6 py-4 border-t border-white/10 bg-white/5">
+                    <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
                         <div className="flex items-center justify-between">
-                            <div className="text-sm text-gray-300">
-                                Found <span className="text-white font-semibold">{detectionCount}</span> issues worth{' '}
-                                <span className="text-emerald-400 font-semibold">
+                            <div className="text-sm text-gray-700">
+                                Found <span className="text-gray-900 font-semibold">{detectionCount}</span> issues worth{' '}
+                                <span className="text-emerald-600 font-semibold">
                                     ${totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </span>
                             </div>
@@ -363,12 +363,12 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
                 )}
 
                 {status === 'completed' && detectionCount === 0 && (
-                    <div className="px-6 py-4 border-t border-white/10 bg-white/5">
+                    <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
                         <div className="flex items-center justify-between">
-                            <div className="text-sm text-gray-300">
+                            <div className="text-sm text-gray-700">
                                 Scan complete. No new issues detected.
                             </div>
-                            <Button onClick={onClose} variant="outline" className="border-white/20 text-white hover:bg-white/10">
+                            <Button onClick={onClose} variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-100">
                                 Close
                             </Button>
                         </div>
