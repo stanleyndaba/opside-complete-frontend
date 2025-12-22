@@ -241,54 +241,49 @@ export default function DocumentDetail() {
         </div>
 
         {/* Document Summary Dropdown */}
-        <div className="mb-6">
+        <div className="mb-4 inline-block relative">
           <button
             type="button"
             onClick={() => setSummaryOpen(!summaryOpen)}
-            className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg transition-colors"
+            className="inline-flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 hover:text-gray-900 bg-white border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
           >
-            <span className="text-sm font-medium text-gray-700">Document Summary</span>
-            {summaryOpen ? (
-              <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-              </svg>
-            ) : (
-              <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            )}
+            <span>Document Summary</span>
+            <span className="text-gray-400">
+              ({(extracted.order_ids?.length || 0) + (extracted.asins?.length || 0) + (extracted.tracking_numbers?.length || 0) + (extracted.amounts?.length || 0) + matchedClaims.length} total)
+            </span>
+            <svg className={`w-3 h-3 text-gray-400 transition-transform ${summaryOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
           </button>
           {summaryOpen && (
-            <div className="mt-2 px-4 py-4 bg-white border border-gray-200 rounded-lg">
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                <div className="text-center">
-                  <div className="text-2xl font-semibold text-gray-900">{extracted.order_ids?.length || 0}</div>
-                  <div className="text-xs text-gray-500 mt-1">Order IDs</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-semibold text-gray-900">{extracted.asins?.length || 0}</div>
-                  <div className="text-xs text-gray-500 mt-1">ASINs</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-semibold text-gray-900">{extracted.tracking_numbers?.length || 0}</div>
-                  <div className="text-xs text-gray-500 mt-1">Tracking #s</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-semibold text-gray-900">{extracted.amounts?.length || 0}</div>
-                  <div className="text-xs text-gray-500 mt-1">Amounts</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-semibold text-gray-900">{matchedClaims.length}</div>
-                  <div className="text-xs text-gray-500 mt-1">Matched Claims</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-semibold text-blue-600">
-                    {documentData?.parser_confidence !== undefined
-                      ? `${(documentData.parser_confidence * 100).toFixed(0)}%`
-                      : '—'}
-                  </div>
-                  <div className="text-xs text-gray-500 mt-1">Confidence</div>
-                </div>
+            <div className="absolute mt-1 py-2 bg-white border border-gray-200 rounded-md shadow-lg z-10 min-w-[180px]">
+              <div className="px-3 py-1.5 text-sm text-gray-700 flex justify-between">
+                <span>Order IDs</span>
+                <span className="font-medium">{extracted.order_ids?.length || 0}</span>
+              </div>
+              <div className="px-3 py-1.5 text-sm text-gray-700 flex justify-between">
+                <span>ASINs</span>
+                <span className="font-medium">{extracted.asins?.length || 0}</span>
+              </div>
+              <div className="px-3 py-1.5 text-sm text-gray-700 flex justify-between">
+                <span>Tracking #s</span>
+                <span className="font-medium">{extracted.tracking_numbers?.length || 0}</span>
+              </div>
+              <div className="px-3 py-1.5 text-sm text-gray-700 flex justify-between">
+                <span>Amounts</span>
+                <span className="font-medium">{extracted.amounts?.length || 0}</span>
+              </div>
+              <div className="px-3 py-1.5 text-sm text-gray-700 flex justify-between">
+                <span>Matched Claims</span>
+                <span className="font-medium">{matchedClaims.length}</span>
+              </div>
+              <div className="px-3 py-1.5 text-sm text-gray-700 flex justify-between border-t border-gray-100 mt-1 pt-1">
+                <span>Confidence</span>
+                <span className="font-medium text-blue-600">
+                  {documentData?.parser_confidence !== undefined
+                    ? `${(documentData.parser_confidence * 100).toFixed(0)}%`
+                    : '—'}
+                </span>
               </div>
             </div>
           )}
