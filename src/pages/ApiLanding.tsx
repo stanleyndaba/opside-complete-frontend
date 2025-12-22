@@ -22,7 +22,7 @@ const ApiLanding = () => {
   );
   const [langQuery, setLangQuery] = useState<string>('');
   useEffect(() => {
-    try { localStorage.setItem('Opside.langPreference', selectedLanguageCode); } catch {}
+    try { localStorage.setItem('Opside.langPreference', selectedLanguageCode); } catch { }
   }, [selectedLanguageCode]);
   const selectedLanguage: LanguageOption =
     LANGUAGE_OPTIONS.find((o) => o.code === selectedLanguageCode) || LANGUAGE_OPTIONS[0];
@@ -69,31 +69,14 @@ const ApiLanding = () => {
         <div className="container mx-auto px-6 py-5">
           <div className="flex items-center justify-between gap-6 px-6 py-4 rounded-[25px] border border-white/40 bg-white/30 supports-[backdrop-filter]:bg-white/30 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_25px_60px_rgba(15,23,42,0.1)] transition-colors">
             <div className="flex items-center gap-3">
-              {/* Brand dropdown */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[16px] transition-colors hover:bg-gray-100">
-                    <span className="font-black text-[#b3b3b3] tracking-tight">
-                      Opside
-                    </span>
-                    <ChevronDown className="h-4 w-4 opacity-70" />
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="min-w-[220px] bg-white/80 supports-[backdrop-filter]:bg-white/70 backdrop-blur-xl border border-white/30 text-gray-900 shadow-2xl">
-                  <DropdownMenuItem asChild>
-                    <Link to="/integrations-hub" className="flex items-center gap-2 hover:bg-gray-100 focus:bg-gray-100">
-                      <Link2 className="h-4 w-4 text-emerald-600" />
-                      <span>Integrations</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/terms" className="flex items-center gap-2 hover:bg-gray-100 focus:bg-gray-100">
-                      <ScrollText className="h-4 w-4 text-emerald-600" />
-                      <span>Terms & Policies</span>
-                    </Link>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <Link to="/" className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[16px] transition-colors hover:bg-gray-100">
+                <img
+                  src="/logoimagetwo.png"
+                  alt="Opside"
+                  className="h-5 w-auto object-contain"
+                />
+                <span style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 600 }} className="text-gray-900">Opside</span>
+              </Link>
             </div>
             <nav className="hidden md:flex items-center gap-3 text-sm text-gray-700">
               <DropdownMenu>
