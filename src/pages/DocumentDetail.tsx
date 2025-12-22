@@ -40,6 +40,7 @@ export default function DocumentDetail() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [triggeringParse, setTriggeringParse] = useState(false);
+  const [summaryOpen, setSummaryOpen] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -239,36 +240,58 @@ export default function DocumentDetail() {
           </div>
         </div>
 
-        {/* Summary Badges */}
-        <div className="flex flex-wrap gap-6 mb-6">
-          <div className="text-sm">
-            <span className="text-gray-500">Order IDs: </span>
-            <span className="font-medium text-[#36454F]">{extracted.order_ids?.length || 0}</span>
-          </div>
-          <div className="text-sm">
-            <span className="text-gray-500">ASINs: </span>
-            <span className="font-medium text-[#36454F]">{extracted.asins?.length || 0}</span>
-          </div>
-          <div className="text-sm">
-            <span className="text-gray-500">Tracking #s: </span>
-            <span className="font-medium text-[#36454F]">{extracted.tracking_numbers?.length || 0}</span>
-          </div>
-          <div className="text-sm">
-            <span className="text-gray-500">Amounts: </span>
-            <span className="font-medium text-[#36454F]">{extracted.amounts?.length || 0}</span>
-          </div>
-          <div className="text-sm">
-            <span className="text-gray-500">Matched Claims: </span>
-            <span className="font-medium text-[#36454F]">{matchedClaims.length}</span>
-          </div>
-          <div className="text-sm">
-            <span className="text-gray-500">Confidence: </span>
-            <span className="font-medium text-blue-600">
-              {documentData?.parser_confidence !== undefined
-                ? `${(documentData.parser_confidence * 100).toFixed(0)}%`
-                : '—'}
-            </span>
-          </div>
+        {/* Document Summary Dropdown */}
+        <div className="mb-6">
+          <button
+            type="button"
+            onClick={() => setSummaryOpen(!summaryOpen)}
+            className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg transition-colors"
+          >
+            <span className="text-sm font-medium text-gray-700">Document Summary</span>
+            {summaryOpen ? (
+              <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+              </svg>
+            ) : (
+              <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            )}
+          </button>
+          {summaryOpen && (
+            <div className="mt-2 px-4 py-4 bg-white border border-gray-200 rounded-lg">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                <div className="text-center">
+                  <div className="text-2xl font-semibold text-gray-900">{extracted.order_ids?.length || 0}</div>
+                  <div className="text-xs text-gray-500 mt-1">Order IDs</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-semibold text-gray-900">{extracted.asins?.length || 0}</div>
+                  <div className="text-xs text-gray-500 mt-1">ASINs</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-semibold text-gray-900">{extracted.tracking_numbers?.length || 0}</div>
+                  <div className="text-xs text-gray-500 mt-1">Tracking #s</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-semibold text-gray-900">{extracted.amounts?.length || 0}</div>
+                  <div className="text-xs text-gray-500 mt-1">Amounts</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-semibold text-gray-900">{matchedClaims.length}</div>
+                  <div className="text-xs text-gray-500 mt-1">Matched Claims</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-semibold text-blue-600">
+                    {documentData?.parser_confidence !== undefined
+                      ? `${(documentData.parser_confidence * 100).toFixed(0)}%`
+                      : '—'}
+                  </div>
+                  <div className="text-xs text-gray-500 mt-1">Confidence</div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Main Content Tabs */}
