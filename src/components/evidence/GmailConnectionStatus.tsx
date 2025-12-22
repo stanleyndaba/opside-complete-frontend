@@ -28,18 +28,18 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
   const fetchGmailStatus = async () => {
     try {
       setLoading(true);
-      
+
       // Try getGmailStatus first (specific endpoint)
       let gmailRes = await api.getGmailStatus();
-      
+
       // Also check getIntegrationsStatus as fallback (more comprehensive)
       const integrationsRes = await api.getIntegrationsStatus();
-      
+
       // Helper function to determine if Gmail is connected - only return true when explicitly verified
       const isGmailConnected = (): boolean => {
         // Check specific Gmail status endpoint first - must explicitly be true
         if (gmailRes?.ok && gmailRes.data?.connected === true) return true;
-        
+
         // Check integrations status providerIngest - must explicitly be true
         if (integrationsRes?.ok && integrationsRes.data) {
           const data = integrationsRes.data;
@@ -50,31 +50,31 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
           // Check top-level gmail_connected field - must be explicitly true
           if ((data as any).gmail_connected === true) return true;
         }
-        
+
         // Only return true if explicitly verified - don't assume connected
         return false;
       };
-      
+
       const connected = isGmailConnected();
-      
+
       // Get email from either endpoint
-      const email = gmailRes?.ok && gmailRes.data?.email 
-        ? gmailRes.data.email 
+      const email = gmailRes?.ok && gmailRes.data?.email
+        ? gmailRes.data.email
         : integrationsRes?.ok && integrationsRes.data?.providerIngest?.['gmail']?.email
-        ? integrationsRes.data.providerIngest['gmail'].email
-        : integrationsRes?.ok && integrationsRes.data?.providerIngest?.['Gmail']?.email
-        ? integrationsRes.data.providerIngest['Gmail'].email
-        : undefined;
-      
+          ? integrationsRes.data.providerIngest['gmail'].email
+          : integrationsRes?.ok && integrationsRes.data?.providerIngest?.['Gmail']?.email
+            ? integrationsRes.data.providerIngest['Gmail'].email
+            : undefined;
+
       // Get lastSync from either endpoint
       const lastSync = gmailRes?.ok && gmailRes.data?.lastSync
         ? gmailRes.data.lastSync
         : integrationsRes?.ok && integrationsRes.data?.providerIngest?.['gmail']?.lastIngest
-        ? integrationsRes.data.providerIngest['gmail'].lastIngest
-        : integrationsRes?.ok && integrationsRes.data?.providerIngest?.['Gmail']?.lastIngest
-        ? integrationsRes.data.providerIngest['Gmail'].lastIngest
-        : undefined;
-      
+          ? integrationsRes.data.providerIngest['gmail'].lastIngest
+          : integrationsRes?.ok && integrationsRes.data?.providerIngest?.['Gmail']?.lastIngest
+            ? integrationsRes.data.providerIngest['Gmail'].lastIngest
+            : undefined;
+
       setStatus({
         connected,
         email,
@@ -126,9 +126,9 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
 
   if (loading) {
     return (
-      <Card className="bg-white/5 border-white/10">
+      <Card className="bg-white border border-gray-200 shadow-sm">
         <CardContent className="p-4">
-          <div className="flex items-center gap-2 text-gray-400">
+          <div className="flex items-center gap-2 text-gray-500">
             <RefreshCw className="h-4 w-4 animate-spin" />
             <span>Loading Gmail status...</span>
           </div>
@@ -138,13 +138,13 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
   }
 
   return (
-    <Card className="bg-white/5 border-white/10">
+    <Card className="bg-white border border-gray-200 shadow-sm">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-[#36454F] font-medium">
+        <CardTitle className="flex items-center gap-2 text-gray-800 font-medium">
           <img src="/G.png" alt="Gmail" className="h-5 w-5" />
           Gmail Connection
         </CardTitle>
-        <CardDescription className="text-gray-400">
+        <CardDescription className="text-gray-500">
           Connect Gmail to automatically ingest evidence documents
         </CardDescription>
       </CardHeader>
@@ -153,16 +153,16 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
           <div className="flex items-center gap-3">
             {status?.connected ? (
               <>
-                <Badge className="bg-blue-500 text-white border-blue-500 font-medium">
+                <Badge className="bg-emerald-500 text-white border-emerald-500 font-medium">
                   <CheckCircle2 className="w-3 h-3 mr-1" />
                   Connected
                 </Badge>
                 {status.email && (
-                  <span className="text-sm text-gray-300">{status.email}</span>
+                  <span className="text-sm text-gray-600">{status.email}</span>
                 )}
               </>
             ) : (
-              <Badge className="bg-blue-500 text-white border-blue-500">
+              <Badge className="bg-amber-500 text-white border-amber-500">
                 <XCircle className="w-3 h-3 mr-1" />
                 Not Connected
               </Badge>
@@ -192,13 +192,13 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
         </div>
 
         {status?.connected && status.lastSync && (
-          <div className="text-sm text-gray-400">
+          <div className="text-sm text-gray-500">
             Last sync: {new Date(status.lastSync).toLocaleString()}
           </div>
         )}
 
         {!status?.connected && showActions && (
-          <div className="text-sm text-gray-400">
+          <div className="text-sm text-gray-500">
             Connect Gmail to start automatically collecting evidence documents from your emails.
           </div>
         )}

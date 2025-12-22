@@ -254,30 +254,30 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
   };
 
   return (
-    <Card className="bg-white/5 border-white/10">
+    <Card className="bg-white border border-gray-200 shadow-sm">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-[#36454F] font-medium">
+        <CardTitle className="flex items-center gap-2 text-gray-800 font-medium">
           <Cloud className="h-5 w-5" />
           Evidence Ingestion
         </CardTitle>
-        <CardDescription className="text-gray-400">
+        <CardDescription className="text-gray-500">
           Collect documents from all connected sources (Gmail, Outlook, Google Drive, Dropbox)
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {loadingSources ? (
           <div className="flex items-center justify-center py-4">
-            <Loader2 className="h-5 w-5 animate-spin text-gray-400" />
-            <span className="ml-2 text-sm text-gray-400">Loading sources...</span>
+            <Loader2 className="h-5 w-5 animate-spin text-gray-500" />
+            <span className="ml-2 text-sm text-gray-500">Loading sources...</span>
           </div>
         ) : (
           <>
             {sources.length > 0 && (
-              <div className="p-3 rounded-lg bg-white/5 border border-white/10">
-                <div className="text-xs font-medium text-gray-400 mb-2">Connected Sources:</div>
+              <div className="p-3 rounded-lg bg-gray-50 border border-gray-200">
+                <div className="text-xs font-medium text-gray-500 mb-2">Connected Sources:</div>
                 <div className="flex flex-wrap gap-2">
                   {sources.map((source) => (
-                    <Badge key={source.id} className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-xs">
+                    <Badge key={source.id} className="bg-emerald-100 text-emerald-700 border-emerald-200 text-xs">
                       {getProviderName(source.provider)}
                     </Badge>
                   ))}
@@ -304,7 +304,7 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
             </Button>
 
             {!hasConnectedSources && (
-              <div className="flex items-center gap-2 text-sm text-amber-400">
+              <div className="flex items-center gap-2 text-sm text-amber-600">
                 <AlertCircle className="w-4 h-4" />
                 <span>Connect at least one source to ingest evidence documents.</span>
               </div>
@@ -312,7 +312,7 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
 
             {ingesting && (
               <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm text-gray-400">
+                <div className="flex items-center justify-between text-sm text-gray-500">
                   <span>Processing documents from all sources...</span>
                   <span>{progress}%</span>
                 </div>
@@ -321,29 +321,29 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
             )}
 
             {result && (
-              <div className="space-y-3 p-4 rounded-lg bg-white/5 border border-white/10">
+              <div className="space-y-3 p-4 rounded-lg bg-gray-50 border border-gray-200">
                 <div className="flex items-center gap-2">
                   {result.success ? (
-                    <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
+                    <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200">
                       <CheckCircle2 className="w-3 h-3 mr-1" />
                       Completed
                     </Badge>
                   ) : (
-                    <Badge className="bg-red-500/20 text-red-400 border-red-500/30">
+                    <Badge className="bg-red-100 text-red-700 border-red-200">
                       <AlertCircle className="w-3 h-3 mr-1" />
                       Failed
                     </Badge>
                   )}
-                  <span className="text-sm text-gray-300">{result.message}</span>
+                  <span className="text-sm text-gray-700">{result.message}</span>
                 </div>
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <span className="text-gray-400">Documents Ingested:</span>
-                    <span className="ml-2 font-medium text-gray-200">{result.totalDocumentsIngested}</span>
+                    <span className="text-gray-500">Documents Ingested:</span>
+                    <span className="ml-2 font-medium text-gray-800">{result.totalDocumentsIngested}</span>
                   </div>
                   <div>
-                    <span className="text-gray-400">Items Processed:</span>
-                    <span className="ml-2 font-medium text-gray-200">{result.totalItemsProcessed}</span>
+                    <span className="text-gray-500">Items Processed:</span>
+                    <span className="ml-2 font-medium text-gray-800">{result.totalItemsProcessed}</span>
                   </div>
                 </div>
                 {result.results && (

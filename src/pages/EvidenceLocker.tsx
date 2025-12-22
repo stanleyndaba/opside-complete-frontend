@@ -1045,7 +1045,7 @@ export default function EvidenceLocker() {
                     Upload invoices, purchase orders, and receipts to verify your product costs
                   </CardDescription>
                 </div>
-                <p className="text-xs text-amber-600 font-medium whitespace-nowrap">
+                <p className="text-xs text-blue-600 font-medium whitespace-nowrap">
                   Amazon rejects 82% of claims without an Invoice.
                 </p>
               </div>
