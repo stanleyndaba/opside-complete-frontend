@@ -243,24 +243,24 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
             {/* Modal */}
             <div className="relative bg-white border border-gray-200 rounded-xl w-full max-w-3xl max-h-[80vh] flex flex-col shadow-2xl">
                 {/* Header */}
-                <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+                <div className="flex items-center justify-between px-5 py-3 border-b border-gray-200">
                     <div className="flex items-center gap-3">
-                        <h2 className="text-lg font-semibold text-gray-900">Sync Logs</h2>
+                        <h2 className="text-sm font-semibold text-gray-900">Sync Logs</h2>
                         {status === 'syncing' && (
-                            <div className="flex items-center gap-2 text-sm text-blue-400">
-                                <Loader2 className="h-4 w-4 animate-spin" />
+                            <div className="flex items-center gap-1.5 text-xs text-blue-500">
+                                <Loader2 className="h-3.5 w-3.5 animate-spin" />
                                 <span>Scanning...</span>
                             </div>
                         )}
                         {status === 'completed' && (
-                            <div className="flex items-center gap-2 text-sm text-emerald-400">
-                                <CheckCircle2 className="h-4 w-4" />
+                            <div className="flex items-center gap-1.5 text-xs text-emerald-600">
+                                <CheckCircle2 className="h-3.5 w-3.5" />
                                 <span>Complete</span>
                             </div>
                         )}
                         {status === 'failed' && (
-                            <div className="flex items-center gap-2 text-sm text-red-400">
-                                <AlertCircle className="h-4 w-4" />
+                            <div className="flex items-center gap-1.5 text-xs text-red-600">
+                                <AlertCircle className="h-3.5 w-3.5" />
                                 <span>Failed</span>
                             </div>
                         )}
@@ -269,70 +269,44 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
                         onClick={onClose}
                         className="p-1 rounded-lg hover:bg-gray-100 transition-colors"
                     >
-                        <X className="h-5 w-5 text-gray-500" />
+                        <X className="h-4 w-4 text-gray-500" />
                     </button>
                 </div>
 
-                {/* Log content */}
+                {/* Log content - Single flat log stream */}
                 <div
                     ref={logContainerRef}
-                    className="flex-1 overflow-y-auto px-6 py-4 space-y-3"
+                    className="flex-1 overflow-y-auto px-5 py-3 bg-white"
                 >
-                    {logStories.map(story => {
-                        const isExpanded = expandedStories.has(story.id);
-                        return (
-                            <div key={story.id} className="rounded-lg border border-gray-200 overflow-hidden">
-                                {/* Story header */}
-                                <button
-                                    onClick={() => toggleStory(story.id)}
-                                    className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors"
-                                >
-                                    <div className="flex items-center gap-3">
-                                        {isExpanded ? (
-                                            <ChevronDown className="h-4 w-4 text-gray-500" />
-                                        ) : (
-                                            <ChevronRight className="h-4 w-4 text-gray-500" />
-                                        )}
-                                        <span className="text-sm font-medium text-gray-900">{story.label}</span>
-                                        <span className="text-xs text-gray-500">— {story.logs.length} events</span>
+                    {logs.length > 0 ? (
+                        <div className="space-y-1.5">
+                            {logs.map(log => (
+                                <div key={log.id} className="flex items-start gap-3 text-xs">
+                                    <span className="text-gray-400 font-mono w-14 flex-shrink-0">
+                                        {formatTime(log.timestamp)}
+                                    </span>
+                                    <span className={`flex-1 ${log.type === 'success' ? 'text-emerald-600' :
+                                        log.type === 'error' ? 'text-red-600' :
+                                            log.type === 'warning' ? 'text-amber-600' :
+                                                log.type === 'thinking' ? 'text-gray-400 italic' :
+                                                    'text-gray-700'
+                                        }`}>
+                                        {log.message}
+                                    </span>
+                                </div>
+                            ))}
+                            {/* Show context details inline */}
+                            {logs.filter(l => l.context?.details?.length).map(log =>
+                                log.context?.details?.map((detail, i) => (
+                                    <div key={`${log.id}-detail-${i}`} className="flex items-start gap-3 text-xs pl-[68px]">
+                                        <span className="text-gray-500">{detail}</span>
                                     </div>
-                                    {story.isComplete && (
-                                        <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                                    )}
-                                </button>
-
-                                {/* Story logs */}
-                                {isExpanded && (
-                                    <div className="px-4 py-3 space-y-2 bg-[#2D2D2D]">
-                                        {story.logs.map(log => (
-                                            <div key={log.id} className="flex items-start gap-3 text-sm">
-                                                <span className="text-gray-500 text-xs font-mono w-12 flex-shrink-0">
-                                                    {formatTime(log.timestamp)}
-                                                </span>
-                                                <span className={`${getLogColor(log.type)} flex-1`}>
-                                                    {log.message}
-                                                </span>
-                                            </div>
-                                        ))}
-                                        {/* Show context details if present */}
-                                        {story.logs.some(l => l.context?.details?.length) && (
-                                            <div className="mt-3 space-y-1">
-                                                {story.logs.flatMap(l => l.context?.details || []).map((detail, i) => (
-                                                    <div key={i} className="text-xs text-gray-400 pl-14">
-                                                        {detail}
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-                            </div>
-                        );
-                    })}
-
-                    {logs.length === 0 && (
-                        <div className="flex items-center justify-center h-32 text-gray-500">
-                            <Loader2 className="h-5 w-5 animate-spin mr-2" />
+                                ))
+                            )}
+                        </div>
+                    ) : (
+                        <div className="flex items-center justify-center h-32 text-gray-500 text-xs">
+                            <Loader2 className="h-4 w-4 animate-spin mr-2" />
                             Starting sync...
                         </div>
                     )}
@@ -340,9 +314,9 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
 
                 {/* Footer with CTA */}
                 {status === 'completed' && detectionCount > 0 && (
-                    <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
+                    <div className="px-5 py-3 border-t border-gray-200 bg-gray-50">
                         <div className="flex items-center justify-between">
-                            <div className="text-sm text-gray-700">
+                            <div className="text-xs text-gray-700">
                                 Found <span className="text-gray-900 font-semibold">{detectionCount}</span> issues worth{' '}
                                 <span className="text-emerald-600 font-semibold">
                                     ${totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -353,22 +327,22 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
                                     onClose();
                                     navigate('/recoveries');
                                 }}
-                                className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                                className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs h-8"
                             >
                                 View potential claims
                             </Button>
                         </div>
-                        <p className="text-xs text-gray-500 mt-2">Next: review and approve for filing</p>
+                        <p className="text-xs text-gray-500 mt-1.5">Next: review and approve for filing</p>
                     </div>
                 )}
 
                 {status === 'completed' && detectionCount === 0 && (
-                    <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
+                    <div className="px-5 py-3 border-t border-gray-200 bg-gray-50">
                         <div className="flex items-center justify-between">
-                            <div className="text-sm text-gray-700">
+                            <div className="text-xs text-gray-700">
                                 Scan complete. No new issues detected.
                             </div>
-                            <Button onClick={onClose} variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-100">
+                            <Button onClick={onClose} variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-100 text-xs h-8">
                                 Close
                             </Button>
                         </div>
