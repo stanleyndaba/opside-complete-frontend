@@ -529,99 +529,99 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
                     </div>
 
                     {/* Shipment & Delivery Evidence */}
-                    <Card className="border-gray-200">
-                        <CardHeader className="pb-2">
-                            <CardTitle className="text-base font-semibold text-gray-900 flex items-center gap-2">
-                                <Truck className="h-4 w-4 text-green-500" />
-                                Shipment & Delivery Evidence
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
+                    <div className="border border-gray-200 rounded-lg overflow-hidden">
+                        <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
+                            <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Shipment & Delivery Evidence</h4>
+                        </div>
+                        <div className="bg-white">
                             {organizedDocs.shipmentDocs.length > 0 ? (
-                                <div className="space-y-2">
+                                <div className="divide-y divide-gray-100">
                                     {organizedDocs.shipmentDocs.map((doc, i) => (
-                                        <div key={doc.id || i} className="p-3 bg-gray-50 rounded-lg border border-gray-100">
+                                        <div key={doc.id || i} className="px-4 py-3">
                                             <div className="flex items-start justify-between">
                                                 <div className="flex-1">
-                                                    <div className="font-medium text-gray-900 text-sm">{doc.name}</div>
+                                                    <div className="text-xs font-medium text-gray-900">{doc.name}</div>
                                                     {doc.extracted?.tracking_numbers && doc.extracted.tracking_numbers.length > 0 && (
                                                         <div className="flex flex-wrap gap-1 mt-2">
                                                             {doc.extracted.tracking_numbers.map((t, j) => (
-                                                                <span key={j} className="px-1.5 py-0.5 bg-yellow-100 text-yellow-800 rounded text-[10px] font-medium">
+                                                                <span key={j} className="px-1.5 py-0.5 bg-gray-100 text-gray-700 rounded text-[10px] font-medium">
                                                                     {t}
                                                                 </span>
                                                             ))}
                                                         </div>
                                                     )}
                                                 </div>
-                                                <Badge className={doc.confidence && doc.confidence >= 0.85 ? 'bg-emerald-100 text-emerald-700' : doc.confidence && doc.confidence >= 0.5 ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-700'}>
-                                                    {Math.round((doc.confidence || 0) * 100)}%
-                                                </Badge>
+                                                <span className="text-[10px] text-gray-600 ml-3">
+                                                    {Math.round((doc.confidence || 0) * 100)}% match
+                                                </span>
                                             </div>
                                         </div>
                                     ))}
                                 </div>
                             ) : (
-                                <p className="text-sm text-gray-500 italic text-center py-4">No shipment documents matched yet</p>
+                                <p className="text-xs text-gray-500 text-center py-6">No shipment documents matched yet</p>
                             )}
-                        </CardContent>
-                    </Card>
+                        </div>
+                    </div>
 
                     {/* Policy Reference & Legal Argument */}
-                    <Card className="border-blue-200 bg-blue-50">
-                        <CardHeader className="pb-2">
-                            <CardTitle className="text-base font-semibold text-blue-900 flex items-center justify-between">
-                                <span>Policy Reference & Argument</span>
-                                <Badge className={policyArgument.withinWindow ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}>
-                                    {policyArgument.withinWindow ? '✓ Within Window' : '⚠ Outside Window'}
-                                </Badge>
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            {/* Policy Info */}
-                            <div>
-                                <div className="font-semibold text-blue-800">{policy.name}</div>
-                                <p className="text-sm text-blue-700 mt-1">{policy.excerpt}</p>
-                                <div className="flex items-center gap-4 mt-2 text-xs">
-                                    <span className="text-blue-600 font-medium">Filing Deadline: {policy.deadline}</span>
-                                    <span className="text-blue-500">Claim Age: {policyArgument.daysOld} days</span>
+                    <div className="border border-gray-200 rounded-lg overflow-hidden">
+                        <div className="bg-gray-50 border-b border-gray-200 px-4 py-2 flex items-center justify-between">
+                            <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Policy Reference & Argument</h4>
+                            <span className={`text-[10px] font-medium px-2 py-0.5 rounded ${policyArgument.withinWindow ? 'bg-emerald-100 text-emerald-700' : 'text-gray-600'}`}>
+                                {policyArgument.withinWindow ? 'Within Window' : 'Outside Window'}
+                            </span>
+                        </div>
+                        <div className="bg-white">
+                            {/* Policy Details */}
+                            <div className="divide-y divide-gray-100">
+                                <div className="px-4 py-3">
+                                    <div className="text-xs font-semibold text-gray-900 mb-1">{policy.name}</div>
+                                    <p className="text-xs text-gray-600 leading-relaxed">{policy.excerpt}</p>
+                                </div>
+                                <div className="flex px-4 py-2.5">
+                                    <div className="flex-1">
+                                        <span className="text-[10px] text-gray-500 uppercase tracking-wide">Filing Deadline</span>
+                                        <div className="text-xs font-medium text-gray-900">{policy.deadline}</div>
+                                    </div>
+                                    <div className="flex-1">
+                                        <span className="text-[10px] text-gray-500 uppercase tracking-wide">Claim Age</span>
+                                        <div className="text-xs font-medium text-gray-900">{policyArgument.daysOld} days</div>
+                                    </div>
                                 </div>
                             </div>
 
                             {/* Legal Argument */}
-                            <div className="border-t border-blue-200 pt-4">
-                                <div className="text-xs text-blue-600 uppercase tracking-wide font-semibold mb-2">Reimbursement Argument</div>
-                                <div className="bg-white/70 rounded-lg p-4 border border-blue-100">
-                                    <p className="text-sm text-blue-900 leading-relaxed italic">
+                            <div className="border-t border-gray-200 px-4 py-3 bg-gray-50">
+                                <div className="text-[10px] text-gray-500 uppercase tracking-wide font-medium mb-2">Reimbursement Argument</div>
+                                <div className="bg-white border border-gray-200 rounded p-3">
+                                    <p className="text-xs text-gray-700 leading-relaxed">
                                         "{policyArgument.argument}"
                                     </p>
                                 </div>
                             </div>
-                        </CardContent>
-                    </Card>
+                        </div>
+                    </div>
 
                     {/* Other Documents */}
                     {organizedDocs.otherDocs.length > 0 && (
-                        <Card className="border-gray-200">
-                            <CardHeader className="pb-2">
-                                <CardTitle className="text-base font-semibold text-gray-900 flex items-center gap-2">
-                                    <FileText className="h-4 w-4 text-gray-500" />
-                                    Additional Supporting Documents
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="space-y-2">
+                        <div className="border border-gray-200 rounded-lg overflow-hidden">
+                            <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
+                                <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Additional Supporting Documents</h4>
+                            </div>
+                            <div className="bg-white">
+                                <div className="divide-y divide-gray-100">
                                     {organizedDocs.otherDocs.map((doc, i) => (
-                                        <div key={doc.id || i} className="p-3 bg-gray-50 rounded-lg border border-gray-100 flex items-center justify-between">
-                                            <span className="font-medium text-gray-900 text-sm">{doc.name}</span>
-                                            <Badge className="bg-gray-100 text-gray-700">
-                                                {Math.round((doc.confidence || 0) * 100)}%
-                                            </Badge>
+                                        <div key={doc.id || i} className="px-4 py-3 flex items-center justify-between">
+                                            <span className="text-xs font-medium text-gray-900">{doc.name}</span>
+                                            <span className="text-[10px] text-gray-600">
+                                                {Math.round((doc.confidence || 0) * 100)}% match
+                                            </span>
                                         </div>
                                     ))}
                                 </div>
-                            </CardContent>
-                        </Card>
+                            </div>
+                        </div>
                     )}
 
                     {/* Amazon Proof Requirements Checklist */}
