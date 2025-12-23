@@ -215,18 +215,23 @@ const Index = () => {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    let lastScrollTop = 0;
+    let lastScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const threshold = 10; // Minimum scroll amount to trigger change
 
     const handleScroll = () => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollDiff = scrollTop - lastScrollTop;
 
-      // Scrolling DOWN toward footer = HIDE banner
-      // Scrolling UP toward hero/top = SHOW banner
-      if (scrollTop > lastScrollTop) {
-        // Scrolling DOWN toward footer - hide banner
+      // Only trigger if scroll is significant (prevents jitter)
+      if (Math.abs(scrollDiff) < threshold) return;
+
+      // User pushes screen UP (scrolling towards footer/bottom) = HIDE banner
+      // User pulls screen DOWN (scrolling towards hero/top) = SHOW banner
+      if (scrollDiff > 0) {
+        // Scrolling DOWN (towards footer) - hide banner
         setShowBanner(false);
       } else {
-        // Scrolling UP toward top - show banner
+        // Scrolling UP (towards hero/top) - show banner
         setShowBanner(true);
       }
 
