@@ -28,6 +28,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { EvidenceMatchingTable } from '@/components/evidence/EvidenceMatchingTable';
 import { DisputeCasesTable } from '@/components/disputes/DisputeCasesTable';
 import { EvidencePackView } from '@/components/evidence/EvidencePackView';
+import { ProofDocumentsModal } from '@/components/evidence/ProofDocumentsModal';
 import { ClaimNegotiationTimeline } from '@/components/claims/ClaimNegotiationTimeline';
 
 
@@ -927,6 +928,9 @@ export default function Recoveries() {
   const [claimToFile, setClaimToFile] = useState<RecoveryClaim | null>(null);
   const [evidencePackOpen, setEvidencePackOpen] = useState(false);
   const [evidencePackClaim, setEvidencePackClaim] = useState<RecoveryClaim | null>(null);
+  const [proofDocsModalOpen, setProofDocsModalOpen] = useState(false);
+  const [proofDocsClaim, setProofDocsClaim] = useState<RecoveryClaim | null>(null);
+  const [proofDocs, setProofDocs] = useState<any[]>([]);
 
   // Read search query from URL on mount and when URL changes
   useEffect(() => {
@@ -2509,27 +2513,26 @@ export default function Recoveries() {
                                             </DropdownMenuItem>
                                           )}
                                           <DropdownMenuItem onClick={async () => {
-                                            const url = api.getRecoveryDocumentUrl(claim.id);
-                                            try {
-                                              const head = await fetch(url, { method: 'HEAD', credentials: 'include' });
-                                              if (head.ok) {
-                                                window.open(url, '_blank');
-                                                return;
-                                              }
-                                            } catch { }
+                                            // Fetch documents for this claim
                                             try {
                                               const res = await api.getRecoveryDetail(claim.id);
                                               const docs = (res && res.ok && Array.isArray((res as any).data?.documents)) ? (res as any).data!.documents : [];
-                                              if (docs.length > 0 && docs[0]?.id) {
-                                                window.open(`/documents/${encodeURIComponent(docs[0].id)}`, '_blank');
-                                              } else {
-                                                toast({ title: 'No proof available yet', description: 'Evidence is still being collected for this case.' });
-                                              }
+                                              // Also check matchedDocs from detection
+                                              const matchedDocs = claim.matchedDocs || [];
+                                              const allDocs = [...docs, ...matchedDocs.filter((md: any) => !docs.some((d: any) => d.id === md.id))];
+                                              setProofDocs(allDocs);
+                                              setProofDocsClaim(claim);
+                                              setProofDocsModalOpen(true);
                                             } catch (e: any) {
-                                              toast({ title: 'Proof unavailable', description: e?.message || 'Please try again later.' });
+                                              toast({ title: 'Error loading documents', description: e?.message || 'Please try again.' });
                                             }
                                           }}>
-                                            Proof Document
+                                            <span className="flex items-center justify-between w-full">
+                                              <span>Proof Documents</span>
+                                              <span className="text-[10px] text-gray-400 ml-2">
+                                                {(claim.matchedDocs?.length || claim.matchedCount || 0)}
+                                              </span>
+                                            </span>
                                           </DropdownMenuItem>
                                           <DropdownMenuItem onClick={() => {
                                             setEvidencePackClaim(claim);
@@ -2897,6 +2900,19 @@ export default function Recoveries() {
                     claim={evidencePackClaim}
                   />
                 )}
+
+                {/* Proof Documents Modal */}
+                <ProofDocumentsModal
+                  open={proofDocsModalOpen}
+                  onClose={() => {
+                    setProofDocsModalOpen(false);
+                    setProofDocsClaim(null);
+                    setProofDocs([]);
+                  }}
+                  claimId={proofDocsClaim?.id || ''}
+                  claimNumber={proofDocsClaim?.claim_number}
+                  documents={proofDocs}
+                />
 
                 {/* Claim Details Modal */}
                 <Dialog open={detailsModalOpen} onOpenChange={setDetailsModalOpen}>
