@@ -1,6 +1,6 @@
 /**
  * DocumentChecklist Component
- * Shows Amazon's proof requirements with ✅/❌ status
+ * Shows Amazon's proof requirements with institutional styling
  * 
  * Categories:
  * - Proof of Ownership (invoice, fapiao)
@@ -11,23 +11,16 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-    FileCheck,
-    FileX,
-    AlertTriangle,
-    CheckCircle2,
-    XCircle,
-    Clock,
     FileText,
     DollarSign,
     Truck,
     Package,
     ChevronDown,
     ChevronRight,
-    Lightbulb
+    Check,
+    Minus,
+    X
 } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { api } from '@/lib/api';
 
@@ -64,10 +57,10 @@ interface DocumentChecklistProps {
 }
 
 const categoryIcons: Record<string, React.ReactNode> = {
-    ownership: <FileText className="h-4 w-4" />,
-    value: <DollarSign className="h-4 w-4" />,
-    delivery: <Truck className="h-4 w-4" />,
-    inventory: <Package className="h-4 w-4" />
+    ownership: <FileText className="h-3.5 w-3.5" />,
+    value: <DollarSign className="h-3.5 w-3.5" />,
+    delivery: <Truck className="h-3.5 w-3.5" />,
+    inventory: <Package className="h-3.5 w-3.5" />
 };
 
 const categoryLabels: Record<string, string> = {
@@ -75,18 +68,6 @@ const categoryLabels: Record<string, string> = {
     value: 'Proof of Value',
     delivery: 'Proof of Delivery',
     inventory: 'Inventory Trail'
-};
-
-const statusColors: Record<string, string> = {
-    complete: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-    partial: 'bg-amber-100 text-amber-700 border-amber-200',
-    missing: 'bg-red-100 text-red-700 border-red-200'
-};
-
-const statusIcons: Record<string, React.ReactNode> = {
-    complete: <CheckCircle2 className="h-4 w-4 text-emerald-600" />,
-    partial: <AlertTriangle className="h-4 w-4 text-amber-600" />,
-    missing: <XCircle className="h-4 w-4 text-red-500" />
 };
 
 export function DocumentChecklist({ claimId, compact = false }: DocumentChecklistProps) {
@@ -123,8 +104,8 @@ export function DocumentChecklist({ claimId, compact = false }: DocumentChecklis
 
     if (loading) {
         return (
-            <div className="flex items-center gap-2 p-4 text-gray-500">
-                <Clock className="h-4 w-4 animate-pulse" />
+            <div className="flex items-center gap-2 px-4 py-3 text-gray-500 text-xs">
+                <div className="w-3 h-3 border border-gray-300 border-t-gray-600 rounded-full animate-spin" />
                 Checking proof requirements...
             </div>
         );
@@ -132,7 +113,7 @@ export function DocumentChecklist({ claimId, compact = false }: DocumentChecklis
 
     if (error || !checklist) {
         return (
-            <div className="p-4 bg-gray-50 rounded-lg text-gray-500 text-sm">
+            <div className="px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-500 text-xs">
                 Unable to check proof requirements
             </div>
         );
@@ -146,34 +127,17 @@ export function DocumentChecklist({ claimId, compact = false }: DocumentChecklis
     ];
 
     const completeCount = proofCategories.filter(p => p.proof.status === 'complete').length;
-    const partialCount = proofCategories.filter(p => p.proof.status === 'partial').length;
 
     // Compact mode: just show summary bar
     if (compact && !expanded) {
         return (
             <Collapsible open={expanded} onOpenChange={setExpanded}>
                 <CollapsibleTrigger asChild>
-                    <button className="flex items-center gap-3 w-full p-3 bg-white border border-gray-200 rounded-lg text-left hover:bg-gray-50 transition-colors">
-                        <FileCheck className="h-5 w-5 text-gray-600" />
-                        <div className="flex-1">
-                            <span className="text-sm font-medium text-gray-700">Amazon Proof Requirements</span>
-                            <div className="flex items-center gap-2 mt-1">
-                                <Progress value={checklist.overallScore} className="h-2 w-24" />
-                                <span className="text-xs text-gray-500">{checklist.overallScore}%</span>
-                            </div>
-                        </div>
-                        <div className="flex gap-1">
-                            {proofCategories.map(({ key, proof }) => (
-                                <div
-                                    key={key}
-                                    className={`w-6 h-6 rounded-full flex items-center justify-center ${statusColors[proof.status]}`}
-                                    title={`${categoryLabels[key]}: ${proof.status}`}
-                                >
-                                    {proof.status === 'complete' ? '✓' : proof.status === 'partial' ? '~' : '✗'}
-                                </div>
-                            ))}
-                        </div>
-                        <ChevronRight className="h-4 w-4 text-gray-400" />
+                    <button className="flex items-center gap-3 w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-left hover:bg-gray-50 transition-colors">
+                        <span className="text-xs font-medium text-gray-700">Amazon Proof Requirements</span>
+                        <div className="flex-1" />
+                        <span className="text-xs text-gray-500">{completeCount}/4</span>
+                        <ChevronRight className="h-3.5 w-3.5 text-gray-400" />
                     </button>
                 </CollapsibleTrigger>
             </Collapsible>
@@ -181,114 +145,110 @@ export function DocumentChecklist({ claimId, compact = false }: DocumentChecklis
     }
 
     return (
-        <Card className="border-gray-200">
+        <div className="border border-gray-200 rounded-lg overflow-hidden">
             <Collapsible open={expanded} onOpenChange={setExpanded}>
-                <CardHeader className="pb-3">
-                    <CollapsibleTrigger asChild>
-                        <button className="flex items-center gap-2 w-full text-left">
-                            <FileCheck className="h-5 w-5 text-gray-600" />
-                            <CardTitle className="text-base font-semibold text-gray-900">
-                                Amazon Proof Requirements
-                            </CardTitle>
-                            <Badge className={`ml-2 ${statusColors[checklist.overallStatus]}`}>
-                                {checklist.overallScore}% Complete
-                            </Badge>
-                            {expanded ? (
-                                <ChevronDown className="h-4 w-4 text-gray-400 ml-auto" />
-                            ) : (
-                                <ChevronRight className="h-4 w-4 text-gray-400 ml-auto" />
-                            )}
-                        </button>
-                    </CollapsibleTrigger>
-
-                    {/* Progress bar */}
-                    <div className="mt-3">
-                        <Progress value={checklist.overallScore} className="h-2" />
-                        <div className="flex justify-between text-xs text-gray-500 mt-1">
-                            <span>{completeCount} complete</span>
-                            {partialCount > 0 && <span>{partialCount} partial</span>}
-                            <span>{4 - completeCount - partialCount} missing</span>
-                        </div>
-                    </div>
-                </CardHeader>
+                {/* Header */}
+                <CollapsibleTrigger asChild>
+                    <button className="flex items-center gap-3 w-full px-4 py-2 bg-gray-50 border-b border-gray-200 text-left hover:bg-gray-100 transition-colors">
+                        <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
+                            Amazon Proof Requirements
+                        </h4>
+                        <span className="text-[10px] text-gray-500 ml-auto mr-2">
+                            {checklist.overallScore}% Complete
+                        </span>
+                        {expanded ? (
+                            <ChevronDown className="h-3.5 w-3.5 text-gray-400" />
+                        ) : (
+                            <ChevronRight className="h-3.5 w-3.5 text-gray-400" />
+                        )}
+                    </button>
+                </CollapsibleTrigger>
 
                 <CollapsibleContent>
-                    <CardContent className="pt-0 space-y-4">
+                    <div className="bg-white">
+                        {/* Progress Summary */}
+                        <div className="px-4 py-2.5 border-b border-gray-100 flex items-center gap-4">
+                            <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                                <div
+                                    className="h-full bg-gray-600 rounded-full transition-all"
+                                    style={{ width: `${checklist.overallScore}%` }}
+                                />
+                            </div>
+                            <div className="text-[10px] text-gray-500">
+                                {completeCount} of 4 complete
+                            </div>
+                        </div>
+
                         {/* Proof Categories */}
-                        {proofCategories.map(({ key, proof }) => (
-                            <div
-                                key={key}
-                                className={`p-4 rounded-lg border ${proof.status === 'complete' ? 'bg-emerald-50 border-emerald-200' :
-                                        proof.status === 'partial' ? 'bg-amber-50 border-amber-200' :
-                                            'bg-red-50 border-red-200'
-                                    }`}
-                            >
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-3">
-                                        <div className={`p-2 rounded-full ${proof.status === 'complete' ? 'bg-emerald-100' :
-                                                proof.status === 'partial' ? 'bg-amber-100' :
-                                                    'bg-red-100'
-                                            }`}>
-                                            {categoryIcons[key]}
+                        <div className="divide-y divide-gray-100">
+                            {proofCategories.map(({ key, proof }) => (
+                                <div key={key} className="px-4 py-3">
+                                    <div className="flex items-start gap-3">
+                                        {/* Status Icon */}
+                                        <div className="mt-0.5 text-gray-400">
+                                            {proof.status === 'complete' ? (
+                                                <Check className="h-3.5 w-3.5 text-gray-700" />
+                                            ) : proof.status === 'partial' ? (
+                                                <Minus className="h-3.5 w-3.5 text-gray-500" />
+                                            ) : (
+                                                <X className="h-3.5 w-3.5 text-gray-400" />
+                                            )}
                                         </div>
-                                        <div>
-                                            <h4 className="text-sm font-semibold text-gray-900">
-                                                {categoryLabels[key]}
-                                            </h4>
-                                            <p className="text-xs text-gray-600">{proof.message}</p>
+
+                                        {/* Content */}
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-gray-500">{categoryIcons[key]}</span>
+                                                <h5 className="text-xs font-medium text-gray-900">
+                                                    {categoryLabels[key]}
+                                                </h5>
+                                                <span className={`text-[10px] px-1.5 py-0.5 rounded ${proof.status === 'complete'
+                                                        ? 'bg-gray-100 text-gray-700'
+                                                        : 'bg-gray-50 text-gray-500'
+                                                    }`}>
+                                                    {proof.status}
+                                                </span>
+                                            </div>
+                                            <p className="text-[11px] text-gray-500 mt-1">{proof.message}</p>
+
+                                            {/* Found fields */}
+                                            {proof.fields.filter(f => f.found).length > 0 && (
+                                                <div className="mt-2 flex flex-wrap gap-1.5">
+                                                    {proof.fields.filter(f => f.found).map((field, i) => (
+                                                        <span
+                                                            key={i}
+                                                            className="text-[10px] px-1.5 py-0.5 bg-gray-50 text-gray-600 border border-gray-200 rounded"
+                                                            title={field.source ? `From: ${field.source}` : undefined}
+                                                        >
+                                                            {field.name.replace(/_/g, ' ')}: {field.value}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            )}
+
+                                            {/* Action required */}
+                                            {proof.actionRequired && (
+                                                <div className="mt-2 text-[10px] text-gray-500 italic">
+                                                    {proof.actionRequired}
+                                                </div>
+                                            )}
                                         </div>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        {statusIcons[proof.status]}
-                                        <span className={`text-sm font-medium ${proof.status === 'complete' ? 'text-emerald-700' :
-                                                proof.status === 'partial' ? 'text-amber-700' :
-                                                    'text-red-600'
-                                            }`}>
-                                            {proof.status === 'complete' ? '✓' : proof.status === 'partial' ? '~' : '✗'}
-                                        </span>
                                     </div>
                                 </div>
-
-                                {/* Found fields */}
-                                {proof.fields.length > 0 && (
-                                    <div className="mt-3 flex flex-wrap gap-2">
-                                        {proof.fields.filter(f => f.found).map((field, i) => (
-                                            <Badge
-                                                key={i}
-                                                variant="outline"
-                                                className="text-xs bg-white"
-                                                title={field.source ? `From: ${field.source}` : undefined}
-                                            >
-                                                {field.name.replace(/_/g, ' ')}: {field.value}
-                                            </Badge>
-                                        ))}
-                                    </div>
-                                )}
-
-                                {/* Action required */}
-                                {proof.actionRequired && (
-                                    <div className="mt-3 p-2 bg-white rounded border border-dashed border-gray-300">
-                                        <p className="text-xs text-gray-700 flex items-start gap-2">
-                                            <Lightbulb className="h-4 w-4 text-amber-500 flex-shrink-0 mt-0.5" />
-                                            {proof.actionRequired}
-                                        </p>
-                                    </div>
-                                )}
-                            </div>
-                        ))}
+                            ))}
+                        </div>
 
                         {/* Recommendations */}
                         {checklist.recommendations.length > 0 && (
-                            <div className="pt-4 border-t border-gray-200">
-                                <h4 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
-                                    <Lightbulb className="h-4 w-4 text-amber-500" />
+                            <div className="px-4 py-3 border-t border-gray-200 bg-gray-50">
+                                <h5 className="text-[10px] text-gray-500 uppercase tracking-wide font-medium mb-2">
                                     Recommendations
-                                </h4>
-                                <ul className="space-y-2">
+                                </h5>
+                                <ul className="space-y-1.5">
                                     {checklist.recommendations.map((rec, i) => (
-                                        <li key={i} className="text-sm text-gray-700 flex items-start gap-2">
-                                            <span className="text-gray-400">•</span>
-                                            {rec}
+                                        <li key={i} className="text-xs text-gray-600 flex items-start gap-2">
+                                            <span className="text-gray-400 mt-0.5">•</span>
+                                            <span>{rec}</span>
                                         </li>
                                     ))}
                                 </ul>
@@ -297,16 +257,16 @@ export function DocumentChecklist({ claimId, compact = false }: DocumentChecklis
 
                         {/* Product identifier */}
                         {(checklist.sku || checklist.asin) && (
-                            <div className="pt-3 border-t border-gray-100 text-xs text-gray-400 text-center">
+                            <div className="px-4 py-2 border-t border-gray-100 text-[10px] text-gray-400 text-center">
                                 {checklist.asin && <span>ASIN: {checklist.asin}</span>}
                                 {checklist.sku && checklist.asin && <span> • </span>}
                                 {checklist.sku && <span>SKU: {checklist.sku}</span>}
                             </div>
                         )}
-                    </CardContent>
+                    </div>
                 </CollapsibleContent>
             </Collapsible>
-        </Card>
+        </div>
     );
 }
 
