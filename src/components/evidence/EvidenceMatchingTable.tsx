@@ -234,28 +234,28 @@ export function EvidenceMatchingTable() {
 
   const getConfidenceBadge = (score: number) => {
     if (score >= 0.85) {
-      return <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200">High ({Math.round(score * 100)}%)</Badge>;
+      return <span className="text-[10px] px-1.5 py-0.5 bg-gray-100 text-gray-700 border border-gray-300 rounded">High ({Math.round(score * 100)}%)</span>;
     } else if (score >= 0.5) {
-      return <Badge className="bg-amber-100 text-amber-800 border-amber-200">Medium ({Math.round(score * 100)}%)</Badge>;
+      return <span className="text-[10px] px-1.5 py-0.5 bg-gray-50 text-gray-600 border border-gray-200 rounded">Medium ({Math.round(score * 100)}%)</span>;
     } else {
-      return <Badge className="bg-gray-100 text-gray-800 border-gray-200">Low ({Math.round(score * 100)}%)</Badge>;
+      return <span className="text-[10px] px-1.5 py-0.5 bg-gray-50 text-gray-500 border border-gray-200 rounded">Low ({Math.round(score * 100)}%)</span>;
     }
   };
 
   const getActionBadge = (action: string) => {
     switch (action) {
       case 'auto_submit':
-        return <Badge className="bg-blue-100 text-blue-800 border-blue-200"><CheckCircle2 className="w-3 h-3 mr-1" />Auto-Submitted</Badge>;
+        return <span className="text-[10px] px-1.5 py-0.5 bg-gray-100 text-gray-700 border border-gray-300 rounded">Auto-Submitted</span>;
       case 'approved':
-        return <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200"><CheckCircle2 className="w-3 h-3 mr-1" />Approved</Badge>;
+        return <span className="text-[10px] px-1.5 py-0.5 bg-gray-100 text-gray-700 border border-gray-300 rounded">Approved</span>;
       case 'smart_prompt':
-        return <Badge className="bg-purple-100 text-purple-800 border-purple-200"><Clock className="w-3 h-3 mr-1" />Needs Review</Badge>;
+        return <span className="text-[10px] px-1.5 py-0.5 bg-gray-50 text-gray-600 border border-gray-200 rounded">Needs Review</span>;
       case 'rejected':
-        return <Badge className="bg-red-100 text-red-800 border-red-200"><XCircle className="w-3 h-3 mr-1" />Rejected</Badge>;
+        return <span className="text-[10px] px-1.5 py-0.5 bg-gray-50 text-gray-500 border border-gray-200 rounded">Rejected</span>;
       case 'no_action':
-        return <Badge className="bg-gray-100 text-gray-800 border-gray-200"><AlertCircle className="w-3 h-3 mr-1" />Held</Badge>;
+        return <span className="text-[10px] px-1.5 py-0.5 bg-gray-50 text-gray-500 border border-gray-200 rounded">Held</span>;
       default:
-        return <Badge className="bg-gray-100 text-gray-800 border-gray-200">{action}</Badge>;
+        return <span className="text-[10px] px-1.5 py-0.5 bg-gray-50 text-gray-500 border border-gray-200 rounded">{action}</span>;
     }
   };
 
@@ -330,7 +330,7 @@ export function EvidenceMatchingTable() {
                         variant="ghost"
                         onClick={() => handleApproveSmartPrompt(result.id)}
                         disabled={processingIds.has(result.id)}
-                        className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
+                        className="text-gray-600 hover:text-gray-800 hover:bg-gray-100"
                       >
                         {processingIds.has(result.id) ? (
                           <Loader2 className="w-4 h-4 animate-spin" />
@@ -343,7 +343,7 @@ export function EvidenceMatchingTable() {
                         variant="ghost"
                         onClick={() => handleRejectSmartPrompt(result.id)}
                         disabled={processingIds.has(result.id)}
-                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                        className="text-gray-500 hover:text-gray-700 hover:bg-gray-100"
                       >
                         <XCircle className="w-4 h-4" />
                       </Button>
@@ -404,7 +404,7 @@ export function EvidenceMatchingTable() {
           <p className="text-sm text-gray-600">
             {matchingResults.length} {matchingResults.length === 1 ? 'match' : 'matches'} found
             {smartPrompts.length > 0 && (
-              <span className="ml-2 text-amber-600 font-medium">
+              <span className="ml-2 text-gray-500 font-medium">
                 • {smartPrompts.length} need{smartPrompts.length === 1 ? 's' : ''} review
               </span>
             )}
@@ -414,7 +414,7 @@ export function EvidenceMatchingTable() {
           <Button
             onClick={handleRunMatching}
             disabled={refreshing}
-            className="bg-emerald-500 hover:bg-emerald-600 text-white"
+            className="bg-gray-700 hover:bg-gray-800 text-white"
           >
             {refreshing ? (
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -441,7 +441,7 @@ export function EvidenceMatchingTable() {
           >
             Needs Review
             {smartPrompts.length > 0 && (
-              <span className="ml-2 text-xs font-semibold text-amber-600">{smartPrompts.length}</span>
+              <span className="ml-2 text-xs font-semibold text-gray-500">{smartPrompts.length}</span>
             )}
           </TabsTrigger>
           <TabsTrigger
@@ -450,7 +450,7 @@ export function EvidenceMatchingTable() {
           >
             Auto-Submitted
             {autoSubmitted.length > 0 && (
-              <span className="ml-2 text-xs font-semibold text-emerald-600">{autoSubmitted.length}</span>
+              <span className="ml-2 text-xs font-semibold text-gray-500">{autoSubmitted.length}</span>
             )}
           </TabsTrigger>
           <TabsTrigger
@@ -489,13 +489,12 @@ export function EvidenceMatchingTable() {
             </Card>
           ) : (
             <div className="space-y-4">
-              <Card className="bg-amber-50 border-amber-200">
+              <Card className="bg-gray-50 border-gray-200">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-base text-amber-800 flex items-center gap-2">
-                    <AlertTriangle className="w-5 h-5" />
+                  <CardTitle className="text-base text-gray-700 flex items-center gap-2">
                     {smartPrompts.length} Match{smartPrompts.length !== 1 ? 'es' : ''} Need Your Review
                   </CardTitle>
-                  <CardDescription className="text-amber-700">
+                  <CardDescription className="text-gray-600">
                     These matches have medium confidence (50-85%) and need your approval before filing.
                   </CardDescription>
                 </CardHeader>
