@@ -31,7 +31,7 @@ const Privacy = () => {
             <section className="space-y-4">
               <h2 className="text-base font-medium text-gray-900">1. Interpretation and Definitions</h2>
               <p>
-                <strong>Company</strong> ("We", "Us", or "Our") refers to Opside (Pty) Ltd, a private company registered in South Africa.
+                <strong>Company</strong> ("We", "Us", or "Our") refers to Opside, a private company registered in South Africa.
               </p>
               <p>
                 <strong>Service</strong> refers to the Opside application accessible from https://opside.co.
@@ -142,7 +142,7 @@ const Privacy = () => {
             <section className="space-y-4">
               <h2 className="text-base font-medium text-gray-900">8. Contact Information</h2>
               <p>If you have questions about this Privacy Policy or our compliance with the Amazon DPP, contact us at:</p>
-              <p>Opside (Pty) Ltd</p>
+              <p>Opside</p>
               <p>Email: clariooai@gmail.com</p>
             </section>
           </div>
