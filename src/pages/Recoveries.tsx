@@ -2766,7 +2766,7 @@ export default function Recoveries() {
 
                 {/* File Anyway Confirmation Modal for Medium-Strength Claims */}
                 <Dialog open={fileAnywayModalOpen} onOpenChange={setFileAnywayModalOpen}>
-                  <DialogContent className="bg-white border-gray-200 text-gray-700 max-w-md">
+                  <DialogContent className="bg-white border-gray-200 text-gray-700 max-w-md max-h-[80vh] overflow-y-auto">
                     <DialogHeader className="border-b border-gray-200 pb-3">
                       <DialogTitle className="text-base font-semibold text-gray-900">
                         Claim Assessment Review
