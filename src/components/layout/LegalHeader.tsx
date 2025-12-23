@@ -11,8 +11,11 @@ const LegalHeader: React.FC = () => {
         <header className="border-b border-gray-200 bg-white">
             <div className="container mx-auto px-6 py-4">
                 <div className="flex items-center justify-between">
-                    <Link to="/" className="text-sm font-medium text-gray-900 hover:text-gray-700 transition-colors">
-                        Opside, Inc.
+                    <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                        <img src="/logoimagetwo.png" alt="Opside" className="h-8 w-auto" />
+                        <span className="text-lg font-semibold text-gray-900" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                            Opside
+                        </span>
                     </Link>
                     <nav className="flex items-center gap-6 text-sm text-gray-600">
                         <Link to="/terms" className="hover:text-gray-900 transition-colors">
