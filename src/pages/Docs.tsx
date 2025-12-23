@@ -130,7 +130,7 @@ const Docs = () => {
 
             <section className="space-y-4">
               <h2 className="text-base font-medium text-gray-900">5. Contact for AUP Violations</h2>
-              <p>Report suspected abuse: support@opside.co</p>
+              <p>Report suspected abuse: clariooai@gmail.com</p>
               <p className="text-gray-600">Internal escalation only — not for user support.</p>
             </section>
           </div>

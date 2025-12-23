@@ -143,7 +143,7 @@ const Privacy = () => {
               <h2 className="text-base font-medium text-gray-900">8. Contact Information</h2>
               <p>If you have questions about this Privacy Policy or our compliance with the Amazon DPP, contact us at:</p>
               <p>Opside (Pty) Ltd</p>
-              <p>Email: support@opside.co</p>
+              <p>Email: clariooai@gmail.com</p>
             </section>
           </div>
         </article>
