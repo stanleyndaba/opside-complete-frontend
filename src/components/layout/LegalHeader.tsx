@@ -12,8 +12,8 @@ const LegalHeader: React.FC = () => {
             <div className="container mx-auto px-6 py-4">
                 <div className="flex items-center justify-between">
                     <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                        <img src="/logoimagetwo.png" alt="Opside" className="h-8 w-auto" />
-                        <span className="text-lg font-semibold text-gray-900" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                        <img src="/logoimagetwo.png" alt="Opside" className="h-5 w-auto" />
+                        <span className="text-base font-semibold text-gray-900 font-montserrat" style={{ fontFamily: 'Montserrat, sans-serif' }}>
                             Opside
                         </span>
                     </Link>
