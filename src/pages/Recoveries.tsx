@@ -2639,16 +2639,15 @@ export default function Recoveries() {
                                 }
                               } else {
                                 toast({
-                                  title: 'Failed to Resolve',
-                                  description: res.error || 'Please try again.',
-                                  variant: 'destructive',
+                                  title: 'Unable to Resolve Right Now',
+                                  description: 'We encountered an issue marking this claim as resolved. Please try again in a moment.'
                                 });
                               }
                             } catch (e: any) {
+                              console.error('[Mark as Resolved] Error:', e);
                               toast({
-                                title: 'Error',
-                                description: e?.message || 'Failed to resolve detection.',
-                                variant: 'destructive',
+                                title: 'Unable to Resolve Right Now',
+                                description: 'We encountered an issue marking this claim as resolved. Please try again in a moment.'
                               });
                             }
                           }}
@@ -2740,16 +2739,15 @@ export default function Recoveries() {
                                 setSelectedStatus('pending');
                               } else {
                                 toast({
-                                  title: 'Failed to Update Status',
-                                  description: res.error || 'Please try again.',
-                                  variant: 'destructive',
+                                  title: 'Unable to Update Status',
+                                  description: 'We encountered an issue updating this claim. Please try again in a moment.'
                                 });
                               }
                             } catch (e: any) {
+                              console.error('[Update Status] Error:', e);
                               toast({
-                                title: 'Error',
-                                description: e?.message || 'Failed to update status.',
-                                variant: 'destructive',
+                                title: 'Unable to Update Status',
+                                description: 'We encountered an issue updating this claim. Please try again in a moment.'
                               });
                             }
                           }}
@@ -2776,8 +2774,38 @@ export default function Recoveries() {
                     </DialogHeader>
                     {claimToFile && (() => {
                       const strength = calculateClaimStrength(claimToFile);
+                      const claimAmount = claimToFile.amount || claimToFile.estimated_value || claimToFile.claim_amount || 0;
+                      const claimType = claimToFile.anomaly_type || claimToFile.type || claimToFile.claim_type || 'Unknown';
+                      const claimDate = claimToFile.discovery_date || claimToFile.created || claimToFile.created_at;
                       return (
                         <div className="space-y-4 py-4">
+                          {/* Claim Details */}
+                          <div className="border border-gray-200 rounded-lg overflow-hidden">
+                            <div className="bg-gray-50 border-b border-gray-200 px-3 py-2">
+                              <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Claim Details</h4>
+                            </div>
+                            <div className="bg-white divide-y divide-gray-100">
+                              <div className="flex justify-between items-center px-3 py-2">
+                                <span className="text-xs text-gray-600">Claim ID</span>
+                                <span className="text-xs font-medium text-gray-900">{claimToFile.id?.slice(0, 12) || 'N/A'}...</span>
+                              </div>
+                              <div className="flex justify-between items-center px-3 py-2">
+                                <span className="text-xs text-gray-600">Amount</span>
+                                <span className="text-xs font-semibold text-gray-900">${typeof claimAmount === 'number' ? claimAmount.toFixed(2) : claimAmount}</span>
+                              </div>
+                              <div className="flex justify-between items-center px-3 py-2">
+                                <span className="text-xs text-gray-600">Type</span>
+                                <span className="text-xs font-medium text-gray-900">{String(claimType).replace(/_/g, ' ')}</span>
+                              </div>
+                              {claimDate && (
+                                <div className="flex justify-between items-center px-3 py-2">
+                                  <span className="text-xs text-gray-600">Discovered</span>
+                                  <span className="text-xs font-medium text-gray-900">{new Date(claimDate).toLocaleDateString()}</span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
                           {/* Assessment Summary */}
                           <div className="border border-gray-200 rounded-lg overflow-hidden">
                             <div className="bg-gray-50 border-b border-gray-200 px-3 py-2">
@@ -2840,7 +2868,13 @@ export default function Recoveries() {
                             setFileAnywayModalOpen(false);
                             setClaimToFile(null);
                           } catch (e: any) {
-                            toast({ title: 'Filing Failed', description: e?.message || 'Please try again.', variant: 'destructive' });
+                            console.error('[File Anyway] Submit error:', e);
+                            toast({
+                              title: 'Unable to File Right Now',
+                              description: 'We encountered an issue filing this claim. Please try again in a moment or contact support if the issue persists.'
+                            });
+                            setFileAnywayModalOpen(false);
+                            setClaimToFile(null);
                           }
                         }}
                         className="bg-gray-200 hover:bg-gray-300 text-[#36454F]"
