@@ -102,7 +102,7 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
               </span>
             </div>
             <p className="order-2 text-gray-600 md:order-1">
-              © {new Date().getFullYear()} Opside AI. Built for operators who need Amazon reimbursements and visibility in real time.
+              © {new Date().getFullYear()} Opside. Built for operators. Operating from Durban, South Africa.
             </p>
           </div>
         </div>
