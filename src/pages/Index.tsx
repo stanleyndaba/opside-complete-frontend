@@ -841,37 +841,36 @@ const Index = () => {
       </div>
       <BrandFooter selectedLanguageLabel={selectedLanguage.language} />
 
-      {/* Founders Council Banner */}
-      {showBanner && (
-        <div
-          className="w-full px-4 py-4 md:px-6 md:py-5"
-          style={{
-            backgroundColor: '#1f4037',
-            fontFamily: 'Inter, sans-serif'
-          }}
-        >
-          <div className="container mx-auto max-w-6xl">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
-              <p className="font-montserrat text-white text-sm md:text-base font-light text-center md:text-left flex-1">
-                Join the exclusive group of 20 high-volume sellers stress-testing our 7-second AI Audit. Lock in a permanent 15% commission rate (vs. the standard 20% public rate) and get direct influence over the Opside roadmap.
-              </p>
-              <a
-                href="https://forms.gle/882hpRYWinNzBt2r9"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-shrink-0"
+      {/* Founders Council Banner - Fixed to bottom with slide animation */}
+      <div
+        className={`fixed bottom-0 left-0 right-0 z-50 w-full px-4 py-4 md:px-6 md:py-5 transition-transform duration-300 ease-in-out ${showBanner ? 'translate-y-0' : 'translate-y-full'
+          }`}
+        style={{
+          backgroundColor: '#1f4037',
+          fontFamily: 'Inter, sans-serif'
+        }}
+      >
+        <div className="container mx-auto max-w-6xl">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
+            <p className="font-montserrat text-white text-sm md:text-base font-light text-center md:text-left flex-1">
+              Join the exclusive group of 20 high-volume sellers stress-testing our 7-second AI Audit. Lock in a permanent 15% commission rate (vs. the standard 20% public rate) and get direct influence over the Opside roadmap.
+            </p>
+            <a
+              href="https://forms.gle/882hpRYWinNzBt2r9"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-shrink-0"
+            >
+              <Button
+                className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium px-6 py-2.5 shadow-lg transition-colors whitespace-nowrap"
+                style={{ fontFamily: 'Inter, sans-serif' }}
               >
-                <Button
-                  className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium px-6 py-2.5 shadow-lg transition-colors whitespace-nowrap"
-                  style={{ fontFamily: 'Inter, sans-serif' }}
-                >
-                  Immediate Access →
-                </Button>
-              </a>
-            </div>
+                Immediate Access →
+              </Button>
+            </a>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };
