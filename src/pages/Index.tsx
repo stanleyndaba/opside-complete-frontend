@@ -220,14 +220,14 @@ const Index = () => {
     const handleScroll = () => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
-      // Scrolling down = show banner
-      // Scrolling up = hide banner
+      // Scrolling DOWN toward footer = HIDE banner
+      // Scrolling UP toward hero/top = SHOW banner
       if (scrollTop > lastScrollTop) {
-        // Scrolling DOWN toward footer - show banner
-        setShowBanner(true);
-      } else {
-        // Scrolling UP toward top - hide banner
+        // Scrolling DOWN toward footer - hide banner
         setShowBanner(false);
+      } else {
+        // Scrolling UP toward top - show banner
+        setShowBanner(true);
       }
 
       lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
