@@ -36,29 +36,44 @@ export const recoveryApi = {
       if (detectionResponse.ok && detectionResponse.data?.results) {
         const detectionClaims = detectionResponse.data.results
           .filter((d: any) => d.status !== 'filed' && d.status !== 'resolved') // Only include unfiled detections
-          .map((d: any) => ({
-            id: d.id,
-            claim_number: `DET-${d.id.slice(0, 8).toUpperCase()}`,
-            status: d.status || 'detected',
-            type: d.anomaly_type,
-            anomaly_type: d.anomaly_type,
-            details: d.evidence?.summary || `${d.anomaly_type} detected`,
-            amount: d.estimated_value || 0,
-            guaranteedAmount: d.estimated_value || 0,
-            estimated_value: d.estimated_value,
-            sku: d.sku || d.evidence?.sku,
-            asin: d.asin || d.evidence?.asin,
-            confidence_score: d.confidence_score,
-            discovery_date: d.discovery_date,
-            created_at: d.created_at || d.discovery_date,
-            deadline_date: d.deadline_date,
-            days_remaining: d.days_remaining,
-            severity: d.severity,
-            currency: d.currency || 'USD',
-            // Flag to distinguish from filed claims
-            isDetection: true,
-            source: 'agent3_detection'
-          }));
+          .map((d: any) => {
+            // Extract evidence data for validateEvidencePolicy
+            const ev = d.evidence || {};
+
+            return {
+              id: d.id,
+              claim_number: `DET-${d.id.slice(0, 8).toUpperCase()}`,
+              status: d.status || 'detected',
+              type: d.anomaly_type,
+              anomaly_type: d.anomaly_type,
+              details: ev.summary || ev.description || `${d.anomaly_type} detected`,
+              amount: d.estimated_value || 0,
+              guaranteedAmount: d.estimated_value || 0,
+              estimated_value: d.estimated_value,
+              // Extract all evidence fields for validateEvidencePolicy
+              sku: d.sku || ev.sku || ev.seller_sku,
+              asin: d.asin || ev.asin,
+              fnsku: ev.fnsku,
+              quantity: ev.quantity || ev.missing_quantity || ev.qty,
+              shipment_id: ev.shipment_id || ev.reference_id,
+              order_id: ev.order_id,
+              tracking_number: ev.tracking_number,
+              fulfillment_center_id: ev.fulfillment_center_id || ev.fc_id,
+              // Dates and metadata
+              confidence_score: d.confidence_score,
+              discovery_date: d.discovery_date,
+              created_at: d.created_at || d.discovery_date,
+              deadline_date: d.deadline_date,
+              days_remaining: d.days_remaining,
+              severity: d.severity,
+              currency: d.currency || 'USD',
+              // Store raw evidence for detailed views
+              evidence: ev,
+              // Flag to distinguish from filed claims
+              isDetection: true,
+              source: 'agent3_detection'
+            };
+          });
 
         // Merge detection results with existing recoveries
         // Avoid duplicates by checking IDs
