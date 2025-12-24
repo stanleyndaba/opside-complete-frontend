@@ -2,30 +2,77 @@ import { api } from './api';
 
 export const recoveryApi = {
   getRecoveries: async () => {
-    // Try new upcoming-payments endpoint first (gets real data from dispute_cases)
+    let recoveries: any[] = [];
+
+    // 1. Try new upcoming-payments endpoint first (gets real data from dispute_cases)
     try {
       const upcomingResponse = await api.get('/api/v1/integrations/amazon/upcoming-payments');
       if (upcomingResponse.ok && upcomingResponse.data?.recoveries) {
-        return upcomingResponse.data.recoveries;
+        recoveries = upcomingResponse.data.recoveries;
       }
     } catch (e) {
-      console.warn('Upcoming payments endpoint failed, falling back to recoveries:', e);
+      console.warn('Upcoming payments endpoint failed:', e);
     }
-    
-    // Fallback to old endpoint
-    const response = await api.get('/api/recoveries');
-    if (!response.ok) {
-      const err: any = new Error(response.error || 'Failed to fetch recoveries');
-      err.status = response.status;
-      throw err;
+
+    // 2. If no upcoming-payments, try fallback to old endpoint
+    if (recoveries.length === 0) {
+      try {
+        const response = await api.get('/api/recoveries');
+        if (response.ok) {
+          if (Array.isArray(response.data)) {
+            recoveries = response.data;
+          } else if (response.data?.recoveries) {
+            recoveries = response.data.recoveries;
+          }
+        }
+      } catch (e) {
+        console.warn('Fallback recoveries endpoint failed:', e);
+      }
     }
-    // Handle both old format (direct array) and new format (with recoveries array)
-    if (Array.isArray(response.data)) {
-      return response.data;
-    } else if (response.data?.recoveries) {
-      return response.data.recoveries;
+
+    // 3. ALSO fetch detection results from Agent 3 (unfiled claims/anomalies)
+    try {
+      const detectionResponse = await api.get('/api/v1/integrations/detections/results');
+      if (detectionResponse.ok && detectionResponse.data?.results) {
+        const detectionClaims = detectionResponse.data.results
+          .filter((d: any) => d.status !== 'filed' && d.status !== 'resolved') // Only include unfiled detections
+          .map((d: any) => ({
+            id: d.id,
+            claim_number: `DET-${d.id.slice(0, 8).toUpperCase()}`,
+            status: d.status || 'detected',
+            type: d.anomaly_type,
+            anomaly_type: d.anomaly_type,
+            details: d.evidence?.summary || `${d.anomaly_type} detected`,
+            amount: d.estimated_value || 0,
+            guaranteedAmount: d.estimated_value || 0,
+            estimated_value: d.estimated_value,
+            sku: d.sku || d.evidence?.sku,
+            asin: d.asin || d.evidence?.asin,
+            confidence_score: d.confidence_score,
+            discovery_date: d.discovery_date,
+            created_at: d.created_at || d.discovery_date,
+            deadline_date: d.deadline_date,
+            days_remaining: d.days_remaining,
+            severity: d.severity,
+            currency: d.currency || 'USD',
+            // Flag to distinguish from filed claims
+            isDetection: true,
+            source: 'agent3_detection'
+          }));
+
+        // Merge detection results with existing recoveries
+        // Avoid duplicates by checking IDs
+        const existingIds = new Set(recoveries.map(r => r.id));
+        const newDetections = detectionClaims.filter((d: any) => !existingIds.has(d.id));
+        recoveries = [...recoveries, ...newDetections];
+
+        console.log(`[RecoveryAPI] Merged ${newDetections.length} detection results with recoveries`);
+      }
+    } catch (e) {
+      console.warn('Detection results fetch failed (Agent 3 may not have run yet):', e);
     }
-    return [];
+
+    return recoveries;
   },
 
   getRecoveryMetrics: async () => {
