@@ -211,41 +211,33 @@ const Index = () => {
     } catch { }
   }, [selectedLanguageCode]);
 
-  // Scroll detection for banner visibility
-  // Banner HIDES when scrolling DOWN (towards footer)
-  // Banner SHOWS when scrolling UP (towards top)
+  // Scroll detection for banner visibility using ref for persistence
+  const lastScrollYRef = React.useRef(0);
+
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    let lastScrollY = window.scrollY;
-    let ticking = false;
+    // Initialize with current scroll position
+    lastScrollYRef.current = window.scrollY;
 
-    const updateBanner = () => {
+    const handleScroll = () => {
       const currentScrollY = window.scrollY;
+      const lastScrollY = lastScrollYRef.current;
 
-      if (currentScrollY > lastScrollY + 10) {
-        // Scrolling down - hide banner
+      // Scrolling DOWN (towards footer) - hide banner
+      if (currentScrollY > lastScrollY + 15) {
         setShowBanner(false);
-        lastScrollY = currentScrollY;
-      } else if (currentScrollY < lastScrollY - 10) {
-        // Scrolling up - show banner
+        lastScrollYRef.current = currentScrollY;
+      }
+      // Scrolling UP (towards top) - show banner
+      else if (currentScrollY < lastScrollY - 15) {
         setShowBanner(true);
-        lastScrollY = currentScrollY;
-      }
-
-      ticking = false;
-    };
-
-    const onScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(updateBanner);
-        ticking = true;
+        lastScrollYRef.current = currentScrollY;
       }
     };
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {
