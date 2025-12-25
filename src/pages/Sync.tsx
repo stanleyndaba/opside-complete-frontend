@@ -1393,15 +1393,15 @@ export default function Sync() {
                   )}
                 </div>
 
-                {/* Search Bar */}
+                {/* Search Bar - Clean minimal design */}
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
                   <Input
                     type="text"
-                    placeholder="Search your Logs... (inventory, shipments, orders, etc.)"
+                    placeholder="Search sync history (e.g. 'Inventory', 'Errors')..."
                     value={logSearch}
                     onChange={(e) => setLogSearch(e.target.value)}
-                    className="pl-10 h-9 text-sm bg-gray-50 border-gray-200 focus:bg-white"
+                    className="pl-10 h-9 text-sm bg-slate-50 border-slate-200 focus:bg-white focus:border-slate-300 rounded-lg placeholder:text-slate-400"
                   />
                 </div>
 
