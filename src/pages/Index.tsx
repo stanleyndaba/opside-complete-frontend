@@ -219,24 +219,29 @@ const Index = () => {
 
     // Initialize with current scroll position
     lastScrollYRef.current = window.scrollY;
+    console.log('[BANNER] Init, scrollY:', window.scrollY);
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       const lastScrollY = lastScrollYRef.current;
+      const diff = currentScrollY - lastScrollY;
 
       // Scrolling DOWN (towards footer) - hide banner
-      if (currentScrollY > lastScrollY + 15) {
+      if (diff > 15) {
+        console.log('[BANNER] DOWN - hide, diff:', diff);
         setShowBanner(false);
         lastScrollYRef.current = currentScrollY;
       }
       // Scrolling UP (towards top) - show banner
-      else if (currentScrollY < lastScrollY - 15) {
+      else if (diff < -15) {
+        console.log('[BANNER] UP - show, diff:', diff);
         setShowBanner(true);
         lastScrollYRef.current = currentScrollY;
       }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    console.log('[BANNER] Scroll listener attached');
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
