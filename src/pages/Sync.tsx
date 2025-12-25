@@ -1405,11 +1405,11 @@ export default function Sync() {
                   />
                 </div>
 
-                {/* Log Container - Clean White Theme */}
+                {/* Log Container - Premium Dark Theme for "Lucrative Security" feel */}
                 <div className="relative group">
-                  {/* Glass header effect - dark theme */}
-                  <div className="absolute top-0 left-0 right-0 h-7 bg-[#252525] backdrop-blur-sm rounded-t-lg border-b border-gray-700 flex items-center px-3 justify-between z-10">
-                    <span className="text-[10px] font-semibold text-gray-300 uppercase tracking-wide">Agent Activity</span>
+                  {/* Glass header effect - premium dark slate */}
+                  <div className="absolute top-0 left-0 right-0 h-7 bg-[#1E293B] backdrop-blur-sm rounded-t-lg border-b border-slate-600/50 flex items-center px-3 justify-between z-10">
+                    <span className="text-[10px] font-semibold text-slate-300 uppercase tracking-wide">Agent Activity</span>
                     <div className="flex items-center gap-2">
                       {status === 'running' || status === 'detecting' ? (
                         <div className="flex items-center gap-1.5 bg-emerald-100 px-2 py-0.5 rounded-full border border-emerald-200">
@@ -1427,10 +1427,10 @@ export default function Sync() {
 
                   <div
                     ref={logContainerRef}
-                    className="bg-[#1a1a1a] rounded-lg pt-9 pb-3 px-3 font-mono text-[10px] h-80 overflow-y-auto scroll-smooth border border-gray-700 shadow-lg relative"
+                    className="bg-[#0F172A] rounded-lg pt-9 pb-3 px-3 font-mono text-[10px] h-80 overflow-y-auto scroll-smooth border border-slate-700/50 shadow-xl relative"
                   >
-                    {/* Grid background effect - dark theme */}
-                    <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none"></div>
+                    {/* Grid background effect - subtle 5% opacity for premium feel */}
+                    <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none"></div>
 
                     {filteredLogs.length === 0 ? (
                       <div className="text-gray-400 flex flex-col items-center justify-center h-full relative z-10">
@@ -1483,7 +1483,7 @@ export default function Sync() {
                               {/* Story Header - Clickable */}
                               <button
                                 onClick={() => toggleStory(story.id)}
-                                className="w-full text-left flex items-center gap-2 py-1.5 px-2 rounded hover:bg-gray-800/50 transition-colors group"
+                                className="w-full text-left flex items-center gap-2 py-1.5 px-2 rounded hover:bg-slate-800/50 transition-colors group"
                               >
                                 {/* Expand/Collapse Icon */}
                                 <span className="text-gray-500 group-hover:text-gray-300 transition-colors">
