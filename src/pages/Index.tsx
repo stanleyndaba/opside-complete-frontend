@@ -221,17 +221,18 @@ const Index = () => {
     console.log('[BANNER] useEffect started');
 
     try {
-      if (typeof window === 'undefined') {
-        console.log('[BANNER] window undefined, returning');
+      if (typeof document === 'undefined') {
+        console.log('[BANNER] document undefined, returning');
         return;
       }
 
       // Initialize with current scroll position
-      lastScrollYRef.current = window.scrollY;
-      console.log('[BANNER] Init, scrollY:', window.scrollY);
+      const getScrollTop = () => window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+      lastScrollYRef.current = getScrollTop();
+      console.log('[BANNER] Init, scrollY:', lastScrollYRef.current);
 
       const handleScroll = () => {
-        const currentScrollY = window.scrollY;
+        const currentScrollY = getScrollTop();
         const lastScrollY = lastScrollYRef.current;
         const diff = currentScrollY - lastScrollY;
 
@@ -252,11 +253,14 @@ const Index = () => {
         }
       };
 
+      // Try attaching to multiple targets
+      document.addEventListener('scroll', handleScroll, { passive: true, capture: true });
       window.addEventListener('scroll', handleScroll, { passive: true });
-      console.log('[BANNER] Scroll listener attached');
+      console.log('[BANNER] Scroll listeners attached to window AND document');
 
       return () => {
-        console.log('[BANNER] Cleanup - removing listener');
+        console.log('[BANNER] Cleanup - removing listeners');
+        document.removeEventListener('scroll', handleScroll, { capture: true });
         window.removeEventListener('scroll', handleScroll);
       };
     } catch (err) {
