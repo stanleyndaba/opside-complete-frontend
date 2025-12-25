@@ -215,6 +215,7 @@ const Index = () => {
   // Banner hides when scrolling down (towards footer)
   // Banner shows when scrolling up (towards top)
   const lastScrollYRef = React.useRef(0);
+  const tickingRef = React.useRef(false);
 
   useEffect(() => {
     if (typeof document === 'undefined') return;
@@ -222,26 +223,39 @@ const Index = () => {
     const getScrollTop = () => window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
     lastScrollYRef.current = getScrollTop();
 
-    const handleScroll = () => {
+    const updateBanner = () => {
       const currentScrollY = getScrollTop();
       const lastScrollY = lastScrollYRef.current;
       const diff = currentScrollY - lastScrollY;
 
-      if (diff > 15) {
+      // Lower threshold for mobile touch scrolling
+      if (diff > 8) {
         setShowBanner(false);
         lastScrollYRef.current = currentScrollY;
-      } else if (diff < -15) {
+      } else if (diff < -8) {
         setShowBanner(true);
         lastScrollYRef.current = currentScrollY;
       }
+      tickingRef.current = false;
     };
 
+    const handleScroll = () => {
+      if (!tickingRef.current) {
+        tickingRef.current = true;
+        requestAnimationFrame(updateBanner);
+      }
+    };
+
+    // Listen on multiple targets for maximum compatibility
     document.addEventListener('scroll', handleScroll, { passive: true, capture: true });
     window.addEventListener('scroll', handleScroll, { passive: true });
+    // Touch events for mobile
+    document.addEventListener('touchmove', handleScroll, { passive: true });
 
     return () => {
       document.removeEventListener('scroll', handleScroll, { capture: true });
       window.removeEventListener('scroll', handleScroll);
+      document.removeEventListener('touchmove', handleScroll);
     };
   }, []);
 
@@ -850,7 +864,7 @@ const Index = () => {
 
       {/* Founders Council Banner - Fixed to bottom with slide animation */}
       <div
-        className={`fixed bottom-0 left-0 right-0 z-50 w-full px-4 py-4 md:px-6 md:py-5 transition-transform duration-300 ease-in-out ${showBanner ? 'translate-y-0' : 'translate-y-full'
+        className={`fixed bottom-0 left-0 right-0 z-50 w-full px-3 py-2.5 md:px-6 md:py-5 transition-transform duration-300 ease-in-out ${showBanner ? 'translate-y-0' : 'translate-y-full'
           }`}
         style={{
           backgroundColor: '#1f4037',
@@ -858,9 +872,9 @@ const Index = () => {
         }}
       >
         <div className="container mx-auto max-w-6xl">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
-            <p className="font-montserrat text-white text-sm md:text-base font-light text-center md:text-left flex-1">
-              Join the exclusive group of 20 high-volume sellers stress-testing our 7-second AI Audit. Lock in a permanent 15% commission rate (vs. the standard 20% public rate) and get direct influence over the Opside roadmap.
+          <div className="flex flex-col md:flex-row items-center justify-between gap-2 md:gap-6">
+            <p className="font-montserrat text-white text-xs md:text-base font-light text-center md:text-left flex-1">
+              Join the exclusive group of 20 high-volume sellers stress-testing our 7-second AI Audit. Lock in a permanent 15% commission rate (vs. 20% public rate).
             </p>
             <a
               href="https://forms.gle/882hpRYWinNzBt2r9"
@@ -869,7 +883,7 @@ const Index = () => {
               className="flex-shrink-0"
             >
               <Button
-                className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium px-6 py-2.5 shadow-lg transition-colors whitespace-nowrap"
+                className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium px-4 py-2 md:px-6 md:py-2.5 text-sm md:text-base shadow-lg transition-colors whitespace-nowrap"
                 style={{ fontFamily: 'Inter, sans-serif' }}
               >
                 Immediate Access →
