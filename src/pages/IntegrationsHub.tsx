@@ -445,7 +445,7 @@ export default function IntegrationsHub() {
                                       Connecting…
                                     </>
                                   ) : (
-                                    connected ? 'Reconnect' : 'Connect'
+                                    connected ? 'Sync Now' : 'Connect'
                                   )}
                                 </Button>
                                 {connected && (
@@ -568,7 +568,7 @@ export default function IntegrationsHub() {
                                     Connecting…
                                   </>
                                 ) : (
-                                  connected ? 'Reconnect' : 'Connect'
+                                  connected ? 'Sync Now' : 'Connect'
                                 )}
                               </Button>
                               {connected && (
