@@ -2141,11 +2141,21 @@ export default function Recoveries() {
                           </Popover>
 
                           {/* Claim Type Filter */}
-                          <Select>
+                          <Select
+                            value={selectedClaimTypes.length > 0 ? selectedClaimTypes[0] : 'all'}
+                            onValueChange={(value) => {
+                              if (value === 'all') {
+                                setSelectedClaimTypes([]);
+                              } else {
+                                setSelectedClaimTypes([value]);
+                              }
+                            }}
+                          >
                             <SelectTrigger className="w-auto min-w-[140px] bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs h-8">
                               <SelectValue placeholder="Filter by Claim Type" />
                             </SelectTrigger>
                             <SelectContent>
+                              <SelectItem value="all">All Claim Types</SelectItem>
                               {claimTypes.map(type => (
                                 <SelectItem key={type} value={type}>{type}</SelectItem>
                               ))}
@@ -2153,11 +2163,21 @@ export default function Recoveries() {
                           </Select>
 
                           {/* Status Filter */}
-                          <Select>
+                          <Select
+                            value={selectedStatuses.length > 0 ? selectedStatuses[0] : 'all'}
+                            onValueChange={(value) => {
+                              if (value === 'all') {
+                                setSelectedStatuses([]);
+                              } else {
+                                setSelectedStatuses([value]);
+                              }
+                            }}
+                          >
                             <SelectTrigger className="w-auto min-w-[140px] bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs h-8">
                               <SelectValue placeholder="Filter by Status" />
                             </SelectTrigger>
                             <SelectContent>
+                              <SelectItem value="all">All Statuses</SelectItem>
                               {statusOptions.map(status => (
                                 <SelectItem key={status} value={status}>{status}</SelectItem>
                               ))}
