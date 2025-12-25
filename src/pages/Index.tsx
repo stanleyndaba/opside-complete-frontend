@@ -40,9 +40,6 @@ const Index = () => {
   const [signingIn, setSigningIn] = useState(false);
   const [showBanner, setShowBanner] = useState(true);
 
-  // DEBUG: Check if component renders
-  console.log('[INDEX] Component rendering, showBanner:', showBanner);
-
   const [selectedLanguageCode, setSelectedLanguageCode] = useState<string>(() =>
     typeof window !== 'undefined' ? localStorage.getItem('Opside.langPreference') || 'en' : 'en'
   );
@@ -214,58 +211,38 @@ const Index = () => {
     } catch { }
   }, [selectedLanguageCode]);
 
-  // Scroll detection for banner visibility using ref for persistence
+  // Scroll detection for banner visibility
+  // Banner hides when scrolling down (towards footer)
+  // Banner shows when scrolling up (towards top)
   const lastScrollYRef = React.useRef(0);
 
   useEffect(() => {
-    console.log('[BANNER] useEffect started');
+    if (typeof document === 'undefined') return;
 
-    try {
-      if (typeof document === 'undefined') {
-        console.log('[BANNER] document undefined, returning');
-        return;
+    const getScrollTop = () => window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    lastScrollYRef.current = getScrollTop();
+
+    const handleScroll = () => {
+      const currentScrollY = getScrollTop();
+      const lastScrollY = lastScrollYRef.current;
+      const diff = currentScrollY - lastScrollY;
+
+      if (diff > 15) {
+        setShowBanner(false);
+        lastScrollYRef.current = currentScrollY;
+      } else if (diff < -15) {
+        setShowBanner(true);
+        lastScrollYRef.current = currentScrollY;
       }
+    };
 
-      // Initialize with current scroll position
-      const getScrollTop = () => window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-      lastScrollYRef.current = getScrollTop();
-      console.log('[BANNER] Init, scrollY:', lastScrollYRef.current);
+    document.addEventListener('scroll', handleScroll, { passive: true, capture: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
-      const handleScroll = () => {
-        const currentScrollY = getScrollTop();
-        const lastScrollY = lastScrollYRef.current;
-        const diff = currentScrollY - lastScrollY;
-
-        // Log every scroll event to verify they're firing
-        console.log('[BANNER] Scroll event! Y:', currentScrollY, 'diff:', diff);
-
-        // Scrolling DOWN (towards footer) - hide banner
-        if (diff > 15) {
-          console.log('[BANNER] DOWN - hide, diff:', diff);
-          setShowBanner(false);
-          lastScrollYRef.current = currentScrollY;
-        }
-        // Scrolling UP (towards top) - show banner
-        else if (diff < -15) {
-          console.log('[BANNER] UP - show, diff:', diff);
-          setShowBanner(true);
-          lastScrollYRef.current = currentScrollY;
-        }
-      };
-
-      // Try attaching to multiple targets
-      document.addEventListener('scroll', handleScroll, { passive: true, capture: true });
-      window.addEventListener('scroll', handleScroll, { passive: true });
-      console.log('[BANNER] Scroll listeners attached to window AND document');
-
-      return () => {
-        console.log('[BANNER] Cleanup - removing listeners');
-        document.removeEventListener('scroll', handleScroll, { capture: true });
-        window.removeEventListener('scroll', handleScroll);
-      };
-    } catch (err) {
-      console.error('[BANNER] Error in useEffect:', err);
-    }
+    return () => {
+      document.removeEventListener('scroll', handleScroll, { capture: true });
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   useEffect(() => {
