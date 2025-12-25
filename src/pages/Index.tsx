@@ -40,6 +40,9 @@ const Index = () => {
   const [signingIn, setSigningIn] = useState(false);
   const [showBanner, setShowBanner] = useState(true);
 
+  // DEBUG: Check if component renders
+  console.log('[INDEX] Component rendering, showBanner:', showBanner);
+
   const [selectedLanguageCode, setSelectedLanguageCode] = useState<string>(() =>
     typeof window !== 'undefined' ? localStorage.getItem('Opside.langPreference') || 'en' : 'en'
   );
