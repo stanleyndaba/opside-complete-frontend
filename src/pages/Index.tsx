@@ -212,33 +212,40 @@ const Index = () => {
   }, [selectedLanguageCode]);
 
   // Scroll detection for banner visibility
-  // Banner HIDES when scrolling towards footer (finger swipes up)
-  // Banner SHOWS when scrolling towards top (finger swipes down)
+  // Banner HIDES when scrolling DOWN (towards footer)
+  // Banner SHOWS when scrolling UP (towards top)
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    let lastScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    let lastScrollY = window.scrollY;
+    let ticking = false;
 
-    const handleScroll = () => {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      const scrollDiff = scrollTop - lastScrollTop;
+    const updateBanner = () => {
+      const currentScrollY = window.scrollY;
 
-      // scrollDiff > 0 = scrollTop increased = scrolling towards footer = HIDE banner
-      // scrollDiff < 0 = scrollTop decreased = scrolling towards top = SHOW banner
-      if (scrollDiff > 5) {
-        // Scrolling towards footer - hide banner
+      if (currentScrollY > lastScrollY + 10) {
+        // Scrolling down - hide banner
         setShowBanner(false);
-      } else if (scrollDiff < -5) {
-        // Scrolling towards top - show banner
+        lastScrollY = currentScrollY;
+      } else if (currentScrollY < lastScrollY - 10) {
+        // Scrolling up - show banner
         setShowBanner(true);
+        lastScrollY = currentScrollY;
       }
 
-      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+      ticking = false;
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateBanner);
+        ticking = true;
+      }
+    };
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   useEffect(() => {
