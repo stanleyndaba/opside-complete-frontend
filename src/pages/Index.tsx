@@ -218,34 +218,47 @@ const Index = () => {
   const lastScrollYRef = React.useRef(0);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    console.log('[BANNER] useEffect started');
 
-    // Initialize with current scroll position
-    lastScrollYRef.current = window.scrollY;
-    console.log('[BANNER] Init, scrollY:', window.scrollY);
-
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      const lastScrollY = lastScrollYRef.current;
-      const diff = currentScrollY - lastScrollY;
-
-      // Scrolling DOWN (towards footer) - hide banner
-      if (diff > 15) {
-        console.log('[BANNER] DOWN - hide, diff:', diff);
-        setShowBanner(false);
-        lastScrollYRef.current = currentScrollY;
+    try {
+      if (typeof window === 'undefined') {
+        console.log('[BANNER] window undefined, returning');
+        return;
       }
-      // Scrolling UP (towards top) - show banner
-      else if (diff < -15) {
-        console.log('[BANNER] UP - show, diff:', diff);
-        setShowBanner(true);
-        lastScrollYRef.current = currentScrollY;
-      }
-    };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    console.log('[BANNER] Scroll listener attached');
-    return () => window.removeEventListener('scroll', handleScroll);
+      // Initialize with current scroll position
+      lastScrollYRef.current = window.scrollY;
+      console.log('[BANNER] Init, scrollY:', window.scrollY);
+
+      const handleScroll = () => {
+        const currentScrollY = window.scrollY;
+        const lastScrollY = lastScrollYRef.current;
+        const diff = currentScrollY - lastScrollY;
+
+        // Scrolling DOWN (towards footer) - hide banner
+        if (diff > 15) {
+          console.log('[BANNER] DOWN - hide, diff:', diff);
+          setShowBanner(false);
+          lastScrollYRef.current = currentScrollY;
+        }
+        // Scrolling UP (towards top) - show banner
+        else if (diff < -15) {
+          console.log('[BANNER] UP - show, diff:', diff);
+          setShowBanner(true);
+          lastScrollYRef.current = currentScrollY;
+        }
+      };
+
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      console.log('[BANNER] Scroll listener attached');
+
+      return () => {
+        console.log('[BANNER] Cleanup - removing listener');
+        window.removeEventListener('scroll', handleScroll);
+      };
+    } catch (err) {
+      console.error('[BANNER] Error in useEffect:', err);
+    }
   }, []);
 
   useEffect(() => {
