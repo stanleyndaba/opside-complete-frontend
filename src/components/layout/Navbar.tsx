@@ -420,10 +420,38 @@ export function Navbar({
             </div>
 
             <Button
-              onClick={() => {
-                // TODO: Implement send invite functionality
-                setShowInviteForm(false);
-                setInviteEmail('');
+              onClick={async () => {
+                if (!inviteEmail || !inviteEmail.includes('@')) {
+                  alert('Please enter a valid email address');
+                  return;
+                }
+
+                try {
+                  const response = await fetch(`${window.location.origin.includes('localhost') ? 'http://localhost:3001' : 'https://opside-node-api-woco.onrender.com'}/api/invites/send`, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'x-user-id': 'demo-user'
+                    },
+                    body: JSON.stringify({
+                      email: inviteEmail,
+                      message: `You've been invited to join Opside! Use this link to get started: ${referralLink}`
+                    })
+                  });
+
+                  const result = await response.json();
+
+                  if (result.success) {
+                    alert(`Invitation sent to ${inviteEmail}!`);
+                    setShowInviteForm(false);
+                    setInviteEmail('');
+                  } else {
+                    alert(`Failed to send invite: ${result.error || 'Unknown error'}`);
+                  }
+                } catch (error: any) {
+                  console.error('Error sending invite:', error);
+                  alert('Failed to send invite. Please try again.');
+                }
               }}
               className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-md transition-colors"
             >
