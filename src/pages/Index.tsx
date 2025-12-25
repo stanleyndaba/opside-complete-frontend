@@ -235,6 +235,9 @@ const Index = () => {
         const lastScrollY = lastScrollYRef.current;
         const diff = currentScrollY - lastScrollY;
 
+        // Log every scroll event to verify they're firing
+        console.log('[BANNER] Scroll event! Y:', currentScrollY, 'diff:', diff);
+
         // Scrolling DOWN (towards footer) - hide banner
         if (diff > 15) {
           console.log('[BANNER] DOWN - hide, diff:', diff);
