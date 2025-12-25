@@ -212,26 +212,24 @@ const Index = () => {
   }, [selectedLanguageCode]);
 
   // Scroll detection for banner visibility
+  // Banner HIDES when scrolling towards footer (finger swipes up)
+  // Banner SHOWS when scrolling towards top (finger swipes down)
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
     let lastScrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const threshold = 10; // Minimum scroll amount to trigger change
 
     const handleScroll = () => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       const scrollDiff = scrollTop - lastScrollTop;
 
-      // Only trigger if scroll is significant (prevents jitter)
-      if (Math.abs(scrollDiff) < threshold) return;
-
-      // User pushes screen UP (scrolling towards footer/bottom) = HIDE banner
-      // User pulls screen DOWN (scrolling towards hero/top) = SHOW banner
-      if (scrollDiff > 0) {
-        // Scrolling DOWN (towards footer) - hide banner
+      // scrollDiff > 0 = scrollTop increased = scrolling towards footer = HIDE banner
+      // scrollDiff < 0 = scrollTop decreased = scrolling towards top = SHOW banner
+      if (scrollDiff > 5) {
+        // Scrolling towards footer - hide banner
         setShowBanner(false);
-      } else {
-        // Scrolling UP (towards hero/top) - show banner
+      } else if (scrollDiff < -5) {
+        // Scrolling towards top - show banner
         setShowBanner(true);
       }
 
