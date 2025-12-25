@@ -685,10 +685,10 @@ const Index = () => {
               <div className="space-y-2 md:w-2/3">
                 <Accordion type="single" collapsible className="space-y-2">
                   <AccordionItem value="safety" className="border-b border-gray-200 py-4">
-                    <AccordionTrigger className="text-left text-lg font-semibold text-gray-900 hover:no-underline">
+                    <AccordionTrigger className="font-montserrat text-left text-lg font-semibold text-gray-900 hover:no-underline">
                       Is this safe? Will linking my account get me suspended by Amazon?
                     </AccordionTrigger>
-                    <AccordionContent className="pt-3 text-sm text-gray-600 space-y-3">
+                    <AccordionContent className="font-montserrat pt-3 text-sm text-gray-600 space-y-3">
                       <p>
                         This is our most important question. Yes, it is 100% safe. We are an officially-verified Amazon developer using the secure Selling Partner API (SP-API).
                       </p>
@@ -698,10 +698,10 @@ const Index = () => {
                     </AccordionContent>
                   </AccordionItem>
                   <AccordionItem value="data" className="border-b border-gray-200 py-4">
-                    <AccordionTrigger className="text-left text-lg font-semibold text-gray-900 hover:no-underline">
+                    <AccordionTrigger className="font-montserrat text-left text-lg font-semibold text-gray-900 hover:no-underline">
                       What data do you access? Do you look at my customer info or sales?
                     </AccordionTrigger>
-                    <AccordionContent className="pt-3 text-sm text-gray-600 space-y-3">
+                    <AccordionContent className="font-montserrat pt-3 text-sm text-gray-600 space-y-3">
                       <p>
                         We never look at your customer&apos;s personal information (PII). Our access is limited only to the data required for reimbursements: inventory reports, shipment details, and transaction history.
                       </p>
@@ -711,20 +711,20 @@ const Index = () => {
                     </AccordionContent>
                   </AccordionItem>
                   <AccordionItem value="cost" className="border-b border-gray-200 py-4">
-                    <AccordionTrigger className="text-left text-lg font-semibold text-gray-900 hover:no-underline">
+                    <AccordionTrigger className="font-montserrat text-left text-lg font-semibold text-gray-900 hover:no-underline">
                       How much does Opside cost?
                     </AccordionTrigger>
-                    <AccordionContent className="pt-3 text-sm text-gray-600 space-y-3">
+                    <AccordionContent className="font-montserrat pt-3 text-sm text-gray-600 space-y-3">
                       <p>
                         It&apos;s simple: We take a 20% commission on successfully recovered funds. There are no monthly fees, no setup fees, and no hidden costs. If you don&apos;t get paid, we don&apos;t get paid.
                       </p>
                     </AccordionContent>
                   </AccordionItem>
                   <AccordionItem value="comparison" className="border-b border-gray-200 py-4">
-                    <AccordionTrigger className="text-left text-lg font-semibold text-gray-900 hover:no-underline">
+                    <AccordionTrigger className="font-montserrat text-left text-lg font-semibold text-gray-900 hover:no-underline">
                       How is this different from GETIDA, Sellerise, or Helium 10?
                     </AccordionTrigger>
-                    <AccordionContent className="pt-3 text-sm text-gray-600 space-y-3">
+                    <AccordionContent className="font-montserrat pt-3 text-sm text-gray-600 space-y-3">
                       <p>
                         Those tools are dashboards or agencies. They identify problems, but you or their auditors still have to gather evidence and build the case. Opside is an autonomous AI agent.
                       </p>
@@ -746,10 +746,10 @@ const Index = () => {
                 {showMoreFAQs && (
                   <Accordion type="single" collapsible className="space-y-2 mt-2">
                     <AccordionItem value="roi" className="border-b border-gray-200 py-4">
-                      <AccordionTrigger className="text-left text-lg font-semibold text-gray-900 hover:no-underline">
+                      <AccordionTrigger className="font-montserrat text-left text-lg font-semibold text-gray-900 hover:no-underline">
                         How much money will I actually get back?
                       </AccordionTrigger>
-                      <AccordionContent className="pt-3 text-sm text-gray-600 space-y-3">
+                      <AccordionContent className="font-montserrat pt-3 text-sm text-gray-600 space-y-3">
                         <p>
                           On average, FBA sellers lose 1–3% of annual revenue to “small” errors. For a seller doing $1M a year, that&apos;s $10,000 to $30,000 in lost profit.
                         </p>
@@ -759,10 +759,10 @@ const Index = () => {
                       </AccordionContent>
                     </AccordionItem>
                     <AccordionItem value="onboarding" className="border-b border-gray-200 py-4">
-                      <AccordionTrigger className="text-left text-lg font-semibold text-gray-900 hover:no-underline">
+                      <AccordionTrigger className="font-montserrat text-left text-lg font-semibold text-gray-900 hover:no-underline">
                         What do I have to do to get started?
                       </AccordionTrigger>
-                      <AccordionContent className="pt-3 text-sm text-gray-600 space-y-3">
+                      <AccordionContent className="font-montserrat pt-3 text-sm text-gray-600 space-y-3">
                         <p>It takes about two minutes:</p>
                         <ul className="list-disc space-y-2 pl-5 text-gray-600">
                           <li>Sign up for a Opside account.</li>
@@ -773,20 +773,20 @@ const Index = () => {
                       </AccordionContent>
                     </AccordionItem>
                     <AccordionItem value="coexist" className="border-b border-gray-200 py-4">
-                      <AccordionTrigger className="text-left text-lg font-semibold text-gray-900 hover:no-underline">
+                      <AccordionTrigger className="font-montserrat text-left text-lg font-semibold text-gray-900 hover:no-underline">
                         What if I already use another reimbursement service?
                       </AccordionTrigger>
-                      <AccordionContent className="pt-3 text-sm text-gray-600 space-y-3">
+                      <AccordionContent className="font-montserrat pt-3 text-sm text-gray-600 space-y-3">
                         <p>
                           No problem. Run Opside alongside your current tool. We&apos;re confident our AI Evidence Engine will find dollars that manual audits missed. You only pay us for the new funds we recover.
                         </p>
                       </AccordionContent>
                     </AccordionItem>
                     <AccordionItem value="cancel" className="border-b border-gray-200 py-4">
-                      <AccordionTrigger className="text-left text-lg font-semibold text-gray-900 hover:no-underline">
+                      <AccordionTrigger className="font-montserrat text-left text-lg font-semibold text-gray-900 hover:no-underline">
                         What if I want to cancel?
                       </AccordionTrigger>
-                      <AccordionContent className="pt-3 text-sm text-gray-600 space-y-3">
+                      <AccordionContent className="font-montserrat pt-3 text-sm text-gray-600 space-y-3">
                         <p>
                           You can cancel anytime. Disconnect Opside from Seller Central and you&apos;re done—no lock-in contracts. We&apos;ll only invoice the 20% commission on claims that were successfully paid out before you canceled.
                         </p>
