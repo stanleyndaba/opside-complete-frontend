@@ -107,45 +107,45 @@ export default function Admin() {
       <div className="relative -m-4 lg:-m-6 min-h-screen bg-gray-50">
         <div className="container mx-auto px-6 md:px-10 lg:px-12 py-6 space-y-6">
           {/* Mission Promise - For Founder Reminder */}
-          <Card className="bg-gradient-to-r from-gray-900 to-gray-800 border-0 shadow-lg">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-semibold text-white uppercase tracking-wide">🎯 The Promise</CardTitle>
-              <CardDescription className="text-gray-300 text-xs">Read this when you drift off mission</CardDescription>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <blockquote className="border-l-2 border-emerald-500 pl-4 py-2">
-                <p className="text-white text-sm font-medium italic leading-relaxed">
-                  "Clario tirelessly finds, proves, and recovers every dollar Amazon owes you, with almost zero work or risk on your side—and shows you exactly how it did it."
+          <div className="bg-white border border-gray-200 rounded-sm">
+            <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+              <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">The Promise</h2>
+              <p className="text-[10px] text-gray-500 mt-0.5">Read this when you drift off mission</p>
+            </div>
+            <div className="p-6">
+              <blockquote className="border-l-2 border-gray-300 pl-4 py-2 mb-6">
+                <p className="text-sm text-gray-700 italic leading-relaxed">
+                  "Opside tirelessly finds, proves, and recovers every dollar Amazon owes you, with almost zero work or risk on your side—and shows you exactly how it did it."
                 </p>
               </blockquote>
 
-              <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div className="bg-white/5 rounded-lg p-3">
-                  <h4 className="text-[10px] font-semibold text-emerald-400 uppercase tracking-wide mb-2">What We're Actually Doing</h4>
-                  <ul className="text-[10px] text-gray-300 space-y-1">
-                    <li><span className="text-emerald-400">Find everything:</span> Always-on scan for lost/damaged inventory, fee errors, underpaid reimbursements</li>
-                    <li><span className="text-emerald-400">Prove everything:</span> Auto-grab invoices/PODs, build clean claim packets, keep full audit trails</li>
-                    <li><span className="text-emerald-400">Recover safely:</span> Only strong, policy-compliant claims auto-filed; double-dip guard</li>
-                    <li><span className="text-emerald-400">Zero cognitive load:</span> Sellers don't chase docs, fill forms, or project manage tickets</li>
-                    <li><span className="text-emerald-400">Radical transparency:</span> Every claim, amount, status, and payout is visible</li>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.15em] mb-3">What We Do</h4>
+                  <ul className="text-xs text-gray-600 space-y-2">
+                    <li className="flex"><span className="text-gray-400 mr-2">1.</span>Find everything: Always-on scan for lost/damaged inventory, fee errors, underpaid reimbursements</li>
+                    <li className="flex"><span className="text-gray-400 mr-2">2.</span>Prove everything: Auto-grab invoices/PODs, build clean claim packets, keep full audit trails</li>
+                    <li className="flex"><span className="text-gray-400 mr-2">3.</span>Recover safely: Only strong, policy-compliant claims auto-filed; double-dip guard</li>
+                    <li className="flex"><span className="text-gray-400 mr-2">4.</span>Zero cognitive load: Sellers don't chase docs, fill forms, or project manage tickets</li>
+                    <li className="flex"><span className="text-gray-400 mr-2">5.</span>Radical transparency: Every claim, amount, status, and payout is visible</li>
                   </ul>
                 </div>
 
-                <div className="bg-white/5 rounded-lg p-3">
-                  <h4 className="text-[10px] font-semibold text-blue-400 uppercase tracking-wide mb-2">The "Obliterate Competition" Promise</h4>
-                  <p className="text-[10px] text-gray-300 italic mb-2">
-                    "Clario is the one place where your Amazon money is never forgotten, never guessed, and never risky—just automatically found, fought for, and deposited."
+                <div>
+                  <h4 className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.15em] mb-3">Competitive Differentiation</h4>
+                  <p className="text-xs text-gray-600 italic mb-3">
+                    "Opside is the one place where your Amazon money is never forgotten, never guessed, and never risky—just automatically found, fought for, and deposited."
                   </p>
-                  <ul className="text-[10px] text-gray-400 space-y-1">
-                    <li>• Others sell "we file claims"; <span className="text-white">we remove the entire burden</span></li>
-                    <li>• Others show numbers; <span className="text-white">we give certainty + receipts</span></li>
-                    <li>• Others need you to work; <span className="text-white">we're the 24/7 finance agent</span></li>
+                  <ul className="text-xs text-gray-600 space-y-1.5">
+                    <li><span className="text-gray-400">Others sell "we file claims"</span> — we remove the entire burden</li>
+                    <li><span className="text-gray-400">Others show numbers</span> — we give certainty + receipts</li>
+                    <li><span className="text-gray-400">Others need you to work</span> — we're the 24/7 finance agent</li>
                   </ul>
-                  <p className="text-[10px] text-gray-500 mt-2 italic">Keep this promise at scale, and everyone else becomes toys.</p>
+                  <p className="text-[10px] text-gray-400 mt-4 italic">Keep this promise at scale, and everyone else becomes toys.</p>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
           {/* Platform Administration */}
           <Card className="bg-white border-gray-200 shadow-sm">
