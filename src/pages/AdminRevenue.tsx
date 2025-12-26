@@ -58,8 +58,8 @@ export default function AdminRevenue() {
             setLoading(true);
             setError(null);
 
-            // Use the same base URL pattern as other API calls
-            const backendUrl = import.meta.env.VITE_API_URL || 'https://clario-complete-backend.onrender.com';
+            // Use the same base URL pattern as api.ts
+            const backendUrl = 'https://opside-node-api-woco.onrender.com';
             const response = await fetch(`${backendUrl}/api/admin/revenue`, {
                 credentials: 'include',
                 headers: {
