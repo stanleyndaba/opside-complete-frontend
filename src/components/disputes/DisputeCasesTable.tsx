@@ -192,6 +192,7 @@ export function DisputeCasesTable() {
                     <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Amazon Case ID</TableHead>
                     <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Retries</TableHead>
                     <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Created</TableHead>
+                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Exp Payout</TableHead>
                     <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -244,6 +245,11 @@ export function DisputeCasesTable() {
                       <TableCell className="py-2">
                         <span className="text-xs text-gray-600">
                           {caseItem.created_at ? format(new Date(caseItem.created_at), 'MMM dd, yyyy') : '—'}
+                        </span>
+                      </TableCell>
+                      <TableCell className="py-2">
+                        <span className="text-xs text-gray-600">
+                          {(caseItem as any).expected_payout_date ? format(new Date((caseItem as any).expected_payout_date), 'MMM dd, yyyy') : '—'}
                         </span>
                       </TableCell>
                       <TableCell className="py-2">

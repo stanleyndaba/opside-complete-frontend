@@ -2304,8 +2304,11 @@ export default function Recoveries() {
                                   }} />
                                 </TableHead>
                                 <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Claim ID</TableHead>
+                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Created</TableHead>
                                 <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Details</TableHead>
                                 <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Status</TableHead>
+                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Duplicate Warning</TableHead>
+                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Days Remaining</TableHead>
                                 <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Evidence</TableHead>
                                 <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Est. Value</TableHead>
                                 <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Actions</TableHead>
@@ -2356,6 +2359,8 @@ export default function Recoveries() {
                                         </TooltipContent>
                                       </Tooltip>
                                     </TableCell>
+                                    {/* Created */}
+                                    <TableCell className="text-xs text-gray-700 py-2">{format(new Date(claim.created || claim.discovery_date || claim.created_at), 'MMM dd, yyyy')}</TableCell>
                                     {/* Details */}
                                     <TableCell className="max-w-xs py-2">
                                       <div className="truncate text-xs text-gray-900" title={claim.details}>
@@ -2370,6 +2375,36 @@ export default function Recoveries() {
                                       <Badge className={getStatusColor(claim.status)}>
                                         {claim.status}
                                       </Badge>
+                                    </TableCell>
+                                    {/* Duplicate Warning */}
+                                    <TableCell className="py-2">
+                                      {(() => {
+                                        const doubleDipWarning = checkDoubleDip(claim, rankedClaims);
+                                        return doubleDipWarning ? <DoubleDipBadge warning={doubleDipWarning} /> : <span className="text-xs text-gray-400">—</span>;
+                                      })()}
+                                    </TableCell>
+                                    {/* Days Remaining */}
+                                    <TableCell className="py-2">
+                                      {claim.days_remaining !== null && claim.days_remaining !== undefined ? (
+                                        <div className="flex items-center gap-1.5">
+                                          {isCritical && (
+                                            <AlertTriangle className="h-3 w-3 text-red-600 flex-shrink-0" />
+                                          )}
+                                          {isUrgent && !isCritical && (
+                                            <Clock className="h-3 w-3 text-amber-600 flex-shrink-0" />
+                                          )}
+                                          <span className={cn(
+                                            "text-xs",
+                                            isCritical && 'text-red-600 font-medium',
+                                            isUrgent && !isCritical && 'text-amber-600 font-medium',
+                                            !isUrgent && 'text-gray-700'
+                                          )}>
+                                            {claim.days_remaining} days
+                                          </span>
+                                        </div>
+                                      ) : (
+                                        <span className="text-xs text-gray-700">—</span>
+                                      )}
                                     </TableCell>
                                     {/* Evidence */}
                                     <TableCell className="py-2">
@@ -2388,7 +2423,7 @@ export default function Recoveries() {
                                         );
                                       })()}
                                     </TableCell>
-                                    {/* Amount */}
+                                    {/* Est. Value */}
                                     <TableCell className="text-xs font-medium text-gray-900 py-2">{formatCurrency(claim.guaranteedAmount, claim.currency || 'USD')}</TableCell>
                                     {/* Actions */}
                                     <TableCell>
