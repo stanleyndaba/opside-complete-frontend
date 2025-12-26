@@ -2303,17 +2303,11 @@ export default function Recoveries() {
                                     else setSelectedIds(new Set());
                                   }} />
                                 </TableHead>
-                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Source</TableHead>
-                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Strength</TableHead>
                                 <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Claim ID</TableHead>
-                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Created</TableHead>
-                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Evidence</TableHead>
                                 <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Details</TableHead>
                                 <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Status</TableHead>
-                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Duplicate Warning</TableHead>
-                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Days Remaining</TableHead>
-                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Guaranteed Amount</TableHead>
-                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Expected Payout</TableHead>
+                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Evidence</TableHead>
+                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Amount</TableHead>
                                 <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Actions</TableHead>
                               </TableRow>
                             </TableHeader>
@@ -2347,40 +2341,7 @@ export default function Recoveries() {
                                         });
                                       }} />
                                     </TableCell>
-                                    <TableCell className="text-xs py-2">
-                                      {claim.source === 'detected' ? (
-                                        <Badge className="bg-gray-100 text-[#36454F] border-0 text-[10px]">Detected</Badge>
-                                      ) : (
-                                        <Badge className="bg-gray-100 text-[#36454F] border-0 text-[10px]">Synced</Badge>
-                                      )}
-                                    </TableCell>
-                                    <TableCell className="py-2">
-                                      {(() => {
-                                        const strength = calculateClaimStrength(claim);
-                                        return (
-                                          <Tooltip>
-                                            <TooltipTrigger asChild>
-                                              <button className="cursor-help">
-                                                <StrengthBadge strength={strength} />
-                                              </button>
-                                            </TooltipTrigger>
-                                            <TooltipContent side="right" className="bg-white text-gray-900 border border-gray-200 p-3 max-w-xs shadow-lg">
-                                              <div className="space-y-2">
-                                                <div className="font-semibold text-xs border-b border-gray-100 pb-1">
-                                                  Claim Strength: {strength.score}/100
-                                                </div>
-                                                {strength.factors.map((f, i) => (
-                                                  <div key={i} className="flex justify-between items-center text-[10px]">
-                                                    <span className="text-gray-600">{f.label}</span>
-                                                    <span className="font-medium">{f.value}/{f.max} <span className="text-gray-400">— {f.reason}</span></span>
-                                                  </div>
-                                                ))}
-                                              </div>
-                                            </TooltipContent>
-                                          </Tooltip>
-                                        );
-                                      })()}
-                                    </TableCell>
+                                    {/* Claim ID */}
                                     <TableCell className="text-xs py-2">
                                       <Tooltip>
                                         <TooltipTrigger asChild>
@@ -2395,7 +2356,22 @@ export default function Recoveries() {
                                         </TooltipContent>
                                       </Tooltip>
                                     </TableCell>
-                                    <TableCell className="text-xs text-gray-700 py-2">{format(new Date(claim.created || claim.discovery_date || claim.created_at), 'MMM dd, yyyy')}</TableCell>
+                                    {/* Details */}
+                                    <TableCell className="max-w-xs py-2">
+                                      <div className="truncate text-xs text-gray-900" title={claim.details}>
+                                        {claim.details}
+                                      </div>
+                                      <div className="text-[10px] text-gray-500 mt-0.5">
+                                        SKU: {claim.sku || 'N/A'} • ASIN: {claim.asin || 'N/A'}
+                                      </div>
+                                    </TableCell>
+                                    {/* Status */}
+                                    <TableCell className="py-2">
+                                      <Badge className={getStatusColor(claim.status)}>
+                                        {claim.status}
+                                      </Badge>
+                                    </TableCell>
+                                    {/* Evidence */}
                                     <TableCell className="py-2">
                                       {(() => {
                                         const validation = validateEvidencePolicy(claim, claim.matchedDocs);
@@ -2412,51 +2388,9 @@ export default function Recoveries() {
                                         );
                                       })()}
                                     </TableCell>
-                                    <TableCell className="max-w-xs py-2">
-                                      <div className="truncate text-xs text-gray-900" title={claim.details}>
-                                        {claim.details}
-                                      </div>
-                                      <div className="text-[10px] text-gray-500 mt-0.5">
-                                        SKU: {claim.sku} • ASIN: {claim.asin}
-                                      </div>
-                                    </TableCell>
-                                    <TableCell className="py-2">
-                                      <Badge className={getStatusColor(claim.status)}>
-                                        {claim.status}
-                                      </Badge>
-                                    </TableCell>
-                                    <TableCell className="py-2">
-                                      {(() => {
-                                        const doubleDipWarning = checkDoubleDip(claim, rankedClaims);
-                                        return doubleDipWarning ? <DoubleDipBadge warning={doubleDipWarning} /> : <span className="text-xs text-gray-400">—</span>;
-                                      })()}
-                                    </TableCell>
-                                    <TableCell className="py-2">
-                                      {claim.days_remaining !== null && claim.days_remaining !== undefined ? (
-                                        <div className="flex items-center gap-1.5">
-                                          {isCritical && (
-                                            <AlertTriangle className="h-3 w-3 text-red-600 flex-shrink-0" />
-                                          )}
-                                          {isUrgent && !isCritical && (
-                                            <Clock className="h-3 w-3 text-amber-600 flex-shrink-0" />
-                                          )}
-                                          <span className={cn(
-                                            "text-xs",
-                                            isCritical && 'text-red-600 font-medium',
-                                            isUrgent && !isCritical && 'text-amber-600 font-medium',
-                                            !isUrgent && 'text-gray-700'
-                                          )}>
-                                            {claim.days_remaining} days
-                                          </span>
-                                        </div>
-                                      ) : (
-                                        <span className="text-xs text-gray-700">-</span>
-                                      )}
-                                    </TableCell>
+                                    {/* Amount */}
                                     <TableCell className="text-xs font-medium text-gray-900 py-2">{formatCurrency(claim.guaranteedAmount, claim.currency || 'USD')}</TableCell>
-                                    <TableCell className="text-xs text-gray-700 py-2">
-                                      {claim.expectedPayoutDate ? format(new Date(claim.expectedPayoutDate), 'MMM dd, yyyy') : '-'}
-                                    </TableCell>
+                                    {/* Actions */}
                                     <TableCell>
                                       <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
@@ -2467,7 +2401,7 @@ export default function Recoveries() {
                                         <DropdownMenuContent align="end">
                                           {claim.status === 'Denied' && (
                                             <DropdownMenuItem onClick={async () => {
-                                              const hasDocs = true; // Backend should validate; UI assumes action allowed
+                                              const hasDocs = true;
                                               if (!hasDocs) return;
                                               try {
                                                 await api.resubmitClaim(claim.id);
@@ -2480,15 +2414,6 @@ export default function Recoveries() {
                                               Resubmit with stronger docs
                                             </DropdownMenuItem>
                                           )}
-                                          {claim._strength?.tier === 'medium' && (
-                                            <DropdownMenuItem onClick={() => {
-                                              setClaimToFile(claim);
-                                              setFileAnywayModalOpen(true);
-                                            }}>
-                                              File Anyway (Medium Strength)
-                                            </DropdownMenuItem>
-                                          )}
-                                          {/* Phase 3: Status Update - only for detected claims */}
                                           {claim.source === 'detected' && claim.status !== 'resolved' && (
                                             <DropdownMenuItem onClick={() => {
                                               setSelectedDetection(claim);
@@ -2499,7 +2424,6 @@ export default function Recoveries() {
                                               Update Status
                                             </DropdownMenuItem>
                                           )}
-                                          {/* Phase 3: Resolve Detection - only for detected claims */}
                                           {claim.source === 'detected' && claim.status !== 'resolved' && (
                                             <DropdownMenuItem onClick={() => {
                                               setSelectedDetection(claim);
@@ -2510,7 +2434,6 @@ export default function Recoveries() {
                                               Mark as Resolved
                                             </DropdownMenuItem>
                                           )}
-                                          {/* Phase 3: View Details - open modal for detected claims, navigate for synced */}
                                           {claim.source === 'detected' ? (
                                             <DropdownMenuItem onClick={() => {
                                               setDetectionDetails(claim);
@@ -2525,19 +2448,10 @@ export default function Recoveries() {
                                               </Link>
                                             </DropdownMenuItem>
                                           )}
-                                          {claim.source !== 'detected' && (
-                                            <DropdownMenuItem asChild>
-                                              <Link to={`/recoveries/${encodeURIComponent(claim.id)}/resolve`} state={{ claim }}>
-                                                Resolve Case
-                                              </Link>
-                                            </DropdownMenuItem>
-                                          )}
                                           <DropdownMenuItem onClick={async () => {
-                                            // Fetch documents for this claim
                                             try {
                                               const res = await api.getRecoveryDetail(claim.id);
                                               const docs = (res && res.ok && Array.isArray((res as any).data?.documents)) ? (res as any).data!.documents : [];
-                                              // Also check matchedDocs from detection
                                               const matchedDocs = claim.matchedDocs || [];
                                               const allDocs = [...docs, ...matchedDocs.filter((md: any) => !docs.some((d: any) => d.id === md.id))];
                                               setProofDocs(allDocs);
