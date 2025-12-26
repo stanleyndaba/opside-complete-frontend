@@ -2307,7 +2307,7 @@ export default function Recoveries() {
                                 <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Details</TableHead>
                                 <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Status</TableHead>
                                 <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Evidence</TableHead>
-                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Amount</TableHead>
+                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Est. Value</TableHead>
                                 <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Actions</TableHead>
                               </TableRow>
                             </TableHeader>
