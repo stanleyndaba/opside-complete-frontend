@@ -52,6 +52,7 @@ const Agent1Test = lazy(() => import("./pages/Agent1Test"));
 const Terms = lazy(() => import("./pages/Terms"));
 const RefundPolicy = lazy(() => import("./pages/RefundPolicy"));
 const LearningInsights = lazy(() => import("./pages/LearningInsights"));
+const AdminRevenue = lazy(() => import("./pages/AdminRevenue"));
 
 // New Evidence Pages
 const EvidenceOnboarding = lazy(() => import("./pages/EvidenceOnboarding"));
@@ -114,6 +115,7 @@ const App = () => (
                 <Route path="/admin/amazon-auth-test" element={<AdminOnly><AmazonAuthTest /></AdminOnly>} />
                 <Route path="/test/agent1" element={<Agent1Test />} />
                 <Route path="/revenue-model" element={<AdminOnly><RevenueModel /></AdminOnly>} />
+                <Route path="/admin/revenue" element={<AdminOnly><AdminRevenue /></AdminOnly>} />
                 <Route path="/recoveries" element={<Recoveries />} />
                 <Route path="/recoveries/:caseId" element={<CaseDetail />} />
                 <Route path="/recoveries/:caseId/resolve" element={<ResolveCase />} />
