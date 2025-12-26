@@ -57,7 +57,15 @@ export default function AdminRevenue() {
         try {
             setLoading(true);
             setError(null);
-            const response = await fetch('/api/admin/revenue');
+
+            // Use the same base URL pattern as other API calls
+            const backendUrl = import.meta.env.VITE_API_URL || 'https://clario-complete-backend.onrender.com';
+            const response = await fetch(`${backendUrl}/api/admin/revenue`, {
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
             const data = await response.json();
 
             if (data.ok) {
