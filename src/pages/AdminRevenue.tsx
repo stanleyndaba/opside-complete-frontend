@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { PageLayout } from '@/components/layout/PageLayout';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, TrendingUp, TrendingDown } from 'lucide-react';
 
 interface RevenueMetrics {
     totalRecovered: number;
@@ -24,6 +20,12 @@ interface RevenueMetrics {
         claims: number;
         approvedClaims: number;
     };
+    // Investor metrics
+    mrrGrowth?: number;
+    currentMrr?: number;
+    previousMrr?: number;
+    activeCustomers?: number;
+    avgRevenuePerCustomer?: number;
 }
 
 const formatCurrency = (amount: number) => {
@@ -48,7 +50,7 @@ export default function AdminRevenue() {
     const [metrics, setMetrics] = useState<RevenueMetrics | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [feePercentage, setFeePercentage] = useState(25);
+    const [feePercentage, setFeePercentage] = useState(20);
 
     const fetchMetrics = async () => {
         try {
@@ -66,7 +68,7 @@ export default function AdminRevenue() {
 
             if (data.ok) {
                 setMetrics(data.data);
-                setFeePercentage(data.feePercentage || 25);
+                setFeePercentage(data.feePercentage || 20);
             } else {
                 setError(data.error || 'Failed to fetch revenue metrics');
             }
@@ -106,6 +108,9 @@ export default function AdminRevenue() {
         );
     }
 
+    const mrrGrowth = metrics?.mrrGrowth || 0;
+    const isPositiveGrowth = mrrGrowth >= 0;
+
     return (
         <div className="min-h-screen bg-white">
             {/* Header Bar */}
@@ -131,11 +136,61 @@ export default function AdminRevenue() {
             </div>
 
             <div className="max-w-7xl mx-auto px-8 py-8 space-y-8">
+
+                {/* Investor Metrics Row */}
+                <div className="grid grid-cols-5 gap-4">
+                    {/* MRR Growth */}
+                    <div className="bg-gray-50 border border-gray-200 rounded-sm p-4">
+                        <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1">MRR Growth</div>
+                        <div className={`text-xl font-light tracking-tight flex items-center ${isPositiveGrowth ? 'text-emerald-600' : 'text-red-600'}`}>
+                            {isPositiveGrowth ? <TrendingUp className="w-4 h-4 mr-1" /> : <TrendingDown className="w-4 h-4 mr-1" />}
+                            {mrrGrowth >= 0 ? '+' : ''}{mrrGrowth.toFixed(1)}%
+                        </div>
+                        <div className="text-[10px] text-gray-500 mt-1">month-over-month</div>
+                    </div>
+
+                    {/* Current MRR */}
+                    <div className="bg-gray-50 border border-gray-200 rounded-sm p-4">
+                        <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1">Current MRR</div>
+                        <div className="text-xl font-light text-gray-900 tracking-tight">
+                            {formatCurrency(metrics?.currentMrr || 0)}
+                        </div>
+                        <div className="text-[10px] text-gray-500 mt-1">this month</div>
+                    </div>
+
+                    {/* Previous MRR */}
+                    <div className="bg-gray-50 border border-gray-200 rounded-sm p-4">
+                        <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1">Previous MRR</div>
+                        <div className="text-xl font-light text-gray-900 tracking-tight">
+                            {formatCurrency(metrics?.previousMrr || 0)}
+                        </div>
+                        <div className="text-[10px] text-gray-500 mt-1">last month</div>
+                    </div>
+
+                    {/* Active Customers */}
+                    <div className="bg-gray-50 border border-gray-200 rounded-sm p-4">
+                        <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1">Active Accounts</div>
+                        <div className="text-xl font-light text-gray-900 tracking-tight">
+                            {metrics?.activeCustomers || 0}
+                        </div>
+                        <div className="text-[10px] text-gray-500 mt-1">total customers</div>
+                    </div>
+
+                    {/* Avg Revenue Per Customer */}
+                    <div className="bg-gray-50 border border-gray-200 rounded-sm p-4">
+                        <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1">ARPC</div>
+                        <div className="text-xl font-light text-gray-900 tracking-tight">
+                            {formatCurrency(metrics?.avgRevenuePerCustomer || 0)}
+                        </div>
+                        <div className="text-[10px] text-gray-500 mt-1">avg rev / customer</div>
+                    </div>
+                </div>
+
                 {/* Primary Metrics Row */}
                 <div className="grid grid-cols-4 gap-6">
                     {/* Net Revenue */}
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-5">
-                        <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-2">Net Revenue</div>
+                        <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-2">Total Revenue</div>
                         <div className="text-2xl font-light text-gray-900 tracking-tight">
                             {formatCurrency(metrics?.opsideRevenue || 0)}
                         </div>
