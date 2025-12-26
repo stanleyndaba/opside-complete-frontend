@@ -46,13 +46,7 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
             >
               Opside AI
             </h1>
-            <Button
-              size="lg"
-              className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all"
-              asChild
-            >
-              <Link to="/integrations-hub">Try Now</Link>
-            </Button>
+
           </div>
         </div>
       </section>
