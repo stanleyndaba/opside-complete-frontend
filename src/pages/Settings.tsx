@@ -362,23 +362,23 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             {/* Header Section */}
-            <div className="flex items-start justify-between pb-4 border-b border-gray-100">
+            <div className="flex items-start justify-between pb-4 border-b border-gray-200">
               <div>
-                <h2 className="text-base font-semibold text-gray-900">
+                <h2 className="text-sm font-medium text-gray-900 uppercase tracking-[0.1em]">
                   {sellerProfile.company_name || 'Seller Profile'}
                 </h2>
                 {sellerProfile.amazon_seller_id && (
-                  <p className="text-xs text-gray-500 mt-1 font-mono">
+                  <p className="text-[10px] text-gray-500 mt-1 font-mono">
                     {sellerProfile.amazon_seller_id}
                   </p>
                 )}
               </div>
               <Badge
                 className={cn(
-                  'px-3 py-1.5 text-xs font-medium rounded-full',
+                  'px-3 py-1.5 text-[10px] font-medium',
                   isAmazonConnected
-                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                    : 'bg-gray-100 text-gray-600 border border-gray-200'
+                    ? 'bg-gray-100 text-gray-700 border border-gray-200'
+                    : 'bg-gray-100 text-gray-500 border border-gray-200'
                 )}
               >
                 {isAmazonConnected ? (
@@ -398,16 +398,16 @@ const Settings = () => {
             {loadingProfile ? (
               <div className="flex items-center justify-center py-12">
                 <RefreshCw className="h-5 w-5 animate-spin text-gray-400" />
-                <span className="ml-3 text-sm text-gray-500">Loading profile...</span>
+                <span className="ml-3 text-xs text-gray-500">Loading profile...</span>
               </div>
             ) : (
               <>
                 {/* Account Information */}
-                <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
-                  <CardHeader className="bg-gray-50/50 border-b border-gray-200 pb-3">
-                    <CardTitle className="text-sm font-semibold text-gray-900">Account Information</CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-4">
+                <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
+                  <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
+                    <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Account Information</h3>
+                  </div>
+                  <div className="p-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                       <div className="space-y-1">
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Company</p>
@@ -455,10 +455,8 @@ const Settings = () => {
                         </div>
                       )}
                     </div>
-                  </CardContent>
-                </Card>
-
-                {/* Marketplaces */}
+                  </div>
+                </div>
                 {marketplaces.length > 0 && (
                   <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
                     <CardHeader className="bg-gray-50/50 border-b border-gray-200 pb-3">
@@ -1106,37 +1104,41 @@ const Settings = () => {
     <PageLayout title="Account Control Center">
       <div className="relative -m-4 lg:-m-6">
         <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24">
-          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-700">
+          <div className="relative container mx-auto px-8 pt-8 pb-10 text-gray-700">
+            {/* Header */}
+            <div className="mb-8">
+              <h1 className="text-lg font-medium text-gray-900 tracking-tight">Settings</h1>
+              <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-[0.15em]">Account Configuration</p>
+            </div>
+
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
               {/* Navigation Menu */}
               <div className="lg:col-span-1">
-                <Card className="lg:sticky lg:top-6 h-fit bg-white border-gray-200 text-gray-700 shadow-sm">
-                  <CardHeader className="border-b border-gray-200 pb-3">
-                    <CardTitle className="text-sm font-semibold text-gray-900">Quick Settings</CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-0">
-                    <nav className="space-y-1 p-2">
-                      {menuItems.map((item) => (
-                        <button
-                          key={item.id}
-                          onClick={() => item.id === 'careers' ? navigate('/careers') : setActiveSection(item.id)}
-                          className={cn(
-                            "relative w-full flex items-center gap-3 px-3 py-2 text-xs rounded-md transition-colors text-left",
-                            activeSection === item.id
-                              ? "bg-gray-100 text-gray-900"
-                              : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                          )}
-                        >
-                          {activeSection === item.id && (
-                            <span className="absolute left-0 h-5 w-[3px] rounded-r bg-emerald-500" />
-                          )}
-                          <item.icon className="h-4 w-4 shrink-0" />
-                          {item.label}
-                        </button>
-                      ))}
-                    </nav>
-                  </CardContent>
-                </Card>
+                <div className="lg:sticky lg:top-6 h-fit bg-white border border-gray-200 rounded-sm">
+                  <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
+                    <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Quick Settings</h2>
+                  </div>
+                  <nav className="p-2 space-y-0.5">
+                    {menuItems.map((item) => (
+                      <button
+                        key={item.id}
+                        onClick={() => item.id === 'careers' ? navigate('/careers') : setActiveSection(item.id)}
+                        className={cn(
+                          "relative w-full flex items-center gap-3 px-3 py-2 text-[11px] transition-colors text-left",
+                          activeSection === item.id
+                            ? "bg-gray-100 text-gray-900"
+                            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                        )}
+                      >
+                        {activeSection === item.id && (
+                          <span className="absolute left-0 h-4 w-[2px] bg-gray-900" />
+                        )}
+                        <item.icon className="h-4 w-4 shrink-0" />
+                        {item.label}
+                      </button>
+                    ))}
+                  </nav>
+                </div>
               </div>
 
               {/* Main Content */}
