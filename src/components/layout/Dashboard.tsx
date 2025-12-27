@@ -634,8 +634,8 @@ export function Dashboard() {
                       {/* Sync status */}
                       {(syncMessage || needsSync || syncTriggered) && (
                         <div className={`mt-4 px-4 py-2.5 text-xs flex items-center justify-between ${syncTriggered ? 'bg-gray-50 text-gray-600 border border-gray-200'
-                            : needsSync ? 'bg-gray-50 text-gray-600 border border-gray-200'
-                              : 'bg-gray-50 text-gray-500 border border-gray-200'
+                          : needsSync ? 'bg-gray-50 text-gray-600 border border-gray-200'
+                            : 'bg-gray-50 text-gray-500 border border-gray-200'
                           }`}>
                           <div className="flex items-center gap-2">
                             {syncTriggered && <RefreshCw className="h-3 w-3 animate-spin text-gray-400" />}
@@ -1088,15 +1088,15 @@ export function Dashboard() {
         </DialogContent>
       </Dialog>
       {/* Quick Actions Editor */}
-      < Dialog open={quickActionsEditOpen} onOpenChange={setQuickActionsEditOpen} >
-        <DialogContent className="max-w-md bg-white border border-gray-200 text-gray-900 shadow-lg rounded-2xl">
-          <DialogHeader>
-            <DialogTitle className="text-lg text-[#1f1f1f]">Customize Quick Actions</DialogTitle>
-            <DialogDescription className="text-gray-600">Select which actions to show.</DialogDescription>
+      <Dialog open={quickActionsEditOpen} onOpenChange={setQuickActionsEditOpen}>
+        <DialogContent className="max-w-md bg-white border border-gray-200 rounded-sm p-0">
+          <DialogHeader className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+            <DialogTitle className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Customize Quick Actions</DialogTitle>
+            <DialogDescription className="text-[10px] text-gray-500 mt-0.5">Select which actions to show.</DialogDescription>
           </DialogHeader>
-          <div className="space-y-3">
+          <div className="p-6 space-y-3">
             {QUICK_ACTIONS.map(a => (
-              <label key={a.id} className="flex items-center gap-2 text-sm text-gray-900">
+              <label key={a.id} className="flex items-center gap-2 text-xs text-gray-700">
                 <Checkbox checked={selectedQuickActions.includes(a.id)} onCheckedChange={(c) => {
                   setSelectedQuickActions(prev => {
                     const next = new Set(prev);
@@ -1108,29 +1108,28 @@ export function Dashboard() {
               </label>
             ))}
           </div>
-          <DialogFooter>
-            <Button variant="ghost" className="text-gray-600 hover:text-gray-800" onClick={() => setQuickActionsEditOpen(false)}>Cancel</Button>
-            <Button className="bg-black hover:bg-gray-800 text-white border border-black" onClick={() => { try { localStorage.setItem('clario.quickActions', JSON.stringify(selectedQuickActions)); toast({ title: 'Saved', description: 'Quick actions updated.' }); } catch { } setQuickActionsEditOpen(false); }}>Save</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog >
-
-      {/* Invite teammate dialog */}
-      < Dialog open={inviteOpen} onOpenChange={setInviteOpen} >
-        <DialogContent className="max-w-sm">
-          <DialogHeader>
-            <DialogTitle>Invite a Teammate</DialogTitle>
-            <DialogDescription>Send a read‑only invite to finance/ops.</DialogDescription>
-          </DialogHeader>
-          <div className="space-y-3">
-            <Input type="email" placeholder="email@company.com" value={inviteEmail} onChange={(e) => setInviteEmail(e.target.value)} />
+          <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end gap-2">
+            <button onClick={() => setQuickActionsEditOpen(false)} className="px-3 py-1.5 text-xs text-gray-600 hover:text-gray-900">Cancel</button>
+            <button className="px-4 py-1.5 text-xs font-medium text-white bg-gray-900 hover:bg-gray-800 transition-colors" onClick={() => { try { localStorage.setItem('clario.quickActions', JSON.stringify(selectedQuickActions)); toast({ title: 'Saved', description: 'Quick actions updated.' }); } catch { } setQuickActionsEditOpen(false); }}>Save</button>
           </div>
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setInviteOpen(false)}>Cancel</Button>
-            <Button onClick={async () => { if (!inviteEmail) return; try { await api.post('/api/team/invite', { email: inviteEmail }); toast({ title: 'Invite sent', description: inviteEmail }); } catch (e: any) { toast({ title: 'Invite failed', description: e?.message || 'Please try again.', variant: 'destructive' }); } setInviteOpen(false); setInviteEmail(''); }}>Send Invite</Button>
-          </DialogFooter>
         </DialogContent>
-      </Dialog >
+      </Dialog>
+
+      <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
+        <DialogContent className="max-w-sm bg-white border border-gray-200 rounded-sm p-0">
+          <DialogHeader className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+            <DialogTitle className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Invite a Teammate</DialogTitle>
+            <DialogDescription className="text-[10px] text-gray-500 mt-0.5">Send a read-only invite to finance/ops.</DialogDescription>
+          </DialogHeader>
+          <div className="p-6">
+            <Input type="email" placeholder="email@company.com" value={inviteEmail} onChange={(e) => setInviteEmail(e.target.value)} className="h-9 text-xs border-gray-200 rounded-sm" />
+          </div>
+          <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end gap-2">
+            <button onClick={() => setInviteOpen(false)} className="px-3 py-1.5 text-xs text-gray-600 hover:text-gray-900">Cancel</button>
+            <button className="px-4 py-1.5 text-xs font-medium text-white bg-gray-900 hover:bg-gray-800 transition-colors" onClick={async () => { if (!inviteEmail) return; try { await api.post('/api/team/invite', { email: inviteEmail }); toast({ title: 'Invite sent', description: inviteEmail }); } catch (e: any) { toast({ title: 'Invite failed', description: e?.message || 'Please try again.', variant: 'destructive' }); } setInviteOpen(false); setInviteEmail(''); }}>Send Invite</button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Sync Log Modal */}
       <SyncLogModal isOpen={showSyncModal} onClose={() => setShowSyncModal(false)} />
