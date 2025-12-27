@@ -1926,66 +1926,75 @@ export default function Recoveries() {
     <PageLayout title="Reimbursements">
       <div className="relative w-full overflow-x-hidden">
         <div className="relative w-full bg-white min-h-screen">
-          <div className="relative w-full max-w-full px-4 sm:px-6 pt-6 pb-6 text-gray-900">
+          <div className="relative w-full max-w-full px-8 pt-8 pb-6 text-gray-900">
             {/* Header Section */}
-            <div className="border-b border-gray-200 pb-4 mb-6">
-              <div className="flex items-center justify-between mb-3">
+            <div className="border-b border-gray-200 pb-6 mb-6">
+              <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h1 className="text-base font-semibold text-gray-900">Audit Ledger</h1>
-                  <p className="text-xs text-gray-600 mt-0.5">Track, filter, and analyze every reimbursement event in real-time.</p>
+                  <h1 className="text-lg font-medium text-gray-900 tracking-tight">Audit Ledger</h1>
+                  <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-[0.15em]">Reimbursement Tracking</p>
                 </div>
-                <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-white" disabled={selectedIds.size === 0 || submittingBulk} onClick={async () => {
-                  setSubmittingBulk(true);
-                  const ids = Array.from(selectedIds);
-                  for (const id of ids) {
-                    try {
-                      await recoveryApi.submitClaim(id);
-                      toast({ title: `Submitted ${id}`, description: 'Claim submitted successfully.' });
-                      setClaims(prev => prev.map(c => c.id === id ? { ...c, status: 'Submitted' } : c));
-                    } catch (e: any) {
-                      toast({ title: `Failed to submit ${id}`, description: e?.message || 'Please try again.' });
+                <button
+                  className={cn(
+                    "flex items-center gap-2 px-4 py-2 text-xs text-white transition-colors",
+                    selectedIds.size === 0 || submittingBulk
+                      ? "bg-gray-300 cursor-not-allowed"
+                      : "bg-gray-900 hover:bg-gray-800"
+                  )}
+                  disabled={selectedIds.size === 0 || submittingBulk}
+                  onClick={async () => {
+                    setSubmittingBulk(true);
+                    const ids = Array.from(selectedIds);
+                    for (const id of ids) {
+                      try {
+                        await recoveryApi.submitClaim(id);
+                        toast({ title: `Submitted ${id}`, description: 'Claim submitted successfully.' });
+                        setClaims(prev => prev.map(c => c.id === id ? { ...c, status: 'Submitted' } : c));
+                      } catch (e: any) {
+                        toast({ title: `Failed to submit ${id}`, description: e?.message || 'Please try again.' });
+                      }
                     }
-                  }
-                  setSubmittingBulk(false);
-                }}>
-                  <Upload className="h-4 w-4 mr-2" />
-                  Submit Selected Claims
-                </Button>
+                    setSubmittingBulk(false);
+                  }}
+                >
+                  <Upload className="h-3.5 w-3.5" />
+                  Submit Selected
+                </button>
               </div>
               {selectedIds.size > 0 && (
-                <span className="text-xs text-gray-500">{selectedIds.size} selected</span>
+                <span className="text-[10px] text-gray-500">{selectedIds.size} selected</span>
               )}
             </div>
 
             {/* Recovered Value Section */}
-            <div className="border-b border-gray-200 pb-4 mb-6">
+            <div className="mb-8">
               <div className="flex items-center justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <div className="text-xs font-medium text-gray-700 uppercase tracking-wide">Recovered Value</div>
+                    <span className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.15em]">Recovered Value</span>
                     {recoveredTotal != null && recoveredTotal > 0 && (
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <button
                             type="button"
                             aria-label="About recovered value"
-                            className="w-3 h-3 rounded-full bg-gray-500 flex items-center justify-center hover:bg-gray-400 transition-colors"
+                            className="w-3 h-3 rounded-full bg-gray-400 flex items-center justify-center hover:bg-gray-500 transition-colors"
                           >
-                            <span className="text-white text-[8px] font-serif italic leading-none">i</span>
+                            <span className="text-white text-[7px] font-serif italic leading-none">i</span>
                           </button>
                         </TooltipTrigger>
-                        <TooltipContent side="top" className="bg-black text-white text-xs">
+                        <TooltipContent side="top" className="bg-gray-900 text-white text-xs rounded-sm">
                           Recovered from approved/completed claims. {recoverySource && `Source: ${recoverySource}`}
                         </TooltipContent>
                       </Tooltip>
                     )}
                   </div>
-                  <div className="text-lg font-semibold text-gray-900">
+                  <div className="text-2xl font-light text-gray-900">
                     {recoveredTotal != null && recoveredTotal > 0 ? (
                       <>
                         {formatCurrencyWithSelection(recoveredTotal, recoveredCurrency)}
-                        <div className="text-xs text-gray-600 font-normal mt-0.5">
-                          recovered from {amazonClaimCount ?? 0} approved claim{amazonClaimCount !== 1 ? 's' : ''}
+                        <div className="text-[10px] text-gray-500 font-normal mt-1">
+                          from {amazonClaimCount ?? 0} approved claim{amazonClaimCount !== 1 ? 's' : ''}
                         </div>
                       </>
                     ) : (
@@ -2051,24 +2060,24 @@ export default function Recoveries() {
 
             {/* Tabs for Claims, Evidence Matching, and Cases */}
             <div className="mb-6">
-              <h2 className="text-base text-gray-900 font-semibold mb-4 text-left">Revenue Recovery</h2>
+              <h2 className="text-sm font-medium text-gray-900 mb-4 uppercase tracking-[0.1em]">Revenue Recovery</h2>
               <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'claims' | 'matching' | 'cases')} className="w-full">
                 <TabsList className="mb-6 inline-flex h-auto items-center justify-start gap-6 bg-transparent border-b border-gray-200 rounded-none p-0">
                   <TabsTrigger
                     value="claims"
-                    className="relative px-1 pb-3 pt-1 text-sm font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-blue-600 data-[state=active]:text-blue-600 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-0.5 data-[state=active]:after:bg-blue-600"
+                    className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900"
                   >
                     Claims
                   </TabsTrigger>
                   <TabsTrigger
                     value="matching"
-                    className="relative px-1 pb-3 pt-1 text-sm font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-blue-600 data-[state=active]:text-blue-600 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-0.5 data-[state=active]:after:bg-blue-600"
+                    className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900"
                   >
                     Evidence Matching
                   </TabsTrigger>
                   <TabsTrigger
                     value="cases"
-                    className="relative px-1 pb-3 pt-1 text-sm font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-blue-600 data-[state=active]:text-blue-600 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-0.5 data-[state=active]:after:bg-blue-600"
+                    className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900"
                   >
                     Dispute Cases
                   </TabsTrigger>
@@ -2077,13 +2086,12 @@ export default function Recoveries() {
                 {/* Claims Tab (Existing Content) */}
                 <TabsContent value="claims" className="mt-0">
                   {/* Controls */}
-                  <Card className="mb-6 bg-white border-gray-200 shadow-sm rounded-lg">
-                    <CardContent className="p-4">
-                      {/* Section Heading */}
-                      <div className="border-b border-gray-200 pb-3 mb-4">
-                        <h2 className="text-sm font-semibold text-gray-900">Capital Recovery</h2>
-                        <p className="text-xs text-gray-600 mt-0.5">Track finalized reimbursements and measure your automated ROI.</p>
-                      </div>
+                  <div className="mb-6 bg-white border border-gray-200 rounded-sm">
+                    <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                      <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Capital Recovery</h3>
+                      <p className="text-[10px] text-gray-500 mt-0.5">Track finalized reimbursements and measure your automated ROI.</p>
+                    </div>
+                    <div className="p-6">
 
                       {/* Search & Quick Filters */}
                       <div className="space-y-3">
