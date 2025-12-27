@@ -2265,8 +2265,8 @@ export default function Recoveries() {
                           </Button>
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
 
                   {/* Data Table */}
                   <Card className="bg-gray-50 border-gray-200 text-gray-900 w-full overflow-hidden shadow-sm rounded-xl">
