@@ -307,58 +307,45 @@ export default function IntegrationsHub() {
   return (
     <PageLayout title="Integrations">
       <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-gray-50 min-h-[calc(100vh+96px)] -mt-24 pt-24">
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white via-transparent to-gray-100" />
-          <div className="relative container mx-auto px-6 pt-6 pb-12 text-gray-900 space-y-8">
+        <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24">
+          <div className="relative container mx-auto px-8 pt-8 pb-12 text-gray-900">
 
             {/* Header */}
-            <div className="text-center">
-              <h1 className="text-xl font-semibold mb-1 text-gray-900">Integrations</h1>
-              <p className="text-xs text-gray-600">
-                Your central command center for all platform connections
-              </p>
-              <div className="mt-4 flex justify-center">
-                <span className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-[10px] font-medium uppercase tracking-wide text-blue-600 shadow-[0_5px_20px_rgba(59,130,246,0.15)]">
-                  Works best with work email!
-                </span>
-              </div>
+            <div className="mb-8">
+              <h1 className="text-lg font-medium text-gray-900 tracking-tight">Integrations</h1>
+              <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-[0.15em]">Platform Connections</p>
             </div>
 
             {/* Core Integrations */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Amazon SP-API - Clean Design */}
-              <Card className="bg-white border-gray-200 shadow-sm overflow-hidden">
-                <CardHeader className="border-b border-gray-200 pb-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center shadow-sm">
-                        <img src="/Amazon-logo.png" alt="Amazon" className="h-7 w-7 object-contain brightness-0 invert" />
-                      </div>
-                      <div>
-                        <CardTitle className="text-sm font-semibold text-gray-900">Amazon SP-API</CardTitle>
-                        <CardDescription className="text-xs text-gray-500">Sync inventory, orders, fees & returns</CardDescription>
-                      </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+              {/* Amazon SP-API */}
+              <div className="bg-white border border-gray-200 rounded-sm">
+                <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="h-8 w-8 bg-orange-500 flex items-center justify-center">
+                      <img src="/Amazon-logo.png" alt="Amazon" className="h-5 w-5 object-contain brightness-0 invert" />
                     </div>
-                    <Badge
-                      variant="outline"
-                      className={cn(
-                        'text-xs px-3 py-1 rounded-full font-medium',
-                        (isSandbox || status?.amazon_connected)
-                          ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
-                          : 'border-gray-200 bg-gray-50 text-gray-500'
-                      )}
-                    >
-                      {(isSandbox || status?.amazon_connected) ? '● Connected' : 'Not connected'}
-                    </Badge>
+                    <div>
+                      <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Amazon SP-API</h2>
+                      <p className="text-[10px] text-gray-500 mt-0.5">Inventory, orders, fees & returns</p>
+                    </div>
                   </div>
-                </CardHeader>
-                <CardContent className="pt-4 space-y-4">
-                  <div className="flex items-center justify-between text-sm border-t border-gray-100 pt-4">
+                  <span className={cn(
+                    'text-[9px] uppercase tracking-[0.1em] font-medium',
+                    (isSandbox || status?.amazon_connected)
+                      ? 'text-emerald-600'
+                      : 'text-gray-500'
+                  )}>
+                    {(isSandbox || status?.amazon_connected) ? 'Connected' : 'Not connected'}
+                  </span>
+                </div>
+                <div className="p-6 space-y-4">
+                  <div className="flex items-center justify-between text-xs">
                     <span className="text-gray-500">Last sync</span>
-                    <span className="text-gray-900 font-medium">{status?.lastSync || lastSyncTime}</span>
+                    <span className="text-gray-900">{status?.lastSync || lastSyncTime}</span>
                   </div>
-                  <Button
-                    className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium"
+                  <button
+                    className="w-full py-2.5 text-xs text-white bg-gray-900 hover:bg-gray-800 transition-colors"
                     onClick={() => {
                       toast({
                         title: (isSandbox || status?.amazon_connected) ? 'Configure Amazon' : 'Connect Amazon',
@@ -368,35 +355,30 @@ export default function IntegrationsHub() {
                     }}
                   >
                     {(isSandbox || status?.amazon_connected) ? 'Manage Connection' : 'Connect Amazon'}
-                  </Button>
-                </CardContent>
-              </Card>
+                  </button>
+                </div>
+              </div>
 
-              {/* Document Source */}
-              <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
-                <CardHeader className="border-b border-gray-200 pb-3">
-                  <CardTitle className="text-sm font-semibold text-gray-900">Document Source</CardTitle>
-                  <CardDescription className="text-xs text-gray-600">
-                    Connect email and cloud to auto‑ingest invoices, receipts and shipping docs.
-                    <span className="block mt-1 text-[10px] text-emerald-600/80">
-                      Gmail, Outlook, Google Drive, and Dropbox are available!
-                    </span>
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="pt-4 space-y-4">
+              {/* Document Sources */}
+              <div className="bg-white border border-gray-200 rounded-sm">
+                <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                  <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Document Sources</h2>
+                  <p className="text-[10px] text-gray-500 mt-0.5">Email and cloud for auto-ingestion</p>
+                </div>
+                <div className="p-6 space-y-4">
                   {evidenceSources.length > 0 && (
-                    <div className="mb-4 p-3 rounded border border-gray-200 bg-gray-50">
-                      <p className="text-xs font-semibold text-gray-600 mb-2">Connected Sources:</p>
-                      <div className="flex flex-wrap gap-2">
+                    <div className="mb-4 p-3 bg-gray-50 border border-gray-200">
+                      <p className="text-[10px] uppercase tracking-[0.1em] text-gray-500 font-medium mb-2">Connected Sources</p>
+                      <div className="flex flex-wrap gap-1.5">
                         {evidenceSources.filter(s => s.status === 'connected').map((source) => (
-                          <Badge key={source.id} variant="outline" className="border-emerald-500/50 text-emerald-700 bg-emerald-50">
+                          <span key={source.id} className="text-[10px] px-2 py-0.5 bg-white border border-gray-200 text-gray-700">
                             {source.provider === 'gdrive' ? 'Google Drive' : source.provider}: {source.account_email}
-                          </Badge>
+                          </span>
                         ))}
                       </div>
                     </div>
                   )}
-                  <div className="rounded-2xl border border-gray-200 bg-white divide-y divide-gray-100">
+                  <div className="border border-gray-200 divide-y divide-gray-100">
                     {(['gmail', 'outlook', 'gdrive', 'dropbox'] as const).map((p) => {
                       if (p === 'gmail') {
                         const isConnected = () => {
@@ -991,17 +973,17 @@ export default function IntegrationsHub() {
                       </div>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             </div>
 
-            {/* Live status */}
-            <Card className="bg-white border-gray-200 text-gray-900 shadow-sm">
-              <CardHeader>
-                <CardTitle className="text-gray-900">Recent Activity</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-sm text-gray-600">
+            {/* Recent Activity */}
+            <div className="bg-white border border-gray-200 rounded-sm">
+              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Recent Activity</h2>
+              </div>
+              <div className="p-6">
+                <p className="text-xs text-gray-600">
                   {(() => {
                     const connectedProviders = evidenceSources.filter(s => s.status === 'connected').map(s => {
                       const name = s.provider === 'gdrive' ? 'Google Drive' : s.provider.charAt(0).toUpperCase() + s.provider.slice(1);
@@ -1028,9 +1010,9 @@ export default function IntegrationsHub() {
 
                     return parts.length > 0 ? parts.join(' • ') : 'No activity yet';
                   })()}
-                </div>
-              </CardContent>
-            </Card>
+                </p>
+              </div>
+            </div>
 
           </div>
         </div>
