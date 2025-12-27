@@ -174,36 +174,27 @@ export function Navbar({
   return (
     <>
       <header className={cn(
-        "sticky top-0 z-30 transition-all duration-300",
+        "sticky top-0 z-30 transition-all duration-200",
         sidebarCollapsed ? "ml-16" : "ml-60",
-        isGreyBgPage ? "bg-gray-50 border-b border-gray-200" :
-          isTransparent ? "!bg-transparent !border-transparent backdrop-blur-none shadow-none" : "bg-background/60 backdrop-blur-sm border-b",
+        isGreyBgPage ? "bg-white border-b border-gray-200" :
+          isTransparent ? "bg-transparent border-transparent" : "bg-white border-b border-gray-200",
         className
       )}>
-        <div className="container flex items-center h-16 px-4 font-body">
+        <div className="flex items-center h-14 px-6">
           {/* Center - Search */}
           <div className="flex-1 max-w-xl hidden md:block md:mx-4">
-            <div className="relative flex items-center gap-2" ref={searchContainerRef}>
+            <div className="relative flex items-center gap-3" ref={searchContainerRef}>
               <div className="relative flex-1">
-                <Search className={cn(
-                  'absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 stroke-[2]',
-                  isDashboard ? 'text-gray-400' : (isTransparent ? 'text-gray-400' : 'text-gray-600')
-                )} />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
                 <Input
                   ref={searchInputRef}
                   aria-label="Search"
-                  placeholder="search invoices, products, documents, and more"
+                  placeholder="Search invoices, products, documents..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
                   onKeyDown={handleKeyDown}
-                  variant={isTransparent ? 'dark' : 'default'}
-                  className={cn(
-                    "pl-9 pr-8 h-9 rounded-md",
-                    isDashboard && "!bg-white/5 !border-gray-300 !text-gray-200 !placeholder:text-gray-400 backdrop-blur-sm",
-                    isTransparent && !isDashboard && "!bg-white/10 !border-gray-300 !text-gray-200 !placeholder:text-gray-400 backdrop-blur-sm",
-                    !isDashboard && !isTransparent && "!border-gray-300"
-                  )}
+                  className="pl-9 pr-8 h-8 text-xs bg-gray-50 border-gray-200 rounded-sm focus:bg-white focus:border-gray-300 placeholder:text-gray-400"
                 />
                 {/* Clear button */}
                 {searchQuery && (
@@ -211,21 +202,21 @@ export function Navbar({
                     onClick={() => setSearchQuery('')}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
-                    <X className="h-4 w-4" />
+                    <X className="h-3 w-3" />
                   </button>
                 )}
 
                 {/* Search Dropdown */}
                 {isSearchFocused && (
-                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-md z-50 overflow-hidden">
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-sm shadow-sm z-50 overflow-hidden">
                     {/* Recent Searches */}
                     {recentSearches.length > 0 && (
-                      <div className="p-1.5 border-b border-gray-100">
-                        <div className="flex items-center justify-between px-2 mb-0.5">
-                          <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-wide">Recent</span>
+                      <div className="p-2 border-b border-gray-100">
+                        <div className="flex items-center justify-between px-2 mb-1">
+                          <span className="text-[9px] font-medium text-gray-500 uppercase tracking-[0.15em]">Recent</span>
                           <button
                             onClick={clearRecentSearches}
-                            className="text-[10px] text-gray-400 hover:text-gray-600"
+                            className="text-[9px] text-gray-400 hover:text-gray-600"
                           >
                             Clear
                           </button>
@@ -237,7 +228,7 @@ export function Navbar({
                               setSearchQuery(search);
                               handleSearch(search);
                             }}
-                            className="w-full flex items-center gap-1.5 px-2 py-1 text-xs text-gray-700 hover:bg-gray-50 rounded"
+                            className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-gray-700 hover:bg-gray-50"
                           >
                             <Clock className="h-3 w-3 text-gray-400" />
                             {search}
@@ -247,8 +238,8 @@ export function Navbar({
                     )}
 
                     {/* Quick Links */}
-                    <div className="p-1.5">
-                      <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-wide px-2">Quick Links</span>
+                    <div className="p-2">
+                      <span className="text-[9px] font-medium text-gray-500 uppercase tracking-[0.15em] px-2">Quick Links</span>
                       {quickLinks.map((link) => (
                         <button
                           key={link.id}
@@ -256,67 +247,49 @@ export function Navbar({
                             setIsSearchFocused(false);
                             navigate(link.path);
                           }}
-                          className="w-full flex items-center gap-1.5 px-2 py-1 text-xs text-gray-700 hover:bg-gray-50 rounded mt-0.5"
+                          className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-gray-700 hover:bg-gray-50 mt-0.5"
                         >
-                          <link.icon className="h-3.5 w-3.5 text-gray-400" />
+                          <link.icon className="h-3 w-3 text-gray-400" />
                           {link.label}
                         </button>
                       ))}
                     </div>
 
                     {/* Search Tip */}
-                    <div className="px-3 py-1.5 bg-gray-50 border-t border-gray-100">
-                      <p className="text-[10px] text-gray-500">
-                        Press <kbd className="px-1 py-0.5 bg-gray-200 rounded text-gray-600 font-mono text-[9px]">Enter</kbd> to search
+                    <div className="px-3 py-2 bg-gray-50 border-t border-gray-100">
+                      <p className="text-[9px] text-gray-500">
+                        Press <kbd className="px-1 py-0.5 bg-gray-200 rounded-sm text-gray-600 font-mono text-[8px]">Enter</kbd> to search
                       </p>
                     </div>
                   </div>
                 )}
               </div>
-              {/* Message icon - visible on all pages */}
+              {/* Message icon */}
               <NotificationBell
                 label="Messages"
                 iconOverride={Mail}
                 showLabel={false}
-                className={cn(
-                  "group h-9 w-9 flex items-center justify-center rounded-md transition-colors",
-                  isDashboard
-                    ? "text-[#36454F] hover:text-[#36454F] hover:bg-gray-100"
-                    : isTransparent
-                      ? "text-[#36454F] hover:text-[#36454F] hover:bg-white/10"
-                      : "text-[#36454F] hover:text-[#36454F] hover:bg-muted/50"
-                )}
-                iconClassName={cn(
-                  "text-[#36454F]"
-                )}
+                className="h-8 w-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-sm transition-colors"
+                iconClassName="h-4 w-4"
               />
-              {/* Gift icon - visible on all pages */}
+              {/* Gift icon */}
               <button
                 onClick={() => setShowReferralPopup(true)}
-                className={cn(
-                  "flex items-center gap-2 h-9 px-3 rounded-md transition-colors relative",
-                  isDashboard
-                    ? "text-[#36454F] hover:text-[#36454F] hover:bg-gray-100"
-                    : isTransparent
-                      ? "text-[#36454F] hover:text-[#36454F] hover:bg-white/10"
-                      : "text-[#36454F] hover:text-[#36454F] hover:bg-muted/50"
-                )}
+                className="h-8 w-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-sm transition-colors relative"
                 aria-label="Referral program"
               >
-                <div className="relative">
-                  <Gift className="h-5 w-5 text-[#36454F]" />
-                  <span className="absolute -top-1 -right-1 h-2 w-2 bg-blue-600 rounded-full border border-white" />
-                </div>
+                <Gift className="h-4 w-4" />
+                <span className="absolute top-1 right-1 h-1.5 w-1.5 bg-gray-900 rounded-full" />
               </button>
             </div>
           </div>
-          {/* Right side - Connect Platform button and Sandbox badge */}
-          <div className="flex items-center gap-0 bg-transparent ml-6">
+          {/* Right side - Currency and Connect */}
+          <div className="flex items-center gap-1">
             <Select value={selectedCurrency} onValueChange={setSelectedCurrency}>
-              <SelectTrigger className="h-9 w-20 bg-transparent border-0 text-[#36454F] focus:ring-0 shadow-none px-2 text-xs font-medium">
+              <SelectTrigger className="h-8 w-16 bg-transparent border-0 text-gray-600 focus:ring-0 shadow-none px-2 text-[10px] font-medium uppercase tracking-wide">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="rounded-sm">
                 {currencies.map(curr => (
                   <SelectItem key={curr.code} value={curr.code} className="text-xs">
                     {curr.symbol} {curr.code}
@@ -324,21 +297,15 @@ export function Navbar({
                 ))}
               </SelectContent>
             </Select>
-            <div className="h-4 w-px bg-gray-300 mx-0" />
-            <Button
+            <div className="h-4 w-px bg-gray-200" />
+            <button
               onClick={() => navigate('/integrations-hub')}
-              variant="ghost"
-              className={cn(
-                "flex items-center gap-2 h-9 px-3 rounded-none",
-                isDashboard ? 'bg-transparent text-[#36454F] hover:bg-white/10 hover:text-[#36454F]' :
-                  isTransparent ? 'text-[#36454F] hover:text-[#36454F] hover:bg-white/10' : 'text-[#36454F] hover:text-[#36454F]'
-              )}
+              className="flex items-center gap-1.5 h-8 px-3 text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-sm transition-colors"
             >
-              <Link2 className={cn("h-4 w-4 text-[#36454F]")} />
-              <span className="hidden sm:inline text-[#36454F]">Connect</span>
-            </Button>
+              <Link2 className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Connect</span>
+            </button>
           </div>
-          {/* Language selector removed */}
         </div>
       </header>
 
