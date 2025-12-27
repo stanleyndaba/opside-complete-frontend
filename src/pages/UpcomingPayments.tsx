@@ -261,80 +261,85 @@ export default function UpcomingPayments() {
     <PageLayout title="Payment Recoveries">
       <div className="relative -m-4 lg:-m-6">
         <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24">
-          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-700 space-y-8">
+          <div className="relative container mx-auto px-8 pt-8 pb-10 text-gray-700">
 
-            <Card className="bg-white border-gray-200 shadow-sm">
-              <CardHeader className="border-b border-gray-200 pb-3">
-                <CardTitle className="text-sm font-semibold text-gray-900">Payment Recoveries</CardTitle>
-                <CardDescription className="text-xs text-gray-600 mt-0.5">Projected recoveries based on claim status and expected payout dates</CardDescription>
-              </CardHeader>
-              <CardContent className="p-4">
+            {/* Header */}
+            <div className="mb-8">
+              <h1 className="text-lg font-medium text-gray-900 tracking-tight">Payment Recoveries</h1>
+              <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-[0.15em]">Projected Payouts</p>
+            </div>
+
+            {/* Payment Recoveries Card */}
+            <div className="bg-white border border-gray-200 rounded-sm mb-8">
+              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Recovery Overview</h2>
+                <p className="text-[10px] text-gray-500 mt-0.5">Projected recoveries based on claim status</p>
+              </div>
+              <div className="p-6">
                 {errorMessage && (
-                  <div className="mb-4 rounded-md border border-amber-500/30 bg-amber-500/10 text-amber-900 text-xs p-3 flex flex-wrap items-center gap-3">
+                  <div className="mb-4 border border-amber-200 bg-amber-50 text-amber-800 text-xs p-3 flex flex-wrap items-center gap-3">
                     <span className="flex-1">{errorMessage}</span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="bg-white text-amber-900 border-amber-200 hover:bg-amber-50 text-xs"
+                    <button
+                      className="px-3 py-1.5 text-[10px] text-amber-800 border border-amber-300 bg-white hover:bg-amber-50 transition-colors"
                       onClick={() => setReloadToken((token) => token + 1)}
                       disabled={loading}
                     >
                       Retry
-                    </Button>
+                    </button>
                   </div>
                 )}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="rounded-md border border-gray-200 bg-gray-50 p-3">
-                    <div className="text-[10px] text-gray-600 uppercase tracking-wide">Next Expected Payout</div>
-                    <div className="text-base font-medium text-gray-900 mt-1">{nextPayout ? formatCurrency(nextPayout.gross, currency) : formatCurrency(0, currency)}</div>
-                    <div className="text-[10px] text-gray-600 mt-0.5">{nextPayout ? nextPayout.label : '—'}</div>
+                  <div className="border border-gray-200 bg-gray-50 p-4">
+                    <div className="text-[10px] text-gray-500 uppercase tracking-[0.1em]">Next Expected Payout</div>
+                    <div className="text-xl font-light text-gray-900 mt-1">{nextPayout ? formatCurrency(nextPayout.gross, currency) : formatCurrency(0, currency)}</div>
+                    <div className="text-[10px] text-gray-500 mt-0.5">{nextPayout ? nextPayout.label : '—'}</div>
                   </div>
-                  <div className="rounded-md border border-gray-200 bg-gray-50 p-3">
-                    <div className="text-[10px] text-gray-600 uppercase tracking-wide">This Month (Projected)</div>
-                    <div className="text-base font-medium text-emerald-600 mt-1">{formatCurrency(monthTotals.gross, currency)}</div>
-                    <div className="text-[10px] text-gray-600 mt-0.5">Across {monthTotals.count} claims</div>
+                  <div className="border border-gray-200 bg-gray-50 p-4">
+                    <div className="text-[10px] text-gray-500 uppercase tracking-[0.1em]">This Month (Projected)</div>
+                    <div className="text-xl font-light text-gray-900 mt-1">{formatCurrency(monthTotals.gross, currency)}</div>
+                    <div className="text-[10px] text-gray-500 mt-0.5">Across {monthTotals.count} claims</div>
                   </div>
-                  <div className="rounded-md border border-gray-200 bg-gray-50 p-3">
-                    <div className="text-[10px] text-gray-600 uppercase tracking-wide">Net To You (Projected)</div>
-                    <div className="text-base font-medium text-emerald-600 mt-1">{formatCurrency(monthTotals.net, currency)}</div>
-                    <div className="text-[10px] text-gray-600 mt-0.5">After 20% commission</div>
+                  <div className="border border-gray-200 bg-gray-50 p-4">
+                    <div className="text-[10px] text-gray-500 uppercase tracking-[0.1em]">Net To You (Projected)</div>
+                    <div className="text-xl font-light text-gray-900 mt-1">{formatCurrency(monthTotals.net, currency)}</div>
+                    <div className="text-[10px] text-gray-500 mt-0.5">After 20% commission</div>
                   </div>
                 </div>
 
-                {/* Pipeline Summary - Total in Processing */}
+                {/* Pipeline Summary */}
                 {pipelineStages.totalInPipeline > 0 && (
-                  <div className="mt-4 rounded-md border border-gray-200 bg-gray-50 p-3">
-                    <div className="text-xs text-gray-700">Total Currently Processing</div>
-                    <div className="text-lg font-semibold text-gray-900 mt-1">{formatCurrency(pipelineStages.totalInPipeline, currency)}</div>
-                    <div className="text-[10px] text-gray-500 mt-0.5">across {pipelineStages.detected.count + pipelineStages.ready.count + pipelineStages.pending.count + pipelineStages.approved.count} claims in various stages</div>
+                  <div className="mt-6 border border-gray-200 bg-gray-50 p-4">
+                    <div className="text-[10px] text-gray-500 uppercase tracking-[0.1em]">Total Currently Processing</div>
+                    <div className="text-2xl font-light text-gray-900 mt-1">{formatCurrency(pipelineStages.totalInPipeline, currency)}</div>
+                    <div className="text-[10px] text-gray-500 mt-0.5">across {pipelineStages.detected.count + pipelineStages.ready.count + pipelineStages.pending.count + pipelineStages.approved.count} claims</div>
                   </div>
                 )}
 
                 {/* Pipeline Stage Cards */}
-                <div className="mt-4 grid grid-cols-2 md:grid-cols-5 gap-3">
-                  <div className="rounded-md border border-gray-200 p-2">
-                    <div className="text-[10px] text-gray-500 uppercase tracking-wide">Detected</div>
+                <div className="mt-6 grid grid-cols-2 md:grid-cols-5 gap-3">
+                  <div className="border border-gray-200 p-3">
+                    <div className="text-[9px] text-gray-500 uppercase tracking-[0.1em]">Detected</div>
                     <div className="text-sm font-medium text-gray-900 mt-1">{formatCurrency(pipelineStages.detected.amount, currency)}</div>
                     <div className="text-[10px] text-gray-500 mt-0.5">{pipelineStages.detected.count} claims</div>
                   </div>
-                  <div className="rounded-md border border-gray-200 p-2">
-                    <div className="text-[10px] text-gray-500 uppercase tracking-wide">Ready to File</div>
+                  <div className="border border-gray-200 p-3">
+                    <div className="text-[9px] text-gray-500 uppercase tracking-[0.1em]">Ready to File</div>
                     <div className="text-sm font-medium text-gray-900 mt-1">{formatCurrency(pipelineStages.ready.amount, currency)}</div>
                     <div className="text-[10px] text-gray-500 mt-0.5">{pipelineStages.ready.count} claims</div>
                   </div>
-                  <div className="rounded-md border border-gray-200 p-2">
-                    <div className="text-[10px] text-gray-500 uppercase tracking-wide">Pending Amazon</div>
+                  <div className="border border-gray-200 p-3">
+                    <div className="text-[9px] text-gray-500 uppercase tracking-[0.1em]">Pending Amazon</div>
                     <div className="text-sm font-medium text-gray-900 mt-1">{formatCurrency(pipelineStages.pending.amount, currency)}</div>
                     <div className="text-[10px] text-gray-500 mt-0.5">{pipelineStages.pending.count} claims</div>
                   </div>
-                  <div className="rounded-md border border-gray-200 p-2">
-                    <div className="text-[10px] text-gray-500 uppercase tracking-wide">Approved</div>
+                  <div className="border border-gray-200 p-3">
+                    <div className="text-[9px] text-gray-500 uppercase tracking-[0.1em]">Approved</div>
                     <div className="text-sm font-medium text-gray-900 mt-1">{formatCurrency(pipelineStages.approved.amount, currency)}</div>
                     <div className="text-[10px] text-gray-500 mt-0.5">{pipelineStages.approved.count} claims</div>
                   </div>
-                  <div className="rounded-md border border-gray-200 p-2 bg-emerald-50">
-                    <div className="text-[10px] text-gray-600 uppercase tracking-wide">Paid</div>
-                    <div className="text-sm font-medium text-emerald-700 mt-1">{formatCurrency(pipelineStages.paid.amount, currency)}</div>
+                  <div className="border border-gray-200 p-3 bg-gray-50">
+                    <div className="text-[9px] text-gray-500 uppercase tracking-[0.1em]">Paid</div>
+                    <div className="text-sm font-medium text-gray-900 mt-1">{formatCurrency(pipelineStages.paid.amount, currency)}</div>
                     <div className="text-[10px] text-gray-500 mt-0.5">{pipelineStages.paid.count} claims</div>
                   </div>
                 </div>
@@ -342,9 +347,9 @@ export default function UpcomingPayments() {
                 {/* Professional Text Timeline */}
                 <div className="mt-6 border-t border-gray-200 pt-6">
                   <div className="text-sm font-medium text-gray-700 mb-4">Pipeline Status</div>
-                  <div className="space-y-3 text-sm">
+                  <div className="space-y-2 text-xs">
                     <div className="flex items-start gap-3">
-                      <span className="w-28 text-gray-500 flex-shrink-0">Detected</span>
+                      <span className="w-24 text-gray-500 flex-shrink-0 uppercase tracking-[0.1em] text-[10px]">Detected</span>
                       <span className="text-gray-400">→</span>
                       <span className="text-gray-700">
                         {pipelineStages.detected.count > 0
@@ -353,7 +358,7 @@ export default function UpcomingPayments() {
                       </span>
                     </div>
                     <div className="flex items-start gap-3">
-                      <span className="w-28 text-gray-500 flex-shrink-0">Ready to File</span>
+                      <span className="w-24 text-gray-500 flex-shrink-0 uppercase tracking-[0.1em] text-[10px]">Ready</span>
                       <span className="text-gray-400">→</span>
                       <span className="text-gray-700">
                         {pipelineStages.ready.count > 0
@@ -362,25 +367,25 @@ export default function UpcomingPayments() {
                       </span>
                     </div>
                     <div className="flex items-start gap-3">
-                      <span className="w-28 text-gray-500 flex-shrink-0">Pending</span>
+                      <span className="w-24 text-gray-500 flex-shrink-0 uppercase tracking-[0.1em] text-[10px]">Pending</span>
                       <span className="text-gray-400">→</span>
                       <span className="text-gray-700">
                         {pipelineStages.pending.count > 0
-                          ? `${pipelineStages.pending.count} claims (${formatCurrency(pipelineStages.pending.amount, currency)}) awaiting Amazon response`
+                          ? `${pipelineStages.pending.count} claims (${formatCurrency(pipelineStages.pending.amount, currency)}) awaiting Amazon`
                           : 'No claims at this stage'}
                       </span>
                     </div>
                     <div className="flex items-start gap-3">
-                      <span className="w-28 text-gray-500 flex-shrink-0">Approved</span>
+                      <span className="w-24 text-gray-500 flex-shrink-0 uppercase tracking-[0.1em] text-[10px]">Approved</span>
                       <span className="text-gray-400">→</span>
                       <span className="text-gray-700">
                         {pipelineStages.approved.count > 0
-                          ? `${pipelineStages.approved.count} claims (${formatCurrency(pipelineStages.approved.amount, currency)}) payment processing`
+                          ? `${pipelineStages.approved.count} claims (${formatCurrency(pipelineStages.approved.amount, currency)}) processing`
                           : 'No claims at this stage'}
                       </span>
                     </div>
                     <div className="flex items-start gap-3">
-                      <span className="w-28 text-gray-500 flex-shrink-0">Paid</span>
+                      <span className="w-24 text-gray-500 flex-shrink-0 uppercase tracking-[0.1em] text-[10px]">Paid</span>
                       <span className="text-gray-400">→</span>
                       <span className="text-gray-700">
                         {pipelineStages.paid.count > 0
@@ -391,28 +396,29 @@ export default function UpcomingPayments() {
                   </div>
                 </div>
 
-                <div className="mt-4 flex items-center gap-3">
-                  <Button variant="outline" className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50" onClick={exportCsv}>Export CSV</Button>
+                <div className="mt-6 flex items-center gap-3">
+                  <button className="px-4 py-2 text-xs text-gray-700 border border-gray-300 bg-white hover:bg-gray-50 transition-colors" onClick={exportCsv}>Export CSV</button>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
-            <Card className="bg-white border-gray-200 shadow-sm">
-              <CardHeader className="border-b border-gray-200 pb-3">
-                <CardTitle className="text-sm font-semibold text-gray-900">Schedule</CardTitle>
-                <CardDescription className="text-xs text-gray-600 mt-0.5">Daily rollup of expected payouts; dates may change based on Amazon processing</CardDescription>
-              </CardHeader>
-              <CardContent className="p-0">
+            {/* Schedule Card */}
+            <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Payment Schedule</h2>
+                <p className="text-[10px] text-gray-500 mt-0.5">Daily rollup of expected payouts</p>
+              </div>
+              <div className="p-0">
                 <Table>
                   <TableHeader>
                     <TableRow className="bg-gray-50">
-                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Payout Date</TableHead>
-                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Claims</TableHead>
-                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Gross</TableHead>
-                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Commission (20%)</TableHead>
-                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Net To You</TableHead>
-                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Filing Status</TableHead>
-                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Actions</TableHead>
+                      <TableHead className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] py-3 px-4">Payout Date</TableHead>
+                      <TableHead className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] py-3 px-4">Claims</TableHead>
+                      <TableHead className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] py-3 px-4">Gross</TableHead>
+                      <TableHead className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] py-3 px-4">Commission</TableHead>
+                      <TableHead className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] py-3 px-4">Net</TableHead>
+                      <TableHead className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] py-3 px-4">Status</TableHead>
+                      <TableHead className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] py-3 px-4">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -454,8 +460,8 @@ export default function UpcomingPayments() {
                     ))}
                   </TableBody>
                 </Table>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         </div>
       </div>
