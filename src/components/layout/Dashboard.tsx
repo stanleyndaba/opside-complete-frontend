@@ -904,174 +904,171 @@ export function Dashboard() {
         </main>
       </div >
       {/* Document Sources Modal */}
-      < Dialog open={showSourcesModal} onOpenChange={setShowSourcesModal} >
-        <DialogContent className="sm:max-w-md bg-white rounded-md">
-          <DialogHeader className="border-b border-gray-200 pb-3">
-            <DialogTitle className="text-sm font-semibold text-gray-900">Connect Document Sources</DialogTitle>
-            <DialogDescription className="text-xs text-gray-500 mt-1">
-              Read-only access for document ingestion.
+      <Dialog open={showSourcesModal} onOpenChange={setShowSourcesModal}>
+        <DialogContent className="sm:max-w-xl bg-white border border-gray-200 rounded-sm p-0">
+          <DialogHeader className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+            <DialogTitle className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Connect Document Sources</DialogTitle>
+            <DialogDescription className="text-[10px] text-gray-500 mt-0.5">
+              Read-only access for document ingestion
             </DialogDescription>
           </DialogHeader>
 
-          <div className="grid grid-cols-2 gap-3 py-3">
-            <button
-              onClick={async () => {
-                try {
-                  setProviderLoading('gmail');
-                  const r = await api.connectDocs('gmail');
-                  if (r.ok && r.data?.auth_url) {
-                    window.location.href = r.data.auth_url;
-                  } else {
+          <div className="p-6">
+            <div className="grid grid-cols-4 gap-4">
+              <button
+                onClick={async () => {
+                  try {
+                    setProviderLoading('gmail');
+                    const r = await api.connectDocs('gmail');
+                    if (r.ok && r.data?.auth_url) {
+                      window.location.href = r.data.auth_url;
+                    } else {
+                      toast({
+                        title: 'Connection Failed',
+                        description: r.error || 'Failed to initiate Gmail connection.',
+                        variant: 'destructive',
+                      });
+                      setProviderLoading(null);
+                    }
+                  } catch (error) {
                     toast({
                       title: 'Connection Failed',
-                      description: r.error || 'Failed to initiate Gmail connection. Please try again.',
+                      description: 'An error occurred. Please try again.',
                       variant: 'destructive',
                     });
                     setProviderLoading(null);
                   }
-                } catch (error) {
-                  console.error('Failed to connect Gmail:', error);
-                  toast({
-                    title: 'Connection Failed',
-                    description: 'An error occurred while connecting Gmail. Please try again.',
-                    variant: 'destructive',
-                  });
-                  setProviderLoading(null);
-                }
-              }}
-              disabled={providerLoading === 'gmail'}
-              className="flex flex-col items-center gap-2 p-4 rounded-lg border border-gray-200 hover:border-red-300 hover:bg-red-50 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {providerLoading === 'gmail' ? (
-                <Loader2 className="h-10 w-10 animate-spin text-red-500" />
-              ) : (
-                <img src={GmailIcon} alt="Gmail" className="h-10 w-10 object-contain group-hover:scale-105 transition-transform" />
-              )}
-              <span className="text-sm font-medium text-gray-700">Gmail</span>
-            </button>
+                }}
+                disabled={providerLoading === 'gmail'}
+                className="flex flex-col items-center justify-center gap-3 p-4 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                {providerLoading === 'gmail' ? (
+                  <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                ) : (
+                  <img src={GmailIcon} alt="Gmail" className="h-8 w-8 object-contain" />
+                )}
+                <span className="text-xs font-medium text-gray-700">Gmail</span>
+              </button>
 
-            <button
-              onClick={async () => {
-                try {
-                  setProviderLoading('outlook');
-                  const r = await api.connectDocs('outlook');
-                  if (r.ok && r.data?.auth_url) {
-                    window.location.href = r.data.auth_url;
-                  } else {
+              <button
+                onClick={async () => {
+                  try {
+                    setProviderLoading('outlook');
+                    const r = await api.connectDocs('outlook');
+                    if (r.ok && r.data?.auth_url) {
+                      window.location.href = r.data.auth_url;
+                    } else {
+                      toast({
+                        title: 'Connection Failed',
+                        description: r.error || 'Failed to initiate Outlook connection.',
+                        variant: 'destructive',
+                      });
+                      setProviderLoading(null);
+                    }
+                  } catch (error) {
                     toast({
                       title: 'Connection Failed',
-                      description: r.error || 'Failed to initiate Outlook connection. Please try again.',
+                      description: 'An error occurred. Please try again.',
                       variant: 'destructive',
                     });
                     setProviderLoading(null);
                   }
-                } catch (error) {
-                  console.error('Failed to connect Outlook:', error);
-                  toast({
-                    title: 'Connection Failed',
-                    description: 'An error occurred while connecting Outlook. Please try again.',
-                    variant: 'destructive',
-                  });
-                  setProviderLoading(null);
-                }
-              }}
-              disabled={providerLoading === 'outlook'}
-              className="flex flex-col items-center gap-2 p-4 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {providerLoading === 'outlook' ? (
-                <Loader2 className="h-10 w-10 animate-spin text-blue-500" />
-              ) : (
-                <img src={OutlookIcon} alt="Outlook" className="h-10 w-10 object-contain group-hover:scale-105 transition-transform" />
-              )}
-              <span className="text-sm font-medium text-gray-700">Outlook</span>
-            </button>
+                }}
+                disabled={providerLoading === 'outlook'}
+                className="flex flex-col items-center justify-center gap-3 p-4 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                {providerLoading === 'outlook' ? (
+                  <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                ) : (
+                  <img src={OutlookIcon} alt="Outlook" className="h-8 w-8 object-contain" />
+                )}
+                <span className="text-xs font-medium text-gray-700">Outlook</span>
+              </button>
 
-            <button
-              onClick={async () => {
-                try {
-                  setProviderLoading('gdrive');
-                  const r = await api.connectDocs('gdrive');
-                  if (r.ok && r.data?.auth_url) {
-                    window.location.href = r.data.auth_url;
-                  } else {
+              <button
+                onClick={async () => {
+                  try {
+                    setProviderLoading('gdrive');
+                    const r = await api.connectDocs('gdrive');
+                    if (r.ok && r.data?.auth_url) {
+                      window.location.href = r.data.auth_url;
+                    } else {
+                      toast({
+                        title: 'Connection Failed',
+                        description: r.error || 'Failed to initiate Google Drive connection.',
+                        variant: 'destructive',
+                      });
+                      setProviderLoading(null);
+                    }
+                  } catch (error) {
                     toast({
                       title: 'Connection Failed',
-                      description: r.error || 'Failed to initiate Google Drive connection. Please try again.',
+                      description: 'An error occurred. Please try again.',
                       variant: 'destructive',
                     });
                     setProviderLoading(null);
                   }
-                } catch (error) {
-                  console.error('Failed to connect Google Drive:', error);
-                  toast({
-                    title: 'Connection Failed',
-                    description: 'An error occurred while connecting Google Drive. Please try again.',
-                    variant: 'destructive',
-                  });
-                  setProviderLoading(null);
-                }
-              }}
-              disabled={providerLoading === 'gdrive'}
-              className="flex flex-col items-center gap-2 p-4 rounded-lg border border-gray-200 hover:border-green-300 hover:bg-green-50 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {providerLoading === 'gdrive' ? (
-                <Loader2 className="h-10 w-10 animate-spin text-green-500" />
-              ) : (
-                <img src={GoogleDriveIcon} alt="Google Drive" className="h-10 w-10 object-contain group-hover:scale-105 transition-transform" />
-              )}
-              <span className="text-sm font-medium text-gray-700">Google Drive</span>
-            </button>
+                }}
+                disabled={providerLoading === 'gdrive'}
+                className="flex flex-col items-center justify-center gap-3 p-4 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                {providerLoading === 'gdrive' ? (
+                  <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                ) : (
+                  <img src={GoogleDriveIcon} alt="Google Drive" className="h-8 w-8 object-contain" />
+                )}
+                <span className="text-xs font-medium text-gray-700">Drive</span>
+              </button>
 
-            <button
-              onClick={async () => {
-                try {
-                  setProviderLoading('dropbox');
-                  const r = await api.connectDocs('dropbox');
-                  if (r.ok && r.data?.auth_url) {
-                    window.location.href = r.data.auth_url;
-                  } else {
+              <button
+                onClick={async () => {
+                  try {
+                    setProviderLoading('dropbox');
+                    const r = await api.connectDocs('dropbox');
+                    if (r.ok && r.data?.auth_url) {
+                      window.location.href = r.data.auth_url;
+                    } else {
+                      toast({
+                        title: 'Connection Failed',
+                        description: r.error || 'Failed to initiate Dropbox connection.',
+                        variant: 'destructive',
+                      });
+                      setProviderLoading(null);
+                    }
+                  } catch (error) {
                     toast({
                       title: 'Connection Failed',
-                      description: r.error || 'Failed to initiate Dropbox connection. Please try again.',
+                      description: 'An error occurred. Please try again.',
                       variant: 'destructive',
                     });
                     setProviderLoading(null);
                   }
-                } catch (error) {
-                  console.error('Failed to connect Dropbox:', error);
-                  toast({
-                    title: 'Connection Failed',
-                    description: 'An error occurred while connecting Dropbox. Please try again.',
-                    variant: 'destructive',
-                  });
-                  setProviderLoading(null);
-                }
-              }}
-              disabled={providerLoading === 'dropbox'}
-              className="flex flex-col items-center gap-2 p-4 rounded-lg border border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {providerLoading === 'dropbox' ? (
-                <Loader2 className="h-10 w-10 animate-spin text-blue-500" />
-              ) : (
-                <img src={DropboxIcon} alt="Dropbox" className="h-10 w-10 object-contain group-hover:scale-105 transition-transform" />
-              )}
-              <span className="text-sm font-medium text-gray-700">Dropbox</span>
-            </button>
+                }}
+                disabled={providerLoading === 'dropbox'}
+                className="flex flex-col items-center justify-center gap-3 p-4 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                {providerLoading === 'dropbox' ? (
+                  <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                ) : (
+                  <img src={DropboxIcon} alt="Dropbox" className="h-8 w-8 object-contain" />
+                )}
+                <span className="text-xs font-medium text-gray-700">Dropbox</span>
+              </button>
+            </div>
           </div>
 
-          <div className="flex justify-center items-center gap-3 pt-2">
+          <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end">
             <Button
               variant="ghost"
-              onClick={() => {
-                setShowSourcesModal(false);
-              }}
-              className="bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 text-xs"
+              size="sm"
+              onClick={() => setShowSourcesModal(false)}
+              className="text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100"
             >
               Skip for Now
             </Button>
           </div>
         </DialogContent>
-      </Dialog >
+      </Dialog>
       {/* Quick Actions Editor */}
       < Dialog open={quickActionsEditOpen} onOpenChange={setQuickActionsEditOpen} >
         <DialogContent className="max-w-md bg-white border border-gray-200 text-gray-900 shadow-lg rounded-2xl">
