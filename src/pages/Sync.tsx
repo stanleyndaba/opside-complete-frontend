@@ -1253,10 +1253,14 @@ export default function Sync() {
   return (
     <PageLayout title="" hideNavbar hideSidebar plainBackground logoFontFamily='"Nunito Sans", sans-serif'>
       <div className="bg-white min-h-screen">
-        <div className="container mx-auto px-6 py-6 text-gray-900">
-          <div className="max-w-4xl mx-auto space-y-4">
-            {/* Dynamic Status Header - REMOVED per user request */}
+        <div className="container mx-auto px-8 py-8 text-gray-900">
+          {/* Page Header */}
+          <div className="mb-6">
+            <h1 className="text-lg font-medium text-gray-900 tracking-tight">Data Synchronization</h1>
+            <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-[0.15em]">Amazon SP-API Sync</p>
+          </div>
 
+          <div className="max-w-4xl mx-auto space-y-4">
             {/* Add shimmer animation to global styles */}
             <style>{`
               @keyframes shimmer {
@@ -1265,27 +1269,27 @@ export default function Sync() {
               }
             `}</style>
 
-            {/* Main Content - Flat, no card */}
+            {/* Main Content */}
             <div className="space-y-4">
-              {/* Detecting Phase - Show AI analysis in progress */}
+              {/* Detecting Phase */}
               {status === 'detecting' && (
-                <div className="py-3 bg-purple-50 rounded-lg px-3 border border-purple-100">
+                <div className="py-3 bg-gray-50 px-4 border border-gray-200">
                   <div className="flex items-center gap-2">
-                    <Target className="h-4 w-4 text-purple-500 animate-pulse" />
+                    <Target className="h-4 w-4 text-gray-500 animate-pulse" />
                     <div>
-                      <p className="text-xs font-medium text-purple-700">Analyzing for Discrepancies...</p>
-                      <p className="text-[10px] text-purple-500">AI-powered detection scanning your data</p>
+                      <p className="text-xs font-medium text-gray-700 uppercase tracking-[0.1em]">Analyzing for Discrepancies</p>
+                      <p className="text-[10px] text-gray-500">AI-powered detection scanning your data</p>
                     </div>
                   </div>
                 </div>
               )}
 
 
-              {/* Simple Status Strip - Last sync + overall status (no dropdown) */}
+              {/* Status Strip */}
               {logs.length > 0 && status === 'completed' && (
                 <div className="flex items-center gap-2 text-xs">
                   {syncData?.completedAt && (
-                    <span className="text-gray-500">
+                    <span className="text-gray-500 uppercase tracking-[0.1em] text-[10px]">
                       Last sync: {(() => {
                         const completedTime = new Date(syncData.completedAt).getTime();
                         const now = Date.now();
@@ -1305,18 +1309,18 @@ export default function Sync() {
                     const hasZeroClaims = claimsCount !== null && claimsCount === 0;
 
                     if (hasError) {
-                      return <span className="bg-red-100 text-red-700 px-2 py-0.5 rounded font-medium">Issues detected</span>;
+                      return <span className="bg-gray-100 text-gray-700 px-2 py-0.5 text-[10px] font-medium border border-gray-200">Issues detected</span>;
                     } else if (hasWarning) {
-                      return <span className="bg-amber-100 text-amber-700 px-2 py-0.5 rounded font-medium">Warnings</span>;
+                      return <span className="bg-gray-100 text-gray-600 px-2 py-0.5 text-[10px] font-medium border border-gray-200">Warnings</span>;
                     } else if (hasZeroClaims) {
                       return (
-                        <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded font-medium flex items-center gap-1">
+                        <span className="bg-gray-100 text-gray-700 px-2 py-0.5 text-[10px] font-medium flex items-center gap-1 border border-gray-200">
                           <CheckCircle2 className="h-3 w-3" />
-                          Your account is clean! No money left on the table.
+                          Account clean
                         </span>
                       );
                     }
-                    return <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded font-medium">All systems OK</span>;
+                    return <span className="bg-gray-100 text-gray-700 px-2 py-0.5 text-[10px] font-medium border border-gray-200">All systems OK</span>;
                   })()}
                 </div>
               )}
@@ -1325,7 +1329,7 @@ export default function Sync() {
               <div className="space-y-2">
                 <div className="space-y-0.5">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-xs font-semibold text-gray-800 uppercase tracking-wide">Real-Time Logs</h4>
+                    <h4 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Real-Time Logs</h4>
                     <span className="text-[10px] text-gray-400">{filteredLogs.length} entries</span>
                   </div>
                   {syncData?.completedAt && (
