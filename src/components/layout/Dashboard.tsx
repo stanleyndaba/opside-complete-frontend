@@ -580,322 +580,340 @@ export function Dashboard() {
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
         <main className={'flex-1 transition-all duration-300 overflow-y-auto ' + mainClass}>
           <div className="relative pt-24">
-            <div className="relative w-full max-w-full mx-auto px-6 md:px-10 lg:px-12 pb-10 text-gray-900 space-y-8">
-              <div className="rounded-2xl bg-white border border-gray-200 shadow-sm p-6 md:p-8">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 h-full">
-                  <div className="lg:col-span-2 space-y-8">
-                    <Card className="bg-white border border-gray-200 text-gray-900 shadow-sm">
-                      <CardContent className="p-4">
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2">
-                              <h2 className="text-sm font-semibold text-gray-900">Recovered Value</h2>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <button
-                                    type="button"
-                                    aria-label="About recovered value"
-                                    className="w-4 h-4 rounded-full bg-gray-500 flex items-center justify-center hover:bg-gray-400 transition-colors"
-                                  >
-                                    <span className="text-white text-[10px] font-serif italic leading-none">i</span>
-                                  </button>
-                                </TooltipTrigger>
-                                <TooltipContent side="top" className="bg-black text-white text-xs">
-                                  Your recovered profits from approved/completed claims. {recoverySource && `Source: ${recoverySource}`}
-                                </TooltipContent>
-                              </Tooltip>
-                            </div>
-                            <div className="text-lg font-semibold mt-1 text-gray-900">
-                              {formatCurrencyWithSelection(recoveredTotal ?? 0, recoveredCurrency)}
-                            </div>
-                            <div className="text-[10px] text-gray-600 mt-1">
-                              {submittedClaimsCount != null && submittedClaimsCount > 0
-                                ? `From ${submittedClaimsCount} claim${submittedClaimsCount !== 1 ? 's' : ''} submitted`
-                                : 'From approved claims submitted'
-                              }
-                            </div>
-                            {/* Sync status message */}
-                            {(syncMessage || needsSync || syncTriggered) && (
-                              <div className={`mt-3 px-3 py-2 rounded-md text-xs ${syncTriggered
-                                ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                                : needsSync
-                                  ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                                  : 'bg-gray-50 text-gray-700 border border-gray-200'
-                                }`}>
-                                <div className="flex items-start justify-between gap-2">
-                                  <div className="flex items-start gap-2 flex-1">
-                                    {syncTriggered && <RefreshCw className="h-3 w-3 mt-0.5 animate-spin" />}
-                                    <span>{syncMessage || (needsSync ? 'Syncing your Amazon account... Please refresh in a few moments.' : '')}</span>
-                                  </div>
-                                  {activeSyncId && (
-                                    <button
-                                      onClick={() => navigate(`/sync?id=${activeSyncId}`)}
-                                      className="text-blue-600 hover:text-blue-700 underline text-xs ml-2"
-                                    >
-                                      View progress
-                                    </button>
-                                  )}
-                                </div>
-                              </div>
-                            )}
-                          </div>
+            <div className="relative w-full max-w-full mx-auto px-8 py-8 text-gray-900">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-8">
+                <div>
+                  <h1 className="text-lg font-medium text-gray-900 tracking-tight">Recovery Overview</h1>
+                  <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-[0.15em]">Dashboard</p>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowSyncModal(true)}
+                  className="text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                >
+                  <RefreshCw className="w-3 h-3 mr-1.5" />
+                  Scan
+                </Button>
+              </div>
 
-                          <div className="mt-4">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="bg-white border-0 text-[#36454F] hover:bg-gray-50 rounded-lg font-medium"
-                              onClick={() => setShowSyncModal(true)}
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                {/* Main Content - 3 columns */}
+                <div className="lg:col-span-3 space-y-6">
+
+                  {/* Primary Metric - Recovered Value */}
+                  <div className="bg-white border border-gray-200 rounded-sm">
+                    <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Recovered Value</h2>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              type="button"
+                              aria-label="About recovered value"
+                              className="w-3.5 h-3.5 rounded-full bg-gray-300 flex items-center justify-center hover:bg-gray-400 transition-colors"
                             >
-                              Scan
-                            </Button>
-                          </div>
-                        </div>
+                              <span className="text-white text-[8px] font-serif italic leading-none">i</span>
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent side="top" className="bg-gray-900 text-white text-xs">
+                            Recovered profits from approved/completed claims. {recoverySource && `Source: ${recoverySource}`}
+                          </TooltipContent>
+                        </Tooltip>
+                      </div>
+                      {submittedClaimsCount != null && submittedClaimsCount > 0 && (
+                        <span className="text-[10px] text-gray-500">{submittedClaimsCount} claims submitted</span>
+                      )}
+                    </div>
+                    <div className="p-6">
+                      <div className="text-3xl font-light text-gray-900 tracking-tight">
+                        {formatCurrencyWithSelection(recoveredTotal ?? 0, recoveredCurrency)}
+                      </div>
 
-                        <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                          <div className="rounded-md border border-gray-200 bg-gray-50 p-3 shadow-sm">
-                            <div className="text-[10px] font-medium text-gray-600 uppercase tracking-wide">Next payment</div>
-                            <div className="text-base font-semibold text-gray-900 mt-1">
-                              {formatCurrencyWithSelection((nextPaymentAmount ?? 0), recoveredCurrency)}
-                            </div>
-                            <div className="text-[10px] text-gray-600 mt-1">
-                              {nextPaymentDate
-                                ? `Estimated on ${new Date(nextPaymentDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
-                                : 'No payout scheduled yet'}
-                            </div>
+                      {/* Sync status */}
+                      {(syncMessage || needsSync || syncTriggered) && (
+                        <div className={`mt-4 px-4 py-2.5 text-xs flex items-center justify-between ${syncTriggered ? 'bg-gray-50 text-gray-600 border border-gray-200'
+                            : needsSync ? 'bg-gray-50 text-gray-600 border border-gray-200'
+                              : 'bg-gray-50 text-gray-500 border border-gray-200'
+                          }`}>
+                          <div className="flex items-center gap-2">
+                            {syncTriggered && <RefreshCw className="h-3 w-3 animate-spin text-gray-400" />}
+                            <span>{syncMessage || (needsSync ? 'Syncing...' : '')}</span>
                           </div>
-                          <div className="rounded-md border border-gray-200 bg-gray-50 p-3 shadow-sm">
-                            <div className="text-[10px] font-medium text-gray-600 uppercase tracking-wide">Pending recovery</div>
-                            <div className="text-base font-semibold text-gray-900 mt-1">
-                              {formatCurrencyWithSelection((pendingRecoveryAmount ?? 0), recoveredCurrency)}
-                            </div>
-                            <div className="text-[10px] text-gray-600 mt-1">
-                              No. of Claims: {effectivePendingClaims}
-                            </div>
-                          </div>
-                          <div className="rounded-md border border-gray-200 bg-gray-50 p-3 shadow-sm">
-                            <div className="flex items-center gap-1.5">
-                              <div className="text-[10px] font-medium text-gray-600 uppercase tracking-wide">Approved</div>
-                              <div className="flex items-center gap-1">
-                                <TrendingDown className="h-3 w-3 text-red-500" />
-                                <span className="text-[10px] text-red-500 font-medium">8%</span>
-                                <TrendingUp className="h-3 w-3 text-green-600" />
-                                <span className="text-[10px] text-green-600 font-medium">92%</span>
-                              </div>
-                            </div>
-                            <div className="text-base font-semibold text-gray-900 mt-1">{formatCurrencyWithSelection(computedApproved ?? 0, recoveredCurrency)}</div>
-                            <div className="text-[10px] mt-1">
-                              <span className="text-gray-600">Total this month: </span>
-                              <span className="text-[#1f1f1f]">$31.4K</span>
-                            </div>
-                          </div>
-                        </div>
-
-
-                        {/* Auto-Submit button removed per request */}
-                      </CardContent>
-                    </Card>
-
-                    {/* Phase 3: Detection Summary Card */}
-                    {detectionStats && detectionStats.totalDetections > 0 && (
-                      <Card className="bg-white border border-gray-200 text-gray-900 shadow-sm">
-                        <CardContent className="p-4">
-                          <div className="flex items-center justify-between mb-3">
-                            <h2 className="text-sm font-semibold text-gray-900">💰 Detected Claims</h2>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="bg-white border border-gray-200 text-gray-900 hover:bg-gray-50"
-                              onClick={() => navigate('/recoveries', { state: { filter: 'detected' } })}
+                          {activeSyncId && (
+                            <button
+                              onClick={() => navigate(`/sync?id=${activeSyncId}`)}
+                              className="text-gray-600 hover:text-gray-900 underline text-xs"
                             >
-                              View All →
-                            </Button>
-                          </div>
-                          <div className="grid grid-cols-2 gap-3 mb-3">
-                            <div className="rounded-md border border-gray-200 bg-gray-50 p-3 shadow-sm">
-                              <div className="text-[10px] font-medium text-gray-600 uppercase tracking-wide">Total Detected</div>
-                              <div className="text-base font-semibold text-gray-900 mt-1">{detectionStats.totalDetections}</div>
-                            </div>
-                            <div className="rounded-md border border-gray-200 bg-gray-50 p-3 shadow-sm">
-                              <div className="text-[10px] font-medium text-gray-600 uppercase tracking-wide">Recovery Potential</div>
-                              <div className="text-base font-semibold text-emerald-600 mt-1">
-                                {formatCurrency(detectionStats.estimatedRecovery)}
-                              </div>
-                            </div>
-                          </div>
-                          <div className="space-y-2">
-                            <div className="flex items-center gap-2 text-sm">
-                              <span className="text-emerald-600">⚡</span>
-                              <span className="text-gray-700">High: <span className="font-medium text-[#1f1f1f]">{detectionStats.highConfidence}</span> claims</span>
-                            </div>
-                            <div className="flex items-center gap-2 text-sm">
-                              <span className="text-amber-600">❓</span>
-                              <span className="text-gray-700">Medium: <span className="font-medium text-[#1f1f1f]">{detectionStats.mediumConfidence}</span> claims</span>
-                            </div>
-                            <div className="flex items-center gap-2 text-sm">
-                              <span className="text-gray-500">📋</span>
-                              <span className="text-gray-700">Low: <span className="font-medium text-[#1f1f1f]">{detectionStats.lowConfidence}</span> claims</span>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    )}
-
-                    <Card className="bg-white border border-gray-200 text-gray-900 shadow-sm">
-                      <CardContent className="p-4">
-                        <div className="flex items-center justify-between border-b border-gray-200 pb-3">
-                          <h2 className="text-sm font-semibold text-gray-900">Actions</h2>
-                          <button aria-label="Customize quick actions" className="text-gray-500 hover:text-gray-700" onClick={() => setQuickActionsEditOpen(true)}>
-                            <Plus className="h-4 w-4" />
-                          </button>
-                        </div>
-                        <div className="grid grid-cols-2 gap-3 mt-3">
-                          {selectedQuickActions.includes('connect_evidence') && (
-                            <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => setShowSourcesModal(true)}>
-                              <Mail className="h-4 w-4" />
-                              Connect evidence sources
-                            </Button>
-                          )}
-                          {selectedQuickActions.includes('review_high_conf') && (
-                            <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => navigate('/recoveries', { state: { filter: 'high_confidence' } })}>
-                              <CheckCircle className="h-4 w-4" />
-                              Review high‑confidence cases
-                            </Button>
-                          )}
-                          {selectedQuickActions.includes('resolve_new') && (
-                            <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => navigate('/recoveries', { state: { filter: 'new_pending' } })}>
-                              <RotateCcw className="h-4 w-4" />
-                              Resolve new opportunities
-                            </Button>
-                          )}
-                          {selectedQuickActions.includes('run_detector') && (
-                            <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={async () => {
-                              try { await api.post('/api/detections/run'); toast({ title: 'Detector started', description: 'Scanning new opportunities…' }); } catch (e: any) { toast({ title: 'Detector failed', description: e?.message || 'Please try again.', variant: 'destructive' }); }
-                            }}>
-                              <RefreshCw className="h-4 w-4" />
-                              Run detector
-                            </Button>
-                          )}
-                          {selectedQuickActions.includes('ingest_now') && (
-                            <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={async () => {
-                              const r = await api.startEvidenceIngest();
-                              if ((r as any)?.ok) toast({ title: 'Ingestion started', description: 'We will notify you when new docs arrive.' });
-                              else toast({ title: 'Ingestion failed', description: (r as any)?.error || 'Try again.', variant: 'destructive' });
-                            }}>
-                              <Cloud className="h-4 w-4" />
-                              Ingest documents now
-                            </Button>
-                          )}
-                          {selectedQuickActions.includes('smart_sync') && (
-                            <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => navigate('/smart-inventory-sync')}>
-                              <RefreshCw className="h-4 w-4" />
-                              Smart Inventory Sync
-                            </Button>
-                          )}
-                          {selectedQuickActions.includes('upcoming_payments') && (
-                            <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => navigate('/upcoming-payments')}>
-                              <CircleDollarSign className="h-4 w-4" />
-                              Payment recoveries
-                            </Button>
-                          )}
-                          {selectedQuickActions.includes('export_history') && (
-                            <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => navigate('/export-center')}>
-                              <Download className="h-4 w-4" />
-                              Export recovery & payout history
-                            </Button>
-                          )}
-                          {selectedQuickActions.includes('evidence_locker') && (
-                            <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => navigate('/evidence-locker')}>
-                              <FileText className="h-4 w-4" />
-                              Doc Locker
-                            </Button>
-                          )}
-                          {selectedQuickActions.includes('invite_teammate') && (
-                            <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => setInviteOpen(true)}>
-                              <Link2 className="h-4 w-4" />
-                              Invite a teammate
-                            </Button>
-                          )}
-                          {selectedQuickActions.includes('configure_alerts') && (
-                            <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => navigate('/notifications')}>
-                              <Bell className="h-4 w-4" />
-                              Configure alerts
-                            </Button>
-                          )}
-                          {selectedQuickActions.includes('security_setup') && (
-                            <Button variant="outline" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50" onClick={() => navigate('/settings')}>
-                              <Shield className="h-4 w-4" />
-                              Security quick setup
-                            </Button>
+                              View progress
+                            </button>
                           )}
                         </div>
-                      </CardContent>
-                    </Card>
+                      )}
+                    </div>
                   </div>
 
-                  <div className="lg:col-span-1">
-                    <Card className="h-full bg-white border border-gray-200 text-gray-900 shadow-sm">
-                      <CardContent className="p-0">
-                        <div className="p-3 border-b border-gray-200">
-                          <div className="flex items-center justify-between">
-                            <h3 className="text-xs font-semibold text-gray-900 uppercase tracking-wide">Recent Logs</h3>
-                            {unreadCount > 0 && (
-                              <span className="text-xs rounded px-2 py-0.5 bg-emerald-500 text-white">
-                                {unreadCount} new
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        <div className="max-h-[600px] overflow-y-auto">
-                          <div className="relative text-[12px] divide-y divide-gray-200">
-                            {notifications.length === 0 ? (
-                              <div className="p-6 text-center text-gray-500">
-                                <Bell className="h-6 w-6 mx-auto mb-2 text-gray-400" />
-                                <p className="text-xs">No notifications yet</p>
-                              </div>
-                            ) : (
-                              notifications.slice(0, 10).map((notification) => {
-                                const isUnread = notification.status !== 'read';
-                                const timeAgo = formatDistanceToNow(new Date(notification.created_at), { addSuffix: true });
+                  {/* Key Metrics Grid */}
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="bg-gray-50 border border-gray-200 rounded-sm p-4">
+                      <div className="text-[10px] uppercase tracking-[0.15em] text-gray-500 mb-1">Next Payment</div>
+                      <div className="text-xl font-light text-gray-900 tracking-tight">
+                        {formatCurrencyWithSelection((nextPaymentAmount ?? 0), recoveredCurrency)}
+                      </div>
+                      <div className="text-[10px] text-gray-500 mt-1">
+                        {nextPaymentDate
+                          ? new Date(nextPaymentDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                          : 'No payout scheduled'}
+                      </div>
+                    </div>
 
-                                return (
-                                  <div
-                                    key={notification.id}
-                                    className={`group relative flex items-start gap-3 py-3 px-4 overflow-hidden ${isUnread ? 'bg-gray-50' : 'bg-white'
-                                      }`}
-                                  >
-                                    <div className="min-w-0 flex-1">
-                                      <div className="flex items-center justify-between">
-                                        <p className={`text-[12px] truncate ${isUnread ? 'text-black font-semibold' : 'text-gray-600 font-medium'
-                                          }`}>
-                                          {notification.title}
-                                        </p>
-                                        <span className={`ml-3 shrink-0 text-[11px] ${isUnread ? 'text-gray-700 font-semibold' : 'text-gray-500'
-                                          }`}>
-                                          {timeAgo}
-                                        </span>
-                                      </div>
-                                      <p className="text-[11px] text-gray-600 mt-0.5 truncate">
-                                        {notification.message}
-                                      </p>
-                                    </div>
-                                  </div>
-                                );
-                              })
-                            )}
+                    <div className="bg-gray-50 border border-gray-200 rounded-sm p-4">
+                      <div className="text-[10px] uppercase tracking-[0.15em] text-gray-500 mb-1">Pending</div>
+                      <div className="text-xl font-light text-amber-600 tracking-tight">
+                        {formatCurrencyWithSelection((pendingRecoveryAmount ?? 0), recoveredCurrency)}
+                      </div>
+                      <div className="text-[10px] text-gray-500 mt-1">
+                        {effectivePendingClaims} claims
+                      </div>
+                    </div>
+
+                    <div className="bg-gray-50 border border-gray-200 rounded-sm p-4">
+                      <div className="text-[10px] uppercase tracking-[0.15em] text-gray-500 mb-1">Approved</div>
+                      <div className="text-xl font-light text-emerald-600 tracking-tight">
+                        {formatCurrencyWithSelection(computedApproved ?? 0, recoveredCurrency)}
+                      </div>
+                      <div className="text-[10px] text-gray-500 mt-1 flex items-center gap-1">
+                        <span className="text-emerald-600">92%</span>
+                        <span>approval rate</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Detection Summary - Minimal */}
+                  {detectionStats && detectionStats.totalDetections > 0 && (
+                    <div className="bg-white border border-gray-200 rounded-sm">
+                      <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
+                        <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Detected Claims</h2>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-xs text-gray-600 hover:text-gray-900"
+                          onClick={() => navigate('/recoveries', { state: { filter: 'detected' } })}
+                        >
+                          View All
+                        </Button>
+                      </div>
+                      <div className="p-6">
+                        <div className="grid grid-cols-4 gap-4">
+                          <div>
+                            <div className="text-[10px] uppercase tracking-[0.15em] text-gray-500 mb-1">Total</div>
+                            <div className="text-xl font-light text-gray-900">{detectionStats.totalDetections}</div>
+                          </div>
+                          <div>
+                            <div className="text-[10px] uppercase tracking-[0.15em] text-gray-500 mb-1">Potential</div>
+                            <div className="text-xl font-light text-emerald-600">{formatCurrency(detectionStats.estimatedRecovery)}</div>
+                          </div>
+                          <div>
+                            <div className="text-[10px] uppercase tracking-[0.15em] text-gray-500 mb-1">High Conf.</div>
+                            <div className="text-xl font-light text-gray-900">{detectionStats.highConfidence}</div>
+                          </div>
+                          <div>
+                            <div className="text-[10px] uppercase tracking-[0.15em] text-gray-500 mb-1">Medium</div>
+                            <div className="text-xl font-light text-gray-900">{detectionStats.mediumConfidence}</div>
                           </div>
                         </div>
-                        <div className="border-t border-gray-200 p-3">
-                          <Button
-                            size="sm"
-                            className="w-full bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 text-xs"
-                            onClick={() => navigate('/notifications')}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Quick Actions */}
+                  <div className="bg-white border border-gray-200 rounded-sm">
+                    <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
+                      <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Actions</h2>
+                      <button
+                        aria-label="Customize quick actions"
+                        className="text-gray-400 hover:text-gray-600"
+                        onClick={() => setQuickActionsEditOpen(true)}
+                      >
+                        <Plus className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                    <div className="p-6">
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        {selectedQuickActions.includes('connect_evidence') && (
+                          <button
+                            onClick={() => setShowSourcesModal(true)}
+                            className="flex items-center gap-2 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-xs text-gray-700 transition-colors"
                           >
-                            View all Logs
-                          </Button>
+                            <Mail className="h-3.5 w-3.5 text-gray-400" />
+                            Connect sources
+                          </button>
+                        )}
+                        {selectedQuickActions.includes('review_high_conf') && (
+                          <button
+                            onClick={() => navigate('/recoveries', { state: { filter: 'high_confidence' } })}
+                            className="flex items-center gap-2 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-xs text-gray-700 transition-colors"
+                          >
+                            <CheckCircle className="h-3.5 w-3.5 text-gray-400" />
+                            High confidence
+                          </button>
+                        )}
+                        {selectedQuickActions.includes('resolve_new') && (
+                          <button
+                            onClick={() => navigate('/recoveries', { state: { filter: 'new_pending' } })}
+                            className="flex items-center gap-2 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-xs text-gray-700 transition-colors"
+                          >
+                            <RotateCcw className="h-3.5 w-3.5 text-gray-400" />
+                            New opportunities
+                          </button>
+                        )}
+                        {selectedQuickActions.includes('run_detector') && (
+                          <button
+                            onClick={async () => {
+                              try { await api.post('/api/detections/run'); toast({ title: 'Detector started', description: 'Scanning...' }); }
+                              catch (e: any) { toast({ title: 'Failed', description: e?.message || 'Try again.', variant: 'destructive' }); }
+                            }}
+                            className="flex items-center gap-2 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-xs text-gray-700 transition-colors"
+                          >
+                            <RefreshCw className="h-3.5 w-3.5 text-gray-400" />
+                            Run detector
+                          </button>
+                        )}
+                        {selectedQuickActions.includes('ingest_now') && (
+                          <button
+                            onClick={async () => {
+                              const r = await api.startEvidenceIngest();
+                              if ((r as any)?.ok) toast({ title: 'Started', description: 'Ingesting documents...' });
+                              else toast({ title: 'Failed', description: (r as any)?.error || 'Try again.', variant: 'destructive' });
+                            }}
+                            className="flex items-center gap-2 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-xs text-gray-700 transition-colors"
+                          >
+                            <Cloud className="h-3.5 w-3.5 text-gray-400" />
+                            Ingest docs
+                          </button>
+                        )}
+                        {selectedQuickActions.includes('smart_sync') && (
+                          <button
+                            onClick={() => navigate('/smart-inventory-sync')}
+                            className="flex items-center gap-2 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-xs text-gray-700 transition-colors"
+                          >
+                            <RefreshCw className="h-3.5 w-3.5 text-gray-400" />
+                            Inventory sync
+                          </button>
+                        )}
+                        {selectedQuickActions.includes('upcoming_payments') && (
+                          <button
+                            onClick={() => navigate('/upcoming-payments')}
+                            className="flex items-center gap-2 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-xs text-gray-700 transition-colors"
+                          >
+                            <CircleDollarSign className="h-3.5 w-3.5 text-gray-400" />
+                            Payments
+                          </button>
+                        )}
+                        {selectedQuickActions.includes('export_history') && (
+                          <button
+                            onClick={() => navigate('/export-center')}
+                            className="flex items-center gap-2 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-xs text-gray-700 transition-colors"
+                          >
+                            <Download className="h-3.5 w-3.5 text-gray-400" />
+                            Export
+                          </button>
+                        )}
+                        {selectedQuickActions.includes('evidence_locker') && (
+                          <button
+                            onClick={() => navigate('/evidence-locker')}
+                            className="flex items-center gap-2 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-xs text-gray-700 transition-colors"
+                          >
+                            <FileText className="h-3.5 w-3.5 text-gray-400" />
+                            Doc Locker
+                          </button>
+                        )}
+                        {selectedQuickActions.includes('invite_teammate') && (
+                          <button
+                            onClick={() => setInviteOpen(true)}
+                            className="flex items-center gap-2 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-xs text-gray-700 transition-colors"
+                          >
+                            <Link2 className="h-3.5 w-3.5 text-gray-400" />
+                            Invite teammate
+                          </button>
+                        )}
+                        {selectedQuickActions.includes('configure_alerts') && (
+                          <button
+                            onClick={() => navigate('/notifications')}
+                            className="flex items-center gap-2 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-xs text-gray-700 transition-colors"
+                          >
+                            <Bell className="h-3.5 w-3.5 text-gray-400" />
+                            Alerts
+                          </button>
+                        )}
+                        {selectedQuickActions.includes('security_setup') && (
+                          <button
+                            onClick={() => navigate('/settings')}
+                            className="flex items-center gap-2 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-xs text-gray-700 transition-colors"
+                          >
+                            <Shield className="h-3.5 w-3.5 text-gray-400" />
+                            Security
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Recent Logs - Right Sidebar */}
+                <div className="lg:col-span-1">
+                  <div className="bg-white border border-gray-200 rounded-sm h-full">
+                    <div className="px-4 py-3 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
+                      <h3 className="text-[10px] font-medium text-gray-900 uppercase tracking-[0.15em]">Recent Logs</h3>
+                      {unreadCount > 0 && (
+                        <span className="text-[9px] rounded px-1.5 py-0.5 bg-gray-900 text-white">
+                          {unreadCount}
+                        </span>
+                      )}
+                    </div>
+                    <div className="max-h-[500px] overflow-y-auto">
+                      {notifications.length === 0 ? (
+                        <div className="p-8 text-center">
+                          <Bell className="h-5 w-5 mx-auto mb-2 text-gray-300" />
+                          <p className="text-[10px] text-gray-400">No notifications</p>
                         </div>
-                      </CardContent>
-                    </Card>
+                      ) : (
+                        <div className="divide-y divide-gray-100">
+                          {notifications.slice(0, 10).map((notification) => {
+                            const isUnread = notification.status !== 'read';
+                            const timeAgo = formatDistanceToNow(new Date(notification.created_at), { addSuffix: true });
+
+                            return (
+                              <div
+                                key={notification.id}
+                                className={`px-4 py-3 ${isUnread ? 'bg-gray-50' : ''}`}
+                              >
+                                <div className="flex items-start justify-between gap-2">
+                                  <p className={`text-xs truncate ${isUnread ? 'text-gray-900 font-medium' : 'text-gray-600'}`}>
+                                    {notification.title}
+                                  </p>
+                                  <span className="text-[10px] text-gray-400 shrink-0">
+                                    {timeAgo.replace(' ago', '')}
+                                  </span>
+                                </div>
+                                <p className="text-[10px] text-gray-500 mt-0.5 truncate">
+                                  {notification.message}
+                                </p>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                    <div className="border-t border-gray-200 p-3">
+                      <button
+                        onClick={() => navigate('/notifications')}
+                        className="w-full text-center text-[10px] text-gray-500 hover:text-gray-700 py-1"
+                      >
+                        View all logs
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
