@@ -1895,12 +1895,13 @@ export default function Recoveries() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'New': return 'bg-blue-100 text-blue-800';
-      case 'Pending': return 'bg-orange-100 text-orange-800';
-      case 'Submitted': return 'bg-purple-100 text-purple-800';
-      case 'Paid': return 'bg-green-100 text-green-800';
-      case 'Denied': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'New': return 'bg-gray-100 text-gray-700 border border-gray-200';
+      case 'Pending': return 'bg-gray-100 text-gray-700 border border-gray-200';
+      case 'pending': return 'bg-gray-100 text-gray-700 border border-gray-200';
+      case 'Submitted': return 'bg-gray-100 text-gray-700 border border-gray-200';
+      case 'Paid': return 'bg-gray-100 text-gray-900 border border-gray-300 font-medium';
+      case 'Denied': return 'bg-gray-50 text-gray-500 border border-gray-200';
+      default: return 'bg-gray-100 text-gray-700 border border-gray-200';
     }
   };
 
@@ -2311,15 +2312,15 @@ export default function Recoveries() {
                                     else setSelectedIds(new Set());
                                   }} />
                                 </TableHead>
-                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Claim ID</TableHead>
-                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Created</TableHead>
-                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Details</TableHead>
-                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Status</TableHead>
-                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Duplicate Warning</TableHead>
-                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Days Remaining</TableHead>
-                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Evidence</TableHead>
-                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Est. Value</TableHead>
-                                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Actions</TableHead>
+                                <TableHead className="text-[10px] font-medium text-gray-900 uppercase tracking-[0.15em] py-2">Claim ID</TableHead>
+                                <TableHead className="text-[10px] font-medium text-gray-900 uppercase tracking-[0.15em] py-2">Created</TableHead>
+                                <TableHead className="text-[10px] font-medium text-gray-900 uppercase tracking-[0.15em] py-2">Details</TableHead>
+                                <TableHead className="text-[10px] font-medium text-gray-900 uppercase tracking-[0.15em] py-2">Status</TableHead>
+                                <TableHead className="text-[10px] font-medium text-gray-900 uppercase tracking-[0.15em] py-2">Duplicate Warning</TableHead>
+                                <TableHead className="text-[10px] font-medium text-gray-900 uppercase tracking-[0.15em] py-2">Days Remaining</TableHead>
+                                <TableHead className="text-[10px] font-medium text-gray-900 uppercase tracking-[0.15em] py-2">Evidence</TableHead>
+                                <TableHead className="text-[10px] font-medium text-gray-900 uppercase tracking-[0.15em] py-2">Est. Value</TableHead>
+                                <TableHead className="text-[10px] font-medium text-gray-900 uppercase tracking-[0.15em] py-2">Actions</TableHead>
                               </TableRow>
                             </TableHeader>
                             <TableBody>
