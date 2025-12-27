@@ -1023,8 +1023,7 @@ export default function CaseDetail() {
                     </div>
 
                     {/* Timeline: fetch and display audit events */}
-                    <div className="mt-4 p-3 rounded-md border border-gray-200 bg-gray-50">
-                      <div className="text-xs font-medium text-gray-900 uppercase tracking-[0.1em] mb-2">Timeline</div>
+                    <div className="mt-4 mb-6">
                       <Timeline claimId={effectiveCase.id} />
                     </div>
 
@@ -1041,7 +1040,7 @@ export default function CaseDetail() {
                         );
                         return (
                           <div key={step} className="flex items-center gap-3">
-                            <div className={`h-6 w-6 flex items-center justify-center border text-xs ${active ? 'bg-gray-900 text-white border-gray-900' : 'bg-gray-100 text-gray-500 border-gray-200'}`}>{idx + 1}</div>
+                            <div className={`h-6 w-6 rounded-full flex items-center justify-center border text-xs ${active ? 'bg-gray-900 text-white border-gray-900' : 'bg-gray-100 text-gray-500 border-gray-200'}`}>{idx + 1}</div>
                             <span className={`text-xs ${active ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>{step}</span>
                             {idx < 3 && <div className={`w-8 h-px ${active ? 'bg-gray-900' : 'bg-gray-200'}`} />}
                           </div>
