@@ -671,7 +671,7 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
                         <Package className="h-4 w-4 mr-2" />
                         Download Composite PDF
                     </Button>
-                    <Button onClick={exportAsPdf} className="bg-blue-600 hover:bg-blue-700 text-white">
+                    <Button onClick={exportAsPdf} className="bg-gray-100 hover:bg-gray-200 text-gray-800">
                         <Download className="h-4 w-4 mr-2" />
                         Export as PDF
                     </Button>

@@ -3175,7 +3175,7 @@ export default function Recoveries() {
                           setEvidencePackOpen(true);
                           setDetailsModalOpen(false);
                         }}
-                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                        className="bg-gray-100 hover:bg-gray-200 text-gray-800"
                       >
                         <FileText className="h-4 w-4 mr-2" />
                         View Evidence Pack
