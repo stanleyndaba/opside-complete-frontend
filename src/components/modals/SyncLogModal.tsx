@@ -227,10 +227,10 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
     // Get log icon color
     const getLogColor = (type: string) => {
         switch (type) {
-            case 'success': return 'text-emerald-500';
-            case 'error': return 'text-red-500';
-            case 'warning': return 'text-amber-500';
-            case 'thinking': return 'text-blue-400';
+            case 'success': return 'text-gray-700';
+            case 'error': return 'text-gray-500';
+            case 'warning': return 'text-gray-500';
+            case 'thinking': return 'text-gray-400';
             default: return 'text-gray-400';
         }
     };
@@ -261,38 +261,38 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
         <div className="fixed inset-0 z-50 flex items-center justify-center">
             {/* Overlay */}
             <div
-                className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                className="absolute inset-0 bg-black/40"
                 onClick={onClose}
             />
 
             {/* Modal */}
-            <div className="relative bg-white border border-gray-200 rounded-xl w-full max-w-3xl max-h-[80vh] flex flex-col shadow-2xl">
+            <div className="relative bg-white border border-gray-200 rounded-sm w-full max-w-3xl max-h-[80vh] flex flex-col">
                 {/* Header */}
-                <div className="flex items-center justify-between px-5 py-3 border-b border-gray-200">
+                <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gray-50">
                     <div className="flex items-center gap-3">
-                        <h2 className="text-sm font-semibold text-gray-900">Sync Logs</h2>
+                        <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Sync Logs</h2>
                         {status === 'syncing' && (
-                            <div className="flex items-center gap-1.5 text-xs text-blue-500">
-                                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                            <div className="flex items-center gap-1.5 text-[10px] text-gray-500">
+                                <Loader2 className="h-3 w-3 animate-spin" />
                                 <span>Scanning...</span>
                             </div>
                         )}
                         {status === 'completed' && (
-                            <div className="flex items-center gap-1.5 text-xs text-emerald-600">
-                                <CheckCircle2 className="h-3.5 w-3.5" />
+                            <div className="flex items-center gap-1.5 text-[10px] text-gray-700">
+                                <CheckCircle2 className="h-3 w-3" />
                                 <span>Complete</span>
                             </div>
                         )}
                         {status === 'failed' && (
-                            <div className="flex items-center gap-1.5 text-xs text-red-600">
-                                <AlertCircle className="h-3.5 w-3.5" />
+                            <div className="flex items-center gap-1.5 text-[10px] text-gray-500">
+                                <AlertCircle className="h-3 w-3" />
                                 <span>Failed</span>
                             </div>
                         )}
                     </div>
                     <button
                         onClick={onClose}
-                        className="p-1 rounded-lg hover:bg-gray-100 transition-colors"
+                        className="p-1 hover:bg-gray-100 transition-colors"
                     >
                         <X className="h-4 w-4 text-gray-500" />
                     </button>
@@ -319,9 +319,9 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
                                     <span className="text-gray-400 font-mono w-14 flex-shrink-0">
                                         {formatTime(log.timestamp)}
                                     </span>
-                                    <span className={`flex-1 ${log.type === 'success' ? 'text-emerald-600' :
-                                        log.type === 'error' ? 'text-red-600' :
-                                            log.type === 'warning' ? 'text-amber-600' :
+                                    <span className={`flex-1 ${log.type === 'success' ? 'text-gray-900 font-medium' :
+                                        log.type === 'error' ? 'text-gray-500' :
+                                            log.type === 'warning' ? 'text-gray-600' :
                                                 log.type === 'thinking' ? 'text-gray-400 italic' :
                                                     'text-gray-700'
                                         }`}>
@@ -348,41 +348,41 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
 
                 {/* Footer with CTA */}
                 {status === 'completed' && detectionCount > 0 && (
-                    <div className="px-5 py-3 border-t border-gray-200 bg-gray-50">
+                    <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
                         <div className="flex items-center justify-between">
                             <div className="text-xs text-gray-700">
-                                Found <span className="text-gray-900 font-semibold">{detectionCount}</span> issues worth{' '}
-                                <span className="text-emerald-600 font-semibold">
+                                Found <span className="text-gray-900 font-medium">{detectionCount}</span> issues worth{' '}
+                                <span className="text-gray-900 font-medium">
                                     ${totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </span>
                             </div>
-                            <Button
+                            <button
                                 onClick={() => {
                                     onClose();
                                     navigate('/recoveries');
                                 }}
-                                className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs h-8"
+                                className="px-4 py-1.5 text-xs font-medium text-white bg-gray-900 hover:bg-gray-800 transition-colors"
                             >
                                 View potential claims
-                            </Button>
+                            </button>
                         </div>
-                        <p className="text-xs text-gray-500 mt-1.5">Next: review and approve for filing</p>
+                        <p className="text-[10px] text-gray-500 mt-1.5">Next: review and approve for filing</p>
                     </div>
                 )}
 
                 {status === 'completed' && detectionCount === 0 && (
-                    <div className="px-5 py-3 border-t border-gray-200 bg-emerald-50">
+                    <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                                <CheckCircle2 className="h-4 w-4 text-gray-600" />
                                 <div className="text-xs text-gray-700">
-                                    <span className="font-semibold text-emerald-700">Your account is clean!</span>
+                                    <span className="font-medium text-gray-900">Your account is clean!</span>
                                     <span className="text-gray-500 ml-1">No money left on the table.</span>
                                 </div>
                             </div>
-                            <Button onClick={onClose} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs h-8">
+                            <button onClick={onClose} className="px-4 py-1.5 text-xs font-medium text-white bg-gray-900 hover:bg-gray-800 transition-colors">
                                 Done
-                            </Button>
+                            </button>
                         </div>
                     </div>
                 )}
