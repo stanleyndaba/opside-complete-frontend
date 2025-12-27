@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Badge } from '@/components/ui/badge';
 import { Search, Mail, Calendar, BookOpen, Video, Phone, ArrowRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -89,14 +86,17 @@ export default function Help() {
     <PageLayout title="Help">
       <div className="relative -m-4 lg:-m-6">
         <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24">
-          <div className="relative container mx-auto px-6 pt-8 pb-12">
+          <div className="relative container mx-auto px-8 pt-8 pb-12">
 
             {/* Header */}
-            <header className="mb-6">
-              <h1 className="text-xl font-semibold text-gray-900 tracking-tight">
-                How can we help?
+            <header className="mb-10">
+              <h1 className="text-lg font-medium text-gray-900 tracking-tight">
+                Help Center
               </h1>
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-[0.15em]">
+                Support & Resources
+              </p>
+              <p className="mt-4 text-sm text-gray-600 max-w-2xl leading-relaxed">
                 Find answers, learn the platform, or contact our team.
               </p>
             </header>
@@ -108,151 +108,149 @@ export default function Help() {
                 placeholder="Search for help..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 py-2 h-9 text-xs border-gray-200 bg-gray-50 focus:bg-white focus:border-gray-300"
+                className="pl-10 py-2 h-9 text-xs border-gray-200 bg-gray-50 focus:bg-white focus:border-gray-300 rounded-sm"
               />
             </div>
 
             {/* FAQs */}
             <section className="mb-10">
-              <h2 className="text-xs font-semibold text-gray-800 uppercase tracking-wide mb-4">Frequently Asked Questions</h2>
-              <Card className="bg-white border border-gray-200 shadow-sm rounded-lg overflow-hidden">
-                <CardContent className="p-0">
-                  <Accordion type="single" collapsible className="w-full">
-                    {filteredFaqs.map((faq, index) => (
-                      <AccordionItem
-                        key={faq.id}
-                        value={faq.id}
-                        className={index !== filteredFaqs.length - 1 ? 'border-b border-gray-100' : 'border-0'}
-                      >
-                        <AccordionTrigger className="px-4 py-3 text-left hover:no-underline text-xs font-medium text-gray-900 hover:bg-gray-50">
-                          {faq.question}
-                        </AccordionTrigger>
-                        <AccordionContent className="px-4 pb-3 text-[10px] text-gray-600 leading-relaxed">
-                          {faq.answer}
-                        </AccordionContent>
-                      </AccordionItem>
-                    ))}
-                  </Accordion>
-                  {filteredFaqs.length === 0 && searchTerm && (
-                    <div className="text-center py-8 text-sm text-gray-500">
-                      No matching questions found.
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+              <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em] mb-4">Frequently Asked Questions</h2>
+              <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
+                <Accordion type="single" collapsible className="w-full">
+                  {filteredFaqs.map((faq, index) => (
+                    <AccordionItem
+                      key={faq.id}
+                      value={faq.id}
+                      className={index !== filteredFaqs.length - 1 ? 'border-b border-gray-100' : 'border-0'}
+                    >
+                      <AccordionTrigger className="px-4 py-3 text-left hover:no-underline text-xs font-medium text-gray-900 hover:bg-gray-50">
+                        {faq.question}
+                      </AccordionTrigger>
+                      <AccordionContent className="px-4 pb-3 text-[10px] text-gray-600 leading-relaxed">
+                        {faq.answer}
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+                {filteredFaqs.length === 0 && searchTerm && (
+                  <div className="text-center py-8 text-xs text-gray-500">
+                    No matching questions found.
+                  </div>
+                )}
+              </div>
             </section>
 
             {/* Getting Started & Guides */}
             <section className="mb-10">
-              <h2 className="text-xs font-semibold text-gray-800 uppercase tracking-wide mb-4">Learn the Platform</h2>
-              <div className="grid md:grid-cols-2 gap-3">
+              <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em] mb-4">Learn the Platform</h2>
+              <div className="grid md:grid-cols-2 gap-4">
                 {/* Getting Started */}
-                <Card className="bg-white border border-gray-200 shadow-sm rounded-lg overflow-hidden">
-                  <CardHeader className="bg-gray-50/50 border-b border-gray-100 py-3 px-4">
-                    <CardTitle className="text-xs font-semibold text-gray-900 flex items-center gap-2">
-                      <div className="h-6 w-6 rounded-md bg-blue-50 flex items-center justify-center">
-                        <BookOpen className="h-3 w-3 text-blue-600" />
+                <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
+                  <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
+                    <h3 className="text-xs font-medium text-gray-900 flex items-center gap-2">
+                      <div className="h-6 w-6 bg-gray-200 flex items-center justify-center">
+                        <BookOpen className="h-3 w-3 text-gray-600" />
                       </div>
                       Getting Started
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-4">
-                    <div className="space-y-2 mb-3">
+                    </h3>
+                  </div>
+                  <div className="p-4">
+                    <div className="space-y-2 mb-4">
                       {gettingStartedSteps.map((item) => (
                         <div key={item.step} className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <div className="h-5 w-5 rounded-full bg-gray-900 text-white text-[9px] font-medium flex items-center justify-center">
+                            <div className="h-5 w-5 bg-gray-900 text-white text-[9px] font-medium flex items-center justify-center">
                               {item.step}
                             </div>
                             <span className="text-xs text-gray-700">{item.title}</span>
                           </div>
-                          <Badge variant="secondary" className="bg-gray-100 text-gray-500 text-[9px] px-1.5 py-0">
+                          <span className="px-1.5 py-0 text-[9px] bg-gray-100 text-gray-500 border border-gray-200">
                             {item.time}
-                          </Badge>
+                          </span>
                         </div>
                       ))}
                     </div>
-                    <Button className="w-full bg-gray-900 hover:bg-gray-800 text-white text-xs h-8">
-                      <Video className="h-3 w-3 mr-1.5" />
+                    <button className="w-full px-4 py-2 text-xs font-medium text-white bg-gray-900 hover:bg-gray-800 transition-colors flex items-center justify-center gap-1">
+                      <Video className="h-3 w-3" />
                       Watch Tutorial
-                    </Button>
-                  </CardContent>
-                </Card>
+                    </button>
+                  </div>
+                </div>
 
                 {/* Dashboard Guide */}
-                <Card className="bg-white border border-gray-200 shadow-sm rounded-lg overflow-hidden">
-                  <CardHeader className="bg-gray-50/50 border-b border-gray-100 py-3 px-4">
-                    <CardTitle className="text-xs font-semibold text-gray-900 flex items-center gap-2">
-                      <div className="h-6 w-6 rounded-md bg-purple-50 flex items-center justify-center">
-                        <Video className="h-3 w-3 text-purple-600" />
+                <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
+                  <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
+                    <h3 className="text-xs font-medium text-gray-900 flex items-center gap-2">
+                      <div className="h-6 w-6 bg-gray-200 flex items-center justify-center">
+                        <Video className="h-3 w-3 text-gray-600" />
                       </div>
                       Understanding Your Dashboard
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-4">
-                    <div className="space-y-2 mb-3">
-                      <div className="p-2.5 rounded-md bg-gray-50 border border-gray-100">
+                    </h3>
+                  </div>
+                  <div className="p-4">
+                    <div className="space-y-2 mb-4">
+                      <div className="p-2.5 bg-gray-50 border border-gray-100">
                         <p className="text-xs font-medium text-gray-900">Total Guaranteed</p>
                         <p className="text-[10px] text-gray-500">Amount committed to recover for active claims</p>
                       </div>
-                      <div className="p-2.5 rounded-md bg-gray-50 border border-gray-100">
+                      <div className="p-2.5 bg-gray-50 border border-gray-100">
                         <p className="text-xs font-medium text-gray-900">Recovery Success Rate</p>
                         <p className="text-[10px] text-gray-500">Percentage of claims that result in payouts</p>
                       </div>
-                      <div className="p-2.5 rounded-md bg-gray-50 border border-gray-100">
+                      <div className="p-2.5 bg-gray-50 border border-gray-100">
                         <p className="text-xs font-medium text-gray-900">Avg Processing Time</p>
                         <p className="text-[10px] text-gray-500">Time from submission to payout</p>
                       </div>
                     </div>
-                    <a href="#" className="inline-flex items-center gap-1 text-xs font-medium text-gray-900 hover:text-gray-600">
+                    <a href="#" className="inline-flex items-center gap-1 text-xs font-medium text-gray-900 hover:text-gray-600 transition-colors">
                       Read full guide
                       <ArrowRight className="h-3 w-3" />
                     </a>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               </div>
             </section>
 
             {/* Contact Support */}
             <section>
-              <h2 className="text-xs font-semibold text-gray-800 uppercase tracking-wide mb-4">Contact Support</h2>
-              <div className="grid md:grid-cols-2 gap-3">
+              <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em] mb-4">Contact Support</h2>
+              <div className="grid md:grid-cols-2 gap-4">
                 {/* Email Form */}
-                <Card className="bg-white border border-gray-200 shadow-sm rounded-lg overflow-hidden">
-                  <CardHeader className="bg-gray-50/50 border-b border-gray-100 py-3 px-4">
-                    <CardTitle className="text-xs font-semibold text-gray-900 flex items-center gap-2">
-                      <div className="h-6 w-6 rounded-md bg-emerald-50 flex items-center justify-center">
-                        <Mail className="h-3 w-3 text-emerald-600" />
+                <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
+                  <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
+                    <h3 className="text-xs font-medium text-gray-900 flex items-center gap-2">
+                      <div className="h-6 w-6 bg-gray-200 flex items-center justify-center">
+                        <Mail className="h-3 w-3 text-gray-600" />
                       </div>
                       Email Support
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-4">
+                    </h3>
+                  </div>
+                  <div className="p-4">
                     <form onSubmit={handleContactSubmit} className="space-y-3">
                       <div>
-                        <Label htmlFor="name" className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Name</Label>
+                        <Label htmlFor="name" className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em]">Name</Label>
                         <Input
                           id="name"
                           value={contactForm.name}
                           onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
                           placeholder="Your name"
-                          className="mt-1 h-8 text-xs"
+                          className="mt-1 h-8 text-xs border-gray-200 rounded-sm"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="sellerId" className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Seller ID</Label>
+                        <Label htmlFor="sellerId" className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em]">Seller ID</Label>
                         <Input
                           id="sellerId"
                           value={contactForm.sellerId}
                           onChange={(e) => setContactForm({ ...contactForm, sellerId: e.target.value })}
                           placeholder="A1B2C3D4E5F6G7"
-                          className="mt-1 h-8 text-xs"
+                          className="mt-1 h-8 text-xs border-gray-200 rounded-sm"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="category" className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Category</Label>
+                        <Label htmlFor="category" className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em]">Category</Label>
                         <Select value={contactForm.category} onValueChange={(value) => setContactForm({ ...contactForm, category: value })}>
-                          <SelectTrigger className="mt-1 h-8 text-xs">
+                          <SelectTrigger className="mt-1 h-8 text-xs border-gray-200 rounded-sm">
                             <SelectValue placeholder="Select..." />
                           </SelectTrigger>
                           <SelectContent>
@@ -265,50 +263,50 @@ export default function Help() {
                         </Select>
                       </div>
                       <div>
-                        <Label htmlFor="message" className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Message</Label>
+                        <Label htmlFor="message" className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em]">Message</Label>
                         <Textarea
                           id="message"
                           value={contactForm.message}
                           onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
                           placeholder="Describe your issue..."
                           rows={2}
-                          className="mt-1 text-xs"
+                          className="mt-1 text-xs border-gray-200 rounded-sm"
                         />
                       </div>
-                      <Button type="submit" className="w-full bg-gray-900 hover:bg-gray-800 text-white text-xs h-8">
+                      <button type="submit" className="w-full px-4 py-2 text-xs font-medium text-white bg-gray-900 hover:bg-gray-800 transition-colors">
                         Send Message
-                      </Button>
+                      </button>
                     </form>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
 
                 {/* Book a Call */}
-                <Card className="bg-white border border-gray-200 shadow-sm rounded-lg overflow-hidden">
-                  <CardHeader className="bg-gray-50/50 border-b border-gray-100 py-3 px-4">
-                    <CardTitle className="text-xs font-semibold text-gray-900 flex items-center gap-2">
-                      <div className="h-6 w-6 rounded-md bg-amber-50 flex items-center justify-center">
-                        <Calendar className="h-3 w-3 text-amber-600" />
+                <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
+                  <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
+                    <h3 className="text-xs font-medium text-gray-900 flex items-center gap-2">
+                      <div className="h-6 w-6 bg-gray-200 flex items-center justify-center">
+                        <Calendar className="h-3 w-3 text-gray-600" />
                       </div>
                       Book a Call
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-4">
+                    </h3>
+                  </div>
+                  <div className="p-4">
                     <div className="space-y-2 mb-4">
-                      <div className="flex items-center gap-2 p-2.5 rounded-md bg-gray-50 border border-gray-100">
+                      <div className="flex items-center gap-2 p-2.5 bg-gray-50 border border-gray-100">
                         <Phone className="h-3 w-3 text-gray-400" />
                         <div>
                           <p className="text-xs font-medium text-gray-900">Direct Access</p>
                           <p className="text-[10px] text-gray-500">Speak with a recovery specialist</p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 p-2.5 rounded-md bg-gray-50 border border-gray-100">
+                      <div className="flex items-center gap-2 p-2.5 bg-gray-50 border border-gray-100">
                         <Calendar className="h-3 w-3 text-gray-400" />
                         <div>
                           <p className="text-xs font-medium text-gray-900">Flexible Scheduling</p>
                           <p className="text-[10px] text-gray-500">Choose a time that works for you</p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 p-2.5 rounded-md bg-gray-50 border border-gray-100">
+                      <div className="flex items-center gap-2 p-2.5 bg-gray-50 border border-gray-100">
                         <Video className="h-3 w-3 text-gray-400" />
                         <div>
                           <p className="text-xs font-medium text-gray-900">Screen Sharing</p>
@@ -316,14 +314,14 @@ export default function Help() {
                         </div>
                       </div>
                     </div>
-                    <Button className="w-full bg-gray-900 hover:bg-gray-800 text-white text-xs h-8">
+                    <button className="w-full px-4 py-2 text-xs font-medium text-white bg-gray-900 hover:bg-gray-800 transition-colors">
                       Schedule 15-min Call
-                    </Button>
-                    <p className="text-[9px] text-gray-400 mt-2">
+                    </button>
+                    <p className="text-[9px] text-gray-400 mt-2 text-center">
                       Mon-Fri, 9 AM - 6 PM EST
                     </p>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               </div>
             </section>
 
