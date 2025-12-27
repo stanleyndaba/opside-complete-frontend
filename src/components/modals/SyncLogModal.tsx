@@ -56,7 +56,8 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
     const [logs, setLogs] = useState<LogEntry[]>([]);
     const [displayedLogs, setDisplayedLogs] = useState<LogEntry[]>([]); // Logs shown with animation
     const [syncId, setSyncId] = useState<string | null>(null);
-    const [status, setStatus] = useState<'idle' | 'syncing' | 'completed' | 'failed'>('idle');
+    const [status, setStatus] = useState<'idle' | 'syncing' | 'completed' | 'failed' | 'cancelled'>('idle');
+    const [isCancelling, setIsCancelling] = useState(false);
     const [expandedStories, setExpandedStories] = useState<Set<string>>(new Set());
     const [detectionCount, setDetectionCount] = useState<number>(0);
     const [totalValue, setTotalValue] = useState<number>(0);
@@ -64,6 +65,40 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
     const hasStartedRef = useRef(false);
     const displayQueueRef = useRef<LogEntry[]>([]);
     const isProcessingQueueRef = useRef(false);
+
+    // Cancel sync handler
+    const handleCancelSync = useCallback(async () => {
+        if (!syncId || isCancelling) return;
+
+        setIsCancelling(true);
+        try {
+            await api.post(`/sync/cancel/${syncId}`);
+            setStatus('cancelled');
+            // Add cancel log directly without using addLog to avoid circular dependency
+            const cancelLog: LogEntry = {
+                id: `log_cancel_${Date.now()}`,
+                type: 'warning',
+                message: 'Sync cancelled by user',
+                category: 'system',
+                timestamp: new Date()
+            };
+            setLogs(prev => [...prev, cancelLog]);
+            setDisplayedLogs(prev => [...prev, cancelLog]);
+        } catch (error: any) {
+            console.error('Failed to cancel sync:', error);
+            const errorLog: LogEntry = {
+                id: `log_error_${Date.now()}`,
+                type: 'error',
+                message: `Failed to cancel: ${error.message}`,
+                category: 'system',
+                timestamp: new Date()
+            };
+            setLogs(prev => [...prev, errorLog]);
+            setDisplayedLogs(prev => [...prev, errorLog]);
+        } finally {
+            setIsCancelling(false);
+        }
+    }, [syncId, isCancelling]);
 
     // Process display queue - shows logs one at a time with delay
     const processDisplayQueue = useCallback(async () => {
@@ -246,6 +281,7 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
                 isProcessingQueueRef.current = false;
                 setSyncId(null);
                 setStatus('idle');
+                setIsCancelling(false);
                 setExpandedStories(new Set());
                 setDetectionCount(0);
                 setTotalValue(0);
@@ -289,13 +325,30 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
                                 <span>Failed</span>
                             </div>
                         )}
+                        {status === 'cancelled' && (
+                            <div className="flex items-center gap-1.5 text-[10px] text-gray-500">
+                                <AlertCircle className="h-3 w-3" />
+                                <span>Cancelled</span>
+                            </div>
+                        )}
                     </div>
-                    <button
-                        onClick={onClose}
-                        className="p-1 hover:bg-gray-100 transition-colors"
-                    >
-                        <X className="h-4 w-4 text-gray-500" />
-                    </button>
+                    <div className="flex items-center gap-2">
+                        {status === 'syncing' && (
+                            <button
+                                onClick={handleCancelSync}
+                                disabled={isCancelling}
+                                className="px-3 py-1.5 text-xs text-gray-600 border border-gray-300 hover:bg-gray-100 transition-colors disabled:opacity-50"
+                            >
+                                {isCancelling ? 'Cancelling...' : 'Cancel'}
+                            </button>
+                        )}
+                        <button
+                            onClick={onClose}
+                            className="p-1 hover:bg-gray-100 transition-colors"
+                        >
+                            <X className="h-4 w-4 text-gray-500" />
+                        </button>
+                    </div>
                 </div>
 
                 {/* Log content - Single flat log stream */}
