@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
-import { Card } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import {
   DollarSign,
   CheckCircle,
@@ -16,7 +13,6 @@ import {
   RefreshCw,
   Loader2
 } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
 import { api } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 import { formatDistanceToNow } from 'date-fns';
@@ -51,7 +47,7 @@ const getNotificationIcon = (type: string): React.ElementType => {
   if (typeLower.includes('security') || typeLower.includes('login')) return Shield;
   if (typeLower.includes('performance') || typeLower.includes('summary')) return TrendingUp;
   if (typeLower.includes('update') || typeLower.includes('feature')) return Sparkles;
-  return FileText; // Default icon
+  return FileText;
 };
 
 // Format timestamp to relative time
@@ -79,24 +75,18 @@ export default function NotificationHub() {
       try {
         const response = await api.getNotifications({ limit: 100 });
         if (!cancelled) {
-          // Support multiple response formats: {notifications: []}, {data: []}, or direct array
           const notifData = response.ok
             ? (response.data?.notifications || response.data?.data || response.data || [])
             : [];
 
           if (response.ok && Array.isArray(notifData)) {
-            // Map API response to frontend format
             const mappedNotifications: Notification[] = notifData.map((notif: any) => {
               const icon = getNotificationIcon(notif.type || '');
               const timestamp = formatTimestamp(notif.created_at || new Date().toISOString());
-
-              // Determine channels based on notification data
-              // Default to In-App, add Email if email_sent is true
               const channels: string[] = ['In-App'];
               if (notif.email_sent || notif.sent_via_email) {
                 channels.push('Email');
               }
-
               return {
                 id: notif.id,
                 type: notif.type || 'general',
@@ -111,7 +101,6 @@ export default function NotificationHub() {
             setError(null);
           } else {
             setNotifications([]);
-            // Only show error if the response was not OK
             if (!response.ok) {
               setError(response.error || 'Failed to load notifications');
             }
@@ -137,7 +126,6 @@ export default function NotificationHub() {
     try {
       const response = await api.markNotificationRead(notificationId);
       if (response.ok) {
-        // Update local state
         setNotifications(prev => prev.map(n =>
           n.id === notificationId ? { ...n, read: true } : n
         ));
@@ -161,7 +149,6 @@ export default function NotificationHub() {
   const handleRefresh = () => {
     setLoading(true);
     api.getNotifications({ limit: 100 }).then(response => {
-      // Support multiple response formats: {notifications: []}, {data: []}, or direct array
       const notifData = response.ok
         ? (response.data?.notifications || response.data?.data || response.data || [])
         : [];
@@ -279,7 +266,6 @@ export default function NotificationHub() {
       try {
         const response = await api.getNotificationPreferences();
         if (!cancelled && response.ok && response.data) {
-          // Merge backend preferences with default state
           setPreferences(prev => prev.map(pref => {
             const saved = response.data[pref.id];
             if (saved) {
@@ -300,12 +286,10 @@ export default function NotificationHub() {
   }, []);
 
   const updatePreference = async (id: string, channel: 'email' | 'inApp', value: boolean) => {
-    // Update local state immediately for responsive UI
     setPreferences(prev => prev.map(pref =>
       pref.id === id ? { ...pref, [channel]: value } : pref
     ));
 
-    // Build preferences object to save
     const prefsToSave: Record<string, { email: boolean; inApp: boolean }> = {};
     preferences.forEach(pref => {
       if (pref.id === id) {
@@ -315,19 +299,14 @@ export default function NotificationHub() {
       }
     });
 
-    // Save to backend
     try {
-      console.log('[NotificationHub] Saving preferences:', prefsToSave);
       const response = await api.saveNotificationPreferences(prefsToSave);
-      console.log('[NotificationHub] Save response:', response);
       if (response.ok) {
         toast({ title: 'Preferences saved' });
       } else {
-        console.warn('[NotificationHub] Save failed:', response.error);
         toast({ title: 'Failed to save', description: response.error || 'Please try again', variant: 'destructive' });
       }
     } catch (err) {
-      console.error('[NotificationHub] Save error:', err);
       toast({ title: 'Failed to save', description: 'Network error - preferences saved locally only', variant: 'destructive' });
     }
   };
@@ -338,136 +317,136 @@ export default function NotificationHub() {
     'Platform & Performance'
   ];
 
-  const getChannelBadges = (channels: string[]) => {
-    return channels.map(channel => (
-      <Badge key={channel} variant="secondary" className="text-xs">
-        {channel}
-      </Badge>
-    ));
-  };
-
   return (
-    <PageLayout title="Notification Hub & Preferences">
+    <PageLayout title="Notifications">
       <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24 text-gray-700">
-          <div className="relative container mx-auto px-6 pt-4 pb-8 text-gray-700 space-y-6">
+        <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24">
+          <div className="relative container mx-auto px-8 pt-8 pb-10 space-y-6">
+            {/* Page Header */}
+            <header>
+              <h1 className="text-lg font-medium text-gray-900 tracking-tight">
+                Notifications
+              </h1>
+              <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-[0.15em]">
+                Hub & Preferences
+              </p>
+            </header>
+
             {/* Notification Log */}
-            <Card className="p-4 bg-white border-gray-200 text-gray-700 shadow-sm">
-              <div className="mb-4 flex items-center justify-between border-b border-gray-200 pb-3">
+            <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
+              <div className="px-4 py-3 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
                 <div>
-                  <h2 className="text-sm font-semibold text-gray-900 mb-0.5">
+                  <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
                     Notification Log
                   </h2>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-[10px] text-gray-500 mt-0.5">
                     Complete history of all notifications sent to you.
                   </p>
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
+                <button
                   onClick={handleRefresh}
                   disabled={loading}
-                  className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs h-7"
+                  className="px-3 py-1.5 text-xs text-gray-700 border border-gray-300 bg-white hover:bg-gray-50 transition-colors flex items-center gap-1 disabled:opacity-50"
                 >
                   {loading ? (
-                    <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
                   ) : (
-                    <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
+                    <RefreshCw className="h-3.5 w-3.5" />
                   )}
                   Refresh
-                </Button>
+                </button>
               </div>
 
-              {loading && (
-                <div className="text-center py-6 text-gray-600">
-                  <Loader2 className="h-5 w-5 animate-spin mx-auto mb-2" />
-                  <p className="text-xs">Loading notifications...</p>
-                </div>
-              )}
+              <div className="p-4">
+                {loading && (
+                  <div className="text-center py-6 text-gray-600">
+                    <Loader2 className="h-5 w-5 animate-spin mx-auto mb-2" />
+                    <p className="text-xs">Loading notifications...</p>
+                  </div>
+                )}
 
-              {error && !loading && (
-                <div className="text-center py-6">
-                  <p className="text-xs text-red-600 mb-2">{error}</p>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleRefresh}
-                    className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs h-7"
-                  >
-                    Retry
-                  </Button>
-                </div>
-              )}
+                {error && !loading && (
+                  <div className="text-center py-6">
+                    <p className="text-xs text-gray-600 mb-2">{error}</p>
+                    <button
+                      onClick={handleRefresh}
+                      className="px-3 py-1.5 text-xs text-gray-700 border border-gray-300 bg-white hover:bg-gray-50 transition-colors"
+                    >
+                      Retry
+                    </button>
+                  </div>
+                )}
 
-              {!loading && !error && notifications.length === 0 && (
-                <div className="text-center py-6 text-gray-600">
-                  <p className="text-xs mb-1">No notifications found.</p>
-                  <p className="text-[10px] text-gray-500">Notifications will appear here as events occur.</p>
-                </div>
-              )}
+                {!loading && !error && notifications.length === 0 && (
+                  <div className="text-center py-6 text-gray-600">
+                    <p className="text-xs mb-1">No notifications found.</p>
+                    <p className="text-[10px] text-gray-500">Notifications will appear here as events occur.</p>
+                  </div>
+                )}
 
-              {!loading && !error && notifications.length > 0 && (
-                <div className="space-y-2">
-                  {notifications.map((notification) => {
-                    const IconComponent = notification.icon;
-                    return (
-                      <div
-                        key={notification.id}
-                        className={`flex items-start gap-3 p-3 rounded-lg border transition-colors cursor-pointer ${!notification.read
-                          ? 'bg-gray-50 border-gray-200'
-                          : 'bg-white hover:bg-gray-50 border-gray-200'
-                          }`}
-                        onClick={() => !notification.read && handleMarkAsRead(notification.id)}
-                      >
-                        <div className="flex-shrink-0">
-                          <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center">
-                            <IconComponent className="w-3 h-3 text-emerald-600" />
-                          </div>
-                        </div>
-
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs font-medium text-gray-900 mb-0.5">
-                            {notification.message}
-                          </p>
-                          <div className="flex items-center gap-2 text-[10px] text-gray-500">
-                            <span>{notification.timestamp}</span>
-                            <div className="flex gap-1">
-                              {notification.channels.map((channel) => (
-                                <Badge key={channel} variant="outline" className="text-[9px] border-gray-200 text-gray-600 bg-gray-50 px-1 py-0">{channel}</Badge>
-                              ))}
+                {!loading && !error && notifications.length > 0 && (
+                  <div className="space-y-2">
+                    {notifications.map((notification) => {
+                      const IconComponent = notification.icon;
+                      return (
+                        <div
+                          key={notification.id}
+                          className={`flex items-start gap-3 p-3 border transition-colors cursor-pointer ${!notification.read
+                            ? 'bg-gray-50 border-gray-200'
+                            : 'bg-white hover:bg-gray-50 border-gray-100'
+                            }`}
+                          onClick={() => !notification.read && handleMarkAsRead(notification.id)}
+                        >
+                          <div className="flex-shrink-0">
+                            <div className="w-6 h-6 bg-gray-100 flex items-center justify-center">
+                              <IconComponent className="w-3 h-3 text-gray-600" />
                             </div>
                           </div>
-                        </div>
 
-                        {!notification.read && (
-                          <div className="w-2 h-2 bg-emerald-500 rounded-full flex-shrink-0 mt-2"></div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </Card>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-medium text-gray-900 mb-0.5">
+                              {notification.message}
+                            </p>
+                            <div className="flex items-center gap-2 text-[10px] text-gray-500">
+                              <span>{notification.timestamp}</span>
+                              <div className="flex gap-1">
+                                {notification.channels.map((channel) => (
+                                  <span key={channel} className="px-1 py-0 text-[9px] border border-gray-200 text-gray-600 bg-gray-50">{channel}</span>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+
+                          {!notification.read && (
+                            <div className="w-2 h-2 bg-gray-900 flex-shrink-0 mt-2"></div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
 
             {/* Notification Preferences */}
-            <Card className="p-4 bg-white border-gray-200 text-gray-700 shadow-sm">
-              <div className="mb-4 border-b border-gray-200 pb-3">
-                <h2 className="text-sm font-semibold text-gray-900 mb-0.5">
+            <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
+              <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
+                <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
                   Notification Preferences
                 </h2>
-                <p className="text-xs text-gray-500">
+                <p className="text-[10px] text-gray-500 mt-0.5">
                   Control how and when you hear from us.
                 </p>
               </div>
 
-              <div className="space-y-6">
-                {categories.map((category) => {
+              <div className="p-4 space-y-6">
+                {categories.map((category, catIdx) => {
                   const categoryPrefs = preferences.filter(pref => pref.category === category);
 
                   return (
                     <div key={category}>
                       <div className="mb-3">
-                        <h3 className="text-xs font-semibold text-gray-800 uppercase tracking-wide mb-0.5">
+                        <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.1em] mb-0.5">
                           {category}
                         </h3>
                         <p className="text-[10px] text-gray-500">
@@ -481,10 +460,10 @@ export default function NotificationHub() {
                         {categoryPrefs.map((pref) => {
                           const IconComponent = pref.icon;
                           return (
-                            <div key={pref.id} className="flex items-start gap-3 p-3 border rounded-lg bg-gray-50 border-gray-200">
+                            <div key={pref.id} className="flex items-start gap-3 p-3 border border-gray-100 bg-gray-50">
                               <div className="flex-shrink-0">
-                                <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center">
-                                  <IconComponent className="w-3 h-3 text-blue-600" />
+                                <div className="w-6 h-6 bg-gray-200 flex items-center justify-center">
+                                  <IconComponent className="w-3 h-3 text-gray-600" />
                                 </div>
                               </div>
 
@@ -525,14 +504,14 @@ export default function NotificationHub() {
                         })}
                       </div>
 
-                      {category !== 'Platform & Performance' && (
-                        <Separator className="mt-6" />
+                      {catIdx < categories.length - 1 && (
+                        <div className="border-t border-gray-200 mt-6"></div>
                       )}
                     </div>
                   );
                 })}
               </div>
-            </Card>
+            </div>
           </div>
         </div>
       </div>
