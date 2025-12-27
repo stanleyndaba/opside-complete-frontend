@@ -209,184 +209,225 @@ export default function Billing() {
     <PageLayout title="Billing & Invoices">
       <div className="relative -m-4 lg:-m-6">
         <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24">
-          <div className="relative container mx-auto px-6 pt-6 pb-10 text-gray-700 space-y-8">
+          <div className="relative container mx-auto px-8 pt-8 pb-12 text-gray-900">
+            {/* Header */}
+            <div className="mb-8">
+              <h1 className="text-lg font-medium text-gray-900 tracking-tight">Billing & Invoices</h1>
+              <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-[0.15em]">Payment Management</p>
+            </div>
+
             {/* Current Plan & Payment Method */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
               {/* Your Plan Card */}
-              <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-gray-900">
-                    <Shield className="h-5 w-5 text-emerald-600" />
-                    Current Plan
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
+              <div className="bg-white border border-gray-200 rounded-sm">
+                <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                  <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Current Plan</h2>
+                </div>
+                <div className="p-6 space-y-4">
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      Clario Billing
-                    </h3>
-                    <div className="mt-3 p-4 rounded-lg border border-gray-200 bg-gray-50">
-                      <p className="text-sm text-gray-600 leading-relaxed">
-                        We charge a <span className="font-semibold text-gray-900">20% commission only</span> on the funds we successfully recover for you.
-                        <span className="font-medium text-emerald-600"> No recovery, no fee.</span>
+                    <h3 className="text-base font-medium text-gray-900">Performance-Based Billing</h3>
+                    <div className="mt-3 p-4 bg-gray-50 border border-gray-200">
+                      <p className="text-xs text-gray-600 leading-relaxed">
+                        <span className="font-medium text-gray-900">20% commission</span> on successfully recovered funds only.
+                        <span className="text-emerald-600 font-medium"> No recovery, no fee.</span>
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-emerald-600">
-                    <Check className="h-4 w-4" />
-                    <span className="text-gray-700">Active and monitoring your account 24/7</span>
+                  <div className="flex items-center gap-2 text-xs text-gray-600">
+                    <Check className="h-3.5 w-3.5 text-emerald-600" />
+                    <span>Active and monitoring 24/7</span>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
 
               {/* Payment & Billing Settings Card */}
-              <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-gray-900">
-                    <CreditCard className="h-5 w-5 text-emerald-600" />
-                    Payment Method
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between p-4 rounded-lg border border-gray-200 bg-gray-50">
+              <div className="bg-white border border-gray-200 rounded-sm">
+                <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                  <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Payment Method</h2>
+                </div>
+                <div className="p-6 space-y-4">
+                  <div className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 bg-gray-100 rounded border border-gray-200">
-                        <CreditCard className="h-4 w-4 text-gray-600" />
+                      <div className="p-2 bg-white border border-gray-200">
+                        <CreditCard className="h-3.5 w-3.5 text-gray-500" />
                       </div>
                       <div>
-                        <p className="font-medium text-gray-900">Visa ending in 4242</p>
-                        <p className="text-sm text-gray-600">Expires 12/2027</p>
+                        <p className="text-xs font-medium text-gray-900">Visa ending in 4242</p>
+                        <p className="text-[10px] text-gray-500">Expires 12/2027</p>
                       </div>
                     </div>
-                    <Badge variant="outline" className="border-emerald-300 text-emerald-700 bg-emerald-50">
-                      Active
-                    </Badge>
+                    <span className="text-[9px] uppercase tracking-[0.1em] text-emerald-600 font-medium">Active</span>
                   </div>
-                  <div className="grid grid-cols-1 gap-4">
+
+                  <div className="space-y-3">
                     <div>
-                      <div className="text-sm text-gray-600 mb-1">Invoice Recipients</div>
-                      <div className="flex gap-2">
-                        <Input placeholder="Add recipient email" value={newRecipient} onChange={(e) => setNewRecipient(e.target.value)} className="border-gray-300 bg-white text-gray-900 placeholder:text-gray-500" />
-                        <Button className="bg-white text-blue-700 border-blue-300 hover:bg-blue-50" variant="outline" onClick={() => {
-                          const email = newRecipient.trim(); if (!email) return; setInvoiceRecipients(prev => prev.includes(email) ? prev : [...prev, email]); setNewRecipient('');
-                        }}>Add</Button>
+                      <label className="text-[10px] uppercase tracking-[0.1em] text-gray-500 font-medium">Invoice Recipients</label>
+                      <div className="flex gap-2 mt-1">
+                        <Input
+                          placeholder="Add recipient email"
+                          value={newRecipient}
+                          onChange={(e) => setNewRecipient(e.target.value)}
+                          className="h-8 text-xs bg-gray-50 border-gray-200 rounded-sm"
+                        />
+                        <button
+                          onClick={() => {
+                            const email = newRecipient.trim();
+                            if (!email) return;
+                            setInvoiceRecipients(prev => prev.includes(email) ? prev : [...prev, email]);
+                            setNewRecipient('');
+                          }}
+                          className="px-3 h-8 text-xs text-gray-600 border border-gray-200 hover:bg-gray-50 transition-colors"
+                        >
+                          Add
+                        </button>
                       </div>
                       {invoiceRecipients.length > 0 && (
-                        <div className="mt-2 flex flex-wrap gap-2">
+                        <div className="mt-2 flex flex-wrap gap-1.5">
                           {invoiceRecipients.map((em) => (
-                            <span key={em} className="inline-flex items-center gap-2 px-2 py-1 rounded border border-gray-200 bg-gray-50 text-xs text-gray-700">
+                            <span key={em} className="inline-flex items-center gap-1.5 px-2 py-1 bg-gray-50 border border-gray-200 text-[10px] text-gray-700">
                               {em}
-                              <button className="text-gray-500 hover:text-gray-900" onClick={() => setInvoiceRecipients(prev => prev.filter(x => x !== em))}>×</button>
+                              <button className="text-gray-400 hover:text-gray-600" onClick={() => setInvoiceRecipients(prev => prev.filter(x => x !== em))}>×</button>
                             </span>
                           ))}
                         </div>
                       )}
                     </div>
                     <div>
-                      <div className="text-sm text-gray-600 mb-1">Tax / VAT Number</div>
-                      <Input placeholder="Optional — shown on invoices" value={taxId} onChange={(e) => setTaxId(e.target.value)} className="border-gray-300 bg-white text-gray-900 placeholder:text-gray-500" />
+                      <label className="text-[10px] uppercase tracking-[0.1em] text-gray-500 font-medium">Tax / VAT Number</label>
+                      <Input
+                        placeholder="Optional — shown on invoices"
+                        value={taxId}
+                        onChange={(e) => setTaxId(e.target.value)}
+                        className="h-8 text-xs bg-gray-50 border-gray-200 rounded-sm mt-1"
+                      />
                     </div>
-                    <div className="flex gap-2">
-                      <Button className="bg-emerald-500 hover:bg-emerald-400 text-white font-semibold" onClick={saveBillingSettings}>Save Billing Settings</Button>
-                      <Button className="bg-white text-blue-700 border-blue-300 hover:bg-blue-50" variant="outline" onClick={() => { window.location.href = '/stripe/callback'; }}>Open Stripe Billing Portal</Button>
+                    <div className="flex gap-2 pt-2">
+                      <button
+                        onClick={saveBillingSettings}
+                        className="px-4 py-2 text-xs text-white bg-gray-900 hover:bg-gray-800 transition-colors"
+                      >
+                        Save Settings
+                      </button>
+                      <button
+                        onClick={() => { window.location.href = '/stripe/callback'; }}
+                        className="px-4 py-2 text-xs text-gray-600 border border-gray-200 hover:bg-gray-50 transition-colors"
+                      >
+                        Stripe Portal
+                      </button>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             </div>
 
             {/* Billing History */}
-            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="text-xl font-semibold text-gray-900">Billing History</CardTitle>
-                    <p className="text-sm text-gray-600 mt-1">
-                      Complete transparency into every charge and recovery
-                    </p>
-                  </div>
-                  <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-white font-semibold" onClick={() => setExportOpen(true)}>
-                    <Download className="h-4 w-4 mr-2" />
-                    Export All
-                  </Button>
+            <div className="bg-white border border-gray-200 rounded-sm mb-8">
+              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
+                <div>
+                  <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Billing History</h2>
+                  <p className="text-[10px] text-gray-500 mt-0.5">Complete transparency into every charge</p>
                 </div>
-              </CardHeader>
-              <CardContent>
+                <button
+                  onClick={() => setExportOpen(true)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-[10px] text-gray-600 border border-gray-200 hover:bg-gray-100 transition-colors"
+                >
+                  <Download className="h-3 w-3" />
+                  Export
+                </button>
+              </div>
+              <div className="p-6">
+                {/* Filters */}
                 <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
                   <div className="flex items-center gap-2">
-                    <Input placeholder="Search invoices (ID/status)" value={invoiceSearch} onChange={(e) => { setInvoiceSearch(e.target.value); setPage(1); }} className="border-gray-300 bg-white text-gray-900 placeholder:text-gray-500 md:w-72" />
-                    <UiSelect value={statusFilter === 'All' ? 'All' : statusFilter} onValueChange={(v) => { setStatusFilter(v as any); setPage(1); }}>
-                      <SelectTrigger className="w-[160px] text-white"><SelectValue placeholder="Status" /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="All">All</SelectItem>
-                        <SelectItem value="Paid">Paid</SelectItem>
-                        <SelectItem value="Due">Due</SelectItem>
-                        <SelectItem value="Overdue">Overdue</SelectItem>
+                    <Input
+                      placeholder="Search invoices..."
+                      value={invoiceSearch}
+                      onChange={(e) => { setInvoiceSearch(e.target.value); setPage(1); }}
+                      className="h-8 text-xs bg-gray-50 border-gray-200 rounded-sm w-48"
+                    />
+                    <Select value={statusFilter === 'All' ? 'All' : statusFilter} onValueChange={(v) => { setStatusFilter(v as any); setPage(1); }}>
+                      <SelectTrigger className="h-8 w-28 text-xs bg-gray-50 border-gray-200 rounded-sm">
+                        <SelectValue placeholder="Status" />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-sm">
+                        <SelectItem value="All" className="text-xs">All</SelectItem>
+                        <SelectItem value="Paid" className="text-xs">Paid</SelectItem>
+                        <SelectItem value="Due" className="text-xs">Due</SelectItem>
+                        <SelectItem value="Overdue" className="text-xs">Overdue</SelectItem>
                       </SelectContent>
-                    </UiSelect>
+                    </Select>
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-gray-600">
+                  <div className="flex items-center gap-2 text-[10px] text-gray-500">
                     <span>{filteredInvoices.length} invoices</span>
-                    <select className="bg-white border border-gray-300 rounded px-2 py-1 text-gray-700" value={pageSize} onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1); }}>
+                    <select
+                      className="h-7 bg-gray-50 border border-gray-200 rounded-sm px-2 text-gray-600"
+                      value={pageSize}
+                      onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1); }}
+                    >
                       <option value={10}>10 / page</option>
                       <option value={25}>25 / page</option>
                       <option value={50}>50 / page</option>
                     </select>
-                    <Button variant="outline" className="bg-white text-blue-700 border-blue-300 hover:bg-blue-50" disabled={page <= 1} onClick={() => setPage(p => Math.max(1, p - 1))}>Prev</Button>
-                    <Button variant="outline" className="bg-white text-blue-700 border-blue-300 hover:bg-blue-50" disabled={page >= totalPages} onClick={() => setPage(p => Math.min(totalPages, p + 1))}>Next</Button>
+                    <button
+                      disabled={page <= 1}
+                      onClick={() => setPage(p => Math.max(1, p - 1))}
+                      className="px-2 py-1 text-gray-500 border border-gray-200 hover:bg-gray-50 disabled:opacity-40"
+                    >
+                      Prev
+                    </button>
+                    <button
+                      disabled={page >= totalPages}
+                      onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                      className="px-2 py-1 text-gray-500 border border-gray-200 hover:bg-gray-50 disabled:opacity-40"
+                    >
+                      Next
+                    </button>
                   </div>
                 </div>
+
                 {loading && (
-                  <div className="text-center py-8 text-gray-600">
-                    Loading billing invoices...
-                  </div>
+                  <div className="text-center py-12 text-gray-500 text-xs">Loading billing invoices...</div>
                 )}
                 {error && !loading && (
-                  <div className="text-center py-8">
-                    <p className="text-amber-600 mb-2">{error}</p>
-                    <p className="text-sm text-gray-500 mb-4">If this keeps happening, please contact support.</p>
-                    <Button
-                      variant="outline"
-                      onClick={() => window.location.reload()}
-                      className="bg-white text-blue-700 border-blue-300 hover:bg-blue-50"
-                    >
+                  <div className="text-center py-12">
+                    <p className="text-amber-600 text-xs mb-2">{error}</p>
+                    <button onClick={() => window.location.reload()} className="text-xs text-gray-600 underline hover:text-gray-900">
                       Try Again
-                    </Button>
+                    </button>
                   </div>
                 )}
                 {!loading && !error && pageData.length === 0 && (
-                  <div className="text-center py-8 text-gray-600">
-                    <p className="mb-2">No billing invoices found.</p>
-                    <p className="text-sm">Invoices will appear here once recoveries are processed.</p>
+                  <div className="text-center py-12 text-gray-500 text-xs">
+                    <p className="mb-1">No billing invoices found.</p>
+                    <p className="text-[10px]">Invoices will appear here once recoveries are processed.</p>
                   </div>
                 )}
                 {!loading && !error && pageData.length > 0 && (
                   <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
-                        <TableRow>
-                          <TableHead className="text-[#36454F]">Invoice #</TableHead>
-                          <TableHead className="text-[#36454F]">Date Issued</TableHead>
-                          <TableHead className="text-[#36454F]">Status</TableHead>
-                          <TableHead className="text-right text-[#36454F]">Total Recovered (Period)</TableHead>
-                          <TableHead className="text-right text-[#36454F]">Our Commission (20%)</TableHead>
-                          <TableHead className="text-right text-[#36454F]">Amount Charged</TableHead>
-                          <TableHead className="text-[#36454F]">Actions</TableHead>
+                        <TableRow className="border-b border-gray-200">
+                          <TableHead className="text-[10px] uppercase tracking-[0.1em] text-gray-500 font-medium">Invoice</TableHead>
+                          <TableHead className="text-[10px] uppercase tracking-[0.1em] text-gray-500 font-medium">Date</TableHead>
+                          <TableHead className="text-[10px] uppercase tracking-[0.1em] text-gray-500 font-medium">Status</TableHead>
+                          <TableHead className="text-[10px] uppercase tracking-[0.1em] text-gray-500 font-medium text-right">Recovered</TableHead>
+                          <TableHead className="text-[10px] uppercase tracking-[0.1em] text-gray-500 font-medium text-right">Commission</TableHead>
+                          <TableHead className="text-[10px] uppercase tracking-[0.1em] text-gray-500 font-medium text-right">Charged</TableHead>
+                          <TableHead className="text-[10px] uppercase tracking-[0.1em] text-gray-500 font-medium"></TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {pageData.map((invoice) => (
-                          <TableRow key={invoice.id} className="hover:bg-gray-50 border-b border-gray-200">
-                            <TableCell>
+                          <TableRow key={invoice.id} className="border-b border-gray-100 hover:bg-gray-50">
+                            <TableCell className="py-3">
                               <Link
                                 to={`/billing/invoice/${invoice.id}`}
-                                className="font-mono text-sm text-emerald-600 hover:underline flex items-center gap-1"
+                                className="text-xs font-mono text-gray-900 hover:text-gray-600"
                               >
                                 {invoice.id}
-                                <ChevronRight className="h-3 w-3" />
                               </Link>
                             </TableCell>
-                            <TableCell>
+                            <TableCell className="text-xs text-gray-600">
                               {new Date(invoice.dateIssued).toLocaleDateString('en-US', {
                                 month: 'short',
                                 day: 'numeric',
@@ -394,33 +435,31 @@ export default function Billing() {
                               })}
                             </TableCell>
                             <TableCell>
-                              <Badge className={cn("font-medium", getStatusColor(invoice.status))}>
+                              <span className={cn(
+                                "text-[10px] px-2 py-0.5",
+                                invoice.status === 'Paid' && "bg-gray-100 text-gray-700",
+                                invoice.status === 'Due' && "bg-amber-50 text-amber-700",
+                                invoice.status === 'Overdue' && "bg-red-50 text-red-700"
+                              )}>
                                 {invoice.status}
-                              </Badge>
+                              </span>
                             </TableCell>
-                            <TableCell className="text-right font-medium">
-                              ${invoice.totalRecovered.toLocaleString('en-US', {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2
-                              })}
+                            <TableCell className="text-right text-xs text-gray-900">
+                              ${invoice.totalRecovered.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </TableCell>
-                            <TableCell className="text-right">
-                              ${invoice.commission.toLocaleString('en-US', {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2
-                              })}
+                            <TableCell className="text-right text-xs text-gray-500">
+                              ${invoice.commission.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </TableCell>
-                            <TableCell className="text-right font-semibold">
-                              ${invoice.amountCharged.toLocaleString('en-US', {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2
-                              })}
+                            <TableCell className="text-right text-xs font-medium text-gray-900">
+                              ${invoice.amountCharged.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </TableCell>
                             <TableCell>
-                              <Button variant="ghost" size="sm" onClick={() => window.print()}>
-                                <Download className="h-4 w-4 mr-2" />
-                                Download PDF
-                              </Button>
+                              <button
+                                onClick={() => window.print()}
+                                className="text-[10px] text-gray-500 hover:text-gray-700"
+                              >
+                                <Download className="h-3.5 w-3.5" />
+                              </button>
                             </TableCell>
                           </TableRow>
                         ))}
@@ -428,106 +467,99 @@ export default function Billing() {
                     </Table>
                   </div>
                 )}
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
-            {/* Frequently Asked Billing Questions */}
-            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
-              <CardHeader>
-                <CardTitle className="text-xl font-semibold text-gray-900">Frequently Asked Billing Questions</CardTitle>
-                <p className="text-sm text-gray-600">
-                  Quick answers to common billing and payment questions
-                </p>
-              </CardHeader>
-              <CardContent>
+            {/* FAQ */}
+            <div className="bg-white border border-gray-200 rounded-sm mb-8">
+              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Frequently Asked Questions</h2>
+              </div>
+              <div className="p-6">
                 <Accordion type="single" collapsible className="w-full">
-                  <AccordionItem value="when-charged" className="border-b border-gray-200">
-                    <AccordionTrigger className="text-left">
+                  <AccordionItem value="when-charged" className="border-b border-gray-100">
+                    <AccordionTrigger className="text-xs text-gray-900 py-3 hover:no-underline">
                       When will I be charged?
                     </AccordionTrigger>
-                    <AccordionContent className="text-gray-600 leading-relaxed">
-                      You are only charged when we successfully recover money for you. We generate invoices monthly for all recoveries completed in that period, with payment automatically processed from your saved payment method within 7 days of invoice generation.
+                    <AccordionContent className="text-xs text-gray-600 leading-relaxed pb-3">
+                      You are only charged when we successfully recover money for you. Invoices are generated monthly, with payment processed within 7 days.
                     </AccordionContent>
                   </AccordionItem>
 
-                  <AccordionItem value="reversed-recovery" className="border-b border-gray-200">
-                    <AccordionTrigger className="text-left">
-                      What happens if a recovery is later reversed by Amazon?
+                  <AccordionItem value="reversed-recovery" className="border-b border-gray-100">
+                    <AccordionTrigger className="text-xs text-gray-900 py-3 hover:no-underline">
+                      What if a recovery is reversed by Amazon?
                     </AccordionTrigger>
-                    <AccordionContent className="text-gray-600 leading-relaxed">
-                      In the rare event that Amazon reverses a recovery, we automatically issue you a full credit on your next invoice. If no future invoice exists, we process a direct refund to your payment method within 5-7 business days.
+                    <AccordionContent className="text-xs text-gray-600 leading-relaxed pb-3">
+                      We automatically issue a full credit on your next invoice. If no future invoice exists, we process a direct refund within 5-7 business days.
                     </AccordionContent>
                   </AccordionItem>
 
-                  <AccordionItem value="vat-number" className="border-b border-gray-200">
-                    <AccordionTrigger className="text-left">
-                      How do I update my company's VAT number?
+                  <AccordionItem value="vat-number" className="border-b border-gray-100">
+                    <AccordionTrigger className="text-xs text-gray-900 py-3 hover:no-underline">
+                      How do I update my VAT number?
                     </AccordionTrigger>
-                    <AccordionContent className="text-gray-600 leading-relaxed">
-                      You can update your VAT number and other billing details by clicking "Update Payment Method" above, or by contacting our support team. Changes will be reflected on your next invoice.
+                    <AccordionContent className="text-xs text-gray-600 leading-relaxed pb-3">
+                      Update your VAT number in the Payment Method section above. Changes will be reflected on your next invoice.
                     </AccordionContent>
                   </AccordionItem>
 
-                  <AccordionItem value="automatic-invoices" className="border-b border-gray-200">
-                    <AccordionTrigger className="text-left">
-                      Can I get invoices automatically sent to my accountant?
-                    </AccordionTrigger>
-                    <AccordionContent className="text-gray-600 leading-relaxed">
-                      Yes! Contact our support team to set up automatic invoice forwarding to additional email addresses. You can add multiple recipients and they'll receive a copy of every invoice automatically.
-                    </AccordionContent>
-                  </AccordionItem>
-
-                  <AccordionItem value="payment-security" className="border-b border-gray-200">
-                    <AccordionTrigger className="text-left">
+                  <AccordionItem value="payment-security" className="border-b border-gray-100">
+                    <AccordionTrigger className="text-xs text-gray-900 py-3 hover:no-underline">
                       How secure is my payment information?
                     </AccordionTrigger>
-                    <AccordionContent className="text-gray-600 leading-relaxed">
-                      All payment processing is handled by Stripe, a PCI DSS Level 1 certified payment processor. We never store your full credit card details on our servers - only encrypted tokens that allow us to process payments securely.
+                    <AccordionContent className="text-xs text-gray-600 leading-relaxed pb-3">
+                      All payments are processed by Stripe, a PCI DSS Level 1 certified processor. We never store your full card details.
                     </AccordionContent>
                   </AccordionItem>
                 </Accordion>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
-            {/* Need More Help */}
-            <div className="text-center py-6">
-              <div className="inline-flex items-center gap-2 text-sm text-gray-600">
-                <AlertCircle className="h-4 w-4" />
-                <span>Have a specific billing question?</span>
-              </div>
-              <div className="mt-2">
-                <Link
-                  to="/help"
-                  className="text-emerald-600 hover:underline font-medium"
-                >
-                  Contact our support team
-                </Link>
-              </div>
+            {/* Support Link */}
+            <div className="text-center py-4">
+              <p className="text-[10px] text-gray-500">
+                Have a billing question?{' '}
+                <Link to="/help" className="text-gray-700 underline hover:text-gray-900">Contact support</Link>
+              </p>
             </div>
           </div>
         </div>
+
         {/* Export Modal */}
         <Dialog open={exportOpen} onOpenChange={setExportOpen}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Export Data</DialogTitle>
-              <DialogDescription>Export your billing history.</DialogDescription>
+          <DialogContent className="sm:max-w-sm bg-white border border-gray-200 rounded-sm p-0">
+            <DialogHeader className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+              <DialogTitle className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Export Data</DialogTitle>
+              <DialogDescription className="text-[10px] text-gray-500 mt-0.5">
+                Download your billing history
+              </DialogDescription>
             </DialogHeader>
-            <div className="space-y-3">
+            <div className="p-6 space-y-4">
               <Select value={exportFormat} onValueChange={(v) => setExportFormat(v as 'csv' | 'pdf')}>
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="h-9 text-xs bg-gray-50 border-gray-200 rounded-sm">
                   <SelectValue placeholder="Select format" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="csv">Detailed CSV</SelectItem>
-                  <SelectItem value="pdf">PDF Summary</SelectItem>
+                <SelectContent className="rounded-sm">
+                  <SelectItem value="csv" className="text-xs">Detailed CSV</SelectItem>
+                  <SelectItem value="pdf" className="text-xs">PDF Summary</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setExportOpen(false)}>Cancel</Button>
-              <Button onClick={exportAction}>Generate & Download</Button>
-            </DialogFooter>
+            <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end gap-2">
+              <button
+                onClick={() => setExportOpen(false)}
+                className="px-3 py-1.5 text-xs text-gray-600 hover:text-gray-900"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={exportAction}
+                className="px-4 py-1.5 text-xs text-white bg-gray-900 hover:bg-gray-800"
+              >
+                Download
+              </button>
+            </div>
           </DialogContent>
         </Dialog>
       </div>
