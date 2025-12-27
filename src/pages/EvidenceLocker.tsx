@@ -911,10 +911,15 @@ export default function EvidenceLocker() {
 
   return <PageLayout title="Doc Locker">
     <div className="relative -m-4 lg:-m-6 overflow-x-hidden">
-      <div className="relative w-full bg-gray-50 min-h-[calc(100vh+96px)] -mt-24 pt-24">
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-gray-50 to-white" />
-        <div className="relative w-full max-w-full mx-auto px-6 pt-6 pb-10 text-gray-900 space-y-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24">
+        <div className="relative w-full max-w-full mx-auto px-8 pt-8 pb-10 text-gray-900">
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-lg font-medium text-gray-900 tracking-tight">Evidence Locker</h1>
+            <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-[0.15em]">Document Management</p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             <GmailConnectionStatus onStatusChange={setGmailConnected} />
             <EvidenceIngestion
               gmailConnected={gmailConnected}
@@ -935,29 +940,27 @@ export default function EvidenceLocker() {
             />
           </div>
 
-          {/* Document Activity Log - Terminal Style */}
-          <Card className="bg-white border-gray-200 text-gray-900">
-            <CardHeader className="border-b border-gray-200 pb-3">
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="text-sm font-semibold text-gray-900">Document Activity</CardTitle>
-                  <CardDescription className="text-xs text-gray-500">Real-time document processing log</CardDescription>
-                </div>
-                <div className="flex items-center gap-4">
-                  <label className="flex items-center gap-2 text-xs text-gray-500 cursor-pointer select-none">
-                    <input
-                      type="checkbox"
-                      checked={showDevLogs}
-                      onChange={(e) => setShowDevLogs(e.target.checked)}
-                      className="w-3.5 h-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    />
-                    Dev Logs
-                  </label>
-                  <span className="text-xs text-gray-400">{filteredDocLogs.length} entries</span>
-                </div>
+          {/* Document Activity Log */}
+          <div className="bg-white border border-gray-200 rounded-sm mb-8">
+            <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
+              <div>
+                <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Document Activity</h2>
+                <p className="text-[10px] text-gray-500 mt-0.5">Real-time document processing log</p>
               </div>
-            </CardHeader>
-            <CardContent className="pt-4">
+              <div className="flex items-center gap-4">
+                <label className="flex items-center gap-2 text-[10px] text-gray-500 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={showDevLogs}
+                    onChange={(e) => setShowDevLogs(e.target.checked)}
+                    className="w-3 h-3 rounded border-gray-300 text-gray-600 focus:ring-gray-500"
+                  />
+                  Dev Logs
+                </label>
+                <span className="text-[10px] text-gray-400">{filteredDocLogs.length} entries</span>
+              </div>
+            </div>
+            <div className="p-6">
               {/* Search Bar */}
               <div className="relative mb-3">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -1033,36 +1036,33 @@ export default function EvidenceLocker() {
                   </div>
                 )}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          <Card className="bg-white border-gray-200 text-gray-900">
-            <CardHeader className="border-b border-gray-200 pb-3">
-              <div className="flex items-start justify-between">
-                <div>
-                  <CardTitle className="text-sm font-semibold text-gray-900">Upload Documents</CardTitle>
-                  <CardDescription className="text-xs text-gray-500">
-                    Upload invoices, purchase orders, and receipts to verify your product costs
-                  </CardDescription>
-                </div>
-                <p className="text-xs text-gray-500 font-medium whitespace-nowrap">
-                  Amazon rejects 82% of claims without an Invoice.
-                </p>
+          {/* Upload Documents */}
+          <div className="bg-white border border-gray-200 rounded-sm mb-8">
+            <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-start justify-between">
+              <div>
+                <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Upload Documents</h2>
+                <p className="text-[10px] text-gray-500 mt-0.5">Invoices, purchase orders, and receipts</p>
               </div>
-            </CardHeader>
-            <CardContent className="pt-4">
-              <div className={`border-2 border-dashed rounded-lg p-6 text-center transition-all ${dragActive ? 'border-emerald-500 bg-emerald-50' : 'border-gray-200 hover:border-emerald-400'}`} onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}>
-                <Upload className="h-8 w-8 mx-auto mb-3 text-gray-400" />
-                <h3 className="text-sm font-medium text-gray-900 mb-1">Drag & Drop Invoices or Purchase Orders</h3>
-                <p className="text-xs text-gray-500 mb-3">
-                  Supports PDF, JPG, PNG files up to 10MB
+              <p className="text-[9px] text-gray-500 font-medium whitespace-nowrap uppercase tracking-[0.1em]">
+                82% of claims rejected without invoice
+              </p>
+            </div>
+            <div className="p-6">
+              <div className={`border border-dashed rounded-sm p-6 text-center transition-all ${dragActive ? 'border-gray-900 bg-gray-50' : 'border-gray-300 hover:border-gray-400'}`} onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}>
+                <Upload className="h-6 w-6 mx-auto mb-3 text-gray-400" />
+                <h3 className="text-xs font-medium text-gray-900 mb-1">Drag & Drop Documents</h3>
+                <p className="text-[10px] text-gray-500 mb-3">
+                  PDF, JPG, PNG up to 10MB
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
-                  <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-white text-xs font-medium" onClick={() => document.getElementById('doc-file-input')?.click()}>
-                    <Upload className="w-3.5 h-3.5 mr-1.5" />
+                  <button className="px-4 py-2 text-xs text-white bg-gray-900 hover:bg-gray-800 transition-colors" onClick={() => document.getElementById('doc-file-input')?.click()}>
+                    <Upload className="w-3 h-3 mr-1.5 inline" />
                     Browse Files
-                  </Button>
+                  </button>
                   <input id="doc-file-input" type="file" multiple className="hidden" onChange={async (e) => {
                     const files = Array.from((e.target as HTMLInputElement).files || []);
                     if (!files.length) {
@@ -1228,298 +1228,298 @@ export default function EvidenceLocker() {
                       Delete All
                     </Button>
                   )}
-                  <div className="text-xs text-gray-600 ml-2">{selectedIds.size > 0 ? `${selectedIds.size} selected` : ''}</div>
+                  <div className="text-[10px] text-gray-600 ml-2">{selectedIds.size > 0 ? `${selectedIds.size} selected` : ''}</div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-          <Card className="bg-white border-gray-200 text-gray-900 overflow-hidden">
-            <CardHeader className="border-b border-gray-200 pb-3">
-              <div>
-                <CardTitle className="text-sm font-semibold text-gray-900 mb-0.5">Document Library</CardTitle>
-                <CardDescription className="text-xs text-gray-500 mb-3">All uploaded evidence documents</CardDescription>
-                <div className="flex flex-wrap items-center gap-2 justify-end">
-                  <div className="relative">
-                    <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500 stroke-[2]" />
-                    <Input placeholder="Search ASIN, SKU, tracking #, invoice, claim ID…" value={q} onChange={(e) => setQ(e.target.value)} className="pl-8 w-80 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
-                    {q && (
-                      <button
-                        onClick={() => setQ('')}
-                        className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                      >
-                        ✕
-                      </button>
-                    )}
-                  </div>
-                  <Input placeholder="Supplier" value={supplier} onChange={(e) => setSupplier(e.target.value)} className="w-40 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
-                  <Input placeholder="Type (invoice/receipt/shipping)" value={type} onChange={(e) => setType(e.target.value)} className="w-56 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
-                  <Input placeholder="Amount min" value={amountMin} onChange={(e) => setAmountMin(e.target.value)} className="w-28 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
-                  <Input placeholder="Amount max" value={amountMax} onChange={(e) => setAmountMax(e.target.value)} className="w-28 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
-                  <Input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
-                  <Input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
+            </div>
+          </div>
+
+          {/* Document Library */}
+          <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+              <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em] mb-0.5">Document Library</h2>
+              <p className="text-[10px] text-gray-500 mb-3">All uploaded evidence documents</p>
+              <div className="flex flex-wrap items-center gap-2 justify-end">
+                <div className="relative">
+                  <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 stroke-[2]" />
+                  <Input placeholder="Search ASIN, SKU, tracking #, invoice…" value={q} onChange={(e) => setQ(e.target.value)} className="pl-8 w-80 h-8 text-xs border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 rounded-sm" />
+                  {q && (
+                    <button
+                      onClick={() => setQ('')}
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    >
+                      ✕
+                    </button>
+                  )}
                 </div>
+                <Input placeholder="Supplier" value={supplier} onChange={(e) => setSupplier(e.target.value)} className="w-40 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
+                <Input placeholder="Type (invoice/receipt/shipping)" value={type} onChange={(e) => setType(e.target.value)} className="w-56 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
+                <Input placeholder="Amount min" value={amountMin} onChange={(e) => setAmountMin(e.target.value)} className="w-28 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
+                <Input placeholder="Amount max" value={amountMax} onChange={(e) => setAmountMax(e.target.value)} className="w-28 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
+                <Input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
+                <Input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="h-8 text-xs border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 rounded-sm" />
               </div>
-            </CardHeader>
-            <CardContent className="p-4">
-              {loading && <div className="text-sm text-muted-foreground">Loading documents…</div>}
-              {error && <div className="text-sm text-red-600">{error}</div>}
-              <div className="overflow-x-auto">
-                <Table className="min-w-[1150px]">
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="text-gray-700 whitespace-nowrap">
-                        <Checkbox checked={selectedIds.size > 0 && selectedIds.size === pageData.length} onCheckedChange={(c) => {
-                          if (c) setSelectedIds(new Set(pageData.map(d => d.id))); else setSelectedIds(new Set());
-                        }} />
-                      </TableHead>
-                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('name')}>Document Name</TableHead>
-                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('supplier')}>Supplier</TableHead>
-                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('invoice')}>Invoice #</TableHead>
-                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('uploadDate')}>Upload Date</TableHead>
-                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('status')}>Status</TableHead>
-                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('parser_status')}>Parsing Status</TableHead>
-                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('parsedVia')}>Parsed Via</TableHead>
-                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('amount')}>Amount</TableHead>
-                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap py-2">Extracted Data</TableHead>
-                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('matchedClaims')}>Matched Claims</TableHead>
-                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('match_confidence')}>Match Confidence</TableHead>
-                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap py-2">Match Status</TableHead>
-                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap py-2">Linked SKUs</TableHead>
-                      <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap py-2">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {pageData.map(doc => <TableRow key={doc.id}>
-                      <TableCell className="whitespace-nowrap">
-                        <Checkbox checked={selectedIds.has(doc.id)} onCheckedChange={(c) => {
-                          setSelectedIds(prev => { const next = new Set(prev); if (c) next.add(doc.id); else next.delete(doc.id); return next; });
-                        }} />
-                      </TableCell>
-                      <TableCell className="whitespace-nowrap">
+            </div>
+          </div>
+          <div className="p-6">
+            {loading && <div className="text-xs text-gray-500">Loading documents…</div>}
+            {error && <div className="text-xs text-red-600">{error}</div>}
+            <div className="overflow-x-auto">
+              <Table className="min-w-[1150px]">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-gray-700 whitespace-nowrap">
+                      <Checkbox checked={selectedIds.size > 0 && selectedIds.size === pageData.length} onCheckedChange={(c) => {
+                        if (c) setSelectedIds(new Set(pageData.map(d => d.id))); else setSelectedIds(new Set());
+                      }} />
+                    </TableHead>
+                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('name')}>Document Name</TableHead>
+                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('supplier')}>Supplier</TableHead>
+                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('invoice')}>Invoice #</TableHead>
+                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('uploadDate')}>Upload Date</TableHead>
+                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('status')}>Status</TableHead>
+                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('parser_status')}>Parsing Status</TableHead>
+                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('parsedVia')}>Parsed Via</TableHead>
+                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('amount')}>Amount</TableHead>
+                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap py-2">Extracted Data</TableHead>
+                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('matchedClaims')}>Matched Claims</TableHead>
+                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('match_confidence')}>Match Confidence</TableHead>
+                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap py-2">Match Status</TableHead>
+                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap py-2">Linked SKUs</TableHead>
+                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap py-2">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {pageData.map(doc => <TableRow key={doc.id}>
+                    <TableCell className="whitespace-nowrap">
+                      <Checkbox checked={selectedIds.has(doc.id)} onCheckedChange={(c) => {
+                        setSelectedIds(prev => { const next = new Set(prev); if (c) next.add(doc.id); else next.delete(doc.id); return next; });
+                      }} />
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap">
+                      <div className="flex items-center gap-2">
+                        <FileText className="h-4 w-4 text-gray-400" />
+                        <span className="font-medium text-black">{doc.name}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap">{doc.supplier || '—'}</TableCell>
+                    <TableCell className="whitespace-nowrap">{doc.invoice || '—'}</TableCell>
+                    <TableCell className="whitespace-nowrap">
+                      {new Date(doc.uploadDate).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap">
+                      {getStatusBadge(doc.status)}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap">
+                      {doc.parser_status && (
                         <div className="flex items-center gap-2">
-                          <FileText className="h-4 w-4 text-gray-400" />
-                          <span className="font-medium text-black">{doc.name}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="whitespace-nowrap">{doc.supplier || '—'}</TableCell>
-                      <TableCell className="whitespace-nowrap">{doc.invoice || '—'}</TableCell>
-                      <TableCell className="whitespace-nowrap">
-                        {new Date(doc.uploadDate).toLocaleDateString()}
-                      </TableCell>
-                      <TableCell className="whitespace-nowrap">
-                        {getStatusBadge(doc.status)}
-                      </TableCell>
-                      <TableCell className="whitespace-nowrap">
-                        {doc.parser_status && (
-                          <div className="flex items-center gap-2">
-                            {doc.parser_status === 'completed' && (
-                              <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-xs">
-                                <Check className="w-3 h-3 mr-1" />
-                                Parsed
-                              </Badge>
-                            )}
-                            {doc.parser_status === 'processing' && (
-                              <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30 text-xs">
-                                <Clock className="w-3 h-3 mr-1" />
-                                Parsing
-                              </Badge>
-                            )}
-                            {doc.parser_status === 'failed' && (
-                              <Badge className="bg-red-500/20 text-red-400 border-red-500/30 text-xs">
-                                <AlertTriangle className="w-3 h-3 mr-1" />
-                                Failed
-                              </Badge>
-                            )}
-                            {doc.parser_status === 'pending' && (
-                              <Badge className="bg-gray-500/20 text-gray-400 border-gray-500/30 text-xs">
-                                Pending
-                              </Badge>
-                            )}
-                            {doc.parser_confidence !== undefined && (
-                              <span className="text-xs text-[#36454F]">
-                                {(doc.parser_confidence * 100).toFixed(0)}%
-                              </span>
-                            )}
-                          </div>
-                        )}
-                      </TableCell>
-                      <TableCell className="whitespace-nowrap">
-                        {doc.parsedVia && <Badge variant="outline" className="text-xs capitalize border-gray-300 text-[#36454F]">{doc.parsedVia}</Badge>}
-                      </TableCell>
-                      <TableCell className="whitespace-nowrap">{typeof doc.amount === 'number' ? `$${doc.amount.toFixed(2)}` : '—'}</TableCell>
-                      {/* Extracted Data from Agent 5 PDF parsing */}
-                      <TableCell className="max-w-[200px]">
-                        {doc.extracted && (
-                          <div className="flex flex-wrap gap-1">
-                            {(doc.extracted.order_ids || []).slice(0, 2).map((id, i) => (
-                              <Badge
-                                key={`order-${i}`}
-                                className="bg-blue-500/10 text-blue-400 border-blue-500/20 text-xs truncate max-w-[120px] cursor-pointer hover:bg-blue-500/20"
-                                title={`Click to filter by ${id}`}
-                                onClick={() => setQ(id)}
-                              >
-                                📦 {id.length > 12 ? id.slice(0, 12) + '...' : id}
-                              </Badge>
-                            ))}
-                            {(doc.extracted.tracking_numbers || []).slice(0, 1).map((tn, i) => (
-                              <Badge
-                                key={`track-${i}`}
-                                className="bg-purple-500/10 text-purple-400 border-purple-500/20 text-xs truncate max-w-[100px] cursor-pointer hover:bg-purple-500/20"
-                                title={`Click to filter by ${tn}`}
-                                onClick={() => setQ(tn)}
-                              >
-                                🚚 {tn.length > 10 ? tn.slice(0, 10) + '...' : tn}
-                              </Badge>
-                            ))}
-                            {(doc.extracted.asins || []).slice(0, 1).map((asin, i) => (
-                              <Badge
-                                key={`asin-${i}`}
-                                className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-xs cursor-pointer hover:bg-emerald-500/20"
-                                title={`Click to show all docs for ASIN ${asin}`}
-                                onClick={() => setQ(asin)}
-                              >
-                                ASIN: {asin}
-                              </Badge>
-                            ))}
-                            {/* Show count if more items */}
-                            {((doc.extracted.order_ids?.length || 0) + (doc.extracted.tracking_numbers?.length || 0) + (doc.extracted.asins?.length || 0)) > 4 && (
-                              <Badge className="bg-gray-100 text-[#36454F] border-gray-200 text-xs">
-                                +{(doc.extracted.order_ids?.length || 0) + (doc.extracted.tracking_numbers?.length || 0) + (doc.extracted.asins?.length || 0) - 4} more
-                              </Badge>
-                            )}
-                          </div>
-                        )}
-                        {!doc.extracted && <span className="text-[#36454F] text-xs">—</span>}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex flex-wrap gap-1 items-center">
-                          {(doc.matchedClaims || []).map(id => (
-                            <Link key={id} to={`/recoveries/${id}`} className="text-xs px-2 py-0.5 rounded bg-blue-50 border border-blue-100 text-blue-700 hover:bg-blue-100">
-                              {id.slice(0, 8)}
-                            </Link>
-                          ))}
-                          {/* Document reuse indicator */}
-                          {(doc.matchedClaims?.length || 0) > 1 && (
-                            <Badge className="bg-purple-100 text-purple-700 border-purple-200 text-xs">
-                              ♻️ Reused
+                          {doc.parser_status === 'completed' && (
+                            <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-xs">
+                              <Check className="w-3 h-3 mr-1" />
+                              Parsed
                             </Badge>
                           )}
-                          {/* Show match reasoning if available */}
-                          {doc.match_reasoning && (
-                            <span className="text-xs text-[#36454F] italic" title={doc.match_reasoning}>
-                              ({doc.matched_fields?.join(', ') || 'matched'})
+                          {doc.parser_status === 'processing' && (
+                            <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30 text-xs">
+                              <Clock className="w-3 h-3 mr-1" />
+                              Parsing
+                            </Badge>
+                          )}
+                          {doc.parser_status === 'failed' && (
+                            <Badge className="bg-red-500/20 text-red-400 border-red-500/30 text-xs">
+                              <AlertTriangle className="w-3 h-3 mr-1" />
+                              Failed
+                            </Badge>
+                          )}
+                          {doc.parser_status === 'pending' && (
+                            <Badge className="bg-gray-500/20 text-gray-400 border-gray-500/30 text-xs">
+                              Pending
+                            </Badge>
+                          )}
+                          {doc.parser_confidence !== undefined && (
+                            <span className="text-xs text-[#36454F]">
+                              {(doc.parser_confidence * 100).toFixed(0)}%
                             </span>
                           )}
                         </div>
-                        {/* Reuse message for multi-claim docs */}
+                      )}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap">
+                      {doc.parsedVia && <Badge variant="outline" className="text-xs capitalize border-gray-300 text-[#36454F]">{doc.parsedVia}</Badge>}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap">{typeof doc.amount === 'number' ? `$${doc.amount.toFixed(2)}` : '—'}</TableCell>
+                    {/* Extracted Data from Agent 5 PDF parsing */}
+                    <TableCell className="max-w-[200px]">
+                      {doc.extracted && (
+                        <div className="flex flex-wrap gap-1">
+                          {(doc.extracted.order_ids || []).slice(0, 2).map((id, i) => (
+                            <Badge
+                              key={`order-${i}`}
+                              className="bg-blue-500/10 text-blue-400 border-blue-500/20 text-xs truncate max-w-[120px] cursor-pointer hover:bg-blue-500/20"
+                              title={`Click to filter by ${id}`}
+                              onClick={() => setQ(id)}
+                            >
+                              📦 {id.length > 12 ? id.slice(0, 12) + '...' : id}
+                            </Badge>
+                          ))}
+                          {(doc.extracted.tracking_numbers || []).slice(0, 1).map((tn, i) => (
+                            <Badge
+                              key={`track-${i}`}
+                              className="bg-purple-500/10 text-purple-400 border-purple-500/20 text-xs truncate max-w-[100px] cursor-pointer hover:bg-purple-500/20"
+                              title={`Click to filter by ${tn}`}
+                              onClick={() => setQ(tn)}
+                            >
+                              🚚 {tn.length > 10 ? tn.slice(0, 10) + '...' : tn}
+                            </Badge>
+                          ))}
+                          {(doc.extracted.asins || []).slice(0, 1).map((asin, i) => (
+                            <Badge
+                              key={`asin-${i}`}
+                              className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-xs cursor-pointer hover:bg-emerald-500/20"
+                              title={`Click to show all docs for ASIN ${asin}`}
+                              onClick={() => setQ(asin)}
+                            >
+                              ASIN: {asin}
+                            </Badge>
+                          ))}
+                          {/* Show count if more items */}
+                          {((doc.extracted.order_ids?.length || 0) + (doc.extracted.tracking_numbers?.length || 0) + (doc.extracted.asins?.length || 0)) > 4 && (
+                            <Badge className="bg-gray-100 text-[#36454F] border-gray-200 text-xs">
+                              +{(doc.extracted.order_ids?.length || 0) + (doc.extracted.tracking_numbers?.length || 0) + (doc.extracted.asins?.length || 0) - 4} more
+                            </Badge>
+                          )}
+                        </div>
+                      )}
+                      {!doc.extracted && <span className="text-[#36454F] text-xs">—</span>}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-wrap gap-1 items-center">
+                        {(doc.matchedClaims || []).map(id => (
+                          <Link key={id} to={`/recoveries/${id}`} className="text-xs px-2 py-0.5 rounded bg-blue-50 border border-blue-100 text-blue-700 hover:bg-blue-100">
+                            {id.slice(0, 8)}
+                          </Link>
+                        ))}
+                        {/* Document reuse indicator */}
                         {(doc.matchedClaims?.length || 0) > 1 && (
-                          <p className="text-[10px] text-purple-600 mt-1">
-                            📎 This invoice supports {doc.matchedClaims?.length} claims
-                          </p>
+                          <Badge className="bg-purple-100 text-purple-700 border-purple-200 text-xs">
+                            ♻️ Reused
+                          </Badge>
                         )}
-                      </TableCell>
-                      <TableCell className="whitespace-nowrap">
-                        {getMatchConfidenceBadge(doc.match_confidence)}
-                      </TableCell>
-                      <TableCell className="whitespace-nowrap">
-                        {getMatchStatusBadge(doc.match_confidence)}
-                      </TableCell>
-                      <TableCell className="whitespace-nowrap">
-                        <span className="font-medium text-[#36454F]">{doc.linkedSKUs}</span>
-                        {doc.linkedSKUs > 0 && <span className="text-sm text-[#36454F] ml-1">SKUs</span>}
-                      </TableCell>
-                      <TableCell className="whitespace-nowrap">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="bg-white">
+                        {/* Show match reasoning if available */}
+                        {doc.match_reasoning && (
+                          <span className="text-xs text-[#36454F] italic" title={doc.match_reasoning}>
+                            ({doc.matched_fields?.join(', ') || 'matched'})
+                          </span>
+                        )}
+                      </div>
+                      {/* Reuse message for multi-claim docs */}
+                      {(doc.matchedClaims?.length || 0) > 1 && (
+                        <p className="text-[10px] text-purple-600 mt-1">
+                          📎 This invoice supports {doc.matchedClaims?.length} claims
+                        </p>
+                      )}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap">
+                      {getMatchConfidenceBadge(doc.match_confidence)}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap">
+                      {getMatchStatusBadge(doc.match_confidence)}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap">
+                      <span className="font-medium text-[#36454F]">{doc.linkedSKUs}</span>
+                      {doc.linkedSKUs > 0 && <span className="text-sm text-[#36454F] ml-1">SKUs</span>}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="bg-white">
+                          <DropdownMenuItem asChild>
+                            <Link to={`/documents/${encodeURIComponent(doc.id)}`} className="flex items-center gap-2">
+                              <Eye className="w-4 h-4" />
+                              View
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => downloadDoc(doc.id)} className="flex items-center gap-2">
+                            <Download className="w-4 h-4" />
+                            Download
+                          </DropdownMenuItem>
+                          {/* Claim Packet - only show if doc has matched claims */}
+                          {doc.matchedClaims && doc.matchedClaims.length > 0 && (
                             <DropdownMenuItem asChild>
-                              <Link to={`/documents/${encodeURIComponent(doc.id)}`} className="flex items-center gap-2">
-                                <Eye className="w-4 h-4" />
-                                View
+                              <Link
+                                to={`/recoveries/${doc.matchedClaims[0]}?evidence=true`}
+                                className="flex items-center gap-2"
+                                title={`View claim packet for ${doc.matchedClaims.length} linked claim(s)`}
+                              >
+                                <FileText className="w-4 h-4" />
+                                View Claim Packet
                               </Link>
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => downloadDoc(doc.id)} className="flex items-center gap-2">
-                              <Download className="w-4 h-4" />
-                              Download
-                            </DropdownMenuItem>
-                            {/* Claim Packet - only show if doc has matched claims */}
-                            {doc.matchedClaims && doc.matchedClaims.length > 0 && (
-                              <DropdownMenuItem asChild>
-                                <Link
-                                  to={`/recoveries/${doc.matchedClaims[0]}?evidence=true`}
-                                  className="flex items-center gap-2"
-                                  title={`View claim packet for ${doc.matchedClaims.length} linked claim(s)`}
-                                >
-                                  <FileText className="w-4 h-4" />
-                                  View Claim Packet
-                                </Link>
-                              </DropdownMenuItem>
-                            )}
-                            {doc.parser_status && doc.parser_status !== 'completed' && doc.parser_status !== 'processing' && (
-                              <DropdownMenuItem
-                                onClick={async () => {
-                                  try {
-                                    const res = await api.reparseDocument(doc.id);
-                                    if (res.ok) {
-                                      toast({ title: 'Parsing Started', description: 'Document parsing has been triggered.' });
-                                      const parsedRes = await api.getDocumentWithParsedData(doc.id);
-                                      if (parsedRes.ok && parsedRes.data) {
-                                        setDocuments(prev => prev.map(d =>
-                                          d.id === doc.id
-                                            ? { ...d, parser_status: parsedRes.data!.parser_status }
-                                            : d
-                                        ));
-                                      }
-                                    } else {
-                                      toast({ title: 'Parse Failed', description: res.error || 'Failed to trigger parsing.', variant: 'destructive' });
-                                    }
-                                  } catch (error) {
-                                    toast({ title: 'Parse Failed', description: 'An error occurred.', variant: 'destructive' });
-                                  }
-                                }}
-                                className="flex items-center gap-2"
-                              >
-                                <RefreshCw className="w-4 h-4" />
-                                Parse
-                              </DropdownMenuItem>
-                            )}
+                          )}
+                          {doc.parser_status && doc.parser_status !== 'completed' && doc.parser_status !== 'processing' && (
                             <DropdownMenuItem
-                              onClick={() => handleDeleteDocument(doc.id, doc.name)}
-                              className="flex items-center gap-2 text-red-600 focus:text-red-600"
+                              onClick={async () => {
+                                try {
+                                  const res = await api.reparseDocument(doc.id);
+                                  if (res.ok) {
+                                    toast({ title: 'Parsing Started', description: 'Document parsing has been triggered.' });
+                                    const parsedRes = await api.getDocumentWithParsedData(doc.id);
+                                    if (parsedRes.ok && parsedRes.data) {
+                                      setDocuments(prev => prev.map(d =>
+                                        d.id === doc.id
+                                          ? { ...d, parser_status: parsedRes.data!.parser_status }
+                                          : d
+                                      ));
+                                    }
+                                  } else {
+                                    toast({ title: 'Parse Failed', description: res.error || 'Failed to trigger parsing.', variant: 'destructive' });
+                                  }
+                                } catch (error) {
+                                  toast({ title: 'Parse Failed', description: 'An error occurred.', variant: 'destructive' });
+                                }
+                              }}
+                              className="flex items-center gap-2"
                             >
-                              <Trash2 className="w-4 h-4" />
-                              Delete
+                              <RefreshCw className="w-4 h-4" />
+                              Parse
                             </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>)}
-                  </TableBody>
-                </Table>
+                          )}
+                          <DropdownMenuItem
+                            onClick={() => handleDeleteDocument(doc.id, doc.name)}
+                            className="flex items-center gap-2 text-red-600 focus:text-red-600"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>)}
+                </TableBody>
+              </Table>
+            </div>
+            {pageData.length === 0 && !loading && (
+              <div className="text-center text-sm text-[#36454F] py-6">No documents found. Try adjusting filters or <Link to="/integrations-hub" className="underline">connect evidence sources</Link>.</div>
+            )}
+            <div className="mt-4 flex items-center justify-between">
+              <div className="text-xs text-[#36454F]">Page {page} of {totalPages} • {sorted.length} items</div>
+              <div className="flex items-center gap-3">
+                <select className="bg-white/10 border border-white/10 rounded px-2 py-1 text-sm" value={pageSize} onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1); }}>
+                  <option value={10}>10 / page</option>
+                  <option value={25}>25 / page</option>
+                  <option value={50}>50 / page</option>
+                </select>
+                <Button variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" disabled={page <= 1} onClick={() => setPage(p => Math.max(1, p - 1))}>Prev</Button>
+                <Button variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" disabled={page >= totalPages} onClick={() => setPage(p => Math.min(totalPages, p + 1))}>Next</Button>
               </div>
-              {pageData.length === 0 && !loading && (
-                <div className="text-center text-sm text-[#36454F] py-6">No documents found. Try adjusting filters or <Link to="/integrations-hub" className="underline">connect evidence sources</Link>.</div>
-              )}
-              <div className="mt-4 flex items-center justify-between">
-                <div className="text-xs text-[#36454F]">Page {page} of {totalPages} • {sorted.length} items</div>
-                <div className="flex items-center gap-3">
-                  <select className="bg-white/10 border border-white/10 rounded px-2 py-1 text-sm" value={pageSize} onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1); }}>
-                    <option value={10}>10 / page</option>
-                    <option value={25}>25 / page</option>
-                    <option value={50}>50 / page</option>
-                  </select>
-                  <Button variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" disabled={page <= 1} onClick={() => setPage(p => Math.max(1, p - 1))}>Prev</Button>
-                  <Button variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" disabled={page >= totalPages} onClick={() => setPage(p => Math.min(totalPages, p + 1))}>Next</Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </PageLayout>;
+  </PageLayout >;
 }
