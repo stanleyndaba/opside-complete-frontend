@@ -1376,7 +1376,15 @@ export const api = {
   markNotificationRead: (notificationId: string) => requestJson<{
     success: boolean;
     message: string;
-  }>(`/api/notifications/${encodeURIComponent(notificationId)}/read`, { method: 'POST' }),
+  }>('/api/notifications/mark-read', {
+    method: 'POST',
+    body: JSON.stringify({ notificationIds: notificationId })
+  }),
+  markAllNotificationsRead: () => requestJson<{
+    success: boolean;
+    message: string;
+    meta: { count: number };
+  }>('/api/notifications/mark-all-read', { method: 'POST' }),
   getUnreadCount: (userId?: string) => {
     const query = userId ? `?userId=${encodeURIComponent(userId)}` : '';
     return requestJson<{

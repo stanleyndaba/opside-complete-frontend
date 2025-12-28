@@ -266,6 +266,19 @@
     scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
   }
 
+  /* Utility class to hide scrollbar while keeping scroll functionality */
+  .scrollbar-hide {
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari, Opera */
+  }
+
   .recoveries-table-scroll::-webkit-scrollbar {
     height: 10px;
   }

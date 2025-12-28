@@ -11,7 +11,10 @@ import {
   TrendingUp,
   Sparkles,
   RefreshCw,
-  Loader2
+  RefreshCw,
+  Loader2,
+  CheckCheck,
+  Check
 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
@@ -152,6 +155,29 @@ export default function NotificationHub() {
       toast({
         title: 'Error',
         description: err.message || 'Failed to mark notification as read',
+        variant: 'destructive'
+      });
+    }
+  };
+
+  // Mark all notifications as read
+  const handleMarkAllRead = async () => {
+    try {
+      const response = await api.markAllNotificationsRead();
+      if (response.ok) {
+        setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+        toast({ title: 'Success', description: 'All notifications marked as read' });
+      } else {
+        toast({
+          title: 'Failed',
+          description: response.error || 'Could not mark all as read',
+          variant: 'destructive'
+        });
+      }
+    } catch (err: any) {
+      toast({
+        title: 'Error',
+        description: err.message || 'Failed to mark notifications as read',
         variant: 'destructive'
       });
     }
@@ -355,18 +381,28 @@ export default function NotificationHub() {
                     Complete history of all notifications sent to you.
                   </p>
                 </div>
-                <button
-                  onClick={handleRefresh}
-                  disabled={loading}
-                  className="px-3 py-1.5 text-xs text-gray-700 border border-gray-300 bg-white hover:bg-gray-50 transition-colors flex items-center gap-1 disabled:opacity-50"
-                >
-                  {loading ? (
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  ) : (
-                    <RefreshCw className="h-3.5 w-3.5" />
-                  )}
-                  Refresh
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleMarkAllRead}
+                    disabled={loading || notifications.length === 0 || notifications.every(n => n.read)}
+                    className="px-3 py-1.5 text-xs text-gray-700 border border-gray-300 bg-white hover:bg-gray-50 transition-colors flex items-center gap-1 disabled:opacity-50"
+                  >
+                    <CheckCheck className="h-3.5 w-3.5" />
+                    Mark all read
+                  </button>
+                  <button
+                    onClick={handleRefresh}
+                    disabled={loading}
+                    className="px-3 py-1.5 text-xs text-gray-700 border border-gray-300 bg-white hover:bg-gray-50 transition-colors flex items-center gap-1 disabled:opacity-50"
+                  >
+                    {loading ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <RefreshCw className="h-3.5 w-3.5" />
+                    )}
+                    Refresh
+                  </button>
+                </div>
               </div>
 
               <div className="p-4">

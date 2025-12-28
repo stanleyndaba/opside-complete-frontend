@@ -150,7 +150,8 @@ export function NotificationBell({
 
       <DropdownMenuContent
         align="end"
-        className="w-80 max-h-96 overflow-y-auto bg-white backdrop-blur-md border border-gray-200 shadow-xl z-50 text-[#36454F]"
+        className="w-80 max-h-96 overflow-y-auto scrollbar-hide bg-white backdrop-blur-md border border-gray-200 shadow-xl z-50 text-[#36454F]"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         <div className="p-3 border-b border-gray-200">
           <div className="flex items-center justify-between">
