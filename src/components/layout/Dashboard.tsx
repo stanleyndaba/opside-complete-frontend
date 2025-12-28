@@ -37,6 +37,12 @@ const renderNotificationMessage = (message: string) => {
   });
 };
 
+// Helper to strip emojis from text
+const stripEmojis = (text: string) => {
+  if (!text) return '';
+  return text.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{231A}-\u{231B}\u{23E9}-\u{23F3}\u{23F8}-\u{23FA}\u{25AA}-\u{25AB}\u{25B6}\u{25C0}\u{25FB}-\u{25FE}\u{2614}-\u{2615}\u{2648}-\u{2653}\u{267F}\u{2693}\u{26A1}\u{26AA}-\u{26AB}\u{26BD}-\u{26BE}\u{26C4}-\u{26C5}\u{26CE}\u{26D4}\u{26EA}\u{26F2}-\u{26F3}\u{26F5}\u{26FA}\u{26FD}\u{2702}\u{2705}\u{2708}-\u{270D}\u{270F}]/gu, '').trim();
+};
+
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
@@ -77,6 +83,7 @@ export function Dashboard() {
   const [dataSource, setDataSource] = useState<string | null>(null);
   const [recoverySource, setRecoverySource] = useState<string | null>(null);
   const [activeSyncId, setActiveSyncId] = useState<string | null>(null);
+  const [lastSyncTime, setLastSyncTime] = useState<Date | null>(null);
   const syncPollingRef = useRef<number | null>(null);
   const syncCheckTimeoutRef = useRef<number | null>(null);
   const upcomingPaymentsLoadedRef = useRef(false);
@@ -316,6 +323,7 @@ export function Dashboard() {
             setSyncTriggered(false);
             setNeedsSync(false);
             setSyncMessage(null);
+            setLastSyncTime(new Date());
 
             // Toast removed per user request
 
@@ -599,15 +607,22 @@ export function Dashboard() {
                   <h1 className="text-lg font-medium text-gray-900 tracking-tight">Recovery Overview</h1>
                   <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-[0.15em]">Dashboard</p>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowSyncModal(true)}
-                  className="text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-                >
-                  <RefreshCw className="w-3 h-3 mr-1.5" />
-                  Scan
-                </Button>
+                <div className="text-right">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowSyncModal(true)}
+                    className="text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                  >
+                    <RefreshCw className="w-3 h-3 mr-1.5" />
+                    Scan
+                  </Button>
+                  {lastSyncTime && (
+                    <p className="text-[9px] text-gray-400 mt-1">
+                      Last sync: {lastSyncTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}
+                    </p>
+                  )}
+                </div>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -884,7 +899,7 @@ export function Dashboard() {
                         </span>
                       )}
                     </div>
-                    <div className="max-h-[500px] overflow-y-auto">
+                    <div className="max-h-[500px] overflow-y-auto scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                       {notifications.length === 0 ? (
                         <div className="p-8 text-center">
                           <Bell className="h-5 w-5 mx-auto mb-2 text-gray-300" />
@@ -903,7 +918,7 @@ export function Dashboard() {
                               >
                                 <div className="flex items-start justify-between gap-2">
                                   <p className={`text-xs truncate ${isUnread ? 'text-gray-900 font-medium' : 'text-gray-600'}`}>
-                                    {notification.title}
+                                    {stripEmojis(notification.title)}
                                   </p>
                                   <span className="text-[10px] text-gray-400 shrink-0">
                                     {timeAgo.replace(' ago', '')}

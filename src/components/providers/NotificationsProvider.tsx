@@ -103,7 +103,8 @@ export function NotificationsProvider({ children }: { children: React.ReactNode 
       // Optimistic update
       setNotifications(prev => prev.map(n => ({ ...n, status: 'read' as const })));
 
-      await (api as any).markNotificationsRead(unreadIds);
+      // Use the new markAllNotificationsRead endpoint
+      await api.markAllNotificationsRead();
     } catch (error) {
       console.error('Failed to mark all as read:', error);
       fetchNotifications();

@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Bell, DollarSign, CheckCircle, FileCheck, Users, Info, AlertTriangle, AlertCircle } from 'lucide-react';
+import { Bell, DollarSign, CheckCircle, FileCheck, Users, AlertTriangle, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
@@ -23,8 +22,20 @@ interface NotificationBellProps {
   iconClassName?: string;
 }
 
+// Helper to render bold text from "**text**" markdown
+const renderFormattedMessage = (message: string): React.ReactNode => {
+  if (!message) return '';
+  const parts = message.split(/(\*\*.*?\*\*)/g);
+  return parts.map((part, index) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <span key={index} className="font-semibold text-gray-900">{part.slice(2, -2)}</span>;
+    }
+    return <span key={index}>{part}</span>;
+  });
+};
+
 export function NotificationBell({
-  label = 'Notifications',
+  label = 'Messages',
   className,
   forceCountStyle = 'default',
   iconOverride,
@@ -148,66 +159,81 @@ export function NotificationBell({
         </Button>
       </DropdownMenuTrigger>
 
+      {/* Institutional Banking Design - Clean, Professional, Executive-Level */}
       <DropdownMenuContent
         align="end"
-        className="w-80 max-h-96 overflow-y-auto scrollbar-hide bg-white backdrop-blur-md border border-gray-200 shadow-xl z-50 text-[#36454F]"
+        className="w-[360px] max-h-[480px] overflow-y-auto scrollbar-hide bg-white border border-gray-200 shadow-2xl z-50 rounded-lg"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
-        <div className="p-3 border-b border-gray-200">
+        {/* Header - Clean institutional style */}
+        <div className="px-5 py-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
           <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-sm text-[#36454F]">{label}</h3>
-            <div className="flex items-center gap-2">
+            <h3 className="font-semibold text-sm text-gray-900 tracking-tight">{label}</h3>
+            <div className="flex items-center gap-3">
               {unreadCount > 0 && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-6 text-[10px] px-2 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
+                <button
                   onClick={handleMarkAllRead}
+                  className="text-[11px] font-medium text-blue-600 hover:text-blue-700 transition-colors"
                 >
                   Mark all read
-                </Button>
+                </button>
               )}
               {unreadCount > 0 && (
-                <Badge variant="outline" className="text-[10px] border-gray-300 text-[#36454F] bg-gray-50">
+                <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
                   {unreadCount} new
-                </Badge>
+                </span>
               )}
             </div>
           </div>
         </div>
 
+        {/* Notification Items */}
         <div>
           {displayNotifications.length === 0 ? (
-            <div className="p-4 text-center text-sm text-gray-500">
-              No notifications yet
+            <div className="px-5 py-8 text-center">
+              <Bell className="h-8 w-8 mx-auto mb-3 text-gray-300" />
+              <p className="text-sm text-gray-500">No messages yet</p>
             </div>
           ) : (
             displayNotifications.map((notification, index) => {
-              const IconComponent = notification.icon;
+              const NotifIcon = notification.icon;
               const content = (
                 <div
-                  className={`flex items-start gap-3 p-3 hover:bg-gray-50 transition-colors cursor-pointer ${!notification.read ? 'bg-gray-50' : 'bg-white'
-                    }`}
+                  className={cn(
+                    'flex items-start gap-4 px-5 py-4 transition-all cursor-pointer border-l-2',
+                    !notification.read
+                      ? 'bg-blue-50/50 border-l-blue-500 hover:bg-blue-50'
+                      : 'bg-white border-l-transparent hover:bg-gray-50'
+                  )}
                   onClick={() => handleNotificationClick(notification.id)}
                 >
-                  <div className={`flex-shrink-0 mt-0.5 w-6 h-6 rounded-full flex items-center justify-center ${!notification.read ? 'bg-gray-200' : 'bg-gray-100'
-                    }`}>
-                    <IconComponent className={`w-3 h-3 ${!notification.read ? 'text-[#36454F]' : 'text-gray-400'
-                      }`} />
+                  {/* Icon */}
+                  <div className={cn(
+                    'flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center',
+                    !notification.read ? 'bg-blue-100' : 'bg-gray-100'
+                  )}>
+                    <NotifIcon className={cn(
+                      'w-4 h-4',
+                      !notification.read ? 'text-blue-600' : 'text-gray-500'
+                    )} />
                   </div>
 
+                  {/* Content */}
                   <div className="flex-1 min-w-0">
-                    <p className={`text-xs leading-relaxed ${!notification.read ? 'font-medium text-[#36454F]' : 'text-gray-600'
-                      }`}>
-                      {notification.message}
+                    <p className={cn(
+                      'text-[13px] leading-relaxed',
+                      !notification.read ? 'text-gray-800' : 'text-gray-600'
+                    )}>
+                      {renderFormattedMessage(notification.message)}
                     </p>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-[11px] text-gray-400 mt-1.5 font-medium">
                       {notification.timestamp}
                     </p>
                   </div>
 
+                  {/* Unread indicator */}
                   {!notification.read && (
-                    <div className="w-2 h-2 bg-emerald-500 rounded-full flex-shrink-0 mt-1.5"></div>
+                    <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-2" />
                   )}
                 </div>
               );
@@ -215,14 +241,14 @@ export function NotificationBell({
               return (
                 <React.Fragment key={notification.id}>
                   {notification.href ? (
-                    <Link to={notification.href}>
+                    <Link to={notification.href} className="block">
                       {content}
                     </Link>
                   ) : (
                     <div>{content}</div>
                   )}
                   {index < displayNotifications.length - 1 && (
-                    <DropdownMenuSeparator className="my-0 bg-gray-200" />
+                    <div className="border-b border-gray-100" />
                   )}
                 </React.Fragment>
               );
@@ -230,16 +256,12 @@ export function NotificationBell({
           )}
         </div>
 
-        <DropdownMenuSeparator className="bg-gray-200" />
-
-        <div className="p-2">
+        {/* Footer */}
+        <div className="px-5 py-3 border-t border-gray-100 bg-gray-50/50">
           <Link to="/notifications" onClick={() => setIsOpen(false)} reloadDocument>
-            <Button
-              variant="ghost"
-              className="w-full justify-center text-xs h-8 hover:bg-gray-50 text-[#36454F]"
-            >
-              View all {label.toLowerCase()}
-            </Button>
+            <button className="w-full text-center text-[12px] font-medium text-gray-600 hover:text-gray-900 transition-colors py-1">
+              View all messages
+            </button>
           </Link>
         </div>
       </DropdownMenuContent>
