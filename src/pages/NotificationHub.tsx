@@ -40,7 +40,7 @@ interface NotificationPreference {
 // Map notification type to icon component
 const getNotificationIcon = (type: string): React.ElementType => {
   const typeLower = type.toLowerCase();
-  if (typeLower.includes('payout') || typeLower.includes('payment')) return DollarSign;
+  if (typeLower.includes('payout') || typeLower.includes('payment') || typeLower.includes('funds')) return DollarSign;
   if (typeLower.includes('recovery') || typeLower.includes('claim')) return CheckCircle;
   if (typeLower.includes('document') || typeLower.includes('invoice') || typeLower.includes('file')) return FileCheck;
   if (typeLower.includes('team') || typeLower.includes('user')) return Users;
