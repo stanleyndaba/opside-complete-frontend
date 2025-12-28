@@ -25,6 +25,18 @@ const OutlookIcon = '/outlookicon.webp';
 const GoogleDriveIcon = '/gd.png';
 const DropboxIcon = '/Dropbox_Icon.svg.png';
 
+// Helper to render bold text from "**text**" markdown
+const renderNotificationMessage = (message: string) => {
+  if (!message) return '';
+  const parts = message.split(/(\*\*.*?\*\*)/g);
+  return parts.map((part, index) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <strong key={index} className="font-bold text-gray-700">{part.slice(2, -2)}</strong>; // Darker and bold
+    }
+    return <span key={index}>{part}</span>;
+  });
+};
+
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
@@ -898,7 +910,7 @@ export function Dashboard() {
                                   </span>
                                 </div>
                                 <p className="text-[10px] text-gray-500 mt-0.5 truncate">
-                                  {notification.message}
+                                  {renderNotificationMessage(notification.message)}
                                 </p>
                               </div>
                             );

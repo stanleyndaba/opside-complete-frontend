@@ -60,6 +60,18 @@ const formatTimestamp = (createdAt: string): string => {
   }
 };
 
+// Helper to render bold text from "**text**" markdown
+const renderNotificationMessage = (message: string) => {
+  if (!message) return '';
+  const parts = message.split(/(\*\*.*?\*\*)/g);
+  return parts.map((part, index) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <strong key={index} className="font-bold text-gray-900">{part.slice(2, -2)}</strong>;
+    }
+    return <span key={index}>{part}</span>;
+  });
+};
+
 export default function NotificationHub() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
@@ -405,7 +417,7 @@ export default function NotificationHub() {
 
                           <div className="flex-1 min-w-0">
                             <p className="text-xs font-medium text-gray-900 mb-0.5">
-                              {notification.message}
+                              {renderNotificationMessage(notification.message)}
                             </p>
                             <div className="flex items-center gap-2 text-[10px] text-gray-500">
                               <span>{notification.timestamp}</span>
