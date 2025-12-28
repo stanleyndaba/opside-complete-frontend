@@ -136,6 +136,15 @@ export const cancelSync = async (syncId: string): Promise<{ success: boolean; me
   return response.data || { success: true, message: 'Sync cancelled successfully' };
 };
 
+// Force clear stuck syncs - POST /api/sync/force-clear
+export const forceClearSync = async (): Promise<{ success: boolean; message: string; clearedCount: number }> => {
+  const response = await api.post<{ success: boolean; message: string; clearedCount: number }>('/api/sync/force-clear');
+  if (!response.ok) {
+    throw new Error(response.error || 'Failed to clear stuck syncs');
+  }
+  return response.data || { success: true, message: 'Stuck syncs cleared', clearedCount: 0 };
+};
+
 // Get sync history - GET /api/sync/history
 export const getSyncHistory = async (limit = 20, offset = 0): Promise<SyncHistoryResponse> => {
   const response = await api.get<any>(`/api/sync/history?limit=${limit}&offset=${offset}`);
@@ -265,6 +274,7 @@ export const inventoryApi = {
   getActiveSyncStatus,
   getSyncStatus,
   cancelSync,
+  forceClearSync,
   getSyncHistory,
   getSyncStatistics,
   subscribeSyncProgress

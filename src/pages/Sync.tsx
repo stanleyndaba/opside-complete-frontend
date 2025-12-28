@@ -3,7 +3,7 @@ import { PageLayout } from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { startSync, getSyncStatus, cancelSync, subscribeSyncProgress, type SyncStatusResponse } from '@/lib/inventoryApi';
+import { startSync, getSyncStatus, cancelSync, forceClearSync, subscribeSyncProgress, type SyncStatusResponse } from '@/lib/inventoryApi';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { RefreshCw, XCircle, CheckCircle2, AlertCircle, Loader2, Search, Package, Truck, RotateCcw, DollarSign, Archive, Target, Clock, ChevronDown, ChevronUp, ChevronRight, ExternalLink, Download } from 'lucide-react';
 import GmailIcon from '/G.png';
@@ -83,6 +83,8 @@ export default function Sync() {
   const [message, setMessage] = useState<string>('Initializing sync...');
   const [syncData, setSyncData] = useState<SyncStatusResponse | null>(null);
   const [isCancelling, setIsCancelling] = useState(false);
+  const [isClearing, setIsClearing] = useState(false);
+  const [isSyncBlocked, setIsSyncBlocked] = useState(false); // Shows force-clear button
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
   const previousStatusRef = useRef<'idle' | 'running' | 'detecting' | 'completed' | 'failed' | 'cancelled'>('idle');
@@ -833,15 +835,28 @@ export default function Sync() {
           navigate(`/sync?id=${newSyncId}`, { replace: true });
         } catch (e: any) {
           if (cancelled) return;
+          const errorMsg = e?.message || 'Failed to start sync';
+
+          // Check if it's a "sync already in progress" error
+          const isBlockedError = errorMsg.toLowerCase().includes('already in progress');
+
           setStatus('failed');
-          setMessage(e?.message || 'Failed to start sync');
-          setError(e?.message || 'Failed to start sync');
+          setMessage(errorMsg);
+          setError(errorMsg);
+          setIsSyncBlocked(isBlockedError);
           previousStatusRef.current = 'failed';
-          addLog({ type: 'error', category: 'system', message: `Failed to start sync: ${e?.message || 'Unknown error'}` });
+
+          if (isBlockedError) {
+            addLog({ type: 'warning', category: 'system', message: 'A previous sync appears stuck. Click "Clear & Retry" to continue.' });
+          } else {
+            addLog({ type: 'error', category: 'system', message: `Failed to start sync: ${errorMsg}` });
+          }
 
           toast({
-            title: 'Failed to Start Sync',
-            description: e?.message || 'Failed to start sync. Please try again.',
+            title: isBlockedError ? 'Sync Blocked' : 'Failed to Start Sync',
+            description: isBlockedError
+              ? 'A previous sync is stuck. Use "Clear & Retry" to fix this.'
+              : errorMsg,
             variant: 'destructive',
             duration: 5000,
           });
@@ -1062,6 +1077,49 @@ export default function Sync() {
     });
 
     window.location.reload();
+  };
+
+  // Force clear stuck syncs and retry
+  const handleForceClear = async () => {
+    setIsClearing(true);
+    addLog({ type: 'info', category: 'system', message: 'Clearing stuck sync...' });
+
+    try {
+      const result = await forceClearSync();
+
+      toast({
+        title: 'Sync Cleared',
+        description: result.message,
+        duration: 3000,
+      });
+
+      addLog({ type: 'success', category: 'system', message: result.message });
+
+      // Reset state and start new sync
+      setIsSyncBlocked(false);
+      setError(null);
+      setSyncId(undefined);
+      setStatus('idle');
+      setProgress(0);
+
+      // Small delay then reload to start fresh sync
+      setTimeout(() => {
+        window.location.href = '/sync';
+      }, 500);
+    } catch (e: any) {
+      const errorMsg = e?.message || 'Failed to clear stuck sync';
+      setError(errorMsg);
+      addLog({ type: 'error', category: 'system', message: errorMsg });
+
+      toast({
+        title: 'Failed to Clear',
+        description: errorMsg,
+        variant: 'destructive',
+        duration: 5000,
+      });
+    } finally {
+      setIsClearing(false);
+    }
   };
 
   // Export logs as styled HTML (printable as PDF) for support tickets
@@ -1708,14 +1766,37 @@ export default function Sync() {
               )}
 
               {(status === 'failed' || status === 'cancelled') && (
-                <Button
-                  variant="outline"
-                  onClick={handleRetry}
-                  className="border-gray-200 text-gray-700 hover:bg-gray-50"
-                >
-                  <RefreshCw className="h-4 w-4 mr-2" />
-                  Retry Sync
-                </Button>
+                <>
+                  {isSyncBlocked ? (
+                    <Button
+                      variant="outline"
+                      onClick={handleForceClear}
+                      disabled={isClearing}
+                      className="border-amber-300 text-amber-700 hover:bg-amber-50 bg-amber-50"
+                    >
+                      {isClearing ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Clearing...
+                        </>
+                      ) : (
+                        <>
+                          <RefreshCw className="h-4 w-4 mr-2" />
+                          Clear & Retry
+                        </>
+                      )}
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="outline"
+                      onClick={handleRetry}
+                      className="border-gray-200 text-gray-700 hover:bg-gray-50"
+                    >
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                      Retry Sync
+                    </Button>
+                  )}
+                </>
               )}
 
               <Button
