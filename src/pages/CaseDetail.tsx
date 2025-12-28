@@ -334,13 +334,21 @@ export default function CaseDetail() {
               // Override with API data
               ...apiData,
               // Ensure key display fields have values (derive if missing)
+              // Ensure key display fields have values (derive if missing)
               id: apiData.id || base.id || caseId,
               title: apiData.title || apiData.details || apiData.anomaly_type || base.title || 'Claim Details',
               status: apiData.status || base.status,
               guaranteedAmount: apiData.guaranteedAmount || apiData.estimated_value || base.guaranteedAmount || 0,
               expectedPayoutDate: apiData.expectedPayoutDate || apiData.expected_payout_date || base.expectedPayoutDate,
               createdDate: apiData.createdDate || apiData.created_at || apiData.discovery_date || base.createdDate,
-              sku: apiData.sku || apiData.evidence?.sku || base.sku || 'N/A',
+
+              // Smart merge for product details - prefer API but don't overwrite with "N/A" if base is valid
+              sku: (apiData.sku && apiData.sku !== 'N/A') ? apiData.sku :
+                (apiData.evidence?.sku && apiData.evidence?.sku !== 'N/A') ? apiData.evidence.sku :
+                  (base.sku && base.sku !== 'N/A') ? base.sku : 'N/A',
+
+              asin: apiData.asin || apiData.evidence?.asin || base.asin,
+
               productName: apiData.productName || apiData.details || apiData.anomaly_type || base.productName || 'Unknown Product',
               facility: apiData.facility || apiData.evidence?.fulfillment_center || apiData.warehouse || base.facility || (
                 ['FTW1 - Fort Worth, TX', 'ONT8 - Moreno Valley, CA', 'BFI4 - Kent, WA', 'MKE1 - Kenosha, WI'][stableHash(caseId || '') % 4]
@@ -354,7 +362,7 @@ export default function CaseDetail() {
               documents: apiData.documents || base.documents || [],
               events: apiData.events || base.events || [],
               // Pass through evidence for detail access
-              evidence: apiData.evidence || base.evidence,
+              evidence: { ...(base.evidence || {}), ...(apiData.evidence || {}) },
               // Human-readable claim number
               claim_number: apiData.claim_number || apiData.evidence?.claim_number || base.claim_number,
             };
