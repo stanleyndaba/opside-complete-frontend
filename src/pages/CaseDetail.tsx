@@ -355,6 +355,8 @@ export default function CaseDetail() {
               events: apiData.events || base.events || [],
               // Pass through evidence for detail access
               evidence: apiData.evidence || base.evidence,
+              // Human-readable claim number
+              claim_number: apiData.claim_number || apiData.evidence?.claim_number || base.claim_number,
             };
           });
           setError(null);
@@ -558,7 +560,9 @@ export default function CaseDetail() {
                         {normalizeStatus(effectiveCase.status)}
                       </span>
                     </div>
-                    <p className="text-[10px] text-gray-500 font-mono mt-1">{effectiveCase.id}</p>
+                    <p className="text-[10px] text-gray-500 font-mono mt-1" title={effectiveCase.id}>
+                      {effectiveCase.claim_number || effectiveCase.evidence?.claim_number || effectiveCase.id?.slice(0, 12) || 'N/A'}
+                    </p>
                   </div>
 
                   <div className="p-4 space-y-4">
