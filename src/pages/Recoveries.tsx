@@ -1135,6 +1135,7 @@ export default function Recoveries() {
     // Transform detection results to match recovery format
     const detected = (detectedClaims || []).map(det => ({
       id: det.id,
+      claim_number: det.claim_number || det.evidence?.claim_number,
       source: 'detected',
       type: det.anomaly_type || 'Detected Claim',
       details: `${det.anomaly_type || 'Claim'} detected with ${(det.confidence_score * 100).toFixed(0)}% confidence`,
