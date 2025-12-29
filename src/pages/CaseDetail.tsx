@@ -262,10 +262,40 @@ const getRequiredDocsForClaimType = (claimType?: string): string[] => {
   }
   // Default fallback
   return [
-    'Invoice or receipt for affected items',
-    'Proof of shipment or delivery',
-    'Any supporting documentation'
   ];
+};
+
+// Generate narrative "What Happened" story for a claim
+const generateNarrative = (claim: any): string => {
+  const type = (claim.anomaly_type || claim.claim_type || claim.type || 'issue').replace(/_/g, ' ');
+  const amount = claim.guaranteedAmount || claim.amount || claim.estimated_value || 0;
+  const sku = claim.sku || claim.evidence?.sku;
+  const asin = claim.asin || claim.evidence?.asin;
+  const dateStr = claim.discovery_date || claim.created_at || claim.createdDate;
+  const date = dateStr ? new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'recently';
+  const status = (claim.status || '').toLowerCase();
+  const units = claim.units_lost || claim.quantity || claim.evidence?.units_lost || '';
+
+  let narrative = `On ${date}, Opside detected a ${type}`;
+  if (units) narrative += ` affecting ${units} unit${units > 1 ? 's' : ''}`;
+  if (sku) narrative += ` of SKU ${sku}`;
+  if (asin) narrative += ` (ASIN: ${asin})`;
+  narrative += `. The estimated recoverable value is $${Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}.`;
+
+  // Add status-specific content
+  if (status === 'approved' || status === 'paid' || status === 'paid out' || status === 'paid_out' || status === 'reconciled') {
+    narrative += ` This claim has been approved and reimbursement has been processed.`;
+  } else if (status === 'denied' || status === 'rejected') {
+    narrative += ` This claim was denied${claim.rejection_reason ? ` due to: ${claim.rejection_reason.replace(/_/g, ' ')}` : ''}.`;
+  } else if (status === 'submitted' || status === 'under review' || status === 'under_review' || status === 'filed') {
+    narrative += ` The claim has been submitted to Amazon and is currently under review.`;
+  } else if (status === 'guaranteed' || status === 'ready') {
+    narrative += ` This claim is ready for submission with all required evidence gathered.`;
+  } else {
+    narrative += ` This claim is currently being prepared for submission.`;
+  }
+
+  return narrative;
 };
 
 export default function CaseDetail() {
@@ -1031,7 +1061,21 @@ export default function CaseDetail() {
               </div>
 
               {/* Right Column - Chronological Ledger */}
-              <div className="lg:col-span-2">
+              <div className="lg:col-span-2 space-y-4">
+                {/* What Happened - Narrative Section */}
+                <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
+                  <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
+                    <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
+                      What Happened
+                    </h3>
+                  </div>
+                  <div className="p-4">
+                    <p className="text-sm text-gray-700 leading-relaxed">
+                      {generateNarrative(effectiveCase)}
+                    </p>
+                  </div>
+                </div>
+
                 <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
                   <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
                     <div className="flex items-center justify-between">
