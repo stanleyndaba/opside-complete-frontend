@@ -2439,73 +2439,83 @@ export default function Recoveries() {
                                     <TableCell>
                                       <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
-                                          <Button variant="ghost" size="sm">
+                                          <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-gray-500 hover:text-gray-900 hover:bg-gray-100">
                                             <MoreHorizontal className="h-4 w-4" />
                                           </Button>
                                         </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end">
+                                        <DropdownMenuContent align="end" className="w-48 bg-white border border-gray-200 shadow-lg rounded-sm p-1">
                                           {claim.status === 'Denied' && (
-                                            <DropdownMenuItem onClick={async () => {
-                                              const hasDocs = true;
-                                              if (!hasDocs) return;
-                                              try {
-                                                await api.resubmitClaim(claim.id);
-                                                toast({ title: 'Resubmitted', description: `${claim.id} resubmitted with stronger docs.` });
-                                                setClaims(prev => prev.map(c => c.id === claim.id ? { ...c, status: 'Submitted' } as any : c));
-                                              } catch (e: any) {
-                                                toast({ title: 'Resubmission failed', description: e?.message || 'Please try again.' });
-                                              }
-                                            }}>
+                                            <DropdownMenuItem
+                                              className="text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer px-3 py-2 rounded-sm"
+                                              onClick={async () => {
+                                                const hasDocs = true;
+                                                if (!hasDocs) return;
+                                                try {
+                                                  await api.resubmitClaim(claim.id);
+                                                  toast({ title: 'Resubmitted', description: `${claim.id} resubmitted with stronger docs.` });
+                                                  setClaims(prev => prev.map(c => c.id === claim.id ? { ...c, status: 'Submitted' } as any : c));
+                                                } catch (e: any) {
+                                                  toast({ title: 'Resubmission failed', description: e?.message || 'Please try again.' });
+                                                }
+                                              }}>
                                               Resubmit with stronger docs
                                             </DropdownMenuItem>
                                           )}
                                           {claim.source === 'detected' && claim.status !== 'resolved' && (
-                                            <DropdownMenuItem onClick={() => {
-                                              setSelectedDetection(claim);
-                                              setSelectedStatus(claim.status || 'pending');
-                                              setStatusUpdateNotes('');
-                                              setStatusUpdateModalOpen(true);
-                                            }}>
+                                            <DropdownMenuItem
+                                              className="text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer px-3 py-2 rounded-sm"
+                                              onClick={() => {
+                                                setSelectedDetection(claim);
+                                                setSelectedStatus(claim.status || 'pending');
+                                                setStatusUpdateNotes('');
+                                                setStatusUpdateModalOpen(true);
+                                              }}>
                                               Update Status
                                             </DropdownMenuItem>
                                           )}
                                           {claim.source === 'detected' && claim.status !== 'resolved' && (
-                                            <DropdownMenuItem onClick={() => {
-                                              setSelectedDetection(claim);
-                                              setResolveNotes('');
-                                              setResolveAmount(claim.guaranteedAmount?.toString() || '');
-                                              setResolveModalOpen(true);
-                                            }}>
+                                            <DropdownMenuItem
+                                              className="text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer px-3 py-2 rounded-sm"
+                                              onClick={() => {
+                                                setSelectedDetection(claim);
+                                                setResolveNotes('');
+                                                setResolveAmount(claim.guaranteedAmount?.toString() || '');
+                                                setResolveModalOpen(true);
+                                              }}>
                                               Mark as Resolved
                                             </DropdownMenuItem>
                                           )}
                                           {claim.source === 'detected' ? (
-                                            <DropdownMenuItem onClick={() => {
-                                              setDetectionDetails(claim);
-                                              setDetailsModalOpen(true);
-                                            }}>
+                                            <DropdownMenuItem
+                                              className="text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer px-3 py-2 rounded-sm"
+                                              onClick={() => {
+                                                setDetectionDetails(claim);
+                                                setDetailsModalOpen(true);
+                                              }}>
                                               View Details
                                             </DropdownMenuItem>
                                           ) : (
-                                            <DropdownMenuItem asChild>
+                                            <DropdownMenuItem asChild className="text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer px-3 py-2 rounded-sm">
                                               <Link to={`/recoveries/${claim.id}`} state={{ claim }}>
                                                 View Details
                                               </Link>
                                             </DropdownMenuItem>
                                           )}
-                                          <DropdownMenuItem onClick={async () => {
-                                            try {
-                                              const res = await api.getRecoveryDetail(claim.id);
-                                              const docs = (res && res.ok && Array.isArray((res as any).data?.documents)) ? (res as any).data!.documents : [];
-                                              const matchedDocs = claim.matchedDocs || [];
-                                              const allDocs = [...docs, ...matchedDocs.filter((md: any) => !docs.some((d: any) => d.id === md.id))];
-                                              setProofDocs(allDocs);
-                                              setProofDocsClaim(claim);
-                                              setProofDocsModalOpen(true);
-                                            } catch (e: any) {
-                                              toast({ title: 'Error loading documents', description: e?.message || 'Please try again.' });
-                                            }
-                                          }}>
+                                          <DropdownMenuItem
+                                            className="text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer px-3 py-2 rounded-sm"
+                                            onClick={async () => {
+                                              try {
+                                                const res = await api.getRecoveryDetail(claim.id);
+                                                const docs = (res && res.ok && Array.isArray((res as any).data?.documents)) ? (res as any).data!.documents : [];
+                                                const matchedDocs = claim.matchedDocs || [];
+                                                const allDocs = [...docs, ...matchedDocs.filter((md: any) => !docs.some((d: any) => d.id === md.id))];
+                                                setProofDocs(allDocs);
+                                                setProofDocsClaim(claim);
+                                                setProofDocsModalOpen(true);
+                                              } catch (e: any) {
+                                                toast({ title: 'Error loading documents', description: e?.message || 'Please try again.' });
+                                              }
+                                            }}>
                                             <span className="flex items-center justify-between w-full">
                                               <span>Proof Documents</span>
                                               <span className="text-[10px] text-gray-400 ml-2">
@@ -2513,10 +2523,12 @@ export default function Recoveries() {
                                               </span>
                                             </span>
                                           </DropdownMenuItem>
-                                          <DropdownMenuItem onClick={() => {
-                                            setEvidencePackClaim(claim);
-                                            setEvidencePackOpen(true);
-                                          }}>
+                                          <DropdownMenuItem
+                                            className="text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer px-3 py-2 rounded-sm"
+                                            onClick={() => {
+                                              setEvidencePackClaim(claim);
+                                              setEvidencePackOpen(true);
+                                            }}>
                                             View Evidence Pack
                                           </DropdownMenuItem>
                                         </DropdownMenuContent>
