@@ -156,7 +156,10 @@ export function NotificationBell({
         {/* Header - Clean, minimal */}
         <div className="px-4 py-3 border-b border-gray-100">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-gray-900">{label}</h3>
+            <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-1.5">
+              <img src="/logoimagetwo.png" alt="" className="h-3.5 w-auto object-contain" />
+              {label}
+            </h3>
             <div className="flex items-center gap-3">
               {unreadCount > 0 && (
                 <button
