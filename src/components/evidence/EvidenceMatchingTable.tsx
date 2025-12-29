@@ -398,13 +398,13 @@ export function EvidenceMatchingTable() {
   return (
     <div className="space-y-4">
       {/* Header with Run Matching Button */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between bg-white border border-gray-200 rounded-sm px-4 py-3">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">Evidence Matching</h3>
-          <p className="text-sm text-gray-600">
+          <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Evidence Matching</h3>
+          <p className="text-[10px] text-gray-500 mt-0.5">
             {matchingResults.length} {matchingResults.length === 1 ? 'match' : 'matches'} found
             {smartPrompts.length > 0 && (
-              <span className="ml-2 text-gray-500 font-medium">
+              <span className="ml-2">
                 • {smartPrompts.length} need{smartPrompts.length === 1 ? 's' : ''} review
               </span>
             )}
@@ -425,49 +425,49 @@ export function EvidenceMatchingTable() {
             onClick={fetchMatchingResults}
             variant="outline"
             size="sm"
-            className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+            className="bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
           >
-            <RefreshCw className="w-4 h-4" />
+            <RefreshCw className="w-3.5 h-3.5" />
           </Button>
         </div>
       </div>
 
-      {/* Tabs for different match categories */}
+      {/* Tabs for different match categories - Pentagon Style */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="inline-flex h-auto items-center justify-start gap-6 bg-transparent border-b border-gray-200 rounded-none p-0">
           <TabsTrigger
             value="smart-prompts"
-            className="relative px-1 pb-3 pt-1 text-sm font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-blue-600 data-[state=active]:text-blue-600 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-0.5 data-[state=active]:after:bg-blue-600"
+            className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900"
           >
             Needs Review
             {smartPrompts.length > 0 && (
-              <span className="ml-2 text-xs font-semibold text-gray-500">{smartPrompts.length}</span>
+              <span className="ml-2 text-[10px] text-gray-400">{smartPrompts.length}</span>
             )}
           </TabsTrigger>
           <TabsTrigger
             value="auto-submitted"
-            className="relative px-1 pb-3 pt-1 text-sm font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-blue-600 data-[state=active]:text-blue-600 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-0.5 data-[state=active]:after:bg-blue-600"
+            className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900"
           >
             Auto-Submitted
             {autoSubmitted.length > 0 && (
-              <span className="ml-2 text-xs font-semibold text-gray-500">{autoSubmitted.length}</span>
+              <span className="ml-2 text-[10px] text-gray-400">{autoSubmitted.length}</span>
             )}
           </TabsTrigger>
           <TabsTrigger
             value="held"
-            className="relative px-1 pb-3 pt-1 text-sm font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-blue-600 data-[state=active]:text-blue-600 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-0.5 data-[state=active]:after:bg-blue-600"
+            className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900"
           >
             Held / Rejected
             {heldForReview.length > 0 && (
-              <span className="ml-2 text-xs font-semibold text-gray-600">{heldForReview.length}</span>
+              <span className="ml-2 text-[10px] text-gray-400">{heldForReview.length}</span>
             )}
           </TabsTrigger>
           <TabsTrigger
             value="all"
-            className="relative px-1 pb-3 pt-1 text-sm font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-blue-600 data-[state=active]:text-blue-600 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-0.5 data-[state=active]:after:bg-blue-600"
+            className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900"
           >
             All Matches
-            <span className="ml-2 text-xs font-semibold text-gray-500">{matchingResults.length}</span>
+            <span className="ml-2 text-[10px] text-gray-400">{matchingResults.length}</span>
           </TabsTrigger>
         </TabsList>
 
@@ -475,9 +475,9 @@ export function EvidenceMatchingTable() {
         <TabsContent value="smart-prompts" className="mt-4">
           {smartPrompts.length === 0 ? (
             <Card className="bg-white border-gray-200">
-              <CardContent className="p-8 text-center">
-                <CheckCircle2 className="w-12 h-12 mx-auto text-emerald-400 mb-4" />
-                <p className="text-lg font-medium text-gray-800 mb-2">All caught up!</p>
+              <CardContent className="p-6 text-center">
+                <CheckCircle2 className="w-8 h-8 mx-auto text-gray-400 mb-3" />
+                <p className="text-sm font-medium text-gray-800 mb-1">All caught up</p>
                 <p className="text-sm text-gray-600 mb-4">
                   No matches need your review. High-confidence matches are auto-submitted.
                 </p>
