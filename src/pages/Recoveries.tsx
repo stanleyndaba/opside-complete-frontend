@@ -2546,27 +2546,27 @@ export default function Recoveries() {
 
                   {/* Phase 3: Resolve Detection Modal */}
                   <Dialog open={resolveModalOpen} onOpenChange={setResolveModalOpen}>
-                    <DialogContent className="bg-white border-gray-200 text-gray-700">
-                      <DialogHeader className="border-b border-gray-200 pb-3">
-                        <DialogTitle className="text-base font-semibold text-gray-900">Resolution Record</DialogTitle>
-                        <DialogDescription className="text-xs text-gray-600 mt-1">
+                    <DialogContent className="max-w-md bg-white border border-gray-200 shadow-lg rounded-sm p-0 overflow-hidden">
+                      <DialogHeader className="px-5 py-4 border-b border-gray-100 bg-gray-50">
+                        <DialogTitle className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Resolution Record</DialogTitle>
+                        <DialogDescription className="text-[10px] text-gray-500 mt-0.5">
                           Complete resolution details and mark claim as resolved
                         </DialogDescription>
                       </DialogHeader>
                       {selectedDetection && (
-                        <div className="space-y-4 py-4">
+                        <div className="space-y-4 px-5 py-4">
                           <div>
-                            <Label className="text-[#36454F]">Detection ID</Label>
-                            <p className="text-sm text-[#36454F] font-mono">{selectedDetection.id}</p>
+                            <Label className="text-[10px] text-gray-500 uppercase tracking-wide">Detection ID</Label>
+                            <p className="text-xs text-gray-900 font-mono mt-0.5">{selectedDetection.id}</p>
                           </div>
                           <div>
-                            <Label className="text-[#36454F]">Anomaly Type</Label>
-                            <p className="text-sm text-[#36454F] capitalize">
+                            <Label className="text-[10px] text-gray-500 uppercase tracking-wide">Anomaly Type</Label>
+                            <p className="text-xs text-gray-900 capitalize mt-0.5">
                               {selectedDetection.type?.replace(/_/g, ' ') || selectedDetection.anomaly_type?.replace(/_/g, ' ')}
                             </p>
                           </div>
                           <div>
-                            <Label htmlFor="resolve-amount" className="text-[#36454F]">Resolution Amount</Label>
+                            <Label htmlFor="resolve-amount" className="text-[10px] text-gray-500 uppercase tracking-wide">Resolution Amount</Label>
                             <Input
                               id="resolve-amount"
                               type="number"
@@ -2574,31 +2574,32 @@ export default function Recoveries() {
                               value={resolveAmount}
                               onChange={(e) => setResolveAmount(e.target.value)}
                               placeholder="0.00"
-                              className="bg-gray-100 border-gray-300 text-[#36454F]"
+                              className="mt-1 h-8 text-xs bg-gray-50 border-gray-200 text-gray-900 rounded-sm"
                             />
                           </div>
                           <div>
-                            <Label htmlFor="resolve-notes" className="text-[#36454F]">Notes</Label>
+                            <Label htmlFor="resolve-notes" className="text-[10px] text-gray-500 uppercase tracking-wide">Notes</Label>
                             <Textarea
                               id="resolve-notes"
                               value={resolveNotes}
                               onChange={(e) => setResolveNotes(e.target.value)}
                               placeholder="Enter resolution notes (e.g., 'Resolved via Amazon reimbursement')"
-                              className="bg-gray-100 border-gray-300 text-[#36454F] min-h-[100px]"
+                              className="mt-1 text-xs bg-gray-50 border-gray-200 text-gray-900 rounded-sm min-h-[80px]"
                             />
                           </div>
                         </div>
                       )}
-                      <DialogFooter>
+                      <DialogFooter className="px-5 py-3 border-t border-gray-100 bg-gray-50 flex gap-2">
                         <Button
                           variant="outline"
+                          size="sm"
                           onClick={() => {
                             setResolveModalOpen(false);
                             setSelectedDetection(null);
                             setResolveNotes('');
                             setResolveAmount('');
                           }}
-                          className="border-white/10"
+                          className="h-8 text-xs text-gray-600 border-gray-200 hover:bg-gray-100 rounded-sm"
                         >
                           Cancel
                         </Button>
@@ -2645,7 +2646,7 @@ export default function Recoveries() {
                               });
                             }
                           }}
-                          className="bg-gray-700 hover:bg-gray-600 text-white"
+                          className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-sm"
                         >
                           Complete Resolution
                         </Button>
@@ -2655,55 +2656,56 @@ export default function Recoveries() {
 
                   {/* Phase 3: Status Update Modal */}
                   <Dialog open={statusUpdateModalOpen} onOpenChange={setStatusUpdateModalOpen}>
-                    <DialogContent className="bg-white border-gray-200 text-gray-700">
-                      <DialogHeader className="border-b border-gray-200 pb-3">
-                        <DialogTitle className="text-base font-semibold text-gray-900">Status Update</DialogTitle>
-                        <DialogDescription className="text-xs text-gray-600 mt-1">
+                    <DialogContent className="max-w-md bg-white border border-gray-200 shadow-lg rounded-sm p-0 overflow-hidden">
+                      <DialogHeader className="px-5 py-4 border-b border-gray-100 bg-gray-50">
+                        <DialogTitle className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Status Update</DialogTitle>
+                        <DialogDescription className="text-[10px] text-gray-500 mt-0.5">
                           Update claim status and record change notes
                         </DialogDescription>
                       </DialogHeader>
                       {selectedDetection && (
-                        <div className="space-y-4 py-4">
+                        <div className="space-y-4 px-5 py-4">
                           <div>
-                            <Label className="text-[#36454F]">Detection ID</Label>
-                            <p className="text-sm text-[#36454F] font-mono">{selectedDetection.id}</p>
+                            <Label className="text-[10px] text-gray-500 uppercase tracking-wide">Detection ID</Label>
+                            <p className="text-xs text-gray-900 font-mono mt-0.5">{selectedDetection.id}</p>
                           </div>
                           <div>
-                            <Label htmlFor="status-select" className="text-[#36454F]">Status</Label>
+                            <Label htmlFor="status-select" className="text-[10px] text-gray-500 uppercase tracking-wide">Status</Label>
                             <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                              <SelectTrigger id="status-select" className="bg-gray-100 border-gray-300 text-[#36454F]">
+                              <SelectTrigger id="status-select" className="mt-1 h-8 text-xs bg-gray-50 border-gray-200 text-gray-900 rounded-sm">
                                 <SelectValue />
                               </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="pending">Pending</SelectItem>
-                                <SelectItem value="reviewed">Reviewed</SelectItem>
-                                <SelectItem value="disputed">Disputed</SelectItem>
-                                <SelectItem value="resolved">Resolved</SelectItem>
+                              <SelectContent className="bg-white border-gray-200 rounded-sm">
+                                <SelectItem value="pending" className="text-xs">Pending</SelectItem>
+                                <SelectItem value="reviewed" className="text-xs">Reviewed</SelectItem>
+                                <SelectItem value="disputed" className="text-xs">Disputed</SelectItem>
+                                <SelectItem value="resolved" className="text-xs">Resolved</SelectItem>
                               </SelectContent>
                             </Select>
                           </div>
                           <div>
-                            <Label htmlFor="status-notes" className="text-[#36454F]">Notes</Label>
+                            <Label htmlFor="status-notes" className="text-[10px] text-gray-500 uppercase tracking-wide">Notes</Label>
                             <Textarea
                               id="status-notes"
                               value={statusUpdateNotes}
                               onChange={(e) => setStatusUpdateNotes(e.target.value)}
                               placeholder="Enter notes for this status change (e.g., 'Reviewed and verified')"
-                              className="bg-gray-100 border-gray-300 text-[#36454F] min-h-[100px]"
+                              className="mt-1 text-xs bg-gray-50 border-gray-200 text-gray-900 rounded-sm min-h-[80px]"
                             />
                           </div>
                         </div>
                       )}
-                      <DialogFooter>
+                      <DialogFooter className="px-5 py-3 border-t border-gray-100 bg-gray-50 flex gap-2">
                         <Button
                           variant="outline"
+                          size="sm"
                           onClick={() => {
                             setStatusUpdateModalOpen(false);
                             setSelectedDetection(null);
                             setStatusUpdateNotes('');
                             setSelectedStatus('pending');
                           }}
-                          className="border-white/10"
+                          className="h-8 text-xs text-gray-600 border-gray-200 hover:bg-gray-100 rounded-sm"
                         >
                           Cancel
                         </Button>
@@ -2745,7 +2747,7 @@ export default function Recoveries() {
                               });
                             }
                           }}
-                          className="bg-gray-700 hover:bg-gray-600 text-white"
+                          className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-sm"
                         >
                           Update Status
                         </Button>
