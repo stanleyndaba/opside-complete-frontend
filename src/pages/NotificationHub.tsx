@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Switch } from '@/components/ui/switch';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   DollarSign,
   CheckCircle,
@@ -11,14 +13,14 @@ import {
   TrendingUp,
   Sparkles,
   RefreshCw,
-  RefreshCw,
   Loader2,
   CheckCheck,
-  Check
+  Search,
+  X
 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow, isAfter, subDays, subHours } from 'date-fns';
 
 interface Notification {
   id: string;
@@ -26,6 +28,7 @@ interface Notification {
   icon: React.ElementType;
   message: string;
   timestamp: string;
+  created_at: Date;
   channels: string[];
   read: boolean;
 }
@@ -81,6 +84,12 @@ export default function NotificationHub() {
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
+  // Search and filter state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [typeFilter, setTypeFilter] = useState<string>('all');
+  const [dateFilter, setDateFilter] = useState<string>('all');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+
   // Load notifications from API
   useEffect(() => {
     let cancelled = false;
@@ -108,6 +117,7 @@ export default function NotificationHub() {
                 icon,
                 message: notif.message || notif.title || 'New notification',
                 timestamp,
+                created_at: new Date(notif.created_at || new Date().toISOString()),
                 channels,
                 read: notif.read || notif.is_read || notif.status === 'read' || false
               };
@@ -135,6 +145,65 @@ export default function NotificationHub() {
     })();
     return () => { cancelled = true; };
   }, []);
+
+  // Filter notifications based on search and filters
+  const filteredNotifications = useMemo(() => {
+    return notifications.filter(notification => {
+      // Search filter
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        if (!notification.message.toLowerCase().includes(query)) {
+          return false;
+        }
+      }
+
+      // Type filter
+      if (typeFilter !== 'all') {
+        const typeLower = notification.type.toLowerCase();
+        if (typeFilter === 'financial' && !typeLower.includes('payout') && !typeLower.includes('payment') && !typeLower.includes('funds') && !typeLower.includes('claim') && !typeLower.includes('recovery')) {
+          return false;
+        }
+        if (typeFilter === 'document' && !typeLower.includes('document') && !typeLower.includes('invoice') && !typeLower.includes('file') && !typeLower.includes('evidence')) {
+          return false;
+        }
+        if (typeFilter === 'system' && !typeLower.includes('security') && !typeLower.includes('update') && !typeLower.includes('feature') && !typeLower.includes('team') && !typeLower.includes('user')) {
+          return false;
+        }
+      }
+
+      // Date filter
+      if (dateFilter !== 'all') {
+        const now = new Date();
+        if (dateFilter === 'today' && !isAfter(notification.created_at, subDays(now, 1))) {
+          return false;
+        }
+        if (dateFilter === 'week' && !isAfter(notification.created_at, subDays(now, 7))) {
+          return false;
+        }
+        if (dateFilter === 'month' && !isAfter(notification.created_at, subDays(now, 30))) {
+          return false;
+        }
+      }
+
+      // Status filter
+      if (statusFilter === 'unread' && notification.read) {
+        return false;
+      }
+      if (statusFilter === 'read' && !notification.read) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [notifications, searchQuery, typeFilter, dateFilter, statusFilter]);
+
+  // Clear all filters
+  const clearFilters = () => {
+    setSearchQuery('');
+    setTypeFilter('all');
+    setDateFilter('all');
+    setStatusFilter('all');
+  };
 
   // Mark notification as read
   const handleMarkAsRead = async (notificationId: string) => {
@@ -205,6 +274,7 @@ export default function NotificationHub() {
             icon,
             message: notif.message || notif.title || 'New notification',
             timestamp,
+            created_at: new Date(notif.created_at || new Date().toISOString()),
             channels,
             read: notif.read || notif.is_read || notif.status === 'read' || false
           };
@@ -405,6 +475,88 @@ export default function NotificationHub() {
                 </div>
               </div>
 
+              {/* Search and Filters Row */}
+              <div className="px-4 py-3 border-b border-gray-100 bg-white">
+                <div className="flex flex-col sm:flex-row gap-3">
+                  {/* Search Bar */}
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
+                    <Input
+                      placeholder="Search notifications..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-9 pr-8 h-8 text-xs bg-gray-50 border-gray-200 focus:bg-white"
+                    />
+                    {searchQuery && (
+                      <button
+                        onClick={() => setSearchQuery('')}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Filter Dropdowns */}
+                  <div className="flex gap-2">
+                    {/* Type Filter */}
+                    <Select value={typeFilter} onValueChange={setTypeFilter}>
+                      <SelectTrigger className="h-8 w-[120px] text-xs bg-gray-50 border-gray-200">
+                        <SelectValue placeholder="Type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all" className="text-xs">All Types</SelectItem>
+                        <SelectItem value="financial" className="text-xs">Financial</SelectItem>
+                        <SelectItem value="document" className="text-xs">Documents</SelectItem>
+                        <SelectItem value="system" className="text-xs">System</SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                    {/* Date Filter */}
+                    <Select value={dateFilter} onValueChange={setDateFilter}>
+                      <SelectTrigger className="h-8 w-[100px] text-xs bg-gray-50 border-gray-200">
+                        <SelectValue placeholder="Date" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all" className="text-xs">All Time</SelectItem>
+                        <SelectItem value="today" className="text-xs">Today</SelectItem>
+                        <SelectItem value="week" className="text-xs">This Week</SelectItem>
+                        <SelectItem value="month" className="text-xs">This Month</SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                    {/* Status Filter */}
+                    <Select value={statusFilter} onValueChange={setStatusFilter}>
+                      <SelectTrigger className="h-8 w-[100px] text-xs bg-gray-50 border-gray-200">
+                        <SelectValue placeholder="Status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all" className="text-xs">All</SelectItem>
+                        <SelectItem value="unread" className="text-xs">Unread</SelectItem>
+                        <SelectItem value="read" className="text-xs">Read</SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                    {/* Clear Filters */}
+                    {(searchQuery || typeFilter !== 'all' || dateFilter !== 'all' || statusFilter !== 'all') && (
+                      <button
+                        onClick={clearFilters}
+                        className="px-2 h-8 text-xs text-gray-500 hover:text-gray-700 border border-gray-200 bg-white hover:bg-gray-50"
+                      >
+                        Clear
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Filter Summary */}
+                {(searchQuery || typeFilter !== 'all' || statusFilter !== 'all') && (
+                  <p className="text-[10px] text-gray-500 mt-2">
+                    Showing {filteredNotifications.length} of {notifications.length} notifications
+                  </p>
+                )}
+              </div>
+
               <div className="p-4">
                 {loading && (
                   <div className="text-center py-6 text-gray-600">
@@ -425,6 +577,15 @@ export default function NotificationHub() {
                   </div>
                 )}
 
+                {!loading && !error && filteredNotifications.length === 0 && notifications.length > 0 && (
+                  <div className="text-center py-6 text-gray-600">
+                    <p className="text-xs mb-1">No notifications match your filters.</p>
+                    <button onClick={clearFilters} className="text-[10px] text-blue-600 hover:text-blue-700">
+                      Clear filters
+                    </button>
+                  </div>
+                )}
+
                 {!loading && !error && notifications.length === 0 && (
                   <div className="text-center py-6 text-gray-600">
                     <p className="text-xs mb-1">No notifications found.</p>
@@ -432,9 +593,9 @@ export default function NotificationHub() {
                   </div>
                 )}
 
-                {!loading && !error && notifications.length > 0 && (
+                {!loading && !error && filteredNotifications.length > 0 && (
                   <div className="space-y-2">
-                    {notifications.map((notification) => {
+                    {filteredNotifications.map((notification) => {
                       const IconComponent = notification.icon;
                       return (
                         <div

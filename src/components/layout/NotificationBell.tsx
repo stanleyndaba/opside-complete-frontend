@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Bell, DollarSign, CheckCircle, FileCheck, Users, AlertTriangle, AlertCircle } from 'lucide-react';
+import { Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 import { Link, useLocation } from 'react-router-dom';
@@ -61,16 +60,6 @@ export function NotificationBell({
     location.pathname.startsWith('/help')
   );
 
-  const getIconForType = (type: string) => {
-    if (type.includes('payment') || type.includes('funds')) return DollarSign;
-    if (type.includes('refund') || type.includes('approved')) return CheckCircle;
-    if (type.includes('claim') || type.includes('detected')) return AlertCircle;
-    if (type.includes('integration')) return FileCheck;
-    if (type.includes('discrepancy')) return AlertTriangle;
-    if (type.includes('user') || type.includes('team')) return Users;
-    return Bell;
-  };
-
   const getHrefForType = (type: string) => {
     if (type.includes('claim') || type.includes('refund') || type.includes('funds')) return '/recoveries';
     if (type.includes('integration')) return '/integrations-hub';
@@ -81,7 +70,6 @@ export function NotificationBell({
 
   const displayNotifications = notifications.slice(0, 10).map(n => ({
     id: n.id,
-    icon: getIconForType(n.type),
     message: n.message,
     timestamp: formatDistanceToNow(new Date(n.created_at), { addSuffix: true }),
     href: getHrefForType(n.type),
@@ -159,16 +147,16 @@ export function NotificationBell({
         </Button>
       </DropdownMenuTrigger>
 
-      {/* Institutional Banking Design - Clean, Professional, Executive-Level */}
+      {/* Pentagon/JP Morgan Style - Minimal, Grayscale, Serious */}
       <DropdownMenuContent
         align="end"
-        className="w-[360px] max-h-[480px] overflow-y-auto scrollbar-hide bg-white border border-gray-200 shadow-2xl z-50 rounded-lg"
+        className="w-[340px] max-h-[420px] overflow-y-auto scrollbar-hide bg-white border border-gray-200 shadow-lg z-50 rounded-sm"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
-        {/* Header - Clean institutional style */}
-        <div className="px-5 py-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
+        {/* Header - Clean, minimal */}
+        <div className="px-4 py-3 border-b border-gray-100">
           <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-sm text-gray-900 tracking-tight">{label}</h3>
+            <h3 className="text-sm font-semibold text-gray-900">{label}</h3>
             <div className="flex items-center gap-3">
               {unreadCount > 0 && (
                 <button
@@ -179,7 +167,7 @@ export function NotificationBell({
                 </button>
               )}
               {unreadCount > 0 && (
-                <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
+                <span className="text-[10px] font-medium text-gray-500">
                   {unreadCount} new
                 </span>
               )}
@@ -187,54 +175,43 @@ export function NotificationBell({
           </div>
         </div>
 
-        {/* Notification Items */}
+        {/* Notification Items - No icons, minimal design */}
         <div>
           {displayNotifications.length === 0 ? (
-            <div className="px-5 py-8 text-center">
-              <Bell className="h-8 w-8 mx-auto mb-3 text-gray-300" />
-              <p className="text-sm text-gray-500">No messages yet</p>
+            <div className="px-4 py-8 text-center">
+              <p className="text-sm text-gray-400">No messages</p>
             </div>
           ) : (
             displayNotifications.map((notification, index) => {
-              const NotifIcon = notification.icon;
               const content = (
                 <div
                   className={cn(
-                    'flex items-start gap-4 px-5 py-4 transition-all cursor-pointer border-l-2',
+                    'px-4 py-3 transition-colors cursor-pointer border-l-2',
                     !notification.read
-                      ? 'bg-blue-50/50 border-l-blue-500 hover:bg-blue-50'
+                      ? 'bg-gray-50 border-l-gray-400'
                       : 'bg-white border-l-transparent hover:bg-gray-50'
                   )}
                   onClick={() => handleNotificationClick(notification.id)}
                 >
-                  {/* Icon */}
-                  <div className={cn(
-                    'flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center',
-                    !notification.read ? 'bg-blue-100' : 'bg-gray-100'
-                  )}>
-                    <NotifIcon className={cn(
-                      'w-4 h-4',
-                      !notification.read ? 'text-blue-600' : 'text-gray-500'
-                    )} />
-                  </div>
+                  <div className="flex items-start justify-between gap-3">
+                    {/* Content */}
+                    <div className="flex-1 min-w-0">
+                      <p className={cn(
+                        'text-[13px] leading-relaxed',
+                        !notification.read ? 'text-gray-800' : 'text-gray-600'
+                      )}>
+                        {renderFormattedMessage(notification.message)}
+                      </p>
+                      <p className="text-[11px] text-gray-400 mt-1">
+                        {notification.timestamp}
+                      </p>
+                    </div>
 
-                  {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <p className={cn(
-                      'text-[13px] leading-relaxed',
-                      !notification.read ? 'text-gray-800' : 'text-gray-600'
-                    )}>
-                      {renderFormattedMessage(notification.message)}
-                    </p>
-                    <p className="text-[11px] text-gray-400 mt-1.5 font-medium">
-                      {notification.timestamp}
-                    </p>
+                    {/* Unread indicator - green dot */}
+                    {!notification.read && (
+                      <div className="w-2 h-2 bg-emerald-500 rounded-full flex-shrink-0 mt-1.5" />
+                    )}
                   </div>
-
-                  {/* Unread indicator */}
-                  {!notification.read && (
-                    <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-2" />
-                  )}
                 </div>
               );
 
@@ -256,11 +233,11 @@ export function NotificationBell({
           )}
         </div>
 
-        {/* Footer */}
-        <div className="px-5 py-3 border-t border-gray-100 bg-gray-50/50">
+        {/* Footer - Minimal */}
+        <div className="px-4 py-2.5 border-t border-gray-100">
           <Link to="/notifications" onClick={() => setIsOpen(false)} reloadDocument>
-            <button className="w-full text-center text-[12px] font-medium text-gray-600 hover:text-gray-900 transition-colors py-1">
-              View all messages
+            <button className="w-full text-center text-[11px] font-medium text-gray-500 hover:text-gray-700 transition-colors">
+              View all
             </button>
           </Link>
         </div>

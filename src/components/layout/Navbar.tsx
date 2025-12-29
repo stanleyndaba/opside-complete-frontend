@@ -309,55 +309,38 @@ export function Navbar({
         </div>
       </header>
 
-      {/* Referral Popup - Institutional Banking Design */}
+      {/* Referral Popup - Pentagon/JP Morgan Style: Minimal, Grayscale, Serious */}
       <Dialog open={showReferralPopup} onOpenChange={setShowReferralPopup}>
-        <DialogContent className="max-w-sm bg-white border border-gray-200 shadow-2xl rounded-xl p-0 overflow-hidden">
-          {/* Header with subtle gradient */}
-          <div className="px-6 py-5 bg-gradient-to-br from-slate-50 via-white to-blue-50/30 border-b border-gray-100">
-            <div className="flex items-start gap-4">
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-blue-100 to-blue-50 border border-blue-200/50">
-                <Gift className="h-5 w-5 text-blue-600" />
-              </div>
-              <div className="flex-1">
-                <h3 className="text-[15px] font-semibold text-gray-900 tracking-tight">
-                  No commission on referrals
-                </h3>
-                <p className="text-[12px] text-gray-500 mt-1 leading-relaxed">
-                  Bring new sellers to Opside and keep 100% of their recovered funds.
-                </p>
-              </div>
-            </div>
+        <DialogContent className="max-w-xs bg-white border border-gray-200 shadow-lg rounded-sm p-0 overflow-hidden">
+          {/* Header - Clean, no icons */}
+          <div className="px-5 py-4 border-b border-gray-100">
+            <h3 className="text-[14px] font-semibold text-gray-900 tracking-tight">
+              No commission on referrals
+            </h3>
+            <p className="text-[12px] text-gray-500 mt-1 leading-relaxed">
+              Bring new sellers to Opside and keep 100% of their recovered funds.
+            </p>
           </div>
 
-          {/* Content */}
-          <div className="px-6 py-5">
+          {/* Content - Minimal, text-only */}
+          <div className="px-5 py-4">
             <div className="space-y-4">
-              {/* Value Proposition */}
-              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100">
-                <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
-                  <DollarSign className="h-4 w-4 text-emerald-600" />
-                </div>
-                <div>
-                  <p className="text-[11px] font-medium text-gray-700">Your referrals earn</p>
-                  <p className="text-[13px] font-semibold text-gray-900">100% of recovered funds</p>
-                </div>
+              {/* Value Proposition - No icon, just text */}
+              <div className="p-3 bg-gray-50 border-l-2 border-gray-400">
+                <p className="text-[11px] text-gray-500">Your referrals earn</p>
+                <p className="text-[14px] font-semibold text-gray-900">100% of recovered funds</p>
               </div>
 
-              {/* CTA Button */}
+              {/* CTA Button - Dark charcoal */}
               <Button
                 onClick={() => {
                   setShowReferralPopup(false);
                   setShowInviteForm(true);
                 }}
-                className="w-full bg-gray-900 hover:bg-gray-800 text-white text-[13px] h-11 font-medium rounded-lg shadow-sm transition-all hover:shadow-md"
+                className="w-full bg-gray-900 hover:bg-gray-800 text-white text-[12px] h-9 font-medium rounded-sm"
               >
                 Invite a seller
               </Button>
-
-              {/* Learn more link */}
-              <p className="text-center text-[11px] text-gray-400">
-                Questions? <button className="text-blue-600 hover:text-blue-700 font-medium">Learn more about referrals</button>
-              </p>
             </div>
           </div>
         </DialogContent>
