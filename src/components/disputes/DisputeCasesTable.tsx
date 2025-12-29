@@ -166,110 +166,109 @@ export function DisputeCasesTable() {
           Refresh
         </Button>
       </div>
-    </div>
 
-      {/* Cases Table */ }
-  <Card className="bg-white border-gray-200">
-    <CardContent className="p-0">
-      {cases.length === 0 ? (
-        <div className="p-8 text-center">
-          <AlertCircle className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-          <p className="text-sm text-gray-600 mb-2">No dispute cases found</p>
-          <p className="text-xs text-gray-500">
-            Cases will appear here after evidence matching and filing
-          </p>
-        </div>
-      ) : (
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-gray-200 bg-gray-50">
-                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Case Number</TableHead>
-                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Claim ID</TableHead>
-                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Status</TableHead>
-                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Amount</TableHead>
-                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Amazon Case ID</TableHead>
-                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Retries</TableHead>
-                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Created</TableHead>
-                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Exp Payout</TableHead>
-                <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {cases.map((caseItem) => (
-                <TableRow key={caseItem.id || Math.random()} className="border-gray-200 hover:bg-gray-50">
-                  <TableCell className="py-2">
-                    <span className="font-mono text-xs text-gray-900">{caseItem.case_number || '—'}</span>
-                  </TableCell>
-                  <TableCell className="py-2">
-                    {caseItem.claim_id ? (
-                      <Button asChild variant="link" className="p-0 h-auto text-xs text-gray-900 hover:text-gray-900 font-mono">
-                        <Link to={`/recoveries/${caseItem.claim_id}`}>
-                          {caseItem.claim_id.substring(0, 12)}...
-                        </Link>
-                      </Button>
-                    ) : (
-                      <span className="text-xs text-gray-400">—</span>
-                    )}
-                  </TableCell>
-                  <TableCell className="py-2">
-                    {getStatusBadge(caseItem.status || 'unknown')}
-                  </TableCell>
-                  <TableCell className="py-2">
-                    <span className="text-xs font-semibold text-gray-900">
-                      {formatCurrency(caseItem.amount || 0, caseItem.currency || 'USD')}
-                    </span>
-                  </TableCell>
-                  <TableCell className="py-2">
-                    {caseItem.amazon_case_id ? (
-                      <div className="flex items-center gap-1.5">
-                        <span className="font-mono text-xs text-gray-700">{caseItem.amazon_case_id}</span>
-                        <Button variant="ghost" size="sm" className="h-5 w-5 p-0">
-                          <ExternalLink className="w-3 h-3" />
-                        </Button>
-                      </div>
-                    ) : (
-                      <span className="text-xs text-gray-400">—</span>
-                    )}
-                  </TableCell>
-                  <TableCell className="py-2">
-                    {caseItem.retry_count && caseItem.retry_count > 0 ? (
-                      <span className="text-[10px] px-1.5 py-0.5 bg-gray-50 text-gray-500 border border-gray-200 rounded">
-                        {caseItem.retry_count}
-                      </span>
-                    ) : (
-                      <span className="text-xs text-gray-400">0</span>
-                    )}
-                  </TableCell>
-                  <TableCell className="py-2">
-                    <span className="text-xs text-gray-600">
-                      {caseItem.created_at ? format(new Date(caseItem.created_at), 'MMM dd, yyyy') : '—'}
-                    </span>
-                  </TableCell>
-                  <TableCell className="py-2">
-                    <span className="text-xs text-gray-600">
-                      {(caseItem as any).expected_payout_date ? format(new Date((caseItem as any).expected_payout_date), 'MMM dd, yyyy') : '—'}
-                    </span>
-                  </TableCell>
-                  <TableCell className="py-2">
-                    {caseItem.claim_id ? (
-                      <Button asChild variant="ghost" size="sm">
-                        <Link to={`/recoveries/${caseItem.claim_id}`}>
-                          <Eye className="w-4 h-4" />
-                        </Link>
-                      </Button>
-                    ) : (
-                      <span className="text-xs text-gray-400">—</span>
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      )}
-    </CardContent>
-  </Card>
+      {/* Cases Table */}
+      <Card className="bg-white border-gray-200">
+        <CardContent className="p-0">
+          {cases.length === 0 ? (
+            <div className="p-8 text-center">
+              <AlertCircle className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+              <p className="text-sm text-gray-600 mb-2">No dispute cases found</p>
+              <p className="text-xs text-gray-500">
+                Cases will appear here after evidence matching and filing
+              </p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-gray-200 bg-gray-50">
+                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Case Number</TableHead>
+                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Claim ID</TableHead>
+                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Status</TableHead>
+                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Amount</TableHead>
+                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Amazon Case ID</TableHead>
+                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Retries</TableHead>
+                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Created</TableHead>
+                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Exp Payout</TableHead>
+                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {cases.map((caseItem) => (
+                    <TableRow key={caseItem.id || Math.random()} className="border-gray-200 hover:bg-gray-50">
+                      <TableCell className="py-2">
+                        <span className="font-mono text-xs text-gray-900">{caseItem.case_number || '—'}</span>
+                      </TableCell>
+                      <TableCell className="py-2">
+                        {caseItem.claim_id ? (
+                          <Button asChild variant="link" className="p-0 h-auto text-xs text-gray-900 hover:text-gray-900 font-mono">
+                            <Link to={`/recoveries/${caseItem.claim_id}`}>
+                              {caseItem.claim_id.substring(0, 12)}...
+                            </Link>
+                          </Button>
+                        ) : (
+                          <span className="text-xs text-gray-400">—</span>
+                        )}
+                      </TableCell>
+                      <TableCell className="py-2">
+                        {getStatusBadge(caseItem.status || 'unknown')}
+                      </TableCell>
+                      <TableCell className="py-2">
+                        <span className="text-xs font-semibold text-gray-900">
+                          {formatCurrency(caseItem.amount || 0, caseItem.currency || 'USD')}
+                        </span>
+                      </TableCell>
+                      <TableCell className="py-2">
+                        {caseItem.amazon_case_id ? (
+                          <div className="flex items-center gap-1.5">
+                            <span className="font-mono text-xs text-gray-700">{caseItem.amazon_case_id}</span>
+                            <Button variant="ghost" size="sm" className="h-5 w-5 p-0">
+                              <ExternalLink className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        ) : (
+                          <span className="text-xs text-gray-400">—</span>
+                        )}
+                      </TableCell>
+                      <TableCell className="py-2">
+                        {caseItem.retry_count && caseItem.retry_count > 0 ? (
+                          <span className="text-[10px] px-1.5 py-0.5 bg-gray-50 text-gray-500 border border-gray-200 rounded">
+                            {caseItem.retry_count}
+                          </span>
+                        ) : (
+                          <span className="text-xs text-gray-400">0</span>
+                        )}
+                      </TableCell>
+                      <TableCell className="py-2">
+                        <span className="text-xs text-gray-600">
+                          {caseItem.created_at ? format(new Date(caseItem.created_at), 'MMM dd, yyyy') : '—'}
+                        </span>
+                      </TableCell>
+                      <TableCell className="py-2">
+                        <span className="text-xs text-gray-600">
+                          {(caseItem as any).expected_payout_date ? format(new Date((caseItem as any).expected_payout_date), 'MMM dd, yyyy') : '—'}
+                        </span>
+                      </TableCell>
+                      <TableCell className="py-2">
+                        {caseItem.claim_id ? (
+                          <Button asChild variant="ghost" size="sm">
+                            <Link to={`/recoveries/${caseItem.claim_id}`}>
+                              <Eye className="w-4 h-4" />
+                            </Link>
+                          </Button>
+                        ) : (
+                          <span className="text-xs text-gray-400">—</span>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div >
   );
 }
