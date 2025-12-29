@@ -1719,6 +1719,23 @@ export const detectionApi = {
     });
   },
 
+  // Get timeline events for a claim
+  getClaimTimeline: async (claimId: string, table: 'detection_results' | 'claims' = 'detection_results') => {
+    return requestJson<{
+      success: boolean;
+      timeline: Array<{
+        id: string;
+        date: string;
+        action: string;
+        description: string;
+        amount?: number;
+        rejectionReason?: string;
+        escalationRound?: number;
+      }>;
+      count: number;
+    }>(`/api/claims/${encodeURIComponent(claimId)}/timeline?table=${table}`);
+  },
+
   // Get claims approaching deadline
   getClaimsApproachingDeadline: async (params?: { userId?: string; days?: number }) => {
     const queryParams = new URLSearchParams();

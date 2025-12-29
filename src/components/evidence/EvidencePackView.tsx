@@ -632,12 +632,18 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
                 </div>
 
                 {/* Actions */}
-                <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
-                    <Button variant="outline" onClick={onClose}>
+                <div className="flex justify-end gap-2 pt-4 border-t border-gray-200">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={onClose}
+                        className="h-8 text-xs text-gray-600 border-gray-200 hover:bg-gray-100 rounded-sm"
+                    >
                         Close
                     </Button>
                     <Button
                         variant="outline"
+                        size="sm"
                         onClick={async () => {
                             try {
                                 toast({ title: 'Generating PDF...', description: 'Please wait while we create your composite document.' });
@@ -666,13 +672,17 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
                                 });
                             }
                         }}
-                        className="border-purple-200 text-purple-700 hover:bg-purple-50"
+                        className="h-8 text-xs text-gray-700 border-gray-200 hover:bg-gray-100 rounded-sm"
                     >
-                        <Package className="h-4 w-4 mr-2" />
+                        <Package className="h-3.5 w-3.5 mr-1.5" />
                         Download Composite PDF
                     </Button>
-                    <Button onClick={exportAsPdf} className="bg-gray-100 hover:bg-gray-200 text-gray-800">
-                        <Download className="h-4 w-4 mr-2" />
+                    <Button
+                        size="sm"
+                        onClick={exportAsPdf}
+                        className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-sm"
+                    >
+                        <Download className="h-3.5 w-3.5 mr-1.5" />
                         Export as PDF
                     </Button>
                 </div>

@@ -1,10 +1,11 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { format } from 'date-fns';
-import { CheckCircle2, XCircle, Clock, AlertTriangle, FileText, RefreshCw, ArrowRight, Shield, FileSearch, DollarSign, Tag } from 'lucide-react';
+import { CheckCircle2, XCircle, Clock, AlertTriangle, FileText, RefreshCw, ArrowRight, Shield, FileSearch, DollarSign, Tag, Loader2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { detectionApi } from '@/lib/api';
 
 // Rejection reason classification
 type RejectionReason =
@@ -276,10 +277,55 @@ const generateMockTimeline = (claim: ClaimNegotiationTimelineProps['claim']): Ti
 };
 
 export function ClaimNegotiationTimeline({ claim, onEscalate, maxEscalations = 2 }: ClaimNegotiationTimelineProps) {
-    // Get or generate timeline
+    // State for fetched timeline
+    const [fetchedTimeline, setFetchedTimeline] = useState<TimelineEvent[] | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    // Fetch timeline from API
+    useEffect(() => {
+        const fetchTimeline = async () => {
+            if (!claim.id) {
+                setLoading(false);
+                return;
+            }
+            try {
+                setLoading(true);
+                setError(null);
+                const res = await detectionApi.getClaimTimeline(claim.id);
+                if (res.ok && res.data?.timeline && res.data.timeline.length > 0) {
+                    // Map API response to TimelineEvent format
+                    const mappedTimeline: TimelineEvent[] = res.data.timeline.map((e: any) => ({
+                        id: e.id,
+                        date: e.date || e.created_at,
+                        action: e.action as TimelineEvent['action'],
+                        description: e.description,
+                        amount: e.amount,
+                        rejectionReason: e.rejectionReason || e.rejection_reason,
+                        escalationRound: e.escalationRound || e.escalation_round
+                    }));
+                    setFetchedTimeline(mappedTimeline);
+                } else {
+                    // No timeline from API, will use generated mock
+                    setFetchedTimeline(null);
+                }
+            } catch (err: any) {
+                console.error('[ClaimTimeline] Error fetching timeline:', err);
+                setError(err?.message || 'Failed to load timeline');
+                setFetchedTimeline(null);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchTimeline();
+    }, [claim.id]);
+
+    // Get or generate timeline - prefer prop, then fetched, then mock
     const timeline = useMemo(() => {
-        return claim.timeline || generateMockTimeline(claim);
-    }, [claim]);
+        if (claim.timeline && claim.timeline.length > 0) return claim.timeline;
+        if (fetchedTimeline && fetchedTimeline.length > 0) return fetchedTimeline;
+        return generateMockTimeline(claim);
+    }, [claim, fetchedTimeline]);
 
     // Get current rejection reason if denied
     const currentRejection = useMemo(() => {
