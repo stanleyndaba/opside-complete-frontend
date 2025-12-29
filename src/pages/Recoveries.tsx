@@ -3189,19 +3189,25 @@ export default function Recoveries() {
                         </div>
                       </div>
                     )}
-                    <DialogFooter>
-                      <Button variant="outline" onClick={() => setDetailsModalOpen(false)}>
+                    <DialogFooter className="border-t border-gray-100 pt-4">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setDetailsModalOpen(false)}
+                        className="h-8 text-xs text-gray-600 border-gray-200 hover:bg-gray-100 rounded-sm"
+                      >
                         Close
                       </Button>
                       <Button
+                        size="sm"
                         onClick={() => {
                           setEvidencePackClaim(detectionDetails);
                           setEvidencePackOpen(true);
                           setDetailsModalOpen(false);
                         }}
-                        className="bg-gray-100 hover:bg-gray-200 text-gray-800"
+                        className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-sm"
                       >
-                        <FileText className="h-4 w-4 mr-2" />
+                        <FileText className="h-3.5 w-3.5 mr-1.5" />
                         View Evidence Pack
                       </Button>
                     </DialogFooter>

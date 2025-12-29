@@ -166,43 +166,43 @@ const classifyRejection = (status: string, notes?: string): RejectionReason => {
     return 'generic_denial';
 };
 
-// Get icon for timeline event
+// Get icon for timeline event - Pentagon grayscale design
 const getEventIcon = (action: TimelineEvent['action']) => {
     switch (action) {
         case 'filed':
         case 'auto_submitted':
-            return <FileText className="h-4 w-4 text-blue-500" />;
+            return <FileText className="h-4 w-4 text-gray-600" />;
         case 'approved':
         case 'resolved':
-            return <CheckCircle2 className="h-4 w-4 text-emerald-500" />;
+            return <CheckCircle2 className="h-4 w-4 text-gray-700" />;
         case 'partially_approved':
-            return <CheckCircle2 className="h-4 w-4 text-amber-500" />;
+            return <CheckCircle2 className="h-4 w-4 text-gray-500" />;
         case 'denied':
-            return <XCircle className="h-4 w-4 text-red-500" />;
+            return <XCircle className="h-4 w-4 text-gray-600" />;
         case 'escalated':
         case 'adjusted':
-            return <RefreshCw className="h-4 w-4 text-purple-500" />;
+            return <RefreshCw className="h-4 w-4 text-gray-600" />;
         default:
             return <Clock className="h-4 w-4 text-gray-400" />;
     }
 };
 
-// Get color for timeline event
+// Get color for timeline event - Pentagon grayscale design
 const getEventColor = (action: TimelineEvent['action']) => {
     switch (action) {
         case 'filed':
         case 'auto_submitted':
-            return 'border-blue-500 bg-blue-50';
+            return 'border-gray-400 bg-gray-50';
         case 'approved':
         case 'resolved':
-            return 'border-emerald-500 bg-emerald-50';
+            return 'border-gray-500 bg-gray-100';
         case 'partially_approved':
-            return 'border-amber-500 bg-amber-50';
+            return 'border-gray-400 bg-gray-50';
         case 'denied':
-            return 'border-red-500 bg-red-50';
+            return 'border-gray-500 bg-gray-100';
         case 'escalated':
         case 'adjusted':
-            return 'border-purple-500 bg-purple-50';
+            return 'border-gray-400 bg-gray-50';
         default:
             return 'border-gray-300 bg-gray-50';
     }
@@ -349,10 +349,10 @@ export function ClaimNegotiationTimeline({ claim, onEscalate, maxEscalations = 2
         <div className="space-y-6">
             {/* Timeline Header */}
             <div className="flex items-center justify-between">
-                <h4 className="text-sm font-semibold text-gray-900">Claim Timeline</h4>
-                <Badge className={escalationCount > 0 ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-600'}>
+                <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-[0.15em]">Claim Timeline</h4>
+                <span className="text-[10px] px-2 py-0.5 bg-gray-100 text-gray-600 border border-gray-200 rounded-sm">
                     Escalation {escalationCount}/{maxEscalations}
-                </Badge>
+                </span>
             </div>
 
             {/* Visual Timeline */}
@@ -381,9 +381,9 @@ export function ClaimNegotiationTimeline({ claim, onEscalate, maxEscalations = 2
                                         </Badge>
                                     )}
                                     {event.escalationRound && (
-                                        <Badge className="bg-purple-100 text-purple-700 text-xs">
+                                        <span className="text-[10px] px-1.5 py-0.5 bg-gray-100 text-gray-600 border border-gray-200 rounded-sm">
                                             Round {event.escalationRound}
-                                        </Badge>
+                                        </span>
                                     )}
                                 </div>
                                 <p className="text-sm text-gray-600 mt-1">{event.description}</p>
@@ -412,24 +412,24 @@ export function ClaimNegotiationTimeline({ claim, onEscalate, maxEscalations = 2
 
             {/* Rejection Analysis & Escalation Playbook */}
             {currentRejection && (
-                <Card className="border-red-200 bg-red-50">
-                    <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-semibold text-red-900 flex items-center gap-2">
+                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                    <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
+                        <h5 className="text-xs font-semibold text-gray-700 uppercase tracking-wide flex items-center gap-2">
                             {currentRejection.icon}
                             Rejection Analysis: {currentRejection.label}
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                        <p className="text-sm text-red-700">{currentRejection.description}</p>
+                        </h5>
+                    </div>
+                    <div className="bg-white p-4 space-y-3">
+                        <p className="text-xs text-gray-600">{currentRejection.description}</p>
 
-                        <div className="bg-white/70 rounded-lg p-3 border border-red-100">
-                            <div className="text-xs text-red-600 uppercase tracking-wide font-semibold mb-2">
+                        <div className="bg-gray-50 rounded-sm p-3 border border-gray-100">
+                            <div className="text-[10px] text-gray-500 uppercase tracking-wide font-semibold mb-2">
                                 Escalation Playbook
                             </div>
                             <ul className="space-y-2">
                                 {currentRejection.actions.map((action, i) => (
-                                    <li key={i} className="flex items-start gap-2 text-sm text-red-800">
-                                        <ArrowRight className="h-4 w-4 mt-0.5 text-red-400 flex-shrink-0" />
+                                    <li key={i} className="flex items-start gap-2 text-xs text-gray-700">
+                                        <ArrowRight className="h-3.5 w-3.5 mt-0.5 text-gray-400 flex-shrink-0" />
                                         {action}
                                     </li>
                                 ))}
@@ -441,56 +441,56 @@ export function ClaimNegotiationTimeline({ claim, onEscalate, maxEscalations = 2
                                 {currentRejection.autoTriggerable ? (
                                     <Button
                                         onClick={() => onEscalate?.(currentRejection)}
-                                        className="bg-purple-600 hover:bg-purple-700 text-white"
+                                        className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-sm"
                                         size="sm"
                                     >
-                                        <RefreshCw className="h-4 w-4 mr-2" />
+                                        <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
                                         Auto-Escalate
                                     </Button>
                                 ) : (
                                     <Button
                                         onClick={() => onEscalate?.(currentRejection)}
                                         variant="outline"
-                                        className="border-purple-300 text-purple-700"
+                                        className="h-8 text-xs border-gray-200 text-gray-700 rounded-sm"
                                         size="sm"
                                     >
-                                        <Shield className="h-4 w-4 mr-2" />
+                                        <Shield className="h-3.5 w-3.5 mr-1.5" />
                                         Manual Review Required
                                     </Button>
                                 )}
-                                <span className="text-xs text-gray-500">
+                                <span className="text-[10px] text-gray-500">
                                     {maxEscalations - escalationCount} escalation(s) remaining
                                 </span>
                             </div>
                         )}
 
                         {!canEscalate && escalationCount >= maxEscalations && (
-                            <div className="flex items-center gap-2 pt-2 text-amber-700 bg-amber-50 p-2 rounded">
-                                <AlertTriangle className="h-4 w-4" />
-                                <span className="text-sm">Max escalations reached. Manual review recommended.</span>
+                            <div className="flex items-center gap-2 pt-2 text-gray-600 bg-gray-50 p-2 rounded-sm border border-gray-200">
+                                <AlertTriangle className="h-4 w-4 text-gray-500" />
+                                <span className="text-xs">Max escalations reached. Manual review recommended.</span>
                             </div>
                         )}
-                    </CardContent>
-                </Card>
+                    </div>
+                </div>
             )}
 
             {/* Success summary for resolved claims */}
             {(claim.status?.toLowerCase() === 'approved' ||
                 claim.status?.toLowerCase() === 'paid' ||
                 claim.status?.toLowerCase() === 'resolved') && (
-                    <Card className="border-emerald-200 bg-emerald-50">
-                        <CardContent className="py-4">
+                    <div className="border border-gray-200 rounded-lg overflow-hidden">
+                        <div className="bg-gray-50 px-4 py-3">
                             <div className="flex items-center gap-3">
-                                <CheckCircle2 className="h-6 w-6 text-emerald-500" />
+                                <CheckCircle2 className="h-5 w-5 text-gray-600" />
                                 <div>
-                                    <div className="font-semibold text-emerald-900">Claim Resolved</div>
-                                    <p className="text-sm text-emerald-700">
+                                    <div className="text-xs font-semibold text-gray-900 uppercase tracking-wide">Claim Resolved</div>
+                                    <p className="text-xs text-gray-600 mt-0.5">
                                         Reimbursement of ${(claim.guaranteedAmount || claim.amount || 0).toFixed(2)} has been processed.
                                     </p>
                                 </div>
                             </div>
-                        </CardContent>
-                    </Card>
+                        </div>
+                    </div>
                 )}
         </div>
     );
