@@ -106,8 +106,9 @@ async function requestJsonWithRetry<T>(
       signal: controller.signal,
       headers: {
         'Content-Type': 'application/json',
-        // Use demo-user for sandbox/development - matches generated mock data
-        'x-user-id': 'demo-user',
+        // Get user ID from localStorage (set by SessionContext) or fallback to demo-user
+        // This allows API calls to work with the actual authenticated user
+        'x-user-id': localStorage.getItem('user_id') || 'demo-user',
         ...options?.headers,
       },
       ...options,

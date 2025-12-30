@@ -22,13 +22,17 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     const [userEmail, setUserEmail] = useState<string | null>(null);
     const [isSessionValid, setIsSessionValid] = useState(true);
 
-    // Get user email on mount
+    // Get user email and ID on mount
     useEffect(() => {
         const getUser = async () => {
             const { data: { user } } = await supabase.auth.getUser();
             if (user?.email) {
                 setUserEmail(user.email);
                 localStorage.setItem('user_email', user.email);
+            }
+            // Store user ID for API calls
+            if (user?.id) {
+                localStorage.setItem('user_id', user.id);
             }
         };
         getUser();
@@ -39,11 +43,17 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
             if (event === 'SIGNED_OUT' || !session) {
                 setIsSessionValid(false);
+                // Clear user_id on sign out
+                localStorage.removeItem('user_id');
             } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
                 setIsSessionValid(true);
                 setSessionTimeoutOpen(false);
                 if (session.user?.email) {
                     setUserEmail(session.user.email);
+                }
+                // Store user_id for API calls
+                if (session.user?.id) {
+                    localStorage.setItem('user_id', session.user.id);
                 }
             }
         });
