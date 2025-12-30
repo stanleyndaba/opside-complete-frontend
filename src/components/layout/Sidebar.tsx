@@ -99,7 +99,7 @@ export function Sidebar({
   const secondaryItems: NavItem[] = [
     { title: 'Settings', icon: Settings2, href: '/settings' },
     { title: 'Help Centre', icon: LifeBuoy, href: '/help' },
-    { title: "What's New", icon: Sparkles, href: '/whats-new' }
+    // { title: "What's New", icon: Sparkles, href: '/whats-new' } // Hidden for now
   ];
   const NavItemComponent = React.memo(({
     item

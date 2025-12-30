@@ -164,6 +164,35 @@ export default function TransactionHistory() {
         }
     };
 
+    // Export statement as CSV
+    const exportStatement = () => {
+        const header = ['Date', 'Case ID', 'Reimbursement ID', 'Recovered Amount', 'Opside Fee', 'Net Amount', 'Status'];
+        const rows = filteredTransactions.map(t => [
+            format(new Date(t.date), 'yyyy-MM-dd'),
+            t.caseId,
+            t.reimbursementId,
+            t.recoveredAmount.toFixed(2),
+            t.feeAmount.toFixed(2),
+            (t.recoveredAmount - t.feeAmount).toFixed(2),
+            t.status
+        ]);
+
+        // Add summary row
+        rows.push([]);
+        rows.push(['', '', 'TOTAL', summary.totalRecovered.toFixed(2), summary.totalFees.toFixed(2), summary.netProfit.toFixed(2), '']);
+
+        const csv = [header.join(','), ...rows.map(r => r.join(','))].join('\n');
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `opside-statement-${format(new Date(), 'yyyy-MM-dd')}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+
+        toast({ title: 'Statement Downloaded', description: 'Your transaction statement has been exported.' });
+    };
+
     const getStatusBadge = (status: Transaction['status']) => {
         switch (status) {
             case 'paid':
@@ -184,55 +213,40 @@ export default function TransactionHistory() {
             <div className="max-w-7xl mx-auto px-6 py-8">
                 {/* Header */}
                 <div className="mb-8">
-                    <div className="flex items-center gap-3 mb-2">
-                        <Receipt className="h-5 w-5 text-gray-600" />
-                        <h1 className="text-lg font-semibold text-gray-900 uppercase tracking-[0.1em]">
-                            Transaction History
-                        </h1>
-                    </div>
-                    <p className="text-xs text-gray-500">
-                        Your complete ledger of recovered funds and fees. Like a bank statement.
+                    <h1 className="text-lg font-medium text-gray-900 tracking-tight">
+                        Transaction History
+                    </h1>
+                    <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-[0.15em]">
+                        Your complete ledger of recovered funds and fees
                     </p>
                 </div>
 
                 {/* Summary Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                    <div className="bg-white border border-gray-200 rounded-sm p-4">
-                        <div className="flex items-center gap-2 mb-2">
-                            <TrendingUp className="h-4 w-4 text-gray-500" />
-                            <span className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Total Recovered</span>
-                        </div>
-                        <div className="text-xl font-semibold text-emerald-600">
+                    <div className="border border-gray-200 bg-gray-50 p-4">
+                        <div className="text-[10px] text-gray-500 uppercase tracking-[0.1em]">Total Recovered</div>
+                        <div className="text-xl font-light text-emerald-600 mt-1">
                             +${summary.totalRecovered.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                         </div>
                     </div>
 
-                    <div className="bg-white border border-gray-200 rounded-sm p-4">
-                        <div className="flex items-center gap-2 mb-2">
-                            <CreditCard className="h-4 w-4 text-gray-500" />
-                            <span className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Total Fees (20%)</span>
-                        </div>
-                        <div className="text-xl font-semibold text-gray-600">
+                    <div className="border border-gray-200 bg-gray-50 p-4">
+                        <div className="text-[10px] text-gray-500 uppercase tracking-[0.1em]">Total Fees (20%)</div>
+                        <div className="text-xl font-light text-gray-600 mt-1">
                             -${summary.totalFees.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                         </div>
                     </div>
 
-                    <div className="bg-white border border-gray-200 rounded-sm p-4">
-                        <div className="flex items-center gap-2 mb-2">
-                            <FileText className="h-4 w-4 text-gray-500" />
-                            <span className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Net Profit</span>
-                        </div>
-                        <div className="text-xl font-semibold text-gray-900">
+                    <div className="border border-gray-200 bg-gray-50 p-4">
+                        <div className="text-[10px] text-gray-500 uppercase tracking-[0.1em]">Net Profit</div>
+                        <div className="text-xl font-light text-gray-900 mt-1">
                             ${summary.netProfit.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                         </div>
                     </div>
 
-                    <div className="bg-white border border-gray-200 rounded-sm p-4">
-                        <div className="flex items-center gap-2 mb-2">
-                            <Calendar className="h-4 w-4 text-gray-500" />
-                            <span className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Transactions</span>
-                        </div>
-                        <div className="text-xl font-semibold text-gray-900">
+                    <div className="border border-gray-200 bg-gray-50 p-4">
+                        <div className="text-[10px] text-gray-500 uppercase tracking-[0.1em]">Transactions</div>
+                        <div className="text-xl font-light text-gray-900 mt-1">
                             {summary.transactionCount}
                         </div>
                     </div>
@@ -253,6 +267,7 @@ export default function TransactionHistory() {
                     <Button
                         variant="outline"
                         size="sm"
+                        onClick={exportStatement}
                         className="h-8 text-xs border-gray-200 text-gray-700 rounded-sm"
                     >
                         <Download className="h-3.5 w-3.5 mr-1.5" />
