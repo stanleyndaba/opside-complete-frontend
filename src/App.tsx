@@ -44,6 +44,7 @@ const Careers = lazy(() => import("./pages/Careers"));
 const Docs = lazy(() => import("./pages/Docs"));
 const Privacy = lazy(() => import("./pages/Privacy"));
 const UpcomingPayments = lazy(() => import("./pages/UpcomingPayments"));
+const TransactionHistory = lazy(() => import("./pages/TransactionHistory"));
 const RevenueModel = lazy(() => import("./pages/RevenueModel"));
 const Admin = lazy(() => import("./pages/Admin"));
 const AdminUsersAndIntegrations = lazy(() => import("./pages/AdminUsersAndIntegrations"));
@@ -110,6 +111,7 @@ const App = () => (
                 <Route path="/integrations/reconnect/:provider" element={<ReconnectProvider />} />
                 <Route path="/reports" element={<Reports />} />
                 <Route path="/upcoming-payments" element={<UpcomingPayments />} />
+                <Route path="/transaction-history" element={<TransactionHistory />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/admin/users-integrations" element={<AdminOnly><AdminUsersAndIntegrations /></AdminOnly>} />
                 <Route path="/admin/amazon-auth-test" element={<AdminOnly><AmazonAuthTest /></AdminOnly>} />

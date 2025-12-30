@@ -92,6 +92,7 @@ export function Sidebar({
     { title: 'Documents and Files', icon: FileText, href: '/evidence-locker' },
     // { title: 'Reports', icon: BarChart3, href: '/reports' }, // Hidden for MVP
     { title: 'Refund Recoveries', icon: Plug, href: '/upcoming-payments' },
+    { title: 'Transaction History', icon: BarChart3, href: '/transaction-history' },
     { title: 'Integrations', icon: Box, href: '/integrations-hub' }
   ];
 
