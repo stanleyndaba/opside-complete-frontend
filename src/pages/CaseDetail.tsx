@@ -486,6 +486,27 @@ export default function CaseDetail() {
     (async () => {
       if (!caseId) return;
       try {
+        // First check if case data has evidence_attachments with document_id
+        const docIdFromCase = caseData?.evidence_attachments?.document_id;
+
+        if (docIdFromCase) {
+          // Fetch the specific matched document by ID
+          const docRes = await api.getDocument(docIdFromCase);
+          if (!cancelled && docRes.ok && docRes.data) {
+            // Add match info from the case's evidence_attachments
+            const docWithMatchInfo = {
+              ...docRes.data,
+              matchConfidence: caseData?.evidence_attachments?.match_confidence,
+              matchType: caseData?.evidence_attachments?.match_type,
+              matchedFields: caseData?.evidence_attachments?.matched_fields,
+              matchedAt: caseData?.evidence_attachments?.matched_at,
+            };
+            setMatchedDocs([docWithMatchInfo]);
+            return;
+          }
+        }
+
+        // Fallback: try to find documents from getDocuments list
         const docsRes = await api.getDocuments();
         const docs = Array.isArray(docsRes) ? docsRes : (docsRes as any)?.data;
         if (!cancelled && Array.isArray(docs)) {
@@ -500,7 +521,7 @@ export default function CaseDetail() {
       } catch { }
     })();
     return () => { cancelled = true; };
-  }, [caseId]);
+  }, [caseId, caseData?.evidence_attachments?.document_id]);
 
   // Compute effectiveCase BEFORE any early returns (React hooks rule)
   const effectiveCase = caseData || (mockCaseData as any)[caseId || ''] || passedClaim;
