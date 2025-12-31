@@ -965,7 +965,7 @@ export default function CaseDetail() {
                     <div className="flex items-center justify-between">
                       <div>
                         <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
-                          Found Documents
+                          Supporting Evidence
                         </h3>
                         <p className="text-[10px] text-gray-500 mt-0.5">Amazon rejects 82% of claims without an Invoice.</p>
                       </div>
@@ -1083,11 +1083,11 @@ export default function CaseDetail() {
 
               {/* Right Column - Chronological Ledger */}
               <div className="lg:col-span-2 space-y-4">
-                {/* What Happened - Narrative Section */}
+                {/* Issue Description - Narrative Section */}
                 <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
                   <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
                     <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
-                      What Happened
+                      Issue Description
                     </h3>
                   </div>
                   <div className="p-4">
