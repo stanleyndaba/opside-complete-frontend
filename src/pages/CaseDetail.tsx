@@ -1083,6 +1083,18 @@ export default function CaseDetail() {
 
               {/* Right Column - Chronological Ledger */}
               <div className="lg:col-span-2 space-y-4">
+                {/* Required Actions */}
+                <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
+                  <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
+                    <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
+                      Required Actions
+                    </h3>
+                  </div>
+                  <div className="p-4 text-sm text-gray-500 italic">
+                    What needs to be done/fixed for this case
+                  </div>
+                </div>
+
                 {/* Issue Description - Narrative Section */}
                 <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
                   <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
@@ -1094,6 +1106,18 @@ export default function CaseDetail() {
                     <p className="text-sm text-gray-700 leading-relaxed">
                       {generateNarrative(effectiveCase)}
                     </p>
+                  </div>
+                </div>
+
+                {/* Transaction History */}
+                <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
+                  <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
+                    <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
+                      Transaction History
+                    </h3>
+                  </div>
+                  <div className="p-4 text-sm text-gray-500 italic">
+                    Proof of the mistake
                   </div>
                 </div>
 
