@@ -1083,24 +1083,13 @@ export default function CaseDetail() {
 
               {/* Right Column - Chronological Ledger */}
               <div className="lg:col-span-2 space-y-4">
-                {/* Required Actions */}
-                <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
-                  <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
-                    <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
-                      Required Actions
-                    </h3>
-                  </div>
-                  <div className="p-4 text-sm text-gray-500 italic">
-                    What needs to be done/fixed for this case
-                  </div>
-                </div>
-
                 {/* Issue Description - Narrative Section */}
                 <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
                   <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
                     <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
                       Issue Description
                     </h3>
+                    <div className="text-[10px] text-gray-500 mt-0.5">Case Context</div>
                   </div>
                   <div className="p-4">
                     <p className="text-sm text-gray-700 leading-relaxed">
@@ -1115,9 +1104,23 @@ export default function CaseDetail() {
                     <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
                       Transaction History
                     </h3>
+                    <div className="text-[10px] text-gray-500 mt-0.5">Proof of Discrepancy</div>
                   </div>
                   <div className="p-4 text-sm text-gray-500 italic">
                     Proof of the mistake
+                  </div>
+                </div>
+
+                {/* Required Actions */}
+                <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
+                  <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
+                    <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
+                      Required Actions
+                    </h3>
+                    <div className="text-[10px] text-gray-500 mt-0.5">Fix needed</div>
+                  </div>
+                  <div className="p-4 text-sm text-gray-500 italic">
+                    What needs to be done/fixed for this case
                   </div>
                 </div>
 
@@ -1129,6 +1132,7 @@ export default function CaseDetail() {
                     <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
                       Contact Information
                     </h3>
+                    <div className="text-[10px] text-gray-500 mt-0.5">seller detail</div>
                   </div>
                   <div className="p-4 text-xs space-y-4">
                     <div>
@@ -1168,10 +1172,13 @@ export default function CaseDetail() {
                 <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
                   <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
                     <div className="flex items-center justify-between">
-                      <h3 className="flex items-center gap-2 text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
-                        <Clock className="h-4 w-4" />
-                        Claim Timeline
-                      </h3>
+                      <div>
+                        <h3 className="flex items-center gap-2 text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
+                          <Clock className="h-4 w-4" />
+                          Claim Timeline
+                        </h3>
+                        <div className="text-[10px] text-gray-500 mt-0.5 ml-6">Case Progress</div>
+                      </div>
                       <span className="text-[10px] text-gray-500 border border-gray-200 px-2 py-0.5">
                         {typeof effectiveCase.progress === 'number' ? `${Math.round(effectiveCase.progress)}%` : 'Real-time transparency'}
                       </span>
