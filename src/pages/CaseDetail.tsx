@@ -398,6 +398,10 @@ export default function CaseDetail() {
               claim_number: apiData.claim_number || apiData.evidence?.claim_number || base.claim_number,
             };
           });
+          // Initialize matchedDocs from API response if documents exist
+          if (Array.isArray((res.data as any)?.documents) && (res.data as any).documents.length > 0) {
+            setMatchedDocs((res.data as any).documents);
+          }
           setError(null);
         } else {
           // Fallback: look up claim from list, then synthesize details (do not clear existing data)
