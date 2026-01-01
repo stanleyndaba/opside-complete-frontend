@@ -625,15 +625,17 @@ export default function CaseDetail() {
               <div className="lg:col-span-1 space-y-6">
                 <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
                   <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
-                        Case Summary
-                      </h3>
-                      {derivedConfidencePct >= 85 ? (
-                        <span className="text-[9px] text-blue-600 font-medium">Auto-Filed</span>
-                      ) : (
-                        <span className="text-[9px] text-emerald-600 font-medium">Awaiting Seller Review</span>
-                      )}
+                    <div className="flex items-start justify-between">
+                      <div className="flex flex-col">
+                        <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
+                          Case Summary
+                        </h3>
+                        {derivedConfidencePct >= 85 ? (
+                          <span className="text-[9px] text-blue-600 font-medium mt-0.5">Auto-Filed</span>
+                        ) : (
+                          <span className="text-[9px] text-emerald-600 font-medium mt-0.5">Awaiting Seller Review</span>
+                        )}
+                      </div>
                       <span className={cn(
                         "px-2 py-0.5 text-[10px] font-medium border",
                         normalizeStatus(effectiveCase.status) === 'Approved' && "bg-gray-100 text-gray-700 border-gray-300",
