@@ -629,6 +629,11 @@ export default function CaseDetail() {
                       <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
                         Case Summary
                       </h3>
+                      {derivedConfidencePct >= 85 ? (
+                        <span className="text-[9px] text-blue-600 font-medium">Auto-Filed</span>
+                      ) : (
+                        <span className="text-[9px] text-emerald-600 font-medium">Awaiting Seller Review</span>
+                      )}
                       <span className={cn(
                         "px-2 py-0.5 text-[10px] font-medium border",
                         normalizeStatus(effectiveCase.status) === 'Approved' && "bg-gray-100 text-gray-700 border-gray-300",
