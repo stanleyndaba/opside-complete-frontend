@@ -146,7 +146,10 @@ async function requestJsonWithRetry<T>(
       // Provide specific error messages based on status code
       let userFriendlyError = errorMsg;
       if (res.status === 404) {
-        userFriendlyError = `Endpoint not found (404): ${path} - The backend may not have implemented this endpoint yet, or the path is incorrect.`;
+        // If backend returned an error message, use it; otherwise show generic
+        userFriendlyError = errorMsg && errorMsg !== 'Not Found'
+          ? errorMsg
+          : `Not found (404): ${path}`;
       } else if (res.status === 401) {
         userFriendlyError = `Unauthorized (401): Please log in or refresh your session.`;
       } else if (res.status === 403) {
