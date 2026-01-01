@@ -23,6 +23,7 @@ import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { SmartPromptCard } from './SmartPromptCard';
+import { ParkedClaimCard } from './ParkedClaimCard';
 
 interface MatchingResult {
   id: string;
@@ -212,13 +213,79 @@ export function EvidenceMatchingTable() {
     }
   };
 
+  // Force approve a parked claim (despite low confidence)
+  const handleForceApproveParked = async (claimId: string) => {
+    setProcessingIds(prev => new Set(prev).add(claimId));
+    try {
+      const response = await api.approveSmartPrompt(claimId);
+      if (response.ok) {
+        toast({
+          title: 'Claim Force Approved',
+          description: 'Claim has been approved and queued for filing.',
+        });
+        setMatchingResults(prev => prev.filter(r => r.id !== claimId));
+      } else {
+        toast({
+          title: 'Approval Failed',
+          description: response.error || 'Could not approve claim',
+          variant: 'destructive',
+        });
+      }
+    } catch (err: any) {
+      toast({
+        title: 'Error',
+        description: err.message || 'Failed to approve claim',
+        variant: 'destructive',
+      });
+    } finally {
+      setProcessingIds(prev => {
+        const next = new Set(prev);
+        next.delete(claimId);
+        return next;
+      });
+    }
+  };
+
+  // Dismiss a parked claim
+  const handleDismissParked = async (claimId: string) => {
+    setProcessingIds(prev => new Set(prev).add(claimId));
+    try {
+      const response = await api.rejectSmartPrompt(claimId, 'Dismissed by user');
+      if (response.ok) {
+        toast({
+          title: 'Claim Dismissed',
+          description: 'Claim has been removed from the queue.',
+        });
+        setMatchingResults(prev => prev.filter(r => r.id !== claimId));
+      } else {
+        toast({
+          title: 'Dismissal Failed',
+          description: response.error || 'Could not dismiss claim',
+          variant: 'destructive',
+        });
+      }
+    } catch (err: any) {
+      toast({
+        title: 'Error',
+        description: err.message || 'Failed to dismiss claim',
+        variant: 'destructive',
+      });
+    } finally {
+      setProcessingIds(prev => {
+        const next = new Set(prev);
+        next.delete(claimId);
+        return next;
+      });
+    }
+  };
+
   useEffect(() => {
     fetchMatchingResults();
   }, []);
 
-  // TEMPORARY: Show ALL matches in Needs Review for testing the UI
+  // Filter results by action type
   const smartPrompts = useMemo(() =>
-    matchingResults.filter(r => r.action_taken === 'smart_prompt' || r.action_taken === 'auto_submit' || r.action_taken === 'approved'),
+    matchingResults.filter(r => r.action_taken === 'smart_prompt'),
     [matchingResults]
   );
 
@@ -527,23 +594,43 @@ export function EvidenceMatchingTable() {
           </Card>
         </TabsContent>
 
-        {/* Held / Rejected Tab */}
+        {/* Held / Rejected Tab - Parked Claims */}
         <TabsContent value="held" className="mt-4">
-          <Card className="bg-white border-gray-200">
-            <CardContent className="p-0">
-              {heldForReview.length === 0 ? (
-                <div className="p-8 text-center">
-                  <AlertCircle className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-                  <p className="text-sm text-gray-600 mb-2">No held or rejected matches</p>
-                  <p className="text-xs text-gray-500">
-                    Low-confidence matches (&lt;50%) and rejections will appear here
+          {heldForReview.length === 0 ? (
+            <Card className="bg-white border-gray-200">
+              <CardContent className="p-8 text-center">
+                <AlertCircle className="w-12 h-12 mx-auto text-gray-300 mb-4" />
+                <p className="text-sm font-medium text-gray-600 mb-2">No parked claims</p>
+                <p className="text-xs text-gray-500 max-w-md mx-auto">
+                  Claims with low confidence (&lt;50%) or missing evidence will appear here.
+                  You can request more evidence or force approve them.
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between py-2">
+                <div>
+                  <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.1em]">
+                    Parked Claims
+                  </h3>
+                  <p className="text-[10px] text-gray-500 mt-0.5">
+                    {heldForReview.length} claim{heldForReview.length !== 1 ? 's' : ''} need more evidence or manual approval
                   </p>
                 </div>
-              ) : (
-                renderResultsTable(heldForReview)
-              )}
-            </CardContent>
-          </Card>
+              </div>
+
+              {heldForReview.map(claim => (
+                <ParkedClaimCard
+                  key={claim.id}
+                  claim={claim}
+                  onRequestEvidence={handleRequestMoreEvidence}
+                  onForceApprove={handleForceApproveParked}
+                  onDismiss={handleDismissParked}
+                />
+              ))}
+            </div>
+          )}
         </TabsContent>
 
         {/* All Matches Tab */}
