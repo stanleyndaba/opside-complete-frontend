@@ -294,8 +294,9 @@ export function EvidenceMatchingTable() {
     [matchingResults]
   );
 
+  // TEMPORARY: Show ALL matches in Parked Claims tab for testing UI
   const heldForReview = useMemo(() =>
-    matchingResults.filter(r => r.action_taken === 'no_action' || r.action_taken === 'rejected'),
+    matchingResults.filter(r => r.action_taken === 'no_action' || r.action_taken === 'rejected' || r.action_taken === 'auto_submit' || r.action_taken === 'approved'),
     [matchingResults]
   );
 
