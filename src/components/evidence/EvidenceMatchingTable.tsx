@@ -275,15 +275,15 @@ export function EvidenceMatchingTable() {
   const renderResultsTable = (results: MatchingResult[], showActions: boolean = false) => (
     <div className="overflow-x-auto">
       <Table>
-        <TableHeader>
+        <TableHeader className="bg-gray-50 border-b border-gray-200">
           <TableRow className="border-gray-200">
-            <TableHead className="text-gray-900 font-semibold">Claim ID</TableHead>
-            <TableHead className="text-gray-900 font-semibold">Document ID</TableHead>
-            <TableHead className="text-gray-900 font-semibold">Match Type</TableHead>
-            <TableHead className="text-gray-900 font-semibold">Confidence</TableHead>
-            <TableHead className="text-gray-900 font-semibold">Status</TableHead>
-            <TableHead className="text-gray-900 font-semibold">Matched At</TableHead>
-            <TableHead className="text-gray-900 font-semibold">Actions</TableHead>
+            <TableHead className="text-[10px] font-medium text-gray-600 uppercase tracking-[0.1em]">Claim ID</TableHead>
+            <TableHead className="text-[10px] font-medium text-gray-600 uppercase tracking-[0.1em]">Document ID</TableHead>
+            <TableHead className="text-[10px] font-medium text-gray-600 uppercase tracking-[0.1em]">Match Type</TableHead>
+            <TableHead className="text-[10px] font-medium text-gray-600 uppercase tracking-[0.1em]">Confidence</TableHead>
+            <TableHead className="text-[10px] font-medium text-gray-600 uppercase tracking-[0.1em]">Status</TableHead>
+            <TableHead className="text-[10px] font-medium text-gray-600 uppercase tracking-[0.1em]">Matched At</TableHead>
+            <TableHead className="text-[10px] font-medium text-gray-600 uppercase tracking-[0.1em]">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -349,14 +349,9 @@ export function EvidenceMatchingTable() {
                       </Button>
                     </>
                   )}
-                  <Button asChild variant="ghost" size="sm">
+                  <Button asChild variant="ghost" size="sm" className="text-gray-500 hover:text-gray-900 hover:bg-gray-100">
                     <Link to={`/recoveries/${result.claim_id}`}>
                       <Eye className="w-4 h-4" />
-                    </Link>
-                  </Button>
-                  <Button asChild variant="ghost" size="sm">
-                    <Link to={`/documents/${result.document_id}`}>
-                      <FileText className="w-4 h-4" />
                     </Link>
                   </Button>
                 </div>
@@ -437,7 +432,7 @@ export function EvidenceMatchingTable() {
         <TabsList className="inline-flex h-auto items-center justify-start gap-6 bg-transparent border-b border-gray-200 rounded-none p-0">
           <TabsTrigger
             value="smart-prompts"
-            className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900"
+            className="relative px-1 pb-3 pt-1 text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900"
           >
             Needs Review
             {smartPrompts.length > 0 && (
@@ -446,7 +441,7 @@ export function EvidenceMatchingTable() {
           </TabsTrigger>
           <TabsTrigger
             value="auto-submitted"
-            className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900"
+            className="relative px-1 pb-3 pt-1 text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900"
           >
             Auto-Submitted
             {autoSubmitted.length > 0 && (
@@ -455,7 +450,7 @@ export function EvidenceMatchingTable() {
           </TabsTrigger>
           <TabsTrigger
             value="held"
-            className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900"
+            className="relative px-1 pb-3 pt-1 text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900"
           >
             Held / Rejected
             {heldForReview.length > 0 && (
@@ -464,7 +459,7 @@ export function EvidenceMatchingTable() {
           </TabsTrigger>
           <TabsTrigger
             value="all"
-            className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900"
+            className="relative px-1 pb-3 pt-1 text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900"
           >
             All Matches
             <span className="ml-2 text-[10px] text-gray-400">{matchingResults.length}</span>
