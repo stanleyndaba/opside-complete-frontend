@@ -473,26 +473,17 @@ export function EvidenceMatchingTable() {
             )}
           </p>
         </div>
-        <div className="flex gap-2">
-          <Button
-            onClick={handleRunMatching}
-            disabled={refreshing}
-            className="bg-gray-700 hover:bg-gray-800 text-white"
-          >
-            {refreshing ? (
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-            ) : null}
-            {refreshing ? 'Running...' : 'Run Matching'}
-          </Button>
-          <Button
-            onClick={fetchMatchingResults}
-            variant="outline"
-            size="sm"
-            className="bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
-          >
-            <RefreshCw className="w-3.5 h-3.5" />
-          </Button>
-        </div>
+        <Button
+          onClick={handleRunMatching}
+          disabled={refreshing}
+          size="sm"
+          className="bg-gray-900 hover:bg-gray-800 text-white text-xs font-medium uppercase tracking-[0.1em] px-4"
+        >
+          {refreshing ? (
+            <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" />
+          ) : null}
+          {refreshing ? 'Running...' : 'Run Matching'}
+        </Button>
       </div>
 
       {/* Tabs for different match categories - Pentagon Style */}
