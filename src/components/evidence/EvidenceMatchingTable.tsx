@@ -483,17 +483,17 @@ export function EvidenceMatchingTable() {
               </CardContent>
             </Card>
           ) : (
-            <div className="space-y-4">
-              <Card className="bg-gray-50 border-gray-200">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-base text-gray-700 flex items-center gap-2">
-                    {smartPrompts.length} Match{smartPrompts.length !== 1 ? 'es' : ''} Need Your Review
-                  </CardTitle>
-                  <CardDescription className="text-gray-600">
-                    These matches have medium confidence (50-85%) and need your approval before filing.
-                  </CardDescription>
-                </CardHeader>
-              </Card>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between py-2">
+                <div>
+                  <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.1em]">
+                    Pending Review
+                  </h3>
+                  <p className="text-[10px] text-gray-500 mt-0.5">
+                    {smartPrompts.length} invoice{smartPrompts.length !== 1 ? 's' : ''} need confirmation (50-85% confidence)
+                  </p>
+                </div>
+              </div>
 
               {smartPrompts.map(match => (
                 <SmartPromptCard

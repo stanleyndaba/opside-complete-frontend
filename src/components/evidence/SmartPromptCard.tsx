@@ -18,7 +18,6 @@ import {
     FileSearch,
     FileText,
     Link2,
-    AlertTriangle,
     Loader2,
     Eye
 } from 'lucide-react';
@@ -103,213 +102,205 @@ export function SmartPromptCard({
 
     const getMatchTypeLabel = (matchType: string) => {
         const labels: Record<string, string> = {
-            'exact_invoice': 'Exact Invoice Match',
-            'sku_match': 'SKU Match',
-            'asin_match': 'ASIN Match',
-            'supplier_match': 'Supplier Match',
-            'date_match': 'Date Match',
-            'amount_match': 'Amount Match',
-            'fuzzy_match': 'Fuzzy Match',
+            'exact_invoice': 'Invoice',
+            'sku_match': 'SKU',
+            'asin_match': 'ASIN',
+            'supplier_match': 'Supplier',
+            'date_match': 'Date',
+            'amount_match': 'Amount',
+            'fuzzy_match': 'Fuzzy',
+            'order_id': 'Order ID',
         };
         return labels[matchType] || matchType.replace(/_/g, ' ');
     };
 
     return (
         <>
-            <Card className="bg-amber-50 border-amber-200 hover:border-amber-300 transition-colors">
-                <CardContent className="p-4">
-                    <div className="flex items-start justify-between gap-4">
-                        {/* Left: Match Info */}
-                        <div className="flex-1 min-w-0 space-y-3">
-                            {/* Header with confidence */}
-                            <div className="flex items-center gap-3 flex-wrap">
-                                <Badge className="bg-amber-100 text-amber-800 border-amber-200">
-                                    <AlertTriangle className="w-3 h-3 mr-1" />
-                                    Needs Review
-                                </Badge>
-                                <Badge className="bg-amber-100 text-amber-800 border-amber-200">
-                                    {confidencePercent}% Confidence
-                                </Badge>
-                                <span className="text-xs text-gray-500">
-                                    {getMatchTypeLabel(match.match_type)}
+            {/* Pentagon Institutional Design - Clean, Minimal, Gray Tones */}
+            <Card className="bg-white border border-gray-200 hover:border-gray-300 transition-colors">
+                <CardContent className="p-0">
+                    {/* Header Row */}
+                    <div className="px-4 py-3 border-b border-gray-100 bg-gray-50">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <span className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em]">
+                                    Confirm Invoice
                                 </span>
+                                <Badge className="bg-gray-100 text-gray-600 border-gray-200 text-[10px] font-medium">
+                                    {confidencePercent}%
+                                </Badge>
+                                <Badge variant="outline" className="text-[10px] text-gray-500 border-gray-200">
+                                    {getMatchTypeLabel(match.match_type)}
+                                </Badge>
                             </div>
+                            {match.created_at && (
+                                <span className="text-[10px] text-gray-400">
+                                    {format(new Date(match.created_at), 'MMM dd, HH:mm')}
+                                </span>
+                            )}
+                        </div>
+                    </div>
 
-                            {/* Document & Claim Links */}
-                            <div className="grid grid-cols-2 gap-4">
+                    {/* Content Row - Minimal Two-Column Layout */}
+                    <div className="p-4">
+                        <div className="flex items-start justify-between gap-6">
+                            {/* Left: Document & Claim Info */}
+                            <div className="flex-1 min-w-0 grid grid-cols-2 gap-4">
+                                {/* Document Column */}
                                 <div>
-                                    <Label className="text-xs text-gray-500">Document</Label>
-                                    <div className="flex items-center gap-2 mt-1">
-                                        <FileText className="w-4 h-4 text-gray-400" />
-                                        <Link
-                                            to={`/documents/${match.document_id}`}
-                                            className="text-sm text-blue-600 hover:underline font-mono truncate"
-                                        >
+                                    <div className="text-[10px] font-medium text-gray-400 uppercase tracking-[0.1em] mb-1">
+                                        Document
+                                    </div>
+                                    <Link
+                                        to={`/documents/${match.document_id}`}
+                                        className="flex items-center gap-1.5 text-sm text-gray-700 hover:text-gray-900 font-mono group"
+                                    >
+                                        <FileText className="w-3.5 h-3.5 text-gray-400 group-hover:text-gray-600" />
+                                        <span className="truncate">
                                             {match.document_details?.filename || match.document_id.substring(0, 12) + '...'}
-                                        </Link>
-                                    </div>
-                                    {match.document_details && (
-                                        <div className="mt-1 text-xs text-gray-500">
-                                            {match.document_details.supplier && (
-                                                <span>Supplier: {match.document_details.supplier}</span>
-                                            )}
-                                            {match.document_details.invoice_number && (
-                                                <span className="ml-2">Invoice: {match.document_details.invoice_number}</span>
-                                            )}
+                                        </span>
+                                    </Link>
+                                    {match.document_details?.amount && (
+                                        <div className="text-xs text-gray-500 mt-0.5 ml-5">
+                                            ${match.document_details.amount.toFixed(2)}
                                         </div>
                                     )}
                                 </div>
+
+                                {/* Claim Column */}
                                 <div>
-                                    <Label className="text-xs text-gray-500">Claim</Label>
-                                    <div className="flex items-center gap-2 mt-1">
-                                        <Link2 className="w-4 h-4 text-gray-400" />
-                                        <Link
-                                            to={`/recoveries/${match.claim_id}`}
-                                            className="text-sm text-blue-600 hover:underline font-mono truncate"
-                                        >
-                                            {match.claim_id.substring(0, 12)}...
-                                        </Link>
+                                    <div className="text-[10px] font-medium text-gray-400 uppercase tracking-[0.1em] mb-1">
+                                        Claim
                                     </div>
-                                    {match.claim_details && (
-                                        <div className="mt-1 text-xs text-gray-500">
+                                    <Link
+                                        to={`/recoveries/${match.claim_id}`}
+                                        className="flex items-center gap-1.5 text-sm text-gray-700 hover:text-gray-900 font-mono group"
+                                    >
+                                        <Link2 className="w-3.5 h-3.5 text-gray-400 group-hover:text-gray-600" />
+                                        <span className="truncate">
+                                            {match.claim_id.substring(0, 12)}...
+                                        </span>
+                                    </Link>
+                                    {match.claim_details?.amount && (
+                                        <div className="text-xs text-gray-500 mt-0.5 ml-5">
+                                            ${match.claim_details.amount.toFixed(2)}
                                             {match.claim_details.type && (
-                                                <span className="capitalize">{match.claim_details.type.replace(/_/g, ' ')}</span>
-                                            )}
-                                            {match.claim_details.amount && (
-                                                <span className="ml-2 font-medium text-gray-700">
-                                                    ${match.claim_details.amount.toFixed(2)}
-                                                </span>
+                                                <span className="ml-1 capitalize">• {match.claim_details.type.replace(/_/g, ' ')}</span>
                                             )}
                                         </div>
                                     )}
                                 </div>
                             </div>
 
-                            {/* Matched Fields */}
-                            {match.matched_fields && match.matched_fields.length > 0 && (
-                                <div>
-                                    <Label className="text-xs text-gray-500">Matched Fields</Label>
-                                    <div className="flex flex-wrap gap-1 mt-1">
+                            {/* Right: One-Tap Actions */}
+                            <div className="flex items-center gap-2 shrink-0">
+                                {/* Primary Action - Confirm */}
+                                <Button
+                                    size="sm"
+                                    onClick={handleApprove}
+                                    disabled={isApproving || isRejecting || isRequestingMore}
+                                    className="bg-gray-900 hover:bg-gray-800 text-white text-xs font-medium px-4"
+                                >
+                                    {isApproving ? (
+                                        <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
+                                    ) : (
+                                        <CheckCircle2 className="w-3.5 h-3.5 mr-1.5" />
+                                    )}
+                                    Confirm
+                                </Button>
+
+                                {/* Secondary Actions */}
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => setShowRejectDialog(true)}
+                                    disabled={isApproving || isRejecting || isRequestingMore}
+                                    className="border-gray-200 text-gray-500 hover:text-gray-700 hover:bg-gray-50 text-xs"
+                                >
+                                    <XCircle className="w-3.5 h-3.5" />
+                                </Button>
+
+                                <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    asChild
+                                    className="text-gray-400 hover:text-gray-600 text-xs"
+                                >
+                                    <Link to={`/recoveries/${match.claim_id}`}>
+                                        <Eye className="w-3.5 h-3.5" />
+                                    </Link>
+                                </Button>
+                            </div>
+                        </div>
+
+                        {/* Matched Fields - Minimal Pills */}
+                        {match.matched_fields && match.matched_fields.length > 0 && (
+                            <div className="mt-3 pt-3 border-t border-gray-100">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-[10px] text-gray-400 uppercase tracking-[0.1em]">
+                                        Matched on:
+                                    </span>
+                                    <div className="flex flex-wrap gap-1">
                                         {match.matched_fields.map((field, idx) => (
-                                            <Badge key={idx} variant="outline" className="text-xs capitalize">
+                                            <span
+                                                key={idx}
+                                                className="text-[10px] text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded capitalize"
+                                            >
                                                 {field.replace(/_/g, ' ')}
-                                            </Badge>
+                                            </span>
                                         ))}
                                     </div>
                                 </div>
-                            )}
-
-                            {/* Reasoning */}
-                            {match.reasoning && (
-                                <div className="text-xs text-gray-600 bg-white/50 rounded p-2 border border-gray-100">
-                                    <span className="font-medium">AI Reasoning:</span> {match.reasoning}
-                                </div>
-                            )}
-
-                            {/* Timestamp */}
-                            {match.created_at && (
-                                <div className="text-xs text-gray-400">
-                                    Matched: {format(new Date(match.created_at), 'MMM dd, yyyy HH:mm')}
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Right: Actions */}
-                        <div className="flex flex-col gap-2 shrink-0">
-                            <Button
-                                size="sm"
-                                onClick={handleApprove}
-                                disabled={isApproving || isRejecting || isRequestingMore}
-                                className="bg-emerald-500 hover:bg-emerald-600 text-white"
-                            >
-                                {isApproving ? (
-                                    <Loader2 className="w-4 h-4 mr-1 animate-spin" />
-                                ) : (
-                                    <CheckCircle2 className="w-4 h-4 mr-1" />
-                                )}
-                                Approve & Submit
-                            </Button>
-
-                            <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => setShowRejectDialog(true)}
-                                disabled={isApproving || isRejecting || isRequestingMore}
-                                className="border-red-200 text-red-600 hover:bg-red-50"
-                            >
-                                <XCircle className="w-4 h-4 mr-1" />
-                                Reject
-                            </Button>
-
-                            <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={handleRequestMore}
-                                disabled={isApproving || isRejecting || isRequestingMore}
-                                className="border-gray-200 text-gray-600 hover:bg-gray-50"
-                            >
-                                {isRequestingMore ? (
-                                    <Loader2 className="w-4 h-4 mr-1 animate-spin" />
-                                ) : (
-                                    <FileSearch className="w-4 h-4 mr-1" />
-                                )}
-                                Need More Evidence
-                            </Button>
-
-                            <Button
-                                size="sm"
-                                variant="ghost"
-                                asChild
-                                className="text-gray-500"
-                            >
-                                <Link to={`/recoveries/${match.claim_id}`}>
-                                    <Eye className="w-4 h-4 mr-1" />
-                                    View Details
-                                </Link>
-                            </Button>
-                        </div>
+                            </div>
+                        )}
                     </div>
                 </CardContent>
             </Card>
 
-            {/* Reject Dialog */}
+            {/* Reject Dialog - Pentagon Style */}
             <Dialog open={showRejectDialog} onOpenChange={setShowRejectDialog}>
                 <DialogContent className="bg-white border-gray-200">
                     <DialogHeader>
-                        <DialogTitle>Reject Match</DialogTitle>
-                        <DialogDescription className="text-gray-500">
-                            This match will be marked as rejected and won't be auto-submitted.
-                            You can optionally provide a reason.
+                        <DialogTitle className="text-sm font-medium text-gray-900 uppercase tracking-[0.1em]">
+                            Reject Match
+                        </DialogTitle>
+                        <DialogDescription className="text-xs text-gray-500">
+                            This match will not be submitted. Provide an optional reason.
                         </DialogDescription>
                     </DialogHeader>
                     <div className="py-4">
-                        <Label htmlFor="reject-reason">Rejection Reason (optional)</Label>
+                        <Label htmlFor="reject-reason" className="text-[10px] uppercase tracking-[0.1em] text-gray-500">
+                            Reason (optional)
+                        </Label>
                         <Textarea
                             id="reject-reason"
                             value={rejectReason}
                             onChange={(e) => setRejectReason(e.target.value)}
-                            placeholder="e.g., Document is for a different order, Invoice date doesn't match..."
-                            className="mt-2"
-                            rows={3}
+                            placeholder="e.g., Wrong order, date mismatch..."
+                            className="mt-2 text-sm border-gray-200 focus:border-gray-400"
+                            rows={2}
                         />
                     </div>
-                    <DialogFooter>
+                    <DialogFooter className="gap-2">
                         <Button
                             variant="outline"
+                            size="sm"
                             onClick={() => {
                                 setShowRejectDialog(false);
                                 setRejectReason('');
                             }}
+                            className="text-xs border-gray-200"
                         >
                             Cancel
                         </Button>
                         <Button
+                            size="sm"
                             onClick={handleReject}
                             disabled={isRejecting}
-                            className="bg-red-500 hover:bg-red-600 text-white"
+                            className="bg-gray-900 hover:bg-gray-800 text-white text-xs"
                         >
-                            {isRejecting && <Loader2 className="w-4 h-4 mr-1 animate-spin" />}
-                            Reject Match
+                            {isRejecting && <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />}
+                            Reject
                         </Button>
                     </DialogFooter>
                 </DialogContent>
