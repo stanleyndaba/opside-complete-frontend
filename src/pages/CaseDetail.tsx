@@ -1246,9 +1246,22 @@ export default function CaseDetail() {
                             <div>
                               <h4 className="font-semibold text-gray-900 mb-2">Seller Contact:</h4>
                               <dl className="space-y-2 text-gray-600">
-                                <div className="grid grid-cols-3 gap-2"><dt className="text-gray-500">Merchant Token:</dt><dd className="col-span-2 font-mono text-gray-900">[Your Merchant Token]</dd></div>
-                                <div className="grid grid-cols-3 gap-2"><dt className="text-gray-500">Store Name:</dt><dd className="col-span-2">[Your Store Name]</dd></div>
-                                <div className="grid grid-cols-3 gap-2"><dt className="text-gray-500">Contact Method:</dt><dd className="col-span-2">Seller Central Case Manager</dd></div>
+                                <div className="grid grid-cols-3 gap-2">
+                                  <dt className="text-gray-500">Seller ID:</dt>
+                                  <dd className="col-span-2 font-mono text-gray-900">
+                                    {effectiveCase.seller_id || effectiveCase.user_id || 'Not available'}
+                                  </dd>
+                                </div>
+                                <div className="grid grid-cols-3 gap-2">
+                                  <dt className="text-gray-500">Store Name:</dt>
+                                  <dd className="col-span-2">
+                                    {effectiveCase.store_name || effectiveCase.seller_name || 'Amazon Seller Account'}
+                                  </dd>
+                                </div>
+                                <div className="grid grid-cols-3 gap-2">
+                                  <dt className="text-gray-500">Contact Method:</dt>
+                                  <dd className="col-span-2">Seller Central Case Manager</dd>
+                                </div>
                               </dl>
                             </div>
                           </div>
@@ -1256,8 +1269,28 @@ export default function CaseDetail() {
                         <div className="border-t border-gray-100 pt-6">
                           <h4 className="font-semibold text-gray-900 mb-2 text-xs">Amazon Reference:</h4>
                           <dl className="space-y-2 text-xs text-gray-600">
-                            <div className="grid grid-cols-3 gap-2"><dt className="text-gray-500">Case ID:</dt><dd className="col-span-2 font-mono text-blue-600">{effectiveCase.amazonCaseId || '[Associated Case ID if applicable]'}</dd></div>
-                            <div className="grid grid-cols-3 gap-2"><dt className="text-gray-500">Previous Cases:</dt><dd className="col-span-2 text-gray-500 italic">[Any previous case references]</dd></div>
+                            <div className="grid grid-cols-3 gap-2">
+                              <dt className="text-gray-500">Case ID:</dt>
+                              <dd className="col-span-2 font-mono text-blue-600">
+                                {effectiveCase.amazonCaseId || effectiveCase.amazon_case_id || (
+                                  <span className="text-gray-400 italic">Not yet filed</span>
+                                )}
+                              </dd>
+                            </div>
+                            <div className="grid grid-cols-3 gap-2">
+                              <dt className="text-gray-500">Prior Case ID:</dt>
+                              <dd className="col-span-2 font-mono">
+                                {effectiveCase.prior_case_id || (
+                                  <span className="text-gray-400 italic">No prior case</span>
+                                )}
+                              </dd>
+                            </div>
+                            <div className="grid grid-cols-3 gap-2">
+                              <dt className="text-gray-500">Claim Ref:</dt>
+                              <dd className="col-span-2 font-mono text-gray-900">
+                                {effectiveCase.claim_number || effectiveCase.claim_id || effectiveCase.id?.slice(0, 12) || 'N/A'}
+                              </dd>
+                            </div>
                           </dl>
                         </div>
                       </div>
