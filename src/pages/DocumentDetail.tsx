@@ -291,17 +291,30 @@ export default function DocumentDetail() {
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="extracted" className="w-full">
-          <TabsList className="bg-transparent border-b border-gray-200 mb-4 p-0 h-auto">
-            <TabsTrigger value="extracted" className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent bg-transparent px-4 py-2 text-gray-600 hover:text-gray-900">
+          <TabsList className="inline-flex h-auto items-center justify-start gap-6 bg-transparent border-b border-gray-200 rounded-none p-0 mb-6">
+            <TabsTrigger
+              value="extracted"
+              className="relative px-1 pb-3 pt-1 text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900"
+            >
               Extracted Data
             </TabsTrigger>
-            <TabsTrigger value="matches" className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent bg-transparent px-4 py-2 text-gray-600 hover:text-gray-900">
-              Matched Claims ({matchedClaims.length})
+            <TabsTrigger
+              value="matches"
+              className="relative px-1 pb-3 pt-1 text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900"
+            >
+              Matched Claims
+              <span className="ml-1.5 text-[9px] text-gray-400">({matchedClaims.length})</span>
             </TabsTrigger>
-            <TabsTrigger value="raw" className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent bg-transparent px-4 py-2 text-gray-600 hover:text-gray-900">
+            <TabsTrigger
+              value="raw"
+              className="relative px-1 pb-3 pt-1 text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900"
+            >
               Raw Text
             </TabsTrigger>
-            <TabsTrigger value="parsing" className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent bg-transparent px-4 py-2 text-gray-600 hover:text-gray-900">
+            <TabsTrigger
+              value="parsing"
+              className="relative px-1 pb-3 pt-1 text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900"
+            >
               Parsing Status
             </TabsTrigger>
           </TabsList>
