@@ -216,9 +216,9 @@ export function EvidenceMatchingTable() {
     fetchMatchingResults();
   }, []);
 
-  // Filter results by action type
+  // TEMPORARY: Show ALL matches in Needs Review for testing the UI
   const smartPrompts = useMemo(() =>
-    matchingResults.filter(r => r.action_taken === 'smart_prompt'),
+    matchingResults.filter(r => r.action_taken === 'smart_prompt' || r.action_taken === 'auto_submit' || r.action_taken === 'approved'),
     [matchingResults]
   );
 
