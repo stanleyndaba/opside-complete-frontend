@@ -605,6 +605,21 @@ export default function CaseDetail() {
               </Link>
             </div>
 
+            {/* Auto-Filing Banner */}
+            <div className="flex items-center gap-3 px-4 py-2.5 bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-sm">
+              <div className="flex items-center justify-center h-8 w-8 rounded-full bg-gray-900 text-white">
+                <CheckCircle className="h-4 w-4" />
+              </div>
+              <div className="flex-1">
+                <p className="text-xs text-gray-700">
+                  <span className="font-semibold text-gray-900">Opside Auto-Files</span> cases with <span className="font-mono font-semibold text-gray-900">≥85%</span> confidence for you
+                </p>
+              </div>
+              <div className="text-[10px] text-gray-500 uppercase tracking-wider border border-gray-300 px-2 py-1 rounded-sm bg-white">
+                Autonomous
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Left Column - Case Summary */}
               <div className="lg:col-span-1 space-y-6">
