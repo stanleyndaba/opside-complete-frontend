@@ -333,7 +333,7 @@ export default function DocumentDetail() {
                     {extracted.order_ids?.length > 0 ? (
                       <div className="flex flex-wrap gap-2">
                         {extracted.order_ids.map((id: string, idx: number) => (
-                          <Badge key={idx} className="bg-blue-100 text-blue-800 border-blue-200 font-mono">
+                          <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-[10px]">
                             {id}
                           </Badge>
                         ))}
@@ -353,12 +353,12 @@ export default function DocumentDetail() {
                     {(extracted.asins?.length > 0 || extracted.skus?.length > 0) ? (
                       <div className="flex flex-wrap gap-2">
                         {extracted.asins?.map((asin: string, idx: number) => (
-                          <Badge key={`asin-${idx}`} className="bg-emerald-100 text-emerald-800 border-emerald-200 font-mono">
+                          <Badge key={`asin-${idx}`} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-[10px]">
                             {asin}
                           </Badge>
                         ))}
                         {extracted.skus?.map((sku: string, idx: number) => (
-                          <Badge key={`sku-${idx}`} className="bg-teal-100 text-teal-800 border-teal-200 font-mono">
+                          <Badge key={`sku-${idx}`} className="bg-gray-50 text-gray-600 border-gray-200 font-mono text-[10px]">
                             {sku}
                           </Badge>
                         ))}
@@ -381,7 +381,7 @@ export default function DocumentDetail() {
                     {extracted.tracking_numbers?.length > 0 ? (
                       <div className="flex flex-wrap gap-2">
                         {extracted.tracking_numbers.map((num: string, idx: number) => (
-                          <Badge key={idx} className="bg-purple-100 text-purple-800 border-purple-200 font-mono">
+                          <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-[10px]">
                             {num}
                           </Badge>
                         ))}
@@ -401,7 +401,7 @@ export default function DocumentDetail() {
                     {extracted.amounts?.length > 0 ? (
                       <div className="flex flex-wrap gap-2">
                         {extracted.amounts.map((amt: number | string, idx: number) => (
-                          <Badge key={idx} className="bg-amber-100 text-amber-800 border-amber-200 font-mono">
+                          <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-[10px]">
                             ${typeof amt === 'number' ? amt.toFixed(2) : amt}
                           </Badge>
                         ))}
@@ -424,7 +424,7 @@ export default function DocumentDetail() {
                     {extracted.invoice_numbers?.length > 0 ? (
                       <div className="flex flex-wrap gap-2">
                         {extracted.invoice_numbers.map((inv: string, idx: number) => (
-                          <Badge key={idx} className="bg-gray-100 text-gray-800 border-gray-200 font-mono">
+                          <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-[10px]">
                             {inv}
                           </Badge>
                         ))}
@@ -444,7 +444,7 @@ export default function DocumentDetail() {
                     {extracted.dates?.length > 0 ? (
                       <div className="flex flex-wrap gap-2">
                         {extracted.dates.map((date: string, idx: number) => (
-                          <Badge key={idx} className="bg-indigo-100 text-indigo-800 border-indigo-200">
+                          <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 text-[10px]">
                             {date}
                           </Badge>
                         ))}
@@ -461,9 +461,9 @@ export default function DocumentDetail() {
           {/* Matched Claims Tab */}
           <TabsContent value="matches">
             <Card className="bg-white border-gray-200">
-              <CardHeader>
-                <CardTitle className="text-[#36454F]">Matched Claims</CardTitle>
-                <CardDescription className="text-gray-600">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-xs font-medium text-gray-600 uppercase tracking-[0.1em]">Matched Claims</CardTitle>
+                <CardDescription className="text-[10px] text-gray-500">
                   Claims that this document matches based on extracted data
                 </CardDescription>
               </CardHeader>
@@ -478,12 +478,8 @@ export default function DocumentDetail() {
                               <span className="font-mono text-sm text-[#36454F]">
                                 {match.claim_id?.substring(0, 12)}...
                               </span>
-                              <Badge className={
-                                match.confidence_score >= 0.85 ? 'bg-emerald-100 text-emerald-800' :
-                                  match.confidence_score >= 0.5 ? 'bg-amber-100 text-amber-800' :
-                                    'bg-gray-100 text-gray-800'
-                              }>
-                                {(match.confidence_score * 100).toFixed(0)}% match
+                              <Badge className="bg-gray-100 text-gray-700 border-gray-200 text-[10px]">
+                                {(match.confidence_score * 100).toFixed(0)}%
                               </Badge>
                             </div>
                             <div className="text-sm text-gray-600">
@@ -518,9 +514,9 @@ export default function DocumentDetail() {
           {/* Raw Text Tab */}
           <TabsContent value="raw">
             <Card className="bg-white border-gray-200">
-              <CardHeader>
-                <CardTitle className="text-[#36454F]">Raw Extracted Text</CardTitle>
-                <CardDescription className="text-gray-600">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-xs font-medium text-gray-600 uppercase tracking-[0.1em]">Raw Extracted Text</CardTitle>
+                <CardDescription className="text-[10px] text-gray-500">
                   Text content extracted from the document via OCR/parsing
                 </CardDescription>
               </CardHeader>
@@ -554,9 +550,9 @@ export default function DocumentDetail() {
           {/* Parsing Status Tab */}
           <TabsContent value="parsing">
             <Card className="bg-white border-gray-200">
-              <CardHeader>
-                <CardTitle className="text-[#36454F]">Parsing Status</CardTitle>
-                <CardDescription className="text-gray-600">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-xs font-medium text-gray-600 uppercase tracking-[0.1em]">Parsing Status</CardTitle>
+                <CardDescription className="text-[10px] text-gray-500">
                   Document parsing and extraction progress
                 </CardDescription>
               </CardHeader>
@@ -592,7 +588,7 @@ export default function DocumentDetail() {
             </div>
           </CardContent>
         </Card>
-      </div>
-    </PageLayout>
+      </div >
+    </PageLayout >
   );
 }
