@@ -695,9 +695,11 @@ export default function CaseDetail() {
                           Case Summary
                         </h3>
                         {derivedConfidencePct >= 85 ? (
-                          <span className="text-[9px] text-blue-600 font-medium mt-0.5">Auto-Filed</span>
+                          <span className="text-[9px] text-emerald-600 font-medium mt-0.5">Auto-Filed</span>
+                        ) : derivedConfidencePct >= 60 ? (
+                          <span className="text-[9px] text-blue-600 font-medium mt-0.5">Awaiting Seller Review</span>
                         ) : (
-                          <span className="text-[9px] text-emerald-600 font-medium mt-0.5">Awaiting Seller Review</span>
+                          <span className="text-[9px] text-amber-600 font-medium mt-0.5">Parked — Needs Evidence</span>
                         )}
                       </div>
                       <span className={cn(
@@ -929,27 +931,6 @@ export default function CaseDetail() {
 
                     {/* Actions */}
                     <div className="space-y-3 pt-2">
-                      {/* Confidence-based status indicator */}
-                      {derivedConfidencePct >= 85 && (
-                        <div className="flex items-center gap-2 p-2 bg-emerald-50 rounded text-emerald-700 text-xs">
-                          <CheckCircle className="h-4 w-4" />
-                          Case auto-filed to Amazon
-                        </div>
-                      )}
-
-                      {derivedConfidencePct >= 60 && derivedConfidencePct < 85 && matchedCount > 0 && (
-                        <div className="flex items-center gap-2 p-2 bg-blue-50 rounded text-blue-700 text-xs">
-                          <Clock className="h-4 w-4" />
-                          Awaiting seller review before filing
-                        </div>
-                      )}
-
-                      {derivedConfidencePct < 60 && (
-                        <div className="flex items-center gap-2 p-2 bg-amber-50 rounded text-amber-700 text-xs">
-                          <AlertCircle className="h-4 w-4" />
-                          Parked — needs more evidence
-                        </div>
-                      )}
 
                       {effectiveCase.status === 'Denied' && (() => {
                         const rejectionReason = classifyRejection(effectiveCase.status, effectiveCase.rejectionReason);
