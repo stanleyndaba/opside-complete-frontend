@@ -538,85 +538,78 @@ const Index = () => {
       </header>
       <div className="relative z-10" style={{ background: 'white' }}>
         <main className="flex-1 relative z-10" style={{ background: 'white' }}>
-          <section
-            className="relative container mx-auto px-6 pt-32 md:pt-36 pb-12 md:pb-16 overflow-hidden"
-          >
-            {/* Content */}
-            <div className="relative z-10 max-w-4xl mx-auto text-center space-y-6">
-              {/* Trust chip removed per request */}
-              <div className="relative inline-flex items-center gap-2 md:gap-4 rounded-[20px] md:rounded-[25px] border border-emerald-100 bg-white/85 px-3 py-1.5 md:px-5 md:py-2 shadow-[0_12px_45px_rgba(16,185,129,0.25)] backdrop-blur supports-[backdrop-filter]:bg-white/70 mx-auto overflow-hidden">
-                <span className="pointer-events-none absolute inset-0 rounded-[20px] md:rounded-[25px] bg-gradient-to-r from-emerald-200/40 via-white/10 to-sky-200/40 blur-xl" aria-hidden="true" />
-                <span className="pointer-events-none absolute inset-0 rounded-[20px] md:rounded-[25px] border border-white/40" aria-hidden="true" />
-                <span className="relative flex items-center gap-1 md:gap-2">
-                  <span className="relative h-1.5 w-1.5 md:h-2 md:w-2 rounded-full bg-emerald-800">
-                    <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-75"></span>
-                  </span>
-                </span>
-                <div className="relative flex items-center gap-1.5 md:gap-3 text-xs md:text-sm font-bold text-gray-700">
-                  <span>Links seamlessly with</span>
-                  <span className="inline-flex items-center gap-1.5 md:gap-3">
-                    <span className="relative inline-flex h-5 w-5 md:h-7 md:w-7 items-center justify-center rounded-full bg-transparent">
-                      <img
-                        src="/gmailicon.png"
-                        alt="Gmail"
-                        width={28}
-                        height={28}
-                        loading="lazy"
-                        decoding="async"
-                        className="h-5 w-5 md:h-7 md:w-7 object-contain"
-                      />
-                    </span>
-                    <span className="relative inline-flex h-5 w-5 md:h-7 md:w-7 items-center justify-center rounded-full bg-transparent">
-                      <img
-                        src="/outlookicon.webp"
-                        alt="Outlook"
-                        width={28}
-                        height={28}
-                        loading="lazy"
-                        decoding="async"
-                        className="h-5 w-5 md:h-7 md:w-7 object-contain"
-                      />
-                    </span>
-                    <span className="text-emerald-500 font-bold text-sm md:text-lg">+</span>
-                    <span className="relative inline-flex h-5 w-5 md:h-7 md:w-7 items-center justify-center rounded-full bg-transparent">
-                      <img
-                        src="/gd.png"
-                        alt="Google Drive"
-                        width={28}
-                        height={28}
-                        loading="lazy"
-                        decoding="async"
-                        className="h-5 w-5 md:h-7 md:w-7 object-contain"
-                      />
-                    </span>
-                  </span>
+          <section className="relative container mx-auto px-6 pt-24 md:pt-32 lg:pt-36 pb-12 lg:pb-16 overflow-hidden">
+            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+              {/* Left Column: Image */}
+              <div className="order-2 lg:order-2 relative">
+                <div className="relative rounded-2xl bg-gradient-to-b from-gray-50/50 to-white/50 p-2 shadow-2xl backdrop-blur-sm border border-gray-100/50 transform transition-transform duration-700 hover:scale-[1.01]">
+                  <img
+                    src="/landingpp.png"
+                    alt="Opside Dashboard"
+                    className="w-full h-auto rounded-xl shadow-sm border border-black/5"
+                  />
                 </div>
+                {/* Decorative blob behind image */}
+                <div className="absolute -inset-4 bg-gradient-to-r from-emerald-100/30 to-sky-100/30 blur-3xl -z-10 rounded-full opacity-70" />
               </div>
-              <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-gray-900 text-left md:text-center">
-                FBA Reimbursements on{" "}
-                <span className="bg-gradient-to-r from-[#1f4037] to-[#10B981] bg-clip-text text-transparent">
-                  Autopilot
-                </span>
-              </h1>
-              <p className="font-montserrat text-sm md:text-base text-gray-700 font-normal max-w-3xl text-left md:text-center md:mx-auto">
-                The world's first autonomous 11-Agent Audit Engine. Opside detects, matches, and recovers lost revenue from Amazon FBA errors in minutes—not months.
-              </p>
-              <div className="pt-2">
-                <div className="max-w-md mx-auto flex justify-center">
-                  <AmazonConnect className="w-full" />
-                </div>
-                <div className="mt-4 flex flex-wrap items-center justify-center gap-4">
-                  <div className="inline-flex items-center gap-2">
-                    <span className="inline-flex h-2 w-2 rounded-full bg-gray-400" aria-hidden="true" />
-                    <span className="text-gray-700 text-xs">No credit cards</span>
+
+              {/* Right Column: Text content */}
+              <div className="order-1 lg:order-1 flex flex-col items-start text-left space-y-6">
+                {/* Trust chip */}
+                <div className="relative inline-flex items-center gap-2 md:gap-4 rounded-[20px] md:rounded-[25px] border border-emerald-100 bg-white/85 px-3 py-1.5 md:px-5 md:py-2 shadow-[0_12px_45px_rgba(16,185,129,0.25)] backdrop-blur supports-[backdrop-filter]:bg-white/70 overflow-hidden">
+                  <span className="pointer-events-none absolute inset-0 rounded-[20px] md:rounded-[25px] bg-gradient-to-r from-emerald-200/40 via-white/10 to-sky-200/40 blur-xl" aria-hidden="true" />
+                  <span className="pointer-events-none absolute inset-0 rounded-[20px] md:rounded-[25px] border border-white/40" aria-hidden="true" />
+                  <span className="relative flex items-center gap-1 md:gap-2">
+                    <span className="relative h-1.5 w-1.5 md:h-2 md:w-2 rounded-full bg-emerald-800">
+                      <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-75"></span>
+                    </span>
+                  </span>
+                  <div className="relative flex items-center gap-1.5 md:gap-3 text-xs md:text-sm font-bold text-gray-700">
+                    <span>Links seamlessly with</span>
+                    <span className="inline-flex items-center gap-1.5 md:gap-3">
+                      <span className="relative inline-flex h-5 w-5 md:h-7 md:w-7 items-center justify-center rounded-full bg-transparent">
+                        <img src="/gmailicon.png" alt="Gmail" width={28} height={28} className="h-5 w-5 md:h-7 md:w-7 object-contain" />
+                      </span>
+                      <span className="relative inline-flex h-5 w-5 md:h-7 md:w-7 items-center justify-center rounded-full bg-transparent">
+                        <img src="/outlookicon.webp" alt="Outlook" width={28} height={28} className="h-5 w-5 md:h-7 md:w-7 object-contain" />
+                      </span>
+                      <span className="text-emerald-500 font-bold text-sm md:text-lg">+</span>
+                      <span className="relative inline-flex h-5 w-5 md:h-7 md:w-7 items-center justify-center rounded-full bg-transparent">
+                        <img src="/gd.png" alt="Google Drive" width={28} height={28} className="h-5 w-5 md:h-7 md:w-7 object-contain" />
+                      </span>
+                    </span>
                   </div>
-                  <div className="inline-flex items-center gap-2">
-                    <span className="inline-flex h-2 w-2 rounded-full bg-gray-400" aria-hidden="true" />
-                    <span className="text-gray-700 text-xs">Cancel anytime</span>
+                </div>
+
+                <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight text-gray-900 leading-[1.1]">
+                  FBA Reimbursements on{" "}
+                  <span className="bg-gradient-to-r from-[#1f4037] to-[#10B981] bg-clip-text text-transparent">
+                    Autopilot
+                  </span>
+                </h1>
+
+                <p className="font-montserrat text-base md:text-lg text-gray-600 font-normal max-w-xl leading-relaxed">
+                  The world's first autonomous 11-Agent Audit Engine. Opside detects, matches, and recovers lost revenue from Amazon FBA errors in minutes—not months.
+                </p>
+
+                <div className="w-full flex flex-col gap-6">
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <AmazonConnect className="w-full sm:w-auto min-w-[200px]" />
+                  </div>
+                  <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500">
+                    <div className="inline-flex items-center gap-2">
+                      <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500" aria-hidden="true" />
+                      <span>No credit cards</span>
+                    </div>
+                    <div className="inline-flex items-center gap-2">
+                      <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500" aria-hidden="true" />
+                      <span>Cancel anytime</span>
+                    </div>
                   </div>
                 </div>
-                <div ref={metricsRef} className="mt-5 w-full text-gray-700">
-                  <div className="flex flex-col items-start gap-6 text-left md:hidden">
+
+                <div ref={metricsRef} className="w-full pt-8 border-t border-gray-100">
+                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-4">
                     {HERO_METRICS.map((metric, index) => {
                       const currentValue = metricValues[index];
                       const displayValue =
@@ -624,44 +617,16 @@ const Index = () => {
                           ? `${Math.min(Math.round(currentValue), metric.target)}/7`
                           : `${currentValue.toFixed(metric.decimals)}${metric.suffix}`;
                       return (
-                        <React.Fragment key={`mobile-${metric.label}`}>
-                          <div className="flex flex-col gap-1">
-                            <p className="text-xs text-gray-500 font-semibold">{metric.label}</p>
-                            <div className="flex items-center gap-3">
-                              <span className="h-10 w-px bg-black/80 rounded-full" aria-hidden="true" />
-                              <div className="text-[50px] font-extralight text-gray-900">
-                                {displayValue}
-                              </div>
-                            </div>
+                        <div key={metric.label} className="flex flex-col gap-1">
+                          <div className="text-3xl font-light text-gray-900">
+                            {displayValue}
                           </div>
-                        </React.Fragment>
-                      );
-                    })}
-                  </div>
-                  <div className="hidden md:flex md:flex-row md:items-center md:justify-center md:gap-8 text-center">
-                    {HERO_METRICS.map((metric, index) => {
-                      const currentValue = metricValues[index];
-                      const displayValue =
-                        metric.label === 'monitoring'
-                          ? `${Math.min(Math.round(currentValue), metric.target)}/7`
-                          : `${currentValue.toFixed(metric.decimals)}${metric.suffix}`;
-                      return (
-                        <React.Fragment key={`desktop-${metric.label}`}>
-                          <div className="text-center">
-                            <div className="text-[50px] font-extralight text-gray-900">
-                              {displayValue}
-                            </div>
-                            <p className="text-xs text-gray-500 font-semibold">{metric.label}</p>
-                          </div>
-                          {index < HERO_METRICS.length - 1 && (
-                            <span className="h-10 w-px bg-black/80 rounded-full mx-2" aria-hidden="true" />
-                          )}
-                        </React.Fragment>
+                          <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide">{metric.label}</p>
+                        </div>
                       );
                     })}
                   </div>
                 </div>
-                {/* Email capture moved to bottom-left above the legal footer */}
               </div>
             </div>
           </section>
