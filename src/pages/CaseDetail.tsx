@@ -1165,52 +1165,102 @@ export default function CaseDetail() {
                               Immediate Actions
                             </h4>
                             <ul className="space-y-1.5 text-xs text-gray-700 ml-3">
-                              {/* Dynamic actions based on case type */}
-                              {(effectiveCase.anomaly_type?.toLowerCase().includes('fee') || effectiveCase.claim_type?.toLowerCase().includes('fee')) && (
-                                <>
-                                  <li className="flex items-start gap-2">
-                                    <span className="text-gray-400 mt-0.5">•</span>
-                                    <span>Review and verify product weight/dimensional specifications</span>
-                                  </li>
-                                  <li className="flex items-start gap-2">
-                                    <span className="text-gray-400 mt-0.5">•</span>
-                                    <span>Update ASIN <span className="font-mono text-blue-600">{effectiveCase.asin || effectiveCase.evidence?.asin || 'N/A'}</span> measurements in Amazon's system</span>
-                                  </li>
-                                </>
-                              )}
-                              {(effectiveCase.anomaly_type?.toLowerCase().includes('lost') || effectiveCase.claim_type?.toLowerCase().includes('lost')) && (
-                                <>
-                                  <li className="flex items-start gap-2">
-                                    <span className="text-gray-400 mt-0.5">•</span>
-                                    <span>Investigate lost inventory at fulfillment center <span className="font-mono text-gray-600">{effectiveCase.facility || effectiveCase.evidence?.fulfillment_center || 'N/A'}</span></span>
-                                  </li>
-                                  <li className="flex items-start gap-2">
-                                    <span className="text-gray-400 mt-0.5">•</span>
-                                    <span>Confirm inventory count discrepancy for {effectiveCase.unitsLost || effectiveCase.quantity || '—'} units</span>
-                                  </li>
-                                </>
-                              )}
-                              {(effectiveCase.anomaly_type?.toLowerCase().includes('damaged') || effectiveCase.claim_type?.toLowerCase().includes('damaged')) && (
-                                <>
-                                  <li className="flex items-start gap-2">
-                                    <span className="text-gray-400 mt-0.5">•</span>
-                                    <span>Review damage report for SKU <span className="font-mono text-gray-600">{effectiveCase.sku || effectiveCase.evidence?.sku || 'N/A'}</span></span>
-                                  </li>
-                                  <li className="flex items-start gap-2">
-                                    <span className="text-gray-400 mt-0.5">•</span>
-                                    <span>Verify damage occurred during Amazon fulfillment handling</span>
-                                  </li>
-                                </>
-                              )}
-                              {/* Always show reimbursement request */}
-                              <li className="flex items-start gap-2">
-                                <span className="text-gray-400 mt-0.5">•</span>
-                                <span>
-                                  Process reimbursement of <span className="font-semibold text-emerald-600">
-                                    ${(effectiveCase.guaranteedAmount || effectiveCase.estimated_value || effectiveCase.claim_amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                  </span> to seller account
-                                </span>
-                              </li>
+                              {/* Fee-related cases: fulfillment_fee_error, storage_overcharge, commission_overcharge, removal_fee_overcharge, lts_overcharge */}
+                              {(() => {
+                                const caseType = (effectiveCase.anomaly_type || effectiveCase.claim_type || effectiveCase.case_type || '').toLowerCase();
+                                const isFeeCase = caseType.includes('fee') || caseType.includes('overcharge') || caseType.includes('commission') || caseType.includes('storage') || caseType.includes('lts');
+                                const isLostCase = caseType.includes('lost') || caseType.includes('missing') || caseType.includes('shipment') || caseType.includes('shortage') || caseType.includes('discrepancy');
+                                const isDamagedCase = caseType.includes('damaged') || caseType.includes('damage') || caseType.includes('carrier');
+                                const isRefundCase = caseType.includes('refund') || caseType.includes('return') || caseType.includes('switcheroo') || caseType.includes('wrong_item') || caseType.includes('empty_box');
+                                const isChargebackCase = caseType.includes('chargeback') || caseType.includes('dispute') || caseType.includes('atoz');
+                                const asin = effectiveCase.asin || effectiveCase.evidence?.asin || 'N/A';
+                                const sku = effectiveCase.sku || effectiveCase.evidence?.sku || 'N/A';
+                                const facility = effectiveCase.facility || effectiveCase.evidence?.fulfillment_center || 'N/A';
+                                const units = effectiveCase.unitsLost || effectiveCase.quantity || effectiveCase.units || '—';
+                                const amount = (effectiveCase.guaranteedAmount || effectiveCase.estimated_value || effectiveCase.claim_amount || 0);
+                                const orderId = effectiveCase.order_id || effectiveCase.evidence?.order_id || 'N/A';
+
+                                return (
+                                  <>
+                                    {isFeeCase && (
+                                      <>
+                                        <li className="flex items-start gap-2">
+                                          <span className="text-gray-400 mt-0.5">•</span>
+                                          <span>Review and verify product weight/dimensional specifications for ASIN <span className="font-mono text-blue-600">{asin}</span></span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                          <span className="text-gray-400 mt-0.5">•</span>
+                                          <span>Update ASIN measurements in Amazon's catalog system</span>
+                                        </li>
+                                      </>
+                                    )}
+                                    {isLostCase && (
+                                      <>
+                                        <li className="flex items-start gap-2">
+                                          <span className="text-gray-400 mt-0.5">•</span>
+                                          <span>Investigate inventory discrepancy at fulfillment center <span className="font-mono text-gray-600">{facility}</span></span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                          <span className="text-gray-400 mt-0.5">•</span>
+                                          <span>Confirm inventory count discrepancy for <span className="font-semibold">{units}</span> units of SKU <span className="font-mono text-gray-600">{sku}</span></span>
+                                        </li>
+                                      </>
+                                    )}
+                                    {isDamagedCase && (
+                                      <>
+                                        <li className="flex items-start gap-2">
+                                          <span className="text-gray-400 mt-0.5">•</span>
+                                          <span>Review damage report for SKU <span className="font-mono text-gray-600">{sku}</span></span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                          <span className="text-gray-400 mt-0.5">•</span>
+                                          <span>Verify damage occurred during Amazon/carrier handling</span>
+                                        </li>
+                                      </>
+                                    )}
+                                    {isRefundCase && (
+                                      <>
+                                        <li className="flex items-start gap-2">
+                                          <span className="text-gray-400 mt-0.5">•</span>
+                                          <span>Verify return status for Order <span className="font-mono text-blue-600">{orderId}</span></span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                          <span className="text-gray-400 mt-0.5">•</span>
+                                          <span>Confirm refund was issued without valid return received</span>
+                                        </li>
+                                      </>
+                                    )}
+                                    {isChargebackCase && (
+                                      <>
+                                        <li className="flex items-start gap-2">
+                                          <span className="text-gray-400 mt-0.5">•</span>
+                                          <span>Review chargeback claim for Order <span className="font-mono text-blue-600">{orderId}</span></span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                          <span className="text-gray-400 mt-0.5">•</span>
+                                          <span>Provide proof of delivery and product condition</span>
+                                        </li>
+                                      </>
+                                    )}
+                                    {/* Fallback for unknown case types */}
+                                    {!isFeeCase && !isLostCase && !isDamagedCase && !isRefundCase && !isChargebackCase && (
+                                      <li className="flex items-start gap-2">
+                                        <span className="text-gray-400 mt-0.5">•</span>
+                                        <span>Review case details for {caseType || 'unknown issue type'}</span>
+                                      </li>
+                                    )}
+                                    {/* Always show reimbursement request */}
+                                    <li className="flex items-start gap-2">
+                                      <span className="text-gray-400 mt-0.5">•</span>
+                                      <span>
+                                        Process reimbursement of <span className="font-semibold text-emerald-600">
+                                          ${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                        </span> to seller account
+                                      </span>
+                                    </li>
+                                  </>
+                                );
+                              })()}
                             </ul>
                           </div>
 
@@ -1221,46 +1271,83 @@ export default function CaseDetail() {
                               Preventive Measures
                             </h4>
                             <ul className="space-y-1.5 text-xs text-gray-700 ml-3">
-                              {(effectiveCase.anomaly_type?.toLowerCase().includes('fee') || effectiveCase.claim_type?.toLowerCase().includes('fee')) && (
-                                <>
-                                  <li className="flex items-start gap-2">
-                                    <span className="text-gray-400 mt-0.5">•</span>
-                                    <span>Correct fulfillment fee calculations for future shipments</span>
-                                  </li>
-                                  <li className="flex items-start gap-2">
-                                    <span className="text-gray-400 mt-0.5">•</span>
-                                    <span>Ensure measurement accuracy for all existing inventory</span>
-                                  </li>
-                                </>
-                              )}
-                              {(effectiveCase.anomaly_type?.toLowerCase().includes('lost') || effectiveCase.claim_type?.toLowerCase().includes('lost')) && (
-                                <>
-                                  <li className="flex items-start gap-2">
-                                    <span className="text-gray-400 mt-0.5">•</span>
-                                    <span>Improve inventory tracking at fulfillment centers</span>
-                                  </li>
-                                  <li className="flex items-start gap-2">
-                                    <span className="text-gray-400 mt-0.5">•</span>
-                                    <span>Implement regular reconciliation checks</span>
-                                  </li>
-                                </>
-                              )}
-                              {(effectiveCase.anomaly_type?.toLowerCase().includes('damaged') || effectiveCase.claim_type?.toLowerCase().includes('damaged')) && (
-                                <>
-                                  <li className="flex items-start gap-2">
-                                    <span className="text-gray-400 mt-0.5">•</span>
-                                    <span>Review handling procedures for this product category</span>
-                                  </li>
-                                  <li className="flex items-start gap-2">
-                                    <span className="text-gray-400 mt-0.5">•</span>
-                                    <span>Consider improved packaging requirements</span>
-                                  </li>
-                                </>
-                              )}
-                              <li className="flex items-start gap-2">
-                                <span className="text-gray-400 mt-0.5">•</span>
-                                <span>Provide confirmation of system updates</span>
-                              </li>
+                              {(() => {
+                                const caseType = (effectiveCase.anomaly_type || effectiveCase.claim_type || effectiveCase.case_type || '').toLowerCase();
+                                const isFeeCase = caseType.includes('fee') || caseType.includes('overcharge') || caseType.includes('commission') || caseType.includes('storage') || caseType.includes('lts');
+                                const isLostCase = caseType.includes('lost') || caseType.includes('missing') || caseType.includes('shipment') || caseType.includes('shortage') || caseType.includes('discrepancy');
+                                const isDamagedCase = caseType.includes('damaged') || caseType.includes('damage') || caseType.includes('carrier');
+                                const isRefundCase = caseType.includes('refund') || caseType.includes('return') || caseType.includes('switcheroo') || caseType.includes('wrong_item') || caseType.includes('empty_box');
+                                const isChargebackCase = caseType.includes('chargeback') || caseType.includes('dispute') || caseType.includes('atoz');
+
+                                return (
+                                  <>
+                                    {isFeeCase && (
+                                      <>
+                                        <li className="flex items-start gap-2">
+                                          <span className="text-gray-400 mt-0.5">•</span>
+                                          <span>Correct fee calculations for future shipments</span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                          <span className="text-gray-400 mt-0.5">•</span>
+                                          <span>Ensure measurement accuracy for all existing inventory</span>
+                                        </li>
+                                      </>
+                                    )}
+                                    {isLostCase && (
+                                      <>
+                                        <li className="flex items-start gap-2">
+                                          <span className="text-gray-400 mt-0.5">•</span>
+                                          <span>Improve inventory tracking at fulfillment centers</span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                          <span className="text-gray-400 mt-0.5">•</span>
+                                          <span>Implement regular reconciliation checks</span>
+                                        </li>
+                                      </>
+                                    )}
+                                    {isDamagedCase && (
+                                      <>
+                                        <li className="flex items-start gap-2">
+                                          <span className="text-gray-400 mt-0.5">•</span>
+                                          <span>Review handling procedures for this product category</span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                          <span className="text-gray-400 mt-0.5">•</span>
+                                          <span>Consider improved packaging requirements</span>
+                                        </li>
+                                      </>
+                                    )}
+                                    {isRefundCase && (
+                                      <>
+                                        <li className="flex items-start gap-2">
+                                          <span className="text-gray-400 mt-0.5">•</span>
+                                          <span>Monitor return compliance more closely</span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                          <span className="text-gray-400 mt-0.5">•</span>
+                                          <span>Flag repeat offender customer accounts</span>
+                                        </li>
+                                      </>
+                                    )}
+                                    {isChargebackCase && (
+                                      <>
+                                        <li className="flex items-start gap-2">
+                                          <span className="text-gray-400 mt-0.5">•</span>
+                                          <span>Enhance delivery confirmation tracking</span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                          <span className="text-gray-400 mt-0.5">•</span>
+                                          <span>Document all communications with buyer</span>
+                                        </li>
+                                      </>
+                                    )}
+                                    <li className="flex items-start gap-2">
+                                      <span className="text-gray-400 mt-0.5">•</span>
+                                      <span>Provide confirmation of system updates</span>
+                                    </li>
+                                  </>
+                                );
+                              })()}
                             </ul>
                           </div>
                         </div>
