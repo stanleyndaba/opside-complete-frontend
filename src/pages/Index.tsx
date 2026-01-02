@@ -778,72 +778,42 @@ const Index = () => {
               <div className="relative z-10 flex flex-col gap-10 px-10 py-14 md:flex-row md:items-center md:justify-between">
                 <div className="max-w-2xl space-y-5">
                   <span className="inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/80 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
-                    <span className="relative flex items-center gap-2">
-                      <span className="relative h-2 w-2 rounded-full bg-emerald-800">
-                        <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-75"></span>
-                      </span>
-                    </span>
-                    Try Opside
-                  </span>
-                  <h2 className="text-4xl font-black tracking-tight text-slate-900 md:text-5xl">
-                    Run reimbursements with{' '}
-                    <span className="bg-gradient-to-r from-[#1f4037] to-[#99f2c8] bg-clip-text text-transparent">
-                      confident control
-                    </span>
-                    .
-                  </h2>
-                  <p className="font-montserrat text-base text-slate-600 md:text-lg">
-                    Switch on automated Amazon claims, surface evidence instantly, and keep your team ahead of every discrepancy.
-                  </p>
-                  <p className="text-base text-navy-900 italic" style={{ color: '#001f3f' }}>
-                    Opside will never request your credit card
-                  </p>
+
                 </div>
-                <div className="flex w-full max-w-sm flex-col items-stretch gap-4 md:items-end">
-                  <AmazonConnect showUseExisting={false} className="w-full md:w-auto bg-emerald-500 text-white hover:bg-emerald-400 hover:text-white shadow-[0_18px_45px_rgba(147,197,253,0.35)]" />
-                  <span className="text-sm text-slate-500 md:text-right">
-                    Connect your Amazon account in minutes and see recoveries in motion.
-                  </span>
+                <BrandFooter selectedLanguageLabel={selectedLanguage.language} />
+
+                {/* Founders Council Banner - Fixed to bottom with slide animation */}
+                <div
+                  className={`fixed bottom-0 left-0 right-0 z-50 w-full px-3 py-2.5 md:px-6 md:py-5 transition-transform duration-300 ease-in-out ${showBanner ? 'translate-y-0' : 'translate-y-full'
+                    }`}
+                  style={{
+                    backgroundColor: '#1f4037',
+                    fontFamily: 'Inter, sans-serif'
+                  }}
+                >
+                  <div className="container mx-auto max-w-6xl">
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-2 md:gap-6">
+                      <p className="font-montserrat text-white text-xs md:text-base font-light text-center md:text-left flex-1">
+                        Join the exclusive group of 20 high-volume sellers stress-testing our 7-second AI Audit. Lock in a permanent 15% commission rate (vs. 20% public rate).
+                      </p>
+                      <a
+                        href="https://forms.gle/882hpRYWinNzBt2r9"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-shrink-0"
+                      >
+                        <Button
+                          className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium px-4 py-2 md:px-6 md:py-2.5 text-sm md:text-base shadow-lg transition-colors whitespace-nowrap"
+                          style={{ fontFamily: 'Inter, sans-serif' }}
+                        >
+                          Immediate Access →
+                        </Button>
+                      </a>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </section>
-      </div>
-      <BrandFooter selectedLanguageLabel={selectedLanguage.language} />
-
-      {/* Founders Council Banner - Fixed to bottom with slide animation */}
-      <div
-        className={`fixed bottom-0 left-0 right-0 z-50 w-full px-3 py-2.5 md:px-6 md:py-5 transition-transform duration-300 ease-in-out ${showBanner ? 'translate-y-0' : 'translate-y-full'
-          }`}
-        style={{
-          backgroundColor: '#1f4037',
-          fontFamily: 'Inter, sans-serif'
-        }}
-      >
-        <div className="container mx-auto max-w-6xl">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-2 md:gap-6">
-            <p className="font-montserrat text-white text-xs md:text-base font-light text-center md:text-left flex-1">
-              Join the exclusive group of 20 high-volume sellers stress-testing our 7-second AI Audit. Lock in a permanent 15% commission rate (vs. 20% public rate).
-            </p>
-            <a
-              href="https://forms.gle/882hpRYWinNzBt2r9"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-shrink-0"
-            >
-              <Button
-                className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium px-4 py-2 md:px-6 md:py-2.5 text-sm md:text-base shadow-lg transition-colors whitespace-nowrap"
-                style={{ fontFamily: 'Inter, sans-serif' }}
-              >
-                Immediate Access →
-              </Button>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+              );
 };
 
-export default Index;
+              export default Index;
