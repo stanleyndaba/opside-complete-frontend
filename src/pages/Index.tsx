@@ -762,58 +762,43 @@ const Index = () => {
             </div>
           </div>
         </section>
-        <section className="relative bg-white py-20 w-full overflow-x-hidden" style={{ width: '100%', maxWidth: '100%' }}>
-          <div className="container mx-auto px-6 w-full" style={{ width: '100%', maxWidth: '100%' }}>
-            <div className="relative overflow-hidden rounded-[36px] border border-gray-100 bg-gradient-to-br from-white via-slate-50 to-gray-100 text-slate-900 shadow-[0_30px_80px_rgba(148,163,184,0.25)]">
-              <div
-                className="pointer-events-none absolute inset-0 opacity-70"
-                aria-hidden="true"
-                style={{
-                  backgroundImage:
-                    'radial-gradient(rgba(148,163,184,0.35) 1px, transparent 1px), radial-gradient(rgba(226,232,240,0.45) 1px, transparent 1px)',
-                  backgroundSize: '26px 26px',
-                  backgroundPosition: '0 0, 13px 13px'
-                }}
-              />
-              <div className="relative z-10 flex flex-col gap-10 px-10 py-14 md:flex-row md:items-center md:justify-between">
-                <div className="max-w-2xl space-y-5">
-                  <span className="inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/80 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
 
-                </div>
-                <BrandFooter selectedLanguageLabel={selectedLanguage.language} />
 
-                {/* Founders Council Banner - Fixed to bottom with slide animation */}
-                <div
-                  className={`fixed bottom-0 left-0 right-0 z-50 w-full px-3 py-2.5 md:px-6 md:py-5 transition-transform duration-300 ease-in-out ${showBanner ? 'translate-y-0' : 'translate-y-full'
-                    }`}
-                  style={{
-                    backgroundColor: '#1f4037',
-                    fontFamily: 'Inter, sans-serif'
-                  }}
-                >
-                  <div className="container mx-auto max-w-6xl">
-                    <div className="flex flex-col md:flex-row items-center justify-between gap-2 md:gap-6">
-                      <p className="font-montserrat text-white text-xs md:text-base font-light text-center md:text-left flex-1">
-                        Join the exclusive group of 20 high-volume sellers stress-testing our 7-second AI Audit. Lock in a permanent 15% commission rate (vs. 20% public rate).
-                      </p>
-                      <a
-                        href="https://forms.gle/882hpRYWinNzBt2r9"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-shrink-0"
-                      >
-                        <Button
-                          className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium px-4 py-2 md:px-6 md:py-2.5 text-sm md:text-base shadow-lg transition-colors whitespace-nowrap"
-                          style={{ fontFamily: 'Inter, sans-serif' }}
-                        >
-                          Immediate Access →
-                        </Button>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              );
+      </div>
+      <BrandFooter selectedLanguageLabel={selectedLanguage.language} />
+
+      {/* Founders Council Banner - Fixed to bottom with slide animation */}
+      <div
+        className={`fixed bottom-0 left-0 right-0 z-50 w-full px-3 py-2.5 md:px-6 md:py-5 transition-transform duration-300 ease-in-out ${showBanner ? 'translate-y-0' : 'translate-y-full'
+          }`}
+        style={{
+          backgroundColor: '#1f4037',
+          fontFamily: 'Inter, sans-serif'
+        }}
+      >
+        <div className="container mx-auto max-w-6xl">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-2 md:gap-6">
+            <p className="font-montserrat text-white text-xs md:text-base font-light text-center md:text-left flex-1">
+              Join the exclusive group of 20 high-volume sellers stress-testing our 7-second AI Audit. Lock in a permanent 15% commission rate (vs. 20% public rate).
+            </p>
+            <a
+              href="https://forms.gle/882hpRYWinNzBt2r9"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-shrink-0"
+            >
+              <Button
+                className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium px-4 py-2 md:px-6 md:py-2.5 text-sm md:text-base shadow-lg transition-colors whitespace-nowrap"
+                style={{ fontFamily: 'Inter, sans-serif' }}
+              >
+                Immediate Access →
+              </Button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
-              export default Index;
+export default Index;
