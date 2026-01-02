@@ -441,18 +441,10 @@ const Index = () => {
               </DropdownMenu>
               <Link
                 to="/contact"
-                className="h-9 rounded-full border border-emerald-500 bg-transparent px-4 text-sm font-medium text-emerald-600 hover:bg-emerald-50 transition-colors inline-flex items-center"
+                className="h-9 rounded-full border border-emerald-500 bg-emerald-500 px-4 text-sm font-medium text-white hover:bg-emerald-600 transition-colors inline-flex items-center"
               >
                 Contact Sales
               </Link>
-              <Button
-                onClick={handleSignIn}
-                disabled={signingIn}
-                variant="outline"
-                className="h-9 rounded-full border border-gray-200 bg-gray-100/80 px-4 text-sm font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors"
-              >
-                {signingIn ? 'Connecting...' : 'Sign in'}
-              </Button>
             </nav>
             <button
               type="button"
@@ -639,20 +631,13 @@ const Index = () => {
                       Talk to Sales
                     </Link>
                   </div>
-                  {/* Trust Badges */}
-                  <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
-                    <div className="inline-flex items-center gap-1.5 bg-gray-50 px-2.5 py-1 rounded-full border border-gray-100">
-                      <span className="text-emerald-600">🔒</span>
-                      <span>256-bit Encrypted</span>
-                    </div>
-                    <div className="inline-flex items-center gap-1.5 bg-gray-50 px-2.5 py-1 rounded-full border border-gray-100">
-                      <span className="text-emerald-600">✓</span>
-                      <span>SOC 2 Compliant</span>
-                    </div>
-                    <div className="inline-flex items-center gap-1.5 bg-gray-50 px-2.5 py-1 rounded-full border border-gray-100">
-                      <span className="text-emerald-600">🛡️</span>
-                      <span>GDPR Ready</span>
-                    </div>
+                  {/* Trust text */}
+                  <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500">
+                    <span>256-bit Encrypted</span>
+                    <span>•</span>
+                    <span>No credit cards</span>
+                    <span>•</span>
+                    <span>Cancel anytime</span>
                   </div>
                 </div>
 
@@ -678,25 +663,6 @@ const Index = () => {
               </div>
             </div>
           </section>
-          {/* Social Proof Bar */}
-          <div className="container mx-auto px-6 py-8 border-t border-gray-100">
-            <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16 text-sm text-gray-500">
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-bold text-gray-900">500+</span>
-                <span>FBA Sellers Trust Opside</span>
-              </div>
-              <div className="hidden md:block h-8 w-px bg-gray-200" />
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-bold text-emerald-600">$2.3M+</span>
-                <span>Recovered for Sellers</span>
-              </div>
-              <div className="hidden md:block h-8 w-px bg-gray-200" />
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-bold text-gray-900">99.8%</span>
-                <span>Claim Accuracy</span>
-              </div>
-            </div>
-          </div>
         </main>
       </div>
       {/* End of background image area - white content starts here */}
