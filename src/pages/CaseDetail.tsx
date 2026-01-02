@@ -1227,91 +1227,88 @@ export default function CaseDetail() {
                             const caseType = (effectiveCase.anomaly_type || effectiveCase.claim_type || effectiveCase.case_type || '').toLowerCase();
 
                             return (
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-gray-200">
                                 {/* Timeline Evidence */}
-                                <div className="bg-gray-50 rounded-sm p-4 border border-gray-100">
-                                  <h4 className="text-[10px] font-semibold text-gray-600 uppercase tracking-[0.1em] mb-3 flex items-center gap-1.5">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                                <div className="bg-white p-5">
+                                  <h4 className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.15em] mb-4 border-b border-gray-100 pb-2">
                                     Timeline Evidence
                                   </h4>
-                                  <dl className="space-y-2 text-xs">
-                                    <div className="flex justify-between">
-                                      <dt className="text-gray-500">Issue Identified:</dt>
-                                      <dd className="font-mono text-gray-900">{detectionDate}</dd>
+                                  <dl className="space-y-3 text-xs">
+                                    <div className="flex justify-between items-baseline">
+                                      <dt className="text-gray-400 font-light">Issue Identified</dt>
+                                      <dd className="font-mono text-gray-900 tabular-nums">{detectionDate}</dd>
                                     </div>
-                                    <div className="flex justify-between">
-                                      <dt className="text-gray-500">Audit Period:</dt>
-                                      <dd className="font-mono text-gray-900">{auditDays} days</dd>
+                                    <div className="flex justify-between items-baseline">
+                                      <dt className="text-gray-400 font-light">Audit Period</dt>
+                                      <dd className="font-mono text-gray-900 tabular-nums">{auditDays} days</dd>
                                     </div>
-                                    <div className="flex justify-between">
-                                      <dt className="text-gray-500">Policy Window:</dt>
-                                      <dd className="font-mono text-emerald-600">Within 180 days ✓</dd>
+                                    <div className="flex justify-between items-baseline">
+                                      <dt className="text-gray-400 font-light">Policy Window</dt>
+                                      <dd className="font-mono text-gray-900">{auditDays <= 180 ? 'Compliant' : 'Exceeded'}</dd>
                                     </div>
-                                    <div className="flex justify-between">
-                                      <dt className="text-gray-500">Status:</dt>
+                                    <div className="flex justify-between items-baseline">
+                                      <dt className="text-gray-400 font-light">Status</dt>
                                       <dd className="font-mono text-gray-900 capitalize">{effectiveCase.status?.replace(/_/g, ' ') || 'Pending'}</dd>
                                     </div>
                                   </dl>
                                 </div>
 
                                 {/* Quantitative Evidence */}
-                                <div className="bg-gray-50 rounded-sm p-4 border border-gray-100">
-                                  <h4 className="text-[10px] font-semibold text-gray-600 uppercase tracking-[0.1em] mb-3 flex items-center gap-1.5">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                <div className="bg-white p-5">
+                                  <h4 className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.15em] mb-4 border-b border-gray-100 pb-2">
                                     Quantitative Evidence
                                   </h4>
-                                  <dl className="space-y-2 text-xs">
-                                    <div className="flex justify-between">
-                                      <dt className="text-gray-500">Units Affected:</dt>
-                                      <dd className="font-mono text-gray-900">{units}</dd>
+                                  <dl className="space-y-3 text-xs">
+                                    <div className="flex justify-between items-baseline">
+                                      <dt className="text-gray-400 font-light">Units Affected</dt>
+                                      <dd className="font-mono text-gray-900 tabular-nums">{units}</dd>
                                     </div>
-                                    <div className="flex justify-between">
-                                      <dt className="text-gray-500">Value Per Unit:</dt>
-                                      <dd className="font-mono text-gray-900">${perUnit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</dd>
+                                    <div className="flex justify-between items-baseline">
+                                      <dt className="text-gray-400 font-light">Value Per Unit</dt>
+                                      <dd className="font-mono text-gray-900 tabular-nums">${perUnit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</dd>
                                     </div>
-                                    <div className="flex justify-between">
-                                      <dt className="text-gray-500">Total Claim:</dt>
-                                      <dd className="font-semibold text-emerald-600">${Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</dd>
+                                    <div className="flex justify-between items-baseline">
+                                      <dt className="text-gray-400 font-light">Total Claim</dt>
+                                      <dd className="font-mono font-medium text-gray-900 tabular-nums">${Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</dd>
                                     </div>
                                     {effectiveCase.actual_payout_amount && (
-                                      <div className="flex justify-between">
-                                        <dt className="text-gray-500">Paid Out:</dt>
-                                        <dd className="font-semibold text-blue-600">${Number(effectiveCase.actual_payout_amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</dd>
+                                      <div className="flex justify-between items-baseline">
+                                        <dt className="text-gray-400 font-light">Paid Out</dt>
+                                        <dd className="font-mono font-medium text-gray-900 tabular-nums">${Number(effectiveCase.actual_payout_amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</dd>
                                       </div>
                                     )}
                                   </dl>
                                 </div>
 
                                 {/* Location Evidence */}
-                                <div className="bg-gray-50 rounded-sm p-4 border border-gray-100">
-                                  <h4 className="text-[10px] font-semibold text-gray-600 uppercase tracking-[0.1em] mb-3 flex items-center gap-1.5">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                <div className="bg-white p-5">
+                                  <h4 className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.15em] mb-4 border-b border-gray-100 pb-2">
                                     Location Evidence
                                   </h4>
-                                  <dl className="space-y-2 text-xs">
-                                    <div className="flex justify-between">
-                                      <dt className="text-gray-500">ASIN:</dt>
-                                      <dd className="font-mono text-blue-600">{asin}</dd>
+                                  <dl className="space-y-3 text-xs">
+                                    <div className="flex justify-between items-baseline">
+                                      <dt className="text-gray-400 font-light">ASIN</dt>
+                                      <dd className="font-mono text-gray-900">{asin}</dd>
                                     </div>
-                                    <div className="flex justify-between">
-                                      <dt className="text-gray-500">SKU:</dt>
+                                    <div className="flex justify-between items-baseline">
+                                      <dt className="text-gray-400 font-light">SKU</dt>
                                       <dd className="font-mono text-gray-900">{sku}</dd>
                                     </div>
                                     {facility && (
-                                      <div className="flex justify-between">
-                                        <dt className="text-gray-500">Fulfillment Center:</dt>
+                                      <div className="flex justify-between items-baseline">
+                                        <dt className="text-gray-400 font-light">Fulfillment Center</dt>
                                         <dd className="font-mono text-gray-900">{facility}</dd>
                                       </div>
                                     )}
                                     {orderId && (
-                                      <div className="flex justify-between">
-                                        <dt className="text-gray-500">Order ID:</dt>
+                                      <div className="flex justify-between items-baseline">
+                                        <dt className="text-gray-400 font-light">Order ID</dt>
                                         <dd className="font-mono text-gray-900 text-[10px]">{orderId}</dd>
                                       </div>
                                     )}
                                     {shipmentId && (
-                                      <div className="flex justify-between">
-                                        <dt className="text-gray-500">Shipment ID:</dt>
+                                      <div className="flex justify-between items-baseline">
+                                        <dt className="text-gray-400 font-light">Shipment ID</dt>
                                         <dd className="font-mono text-gray-900">{shipmentId}</dd>
                                       </div>
                                     )}
@@ -1319,26 +1316,32 @@ export default function CaseDetail() {
                                 </div>
 
                                 {/* Pattern Evidence */}
-                                <div className="bg-gray-50 rounded-sm p-4 border border-gray-100">
-                                  <h4 className="text-[10px] font-semibold text-gray-600 uppercase tracking-[0.1em] mb-3 flex items-center gap-1.5">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-purple-500"></span>
+                                <div className="bg-white p-5">
+                                  <h4 className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.15em] mb-4 border-b border-gray-100 pb-2">
                                     Pattern Evidence
                                   </h4>
-                                  <dl className="space-y-2 text-xs">
-                                    <div className="flex justify-between">
-                                      <dt className="text-gray-500">Claim Type:</dt>
+                                  <dl className="space-y-3 text-xs">
+                                    <div className="flex justify-between items-baseline">
+                                      <dt className="text-gray-400 font-light">Claim Type</dt>
                                       <dd className="font-mono text-gray-900 capitalize">{caseType.replace(/_/g, ' ') || 'Discrepancy'}</dd>
                                     </div>
-                                    <div className="flex justify-between">
-                                      <dt className="text-gray-500">Confidence:</dt>
-                                      <dd className="font-mono text-gray-900">{Math.round((effectiveCase.confidence || effectiveCase.confidence_score || 0.85) * 100)}%</dd>
+                                    <div className="flex justify-between items-baseline">
+                                      <dt className="text-gray-400 font-light">Confidence</dt>
+                                      <dd className="font-mono text-gray-900 tabular-nums">
+                                        {(() => {
+                                          const conf = effectiveCase.confidence || effectiveCase.confidence_score || 0.85;
+                                          // Handle both 0-1 and 0-100 formats
+                                          const normalized = conf > 1 ? conf : conf * 100;
+                                          return `${Math.min(Math.round(normalized), 100)}%`;
+                                        })()}
+                                      </dd>
                                     </div>
-                                    <div className="flex justify-between">
-                                      <dt className="text-gray-500">Match Type:</dt>
+                                    <div className="flex justify-between items-baseline">
+                                      <dt className="text-gray-400 font-light">Match Type</dt>
                                       <dd className="font-mono text-gray-900 capitalize">{(effectiveCase.match_type || 'order_id').replace(/_/g, ' ')}</dd>
                                     </div>
-                                    <div className="flex justify-between">
-                                      <dt className="text-gray-500">Detection:</dt>
+                                    <div className="flex justify-between items-baseline">
+                                      <dt className="text-gray-400 font-light">Detection</dt>
                                       <dd className="font-mono text-gray-900">Automated Audit</dd>
                                     </div>
                                   </dl>
