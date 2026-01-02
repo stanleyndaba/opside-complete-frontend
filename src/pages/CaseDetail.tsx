@@ -1155,9 +1155,114 @@ export default function CaseDetail() {
                     {activeTab === 'actions' && (
                       <div className="space-y-6">
                         <div>
-                          <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em] mb-1">Required Actions</h3>
-                          <div className="text-[10px] text-gray-500 mb-3">Fix needed</div>
-                          <p className="text-sm text-gray-500 italic">What needs to be done/fixed for this case</p>
+                          <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em] mb-1">Required Actions Requested</h3>
+                          <div className="text-[10px] text-gray-500 mb-4">Resolution request to Amazon</div>
+
+                          {/* Immediate Actions */}
+                          <div className="mb-4">
+                            <h4 className="text-xs font-semibold text-gray-900 mb-2 flex items-center gap-1.5">
+                              <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                              Immediate Actions
+                            </h4>
+                            <ul className="space-y-1.5 text-xs text-gray-700 ml-3">
+                              {/* Dynamic actions based on case type */}
+                              {(effectiveCase.anomaly_type?.toLowerCase().includes('fee') || effectiveCase.claim_type?.toLowerCase().includes('fee')) && (
+                                <>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-gray-400 mt-0.5">•</span>
+                                    <span>Review and verify product weight/dimensional specifications</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-gray-400 mt-0.5">•</span>
+                                    <span>Update ASIN <span className="font-mono text-blue-600">{effectiveCase.asin || effectiveCase.evidence?.asin || 'N/A'}</span> measurements in Amazon's system</span>
+                                  </li>
+                                </>
+                              )}
+                              {(effectiveCase.anomaly_type?.toLowerCase().includes('lost') || effectiveCase.claim_type?.toLowerCase().includes('lost')) && (
+                                <>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-gray-400 mt-0.5">•</span>
+                                    <span>Investigate lost inventory at fulfillment center <span className="font-mono text-gray-600">{effectiveCase.facility || effectiveCase.evidence?.fulfillment_center || 'N/A'}</span></span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-gray-400 mt-0.5">•</span>
+                                    <span>Confirm inventory count discrepancy for {effectiveCase.unitsLost || effectiveCase.quantity || '—'} units</span>
+                                  </li>
+                                </>
+                              )}
+                              {(effectiveCase.anomaly_type?.toLowerCase().includes('damaged') || effectiveCase.claim_type?.toLowerCase().includes('damaged')) && (
+                                <>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-gray-400 mt-0.5">•</span>
+                                    <span>Review damage report for SKU <span className="font-mono text-gray-600">{effectiveCase.sku || effectiveCase.evidence?.sku || 'N/A'}</span></span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-gray-400 mt-0.5">•</span>
+                                    <span>Verify damage occurred during Amazon fulfillment handling</span>
+                                  </li>
+                                </>
+                              )}
+                              {/* Always show reimbursement request */}
+                              <li className="flex items-start gap-2">
+                                <span className="text-gray-400 mt-0.5">•</span>
+                                <span>
+                                  Process reimbursement of <span className="font-semibold text-emerald-600">
+                                    ${(effectiveCase.guaranteedAmount || effectiveCase.estimated_value || effectiveCase.claim_amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                  </span> to seller account
+                                </span>
+                              </li>
+                            </ul>
+                          </div>
+
+                          {/* Preventive Measures */}
+                          <div className="pt-4 border-t border-gray-100">
+                            <h4 className="text-xs font-semibold text-gray-900 mb-2 flex items-center gap-1.5">
+                              <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                              Preventive Measures
+                            </h4>
+                            <ul className="space-y-1.5 text-xs text-gray-700 ml-3">
+                              {(effectiveCase.anomaly_type?.toLowerCase().includes('fee') || effectiveCase.claim_type?.toLowerCase().includes('fee')) && (
+                                <>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-gray-400 mt-0.5">•</span>
+                                    <span>Correct fulfillment fee calculations for future shipments</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-gray-400 mt-0.5">•</span>
+                                    <span>Ensure measurement accuracy for all existing inventory</span>
+                                  </li>
+                                </>
+                              )}
+                              {(effectiveCase.anomaly_type?.toLowerCase().includes('lost') || effectiveCase.claim_type?.toLowerCase().includes('lost')) && (
+                                <>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-gray-400 mt-0.5">•</span>
+                                    <span>Improve inventory tracking at fulfillment centers</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-gray-400 mt-0.5">•</span>
+                                    <span>Implement regular reconciliation checks</span>
+                                  </li>
+                                </>
+                              )}
+                              {(effectiveCase.anomaly_type?.toLowerCase().includes('damaged') || effectiveCase.claim_type?.toLowerCase().includes('damaged')) && (
+                                <>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-gray-400 mt-0.5">•</span>
+                                    <span>Review handling procedures for this product category</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-gray-400 mt-0.5">•</span>
+                                    <span>Consider improved packaging requirements</span>
+                                  </li>
+                                </>
+                              )}
+                              <li className="flex items-start gap-2">
+                                <span className="text-gray-400 mt-0.5">•</span>
+                                <span>Provide confirmation of system updates</span>
+                              </li>
+                            </ul>
+                          </div>
                         </div>
                         <div className="border-t border-gray-100 pt-6">
                           <div className="flex items-center justify-between mb-4">
