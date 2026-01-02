@@ -661,27 +661,55 @@ export default function CaseDetail() {
       <div className="relative -m-4 lg:-m-6">
         <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24">
           <div className="relative container mx-auto px-8 pt-8 pb-10 text-gray-900 space-y-6">
-            {/* Header */}
-            <div className="flex items-center gap-4">
-              <Link to="/recoveries" className="flex items-center gap-2 text-xs text-gray-600 hover:text-gray-900 transition-colors">
-                <ArrowLeft className="h-4 w-4" />
+            {/* Header - Navigation */}
+            <div className="flex items-center justify-between">
+              <Link to="/recoveries" className="flex items-center gap-2 text-xs text-gray-500 hover:text-gray-900 transition-colors">
+                <ArrowLeft className="h-3.5 w-3.5" />
                 Back to Cases
               </Link>
+              {/* Next Claim navigation - fetches cases and navigates to next */}
+              <button
+                className="flex items-center gap-2 text-xs text-gray-500 hover:text-gray-900 transition-colors"
+                onClick={async () => {
+                  try {
+                    // Fetch all cases
+                    const casesResponse = await recoveryApi.getCases({ limit: 500 }) as any;
+                    const cases = casesResponse?.cases || casesResponse?.data || casesResponse || [];
+                    if (!Array.isArray(cases) || cases.length === 0) {
+                      toast({ title: 'No more cases', description: 'You have reviewed all cases.' });
+                      return;
+                    }
+                    // Find current case index
+                    const currentIdx = cases.findIndex((c: any) => c.id === caseId);
+                    // Get next case (wrap around if at end)
+                    const nextIdx = (currentIdx + 1) % cases.length;
+                    const nextCase = cases[nextIdx];
+                    if (nextCase?.id && nextCase.id !== caseId) {
+                      window.location.href = `/case/${nextCase.id}`;
+                    } else {
+                      toast({ title: 'No more cases', description: 'This is the last case.' });
+                    }
+                  } catch (e) {
+                    toast({ title: 'Error', description: 'Could not load next case.' });
+                  }
+                }}
+              >
+                Next Claim
+                <ArrowLeft className="h-3.5 w-3.5 rotate-180" />
+              </button>
             </div>
 
-            {/* Auto-Filing Banner */}
-            <div className="flex items-center gap-3 px-4 py-2.5 bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-sm">
-              <div className="flex items-center justify-center h-8 w-8 rounded-full bg-gray-900 text-white">
-                <CheckCircle className="h-4 w-4" />
-              </div>
+            {/* Auto-Filing Banner - Institutional Style */}
+            <div className="flex items-center gap-4 px-4 py-3 bg-white border border-gray-200">
+              <span className="text-[10px] font-mono text-gray-400">—</span>
               <div className="flex-1">
-                <p className="text-xs text-gray-700">
-                  <span className="font-semibold text-gray-900">Opside Auto-Files</span> cases with <span className="font-mono font-semibold text-gray-900">≥85%</span> confidence for you
+                <p className="text-xs text-gray-600">
+                  <span className="font-medium text-gray-900">Opside Auto-Files</span> cases with <span className="font-mono font-medium text-gray-900">≥85%</span> confidence for you
                 </p>
               </div>
-              <div className="text-[10px] text-gray-500 uppercase tracking-wider border border-gray-300 px-2 py-1 rounded-sm bg-white">
+              <span className="text-[10px] font-light text-gray-400 uppercase tracking-[0.15em]">
                 Autonomous
-              </div>
+              </span>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
