@@ -1266,82 +1266,69 @@ export default function EvidenceLocker() {
             {error && <div className="text-xs text-red-600">{error}</div>}
             <div className="overflow-x-auto">
               <Table className="min-w-[900px]">
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="text-gray-700 whitespace-nowrap">
+                <TableHeader className="border-b border-gray-200">
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead className="text-gray-400 whitespace-nowrap py-3 border-b border-gray-200">
                       <Checkbox checked={selectedIds.size > 0 && selectedIds.size === pageData.length} onCheckedChange={(c) => {
                         if (c) setSelectedIds(new Set(pageData.map(d => d.id))); else setSelectedIds(new Set());
                       }} />
                     </TableHead>
-                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('name')}>Document Name</TableHead>
-                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('supplier')}>Supplier</TableHead>
-                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('invoice')}>Invoice #</TableHead>
-                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('uploadDate')}>Upload Date</TableHead>
-                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('parser_status')}>Parsing Status</TableHead>
-                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('amount')}>Amount</TableHead>
-                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('matchedClaims')}>Matched Claims</TableHead>
-                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap py-2">Actions</TableHead>
+                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] whitespace-nowrap cursor-pointer py-3 border-b border-gray-200" onClick={() => toggleSort('name')}>Document Name</TableHead>
+                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] whitespace-nowrap cursor-pointer py-3 border-b border-gray-200" onClick={() => toggleSort('supplier')}>Supplier</TableHead>
+                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] whitespace-nowrap cursor-pointer py-3 border-b border-gray-200" onClick={() => toggleSort('invoice')}>Invoice #</TableHead>
+                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] whitespace-nowrap cursor-pointer py-3 border-b border-gray-200" onClick={() => toggleSort('uploadDate')}>Upload Date</TableHead>
+                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] whitespace-nowrap cursor-pointer py-3 border-b border-gray-200" onClick={() => toggleSort('parser_status')}>Status</TableHead>
+                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] whitespace-nowrap cursor-pointer py-3 border-b border-gray-200" onClick={() => toggleSort('amount')}>Amount</TableHead>
+                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] whitespace-nowrap cursor-pointer py-3 border-b border-gray-200" onClick={() => toggleSort('matchedClaims')}>Linked Claims</TableHead>
+                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] whitespace-nowrap py-3 border-b border-gray-200"></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {pageData.map(doc => <TableRow key={doc.id}>
-                    <TableCell className="whitespace-nowrap">
+                  {pageData.map(doc => <TableRow key={doc.id} className="border-b border-gray-100 hover:bg-gray-50/50">
+                    <TableCell className="whitespace-nowrap py-3">
                       <Checkbox checked={selectedIds.has(doc.id)} onCheckedChange={(c) => {
                         setSelectedIds(prev => { const next = new Set(prev); if (c) next.add(doc.id); else next.delete(doc.id); return next; });
                       }} />
                     </TableCell>
-                    <TableCell className="whitespace-nowrap">
+                    <TableCell className="whitespace-nowrap py-3">
                       <div className="flex items-center gap-2">
-                        <FileText className="h-4 w-4 text-gray-400" />
-                        <span className="font-medium text-black">{doc.name}</span>
+                        <FileText className="h-3.5 w-3.5 text-gray-300" />
+                        <span className="text-sm text-gray-900">{doc.name}</span>
                       </div>
                     </TableCell>
-                    <TableCell className="whitespace-nowrap">{doc.supplier || '—'}</TableCell>
-                    <TableCell className="whitespace-nowrap">{doc.invoice || '—'}</TableCell>
-                    <TableCell className="whitespace-nowrap">
-                      {new Date(doc.uploadDate).toLocaleDateString()}
+                    <TableCell className="whitespace-nowrap py-3 text-sm text-gray-600">{doc.supplier || '—'}</TableCell>
+                    <TableCell className="whitespace-nowrap py-3 text-sm font-mono text-gray-600">{doc.invoice || '—'}</TableCell>
+                    <TableCell className="whitespace-nowrap py-3 text-sm font-mono tabular-nums text-gray-600">
+                      {new Date(doc.uploadDate).toLocaleDateString('en-CA')}
                     </TableCell>
 
-                    <TableCell className="whitespace-nowrap">
-                      {doc.parser_status && (
-                        <div className="flex items-center gap-2">
-                          {doc.parser_status === 'completed' && (
-                            <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-xs">
-                              <Check className="w-3 h-3 mr-1" />
-                              Parsed
-                            </Badge>
-                          )}
-                          {doc.parser_status === 'processing' && (
-                            <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30 text-xs">
-                              <Clock className="w-3 h-3 mr-1" />
-                              Parsing
-                            </Badge>
-                          )}
-                          {doc.parser_status === 'failed' && (
-                            <Badge className="bg-red-500/20 text-red-400 border-red-500/30 text-xs">
-                              <AlertTriangle className="w-3 h-3 mr-1" />
-                              Failed
-                            </Badge>
-                          )}
-                          {doc.parser_status === 'pending' && (
-                            <Badge className="bg-gray-500/20 text-gray-400 border-gray-500/30 text-xs">
-                              Pending
-                            </Badge>
-                          )}
-                          {doc.parser_confidence !== undefined && (
-                            <span className="text-xs text-[#36454F]">
-                              {(doc.parser_confidence * 100).toFixed(0)}%
-                            </span>
-                          )}
-                        </div>
-                      )}
+                    {/* Status - Institutional: plain text, no badges */}
+                    <TableCell className="whitespace-nowrap py-3">
+                      <div className="flex items-center gap-2">
+                        <span className={`text-xs font-mono ${doc.parser_status === 'completed' ? 'text-gray-900' :
+                          doc.parser_status === 'processing' ? 'text-gray-500' :
+                            doc.parser_status === 'failed' ? 'text-red-600' :
+                              'text-gray-400'
+                          }`}>
+                          {doc.parser_status === 'completed' ? 'Parsed' :
+                            doc.parser_status === 'processing' ? 'Parsing' :
+                              doc.parser_status === 'failed' ? 'Failed' :
+                                doc.parser_status === 'pending' ? 'Pending' : '—'}
+                        </span>
+                        {doc.parser_confidence !== undefined && (
+                          <span className="text-[10px] font-mono text-gray-400">
+                            {(doc.parser_confidence * 100).toFixed(0)}%
+                          </span>
+                        )}
+                      </div>
                     </TableCell>
 
-                    <TableCell className="whitespace-nowrap">{typeof doc.amount === 'number' ? `$${doc.amount.toFixed(2)}` : '—'}</TableCell>
+                    {/* Amount */}
+                    <TableCell className="whitespace-nowrap py-3 text-sm font-mono tabular-nums text-gray-900">{typeof doc.amount === 'number' ? `$${doc.amount.toFixed(2)}` : '—'}</TableCell>
 
-                    <TableCell>
+                    {/* Linked Claims - Institutional: plain text links */}
+                    <TableCell className="whitespace-nowrap py-3">
                       {(() => {
-                        // Try multiple sources for matched claims
                         const claims = doc.matchedClaims || [];
 
                         if (claims.length === 0) {
@@ -1349,30 +1336,29 @@ export default function EvidenceLocker() {
                         }
 
                         return (
-                          <div className="flex flex-wrap gap-1 items-center">
-                            {claims.map((id: string) => (
+                          <div className="flex flex-wrap gap-2 items-center">
+                            {claims.slice(0, 2).map((id: string) => (
                               <Link
                                 key={id}
                                 to={`/case/${id}`}
-                                className="text-xs px-2 py-0.5 rounded bg-blue-50 border border-blue-100 text-blue-700 hover:bg-blue-100 font-mono"
+                                className="text-xs font-mono text-gray-600 hover:text-gray-900 hover:underline"
                               >
-                                {id.slice(0, 8)}…
+                                {id.slice(0, 8)}
                               </Link>
                             ))}
-                            {claims.length > 1 && (
-                              <Badge className="bg-purple-100 text-purple-700 border-purple-200 text-xs">
-                                ♻️ {claims.length}
-                              </Badge>
+                            {claims.length > 2 && (
+                              <span className="text-[10px] text-gray-400">+{claims.length - 2}</span>
                             )}
                           </div>
                         );
                       })()}
                     </TableCell>
 
-                    <TableCell className="whitespace-nowrap">
+                    {/* Actions - Institutional: subtle */}
+                    <TableCell className="whitespace-nowrap py-3">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                          <Button variant="ghost" size="sm" className="h-6 w-6 p-0 text-gray-400 hover:text-gray-600">
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
