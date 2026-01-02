@@ -31,7 +31,7 @@ const ApiAccess = () => {
                   <span className="ml-3 text-xs text-gray-500 font-mono">example.py</span>
                 </div>
                 <CardContent className="p-0">
-                  <pre className="p-6 overflow-x-auto text-sm md:text-base leading-relaxed" style={{ fontFamily: "'Fira Code', 'JetBrains Mono', 'SF Mono', 'Monaco', 'Consolas', monospace" }}>
+                  <pre className="p-6 overflow-x-auto text-[11px] md:text-xs leading-loose" style={{ fontFamily: "'Fira Code', 'JetBrains Mono', 'SF Mono', 'Monaco', 'Consolas', monospace" }}>
                     <code style={{ fontFamily: 'inherit' }}>
                       <span className="text-purple-400">import</span> <span className="text-blue-300">opside</span>{'\n'}
                       <span className="text-purple-400">from</span> <span className="text-blue-300">datetime</span> <span className="text-purple-400">import</span> <span className="text-yellow-300">datetime</span>, <span className="text-yellow-300">timedelta</span>{'\n'}
