@@ -672,9 +672,8 @@ export default function CaseDetail() {
                 className="flex items-center gap-2 text-xs text-gray-500 hover:text-gray-900 transition-colors"
                 onClick={async () => {
                   try {
-                    // Fetch all cases
-                    const casesResponse = await recoveryApi.getCases({ limit: 500 }) as any;
-                    const cases = casesResponse?.cases || casesResponse?.data || casesResponse || [];
+                    // Fetch all cases using getRecoveries
+                    const cases = await recoveryApi.getRecoveries() as any[];
                     if (!Array.isArray(cases) || cases.length === 0) {
                       toast({ title: 'No more cases', description: 'You have reviewed all cases.' });
                       return;
@@ -690,6 +689,7 @@ export default function CaseDetail() {
                       toast({ title: 'No more cases', description: 'This is the last case.' });
                     }
                   } catch (e) {
+                    console.error('Next claim error:', e);
                     toast({ title: 'Error', description: 'Could not load next case.' });
                   }
                 }}
@@ -700,14 +700,11 @@ export default function CaseDetail() {
             </div>
 
             {/* Auto-Filing Banner - Institutional Style */}
-            <div className="flex items-center gap-4 px-4 py-3 bg-white border border-gray-200">
-              <span className="text-[10px] font-mono text-gray-400">—</span>
-              <div className="flex-1">
-                <p className="text-xs text-gray-600">
-                  <span className="font-medium text-gray-900">Opside Auto-Files</span> cases with <span className="font-mono font-medium text-gray-900">≥85%</span> confidence for you
-                </p>
-              </div>
-              <span className="text-[10px] font-light text-gray-400 uppercase tracking-[0.15em]">
+            <div className="flex items-center gap-4 px-4 py-3 bg-white">
+              <p className="text-xs text-gray-600">
+                <span className="font-medium text-gray-900">Opside Auto-Files</span> cases with <span className="font-mono font-medium text-gray-900">≥85%</span> confidence for you
+              </p>
+              <span className="text-[10px] font-light text-gray-400 uppercase tracking-[0.15em] ml-auto">
                 Autonomous
               </span>
             </div>
