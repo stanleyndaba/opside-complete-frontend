@@ -1265,7 +1265,7 @@ export default function EvidenceLocker() {
             {loading && <div className="text-xs text-gray-500">Loading documents…</div>}
             {error && <div className="text-xs text-red-600">{error}</div>}
             <div className="overflow-x-auto">
-              <Table className="min-w-[1150px]">
+              <Table className="min-w-[900px]">
                 <TableHeader>
                   <TableRow>
                     <TableHead className="text-gray-700 whitespace-nowrap">
@@ -1277,15 +1277,9 @@ export default function EvidenceLocker() {
                     <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('supplier')}>Supplier</TableHead>
                     <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('invoice')}>Invoice #</TableHead>
                     <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('uploadDate')}>Upload Date</TableHead>
-                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('status')}>Status</TableHead>
                     <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('parser_status')}>Parsing Status</TableHead>
-                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('parsedVia')}>Parsed Via</TableHead>
                     <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('amount')}>Amount</TableHead>
-                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap py-2">Extracted Data</TableHead>
                     <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('matchedClaims')}>Matched Claims</TableHead>
-                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap cursor-pointer py-2" onClick={() => toggleSort('match_confidence')}>Match Confidence</TableHead>
-                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap py-2">Match Status</TableHead>
-                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap py-2">Linked SKUs</TableHead>
                     <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide whitespace-nowrap py-2">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -1307,9 +1301,7 @@ export default function EvidenceLocker() {
                     <TableCell className="whitespace-nowrap">
                       {new Date(doc.uploadDate).toLocaleDateString()}
                     </TableCell>
-                    <TableCell className="whitespace-nowrap">
-                      {getStatusBadge(doc.status)}
-                    </TableCell>
+
                     <TableCell className="whitespace-nowrap">
                       {doc.parser_status && (
                         <div className="flex items-center gap-2">
@@ -1344,54 +1336,9 @@ export default function EvidenceLocker() {
                         </div>
                       )}
                     </TableCell>
-                    <TableCell className="whitespace-nowrap">
-                      {doc.parsedVia && <Badge variant="outline" className="text-xs capitalize border-gray-300 text-[#36454F]">{doc.parsedVia}</Badge>}
-                    </TableCell>
+
                     <TableCell className="whitespace-nowrap">{typeof doc.amount === 'number' ? `$${doc.amount.toFixed(2)}` : '—'}</TableCell>
-                    {/* Extracted Data from Agent 5 PDF parsing */}
-                    <TableCell className="max-w-[200px]">
-                      {doc.extracted && (
-                        <div className="flex flex-wrap gap-1">
-                          {(doc.extracted.order_ids || []).slice(0, 2).map((id, i) => (
-                            <Badge
-                              key={`order-${i}`}
-                              className="bg-blue-500/10 text-blue-400 border-blue-500/20 text-xs truncate max-w-[120px] cursor-pointer hover:bg-blue-500/20"
-                              title={`Click to filter by ${id}`}
-                              onClick={() => setQ(id)}
-                            >
-                              📦 {id.length > 12 ? id.slice(0, 12) + '...' : id}
-                            </Badge>
-                          ))}
-                          {(doc.extracted.tracking_numbers || []).slice(0, 1).map((tn, i) => (
-                            <Badge
-                              key={`track-${i}`}
-                              className="bg-purple-500/10 text-purple-400 border-purple-500/20 text-xs truncate max-w-[100px] cursor-pointer hover:bg-purple-500/20"
-                              title={`Click to filter by ${tn}`}
-                              onClick={() => setQ(tn)}
-                            >
-                              🚚 {tn.length > 10 ? tn.slice(0, 10) + '...' : tn}
-                            </Badge>
-                          ))}
-                          {(doc.extracted.asins || []).slice(0, 1).map((asin, i) => (
-                            <Badge
-                              key={`asin-${i}`}
-                              className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-xs cursor-pointer hover:bg-emerald-500/20"
-                              title={`Click to show all docs for ASIN ${asin}`}
-                              onClick={() => setQ(asin)}
-                            >
-                              ASIN: {asin}
-                            </Badge>
-                          ))}
-                          {/* Show count if more items */}
-                          {((doc.extracted.order_ids?.length || 0) + (doc.extracted.tracking_numbers?.length || 0) + (doc.extracted.asins?.length || 0)) > 4 && (
-                            <Badge className="bg-gray-100 text-[#36454F] border-gray-200 text-xs">
-                              +{(doc.extracted.order_ids?.length || 0) + (doc.extracted.tracking_numbers?.length || 0) + (doc.extracted.asins?.length || 0) - 4} more
-                            </Badge>
-                          )}
-                        </div>
-                      )}
-                      {!doc.extracted && <span className="text-[#36454F] text-xs">—</span>}
-                    </TableCell>
+
                     <TableCell>
                       <div className="flex flex-wrap gap-1 items-center">
                         {(doc.matchedClaims || []).map(id => (
@@ -1419,16 +1366,7 @@ export default function EvidenceLocker() {
                         </p>
                       )}
                     </TableCell>
-                    <TableCell className="whitespace-nowrap">
-                      {getMatchConfidenceBadge(doc.match_confidence)}
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap">
-                      {getMatchStatusBadge(doc.match_confidence)}
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap">
-                      <span className="font-medium text-[#36454F]">{doc.linkedSKUs}</span>
-                      {doc.linkedSKUs > 0 && <span className="text-sm text-[#36454F] ml-1">SKUs</span>}
-                    </TableCell>
+
                     <TableCell className="whitespace-nowrap">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
