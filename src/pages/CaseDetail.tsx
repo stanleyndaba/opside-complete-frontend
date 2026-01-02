@@ -751,11 +751,11 @@ export default function CaseDetail() {
                       )}
                     </div>
 
-                    {/* Key Details Grid */}
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="bg-gray-50 rounded-lg p-2.5">
-                        <div className="text-[10px] font-medium text-gray-500 uppercase tracking-wide mb-0.5">Expected Payout</div>
-                        <div className="text-xs font-medium text-gray-900">
+                    {/* Key Details Grid - Institutional Style */}
+                    <div className="grid grid-cols-2 gap-px bg-gray-200 border border-gray-200">
+                      <div className="bg-white p-3">
+                        <div className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] mb-1">Expected Payout</div>
+                        <div className="text-sm font-mono text-gray-900 tabular-nums">
                           {effectiveCase.expectedPayoutDate ? new Date(effectiveCase.expectedPayoutDate).toLocaleDateString('en-US', {
                             month: 'short',
                             day: 'numeric',
@@ -763,68 +763,68 @@ export default function CaseDetail() {
                           }) : '—'}
                         </div>
                       </div>
-                      <div className="bg-gray-50 rounded-lg p-2.5">
-                        <div className="text-[10px] font-medium text-gray-500 uppercase tracking-wide mb-0.5">Confidence</div>
-                        <div className="text-xs font-medium text-gray-900">{derivedConfidencePct}%</div>
+                      <div className="bg-white p-3">
+                        <div className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] mb-1">Confidence</div>
+                        <div className="text-sm font-mono text-gray-900 tabular-nums">{derivedConfidencePct}%</div>
                       </div>
-                      <div className="bg-gray-50 rounded-lg p-2.5">
-                        <div className="text-[10px] font-medium text-gray-500 uppercase tracking-wide mb-0.5">Units Lost</div>
-                        <div className="text-xs font-medium text-gray-900">{effectiveCase.unitsLost ?? '—'}</div>
+                      <div className="bg-white p-3">
+                        <div className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] mb-1">Units Lost</div>
+                        <div className="text-sm font-mono text-gray-900 tabular-nums">{effectiveCase.unitsLost ?? '—'}</div>
                       </div>
-                      <div className="bg-gray-50 rounded-lg p-2.5">
-                        <div className="text-[10px] font-medium text-gray-500 uppercase tracking-wide mb-0.5">Unit Cost</div>
-                        <div className="text-xs font-medium text-gray-900">
+                      <div className="bg-white p-3">
+                        <div className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] mb-1">Unit Cost</div>
+                        <div className="text-sm font-mono text-gray-900 tabular-nums">
                           {typeof effectiveCase.unitCost === 'number' ? `$${effectiveCase.unitCost.toFixed(2)}` : '—'}
                         </div>
                       </div>
                     </div>
 
-                    {/* Product Info */}
-                    <div className="border border-gray-100 rounded-lg p-3 space-y-2">
-                      <div className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Product Details</div>
+                    {/* Product Info - Institutional Style */}
+                    <div className="border border-gray-200 p-3 space-y-2">
+                      <div className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] border-b border-gray-100 pb-1">Product Details</div>
                       <div>
                         <div className="text-xs font-medium text-gray-900">{effectiveCase.productName || effectiveCase.title || effectiveCase.anomaly_type || 'Unknown Product'}</div>
-                        <div className="text-[10px] text-gray-500">SKU: {effectiveCase.sku || effectiveCase.evidence?.sku || 'N/A'}</div>
+                        <div className="text-[10px] font-mono text-gray-500 mt-1">SKU: {effectiveCase.sku || effectiveCase.evidence?.sku || '—'}</div>
                         {(effectiveCase.asin || effectiveCase.evidence?.asin) && (
-                          <div className="text-[10px] text-gray-500">ASIN: {effectiveCase.asin || effectiveCase.evidence?.asin}</div>
+                          <div className="text-[10px] font-mono text-gray-500">ASIN: {effectiveCase.asin || effectiveCase.evidence?.asin}</div>
                         )}
                       </div>
-                      <div className="flex items-center gap-2 text-[10px] text-gray-600">
-                        <MapPin className="h-4 w-4 text-gray-400" />
+                      <div className="flex items-center gap-2 text-[10px] font-mono text-gray-500 pt-1 border-t border-gray-100">
+                        <MapPin className="h-3 w-3 text-gray-400" />
                         {effectiveCase.facility || effectiveCase.evidence?.fulfillment_center || '—'}
                       </div>
                     </div>
 
-                    {/* Evidence Status */}
-                    <div className="border border-gray-100 rounded-lg p-3 space-y-2">
-                      <div className="flex items-center justify-between">
-                        <div className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Evidence</div>
-                        <Badge variant="outline" className="text-xs border-gray-200">{matchedCount} docs</Badge>
+                    {/* Evidence Status - Institutional Style */}
+                    <div className="border border-gray-200 p-3 space-y-2">
+                      <div className="flex items-center justify-between border-b border-gray-100 pb-1">
+                        <div className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em]">Evidence</div>
+                        <span className="text-[10px] font-mono text-gray-600">{matchedCount} docs</span>
                       </div>
 
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-gray-500">Status:</span>
-                        <Badge variant="outline" className={cn(
-                          "text-xs",
-                          derivedEvidence === 'Ready' && "bg-green-50 text-green-700 border-green-200",
-                          derivedEvidence === 'Collecting' && "bg-blue-50 text-blue-700 border-blue-200",
-                          derivedEvidence === 'Needs Docs' && "bg-amber-50 text-amber-700 border-amber-200",
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-light text-gray-400">Status</span>
+                        <span className={cn(
+                          "text-xs font-mono",
+                          derivedEvidence === 'Ready' && "text-gray-900",
+                          derivedEvidence === 'Collecting' && "text-gray-600",
+                          derivedEvidence === 'Needs Docs' && "text-amber-600",
                         )}>
                           {derivedEvidence}
-                        </Badge>
+                        </span>
                       </div>
 
                       {matchedDocs.length > 0 && (
-                        <div className="flex flex-wrap gap-2 pt-2">
+                        <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-100">
                           {matchedDocs.slice(0, 2).map((d: any) => (
-                            <Button key={d.id} variant="outline" size="sm" className="h-7 text-xs" onClick={() => window.open(`/documents/${encodeURIComponent(d.id)}`, '_blank')}>
+                            <button key={d.id} className="text-xs font-mono text-gray-500 hover:text-gray-900 hover:underline" onClick={() => window.open(`/documents/${encodeURIComponent(d.id)}`, '_blank')}>
                               {d.name || d.filename || d.id}
-                            </Button>
+                            </button>
                           ))}
                           {matchedDocs.length > 2 && (
-                            <Button variant="ghost" size="sm" className="h-7 text-xs text-gray-500" asChild>
-                              <Link to="/evidence-locker">+{matchedDocs.length - 2} more</Link>
-                            </Button>
+                            <Link to="/evidence-locker" className="text-xs text-gray-400 hover:text-gray-600">
+                              +{matchedDocs.length - 2} more
+                            </Link>
                           )}
                         </div>
                       )}
