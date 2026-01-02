@@ -14,6 +14,7 @@ import { AGENT_HIGHLIGHTS, HERO_METRICS, LANGUAGE_OPTIONS, SITE_META } from '@/c
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
+import heroImage from '@/assets/landingpp.png';
 
 const PadlockIcon: React.FC = () => (
   <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
@@ -544,7 +545,7 @@ const Index = () => {
               <div className="order-2 lg:order-2 relative">
                 <div className="relative rounded-2xl bg-gradient-to-b from-gray-50/50 to-white/50 p-2 shadow-2xl backdrop-blur-sm border border-gray-100/50 transform transition-transform duration-700 hover:scale-[1.01]">
                   <img
-                    src="/landingpp.png"
+                    src={heroImage}
                     alt="Opside Dashboard"
                     className="w-full h-auto rounded-xl shadow-sm border border-black/5"
                   />
