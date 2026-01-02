@@ -59,14 +59,14 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         try {
           sessionStorage.setItem('amazon_sandbox_state', stateParam);
           localStorage.setItem('amazon_sandbox_state', stateParam);
-        } catch {}
+        } catch { }
       }
 
       if (authUrl && authUrl.includes('/auth/amazon-sandbox')) {
         try {
           sessionStorage.setItem('amazon_sandbox_mode', 'true');
           localStorage.setItem('amazon_sandbox_mode', 'true');
-        } catch {}
+        } catch { }
       }
 
       if (authUrl) {
@@ -149,7 +149,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         if (response.data?.bypassed && response.data?.redirectUrl) {
           console.log('[AmazonConnect] ✅ Bypass successful! Backend found refresh token and validated it.');
           console.log('[AmazonConnect] Redirect URL:', response.data.redirectUrl);
-          
+
           // Handle bypass response according to Phase 1 requirements
           const data = response.data;
           if (data.sandboxMode && !data.connectionVerified) {
@@ -166,7 +166,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
               duration: 3000,
             });
           }
-          
+
           // Redirect to sync page to show the live dialogue logs
           window.location.href = '/sync';
           return;
@@ -198,7 +198,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
       }
     } catch (error: any) {
       console.error('[AmazonConnect] Use existing failed:', error);
-      
+
       // Provide more helpful error messages
       if (error?.message?.includes('timed out') || error?.message?.includes('sleeping')) {
         toast({
@@ -222,29 +222,29 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
 
   // Check if className includes w-full to make buttons full width
   const isFullWidth = className?.includes('w-full');
-  
+
   return (
-      <div className="flex flex-col gap-2">
-        <Button
-          onClick={handleUseExisting}
-          disabled={connecting}
-          className={cn(
-            isFullWidth ? 'w-full' : 'w-auto',
-            'justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-semibold shadow-lg transition-colors px-8',
-            connecting && usingExisting && 'opacity-80',
-            className
-          )}
-          size="lg"
-        >
-          {connecting && usingExisting ? (
-            <>
-              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-              Reconnecting...
-            </>
-          ) : (
-            'Sandbox Sign in'
-          )}
-        </Button>
-      </div>
+    <div className="flex flex-col gap-2">
+      <Button
+        onClick={handleUseExisting}
+        disabled={connecting}
+        className={cn(
+          isFullWidth ? 'w-full' : 'w-auto',
+          'justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-semibold shadow-lg transition-colors px-8',
+          connecting && usingExisting && 'opacity-80',
+          className
+        )}
+        size="lg"
+      >
+        {connecting && usingExisting ? (
+          <>
+            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+            Reconnecting...
+          </>
+        ) : (
+          'Start Recovery'
+        )}
+      </Button>
+    </div>
   );
 }

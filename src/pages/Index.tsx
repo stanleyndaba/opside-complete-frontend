@@ -552,7 +552,7 @@ const Index = () => {
                     <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-75"></span>
                   </span>
                 </span>
-                <div className="relative flex items-center gap-1.5 md:gap-3 text-xs md:text-sm font-medium text-gray-700">
+                <div className="relative flex items-center gap-1.5 md:gap-3 text-xs md:text-sm font-bold text-gray-700">
                   <span>Links seamlessly with</span>
                   <span className="inline-flex items-center gap-1.5 md:gap-3">
                     <span className="relative inline-flex h-5 w-5 md:h-7 md:w-7 items-center justify-center rounded-full bg-transparent">
@@ -594,7 +594,7 @@ const Index = () => {
               </div>
               <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-gray-900 text-left md:text-center">
                 FBA Reimbursements on{" "}
-                <span className="bg-gradient-to-r from-[#1f4037] to-[#99f2c8] bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-[#1f4037] to-[#10B981] bg-clip-text text-transparent">
                   Autopilot
                 </span>
               </h1>
