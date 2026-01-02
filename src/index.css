@@ -198,13 +198,21 @@
   }
 
   /* Override for code snippets - use programming fonts */
-  pre code,
+  /* IMPORTANT: This must be more specific than .platform * to work */
   pre,
-  code[class*="code"],
-  pre[class*="code"],
+  code,
+  pre code,
   pre span,
   pre code span,
-  code span {
+  code span,
+  code[class*="code"],
+  pre[class*="code"],
+  .platform pre,
+  .platform code,
+  .platform pre code,
+  .platform pre span,
+  [style*="font-family"] pre,
+  [style*="font-family"] code {
     font-family: 'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Consolas', 'Monaco', 'Menlo', 'Courier New', monospace !important;
   }
 
@@ -402,7 +410,8 @@
     font-size: 0.95rem;
   }
 
-  .platform * {
+  /* Apply Inter to all platform elements EXCEPT pre/code which should use monospace */
+  .platform *:not(pre):not(code):not(pre *) {
     font-family: 'Inter', system-ui, sans-serif !important;
   }
 
