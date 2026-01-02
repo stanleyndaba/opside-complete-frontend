@@ -554,30 +554,6 @@ const Index = () => {
                     className="w-full h-auto rounded-xl shadow-sm border border-black/5"
                   />
                 </div>
-                {/* Floating Card: Agent Activity */}
-                <div className="absolute -top-4 -right-4 md:top-4 md:-right-8 bg-white rounded-xl shadow-lg border border-gray-100 p-3 transform rotate-2 hover:rotate-0 transition-transform duration-300 hidden sm:block">
-                  <div className="flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center">
-                      <span className="text-emerald-600 text-xs font-bold">A3</span>
-                    </div>
-                    <div>
-                      <p className="text-xs font-semibold text-gray-800">Agent 3 Active</p>
-                      <p className="text-xs text-emerald-600">+$2,340 detected</p>
-                    </div>
-                  </div>
-                </div>
-                {/* Floating Card: Recovery Notification */}
-                <div className="absolute -bottom-4 -left-4 md:bottom-8 md:-left-8 bg-white rounded-xl shadow-lg border border-gray-100 p-3 transform -rotate-2 hover:rotate-0 transition-transform duration-300 hidden sm:block">
-                  <div className="flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-full bg-sky-100 flex items-center justify-center">
-                      <span className="text-sky-600 text-lg">💰</span>
-                    </div>
-                    <div>
-                      <p className="text-xs font-semibold text-gray-800">Recovery Complete</p>
-                      <p className="text-sm font-bold text-emerald-600">+$5,137.46</p>
-                    </div>
-                  </div>
-                </div>
                 {/* Decorative blob behind image */}
                 <div className="absolute -inset-4 bg-gradient-to-r from-emerald-100/30 to-sky-100/30 blur-3xl -z-10 rounded-full opacity-70" />
               </div>
@@ -626,9 +602,9 @@ const Index = () => {
                     <AmazonConnect className="w-full sm:w-auto min-w-[200px]" />
                     <Link
                       to="/contact"
-                      className="w-full sm:w-auto min-w-[160px] h-11 rounded-lg border-2 border-gray-300 bg-white text-gray-700 font-semibold inline-flex items-center justify-center hover:border-gray-400 hover:bg-gray-50 transition-colors"
+                      className="w-full sm:w-auto min-w-[160px] h-11 rounded-lg bg-transparent text-gray-700 font-semibold inline-flex items-center justify-center gap-2 hover:text-gray-900 transition-colors"
                     >
-                      Talk to Sales
+                      Talk to Sales <span aria-hidden="true">→</span>
                     </Link>
                   </div>
                   {/* Trust text */}
