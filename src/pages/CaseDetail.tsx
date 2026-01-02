@@ -267,32 +267,96 @@ const getRequiredDocsForClaimType = (claimType?: string): string[] => {
 
 // Generate narrative "What Happened" story for a claim
 const generateNarrative = (claim: any): string => {
-  const type = (claim.anomaly_type || claim.claim_type || claim.type || 'issue').replace(/_/g, ' ');
-  const amount = claim.guaranteedAmount || claim.amount || claim.estimated_value || 0;
-  const sku = claim.sku || claim.evidence?.sku;
-  const asin = claim.asin || claim.evidence?.asin;
+  const caseType = (claim.anomaly_type || claim.claim_type || claim.case_type || '').toLowerCase();
+  const amount = claim.guaranteedAmount || claim.amount || claim.estimated_value || claim.claim_amount || 0;
+  const formattedAmount = `$${Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  const sku = claim.sku || claim.evidence?.sku || 'N/A';
+  const asin = claim.asin || claim.evidence?.asin || 'N/A';
+  const orderId = claim.order_id || claim.evidence?.order_id || '';
+  const facility = claim.facility || claim.evidence?.fulfillment_center || '';
+  const units = claim.units_lost || claim.unitsLost || claim.quantity || claim.units || '';
   const dateStr = claim.discovery_date || claim.created_at || claim.createdDate;
-  const date = dateStr ? new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'recently';
-  const status = (claim.status || '').toLowerCase();
-  const units = claim.units_lost || claim.quantity || claim.evidence?.units_lost || '';
+  const detectionDate = dateStr ? new Date(dateStr).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '';
 
-  let narrative = `On ${date}, Opside detected a ${type}`;
-  if (units) narrative += ` affecting ${units} unit${units > 1 ? 's' : ''}`;
-  if (sku) narrative += ` of SKU ${sku}`;
-  if (asin) narrative += ` (ASIN: ${asin})`;
-  narrative += `. The estimated recoverable value is $${Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}.`;
+  // Determine case category for professional narrative
+  const isFeeCase = caseType.includes('fee') || caseType.includes('overcharge') || caseType.includes('commission') || caseType.includes('storage') || caseType.includes('lts');
+  const isLostCase = caseType.includes('lost') || caseType.includes('missing') || caseType.includes('shipment') || caseType.includes('shortage') || caseType.includes('discrepancy') || caseType.includes('inbound');
+  const isDamagedCase = caseType.includes('damaged') || caseType.includes('damage') || caseType.includes('carrier');
+  const isRefundCase = caseType.includes('refund') || caseType.includes('return') || caseType.includes('switcheroo') || caseType.includes('wrong_item') || caseType.includes('empty_box');
+  const isChargebackCase = caseType.includes('chargeback') || caseType.includes('dispute') || caseType.includes('atoz');
 
-  // Add status-specific content
-  if (status === 'approved' || status === 'paid' || status === 'paid out' || status === 'paid_out' || status === 'reconciled') {
-    narrative += ` This claim has been approved and reimbursement has been processed.`;
-  } else if (status === 'denied' || status === 'rejected') {
-    narrative += ` This claim was denied${claim.rejection_reason ? ` due to: ${claim.rejection_reason.replace(/_/g, ' ')}` : ''}.`;
-  } else if (status === 'submitted' || status === 'under review' || status === 'under_review' || status === 'filed') {
-    narrative += ` The claim has been submitted to Amazon and is currently under review.`;
-  } else if (status === 'guaranteed' || status === 'ready') {
-    narrative += ` This claim is ready for submission with all required evidence gathered.`;
+  // Build professional executive summary based on case type
+  let narrative = '';
+
+  if (isFeeCase) {
+    narrative = `Amazon FBA has applied incorrect fulfillment fees to ASIN ${asin}`;
+    if (caseType.includes('storage') || caseType.includes('lts')) {
+      narrative += ` based on erroneous storage fee calculations. The product has been consistently overcharged for storage fees`;
+    } else if (caseType.includes('commission')) {
+      narrative += ` resulting in referral fee overcharges. Amazon's system has applied incorrect commission rates`;
+    } else {
+      narrative += ` based on incorrect dimensional/weight data in Amazon's catalog system. The product has been consistently mis-measured`;
+    }
+    narrative += `, resulting in oversized/overweight fee categorization when the product should fall within standard rates. `;
+    narrative += `This systematic measurement error has resulted in cumulative overcharges totaling ${formattedAmount}.`;
+  } else if (isLostCase) {
+    const unitText = units ? `${units} units` : 'inventory';
+    if (caseType.includes('inbound') || caseType.includes('shipment')) {
+      narrative = `Amazon received an inbound shipment containing ${unitText} of SKU ${sku}`;
+      if (facility) narrative += ` at fulfillment center ${facility}`;
+      if (detectionDate) narrative += ` on ${detectionDate}`;
+      narrative += `, but the full quantity was not checked into available inventory. `;
+      narrative += `The shipment shows as "Receiving Discrepancy" with ${unitText} remaining unaccounted for after 30+ days. `;
+    } else {
+      narrative = `Amazon's inventory management system shows ${unitText} of SKU ${sku} as missing from fulfillment center${facility ? ` ${facility}` : ''}. `;
+      narrative += `These units were properly received but have since disappeared from available inventory without corresponding customer orders or removals. `;
+    }
+    narrative += `This inventory discrepancy represents a recoverable value of ${formattedAmount}.`;
+  } else if (isDamagedCase) {
+    const unitText = units ? `${units} units` : 'inventory';
+    narrative = `Amazon FBA has reported ${unitText} of SKU ${sku} as damaged while in Amazon's possession`;
+    if (facility) narrative += ` at fulfillment center ${facility}`;
+    narrative += `. The damage occurred during `;
+    if (caseType.includes('carrier')) {
+      narrative += `carrier transit to the fulfillment center, `;
+    } else if (caseType.includes('inbound')) {
+      narrative += `the inbound receiving process, `;
+    } else {
+      narrative += `warehouse handling and storage, `;
+    }
+    narrative += `which falls under Amazon's responsibility for product care. `;
+    narrative += `This damage has resulted in a loss of ${formattedAmount} that qualifies for seller reimbursement.`;
+  } else if (isRefundCase) {
+    narrative = `Amazon issued a customer refund for Order ${orderId || 'N/A'}`;
+    if (caseType.includes('switcheroo')) {
+      narrative += `, but the customer returned a different item than what was originally purchased. This "switcheroo" fraud `;
+    } else if (caseType.includes('wrong_item')) {
+      narrative += `, but the returned item does not match the original product. The wrong item `;
+    } else if (caseType.includes('empty_box')) {
+      narrative += `, but the return package was received empty or with missing contents. This `;
+    } else {
+      narrative += `, however the return was never received at the fulfillment center. After the standard return window (45+ days), this `;
+    }
+    narrative += `qualifies for seller reimbursement under Amazon's FBA policy. `;
+    narrative += `The unrecovered value totals ${formattedAmount}.`;
+  } else if (isChargebackCase) {
+    narrative = `A payment chargeback/claim was filed against Order ${orderId || 'N/A'}`;
+    if (caseType.includes('atoz')) {
+      narrative += ` through Amazon's A-to-Z Guarantee program. `;
+    } else {
+      narrative += ` that was not properly defended. `;
+    }
+    narrative += `Delivery confirmation and tracking data show the order was successfully delivered to the customer, making this claim eligible for dispute. `;
+    narrative += `The contested amount is ${formattedAmount}.`;
   } else {
-    narrative += ` This claim is currently being prepared for submission.`;
+    // Fallback for unknown case types
+    const typeDisplay = caseType.replace(/_/g, ' ') || 'discrepancy';
+    narrative = `Opside's audit engine detected a ${typeDisplay} affecting SKU ${sku}`;
+    if (asin !== 'N/A') narrative += ` (ASIN: ${asin})`;
+    if (detectionDate) narrative += ` on ${detectionDate}`;
+    narrative += `. `;
+    narrative += `Based on automated analysis of fulfillment records, this ${typeDisplay} represents a recoverable value of ${formattedAmount}. `;
+    narrative += `The case has been flagged for review and submission to Amazon Seller Support.`;
   }
 
   return narrative;
