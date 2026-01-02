@@ -2271,7 +2271,7 @@ export default function Recoveries() {
                   </div>
 
                   {/* Data Table */}
-                  <Card className="bg-gray-50 border-gray-200 text-gray-900 w-full overflow-hidden shadow-sm rounded-xl">
+                  <Card className="bg-white border-slate-200 text-slate-900 w-full overflow-hidden shadow-sm rounded-none">
                     <CardContent className="p-0 w-full">
                       {loading && (
                         <div className="p-8 text-center">
@@ -2306,22 +2306,22 @@ export default function Recoveries() {
                         >
                           <Table style={{ minWidth: '1600px', width: 'max-content' }}>
                             <TableHeader>
-                              <TableRow className="border-gray-200 bg-gray-50">
+                              <TableRow className="border-slate-200 bg-slate-100">
                                 <TableHead className="py-2">
                                   <Checkbox checked={selectedIds.size > 0 && selectedIds.size === filteredClaims.length} onCheckedChange={(checked) => {
                                     if (checked) setSelectedIds(new Set(filteredClaims.map(c => c.id)));
                                     else setSelectedIds(new Set());
                                   }} />
                                 </TableHead>
-                                <TableHead className="text-[10px] font-medium text-gray-900 uppercase tracking-[0.15em] py-2">Claim ID</TableHead>
-                                <TableHead className="text-[10px] font-medium text-gray-900 uppercase tracking-[0.15em] py-2">Created</TableHead>
-                                <TableHead className="text-[10px] font-medium text-gray-900 uppercase tracking-[0.15em] py-2">Details</TableHead>
-                                <TableHead className="text-[10px] font-medium text-gray-900 uppercase tracking-[0.15em] py-2">Status</TableHead>
-                                <TableHead className="text-[10px] font-medium text-gray-900 uppercase tracking-[0.15em] py-2">Duplicate Warning</TableHead>
-                                <TableHead className="text-[10px] font-medium text-gray-900 uppercase tracking-[0.15em] py-2">Days Remaining</TableHead>
-                                <TableHead className="text-[10px] font-medium text-gray-900 uppercase tracking-[0.15em] py-2">Evidence</TableHead>
-                                <TableHead className="text-[10px] font-medium text-gray-900 uppercase tracking-[0.15em] py-2">Est. Value</TableHead>
-                                <TableHead className="text-[10px] font-medium text-gray-900 uppercase tracking-[0.15em] py-2">Actions</TableHead>
+                                <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Claim ID</TableHead>
+                                <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Created</TableHead>
+                                <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Details</TableHead>
+                                <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Status</TableHead>
+                                <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Duplicate</TableHead>
+                                <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Days Left</TableHead>
+                                <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Evidence</TableHead>
+                                <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Est. Value</TableHead>
+                                <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Actions</TableHead>
                               </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -2340,9 +2340,9 @@ export default function Recoveries() {
                                   <TableRow
                                     key={claim.id}
                                     className={cn(
-                                      "cursor-pointer hover:bg-gray-50 border-gray-200",
-                                      isCritical && "bg-red-50/50 border-l-4 border-l-red-500",
-                                      isUrgent && !isCritical && "bg-amber-50/50 border-l-4 border-l-amber-500"
+                                      "cursor-pointer hover:bg-slate-50 border-slate-200",
+                                      isCritical && "bg-red-50/50 border-l-4 border-l-red-600",
+                                      isUrgent && !isCritical && "bg-amber-50/50 border-l-4 border-l-amber-600"
                                     )}
                                   >
                                     <TableCell className="py-2">
@@ -2358,25 +2358,25 @@ export default function Recoveries() {
                                     <TableCell className="text-xs py-2">
                                       <Tooltip>
                                         <TooltipTrigger asChild>
-                                          <Button asChild variant="link" className="p-0 h-auto text-xs text-[#36454F] hover:text-[#36454F] font-medium">
+                                          <Button asChild variant="link" className="p-0 h-auto text-xs text-slate-800 hover:text-slate-900 font-mono font-medium">
                                             <Link to={`/recoveries/${claim.id}`} state={{ claim }}>
-                                              {claim.claim_number || claim.id.slice(0, 8)}
+                                              {claim.claim_number || claim.id.slice(0, 12)}
                                             </Link>
                                           </Button>
                                         </TooltipTrigger>
-                                        <TooltipContent side="top" className="bg-black text-white text-xs font-mono">
+                                        <TooltipContent side="top" className="bg-slate-900 text-white text-xs font-mono rounded-none border-slate-700">
                                           {claim.id}
                                         </TooltipContent>
                                       </Tooltip>
                                     </TableCell>
                                     {/* Created */}
-                                    <TableCell className="text-xs text-gray-700 py-2">{format(new Date(claim.created || claim.discovery_date || claim.created_at), 'MMM dd, yyyy')}</TableCell>
+                                    <TableCell className="text-xs text-slate-700 py-2 font-mono">{format(new Date(claim.created || claim.discovery_date || claim.created_at), 'MMM dd, yyyy')}</TableCell>
                                     {/* Details */}
                                     <TableCell className="max-w-xs py-2">
-                                      <div className="truncate text-xs text-gray-900" title={claim.details}>
+                                      <div className="truncate text-xs text-slate-800" title={claim.details}>
                                         {claim.details}
                                       </div>
-                                      <div className="text-[10px] text-gray-500 mt-0.5">
+                                      <div className="text-[10px] text-slate-500 mt-0.5 font-mono">
                                         SKU: {claim.sku || 'N/A'} • ASIN: {claim.asin || 'N/A'}
                                       </div>
                                     </TableCell>
@@ -2390,7 +2390,7 @@ export default function Recoveries() {
                                     <TableCell className="py-2">
                                       {(() => {
                                         const doubleDipWarning = checkDoubleDip(claim, rankedClaims);
-                                        return doubleDipWarning ? <DoubleDipBadge warning={doubleDipWarning} /> : <span className="text-xs text-gray-400">—</span>;
+                                        return doubleDipWarning ? <DoubleDipBadge warning={doubleDipWarning} /> : <span className="text-xs text-slate-400 font-mono">—</span>;
                                       })()}
                                     </TableCell>
                                     {/* Days Remaining */}
