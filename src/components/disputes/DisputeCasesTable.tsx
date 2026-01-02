@@ -4,9 +4,10 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { api } from '@/lib/api';
 import { Link } from 'react-router-dom';
-import { Eye, RefreshCw, CheckCircle2, XCircle, Clock, AlertCircle, ExternalLink } from 'lucide-react';
+import { Eye, RefreshCw, CheckCircle2, XCircle, Clock, AlertCircle, ExternalLink, Send, RotateCcw, AlertTriangle, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
@@ -22,6 +23,8 @@ interface DisputeCase {
   created_at: string;
   amazon_case_id?: string;
   retry_count?: number;
+  filing_error?: string;
+  last_filing_attempt?: string;
 }
 
 export function DisputeCasesTable() {
@@ -29,6 +32,7 @@ export function DisputeCasesTable() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [filingInProgress, setFilingInProgress] = useState<Set<string>>(new Set());
   const { toast } = useToast();
 
   const fetchCases = async (status?: string) => {
@@ -47,7 +51,6 @@ export function DisputeCasesTable() {
         setCases(response.data.cases);
         console.log('[DisputeCasesTable] Loaded', response.data.cases.length, 'cases');
       } else if (response.ok && Array.isArray(response.data)) {
-        // Handle case where data is an array directly
         setCases(response.data);
         console.log('[DisputeCasesTable] Loaded', response.data.length, 'cases (array format)');
       } else {
@@ -61,6 +64,88 @@ export function DisputeCasesTable() {
       setCases([]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Agent 7: File Now - Trigger immediate filing
+  const handleFileNow = async (caseItem: DisputeCase) => {
+    const caseId = caseItem.id;
+    setFilingInProgress(prev => new Set(prev).add(caseId));
+
+    try {
+      toast({
+        title: "FILING INITIATED",
+        description: `Case ${caseItem.case_number || caseId.substring(0, 8)} queued for immediate submission.`,
+      });
+
+      const response = await api.post('/api/disputes/file-now', {
+        dispute_id: caseId,
+        claim_id: caseItem.claim_id
+      });
+
+      if (response.ok) {
+        toast({
+          title: "SUBMISSION SUCCESSFUL",
+          description: `Case filed with Amazon. Case ID: ${response.data?.amazon_case_id || 'Pending'}`,
+        });
+        // Refresh to show updated status
+        await fetchCases(statusFilter !== 'all' ? statusFilter : undefined);
+      } else {
+        throw new Error(response.error || 'Filing failed');
+      }
+    } catch (err: any) {
+      toast({
+        variant: "destructive",
+        title: "FILING FAILED",
+        description: err.message || 'Unable to submit dispute to Amazon',
+      });
+    } finally {
+      setFilingInProgress(prev => {
+        const next = new Set(prev);
+        next.delete(caseId);
+        return next;
+      });
+    }
+  };
+
+  // Agent 7: Retry Filing - Retry failed cases with stronger evidence
+  const handleRetryFiling = async (caseItem: DisputeCase) => {
+    const caseId = caseItem.id;
+    setFilingInProgress(prev => new Set(prev).add(caseId));
+
+    try {
+      toast({
+        title: "RETRY INITIATED",
+        description: `Collecting stronger evidence for case ${caseItem.case_number || caseId.substring(0, 8)}...`,
+      });
+
+      const response = await api.post('/api/disputes/retry-filing', {
+        dispute_id: caseId,
+        claim_id: caseItem.claim_id,
+        collect_stronger_evidence: true
+      });
+
+      if (response.ok) {
+        toast({
+          title: "RETRY QUEUED",
+          description: `Case will be resubmitted with enhanced evidence package.`,
+        });
+        await fetchCases(statusFilter !== 'all' ? statusFilter : undefined);
+      } else {
+        throw new Error(response.error || 'Retry failed');
+      }
+    } catch (err: any) {
+      toast({
+        variant: "destructive",
+        title: "RETRY FAILED",
+        description: err.message || 'Unable to queue retry',
+      });
+    } finally {
+      setFilingInProgress(prev => {
+        const next = new Set(prev);
+        next.delete(caseId);
+        return next;
+      });
     }
   };
 
@@ -83,20 +168,34 @@ export function DisputeCasesTable() {
     }
   };
 
-  const getFilingStatusBadge = (filingStatus?: string) => {
+  const getFilingStatusBadge = (filingStatus?: string, filingError?: string) => {
     if (!filingStatus) return null;
 
     const statusLower = filingStatus.toLowerCase();
-    if (statusLower === 'filed') {
-      return <span className="text-[10px] px-1.5 py-0.5 bg-gray-50 text-gray-600 border border-gray-200 rounded">Filed</span>;
+    if (statusLower === 'filed' || statusLower === 'submitted') {
+      return <span className="text-[10px] px-1.5 py-0.5 bg-slate-800 text-white border border-slate-700 rounded-none font-mono uppercase tracking-wide">FILED</span>;
     } else if (statusLower === 'filing') {
-      return <span className="text-[10px] px-1.5 py-0.5 bg-gray-50 text-gray-500 border border-gray-200 rounded">Filing...</span>;
+      return <span className="text-[10px] px-1.5 py-0.5 bg-slate-600 text-white border border-slate-500 rounded-none font-mono uppercase tracking-wide">FILING...</span>;
     } else if (statusLower === 'retrying') {
-      return <span className="text-[10px] px-1.5 py-0.5 bg-gray-50 text-gray-500 border border-gray-200 rounded">Retrying</span>;
+      return <span className="text-[10px] px-1.5 py-0.5 bg-amber-800 text-white border border-amber-700 rounded-none font-mono uppercase tracking-wide">RETRYING</span>;
     } else if (statusLower === 'failed') {
-      return <span className="text-[10px] px-1.5 py-0.5 bg-gray-50 text-gray-500 border border-gray-200 rounded">Failed</span>;
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="text-[10px] px-1.5 py-0.5 bg-red-900 text-white border border-red-800 rounded-none font-mono uppercase tracking-wide cursor-help flex items-center gap-1">
+                <AlertTriangle className="w-3 h-3" />
+                FAILED
+              </span>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="max-w-[300px] bg-slate-900 text-white border-slate-700 rounded-none">
+              <p className="text-xs font-mono">{filingError || 'Unknown error - check logs'}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      );
     } else {
-      return <span className="text-[10px] px-1.5 py-0.5 bg-gray-50 text-gray-500 border border-gray-200 rounded">Pending</span>;
+      return <span className="text-[10px] px-1.5 py-0.5 bg-slate-500 text-white border border-slate-400 rounded-none font-mono uppercase tracking-wide">PENDING</span>;
     }
   };
 
@@ -105,6 +204,64 @@ export function DisputeCasesTable() {
       style: 'currency',
       currency
     }).format(amount);
+  };
+
+  // Render filing action buttons based on status
+  const renderFilingActions = (caseItem: DisputeCase) => {
+    const filingStatus = caseItem.filing_status?.toLowerCase();
+    const isProcessing = filingInProgress.has(caseItem.id);
+
+    // Case already filed or approved - no action needed
+    if (filingStatus === 'filed' || filingStatus === 'submitted' || filingStatus === 'approved') {
+      return null;
+    }
+
+    // Failed case - show Retry button
+    if (filingStatus === 'failed') {
+      return (
+        <Button
+          onClick={() => handleRetryFiling(caseItem)}
+          disabled={isProcessing}
+          size="sm"
+          className="h-7 px-2.5 bg-slate-800 hover:bg-slate-700 text-white border border-slate-600 rounded-none text-[10px] font-mono uppercase tracking-wide"
+        >
+          {isProcessing ? (
+            <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+          ) : (
+            <RotateCcw className="w-3 h-3 mr-1" />
+          )}
+          RETRY
+        </Button>
+      );
+    }
+
+    // Pending case - show File Now button
+    if (filingStatus === 'pending' || !filingStatus) {
+      return (
+        <Button
+          onClick={() => handleFileNow(caseItem)}
+          disabled={isProcessing}
+          size="sm"
+          className="h-7 px-2.5 bg-slate-900 hover:bg-slate-800 text-white border border-slate-700 rounded-none text-[10px] font-mono uppercase tracking-wide"
+        >
+          {isProcessing ? (
+            <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+          ) : (
+            <Send className="w-3 h-3 mr-1" />
+          )}
+          FILE NOW
+        </Button>
+      );
+    }
+
+    // Filing in progress
+    if (filingStatus === 'filing' || filingStatus === 'retrying') {
+      return (
+        <span className="text-[10px] text-slate-500 font-mono uppercase">PROCESSING...</span>
+      );
+    }
+
+    return null;
   };
 
   if (loading && cases.length === 0) {
@@ -136,130 +293,125 @@ export function DisputeCasesTable() {
   return (
     <div className="space-y-4">
       {/* Header with Filters - Pentagon Style */}
-      <div className="flex items-center justify-between bg-white border border-gray-200 rounded-sm px-4 py-3">
+      <div className="flex items-center justify-between bg-slate-50 border border-slate-200 rounded-none px-4 py-3">
         <div>
-          <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Dispute Cases</h3>
-          <p className="text-[10px] text-gray-500 mt-0.5">
-            {cases.length} {cases.length === 1 ? 'case' : 'cases'} found
+          <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-[0.15em]">DISPUTE CASES</h3>
+          <p className="text-[10px] text-slate-500 mt-0.5 font-mono">
+            {cases.length} {cases.length === 1 ? 'CASE' : 'CASES'} • AGENT 7 FILING SYSTEM
           </p>
         </div>
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-[140px] h-8 text-xs bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100">
-            <SelectValue placeholder="Filter by Status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all" className="text-xs">All Statuses</SelectItem>
-            <SelectItem value="pending" className="text-xs">Pending</SelectItem>
-            <SelectItem value="submitted" className="text-xs">Submitted</SelectItem>
-            <SelectItem value="in_progress" className="text-xs">In Progress</SelectItem>
-            <SelectItem value="approved" className="text-xs">Approved</SelectItem>
-            <SelectItem value="rejected" className="text-xs">Rejected</SelectItem>
-          </SelectContent>
-        </Select>
-        <Button
-          onClick={() => fetchCases(statusFilter !== 'all' ? statusFilter : undefined)}
-          variant="outline"
-          size="sm"
-          className="h-8 bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
-        >
-          <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
-          Refresh
-        </Button>
+        <div className="flex items-center gap-2">
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-[140px] h-8 text-xs bg-white text-slate-700 border-slate-300 hover:bg-slate-50 rounded-none">
+              <SelectValue placeholder="Filter by Status" />
+            </SelectTrigger>
+            <SelectContent className="rounded-none">
+              <SelectItem value="all" className="text-xs">All Statuses</SelectItem>
+              <SelectItem value="pending" className="text-xs">Pending</SelectItem>
+              <SelectItem value="submitted" className="text-xs">Submitted</SelectItem>
+              <SelectItem value="in_progress" className="text-xs">In Progress</SelectItem>
+              <SelectItem value="approved" className="text-xs">Approved</SelectItem>
+              <SelectItem value="rejected" className="text-xs">Rejected</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button
+            onClick={() => fetchCases(statusFilter !== 'all' ? statusFilter : undefined)}
+            variant="outline"
+            size="sm"
+            className="h-8 bg-white text-slate-700 border-slate-300 hover:bg-slate-100 rounded-none"
+          >
+            <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
+            REFRESH
+          </Button>
+        </div>
       </div>
 
       {/* Cases Table */}
-      <Card className="bg-white border-gray-200">
+      <Card className="bg-white border-slate-200 rounded-none">
         <CardContent className="p-0">
           {cases.length === 0 ? (
             <div className="p-8 text-center">
-              <AlertCircle className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-              <p className="text-sm text-gray-600 mb-2">No dispute cases found</p>
-              <p className="text-xs text-gray-500">
-                Cases will appear here after evidence matching and filing
+              <AlertCircle className="w-12 h-12 mx-auto text-slate-400 mb-4" />
+              <p className="text-sm text-slate-600 mb-2 uppercase tracking-wide">No dispute cases found</p>
+              <p className="text-xs text-slate-500 font-mono">
+                Cases will appear here after evidence matching
               </p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
-                  <TableRow className="border-gray-200 bg-gray-50">
-                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Case Number</TableHead>
-                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Claim ID</TableHead>
-                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Status</TableHead>
-                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Amount</TableHead>
-                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Amazon Case ID</TableHead>
-                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Retries</TableHead>
-                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Created</TableHead>
-                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Exp Payout</TableHead>
-                    <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Actions</TableHead>
+                  <TableRow className="border-slate-200 bg-slate-100">
+                    <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Case #</TableHead>
+                    <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Claim ID</TableHead>
+                    <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Status</TableHead>
+                    <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Filing Status</TableHead>
+                    <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Amount</TableHead>
+                    <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Amazon Case</TableHead>
+                    <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Retries</TableHead>
+                    <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {cases.map((caseItem) => (
-                    <TableRow key={caseItem.id || Math.random()} className="border-gray-200 hover:bg-gray-50">
+                    <TableRow key={caseItem.id || Math.random()} className="border-slate-200 hover:bg-slate-50">
                       <TableCell className="py-2">
-                        <span className="font-mono text-xs text-gray-900">{caseItem.case_number || '—'}</span>
+                        <span className="font-mono text-xs text-slate-900">{caseItem.case_number || '—'}</span>
                       </TableCell>
                       <TableCell className="py-2">
                         {caseItem.claim_id ? (
-                          <Button asChild variant="link" className="p-0 h-auto text-xs text-gray-900 hover:text-gray-900 font-mono">
+                          <Button asChild variant="link" className="p-0 h-auto text-xs text-slate-700 hover:text-slate-900 font-mono">
                             <Link to={`/recoveries/${caseItem.claim_id}`}>
                               {caseItem.claim_id.substring(0, 12)}...
                             </Link>
                           </Button>
                         ) : (
-                          <span className="text-xs text-gray-400">—</span>
+                          <span className="text-xs text-slate-400 font-mono">—</span>
                         )}
                       </TableCell>
                       <TableCell className="py-2">
                         {getStatusBadge(caseItem.status || 'unknown')}
                       </TableCell>
                       <TableCell className="py-2">
-                        <span className="text-xs font-semibold text-gray-900">
+                        {getFilingStatusBadge(caseItem.filing_status, caseItem.filing_error)}
+                      </TableCell>
+                      <TableCell className="py-2">
+                        <span className="text-xs font-bold text-slate-900 font-mono">
                           {formatCurrency(caseItem.amount || 0, caseItem.currency || 'USD')}
                         </span>
                       </TableCell>
                       <TableCell className="py-2">
                         {caseItem.amazon_case_id ? (
                           <div className="flex items-center gap-1.5">
-                            <span className="font-mono text-xs text-gray-700">{caseItem.amazon_case_id}</span>
+                            <span className="font-mono text-xs text-slate-700">{caseItem.amazon_case_id}</span>
                             <Button variant="ghost" size="sm" className="h-5 w-5 p-0">
                               <ExternalLink className="w-3 h-3" />
                             </Button>
                           </div>
                         ) : (
-                          <span className="text-xs text-gray-400">—</span>
+                          <span className="text-xs text-slate-400 font-mono">—</span>
                         )}
                       </TableCell>
                       <TableCell className="py-2">
                         {caseItem.retry_count && caseItem.retry_count > 0 ? (
-                          <span className="text-[10px] px-1.5 py-0.5 bg-gray-50 text-gray-500 border border-gray-200 rounded">
+                          <span className="text-[10px] px-1.5 py-0.5 bg-amber-100 text-amber-800 border border-amber-300 rounded-none font-mono">
                             {caseItem.retry_count}
                           </span>
                         ) : (
-                          <span className="text-xs text-gray-400">0</span>
+                          <span className="text-xs text-slate-400 font-mono">0</span>
                         )}
                       </TableCell>
                       <TableCell className="py-2">
-                        <span className="text-xs text-gray-600">
-                          {caseItem.created_at ? format(new Date(caseItem.created_at), 'MMM dd, yyyy') : '—'}
-                        </span>
-                      </TableCell>
-                      <TableCell className="py-2">
-                        <span className="text-xs text-gray-600">
-                          {(caseItem as any).expected_payout_date ? format(new Date((caseItem as any).expected_payout_date), 'MMM dd, yyyy') : '—'}
-                        </span>
-                      </TableCell>
-                      <TableCell className="py-2">
-                        {caseItem.claim_id ? (
-                          <Button asChild variant="ghost" size="sm">
-                            <Link to={`/recoveries/${caseItem.claim_id}`}>
-                              <Eye className="w-4 h-4" />
-                            </Link>
-                          </Button>
-                        ) : (
-                          <span className="text-xs text-gray-400">—</span>
-                        )}
+                        <div className="flex items-center gap-2">
+                          {renderFilingActions(caseItem)}
+                          {caseItem.claim_id && (
+                            <Button asChild variant="ghost" size="sm" className="h-7 w-7 p-0">
+                              <Link to={`/recoveries/${caseItem.claim_id}`}>
+                                <Eye className="w-4 h-4 text-slate-500" />
+                              </Link>
+                            </Button>
+                          )}
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -269,7 +421,7 @@ export function DisputeCasesTable() {
           )}
         </CardContent>
       </Card>
-    </div >
+    </div>
   );
 }
 
