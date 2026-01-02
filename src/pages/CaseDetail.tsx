@@ -928,49 +928,26 @@ export default function CaseDetail() {
                     )}
 
                     {/* Actions */}
-                    <div className="space-y-2 pt-2">
-                      <Button
-                        className="w-full bg-emerald-600 hover:bg-emerald-700"
-                        disabled={effectiveCase.status === 'Paid Out'}
-                        onClick={async () => {
-                          const res = await api.submitClaim(effectiveCase.id);
-                          if (res.ok) {
-                            setCaseData((prev: any) => ({ ...(prev || {}), status: 'Submitted', submissionStatus: 'submitted' }));
-                            toast({ title: 'Claim submitted to Amazon', description: 'We will update you with the Amazon Case ID shortly.' });
-                          } else {
-                            toast({ title: 'Submission failed', description: res.error || 'Please try again.' });
-                          }
-                        }}
-                      >
-                        Resolve Case
-                      </Button>
-
+                    <div className="space-y-3 pt-2">
+                      {/* Confidence-based status indicator */}
                       {derivedConfidencePct >= 85 && (
-                        <Button className="w-full bg-emerald-500 hover:bg-emerald-400 text-white" onClick={async () => {
-                          try {
-                            await recoveryApi.submitClaim(effectiveCase.id);
-                            toast({ title: 'Auto-submitted', description: `${effectiveCase.id} submitted automatically (high confidence).` });
-                            setCaseData((prev: any) => ({ ...(prev || {}), status: 'Submitted' }));
-                          } catch (e: any) {
-                            toast({ title: 'Auto-submit failed', description: e?.message || 'Please try again.' });
-                          }
-                        }}>
-                          Auto-submit (High Confidence)
-                        </Button>
+                        <div className="flex items-center gap-2 p-2 bg-emerald-50 rounded text-emerald-700 text-xs">
+                          <CheckCircle className="h-4 w-4" />
+                          Case auto-filed to Amazon
+                        </div>
                       )}
 
                       {derivedConfidencePct >= 60 && derivedConfidencePct < 85 && matchedCount > 0 && (
-                        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white" onClick={() => {
-                          toast({ title: 'Confirm invoice', description: 'Invoice confirmed and ready to submit.' });
-                          setCaseData((prev: any) => ({ ...(prev || {}), submissionStatus: 'submitted' }));
-                        }}>
-                          Confirm Invoice
-                        </Button>
+                        <div className="flex items-center gap-2 p-2 bg-blue-50 rounded text-blue-700 text-xs">
+                          <Clock className="h-4 w-4" />
+                          Awaiting seller review before filing
+                        </div>
                       )}
 
                       {derivedConfidencePct < 60 && (
-                        <div className="text-center py-2">
-                          <Badge variant="outline" className="border-amber-200 text-amber-600">Parked — needs more data</Badge>
+                        <div className="flex items-center gap-2 p-2 bg-amber-50 rounded text-amber-700 text-xs">
+                          <AlertCircle className="h-4 w-4" />
+                          Parked — needs more evidence
                         </div>
                       )}
 
@@ -1037,6 +1014,7 @@ export default function CaseDetail() {
                         );
                       })()}
 
+                      {/* Download Proof Document */}
                       <Button variant="outline" className="w-full text-gray-600 border-gray-200 hover:bg-gray-50" onClick={() => {
                         window.open(api.getRecoveryDocumentUrl(effectiveCase.id), '_blank');
                       }}>
@@ -1044,9 +1022,12 @@ export default function CaseDetail() {
                         Download Proof Document
                       </Button>
 
-                      <Button variant="ghost" className="w-full text-gray-500 hover:text-gray-700" asChild>
-                        <Link to="/evidence-locker">Open Evidence Locker</Link>
-                      </Button>
+                      {/* Subtle Evidence Locker link */}
+                      <div className="text-center pt-1">
+                        <Link to="/evidence-locker" className="text-xs text-gray-400 hover:text-gray-600 hover:underline">
+                          View Evidence Locker →
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </div>
