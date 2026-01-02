@@ -439,6 +439,12 @@ const Index = () => {
                   </div>
                 </DropdownMenuContent>
               </DropdownMenu>
+              <Link
+                to="/contact"
+                className="h-9 rounded-full border border-emerald-500 bg-transparent px-4 text-sm font-medium text-emerald-600 hover:bg-emerald-50 transition-colors inline-flex items-center"
+              >
+                Contact Sales
+              </Link>
               <Button
                 onClick={handleSignIn}
                 disabled={signingIn}
@@ -540,15 +546,45 @@ const Index = () => {
       <div className="relative z-10" style={{ background: 'white' }}>
         <main className="flex-1 relative z-10" style={{ background: 'white' }}>
           <section className="relative container mx-auto px-6 pt-24 md:pt-32 lg:pt-36 pb-12 lg:pb-16 overflow-hidden">
+            {/* Gradient mesh background */}
+            <div className="absolute inset-0 -z-10 overflow-hidden">
+              <div className="absolute -top-40 -right-40 w-[600px] h-[600px] bg-gradient-to-br from-emerald-100/60 via-teal-50/40 to-sky-100/50 rounded-full blur-3xl" />
+              <div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] bg-gradient-to-tr from-emerald-50/40 via-white to-teal-50/30 rounded-full blur-3xl" />
+            </div>
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-              {/* Left Column: Image */}
+              {/* Right Column: Product Visualization */}
               <div className="order-2 lg:order-2 relative">
+                {/* Main Dashboard Image */}
                 <div className="relative rounded-2xl bg-gradient-to-b from-gray-50/50 to-white/50 p-2 shadow-2xl backdrop-blur-sm border border-gray-100/50 transform transition-transform duration-700 hover:scale-[1.01]">
                   <img
                     src={heroImage}
                     alt="Opside Dashboard"
                     className="w-full h-auto rounded-xl shadow-sm border border-black/5"
                   />
+                </div>
+                {/* Floating Card: Agent Activity */}
+                <div className="absolute -top-4 -right-4 md:top-4 md:-right-8 bg-white rounded-xl shadow-lg border border-gray-100 p-3 transform rotate-2 hover:rotate-0 transition-transform duration-300 hidden sm:block">
+                  <div className="flex items-center gap-2">
+                    <div className="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center">
+                      <span className="text-emerald-600 text-xs font-bold">A3</span>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-gray-800">Agent 3 Active</p>
+                      <p className="text-xs text-emerald-600">+$2,340 detected</p>
+                    </div>
+                  </div>
+                </div>
+                {/* Floating Card: Recovery Notification */}
+                <div className="absolute -bottom-4 -left-4 md:bottom-8 md:-left-8 bg-white rounded-xl shadow-lg border border-gray-100 p-3 transform -rotate-2 hover:rotate-0 transition-transform duration-300 hidden sm:block">
+                  <div className="flex items-center gap-2">
+                    <div className="h-8 w-8 rounded-full bg-sky-100 flex items-center justify-center">
+                      <span className="text-sky-600 text-lg">💰</span>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-gray-800">Recovery Complete</p>
+                      <p className="text-sm font-bold text-emerald-600">+$5,137.46</p>
+                    </div>
+                  </div>
                 </div>
                 {/* Decorative blob behind image */}
                 <div className="absolute -inset-4 bg-gradient-to-r from-emerald-100/30 to-sky-100/30 blur-3xl -z-10 rounded-full opacity-70" />
@@ -596,15 +632,26 @@ const Index = () => {
                 <div className="w-full flex flex-col gap-6">
                   <div className="flex flex-col sm:flex-row gap-4">
                     <AmazonConnect className="w-full sm:w-auto min-w-[200px]" />
+                    <Link
+                      to="/contact"
+                      className="w-full sm:w-auto min-w-[160px] h-11 rounded-lg border-2 border-gray-300 bg-white text-gray-700 font-semibold inline-flex items-center justify-center hover:border-gray-400 hover:bg-gray-50 transition-colors"
+                    >
+                      Talk to Sales
+                    </Link>
                   </div>
-                  <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500">
-                    <div className="inline-flex items-center gap-2">
-                      <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500" aria-hidden="true" />
-                      <span>No credit cards</span>
+                  {/* Trust Badges */}
+                  <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
+                    <div className="inline-flex items-center gap-1.5 bg-gray-50 px-2.5 py-1 rounded-full border border-gray-100">
+                      <span className="text-emerald-600">🔒</span>
+                      <span>256-bit Encrypted</span>
                     </div>
-                    <div className="inline-flex items-center gap-2">
-                      <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500" aria-hidden="true" />
-                      <span>Cancel anytime</span>
+                    <div className="inline-flex items-center gap-1.5 bg-gray-50 px-2.5 py-1 rounded-full border border-gray-100">
+                      <span className="text-emerald-600">✓</span>
+                      <span>SOC 2 Compliant</span>
+                    </div>
+                    <div className="inline-flex items-center gap-1.5 bg-gray-50 px-2.5 py-1 rounded-full border border-gray-100">
+                      <span className="text-emerald-600">🛡️</span>
+                      <span>GDPR Ready</span>
                     </div>
                   </div>
                 </div>
@@ -631,6 +678,25 @@ const Index = () => {
               </div>
             </div>
           </section>
+          {/* Social Proof Bar */}
+          <div className="container mx-auto px-6 py-8 border-t border-gray-100">
+            <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16 text-sm text-gray-500">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl font-bold text-gray-900">500+</span>
+                <span>FBA Sellers Trust Opside</span>
+              </div>
+              <div className="hidden md:block h-8 w-px bg-gray-200" />
+              <div className="flex items-center gap-2">
+                <span className="text-2xl font-bold text-emerald-600">$2.3M+</span>
+                <span>Recovered for Sellers</span>
+              </div>
+              <div className="hidden md:block h-8 w-px bg-gray-200" />
+              <div className="flex items-center gap-2">
+                <span className="text-2xl font-bold text-gray-900">99.8%</span>
+                <span>Claim Accuracy</span>
+              </div>
+            </div>
+          </div>
         </main>
       </div>
       {/* End of background image area - white content starts here */}
