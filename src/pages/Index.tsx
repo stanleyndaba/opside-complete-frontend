@@ -635,23 +635,7 @@ const Index = () => {
       </div>
       {/* End of background image area - white content starts here */}
       <div className="relative z-10 w-full" style={{ background: 'white' }}>
-        <section className="relative isolate bg-white text-gray-900 w-full" style={{ width: '100%', maxWidth: '100%' }}>
-          <div className="container mx-auto px-6 pt-24 md:pt-32 pb-24 md:pb-28">
-            <div className="relative grid gap-12 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
-              <div className="relative space-y-8">
-                <h2 className="text-5xl md:text-6xl font-bold tracking-tight" style={{ color: '#a6a6a6' }}>
-                  Recover lost revenue on complete{' '}
-                  <span className="bg-gradient-to-r from-[#1f4037] to-[#99f2c8] bg-clip-text text-transparent">
-                    autopilot.
-                  </span>
-                </h2>
-                <p className="font-montserrat text-base md:text-lg text-black max-w-3xl leading-relaxed">
-                  Automated FBA Recovery with <span className="font-semibold text-emerald-500">{precisionCount.toFixed(2)}%</span> Precision. Opside hunts through your data and documents to perform a full scan of all major reimbursement types—lost inventory, bad returns, and fee errors. We build airtight claims automatically, so you never need a spreadsheet or VA again.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+
 
         <section className="bg-white py-24 w-full overflow-x-hidden" style={{ width: '100%', maxWidth: '100%' }}>
           <div className="container mx-auto px-6 w-full" style={{ width: '100%', maxWidth: '100%' }}>
