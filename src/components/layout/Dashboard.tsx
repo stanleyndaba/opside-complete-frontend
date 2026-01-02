@@ -509,7 +509,35 @@ export function Dashboard() {
       try {
         const payments = await recoveryApi.getRecoveries();
         if (!active) return;
-        updateUpcomingMetrics(Array.isArray(payments) ? payments : []);
+
+        if (Array.isArray(payments) && payments.length > 0) {
+          // Map to normalized format
+          const mapped = payments.map((c: any) => ({
+            guaranteedAmount: c.guaranteedAmount ?? c.amount ?? c.claim_amount ?? c.actual_payout_amount ?? c.estimated_value ?? 0,
+            expectedPayoutDate: c.expectedPayoutDate ?? c.expected_payout_date ?? null,
+          }));
+          updateUpcomingMetrics(mapped);
+        } else {
+          // Fallback: Try detection results if recoveryApi returns empty
+          console.log('[Dashboard] No data from recoveryApi, trying detectionApi fallback...');
+          try {
+            const detectionRes = await detectionApi.getDetectionResults({ limit: 100 });
+            if (!active) return;
+            if (detectionRes?.results && detectionRes.results.length > 0) {
+              console.log('[Dashboard] Fallback: Got', detectionRes.results.length, 'detection results');
+              const mapped = detectionRes.results.map((d: any) => ({
+                guaranteedAmount: parseFloat(String(d.estimated_value ?? d.amount ?? 0)) || 0,
+                expectedPayoutDate: null,
+              }));
+              updateUpcomingMetrics(mapped);
+            } else {
+              updateUpcomingMetrics([]);
+            }
+          } catch (detectionErr) {
+            console.warn('[Dashboard] Detection fallback also failed:', detectionErr);
+            updateUpcomingMetrics([]);
+          }
+        }
       } catch (error) {
         console.error('[Dashboard] Failed to fetch upcoming payments:', error);
       }
