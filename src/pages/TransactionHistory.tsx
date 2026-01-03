@@ -172,48 +172,74 @@ export default function TransactionHistory() {
     };
 
     // Export statement as PDF
-    const exportStatement = () => {
+    const exportStatement = async () => {
         const doc = new jsPDF();
         const pageWidth = doc.internal.pageSize.getWidth();
         const today = format(new Date(), 'MMMM dd, yyyy');
         const statementDate = format(new Date(), 'yyyy-MM-dd');
 
-        // Header
-        doc.setFontSize(20);
+        // Load logo image
+        let logoLoaded = false;
+        try {
+            const response = await fetch('/logoimagetwo.png');
+            const blob = await response.blob();
+            const reader = new FileReader();
+            await new Promise<void>((resolve) => {
+                reader.onloadend = () => {
+                    if (reader.result) {
+                        try {
+                            doc.addImage(reader.result as string, 'PNG', 14, 12, 25, 12);
+                            logoLoaded = true;
+                        } catch (e) {
+                            console.warn('Could not add logo to PDF:', e);
+                        }
+                    }
+                    resolve();
+                };
+                reader.readAsDataURL(blob);
+            });
+        } catch (e) {
+            console.warn('Could not load logo:', e);
+        }
+
+        // Header text (positioned after logo or at start if no logo)
+        const headerTextX = logoLoaded ? 42 : 14;
+        doc.setFontSize(16);
         doc.setFont('helvetica', 'bold');
-        doc.text('OPSIDE', 14, 20);
+        doc.setTextColor(0);
+        doc.text('OPSIDE', headerTextX, 18);
 
         doc.setFontSize(10);
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(100);
-        doc.text('Recovery Statement', 14, 28);
+        doc.text('Recovery Statement', headerTextX, 24);
 
         // Statement info (right side)
         doc.setTextColor(0);
         doc.setFontSize(10);
-        doc.text(`Statement Date: ${today}`, pageWidth - 14, 20, { align: 'right' });
-        doc.text(`Transactions: ${filteredTransactions.length}`, pageWidth - 14, 28, { align: 'right' });
+        doc.text(`Statement Date: ${today}`, pageWidth - 14, 15, { align: 'right' });
+        doc.text(`Transactions: ${filteredTransactions.length}`, pageWidth - 14, 22, { align: 'right' });
 
         // Summary section
         doc.setFontSize(11);
         doc.setFont('helvetica', 'bold');
-        doc.text('Summary', 14, 45);
+        doc.text('Summary', 14, 42);
 
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(10);
-        doc.text(`Total Recovered:`, 14, 55);
-        doc.text(`$${summary.totalRecovered.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, 70, 55);
+        doc.text(`Total Recovered:`, 14, 52);
+        doc.text(`$${summary.totalRecovered.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, 70, 52);
 
-        doc.text(`Platform Fee (20%):`, 14, 62);
-        doc.text(`-$${summary.totalFees.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, 70, 62);
+        doc.text(`Platform Fee (20%):`, 14, 59);
+        doc.text(`-$${summary.totalFees.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, 70, 59);
 
         doc.setFont('helvetica', 'bold');
-        doc.text(`Net Profit:`, 14, 72);
-        doc.text(`$${summary.netProfit.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, 70, 72);
+        doc.text(`Net Profit:`, 14, 69);
+        doc.text(`$${summary.netProfit.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, 70, 69);
 
         // Horizontal line
         doc.setDrawColor(200);
-        doc.line(14, 80, pageWidth - 14, 80);
+        doc.line(14, 77, pageWidth - 14, 77);
 
         // Transaction table
         const tableData = filteredTransactions.map(t => [
@@ -227,7 +253,7 @@ export default function TransactionHistory() {
         ]);
 
         autoTable(doc, {
-            startY: 88,
+            startY: 85,
             head: [['Date', 'Case ID', 'Reimb ID', 'Recovered', 'Fee', 'Net', 'Status']],
             body: tableData,
             theme: 'striped',
