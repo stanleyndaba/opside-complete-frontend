@@ -451,25 +451,27 @@ export default function IntegrationsHub() {
                               </div>
                             </div>
                             <div className="flex flex-col gap-2 md:flex-row md:items-center">
-                              <Badge variant="outline" className={cn('w-fit text-xs', connected ? 'border-emerald-500 text-emerald-700 font-semibold' : hasError() ? 'border-red-400 text-red-500' : 'border-gray-300 text-gray-600')}>
+                              <Badge variant="outline" className={cn('w-fit text-xs', connected ? 'border-gray-400 text-gray-700 font-medium' : hasError() ? 'border-gray-400 text-gray-600' : 'border-gray-300 text-gray-500')}>
                                 {connected ? 'Connected' : hasError() ? 'Error' : 'Not connected'}
                               </Badge>
                               <div className="flex gap-2">
-                                <Button
-                                  size="sm"
-                                  className={cn(connected ? 'bg-emerald-50 text-emerald-600 border border-emerald-100 hover:bg-emerald-100' : 'bg-emerald-500 hover:bg-emerald-400 text-white')}
-                                  onClick={() => handleConnectDocSource(p)}
-                                  disabled={providerLoading !== null || disconnectingProvider === p}
-                                >
-                                  {providerLoading === p ? (
-                                    <>
-                                      <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
-                                      Connecting…
-                                    </>
-                                  ) : (
-                                    connected ? 'Sync Now' : 'Connect'
-                                  )}
-                                </Button>
+                                {!connected && (
+                                  <Button
+                                    size="sm"
+                                    className="bg-gray-900 hover:bg-gray-800 text-white text-xs"
+                                    onClick={() => handleConnectDocSource(p)}
+                                    disabled={providerLoading !== null || disconnectingProvider === p}
+                                  >
+                                    {providerLoading === p ? (
+                                      <>
+                                        <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
+                                        Connecting
+                                      </>
+                                    ) : (
+                                      'Connect'
+                                    )}
+                                  </Button>
+                                )}
                                 {connected && (
                                   <Button
                                     size="sm"
@@ -574,25 +576,27 @@ export default function IntegrationsHub() {
                             </div>
                           </div>
                           <div className="flex flex-col gap-2 md:flex-row md:items-center">
-                            <Badge variant="outline" className={cn('w-fit text-xs', connected ? 'border-emerald-500 text-emerald-700 font-semibold' : hasError() ? 'border-red-400 text-red-500' : 'border-gray-300 text-gray-600')}>
+                            <Badge variant="outline" className={cn('w-fit text-xs', connected ? 'border-gray-400 text-gray-700 font-medium' : hasError() ? 'border-gray-400 text-gray-600' : 'border-gray-300 text-gray-500')}>
                               {connected ? 'Connected' : hasError() ? 'Error' : 'Not connected'}
                             </Badge>
                             <div className="flex gap-2">
-                              <Button
-                                size="sm"
-                                className={cn(connected ? 'bg-emerald-50 text-emerald-600 border border-emerald-100 hover:bg-emerald-100' : 'bg-emerald-500 hover:bg-emerald-400 text-white')}
-                                onClick={() => handleConnectDocSource(p)}
-                                disabled={providerLoading !== null || disconnectingProvider === p}
-                              >
-                                {providerLoading === p ? (
-                                  <>
-                                    <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
-                                    Connecting…
-                                  </>
-                                ) : (
-                                  connected ? 'Sync Now' : 'Connect'
-                                )}
-                              </Button>
+                              {!connected && (
+                                <Button
+                                  size="sm"
+                                  className="bg-gray-900 hover:bg-gray-800 text-white text-xs"
+                                  onClick={() => handleConnectDocSource(p)}
+                                  disabled={providerLoading !== null || disconnectingProvider === p}
+                                >
+                                  {providerLoading === p ? (
+                                    <>
+                                      <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
+                                      Connecting
+                                    </>
+                                  ) : (
+                                    'Connect'
+                                  )}
+                                </Button>
+                              )}
                               {connected && (
                                 <Button
                                   size="sm"
@@ -1026,7 +1030,7 @@ export default function IntegrationsHub() {
                       </div>
                       <Button
                         size="lg"
-                        className="bg-emerald-500 hover:bg-emerald-400 text-white font-semibold w-full"
+                        className="bg-gray-900 hover:bg-gray-800 text-white font-medium w-full"
                         onClick={async () => {
                           try {
                             setIngestingAll(true);
