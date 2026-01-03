@@ -338,6 +338,24 @@ export default function IntegrationsHub() {
               <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-[0.15em]">Platform Connections</p>
             </div>
 
+            {/* Hardcopy Document Notice - Institutional Banking Style */}
+            <div className="bg-gray-50 border border-gray-200 mb-8">
+              <div className="px-6 py-4 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <p className="text-[9px] font-semibold text-gray-500 uppercase tracking-[0.15em]">Manual Upload</p>
+                  <p className="text-xs text-gray-700 mt-0.5">
+                    For hardcopy documents, scanned images, or files not available via connected sources.
+                  </p>
+                </div>
+                <button
+                  onClick={() => navigate('/evidence-locker')}
+                  className="text-xs font-medium text-gray-900 hover:text-gray-700 transition-colors uppercase tracking-[0.1em] border border-gray-300 px-4 py-2 bg-white hover:bg-gray-50"
+                >
+                  Open Evidence Locker
+                </button>
+              </div>
+            </div>
+
             {/* Core Integrations */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
               {/* Amazon SP-API */}
@@ -1188,26 +1206,6 @@ export default function IntegrationsHub() {
               </div>
             </div>
 
-            {/* Hardcopy Document Notice - Institutional Banking Style */}
-            <div className="bg-gray-50 border border-gray-200">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <p className="text-[9px] font-semibold text-gray-500 uppercase tracking-[0.15em]">Manual Upload Option</p>
-              </div>
-              <div className="px-6 py-4">
-                <p className="text-xs text-gray-700 leading-relaxed">
-                  For hardcopy documents, scanned images, or files not available via connected sources,
-                  use the Document Parser for direct upload and processing.
-                </p>
-                <div className="mt-3 pt-3 border-t border-gray-200">
-                  <button
-                    onClick={() => navigate('/document-parsing')}
-                    className="text-xs font-medium text-gray-900 hover:text-gray-700 transition-colors uppercase tracking-[0.1em]"
-                  >
-                    Open Document Parser
-                  </button>
-                </div>
-              </div>
-            </div>
 
             {/* Recent Activity */}
             <div className="bg-white border border-gray-200 rounded-sm">
