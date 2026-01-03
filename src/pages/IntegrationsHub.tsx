@@ -25,7 +25,29 @@ export default function IntegrationsHub() {
   const isSandbox = String(env.VITE_SANDBOX || '') === 'true' || String(env.MODE || env.NODE_ENV || '') !== 'production';
   const [autoCollect, setAutoCollect] = useState<boolean>(true);
   const [schedule, setSchedule] = useState<string>('daily_0200');
-  const [filters, setFilters] = useState<{ includeSenders: string[]; excludeSenders: string[]; fileTypes: string[]; folders: string[] }>({ includeSenders: ['invoices@'], excludeSenders: [], fileTypes: ['pdf', 'png'], folders: ['/Finance'] });
+  const [filters, setFilters] = useState<{
+    senderPatterns: string[];
+    excludeSenders: string[];
+    subjectKeywords: string[];
+    excludeSubjects: string[];
+    fileTypes: { pdf: boolean; images: boolean; spreadsheets: boolean; docs: boolean };
+    fileNamePatterns: string[];
+    folders: string[];
+    dateRange: 'last_30' | 'last_90' | 'last_12_months' | 'since_last_sync' | 'all';
+    skipDuplicates: boolean;
+    skipExisting: boolean;
+  }>({
+    senderPatterns: ['*@amazon.com', '*invoice*'],
+    excludeSenders: ['*newsletter*', '*marketing*', '*promo*'],
+    subjectKeywords: ['invoice', 'receipt', 'reimbursement', 'case', 'shipment', 'order'],
+    excludeSubjects: ['unsubscribe', 'promotional'],
+    fileTypes: { pdf: true, images: true, spreadsheets: true, docs: false },
+    fileNamePatterns: ['invoice', 'receipt', 'order', 'FBA', 'shipment', 'reimburse'],
+    folders: ['/Finance', '/Invoices', '/Amazon'],
+    dateRange: 'last_90',
+    skipDuplicates: true,
+    skipExisting: true
+  });
   const [loading, setLoading] = useState(false);
   const [disconnecting, setDisconnecting] = useState<string | null>(null);
   const [requestFormData, setRequestFormData] = useState({
@@ -717,38 +739,199 @@ export default function IntegrationsHub() {
                       </Button>
                     </div>
                     <Separator className="bg-gray-100" />
-                    <div>
-                      <div className="flex flex-col gap-1 mb-3">
-                        <p className="text-sm font-semibold text-gray-900">Filters</p>
-                        <p className="text-xs text-gray-500">
-                          include {filters.includeSenders.join(', ') || '—'} • file types {filters.fileTypes.join(', ') || '—'} • folders {filters.folders.join(', ') || '—'}
-                        </p>
+                    <div className="space-y-6">
+                      {/* Section Header */}
+                      <div className="flex items-center justify-between border-b border-gray-200 pb-3">
+                        <div>
+                          <p className="text-xs font-semibold text-gray-900 uppercase tracking-[0.15em]">Ingestion Filters</p>
+                          <p className="text-[10px] text-gray-500 mt-0.5">Configure rules for maximum document yield</p>
+                        </div>
                       </div>
-                      <div className="grid gap-3 md:grid-cols-3">
-                        <Input
-                          placeholder="Include senders (comma‑separated)"
-                          value={filters.includeSenders.join(', ')}
-                          onChange={(e) => setFilters(f => ({ ...f, includeSenders: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
-                          className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-400"
-                        />
-                        <Input
-                          placeholder="File types (comma‑separated, e.g. pdf, png, jpg)"
-                          value={filters.fileTypes.join(', ')}
-                          onChange={(e) => setFilters(f => ({ ...f, fileTypes: e.target.value.split(',').map(s => s.trim().toLowerCase()).filter(Boolean) }))}
-                          className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-400"
-                        />
-                        <Input
-                          placeholder="Folders (comma‑separated)"
-                          value={filters.folders.join(', ')}
-                          onChange={(e) => setFilters(f => ({ ...f, folders: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
-                          className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-400"
-                        />
+
+                      {/* Grid Layout for Filters */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                        {/* Sender Patterns */}
+                        <div className="space-y-2">
+                          <label className="block text-[9px] font-semibold text-gray-500 uppercase tracking-[0.1em]">Sender Patterns (OR)</label>
+                          <p className="text-[10px] text-gray-400 -mt-1">Match emails from these senders. Use * as wildcard.</p>
+                          <Input
+                            placeholder="*@amazon.com, *invoice*, *@alibaba.com"
+                            value={filters.senderPatterns.join(', ')}
+                            onChange={(e) => setFilters(f => ({ ...f, senderPatterns: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
+                            className="border-gray-200 bg-gray-50 text-gray-900 placeholder:text-gray-400 text-xs h-9"
+                          />
+                        </div>
+
+                        {/* Subject Keywords */}
+                        <div className="space-y-2">
+                          <label className="block text-[9px] font-semibold text-gray-500 uppercase tracking-[0.1em]">Subject Keywords (OR)</label>
+                          <p className="text-[10px] text-gray-400 -mt-1">Match emails containing these subject terms.</p>
+                          <Input
+                            placeholder="invoice, receipt, reimbursement, case, shipment"
+                            value={filters.subjectKeywords.join(', ')}
+                            onChange={(e) => setFilters(f => ({ ...f, subjectKeywords: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
+                            className="border-gray-200 bg-gray-50 text-gray-900 placeholder:text-gray-400 text-xs h-9"
+                          />
+                        </div>
+
+                        {/* File Types */}
+                        <div className="space-y-2">
+                          <label className="block text-[9px] font-semibold text-gray-500 uppercase tracking-[0.1em]">File Types</label>
+                          <div className="grid grid-cols-2 gap-2">
+                            <label className="flex items-center gap-2 px-3 py-2 bg-gray-50 border border-gray-200 cursor-pointer hover:bg-gray-100">
+                              <input
+                                type="checkbox"
+                                checked={filters.fileTypes.pdf}
+                                onChange={(e) => setFilters(f => ({ ...f, fileTypes: { ...f.fileTypes, pdf: e.target.checked } }))}
+                                className="w-3.5 h-3.5 text-gray-900 border-gray-300 focus:ring-gray-500"
+                              />
+                              <span className="text-xs text-gray-700">PDF</span>
+                            </label>
+                            <label className="flex items-center gap-2 px-3 py-2 bg-gray-50 border border-gray-200 cursor-pointer hover:bg-gray-100">
+                              <input
+                                type="checkbox"
+                                checked={filters.fileTypes.images}
+                                onChange={(e) => setFilters(f => ({ ...f, fileTypes: { ...f.fileTypes, images: e.target.checked } }))}
+                                className="w-3.5 h-3.5 text-gray-900 border-gray-300 focus:ring-gray-500"
+                              />
+                              <span className="text-xs text-gray-700">PNG / JPG</span>
+                            </label>
+                            <label className="flex items-center gap-2 px-3 py-2 bg-gray-50 border border-gray-200 cursor-pointer hover:bg-gray-100">
+                              <input
+                                type="checkbox"
+                                checked={filters.fileTypes.spreadsheets}
+                                onChange={(e) => setFilters(f => ({ ...f, fileTypes: { ...f.fileTypes, spreadsheets: e.target.checked } }))}
+                                className="w-3.5 h-3.5 text-gray-900 border-gray-300 focus:ring-gray-500"
+                              />
+                              <span className="text-xs text-gray-700">XLS / CSV</span>
+                            </label>
+                            <label className="flex items-center gap-2 px-3 py-2 bg-gray-50 border border-gray-200 cursor-pointer hover:bg-gray-100">
+                              <input
+                                type="checkbox"
+                                checked={filters.fileTypes.docs}
+                                onChange={(e) => setFilters(f => ({ ...f, fileTypes: { ...f.fileTypes, docs: e.target.checked } }))}
+                                className="w-3.5 h-3.5 text-gray-900 border-gray-300 focus:ring-gray-500"
+                              />
+                              <span className="text-xs text-gray-700">DOC / DOCX</span>
+                            </label>
+                          </div>
+                        </div>
+
+                        {/* File Name Patterns */}
+                        <div className="space-y-2">
+                          <label className="block text-[9px] font-semibold text-gray-500 uppercase tracking-[0.1em]">File Name Contains</label>
+                          <p className="text-[10px] text-gray-400 -mt-1">Match attachment names containing these terms.</p>
+                          <Input
+                            placeholder="invoice, receipt, order, FBA, shipment, reimburse"
+                            value={filters.fileNamePatterns.join(', ')}
+                            onChange={(e) => setFilters(f => ({ ...f, fileNamePatterns: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
+                            className="border-gray-200 bg-gray-50 text-gray-900 placeholder:text-gray-400 text-xs h-9"
+                          />
+                        </div>
+
+                        {/* Date Range */}
+                        <div className="space-y-2">
+                          <label className="block text-[9px] font-semibold text-gray-500 uppercase tracking-[0.1em]">Date Range</label>
+                          <div className="grid grid-cols-3 gap-1">
+                            {[
+                              { value: 'last_30', label: 'Last 30 days' },
+                              { value: 'last_90', label: 'Last 90 days' },
+                              { value: 'last_12_months', label: 'Last 12 months' },
+                              { value: 'since_last_sync', label: 'Since last sync' },
+                              { value: 'all', label: 'All time' }
+                            ].map(opt => (
+                              <label
+                                key={opt.value}
+                                className={cn(
+                                  "flex items-center justify-center px-2 py-1.5 text-[10px] border cursor-pointer transition-colors",
+                                  filters.dateRange === opt.value
+                                    ? "bg-gray-900 text-white border-gray-900"
+                                    : "bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100"
+                                )}
+                              >
+                                <input
+                                  type="radio"
+                                  name="dateRange"
+                                  value={opt.value}
+                                  checked={filters.dateRange === opt.value}
+                                  onChange={(e) => setFilters(f => ({ ...f, dateRange: e.target.value as any }))}
+                                  className="sr-only"
+                                />
+                                {opt.label}
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Folders */}
+                        <div className="space-y-2">
+                          <label className="block text-[9px] font-semibold text-gray-500 uppercase tracking-[0.1em]">Folders (Cloud Drives)</label>
+                          <p className="text-[10px] text-gray-400 -mt-1">Comma-separated folder paths to scan.</p>
+                          <Input
+                            placeholder="/Finance, /Invoices, /Amazon, /Receipts"
+                            value={filters.folders.join(', ')}
+                            onChange={(e) => setFilters(f => ({ ...f, folders: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
+                            className="border-gray-200 bg-gray-50 text-gray-900 placeholder:text-gray-400 text-xs h-9"
+                          />
+                        </div>
                       </div>
-                      <div className="mt-3">
+
+                      {/* Exclusions Section */}
+                      <div className="pt-4 border-t border-gray-200">
+                        <label className="block text-[9px] font-semibold text-gray-500 uppercase tracking-[0.1em] mb-3">Exclusion Rules</label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-1">
+                            <label className="text-[10px] text-gray-500">Exclude Senders</label>
+                            <Input
+                              placeholder="*newsletter*, *marketing*, *promo*"
+                              value={filters.excludeSenders.join(', ')}
+                              onChange={(e) => setFilters(f => ({ ...f, excludeSenders: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
+                              className="border-gray-200 bg-gray-50 text-gray-900 placeholder:text-gray-400 text-xs h-9"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-[10px] text-gray-500">Exclude Subjects</label>
+                            <Input
+                              placeholder="unsubscribe, promotional, marketing"
+                              value={filters.excludeSubjects.join(', ')}
+                              onChange={(e) => setFilters(f => ({ ...f, excludeSubjects: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
+                              className="border-gray-200 bg-gray-50 text-gray-900 placeholder:text-gray-400 text-xs h-9"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Deduplication Section */}
+                      <div className="pt-4 border-t border-gray-200">
+                        <label className="block text-[9px] font-semibold text-gray-500 uppercase tracking-[0.1em] mb-3">Deduplication</label>
+                        <div className="flex flex-wrap gap-4">
+                          <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={filters.skipDuplicates}
+                              onChange={(e) => setFilters(f => ({ ...f, skipDuplicates: e.target.checked }))}
+                              className="w-3.5 h-3.5 text-gray-900 border-gray-300 focus:ring-gray-500"
+                            />
+                            <span className="text-xs text-gray-700">Skip duplicate filenames</span>
+                          </label>
+                          <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={filters.skipExisting}
+                              onChange={(e) => setFilters(f => ({ ...f, skipExisting: e.target.checked }))}
+                              className="w-3.5 h-3.5 text-gray-900 border-gray-300 focus:ring-gray-500"
+                            />
+                            <span className="text-xs text-gray-700">Skip already ingested</span>
+                          </label>
+                        </div>
+                      </div>
+
+                      {/* Save Button */}
+                      <div className="pt-4 border-t border-gray-200 flex gap-3">
                         <Button
                           size="sm"
-                          variant="outline"
-                          className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+                          className="bg-gray-900 text-white hover:bg-gray-800 text-xs px-6"
                           onClick={async () => {
                             try {
                               setSavingFilters(true);
@@ -786,6 +969,19 @@ export default function IntegrationsHub() {
                           ) : (
                             'Save Filters'
                           )}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs"
+                          onClick={() => {
+                            toast({
+                              title: 'Test Run',
+                              description: 'Preview functionality coming soon. Save filters and run ingestion to test.',
+                            });
+                          }}
+                        >
+                          Test Run
                         </Button>
                       </div>
                     </div>
