@@ -505,48 +505,69 @@ export function Dashboard() {
       }
     }
 
-    async function fetchUpcomingPayments() {
+    // Fetch real dispute case data for Next Payment and Pending tiles
+    async function fetchDisputeMetrics() {
       try {
-        const payments = await recoveryApi.getRecoveries();
+        const res = await api.getDisputeCases({ limit: 500 });
         if (!active) return;
 
-        if (Array.isArray(payments) && payments.length > 0) {
-          // Map to normalized format
-          const mapped = payments.map((c: any) => ({
-            guaranteedAmount: c.guaranteedAmount ?? c.amount ?? c.claim_amount ?? c.actual_payout_amount ?? c.estimated_value ?? 0,
-            expectedPayoutDate: c.expectedPayoutDate ?? c.expected_payout_date ?? null,
-          }));
-          updateUpcomingMetrics(mapped);
-        } else {
-          // Fallback: Try detection results if recoveryApi returns empty
-          console.log('[Dashboard] No data from recoveryApi, trying detectionApi fallback...');
-          try {
-            const detectionRes = await detectionApi.getDetectionResults({ limit: 100 });
-            if (!active) return;
-            if (detectionRes?.results && detectionRes.results.length > 0) {
-              console.log('[Dashboard] Fallback: Got', detectionRes.results.length, 'detection results');
-              const mapped = detectionRes.results.map((d: any) => ({
-                guaranteedAmount: parseFloat(String(d.estimated_value ?? d.amount ?? 0)) || 0,
-                expectedPayoutDate: null,
-              }));
-              updateUpcomingMetrics(mapped);
-            } else {
-              updateUpcomingMetrics([]);
-            }
-          } catch (detectionErr) {
-            console.warn('[Dashboard] Detection fallback also failed:', detectionErr);
-            updateUpcomingMetrics([]);
+        if (res.ok && res.data?.cases) {
+          const cases = res.data.cases;
+
+          // Next Payment = Approved disputes (awaiting payout)
+          const approvedCases = cases.filter((c: any) => {
+            const status = (c.status || '').toLowerCase();
+            return status === 'approved' || status === 'resolved' || status === 'won';
+          });
+          const approvedTotal = approvedCases.reduce((sum: number, c: any) => {
+            const amount = parseFloat(String(c.amount ?? c.claim_amount ?? c.actual_payout_amount ?? 0)) || 0;
+            return sum + amount;
+          }, 0);
+
+          // Pending = Submitted disputes (waiting for Amazon approval)
+          const pendingCases = cases.filter((c: any) => {
+            const status = (c.status || '').toLowerCase();
+            return status === 'submitted' || status === 'pending' || status === 'under review' || status === 'in review';
+          });
+          const pendingTotal = pendingCases.reduce((sum: number, c: any) => {
+            const amount = parseFloat(String(c.amount ?? c.claim_amount ?? c.actual_payout_amount ?? 0)) || 0;
+            return sum + amount;
+          }, 0);
+
+          // Find next expected payout date from approved cases
+          const datedApproved = approvedCases.filter((c: any) => c.expected_payout_date || c.expectedPayoutDate);
+          let nextDate: string | null = null;
+          if (datedApproved.length > 0) {
+            const sorted = [...datedApproved].sort((a: any, b: any) => {
+              const dateA = new Date(a.expected_payout_date || a.expectedPayoutDate);
+              const dateB = new Date(b.expected_payout_date || b.expectedPayoutDate);
+              return dateA.getTime() - dateB.getTime();
+            });
+            nextDate = sorted[0]?.expected_payout_date || sorted[0]?.expectedPayoutDate || null;
           }
+
+          // Update state with real values
+          setNextPaymentAmount(approvedTotal);
+          setNextPaymentDate(nextDate);
+          setPendingRecoveryAmount(pendingTotal);
+          setPendingClaimsCount(pendingCases.length);
+
+          console.log('[Dashboard] Dispute metrics:', {
+            approved: { count: approvedCases.length, total: approvedTotal },
+            pending: { count: pendingCases.length, total: pendingTotal }
+          });
+        } else {
+          console.warn('[Dashboard] No dispute cases returned');
         }
       } catch (error) {
-        console.error('[Dashboard] Failed to fetch upcoming payments:', error);
+        console.error('[Dashboard] Failed to fetch dispute metrics:', error);
       }
     }
 
     // Initial fetch immediately on mount
     fetchRecoveriesOnce();
     fetchMetrics();
-    fetchUpcomingPayments();
+    fetchDisputeMetrics();
     // Decide whether to prompt evidence connections (Gmail/Outlook/Drive/Dropbox)
     (async () => {
       try {
@@ -573,7 +594,7 @@ export function Dashboard() {
       polls += 1;
       await fetchRecoveriesOnce();
       await fetchMetrics();
-      await fetchUpcomingPayments();
+      await fetchDisputeMetrics();
       if (polls >= 12) { // ~1 minute at 5s cadence
         if (pollTimer) window.clearInterval(pollTimer);
       }
@@ -589,7 +610,7 @@ export function Dashboard() {
           if (evt?.type === 'sync' || evt?.type === 'detection') {
             await fetchRecoveriesOnce();
             await fetchMetrics();
-            await fetchUpcomingPayments();
+            await fetchDisputeMetrics();
           }
         } catch { }
       };
