@@ -441,8 +441,9 @@ export default function NotificationHub() {
             </header>
 
             {/* Notification Log */}
-            <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
-              <div className="px-4 py-3 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
+            <div className="bg-white border border-gray-200 rounded-sm overflow-hidden flex flex-col" style={{ maxHeight: 'calc(100vh - 300px)' }}>
+              {/* Fixed Header */}
+              <div className="px-4 py-3 border-b border-gray-200 bg-gray-50 flex items-center justify-between flex-shrink-0">
                 <div>
                   <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
                     Notification Log
@@ -475,8 +476,8 @@ export default function NotificationHub() {
                 </div>
               </div>
 
-              {/* Search and Filters Row */}
-              <div className="px-4 py-3 border-b border-gray-100 bg-white">
+              {/* Fixed Search and Filters Row */}
+              <div className="px-4 py-3 border-b border-gray-100 bg-white flex-shrink-0">
                 <div className="flex flex-col sm:flex-row gap-3">
                   {/* Search Bar */}
                   <div className="relative flex-1">
@@ -557,7 +558,8 @@ export default function NotificationHub() {
                 )}
               </div>
 
-              <div className="p-4">
+              {/* Scrollable Content Area */}
+              <div className="p-4 overflow-y-auto flex-1">
                 {loading && (
                   <div className="text-center py-6 text-gray-600">
                     <Loader2 className="h-5 w-5 animate-spin mx-auto mb-2" />
