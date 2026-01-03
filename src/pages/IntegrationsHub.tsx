@@ -1099,50 +1099,58 @@ export default function IntegrationsHub() {
                           : 'Connect at least one evidence source to begin ingestion.'}
                       </p>
                       {ingestionResult && (
-                        <div className={`rounded-lg border p-4 ${ingestionResult.success ? 'border-emerald-200 bg-emerald-50' : 'border-red-200 bg-red-50'}`}>
-                          <div className="flex items-center justify-between mb-2">
-                            <h4 className={`font-semibold ${ingestionResult.success ? 'text-emerald-700' : 'text-red-600'}`}>
-                              {ingestionResult.success ? '✅ Ingestion Complete' : 'Ingestion Completed with Errors'}
-                            </h4>
+                        <div className="border border-gray-200 bg-gray-50">
+                          <div className="px-4 py-3 border-b border-gray-200">
+                            <p className={`text-[9px] font-semibold uppercase tracking-[0.15em] ${ingestionResult.success ? 'text-gray-700' : 'text-gray-600'}`}>
+                              {ingestionResult.success ? 'Ingestion Complete' : 'Ingestion Completed with Errors'}
+                            </p>
                           </div>
-                          {ingestionResult.totalDocumentsIngested !== undefined ? (
-                            <div className="space-y-2 text-sm">
-                              <p className="text-gray-700">
-                                <span className="font-semibold">Total Documents:</span> {ingestionResult.totalDocumentsIngested}
-                              </p>
-                              <p className="text-gray-700">
-                                <span className="font-semibold">Total Items Processed:</span> {ingestionResult.totalItemsProcessed}
-                              </p>
-                              {ingestionResult.results && (
-                                <div className="mt-3 space-y-1">
-                                  <p className="text-xs font-semibold text-gray-500 uppercase">Breakdown by Provider:</p>
-                                  {Object.entries(ingestionResult.results).map(([provider, result]) => (
-                                    <div key={provider} className="flex items-center justify-between text-xs">
-                                      <span className="text-gray-600 capitalize">{provider === 'gdrive' ? 'Google Drive' : provider}:</span>
-                                      <span className="text-gray-800">
-                                        {result.documentsIngested} docs from {result.emailsProcessed || result.filesProcessed} items
-                                      </span>
-                                    </div>
-                                  ))}
+                          <div className="px-4 py-3">
+                            {ingestionResult.totalDocumentsIngested !== undefined ? (
+                              <div className="space-y-1.5 text-xs">
+                                <div className="flex justify-between">
+                                  <span className="text-gray-500 uppercase tracking-[0.05em]">Documents Ingested</span>
+                                  <span className="text-gray-900 font-medium">{ingestionResult.totalDocumentsIngested}</span>
                                 </div>
-                              )}
-                            </div>
-                          ) : (
-                            <div className="text-sm text-gray-700">
-                              <p><span className="font-semibold">Documents Ingested:</span> {ingestionResult.documentsIngested || 0}</p>
-                              <p><span className="font-semibold">Items Processed:</span> {ingestionResult.emailsProcessed || ingestionResult.filesProcessed || 0}</p>
-                            </div>
-                          )}
-                          {ingestionResult.errors && ingestionResult.errors.length > 0 && (
-                            <div className="mt-3 pt-3 border-t border-red-200">
-                              <p className="text-xs font-semibold text-red-600 mb-1">Errors:</p>
-                              <ul className="text-xs text-red-500 space-y-1">
-                                {ingestionResult.errors.map((error, i) => (
-                                  <li key={i}>• {error}</li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
+                                <div className="flex justify-between">
+                                  <span className="text-gray-500 uppercase tracking-[0.05em]">Items Processed</span>
+                                  <span className="text-gray-900 font-medium">{ingestionResult.totalItemsProcessed}</span>
+                                </div>
+                                {ingestionResult.results && (
+                                  <div className="mt-3 pt-3 border-t border-gray-200 space-y-1">
+                                    <p className="text-[9px] font-semibold text-gray-500 uppercase tracking-[0.1em] mb-2">Breakdown</p>
+                                    {Object.entries(ingestionResult.results).map(([provider, result]) => (
+                                      <div key={provider} className="flex items-center justify-between text-xs">
+                                        <span className="text-gray-600">{provider === 'gdrive' ? 'Google Drive' : provider.charAt(0).toUpperCase() + provider.slice(1)}</span>
+                                        <span className="text-gray-800">{result.documentsIngested} / {result.emailsProcessed || result.filesProcessed}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            ) : (
+                              <div className="space-y-1.5 text-xs">
+                                <div className="flex justify-between">
+                                  <span className="text-gray-500 uppercase tracking-[0.05em]">Documents Ingested</span>
+                                  <span className="text-gray-900 font-medium">{ingestionResult.documentsIngested || 0}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-gray-500 uppercase tracking-[0.05em]">Items Processed</span>
+                                  <span className="text-gray-900 font-medium">{ingestionResult.emailsProcessed || ingestionResult.filesProcessed || 0}</span>
+                                </div>
+                              </div>
+                            )}
+                            {ingestionResult.errors && ingestionResult.errors.length > 0 && (
+                              <div className="mt-3 pt-3 border-t border-gray-300">
+                                <p className="text-[9px] font-semibold text-gray-600 uppercase tracking-[0.1em] mb-2">Errors</p>
+                                <ul className="text-xs text-gray-700 space-y-1">
+                                  {ingestionResult.errors.map((error, i) => (
+                                    <li key={i} className="text-gray-600">- {error}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       )}
                       <div className="flex flex-col gap-2 pt-2 md:flex-row md:items-center md:justify-between">
