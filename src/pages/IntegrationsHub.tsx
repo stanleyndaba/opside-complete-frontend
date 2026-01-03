@@ -33,18 +33,58 @@ export default function IntegrationsHub() {
     fileTypes: { pdf: boolean; images: boolean; spreadsheets: boolean; docs: boolean; shipping: boolean };
     fileNamePatterns: string[];
     folders: string[];
-    dateRange: 'last_30' | 'last_90' | 'last_12_months' | 'since_last_sync' | 'all';
+    dateRange: 'last_30' | 'last_90' | 'last_12_months' | 'last_18_months' | 'since_last_sync' | 'all';
     skipDuplicates: boolean;
     skipExisting: boolean;
   }>({
-    senderPatterns: ['*@amazon.com', '*invoice*', '*@fedex.com', '*@ups.com', '*@dhl.com', '*@usps.com'],
-    excludeSenders: ['*newsletter*', '*marketing*', '*promo*'],
-    subjectKeywords: ['invoice', 'receipt', 'reimbursement', 'case', 'shipment', 'order', 'tracking', 'delivery', 'carrier', 'freight', 'BOL', 'manifest'],
-    excludeSubjects: ['unsubscribe', 'promotional'],
+    // === SENDER PATTERNS (Carriers + Marketplaces + Freight) ===
+    senderPatterns: [
+      // Carriers
+      '*@fedex.com', '*@ups.com', '*@dhl.com', '*@usps.com', '*@ontrac.com', '*@freight*',
+      // Marketplaces & Amazon
+      '*@amazon.com', '*@sellercentral.amazon.*', '*@payments.amazon.com',
+      // 3PL & Fulfillment platforms
+      '*@shipstation.com', '*@shipbob.com', '*@easyship.com', '*@flexport.com', '*@deliverr.com',
+      // Invoice-like domains (wildcard for supplier invoices)
+      '*invoice*', '*billing*', '*accounts*', '*finance*'
+    ],
+    excludeSenders: ['*newsletter*', '*marketing*', '*promo*', '*noreply*advertising*', '*survey*'],
+    // === SUBJECT KEYWORDS (5 Document Classes) ===
+    subjectKeywords: [
+      // CLASS 1: Proof of Ownership / Cost
+      'invoice', 'tax invoice', 'proforma', 'receipt', 'PO', 'purchase order', 'packing slip', 'commercial invoice', 'vendor invoice', 'supplier',
+      // CLASS 2: Proof of Shipment
+      'bill of lading', 'BOL', 'waybill', 'tracking', 'shipment', 'dispatch', 'airwaybill', 'AWB', 'freight', 'manifest', 'booking confirmation', 'carrier',
+      // CLASS 3: Proof of Delivery
+      'POD', 'proof of delivery', 'delivery confirmation', 'signed', 'delivered', 'received',
+      // CLASS 4: Returns / Refunds
+      'return authorization', 'RMA', 'return label', 'return confirmed', 'refund issued', 'credit note', 'credit memo', 'refund', 'return request',
+      // CLASS 5: Inventory / ASN
+      'ASN', 'advance shipment notice', 'packing list', 'shipment summary', 'inventory', 'pick list', 'pack slip',
+      // Amazon-specific
+      'reimbursement', 'case', 'FBA', 'removal order', 'liquidation'
+    ],
+    excludeSubjects: ['unsubscribe', 'promotional', 'survey', 'feedback request', 'rate your'],
     fileTypes: { pdf: true, images: true, spreadsheets: true, docs: false, shipping: true },
-    fileNamePatterns: ['invoice', 'receipt', 'order', 'FBA', 'shipment', 'reimburse', 'tracking', 'BOL', 'POD', 'manifest', 'delivery', 'freight'],
-    folders: ['/Finance', '/Invoices', '/Amazon', '/Shipping'],
-    dateRange: 'last_90',
+    // === FILENAME PATTERNS (5 Document Classes) ===
+    fileNamePatterns: [
+      // CLASS 1: Ownership / Cost
+      'invoice', 'inv-', 'inv_', 'receipt', 'tax-invoice', 'purchase-order', 'po-', 'po_', 'packing-slip', 'commercial-invoice', 'proforma',
+      // CLASS 2: Shipment
+      'bol', 'bill-of-lading', 'waybill', 'awb', 'tracking', 'manifest', 'shipment', 'freight', 'dispatch', 'booking',
+      // CLASS 3: Delivery
+      'pod', 'proof-of-delivery', 'delivery', 'signed', 'confirmation',
+      // CLASS 4: Returns / Credits
+      'rma', 'return', 'credit-note', 'credit-memo', 'refund',
+      // CLASS 5: Inventory / ASN
+      'asn', 'packing-list', 'pack-list', 'pick-list', 'inventory',
+      // Amazon / FBA
+      'FBA', 'reimburse', 'removal', 'liquidation', 'order'
+    ],
+    // === FOLDER STRUCTURE ===
+    folders: ['/Invoices', '/Shipping', '/Returns', '/Credits', '/Amazon', '/Finance', '/Inventory'],
+    // 18-month window for Amazon claimable period
+    dateRange: 'last_18_months',
     skipDuplicates: true,
     skipExisting: true
   });
@@ -884,6 +924,7 @@ export default function IntegrationsHub() {
                               { value: 'last_30', label: 'Last 30 days' },
                               { value: 'last_90', label: 'Last 90 days' },
                               { value: 'last_12_months', label: 'Last 12 months' },
+                              { value: 'last_18_months', label: 'Last 18 months' },
                               { value: 'since_last_sync', label: 'Since last sync' },
                               { value: 'all', label: 'All time' }
                             ].map(opt => (
