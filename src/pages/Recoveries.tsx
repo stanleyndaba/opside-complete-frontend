@@ -523,7 +523,7 @@ const DoubleDipBadge = ({ warning }: { warning: DuplicateWarning }) => {
   );
 };
 
-// Generate Casebook PDF for export (audits, CFOs, legal)
+// Generate Casebook PDF for export (audits, CFOs, legal) - Institutional Banking Style
 const generateCasebookPDF = (claims: RecoveryClaim[], dateRange: { from: Date; to: Date } | null) => {
   const periodLabel = dateRange
     ? `${format(dateRange.from, 'MMM dd, yyyy')} - ${format(dateRange.to, 'MMM dd, yyyy')}`
@@ -550,43 +550,170 @@ const generateCasebookPDF = (claims: RecoveryClaim[], dateRange: { from: Date; t
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Recovery Casebook - ${periodLabel}</title>
+  <title>Recovery Statement - ${periodLabel}</title>
   <style>
     @page { size: A4; margin: 20mm; }
-    body { font-family: 'Segoe UI', system-ui, sans-serif; color: #1f2937; line-height: 1.5; max-width: 800px; margin: 0 auto; padding: 20px; }
-    .header { text-align: center; border-bottom: 2px solid #3b82f6; padding-bottom: 20px; margin-bottom: 30px; }
-    .logo { font-size: 28pt; font-weight: bold; color: #3b82f6; }
-    .period { font-size: 14pt; color: #6b7280; margin-top: 5px; }
-    .generated { font-size: 10pt; color: #9ca3af; margin-top: 5px; }
-    .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px; }
-    .summary-card { background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; }
-    .summary-value { font-size: 20pt; font-weight: bold; color: #1f2937; }
-    .summary-label { font-size: 9pt; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; }
-    .summary-card.green .summary-value { color: #059669; }
-    .summary-card.blue .summary-value { color: #3b82f6; }
-    .summary-card.amber .summary-value { color: #d97706; }
-    .section { margin-bottom: 30px; page-break-inside: avoid; }
-    .section-title { font-size: 14pt; font-weight: 600; color: #1f2937; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; margin-bottom: 15px; }
-    .claim-row { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #f3f4f6; font-size: 10pt; }
-    .claim-row:nth-child(odd) { background: #f9fafb; }
-    .claim-id { font-family: monospace; color: #3b82f6; }
-    .claim-status { padding: 2px 8px; border-radius: 9999px; font-size: 9pt; }
-    .status-approved { background: #d1fae5; color: #065f46; }
-    .status-pending { background: #dbeafe; color: #1e40af; }
-    .status-denied { background: #fee2e2; color: #991b1b; }
-    .status-other { background: #f3f4f6; color: #4b5563; }
-    .amount { font-weight: 600; }
-    .footer { text-align: center; padding-top: 30px; border-top: 1px solid #e5e7eb; font-size: 9pt; color: #9ca3af; }
-    .type-section { margin-left: 20px; margin-bottom: 20px; }
-    .type-header { font-weight: 600; color: #374151; margin-bottom: 10px; display: flex; justify-content: space-between; }
-    @media print { .no-print { display: none; } }
+    * { box-sizing: border-box; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+      color: #1e293b; 
+      line-height: 1.4; 
+      max-width: 800px; 
+      margin: 0 auto; 
+      padding: 40px 30px;
+      background: #fff;
+    }
+    .header { 
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid #e2e8f0; 
+      padding-bottom: 20px; 
+      margin-bottom: 30px; 
+    }
+    .logo { 
+      font-size: 18px; 
+      font-weight: 600; 
+      color: #0f172a;
+      letter-spacing: -0.5px;
+    }
+    .logo-sub {
+      font-size: 10px;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-top: 2px;
+    }
+    .header-right {
+      text-align: right;
+    }
+    .period { 
+      font-size: 11px; 
+      color: #475569;
+    }
+    .generated { 
+      font-size: 9px; 
+      color: #94a3b8; 
+      margin-top: 2px;
+    }
+    .summary-grid { 
+      display: grid; 
+      grid-template-columns: repeat(4, 1fr); 
+      gap: 1px; 
+      background: #e2e8f0;
+      border: 1px solid #e2e8f0;
+      margin-bottom: 30px; 
+    }
+    .summary-card { 
+      background: #f8fafc; 
+      padding: 16px 12px; 
+      text-align: center; 
+    }
+    .summary-value { 
+      font-size: 18px; 
+      font-weight: 600; 
+      color: #0f172a;
+      font-variant-numeric: tabular-nums;
+    }
+    .summary-label { 
+      font-size: 9px; 
+      color: #64748b; 
+      text-transform: uppercase; 
+      letter-spacing: 1px;
+      margin-top: 4px;
+    }
+    .section { 
+      margin-bottom: 25px; 
+      page-break-inside: avoid; 
+    }
+    .section-title { 
+      font-size: 9px; 
+      font-weight: 600; 
+      color: #64748b; 
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      border-bottom: 1px solid #e2e8f0; 
+      padding-bottom: 8px; 
+      margin-bottom: 12px; 
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10px;
+    }
+    .data-table th {
+      text-align: left;
+      font-size: 8px;
+      font-weight: 600;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 8px 10px;
+      border-bottom: 1px solid #e2e8f0;
+      background: #f8fafc;
+    }
+    .data-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #f1f5f9;
+      color: #334155;
+    }
+    .data-table tr:hover { background: #f8fafc; }
+    .data-table .mono {
+      font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+      font-size: 9px;
+    }
+    .data-table .amount {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      font-weight: 500;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      font-size: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #e2e8f0;
+    }
+    .status-approved { background: #f0fdf4; color: #166534; border-color: #bbf7d0; }
+    .status-pending { background: #fefce8; color: #854d0e; border-color: #fef08a; }
+    .status-denied { background: #fef2f2; color: #991b1b; border-color: #fecaca; }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 11px;
+    }
+    .summary-row:last-child { border-bottom: none; }
+    .summary-row .label { color: #64748b; }
+    .summary-row .value { font-weight: 500; color: #0f172a; }
+    .footer { 
+      text-align: center; 
+      padding-top: 30px; 
+      margin-top: 30px;
+      border-top: 1px solid #e2e8f0; 
+      font-size: 9px; 
+      color: #94a3b8;
+    }
+    @media print { 
+      body { padding: 0; }
+      .no-print { display: none; } 
+    }
   </style>
 </head>
 <body>
   <div class="header">
-    <div class="logo">📋 Recovery Casebook</div>
-    <div class="period">${periodLabel}</div>
-    <div class="generated">Generated ${format(new Date(), 'MMMM dd, yyyy \'at\' h:mm a')}</div>
+    <div>
+      <div class="logo">OPSIDE</div>
+      <div class="logo-sub">Recovery Statement</div>
+    </div>
+    <div class="header-right">
+      <div class="period">${periodLabel}</div>
+      <div class="generated">Generated ${format(new Date(), 'MMMM dd, yyyy')}</div>
+    </div>
   </div>
 
   <div class="summary-grid">
@@ -594,70 +721,81 @@ const generateCasebookPDF = (claims: RecoveryClaim[], dateRange: { from: Date; t
       <div class="summary-value">${totalClaims}</div>
       <div class="summary-label">Total Claims</div>
     </div>
-    <div class="summary-card green">
+    <div class="summary-card">
       <div class="summary-value">$${recoveredValue.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
       <div class="summary-label">Recovered</div>
     </div>
-    <div class="summary-card blue">
+    <div class="summary-card">
       <div class="summary-value">${pendingClaims.length}</div>
       <div class="summary-label">Pending</div>
     </div>
-    <div class="summary-card amber">
+    <div class="summary-card">
       <div class="summary-value">${successRate}%</div>
       <div class="summary-label">Success Rate</div>
     </div>
   </div>
 
   <div class="section">
-    <div class="section-title">📊 Summary by Status</div>
-    <div class="claim-row">
-      <span>Approved/Paid</span>
-      <span class="amount" style="color: #059669;">${approvedClaims.length} claims ($${recoveredValue.toLocaleString('en-US', { minimumFractionDigits: 2 })})</span>
+    <div class="section-title">Status Summary</div>
+    <div class="summary-row">
+      <span class="label">Approved / Paid</span>
+      <span class="value">${approvedClaims.length} claims — $${recoveredValue.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
     </div>
-    <div class="claim-row">
-      <span>Pending/Under Review</span>
-      <span class="amount" style="color: #3b82f6;">${pendingClaims.length} claims ($${pendingClaims.reduce((s, c) => s + (c.guaranteedAmount || c.amount || 0), 0).toLocaleString('en-US', { minimumFractionDigits: 2 })})</span>
+    <div class="summary-row">
+      <span class="label">Pending Review</span>
+      <span class="value">${pendingClaims.length} claims — $${pendingClaims.reduce((s, c) => s + (c.guaranteedAmount || c.amount || 0), 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
     </div>
-    <div class="claim-row">
-      <span>Denied/Rejected</span>
-      <span class="amount" style="color: #dc2626;">${deniedClaims.length} claims ($${deniedClaims.reduce((s, c) => s + (c.guaranteedAmount || c.amount || 0), 0).toLocaleString('en-US', { minimumFractionDigits: 2 })})</span>
+    <div class="summary-row">
+      <span class="label">Denied</span>
+      <span class="value">${deniedClaims.length} claims — $${deniedClaims.reduce((s, c) => s + (c.guaranteedAmount || c.amount || 0), 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
     </div>
   </div>
 
   <div class="section">
-    <div class="section-title">📁 Claims by Type</div>
+    <div class="section-title">Claims by Type</div>
     ${Object.entries(byType).map(([type, typeClaims]) => `
-      <div class="type-section">
-        <div class="type-header">
-          <span>${type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</span>
-          <span>${typeClaims.length} claims • $${typeClaims.reduce((s, c) => s + (c.guaranteedAmount || c.amount || 0), 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
-        </div>
+      <div class="summary-row">
+        <span class="label">${type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</span>
+        <span class="value">${typeClaims.length} claims — $${typeClaims.reduce((s, c) => s + (c.guaranteedAmount || c.amount || 0), 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
       </div>
     `).join('')}
   </div>
 
   <div class="section">
-    <div class="section-title">📋 Full Claim Ledger</div>
-    ${claims.map(c => {
+    <div class="section-title">Claim Ledger</div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Claim ID</th>
+          <th>Type</th>
+          <th>SKU</th>
+          <th>Status</th>
+          <th style="text-align: right;">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${claims.map(c => {
     const status = (c.status || 'unknown').toLowerCase();
     const statusClass = ['paid', 'approved', 'reconciled'].includes(status) ? 'status-approved'
       : ['submitted', 'pending', 'under review'].includes(status) ? 'status-pending'
-        : ['denied', 'rejected'].includes(status) ? 'status-denied' : 'status-other';
+        : ['denied', 'rejected'].includes(status) ? 'status-denied' : '';
     return `
-      <div class="claim-row">
-        <span class="claim-id">${c.claim_number || c.id.slice(0, 12)}...</span>
-        <span>${c.anomaly_type?.replace(/_/g, ' ') || c.type || '-'}</span>
-        <span>${c.sku || '-'}</span>
-        <span class="claim-status ${statusClass}">${c.status}</span>
-        <span class="amount">$${(c.guaranteedAmount || c.amount || 0).toFixed(2)}</span>
-      </div>`;
+        <tr>
+          <td class="mono">${c.claim_number || c.id.slice(0, 12)}</td>
+          <td>${c.anomaly_type?.replace(/_/g, ' ') || c.type || '—'}</td>
+          <td class="mono">${c.sku || '—'}</td>
+          <td><span class="status-badge ${statusClass}">${c.status || 'Unknown'}</span></td>
+          <td class="amount">$${(c.guaranteedAmount || c.amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+        </tr>`;
   }).join('')}
+      </tbody>
+    </table>
   </div>
 
   <div class="footer">
-    <p>This casebook was generated by Opside Recovery System</p>
-    <p>For audit, legal, and accounting purposes</p>
-    <p class="no-print" style="margin-top: 15px;"><strong>Press Ctrl+P (Cmd+P on Mac) to save as PDF</strong></p>
+    <p>Opside Recovery Platform — Confidential</p>
+    <p>For audit and accounting purposes only</p>
+    <p class="no-print" style="margin-top: 12px; color: #64748b;"><strong>Press Ctrl+P (Cmd+P) to save as PDF</strong></p>
   </div>
 </body>
 </html>`;
@@ -2259,7 +2397,7 @@ export default function Recoveries() {
                                 ? { from: dateRange.from, to: dateRange.to }
                                 : null;
                               generateCasebookPDF(rankedClaims, exportRange);
-                              toast({ title: '📋 Casebook Generated', description: 'Press Ctrl+P to save as PDF for audits and accounting.' });
+                              toast({ title: 'Statement Generated', description: 'Press Ctrl+P to save as PDF for audits and accounting.' });
                             }}
                           >
                             <ArrowUpFromLine className="h-3 w-3 mr-2" />
