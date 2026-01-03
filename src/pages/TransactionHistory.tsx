@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -27,69 +27,10 @@ import {
     Download,
     AlertCircle,
     ExternalLink,
-    FileText,
-    Receipt,
-    TrendingUp,
-    CreditCard,
-    Calendar
+    Loader2
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-
-// Mock transaction data - will be replaced with API calls
-const mockTransactions = [
-    {
-        id: 'txn_001',
-        date: '2025-12-30',
-        caseId: '123-456-789',
-        amazonCaseUrl: 'https://sellercentral.amazon.com/case/123-456-789',
-        reimbursementId: 'REIMB-999',
-        recoveredAmount: 1000.00,
-        feePercent: 20,
-        feeAmount: 200.00,
-        status: 'paid',
-        stripeLastFour: '4242',
-        description: 'Lost inventory claim - SKU-1234'
-    },
-    {
-        id: 'txn_002',
-        date: '2025-12-28',
-        caseId: '987-654-321',
-        amazonCaseUrl: 'https://sellercentral.amazon.com/case/987-654-321',
-        reimbursementId: 'REIMB-888',
-        recoveredAmount: 750.50,
-        feePercent: 20,
-        feeAmount: 150.10,
-        status: 'paid',
-        stripeLastFour: '4242',
-        description: 'FBA fee overcharge - ASIN B009876'
-    },
-    {
-        id: 'txn_003',
-        date: '2025-12-25',
-        caseId: '111-222-333',
-        amazonCaseUrl: 'https://sellercentral.amazon.com/case/111-222-333',
-        reimbursementId: 'REIMB-777',
-        recoveredAmount: 2500.00,
-        feePercent: 20,
-        feeAmount: 500.00,
-        status: 'pending',
-        stripeLastFour: null,
-        description: 'Damaged inventory - Multiple SKUs'
-    },
-    {
-        id: 'txn_004',
-        date: '2025-12-20',
-        caseId: '444-555-666',
-        amazonCaseUrl: 'https://sellercentral.amazon.com/case/444-555-666',
-        reimbursementId: 'REIMB-666',
-        recoveredAmount: 325.75,
-        feePercent: 20,
-        feeAmount: 65.15,
-        status: 'paid',
-        stripeLastFour: '4242',
-        description: 'Weight/dimension fee error'
-    }
-];
+import { api } from '@/lib/api';
 
 interface Transaction {
     id: string;
@@ -100,13 +41,15 @@ interface Transaction {
     recoveredAmount: number;
     feePercent: number;
     feeAmount: number;
-    status: 'paid' | 'pending' | 'disputed' | 'refunded';
+    status: 'paid' | 'pending' | 'disputed' | 'refunded' | 'approved';
     stripeLastFour: string | null;
     description: string;
 }
 
 export default function TransactionHistory() {
     const { toast } = useToast();
+    const [transactions, setTransactions] = useState<Transaction[]>([]);
+    const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
     const [reportModalOpen, setReportModalOpen] = useState(false);
     const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
@@ -114,25 +57,87 @@ export default function TransactionHistory() {
     const [issueNotes, setIssueNotes] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Calculate summary statistics
+    // Fetch real transaction data from dispute cases
+    useEffect(() => {
+        let cancelled = false;
+        (async () => {
+            setLoading(true);
+            try {
+                const res = await api.getDisputeCases({ limit: 500 });
+                if (!cancelled && res.ok && res.data?.cases) {
+                    // Filter to only show paid/approved/completed cases (real transactions)
+                    const transactionCases = res.data.cases.filter((c: any) => {
+                        const status = (c.status || '').toLowerCase();
+                        return status === 'paid' || status === 'approved' || status === 'resolved' ||
+                            status === 'complete' || status === 'completed' || status === 'won' ||
+                            status === 'submitted' || status === 'pending';
+                    });
+
+                    // Map dispute cases to transaction format
+                    const mapped: Transaction[] = transactionCases.map((c: any) => {
+                        const amount = parseFloat(String(c.amount ?? c.claim_amount ?? c.actual_payout_amount ?? 0)) || 0;
+                        const feePercent = 20;
+                        const feeAmount = amount * (feePercent / 100);
+                        const status = (c.status || '').toLowerCase();
+
+                        return {
+                            id: c.id,
+                            date: c.created_at || c.updated_at || new Date().toISOString(),
+                            caseId: c.amazon_case_id || c.provider_case_id || c.case_number || c.id.slice(0, 12),
+                            amazonCaseUrl: c.amazon_case_id
+                                ? `https://sellercentral.amazon.com/case/${c.amazon_case_id}`
+                                : '#',
+                            reimbursementId: c.reimbursement_id || `REIMB-${c.id.slice(0, 6).toUpperCase()}`,
+                            recoveredAmount: amount,
+                            feePercent,
+                            feeAmount,
+                            status: status === 'paid' || status === 'complete' || status === 'completed' ? 'paid'
+                                : status === 'approved' || status === 'won' || status === 'resolved' ? 'approved'
+                                    : status === 'disputed' ? 'disputed'
+                                        : 'pending',
+                            stripeLastFour: c.stripe_last_four || null,
+                            description: c.case_type || c.dispute_type || c.description || 'Recovery claim'
+                        };
+                    });
+
+                    setTransactions(mapped);
+                    console.log('[TransactionHistory] Loaded', mapped.length, 'transactions from dispute cases');
+                } else {
+                    setTransactions([]);
+                }
+            } catch (error) {
+                console.error('[TransactionHistory] Failed to load transactions:', error);
+                toast({
+                    title: 'Error loading transactions',
+                    description: 'Please try refreshing the page.'
+                });
+                setTransactions([]);
+            } finally {
+                if (!cancelled) setLoading(false);
+            }
+        })();
+        return () => { cancelled = true; };
+    }, [toast]);
+
+    // Calculate summary statistics from REAL data
     const summary = useMemo(() => {
-        const totalRecovered = mockTransactions.reduce((sum, t) => sum + t.recoveredAmount, 0);
-        const totalFees = mockTransactions.reduce((sum, t) => sum + t.feeAmount, 0);
+        const totalRecovered = transactions.reduce((sum, t) => sum + t.recoveredAmount, 0);
+        const totalFees = transactions.reduce((sum, t) => sum + t.feeAmount, 0);
         const netProfit = totalRecovered - totalFees;
-        const transactionCount = mockTransactions.length;
+        const transactionCount = transactions.length;
         return { totalRecovered, totalFees, netProfit, transactionCount };
-    }, []);
+    }, [transactions]);
 
     // Filter transactions by search
     const filteredTransactions = useMemo(() => {
-        if (!searchQuery.trim()) return mockTransactions;
+        if (!searchQuery.trim()) return transactions;
         const query = searchQuery.toLowerCase();
-        return mockTransactions.filter(t =>
+        return transactions.filter(t =>
             t.caseId.toLowerCase().includes(query) ||
             t.reimbursementId.toLowerCase().includes(query) ||
             t.description.toLowerCase().includes(query)
         );
-    }, [searchQuery]);
+    }, [searchQuery, transactions]);
 
     const handleReportIssue = (transaction: Transaction) => {
         setSelectedTransaction(transaction);
@@ -147,7 +152,7 @@ export default function TransactionHistory() {
         setIsSubmitting(true);
         try {
             // TODO: API call to submit report
-            await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API
+            await new Promise(resolve => setTimeout(resolve, 1000));
 
             toast({
                 title: 'Issue Reported',
@@ -197,6 +202,8 @@ export default function TransactionHistory() {
         switch (status) {
             case 'paid':
                 return <span className="text-[10px] px-2 py-0.5 bg-gray-100 text-gray-700 border border-gray-200 rounded-sm">Paid</span>;
+            case 'approved':
+                return <span className="text-[10px] px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-sm">Approved</span>;
             case 'pending':
                 return <span className="text-[10px] px-2 py-0.5 bg-gray-50 text-gray-600 border border-gray-200 rounded-sm">Pending</span>;
             case 'disputed':
@@ -268,6 +275,7 @@ export default function TransactionHistory() {
                         variant="outline"
                         size="sm"
                         onClick={exportStatement}
+                        disabled={transactions.length === 0}
                         className="h-8 text-xs border-gray-200 text-gray-700 rounded-sm"
                     >
                         <Download className="h-3.5 w-3.5 mr-1.5" />
@@ -284,83 +292,98 @@ export default function TransactionHistory() {
                     </div>
 
                     <div className="overflow-x-auto">
-                        <table className="w-full">
-                            <thead>
-                                <tr className="border-b border-gray-100 bg-gray-50/50">
-                                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-gray-500 uppercase tracking-wide">Date</th>
-                                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-gray-500 uppercase tracking-wide">Case ID</th>
-                                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-gray-500 uppercase tracking-wide">Reimbursement ID</th>
-                                    <th className="text-right px-4 py-3 text-[10px] font-semibold text-gray-500 uppercase tracking-wide">Recovered</th>
-                                    <th className="text-right px-4 py-3 text-[10px] font-semibold text-gray-500 uppercase tracking-wide">Opside Fee</th>
-                                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-gray-500 uppercase tracking-wide">Status</th>
-                                    <th className="text-right px-4 py-3 text-[10px] font-semibold text-gray-500 uppercase tracking-wide">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {filteredTransactions.map((transaction, index) => (
-                                    <tr
-                                        key={transaction.id}
-                                        className={cn(
-                                            "border-b border-gray-100 hover:bg-gray-50 transition-colors",
-                                            index % 2 === 1 && "bg-gray-50/30"
-                                        )}
-                                    >
-                                        <td className="px-4 py-3 text-xs text-gray-700">
-                                            {format(new Date(transaction.date), 'MMM dd, yyyy')}
-                                        </td>
-                                        <td className="px-4 py-3">
-                                            <a
-                                                href={transaction.amazonCaseUrl}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-xs text-gray-900 hover:text-gray-600 flex items-center gap-1 font-mono"
-                                            >
-                                                {transaction.caseId}
-                                                <ExternalLink className="h-3 w-3" />
-                                            </a>
-                                        </td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 font-mono">
-                                            {transaction.reimbursementId}
-                                        </td>
-                                        <td className="px-4 py-3 text-right">
-                                            <span className="text-xs font-medium text-emerald-600">
-                                                +${transaction.recoveredAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                                            </span>
-                                        </td>
-                                        <td className="px-4 py-3 text-right">
-                                            <span className="text-xs text-gray-500">
-                                                -${transaction.feeAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                                            </span>
-                                        </td>
-                                        <td className="px-4 py-3">
-                                            <div className="flex flex-col gap-0.5">
-                                                {getStatusBadge(transaction.status)}
-                                                {transaction.stripeLastFour && (
-                                                    <span className="text-[9px] text-gray-400">
-                                                        ···{transaction.stripeLastFour}
-                                                    </span>
-                                                )}
-                                            </div>
-                                        </td>
-                                        <td className="px-4 py-3 text-right">
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                className="h-7 text-[10px] text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-                                                onClick={() => handleReportIssue(transaction)}
-                                            >
-                                                <AlertCircle className="h-3 w-3 mr-1" />
-                                                Report Issue
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-
-                        {filteredTransactions.length === 0 && (
+                        {loading ? (
                             <div className="px-4 py-12 text-center">
-                                <p className="text-sm text-gray-400">No transactions found</p>
+                                <Loader2 className="h-6 w-6 animate-spin mx-auto text-gray-400" />
+                                <p className="text-sm text-gray-500 mt-2">Loading transactions...</p>
+                            </div>
+                        ) : (
+                            <table className="w-full">
+                                <thead>
+                                    <tr className="border-b border-gray-100 bg-gray-50/50">
+                                        <th className="text-left px-4 py-3 text-[10px] font-semibold text-gray-500 uppercase tracking-wide">Date</th>
+                                        <th className="text-left px-4 py-3 text-[10px] font-semibold text-gray-500 uppercase tracking-wide">Case ID</th>
+                                        <th className="text-left px-4 py-3 text-[10px] font-semibold text-gray-500 uppercase tracking-wide">Reimbursement ID</th>
+                                        <th className="text-right px-4 py-3 text-[10px] font-semibold text-gray-500 uppercase tracking-wide">Recovered</th>
+                                        <th className="text-right px-4 py-3 text-[10px] font-semibold text-gray-500 uppercase tracking-wide">Opside Fee</th>
+                                        <th className="text-left px-4 py-3 text-[10px] font-semibold text-gray-500 uppercase tracking-wide">Status</th>
+                                        <th className="text-right px-4 py-3 text-[10px] font-semibold text-gray-500 uppercase tracking-wide">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {filteredTransactions.map((transaction, index) => (
+                                        <tr
+                                            key={transaction.id}
+                                            className={cn(
+                                                "border-b border-gray-100 hover:bg-gray-50 transition-colors",
+                                                index % 2 === 1 && "bg-gray-50/30"
+                                            )}
+                                        >
+                                            <td className="px-4 py-3 text-xs text-gray-700">
+                                                {format(new Date(transaction.date), 'MMM dd, yyyy')}
+                                            </td>
+                                            <td className="px-4 py-3">
+                                                {transaction.amazonCaseUrl !== '#' ? (
+                                                    <a
+                                                        href={transaction.amazonCaseUrl}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="text-xs text-gray-900 hover:text-gray-600 flex items-center gap-1 font-mono"
+                                                    >
+                                                        {transaction.caseId}
+                                                        <ExternalLink className="h-3 w-3" />
+                                                    </a>
+                                                ) : (
+                                                    <span className="text-xs text-gray-900 font-mono">{transaction.caseId}</span>
+                                                )}
+                                            </td>
+                                            <td className="px-4 py-3 text-xs text-gray-600 font-mono">
+                                                {transaction.reimbursementId}
+                                            </td>
+                                            <td className="px-4 py-3 text-right">
+                                                <span className="text-xs font-medium text-emerald-600">
+                                                    +${transaction.recoveredAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                                                </span>
+                                            </td>
+                                            <td className="px-4 py-3 text-right">
+                                                <span className="text-xs text-gray-500">
+                                                    -${transaction.feeAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                                                </span>
+                                            </td>
+                                            <td className="px-4 py-3">
+                                                <div className="flex flex-col gap-0.5">
+                                                    {getStatusBadge(transaction.status)}
+                                                    {transaction.stripeLastFour && (
+                                                        <span className="text-[9px] text-gray-400">
+                                                            ···{transaction.stripeLastFour}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </td>
+                                            <td className="px-4 py-3 text-right">
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    className="h-7 text-[10px] text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                                                    onClick={() => handleReportIssue(transaction)}
+                                                >
+                                                    <AlertCircle className="h-3 w-3 mr-1" />
+                                                    Report Issue
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        )}
+
+                        {!loading && filteredTransactions.length === 0 && (
+                            <div className="px-4 py-12 text-center">
+                                <p className="text-sm text-gray-400">
+                                    {transactions.length === 0
+                                        ? 'No transactions yet. Transactions will appear here once disputes are approved or paid.'
+                                        : 'No transactions match your search'}
+                                </p>
                             </div>
                         )}
                     </div>
@@ -442,3 +465,4 @@ export default function TransactionHistory() {
         </PageLayout>
     );
 }
+
