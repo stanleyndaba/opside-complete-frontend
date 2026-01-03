@@ -688,55 +688,70 @@ export default function IntegrationsHub() {
                       </Button>
                     </div>
                     <Separator className="bg-gray-100" />
-                    <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                    <div className="flex flex-col gap-3">
                       <div>
                         <p className="text-sm font-semibold text-gray-900">Schedule</p>
-                        <p className="text-xs text-gray-500">Choose how often evidence is ingested.</p>
+                        <p className="text-xs text-gray-500">Choose when evidence is ingested.</p>
                       </div>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
-                        onClick={async () => {
-                          try {
-                            setUpdatingSchedule(true);
-                            const next = schedule === 'daily_0200' ? 'hourly' : 'daily_0200';
-                            const r = await api.setEvidenceSchedule(next);
-                            if (r.ok) {
-                              setSchedule(next);
-                              toast({
-                                title: 'Schedule Saved',
-                                description: next === 'hourly' ? 'Evidence will be ingested hourly.' : 'Evidence will be ingested daily at 02:00 UTC.',
-                              });
-                            } else {
-                              toast({
-                                title: 'Save Failed',
-                                description: r.error || 'Failed to update schedule. Please try again.',
-                                variant: 'destructive',
-                              });
-                            }
-                          } catch (error) {
-                            console.error('Failed to update schedule:', error);
-                            toast({
-                              title: 'Save Failed',
-                              description: 'An error occurred. Please try again.',
-                              variant: 'destructive',
-                            });
-                          } finally {
-                            setUpdatingSchedule(false);
-                          }
-                        }}
-                        disabled={updatingSchedule}
-                      >
-                        {updatingSchedule ? (
-                          <>
-                            <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
-                            Updating…
-                          </>
-                        ) : (
-                          schedule === 'daily_0200' ? 'Daily 02:00 UTC' : 'Hourly'
-                        )}
-                      </Button>
+                      <div className="grid grid-cols-4 gap-2">
+                        {[
+                          { value: 'hourly', label: 'Hourly' },
+                          { value: 'daily_0200', label: '02:00 UTC' },
+                          { value: 'daily_0600', label: '06:00 UTC' },
+                          { value: 'daily_1000', label: '10:00 UTC' },
+                          { value: 'daily_1400', label: '14:00 UTC' },
+                          { value: 'daily_1800', label: '18:00 UTC' },
+                          { value: 'daily_2200', label: '22:00 UTC' },
+                        ].map((opt) => (
+                          <button
+                            key={opt.value}
+                            type="button"
+                            className={cn(
+                              "px-3 py-2 text-xs border transition-colors",
+                              schedule === opt.value
+                                ? "bg-gray-900 text-white border-gray-900"
+                                : "bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100"
+                            )}
+                            disabled={updatingSchedule}
+                            onClick={async () => {
+                              if (schedule === opt.value) return;
+                              try {
+                                setUpdatingSchedule(true);
+                                const r = await api.setEvidenceSchedule(opt.value);
+                                if (r.ok) {
+                                  setSchedule(opt.value);
+                                  toast({
+                                    title: 'Schedule Updated',
+                                    description: opt.value === 'hourly'
+                                      ? 'Evidence will be ingested every hour.'
+                                      : `Evidence will be ingested daily at ${opt.label}.`,
+                                  });
+                                } else {
+                                  toast({
+                                    title: 'Update Failed',
+                                    description: r.error || 'Failed to update schedule.',
+                                    variant: 'destructive',
+                                  });
+                                }
+                              } catch (error) {
+                                toast({
+                                  title: 'Update Failed',
+                                  description: 'An error occurred. Please try again.',
+                                  variant: 'destructive',
+                                });
+                              } finally {
+                                setUpdatingSchedule(false);
+                              }
+                            }}
+                          >
+                            {updatingSchedule && schedule === opt.value ? (
+                              <RefreshCw className="h-3 w-3 animate-spin mx-auto" />
+                            ) : (
+                              opt.label
+                            )}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                     <Separator className="bg-gray-100" />
                     <div className="space-y-6">
