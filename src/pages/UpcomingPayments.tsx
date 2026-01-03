@@ -5,9 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { recoveryApi } from '@/lib/recoveryApi';
 import { api } from '@/lib/api';
-import { detectionApi } from '@/lib/detectionApi';
 import { Link } from 'react-router-dom';
 
 interface RecoveryClaim {
@@ -51,92 +49,57 @@ export default function UpcomingPayments() {
     (async () => {
       setLoading(true);
       try {
-        // Fetch both recoveries and dispute cases
-        const [res, casesRes] = await Promise.all([
-          recoveryApi.getRecoveries(),
-          api.getDisputeCases({ limit: 100 }).catch(() => ({ ok: false, data: null }))
-        ]);
+        // Fetch dispute cases as the PRIMARY data source - no fallbacks/mocks
+        const casesRes = await api.getDisputeCases({ limit: 500 });
 
         if (!cancelled) {
-          // Store dispute cases
-          if (casesRes.ok && casesRes.data?.cases) {
-            setDisputeCases(casesRes.data.cases);
-          }
+          if (casesRes.ok && casesRes.data?.cases && casesRes.data.cases.length > 0) {
+            const cases = casesRes.data.cases;
+            setDisputeCases(cases);
 
-          if (Array.isArray(res) && res.length > 0) {
-            // Map API response to frontend format
-            const mapped = (res as any[]).map((c) => {
-              // Find matching dispute case
-              const disputeCase = casesRes.ok && casesRes.data?.cases
-                ? casesRes.data.cases.find((dc: any) => dc.claim_id === c.id)
-                : null;
+            // Map dispute cases to RecoveryClaim format
+            const mapped = cases.map((c: any) => ({
+              id: c.id,
+              created: c.created_at || c.created,
+              type: c.case_type || c.dispute_type || 'unknown',
+              status: c.status || 'pending',
+              guaranteedAmount: parseFloat(String(c.amount ?? c.claim_amount ?? c.actual_payout_amount ?? 0)) || 0,
+              expectedPayoutDate: (c.expected_payout_date ?? c.expectedPayoutDate ?? null) as string | null,
+              currency: (c.currency ?? 'USD') as string,
+              filing_status: c.filing_status,
+              amazon_case_id: c.amazon_case_id || c.provider_case_id,
+              case_id: c.id,
+            })) as RecoveryClaim[];
 
-              return {
-                id: c.id || c.claim_id,
-                created: c.created || c.created_at,
-                type: c.type || c.dispute_type || 'unknown',
-                status: c.status,
-                guaranteedAmount: c.guaranteedAmount ?? c.amount ?? c.claim_amount ?? c.actual_payout_amount ?? c.estimated_value ?? 0,
-                expectedPayoutDate: (c.expectedPayoutDate ?? c.expected_payout_date ?? null) as string | null,
-                currency: (c.currency ?? 'USD') as string,
-                // Add dispute case data
-                filing_status: disputeCase?.filing_status,
-                amazon_case_id: disputeCase?.amazon_case_id,
-                case_id: disputeCase?.id,
-              };
-            }) as RecoveryClaim[];
             setClaims(mapped);
             const firstWithCurrency = (mapped.find(c => !!c.currency)?.currency) || 'USD';
             setCurrency(firstWithCurrency);
             setErrorMessage(null);
+
+            console.log('[UpcomingPayments] Loaded', mapped.length, 'dispute cases');
           } else {
-            // Fallback: Try detection results if recoveryApi returns empty
-            console.log('[UpcomingPayments] No data from recoveryApi, trying detectionApi...');
-            try {
-              const detectionRes = await detectionApi.getDetectionResults({ limit: 100 });
-              if (detectionRes?.results && detectionRes.results.length > 0) {
-                console.log('[UpcomingPayments] Fallback: Got', detectionRes.results.length, 'detection results');
-                const mapped = detectionRes.results.map((d: any) => ({
-                  id: d.id,
-                  created: d.created_at || d.discovery_date,
-                  type: d.anomaly_type || 'detection',
-                  status: d.status || 'Open',
-                  guaranteedAmount: parseFloat(String(d.estimated_value ?? 0)) || 0,
-                  expectedPayoutDate: null,
-                  currency: d.currency || 'USD',
-                  filing_status: null,
-                  amazon_case_id: null,
-                  case_id: null,
-                })) as RecoveryClaim[];
-                setClaims(mapped);
-                const firstWithCurrency = (mapped.find(c => !!c.currency)?.currency) || 'USD';
-                setCurrency(firstWithCurrency);
-                setErrorMessage(null);
-              } else {
-                setClaims([]);
-                setErrorMessage(null);
-              }
-            } catch (detectionErr) {
-              console.warn('[UpcomingPayments] Detection fallback also failed:', detectionErr);
-              setClaims([]);
-              setErrorMessage(null);
-            }
+            // No dispute cases found - show empty state (no mock data!)
+            console.log('[UpcomingPayments] No dispute cases found');
+            setClaims([]);
+            setDisputeCases([]);
+            setErrorMessage(null);
           }
         }
       } catch (error: any) {
         if (!cancelled) {
-          console.error('Failed to load upcoming payments:', error);
+          console.error('Failed to load dispute cases:', error);
           const status = error?.status || error?.response?.status;
           if (status === 401) {
-            setErrorMessage('Session expired. Please refresh or reconnect your Amazon account to see upcoming payouts.');
+            setErrorMessage('Session expired. Please refresh or reconnect your Amazon account.');
           } else {
             toast({
-              title: 'Could not load upcoming payments',
+              title: 'Could not load payment recoveries',
               description: error?.message || 'Please try again later.'
             });
-            setErrorMessage(error?.message || 'We could not load upcoming payouts. Please try again shortly.');
+            setErrorMessage(error?.message || 'We could not load payment data. Please try again shortly.');
           }
           setClaims([]);
+          setDisputeCases([]);
         }
       } finally {
         if (!cancelled) setLoading(false);
