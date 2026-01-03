@@ -30,20 +30,20 @@ export default function IntegrationsHub() {
     excludeSenders: string[];
     subjectKeywords: string[];
     excludeSubjects: string[];
-    fileTypes: { pdf: boolean; images: boolean; spreadsheets: boolean; docs: boolean };
+    fileTypes: { pdf: boolean; images: boolean; spreadsheets: boolean; docs: boolean; shipping: boolean };
     fileNamePatterns: string[];
     folders: string[];
     dateRange: 'last_30' | 'last_90' | 'last_12_months' | 'since_last_sync' | 'all';
     skipDuplicates: boolean;
     skipExisting: boolean;
   }>({
-    senderPatterns: ['*@amazon.com', '*invoice*'],
+    senderPatterns: ['*@amazon.com', '*invoice*', '*@fedex.com', '*@ups.com', '*@dhl.com', '*@usps.com'],
     excludeSenders: ['*newsletter*', '*marketing*', '*promo*'],
-    subjectKeywords: ['invoice', 'receipt', 'reimbursement', 'case', 'shipment', 'order'],
+    subjectKeywords: ['invoice', 'receipt', 'reimbursement', 'case', 'shipment', 'order', 'tracking', 'delivery', 'carrier', 'freight', 'BOL', 'manifest'],
     excludeSubjects: ['unsubscribe', 'promotional'],
-    fileTypes: { pdf: true, images: true, spreadsheets: true, docs: false },
-    fileNamePatterns: ['invoice', 'receipt', 'order', 'FBA', 'shipment', 'reimburse'],
-    folders: ['/Finance', '/Invoices', '/Amazon'],
+    fileTypes: { pdf: true, images: true, spreadsheets: true, docs: false, shipping: true },
+    fileNamePatterns: ['invoice', 'receipt', 'order', 'FBA', 'shipment', 'reimburse', 'tracking', 'BOL', 'POD', 'manifest', 'delivery', 'freight'],
+    folders: ['/Finance', '/Invoices', '/Amazon', '/Shipping'],
     dateRange: 'last_90',
     skipDuplicates: true,
     skipExisting: true
@@ -852,6 +852,15 @@ export default function IntegrationsHub() {
                               />
                               <span className="text-xs text-gray-700">DOC / DOCX</span>
                             </label>
+                            <label className="flex items-center gap-2 px-3 py-2 bg-gray-50 border border-gray-200 cursor-pointer hover:bg-gray-100">
+                              <input
+                                type="checkbox"
+                                checked={filters.fileTypes.shipping}
+                                onChange={(e) => setFilters(f => ({ ...f, fileTypes: { ...f.fileTypes, shipping: e.target.checked } }))}
+                                className="w-3.5 h-3.5 text-gray-900 border-gray-300 focus:ring-gray-500"
+                              />
+                              <span className="text-xs text-gray-700">Shipping (BOL/POD)</span>
+                            </label>
                           </div>
                         </div>
 
@@ -860,7 +869,7 @@ export default function IntegrationsHub() {
                           <label className="block text-[9px] font-semibold text-gray-500 uppercase tracking-[0.1em]">File Name Contains</label>
                           <p className="text-[10px] text-gray-400 -mt-1">Match attachment names containing these terms.</p>
                           <Input
-                            placeholder="invoice, receipt, order, FBA, shipment, reimburse"
+                            placeholder="invoice, receipt, order, FBA, shipment, tracking, BOL, POD, manifest, freight"
                             value={filters.fileNamePatterns.join(', ')}
                             onChange={(e) => setFilters(f => ({ ...f, fileNamePatterns: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
                             className="border-gray-200 bg-gray-50 text-gray-900 placeholder:text-gray-400 text-xs h-9"
