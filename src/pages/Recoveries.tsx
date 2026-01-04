@@ -1377,6 +1377,7 @@ export default function Recoveries() {
       claim_number: det.claim_number || det.evidence?.claim_number,
       source: 'detected',
       type: det.anomaly_type || 'Detected Claim',
+      anomaly_type: det.anomaly_type, // Keep original for evidence validation
       details: `${det.anomaly_type || 'Claim'} detected with ${(det.confidence_score * 100).toFixed(0)}% confidence`,
       status: det.status || 'New',
       guaranteedAmount: det.estimated_value || 0,
@@ -1387,12 +1388,18 @@ export default function Recoveries() {
       deadline_date: det.deadline_date,
       created: det.discovery_date || det.created_at || new Date().toISOString(),
       expectedPayoutDate: det.deadline_date || null,
-      sku: det.evidence?.sku || 'N/A',
-      asin: det.evidence?.asin || 'N/A',
+      sku: det.evidence?.sku || det.sku || 'N/A',
+      asin: det.evidence?.asin || det.asin || 'N/A',
+      order_id: det.evidence?.order_id || det.order_id,
+      shipment_id: det.evidence?.shipment_id || det.shipment_id,
+      quantity: det.evidence?.quantity || det.quantity,
       _confidence: det.confidence_score,
       _priority: (det.confidence_score || 0) * (det.estimated_value || 0),
       _evidence: det.days_remaining && det.days_remaining <= 7 ? 'Ready' : 'Collecting',
-      _matchedCount: 0,
+      // Use actual matched_document_ids from backend if available
+      matchedDocs: det.matched_documents || [], // Backend may provide matched docs directly
+      matchedCount: Array.isArray(det.matched_document_ids) ? det.matched_document_ids.length : 0,
+      _matchedCount: Array.isArray(det.matched_document_ids) ? det.matched_document_ids.length : 0,
     }));
 
     // Mark synced recoveries
