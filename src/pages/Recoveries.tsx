@@ -305,8 +305,8 @@ const EvidenceQualityBadge = ({ validation, claim, matchedDocs }: { validation: 
   const requiredFields = policy.required || [];
   const optionalFields = policy.optional || [];
 
-  // Count matched documents
-  const docCount = matchedDocs?.length || claim?.matchedDocs?.length || claim?.matchedCount || 0;
+  // Count matched documents - use all possible sources
+  const docCount = matchedDocs?.length || claim?.matchedDocs?.length || claim?.matchedCount || (claim as any)?._matchedCount || 0;
 
   // Calculate readiness percentage (required fields)
   const requiredPresent = requiredFields.filter(f => presentFieldNames.includes(f)).length;
@@ -385,14 +385,22 @@ const EvidenceQualityBadge = ({ validation, claim, matchedDocs }: { validation: 
                 Matched Documents ({docCount})
               </div>
               <div className="space-y-0.5">
-                {(matchedDocs || claim?.matchedDocs || []).slice(0, 3).map((doc: any, i: number) => (
-                  <div key={i} className="text-[10px] text-gray-600 truncate">
-                    {doc.filename || doc.title || doc.name || `Document ${i + 1}`}
-                  </div>
-                ))}
-                {docCount > 3 && (
-                  <div className="text-[9px] text-gray-400">
-                    +{docCount - 3} more documents
+                {(matchedDocs || claim?.matchedDocs || []).length > 0 ? (
+                  <>
+                    {(matchedDocs || claim?.matchedDocs || []).slice(0, 3).map((doc: any, i: number) => (
+                      <div key={i} className="text-[10px] text-gray-600 truncate">
+                        {doc.filename || doc.title || doc.name || `Document ${i + 1}`}
+                      </div>
+                    ))}
+                    {docCount > 3 && (
+                      <div className="text-[9px] text-gray-400">
+                        +{docCount - 3} more documents
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="text-[10px] text-gray-500">
+                    {docCount} linked document{docCount !== 1 ? 's' : ''} — click "Proof Documents" to view
                   </div>
                 )}
               </div>
