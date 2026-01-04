@@ -2346,7 +2346,7 @@ export default function Recoveries() {
                 {/* Claims Tab (Existing Content) */}
                 <TabsContent value="claims" className="mt-0">
                   {/* Controls */}
-                  <div className="mb-6 bg-white border border-gray-200 rounded-sm">
+                  <div className="mb-6 bg-white border border-white rounded-sm">
                     <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
                       <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Capital Recovery</h3>
                       <p className="text-[10px] text-gray-500 mt-0.5">Track finalized reimbursements and measure your automated ROI.</p>

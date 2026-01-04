@@ -327,7 +327,7 @@ export function DisputeCasesTable() {
       </div>
 
       {/* Cases Table */}
-      <Card className="bg-white border-gray-200 rounded-sm">
+      <Card className="bg-white border-white rounded-sm">
         <CardContent className="p-0">
           {cases.length === 0 ? (
             <div className="p-8 text-center">
