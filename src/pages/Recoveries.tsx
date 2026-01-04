@@ -2563,23 +2563,23 @@ export default function Recoveries() {
                           onMouseLeave={handleMouseLeave}
                         >
                           <Table style={{ minWidth: '1600px', width: 'max-content' }}>
-                            <TableHeader className="border-b border-gray-200">
+                            <TableHeader>
                               <TableRow className="hover:bg-transparent">
-                                <TableHead className="py-3 border-b border-gray-200">
+                                <TableHead className="py-3">
                                   <Checkbox checked={selectedIds.size > 0 && selectedIds.size === filteredClaims.length} onCheckedChange={(checked) => {
                                     if (checked) setSelectedIds(new Set(filteredClaims.map(c => c.id)));
                                     else setSelectedIds(new Set());
                                   }} />
                                 </TableHead>
-                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3 border-b border-gray-200">Claim ID</TableHead>
-                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3 border-b border-gray-200">Created</TableHead>
-                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3 border-b border-gray-200">Details</TableHead>
-                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3 border-b border-gray-200">Status</TableHead>
-                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3 border-b border-gray-200">Duplicate</TableHead>
-                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3 border-b border-gray-200">Days Left</TableHead>
-                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3 border-b border-gray-200">Evidence</TableHead>
-                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3 border-b border-gray-200">Est. Value</TableHead>
-                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3 border-b border-gray-200"></TableHead>
+                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Claim ID</TableHead>
+                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Created</TableHead>
+                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Details</TableHead>
+                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Status</TableHead>
+                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Duplicate</TableHead>
+                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Days Left</TableHead>
+                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Evidence</TableHead>
+                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Est. Value</TableHead>
+                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3"></TableHead>
                               </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -2598,7 +2598,7 @@ export default function Recoveries() {
                                   <TableRow
                                     key={claim.id}
                                     className={cn(
-                                      "border-b border-gray-100 hover:bg-gray-50/50",
+                                      "hover:bg-gray-50/50",
                                       isCritical && "bg-red-50/50 border-l-4 border-l-red-600",
                                       isUrgent && !isCritical && "bg-amber-50/50 border-l-4 border-l-amber-600"
                                     )}
