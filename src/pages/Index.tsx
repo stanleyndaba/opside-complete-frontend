@@ -441,7 +441,7 @@ const Index = () => {
               </DropdownMenu>
               <Link
                 to="/contact"
-                className="h-9 rounded-full border border-emerald-500 bg-emerald-500 px-4 text-sm font-medium text-white hover:bg-emerald-600 transition-colors inline-flex items-center"
+                className="h-9 rounded-full bg-transparent px-4 text-sm font-medium text-gray-900 hover:bg-gray-100 transition-colors inline-flex items-center"
               >
                 Contact Sales
               </Link>
@@ -796,7 +796,7 @@ const Index = () => {
               className="flex-shrink-0"
             >
               <Button
-                className="bg-black border border-white hover:bg-gray-900 text-white font-medium px-4 py-2 md:px-6 md:py-2.5 text-sm md:text-base shadow-lg transition-colors whitespace-nowrap"
+                className="bg-black hover:bg-gray-900 text-white font-medium px-4 py-2 md:px-6 md:py-2.5 text-sm md:text-base shadow-lg transition-colors whitespace-nowrap"
                 style={{ fontFamily: 'Inter, sans-serif' }}
               >
                 Immediate Access →
