@@ -3185,39 +3185,76 @@ export default function Recoveries() {
                   documents={proofDocs}
                 />
 
-                {/* Claim Details Modal */}
+                {/* Claim Details Modal - Institutional Banking Style */}
                 <Dialog open={detailsModalOpen} onOpenChange={setDetailsModalOpen}>
-                  <DialogContent className="bg-white border-gray-200 text-gray-700 max-w-2xl max-h-[90vh] overflow-y-auto">
-                    <DialogHeader>
-                      <DialogTitle className="text-xl font-semibold text-gray-900">
-                        Claim Details
-                      </DialogTitle>
+                  <DialogContent className="bg-white border-gray-200 text-gray-700 max-w-2xl max-h-[90vh] overflow-y-auto p-0">
+                    {/* Header - Institutional Style */}
+                    <div className="px-6 py-4 border-b border-gray-200">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-[0.2em] mb-1">OPSIDE</div>
+                          <DialogTitle className="text-base font-semibold text-gray-900">
+                            Claim Details
+                          </DialogTitle>
+                        </div>
+                        <div className="text-right">
+                          {detectionDetails && (
+                            <>
+                              <div
+                                className="text-xs font-mono text-gray-600 cursor-pointer hover:text-gray-900 transition-colors"
+                                onClick={() => {
+                                  navigator.clipboard.writeText(detectionDetails.id || '');
+                                  toast({ title: 'Copied', description: 'Claim ID copied to clipboard' });
+                                }}
+                                title="Click to copy"
+                              >
+                                REF: {(detectionDetails.claim_number || detectionDetails.id?.slice(0, 12) || '').toUpperCase()}
+                              </div>
+                              <div className="text-[10px] text-gray-400 mt-0.5">
+                                {detectionDetails.created_at || detectionDetails.discovery_date
+                                  ? format(new Date(detectionDetails.created_at || detectionDetails.discovery_date), 'MMM dd, yyyy')
+                                  : ''
+                                }
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      </div>
                       {detectionDetails && (
-                        <DialogDescription className="text-gray-600">
-                          {detectionDetails.anomaly_type?.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Recovery Claim'}
-                        </DialogDescription>
+                        <div className="mt-2 text-xs text-gray-500 uppercase tracking-wide">
+                          {(detectionDetails.anomaly_type || detectionDetails.type || 'Recovery Claim').replace(/_/g, ' ').toUpperCase()}
+                        </div>
                       )}
-                    </DialogHeader>
+                    </div>
+
                     {detectionDetails && (
-                      <div className="space-y-6 py-4">
-                        {/* Summary Information */}
-                        <div className="border border-gray-200 rounded-lg overflow-hidden">
+                      <div className="px-6 py-4 space-y-5">
+                        {/* Summary Card - Institutional Style */}
+                        <div className="border border-gray-200">
                           <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-                            <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Claim Summary</h4>
+                            <h4 className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.15em]">Claim Summary</h4>
                           </div>
-                          <div className="divide-y divide-gray-200">
-                            <div className="flex justify-between items-center px-4 py-3 bg-white">
-                              <span className="text-sm text-gray-600">Amount</span>
-                              <span className="text-sm font-medium text-gray-900">${(detectionDetails.guaranteedAmount || detectionDetails.amount || 0).toFixed(2)}</span>
+                          <div className="divide-y divide-gray-100">
+                            <div className="flex justify-between items-center px-4 py-2.5">
+                              <span className="text-[11px] text-gray-500 uppercase tracking-wide">Amount</span>
+                              <span className="text-sm font-semibold text-gray-900 font-mono">
+                                {formatCurrency(detectionDetails.guaranteedAmount || detectionDetails.amount || detectionDetails.estimated_value || 0, detectionDetails.currency || 'USD')}
+                              </span>
                             </div>
-                            <div className="flex justify-between items-center px-4 py-3 bg-white">
-                              <span className="text-sm text-gray-600">Status</span>
-                              <span className="text-sm font-medium text-gray-900">{detectionDetails.status || 'Pending'}</span>
+                            <div className="flex justify-between items-center px-4 py-2.5">
+                              <span className="text-[11px] text-gray-500 uppercase tracking-wide">Status</span>
+                              <span className="text-xs font-medium text-gray-900 uppercase">{detectionDetails.status || 'Pending'}</span>
                             </div>
-                            <div className="flex justify-between items-center px-4 py-3 bg-white">
-                              <span className="text-sm text-gray-600">Evidence Documents</span>
-                              <span className="text-sm font-medium text-gray-900">{detectionDetails.matchedCount || detectionDetails.matchedDocs?.length || 0}</span>
+                            <div className="flex justify-between items-center px-4 py-2.5">
+                              <span className="text-[11px] text-gray-500 uppercase tracking-wide">Evidence</span>
+                              <span className="text-xs font-medium text-gray-900">{detectionDetails.matchedCount || detectionDetails.matchedDocs?.length || 0} document{(detectionDetails.matchedCount || 0) !== 1 ? 's' : ''}</span>
                             </div>
+                            {detectionDetails.confidence_score !== null && detectionDetails.confidence_score !== undefined && (
+                              <div className="flex justify-between items-center px-4 py-2.5">
+                                <span className="text-[11px] text-gray-500 uppercase tracking-wide">Confidence</span>
+                                <span className="text-xs font-medium text-gray-900">{(detectionDetails.confidence_score * 100).toFixed(0)}%</span>
+                              </div>
+                            )}
                           </div>
                         </div>
 
@@ -3333,19 +3370,21 @@ export default function Recoveries() {
                           );
                         })()}
 
-                        {/* Financial Information */}
-                        <div className="border-t border-gray-100 pt-4">
-                          <h4 className="text-sm font-semibold text-gray-900 mb-3">Financial Information</h4>
-                          <div className="grid grid-cols-2 gap-4">
-                            <div>
-                              <div className="text-xs text-gray-500 uppercase tracking-wide">Estimated Value</div>
-                              <div className="text-lg font-semibold text-emerald-600 mt-1">
+                        {/* Financial Information - Institutional Style */}
+                        <div className="border border-gray-200">
+                          <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
+                            <h4 className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.15em]">Financial Information</h4>
+                          </div>
+                          <div className="divide-y divide-gray-100">
+                            <div className="flex justify-between items-center px-4 py-2.5">
+                              <span className="text-[11px] text-gray-500 uppercase tracking-wide">Estimated Value</span>
+                              <span className="text-sm font-semibold text-gray-900 font-mono">
                                 {formatCurrency(detectionDetails.estimated_value || detectionDetails.guaranteedAmount || 0, detectionDetails.currency || 'USD')}
-                              </div>
+                              </span>
                             </div>
-                            <div>
-                              <div className="text-xs text-gray-500 uppercase tracking-wide">Currency</div>
-                              <div className="text-sm text-gray-900 mt-1">{detectionDetails.currency || 'USD'}</div>
+                            <div className="flex justify-between items-center px-4 py-2.5">
+                              <span className="text-[11px] text-gray-500 uppercase tracking-wide">Currency</span>
+                              <span className="text-xs font-medium text-gray-900 uppercase">{detectionDetails.currency || 'USD'}</span>
                             </div>
                           </div>
                         </div>
