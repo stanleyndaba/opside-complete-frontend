@@ -341,24 +341,24 @@ export function DisputeCasesTable() {
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
-                  <TableRow className="border-slate-200 bg-slate-100">
-                    <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Case #</TableHead>
-                    <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Claim ID</TableHead>
-                    <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Status</TableHead>
-                    <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Filing Status</TableHead>
-                    <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Amount</TableHead>
-                    <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Amazon Case</TableHead>
-                    <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Retries</TableHead>
-                    <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Actions</TableHead>
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Case #</TableHead>
+                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Claim ID</TableHead>
+                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Status</TableHead>
+                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Filing Status</TableHead>
+                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Amount</TableHead>
+                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Amazon Case</TableHead>
+                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Retries</TableHead>
+                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3"></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {cases.map((caseItem) => (
-                    <TableRow key={caseItem.id || Math.random()} className="border-slate-200 hover:bg-slate-50">
-                      <TableCell className="py-2">
+                    <TableRow key={caseItem.id || Math.random()} className="hover:bg-gray-50/50">
+                      <TableCell className="py-3">
                         <span className="font-mono text-xs text-slate-900">{caseItem.case_number || '—'}</span>
                       </TableCell>
-                      <TableCell className="py-2">
+                      <TableCell className="py-3">
                         {caseItem.claim_id ? (
                           <Button asChild variant="link" className="p-0 h-auto text-xs text-slate-700 hover:text-slate-900 font-mono">
                             <Link to={`/recoveries/${caseItem.claim_id}`}>
@@ -369,18 +369,18 @@ export function DisputeCasesTable() {
                           <span className="text-xs text-slate-400 font-mono">—</span>
                         )}
                       </TableCell>
-                      <TableCell className="py-2">
+                      <TableCell className="py-3">
                         {getStatusBadge(caseItem.status || 'unknown')}
                       </TableCell>
-                      <TableCell className="py-2">
+                      <TableCell className="py-3">
                         {getFilingStatusBadge(caseItem.filing_status, caseItem.filing_error)}
                       </TableCell>
-                      <TableCell className="py-2">
+                      <TableCell className="py-3">
                         <span className="text-xs font-bold text-slate-900 font-mono">
                           {formatCurrency(caseItem.amount || 0, caseItem.currency || 'USD')}
                         </span>
                       </TableCell>
-                      <TableCell className="py-2">
+                      <TableCell className="py-3">
                         {caseItem.amazon_case_id ? (
                           <div className="flex items-center gap-1.5">
                             <span className="font-mono text-xs text-slate-700">{caseItem.amazon_case_id}</span>
@@ -392,7 +392,7 @@ export function DisputeCasesTable() {
                           <span className="text-xs text-slate-400 font-mono">—</span>
                         )}
                       </TableCell>
-                      <TableCell className="py-2">
+                      <TableCell className="py-3">
                         {caseItem.retry_count && caseItem.retry_count > 0 ? (
                           <span className="text-[10px] px-1.5 py-0.5 bg-amber-100 text-amber-800 border border-amber-300 rounded-none font-mono">
                             {caseItem.retry_count}
@@ -401,7 +401,7 @@ export function DisputeCasesTable() {
                           <span className="text-xs text-slate-400 font-mono">0</span>
                         )}
                       </TableCell>
-                      <TableCell className="py-2">
+                      <TableCell className="py-3">
                         <div className="flex items-center gap-2">
                           {renderFilingActions(caseItem)}
                           {caseItem.claim_id && (
