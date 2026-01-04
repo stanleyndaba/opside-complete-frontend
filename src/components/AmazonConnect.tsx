@@ -230,10 +230,15 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         disabled={connecting}
         className={cn(
           isFullWidth ? 'w-full' : 'w-auto',
-          'justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-semibold shadow-lg transition-colors px-8',
+          'justify-center font-semibold shadow-lg transition-colors px-8',
           connecting && usingExisting && 'opacity-80',
           className
         )}
+        style={{
+          backgroundColor: '#000000',
+          borderRadius: '0px',
+          color: '#ffffff'
+        }}
         size="lg"
       >
         {connecting && usingExisting ? (
