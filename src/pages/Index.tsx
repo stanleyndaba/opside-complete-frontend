@@ -780,7 +780,7 @@ const Index = () => {
         className={`fixed bottom-0 left-0 right-0 z-50 w-full px-3 py-2.5 md:px-6 md:py-5 transition-transform duration-300 ease-in-out ${showBanner ? 'translate-y-0' : 'translate-y-full'
           }`}
         style={{
-          backgroundColor: '#1f4037',
+          backgroundColor: '#000000',
           fontFamily: 'Inter, sans-serif'
         }}
       >
@@ -796,7 +796,7 @@ const Index = () => {
               className="flex-shrink-0"
             >
               <Button
-                className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium px-4 py-2 md:px-6 md:py-2.5 text-sm md:text-base shadow-lg transition-colors whitespace-nowrap"
+                className="bg-black border border-white hover:bg-gray-900 text-white font-medium px-4 py-2 md:px-6 md:py-2.5 text-sm md:text-base shadow-lg transition-colors whitespace-nowrap"
                 style={{ fontFamily: 'Inter, sans-serif' }}
               >
                 Immediate Access →
