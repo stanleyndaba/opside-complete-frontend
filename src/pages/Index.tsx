@@ -594,7 +594,7 @@ const Index = () => {
                 </h1>
 
                 <p className="font-montserrat text-base md:text-lg text-gray-600 font-normal max-w-xl leading-relaxed">
-                  The world's first autonomous 11-Agent Audit Engine. Margin detects, matches, and recovers lost revenue from Amazon FBA errors in minutes—not months.
+                  The world's first autonomous 15-Point Forensic Audit. Margin detects, matches, and recovers lost revenue from Amazon FBA errors in minutes—not months.
                 </p>
 
                 <div className="w-full flex flex-col gap-6">
@@ -608,40 +608,37 @@ const Index = () => {
                     </Link>
                   </div>
                   {/* Trust text */}
-                  <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500">
-                    <span>256-bit Encrypted</span>
-                    <span>•</span>
-                    <span>No credit cards</span>
-                    <span>•</span>
-                    <span>Cancel anytime</span>
-                  </div>
+                  <span>No credit cards</span>
+                  <span>•</span>
+                  <span>Cancel anytime</span>
                 </div>
+              </div>
 
-                <div ref={metricsRef} className="w-full pt-8 border-t border-gray-100">
-                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-4">
-                    {HERO_METRICS.map((metric, index) => {
-                      const currentValue = metricValues[index];
-                      const displayValue =
-                        metric.label === 'monitoring'
-                          ? `${Math.min(Math.round(currentValue), metric.target)}/7`
-                          : `${currentValue.toFixed(metric.decimals)}${metric.suffix}`;
-                      return (
-                        <div key={metric.label} className="flex flex-col gap-1">
-                          <div className="text-3xl font-light text-gray-900">
-                            {displayValue}
-                          </div>
-                          <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide">{metric.label}</p>
+              <div ref={metricsRef} className="w-full pt-8 border-t border-gray-100">
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-4">
+                  {HERO_METRICS.map((metric, index) => {
+                    const currentValue = metricValues[index];
+                    const displayValue =
+                      metric.label === 'Monitoring'
+                        ? `${Math.min(Math.round(currentValue), metric.target)}/7`
+                        : `${currentValue.toFixed(metric.decimals)}${metric.suffix}`;
+                    return (
+                      <div key={metric.label} className="flex flex-col gap-1">
+                        <div className="text-3xl font-extralight text-gray-900">
+                          {displayValue}
                         </div>
-                      );
-                    })}
-                  </div>
+                        <p className="text-sm text-gray-600 font-normal">{metric.label}</p>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
-          </section>
-        </main>
-      </div>
-      {/* End of background image area - white content starts here */}
+          </div>
+        </section>
+      </main>
+    </div>
+      {/* End of background image area - white content starts here */ }
       <div className="relative z-10 w-full" style={{ background: 'white' }}>
 
 
@@ -775,37 +772,37 @@ const Index = () => {
       </div>
       <BrandFooter selectedLanguageLabel={selectedLanguage.language} />
 
-      {/* Founders Council Banner - Fixed to bottom with slide animation */}
-      <div
-        className={`fixed bottom-0 left-0 right-0 z-50 w-full px-3 py-2.5 md:px-6 md:py-5 transition-transform duration-300 ease-in-out ${showBanner ? 'translate-y-0' : 'translate-y-full'
-          }`}
-        style={{
-          backgroundColor: '#000000',
-          fontFamily: 'Inter, sans-serif'
-        }}
-      >
-        <div className="container mx-auto max-w-6xl">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-2 md:gap-6">
-            <p className="font-montserrat text-white text-xs md:text-base font-light text-center md:text-left flex-1">
-              Join the exclusive group of 20 high-volume sellers stress-testing our 7-second AI Audit. Lock in a permanent 15% commission rate (vs. 20% public rate).
-            </p>
-            <a
-              href="https://forms.gle/882hpRYWinNzBt2r9"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-shrink-0"
-            >
-              <Button
-                className="bg-black hover:bg-gray-900 text-white font-medium px-4 py-2 md:px-6 md:py-2.5 text-sm md:text-base shadow-lg transition-colors whitespace-nowrap"
-                style={{ fontFamily: 'Inter, sans-serif' }}
-              >
-                Immediate Access →
-              </Button>
-            </a>
-          </div>
-        </div>
+  {/* Founders Council Banner - Fixed to bottom with slide animation */ }
+  <div
+    className={`fixed bottom-0 left-0 right-0 z-50 w-full px-3 py-2.5 md:px-6 md:py-5 transition-transform duration-300 ease-in-out ${showBanner ? 'translate-y-0' : 'translate-y-full'
+      }`}
+    style={{
+      backgroundColor: '#000000',
+      fontFamily: 'Inter, sans-serif'
+    }}
+  >
+    <div className="container mx-auto max-w-6xl">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-2 md:gap-6">
+        <p className="font-montserrat text-white text-xs md:text-base font-light text-center md:text-left flex-1">
+          Join the exclusive group of 20 high-volume sellers stress-testing our 7-second AI Audit. Lock in a permanent 15% commission rate (vs. 20% public rate).
+        </p>
+        <a
+          href="https://forms.gle/882hpRYWinNzBt2r9"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex-shrink-0"
+        >
+          <Button
+            className="bg-black hover:bg-gray-900 text-white font-medium px-4 py-2 md:px-6 md:py-2.5 text-sm md:text-base shadow-lg transition-colors whitespace-nowrap"
+            style={{ fontFamily: 'Inter, sans-serif' }}
+          >
+            Immediate Access →
+          </Button>
+        </a>
       </div>
     </div>
+  </div>
+    </div >
   );
 };
 

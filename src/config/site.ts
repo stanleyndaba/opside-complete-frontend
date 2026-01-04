@@ -16,9 +16,9 @@ export const LANGUAGE_OPTIONS: LanguageOption[] = [
 ];
 
 export const HERO_METRICS = [
-  { label: 'accuracy', target: 99.2, suffix: '%', decimals: 1 },
-  { label: 'monitoring', target: 24, suffix: '/7', decimals: 0 },
-  { label: 'reduced manual work', target: 80, suffix: '%', decimals: 0 }
+  { label: 'Accuracy', target: 99.2, suffix: '%', decimals: 1 },
+  { label: 'Monitoring', target: 24, suffix: '/7', decimals: 0 },
+  { label: 'Reduced manual work', target: 80, suffix: '%', decimals: 0 }
 ];
 
 export const AGENT_HIGHLIGHTS = [
