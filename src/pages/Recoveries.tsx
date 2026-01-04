@@ -2771,9 +2771,41 @@ export default function Recoveries() {
                                           </DropdownMenuItem>
                                           <DropdownMenuItem
                                             className="text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer px-3 py-2 rounded-sm"
-                                            onClick={() => {
-                                              setEvidencePackClaim(claim);
-                                              setEvidencePackOpen(true);
+                                            onClick={async () => {
+                                              try {
+                                                // Fetch real matched documents from backend
+                                                const res = await api.getRecoveryDetail(claim.id);
+                                                const docs = (res && res.ok && Array.isArray((res as any).data?.documents))
+                                                  ? (res as any).data!.documents
+                                                  : [];
+
+                                                // Transform documents to matchedDocs format
+                                                const matchedDocs = docs.map((doc: any) => ({
+                                                  id: doc.id,
+                                                  name: doc.filename || doc.title || `Document ${doc.id?.slice(0, 8)}`,
+                                                  type: doc.doc_type || doc.type,
+                                                  uploadDate: doc.created_at,
+                                                  supplier: doc.metadata?.supplier_name || doc.extracted?.supplier_name,
+                                                  invoice: doc.metadata?.invoice_number || doc.extracted?.invoice_numbers?.[0],
+                                                  amount: doc.metadata?.total_amount || doc.extracted?.amounts?.[0],
+                                                  confidence: doc.matchConfidence || doc.parser_confidence || 0.8,
+                                                  matchedFields: doc.matchedFields || [],
+                                                  extracted: doc.extracted || {},
+                                                }));
+
+                                                // Open modal with enriched claim data
+                                                setEvidencePackClaim({
+                                                  ...claim,
+                                                  matchedDocs,
+                                                  matchedCount: matchedDocs.length,
+                                                });
+                                                setEvidencePackOpen(true);
+                                              } catch (e: any) {
+                                                // Fallback: open with existing claim data
+                                                setEvidencePackClaim(claim);
+                                                setEvidencePackOpen(true);
+                                                toast({ title: 'Note', description: 'Could not load additional document data.' });
+                                              }
                                             }}>
                                             View Evidence Pack
                                           </DropdownMenuItem>
