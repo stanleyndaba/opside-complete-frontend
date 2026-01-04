@@ -2563,23 +2563,23 @@ export default function Recoveries() {
                           onMouseLeave={handleMouseLeave}
                         >
                           <Table style={{ minWidth: '1600px', width: 'max-content' }}>
-                            <TableHeader>
-                              <TableRow className="border-slate-200 bg-slate-100">
-                                <TableHead className="py-2">
+                            <TableHeader className="border-b border-gray-200">
+                              <TableRow className="hover:bg-transparent">
+                                <TableHead className="py-3 border-b border-gray-200">
                                   <Checkbox checked={selectedIds.size > 0 && selectedIds.size === filteredClaims.length} onCheckedChange={(checked) => {
                                     if (checked) setSelectedIds(new Set(filteredClaims.map(c => c.id)));
                                     else setSelectedIds(new Set());
                                   }} />
                                 </TableHead>
-                                <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Claim ID</TableHead>
-                                <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Created</TableHead>
-                                <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Details</TableHead>
-                                <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Status</TableHead>
-                                <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Duplicate</TableHead>
-                                <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Days Left</TableHead>
-                                <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Evidence</TableHead>
-                                <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Est. Value</TableHead>
-                                <TableHead className="text-[10px] font-bold text-slate-800 uppercase tracking-wider py-2">Actions</TableHead>
+                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3 border-b border-gray-200">Claim ID</TableHead>
+                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3 border-b border-gray-200">Created</TableHead>
+                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3 border-b border-gray-200">Details</TableHead>
+                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3 border-b border-gray-200">Status</TableHead>
+                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3 border-b border-gray-200">Duplicate</TableHead>
+                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3 border-b border-gray-200">Days Left</TableHead>
+                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3 border-b border-gray-200">Evidence</TableHead>
+                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3 border-b border-gray-200">Est. Value</TableHead>
+                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3 border-b border-gray-200"></TableHead>
                               </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -2598,12 +2598,12 @@ export default function Recoveries() {
                                   <TableRow
                                     key={claim.id}
                                     className={cn(
-                                      "cursor-pointer hover:bg-slate-50 border-slate-200",
+                                      "border-b border-gray-100 hover:bg-gray-50/50",
                                       isCritical && "bg-red-50/50 border-l-4 border-l-red-600",
                                       isUrgent && !isCritical && "bg-amber-50/50 border-l-4 border-l-amber-600"
                                     )}
                                   >
-                                    <TableCell className="py-2">
+                                    <TableCell className="py-3">
                                       <Checkbox checked={selectedIds.has(claim.id)} onCheckedChange={(checked) => {
                                         setSelectedIds(prev => {
                                           const next = new Set(prev);
@@ -2613,7 +2613,7 @@ export default function Recoveries() {
                                       }} />
                                     </TableCell>
                                     {/* Claim ID */}
-                                    <TableCell className="text-xs py-2">
+                                    <TableCell className="text-xs py-3">
                                       <Tooltip>
                                         <TooltipTrigger asChild>
                                           <Button asChild variant="link" className="p-0 h-auto text-xs text-slate-800 hover:text-slate-900 font-mono font-medium">
@@ -2628,10 +2628,10 @@ export default function Recoveries() {
                                       </Tooltip>
                                     </TableCell>
                                     {/* Created */}
-                                    <TableCell className="text-xs text-slate-700 py-2 font-mono">{format(new Date(claim.created || claim.discovery_date || claim.created_at), 'MMM dd, yyyy')}</TableCell>
+                                    <TableCell className="text-xs text-gray-600 py-3 font-mono">{format(new Date(claim.created || claim.discovery_date || claim.created_at), 'MMM dd, yyyy')}</TableCell>
                                     {/* Details */}
-                                    <TableCell className="max-w-xs py-2">
-                                      <div className="truncate text-xs text-slate-800" title={claim.details}>
+                                    <TableCell className="max-w-xs py-3">
+                                      <div className="truncate text-sm text-gray-900" title={claim.details}>
                                         {claim.details}
                                       </div>
                                       <div className="text-[10px] text-slate-500 mt-0.5 font-mono">
@@ -2639,20 +2639,20 @@ export default function Recoveries() {
                                       </div>
                                     </TableCell>
                                     {/* Status */}
-                                    <TableCell className="py-2">
+                                    <TableCell className="py-3">
                                       <Badge className={getStatusColor(claim.status)}>
                                         {claim.status}
                                       </Badge>
                                     </TableCell>
                                     {/* Duplicate Warning */}
-                                    <TableCell className="py-2">
+                                    <TableCell className="py-3">
                                       {(() => {
                                         const doubleDipWarning = checkDoubleDip(claim, rankedClaims);
                                         return doubleDipWarning ? <DoubleDipBadge warning={doubleDipWarning} /> : <span className="text-xs text-slate-400">None</span>;
                                       })()}
                                     </TableCell>
                                     {/* Days Remaining */}
-                                    <TableCell className="py-2">
+                                    <TableCell className="py-3">
                                       {claim.days_remaining !== null && claim.days_remaining !== undefined ? (
                                         <div className="flex items-center gap-1.5">
                                           {isCritical && (
@@ -2675,7 +2675,7 @@ export default function Recoveries() {
                                       )}
                                     </TableCell>
                                     {/* Evidence */}
-                                    <TableCell className="py-2">
+                                    <TableCell className="py-3">
                                       {(() => {
                                         const validation = validateEvidencePolicy(claim, claim.matchedDocs);
                                         const docCount = claim.matchedDocs?.length || claim.matchedCount || 0;
@@ -2692,7 +2692,7 @@ export default function Recoveries() {
                                       })()}
                                     </TableCell>
                                     {/* Est. Value */}
-                                    <TableCell className="text-xs font-medium text-gray-900 py-2">{formatCurrency(claim.guaranteedAmount, claim.currency || 'USD')}</TableCell>
+                                    <TableCell className="text-sm font-mono tabular-nums text-gray-900 py-3">{formatCurrency(claim.guaranteedAmount, claim.currency || 'USD')}</TableCell>
                                     {/* Actions */}
                                     <TableCell>
                                       <DropdownMenu>
