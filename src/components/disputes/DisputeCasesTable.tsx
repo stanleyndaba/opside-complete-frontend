@@ -292,20 +292,20 @@ export function DisputeCasesTable() {
 
   return (
     <div className="space-y-4">
-      {/* Header with Filters - Pentagon Style */}
-      <div className="flex items-center justify-between bg-slate-50 border border-slate-200 rounded-none px-4 py-3">
+      {/* Header with Filters */}
+      <div className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-sm px-4 py-3">
         <div>
-          <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-[0.15em]">DISPUTE CASES</h3>
-          <p className="text-[10px] text-slate-500 mt-0.5 font-mono">
-            {cases.length} {cases.length === 1 ? 'CASE' : 'CASES'} • AGENT 7 FILING SYSTEM
+          <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">DISPUTE CASES</h3>
+          <p className="text-[10px] text-gray-500 mt-0.5">
+            {cases.length} {cases.length === 1 ? 'case' : 'cases'} • Agent 7 Filing System
           </p>
         </div>
         <div className="flex items-center gap-2">
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[140px] h-8 text-xs bg-white text-slate-700 border-slate-300 hover:bg-slate-50 rounded-none">
+            <SelectTrigger className="w-[140px] h-8 text-xs bg-white text-gray-700 border-gray-200 hover:bg-gray-50 rounded-sm">
               <SelectValue placeholder="Filter by Status" />
             </SelectTrigger>
-            <SelectContent className="rounded-none">
+            <SelectContent className="rounded-sm">
               <SelectItem value="all" className="text-xs">All Statuses</SelectItem>
               <SelectItem value="pending" className="text-xs">Pending</SelectItem>
               <SelectItem value="submitted" className="text-xs">Submitted</SelectItem>
@@ -318,22 +318,22 @@ export function DisputeCasesTable() {
             onClick={() => fetchCases(statusFilter !== 'all' ? statusFilter : undefined)}
             variant="outline"
             size="sm"
-            className="h-8 bg-white text-slate-700 border-slate-300 hover:bg-slate-100 rounded-none"
+            className="h-8 bg-white text-gray-700 border-gray-200 hover:bg-gray-50 rounded-sm"
           >
             <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
-            REFRESH
+            Refresh
           </Button>
         </div>
       </div>
 
       {/* Cases Table */}
-      <Card className="bg-white border-slate-200 rounded-none">
+      <Card className="bg-white border-gray-200 rounded-sm">
         <CardContent className="p-0">
           {cases.length === 0 ? (
             <div className="p-8 text-center">
-              <AlertCircle className="w-12 h-12 mx-auto text-slate-400 mb-4" />
-              <p className="text-sm text-slate-600 mb-2 uppercase tracking-wide">No dispute cases found</p>
-              <p className="text-xs text-slate-500 font-mono">
+              <AlertCircle className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+              <p className="text-sm text-gray-600 mb-2">No dispute cases found</p>
+              <p className="text-xs text-gray-500">
                 Cases will appear here after evidence matching
               </p>
             </div>
@@ -356,17 +356,17 @@ export function DisputeCasesTable() {
                   {cases.map((caseItem) => (
                     <TableRow key={caseItem.id || Math.random()} className="hover:bg-gray-50/50">
                       <TableCell className="py-3">
-                        <span className="font-mono text-xs text-slate-900">{caseItem.case_number || '—'}</span>
+                        <span className="font-mono text-sm text-gray-900">{caseItem.case_number || '—'}</span>
                       </TableCell>
                       <TableCell className="py-3">
                         {caseItem.claim_id ? (
-                          <Button asChild variant="link" className="p-0 h-auto text-xs text-slate-700 hover:text-slate-900 font-mono">
+                          <Button asChild variant="link" className="p-0 h-auto text-xs text-gray-600 hover:text-gray-900 font-mono">
                             <Link to={`/recoveries/${caseItem.claim_id}`}>
                               {caseItem.claim_id.substring(0, 12)}...
                             </Link>
                           </Button>
                         ) : (
-                          <span className="text-xs text-slate-400 font-mono">—</span>
+                          <span className="text-xs text-gray-400 font-mono">—</span>
                         )}
                       </TableCell>
                       <TableCell className="py-3">
@@ -376,20 +376,20 @@ export function DisputeCasesTable() {
                         {getFilingStatusBadge(caseItem.filing_status, caseItem.filing_error)}
                       </TableCell>
                       <TableCell className="py-3">
-                        <span className="text-xs font-bold text-slate-900 font-mono">
+                        <span className="text-sm font-mono tabular-nums text-gray-900">
                           {formatCurrency(caseItem.amount || 0, caseItem.currency || 'USD')}
                         </span>
                       </TableCell>
                       <TableCell className="py-3">
                         {caseItem.amazon_case_id ? (
                           <div className="flex items-center gap-1.5">
-                            <span className="font-mono text-xs text-slate-700">{caseItem.amazon_case_id}</span>
+                            <span className="font-mono text-xs text-gray-600">{caseItem.amazon_case_id}</span>
                             <Button variant="ghost" size="sm" className="h-5 w-5 p-0">
                               <ExternalLink className="w-3 h-3" />
                             </Button>
                           </div>
                         ) : (
-                          <span className="text-xs text-slate-400 font-mono">—</span>
+                          <span className="text-xs text-gray-400">—</span>
                         )}
                       </TableCell>
                       <TableCell className="py-3">
@@ -398,7 +398,7 @@ export function DisputeCasesTable() {
                             {caseItem.retry_count}
                           </span>
                         ) : (
-                          <span className="text-xs text-slate-400 font-mono">0</span>
+                          <span className="text-xs text-gray-400">0</span>
                         )}
                       </TableCell>
                       <TableCell className="py-3">
@@ -407,7 +407,7 @@ export function DisputeCasesTable() {
                           {caseItem.claim_id && (
                             <Button asChild variant="ghost" size="sm" className="h-7 w-7 p-0">
                               <Link to={`/recoveries/${caseItem.claim_id}`}>
-                                <Eye className="w-4 h-4 text-slate-500" />
+                                <Eye className="w-4 h-4 text-gray-500" />
                               </Link>
                             </Button>
                           )}
