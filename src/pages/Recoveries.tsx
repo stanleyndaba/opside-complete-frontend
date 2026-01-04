@@ -292,32 +292,133 @@ const validateEvidencePolicy = (claim: RecoveryClaim, matchedDocs?: any[]): Evid
   };
 };
 
-// Evidence Quality Badge Component
-const EvidenceQualityBadge = ({ validation }: { validation: EvidenceValidation }) => {
-  const config = {
-    strong: { color: 'text-emerald-600' },
-    medium: { color: 'text-gray-400' },
-    weak: { color: 'text-amber-500' }
+// Evidence Quality Badge Component - Institutional Banking Style
+const EvidenceQualityBadge = ({ validation, claim, matchedDocs }: { validation: EvidenceValidation; claim?: RecoveryClaim; matchedDocs?: any[] }) => {
+  // Get claim type for policy lookup
+  const claimType = claim?.type || claim?.anomaly_type || 'default';
+  const normalizedType = claimType.toLowerCase().replace(/[^a-z_:]/g, '');
+  const policy = FBA_POLICY_REQUIREMENTS[normalizedType] || FBA_POLICY_REQUIREMENTS['default'];
+
+  // Calculate which required fields are present
+  const presentFields = validation.fieldChecks?.filter(f => f.present) || [];
+  const presentFieldNames = presentFields.map(f => f.field);
+  const requiredFields = policy.required || [];
+  const optionalFields = policy.optional || [];
+
+  // Count matched documents
+  const docCount = matchedDocs?.length || claim?.matchedDocs?.length || claim?.matchedCount || 0;
+
+  // Calculate readiness percentage (required fields)
+  const requiredPresent = requiredFields.filter(f => presentFieldNames.includes(f)).length;
+  const readinessPercent = requiredFields.length > 0
+    ? Math.round((requiredPresent / requiredFields.length) * 100)
+    : (docCount > 0 ? 50 : 0);
+
+  // Status configuration
+  const statusConfig = {
+    strong: { label: 'Ready', bgColor: 'bg-gray-100', textColor: 'text-gray-700', iconColor: 'text-gray-600' },
+    medium: { label: 'Partial', bgColor: 'bg-gray-50', textColor: 'text-gray-600', iconColor: 'text-gray-400' },
+    weak: { label: 'Required', bgColor: 'bg-gray-50', textColor: 'text-gray-500', iconColor: 'text-gray-400' }
   };
-  const c = config[validation.quality];
+  const status = statusConfig[validation.quality];
+
+  // Format field name for display
+  const formatFieldName = (field: string) => {
+    return field.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  };
 
   return (
     <Tooltip>
       <TooltipTrigger>
-        <Info className={`h-4 w-4 ${c.color} cursor-pointer hover:opacity-70 transition-opacity`} />
+        <Info className={`h-4 w-4 ${status.iconColor} cursor-pointer hover:opacity-70 transition-opacity`} />
       </TooltipTrigger>
-      <TooltipContent className="max-w-xs bg-white text-gray-900 border border-gray-200 p-2">
-        <div className="space-y-1">
-          <div className="text-xs font-medium">{validation.recommendationText}</div>
-          {validation.missingRequired.length > 0 && (
-            <div className="text-[10px]">
-              <span className="text-red-600 font-medium">Missing:</span>
-              <span className="text-gray-500 ml-1">{validation.missingRequired.join(', ')}</span>
+      <TooltipContent
+        side="right"
+        align="start"
+        className="w-72 p-0 bg-white border border-gray-200 shadow-lg rounded-none"
+      >
+        {/* Header */}
+        <div className="px-3 py-2 border-b border-gray-200 bg-gray-50">
+          <div className="flex items-center justify-between">
+            <span className="text-[9px] font-semibold text-gray-500 uppercase tracking-[0.1em]">
+              Evidence Status
+            </span>
+            <span className={`text-[9px] font-medium uppercase tracking-[0.05em] px-1.5 py-0.5 ${status.bgColor} ${status.textColor}`}>
+              {status.label}
+            </span>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="px-3 py-2 space-y-3">
+          {/* Required Documents */}
+          <div>
+            <div className="text-[9px] font-semibold text-gray-500 uppercase tracking-[0.08em] mb-1.5">
+              Required Documents
+            </div>
+            <div className="space-y-1">
+              {requiredFields.slice(0, 5).map((field, i) => {
+                const isPresent = presentFieldNames.includes(field);
+                return (
+                  <div key={i} className="flex items-center gap-2 text-[10px]">
+                    <span className={isPresent ? 'text-gray-700' : 'text-gray-400'}>
+                      {isPresent ? '✓' : '—'}
+                    </span>
+                    <span className={isPresent ? 'text-gray-700' : 'text-gray-400'}>
+                      {formatFieldName(field)}
+                    </span>
+                  </div>
+                );
+              })}
+              {requiredFields.length > 5 && (
+                <div className="text-[9px] text-gray-400 mt-1">
+                  +{requiredFields.length - 5} more required
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Matched Documents */}
+          {docCount > 0 && (
+            <div className="pt-2 border-t border-gray-100">
+              <div className="text-[9px] font-semibold text-gray-500 uppercase tracking-[0.08em] mb-1.5">
+                Matched Documents ({docCount})
+              </div>
+              <div className="space-y-0.5">
+                {(matchedDocs || claim?.matchedDocs || []).slice(0, 3).map((doc: any, i: number) => (
+                  <div key={i} className="text-[10px] text-gray-600 truncate">
+                    {doc.filename || doc.title || doc.name || `Document ${i + 1}`}
+                  </div>
+                ))}
+                {docCount > 3 && (
+                  <div className="text-[9px] text-gray-400">
+                    +{docCount - 3} more documents
+                  </div>
+                )}
+              </div>
             </div>
           )}
-          {validation.warnings.length > 0 && (
-            <div className="text-[10px] text-amber-600">
-              {validation.warnings[0]}
+
+          {/* Readiness Bar */}
+          <div className="pt-2 border-t border-gray-100">
+            <div className="flex items-center justify-between text-[9px] mb-1">
+              <span className="text-gray-500 uppercase tracking-[0.05em]">Claim Readiness</span>
+              <span className="text-gray-700 font-medium">{readinessPercent}%</span>
+            </div>
+            <div className="h-1 bg-gray-100 w-full">
+              <div
+                className="h-1 bg-gray-400 transition-all duration-300"
+                style={{ width: `${readinessPercent}%` }}
+              />
+            </div>
+          </div>
+
+          {/* Notes */}
+          {policy.notes && (
+            <div className="pt-2 border-t border-gray-100">
+              <p className="text-[9px] text-gray-400 leading-relaxed">
+                {policy.notes}
+              </p>
             </div>
           )}
         </div>
@@ -2561,7 +2662,7 @@ export default function Recoveries() {
                                         const docCount = claim.matchedDocs?.length || claim.matchedCount || 0;
                                         return (
                                           <div className="flex items-center gap-2">
-                                            <EvidenceQualityBadge validation={validation} />
+                                            <EvidenceQualityBadge validation={validation} claim={claim} matchedDocs={claim.matchedDocs} />
                                             {docCount > 0 && (
                                               <span className="text-[10px] text-gray-500">
                                                 {docCount} doc{docCount !== 1 ? 's' : ''}
