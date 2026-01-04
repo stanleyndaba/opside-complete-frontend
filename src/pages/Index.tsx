@@ -42,7 +42,7 @@ const Index = () => {
   const [showBanner, setShowBanner] = useState(true);
 
   const [selectedLanguageCode, setSelectedLanguageCode] = useState<string>(() =>
-    typeof window !== 'undefined' ? localStorage.getItem('Opside.langPreference') || 'en' : 'en'
+    typeof window !== 'undefined' ? localStorage.getItem('Margin.langPreference') || 'en' : 'en'
   );
   const [langQuery, setLangQuery] = useState<string>('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -208,7 +208,7 @@ const Index = () => {
 
   useEffect(() => {
     try {
-      localStorage.setItem('Opside.langPreference', selectedLanguageCode);
+      localStorage.setItem('Margin.langPreference', selectedLanguageCode);
     } catch { }
   }, [selectedLanguageCode]);
 
@@ -366,10 +366,10 @@ const Index = () => {
               <Link to="/" className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[16px] transition-colors hover:bg-gray-100">
                 <img
                   src="/logoimagetwo.png"
-                  alt="Opside"
+                  alt="Margin"
                   className="h-5 w-auto object-contain"
                 />
-                <span className="font-montserrat text-gray-900" style={{ fontWeight: 600 }}>Opside</span>
+                <span className="font-montserrat text-gray-900" style={{ fontWeight: 600 }}>Margin</span>
               </Link>
             </div>
             <nav className="hidden md:flex items-center gap-4 text-sm text-gray-700">
@@ -389,7 +389,7 @@ const Index = () => {
                     <div className="space-y-2">
                       <h3 className="font-semibold text-emerald-900 text-base">No commission on referrals</h3>
                       <p className="text-sm text-emerald-800">
-                        Sellers who bring new sellers to Opside keep 100% value of their recovered funds
+                        Sellers who bring new sellers to Margin keep 100% value of their recovered funds
                       </p>
                     </div>
                     <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium">
@@ -467,7 +467,7 @@ const Index = () => {
                     <span>No commission on referrals</span>
                   </div>
                   <p className="mt-1 text-xs font-normal text-emerald-700/80">
-                    Sellers who bring new sellers to Opside keep 100% value of their recovered funds
+                    Sellers who bring new sellers to Margin keep 100% value of their recovered funds
                   </p>
                 </div>
                 {primaryLinks.map((link) => (
@@ -550,7 +550,7 @@ const Index = () => {
                 <div className="relative rounded-2xl bg-gradient-to-b from-gray-50/50 to-white/50 p-2 shadow-2xl backdrop-blur-sm border border-gray-100/50 transform transition-transform duration-700 hover:scale-[1.01]">
                   <img
                     src={heroImage}
-                    alt="Opside Dashboard"
+                    alt="Margin Dashboard"
                     className="w-full h-auto rounded-xl shadow-sm border border-black/5"
                   />
                 </div>
@@ -594,7 +594,7 @@ const Index = () => {
                 </h1>
 
                 <p className="font-montserrat text-base md:text-lg text-gray-600 font-normal max-w-xl leading-relaxed">
-                  The world's first autonomous 11-Agent Audit Engine. Opside detects, matches, and recovers lost revenue from Amazon FBA errors in minutes—not months.
+                  The world's first autonomous 11-Agent Audit Engine. Margin detects, matches, and recovers lost revenue from Amazon FBA errors in minutes—not months.
                 </p>
 
                 <div className="w-full flex flex-col gap-6">
@@ -651,7 +651,7 @@ const Index = () => {
               <div className="space-y-4 md:w-1/3">
                 <span className="text-sm font-semibold bg-gradient-to-r from-[#1f4037] to-[#99f2c8] bg-clip-text text-transparent">frequently asked questions</span>
                 <h2 className="text-3xl font-black tracking-tight text-gray-900 md:text-4xl">
-                  Everything you wanted to ask before Opside starts recovering funds.
+                  Everything you wanted to ask before Margin starts recovering funds.
                 </h2>
               </div>
               <div className="space-y-2 md:w-2/3">
@@ -665,7 +665,7 @@ const Index = () => {
                         This is our most important question. Yes, it is 100% safe. We are an officially-verified Amazon developer using the secure Selling Partner API (SP-API).
                       </p>
                       <p>
-                        We only perform actions that are fully compliant with Amazon&apos;s Terms of Service. Opside simply does the work of a manual audit, but 1,000x faster. Your account&apos;s safety is our #1 priority.
+                        We only perform actions that are fully compliant with Amazon&apos;s Terms of Service. Margin simply does the work of a manual audit, but 1,000x faster. Your account&apos;s safety is our #1 priority.
                       </p>
                     </AccordionContent>
                   </AccordionItem>
@@ -684,7 +684,7 @@ const Index = () => {
                   </AccordionItem>
                   <AccordionItem value="cost" className="border-b border-gray-200 py-4">
                     <AccordionTrigger className="font-montserrat text-left text-lg font-semibold text-gray-900 hover:no-underline">
-                      How much does Opside cost?
+                      How much does Margin cost?
                     </AccordionTrigger>
                     <AccordionContent className="font-montserrat pt-3 text-sm text-gray-600 space-y-3">
                       <p>
@@ -698,7 +698,7 @@ const Index = () => {
                     </AccordionTrigger>
                     <AccordionContent className="font-montserrat pt-3 text-sm text-gray-600 space-y-3">
                       <p>
-                        Those tools are dashboards or agencies. They identify problems, but you or their auditors still have to gather evidence and build the case. Opside is an autonomous AI agent.
+                        Those tools are dashboards or agencies. They identify problems, but you or their auditors still have to gather evidence and build the case. Margin is an autonomous AI agent.
                       </p>
                       <p>
                         Our Evidence Engine finds the error, locates the matching invoice from your email, builds the case, and files it for you. It&apos;s zero effort, not just less effort.
@@ -737,11 +737,11 @@ const Index = () => {
                       <AccordionContent className="font-montserrat pt-3 text-sm text-gray-600 space-y-3">
                         <p>It takes about two minutes:</p>
                         <ul className="list-disc space-y-2 pl-5 text-gray-600">
-                          <li>Sign up for a Opside account.</li>
+                          <li>Sign up for a Margin account.</li>
                           <li>Securely connect your Amazon Seller Central account via the SP-API.</li>
                           <li>(Optional) Grant read-only access to your email or Google Drive so our AI can gather invoices.</li>
                         </ul>
-                        <p>That&apos;s it. Opside begins auditing immediately.</p>
+                        <p>That&apos;s it. Margin begins auditing immediately.</p>
                       </AccordionContent>
                     </AccordionItem>
                     <AccordionItem value="coexist" className="border-b border-gray-200 py-4">
@@ -750,7 +750,7 @@ const Index = () => {
                       </AccordionTrigger>
                       <AccordionContent className="font-montserrat pt-3 text-sm text-gray-600 space-y-3">
                         <p>
-                          No problem. Run Opside alongside your current tool. We&apos;re confident our AI Evidence Engine will find dollars that manual audits missed. You only pay us for the new funds we recover.
+                          No problem. Run Margin alongside your current tool. We&apos;re confident our AI Evidence Engine will find dollars that manual audits missed. You only pay us for the new funds we recover.
                         </p>
                       </AccordionContent>
                     </AccordionItem>
@@ -760,7 +760,7 @@ const Index = () => {
                       </AccordionTrigger>
                       <AccordionContent className="font-montserrat pt-3 text-sm text-gray-600 space-y-3">
                         <p>
-                          You can cancel anytime. Disconnect Opside from Seller Central and you&apos;re done—no lock-in contracts. We&apos;ll only invoice the 20% commission on claims that were successfully paid out before you canceled.
+                          You can cancel anytime. Disconnect Margin from Seller Central and you&apos;re done—no lock-in contracts. We&apos;ll only invoice the 20% commission on claims that were successfully paid out before you canceled.
                         </p>
                       </AccordionContent>
                     </AccordionItem>
