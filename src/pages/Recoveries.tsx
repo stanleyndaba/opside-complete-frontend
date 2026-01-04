@@ -2644,7 +2644,7 @@ export default function Recoveries() {
                                     <TableCell className="py-2">
                                       {(() => {
                                         const doubleDipWarning = checkDoubleDip(claim, rankedClaims);
-                                        return doubleDipWarning ? <DoubleDipBadge warning={doubleDipWarning} /> : <span className="text-xs text-slate-400 font-mono">—</span>;
+                                        return doubleDipWarning ? <DoubleDipBadge warning={doubleDipWarning} /> : <span className="text-xs text-slate-400">None</span>;
                                       })()}
                                     </TableCell>
                                     {/* Days Remaining */}
@@ -3242,12 +3242,6 @@ export default function Recoveries() {
                               <span className="text-[11px] text-gray-500 uppercase tracking-wide">Evidence</span>
                               <span className="text-xs font-medium text-gray-900">{detectionDetails.matchedCount || detectionDetails.matchedDocs?.length || 0} document{(detectionDetails.matchedCount || 0) !== 1 ? 's' : ''}</span>
                             </div>
-                            {detectionDetails.confidence_score !== null && detectionDetails.confidence_score !== undefined && (
-                              <div className="flex justify-between items-center px-4 py-2.5">
-                                <span className="text-[11px] text-gray-500 uppercase tracking-wide">Confidence</span>
-                                <span className="text-xs font-medium text-gray-900">{(detectionDetails.confidence_score * 100).toFixed(0)}%</span>
-                              </div>
-                            )}
                           </div>
                         </div>
 
@@ -3288,23 +3282,7 @@ export default function Recoveries() {
                                 <div className="text-sm font-mono text-gray-900 mt-1">{detectionDetails.asin}</div>
                               </div>
                             )}
-                            <div className="col-span-2">
-                              <div className="text-xs text-gray-500 uppercase tracking-wide mb-2">AI Confidence</div>
-                              <div className="flex items-center gap-2">
-                                {detectionDetails.confidence_score !== null && detectionDetails.confidence_score !== undefined ? (
-                                  <>
-                                    <span className="text-sm font-medium text-gray-900">
-                                      {(detectionDetails.confidence_score * 100).toFixed(1)}%
-                                    </span>
-                                    <Badge className="bg-gray-100 text-[#36454F] border-gray-400">
-                                      {detectionDetails.confidence_score >= 0.85 ? 'High' : detectionDetails.confidence_score >= 0.50 ? 'Medium' : 'Low'}
-                                    </Badge>
-                                  </>
-                                ) : (
-                                  <span className="text-sm text-gray-600">N/A</span>
-                                )}
-                              </div>
-                            </div>
+
                           </div>
                         </div>
 
@@ -3327,7 +3305,6 @@ export default function Recoveries() {
                                     </div>
                                     <div className="text-right">
                                       <div className="text-sm font-semibold text-gray-900">{validation.quality.charAt(0).toUpperCase() + validation.quality.slice(1)}</div>
-                                      <div className="text-xs text-gray-500 mt-1">{validation.qualityScore}% Policy Score</div>
                                     </div>
                                   </div>
 
