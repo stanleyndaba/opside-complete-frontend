@@ -226,179 +226,361 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
         return [...new Set(highlights)].slice(0, 10); // Dedupe and limit
     }, [claim.matchedDocs]);
 
-    // Export as PDF (opens print-ready HTML in new tab)
+    // Export as PDF (opens print-ready HTML in new tab) - Institutional Banking Style
     const exportAsPdf = () => {
         const claimDate = claim.created || claim.created_at || claim.discovery_date || new Date().toISOString();
-        const claimType = (claim.anomaly_type || claim.type || 'Recovery Claim').replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        const claimType = (claim.anomaly_type || claim.type || 'Recovery Claim').replace(/_/g, ' ').toUpperCase();
         const amount = claim.guaranteedAmount || claim.amount || 0;
+        const totalDocs = (claim.matchedDocs?.length || claim.matchedCount || 0);
 
         const html = `
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Evidence Pack - ${claim.claim_number || claim.id}</title>
+  <title>Evidence Documentation Package - ${claim.claim_number || claim.id}</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 11pt; color: #1a1a1a; line-height: 1.5; padding: 40px; }
+    body { 
+      font-family: 'Inter', 'Segoe UI', -apple-system, sans-serif; 
+      font-size: 10pt; 
+      color: #1e293b; 
+      line-height: 1.5; 
+      padding: 48px;
+      background: #fff;
+    }
     @media print {
-      body { padding: 20px; }
+      body { padding: 24px; }
       .no-print { display: none !important; }
       .section { page-break-inside: avoid; }
     }
-    .header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #e5e7eb; }
-    .header h1 { font-size: 24pt; color: #111827; margin-bottom: 5px; }
-    .header .subtitle { color: #6b7280; font-size: 10pt; }
-    .cover { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 24px; margin-bottom: 24px; }
-    .cover-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .cover-item { }
-    .cover-label { font-size: 9pt; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; }
-    .cover-value { font-size: 12pt; font-weight: 600; color: #111827; }
-    .cover-value.amount { font-size: 18pt; color: #059669; }
-    .section { margin-bottom: 24px; }
-    .section-title { font-size: 14pt; font-weight: 600; color: #111827; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; gap: 8px; }
-    .section-icon { width: 20px; height: 20px; }
-    .doc-list { }
-    .doc-item { background: #fff; border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px; margin-bottom: 8px; }
-    .doc-name { font-weight: 600; color: #111827; }
-    .doc-meta { font-size: 9pt; color: #6b7280; margin-top: 4px; }
-    .doc-confidence { display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 9pt; font-weight: 500; }
-    .confidence-high { background: #d1fae5; color: #065f46; }
-    .confidence-medium { background: #fef3c7; color: #92400e; }
-    .confidence-low { background: #fee2e2; color: #991b1b; }
-    .highlight { background: #fef9c3; padding: 2px 6px; border-radius: 4px; font-weight: 500; }
-    .highlights-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-    .policy-box { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 16px; }
-    .policy-name { font-weight: 600; color: #1e40af; margin-bottom: 8px; }
-    .policy-excerpt { font-size: 10pt; color: #1e3a8a; margin-bottom: 8px; }
-    .policy-deadline { font-size: 9pt; color: #3b82f6; font-weight: 500; }
-    .timeline { margin-top: 16px; }
-    .timeline-item { display: flex; gap: 12px; margin-bottom: 8px; }
-    .timeline-date { font-size: 9pt; color: #6b7280; width: 80px; flex-shrink: 0; }
-    .timeline-event { font-size: 10pt; color: #374151; }
-    .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; text-align: center; font-size: 9pt; color: #9ca3af; }
-    .print-btn { position: fixed; top: 20px; right: 20px; background: #3b82f6; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 500; }
-    .print-btn:hover { background: #2563eb; }
-    .empty-state { color: #9ca3af; font-style: italic; padding: 12px; text-align: center; }
+    
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding-bottom: 24px;
+      margin-bottom: 32px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .header-left {}
+    .logo {
+      font-size: 11pt;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      color: #0f172a;
+      text-transform: uppercase;
+    }
+    .logo-sub {
+      font-size: 8pt;
+      color: #64748b;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+    .header-right {
+      text-align: right;
+    }
+    .doc-id {
+      font-size: 9pt;
+      color: #64748b;
+      letter-spacing: 0.05em;
+    }
+    .doc-date {
+      font-size: 8pt;
+      color: #94a3b8;
+      margin-top: 2px;
+    }
+
+    /* Sections */
+    .section {
+      margin-bottom: 28px;
+    }
+    .section-header {
+      font-size: 9pt;
+      font-weight: 600;
+      color: #64748b;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    /* Summary Table */
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .summary-table td {
+      padding: 10px 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 10pt;
+    }
+    .summary-table td:first-child {
+      color: #64748b;
+      width: 140px;
+      font-size: 9pt;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .summary-table td:last-child {
+      color: #1e293b;
+      font-weight: 500;
+    }
+    .amount-value {
+      font-size: 14pt;
+      font-weight: 600;
+      color: #0f172a;
+    }
+    .mono {
+      font-family: 'SFMono-Regular', Consolas, monospace;
+      font-size: 9pt;
+    }
+
+    /* Documents Table */
+    .docs-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9pt;
+    }
+    .docs-table th {
+      text-align: left;
+      padding: 8px 12px;
+      background: #f8fafc;
+      color: #64748b;
+      font-weight: 600;
+      font-size: 8pt;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .docs-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #f1f5f9;
+      color: #334155;
+    }
+    .docs-table tr:last-child td {
+      border-bottom: none;
+    }
+    .doc-filename {
+      font-weight: 500;
+      color: #1e293b;
+    }
+    .doc-meta {
+      font-size: 8pt;
+      color: #94a3b8;
+      margin-top: 2px;
+    }
+
+    /* Policy Box */
+    .policy-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 20px;
+      margin-top: 8px;
+    }
+    .policy-title {
+      font-size: 10pt;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 8px;
+    }
+    .policy-text {
+      font-size: 9pt;
+      color: #475569;
+      line-height: 1.6;
+    }
+    .policy-meta {
+      display: flex;
+      gap: 32px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #e2e8f0;
+    }
+    .policy-meta-item {
+      font-size: 8pt;
+    }
+    .policy-meta-label {
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .policy-meta-value {
+      color: #334155;
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    /* Argument Quote */
+    .argument-box {
+      background: #f8fafc;
+      border-left: 3px solid #cbd5e1;
+      padding: 16px 20px;
+      margin-top: 16px;
+    }
+    .argument-label {
+      font-size: 8pt;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+    .argument-text {
+      font-size: 9pt;
+      color: #334155;
+      line-height: 1.7;
+      font-style: italic;
+    }
+
+    /* Empty State */
+    .empty-state {
+      color: #94a3b8;
+      font-size: 9pt;
+      text-align: center;
+      padding: 16px;
+      font-style: italic;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #e2e8f0;
+      text-align: center;
+      font-size: 8pt;
+      color: #94a3b8;
+    }
+
+    /* Print Button */
+    .print-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #1e293b;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      cursor: pointer;
+      font-size: 10pt;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+    }
+    .print-btn:hover { background: #0f172a; }
   </style>
 </head>
 <body>
-  <button class="print-btn no-print" onclick="window.print()">Save as PDF (Ctrl+P)</button>
+  <button class="print-btn no-print" onclick="window.print()">SAVE AS PDF</button>
   
   <div class="header">
-    <h1>Evidence Pack</h1>
-    <div class="subtitle">Claim ${claim.claim_number || claim.id.slice(0, 8)} • Generated ${format(new Date(), 'MMM dd, yyyy')}</div>
-  </div>
-  
-  <div class="cover section">
-    <div class="cover-grid">
-      <div class="cover-item">
-        <div class="cover-label">Claim Type</div>
-        <div class="cover-value">${claimType}</div>
-      </div>
-      <div class="cover-item">
-        <div class="cover-label">Status</div>
-        <div class="cover-value">${claim.status}</div>
-      </div>
-      <div class="cover-item">
-        <div class="cover-label">Discovery Date</div>
-        <div class="cover-value">${format(new Date(claimDate), 'MMMM dd, yyyy')}</div>
-      </div>
-      <div class="cover-item">
-        <div class="cover-label">Claim Amount</div>
-        <div class="cover-value amount">${formatCurrency(amount)}</div>
-      </div>
-      ${claim.sku ? `<div class="cover-item"><div class="cover-label">SKU</div><div class="cover-value">${claim.sku}</div></div>` : ''}
-      ${claim.asin ? `<div class="cover-item"><div class="cover-label">ASIN</div><div class="cover-value">${claim.asin}</div></div>` : ''}
+    <div class="header-left">
+      <div class="logo">OPSIDE</div>
+      <div class="logo-sub">Evidence Documentation Package</div>
     </div>
-    ${claim.details ? `<div style="margin-top: 16px;"><div class="cover-label">Details</div><div style="margin-top: 4px; color: #374151;">${claim.details}</div></div>` : ''}
-    ${highlights.length > 0 ? `
-      <div style="margin-top: 16px;">
-        <div class="cover-label">Key Evidence Highlights</div>
-        <div class="highlights-list">
-          ${highlights.map(h => `<span class="highlight">${h}</span>`).join('')}
-        </div>
-      </div>
+    <div class="header-right">
+      <div class="doc-id">REF: ${claim.claim_number || claim.id.slice(0, 12).toUpperCase()}</div>
+      <div class="doc-date">Generated ${format(new Date(), 'MMMM dd, yyyy')}</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">Claim Summary</div>
+    <table class="summary-table">
+      <tr>
+        <td>Claim Type</td>
+        <td>${claimType}</td>
+      </tr>
+      <tr>
+        <td>Status</td>
+        <td>${(claim.status || 'PENDING').toUpperCase()}</td>
+      </tr>
+      <tr>
+        <td>Claim Amount</td>
+        <td class="amount-value">${formatCurrency(amount)}</td>
+      </tr>
+      <tr>
+        <td>Discovery Date</td>
+        <td>${format(new Date(claimDate), 'MMMM dd, yyyy')}</td>
+      </tr>
+      ${claim.sku ? `<tr><td>SKU</td><td class="mono">${claim.sku}</td></tr>` : ''}
+      ${claim.asin ? `<tr><td>ASIN</td><td class="mono">${claim.asin}</td></tr>` : ''}
+      <tr>
+        <td>Documents</td>
+        <td>${totalDocs} matched document${totalDocs !== 1 ? 's' : ''}</td>
+      </tr>
+    </table>
+    ${claim.details ? `
+    <div style="margin-top: 16px; padding: 12px; background: #f8fafc; border: 1px solid #e2e8f0;">
+      <div style="font-size: 8pt; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">Details</div>
+      <div style="font-size: 9pt; color: #334155;">${claim.details}</div>
+    </div>
     ` : ''}
   </div>
-  
+
   <div class="section">
-    <div class="section-title">📦 Order & Inventory Evidence</div>
-    <div class="doc-list">
-      ${organizedDocs.orderDocs.length > 0 ? organizedDocs.orderDocs.map(doc => `
-        <div class="doc-item">
-          <div class="doc-name">${doc.name}</div>
-          <div class="doc-meta">
-            ${doc.supplier ? `Supplier: ${doc.supplier} • ` : ''}
-            ${doc.invoice ? `Invoice: ${doc.invoice} • ` : ''}
-            ${doc.amount ? `Amount: ${formatCurrency(doc.amount)} • ` : ''}
-            <span class="doc-confidence ${(doc.confidence || 0) >= 0.85 ? 'confidence-high' : (doc.confidence || 0) >= 0.5 ? 'confidence-medium' : 'confidence-low'}">
-              ${Math.round((doc.confidence || 0) * 100)}% match
-            </span>
-          </div>
-          ${doc.extracted?.order_ids?.length ? `<div class="doc-meta">Order IDs: ${doc.extracted.order_ids.map(id => `<span class="highlight">${id}</span>`).join(', ')}</div>` : ''}
-        </div>
-      `).join('') : '<div class="empty-state">No order documents matched</div>'}
-    </div>
+    <div class="section-header">Matched Evidence Documents</div>
+    ${totalDocs > 0 ? `
+    <table class="docs-table">
+      <thead>
+        <tr>
+          <th>Document</th>
+          <th>Type</th>
+          <th>Extracted Data</th>
+          <th style="text-align: right;">Confidence</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${(claim.matchedDocs || []).map((doc: MatchedDocument) => `
+        <tr>
+          <td>
+            <div class="doc-filename">${doc.name || 'Document'}</div>
+            ${doc.uploadDate ? `<div class="doc-meta">Uploaded: ${format(new Date(doc.uploadDate), 'MMM dd, yyyy')}</div>` : ''}
+          </td>
+          <td>${(doc.type || 'Document').replace(/_/g, ' ')}</td>
+          <td>
+            ${doc.extracted?.invoice_numbers?.length ? `Invoice: ${doc.extracted.invoice_numbers[0]}<br/>` : ''}
+            ${doc.extracted?.order_ids?.length ? `Order: ${doc.extracted.order_ids[0]}<br/>` : ''}
+            ${doc.extracted?.tracking_numbers?.length ? `Tracking: ${doc.extracted.tracking_numbers[0]}<br/>` : ''}
+            ${doc.extracted?.amounts?.length ? `Amount: $${doc.extracted.amounts[0]}` : ''}
+            ${!doc.extracted?.invoice_numbers?.length && !doc.extracted?.order_ids?.length && !doc.extracted?.tracking_numbers?.length && !doc.extracted?.amounts?.length ? '<span style="color:#94a3b8;">—</span>' : ''}
+          </td>
+          <td style="text-align: right;">${Math.round((doc.confidence || 0) * 100)}%</td>
+        </tr>
+        `).join('')}
+      </tbody>
+    </table>
+    ` : '<div class="empty-state">No matched documents available</div>'}
   </div>
-  
+
   <div class="section">
-    <div class="section-title">🚚 Shipment & Delivery Evidence</div>
-    <div class="doc-list">
-      ${organizedDocs.shipmentDocs.length > 0 ? organizedDocs.shipmentDocs.map(doc => `
-        <div class="doc-item">
-          <div class="doc-name">${doc.name}</div>
-          <div class="doc-meta">
-            ${doc.uploadDate ? `Uploaded: ${format(new Date(doc.uploadDate), 'MMM dd, yyyy')} • ` : ''}
-            <span class="doc-confidence ${(doc.confidence || 0) >= 0.85 ? 'confidence-high' : (doc.confidence || 0) >= 0.5 ? 'confidence-medium' : 'confidence-low'}">
-              ${Math.round((doc.confidence || 0) * 100)}% match
-            </span>
-          </div>
-          ${doc.extracted?.tracking_numbers?.length ? `<div class="doc-meta">Tracking: ${doc.extracted.tracking_numbers.map(t => `<span class="highlight">${t}</span>`).join(', ')}</div>` : ''}
-        </div>
-      `).join('') : '<div class="empty-state">No shipment documents matched</div>'}
-    </div>
-  </div>
-  
-  <div class="section">
-    <div class="section-title">⚖️ Policy Reference & Argument 
-      <span style="margin-left: auto; padding: 2px 8px; border-radius: 9999px; font-size: 9pt; ${policyArgument.withinWindow ? 'background: #d1fae5; color: #065f46;' : 'background: #fee2e2; color: #991b1b;'}">
-        ${policyArgument.withinWindow ? '✓ Within Window' : '⚠ Outside Window'}
-      </span>
-    </div>
+    <div class="section-header">Policy Reference</div>
     <div class="policy-box">
-      <div class="policy-name">${policy.name}</div>
-      <div class="policy-excerpt">${policy.excerpt}</div>
-      <div class="policy-deadline" style="margin-bottom: 12px;">Filing Deadline: ${policy.deadline} • Claim Age: ${policyArgument.daysOld} days</div>
-      <div style="border-top: 1px solid #bfdbfe; padding-top: 12px; margin-top: 8px;">
-        <div style="font-size: 9pt; color: #3b82f6; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Reimbursement Argument</div>
-        <div style="background: rgba(255,255,255,0.7); padding: 12px; border-radius: 6px; border: 1px solid #bfdbfe;">
-          <p style="font-size: 10pt; color: #1e3a8a; font-style: italic; line-height: 1.6; margin: 0;">"${policyArgument.argument}"</p>
+      <div class="policy-title">${policy.name}</div>
+      <div class="policy-text">${policy.excerpt}</div>
+      <div class="policy-meta">
+        <div class="policy-meta-item">
+          <div class="policy-meta-label">Filing Deadline</div>
+          <div class="policy-meta-value">${policy.deadline}</div>
+        </div>
+        <div class="policy-meta-item">
+          <div class="policy-meta-label">Claim Age</div>
+          <div class="policy-meta-value">${policyArgument.daysOld} days</div>
+        </div>
+        <div class="policy-meta-item">
+          <div class="policy-meta-label">Window Status</div>
+          <div class="policy-meta-value">${policyArgument.withinWindow ? 'Within Window' : 'Outside Window'}</div>
         </div>
       </div>
     </div>
-  </div>
-  
-  ${organizedDocs.otherDocs.length > 0 ? `
-  <div class="section">
-    <div class="section-title">📎 Additional Supporting Documents</div>
-    <div class="doc-list">
-      ${organizedDocs.otherDocs.map(doc => `
-        <div class="doc-item">
-          <div class="doc-name">${doc.name}</div>
-          <div class="doc-meta">
-            ${doc.type ? `Type: ${doc.type} • ` : ''}
-            <span class="doc-confidence ${(doc.confidence || 0) >= 0.85 ? 'confidence-high' : (doc.confidence || 0) >= 0.5 ? 'confidence-medium' : 'confidence-low'}">
-              ${Math.round((doc.confidence || 0) * 100)}% match
-            </span>
-          </div>
-        </div>
-      `).join('')}
+    <div class="argument-box">
+      <div class="argument-label">Reimbursement Argument</div>
+      <div class="argument-text">"${policyArgument.argument}"</div>
     </div>
   </div>
-  ` : ''}
-  
+
   <div class="footer">
-    Generated by Opside • ${format(new Date(), 'MMMM dd, yyyy \'at\' h:mm a')}
+    <div>Opside Recovery Platform — Confidential</div>
+    <div style="margin-top: 4px;">For audit and accounting purposes only</div>
   </div>
 </body>
 </html>`;
@@ -410,7 +592,7 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
             newTab.document.close();
             toast({
                 title: 'Evidence Pack Ready',
-                description: 'Press Ctrl+P (or Cmd+P) to save as PDF.',
+                description: 'Press Ctrl+P to save as PDF.',
             });
         } else {
             toast({
