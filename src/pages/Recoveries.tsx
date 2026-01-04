@@ -1396,10 +1396,10 @@ export default function Recoveries() {
       _confidence: det.confidence_score,
       _priority: (det.confidence_score || 0) * (det.estimated_value || 0),
       _evidence: det.days_remaining && det.days_remaining <= 7 ? 'Ready' : 'Collecting',
-      // Use actual matched_document_ids from backend if available
-      matchedDocs: det.matched_documents || [], // Backend may provide matched docs directly
-      matchedCount: Array.isArray(det.matched_document_ids) ? det.matched_document_ids.length : 0,
-      _matchedCount: Array.isArray(det.matched_document_ids) ? det.matched_document_ids.length : 0,
+      // Use matched_document_count from backend (enhanced API that queries dispute_evidence_links)
+      matchedDocs: det.matched_documents || [],
+      matchedCount: det.matched_document_count || (Array.isArray(det.matched_document_ids) ? det.matched_document_ids.length : 0),
+      _matchedCount: det.matched_document_count || (Array.isArray(det.matched_document_ids) ? det.matched_document_ids.length : 0),
     }));
 
     // Mark synced recoveries
