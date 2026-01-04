@@ -3201,6 +3201,15 @@ export default function Recoveries() {
                           {(detectionDetails.anomaly_type || detectionDetails.type || 'Recovery Claim').replace(/_/g, ' ').toUpperCase()}
                         </div>
                       )}
+                      {detectionDetails && (
+                        <Link
+                          to={`/recoveries/${detectionDetails.id}`}
+                          state={{ claim: detectionDetails }}
+                          className="mt-2 inline-flex items-center text-xs text-gray-600 hover:text-gray-900 hover:underline transition-colors"
+                        >
+                          View Full Claim Details →
+                        </Link>
+                      )}
                     </div>
 
                     {detectionDetails && (
