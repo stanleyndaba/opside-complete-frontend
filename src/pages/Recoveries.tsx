@@ -378,14 +378,14 @@ const EvidenceQualityBadge = ({ validation, claim, matchedDocs }: { validation: 
             </div>
           </div>
 
-          {/* Matched Documents */}
-          {docCount > 0 && (
-            <div className="pt-2 border-t border-gray-100">
-              <div className="text-[9px] font-semibold text-gray-500 uppercase tracking-[0.08em] mb-1.5">
-                Matched Documents ({docCount})
-              </div>
-              <div className="space-y-0.5">
-                {(matchedDocs || claim?.matchedDocs || []).length > 0 ? (
+          {/* Matched Documents - Always show */}
+          <div className="pt-2 border-t border-gray-100">
+            <div className="text-[9px] font-semibold text-gray-500 uppercase tracking-[0.08em] mb-1.5">
+              Matched Documents ({docCount})
+            </div>
+            <div className="space-y-0.5">
+              {docCount > 0 ? (
+                (matchedDocs || claim?.matchedDocs || []).length > 0 ? (
                   <>
                     {(matchedDocs || claim?.matchedDocs || []).slice(0, 3).map((doc: any, i: number) => (
                       <div key={i} className="text-[10px] text-gray-600 truncate">
@@ -402,10 +402,14 @@ const EvidenceQualityBadge = ({ validation, claim, matchedDocs }: { validation: 
                   <div className="text-[10px] text-gray-500">
                     {docCount} linked document{docCount !== 1 ? 's' : ''} — click "Proof Documents" to view
                   </div>
-                )}
-              </div>
+                )
+              ) : (
+                <div className="text-[10px] text-gray-400">
+                  No documents linked yet
+                </div>
+              )}
             </div>
-          )}
+          </div>
 
           {/* Readiness Bar */}
           <div className="pt-2 border-t border-gray-100">
