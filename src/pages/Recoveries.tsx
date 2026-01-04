@@ -3442,26 +3442,6 @@ export default function Recoveries() {
                           </div>
                         )}
 
-                        {/* Strength Score if available */}
-                        {detectionDetails._strength && (
-                          <div className="border-t border-gray-100 pt-4">
-                            <h4 className="text-sm font-semibold text-gray-900 mb-3">Claim Strength</h4>
-                            <div className="flex items-center gap-3 mb-3">
-                              <StrengthBadge strength={detectionDetails._strength} />
-                              <span className="text-sm text-gray-600">
-                                Score: {detectionDetails._strength.score}/100
-                              </span>
-                            </div>
-                            <div className="bg-gray-50 rounded-lg p-3 space-y-2">
-                              {detectionDetails._strength.factors?.map((f: any, i: number) => (
-                                <div key={i} className="flex justify-between text-sm">
-                                  <span className="text-gray-600">{f.label}</span>
-                                  <span className="text-gray-900">{f.value}/{f.max}</span>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
 
                         {/* Claim Timeline & Escalation */}
                         <div className="border-t border-gray-100 pt-4">
@@ -3480,7 +3460,7 @@ export default function Recoveries() {
                         </div>
                       </div>
                     )}
-                    <DialogFooter className="border-t border-gray-100 pt-4">
+                    <DialogFooter className="px-6 py-4 border-t border-gray-200 bg-gray-50">
                       <Button
                         variant="outline"
                         size="sm"
