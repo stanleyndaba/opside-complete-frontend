@@ -2707,30 +2707,6 @@ export default function Recoveries() {
                                               Resubmit with stronger docs
                                             </DropdownMenuItem>
                                           )}
-                                          {claim.source === 'detected' && claim.status !== 'resolved' && (
-                                            <DropdownMenuItem
-                                              className="text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer px-3 py-2 rounded-sm"
-                                              onClick={() => {
-                                                setSelectedDetection(claim);
-                                                setSelectedStatus(claim.status || 'pending');
-                                                setStatusUpdateNotes('');
-                                                setStatusUpdateModalOpen(true);
-                                              }}>
-                                              Update Status
-                                            </DropdownMenuItem>
-                                          )}
-                                          {claim.source === 'detected' && claim.status !== 'resolved' && (
-                                            <DropdownMenuItem
-                                              className="text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer px-3 py-2 rounded-sm"
-                                              onClick={() => {
-                                                setSelectedDetection(claim);
-                                                setResolveNotes('');
-                                                setResolveAmount(claim.guaranteedAmount?.toString() || '');
-                                                setResolveModalOpen(true);
-                                              }}>
-                                              Mark as Resolved
-                                            </DropdownMenuItem>
-                                          )}
                                           {claim.source === 'detected' ? (
                                             <DropdownMenuItem
                                               className="text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer px-3 py-2 rounded-sm"
@@ -2765,7 +2741,7 @@ export default function Recoveries() {
                                             <span className="flex items-center justify-between w-full">
                                               <span>Proof Documents</span>
                                               <span className="text-[10px] text-gray-400 ml-2">
-                                                {(claim.matchedDocs?.length || claim.matchedCount || 0)}
+                                                {(claim.matchedDocs?.length || claim.matchedCount || claim._matchedCount || (claim as any).matched_document_ids?.length || 0)}
                                               </span>
                                             </span>
                                           </DropdownMenuItem>
