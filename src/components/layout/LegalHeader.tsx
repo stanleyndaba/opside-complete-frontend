@@ -12,9 +12,9 @@ const LegalHeader: React.FC = () => {
             <div className="container mx-auto px-6 py-4">
                 <div className="flex items-center justify-between">
                     <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                        <img src="/logoimagetwo.png" alt="Opside" className="h-5 w-auto" />
+                        <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto" />
                         <span className="text-base font-semibold text-gray-900 font-montserrat" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                            Opside
+                            Margin
                         </span>
                     </Link>
                     <nav className="flex items-center gap-6 text-sm text-gray-600">

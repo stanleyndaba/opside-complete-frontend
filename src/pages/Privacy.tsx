@@ -6,8 +6,8 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 
 const Privacy = () => {
   usePageMeta({
-    title: 'Opside Privacy Policy',
-    description: "Privacy Policy for Opside's automated FBA auditing platform.",
+    title: 'Margin Privacy Policy',
+    description: "Privacy Policy for Margin's automated FBA auditing platform.",
     url: `${SITE_META.url}/privacy`,
     image: SITE_META.image
   });
@@ -20,7 +20,7 @@ const Privacy = () => {
         <article className="max-w-3xl mx-auto">
           <header className="mb-8 pb-8 border-b border-gray-200">
             <p className="text-sm text-gray-500 mb-6">Last Updated: December 22, 2025</p>
-            <h1 className="text-2xl font-medium text-gray-900">Opside Privacy Policy</h1>
+            <h1 className="text-2xl font-medium text-gray-900">Margin Privacy Policy</h1>
           </header>
 
           <div className="space-y-8 text-sm leading-relaxed text-gray-700">
@@ -31,10 +31,10 @@ const Privacy = () => {
             <section className="space-y-4">
               <h2 className="text-base font-medium text-gray-900">1. Interpretation and Definitions</h2>
               <p>
-                <strong>Company</strong> ('We', 'Us', or 'Our') refers to Opside, operating from Durban, South Africa.
+                <strong>Company</strong> ('We', 'Us', or 'Our') refers to Margin, operating from Durban, South Africa.
               </p>
               <p>
-                <strong>Service</strong> refers to the Opside application accessible from https://opside-complete-frontend-ni6o7xnko-mvelo-ndabas-projects.vercel.app/.
+                <strong>Service</strong> refers to the Margin application accessible from https://opside-complete-frontend-ni6o7xnko-mvelo-ndabas-projects.vercel.app/.
               </p>
               <p>
                 <strong>Personal Data</strong> means any information that relates to an identified or identifiable individual.
@@ -73,7 +73,7 @@ const Privacy = () => {
             <section className="space-y-4">
               <h2 className="text-base font-medium text-gray-900">3. Use of Your Data</h2>
               <p>
-                We use Personal Data and Amazon Information for a single purpose: to provide and improve the Opside reimbursement Service. Specifically, we use data to:
+                We use Personal Data and Amazon Information for a single purpose: to provide and improve the Margin reimbursement Service. Specifically, we use data to:
               </p>
               <ul className="list-disc pl-6 space-y-1">
                 <li>Manage and authenticate your Account</li>
@@ -122,10 +122,10 @@ const Privacy = () => {
             <section className="space-y-4">
               <h2 className="text-base font-medium text-gray-900">6. POPIA Compliance (South Africa)</h2>
               <p>
-                In accordance with the Protection of Personal Information Act 4 of 2013 ("POPIA"), Opside is committed to protecting your privacy.
+                In accordance with the Protection of Personal Information Act 4 of 2013 ("POPIA"), Margin is committed to protecting your privacy.
               </p>
               <p>
-                <strong>Information Officer:</strong> The Founder of Opside acts as the Information Officer.
+                <strong>Information Officer:</strong> The Founder of Margin acts as the Information Officer.
               </p>
               <p>
                 <strong>Your Rights:</strong> You have the right to request access to, correction of, or deletion of your personal data held by us.
@@ -142,7 +142,7 @@ const Privacy = () => {
             <section className="space-y-4">
               <h2 className="text-base font-medium text-gray-900">8. Contact Information</h2>
               <p>If you have questions about this Privacy Policy or our compliance with the Amazon DPP, contact us at:</p>
-              <p>Opside</p>
+              <p>Margin</p>
               <p>Email: clariooai@gmail.com</p>
             </section>
           </div>

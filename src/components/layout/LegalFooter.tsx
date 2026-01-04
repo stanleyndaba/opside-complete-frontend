@@ -13,7 +13,7 @@ const LegalFooter: React.FC = () => {
         <footer className="border-t border-gray-200 bg-white">
             <div className="container mx-auto px-6 py-8">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-sm text-gray-600">
-                    <p>© 2025 Opside AI. All rights reserved.</p>
+                    <p>© 2025 Margin AI. All rights reserved.</p>
                     <nav className="flex flex-wrap items-center gap-6">
                         <Link to="/terms" className="hover:text-gray-900 transition-colors">
                             Terms of Service
@@ -30,7 +30,7 @@ const LegalFooter: React.FC = () => {
                     </nav>
                 </div>
                 <div className="mt-6 pt-6 border-t border-gray-100 text-xs text-gray-500">
-                    <p>© 2025 Opside AI. Operating globally from Durban, South Africa.</p>
+                    <p>© 2025 Margin AI. Operating globally from Durban, South Africa.</p>
                 </div>
             </div>
         </footer>

@@ -202,12 +202,12 @@ export function Sidebar({
         <div className="flex items-center gap-2">
           <img
             src="/logoimagetwo.png"
-            alt="Opside"
+            alt="Margin"
             className={cn(isCollapsed ? "h-3" : "h-4", "w-auto object-contain")}
           />
           {!isCollapsed && (
             <span className="font-montserrat text-gray-900 text-sm tracking-tight" style={{ fontWeight: 600 }}>
-              Opside
+              Margin
             </span>
           )}
         </div>
@@ -274,7 +274,7 @@ export function Sidebar({
                     "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                   )}
                   onClick={async () => {
-                    const ok = window.confirm('Log out of Opside?');
+                    const ok = window.confirm('Log out of Margin?');
                     if (!ok) return;
                     try { await api.logout(); } catch (_) { }
                     window.location.href = '/';
