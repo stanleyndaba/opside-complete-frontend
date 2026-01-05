@@ -2554,7 +2554,7 @@ export default function Recoveries() {
                   </div>
 
                   {/* Data Table */}
-                  <Card className="bg-white border-slate-200 text-slate-900 w-full overflow-hidden shadow-sm rounded-none">
+                  <Card className="bg-white border-0 text-slate-900 w-full overflow-hidden shadow-none rounded-none">
                     <CardContent className="p-0 w-full">
                       {loading && (
                         <div className="p-8 text-center">
