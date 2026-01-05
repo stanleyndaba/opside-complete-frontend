@@ -2066,6 +2066,31 @@ export default function Recoveries() {
     return filtered;
   }, [filteredClaims, showParkedOnly, showRiskyClaims]);
 
+  // Group claims by month for timeline-style display
+  const claimsByMonth = useMemo(() => {
+    const groups: { [key: string]: { month: string; year: number; claims: typeof rankedClaims; sortKey: number } } = {};
+
+    rankedClaims.forEach(claim => {
+      const date = new Date(claim.created || claim.discovery_date || claim.created_at);
+      const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+      const monthName = date.toLocaleString('en-US', { month: 'long' });
+      const year = date.getFullYear();
+
+      if (!groups[monthKey]) {
+        groups[monthKey] = {
+          month: monthName,
+          year,
+          claims: [],
+          sortKey: date.getFullYear() * 100 + date.getMonth()
+        };
+      }
+      groups[monthKey].claims.push(claim);
+    });
+
+    // Sort by most recent first
+    return Object.values(groups).sort((a, b) => b.sortKey - a.sortKey);
+  }, [rankedClaims]);
+
   // Calculate key metrics
   const keyMetrics = useMemo(() => {
     const totalClaimsFound = filteredClaims.length;
@@ -2562,249 +2587,271 @@ export default function Recoveries() {
                           onMouseDown={handleMouseDown}
                           onMouseLeave={handleMouseLeave}
                         >
-                          <Table style={{ minWidth: '1600px', width: 'max-content' }}>
-                            <TableHeader>
-                              <TableRow className="hover:bg-transparent">
-                                <TableHead className="py-1.5">
+                          <table className="w-full border-collapse" style={{ minWidth: '1400px' }}>
+                            <thead>
+                              <tr className="border-b border-gray-200">
+                                <th className="text-left py-2 px-3 w-10">
                                   <Checkbox checked={selectedIds.size > 0 && selectedIds.size === filteredClaims.length} onCheckedChange={(checked) => {
                                     if (checked) setSelectedIds(new Set(filteredClaims.map(c => c.id)));
                                     else setSelectedIds(new Set());
                                   }} />
-                                </TableHead>
-                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-1.5">Claim ID</TableHead>
-                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-1.5">Created</TableHead>
-                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-1.5">Details</TableHead>
-                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-1.5">Status</TableHead>
-                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-1.5">Duplicate</TableHead>
-                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-1.5">Days Left</TableHead>
-                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-1.5">Evidence</TableHead>
-                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-1.5">Est. Value</TableHead>
-                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-1.5"></TableHead>
-                              </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                              {rankedClaims.map((claim: any) => {
-                                const confidenceBadge = claim.confidence_score !== null && claim.confidence_score !== undefined
-                                  ? (claim.confidence_score >= 0.85 ? { label: 'High', color: 'green' } : claim.confidence_score >= 0.50 ? { label: 'Medium', color: 'yellow' } : { label: 'Low', color: 'gray' })
-                                  : null;
-                                const displayConfidence = claim.confidence_score !== null && claim.confidence_score !== undefined
-                                  ? claim.confidence_score
-                                  : claim._confidence;
-
-                                const isUrgent = claim.days_remaining !== null && claim.days_remaining !== undefined && claim.days_remaining <= 7;
-                                const isCritical = claim.days_remaining !== null && claim.days_remaining !== undefined && claim.days_remaining <= 3;
-
-                                return (
-                                  <TableRow
-                                    key={claim.id}
-                                    className={cn(
-                                      "hover:bg-gray-50/50",
-                                      isCritical && "bg-red-50/50 border-l-4 border-l-red-600",
-                                      isUrgent && !isCritical && "bg-amber-50/50 border-l-4 border-l-amber-600"
-                                    )}
-                                  >
-                                    <TableCell className="py-1.5">
-                                      <Checkbox checked={selectedIds.has(claim.id)} onCheckedChange={(checked) => {
-                                        setSelectedIds(prev => {
-                                          const next = new Set(prev);
-                                          if (checked) next.add(claim.id); else next.delete(claim.id);
-                                          return next;
-                                        });
-                                      }} />
-                                    </TableCell>
-                                    {/* Claim ID */}
-                                    <TableCell className="text-xs py-1.5">
-                                      <Tooltip>
-                                        <TooltipTrigger asChild>
-                                          <Button asChild variant="link" className="p-0 h-auto text-xs text-slate-800 hover:text-slate-900 font-mono font-medium">
-                                            <Link to={`/recoveries/${claim.id}`} state={{ claim }}>
-                                              {claim.claim_number || claim.id.slice(0, 12)}
-                                            </Link>
-                                          </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent side="top" className="bg-slate-900 text-white text-xs font-mono rounded-none border-slate-700">
-                                          {claim.id}
-                                        </TooltipContent>
-                                      </Tooltip>
-                                    </TableCell>
-                                    {/* Created */}
-                                    <TableCell className="text-xs text-gray-600 py-1.5 font-mono">{format(new Date(claim.created || claim.discovery_date || claim.created_at), 'MMM dd, yyyy')}</TableCell>
-                                    {/* Details */}
-                                    <TableCell className="max-w-xs py-1.5">
-                                      <div className="truncate text-sm text-gray-900" title={claim.details}>
-                                        {claim.details}
+                                </th>
+                                <th className="text-left text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-2 px-3">Claim ID</th>
+                                <th className="text-left text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-2 px-3">Created</th>
+                                <th className="text-left text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-2 px-3">Details</th>
+                                <th className="text-left text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-2 px-3">Status</th>
+                                <th className="text-left text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-2 px-3">Duplicate</th>
+                                <th className="text-left text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-2 px-3">Days Left</th>
+                                <th className="text-left text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-2 px-3">Evidence</th>
+                                <th className="text-left text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-2 px-3">Est. Value</th>
+                                <th className="text-left py-2 px-3 w-10"></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {claimsByMonth.map((monthGroup, groupIndex) => (
+                                <React.Fragment key={`${monthGroup.month}-${monthGroup.year}`}>
+                                  {/* Month Header Row */}
+                                  <tr className={cn(
+                                    "bg-gray-50",
+                                    groupIndex > 0 && "border-t-2 border-gray-200"
+                                  )}>
+                                    <td colSpan={10} className="py-2.5 px-3">
+                                      <div className="flex items-center justify-between">
+                                        <span className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+                                          {monthGroup.month} {monthGroup.year}
+                                        </span>
+                                        <span className="text-[10px] text-gray-400">
+                                          {monthGroup.claims.length} claim{monthGroup.claims.length !== 1 ? 's' : ''}
+                                        </span>
                                       </div>
-                                      <div className="text-[10px] text-slate-500 mt-0.5 font-mono">
-                                        SKU: {claim.sku || 'N/A'} • ASIN: {claim.asin || 'N/A'}
-                                      </div>
-                                    </TableCell>
-                                    {/* Status */}
-                                    <TableCell className="py-1.5">
-                                      <Badge className={getStatusColor(claim.status)}>
-                                        {claim.status}
-                                      </Badge>
-                                    </TableCell>
-                                    {/* Duplicate Warning */}
-                                    <TableCell className="py-1.5">
-                                      {(() => {
-                                        const doubleDipWarning = checkDoubleDip(claim, rankedClaims);
-                                        return doubleDipWarning ? <DoubleDipBadge warning={doubleDipWarning} /> : <span className="text-xs text-slate-400">None</span>;
-                                      })()}
-                                    </TableCell>
-                                    {/* Days Remaining */}
-                                    <TableCell className="py-1.5">
-                                      {claim.days_remaining !== null && claim.days_remaining !== undefined ? (
-                                        <div className="flex items-center gap-1.5">
-                                          {isCritical && (
-                                            <AlertTriangle className="h-3 w-3 text-red-600 flex-shrink-0" />
-                                          )}
-                                          {isUrgent && !isCritical && (
-                                            <Clock className="h-3 w-3 text-amber-600 flex-shrink-0" />
-                                          )}
-                                          <span className={cn(
-                                            "text-xs",
-                                            isCritical && 'text-red-600 font-medium',
-                                            isUrgent && !isCritical && 'text-amber-600 font-medium',
-                                            !isUrgent && 'text-gray-700'
-                                          )}>
-                                            {claim.days_remaining} days
-                                          </span>
-                                        </div>
-                                      ) : (
-                                        <span className="text-xs text-gray-700">—</span>
-                                      )}
-                                    </TableCell>
-                                    {/* Evidence */}
-                                    <TableCell className="py-1.5">
-                                      {(() => {
-                                        const validation = validateEvidencePolicy(claim, claim.matchedDocs);
-                                        const docCount = claim.matchedDocs?.length || claim.matchedCount || 0;
-                                        return (
-                                          <div className="flex items-center gap-2">
-                                            <EvidenceQualityBadge validation={validation} claim={claim} matchedDocs={claim.matchedDocs} />
-                                            {docCount > 0 && (
-                                              <span className="text-[10px] text-gray-500">
-                                                {docCount} doc{docCount !== 1 ? 's' : ''}
-                                              </span>
-                                            )}
+                                    </td>
+                                  </tr>
+                                  {/* Claims in this month */}
+                                  {monthGroup.claims.map((claim: any) => {
+                                    const confidenceBadge = claim.confidence_score !== null && claim.confidence_score !== undefined
+                                      ? (claim.confidence_score >= 0.85 ? { label: 'High', color: 'green' } : claim.confidence_score >= 0.50 ? { label: 'Medium', color: 'yellow' } : { label: 'Low', color: 'gray' })
+                                      : null;
+                                    const displayConfidence = claim.confidence_score !== null && claim.confidence_score !== undefined
+                                      ? claim.confidence_score
+                                      : claim._confidence;
+
+                                    const isUrgent = claim.days_remaining !== null && claim.days_remaining !== undefined && claim.days_remaining <= 7;
+                                    const isCritical = claim.days_remaining !== null && claim.days_remaining !== undefined && claim.days_remaining <= 3;
+
+                                    const claimDate = new Date(claim.created || claim.discovery_date || claim.created_at);
+
+                                    return (
+                                      <tr
+                                        key={claim.id}
+                                        className={cn(
+                                          "border-b border-gray-100 hover:bg-gray-50/50 transition-colors",
+                                          isCritical && "bg-red-50/30",
+                                          isUrgent && !isCritical && "bg-amber-50/30"
+                                        )}
+                                      >
+                                        <td className="py-1.5 px-3">
+                                          <Checkbox checked={selectedIds.has(claim.id)} onCheckedChange={(checked) => {
+                                            setSelectedIds(prev => {
+                                              const next = new Set(prev);
+                                              if (checked) next.add(claim.id); else next.delete(claim.id);
+                                              return next;
+                                            });
+                                          }} />
+                                        </td>
+                                        {/* Claim ID */}
+                                        <td className="py-1.5 px-3">
+                                          <Tooltip>
+                                            <TooltipTrigger asChild>
+                                              <Button asChild variant="link" className="p-0 h-auto text-xs text-slate-800 hover:text-slate-900 font-mono font-medium">
+                                                <Link to={`/recoveries/${claim.id}`} state={{ claim }}>
+                                                  {claim.claim_number || claim.id.slice(0, 12)}
+                                                </Link>
+                                              </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent side="top" className="bg-slate-900 text-white text-xs font-mono rounded-none border-slate-700">
+                                              {claim.id}
+                                            </TooltipContent>
+                                          </Tooltip>
+                                        </td>
+                                        {/* Created - Format: "4 Jan, 02:19" */}
+                                        <td className="py-1.5 px-3">
+                                          <div className="flex flex-col">
+                                            <span className="text-xs text-gray-700 font-mono">{format(claimDate, 'd MMM')}</span>
+                                            <span className="text-[10px] text-gray-400 font-mono">{format(claimDate, 'HH:mm')}</span>
                                           </div>
-                                        );
-                                      })()}
-                                    </TableCell>
-                                    {/* Est. Value */}
-                                    <TableCell className="text-sm font-mono tabular-nums text-gray-900 py-1.5">{formatCurrency(claim.guaranteedAmount, claim.currency || 'USD')}</TableCell>
-                                    {/* Actions */}
-                                    <TableCell>
-                                      <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                          <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-gray-500 hover:text-gray-900 hover:bg-gray-100">
-                                            <MoreHorizontal className="h-4 w-4" />
-                                          </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end" className="w-48 bg-white border border-gray-200 shadow-lg rounded-sm p-1">
-                                          {claim.status === 'Denied' && (
-                                            <DropdownMenuItem
-                                              className="text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer px-3 py-2 rounded-sm"
-                                              onClick={async () => {
-                                                const hasDocs = true;
-                                                if (!hasDocs) return;
-                                                try {
-                                                  await api.resubmitClaim(claim.id);
-                                                  toast({ title: 'Resubmitted', description: `${claim.id} resubmitted with stronger docs.` });
-                                                  setClaims(prev => prev.map(c => c.id === claim.id ? { ...c, status: 'Submitted' } as any : c));
-                                                } catch (e: any) {
-                                                  toast({ title: 'Resubmission failed', description: e?.message || 'Please try again.' });
-                                                }
-                                              }}>
-                                              Resubmit with stronger docs
-                                            </DropdownMenuItem>
-                                          )}
-                                          {claim.source === 'detected' ? (
-                                            <DropdownMenuItem
-                                              className="text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer px-3 py-2 rounded-sm"
-                                              onClick={() => {
-                                                setDetectionDetails(claim);
-                                                setDetailsModalOpen(true);
-                                              }}>
-                                              View Details
-                                            </DropdownMenuItem>
-                                          ) : (
-                                            <DropdownMenuItem asChild className="text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer px-3 py-2 rounded-sm">
-                                              <Link to={`/recoveries/${claim.id}`} state={{ claim }}>
-                                                View Details
-                                              </Link>
-                                            </DropdownMenuItem>
-                                          )}
-                                          <DropdownMenuItem
-                                            className="text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer px-3 py-2 rounded-sm"
-                                            onClick={async () => {
-                                              try {
-                                                const res = await api.getRecoveryDetail(claim.id);
-                                                const docs = (res && res.ok && Array.isArray((res as any).data?.documents)) ? (res as any).data!.documents : [];
-                                                const matchedDocs = claim.matchedDocs || [];
-                                                const allDocs = [...docs, ...matchedDocs.filter((md: any) => !docs.some((d: any) => d.id === md.id))];
-                                                setProofDocs(allDocs);
-                                                setProofDocsClaim(claim);
-                                                setProofDocsModalOpen(true);
-                                              } catch (e: any) {
-                                                toast({ title: 'Error loading documents', description: e?.message || 'Please try again.' });
-                                              }
-                                            }}>
-                                            <span className="flex items-center justify-between w-full">
-                                              <span>Proof Documents</span>
-                                              <span className="text-[10px] text-gray-400 ml-2">
-                                                {(claim.matchedDocs?.length || claim.matchedCount || claim._matchedCount || (claim as any).matched_document_ids?.length || 0)}
+                                        </td>
+                                        {/* Details */}
+                                        <td className="py-1.5 px-3 max-w-xs">
+                                          <div className="truncate text-sm text-gray-900" title={claim.details}>
+                                            {claim.details}
+                                          </div>
+                                          <div className="text-[10px] text-slate-500 mt-0.5 font-mono">
+                                            SKU: {claim.sku || 'N/A'} • ASIN: {claim.asin || 'N/A'}
+                                          </div>
+                                        </td>
+                                        {/* Status */}
+                                        <td className="py-1.5 px-3">
+                                          <Badge className={getStatusColor(claim.status)}>
+                                            {claim.status}
+                                          </Badge>
+                                        </td>
+                                        {/* Duplicate Warning */}
+                                        <td className="py-1.5 px-3">
+                                          {(() => {
+                                            const doubleDipWarning = checkDoubleDip(claim, rankedClaims);
+                                            return doubleDipWarning ? <DoubleDipBadge warning={doubleDipWarning} /> : <span className="text-xs text-slate-400">None</span>;
+                                          })()}
+                                        </td>
+                                        {/* Days Remaining */}
+                                        <td className="py-1.5 px-3">
+                                          {claim.days_remaining !== null && claim.days_remaining !== undefined ? (
+                                            <div className="flex items-center gap-1.5">
+                                              {isCritical && (
+                                                <AlertTriangle className="h-3 w-3 text-red-600 flex-shrink-0" />
+                                              )}
+                                              {isUrgent && !isCritical && (
+                                                <Clock className="h-3 w-3 text-amber-600 flex-shrink-0" />
+                                              )}
+                                              <span className={cn(
+                                                "text-xs",
+                                                isCritical && 'text-red-600 font-medium',
+                                                isUrgent && !isCritical && 'text-amber-600 font-medium',
+                                                !isUrgent && 'text-gray-700'
+                                              )}>
+                                                {claim.days_remaining} days
                                               </span>
-                                            </span>
-                                          </DropdownMenuItem>
-                                          <DropdownMenuItem
-                                            className="text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer px-3 py-2 rounded-sm"
-                                            onClick={async () => {
-                                              try {
-                                                // Fetch real matched documents from backend
-                                                const res = await api.getRecoveryDetail(claim.id);
-                                                const docs = (res && res.ok && Array.isArray((res as any).data?.documents))
-                                                  ? (res as any).data!.documents
-                                                  : [];
-
-                                                // Transform documents to matchedDocs format
-                                                const matchedDocs = docs.map((doc: any) => ({
-                                                  id: doc.id,
-                                                  name: doc.filename || doc.title || `Document ${doc.id?.slice(0, 8)}`,
-                                                  type: doc.doc_type || doc.type,
-                                                  uploadDate: doc.created_at,
-                                                  supplier: doc.metadata?.supplier_name || doc.extracted?.supplier_name,
-                                                  invoice: doc.metadata?.invoice_number || doc.extracted?.invoice_numbers?.[0],
-                                                  amount: doc.metadata?.total_amount || doc.extracted?.amounts?.[0],
-                                                  confidence: doc.matchConfidence || doc.parser_confidence || 0.8,
-                                                  matchedFields: doc.matchedFields || [],
-                                                  extracted: doc.extracted || {},
-                                                }));
-
-                                                // Open modal with enriched claim data
-                                                setEvidencePackClaim({
-                                                  ...claim,
-                                                  matchedDocs,
-                                                  matchedCount: matchedDocs.length,
-                                                });
-                                                setEvidencePackOpen(true);
-                                              } catch (e: any) {
-                                                // Fallback: open with existing claim data
-                                                setEvidencePackClaim(claim);
-                                                setEvidencePackOpen(true);
-                                                toast({ title: 'Note', description: 'Could not load additional document data.' });
-                                              }
-                                            }}>
-                                            View Evidence Pack
-                                          </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                      </DropdownMenu>
-                                    </TableCell>
-                                  </TableRow>
-                                );
-                              })}
-                            </TableBody>
-                          </Table>
+                                            </div>
+                                          ) : (
+                                            <span className="text-xs text-gray-700">—</span>
+                                          )}
+                                        </td>
+                                        {/* Evidence */}
+                                        <td className="py-1.5 px-3">
+                                          {(() => {
+                                            const validation = validateEvidencePolicy(claim, claim.matchedDocs);
+                                            const docCount = claim.matchedDocs?.length || claim.matchedCount || 0;
+                                            return (
+                                              <div className="flex items-center gap-2">
+                                                <EvidenceQualityBadge validation={validation} claim={claim} matchedDocs={claim.matchedDocs} />
+                                                {docCount > 0 && (
+                                                  <span className="text-[10px] text-gray-500">
+                                                    {docCount} doc{docCount !== 1 ? 's' : ''}
+                                                  </span>
+                                                )}
+                                              </div>
+                                            );
+                                          })()}
+                                        </td>
+                                        {/* Est. Value */}
+                                        <td className="py-1.5 px-3 text-sm font-mono tabular-nums text-gray-900">{formatCurrency(claim.guaranteedAmount, claim.currency || 'USD')}</td>
+                                        {/* Actions */}
+                                        <td className="py-1.5 px-3">
+                                          <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                              <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-gray-500 hover:text-gray-900 hover:bg-gray-100">
+                                                <MoreHorizontal className="h-4 w-4" />
+                                              </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent align="end" className="w-48 bg-white border border-gray-200 shadow-lg rounded-sm p-1">
+                                              {claim.status === 'Denied' && (
+                                                <DropdownMenuItem
+                                                  className="text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer px-3 py-2 rounded-sm"
+                                                  onClick={async () => {
+                                                    const hasDocs = true;
+                                                    if (!hasDocs) return;
+                                                    try {
+                                                      await api.resubmitClaim(claim.id);
+                                                      toast({ title: 'Resubmitted', description: `${claim.id} resubmitted with stronger docs.` });
+                                                      setClaims(prev => prev.map(c => c.id === claim.id ? { ...c, status: 'Submitted' } as any : c));
+                                                    } catch (e: any) {
+                                                      toast({ title: 'Resubmission failed', description: e?.message || 'Please try again.' });
+                                                    }
+                                                  }}>
+                                                  Resubmit with stronger docs
+                                                </DropdownMenuItem>
+                                              )}
+                                              {claim.source === 'detected' ? (
+                                                <DropdownMenuItem
+                                                  className="text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer px-3 py-2 rounded-sm"
+                                                  onClick={() => {
+                                                    setDetectionDetails(claim);
+                                                    setDetailsModalOpen(true);
+                                                  }}>
+                                                  View Details
+                                                </DropdownMenuItem>
+                                              ) : (
+                                                <DropdownMenuItem asChild className="text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer px-3 py-2 rounded-sm">
+                                                  <Link to={`/recoveries/${claim.id}`} state={{ claim }}>
+                                                    View Details
+                                                  </Link>
+                                                </DropdownMenuItem>
+                                              )}
+                                              <DropdownMenuItem
+                                                className="text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer px-3 py-2 rounded-sm"
+                                                onClick={async () => {
+                                                  try {
+                                                    const res = await api.getRecoveryDetail(claim.id);
+                                                    const docs = (res && res.ok && Array.isArray((res as any).data?.documents)) ? (res as any).data!.documents : [];
+                                                    const matchedDocs = claim.matchedDocs || [];
+                                                    const allDocs = [...docs, ...matchedDocs.filter((md: any) => !docs.some((d: any) => d.id === md.id))];
+                                                    setProofDocs(allDocs);
+                                                    setProofDocsClaim(claim);
+                                                    setProofDocsModalOpen(true);
+                                                  } catch (e: any) {
+                                                    toast({ title: 'Error loading documents', description: e?.message || 'Please try again.' });
+                                                  }
+                                                }}>
+                                                <span className="flex items-center justify-between w-full">
+                                                  <span>Proof Documents</span>
+                                                  <span className="text-[10px] text-gray-400 ml-2">
+                                                    {(claim.matchedDocs?.length || claim.matchedCount || claim._matchedCount || (claim as any).matched_document_ids?.length || 0)}
+                                                  </span>
+                                                </span>
+                                              </DropdownMenuItem>
+                                              <DropdownMenuItem
+                                                className="text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer px-3 py-2 rounded-sm"
+                                                onClick={async () => {
+                                                  try {
+                                                    const res = await api.getRecoveryDetail(claim.id);
+                                                    const docs = (res && res.ok && Array.isArray((res as any).data?.documents))
+                                                      ? (res as any).data!.documents
+                                                      : [];
+                                                    const matchedDocs = docs.map((doc: any) => ({
+                                                      id: doc.id,
+                                                      name: doc.filename || doc.title || `Document ${doc.id?.slice(0, 8)}`,
+                                                      type: doc.doc_type || doc.type,
+                                                      uploadDate: doc.created_at,
+                                                      supplier: doc.metadata?.supplier_name || doc.extracted?.supplier_name,
+                                                      invoice: doc.metadata?.invoice_number || doc.extracted?.invoice_numbers?.[0],
+                                                      amount: doc.metadata?.total_amount || doc.extracted?.amounts?.[0],
+                                                      confidence: doc.matchConfidence || doc.parser_confidence || 0.8,
+                                                      matchedFields: doc.matchedFields || [],
+                                                      extracted: doc.extracted || {},
+                                                    }));
+                                                    setEvidencePackClaim({
+                                                      ...claim,
+                                                      matchedDocs,
+                                                      matchedCount: matchedDocs.length,
+                                                    });
+                                                    setEvidencePackOpen(true);
+                                                  } catch (e: any) {
+                                                    setEvidencePackClaim(claim);
+                                                    setEvidencePackOpen(true);
+                                                    toast({ title: 'Note', description: 'Could not load additional document data.' });
+                                                  }
+                                                }}>
+                                                View Evidence Pack
+                                              </DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                          </DropdownMenu>
+                                        </td>
+                                      </tr>
+                                    );
+                                  })}
+                                </React.Fragment>
+                              ))}
+                            </tbody>
+                          </table>
                         </div>
                       )}
                     </CardContent>
