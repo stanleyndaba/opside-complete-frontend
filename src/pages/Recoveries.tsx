@@ -2565,21 +2565,21 @@ export default function Recoveries() {
                           <Table style={{ minWidth: '1600px', width: 'max-content' }}>
                             <TableHeader>
                               <TableRow className="hover:bg-transparent">
-                                <TableHead className="py-3">
+                                <TableHead className="py-1.5">
                                   <Checkbox checked={selectedIds.size > 0 && selectedIds.size === filteredClaims.length} onCheckedChange={(checked) => {
                                     if (checked) setSelectedIds(new Set(filteredClaims.map(c => c.id)));
                                     else setSelectedIds(new Set());
                                   }} />
                                 </TableHead>
-                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Claim ID</TableHead>
-                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Created</TableHead>
-                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Details</TableHead>
-                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Status</TableHead>
-                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Duplicate</TableHead>
-                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Days Left</TableHead>
-                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Evidence</TableHead>
-                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Est. Value</TableHead>
-                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3"></TableHead>
+                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-1.5">Claim ID</TableHead>
+                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-1.5">Created</TableHead>
+                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-1.5">Details</TableHead>
+                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-1.5">Status</TableHead>
+                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-1.5">Duplicate</TableHead>
+                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-1.5">Days Left</TableHead>
+                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-1.5">Evidence</TableHead>
+                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-1.5">Est. Value</TableHead>
+                                <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-1.5"></TableHead>
                               </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -2603,7 +2603,7 @@ export default function Recoveries() {
                                       isUrgent && !isCritical && "bg-amber-50/50 border-l-4 border-l-amber-600"
                                     )}
                                   >
-                                    <TableCell className="py-3">
+                                    <TableCell className="py-1.5">
                                       <Checkbox checked={selectedIds.has(claim.id)} onCheckedChange={(checked) => {
                                         setSelectedIds(prev => {
                                           const next = new Set(prev);
@@ -2613,7 +2613,7 @@ export default function Recoveries() {
                                       }} />
                                     </TableCell>
                                     {/* Claim ID */}
-                                    <TableCell className="text-xs py-3">
+                                    <TableCell className="text-xs py-1.5">
                                       <Tooltip>
                                         <TooltipTrigger asChild>
                                           <Button asChild variant="link" className="p-0 h-auto text-xs text-slate-800 hover:text-slate-900 font-mono font-medium">
@@ -2628,9 +2628,9 @@ export default function Recoveries() {
                                       </Tooltip>
                                     </TableCell>
                                     {/* Created */}
-                                    <TableCell className="text-xs text-gray-600 py-3 font-mono">{format(new Date(claim.created || claim.discovery_date || claim.created_at), 'MMM dd, yyyy')}</TableCell>
+                                    <TableCell className="text-xs text-gray-600 py-1.5 font-mono">{format(new Date(claim.created || claim.discovery_date || claim.created_at), 'MMM dd, yyyy')}</TableCell>
                                     {/* Details */}
-                                    <TableCell className="max-w-xs py-3">
+                                    <TableCell className="max-w-xs py-1.5">
                                       <div className="truncate text-sm text-gray-900" title={claim.details}>
                                         {claim.details}
                                       </div>
@@ -2639,20 +2639,20 @@ export default function Recoveries() {
                                       </div>
                                     </TableCell>
                                     {/* Status */}
-                                    <TableCell className="py-3">
+                                    <TableCell className="py-1.5">
                                       <Badge className={getStatusColor(claim.status)}>
                                         {claim.status}
                                       </Badge>
                                     </TableCell>
                                     {/* Duplicate Warning */}
-                                    <TableCell className="py-3">
+                                    <TableCell className="py-1.5">
                                       {(() => {
                                         const doubleDipWarning = checkDoubleDip(claim, rankedClaims);
                                         return doubleDipWarning ? <DoubleDipBadge warning={doubleDipWarning} /> : <span className="text-xs text-slate-400">None</span>;
                                       })()}
                                     </TableCell>
                                     {/* Days Remaining */}
-                                    <TableCell className="py-3">
+                                    <TableCell className="py-1.5">
                                       {claim.days_remaining !== null && claim.days_remaining !== undefined ? (
                                         <div className="flex items-center gap-1.5">
                                           {isCritical && (
@@ -2675,7 +2675,7 @@ export default function Recoveries() {
                                       )}
                                     </TableCell>
                                     {/* Evidence */}
-                                    <TableCell className="py-3">
+                                    <TableCell className="py-1.5">
                                       {(() => {
                                         const validation = validateEvidencePolicy(claim, claim.matchedDocs);
                                         const docCount = claim.matchedDocs?.length || claim.matchedCount || 0;
@@ -2692,7 +2692,7 @@ export default function Recoveries() {
                                       })()}
                                     </TableCell>
                                     {/* Est. Value */}
-                                    <TableCell className="text-sm font-mono tabular-nums text-gray-900 py-3">{formatCurrency(claim.guaranteedAmount, claim.currency || 'USD')}</TableCell>
+                                    <TableCell className="text-sm font-mono tabular-nums text-gray-900 py-1.5">{formatCurrency(claim.guaranteedAmount, claim.currency || 'USD')}</TableCell>
                                     {/* Actions */}
                                     <TableCell>
                                       <DropdownMenu>
