@@ -378,7 +378,6 @@ const Index = () => {
                     type="button"
                     className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
                   >
-                    <Sparkles className="h-3.5 w-3.5 text-emerald-500" />
                     Immediate Access
                   </button>
                 </PopoverTrigger>
