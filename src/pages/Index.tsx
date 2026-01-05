@@ -642,8 +642,6 @@ const Index = () => {
                   </div>
                   {/* Trust text */}
                   <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500">
-                    <span>No credit cards</span>
-                    <span>•</span>
                     <span>Cancel anytime</span>
                   </div>
                 </div>
@@ -658,7 +656,7 @@ const Index = () => {
                           : `${currentValue.toFixed(metric.decimals)}${metric.suffix}`;
                       return (
                         <div key={metric.label} className="flex flex-col gap-1">
-                          <div className="text-4xl font-thin text-gray-900">
+                          <div className="text-5xl text-gray-900" style={{ fontWeight: 100 }}>
                             {displayValue}
                           </div>
                           <p className="text-sm text-gray-600 font-normal">{metric.label}</p>
