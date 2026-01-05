@@ -681,7 +681,7 @@ const Index = () => {
             <div className="mx-auto flex max-w-6xl flex-col gap-10 md:flex-row md:items-start">
               <div className="space-y-4 md:w-1/3">
                 <span className="text-sm font-semibold bg-gradient-to-r from-[#1f4037] to-[#99f2c8] bg-clip-text text-transparent">frequently asked questions</span>
-                <h2 className="text-3xl font-black tracking-tight text-gray-900 md:text-4xl">
+                <h2 className="text-3xl font-normal tracking-tight text-gray-900 md:text-4xl">
                   Everything you wanted to ask before Margin starts recovering funds.
                 </h2>
               </div>
