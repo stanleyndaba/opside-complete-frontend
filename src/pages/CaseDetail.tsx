@@ -351,7 +351,7 @@ const generateNarrative = (claim: any): string => {
   } else {
     // Fallback for unknown case types
     const typeDisplay = caseType.replace(/_/g, ' ') || 'discrepancy';
-    narrative = `Opside's audit engine detected a ${typeDisplay} affecting SKU ${sku}`;
+    narrative = `Margin's audit engine detected a ${typeDisplay} affecting SKU ${sku}`;
     if (asin !== 'N/A') narrative += ` (ASIN: ${asin})`;
     if (detectionDate) narrative += ` on ${detectionDate}`;
     narrative += `. `;
@@ -702,7 +702,7 @@ export default function CaseDetail() {
             {/* Auto-Filing Banner - Institutional Style */}
             <div className="flex items-center gap-4 px-4 py-3 bg-white">
               <p className="text-xs text-gray-600">
-                <span className="font-medium text-gray-900">Opside Auto-Files</span> cases with <span className="font-mono font-medium text-gray-900">≥85%</span> confidence for you
+                <span className="font-medium text-gray-900">Margin Auto-Files</span> cases with <span className="font-mono font-medium text-gray-900">≥85%</span> confidence for you
               </p>
               <span className="text-[10px] font-light text-gray-400 uppercase tracking-[0.15em] ml-auto">
                 Autonomous
