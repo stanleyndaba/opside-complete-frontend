@@ -66,8 +66,9 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
               })}
             </div>
           </div>
-          <div className="flex flex-col gap-4 border-t border-gray-200 pt-6 text-xs text-gray-500 md:flex-row md:items-center md:justify-between">
-            <div className="order-1 flex flex-wrap items-center gap-4 text-gray-600 md:order-2">
+          <div className="flex flex-col gap-6 border-t border-gray-200 pt-6 text-xs text-gray-500">
+            {/* Links - stack on mobile, row on desktop */}
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-gray-600 md:justify-end">
               <Link to="/privacy" className="transition hover:text-gray-900">
                 Privacy Policy
               </Link>
@@ -85,8 +86,9 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
                 {selectedLanguageLabel}
               </span>
             </div>
-            <p className="order-2 text-gray-600 md:order-1">
-              © {new Date().getFullYear()} Opside. Built for operators. Operating from Durban, South Africa.
+            {/* Copyright - centered on mobile, left on desktop */}
+            <p className="text-center text-gray-600 md:text-left">
+              © {new Date().getFullYear()} Margin. Built for operators.
             </p>
           </div>
         </div>
