@@ -646,6 +646,7 @@ const Index = () => {
                   </div>
                 </div>
 
+                {/* Metrics section - temporarily hidden
                 <div ref={metricsRef} className="w-full pt-8 border-t border-gray-100">
                   <div className="grid grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-4">
                     {HERO_METRICS.map((metric, index) => {
@@ -665,6 +666,7 @@ const Index = () => {
                     })}
                   </div>
                 </div>
+                */}
               </div>
             </div>
           </section>
