@@ -1313,9 +1313,9 @@ export default function Sync() {
       <div className="bg-white min-h-screen">
         <div className="container mx-auto px-8 py-8 text-gray-900">
           {/* Page Header */}
-          <div className="mb-6">
-            <h1 className="text-lg font-medium text-gray-900 tracking-tight">Data Synchronization</h1>
-            <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-[0.15em]">Amazon SP-API Sync</p>
+          <div className="mb-8">
+            <h1 className="text-xl font-semibold text-gray-900 font-montserrat">Data Synchronization</h1>
+            <p className="text-xs text-gray-400 mt-1 font-montserrat">Amazon SP-API Sync</p>
           </div>
 
           <div className="max-w-4xl mx-auto space-y-4">
@@ -1331,12 +1331,12 @@ export default function Sync() {
             <div className="space-y-4">
               {/* Detecting Phase */}
               {status === 'detecting' && (
-                <div className="py-3 bg-gray-50 px-4 border border-gray-200">
-                  <div className="flex items-center gap-2">
+                <div className="py-4 bg-gray-50 px-5 rounded-lg border border-gray-200">
+                  <div className="flex items-center gap-3">
                     <Target className="h-4 w-4 text-gray-500 animate-pulse" />
                     <div>
-                      <p className="text-xs font-medium text-gray-700 uppercase tracking-[0.1em]">Analyzing for Discrepancies</p>
-                      <p className="text-[10px] text-gray-500">AI-powered detection scanning your data</p>
+                      <p className="text-sm font-medium text-gray-800 font-montserrat">Analyzing for discrepancies</p>
+                      <p className="text-xs text-gray-500 font-montserrat">AI-powered detection scanning your data</p>
                     </div>
                   </div>
                 </div>
@@ -1345,9 +1345,9 @@ export default function Sync() {
 
               {/* Status Strip */}
               {logs.length > 0 && status === 'completed' && (
-                <div className="flex items-center gap-2 text-xs">
+                <div className="flex items-center gap-3 text-xs font-montserrat">
                   {syncData?.completedAt && (
-                    <span className="text-gray-500 uppercase tracking-[0.1em] text-[10px]">
+                    <span className="text-gray-400">
                       Last sync: {(() => {
                         const completedTime = new Date(syncData.completedAt).getTime();
                         const now = Date.now();
@@ -1387,26 +1387,9 @@ export default function Sync() {
               <div className="space-y-2">
                 <div className="space-y-0.5">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Real-Time Logs</h4>
-                    <span className="text-[10px] text-gray-400">{filteredLogs.length} entries</span>
+                    <h4 className="text-sm font-medium text-gray-900">Activity Log</h4>
+                    <span className="text-xs text-gray-400 font-mono">{filteredLogs.length} entries</span>
                   </div>
-                  {syncData?.completedAt && (
-                    <p className="text-xs text-gray-400">
-                      Last synced: {(() => {
-                        const completedTime = new Date(syncData.completedAt).getTime();
-                        const now = Date.now();
-                        const diffMs = now - completedTime;
-                        const diffMins = Math.floor(diffMs / (1000 * 60));
-                        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-                        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-                        if (diffMins < 1) return 'just now';
-                        if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
-                        if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-                        return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
-                      })()}
-                    </p>
-                  )}
                 </div>
 
                 {/* Filter Toggles */}
@@ -1467,32 +1450,32 @@ export default function Sync() {
                   />
                 </div>
 
-                {/* Log Container - Premium Dark Theme for "Lucrative Security" feel */}
+                {/* Log Container - Institutional Dark Theme */}
                 <div className="relative group">
-                  {/* Glass header effect - premium dark slate */}
-                  <div className="absolute top-0 left-0 right-0 h-7 bg-[#1E293B] backdrop-blur-sm rounded-t-lg border-b border-slate-600/50 flex items-center px-3 justify-between z-10">
-                    <span className="text-[10px] font-semibold text-slate-300 uppercase tracking-wide">Agent Activity</span>
+                  {/* Header bar - true black */}
+                  <div className="absolute top-0 left-0 right-0 h-8 bg-[#111111] rounded-t-lg border-b border-neutral-800 flex items-center px-4 justify-between z-10">
+                    <span className="text-xs font-medium text-neutral-400 font-montserrat">Agent Activity</span>
                     <div className="flex items-center gap-2">
                       {status === 'running' || status === 'detecting' ? (
-                        <div className="flex items-center gap-1.5 bg-emerald-100 px-2 py-0.5 rounded-full border border-emerald-200">
-                          <span className="relative flex h-1.5 w-1.5">
+                        <div className="flex items-center gap-2 px-2.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/30">
+                          <span className="relative flex h-2 w-2">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                           </span>
-                          <span className="text-[9px] font-medium text-emerald-600 tracking-wider">LIVE</span>
+                          <span className="text-[10px] font-semibold text-emerald-400 tracking-wide">LIVE</span>
                         </div>
                       ) : (
-                        <span className="text-[9px] text-gray-400">OFFLINE</span>
+                        <span className="text-[10px] text-neutral-500 font-medium">IDLE</span>
                       )}
                     </div>
                   </div>
 
                   <div
                     ref={logContainerRef}
-                    className="bg-[#0F172A] rounded-lg pt-9 pb-3 px-3 font-mono text-[10px] h-80 overflow-y-auto scroll-smooth border border-slate-700/50 shadow-xl relative"
+                    className="bg-black rounded-lg pt-10 pb-4 px-4 font-montserrat text-xs h-80 overflow-y-auto scroll-smooth border border-neutral-800 shadow-2xl relative"
                   >
-                    {/* Grid background effect - subtle 5% opacity for premium feel */}
-                    <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none"></div>
+                    {/* Subtle grid overlay */}
+                    <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none rounded-lg"></div>
 
                     {filteredLogs.length === 0 ? (
                       <div className="text-gray-400 flex flex-col items-center justify-center h-full relative z-10">
@@ -1545,10 +1528,10 @@ export default function Sync() {
                               {/* Story Header - Clickable */}
                               <button
                                 onClick={() => toggleStory(story.id)}
-                                className="w-full text-left flex items-center gap-2 py-1.5 px-2 rounded hover:bg-slate-800/50 transition-colors group"
+                                className="w-full text-left flex items-center gap-2.5 py-2 px-3 rounded hover:bg-neutral-900 transition-colors group"
                               >
                                 {/* Expand/Collapse Icon */}
-                                <span className="text-gray-500 group-hover:text-gray-300 transition-colors">
+                                <span className="text-neutral-500 group-hover:text-neutral-300 transition-colors">
                                   {isExpanded ? (
                                     <ChevronDown className="h-3.5 w-3.5" />
                                   ) : (
@@ -1565,14 +1548,14 @@ export default function Sync() {
                                   <Clock className="h-3.5 w-3.5 text-gray-400" />
                                 )}
 
-                                {/* Title & Summary (includes potential value inline) */}
-                                <span className="font-medium text-gray-200 text-xs">{story.title}</span>
-                                <span className="text-gray-400 text-xs">— {story.summary}</span>
+                                {/* Title & Summary */}
+                                <span className="font-medium text-neutral-200 text-xs">{story.title}</span>
+                                <span className="text-neutral-500 text-xs">— {story.summary}</span>
                               </button>
 
                               {/* Expanded Log Details */}
                               {isExpanded && (
-                                <div className="ml-6 pl-3 border-l-2 border-gray-100 mt-1 space-y-0.5">
+                                <div className="ml-7 pl-3 border-l border-neutral-800 mt-1 space-y-1">
                                   {story.logs.map((log, index) => {
                                     // First, humanize any error/warning messages
                                     const humanized = humanizeErrorMessage(log.message, log.type);
@@ -1582,18 +1565,18 @@ export default function Sync() {
                                     return (
                                       <React.Fragment key={log.id}>
                                         <div
-                                          className={`flex items-start gap-2 py-0.5 text-xs ${log.type === 'thinking' ? 'opacity-50' : ''} ${humanized.isHumanized ? 'bg-gray-800/30 -mx-2 px-2 py-1 rounded' : ''}`}
+                                          className={`flex items-start gap-3 py-1 text-xs ${log.type === 'thinking' ? 'opacity-50' : ''} ${humanized.isHumanized ? 'bg-neutral-900/50 -mx-2 px-2 py-1.5 rounded' : ''}`}
                                         >
                                           {/* Timestamp with hover for exact time */}
                                           <span
-                                            className="hidden sm:inline text-gray-400 shrink-0 text-[10px] cursor-help"
+                                            className="hidden sm:inline text-neutral-600 shrink-0 text-[10px] font-mono cursor-help"
                                             title={formatTimestamp(log.timestamp).full}
                                           >
                                             {formatTimestamp(log.timestamp).short}
                                           </span>
 
-                                          {/* Message - humanized errors get special styling */}
-                                          <span className={`${humanized.isHumanized ? 'text-gray-200' : getLogColor(log.type)} break-all flex-1`}>
+                                          {/* Message */}
+                                          <span className={`${humanized.isHumanized ? 'text-neutral-300' : getLogColor(log.type)} break-all flex-1`}>
                                             {highlightContent(enriched.text)}
                                             {index === story.logs.length - 1 && isRunning && (
                                               <span className="inline-block w-1.5 h-3 bg-blue-500 ml-1 animate-pulse align-middle"></span>
