@@ -27,6 +27,11 @@
   .font-code {
     font-family: 'Fira Code', 'JetBrains Mono', 'Consolas', 'Monaco', monospace !important;
   }
+
+  /* Landing page metrics - force light weight */
+  .font-extralight-200 {
+    font-weight: 200 !important;
+  }
 }
 
 @layer base {
