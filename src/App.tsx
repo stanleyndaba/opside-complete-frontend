@@ -54,6 +54,8 @@ const Terms = lazy(() => import("./pages/Terms"));
 const RefundPolicy = lazy(() => import("./pages/RefundPolicy"));
 const LearningInsights = lazy(() => import("./pages/LearningInsights"));
 const AdminRevenue = lazy(() => import("./pages/AdminRevenue"));
+const Contact = lazy(() => import("./pages/Contact"));
+const Sales = lazy(() => import("./pages/Sales"));
 
 // New Evidence Pages
 const EvidenceOnboarding = lazy(() => import("./pages/EvidenceOnboarding"));
@@ -140,6 +142,8 @@ const App = () => (
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/terms" element={<Terms />} />
                 <Route path="/refund-policy" element={<RefundPolicy />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/sales" element={<Sales />} />
                 <Route path="/evidence-onboarding" element={<EvidenceOnboarding />} />
                 <Route path="/evidence-search" element={<EvidenceSearch />} />
 
