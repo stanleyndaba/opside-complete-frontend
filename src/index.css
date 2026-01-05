@@ -466,3 +466,10 @@
     font-weight: 400;
   }
 }
+
+/* Override for metrics - must be outside @layer for highest specificity */
+.font-extralight-200,
+.landing .font-extralight-200,
+.landing div.font-extralight-200 {
+  font-weight: 200 !important;
+}
