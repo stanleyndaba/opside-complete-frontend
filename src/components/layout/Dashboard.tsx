@@ -746,7 +746,7 @@ export function Dashboard() {
 
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-4">
                       <div className="text-[10px] uppercase tracking-[0.15em] text-gray-500 mb-1">Pending</div>
-                      <div className="text-xl font-light text-amber-600 tracking-tight">
+                      <div className="text-xl font-light text-gray-900 tracking-tight">
                         {formatCurrencyWithSelection((pendingRecoveryAmount ?? 0), recoveredCurrency)}
                       </div>
                       <div className="text-[10px] text-gray-500 mt-1">
@@ -756,7 +756,7 @@ export function Dashboard() {
 
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-4">
                       <div className="text-[10px] uppercase tracking-[0.15em] text-gray-500 mb-1">Approved</div>
-                      <div className="text-xl font-light text-emerald-600 tracking-tight">
+                      <div className="text-xl font-light text-gray-900 tracking-tight">
                         {formatCurrencyWithSelection(computedApproved ?? 0, recoveredCurrency)}
                       </div>
                       <div className="text-[10px] text-gray-500 mt-1 flex items-center gap-1">
@@ -788,7 +788,7 @@ export function Dashboard() {
                           </div>
                           <div>
                             <div className="text-[10px] uppercase tracking-[0.15em] text-gray-500 mb-1">Potential</div>
-                            <div className="text-xl font-light text-emerald-600">{formatCurrency(detectionStats.estimatedRecovery)}</div>
+                            <div className="text-xl font-light text-gray-900">{formatCurrency(detectionStats.estimatedRecovery)}</div>
                           </div>
                           <div>
                             <div className="text-[10px] uppercase tracking-[0.15em] text-gray-500 mb-1">High Conf.</div>

@@ -215,7 +215,7 @@ export function Sidebar({
           <div className="select-none flex flex-col mt-1 ml-0">
             <div className="flex items-center gap-1">
               <span className="w-1 h-1 rounded-full bg-gray-400" />
-              <span className="text-[9px] text-gray-500 uppercase tracking-[0.1em]">Connected</span>
+              <span className="text-[9px] text-gray-500 tracking-[0.1em]">Connected, secured</span>
             </div>
           </div>
         )}
