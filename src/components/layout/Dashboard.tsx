@@ -569,9 +569,6 @@ export function Dashboard() {
     fetchMetrics();
     fetchDisputeMetrics();
     // Decide whether to prompt evidence connections (Gmail/Outlook/Drive/Dropbox)
-    // DISABLED: Auto-popup was causing white space issue on page load
-    // Users can connect sources from the Actions section instead
-    /*
     (async () => {
       try {
         const dismissed = typeof window !== 'undefined' ? localStorage.getItem('clario.evidencePromptDismissed') === 'true' : false;
@@ -589,7 +586,6 @@ export function Dashboard() {
         setShowSourcesModal(true);
       }
     })();
-    */
     hasFetchedRef.current = true;
 
     // Short burst polling to show numbers populate quickly
