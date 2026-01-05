@@ -648,7 +648,7 @@ export function Dashboard() {
       <div className="flex-1 flex h-full overflow-hidden">
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
         <main className={'flex-1 transition-all duration-300 overflow-y-auto ' + mainClass}>
-          <div className="relative pt-16">
+          <div className="relative pt-12">
             <div className="relative w-full max-w-full mx-auto px-8 py-8 text-gray-900">
               {/* Header */}
               <div className="flex items-center justify-between mb-8">
