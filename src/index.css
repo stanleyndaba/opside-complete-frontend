@@ -453,11 +453,11 @@
 
 /* Slightly lighter typography on landing page */
 @layer base {
-  .landing :where(h1, h2, h3, h4, h5, h6) {
+  .landing :where(h1, h2, h3, h4, h5, h6):not([style*="font"]) {
     font-weight: 600;
   }
 
-  .landing :where(p, span, li, label, input, textarea, select, button, small, strong, em) {
+  .landing :where(p, span, li, label, input, textarea, select, button, small, strong, em):not([style*="font"]) {
     font-weight: 400;
   }
 }
