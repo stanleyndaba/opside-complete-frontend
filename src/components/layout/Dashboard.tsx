@@ -944,7 +944,7 @@ export function Dashboard() {
                       <h3 className="text-[10px] font-medium text-gray-900 uppercase tracking-[0.15em]">Recent Logs</h3>
                       {unreadCount > 0 && (
                         <span className="text-[9px] rounded px-1.5 py-0.5 bg-gray-900 text-white">
-                          {unreadCount}
+                          {unreadCount > 50 ? '50+' : unreadCount}
                         </span>
                       )}
                     </div>
