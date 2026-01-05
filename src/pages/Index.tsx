@@ -269,8 +269,8 @@ const Index = () => {
   }, [benefitWords]);
 
 
-  const primaryLinks = [
-    { label: 'API', href: '/developer-api' }
+  const primaryLinks: { label: string; href: string }[] = [
+    // { label: 'API', href: '/developer-api' } // Hidden temporarily
   ];
 
   const selectedLanguage: LanguageOption =
@@ -405,6 +405,7 @@ const Index = () => {
               </Popover>
             </div>
             <nav className="hidden md:flex items-center gap-4 text-sm text-gray-700">
+              {/* Gift icon - hidden temporarily
               <Popover>
                 <PopoverTrigger asChild>
                   <button
@@ -430,6 +431,7 @@ const Index = () => {
                   </div>
                 </PopoverContent>
               </Popover>
+              */}
               {primaryLinks.map((link) => (
                 <Link
                   key={link.label}
