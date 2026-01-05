@@ -21,7 +21,7 @@
   }
 
   .font-montserrat {
-    font-family: 'Montserrat', sans-serif !important;
+    font-family: 'Inter', system-ui, sans-serif !important;
   }
 
   .font-code {
@@ -191,10 +191,10 @@
     font-family: 'Inter', system-ui, sans-serif !important;
   }
 
-  /* Montserrat for Opside branding - explicitly override */
+  /* Inter for branding - explicitly override */
   .font-montserrat,
   .font-montserrat * {
-    font-family: 'Montserrat', sans-serif !important;
+    font-family: 'Inter', system-ui, sans-serif !important;
   }
 
   /* Override for code snippets - use programming fonts */
