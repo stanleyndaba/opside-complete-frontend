@@ -656,7 +656,7 @@ const Index = () => {
                           : `${currentValue.toFixed(metric.decimals)}${metric.suffix}`;
                       return (
                         <div key={metric.label} className="flex flex-col gap-1">
-                          <div className="text-5xl text-gray-900" style={{ fontWeight: 100 }}>
+                          <div className="text-5xl text-gray-900" style={{ fontWeight: 200 }}>
                             {displayValue}
                           </div>
                           <p className="text-sm text-gray-600 font-normal">{metric.label}</p>
