@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ChevronDown, Gift, Globe } from 'lucide-react';
+import { ArrowRight, ChevronDown, Gift, Globe, Sparkles } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AmazonConnect } from '@/components/AmazonConnect';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -371,6 +371,38 @@ const Index = () => {
                 />
                 <span className="font-montserrat text-gray-900" style={{ fontWeight: 600 }}>Margin</span>
               </Link>
+              <span className="text-gray-300">|</span>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button
+                    type="button"
+                    className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+                  >
+                    <Sparkles className="h-3.5 w-3.5 text-emerald-500" />
+                    Immediate Access
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent side="bottom" align="start" className="w-80 p-0 border-0 shadow-xl">
+                  <div className="bg-black rounded-lg p-5 space-y-4">
+                    <div className="space-y-2">
+                      <h3 className="font-semibold text-white text-base">Founders Council</h3>
+                      <p className="text-sm text-gray-300">
+                        Join 20 high-volume sellers stress-testing our 7-second AI Audit. Lock in a permanent 15% commission rate (vs. 20% public rate).
+                      </p>
+                    </div>
+                    <a
+                      href="https://forms.gle/882hpRYWinNzBt2r9"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block"
+                    >
+                      <Button className="w-full bg-white hover:bg-gray-100 text-black font-medium">
+                        Apply Now →
+                      </Button>
+                    </a>
+                  </div>
+                </PopoverContent>
+              </Popover>
             </div>
             <nav className="hidden md:flex items-center gap-4 text-sm text-gray-700">
               <Popover>
@@ -441,7 +473,8 @@ const Index = () => {
               </DropdownMenu>
               <Link
                 to="/contact"
-                className="h-9 rounded-full bg-transparent px-4 text-sm font-medium text-gray-900 hover:bg-gray-100 transition-colors inline-flex items-center"
+                className="h-9 px-5 text-sm font-medium text-white bg-black hover:bg-gray-900 transition-colors inline-flex items-center"
+                style={{ borderRadius: '0px' }}
               >
                 Contact Sales
               </Link>
@@ -625,7 +658,7 @@ const Index = () => {
                           : `${currentValue.toFixed(metric.decimals)}${metric.suffix}`;
                       return (
                         <div key={metric.label} className="flex flex-col gap-1">
-                          <div className="text-3xl font-extralight text-gray-900">
+                          <div className="text-4xl font-thin text-gray-900">
                             {displayValue}
                           </div>
                           <p className="text-sm text-gray-600 font-normal">{metric.label}</p>
@@ -773,7 +806,7 @@ const Index = () => {
       </div>
       <BrandFooter selectedLanguageLabel={selectedLanguage.language} />
 
-      {/* Founders Council Banner - Fixed to bottom with slide animation */}
+      {/* Founders Council Banner - HIDDEN - Moved to navbar Immediate Access
       <div
         className={`fixed bottom-0 left-0 right-0 z-50 w-full px-3 py-2.5 md:px-6 md:py-5 transition-transform duration-300 ease-in-out ${showBanner ? 'translate-y-0' : 'translate-y-full'
           }`}
@@ -803,6 +836,7 @@ const Index = () => {
           </div>
         </div>
       </div>
+      */}
     </div >
   );
 };
