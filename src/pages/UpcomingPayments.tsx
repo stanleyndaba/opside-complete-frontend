@@ -110,12 +110,12 @@ export default function UpcomingPayments() {
 
   const upcomingGroups = useMemo(() => {
     const groups: Record<string, RecoveryClaim[]> = {};
-    const today = new Date();
+
     for (const c of claims) {
       // Consider claims scheduled for the future or not yet paid as "upcoming"
       const isPaid = c.status?.toLowerCase() === 'paid';
       const dt = c.expectedPayoutDate ? new Date(c.expectedPayoutDate) : null;
-      const isUpcomingDate = dt ? dt >= new Date(today.getFullYear(), today.getMonth(), today.getDate()) : false;
+
       // Show all unpaid claims, even if expected payout date has passed (Overdue)
       if (!isPaid) {
         const key = dt ? new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()).toISOString() : 'TBD';
