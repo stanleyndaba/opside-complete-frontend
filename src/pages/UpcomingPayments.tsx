@@ -116,7 +116,8 @@ export default function UpcomingPayments() {
       const isPaid = c.status?.toLowerCase() === 'paid';
       const dt = c.expectedPayoutDate ? new Date(c.expectedPayoutDate) : null;
       const isUpcomingDate = dt ? dt >= new Date(today.getFullYear(), today.getMonth(), today.getDate()) : false;
-      if (!isPaid && (isUpcomingDate || dt === null)) {
+      // Show all unpaid claims, even if expected payout date has passed (Overdue)
+      if (!isPaid) {
         const key = dt ? new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()).toISOString() : 'TBD';
         if (!groups[key]) groups[key] = [];
         groups[key].push(c);
