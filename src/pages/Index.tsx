@@ -14,6 +14,7 @@ import { AGENT_HIGHLIGHTS, HERO_METRICS, LANGUAGE_OPTIONS, SITE_META } from '@/c
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
+import { CookieConsent } from '@/components/landing/CookieConsent';
 import heroImage from '@/assets/landingpp.png';
 
 const PadlockIcon: React.FC = () => (
@@ -838,6 +839,7 @@ const Index = () => {
         </div>
       </div>
       */}
+      <CookieConsent />
     </div >
   );
 };
