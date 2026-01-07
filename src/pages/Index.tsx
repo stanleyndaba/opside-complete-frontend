@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ChevronDown, Gift, Globe, Sparkles } from 'lucide-react';
+import { ArrowRight, ChevronDown, ChevronRight, Gift, Globe, Sparkles } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AmazonConnect } from '@/components/AmazonConnect';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -598,9 +598,10 @@ const Index = () => {
               {/* Right Column: Text content */}
               <div className="order-1 lg:order-1 flex flex-col items-start text-left space-y-6">
                 {/* New Feature Banner */}
-                <div className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-50">
-                  <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700 uppercase tracking-wide">NEW</span>
-                  <span className="inline-block">Introducing Margin Board: Transforming Identity Verification and Customer Onboarding experiences</span>
+                <div className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50/50 px-2 py-1 pr-3 text-xs font-medium text-gray-900 transition-colors hover:bg-blue-50 hover:border-blue-200 cursor-pointer">
+                  <span className="rounded-full bg-blue-600 px-2.5 py-0.5 text-[10px] font-bold text-white uppercase tracking-wide">NEW</span>
+                  <span className="inline-block text-gray-700">Introducing Margin Board: Transforming Identity Verification and Customer Onboarding experiences</span>
+                  <ChevronRight className="h-3 w-3 text-gray-400" />
                 </div>
 
                 {/* Trust chip */}
