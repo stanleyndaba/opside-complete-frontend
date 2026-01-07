@@ -689,12 +689,13 @@ export function Dashboard() {
                       <div className="flex items-center text-emerald-600 px-1.5 py-0.5">
                         <TrendingUp className="w-3 h-3 mr-0.5" />
                         <span className="text-[10px] font-bold">12%</span>
+                        <span className="text-[9px] text-emerald-600/70 ml-1 font-medium">vs last month</span>
                       </div>
                     </div>
                     <p className="text-[9px] text-gray-400 uppercase tracking-widest mt-1 font-medium">{new Date().toLocaleString('default', { month: 'long' })} Recoveries</p>
                   </div>
 
-                  <div className="text-right">
+                  <div className="flex flex-col items-end">
                     <Button
                       variant="ghost"
                       size="sm"
@@ -704,11 +705,15 @@ export function Dashboard() {
                       <RefreshCw className="w-3 h-3 mr-1.5" />
                       Scan
                     </Button>
-                    {lastSyncTime && (
-                      <p className="text-[9px] text-gray-400 mt-1">
-                        Last sync: {lastSyncTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}
+                    <div className="flex items-center gap-1.5 mt-1.5">
+                      <span className="relative flex h-1.5 w-1.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                      </span>
+                      <p className="text-[9px] text-gray-500 font-medium">
+                        Last scan {formatDistanceToNow(lastSyncTime || new Date(), { addSuffix: true })} • All systems healthy
                       </p>
-                    )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -721,7 +726,7 @@ export function Dashboard() {
                   <div className="bg-white border border-gray-200 rounded-sm">
                     <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Recovered Value</h2>
+                        <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Total Recovered</h2>
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <button
@@ -733,7 +738,7 @@ export function Dashboard() {
                             </button>
                           </TooltipTrigger>
                           <TooltipContent side="top" className="bg-gray-900 text-white text-xs">
-                            Recovered profits from approved/completed claims. {recoverySource && `Source: ${recoverySource}`}
+                            Total recovered profits from approved/completed claims. {recoverySource && `Source: ${recoverySource}`}
                           </TooltipContent>
                         </Tooltip>
                       </div>
@@ -745,6 +750,7 @@ export function Dashboard() {
                       <div className="text-3xl font-light text-gray-900 tracking-tight">
                         {formatCurrencyWithSelection(recoveredTotal ?? 0, recoveredCurrency)}
                       </div>
+                      <p className="text-[10px] text-gray-400 mt-1">Since connecting Margin</p>
 
                       {/* Sync status */}
                       {(syncMessage || needsSync || syncTriggered) && (
@@ -1002,7 +1008,8 @@ export function Dashboard() {
                             return (
                               <div
                                 key={notification.id}
-                                className={`px-4 py-3 ${isUnread ? 'bg-gray-50' : ''}`}
+                                className={`px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors ${isUnread ? 'bg-gray-50' : ''}`}
+                                onClick={() => navigate('/recoveries')}
                               >
                                 <div className="flex items-start justify-between gap-2">
                                   <p className={`text-xs truncate ${isUnread ? 'text-gray-900 font-medium' : 'text-gray-600'}`}>
