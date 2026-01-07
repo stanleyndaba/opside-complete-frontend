@@ -752,23 +752,36 @@ export function Dashboard() {
                       </div>
                       <p className="text-[10px] text-gray-400 mt-1">Verified reimbursement recoveries since activation</p>
 
-                      {/* Sync status */}
-                      {(syncMessage || needsSync || syncTriggered) && (
-                        <div className={`mt-4 px-4 py-2.5 text-xs flex items-center justify-between ${syncTriggered ? 'bg-gray-50 text-gray-600 border border-gray-200'
-                          : needsSync ? 'bg-gray-50 text-gray-600 border border-gray-200'
-                            : 'bg-gray-50 text-gray-500 border border-gray-200'
-                          }`}>
-                          <div className="flex items-center gap-2">
-                            {syncTriggered && <RefreshCw className="h-3 w-3 animate-spin text-gray-400" />}
-                            <span>{syncMessage || (needsSync ? 'Syncing...' : '')}</span>
-                          </div>
-                          {activeSyncId && (
-                            <button
-                              onClick={() => navigate(`/sync?id=${activeSyncId}`)}
-                              className="text-gray-600 hover:text-gray-900 underline text-xs"
-                            >
-                              View progress
-                            </button>
+                      {/* Proof Statement / Sync Status */}
+                      {(syncMessage || needsSync || syncTriggered || (submittedClaimsCount != null && submittedClaimsCount > 0)) && (
+                        <div className="mt-4 px-4 py-3 bg-gray-50 border border-gray-100 rounded-sm">
+                          {syncTriggered ? (
+                            <div className="flex items-center justify-between text-xs">
+                              <div className="flex items-center gap-2 text-gray-600">
+                                <RefreshCw className="h-3 w-3 animate-spin text-gray-400" />
+                                <span>Syncing latest financial records...</span>
+                              </div>
+                              {activeSyncId && (
+                                <button
+                                  onClick={() => navigate(`/sync?id=${activeSyncId}`)}
+                                  className="text-gray-500 hover:text-gray-900 underline text-[10px]"
+                                >
+                                  View progress
+                                </button>
+                              )}
+                            </div>
+                          ) : (
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <CheckCircle className="h-3.5 w-3.5 text-emerald-500" />
+                                <span className="text-xs font-medium text-gray-700">
+                                  {submittedClaimsCount || 0} recoveries verified against Amazon financial records
+                                </span>
+                              </div>
+                              <p className="text-[9px] text-gray-400 mt-1 ml-5 font-light italic">
+                                Every recovery is traceable and fully auditable.
+                              </p>
+                            </div>
                           )}
                         </div>
                       )}
