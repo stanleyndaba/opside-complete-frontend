@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Navbar } from '@/components/layout/Navbar';
+import LegalHeader from '@/components/layout/LegalHeader';
 import { ArrowRight, ShieldCheck, Building2, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { BrandFooter } from '@/components/layout/BrandFooter';
@@ -12,10 +12,7 @@ const MarginBoard = () => {
 
     return (
         <div className="min-h-screen bg-white flex flex-col font-sans text-gray-900 selection:bg-gray-900 selection:text-white">
-            {/* Navbar Overlay - Force solid white for this page */}
-            <div className="bg-white border-b border-gray-100">
-                <Navbar className="bg-white" />
-            </div>
+            <LegalHeader />
 
             <main className="flex-grow flex flex-col items-center justify-center py-20 px-6">
                 <div className="max-w-4xl w-full space-y-12">
