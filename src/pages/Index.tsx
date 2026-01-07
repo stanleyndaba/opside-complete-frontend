@@ -15,6 +15,7 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
 import { CookieConsent } from '@/components/landing/CookieConsent';
+import { ProductsMegaMenu } from '@/components/landing/ProductsMegaMenu';
 import heroImage from '@/assets/landingpp.png';
 
 const PadlockIcon: React.FC = () => (
@@ -373,6 +374,7 @@ const Index = () => {
                 <span className="font-montserrat text-gray-900" style={{ fontWeight: 600 }}>Margin</span>
               </Link>
               <span className="text-gray-300">|</span>
+              <ProductsMegaMenu />
               <Popover>
                 <PopoverTrigger asChild>
                   <button
