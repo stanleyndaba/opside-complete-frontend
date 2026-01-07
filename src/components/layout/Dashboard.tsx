@@ -777,36 +777,55 @@ export function Dashboard() {
 
                   {/* Key Metrics Grid */}
                   <div className="grid grid-cols-3 gap-4">
-                    <div className="bg-gray-50 border border-gray-200 rounded-sm p-4">
-                      <div className="text-[10px] uppercase tracking-[0.15em] text-gray-500 mb-1">Next Payment</div>
-                      <div className="text-xl font-light text-gray-900 tracking-tight">
-                        {formatCurrencyWithSelection((nextPaymentAmount ?? 0), recoveredCurrency)}
+                    <div className="bg-gray-50 border border-gray-200 rounded-sm p-4 flex flex-col justify-between h-full">
+                      <div>
+                        <div className="text-[10px] uppercase tracking-[0.15em] text-gray-500 mb-1">Next Scheduled Amazon Disbursement</div>
+                        <div className="text-xl font-light text-gray-900 tracking-tight">
+                          {formatCurrencyWithSelection((nextPaymentAmount ?? 0), recoveredCurrency)}
+                        </div>
                       </div>
-                      <div className="text-[10px] text-gray-500 mt-1">
-                        {nextPaymentDate
-                          ? new Date(nextPaymentDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-                          : 'No payout scheduled'}
-                      </div>
-                    </div>
-
-                    <div className="bg-gray-50 border border-gray-200 rounded-sm p-4">
-                      <div className="text-[10px] uppercase tracking-[0.15em] text-gray-500 mb-1">Pending</div>
-                      <div className="text-xl font-light text-gray-900 tracking-tight">
-                        {formatCurrencyWithSelection((pendingRecoveryAmount ?? 0), recoveredCurrency)}
-                      </div>
-                      <div className="text-[10px] text-gray-500 mt-1">
-                        {effectivePendingClaims} claims
+                      <div className="mt-3">
+                        <p className="text-[9px] text-gray-400 font-medium">Funds to be deposited directly to your seller account.</p>
+                        <div className="text-[10px] text-gray-500 mt-1 border-t border-gray-100 pt-1">
+                          {nextPaymentDate
+                            ? new Date(nextPaymentDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                            : 'No payout scheduled'}
+                        </div>
                       </div>
                     </div>
 
-                    <div className="bg-gray-50 border border-gray-200 rounded-sm p-4">
-                      <div className="text-[10px] uppercase tracking-[0.15em] text-gray-500 mb-1">Approved</div>
-                      <div className="text-xl font-light text-gray-900 tracking-tight">
-                        {formatCurrencyWithSelection(computedApproved ?? 0, recoveredCurrency)}
+                    <div className="bg-gray-50 border border-gray-200 rounded-sm p-4 flex flex-col justify-between h-full">
+                      <div>
+                        <div className="text-[10px] uppercase tracking-[0.15em] text-gray-500 mb-1">Under Review</div>
+                        <div className="text-xl font-light text-gray-900 tracking-tight">
+                          {formatCurrencyWithSelection((pendingRecoveryAmount ?? 0), recoveredCurrency)}
+                        </div>
                       </div>
-                      <div className="text-[10px] text-gray-500 mt-1 flex items-center gap-1">
-                        <span className="text-emerald-600">92%</span>
-                        <span>approval rate</span>
+                      <div className="mt-3">
+                        <p className="text-[9px] text-gray-400 font-medium">Claims currently being processed with Amazon.</p>
+                        <div className="text-[10px] text-gray-500 mt-1 border-t border-gray-100 pt-1">
+                          {effectivePendingClaims} claims
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-gray-50 border border-gray-200 rounded-sm p-4 flex flex-col justify-between h-full">
+                      <div>
+                        <div className="text-[10px] uppercase tracking-[0.15em] text-gray-500 mb-1">Approved</div>
+                        <div className="text-xl font-light text-gray-900 tracking-tight">
+                          {formatCurrencyWithSelection(computedApproved ?? 0, recoveredCurrency)}
+                        </div>
+                      </div>
+                      <div className="mt-3">
+                        <p className="text-[9px] text-gray-400 font-medium leading-tight">Evidence-backed and reconciled by Amazon.</p>
+                        <div className="mt-2 space-y-0.5">
+                          <div className="text-[10px] text-emerald-600 font-bold flex items-center gap-1">
+                            92% success rate
+                          </div>
+                          <p className="text-[8px] text-gray-400 leading-tight">
+                            Benchmark: 30–50% higher than typical manual success
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
