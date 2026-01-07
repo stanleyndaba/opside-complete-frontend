@@ -631,7 +631,7 @@ const Index = () => {
                 </h1>
 
                 <p className="font-montserrat text-base md:text-lg text-gray-600 font-normal max-w-xl leading-relaxed">
-                  The world's first autonomous 15-Point Forensic Audit. Margin detects, matches, and recovers lost revenue from Amazon FBA errors in minutes—not months.
+                  Our agents provide the infrastructure for Amazon profit recovery. We link directly to your Seller Central to audit every transaction, recover lost inventory, and automate reimbursements—turning messy data into immediate capital.
                 </p>
 
                 <div className="w-full flex flex-col gap-6">
