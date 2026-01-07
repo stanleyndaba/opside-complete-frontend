@@ -750,7 +750,7 @@ export function Dashboard() {
                       <div className="text-3xl font-light text-gray-900 tracking-tight">
                         {formatCurrencyWithSelection(recoveredTotal ?? 0, recoveredCurrency)}
                       </div>
-                      <p className="text-[10px] text-gray-400 mt-1">Since connecting Margin</p>
+                      <p className="text-[10px] text-gray-400 mt-1">Verified reimbursement recoveries since activation</p>
 
                       {/* Sync status */}
                       {(syncMessage || needsSync || syncTriggered) && (
