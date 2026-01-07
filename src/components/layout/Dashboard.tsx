@@ -711,7 +711,7 @@ export function Dashboard() {
                         <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
                       </span>
                       <p className="text-[9px] text-gray-500 font-medium">
-                        Last scan {formatDistanceToNow(lastSyncTime || new Date(), { addSuffix: true })} • All systems healthy
+                        {formatDistanceToNow(lastSyncTime || new Date(), { addSuffix: true }).replace('less than a minute', '1 minute')} • All systems healthy
                       </p>
                     </div>
                   </div>
