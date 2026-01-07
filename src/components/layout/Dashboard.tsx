@@ -666,9 +666,9 @@ export function Dashboard() {
                     <h1 className="text-lg font-medium text-gray-900 tracking-tight">Recovery Overview</h1>
                     <span className="text-gray-300 text-lg font-light">|</span>
                     <DropdownMenu>
-                      <DropdownMenuTrigger className="flex items-center gap-2 text-lg font-medium text-gray-900 tracking-tight outline-none hover:text-gray-600 transition-colors focus:outline-none">
+                      <DropdownMenuTrigger className="flex items-center gap-2 text-xs font-medium text-gray-900 tracking-tight outline-none hover:text-gray-600 transition-colors focus:outline-none">
                         Financial Data
-                        <ChevronDown className="h-4 w-4 text-gray-400" />
+                        <ChevronDown className="h-3 w-3 text-gray-400" />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="start" className="w-56 bg-white border-gray-100 shadow-lg">
                         <DropdownMenuLabel className="text-[10px] text-gray-400 font-medium uppercase tracking-widest">(Review)</DropdownMenuLabel>
@@ -685,13 +685,13 @@ export function Dashboard() {
                   {/* Month Banner Stats */}
                   <div className="text-right hidden sm:block">
                     <div className="flex items-center gap-2 justify-end">
-                      <span className="text-xl font-light text-gray-900 tracking-tight">$12,450.00</span>
-                      <div className="flex items-center text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full border border-emerald-100">
+                      <span className="text-xl font-light text-gray-900 tracking-tight">$9,337.50</span>
+                      <div className="flex items-center text-emerald-600 px-1.5 py-0.5">
                         <TrendingUp className="w-3 h-3 mr-0.5" />
                         <span className="text-[10px] font-bold">12%</span>
                       </div>
                     </div>
-                    <p className="text-[9px] text-gray-400 uppercase tracking-widest mt-1 font-medium">Month Recoveries</p>
+                    <p className="text-[9px] text-gray-400 uppercase tracking-widest mt-1 font-medium">{new Date().toLocaleString('default', { month: 'long' })} Recoveries</p>
                   </div>
 
                   <div className="text-right">
