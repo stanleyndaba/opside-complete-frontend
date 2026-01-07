@@ -597,6 +597,12 @@ const Index = () => {
 
               {/* Right Column: Text content */}
               <div className="order-1 lg:order-1 flex flex-col items-start text-left space-y-6">
+                {/* New Feature Banner */}
+                <div className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-50">
+                  <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700 uppercase tracking-wide">NEW</span>
+                  <span className="inline-block">Introducing Margin Board: Transforming Identity Verification and Customer Onboarding experiences</span>
+                </div>
+
                 {/* Trust chip */}
                 <div className="relative inline-flex items-center gap-2 md:gap-4 rounded-[20px] md:rounded-[25px] border border-emerald-100 bg-white/85 px-3 py-1.5 md:px-5 md:py-2 shadow-[0_12px_45px_rgba(16,185,129,0.25)] backdrop-blur supports-[backdrop-filter]:bg-white/70 overflow-hidden">
                   <span className="pointer-events-none absolute inset-0 rounded-[20px] md:rounded-[25px] bg-gradient-to-r from-emerald-200/40 via-white/10 to-sky-200/40 blur-xl" aria-hidden="true" />
