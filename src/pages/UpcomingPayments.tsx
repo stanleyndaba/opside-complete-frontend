@@ -19,6 +19,11 @@ interface RecoveryClaim {
   filing_status?: string;
   amazon_case_id?: string;
   case_id?: string;
+  // Optional properties for pipeline calculations
+  amount?: number;
+  claim_amount?: number;
+  actual_payout_amount?: number;
+  estimated_value?: number;
 }
 
 function formatCurrency(amount: number, currency: string = 'USD') {

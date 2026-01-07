@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
-import { ArrowUpDown, ChevronDown, Search, Gift, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock } from 'lucide-react';
+import { ArrowUpDown, ChevronDown, Search, Gift, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock, StickyNote } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -82,6 +82,16 @@ export function Navbar({
   const [inviteEmail, setInviteEmail] = useState('');
   const [linkCopied, setLinkCopied] = useState(false);
   const { selectedCurrency, setSelectedCurrency } = useCurrency();
+
+  // State for notes feature
+  const [showNotesModal, setShowNotesModal] = useState(false);
+  const [notes, setNotes] = useState<{ id: string; text: string; createdAt: string }[]>(() => {
+    const stored = localStorage.getItem('userNotes');
+    return stored ? JSON.parse(stored) : [];
+  });
+  const [currentNote, setCurrentNote] = useState('');
+  const [isNoteHovered, setIsNoteHovered] = useState(false);
+  const noteIconRef = useRef<HTMLButtonElement>(null);
 
   // Generate referral link (placeholder - in production this would come from backend)
   const referralLink = typeof window !== 'undefined'
@@ -305,6 +315,38 @@ export function Navbar({
               <Link2 className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">Connect</span>
             </button>
+
+            {/* Notes Icon - Far right with spacing */}
+            <div className="ml-6 relative">
+              <button
+                ref={noteIconRef}
+                onClick={() => setShowNotesModal(true)}
+                onMouseEnter={() => setIsNoteHovered(true)}
+                onMouseLeave={() => setIsNoteHovered(false)}
+                className="h-8 w-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-sm transition-colors relative"
+                aria-label="Notes"
+              >
+                <StickyNote className="h-4 w-4" />
+                {notes.length > 0 && (
+                  <span className="absolute top-1 right-1 h-1.5 w-1.5 bg-amber-500 rounded-full" />
+                )}
+              </button>
+
+              {/* Hover tooltip showing last note */}
+              {isNoteHovered && notes.length > 0 && (
+                <div className="absolute top-full right-0 mt-2 w-64 bg-white border border-gray-200 rounded-sm shadow-lg z-50 overflow-hidden">
+                  <div className="px-3 py-2 border-b border-gray-100 bg-gray-50">
+                    <span className="text-[9px] font-medium text-gray-500 uppercase tracking-[0.15em]">Last Note</span>
+                  </div>
+                  <div className="p-3">
+                    <p className="text-xs text-gray-700 line-clamp-3">{notes[0].text}</p>
+                    <p className="text-[9px] text-gray-400 mt-2">
+                      {new Date(notes[0].createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </header>
@@ -431,6 +473,86 @@ export function Navbar({
             >
               Send
             </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Notes Modal */}
+      <Dialog open={showNotesModal} onOpenChange={setShowNotesModal}>
+        <DialogContent className="max-w-md bg-white border border-gray-200 shadow-lg rounded-sm p-0 overflow-hidden">
+          <div className="px-5 py-4 border-b border-gray-100">
+            <h3 className="text-[14px] font-semibold text-gray-900 tracking-tight">
+              Quick Notes
+            </h3>
+            <p className="text-[12px] text-gray-500 mt-1">
+              Capture important details and reminders
+            </p>
+          </div>
+
+          <div className="p-5 space-y-4">
+            {/* Add new note */}
+            <div className="space-y-2">
+              <textarea
+                value={currentNote}
+                onChange={(e) => setCurrentNote(e.target.value)}
+                placeholder="Write a note..."
+                className="w-full h-24 p-3 text-xs border border-gray-200 rounded-sm resize-none focus:outline-none focus:border-gray-300 bg-gray-50 focus:bg-white"
+              />
+              <Button
+                onClick={() => {
+                  if (!currentNote.trim()) return;
+                  const newNote = {
+                    id: Date.now().toString(),
+                    text: currentNote.trim(),
+                    createdAt: new Date().toISOString()
+                  };
+                  const updatedNotes = [newNote, ...notes];
+                  setNotes(updatedNotes);
+                  localStorage.setItem('userNotes', JSON.stringify(updatedNotes));
+                  setCurrentNote('');
+                }}
+                className="w-full bg-gray-900 hover:bg-gray-800 text-white text-[12px] h-9 font-medium rounded-sm"
+                disabled={!currentNote.trim()}
+              >
+                Save Note
+              </Button>
+            </div>
+
+            {/* Notes list */}
+            {notes.length > 0 && (
+              <div className="border-t border-gray-100 pt-4">
+                <span className="text-[9px] font-medium text-gray-500 uppercase tracking-[0.15em]">Your Notes ({notes.length})</span>
+                <div className="mt-3 space-y-2 max-h-60 overflow-y-auto">
+                  {notes.map((note) => (
+                    <div key={note.id} className="p-3 bg-gray-50 border border-gray-100 rounded-sm group">
+                      <p className="text-xs text-gray-700">{note.text}</p>
+                      <div className="flex items-center justify-between mt-2">
+                        <span className="text-[9px] text-gray-400">
+                          {new Date(note.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                        <button
+                          onClick={() => {
+                            const updatedNotes = notes.filter(n => n.id !== note.id);
+                            setNotes(updatedNotes);
+                            localStorage.setItem('userNotes', JSON.stringify(updatedNotes));
+                          }}
+                          className="text-[9px] text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {notes.length === 0 && (
+              <div className="text-center py-6">
+                <StickyNote className="h-8 w-8 text-gray-300 mx-auto mb-2" />
+                <p className="text-xs text-gray-400">No notes yet. Start by adding one above.</p>
+              </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>

@@ -14,7 +14,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { format, subDays, startOfYear, startOfQuarter } from 'date-fns';
-import { CalendarIcon, Search, MoreHorizontal, FileText, Eye, RefreshCw, Info, AlertTriangle, X, CheckCircle2, Clock, ExternalLink, ChevronDown, ChevronUp, ArrowUpFromLine, Upload } from 'lucide-react';
+import { CalendarIcon, Search, MoreHorizontal, FileText, Eye, RefreshCw, Info, AlertTriangle, X, CheckCircle2, Clock, ExternalLink, ChevronDown, ChevronUp, ArrowUpFromLine, Upload, Mail } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
@@ -1182,6 +1182,7 @@ export default function Recoveries() {
   const [proofDocsModalOpen, setProofDocsModalOpen] = useState(false);
   const [proofDocsClaim, setProofDocsClaim] = useState<RecoveryClaim | null>(null);
   const [proofDocs, setProofDocs] = useState<any[]>([]);
+  const [markAllReadModalOpen, setMarkAllReadModalOpen] = useState(false);
 
   // Read search query from URL on mount and when URL changes
   useEffect(() => {
@@ -2596,6 +2597,40 @@ export default function Recoveries() {
                                     else setSelectedIds(new Set());
                                   }} />
                                 </th>
+                                <th className="text-left py-2 px-1 w-16">
+                                  <div className="flex items-center gap-1">
+                                    <button
+                                      onClick={() => {
+                                        setLoading(true);
+                                        // Refresh claims data
+                                        window.location.reload();
+                                      }}
+                                      className="h-6 w-6 flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors"
+                                      aria-label="Refresh claims"
+                                    >
+                                      <RefreshCw className="h-3.5 w-3.5" />
+                                    </button>
+                                    <DropdownMenu>
+                                      <DropdownMenuTrigger asChild>
+                                        <button
+                                          className="h-6 w-6 flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors"
+                                          aria-label="More options"
+                                        >
+                                          <MoreHorizontal className="h-3.5 w-3.5" />
+                                        </button>
+                                      </DropdownMenuTrigger>
+                                      <DropdownMenuContent align="start" className="w-48 bg-white border border-gray-200 shadow-lg rounded-sm p-1">
+                                        <DropdownMenuItem
+                                          className="text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer px-3 py-2 rounded-sm flex items-center gap-2"
+                                          onClick={() => setMarkAllReadModalOpen(true)}
+                                        >
+                                          <Mail className="h-3.5 w-3.5" />
+                                          Mark all Read
+                                        </DropdownMenuItem>
+                                      </DropdownMenuContent>
+                                    </DropdownMenu>
+                                  </div>
+                                </th>
                                 <th className="text-left text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-2 px-3">Claim ID</th>
                                 <th className="text-left text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-2 px-3">Created</th>
                                 <th className="text-left text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-2 px-3">Details</th>
@@ -2615,7 +2650,7 @@ export default function Recoveries() {
                                     "bg-gray-50",
                                     groupIndex > 0 && "border-t-2 border-gray-200"
                                   )}>
-                                    <td colSpan={10} className="py-2.5 px-3">
+                                    <td colSpan={11} className="py-2.5 px-3">
                                       <div className="flex items-center justify-between">
                                         <span className="text-xs font-medium text-gray-600 uppercase tracking-wide">
                                           {monthGroup.month} {monthGroup.year}
@@ -2658,6 +2693,7 @@ export default function Recoveries() {
                                             });
                                           }} />
                                         </td>
+                                        <td className="py-1.5 px-1 w-16"></td>
                                         {/* Claim ID */}
                                         <td className="py-1.5 px-3">
                                           <Tooltip>
@@ -3065,6 +3101,45 @@ export default function Recoveries() {
                           Update Status
                         </Button>
                       </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+
+                  {/* Mark All Read Modal */}
+                  <Dialog open={markAllReadModalOpen} onOpenChange={setMarkAllReadModalOpen}>
+                    <DialogContent className="max-w-xs bg-white border border-gray-200 shadow-lg rounded-sm p-0 overflow-hidden">
+                      <div className="px-5 py-6 text-center">
+                        <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <Mail className="h-5 w-5 text-gray-600" />
+                        </div>
+                        <h3 className="text-sm font-semibold text-gray-900 mb-2">
+                          Mark all Read
+                        </h3>
+                        <p className="text-xs text-gray-500 mb-6">
+                          All claims will be marked as reviewed.
+                        </p>
+                        <div className="flex gap-2 justify-center">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setMarkAllReadModalOpen(false)}
+                            className="h-8 text-xs text-gray-600 border-gray-200 hover:bg-gray-100 rounded-sm px-4"
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              toast({
+                                title: 'All Marked as Read',
+                                description: 'All claims have been marked as reviewed.'
+                              });
+                              setMarkAllReadModalOpen(false);
+                            }}
+                            className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-sm px-4"
+                          >
+                            Confirm
+                          </Button>
+                        </div>
+                      </div>
                     </DialogContent>
                   </Dialog>
 
