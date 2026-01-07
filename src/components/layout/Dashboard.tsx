@@ -738,7 +738,11 @@ export function Dashboard() {
                           <div className="flex items-start gap-2">
                             {syncTriggered && <RefreshCw className="h-3 w-3 animate-spin text-gray-400 mt-0.5" />}
                             <div className="flex flex-col">
-                              <span>{syncMessage || (needsSync ? 'Syncing...' : '')}</span>
+                              <span>
+                                {reconciledCount != null && reconciledCount > 0 && !syncTriggered && !needsSync
+                                  ? `${reconciledCount} recoveries verified against Amazon financial records`
+                                  : syncMessage || (needsSync ? 'Syncing...' : '')}
+                              </span>
                               {reconciledCount != null && reconciledCount > 0 && !syncTriggered && !needsSync && (
                                 <p className="text-[9px] text-gray-400 mt-0.5 font-medium italic">Every recovery is traceable and fully auditable.</p>
                               )}
