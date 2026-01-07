@@ -375,37 +375,9 @@ const Index = () => {
               </Link>
               <span className="text-gray-300">|</span>
               <ProductsMegaMenu />
-              <Popover>
-                <PopoverTrigger asChild>
-                  <button
-                    type="button"
-                    className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
-                  >
-                    Immediate Access
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent side="bottom" align="start" className="w-80 p-0 border-0 shadow-xl">
-                  <div className="bg-black rounded-lg p-5 space-y-4">
-                    <div className="space-y-2">
-                      <h3 className="font-semibold text-white text-base">Founders Council</h3>
-                      <p className="text-sm text-gray-300">
-                        Join 20 high-volume sellers stress-testing our 7-second AI Audit. Lock in a permanent 15% commission rate (vs. 20% public rate).
-                      </p>
-                    </div>
-                    <a
-                      href="https://forms.gle/882hpRYWinNzBt2r9"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block"
-                    >
-                      <Button className="w-full bg-white hover:bg-gray-100 text-black font-medium">
-                        Apply Now →
-                      </Button>
-                    </a>
-                  </div>
-                </PopoverContent>
-              </Popover>
             </div>
+
+
             <nav className="hidden md:flex items-center gap-4 text-sm text-gray-700">
               {/* Gift icon - hidden temporarily
               <Popover>
@@ -494,7 +466,7 @@ const Index = () => {
               <span className="block h-[1px] w-5 bg-gray-900 rounded-full" />
               <span className="block h-[1px] w-4 bg-gray-900 rounded-full" />
             </button>
-          </div>
+          </div >
           {mobileMenuOpen && (
             <div className="mt-4 md:hidden relative z-50">
               <div className="flex flex-col gap-2 rounded-[20px] border border-white/40 bg-white/80 supports-[backdrop-filter]:bg-white/70 backdrop-blur-2xl p-4 shadow-2xl">
@@ -570,8 +542,8 @@ const Index = () => {
               </div>
             </div>
           )}
-        </div>
-      </header>
+        </div >
+      </header >
       <div className="relative z-10" style={{ background: 'white' }}>
         <main className="flex-1 relative z-10" style={{ background: 'white' }}>
           <section className="relative container mx-auto px-6 pt-24 md:pt-32 lg:pt-36 pb-12 lg:pb-16 overflow-hidden">
@@ -598,7 +570,10 @@ const Index = () => {
               {/* Right Column: Text content */}
               <div className="order-1 lg:order-1 flex flex-col items-start text-left space-y-6">
                 {/* New Feature Banner */}
-                <div className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50/50 px-2 py-1 pr-3 text-xs font-medium text-gray-900 transition-colors hover:bg-blue-50 hover:border-blue-200 cursor-pointer">
+                <div
+                  onClick={() => window.location.href = '/margin-board'}
+                  className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50/50 px-2 py-1 pr-3 text-xs font-medium text-gray-900 transition-colors hover:bg-blue-50 hover:border-blue-200 cursor-pointer"
+                >
                   <span className="rounded-full bg-blue-600 px-2.5 py-0.5 text-[10px] font-bold text-white uppercase tracking-wide">NEW</span>
                   <span className="inline-block text-gray-700">Introducing Margin Board: Transforming Identity Verification and Customer Onboarding experiences</span>
                   <ChevronRight className="h-3 w-3 text-gray-400" />

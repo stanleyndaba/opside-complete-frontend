@@ -60,6 +60,7 @@ const Sales = lazy(() => import("./pages/Sales"));
 // New Evidence Pages
 const EvidenceOnboarding = lazy(() => import("./pages/EvidenceOnboarding"));
 const EvidenceSearch = lazy(() => import("./pages/EvidenceSearch"));
+const MarginBoard = lazy(() => import("./pages/MarginBoard"));
 
 // Shock & Awe Flow Pages
 const AmazonSandbox = lazy(() => import("./pages/AmazonSandbox"));
@@ -146,6 +147,7 @@ const App = () => (
                 <Route path="/sales" element={<Sales />} />
                 <Route path="/evidence-onboarding" element={<EvidenceOnboarding />} />
                 <Route path="/evidence-search" element={<EvidenceSearch />} />
+                <Route path="/margin-board" element={<MarginBoard />} />
 
                 {/* Auth & OAuth Routes */}
                 <Route path="/auth/callback" element={<OAuthCallback />} />
