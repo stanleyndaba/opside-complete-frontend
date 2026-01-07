@@ -702,22 +702,25 @@ export function Dashboard() {
                   {/* Primary Metric - Recovered Value */}
                   <div className="bg-white border border-gray-200 rounded-sm">
                     <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Funds Recovered Back</h2>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <button
-                              type="button"
-                              aria-label="About recovered value"
-                              className="w-3.5 h-3.5 rounded-full bg-gray-300 flex items-center justify-center hover:bg-gray-400 transition-colors"
-                            >
-                              <span className="text-white text-[8px] font-serif italic leading-none">i</span>
-                            </button>
-                          </TooltipTrigger>
-                          <TooltipContent side="top" className="bg-gray-900 text-white text-xs">
-                            Total recovered profits from approved/completed claims. {recoverySource && `Source: ${recoverySource}`}
-                          </TooltipContent>
-                        </Tooltip>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Funds Recovered Back</h2>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button
+                                type="button"
+                                aria-label="About recovered value"
+                                className="w-3.5 h-3.5 rounded-full bg-gray-300 flex items-center justify-center hover:bg-gray-400 transition-colors"
+                              >
+                                <span className="text-white text-[8px] font-serif italic leading-none">i</span>
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent side="top" className="bg-gray-900 text-white text-xs">
+                              Total recovered profits from approved/completed claims. {recoverySource && `Source: ${recoverySource}`}
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
+                        <p className="text-[9px] text-gray-400 mt-1">Verified reimbursement recoveries since activation</p>
                       </div>
                       {submittedClaimsCount != null && submittedClaimsCount > 0 && (
                         <span className="text-[10px] text-gray-500">{submittedClaimsCount} claims submitted</span>
@@ -727,7 +730,6 @@ export function Dashboard() {
                       <div className="text-3xl font-light text-gray-900 tracking-tight">
                         {formatCurrencyWithSelection(recoveredTotal ?? 0, recoveredCurrency)}
                       </div>
-                      <p className="text-[10px] text-gray-400 mt-1">Verified reimbursement recoveries since activation</p>
 
                       {/* Sync status */}
                       {(syncMessage || needsSync || syncTriggered) && (
@@ -744,7 +746,7 @@ export function Dashboard() {
                                   : syncMessage || (needsSync ? 'Syncing...' : '')}
                               </span>
                               {reconciledCount != null && reconciledCount > 0 && !syncTriggered && !needsSync && (
-                                <p className="text-[9px] text-gray-400 mt-0.5 font-medium italic">Every recovery is traceable and fully auditable.</p>
+                                <p className="text-[9px] text-gray-400 mt-0.5 font-medium">Every recovery is traceable and fully auditable.</p>
                               )}
                             </div>
                           </div>
