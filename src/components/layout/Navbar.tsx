@@ -549,7 +549,7 @@ export function Navbar({
 
             {notes.length === 0 && (
               <div className="text-center py-6">
-                <StickyNote className="h-8 w-8 text-gray-300 mx-auto mb-2" />
+                <FileText className="h-8 w-8 text-gray-300 mx-auto mb-2" />
                 <p className="text-xs text-gray-400">No notes yet. Start by adding one above.</p>
               </div>
             )}
