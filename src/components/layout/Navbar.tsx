@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
-import { ArrowUpDown, ChevronDown, Search, Gift, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock } from 'lucide-react';
+import { ArrowUpDown, ChevronDown, Search, Gift, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock, NotebookPen } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -326,7 +326,7 @@ export function Navbar({
                 className="h-8 w-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-sm transition-colors relative"
                 aria-label="Notes"
               >
-                <FileText className="h-4 w-4" />
+                <NotebookPen className="h-4 w-4" />
                 {notes.length > 0 && (
                   <span className="absolute top-1 right-1 h-1.5 w-1.5 bg-amber-500 rounded-full" />
                 )}
@@ -549,7 +549,7 @@ export function Navbar({
 
             {notes.length === 0 && (
               <div className="text-center py-6">
-                <FileText className="h-8 w-8 text-gray-300 mx-auto mb-2" />
+                <NotebookPen className="h-8 w-8 text-gray-300 mx-auto mb-2" />
                 <p className="text-xs text-gray-400">No notes yet. Start by adding one above.</p>
               </div>
             )}
