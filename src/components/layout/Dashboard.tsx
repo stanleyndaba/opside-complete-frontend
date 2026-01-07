@@ -664,19 +664,6 @@ export function Dashboard() {
                 <div>
                   <div className="flex items-center gap-3">
                     <h1 className="text-lg font-medium text-gray-900 tracking-tight">Recovery Overview</h1>
-                    <span className="text-gray-300 text-lg font-light">|</span>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger className="flex items-center gap-2 text-xs font-medium text-gray-900 tracking-tight outline-none hover:text-gray-600 transition-colors focus:outline-none">
-                        Financial Data
-                        <ChevronDown className="h-3 w-3 text-gray-400" />
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="start" className="w-56 bg-white border-gray-100 shadow-lg">
-                        <DropdownMenuLabel className="text-[10px] text-gray-400 font-medium uppercase tracking-widest">(Review)</DropdownMenuLabel>
-                        <DropdownMenuItem className="cursor-pointer">Agentic Matching</DropdownMenuItem>
-                        <DropdownMenuItem className="cursor-pointer">Agentic Submission</DropdownMenuItem>
-                        <DropdownMenuItem className="cursor-pointer">Agentic Report</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
                   </div>
                   <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-[0.15em]">Dashboard</p>
                 </div>
