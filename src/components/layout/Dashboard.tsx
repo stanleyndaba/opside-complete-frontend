@@ -668,19 +668,7 @@ export function Dashboard() {
                   <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-[0.15em]">Dashboard</p>
                 </div>
 
-                <div className="flex items-end gap-8">
-                  {/* Month Banner Stats */}
-                  <div className="text-right hidden sm:block">
-                    <div className="flex items-center gap-2 justify-end">
-                      <span className="text-xl font-light text-gray-900 tracking-tight">$9,337.50</span>
-                      <div className="flex items-center text-emerald-600 px-1.5 py-0.5">
-                        <TrendingUp className="w-3 h-3 mr-0.5" />
-                        <span className="text-[10px] font-bold">12%</span>
-                        <span className="text-[9px] text-emerald-600/70 ml-1 font-medium">vs last month</span>
-                      </div>
-                    </div>
-                    <p className="text-[9px] text-gray-400 uppercase tracking-widest mt-1 font-medium">{new Date().toLocaleString('default', { month: 'long' })} Recoveries</p>
-                  </div>
+                <div className="flex items-end">
 
                   <div className="flex flex-col items-end">
                     <Button
