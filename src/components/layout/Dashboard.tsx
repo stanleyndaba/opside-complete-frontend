@@ -80,6 +80,7 @@ export function Dashboard() {
   const [nextPaymentAmount, setNextPaymentAmount] = useState<number | null>(null);
   const [nextPaymentDate, setNextPaymentDate] = useState<string | null>(null);
   const [successRate, setSuccessRate] = useState<number | null>(null);
+  const [reconciledCount, setReconciledCount] = useState<number | null>(null);
   const [lastUpdated, setLastUpdated] = useState<string>('');
   const [approvedClaimsThisMonth, setApprovedClaimsThisMonth] = useState<number | null>(null);
   const [showSourcesModal, setShowSourcesModal] = useState<boolean>(false);
@@ -259,6 +260,7 @@ export function Dashboard() {
         setRecoveredTotal(data.totalAmount ?? 0);
         if (data.currency) setRecoveredCurrency(data.currency);
         if (typeof data.claimCount === 'number') setSubmittedClaimsCount(data.claimCount);
+        if (typeof data.recoveredCount === 'number') setReconciledCount(data.recoveredCount);
 
         // Handle sync-related fields from API response
         if (data.message) setSyncMessage(data.message);
@@ -733,9 +735,14 @@ export function Dashboard() {
                           : needsSync ? 'bg-gray-50 text-gray-600 border border-gray-200'
                             : 'bg-gray-50 text-gray-500 border border-gray-200'
                           }`}>
-                          <div className="flex items-center gap-2">
-                            {syncTriggered && <RefreshCw className="h-3 w-3 animate-spin text-gray-400" />}
-                            <span>{syncMessage || (needsSync ? 'Syncing...' : '')}</span>
+                          <div className="flex items-start gap-2">
+                            {syncTriggered && <RefreshCw className="h-3 w-3 animate-spin text-gray-400 mt-0.5" />}
+                            <div className="flex flex-col">
+                              <span>{syncMessage || (needsSync ? 'Syncing...' : '')}</span>
+                              {reconciledCount != null && reconciledCount > 0 && !syncTriggered && !needsSync && (
+                                <p className="text-[9px] text-gray-400 mt-0.5 font-medium italic">Every recovery is traceable and fully auditable.</p>
+                              )}
+                            </div>
                           </div>
                           {activeSyncId && (
                             <button
