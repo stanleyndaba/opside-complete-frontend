@@ -306,6 +306,10 @@ export const api = {
     body: JSON.stringify({ content })
   }),
   deleteNote: (id: string) => requestJson<{ success: boolean }>('/api/notes/' + id, { method: 'DELETE' }),
+  updateNote: (id: string, content: string) => requestJson<{ success: boolean; data: any }>('/api/notes/' + id, {
+    method: 'PATCH',
+    body: JSON.stringify({ content })
+  }),
 
   // Generic helpers
   get: <T = any>(path: string) => requestJson<T>(path, { method: 'GET' }),

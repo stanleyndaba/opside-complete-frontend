@@ -88,6 +88,8 @@ export function Navbar({
   const [showNotesModal, setShowNotesModal] = useState(false);
   const [notes, setNotes] = useState<{ id: string; text: string; createdAt: string }[]>([]);
   const [currentNote, setCurrentNote] = useState('');
+  const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
+  const [editingNoteContent, setEditingNoteContent] = useState('');
   const [isNoteHovered, setIsNoteHovered] = useState(false);
   const noteIconRef = useRef<HTMLButtonElement>(null);
 
@@ -549,27 +551,83 @@ export function Navbar({
                 <div className="mt-3 space-y-2 max-h-60 overflow-y-auto">
                   {notes.map((note) => (
                     <div key={note.id} className="p-3 bg-gray-50 border border-gray-100 rounded-sm group">
-                      <p className="text-xs text-gray-700">{note.text}</p>
-                      <div className="flex items-center justify-between mt-2">
-                        <span className="text-[9px] text-gray-400">
-                          {new Date(note.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                        </span>
-                        <button
-                          onClick={async () => {
-                            try {
-                              const response = await api.deleteNote(note.id);
-                              if (response.success) {
-                                setNotes(notes.filter(n => n.id !== note.id));
-                              }
-                            } catch (error) {
-                              console.error('Failed to delete note:', error);
-                            }
-                          }}
-                          className="text-[9px] text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
-                        >
-                          Delete
-                        </button>
-                      </div>
+                      {editingNoteId === note.id ? (
+                        <div className="space-y-2">
+                          <textarea
+                            value={editingNoteContent}
+                            onChange={(e) => setEditingNoteContent(e.target.value)}
+                            className="w-full h-20 p-2 text-xs border border-gray-200 rounded-sm resize-none focus:outline-none focus:border-gray-300 bg-white"
+                            autoFocus
+                          />
+                          <div className="flex justify-end gap-2">
+                            <button
+                              onClick={() => setEditingNoteId(null)}
+                              className="text-[10px] text-gray-500 hover:text-gray-700 font-medium"
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              onClick={async () => {
+                                if (!editingNoteContent.trim() || editingNoteContent === note.text) {
+                                  setEditingNoteId(null);
+                                  return;
+                                }
+                                try {
+                                  const response = await api.updateNote(note.id, editingNoteContent.trim());
+                                  if (response.success && response.data) {
+                                    setNotes(notes.map(n => n.id === note.id ? {
+                                      ...n,
+                                      text: response.data.content,
+                                      createdAt: response.data.updated_at
+                                    } : n));
+                                    setEditingNoteId(null);
+                                  }
+                                } catch (error) {
+                                  console.error('Failed to update note:', error);
+                                }
+                              }}
+                              className="text-[10px] text-gray-900 hover:text-black font-semibold"
+                            >
+                              Save
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          <p className="text-xs text-gray-700 whitespace-pre-wrap">{note.text}</p>
+                          <div className="flex items-center justify-between mt-2">
+                            <span className="text-[9px] text-gray-400">
+                              {new Date(note.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                            <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <button
+                                onClick={() => {
+                                  setEditingNoteId(note.id);
+                                  setEditingNoteContent(note.text);
+                                }}
+                                className="text-[9px] text-gray-400 hover:text-gray-900"
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={async () => {
+                                  try {
+                                    const response = await api.deleteNote(note.id);
+                                    if (response.success) {
+                                      setNotes(notes.filter(n => n.id !== note.id));
+                                    }
+                                  } catch (error) {
+                                    console.error('Failed to delete note:', error);
+                                  }
+                                }}
+                                className="text-[9px] text-gray-400 hover:text-red-500"
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </div>
+                        </>
+                      )}
                     </div>
                   ))}
                 </div>
