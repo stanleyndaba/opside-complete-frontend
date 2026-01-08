@@ -282,6 +282,38 @@ export function Navbar({
                 className="h-8 w-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-sm transition-colors"
                 iconClassName="h-4 w-4"
               />
+
+              {/* Notes Icon - Center group between Mail and Gift */}
+              <div className="relative">
+                <button
+                  ref={noteIconRef}
+                  onClick={() => setShowNotesModal(true)}
+                  onMouseEnter={() => setIsNoteHovered(true)}
+                  onMouseLeave={() => setIsNoteHovered(false)}
+                  className="h-8 w-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-sm transition-colors relative"
+                  aria-label="Notes"
+                >
+                  <NotebookPen className="h-4 w-4" />
+                  {notes.length > 0 && (
+                    <span className="absolute top-1 right-1 h-1.5 w-1.5 bg-amber-500 rounded-full" />
+                  )}
+                </button>
+
+                {/* Hover tooltip showing last note */}
+                {isNoteHovered && notes.length > 0 && (
+                  <div className="absolute top-full right-1/2 translate-x-1/2 mt-2 w-64 bg-white border border-gray-200 rounded-sm shadow-lg z-50 overflow-hidden">
+                    <div className="px-3 py-2 border-b border-gray-100 bg-gray-50">
+                      <span className="text-[9px] font-medium text-gray-500 uppercase tracking-[0.15em]">Last Note</span>
+                    </div>
+                    <div className="p-3">
+                      <p className="text-xs text-gray-700 line-clamp-3">{notes[0].text}</p>
+                      <p className="text-[9px] text-gray-400 mt-2">
+                        {new Date(notes[0].createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
               {/* Gift icon */}
               <button
                 onClick={() => setShowReferralPopup(true)}
@@ -316,37 +348,7 @@ export function Navbar({
               <span className="hidden sm:inline">Connect</span>
             </button>
 
-            {/* Notes Icon - Far right with spacing */}
-            <div className="ml-6 relative">
-              <button
-                ref={noteIconRef}
-                onClick={() => setShowNotesModal(true)}
-                onMouseEnter={() => setIsNoteHovered(true)}
-                onMouseLeave={() => setIsNoteHovered(false)}
-                className="h-8 w-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-sm transition-colors relative"
-                aria-label="Notes"
-              >
-                <NotebookPen className="h-4 w-4" />
-                {notes.length > 0 && (
-                  <span className="absolute top-1 right-1 h-1.5 w-1.5 bg-amber-500 rounded-full" />
-                )}
-              </button>
 
-              {/* Hover tooltip showing last note */}
-              {isNoteHovered && notes.length > 0 && (
-                <div className="absolute top-full right-0 mt-2 w-64 bg-white border border-gray-200 rounded-sm shadow-lg z-50 overflow-hidden">
-                  <div className="px-3 py-2 border-b border-gray-100 bg-gray-50">
-                    <span className="text-[9px] font-medium text-gray-500 uppercase tracking-[0.15em]">Last Note</span>
-                  </div>
-                  <div className="p-3">
-                    <p className="text-xs text-gray-700 line-clamp-3">{notes[0].text}</p>
-                    <p className="text-[9px] text-gray-400 mt-2">
-                      {new Date(notes[0].createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
           </div>
         </div>
       </header>
