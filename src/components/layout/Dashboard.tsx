@@ -810,8 +810,8 @@ export function Dashboard() {
                           <div className="text-xl font-light text-gray-900 tracking-tight">
                             {formatCurrencyWithSelection(computedApproved ?? 0, recoveredCurrency)}
                           </div>
-                          <div className="text-[9px] text-emerald-600 font-bold bg-emerald-50/50 px-1.5 py-0.5 rounded-sm border border-emerald-100/50">
-                            92% success
+                          <div className="text-[9px] text-emerald-600 font-bold">
+                            95% Approve rate
                           </div>
                         </div>
                       </div>
