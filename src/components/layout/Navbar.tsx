@@ -194,8 +194,8 @@ export function Navbar({
           {/* Center - Search */}
           <div className="flex-1 max-w-xl hidden md:block md:mx-4">
             <div className="relative flex items-center gap-3" ref={searchContainerRef}>
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
+              <div className="relative flex-1 group">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400 group-focus-within:text-gray-600 transition-colors" />
                 <Input
                   ref={searchInputRef}
                   aria-label="Search"
@@ -204,7 +204,7 @@ export function Navbar({
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
                   onKeyDown={handleKeyDown}
-                  className="pl-9 pr-8 h-8 text-xs bg-gray-50 border-gray-200 rounded-sm focus:bg-white focus:border-gray-300 placeholder:text-gray-400"
+                  className="pl-10 pr-10 h-9 text-xs bg-gray-100/50 border-transparent rounded-full focus:bg-white focus:border-gray-200 focus:ring-4 focus:ring-gray-100/30 transition-all placeholder:text-gray-400"
                 />
                 {/* Clear button */}
                 {searchQuery && (
