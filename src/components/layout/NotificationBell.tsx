@@ -155,8 +155,7 @@ export function NotificationBell({
         {/* Header - Fixed, Clean, minimal */}
         <div className="px-4 py-3 border-b border-gray-100 flex-shrink-0">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-1.5">
-              <img src="/logoimagetwo.png" alt="" className="h-3.5 w-auto object-contain" />
+            <h3 className="text-sm font-semibold text-gray-900">
               {label}
             </h3>
             <div className="flex items-center gap-3">
