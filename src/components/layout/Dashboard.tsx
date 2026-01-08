@@ -768,7 +768,7 @@ export function Dashboard() {
                   <div className="grid grid-cols-3 gap-4">
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-4 flex flex-col justify-between h-full">
                       <div>
-                        <div className="text-[10px] uppercase tracking-[0.15em] text-gray-500 mb-0.5">Next Disbursement</div>
+                        <div className="text-[10px] font-semibold text-gray-500 mb-0.5">Next Disbursement</div>
                         <p className="text-[9px] text-gray-400 font-medium mb-3">Funds to be deposited</p>
                         <div className="text-xl font-light text-gray-900 tracking-tight">
                           {formatCurrencyWithSelection((nextPaymentAmount ?? 0), recoveredCurrency)}
@@ -785,7 +785,7 @@ export function Dashboard() {
 
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-4 flex flex-col justify-between h-full">
                       <div>
-                        <div className="text-[10px] uppercase tracking-[0.15em] text-gray-500 mb-0.5">Under Review</div>
+                        <div className="text-[10px] font-semibold text-gray-500 mb-0.5">Under Review</div>
                         <p className="text-[9px] text-gray-400 font-medium mb-3">Claims currently being processed with Amazon.</p>
                         <div className="text-xl font-light text-gray-900 tracking-tight">
                           {formatCurrencyWithSelection((pendingRecoveryAmount ?? 0), recoveredCurrency)}
@@ -800,7 +800,7 @@ export function Dashboard() {
 
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-4 flex flex-col justify-between h-full">
                       <div>
-                        <div className="text-[10px] uppercase tracking-[0.15em] text-gray-500 mb-0.5">Approved</div>
+                        <div className="text-[10px] font-semibold text-gray-500 mb-0.5">Approved</div>
                         <p className="text-[9px] text-gray-400 font-medium mb-3">Validated and reconciled by Amazon</p>
                         <div className="flex items-baseline gap-2">
                           <div className="text-xl font-light text-gray-900 tracking-tight">
