@@ -299,6 +299,14 @@ export const api = {
   // Export getFrontendUrl for use in other modules
   getFrontendUrl,
 
+  // Notes
+  getNotes: () => requestJson<{ success: boolean; data: any[] }>('/api/notes'),
+  createNote: (content: string) => requestJson<{ success: boolean; data: any }>('/api/notes', {
+    method: 'POST',
+    body: JSON.stringify({ content })
+  }),
+  deleteNote: (id: string) => requestJson<{ success: boolean }>('/api/notes/' + id, { method: 'DELETE' }),
+
   // Generic helpers
   get: <T = any>(path: string) => requestJson<T>(path, { method: 'GET' }),
   post: <T = any>(path: string, body?: unknown) => requestJson<T>(path, { method: 'POST', body: body !== undefined ? JSON.stringify(body) : undefined }),

@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { NotificationBell } from './NotificationBell';
 import { useCurrency, currencies } from '@/components/providers/CurrencyProvider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { api } from '@/lib/api';
 interface NavbarProps {
   className?: string;
   sidebarCollapsed?: boolean;
@@ -85,13 +86,29 @@ export function Navbar({
 
   // State for notes feature
   const [showNotesModal, setShowNotesModal] = useState(false);
-  const [notes, setNotes] = useState<{ id: string; text: string; createdAt: string }[]>(() => {
-    const stored = localStorage.getItem('userNotes');
-    return stored ? JSON.parse(stored) : [];
-  });
+  const [notes, setNotes] = useState<{ id: string; text: string; createdAt: string }[]>([]);
   const [currentNote, setCurrentNote] = useState('');
   const [isNoteHovered, setIsNoteHovered] = useState(false);
   const noteIconRef = useRef<HTMLButtonElement>(null);
+
+  // Fetch notes from backend on load
+  useEffect(() => {
+    const fetchNotes = async () => {
+      try {
+        const response = await api.getNotes();
+        if (response.success && response.data) {
+          setNotes(response.data.map((n: any) => ({
+            id: n.id,
+            text: n.content,
+            createdAt: n.created_at
+          })));
+        }
+      } catch (error) {
+        console.error('Failed to fetch notes:', error);
+      }
+    };
+    fetchNotes();
+  }, []);
 
   // Generate referral link (placeholder - in production this would come from backend)
   const referralLink = typeof window !== 'undefined'
@@ -501,17 +518,22 @@ export function Navbar({
                 className="w-full h-24 p-3 text-xs border border-gray-200 rounded-sm resize-none focus:outline-none focus:border-gray-300 bg-gray-50 focus:bg-white"
               />
               <Button
-                onClick={() => {
+                onClick={async () => {
                   if (!currentNote.trim()) return;
-                  const newNote = {
-                    id: Date.now().toString(),
-                    text: currentNote.trim(),
-                    createdAt: new Date().toISOString()
-                  };
-                  const updatedNotes = [newNote, ...notes];
-                  setNotes(updatedNotes);
-                  localStorage.setItem('userNotes', JSON.stringify(updatedNotes));
-                  setCurrentNote('');
+                  try {
+                    const response = await api.createNote(currentNote.trim());
+                    if (response.success && response.data) {
+                      const newNote = {
+                        id: response.data.id,
+                        text: response.data.content,
+                        createdAt: response.data.created_at
+                      };
+                      setNotes([newNote, ...notes]);
+                      setCurrentNote('');
+                    }
+                  } catch (error) {
+                    console.error('Failed to save note:', error);
+                  }
                 }}
                 className="w-full bg-gray-900 hover:bg-gray-800 text-white text-[12px] h-9 font-medium rounded-sm"
                 disabled={!currentNote.trim()}
@@ -533,10 +555,15 @@ export function Navbar({
                           {new Date(note.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                         </span>
                         <button
-                          onClick={() => {
-                            const updatedNotes = notes.filter(n => n.id !== note.id);
-                            setNotes(updatedNotes);
-                            localStorage.setItem('userNotes', JSON.stringify(updatedNotes));
+                          onClick={async () => {
+                            try {
+                              const response = await api.deleteNote(note.id);
+                              if (response.success) {
+                                setNotes(notes.filter(n => n.id !== note.id));
+                              }
+                            } catch (error) {
+                              console.error('Failed to delete note:', error);
+                            }
                           }}
                           className="text-[9px] text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
                         >
