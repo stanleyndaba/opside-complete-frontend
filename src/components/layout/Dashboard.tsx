@@ -1036,7 +1036,6 @@ export function Dashboard() {
                                   </div>
                                 </HoverCardTrigger>
                                 <HoverCardContent side="left" align="start" className="w-80 p-0 overflow-hidden border-gray-200 shadow-xl">
-                                  <div className={`h-1 w-full ${indicatorColor}`}></div>
                                   <div className="p-4">
                                     <div className="flex items-center gap-2 mb-2">
                                       <div className={cn("px-1.5 py-0.5 rounded-[2px] text-[8px] font-bold uppercase tracking-wider",
