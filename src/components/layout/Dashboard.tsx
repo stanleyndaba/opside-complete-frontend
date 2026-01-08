@@ -22,11 +22,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Clock, Search as SearchIcon, Terminal } from 'lucide-react';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { useNotifications } from '@/components/providers/NotificationsProvider';
 import { SyncLogModal } from '@/components/modals/SyncLogModal';
 import { formatDistanceToNow } from 'date-fns';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 
 // Icon imports for document sources
 const GmailIcon = '/G.png';
@@ -330,7 +331,7 @@ export function Dashboard() {
             // Sync completed, refresh data
             await fetchRecoveriesOnce();
             await fetchMetrics();
-            await fetchUpcomingPayments();
+            await fetchDisputeMetrics();
             setSyncTriggered(false);
             setNeedsSync(false);
             setSyncMessage(null);
@@ -417,7 +418,7 @@ export function Dashboard() {
             // Sync completed, refresh data
             await fetchRecoveriesOnce();
             await fetchMetrics();
-            await fetchUpcomingPayments();
+            await fetchDisputeMetrics();
             setSyncTriggered(false);
             setNeedsSync(false);
             setSyncMessage('Sync completed successfully!');
@@ -432,7 +433,7 @@ export function Dashboard() {
             setSyncTriggered(false);
             setNeedsSync(true);
             setSyncMessage('Sync failed. Please try again.');
-            await fetchUpcomingPayments();
+            await fetchDisputeMetrics();
 
             toast({
               title: 'Sync Failed',
@@ -1007,24 +1008,68 @@ export function Dashboard() {
                             const isUnread = notification.status !== 'read';
                             const timeAgo = formatDistanceToNow(new Date(notification.created_at), { addSuffix: true });
 
+                            // Determine indicator color based on type
+                            let indicatorColor = 'bg-gray-200';
+                            if (notification.type === 'claim_detected' || notification.type === 'case_filed') indicatorColor = 'bg-blue-500';
+                            if (notification.type === 'refund_approved' || notification.type === 'funds_deposited') indicatorColor = 'bg-emerald-500';
+                            if (notification.type === 'amazon_challenge' || notification.type === 'user_action_required') indicatorColor = 'bg-amber-500';
+                            if (notification.type === 'evidence_found') indicatorColor = 'bg-indigo-400';
+
                             return (
-                              <div
-                                key={notification.id}
-                                className={`px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors ${isUnread ? 'bg-gray-50' : ''}`}
-                                onClick={() => navigate('/recoveries')}
-                              >
-                                <div className="flex items-start justify-between gap-2">
-                                  <p className={`text-xs truncate ${isUnread ? 'text-gray-900 font-medium' : 'text-gray-600'}`}>
-                                    {stripEmojis(notification.title)}
-                                  </p>
-                                  <span className="text-[10px] text-gray-400 shrink-0">
-                                    {timeAgo.replace(' ago', '')}
-                                  </span>
-                                </div>
-                                <p className="text-[10px] text-gray-500 mt-0.5 truncate">
-                                  {renderNotificationMessage(notification.message)}
-                                </p>
-                              </div>
+                              <HoverCard key={notification.id} openDelay={100} closeDelay={100}>
+                                <HoverCardTrigger asChild>
+                                  <div
+                                    className={`px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors relative border-l-2 ${indicatorColor.replace('bg-', 'border-')} ${isUnread ? 'bg-gray-50/50' : 'border-opacity-30'}`}
+                                    onClick={() => navigate('/recoveries')}
+                                  >
+                                    <div className="flex items-start justify-between gap-2">
+                                      <p className={`text-[11px] leading-tight truncate pr-1 ${isUnread ? 'text-gray-900 font-bold' : 'text-gray-700 font-semibold'}`}>
+                                        {stripEmojis(notification.title)}
+                                      </p>
+                                      <span className="text-[9px] text-gray-400 font-medium shrink-0 pt-0.5">
+                                        {timeAgo.replace(' ago', '')}
+                                      </span>
+                                    </div>
+                                    <div className="text-[10px] text-gray-500 mt-1 leading-relaxed truncate">
+                                      {renderNotificationMessage(notification.message)}
+                                    </div>
+                                  </div>
+                                </HoverCardTrigger>
+                                <HoverCardContent side="left" align="start" className="w-80 p-0 overflow-hidden border-gray-200 shadow-xl">
+                                  <div className={`h-1 w-full ${indicatorColor}`}></div>
+                                  <div className="p-4">
+                                    <div className="flex items-center gap-2 mb-2">
+                                      <div className={cn("px-1.5 py-0.5 rounded-[2px] text-[8px] font-bold uppercase tracking-wider",
+                                        notification.type === 'funds_deposited' || notification.type === 'refund_approved' ? "bg-emerald-100 text-emerald-700" :
+                                          notification.type === 'amazon_challenge' ? "bg-amber-100 text-amber-700" : "bg-blue-100 text-blue-700"
+                                      )}>
+                                        {notification.type.replace(/_/g, ' ')}
+                                      </div>
+                                      <span className="text-[9px] text-gray-400 font-medium flex items-center gap-1">
+                                        <Clock className="h-2.5 w-2.5" />
+                                        {timeAgo}
+                                      </span>
+                                    </div>
+                                    <h4 className="text-xs font-bold text-gray-900 leading-snug mb-2">
+                                      {notification.title}
+                                    </h4>
+                                    <div className="text-[11px] text-gray-600 leading-relaxed space-y-2 bg-gray-50/50 p-3 rounded-sm border border-gray-100">
+                                      {renderNotificationMessage(notification.message)}
+                                    </div>
+                                    <div className="mt-3 flex items-center justify-between pt-3 border-t border-gray-100">
+                                      <span className="text-[9px] text-gray-400 font-mono">
+                                        REF: {notification.id.substring(0, 8).toUpperCase()}
+                                      </span>
+                                      <button
+                                        onClick={() => navigate('/recoveries')}
+                                        className="text-[9px] font-bold text-gray-900 flex items-center gap-1 hover:underline"
+                                      >
+                                        Case Details <ArrowRight className="h-2.5 w-2.5" />
+                                      </button>
+                                    </div>
+                                  </div>
+                                </HoverCardContent>
+                              </HoverCard>
                             );
                           })}
                         </div>

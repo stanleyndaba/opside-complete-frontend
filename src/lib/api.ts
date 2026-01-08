@@ -1262,6 +1262,8 @@ export const api = {
         amount: number;
         currency: string;
         created_at: string;
+        expected_payout_date?: string;
+        expectedPayoutDate?: string;
       }>;
       total: number;
     }>(`/api/disputes${query ? `?${query}` : ''}`);
