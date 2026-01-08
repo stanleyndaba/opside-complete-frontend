@@ -98,8 +98,8 @@ export function Navbar({
     const fetchNotes = async () => {
       try {
         const response = await api.getNotes();
-        if (response.success && response.data) {
-          setNotes(response.data.map((n: any) => ({
+        if (response.ok && response.data?.success) {
+          setNotes(response.data.data.map((n: any) => ({
             id: n.id,
             text: n.content,
             createdAt: n.created_at
@@ -381,7 +381,7 @@ export function Navbar({
               No commission on referrals
             </h3>
             <p className="text-[12px] text-gray-500 mt-1 leading-relaxed">
-              Bring new sellers to Opside and keep 100% of their recovered funds.
+              Bring new sellers to Margin and keep 100% of their recovered funds.
             </p>
           </div>
 
@@ -415,7 +415,7 @@ export function Navbar({
           <div className="space-y-3">
             <div>
               <h3 className="text-sm font-semibold text-gray-900">Invite seller friend</h3>
-              <p className="text-[10px] text-gray-500">Send an invitation to join Opside</p>
+              <p className="text-[10px] text-gray-500">Send an invitation to join Margin</p>
             </div>
 
             <div className="space-y-1.5">
@@ -472,7 +472,7 @@ export function Navbar({
                     },
                     body: JSON.stringify({
                       email: inviteEmail,
-                      message: `You've been invited to join Opside! Use this link to get started: ${referralLink}`
+                      message: `You've been invited to join Margin! Use this link to get started: ${referralLink}`
                     })
                   });
 
@@ -524,11 +524,11 @@ export function Navbar({
                   if (!currentNote.trim()) return;
                   try {
                     const response = await api.createNote(currentNote.trim());
-                    if (response.success && response.data) {
+                    if (response.ok && response.data?.success) {
                       const newNote = {
-                        id: response.data.id,
-                        text: response.data.content,
-                        createdAt: response.data.created_at
+                        id: response.data.data.id,
+                        text: response.data.data.content,
+                        createdAt: response.data.data.created_at
                       };
                       setNotes([newNote, ...notes]);
                       setCurrentNote('');
@@ -574,11 +574,11 @@ export function Navbar({
                                 }
                                 try {
                                   const response = await api.updateNote(note.id, editingNoteContent.trim());
-                                  if (response.success && response.data) {
+                                  if (response.ok && response.data?.success) {
                                     setNotes(notes.map(n => n.id === note.id ? {
                                       ...n,
-                                      text: response.data.content,
-                                      createdAt: response.data.updated_at
+                                      text: response.data.data.content,
+                                      createdAt: response.data.data.updated_at
                                     } : n));
                                     setEditingNoteId(null);
                                   }
@@ -613,7 +613,7 @@ export function Navbar({
                                 onClick={async () => {
                                   try {
                                     const response = await api.deleteNote(note.id);
-                                    if (response.success) {
+                                    if (response.ok) {
                                       setNotes(notes.filter(n => n.id !== note.id));
                                     }
                                   } catch (error) {
