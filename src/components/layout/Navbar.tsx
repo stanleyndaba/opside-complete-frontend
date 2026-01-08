@@ -276,7 +276,7 @@ export function Navbar({
               </div>
               {/* Message icon */}
               <NotificationBell
-                label="Messages"
+                label="Margin Notifications"
                 iconOverride={Mail}
                 showLabel={false}
                 className="h-8 w-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-sm transition-colors"

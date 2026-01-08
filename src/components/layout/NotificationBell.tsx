@@ -34,7 +34,7 @@ const renderFormattedMessage = (message: string): React.ReactNode => {
 };
 
 export function NotificationBell({
-  label = 'Messages',
+  label = 'Margin Notifications',
   className,
   forceCountStyle = 'default',
   iconOverride,
