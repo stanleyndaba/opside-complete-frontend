@@ -1023,7 +1023,7 @@ export function Dashboard() {
                               <HoverCard key={notification.id} openDelay={100} closeDelay={100}>
                                 <HoverCardTrigger asChild>
                                   <div
-                                    className={`px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors relative border-l-2 ${indicatorColor.replace('bg-', 'border-')} ${isUnread ? 'bg-gray-50/50' : 'border-opacity-30'}`}
+                                    className={`px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors relative ${isUnread ? 'bg-gray-50/20' : ''}`}
                                     onClick={() => navigate('/recoveries')}
                                   >
                                     <div className="flex items-start justify-between gap-2">
