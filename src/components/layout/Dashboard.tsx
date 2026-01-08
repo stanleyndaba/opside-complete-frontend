@@ -668,7 +668,7 @@ export function Dashboard() {
                   <div className="flex items-center gap-3">
                     <h1 className="text-lg font-medium text-gray-900 tracking-tight">Recovery Overview</h1>
                   </div>
-                  <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-[0.15em]">Dashboard</p>
+                  <p className="text-[10px] text-gray-500 mt-0.5 font-medium">Dashboard</p>
                 </div>
 
                 <div className="flex items-end">
@@ -728,7 +728,7 @@ export function Dashboard() {
                       )}
                     </div>
                     <div className="p-6">
-                      <div className="text-3xl font-light text-gray-900 tracking-tight">
+                      <div className="text-2xl font-light text-gray-900 tracking-tight">
                         {formatCurrencyWithSelection(recoveredTotal ?? 0, recoveredCurrency)}
                       </div>
 
