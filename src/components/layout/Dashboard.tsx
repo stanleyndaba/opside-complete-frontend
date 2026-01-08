@@ -688,8 +688,12 @@ export function Dashboard() {
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
                       </span>
-                      <p className="text-[9px] text-gray-500 font-medium">
-                        {formatDistanceToNow(lastSyncTime || new Date(), { addSuffix: true }).replace('less than a minute', '1 minute')} • systems healthy
+                      <p className="text-[9px] text-gray-500 font-medium whitespace-nowrap">
+                        {(() => {
+                          const timeStr = formatDistanceToNow(lastSyncTime || new Date(), { addSuffix: true });
+                          if (timeStr === 'less than a minute ago') return 'Updated just now';
+                          return `Updated ${timeStr.replace('about ', '')}`;
+                        })()} • systems healthy
                       </p>
                     </div>
                   </div>
