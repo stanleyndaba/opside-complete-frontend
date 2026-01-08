@@ -993,7 +993,7 @@ export function Dashboard() {
                 <div className="lg:col-span-1">
                   <div className="bg-white border border-gray-200 rounded-sm h-full">
                     <div className="px-4 py-3 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
-                      <h3 className="text-[10px] font-medium text-gray-900 uppercase tracking-[0.15em]">Recent Logs</h3>
+                      <h3 className="text-xs font-semibold text-gray-900">Margin Logs</h3>
                       {unreadCount > 0 && (
                         <span className="text-[9px] rounded px-1.5 py-0.5 bg-gray-900 text-white">
                           {unreadCount > 50 ? '50+' : unreadCount}
