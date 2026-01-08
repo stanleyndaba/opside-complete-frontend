@@ -705,7 +705,7 @@ export function Dashboard() {
                     <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
                       <div>
                         <div className="flex items-center gap-2">
-                          <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Funds Recovered Back</h2>
+                          <h2 className="text-xs font-semibold text-gray-900">Funds Recovered Back</h2>
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <button
