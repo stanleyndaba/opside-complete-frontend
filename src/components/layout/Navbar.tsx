@@ -321,7 +321,7 @@ export function Navbar({
                   {isNoteHovered && notes.length > 0 && (
                     <div className="absolute top-full right-1/2 translate-x-1/2 mt-2 w-72 bg-white border border-gray-200 rounded-none shadow-xl z-50 overflow-hidden">
                       <div className="px-4 py-3 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
-                        <span className="text-[9px] font-bold text-gray-900 uppercase tracking-[0.2em]">External Records // Notes</span>
+                        <span className="text-[9px] font-bold text-gray-900 uppercase tracking-[0.2em]">External Records</span>
                         <span className="text-[9px] text-gray-400 font-mono">{notes.length} REC</span>
                       </div>
                       <div className="max-h-64 overflow-y-auto divide-y divide-gray-50">
