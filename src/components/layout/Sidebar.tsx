@@ -65,7 +65,6 @@ export function Sidebar({
 }: SidebarProps) {
   const location = useLocation();
   const queryClient = useQueryClient();
-  const [showLogout, setShowLogout] = useState(false);
   const [connectedEmail, setConnectedEmail] = useState<string | null>(null);
 
   // Fetch connected email from evidence sources
@@ -265,28 +264,6 @@ export function Sidebar({
                 Account
               </TooltipContent>
             </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  aria-label="Logout"
-                  className={cn(
-                    "relative flex items-center justify-center w-8 h-8 transition-colors",
-                    "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                  )}
-                  onClick={async () => {
-                    const ok = window.confirm('Log out of Margin?');
-                    if (!ok) return;
-                    try { await api.logout(); } catch (_) { }
-                    window.location.href = '/';
-                  }}
-                >
-                  <LogOut className="h-4 w-4" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="right" className="bg-gray-900 text-white text-xs">
-                Logout
-              </TooltipContent>
-            </Tooltip>
           </TooltipProvider>
         </div>
       ) : (
@@ -310,27 +287,6 @@ export function Sidebar({
               )}
             </div>
           </Link>
-          <button
-            className={cn(
-              "w-full flex items-center gap-1.5 text-left hover:text-gray-900 hover:bg-gray-50 px-2 py-1.5",
-              "text-gray-600"
-            )}
-            onClick={() => setShowLogout(prev => !prev)}
-          >
-            <LogOut className="h-3.5 w-3.5" />
-            <span className="text-[11px]">Logout</span>
-          </button>
-          {showLogout && (
-            <div className="mt-0.5 border border-gray-200 bg-gray-50 p-2">
-              <button
-                className="w-full inline-flex items-center justify-center gap-1.5 text-xs text-white bg-gray-900 hover:bg-gray-800 px-2 py-1.5"
-                onClick={async () => { try { await api.logout(); } catch (_) { } window.location.href = '/'; }}
-              >
-                <LogOut className="h-3 w-3" />
-                <span>Log out</span>
-              </button>
-            </div>
-          )}
         </div>
       )}
       {/* Edge toggle handle */}

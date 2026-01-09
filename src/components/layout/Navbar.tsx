@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
-import { ArrowUpDown, ChevronDown, Search, Gift, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock, NotebookPen } from 'lucide-react';
+import { ArrowUpDown, ChevronDown, Search, Gift, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock, NotebookPen, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -376,6 +376,19 @@ export function Navbar({
             >
               <Link2 className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">Connect</span>
+            </button>
+            <div className="h-4 w-px bg-gray-200" />
+            <button
+              onClick={async () => {
+                const ok = window.confirm('Sign out of Margin?');
+                if (!ok) return;
+                try { await api.logout(); } catch (_) { }
+                window.location.href = '/';
+              }}
+              className="flex items-center gap-1.5 h-8 px-3 text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-sm transition-colors"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Sign Out</span>
             </button>
 
 
