@@ -709,7 +709,7 @@ export function Dashboard() {
                     <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
                       <div>
                         <div className="flex items-center gap-2">
-                          <h2 className="text-xs font-semibold text-gray-900">Funds Recovered Back</h2>
+                          <h2 className="text-xs font-semibold text-gray-900">Recovered Funds</h2>
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <button
@@ -751,7 +751,7 @@ export function Dashboard() {
                                   : syncMessage || (needsSync ? 'Syncing...' : '')}
                               </span>
                               {reconciledCount != null && reconciledCount > 0 && !syncTriggered && !needsSync && (
-                                <p className="text-[9px] text-gray-400 mt-0.5 font-medium">Every recovery is traceable and fully auditable.</p>
+                                <p className="text-[9px] text-gray-400 mt-0.5 font-medium">Fully traceable. Fully auditable.</p>
                               )}
                             </div>
                           </div>
@@ -772,8 +772,8 @@ export function Dashboard() {
                   <div className="grid grid-cols-3 gap-4">
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-4 flex flex-col justify-between h-full">
                       <div>
-                        <div className="text-[10px] font-semibold text-gray-500 mb-0.5">Next Disbursement</div>
-                        <p className="text-[9px] text-gray-400 font-medium mb-3">Funds to be deposited</p>
+                        <div className="text-[10px] font-semibold text-gray-500 mb-0.5">Next Payout From Amazon</div>
+                        <p className="text-[9px] text-gray-400 font-medium mb-3">Funds scheduled for deposit</p>
                         <div className="text-xl font-light text-gray-900 tracking-tight">
                           {formatCurrencyWithSelection((nextPaymentAmount ?? 0), recoveredCurrency)}
                         </div>
@@ -789,8 +789,8 @@ export function Dashboard() {
 
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-4 flex flex-col justify-between h-full">
                       <div>
-                        <div className="text-[10px] font-semibold text-gray-500 mb-0.5">Under Review</div>
-                        <p className="text-[9px] text-gray-400 font-medium mb-3">Claims currently being processed with Amazon.</p>
+                        <div className="text-[10px] font-semibold text-gray-500 mb-0.5">In Review</div>
+                        <p className="text-[9px] text-gray-400 font-medium mb-3">Actively processed with Amazon</p>
                         <div className="text-xl font-light text-gray-900 tracking-tight">
                           {formatCurrencyWithSelection((pendingRecoveryAmount ?? 0), recoveredCurrency)}
                         </div>
@@ -804,8 +804,8 @@ export function Dashboard() {
 
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-4 flex flex-col justify-between h-full">
                       <div>
-                        <div className="text-[10px] font-semibold text-gray-500 mb-0.5">Approved</div>
-                        <p className="text-[9px] text-gray-400 font-medium mb-3">Validated and reconciled by Amazon</p>
+                        <div className="text-[10px] font-semibold text-gray-500 mb-0.5">Approved & Paid by Amazon</div>
+                        <p className="text-[9px] text-gray-400 font-medium mb-3">Fully validated and reconciled</p>
                         <div className="flex items-baseline gap-2">
                           <div className="text-xl font-light text-gray-900 tracking-tight">
                             {formatCurrencyWithSelection(computedApproved ?? 0, recoveredCurrency)}
@@ -993,7 +993,7 @@ export function Dashboard() {
                 <div className="lg:col-span-1">
                   <div className="bg-white border border-gray-200 rounded-sm h-full">
                     <div className="px-4 py-3 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
-                      <h3 className="text-xs font-semibold text-gray-900">Margin Logs</h3>
+                      <h3 className="text-xs font-semibold text-gray-900">Margin Logs Panel</h3>
                       {unreadCount > 0 && (
                         <span className="text-[9px] rounded px-1.5 py-0.5 bg-gray-900 text-white">
                           {unreadCount > 50 ? '50+' : unreadCount}
@@ -1004,7 +1004,8 @@ export function Dashboard() {
                       {notifications.length === 0 ? (
                         <div className="p-8 text-center">
                           <Bell className="h-5 w-5 mx-auto mb-2 text-gray-300" />
-                          <p className="text-[10px] text-gray-400">No notifications</p>
+                          <p className="text-[10px] text-gray-600 font-medium">No issues requiring your attention</p>
+                          <p className="text-[9px] text-gray-400 mt-1">You're fully compliant</p>
                         </div>
                       ) : (
                         <div className="divide-y divide-gray-100">
