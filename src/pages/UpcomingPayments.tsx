@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
+import { LayoutDashboard, ShieldCheck, Settings2, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, FileText, LifeBuoy, User, Plug, Box, Gift, NotebookPen } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
@@ -30,14 +31,25 @@ function formatCurrency(amount: number, currency: string = 'USD') {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(amount);
 }
 
-function getFilingStatusBadge(status?: string) {
-  if (!status) return <span className="text-gray-400 text-sm">—</span>;
+function getFilingStatusMarker(status?: string) {
+  if (!status) return <span className="text-gray-300 text-[10px] font-mono tracking-widest">—</span>;
 
-  if (status === 'filed') return <Badge className="bg-blue-50 text-blue-700 border-blue-200">Filed</Badge>;
-  if (status === 'filing') return <Badge className="bg-amber-50 text-amber-700 border-amber-200">Filing...</Badge>;
-  if (status === 'retrying') return <Badge className="bg-purple-50 text-purple-700 border-purple-200">Retrying</Badge>;
-  if (status === 'failed') return <Badge className="bg-red-50 text-red-700 border-red-200">Failed</Badge>;
-  return <Badge className="bg-gray-50 text-gray-700 border-gray-200">Pending</Badge>;
+  const config: Record<string, { dot: string; label: string }> = {
+    filed: { dot: 'bg-blue-500', label: 'FILED' },
+    filing: { dot: 'bg-amber-500', label: 'FILING' },
+    retrying: { dot: 'bg-purple-500', label: 'RETRYING' },
+    failed: { dot: 'bg-red-500', label: 'FAILED' },
+    pending: { dot: 'bg-gray-400', label: 'PENDING' }
+  };
+
+  const { dot, label } = config[status.toLowerCase()] || config.pending;
+
+  return (
+    <div className="flex items-center gap-2">
+      <div className={cn("h-1.5 w-1.5 rounded-full", dot)} />
+      <span className="text-[9px] font-bold text-gray-900 uppercase tracking-widest font-mono">{label}</span>
+    </div>
+  );
 }
 
 export default function UpcomingPayments() {
@@ -58,7 +70,7 @@ export default function UpcomingPayments() {
         const casesRes = await api.getDisputeCases({ limit: 500 });
 
         if (!cancelled) {
-          if (casesRes.ok && casesRes.data?.cases && casesRes.data.cases.length> 0) {
+          if (casesRes.ok && casesRes.data?.cases && casesRes.data.cases.length > 0) {
             const cases = casesRes.data.cases;
             setDisputeCases(cases);
 
@@ -160,7 +172,7 @@ export default function UpcomingPayments() {
     }
 
     // If no claims have dated payouts, use total claims value as projection
-    if (gross === 0 && claims.length> 0) {
+    if (gross === 0 && claims.length > 0) {
       gross = claims.reduce((sum, c) => sum + parseFloat(String(c.guaranteedAmount ?? 0)) || 0, 0);
       count = claims.length;
     }
@@ -233,9 +245,15 @@ export default function UpcomingPayments() {
           <div className="relative container mx-auto px-8 pt-8 pb-10 text-gray-700">
 
             {/* Header */}
-            <div className="mb-8">
-              <h1 className="text-lg font-medium text-gray-900 tracking-tight">Payment Recoveries</h1>
-              <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-[0.15em]">Projected Payouts</p>
+            <div className="mb-10 flex items-end justify-between border-b border-gray-100 pb-8">
+              <div>
+                <h1 className="text-xl font-light text-gray-900 tracking-tight">Payment Recoveries</h1>
+                <p className="text-[10px] text-gray-400 mt-1 uppercase tracking-[0.2em] font-mono">INTERNAL AUDIT // PROJECTED PAYOUTS</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                <span className="text-[9px] font-bold text-gray-900 uppercase tracking-[0.2em]">LIVE ENGINE</span>
+              </div>
             </div>
 
             {/* Payment Recoveries Card */}
@@ -256,59 +274,66 @@ export default function UpcomingPayments() {
                     </button>
                   </div>
                 )}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="border border-gray-200 bg-gray-50 p-4">
-                    <div className="text-[10px] text-gray-500 uppercase tracking-[0.1em]">Next Expected Payout</div>
-                    <div className="text-xl font-light text-gray-900 mt-1">{nextPayout ? formatCurrency(nextPayout.gross, currency) : formatCurrency(0, currency)}</div>
-                    <div className="text-[10px] text-gray-500 mt-0.5">{nextPayout ? nextPayout.label : '—'}</div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-gray-100 italic-divider">
+                  <div className="p-6 bg-gray-50/50">
+                    <div className="text-[9px] text-gray-400 uppercase tracking-[0.2em] font-bold mb-2">Next Expected Payout</div>
+                    <div className="text-2xl font-light text-gray-900 font-mono tracking-tight">{nextPayout ? formatCurrency(nextPayout.gross, currency) : formatCurrency(0, currency)}</div>
+                    <div className="text-[9px] text-gray-500 mt-2 uppercase tracking-widest font-mono">{nextPayout ? nextPayout.label : '—'}</div>
                   </div>
-                  <div className="border border-gray-200 bg-gray-50 p-4">
-                    <div className="text-[10px] text-gray-500 uppercase tracking-[0.1em]">This Month (Projected)</div>
-                    <div className="text-xl font-light text-gray-900 mt-1">{formatCurrency(monthTotals.gross, currency)}</div>
-                    <div className="text-[10px] text-gray-500 mt-0.5">Across {monthTotals.count} claims</div>
+                  <div className="p-6 border-l border-gray-100 bg-gray-50/50">
+                    <div className="text-[9px] text-gray-400 uppercase tracking-[0.2em] font-bold mb-2">This Month (Projected)</div>
+                    <div className="text-2xl font-light text-gray-900 font-mono tracking-tight">{formatCurrency(monthTotals.gross, currency)}</div>
+                    <div className="text-[9px] text-gray-500 mt-2 uppercase tracking-widest font-mono">VOL.{monthTotals.count} CLAIMS</div>
                   </div>
-                  <div className="border border-gray-200 bg-gray-50 p-4">
-                    <div className="text-[10px] text-gray-500 uppercase tracking-[0.1em]">Net To You (Projected)</div>
-                    <div className="text-xl font-light text-gray-900 mt-1">{formatCurrency(monthTotals.net, currency)}</div>
-                    <div className="text-[10px] text-gray-500 mt-0.5">After 20% commission</div>
+                  <div className="p-6 border-l border-gray-100 bg-gray-50/50">
+                    <div className="text-[9px] text-gray-400 uppercase tracking-[0.2em] font-bold mb-2">Net To You (Projected)</div>
+                    <div className="text-2xl font-light text-emerald-600 font-mono tracking-tight">{formatCurrency(monthTotals.net, currency)}</div>
+                    <div className="text-[9px] text-gray-500 mt-2 uppercase tracking-widest font-mono">AFTR 20% COMM.</div>
                   </div>
                 </div>
 
                 {/* Pipeline Summary */}
-                {pipelineStages.totalInPipeline> 0 && (
-                  <div className="mt-6 border border-gray-200 bg-gray-50 p-4">
-                    <div className="text-[10px] text-gray-500 uppercase tracking-[0.1em]">Total Currently Processing</div>
-                    <div className="text-2xl font-light text-gray-900 mt-1">{formatCurrency(pipelineStages.totalInPipeline, currency)}</div>
-                    <div className="text-[10px] text-gray-500 mt-0.5">across {pipelineStages.detected.count + pipelineStages.ready.count + pipelineStages.pending.count + pipelineStages.approved.count} claims</div>
+                {pipelineStages.totalInPipeline > 0 && (
+                  <div className="mt-8 p-6 bg-gray-900 text-white relative overflow-hidden">
+                    <div className="absolute right-[-20px] top-[-20px] opacity-10">
+                      <BarChart3 className="h-32 w-32" />
+                    </div>
+                    <div className="relative z-10">
+                      <div className="text-[9px] text-gray-400 uppercase tracking-[0.2em] font-bold mb-1">Total Pipeline Liquidity</div>
+                      <div className="text-3xl font-light text-white font-mono tracking-tight">{formatCurrency(pipelineStages.totalInPipeline, currency)}</div>
+                      <div className="text-[9px] text-gray-500 mt-2 uppercase tracking-widest font-mono">
+                        AGGREGATE: {pipelineStages.detected.count + pipelineStages.ready.count + pipelineStages.pending.count + pipelineStages.approved.count} ENTITIES IN PROCESS
+                      </div>
+                    </div>
                   </div>
                 )}
 
                 {/* Pipeline Stage Cards */}
-                <div className="mt-6 grid grid-cols-2 md:grid-cols-5 gap-3">
-                  <div className="border border-gray-200 p-3">
-                    <div className="text-[9px] text-gray-500 uppercase tracking-[0.1em]">Detected</div>
-                    <div className="text-sm font-medium text-gray-900 mt-1">{formatCurrency(pipelineStages.detected.amount, currency)}</div>
-                    <div className="text-[10px] text-gray-500 mt-0.5">{pipelineStages.detected.count} claims</div>
+                <div className="mt-8 grid grid-cols-2 md:grid-cols-5 gap-0 border border-gray-100">
+                  <div className="p-4 border-r border-gray-100">
+                    <div className="text-[8px] text-gray-400 uppercase tracking-[0.2em] font-bold mb-1">Detected</div>
+                    <div className="text-[13px] font-bold text-gray-900 font-mono">{formatCurrency(pipelineStages.detected.amount, currency)}</div>
+                    <div className="text-[9px] text-gray-400 mt-1 uppercase font-mono tracking-tighter">{pipelineStages.detected.count} REC</div>
                   </div>
-                  <div className="border border-gray-200 p-3">
-                    <div className="text-[9px] text-gray-500 uppercase tracking-[0.1em]">Ready to File</div>
-                    <div className="text-sm font-medium text-gray-900 mt-1">{formatCurrency(pipelineStages.ready.amount, currency)}</div>
-                    <div className="text-[10px] text-gray-500 mt-0.5">{pipelineStages.ready.count} claims</div>
+                  <div className="p-4 border-r border-gray-100">
+                    <div className="text-[8px] text-gray-400 uppercase tracking-[0.2em] font-bold mb-1">Ready</div>
+                    <div className="text-[13px] font-bold text-gray-900 font-mono">{formatCurrency(pipelineStages.ready.amount, currency)}</div>
+                    <div className="text-[9px] text-gray-400 mt-1 uppercase font-mono tracking-tighter">{pipelineStages.ready.count} REC</div>
                   </div>
-                  <div className="border border-gray-200 p-3">
-                    <div className="text-[9px] text-gray-500 uppercase tracking-[0.1em]">Pending Amazon</div>
-                    <div className="text-sm font-medium text-gray-900 mt-1">{formatCurrency(pipelineStages.pending.amount, currency)}</div>
-                    <div className="text-[10px] text-gray-500 mt-0.5">{pipelineStages.pending.count} claims</div>
+                  <div className="p-4 border-r border-gray-100">
+                    <div className="text-[8px] text-gray-400 uppercase tracking-[0.2em] font-bold mb-1">Pending</div>
+                    <div className="text-[13px] font-bold text-gray-900 font-mono">{formatCurrency(pipelineStages.pending.amount, currency)}</div>
+                    <div className="text-[9px] text-gray-400 mt-1 uppercase font-mono tracking-tighter">{pipelineStages.pending.count} REC</div>
                   </div>
-                  <div className="border border-gray-200 p-3">
-                    <div className="text-[9px] text-gray-500 uppercase tracking-[0.1em]">Approved</div>
-                    <div className="text-sm font-medium text-gray-900 mt-1">{formatCurrency(pipelineStages.approved.amount, currency)}</div>
-                    <div className="text-[10px] text-gray-500 mt-0.5">{pipelineStages.approved.count} claims</div>
+                  <div className="p-4 border-r border-gray-100">
+                    <div className="text-[8px] text-gray-400 uppercase tracking-[0.2em] font-bold mb-1">Approved</div>
+                    <div className="text-[13px] font-bold text-gray-900 font-mono">{formatCurrency(pipelineStages.approved.amount, currency)}</div>
+                    <div className="text-[9px] text-gray-400 mt-1 uppercase font-mono tracking-tighter">{pipelineStages.approved.count} REC</div>
                   </div>
-                  <div className="border border-gray-200 p-3 bg-gray-50">
-                    <div className="text-[9px] text-gray-500 uppercase tracking-[0.1em]">Paid</div>
-                    <div className="text-sm font-medium text-gray-900 mt-1">{formatCurrency(pipelineStages.paid.amount, currency)}</div>
-                    <div className="text-[10px] text-gray-500 mt-0.5">{pipelineStages.paid.count} claims</div>
+                  <div className="p-4 bg-gray-50/50">
+                    <div className="text-[8px] text-gray-400 uppercase tracking-[0.2em] font-bold mb-1">Paid</div>
+                    <div className="text-[13px] font-bold text-emerald-600 font-mono">{formatCurrency(pipelineStages.paid.amount, currency)}</div>
+                    <div className="text-[9px] text-gray-400 mt-1 uppercase font-mono tracking-tighter">{pipelineStages.paid.count} REC</div>
                   </div>
                 </div>
 
@@ -320,7 +345,7 @@ export default function UpcomingPayments() {
                       <span className="w-24 text-gray-500 flex-shrink-0 uppercase tracking-[0.1em] text-[10px]">Detected</span>
                       <span className="text-gray-400">→</span>
                       <span className="text-gray-700">
-                        {pipelineStages.detected.count> 0
+                        {pipelineStages.detected.count > 0
                           ? `${pipelineStages.detected.count} claims (${formatCurrency(pipelineStages.detected.amount, currency)}) awaiting evidence`
                           : 'No claims at this stage'}
                       </span>
@@ -329,7 +354,7 @@ export default function UpcomingPayments() {
                       <span className="w-24 text-gray-500 flex-shrink-0 uppercase tracking-[0.1em] text-[10px]">Ready</span>
                       <span className="text-gray-400">→</span>
                       <span className="text-gray-700">
-                        {pipelineStages.ready.count> 0
+                        {pipelineStages.ready.count > 0
                           ? `${pipelineStages.ready.count} claims (${formatCurrency(pipelineStages.ready.amount, currency)}) ready for submission`
                           : 'No claims at this stage'}
                       </span>
@@ -338,7 +363,7 @@ export default function UpcomingPayments() {
                       <span className="w-24 text-gray-500 flex-shrink-0 uppercase tracking-[0.1em] text-[10px]">Pending</span>
                       <span className="text-gray-400">→</span>
                       <span className="text-gray-700">
-                        {pipelineStages.pending.count> 0
+                        {pipelineStages.pending.count > 0
                           ? `${pipelineStages.pending.count} claims (${formatCurrency(pipelineStages.pending.amount, currency)}) awaiting Amazon`
                           : 'No claims at this stage'}
                       </span>
@@ -347,7 +372,7 @@ export default function UpcomingPayments() {
                       <span className="w-24 text-gray-500 flex-shrink-0 uppercase tracking-[0.1em] text-[10px]">Approved</span>
                       <span className="text-gray-400">→</span>
                       <span className="text-gray-700">
-                        {pipelineStages.approved.count> 0
+                        {pipelineStages.approved.count > 0
                           ? `${pipelineStages.approved.count} claims (${formatCurrency(pipelineStages.approved.amount, currency)}) processing`
                           : 'No claims at this stage'}
                       </span>
@@ -356,7 +381,7 @@ export default function UpcomingPayments() {
                       <span className="w-24 text-gray-500 flex-shrink-0 uppercase tracking-[0.1em] text-[10px]">Paid</span>
                       <span className="text-gray-400">→</span>
                       <span className="text-gray-700">
-                        {pipelineStages.paid.count> 0
+                        {pipelineStages.paid.count > 0
                           ? `${pipelineStages.paid.count} claims (${formatCurrency(pipelineStages.paid.amount, currency)}) recovered`
                           : 'No payments received yet'}
                       </span>
@@ -379,47 +404,54 @@ export default function UpcomingPayments() {
               <div className="p-0">
                 <Table>
                   <TableHeader>
-                    <TableRow className="bg-gray-50">
-                      <TableHead className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] py-3 px-4">Payout Date</TableHead>
-                      <TableHead className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] py-3 px-4">Claims</TableHead>
-                      <TableHead className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] py-3 px-4">Gross</TableHead>
-                      <TableHead className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] py-3 px-4">Commission</TableHead>
-                      <TableHead className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] py-3 px-4">Net</TableHead>
-                      <TableHead className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] py-3 px-4">Status</TableHead>
-                      <TableHead className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] py-3 px-4">Actions</TableHead>
+                    <TableRow className="bg-gray-900 hover:bg-gray-900 border-none">
+                      <TableHead className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em] py-4 px-6">Payout Date</TableHead>
+                      <TableHead className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em] py-4 px-6 text-center">Claims</TableHead>
+                      <TableHead className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em] py-4 px-6">Gross</TableHead>
+                      <TableHead className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em] py-4 px-6">Commission</TableHead>
+                      <TableHead className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em] py-4 px-6">Net</TableHead>
+                      <TableHead className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em] py-4 px-6">Status</TableHead>
+                      <TableHead className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em] py-4 px-6 text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {loading && (
                       <TableRow>
-                        <TableCell colSpan={7} className="text-xs text-gray-600 p-4">Loading…</TableCell>
+                        <TableCell colSpan={7} className="text-[11px] font-mono text-gray-500 p-8 text-center uppercase tracking-widest">Initialising Secure Data Feed...</TableCell>
                       </TableRow>
                     )}
                     {!loading && upcomingGroups.length === 0 && (
                       <TableRow>
-                        <TableCell colSpan={7} className="text-xs text-gray-600 p-4">No upcoming payments yet. Once claims are approved with payout dates, they will appear here.</TableCell>
+                        <TableCell colSpan={7} className="text-[11px] font-mono text-gray-500 p-8 text-center uppercase tracking-widest">Zero (0) Records Detected for Projection</TableCell>
                       </TableRow>
                     )}
                     {!loading && upcomingGroups.map((g) => (
-                      <TableRow key={g.key} className="hover:bg-gray-50 border-b border-gray-200">
-                        <TableCell className="whitespace-nowrap font-medium text-xs text-gray-900 py-2">{g.label}</TableCell>
-                        <TableCell className="text-xs text-gray-700 py-2">{g.count}</TableCell>
-                        <TableCell className="text-xs font-medium text-gray-900 py-2">{formatCurrency(g.gross, currency)}</TableCell>
-                        <TableCell className="text-xs text-gray-700 py-2">{formatCurrency(g.commission, currency)}</TableCell>
-                        <TableCell className="text-xs text-emerald-600 font-medium py-2">{formatCurrency(g.net, currency)}</TableCell>
-                        <TableCell className="py-2">
-                          {g.claims.length> 0 && (
-                            <div className="flex flex-col gap-1">
+                      <TableRow key={g.key} className="hover:bg-gray-50/50 border-b border-gray-100 group relative transition-colors">
+                        <TableCell className="whitespace-nowrap font-bold text-[11px] text-gray-900 py-4 px-6 font-mono tracking-tighter relative">
+                          <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity" />
+                          {g.label.toUpperCase()}
+                        </TableCell>
+                        <TableCell className="text-[11px] text-center text-gray-600 py-4 px-6 font-mono font-bold">{g.count}</TableCell>
+                        <TableCell className="text-[11px] font-bold text-gray-900 py-4 px-6 font-mono">{formatCurrency(g.gross, currency)}</TableCell>
+                        <TableCell className="text-[11px] text-gray-500 py-4 px-6 font-mono">{formatCurrency(g.commission, currency)}</TableCell>
+                        <TableCell className="text-[11px] text-emerald-600 font-bold py-4 px-6 font-mono">{formatCurrency(g.net, currency)}</TableCell>
+                        <TableCell className="py-4 px-6">
+                          {g.claims.length > 0 && (
+                            <div className="flex flex-col gap-2">
                               {g.claims.slice(0, 2).map((claim: RecoveryClaim) => (
-                                <div key={claim.id}>{getFilingStatusBadge(claim.filing_status)}</div>
+                                <div key={claim.id}>{getFilingStatusMarker(claim.filing_status)}</div>
                               ))}
-                              {g.claims.length> 2 && <span className="text-xs text-gray-500">+{g.claims.length - 2} more</span>}
+                              {g.claims.length > 2 && (
+                                <span className="text-[9px] text-gray-400 font-mono uppercase tracking-widest ml-3.5">
+                                  + {g.claims.length - 2} ADDTL RECORDS
+                                </span>
+                              )}
                             </div>
                           )}
                         </TableCell>
-                        <TableCell>
-                          {g.claims.length> 0 && g.claims[0].case_id && (
-                            <Button asChild variant="outline" size="sm">
+                        <TableCell className="py-4 px-6 text-right">
+                          {g.claims.length > 0 && g.claims[0].case_id && (
+                            <Button asChild variant="ghost" className="h-8 rounded-none border border-gray-200 text-[9px] font-bold uppercase tracking-[0.2em] hover:bg-gray-900 hover:text-white transition-all">
                               <Link to={`/recoveries?tab=cases`}>View Cases</Link>
                             </Button>
                           )}
