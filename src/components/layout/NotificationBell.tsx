@@ -23,7 +23,7 @@ interface NotificationBellProps {
 
 // Helper to render bold text from "**text**" markdown
 const renderFormattedMessage = (message: string): React.ReactNode => {
-  if (!message) return '';
+  if (!message || typeof message !== 'string') return '';
   const parts = message.split(/(\*\*.*?\*\*)/g);
   return parts.map((part, index) => {
     if (part.startsWith('**') && part.endsWith('**')) {
@@ -31,6 +31,12 @@ const renderFormattedMessage = (message: string): React.ReactNode => {
     }
     return <span key={index}>{part}</span>;
   });
+};
+
+// Helper to strip emojis from text
+const stripEmojis = (text: any) => {
+  if (!text || typeof text !== 'string') return '';
+  return text.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{231A}-\u{231B}\u{23E9}-\u{23F3}\u{23F8}-\u{23FA}\u{25AA}-\u{25AB}\u{25B6}\u{25C0}\u{25FB}-\u{25FE}\u{2614}-\u{2615}\u{2648}-\u{2653}\u{267F}\u{2693}\u{26A1}\u{26AA}-\u{26AB}\u{26BD}-\u{26BE}\u{26C4}-\u{26C5}\u{26CE}\u{26D4}\u{26EA}\u{26F2}-\u{26F3}\u{26F5}\u{26FA}\u{26FD}\u{2702}\u{2705}\u{2708}-\u{270D}\u{270F}]/gu, '').trim();
 };
 
 export function NotificationBell({
@@ -68,13 +74,26 @@ export function NotificationBell({
     return '/notifications';
   };
 
-  const displayNotifications = notifications.slice(0, 10).map(n => ({
-    id: n.id,
-    message: n.message,
-    timestamp: formatDistanceToNow(new Date(n.created_at), { addSuffix: true }),
-    href: getHrefForType(n.type),
-    read: n.status === 'read'
-  }));
+  const displayNotifications = notifications.slice(0, 10).map(n => {
+    let timeAgo = 'Just now';
+    try {
+      const date = new Date(n.created_at);
+      if (!isNaN(date.getTime())) {
+        timeAgo = formatDistanceToNow(date, { addSuffix: true });
+      }
+    } catch (e) {
+      console.error('Invalid date for notification:', n.created_at);
+    }
+
+    return {
+      id: n.id,
+      message: n.message,
+      timestamp: timeAgo,
+      href: getHrefForType(n.type),
+      read: n.status === 'read',
+      type: n.type
+    };
+  });
 
   const IconComponent = iconOverride ?? Bell;
   const isSidebarStyle = forceCountStyle === 'sidebar';
@@ -103,7 +122,7 @@ export function NotificationBell({
     className
   ].filter(Boolean).join(' ');
 
-  const badge = unreadCount> 0 && (
+  const badge = unreadCount > 0 && (
     <>
       <div
         className={
@@ -118,7 +137,7 @@ export function NotificationBell({
             ? 'top-2 right-3 w-4 h-4 bg-emerald-500 text-white'
             : '-top-1 -right-1 w-4 h-4 bg-emerald-500 text-white')
         }>
-        {unreadCount> 9 ? '9+' : unreadCount}
+        {unreadCount > 9 ? '9+' : unreadCount}
       </div>
     </>
   );
@@ -133,16 +152,17 @@ export function NotificationBell({
           onClick={() => setIsOpen(true)}>
           <IconComponent className={cn(
             'h-4 w-4',
-            iconClassName || (isSidebarStyle ? '' : isTransparentNavbar ? 'text-gray-200' : '')
+            iconClassName || (isSidebarStyle ? '' : isTransparentNavbar ? 'text-gray-200' : 'text-gray-500')
           )} />
-          {shouldShowLabel && <span className="text-sm font-medium">{label}</span>}
-          {isSidebarStyle && shouldShowLabel && unreadCount> 0 && (
-            <Badge variant="outline" className="ml-auto text-[10px] border-emerald-500 text-white bg-emerald-500">
-              {unreadCount> 9 ? '9+' : unreadCount}
-            </Badge>
+          {shouldShowLabel && <span className="text-[10px] font-bold uppercase tracking-wider">{label}</span>}
+          {unreadCount > 0 && (
+            <span className={cn(
+              "absolute flex items-center justify-center bg-gray-900 text-white text-[8px] font-bold leading-none p-0.5 min-w-[12px] h-[12px]",
+              isSidebarStyle ? "top-2 right-3" : "-top-0.5 -right-0.5"
+            )}>
+              {unreadCount > 9 ? '9+' : unreadCount}
+            </span>
           )}
-          {!isSidebarStyle && badge}
-          {isSidebarStyle && !shouldShowLabel && badge}
         </Button>
       </HoverCardTrigger>
 
@@ -151,24 +171,24 @@ export function NotificationBell({
         align="end"
         sideOffset={8}
         className="w-[340px] max-h-[420px] bg-white border border-gray-200 shadow-lg z-50 rounded-sm flex flex-col overflow-hidden p-0">
-        {/* Header - Fixed, Clean, minimal */}
-        <div className="px-4 py-3 border-b border-gray-100 flex-shrink-0">
+        {/* Header - Fixed, Institutional Style */}
+        <div className="px-5 py-4 border-b border-gray-100 flex-shrink-0 bg-gray-50/50">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-gray-900">
+            <h3 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.2em]">
               {label}
             </h3>
             <div className="flex items-center gap-3">
-              {unreadCount> 0 && (
+              {unreadCount > 0 && (
                 <button
                   onClick={handleMarkAllRead}
-                  className="text-[11px] font-medium text-blue-600 hover:text-blue-700 transition-colors">
-                  Mark all read
+                  className="text-[9px] font-bold text-gray-400 hover:text-gray-900 uppercase tracking-widest transition-colors">
+                  Clear All
                 </button>
               )}
-              {unreadCount> 0 && (
-                <span className="text-[10px] font-medium text-gray-500">
-                  {unreadCount} new
-                </span>
+              {unreadCount > 0 && (
+                <div className="px-1.5 py-0.5 bg-gray-900 text-white text-[8px] font-bold tracking-tighter">
+                  {unreadCount} NEW
+                </div>
               )}
             </div>
           </div>
@@ -185,30 +205,39 @@ export function NotificationBell({
               const content = (
                 <div
                   className={cn(
-                    'px-4 py-3 transition-colors cursor-pointer border-l-2',
-                    !notification.read
-                      ? 'bg-gray-50 border-l-gray-400'
-                      : 'bg-white border-l-transparent hover:bg-gray-50'
+                    'group relative px-5 py-4 transition-all duration-200 cursor-pointer border-r-2 border-transparent hover:bg-gray-50/50',
+                    !notification.read ? 'bg-gray-50/30' : 'bg-white'
                   )}
                   onClick={() => handleNotificationClick(notification.id)}>
-                  <div className="flex items-start justify-between gap-3">
-                    {/* Content */}
-                    <div className="flex-1 min-w-0">
+
+                  {/* Hover Accent Bar */}
+                  <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity" />
+
+                  <div className="flex items-start justify-between gap-3 mb-1">
+                    <div className="flex items-center gap-2 overflow-hidden">
+                      <div className={cn(
+                        "h-1.5 w-1.5 rounded-full shrink-0",
+                        !notification.read ? "bg-emerald-500" : "bg-gray-200"
+                      )} />
                       <p className={cn(
-                        'text-[13px] leading-relaxed',
-                        !notification.read ? 'text-gray-800' : 'text-gray-600'
+                        'text-[10px] uppercase tracking-widest font-bold truncate',
+                        !notification.read ? 'text-gray-900' : 'text-gray-400 group-hover:text-gray-900'
                       )}>
-                        {renderFormattedMessage(notification.message)}
-                      </p>
-                      <p className="text-[11px] text-gray-400 mt-1">
-                        {notification.timestamp}
+                        {notification.read ? 'System Update' : 'Action Required'}
                       </p>
                     </div>
+                    <span className="text-[9px] text-gray-400 font-medium uppercase tracking-widest shrink-0 tabular-nums">
+                      {notification.timestamp.replace('about ', '').replace(' ago', '')}
+                    </span>
+                  </div>
 
-                    {/* Unread indicator - green dot */}
-                    {!notification.read && (
-                      <div className="w-2 h-2 bg-emerald-500 rounded-full flex-shrink-0 mt-1.5" />
-                    )}
+                  <div className="ml-3.5">
+                    <p className={cn(
+                      'text-[11px] leading-relaxed font-mono tracking-tight',
+                      !notification.read ? 'text-gray-700' : 'text-gray-400 group-hover:text-gray-700'
+                    )}>
+                      {stripEmojis(notification.message)}
+                    </p>
                   </div>
                 </div>
               );
@@ -231,11 +260,11 @@ export function NotificationBell({
           )}
         </div>
 
-        {/* Footer - Fixed, Minimal */}
-        <div className="px-4 py-2.5 border-t border-gray-100 flex-shrink-0">
+        {/* Footer - Institutional Style */}
+        <div className="px-4 py-3 border-t border-gray-100 flex-shrink-0 bg-gray-50/20">
           <Link to="/notifications" onClick={() => setIsOpen(false)} reloadDocument>
-            <button className="w-full text-center text-[11px] font-medium text-gray-500 hover:text-gray-700 transition-colors">
-              View all
+            <button className="w-full text-center text-[9px] font-bold text-gray-400 hover:text-gray-900 transition-colors uppercase tracking-[0.2em]">
+              Archive // All Records
             </button>
           </Link>
         </div>
