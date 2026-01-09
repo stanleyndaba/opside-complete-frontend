@@ -121,10 +121,10 @@ export function Dashboard() {
   // Generate synthetic notifications if real ones are missing but we have recovery data
   // This ensures the "System Activity" panel matches the "Recovered Funds" reality
   const displayNotifications = useMemo(() => {
-    if (notifications.length> 0) return notifications;
+    if (notifications.length > 0) return notifications;
 
     // Fallback: Generate synthetic notifications if we have recovery data but no logs
-    if (recoveredTotal && recoveredTotal> 0) {
+    if (recoveredTotal && recoveredTotal > 0) {
       return [{
         id: 'synthetic-recovery-root',
         type: 'funds_deposited',
@@ -145,7 +145,7 @@ export function Dashboard() {
     // Pattern match "Detected <number> High-Probability Claims" (without existing amount)
     // Check if it ends with "Claims" or "Claim" to ensure we don't append twice if backend already handled it
     if ((cleanTitle.match(/Detected \d+ High-Probability Claims$/) || cleanTitle === 'Detected High-Probability Claim') &&
-      pendingRecoveryAmount && pendingRecoveryAmount> 0) {
+      pendingRecoveryAmount && pendingRecoveryAmount > 0) {
       return `${cleanTitle} - ${formatCurrencyWithSelection(pendingRecoveryAmount, recoveredCurrency)}`;
     }
     return cleanTitle;
@@ -155,7 +155,7 @@ export function Dashboard() {
     try {
       const raw = typeof window !== 'undefined' ? localStorage.getItem('clario.quickActions') : null;
       const parsed = raw ? JSON.parse(raw) : null;
-      return Array.isArray(parsed) && parsed.length> 0 ? parsed : ['ingest_now', 'invite_teammate'];
+      return Array.isArray(parsed) && parsed.length > 0 ? parsed : ['ingest_now', 'invite_teammate'];
     } catch { return ['ingest_now', 'invite_teammate']; }
   });
   const QUICK_ACTIONS: Array<{ id: string; label: string; subtitle: string }> = [
@@ -268,7 +268,7 @@ export function Dashboard() {
     setPendingRecoveryAmount(totalPending);
 
     const datedPayments = normalizedPayments.filter(entry => entry.date);
-    if (datedPayments.length> 0) {
+    if (datedPayments.length > 0) {
       const sortedByDate = [...datedPayments].sort((a, b) => new Date(a.date!).getTime() - new Date(b.date!).getTime());
       const nextDate = sortedByDate[0]?.date as string;
       const amountForNextDate = normalizedPayments
@@ -487,7 +487,7 @@ export function Dashboard() {
           console.error('Error polling sync status:', error);
 
           // Stop polling after max attempts or if there's an error
-          if (pollCount>= maxPolls) {
+          if (pollCount >= maxPolls) {
             if (syncPollingRef.current) {
               clearInterval(syncPollingRef.current);
               syncPollingRef.current = null;
@@ -583,7 +583,7 @@ export function Dashboard() {
           // Find next expected payout date from approved cases
           const datedApproved = approvedCases.filter((c: any) => c.expected_payout_date || c.expectedPayoutDate);
           let nextDate: string | null = null;
-          if (datedApproved.length> 0) {
+          if (datedApproved.length > 0) {
             const sorted = [...datedApproved].sort((a: any, b: any) => {
               const dateA = new Date(a.expected_payout_date || a.expectedPayoutDate);
               const dateB = new Date(b.expected_payout_date || b.expectedPayoutDate);
@@ -641,7 +641,7 @@ export function Dashboard() {
       await fetchRecoveriesOnce();
       await fetchMetrics();
       await fetchDisputeMetrics();
-      if (polls>= 12) { // ~1 minute at 5s cadence
+      if (polls >= 12) { // ~1 minute at 5s cadence
         if (pollTimer) window.clearInterval(pollTimer);
       }
     }, 5000) as unknown as number;
@@ -758,7 +758,7 @@ export function Dashboard() {
                         </div>
                         <p className="text-[9px] text-gray-400 mt-1">Verified reimbursements secured since activation</p>
                       </div>
-                      {submittedClaimsCount != null && submittedClaimsCount> 0 && (
+                      {submittedClaimsCount != null && submittedClaimsCount > 0 && (
                         <span className="text-[10px] text-gray-500">{submittedClaimsCount} claims submitted</span>
                       )}
                     </div>
@@ -767,7 +767,7 @@ export function Dashboard() {
                         {formatCurrencyWithSelection(recoveredTotal ?? 0, recoveredCurrency)}
                       </div>
                       {/* Momentum indicator */}
-                      {reconciledCount != null && reconciledCount> 0 && (
+                      {reconciledCount != null && reconciledCount > 0 && (
                         <div className="flex items-center gap-2 mt-2">
                           <span className="text-emerald-600 text-[10px] font-medium flex items-center gap-1">
                             <svg className="w-3 h-3" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -778,7 +778,7 @@ export function Dashboard() {
                         </div>
                       )}
                       {/* Estimated margin protected (mock) */}
-                      {recoveredTotal != null && recoveredTotal> 0 && (
+                      {recoveredTotal != null && recoveredTotal > 0 && (
                         <p className="text-[9px] text-gray-400 mt-2">
                           Estimated margin protected: <span className="font-medium text-gray-500">2.3%</span> of your last 12 months' FBA revenue
                         </p>
@@ -794,11 +794,11 @@ export function Dashboard() {
                             {syncTriggered && <RefreshCw className="h-3 w-3 animate-spin text-gray-400 mt-0.5" />}
                             <div className="flex flex-col">
                               <span>
-                                {reconciledCount != null && reconciledCount> 0 && !syncTriggered && !needsSync
+                                {reconciledCount != null && reconciledCount > 0 && !syncTriggered && !needsSync
                                   ? `${reconciledCount} recoveries verified against Amazon financial records`
                                   : syncMessage || (needsSync ? 'Syncing...' : '')}
                               </span>
-                              {reconciledCount != null && reconciledCount> 0 && !syncTriggered && !needsSync && (
+                              {reconciledCount != null && reconciledCount > 0 && !syncTriggered && !needsSync && (
                                 <p className="text-[9px] text-gray-400 mt-0.5 font-medium">Recovered with verified proof. Fully traceable. Fully auditable.</p>
                               )}
                             </div>
@@ -862,8 +862,8 @@ export function Dashboard() {
                           </div>
                         </div>
                       </div>
-                      <div className="mt-3 pt-3 border-t border-gray-200">
-                        <div className="text-[10px] text-gray-500 font-medium uppercase tracking-wider">
+                      <div className="mt-3">
+                        <div className="text-[10px] text-gray-500 mt-1 border-t border-gray-100 pt-1">
                           {(() => {
                             const now = new Date();
                             const quarter = Math.floor(now.getMonth() / 3) + 1;
@@ -876,7 +876,7 @@ export function Dashboard() {
                   </div>
 
                   {/* Detection Summary - Minimal */}
-                  {detectionStats && detectionStats.totalDetections> 0 && (
+                  {detectionStats && detectionStats.totalDetections > 0 && (
                     <div className="bg-white border border-gray-200 rounded-sm">
                       <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
                         <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Detected Claims</h2>
@@ -1073,9 +1073,9 @@ export function Dashboard() {
                   <div className="bg-white border border-gray-200 rounded-sm h-full">
                     <div className="px-4 py-3 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
                       <h3 className="text-xs font-semibold text-gray-900">System Activity</h3>
-                      {unreadCount> 0 && (
+                      {unreadCount > 0 && (
                         <span className="text-[9px] rounded px-1.5 py-0.5 bg-gray-900 text-white">
-                          {unreadCount> 50 ? '50+' : unreadCount}
+                          {unreadCount > 50 ? '50+' : unreadCount}
                         </span>
                       )}
                     </div>
