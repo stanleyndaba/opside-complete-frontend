@@ -156,13 +156,16 @@ export function Sidebar({
                 to={item.href}
                 onMouseEnter={handlePrefetch}
                 className={cn(
-                  "relative flex items-center justify-center w-8 h-8 transition-colors duration-200",
+                  "relative flex items-center justify-center w-8 h-8 transition-colors duration-200 rounded-none",
                   isActive
                     ? "bg-gray-100 text-gray-900"
-                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                    : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
                 )}
                 style={{ willChange: 'background-color' }}>
-                <item.icon className="h-4 w-4" strokeWidth={1.5} />
+                {isActive && (
+                  <span className="absolute left-0 top-0 bottom-0 w-[2px] bg-gray-900" />
+                )}
+                <item.icon className="h-4 w-4" strokeWidth={isActive ? 2 : 1.5} />
               </Link>
             </TooltipTrigger>
             <TooltipContent side="right" className="bg-gray-900 text-white text-xs">
@@ -172,144 +175,145 @@ export function Sidebar({
         </TooltipProvider>
       );
     }
-    return (
-      <Link
-        to={item.href}
-        onMouseEnter={handlePrefetch}
-        className={cn(
-          "relative flex items-center gap-2.5 w-full px-3 py-2 transition-colors duration-200",
-          isActive
-            ? "bg-gray-100 text-gray-900"
-            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-        )}
-        style={{ willChange: 'background-color' }}>
-        {isActive && (
-          <span className="absolute left-0 h-4 w-[2px] bg-gray-900" />
-        )}
-        <item.icon strokeWidth={1.5} className="h-4 w-4 shrink-0" />
-        <span className="text-[11px] font-medium">{item.title}</span>
-        {item.title === 'Claims' && claimCount !== null && !isCollapsed && (
-          <span className="ml-auto text-[10px] text-gray-600 font-medium tabular-nums">
-            {claimCount}
+    <Link
+      to={item.href}
+      onMouseEnter={handlePrefetch}
+      className={cn(
+        "relative flex items-center gap-3 w-full px-4 py-2.5 transition-all duration-200 group rounded-none",
+        isActive
+          ? "bg-gray-50 text-gray-900"
+          : "text-gray-500 hover:bg-gray-50/50 hover:text-gray-900"
+      )}
+      style={{ willChange: 'background-color' }}>
+      {isActive && (
+        <span className="absolute left-0 top-0 bottom-0 w-[2px] bg-gray-900" />
+      )}
+      {!isActive && (
+        <span className="absolute left-0 top-0 bottom-0 w-[2px] bg-gray-900 opacity-0 group-hover:opacity-20 transition-opacity" />
+      )}
+      <item.icon strokeWidth={isActive ? 2 : 1.5} className={cn("h-4 w-4 shrink-0 transition-colors", isActive ? "text-gray-900" : "text-gray-400 group-hover:text-gray-900")} />
+      <span className={cn(
+        "text-[10px] uppercase tracking-[0.15em] transition-colors",
+        isActive ? "font-bold" : "font-medium"
+      )}>{item.title}</span>
+      {item.title === 'Claims' && claimCount !== null && !isCollapsed && (
+        <span className="ml-auto text-[9px] text-gray-500 font-mono font-bold tabular-nums bg-gray-100 px-1.5 py-0.5 border border-gray-200">
+          {claimCount}
+        </span>
+      )}
+    </Link>
+    );
+});
+return (
+  <aside
+    className={cn(
+      "fixed left-0 top-0 transition-all duration-300 ease-in-out flex flex-col h-screen z-40 gpu-accelerated",
+      isCollapsed ? "w-16" : "w-60",
+      "text-gray-700 border-r border-gray-100",
+      "bg-white",
+      className
+    )}
+    style={{ willChange: 'width' }}>
+    {/* Branding + Collapse */}
+    <div
+      className={cn(
+        "border-b border-gray-100 flex flex-col",
+        isCollapsed ? "py-6 items-center justify-center" : "px-6 py-5 items-start justify-center"
+      )}>
+      <div className="flex items-center gap-3">
+        <img
+          src="/logoimagetwo.png"
+          alt="Margin"
+          className={cn(isCollapsed ? "h-3.5" : "h-4", "w-auto object-contain")}
+        />
+        {!isCollapsed && (
+          <span className="text-[12px] font-bold text-gray-900 uppercase tracking-[0.25em]">
+            Margin
           </span>
         )}
-      </Link>
-    );
-  });
-  return (
-    <aside
-      className={cn(
-        "fixed left-0 top-0 transition-all duration-300 ease-in-out flex flex-col h-screen z-40 gpu-accelerated",
-        isCollapsed ? "w-16" : "w-56",
-        "text-gray-700 border-r border-gray-200",
-        "bg-white",
-        className
+      </div>
+      {!isCollapsed && (
+        <div className="flex items-center gap-1.5 mt-1.5">
+          <div className="h-1 w-1 rounded-full bg-emerald-500" />
+          <span className="text-[8px] text-gray-400 font-mono uppercase tracking-[0.2em]">Live // Secured</span>
+        </div>
       )}
-      style={{ willChange: 'width' }}>
-      {/* Branding + Collapse */}
+    </div>
+
+    <ScrollArea className="flex-1">
       <div
         className={cn(
-          "border-b border-gray-200 flex flex-col",
-          isCollapsed ? "p-2 items-center justify-center" : "px-4 py-3 items-start justify-center"
+          "h-full flex",
+          isCollapsed ? "px-2" : "px-3"
         )}>
-        <div className="flex items-center gap-2">
-          <img
-            src="/logoimagetwo.png"
-            alt="Margin"
-            className={cn(isCollapsed ? "h-3" : "h-4", "w-auto object-contain")}
-          />
-          {!isCollapsed && (
-            <span className="font-montserrat text-gray-900 text-sm tracking-tight" style={{ fontWeight: 600 }}>
-              Margin
+        <nav className={cn("w-full flex flex-col items-center pt-6 pb-4 space-y-1", isCollapsed ? "space-y-0.5" : "space-y-3")}>
+          <div className={cn("w-full flex flex-col", isCollapsed ? "items-center space-y-0.5" : "items-start space-y-0.5")}>
+            {primaryItems.map((item) => (
+              <NavItemComponent key={item.title} item={item} />
+            ))}
+          </div>
+          {!isCollapsed && <div className="h-px bg-gray-200 w-full" />}
+          <div className={cn("w-full flex flex-col", isCollapsed ? "items-center space-y-0.5" : "items-start space-y-0.5")}>
+            {secondaryItems.map((item) => (
+              <NavItemComponent key={item.title} item={item} />
+            ))}
+          </div>
+        </nav>
+      </div>
+    </ScrollArea>
+
+    {/* Profile + Status + Logout */}
+    {isCollapsed ? (
+      <div className="mt-auto border-t border-gray-100 py-4 flex flex-col items-center justify-center">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link
+                to="/settings"
+                aria-label="Account"
+                className={cn(
+                  "relative flex items-center justify-center w-8 h-8 transition-colors rounded-none",
+                  "text-gray-400 hover:bg-gray-50 hover:text-gray-900"
+                )}>
+                <User className="h-4 w-4" strokeWidth={1.5} />
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent side="right" className="bg-gray-900 text-white text-[10px] uppercase tracking-widest rounded-none">
+              Account
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
+    ) : (
+      <div className="mt-auto border-t border-gray-100 py-2">
+        <Link
+          to="/settings"
+          className={cn(
+            "w-full flex flex-col text-left hover:bg-gray-50 px-6 py-4 transition-all group",
+            "text-gray-500"
+          )}>
+          <div className="flex items-center gap-2.5">
+            <User className="h-3.5 w-3.5 text-gray-400 group-hover:text-gray-900" strokeWidth={1.5} />
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] group-hover:text-gray-900">Account</span>
+          </div>
+          {connectedEmail && (
+            <span className="text-[9px] text-gray-400 font-mono mt-1 blur-[0px] group-hover:text-gray-600 truncate max-w-full" title={connectedEmail}>
+              ID: {connectedEmail.toUpperCase()}
             </span>
           )}
-        </div>
-        {!isCollapsed && (
-          <div className="select-none flex flex-col mt-1 ml-0">
-            <div className="flex items-center gap-1">
-              <span className="w-1 h-1 rounded-full bg-gray-400" />
-              <span className="text-[9px] text-gray-500 tracking-[0.1em]">Secured</span>
-            </div>
-          </div>
-        )}
+        </Link>
       </div>
-
-      <ScrollArea className="flex-1">
-        <div
-          className={cn(
-            "h-full flex",
-            isCollapsed ? "px-2" : "px-3"
-          )}>
-          <nav className={cn("w-full flex flex-col items-center pt-6 pb-4 space-y-1", isCollapsed ? "space-y-0.5" : "space-y-3")}>
-            <div className={cn("w-full flex flex-col", isCollapsed ? "items-center space-y-0.5" : "items-start space-y-0.5")}>
-              {primaryItems.map((item) => (
-                <NavItemComponent key={item.title} item={item} />
-              ))}
-            </div>
-            {!isCollapsed && <div className="h-px bg-gray-200 w-full" />}
-            <div className={cn("w-full flex flex-col", isCollapsed ? "items-center space-y-0.5" : "items-start space-y-0.5")}>
-              {secondaryItems.map((item) => (
-                <NavItemComponent key={item.title} item={item} />
-              ))}
-            </div>
-          </nav>
-        </div>
-      </ScrollArea>
-
-      {/* Profile + Status + Logout */}
-      {isCollapsed ? (
-        <div className="mt-auto border-t border-gray-200 p-2 flex flex-col items-center justify-center gap-1">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  to="/settings"
-                  aria-label="Account"
-                  className={cn(
-                    "relative flex items-center justify-center w-8 h-8 transition-colors",
-                    "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                  )}>
-                  <User className="h-4 w-4" />
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right" className="bg-gray-900 text-white text-xs">
-                Account
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
-      ) : (
-        <div className="mt-auto border-t border-gray-200 px-3 py-3 space-y-1">
-          <Link
-            to="/settings"
-            className={cn(
-              "w-full flex flex-col text-left hover:text-gray-900 hover:bg-gray-50 px-2 py-1.5 transition-colors",
-              "text-gray-600"
-            )}>
-            <div className="flex items-center gap-1.5">
-              <User className="h-3.5 w-3.5" />
-              <span className="text-xs">Account</span>
-            </div>
-            <div className="select-none flex flex-col mt-0.5">
-              {connectedEmail && (
-                <span className="text-[9px] text-gray-500 truncate max-w-[130px] ml-5" title={connectedEmail}>
-                  {connectedEmail}
-                </span>
-              )}
-            </div>
-          </Link>
-        </div>
-      )}
-      {/* Edge toggle handle */}
-      <button
-        aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-        title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-        onClick={onToggle}
-        className={cn(
-          'absolute top-14 -right-2.5 z-50 h-6 w-6 rounded-full border border-gray-300 bg-white backdrop-blur-sm flex items-center justify-center text-[#36454F] hover:bg-gray-200 shadow-sm',
-        )}>
-        {isCollapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
-      </button>
-    </aside>
-  );
+    )}
+    {/* Edge toggle handle */}
+    <button
+      aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+      title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+      onClick={onToggle}
+      className={cn(
+        'absolute top-14 -right-2.5 z-50 h-6 w-6 rounded-full border border-gray-300 bg-white backdrop-blur-sm flex items-center justify-center text-[#36454F] hover:bg-gray-200 shadow-sm',
+      )}>
+      {isCollapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
+    </button>
+  </aside>
+);
 }
