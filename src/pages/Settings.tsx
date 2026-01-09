@@ -1092,7 +1092,7 @@ const Settings = () => {
                 </DialogFooter>
               </DialogContent>
             </Dialog>
-          </div >
+          </div>
         );
 
       default:

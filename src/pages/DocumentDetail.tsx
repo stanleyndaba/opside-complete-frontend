@@ -588,7 +588,7 @@ export default function DocumentDetail() {
             </div>
           </CardContent>
         </Card>
-      </div >
-    </PageLayout >
+      </div>
+    </PageLayout>
   );
 }

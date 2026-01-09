@@ -3621,6 +3621,6 @@ export default function Recoveries() {
           </div>
         </div>
       </div>
-    </PageLayout >
+    </PageLayout>
   );
 }

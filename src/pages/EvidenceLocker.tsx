@@ -1447,5 +1447,5 @@ export default function EvidenceLocker() {
         </div>
       </div>
     </div>
-  </PageLayout >;
+  </PageLayout>;
 }

@@ -466,7 +466,7 @@ const Index = () => {
               <span className="block h-[1px] w-5 bg-gray-900 rounded-full" />
               <span className="block h-[1px] w-4 bg-gray-900 rounded-full" />
             </button>
-          </div >
+          </div>
           {mobileMenuOpen && (
             <div className="mt-4 md:hidden relative z-50">
               <div className="flex flex-col gap-2 rounded-[20px] border border-white/40 bg-white/80 supports-[backdrop-filter]:bg-white/70 backdrop-blur-2xl p-4 shadow-2xl">
@@ -542,8 +542,8 @@ const Index = () => {
               </div>
             </div>
           )}
-        </div >
-      </header >
+        </div>
+      </header>
       <div className="relative z-10" style={{ background: 'white' }}>
         <main className="flex-1 relative z-10" style={{ background: 'white' }}>
           <section className="relative container mx-auto px-6 pt-24 md:pt-32 lg:pt-36 pb-12 lg:pb-16 overflow-hidden">
@@ -824,7 +824,7 @@ const Index = () => {
       </div>
       */}
       <CookieConsent />
-    </div >
+    </div>
   );
 };
 

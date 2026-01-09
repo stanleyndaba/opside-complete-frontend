@@ -1973,6 +1973,6 @@ export default function Sync() {
           </div>
         </div>
       </div>
-    </PageLayout >
+    </PageLayout>
   );
 }

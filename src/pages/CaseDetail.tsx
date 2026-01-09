@@ -1574,6 +1574,6 @@ export default function CaseDetail() {
           </div>
         </div>
       </div>
-    </PageLayout >
+    </PageLayout>
   );
 }
