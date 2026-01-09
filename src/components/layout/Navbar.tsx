@@ -319,17 +319,19 @@ export function Navbar({
 
                   {/* Hover tooltip showing recent notes */}
                   {isNoteHovered && notes.length > 0 && (
-                    <div className="absolute top-full right-1/2 translate-x-1/2 mt-2 w-72 bg-white border border-gray-200 rounded-sm shadow-lg z-50 overflow-hidden">
-                      <div className="px-3 py-2 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
-                        <span className="text-[9px] font-medium text-gray-500 uppercase tracking-[0.15em]">Recent Notes</span>
-                        <span className="text-[9px] text-gray-400">{notes.length} total</span>
+                    <div className="absolute top-full right-1/2 translate-x-1/2 mt-2 w-72 bg-white border border-gray-200 rounded-none shadow-xl z-50 overflow-hidden">
+                      <div className="px-4 py-3 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
+                        <span className="text-[9px] font-bold text-gray-900 uppercase tracking-[0.2em]">External Records // Notes</span>
+                        <span className="text-[9px] text-gray-400 font-mono">{notes.length} REC</span>
                       </div>
-                      <div className="max-h-64 overflow-y-auto">
+                      <div className="max-h-64 overflow-y-auto divide-y divide-gray-50">
                         {notes.slice(0, 5).map((note, index) => (
-                          <div key={note.id} className={`p-3 hover:bg-gray-50 transition-colors ${index !== Math.min(notes.length, 5) - 1 ? 'border-b border-gray-100' : ''}`}>
-                            <p className="text-xs text-gray-700 line-clamp-3">{note.text}</p>
-                            <p className="text-[9px] text-gray-400 mt-1.5 flex items-center justify-between">
-                              <span>{new Date(note.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                          <div key={note.id} className="group relative p-4 hover:bg-gray-50/50 transition-colors">
+                            <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <p className="text-[11px] text-gray-700 font-mono tracking-tight line-clamp-3 leading-relaxed">{note.text}</p>
+                            <p className="text-[9px] text-gray-400 mt-2 font-mono uppercase tracking-widest flex items-center justify-between">
+                              <span>TS.{new Date(note.createdAt).getTime().toString().slice(-8)}</span>
+                              <span>{new Date(note.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                             </p>
                           </div>
                         ))}
@@ -513,26 +515,26 @@ export function Navbar({
         </DialogContent>
       </Dialog>
 
-      {/* Notes Modal */}
+      {/* Notes Modal - Institutional Style */}
       <Dialog open={showNotesModal} onOpenChange={setShowNotesModal}>
-        <DialogContent className="max-w-md bg-white border border-gray-200 shadow-lg rounded-sm p-0 overflow-hidden">
-          <div className="px-5 py-4 border-b border-gray-100">
-            <h3 className="text-[14px] font-semibold text-gray-900 tracking-tight">
-              Quick Notes
+        <DialogContent className="max-w-md bg-white border border-gray-200 shadow-2xl rounded-none p-0 overflow-hidden">
+          <div className="px-6 py-5 border-b border-gray-900 bg-gray-900">
+            <h3 className="text-xs font-bold text-white uppercase tracking-[0.2em]">
+              Note Ingestion Engine
             </h3>
-            <p className="text-[12px] text-gray-500 mt-1">
-              Capture important details and reminders
+            <p className="text-[9px] text-gray-400 mt-1 uppercase tracking-widest font-mono">
+              INTERNAL DOCUMENTATION // AUDIT LOGS
             </p>
           </div>
 
-          <div className="p-5 space-y-4">
+          <div className="p-6 space-y-6">
             {/* Add new note */}
-            <div className="space-y-2">
+            <div className="space-y-3">
               <textarea
                 value={currentNote}
                 onChange={(e) => setCurrentNote(e.target.value)}
-                placeholder="Write a note..."
-                className="w-full h-24 p-3 text-xs border border-gray-200 rounded-sm resize-none focus:outline-none focus:border-gray-300 bg-gray-50 focus:bg-white"
+                placeholder="INPUT TECHNICAL DATA OR REMINDERS HERE..."
+                className="w-full h-32 p-4 text-[11px] border border-gray-100 rounded-none resize-none focus:outline-none focus:border-gray-900 bg-gray-50/50 focus:bg-white font-mono leading-relaxed transition-all"
               />
               <Button
                 onClick={async () => {
@@ -557,32 +559,37 @@ export function Navbar({
                     setIsSavingNote(false);
                   }
                 }}
-                className="w-full bg-gray-900 hover:bg-gray-800 text-white text-[12px] h-9 font-medium rounded-sm"
+                className="w-full bg-gray-900 hover:bg-black text-white text-[10px] h-10 font-bold uppercase tracking-[0.2em] rounded-none transition-all"
                 disabled={!currentNote.trim() || isSavingNote}>
-                {isSavingNote ? 'Saving...' : 'Save Note'}
+                {isSavingNote ? 'Processing...' : 'Ingest Note Record'}
               </Button>
             </div>
 
             {/* Notes list */}
             {notes.length > 0 && (
-              <div className="border-t border-gray-100 pt-4">
-                <span className="text-[9px] font-medium text-gray-500 uppercase tracking-[0.15em]">Your Notes ({notes.length})</span>
-                <div className="mt-3 space-y-2 max-h-60 overflow-y-auto">
+              <div className="border-t border-gray-100 pt-6">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em]">Stored Records</span>
+                  <span className="text-[9px] font-mono text-gray-400 uppercase">VOL.{notes.length}</span>
+                </div>
+                <div className="space-y-3 max-h-80 overflow-y-auto pr-2 scrollbar-hide">
                   {notes.map((note) => (
-                    <div key={note.id} className="p-3 bg-gray-50 border border-gray-100 rounded-sm group">
+                    <div key={note.id} className="group relative p-4 bg-gray-50/50 border border-gray-100 rounded-none transition-all hover:bg-white hover:border-gray-200">
+                      <div className="absolute left-[-1px] top-[-1px] bottom-[-1px] w-[3px] bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity" />
+
                       {editingNoteId === note.id ? (
-                        <div className="space-y-2">
+                        <div className="space-y-3">
                           <textarea
                             value={editingNoteContent}
                             onChange={(e) => setEditingNoteContent(e.target.value)}
-                            className="w-full h-20 p-2 text-xs border border-gray-200 rounded-sm resize-none focus:outline-none focus:border-gray-300 bg-white"
+                            className="w-full h-24 p-3 text-[11px] border border-gray-200 rounded-none resize-none focus:outline-none focus:border-gray-900 bg-white font-mono"
                             autoFocus
                           />
-                          <div className="flex justify-end gap-2">
+                          <div className="flex justify-end gap-3">
                             <button
                               onClick={() => setEditingNoteId(null)}
-                              className="text-[10px] text-gray-500 hover:text-gray-700 font-medium">
-                              Cancel
+                              className="text-[9px] text-gray-400 hover:text-gray-900 font-bold uppercase tracking-widest transition-colors">
+                              Discard
                             </button>
                             <button
                               onClick={async () => {
@@ -607,43 +614,45 @@ export function Navbar({
                                   setIsSavingNote(false);
                                 }
                               }}
-                              className="text-[10px] text-gray-900 hover:text-black font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                              className="text-[9px] text-gray-900 hover:text-black font-bold uppercase tracking-widest disabled:opacity-50"
                               disabled={isSavingNote}>
-                              {isSavingNote ? 'Saving...' : 'Save'}
+                              {isSavingNote ? 'Syncing...' : 'Confirm Change'}
                             </button>
                           </div>
                         </div>
                       ) : (
                         <>
-                          <p className="text-xs text-gray-700 whitespace-pre-wrap">{note.text}</p>
-                          <div className="flex items-center justify-between mt-2">
-                            <span className="text-[9px] text-gray-400">
-                              {new Date(note.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                            </span>
-                            <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                              <button
-                                onClick={() => {
-                                  setEditingNoteId(note.id);
-                                  setEditingNoteContent(note.text);
-                                }}
-                                className="text-[9px] text-gray-400 hover:text-gray-900">
-                                Edit
-                              </button>
-                              <button
-                                onClick={async () => {
-                                  try {
-                                    const response = await api.deleteNote(note.id);
-                                    if (response.ok) {
-                                      setNotes(notes.filter(n => n.id !== note.id));
-                                    }
-                                  } catch (error) {
-                                    console.error('Failed to delete note:', error);
-                                  }
-                                }}
-                                className="text-[9px] text-gray-400 hover:text-red-500">
-                                Delete
-                              </button>
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              <div className="h-1.5 w-1.5 rounded-full bg-gray-400 group-hover:bg-gray-900" />
+                              <span className="text-[9px] text-gray-400 font-mono uppercase tracking-widest">RECORD.{note.id.substring(0, 8).toUpperCase()}</span>
                             </div>
+                            <span className="text-[9px] text-gray-400 font-mono">{new Date(note.createdAt).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' })}</span>
+                          </div>
+                          <p className="text-[11px] text-gray-700 font-mono leading-relaxed mb-3">{note.text}</p>
+                          <div className="flex items-center justify-end gap-4 opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0">
+                            <button
+                              onClick={() => {
+                                setEditingNoteId(note.id);
+                                setEditingNoteContent(note.text);
+                              }}
+                              className="text-[9px] font-bold text-gray-400 hover:text-gray-900 uppercase tracking-widest">
+                              Modify
+                            </button>
+                            <button
+                              onClick={async () => {
+                                try {
+                                  const response = await api.deleteNote(note.id);
+                                  if (response.ok) {
+                                    setNotes(notes.filter(n => n.id !== note.id));
+                                  }
+                                } catch (error) {
+                                  console.error('Failed to delete note:', error);
+                                }
+                              }}
+                              className="text-[9px] font-bold text-gray-400 hover:text-red-600 uppercase tracking-widest">
+                              Purge
+                            </button>
                           </div>
                         </>
                       )}
