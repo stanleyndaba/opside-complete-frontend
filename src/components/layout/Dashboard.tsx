@@ -1143,222 +1143,221 @@ export function Dashboard() {
               </div>
             </div>
           </div>
+        </main>
       </div>
-    </main>
-    </div >
-    {/* Document Sources Modal */ }
-    < Dialog open = { showSourcesModal } onOpenChange = { setShowSourcesModal } >
-      <DialogContent className="sm:max-w-md p-0 gap-0 overflow-hidden border-gray-200 rounded-sm shadow-2xl">
-        <DialogHeader className="px-6 py-5 bg-gray-900 border-b border-gray-900">
-          <DialogTitle className="text-xs font-semibold text-white uppercase tracking-[0.2em]">Connect Document Sources</DialogTitle>
-          <DialogDescription className="text-[10px] text-gray-400 mt-1 font-medium tracking-wide">
-            AUTHORIZED ACCESS FOR DOCUMENT INGESTION
-          </DialogDescription>
-        </DialogHeader>
+      {/* Document Sources Modal */}
+      <Dialog open={showSourcesModal} onOpenChange={setShowSourcesModal} >
+        <DialogContent className="sm:max-w-md p-0 gap-0 overflow-hidden border-gray-200 rounded-sm shadow-2xl">
+          <DialogHeader className="px-6 py-5 bg-gray-900 border-b border-gray-900">
+            <DialogTitle className="text-xs font-semibold text-white uppercase tracking-[0.2em]">Connect Document Sources</DialogTitle>
+            <DialogDescription className="text-[10px] text-gray-400 mt-1 font-medium tracking-wide">
+              AUTHORIZED ACCESS FOR DOCUMENT INGESTION
+            </DialogDescription>
+          </DialogHeader>
 
-        <div className="p-6">
-          <div className="grid grid-cols-2 gap-4">
-            <button
-              onClick={async () => {
-                try {
-                  setProviderLoading('gmail');
-                  const r = await api.connectDocs('gmail');
-                  if (r.ok && r.data?.auth_url) {
-                    window.location.href = r.data.auth_url;
-                  } else {
+          <div className="p-6">
+            <div className="grid grid-cols-2 gap-4">
+              <button
+                onClick={async () => {
+                  try {
+                    setProviderLoading('gmail');
+                    const r = await api.connectDocs('gmail');
+                    if (r.ok && r.data?.auth_url) {
+                      window.location.href = r.data.auth_url;
+                    } else {
+                      toast({
+                        title: 'Connection Failed',
+                        description: r.error || 'Failed to initiate Gmail connection.',
+                        variant: 'destructive',
+                      });
+                      setProviderLoading(null);
+                    }
+                  } catch (error) {
                     toast({
                       title: 'Connection Failed',
-                      description: r.error || 'Failed to initiate Gmail connection.',
+                      description: 'An error occurred. Please try again.',
                       variant: 'destructive',
                     });
                     setProviderLoading(null);
                   }
-                } catch (error) {
-                  toast({
-                    title: 'Connection Failed',
-                    description: 'An error occurred. Please try again.',
-                    variant: 'destructive',
-                  });
-                  setProviderLoading(null);
-                }
-              }}
-              disabled={providerLoading === 'gmail'}
-              className="group flex flex-col items-center justify-center gap-3 p-6 border border-gray-200 hover:border-gray-900 hover:bg-gray-50 transition-all duration-200 rounded-sm disabled:opacity-50"
-            >
-              {providerLoading === 'gmail' ? (
-                <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
-              ) : (
-                <img src={GmailIcon} alt="Gmail" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
-              )}
-              <span className="text-[10px] font-bold text-gray-900 uppercase tracking-wider group-hover:text-black">Gmail</span>
-            </button>
+                }}
+                disabled={providerLoading === 'gmail'}
+                className="group flex flex-col items-center justify-center gap-3 p-6 border border-gray-200 hover:border-gray-900 hover:bg-gray-50 transition-all duration-200 rounded-sm disabled:opacity-50"
+              >
+                {providerLoading === 'gmail' ? (
+                  <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
+                ) : (
+                  <img src={GmailIcon} alt="Gmail" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
+                )}
+                <span className="text-[10px] font-bold text-gray-900 uppercase tracking-wider group-hover:text-black">Gmail</span>
+              </button>
 
-            <button
-              onClick={async () => {
-                try {
-                  setProviderLoading('outlook');
-                  const r = await api.connectDocs('outlook');
-                  if (r.ok && r.data?.auth_url) {
-                    window.location.href = r.data.auth_url;
-                  } else {
+              <button
+                onClick={async () => {
+                  try {
+                    setProviderLoading('outlook');
+                    const r = await api.connectDocs('outlook');
+                    if (r.ok && r.data?.auth_url) {
+                      window.location.href = r.data.auth_url;
+                    } else {
+                      toast({
+                        title: 'Connection Failed',
+                        description: r.error || 'Failed to initiate Outlook connection.',
+                        variant: 'destructive',
+                      });
+                      setProviderLoading(null);
+                    }
+                  } catch (error) {
                     toast({
                       title: 'Connection Failed',
-                      description: r.error || 'Failed to initiate Outlook connection.',
+                      description: 'An error occurred. Please try again.',
                       variant: 'destructive',
                     });
                     setProviderLoading(null);
                   }
-                } catch (error) {
-                  toast({
-                    title: 'Connection Failed',
-                    description: 'An error occurred. Please try again.',
-                    variant: 'destructive',
-                  });
-                  setProviderLoading(null);
-                }
-              }}
-              disabled={providerLoading === 'outlook'}
-              className="group flex flex-col items-center justify-center gap-3 p-6 border border-gray-200 hover:border-gray-900 hover:bg-gray-50 transition-all duration-200 rounded-sm disabled:opacity-50"
-            >
-              {providerLoading === 'outlook' ? (
-                <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
-              ) : (
-                <img src={OutlookIcon} alt="Outlook" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
-              )}
-              <span className="text-[10px] font-bold text-gray-900 uppercase tracking-wider group-hover:text-black">Outlook</span>
-            </button>
+                }}
+                disabled={providerLoading === 'outlook'}
+                className="group flex flex-col items-center justify-center gap-3 p-6 border border-gray-200 hover:border-gray-900 hover:bg-gray-50 transition-all duration-200 rounded-sm disabled:opacity-50"
+              >
+                {providerLoading === 'outlook' ? (
+                  <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
+                ) : (
+                  <img src={OutlookIcon} alt="Outlook" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
+                )}
+                <span className="text-[10px] font-bold text-gray-900 uppercase tracking-wider group-hover:text-black">Outlook</span>
+              </button>
 
-            <button
-              onClick={async () => {
-                try {
-                  setProviderLoading('gdrive');
-                  const r = await api.connectDocs('gdrive');
-                  if (r.ok && r.data?.auth_url) {
-                    window.location.href = r.data.auth_url;
-                  } else {
+              <button
+                onClick={async () => {
+                  try {
+                    setProviderLoading('gdrive');
+                    const r = await api.connectDocs('gdrive');
+                    if (r.ok && r.data?.auth_url) {
+                      window.location.href = r.data.auth_url;
+                    } else {
+                      toast({
+                        title: 'Connection Failed',
+                        description: r.error || 'Failed to initiate Google Drive connection.',
+                        variant: 'destructive',
+                      });
+                      setProviderLoading(null);
+                    }
+                  } catch (error) {
                     toast({
                       title: 'Connection Failed',
-                      description: r.error || 'Failed to initiate Google Drive connection.',
+                      description: 'An error occurred. Please try again.',
                       variant: 'destructive',
                     });
                     setProviderLoading(null);
                   }
-                } catch (error) {
-                  toast({
-                    title: 'Connection Failed',
-                    description: 'An error occurred. Please try again.',
-                    variant: 'destructive',
-                  });
-                  setProviderLoading(null);
-                }
-              }}
-              disabled={providerLoading === 'gdrive'}
-              className="group flex flex-col items-center justify-center gap-3 p-6 border border-gray-200 hover:border-gray-900 hover:bg-gray-50 transition-all duration-200 rounded-sm disabled:opacity-50"
-            >
-              {providerLoading === 'gdrive' ? (
-                <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
-              ) : (
-                <img src={GoogleDriveIcon} alt="Google Drive" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
-              )}
-              <span className="text-[10px] font-bold text-gray-900 uppercase tracking-wider group-hover:text-black">Drive</span>
-            </button>
+                }}
+                disabled={providerLoading === 'gdrive'}
+                className="group flex flex-col items-center justify-center gap-3 p-6 border border-gray-200 hover:border-gray-900 hover:bg-gray-50 transition-all duration-200 rounded-sm disabled:opacity-50"
+              >
+                {providerLoading === 'gdrive' ? (
+                  <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
+                ) : (
+                  <img src={GoogleDriveIcon} alt="Google Drive" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
+                )}
+                <span className="text-[10px] font-bold text-gray-900 uppercase tracking-wider group-hover:text-black">Drive</span>
+              </button>
 
-            <button
-              onClick={async () => {
-                try {
-                  setProviderLoading('dropbox');
-                  const r = await api.connectDocs('dropbox');
-                  if (r.ok && r.data?.auth_url) {
-                    window.location.href = r.data.auth_url;
-                  } else {
+              <button
+                onClick={async () => {
+                  try {
+                    setProviderLoading('dropbox');
+                    const r = await api.connectDocs('dropbox');
+                    if (r.ok && r.data?.auth_url) {
+                      window.location.href = r.data.auth_url;
+                    } else {
+                      toast({
+                        title: 'Connection Failed',
+                        description: r.error || 'Failed to initiate Dropbox connection.',
+                        variant: 'destructive',
+                      });
+                      setProviderLoading(null);
+                    }
+                  } catch (error) {
                     toast({
                       title: 'Connection Failed',
-                      description: r.error || 'Failed to initiate Dropbox connection.',
+                      description: 'An error occurred. Please try again.',
                       variant: 'destructive',
                     });
                     setProviderLoading(null);
                   }
-                } catch (error) {
-                  toast({
-                    title: 'Connection Failed',
-                    description: 'An error occurred. Please try again.',
-                    variant: 'destructive',
-                  });
-                  setProviderLoading(null);
-                }
-              }}
-              disabled={providerLoading === 'dropbox'}
-              className="group flex flex-col items-center justify-center gap-3 p-6 border border-gray-200 hover:border-gray-900 hover:bg-gray-50 transition-all duration-200 rounded-sm disabled:opacity-50"
-            >
-              {providerLoading === 'dropbox' ? (
-                <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
-              ) : (
-                <img src={DropboxIcon} alt="Dropbox" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
-              )}
-              <span className="text-[10px] font-bold text-gray-900 uppercase tracking-wider group-hover:text-black">Dropbox</span>
-            </button>
+                }}
+                disabled={providerLoading === 'dropbox'}
+                className="group flex flex-col items-center justify-center gap-3 p-6 border border-gray-200 hover:border-gray-900 hover:bg-gray-50 transition-all duration-200 rounded-sm disabled:opacity-50"
+              >
+                {providerLoading === 'dropbox' ? (
+                  <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
+                ) : (
+                  <img src={DropboxIcon} alt="Dropbox" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
+                )}
+                <span className="text-[10px] font-bold text-gray-900 uppercase tracking-wider group-hover:text-black">Dropbox</span>
+              </button>
+            </div>
           </div>
-        </div>
 
-        <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setShowSourcesModal(false)}
-            className="text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-          >
-            Skip for Now
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog >
-    {/* Quick Actions Editor */ }
-    < Dialog open = { quickActionsEditOpen } onOpenChange = { setQuickActionsEditOpen } >
-      <DialogContent className="max-w-md bg-white border border-gray-200 rounded-sm p-0">
-        <DialogHeader className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-          <DialogTitle className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Customize Quick Actions</DialogTitle>
-          <DialogDescription className="text-[10px] text-gray-500 mt-0.5">Select which actions to show.</DialogDescription>
-        </DialogHeader>
-        <div className="p-6 space-y-3">
-          {QUICK_ACTIONS.map(a => (
-            <label key={a.id} className="flex items-center gap-2 text-xs text-gray-700">
-              <Checkbox checked={selectedQuickActions.includes(a.id)} onCheckedChange={(c) => {
-                setSelectedQuickActions(prev => {
-                  const next = new Set(prev);
-                  if (c) next.add(a.id); else next.delete(a.id);
-                  return Array.from(next);
-                });
-              }} />
-              {a.label}
-            </label>
-          ))}
-        </div>
-        <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end gap-2">
-          <button onClick={() => setQuickActionsEditOpen(false)} className="px-3 py-1.5 text-xs text-gray-600 hover:text-gray-900">Cancel</button>
-          <button className="px-4 py-1.5 text-xs font-medium text-white bg-gray-900 hover:bg-gray-800 transition-colors" onClick={() => { try { localStorage.setItem('clario.quickActions', JSON.stringify(selectedQuickActions)); toast({ title: 'Saved', description: 'Quick actions updated.' }); } catch { } setQuickActionsEditOpen(false); }}>Save</button>
-        </div>
-      </DialogContent>
-    </Dialog >
+          <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowSourcesModal(false)}
+              className="text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+            >
+              Skip for Now
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+      {/* Quick Actions Editor */}
+      <Dialog open={quickActionsEditOpen} onOpenChange={setQuickActionsEditOpen} >
+        <DialogContent className="max-w-md bg-white border border-gray-200 rounded-sm p-0">
+          <DialogHeader className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+            <DialogTitle className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Customize Quick Actions</DialogTitle>
+            <DialogDescription className="text-[10px] text-gray-500 mt-0.5">Select which actions to show.</DialogDescription>
+          </DialogHeader>
+          <div className="p-6 space-y-3">
+            {QUICK_ACTIONS.map(a => (
+              <label key={a.id} className="flex items-center gap-2 text-xs text-gray-700">
+                <Checkbox checked={selectedQuickActions.includes(a.id)} onCheckedChange={(c) => {
+                  setSelectedQuickActions(prev => {
+                    const next = new Set(prev);
+                    if (c) next.add(a.id); else next.delete(a.id);
+                    return Array.from(next);
+                  });
+                }} />
+                {a.label}
+              </label>
+            ))}
+          </div>
+          <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end gap-2">
+            <button onClick={() => setQuickActionsEditOpen(false)} className="px-3 py-1.5 text-xs text-gray-600 hover:text-gray-900">Cancel</button>
+            <button className="px-4 py-1.5 text-xs font-medium text-white bg-gray-900 hover:bg-gray-800 transition-colors" onClick={() => { try { localStorage.setItem('clario.quickActions', JSON.stringify(selectedQuickActions)); toast({ title: 'Saved', description: 'Quick actions updated.' }); } catch { } setQuickActionsEditOpen(false); }}>Save</button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
-    <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
-      <DialogContent className="max-w-sm bg-white border border-gray-200 rounded-sm p-0">
-        <DialogHeader className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-          <DialogTitle className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Invite a Teammate</DialogTitle>
-          <DialogDescription className="text-[10px] text-gray-500 mt-0.5">Send a read-only invite to finance/ops.</DialogDescription>
-        </DialogHeader>
-        <div className="p-6">
-          <Input type="email" placeholder="email@company.com" value={inviteEmail} onChange={(e) => setInviteEmail(e.target.value)} className="h-9 text-xs border-gray-200 rounded-sm" />
-        </div>
-        <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end gap-2">
-          <button onClick={() => setInviteOpen(false)} className="px-3 py-1.5 text-xs text-gray-600 hover:text-gray-900">Cancel</button>
-          <button className="px-4 py-1.5 text-xs font-medium text-white bg-gray-900 hover:bg-gray-800 transition-colors" onClick={async () => { if (!inviteEmail) return; try { await api.post('/api/team/invite', { email: inviteEmail }); toast({ title: 'Invite sent', description: inviteEmail }); } catch (e: any) { toast({ title: 'Invite failed', description: e?.message || 'Please try again.', variant: 'destructive' }); } setInviteOpen(false); setInviteEmail(''); }}>Send Invite</button>
-        </div>
-      </DialogContent>
-    </Dialog>
+      <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
+        <DialogContent className="max-w-sm bg-white border border-gray-200 rounded-sm p-0">
+          <DialogHeader className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+            <DialogTitle className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Invite a Teammate</DialogTitle>
+            <DialogDescription className="text-[10px] text-gray-500 mt-0.5">Send a read-only invite to finance/ops.</DialogDescription>
+          </DialogHeader>
+          <div className="p-6">
+            <Input type="email" placeholder="email@company.com" value={inviteEmail} onChange={(e) => setInviteEmail(e.target.value)} className="h-9 text-xs border-gray-200 rounded-sm" />
+          </div>
+          <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end gap-2">
+            <button onClick={() => setInviteOpen(false)} className="px-3 py-1.5 text-xs text-gray-600 hover:text-gray-900">Cancel</button>
+            <button className="px-4 py-1.5 text-xs font-medium text-white bg-gray-900 hover:bg-gray-800 transition-colors" onClick={async () => { if (!inviteEmail) return; try { await api.post('/api/team/invite', { email: inviteEmail }); toast({ title: 'Invite sent', description: inviteEmail }); } catch (e: any) { toast({ title: 'Invite failed', description: e?.message || 'Please try again.', variant: 'destructive' }); } setInviteOpen(false); setInviteEmail(''); }}>Send Invite</button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
-  {/* Sync Log Modal */ }
-  <SyncLogModal isOpen={showSyncModal} onClose={() => setShowSyncModal(false)} />
-    </div >
+      {/* Sync Log Modal */}
+      <SyncLogModal isOpen={showSyncModal} onClose={() => setShowSyncModal(false)} />
+    </div>
   );
 }
 
