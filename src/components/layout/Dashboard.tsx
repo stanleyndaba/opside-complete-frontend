@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
-import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud, ArrowRight, Plus, CheckCircle, RefreshCw, RotateCcw, Download, Bell, Shield, TrendingDown, TrendingUp, Loader2 } from 'lucide-react';
+import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud, ArrowRight, ArrowUp, Plus, CheckCircle, RefreshCw, RotateCcw, Download, Bell, Shield, TrendingDown, TrendingUp, Loader2 } from 'lucide-react';
 import { api, detectionApi } from '@/lib/api';
 import { recoveryApi } from '@/lib/recoveryApi';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -744,7 +744,7 @@ export function Dashboard() {
                         <div className="w-[3px] h-3 bg-gray-900" />
                         <div>
                           <h2 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.2em]">Funds Successfully Recovered</h2>
-                          <p className="text-[9px] text-gray-400 font-mono uppercase tracking-widest mt-1">Audit.Verified // Global Cumulative</p>
+                          <p className="text-[9px] text-gray-400 font-mono uppercase tracking-widest mt-1">Audit.Verified</p>
                         </div>
                       </div>
                       {submittedClaimsCount != null && submittedClaimsCount > 0 && (
@@ -762,7 +762,7 @@ export function Dashboard() {
 
                         {reconciledCount != null && reconciledCount > 0 && (
                           <div className="flex items-center gap-2">
-                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            <ArrowUp className="h-3 w-3 text-emerald-500" />
                             <span className="text-[10px] font-mono text-emerald-600 font-bold uppercase tracking-widest">
                               +{reconciledCount} Verified this period
                             </span>
