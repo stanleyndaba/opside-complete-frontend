@@ -24,7 +24,9 @@ import {
   Link2,
   Eye,
   Sparkles,
-  Hexagon
+  Hexagon,
+  Copy,
+  Square
 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { ParsingStatus } from '@/components/evidence/ParsingStatus';
@@ -529,39 +531,85 @@ export default function DocumentDetail() {
             </div>
           </TabsContent>
 
-          {/* Raw Text Tab */}
-          <TabsContent value="raw">
-            <Card className="bg-white border-gray-200">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-xs font-medium text-gray-600 uppercase tracking-[0.1em]">Raw Extracted Text</CardTitle>
-                <CardDescription className="text-[10px] text-gray-500">
-                  Text content extracted from the document via OCR/parsing
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {(documentData?.raw_text_preview || parsedData?.raw_text_preview) ? (
-                  <pre className="bg-gray-50 p-4 rounded-lg text-sm text-gray-700 font-mono whitespace-pre-wrap overflow-x-auto max-h-[600px] overflow-y-auto border border-gray-200">
-                    {documentData?.raw_text_preview || parsedData?.raw_text_preview}
-                  </pre>
-                ) : (
-                  <div className="text-center py-8">
-                    <FileText className="w-12 h-12 mx-auto text-gray-300 mb-4" />
-                    <p className="text-gray-600 mb-2">No raw text available</p>
-                    <p className="text-sm text-gray-500">
-                      Document may not have been parsed yet
-                    </p>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="mt-4"
-                      onClick={handleTriggerParsing}
-                      disabled={triggeringParse}>
-                      {triggeringParse ? 'Parsing...' : 'Trigger Parsing'}
-                    </Button>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+          {/* Raw Text Tab - Redesigned for Institutional Aesthetic */}
+          <TabsContent value="raw" className="mt-0">
+            <div className="border-t border-gray-100">
+              {(() => {
+                const rawText = documentData?.raw_text_preview || parsedData?.raw_text_preview;
+                const lines = rawText ? rawText.split('\n') : [];
+
+                return (
+                  <>
+                    <div className="flex items-center justify-between py-4 px-4 bg-gray-50/50">
+                      <div className="flex items-center gap-3">
+                        <Square className="w-3.5 h-3.5 text-gray-400 fill-gray-100" />
+                        <h4 className="text-[10px] font-semibold text-gray-400 uppercase tracking-[0.15em]">
+                          Extracted Intelligence Output
+                        </h4>
+                        <span className="text-gray-300">|</span>
+                        <span className="text-[9px] font-medium text-gray-500 uppercase tracking-wider">
+                          {lines.length} Entries Detected
+                        </span>
+                      </div>
+                      {rawText && (
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(rawText);
+                            toast({ title: 'Intelligence Data Copied', description: 'Raw document output has been copied to your clipboard.' });
+                          }}
+                          className="flex items-center gap-2 text-[10px] font-bold text-gray-400 hover:text-indigo-600 uppercase tracking-[0.15em] transition-colors"
+                        >
+                          <Copy className="w-3 h-3" />
+                          Copy Raw Intelligence
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="border-b border-gray-100 bg-white">
+                      {rawText ? (
+                        <div className="flex font-mono text-[11px] leading-relaxed max-h-[600px] overflow-hidden">
+                          {/* Institutional Line Numbers */}
+                          <div className="bg-gray-50/80 border-r border-gray-100 px-3 py-6 text-right select-none text-gray-300 min-w-[3.5rem] flex-shrink-0">
+                            {lines.map((_, i) => (
+                              <div key={i} className="h-5">{(i + 1).toString().padStart(2, '0')}</div>
+                            ))}
+                          </div>
+
+                          {/* Inspection Panel */}
+                          <div className="flex-1 overflow-auto p-6 text-gray-700 whitespace-pre scrollbar-thin scrollbar-thumb-gray-200">
+                            {lines.map((text, i) => (
+                              <div key={i} className="h-5 hover:bg-indigo-50/30 transition-colors px-2 -mx-2 rounded-sm">
+                                {text || ' '}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="text-center py-20 bg-gray-50/30">
+                          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white border border-gray-100 shadow-sm mb-4">
+                            <FileText className="w-5 h-5 text-gray-300" />
+                          </div>
+                          <h3 className="text-sm font-semibold text-gray-900 mb-1 uppercase tracking-wider">Intelligence Data Pending</h3>
+                          <p className="text-xs text-gray-500 max-w-[240px] mx-auto leading-relaxed mb-6">
+                            This document hasn't been processed by the intelligence engine yet.
+                          </p>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="bg-white text-[10px] h-8 px-4 font-bold border-gray-200 hover:bg-gray-50 hover:text-indigo-600 uppercase tracking-widest transition-all"
+                            onClick={handleTriggerParsing}
+                            disabled={triggeringParse}
+                          >
+                            {triggeringParse ? <RefreshCw className="w-3 h-3 mr-2 animate-spin" /> : null}
+                            {triggeringParse ? 'Processing...' : 'Engage Processing'}
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  </>
+                );
+              })()}
+            </div>
           </TabsContent>
 
           {/* Parsing Status Tab */}
