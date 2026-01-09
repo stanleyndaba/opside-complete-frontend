@@ -950,9 +950,7 @@ export function Dashboard() {
 
                                     <div className="flex items-start justify-between gap-3 mb-1">
                                       <div className="flex items-center gap-2 overflow-hidden">
-                                        <div className={cn("w-[2px] h-3 shrink-0 transition-colors",
-                                          isUnread ? "bg-gray-900" : "bg-gray-200 group-hover:bg-gray-900"
-                                        )} />
+                                        <div className={cn("h-1.5 w-1.5 rounded-full shrink-0 transition-colors", statusColor)} />
                                         <p className={cn(
                                           "text-[10px] uppercase tracking-[0.1em] truncate",
                                           isUnread ? "font-bold text-gray-900" : "font-medium text-gray-500 group-hover:text-gray-900"
@@ -965,7 +963,7 @@ export function Dashboard() {
                                       </span>
                                     </div>
 
-                                    <div className="flex items-center gap-2 mt-0.5 ml-[10px]">
+                                    <div className="flex items-center gap-2 mt-0.5 ml-3.5">
                                       <p className="text-[10px] text-gray-400 font-mono tracking-tight leading-relaxed truncate">
                                         {stripEmojis(notification.message)}
                                       </p>
