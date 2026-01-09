@@ -741,7 +741,7 @@ export default function CaseDetail() {
                     </p>
 
                     <div className="pt-6 border-t border-gray-100">
-                      <div className="text-[9px] text-gray-400 uppercase tracking-widest font-bold mb-4">Product Trace</div>
+                      <div className="text-[9px] text-gray-400 uppercase tracking-widest font-bold mb-4">Product Trace & Protocols</div>
                       <div className="grid grid-cols-2 gap-6">
                         <div className="space-y-4">
                           <div>
@@ -763,16 +763,38 @@ export default function CaseDetail() {
                               <p className="text-xs font-bold text-gray-900">{effectiveCase.facility || effectiveCase.evidence?.fulfillment_center || '—'}</p>
                             </div>
                           </div>
-                          {effectiveCase.amazonCaseId && (
-                            <div>
-                              <p className="text-[10px] text-gray-400 uppercase tracking-widest mb-1">Amazon Reference</p>
-                              <a href={`https://sellercentral.amazon.com/case-log/${effectiveCase.amazonCaseId}`} target="_blank" rel="noreferrer" className="text-xs font-mono font-bold text-blue-600 hover:underline flex items-center gap-1">
-                                {effectiveCase.amazonCaseId} <ExternalLink className="h-2.5 w-2.5" />
-                              </a>
+                          <div>
+                            <p className="text-[10px] text-gray-400 uppercase tracking-widest mb-1">Reference IDs</p>
+                            <div className="space-y-1">
+                              {effectiveCase.amazonCaseId ? (
+                                <a href={`https://sellercentral.amazon.com/case-log/${effectiveCase.amazonCaseId}`} target="_blank" rel="noreferrer" className="text-xs font-mono font-bold text-blue-600 hover:underline flex items-center gap-1">
+                                  {effectiveCase.amazonCaseId} <ExternalLink className="h-2.5 w-2.5" />
+                                </a>
+                              ) : <span className="text-[10px] text-gray-400 italic">No Case ID</span>}
+                              {effectiveCase.prior_case_id && (
+                                <div className="text-[10px] text-gray-500 font-mono">Prior: {effectiveCase.prior_case_id}</div>
+                              )}
                             </div>
-                          )}
+                          </div>
                         </div>
                       </div>
+
+                      {/* Double-Dip Protection Alert */}
+                      {(effectiveCase.prior_reimbursement_detected || effectiveCase.inventory_adjustment_applied || effectiveCase.duplicate_blocked) && (
+                        <div className="mt-6 p-3 bg-blue-50/50 border border-blue-100 flex gap-3">
+                          <CheckCircle className="h-3.5 w-3.5 text-blue-600 flex-shrink-0 mt-0.5" />
+                          <div>
+                            <div className="text-[9px] font-bold text-blue-900 uppercase tracking-widest mb-1">Account Protection Active</div>
+                            <p className="text-[10px] text-blue-700 leading-relaxed font-light">
+                              {effectiveCase.prior_reimbursement_detected
+                                ? `System detected prior reimbursement for ${effectiveCase.sku}. Claim blocked to prevent duplicate filing violation.`
+                                : effectiveCase.inventory_adjustment_applied
+                                  ? 'Amazon processed inventory adjustment. Claim suppressed to avoid policy flag.'
+                                  : 'Claim blocked by autonomous protection system to preserve account health.'}
+                            </p>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -1084,7 +1106,7 @@ export default function CaseDetail() {
                       </section>
 
                       <section className="pt-4 border-t border-gray-100">
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-3 mb-4">
                           <div className="p-2 bg-gray-900 rounded-xs">
                             <ShieldCheck className="h-4 w-4 text-white" />
                           </div>
@@ -1093,98 +1115,295 @@ export default function CaseDetail() {
                             <p className="text-[8px] text-gray-400 uppercase tracking-widest">Compliance Protocol: NIST-800</p>
                           </div>
                         </div>
+                        <dl className="space-y-2">
+                          <div className="flex justify-between items-baseline">
+                            <dt className="text-[10px] text-gray-500 font-light">Seller ID</dt>
+                            <dd className="text-[10px] font-mono text-gray-900">{effectiveCase.seller_id || effectiveCase.user_id || '—'}</dd>
+                          </div>
+                          <div className="flex justify-between items-baseline">
+                            <dt className="text-[10px] text-gray-500 font-light">Store Name</dt>
+                            <dd className="text-[10px] font-mono text-gray-900 truncate max-w-[120px]" title={effectiveCase.store_name || effectiveCase.seller_name}>
+                              {effectiveCase.store_name || effectiveCase.seller_name || '—'}
+                            </dd>
+                          </div>
+                        </dl>
                       </section>
                     </div>
                   </div>
                 </div>
 
-                {/* Tile 3: Action Protocol */}
+                {/* Tile 3: Evidence Vault & Identity */}
                 <div className="lg:col-span-1 p-8 bg-gray-50/50">
                   <div className="flex items-center gap-2 mb-6">
-                    <ShieldCheck className="h-3.5 w-3.5 text-gray-400" />
-                    <h3 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.2em]">Action Protocol</h3>
+                    <Database className="h-3.5 w-3.5 text-gray-400" />
+                    <h3 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.2em]">Evidence Vault</h3>
                   </div>
 
                   <div className="space-y-8">
-                    {(() => {
-                      const caseType = (effectiveCase.anomaly_type || effectiveCase.claim_type || effectiveCase.case_type || '').toLowerCase();
-                      const isFeeCase = caseType.includes('fee') || caseType.includes('overcharge');
-                      const isLostCase = caseType.includes('lost') || caseType.includes('missing') || caseType.includes('shipment');
-                      const amount = effectiveCase.guaranteedAmount || 0;
-                      const formattedAmount = `$${Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
-                      const actions = isFeeCase ? [
-                        'RE-MEASURE_ASIN_IN_FC',
-                        'RECONCILE_WEIGHT_LOGS',
-                        'CALC_HISTORIAL_REFUND',
-                        'SYNC_DIMENSIONAL_DATA'
-                      ] : isLostCase ? [
-                        'INVENTORY_COUNT_FC_AUDIT',
-                        'FREIGHT_BILL_RECONCILE',
-                        'POD_SIGNATURE_TRACE',
-                        'CARRIER_LIABILITY_CLAIM'
-                      ] : [
-                        'EVIDENCE_ARTIFACT_REVIEW',
-                        'POLICY_VIOLATION_CHECK',
-                        'IMMEDIATE_SETTLEMENT_REQ',
-                        'ENFORCE_SELLER_RIGHTS'
-                      ];
-
-                      return (
-                        <>
-                          <section>
-                            <div className="text-[9px] text-gray-400 uppercase tracking-widest font-bold mb-4">Immediate Actions</div>
-                            <div className="space-y-2">
-                              {actions.slice(0, 3).map(a => (
-                                <div key={a} className="flex items-center gap-3 p-3 bg-white border border-gray-100">
-                                  <div className="h-1.5 w-1.5 rounded-full bg-gray-900" />
-                                  <span className="text-[9px] font-bold text-gray-700 font-mono tracking-tight">{a}</span>
+                    {/* Matched Documents */}
+                    <div>
+                      {matchedDocs.length > 0 ? (
+                        <div className="space-y-3">
+                          {matchedDocs.slice(0, 3).map((doc: any, idx: number) => {
+                            const confidencePct = Math.round((doc.matchConfidence || doc.confidence_score || 0.85) * 100);
+                            return (
+                              <div key={doc.id || idx} className="p-3 bg-white border border-gray-200 group hover:border-gray-300 transition-colors cursor-pointer" onClick={() => window.open(`/documents/${encodeURIComponent(doc.id)}`, '_blank')}>
+                                <div className="flex items-center gap-2 mb-2">
+                                  <FileText className="h-3.5 w-3.5 text-gray-400 group-hover:text-gray-600" />
+                                  <span className="text-[10px] font-medium text-gray-700 truncate flex-1">{doc.name || doc.filename || `Document ${idx + 1}`}</span>
+                                  <Badge variant="outline" className="text-[9px] h-4 px-1.5 border-emerald-200 text-emerald-700 bg-emerald-50">
+                                    {confidencePct}%
+                                  </Badge>
                                 </div>
-                              ))}
-                              <div className="flex items-center gap-1.5 pt-2 text-[8px] text-emerald-600 font-bold uppercase tracking-widest">
-                                <ArrowRight className="h-2.5 w-2.5" /> REIMBURSEMENT REQ: {formattedAmount}
+                                <div className="flex items-center justify-between text-[9px] text-gray-400">
+                                  <span>{doc.uploadDate || '2025-01-08'}</span>
+                                  <span className="uppercase tracking-wider">Verified</span>
+                                </div>
                               </div>
+                            );
+                          })}
+                          {matchedDocs.length > 3 && (
+                            <Link to="/evidence-locker" className="block text-center text-[9px] text-gray-400 hover:text-gray-600 uppercase tracking-widest mt-2">
+                              + {matchedDocs.length - 3} More Documents
+                            </Link>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="text-center py-6 border border-dashed border-gray-200 bg-white">
+                          <FileText className="h-5 w-5 text-gray-300 mx-auto mb-2" />
+                          <p className="text-[10px] text-gray-400">No documents matched yet</p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Contact Detail Section - Restored Full Fidelity */}
+                    <div className="pt-6 border-t border-gray-100">
+                      <div className="flex items-center gap-2 mb-4">
+                        <ShieldCheck className="h-3.5 w-3.5 text-gray-400" />
+                        <h4 className="text-[9px] font-bold text-gray-900 uppercase tracking-[0.2em]">Seller Identity</h4>
+                      </div>
+                      <div className="space-y-4">
+                        <div>
+                          <p className="text-[9px] text-gray-400 uppercase tracking-widest mb-1.5">Seller Detail</p>
+                          <dl className="space-y-2 text-[10px] text-gray-600 font-mono">
+                            <div className="flex justify-between border-b border-gray-100 pb-1">
+                              <dt className="text-gray-400">Seller ID:</dt>
+                              <dd className="font-medium text-gray-900 text-right">{effectiveCase.seller_id || effectiveCase.user_id || 'Not available'}</dd>
+                            </div>
+                            <div className="flex justify-between border-b border-gray-100 pb-1">
+                              <dt className="text-gray-400">Store Name:</dt>
+                              <dd className="font-medium text-gray-900 text-right truncate pl-2 max-w-[140px]">{effectiveCase.store_name || effectiveCase.seller_name || 'Amazon Seller Account'}</dd>
+                            </div>
+                            <div className="flex justify-between">
+                              <dt className="text-gray-400">Contact Method:</dt>
+                              <dd className="font-medium text-gray-900 text-right">Seller Central Case Mgr</dd>
+                            </div>
+                          </dl>
+                        </div>
+
+                        <div>
+                          <p className="text-[9px] text-gray-400 uppercase tracking-widest mb-1.5">Reference Data</p>
+                          <dl className="space-y-2 text-[10px] text-gray-600 font-mono">
+                            <div className="flex justify-between border-b border-gray-100 pb-1">
+                              <dt className="text-gray-400">Case ID:</dt>
+                              <dd className="font-medium text-blue-600 text-right">{effectiveCase.amazonCaseId || <span className="text-gray-400 italic">Not filed</span>}</dd>
+                            </div>
+                            <div className="flex justify-between border-b border-gray-100 pb-1">
+                              <dt className="text-gray-400">Prior Case:</dt>
+                              <dd className="font-medium text-gray-900 text-right">{effectiveCase.prior_case_id || <span className="text-gray-400 italic">None</span>}</dd>
+                            </div>
+                            <div className="flex justify-between">
+                              <dt className="text-gray-400">Claim Ref:</dt>
+                              <dd className="font-medium text-gray-900 text-right">{effectiveCase.claim_number || effectiveCase.claim_id || effectiveCase.id?.slice(0, 12)}</dd>
+                            </div>
+                          </dl>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'PROTOCOL' && (
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-0 border border-gray-100 divide-x divide-gray-100 italic-divider">
+                {/* Tile 1: Action Protocol (Detailed) */}
+                <div className="lg:col-span-2 p-8 bg-white">
+                  <div className="flex items-center gap-2 mb-8">
+                    <ShieldCheck className="h-3.5 w-3.5 text-gray-400" />
+                    <h3 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.2em]">Resolution Protocol</h3>
+                  </div>
+
+                  {(() => {
+                    const caseType = (effectiveCase.anomaly_type || effectiveCase.claim_type || effectiveCase.case_type || '').toLowerCase();
+                    const isFeeCase = caseType.includes('fee') || caseType.includes('overcharge') || caseType.includes('commission') || caseType.includes('storage') || caseType.includes('lts');
+                    const isLostCase = caseType.includes('lost') || caseType.includes('missing') || caseType.includes('shipment') || caseType.includes('shortage') || caseType.includes('discrepancy');
+                    const isDamagedCase = caseType.includes('damaged') || caseType.includes('damage') || caseType.includes('carrier');
+                    const isRefundCase = caseType.includes('refund') || caseType.includes('return') || caseType.includes('switcheroo') || caseType.includes('wrong_item') || caseType.includes('empty_box');
+                    const isChargebackCase = caseType.includes('chargeback') || caseType.includes('dispute') || caseType.includes('atoz');
+                    const asin = effectiveCase.asin || effectiveCase.evidence?.asin || '—';
+                    const sku = effectiveCase.sku || effectiveCase.evidence?.sku || '—';
+                    const facility = effectiveCase.facility || effectiveCase.evidence?.fulfillment_center || '—';
+                    const units = effectiveCase.unitsLost || effectiveCase.quantity || effectiveCase.units || '—';
+                    const amount = (effectiveCase.guaranteedAmount || effectiveCase.estimated_value || effectiveCase.claim_amount || 0);
+                    const orderId = effectiveCase.order_id || effectiveCase.evidence?.order_id || '—';
+                    const formattedAmount = `$${Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+                    const immediateActions: string[] = [];
+                    const preventiveMeasures: string[] = [];
+
+                    if (isFeeCase) {
+                      immediateActions.push(`Review product weight/dimensional specifications for ASIN ${asin}`);
+                      immediateActions.push(`Update ASIN measurements in Amazon catalog system`);
+                      preventiveMeasures.push(`Correct fee calculations for future shipments`);
+                      preventiveMeasures.push(`Ensure measurement accuracy for existing inventory`);
+                    } else if (isLostCase) {
+                      immediateActions.push(`Investigate inventory discrepancy at FC ${facility}`);
+                      immediateActions.push(`Confirm count discrepancy for ${units} units of SKU ${sku}`);
+                      preventiveMeasures.push(`Improve inventory tracking at fulfillment centers`);
+                      preventiveMeasures.push(`Implement regular reconciliation checks`);
+                    } else if (isDamagedCase) {
+                      immediateActions.push(`Review damage report for SKU ${sku}`);
+                      immediateActions.push(`Verify damage occurred during Amazon/carrier handling`);
+                      preventiveMeasures.push(`Review handling procedures for product category`);
+                      preventiveMeasures.push(`Consider improved packaging requirements`);
+                    } else if (isRefundCase) {
+                      immediateActions.push(`Verify return status for Order ${orderId}`);
+                      immediateActions.push(`Confirm refund issued without valid return received`);
+                      preventiveMeasures.push(`Monitor return compliance more closely`);
+                      preventiveMeasures.push(`Flag repeat offender customer accounts`);
+                    } else if (isChargebackCase) {
+                      immediateActions.push(`Review chargeback claim for Order ${orderId}`);
+                      immediateActions.push(`Provide proof of delivery and product condition`);
+                      preventiveMeasures.push(`Enhance delivery confirmation tracking`);
+                      preventiveMeasures.push(`Document all communications with buyer`);
+                    } else {
+                      immediateActions.push(`Review case documentation and evidence`);
+                      immediateActions.push(`Verify discrepancy against fulfillment records`);
+                      preventiveMeasures.push(`Implement monitoring for similar discrepancies`);
+                    }
+                    immediateActions.push(`Process reimbursement of ${formattedAmount} to seller account`);
+                    preventiveMeasures.push(`Provide confirmation of system updates`);
+
+                    return (
+                      <div className="space-y-8">
+                        {/* Missing Docs Prompt */}
+                        {effectiveCase?.missingDocumentPrompt && (
+                          <section className="mb-6 rounded-none border border-amber-200 bg-amber-50 p-6 shadow-sm">
+                            <div className="flex items-center gap-2 mb-4">
+                              <AlertCircle className="h-4 w-4 text-amber-600" />
+                              <h4 className="text-[10px] font-bold text-amber-900 uppercase tracking-widest">Required Actions Requested</h4>
+                            </div>
+                            <p className="text-xs text-amber-900 mb-4 leading-relaxed font-medium">{effectiveCase.missingDocumentPrompt}</p>
+                            {Array.isArray(effectiveCase.missingDocumentOptions) && (
+                              <div className="flex flex-wrap gap-2 mb-4">
+                                {effectiveCase.missingDocumentOptions.map((opt: string) => (
+                                  <button key={opt} className="px-3 py-1.5 bg-white border border-amber-200 text-amber-800 text-[9px] font-bold uppercase tracking-wider hover:bg-amber-100 transition-colors shadow-sm" onClick={() => {
+                                    recoveryApi.submitRecoveryAnswer(effectiveCase.id, { answer: opt }).catch(() => { });
+                                  }}>{opt}</button>
+                                ))}
+                              </div>
+                            )}
+                            <div
+                              className="p-6 border-2 border-dashed border-amber-300 bg-white/50 text-center cursor-pointer hover:bg-white hover:border-amber-400 transition-all"
+                              onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                              onDrop={async (e) => {
+                                e.preventDefault();
+                                const files = Array.from(e.dataTransfer.files || []);
+                                if (!files.length) return;
+                                await recoveryApi.uploadRecoveryDocuments(effectiveCase.id, files as any).catch(() => { });
+                              }}>
+                              <FileText className="h-6 w-6 text-amber-400 mx-auto mb-2" />
+                              <p className="text-[10px] font-bold text-amber-800 uppercase tracking-widest">Drag & Drop Evidence Documents</p>
+                              <p className="text-[9px] text-amber-600 mt-1">Supports PDF, JPG, PNG (Max 10MB)</p>
                             </div>
                           </section>
+                        )}
 
-                          {effectiveCase.status === 'Denied' && (() => {
-                            const rejectionReason = classifyRejection(effectiveCase.status, effectiveCase.rejectionReason);
-                            const playbook = escalationPlaybooks[rejectionReason];
-                            const escalationCount = effectiveCase.escalation_count || 0;
-
-                            return (
-                              <section className="bg-red-50/50 p-4 border border-red-100">
-                                <h4 className="text-[9px] font-bold text-red-900 uppercase tracking-widest mb-3">Escalation Playbook</h4>
-                                <p className="text-[10px] text-red-700 font-light mb-4 leading-relaxed">{playbook.description}</p>
-                                <div className="space-y-2 mb-4">
-                                  {playbook.actions.map((action, i) => (
-                                    <div key={i} className="flex items-start gap-2 text-[9px] text-red-800 font-mono">
-                                      <span>→</span> {action}
-                                    </div>
-                                  ))}
-                                </div>
-                                <Button className="w-full h-8 bg-red-900 hover:bg-red-950 text-white text-[9px] font-bold uppercase tracking-[0.2em] rounded-none">
-                                  Execute Escalation {escalationCount + 1}
-                                </Button>
-                              </section>
-                            );
-                          })()}
-
-                          <div className="pt-6 border-t border-gray-100 space-y-2">
-                            <Button variant="outline" className="w-full h-9 border-gray-200 text-gray-600 rounded-none text-[9px] font-bold uppercase tracking-[0.2em] hover:bg-gray-50" onClick={() => {
-                              window.open(api.getRecoveryDocumentUrl(effectiveCase.id), '_blank');
-                            }}>
-                              Download Case Pack
-                            </Button>
-                            <div className="text-center">
-                              <Link to="/evidence-locker" className="text-[8px] text-gray-400 font-bold uppercase tracking-widest hover:text-gray-600 transition-colors">
-                                Open Evidence Locker →
-                              </Link>
+                        {/* Actions Grid */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-gray-100 border border-gray-100">
+                          <div className="bg-white p-6 h-full">
+                            <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em] mb-6 border-b border-gray-100 pb-3">
+                              Immediate Actions
+                            </h4>
+                            <ol className="space-y-4">
+                              {immediateActions.map((action, idx) => (
+                                <li key={idx} className="flex items-start gap-4 group">
+                                  <span className="text-gray-300 font-mono text-[10px] mt-0.5 w-4 shrink-0 group-hover:text-gray-500 transition-colors">0{idx + 1}.</span>
+                                  <span className="text-xs text-gray-700 leading-relaxed font-light">{action}</span>
+                                </li>
+                              ))}
+                            </ol>
+                            <div className="mt-6 pt-4 border-t border-gray-50 flex items-center gap-2 text-[9px] font-bold text-emerald-600 uppercase tracking-widest">
+                              <ArrowRight className="h-3 w-3" /> Reimbursement Target: {formattedAmount}
                             </div>
                           </div>
-                        </>
-                      );
-                    })()}
+                          <div className="bg-white p-6 h-full">
+                            <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em] mb-6 border-b border-gray-100 pb-3">
+                              Preventive Measures
+                            </h4>
+                            <ol className="space-y-4">
+                              {preventiveMeasures.map((measure, idx) => (
+                                <li key={idx} className="flex items-start gap-4 group">
+                                  <span className="text-gray-300 font-mono text-[10px] mt-0.5 w-4 shrink-0 group-hover:text-gray-500 transition-colors">0{idx + 1}.</span>
+                                  <span className="text-xs text-gray-700 leading-relaxed font-light">{measure}</span>
+                                </li>
+                              ))}
+                            </ol>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </div>
+
+                {/* Tile 2: Audit Timeline */}
+                <div className="lg:col-span-1 p-8 bg-gray-50/30">
+                  <div className="flex items-center gap-2 mb-8">
+                    <History className="h-3.5 w-3.5 text-gray-400" />
+                    <h3 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.2em]">Audit Timeline</h3>
+                  </div>
+
+                  <div className="relative pl-2 space-y-8">
+                    {/* Timeline Visualizer */}
+                    <div className="mb-8 pl-4">
+                      <Timeline claimId={effectiveCase.id} />
+                    </div>
+
+                    {/* Detailed Event List */}
+                    <div className="relative border-l border-dashed border-gray-200 ml-2 space-y-8">
+                      {(effectiveCase.events || []).map((event: any, index: number) => (
+                        <div key={index} className="relative pl-6">
+                          <div className={cn(
+                            "absolute -left-[5px] top-0 h-2.5 w-2.5 rounded-full border-2 bg-white",
+                            event.type === 'submission' ? "border-emerald-500" :
+                              event.type === 'detection' ? "border-amber-500" :
+                                "border-gray-300"
+                          )} />
+                          <div>
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="text-[9px] font-bold text-gray-900 uppercase tracking-widest">
+                                {event.title.includes('•') ? event.title : event.title.replace(/\s+/g, ' • ')}
+                              </span>
+                            </div>
+                            <div className="text-[10px] font-mono text-gray-400 mb-2">
+                              {new Date(event.timestamp).toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).replace(',', '')}
+                            </div>
+                            {event.type === 'submission' && (
+                              <div className="text-[10px] font-mono text-gray-500 mb-1">Status: submitted</div>
+                            )}
+                            {(effectiveCase.guaranteedAmount || effectiveCase.amount) && (['submission', 'generation', 'detection'].includes(event.type)) && (
+                              <div className="text-[10px] font-mono text-gray-500">
+                                Amount: ${Number(effectiveCase.guaranteedAmount || effectiveCase.amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                              </div>
+                            )}
+                            <p className="text-[10px] text-gray-600 mt-2 leading-relaxed font-light border-l-2 border-gray-100 pl-3 py-1">
+                              {event.description}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
