@@ -517,7 +517,7 @@ export function Navbar({
 
       {/* Notes Modal - Institutional Style */}
       <Dialog open={showNotesModal} onOpenChange={setShowNotesModal}>
-        <DialogContent className="max-w-md bg-white border border-gray-200 shadow-2xl rounded-none p-0 overflow-hidden">
+        <DialogContent className="max-w-md bg-white border border-gray-200 shadow-2xl rounded-none p-0 overflow-hidden flex flex-col max-h-[90vh]">
           <div className="px-6 py-5 border-b border-gray-900 bg-gray-900">
             <h3 className="text-xs font-bold text-white uppercase tracking-[0.2em]">
               Note Ingestion Engine
@@ -527,7 +527,7 @@ export function Navbar({
             </p>
           </div>
 
-          <div className="p-6 space-y-6">
+          <div className="p-6 space-y-6 overflow-y-auto flex-1 scrollbar-hide">
             {/* Add new note */}
             <div className="space-y-3">
               <textarea
@@ -572,7 +572,7 @@ export function Navbar({
                   <span className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em]">Stored Records</span>
                   <span className="text-[9px] font-mono text-gray-400 uppercase">VOL.{notes.length}</span>
                 </div>
-                <div className="space-y-3 max-h-80 overflow-y-auto pr-2 scrollbar-hide">
+                <div className="space-y-3 max-h-60 overflow-y-auto pr-2 scrollbar-hide">
                   {notes.map((note) => (
                     <div key={note.id} className="group relative p-4 bg-gray-50/50 border border-gray-100 rounded-none transition-all hover:bg-white hover:border-gray-200">
                       <div className="absolute left-[-1px] top-[-1px] bottom-[-1px] w-[3px] bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity" />
