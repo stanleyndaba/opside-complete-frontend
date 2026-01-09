@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
-import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud, ArrowRight, Plus, CheckCircle, RefreshCw, RotateCcw, Download, Bell, Shield, TrendingDown, TrendingUp, Loader2 } from 'lucide-react';
+import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud, ArrowRight, Plus, CheckCircle, RefreshCw, RotateCcw, Download, Bell, Shield, TrendingDown, TrendingUp, Loader2, Hexagon } from 'lucide-react';
 import { api, detectionApi } from '@/lib/api';
 import { recoveryApi } from '@/lib/recoveryApi';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -36,20 +36,20 @@ const GoogleDriveIcon = '/gd.png';
 const DropboxIcon = '/Dropbox_Icon.svg.png';
 
 // Helper to render bold text from "**text**" markdown
-const renderNotificationMessage = (message: string) => {
-  if (!message) return '';
+const renderNotificationMessage = (message: any) => {
+  if (!message || typeof message !== 'string') return '';
   const parts = message.split(/(\*\*.*?\*\*)/g);
   return parts.map((part, index) => {
     if (part.startsWith('**') && part.endsWith('**')) {
-      return <strong key={index} className="font-bold text-gray-700">{part.slice(2, -2)}</strong>; // Darker and bold
+      return <strong key={index} className="font-bold text-gray-700">{part.slice(2, -2)}</strong>;
     }
     return <span key={index}>{part}</span>;
   });
 };
 
 // Helper to strip emojis from text
-const stripEmojis = (text: string) => {
-  if (!text) return '';
+const stripEmojis = (text: any) => {
+  if (!text || typeof text !== 'string') return '';
   return text.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{231A}-\u{231B}\u{23E9}-\u{23F3}\u{23F8}-\u{23FA}\u{25AA}-\u{25AB}\u{25B6}\u{25C0}\u{25FB}-\u{25FE}\u{2614}-\u{2615}\u{2648}-\u{2653}\u{267F}\u{2693}\u{26A1}\u{26AA}-\u{26AB}\u{26BD}-\u{26BE}\u{26C4}-\u{26C5}\u{26CE}\u{26D4}\u{26EA}\u{26F2}-\u{26F3}\u{26F5}\u{26FA}\u{26FD}\u{2702}\u{2705}\u{2708}-\u{270D}\u{270F}]/gu, '').trim();
 };
 
@@ -140,7 +140,8 @@ export function Dashboard() {
   }, [notifications, recoveredTotal, recoveredCurrency, reconciledCount, formatCurrencyWithSelection]);
 
   // Helper to intercept "Detected X High-Probability Claims" and append value if missing
-  const enrichNotificationTitle = useCallback((title: string) => {
+  const enrichNotificationTitle = useCallback((title: any) => {
+    if (!title || typeof title !== 'string') return '';
     const cleanTitle = stripEmojis(title);
     // Pattern match "Detected <number> High-Probability Claims" (without existing amount)
     // Check if it ends with "Claims" or "Claim" to ensure we don't append twice if backend already handled it
@@ -1093,7 +1094,11 @@ export function Dashboard() {
                         <div className="flex flex-col">
                           {displayNotifications.slice(0, 12).map((notification) => {
                             const isUnread = notification.status !== 'read';
-                            const timeAgo = formatDistanceToNow(new Date(notification.created_at), { addSuffix: true });
+                            const notificationDate = new Date(notification.created_at);
+                            const isValidDate = notificationDate instanceof Date && !isNaN(notificationDate.getTime());
+                            const timeAgo = isValidDate
+                              ? formatDistanceToNow(notificationDate, { addSuffix: true })
+                              : 'recently';
 
                             // Status Dot Color
                             let statusColor = 'bg-gray-200';
