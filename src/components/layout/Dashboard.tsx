@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
+﻿import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
@@ -1311,7 +1311,7 @@ export function Dashboard() {
           </Button>
         </div>
       </DialogContent>
-  </Dialog >
+    </Dialog >
     {/* Quick Actions Editor */ }
     < Dialog open = { quickActionsEditOpen } onOpenChange = { setQuickActionsEditOpen } >
       <DialogContent className="max-w-md bg-white border border-gray-200 rounded-sm p-0">
@@ -1361,3 +1361,4 @@ export function Dashboard() {
     </div >
   );
 }
+
