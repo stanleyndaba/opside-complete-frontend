@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { api } from '@/lib/api';
 import { Link } from 'react-router-dom';
-import { Eye, RefreshCw, CheckCircle2, XCircle, Clock, AlertCircle, ExternalLink, Send, RotateCcw, AlertTriangle, Loader2 } from 'lucide-react';
+import { Eye, RefreshCw, CheckCircle2, XCircle, Clock, AlertCircle, ExternalLink, Send, RotateCcw, AlertTriangle, Loader2, Hexagon, ArrowRight, Search } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
@@ -156,15 +153,35 @@ export function DisputeCasesTable() {
   const getStatusBadge = (status: string) => {
     const statusLower = status.toLowerCase();
     if (statusLower === 'approved' || statusLower === 'paid') {
-      return <span className="text-[10px] px-1.5 py-0.5 bg-gray-100 text-gray-700 border border-gray-300 rounded"><CheckCircle2 className="w-3 h-3 mr-1 inline" />{status}</span>;
+      return (
+        <span className="flex items-center gap-1.5 text-emerald-600">
+          <CheckCircle2 className="w-3 h-3" />
+          <span className="text-[10px] font-medium uppercase tracking-wider">{status}</span>
+        </span>
+      );
     } else if (statusLower === 'rejected' || statusLower === 'denied' || statusLower === 'failed') {
-      return <span className="text-[10px] px-1.5 py-0.5 bg-gray-50 text-gray-500 border border-gray-200 rounded"><XCircle className="w-3 h-3 mr-1 inline" />{status}</span>;
+      return (
+        <span className="flex items-center gap-1.5 text-red-600">
+          <XCircle className="w-3 h-3" />
+          <span className="text-[10px] font-medium uppercase tracking-wider">{status}</span>
+        </span>
+      );
     } else if (statusLower === 'pending' || statusLower === 'submitted') {
-      return <span className="text-[10px] px-1.5 py-0.5 bg-gray-50 text-gray-600 border border-gray-200 rounded"><Clock className="w-3 h-3 mr-1 inline" />{status}</span>;
+      return (
+        <span className="flex items-center gap-1.5 text-amber-600">
+          <Clock className="w-3 h-3" />
+          <span className="text-[10px] font-medium uppercase tracking-wider">{status}</span>
+        </span>
+      );
     } else if (statusLower === 'in_progress' || statusLower === 'filing') {
-      return <span className="text-[10px] px-1.5 py-0.5 bg-gray-50 text-gray-600 border border-gray-200 rounded"><Clock className="w-3 h-3 mr-1 inline" />{status}</span>;
+      return (
+        <span className="flex items-center gap-1.5 text-blue-600">
+          <Loader2 className="w-3 h-3 animate-spin" />
+          <span className="text-[10px] font-medium uppercase tracking-wider">{status}</span>
+        </span>
+      );
     } else {
-      return <span className="text-[10px] px-1.5 py-0.5 bg-gray-50 text-gray-500 border border-gray-200 rounded">{status}</span>;
+      return <span className="text-[10px] text-gray-500 font-medium uppercase tracking-wider">{status}</span>;
     }
   };
 
@@ -173,29 +190,29 @@ export function DisputeCasesTable() {
 
     const statusLower = filingStatus.toLowerCase();
     if (statusLower === 'filed' || statusLower === 'submitted') {
-      return <span className="text-[10px] px-1.5 py-0.5 bg-slate-800 text-white border border-slate-700 rounded-none font-mono uppercase tracking-wide">FILED</span>;
+      return <span className="text-[10px] font-mono text-gray-900 font-medium">FILED</span>;
     } else if (statusLower === 'filing') {
-      return <span className="text-[10px] px-1.5 py-0.5 bg-slate-600 text-white border border-slate-500 rounded-none font-mono uppercase tracking-wide">FILING...</span>;
+      return <span className="text-[10px] font-mono text-blue-600 animate-pulse font-medium">FILING...</span>;
     } else if (statusLower === 'retrying') {
-      return <span className="text-[10px] px-1.5 py-0.5 bg-amber-800 text-white border border-amber-700 rounded-none font-mono uppercase tracking-wide">RETRYING</span>;
+      return <span className="text-[10px] font-mono text-amber-600 font-medium">RETRYING</span>;
     } else if (statusLower === 'failed') {
       return (
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <span className="text-[10px] px-1.5 py-0.5 bg-red-900 text-white border border-red-800 rounded-none font-mono uppercase tracking-wide cursor-help flex items-center gap-1">
+              <span className="flex items-center gap-1 text-red-600 cursor-help">
                 <AlertTriangle className="w-3 h-3" />
-                FAILED
+                <span className="text-[10px] font-mono font-medium">FAILED</span>
               </span>
             </TooltipTrigger>
-            <TooltipContent side="top" className="max-w-[300px] bg-slate-900 text-white border-slate-700 rounded-none">
-              <p className="text-xs font-mono">{filingError || 'Unknown error - check logs'}</p>
+            <TooltipContent side="top" className="max-w-[300px] bg-white text-gray-900 border-gray-200 shadow-xl rounded-none">
+              <p className="text-[10px] font-mono leading-relaxed">{filingError || 'Unknown error - check logs'}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
       );
     } else {
-      return <span className="text-[10px] px-1.5 py-0.5 bg-slate-500 text-white border border-slate-400 rounded-none font-mono uppercase tracking-wide">PENDING</span>;
+      return <span className="text-[10px] font-mono text-gray-500 font-medium uppercase">PENDING</span>;
     }
   };
 
@@ -211,51 +228,49 @@ export function DisputeCasesTable() {
     const filingStatus = caseItem.filing_status?.toLowerCase();
     const isProcessing = filingInProgress.has(caseItem.id);
 
-    // Case already filed or approved - no action needed
     if (filingStatus === 'filed' || filingStatus === 'submitted' || filingStatus === 'approved') {
       return null;
     }
 
-    // Failed case - show Retry button
     if (filingStatus === 'failed') {
       return (
         <Button
           onClick={() => handleRetryFiling(caseItem)}
           disabled={isProcessing}
+          variant="ghost"
           size="sm"
-          className="h-7 px-2.5 bg-slate-800 hover:bg-slate-700 text-white border border-slate-600 rounded-none text-[10px] font-mono uppercase tracking-wide">
+          className="h-7 px-3 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-none text-[10px] font-medium tracking-[0.1em] uppercase">
           {isProcessing ? (
-            <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+            <Loader2 className="w-3 h-3 mr-1.5 animate-spin" />
           ) : (
-            <RotateCcw className="w-3 h-3 mr-1" />
+            <RotateCcw className="w-3 h-3 mr-1.5" />
           )}
-          RETRY
+          RETRY FILING
         </Button>
       );
     }
 
-    // Pending case - show File Now button
     if (filingStatus === 'pending' || !filingStatus) {
       return (
         <Button
           onClick={() => handleFileNow(caseItem)}
           disabled={isProcessing}
+          variant="ghost"
           size="sm"
-          className="h-7 px-2.5 bg-slate-900 hover:bg-slate-800 text-white border border-slate-700 rounded-none text-[10px] font-mono uppercase tracking-wide">
+          className="h-7 px-3 text-gray-900 hover:bg-gray-100 rounded-none text-[10px] font-medium tracking-[0.1em] uppercase">
           {isProcessing ? (
-            <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+            <Loader2 className="w-3 h-3 mr-1.5 animate-spin" />
           ) : (
-            <Send className="w-3 h-3 mr-1" />
+            <Send className="w-3 h-3 mr-1.5" />
           )}
           FILE NOW
         </Button>
       );
     }
 
-    // Filing in progress
     if (filingStatus === 'filing' || filingStatus === 'retrying') {
       return (
-        <span className="text-[10px] text-slate-500 font-mono uppercase">PROCESSING...</span>
+        <span className="text-[10px] text-gray-400 font-medium tracking-[0.1em] uppercase px-3">PROCESSING...</span>
       );
     }
 
@@ -264,160 +279,133 @@ export function DisputeCasesTable() {
 
   if (loading && cases.length === 0) {
     return (
-      <Card className="bg-white border-gray-200">
-        <CardContent className="p-8 text-center">
-          <p className="text-sm text-gray-600">Loading dispute cases...</p>
-        </CardContent>
-      </Card>
+      <div className="py-12 flex flex-col items-center justify-center space-y-4">
+        <Loader2 className="w-6 h-6 text-gray-300 animate-spin" />
+        <span className="text-[11px] text-gray-400 uppercase tracking-[0.2em]">Synchronizing Intelligence</span>
+      </div>
     );
   }
 
   if (error && cases.length === 0) {
     return (
-      <Card className="bg-white border-gray-200">
-        <CardContent className="p-6">
-          <div className="text-center">
-            <p className="text-sm text-red-600 mb-4">{error}</p>
-            <Button onClick={() => fetchCases()} variant="outline" size="sm">
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Retry
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="py-12 flex flex-col items-center justify-center space-y-4">
+        <AlertTriangle className="w-6 h-6 text-red-200" />
+        <span className="text-[11px] text-gray-500 uppercase tracking-[0.2em]">Interface Error: {error}</span>
+        <Button variant="outline" size="sm" onClick={() => fetchCases()} className="h-8 rounded-none border-gray-200">
+          RETRY CONNECTION
+        </Button>
+      </div>
     );
   }
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col">
       {/* Header with Filters */}
-      <div className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-sm px-4 py-3">
+      <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-white">
         <div>
-          <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">DISPUTE CASES</h3>
-          <p className="text-[10px] text-gray-500 mt-0.5">
-            {cases.length} {cases.length === 1 ? 'case' : 'cases'} • Agent 7 Filing System
+          <h3 className="text-[11px] font-semibold text-gray-900 uppercase tracking-[0.15em]">Dispute Cases</h3>
+          <p className="text-[10px] text-gray-400 mt-1 uppercase tracking-wider font-medium">
+            {cases.length} cases • Agent 7 Filing System
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[140px] h-8 text-xs bg-white text-gray-700 border-gray-200 hover:bg-gray-50 rounded-sm">
-              <SelectValue placeholder="Filter by Status" />
+            <SelectTrigger className="w-[160px] h-9 text-[11px] bg-white text-gray-600 border-gray-200 hover:bg-gray-50 rounded-none focus:ring-0">
+              <SelectValue placeholder="STATUS: ALL" />
             </SelectTrigger>
-            <SelectContent className="rounded-sm">
-              <SelectItem value="all" className="text-xs">All Statuses</SelectItem>
-              <SelectItem value="pending" className="text-xs">Pending</SelectItem>
-              <SelectItem value="submitted" className="text-xs">Submitted</SelectItem>
-              <SelectItem value="in_progress" className="text-xs">In Progress</SelectItem>
-              <SelectItem value="approved" className="text-xs">Approved</SelectItem>
-              <SelectItem value="rejected" className="text-xs">Rejected</SelectItem>
+            <SelectContent className="rounded-none border-gray-100 shadow-2xl">
+              <SelectItem value="all" className="text-[11px] uppercase tracking-wider">ALL STATUSES</SelectItem>
+              <SelectItem value="pending" className="text-[11px] uppercase tracking-wider">PENDING</SelectItem>
+              <SelectItem value="submitted" className="text-[11px] uppercase tracking-wider">SUBMITTED</SelectItem>
+              <SelectItem value="in_progress" className="text-[11px] uppercase tracking-wider">IN PROGRESS</SelectItem>
+              <SelectItem value="approved" className="text-[11px] uppercase tracking-wider">APPROVED</SelectItem>
+              <SelectItem value="rejected" className="text-[11px] uppercase tracking-wider">REJECTED</SelectItem>
             </SelectContent>
           </Select>
           <Button
             onClick={() => fetchCases(statusFilter !== 'all' ? statusFilter : undefined)}
-            variant="outline"
+            variant="ghost"
             size="sm"
-            className="h-8 bg-white text-gray-700 border-gray-200 hover:bg-gray-50 rounded-sm">
-            <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
-            Refresh
+            className="h-9 px-4 text-gray-400 hover:text-gray-900 border border-gray-100 hover:border-gray-200 rounded-none text-[11px] font-medium tracking-wider">
+            <RefreshCw className="w-3.5 h-3.5 mr-2" />
+            SYNCHRONIZE
           </Button>
         </div>
       </div>
 
-      {/* Cases Table */}
-      <Card className="bg-white border-white rounded-sm">
-        <CardContent className="p-0">
-          {cases.length === 0 ? (
-            <div className="p-8 text-center">
-              <AlertCircle className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-              <p className="text-sm text-gray-600 mb-2">No dispute cases found</p>
-              <p className="text-xs text-gray-500">
-                Cases will appear here after evidence matching
-              </p>
+      {/* Institutional List */}
+      <div className="mt-0 border-t border-gray-100 divide-y divide-gray-100 bg-white">
+        {cases.length === 0 ? (
+          <div className="py-20 flex flex-col items-center justify-center space-y-4">
+            <Search className="w-8 h-8 text-gray-100" />
+            <div className="flex flex-col items-center">
+              <span className="text-[11px] text-gray-900 font-semibold uppercase tracking-[0.2em]">Queue Clean</span>
+              <span className="text-[10px] text-gray-400 mt-1 uppercase tracking-wider">No cases require immediate filing</span>
             </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow className="hover:bg-transparent">
-                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Case #</TableHead>
-                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Claim ID</TableHead>
-                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Status</TableHead>
-                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Filing Status</TableHead>
-                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Amount</TableHead>
-                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Amazon Case</TableHead>
-                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3">Retries</TableHead>
-                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-3"></TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {cases.map((caseItem) => (
-                    <TableRow key={caseItem.id || Math.random()} className="hover:bg-gray-50/50">
-                      <TableCell className="py-3">
-                        <span className="font-mono text-sm text-gray-900">{caseItem.case_number || '—'}</span>
-                      </TableCell>
-                      <TableCell className="py-3">
-                        {caseItem.claim_id ? (
-                          <Button asChild variant="link" className="p-0 h-auto text-xs text-gray-600 hover:text-gray-900 font-mono">
-                            <Link to={`/recoveries/${caseItem.claim_id}`}>
-                              {caseItem.claim_id.substring(0, 12)}...
-                            </Link>
-                          </Button>
-                        ) : (
-                          <span className="text-xs text-gray-400 font-mono">—</span>
-                        )}
-                      </TableCell>
-                      <TableCell className="py-3">
-                        {getStatusBadge(caseItem.status || 'unknown')}
-                      </TableCell>
-                      <TableCell className="py-3">
-                        {getFilingStatusBadge(caseItem.filing_status, caseItem.filing_error)}
-                      </TableCell>
-                      <TableCell className="py-3">
-                        <span className="text-sm font-mono tabular-nums text-gray-900">
-                          {formatCurrency(caseItem.amount || 0, caseItem.currency || 'USD')}
+          </div>
+        ) : (
+          cases.map((caseItem) => (
+            <div key={caseItem.id || Math.random()} className="group relative bg-white hover:bg-gray-50/40 transition-all duration-200">
+              {/* Signature Left Accent */}
+              <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gray-900 scale-y-0 group-hover:scale-y-100 transition-transform duration-200 origin-center" />
+
+              <div className="flex items-center justify-between px-6 py-5">
+                <div className="flex items-center gap-5 min-w-0 flex-1">
+                  <div className="flex-shrink-0">
+                    <Hexagon className="w-5 h-5 text-gray-200 group-hover:text-gray-900 transition-colors duration-300" strokeWidth={1.5} />
+                  </div>
+
+                  <div className="flex flex-col min-w-0">
+                    <div className="flex items-center gap-3">
+                      <span className="text-[13px] font-mono font-medium text-gray-900 truncate">
+                        {caseItem.case_number || 'CASE-ID-PENDING'}
+                      </span>
+                      {caseItem.amazon_case_id && (
+                        <span className="flex items-center gap-1.5 px-2 py-0.5 bg-gray-100 text-[10px] font-mono text-gray-600">
+                          AMZ: {caseItem.amazon_case_id}
+                          <ExternalLink className="w-2.5 h-2.5" />
                         </span>
-                      </TableCell>
-                      <TableCell className="py-3">
-                        {caseItem.amazon_case_id ? (
-                          <div className="flex items-center gap-1.5">
-                            <span className="font-mono text-xs text-gray-600">{caseItem.amazon_case_id}</span>
-                            <Button variant="ghost" size="sm" className="h-5 w-5 p-0">
-                              <ExternalLink className="w-3 h-3" />
-                            </Button>
-                          </div>
-                        ) : (
-                          <span className="text-xs text-gray-400">—</span>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-2 mt-2">
+                      <div className="flex items-center gap-2 text-[10px] font-medium tracking-wider uppercase text-gray-400">
+                        <span>{getStatusBadge(caseItem.status || 'unknown')}</span>
+                        <span className="text-gray-200">|</span>
+                        <span>{getFilingStatusBadge(caseItem.filing_status, caseItem.filing_error)}</span>
+                        <span className="text-gray-200">|</span>
+                        <span className="text-gray-900 font-mono tabular-nums">{formatCurrency(caseItem.amount || 0, caseItem.currency || 'USD')}</span>
+                        <span className="text-gray-200">|</span>
+                        <span className="font-mono text-[9px] lowercase tracking-normal">id: {caseItem.claim_id?.substring(0, 8)}...</span>
+                        {caseItem.retry_count && caseItem.retry_count > 0 && (
+                          <>
+                            <span className="text-gray-200">|</span>
+                            <span className="text-amber-600">{caseItem.retry_count} RETRIES</span>
+                          </>
                         )}
-                      </TableCell>
-                      <TableCell className="py-3">
-                        {caseItem.retry_count && caseItem.retry_count> 0 ? (
-                          <span className="text-[10px] px-1.5 py-0.5 bg-amber-100 text-amber-800 border border-amber-300 rounded-none font-mono">
-                            {caseItem.retry_count}
-                          </span>
-                        ) : (
-                          <span className="text-xs text-gray-400">0</span>
-                        )}
-                      </TableCell>
-                      <TableCell className="py-3">
-                        <div className="flex items-center gap-2">
-                          {renderFilingActions(caseItem)}
-                          {caseItem.claim_id && (
-                            <Button asChild variant="ghost" size="sm" className="h-7 w-7 p-0">
-                              <Link to={`/recoveries/${caseItem.claim_id}`}>
-                                <Eye className="w-4 h-4 text-gray-500" />
-                              </Link>
-                            </Button>
-                          )}
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4 ml-6">
+                  {renderFilingActions(caseItem)}
+
+                  {caseItem.claim_id && (
+                    <Link
+                      to={`/recoveries/${caseItem.claim_id}`}
+                      className="flex items-center gap-2.5 text-[10px] font-bold text-gray-400 hover:text-gray-900 tracking-[0.15em] transition-all duration-200 group/link"
+                    >
+                      VIEW RECOVERY
+                      <ArrowRight className="w-3 h-3 translate-x-0 group-hover/link:translate-x-1 transition-transform duration-200" />
+                    </Link>
+                  )}
+                </div>
+              </div>
             </div>
-          )}
-        </CardContent>
-      </Card>
+          ))
+        )}
+      </div>
     </div>
   );
 }
