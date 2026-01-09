@@ -746,6 +746,12 @@ export function Dashboard() {
                           </span>
                         </div>
                       )}
+                      {/* Estimated margin protected (mock) */}
+                      {recoveredTotal != null && recoveredTotal > 0 && (
+                        <p className="text-[9px] text-gray-400 mt-2">
+                          Estimated margin protected: <span className="font-medium text-gray-500">2.3%</span> of your last 12 months' FBA revenue
+                        </p>
+                      )}
 
                       {/* Sync status */}
                       {(syncMessage || needsSync || syncTriggered) && (
