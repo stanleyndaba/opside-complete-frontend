@@ -1105,37 +1105,39 @@ export function Dashboard() {
                                         {timeAgo}
                                       </span>
                                     </div>
-                                    {enrichNotificationTitle(notification.title)}
-                                  </h4>
-                                  <div className="text-[11px] text-gray-600 leading-relaxed space-y-2 bg-gray-50/50 p-3 rounded-sm border border-gray-100">
-                                    {renderNotificationMessage(notification.message)}
+                                    <h4 className="text-xs font-bold text-gray-900 leading-snug mb-2">
+                                      {enrichNotificationTitle(notification.title)}
+                                    </h4>
+                                    <div className="text-[11px] text-gray-600 leading-relaxed space-y-2 bg-gray-50/50 p-3 rounded-sm border border-gray-100">
+                                      {renderNotificationMessage(notification.message)}
+                                    </div>
+                                    <div className="mt-3 flex items-center justify-between pt-3 border-t border-gray-100">
+                                      <span className="text-[9px] text-gray-400 font-mono">
+                                        REF: {notification.id.substring(0, 8).toUpperCase()}
+                                      </span>
+                                      <button
+                                        onClick={() => navigate('/recoveries')}
+                                        className="text-[9px] font-bold text-gray-900 flex items-center gap-1 hover:underline"
+                                      >
+                                        Case Details <ArrowRight className="h-2.5 w-2.5" />
+                                      </button>
+                                    </div>
                                   </div>
-                                  <div className="mt-3 flex items-center justify-between pt-3 border-t border-gray-100">
-                                    <span className="text-[9px] text-gray-400 font-mono">
-                                      REF: {notification.id.substring(0, 8).toUpperCase()}
-                                    </span>
-                                    <button
-                                      onClick={() => navigate('/recoveries')}
-                                      className="text-[9px] font-bold text-gray-900 flex items-center gap-1 hover:underline"
-                                    >
-                                      Case Details <ArrowRight className="h-2.5 w-2.5" />
-                                    </button>
-                                  </div>
-                                </div>
-                              </HoverCardContent>
+                                </HoverCardContent>
                               </HoverCard>
-                      );
+                            );
                           })}
-                    </div>
+                        </div>
                       )}
-                  </div>
-                  <div className="border-t border-gray-200 p-3">
-                    <button
-                      onClick={() => navigate('/notifications')}
-                      className="w-full text-center text-[10px] text-gray-500 hover:text-gray-700 py-1"
-                    >
-                      View all logs
-                    </button>
+                    </div>
+                    <div className="border-t border-gray-200 p-3">
+                      <button
+                        onClick={() => navigate('/notifications')}
+                        className="w-full text-center text-[10px] text-gray-500 hover:text-gray-700 py-1"
+                      >
+                        View all logs
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1143,174 +1145,173 @@ export function Dashboard() {
           </div>
       </div>
     </main>
-      </div >
     {/* Document Sources Modal */ }
-    < Dialog open = { showSourcesModal } onOpenChange = { setShowSourcesModal } >
-      <DialogContent className="sm:max-w-xl bg-white border border-gray-200 rounded-sm p-0">
-        <DialogHeader className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-          <DialogTitle className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Connect Document Sources</DialogTitle>
-          <DialogDescription className="text-[10px] text-gray-500 mt-0.5">
-            Read-only access for document ingestion
-          </DialogDescription>
-        </DialogHeader>
+  <Dialog open={showSourcesModal} onOpenChange={setShowSourcesModal}>
+    <DialogContent className="sm:max-w-md p-0 gap-0 overflow-hidden border-gray-200 rounded-sm shadow-2xl">
+      <DialogHeader className="px-6 py-5 bg-gray-900 border-b border-gray-900">
+        <DialogTitle className="text-xs font-semibold text-white uppercase tracking-[0.2em]">Connect Document Sources</DialogTitle>
+        <DialogDescription className="text-[10px] text-gray-400 mt-1 font-medium tracking-wide">
+          AUTHORIZED ACCESS FOR DOCUMENT INGESTION
+        </DialogDescription>
+      </DialogHeader>
 
-        <div className="p-6">
-          <div className="grid grid-cols-4 gap-4">
-            <button
-              onClick={async () => {
-                try {
-                  setProviderLoading('gmail');
-                  const r = await api.connectDocs('gmail');
-                  if (r.ok && r.data?.auth_url) {
-                    window.location.href = r.data.auth_url;
-                  } else {
-                    toast({
-                      title: 'Connection Failed',
-                      description: r.error || 'Failed to initiate Gmail connection.',
-                      variant: 'destructive',
-                    });
-                    setProviderLoading(null);
-                  }
-                } catch (error) {
+      <div className="p-6">
+        <div className="grid grid-cols-2 gap-4">
+          <button
+            onClick={async () => {
+              try {
+                setProviderLoading('gmail');
+                const r = await api.connectDocs('gmail');
+                if (r.ok && r.data?.auth_url) {
+                  window.location.href = r.data.auth_url;
+                } else {
                   toast({
                     title: 'Connection Failed',
-                    description: 'An error occurred. Please try again.',
+                    description: r.error || 'Failed to initiate Gmail connection.',
                     variant: 'destructive',
                   });
                   setProviderLoading(null);
                 }
-              }}
-              disabled={providerLoading === 'gmail'}
-              className="flex flex-col items-center justify-center gap-3 p-4 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50"
-            >
-              {providerLoading === 'gmail' ? (
-                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-              ) : (
-                <img src={GmailIcon} alt="Gmail" className="h-8 w-8 object-contain" />
-              )}
-              <span className="text-xs font-medium text-gray-700">Gmail</span>
-            </button>
-
-            <button
-              onClick={async () => {
-                try {
-                  setProviderLoading('outlook');
-                  const r = await api.connectDocs('outlook');
-                  if (r.ok && r.data?.auth_url) {
-                    window.location.href = r.data.auth_url;
-                  } else {
-                    toast({
-                      title: 'Connection Failed',
-                      description: r.error || 'Failed to initiate Outlook connection.',
-                      variant: 'destructive',
-                    });
-                    setProviderLoading(null);
-                  }
-                } catch (error) {
-                  toast({
-                    title: 'Connection Failed',
-                    description: 'An error occurred. Please try again.',
-                    variant: 'destructive',
-                  });
-                  setProviderLoading(null);
-                }
-              }}
-              disabled={providerLoading === 'outlook'}
-              className="flex flex-col items-center justify-center gap-3 p-4 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50"
-            >
-              {providerLoading === 'outlook' ? (
-                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-              ) : (
-                <img src={OutlookIcon} alt="Outlook" className="h-8 w-8 object-contain" />
-              )}
-              <span className="text-xs font-medium text-gray-700">Outlook</span>
-            </button>
-
-            <button
-              onClick={async () => {
-                try {
-                  setProviderLoading('gdrive');
-                  const r = await api.connectDocs('gdrive');
-                  if (r.ok && r.data?.auth_url) {
-                    window.location.href = r.data.auth_url;
-                  } else {
-                    toast({
-                      title: 'Connection Failed',
-                      description: r.error || 'Failed to initiate Google Drive connection.',
-                      variant: 'destructive',
-                    });
-                    setProviderLoading(null);
-                  }
-                } catch (error) {
-                  toast({
-                    title: 'Connection Failed',
-                    description: 'An error occurred. Please try again.',
-                    variant: 'destructive',
-                  });
-                  setProviderLoading(null);
-                }
-              }}
-              disabled={providerLoading === 'gdrive'}
-              className="flex flex-col items-center justify-center gap-3 p-4 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50"
-            >
-              {providerLoading === 'gdrive' ? (
-                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-              ) : (
-                <img src={GoogleDriveIcon} alt="Google Drive" className="h-8 w-8 object-contain" />
-              )}
-              <span className="text-xs font-medium text-gray-700">Drive</span>
-            </button>
-
-            <button
-              onClick={async () => {
-                try {
-                  setProviderLoading('dropbox');
-                  const r = await api.connectDocs('dropbox');
-                  if (r.ok && r.data?.auth_url) {
-                    window.location.href = r.data.auth_url;
-                  } else {
-                    toast({
-                      title: 'Connection Failed',
-                      description: r.error || 'Failed to initiate Dropbox connection.',
-                      variant: 'destructive',
-                    });
-                    setProviderLoading(null);
-                  }
-                } catch (error) {
-                  toast({
-                    title: 'Connection Failed',
-                    description: 'An error occurred. Please try again.',
-                    variant: 'destructive',
-                  });
-                  setProviderLoading(null);
-                }
-              }}
-              disabled={providerLoading === 'dropbox'}
-              className="flex flex-col items-center justify-center gap-3 p-4 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50"
-            >
-              {providerLoading === 'dropbox' ? (
-                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-              ) : (
-                <img src={DropboxIcon} alt="Dropbox" className="h-8 w-8 object-contain" />
-              )}
-              <span className="text-xs font-medium text-gray-700">Dropbox</span>
-            </button>
-          </div>
-        </div>
-
-        <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setShowSourcesModal(false)}
-            className="text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+              } catch (error) {
+                toast({
+                  title: 'Connection Failed',
+                  description: 'An error occurred. Please try again.',
+                  variant: 'destructive',
+                });
+                setProviderLoading(null);
+              }
+            }}
+            disabled={providerLoading === 'gmail'}
+            className="group flex flex-col items-center justify-center gap-3 p-6 border border-gray-200 hover:border-gray-900 hover:bg-gray-50 transition-all duration-200 rounded-sm disabled:opacity-50"
           >
-            Skip for Now
-          </Button>
+            {providerLoading === 'gmail' ? (
+              <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
+            ) : (
+              <img src={GmailIcon} alt="Gmail" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
+            )}
+            <span className="text-[10px] font-bold text-gray-900 uppercase tracking-wider group-hover:text-black">Gmail</span>
+          </button>
+
+          <button
+            onClick={async () => {
+              try {
+                setProviderLoading('outlook');
+                const r = await api.connectDocs('outlook');
+                if (r.ok && r.data?.auth_url) {
+                  window.location.href = r.data.auth_url;
+                } else {
+                  toast({
+                    title: 'Connection Failed',
+                    description: r.error || 'Failed to initiate Outlook connection.',
+                    variant: 'destructive',
+                  });
+                  setProviderLoading(null);
+                }
+              } catch (error) {
+                toast({
+                  title: 'Connection Failed',
+                  description: 'An error occurred. Please try again.',
+                  variant: 'destructive',
+                });
+                setProviderLoading(null);
+              }
+            }}
+            disabled={providerLoading === 'outlook'}
+            className="group flex flex-col items-center justify-center gap-3 p-6 border border-gray-200 hover:border-gray-900 hover:bg-gray-50 transition-all duration-200 rounded-sm disabled:opacity-50"
+          >
+            {providerLoading === 'outlook' ? (
+              <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
+            ) : (
+              <img src={OutlookIcon} alt="Outlook" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
+            )}
+            <span className="text-[10px] font-bold text-gray-900 uppercase tracking-wider group-hover:text-black">Outlook</span>
+          </button>
+
+          <button
+            onClick={async () => {
+              try {
+                setProviderLoading('gdrive');
+                const r = await api.connectDocs('gdrive');
+                if (r.ok && r.data?.auth_url) {
+                  window.location.href = r.data.auth_url;
+                } else {
+                  toast({
+                    title: 'Connection Failed',
+                    description: r.error || 'Failed to initiate Google Drive connection.',
+                    variant: 'destructive',
+                  });
+                  setProviderLoading(null);
+                }
+              } catch (error) {
+                toast({
+                  title: 'Connection Failed',
+                  description: 'An error occurred. Please try again.',
+                  variant: 'destructive',
+                });
+                setProviderLoading(null);
+              }
+            }}
+            disabled={providerLoading === 'gdrive'}
+            className="group flex flex-col items-center justify-center gap-3 p-6 border border-gray-200 hover:border-gray-900 hover:bg-gray-50 transition-all duration-200 rounded-sm disabled:opacity-50"
+          >
+            {providerLoading === 'gdrive' ? (
+              <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
+            ) : (
+              <img src={GoogleDriveIcon} alt="Google Drive" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
+            )}
+            <span className="text-[10px] font-bold text-gray-900 uppercase tracking-wider group-hover:text-black">Drive</span>
+          </button>
+
+          <button
+            onClick={async () => {
+              try {
+                setProviderLoading('dropbox');
+                const r = await api.connectDocs('dropbox');
+                if (r.ok && r.data?.auth_url) {
+                  window.location.href = r.data.auth_url;
+                } else {
+                  toast({
+                    title: 'Connection Failed',
+                    description: r.error || 'Failed to initiate Dropbox connection.',
+                    variant: 'destructive',
+                  });
+                  setProviderLoading(null);
+                }
+              } catch (error) {
+                toast({
+                  title: 'Connection Failed',
+                  description: 'An error occurred. Please try again.',
+                  variant: 'destructive',
+                });
+                setProviderLoading(null);
+              }
+            }}
+            disabled={providerLoading === 'dropbox'}
+            className="group flex flex-col items-center justify-center gap-3 p-6 border border-gray-200 hover:border-gray-900 hover:bg-gray-50 transition-all duration-200 rounded-sm disabled:opacity-50"
+          >
+            {providerLoading === 'dropbox' ? (
+              <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
+            ) : (
+              <img src={DropboxIcon} alt="Dropbox" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
+            )}
+            <span className="text-[10px] font-bold text-gray-900 uppercase tracking-wider group-hover:text-black">Dropbox</span>
+          </button>
         </div>
-      </DialogContent>
-      </Dialog >
-    {/* Quick Actions Editor */ }
+      </div>
+
+      <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setShowSourcesModal(false)}
+          className="text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+        >
+          Skip for Now
+        </Button>
+      </div>
+    </DialogContent>
+  </Dialog >
+  {/* Quick Actions Editor */ }
     < Dialog open = { quickActionsEditOpen } onOpenChange = { setQuickActionsEditOpen } >
       <DialogContent className="max-w-md bg-white border border-gray-200 rounded-sm p-0">
         <DialogHeader className="px-6 py-4 border-b border-gray-200 bg-gray-50">
@@ -1336,7 +1337,7 @@ export function Dashboard() {
           <button className="px-4 py-1.5 text-xs font-medium text-white bg-gray-900 hover:bg-gray-800 transition-colors" onClick={() => { try { localStorage.setItem('clario.quickActions', JSON.stringify(selectedQuickActions)); toast({ title: 'Saved', description: 'Quick actions updated.' }); } catch { } setQuickActionsEditOpen(false); }}>Save</button>
         </div>
       </DialogContent>
-      </Dialog >
+    </Dialog>
 
     <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
       <DialogContent className="max-w-sm bg-white border border-gray-200 rounded-sm p-0">
@@ -1357,5 +1358,6 @@ export function Dashboard() {
   {/* Sync Log Modal */ }
   <SyncLogModal isOpen={showSyncModal} onClose={() => setShowSyncModal(false)} />
     </div >
+  </div >
   );
 }
