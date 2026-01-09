@@ -6,7 +6,14 @@ import { Badge } from '@/components/ui/badge';
 import Timeline from '@/components/layout/Timeline';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, AlertCircle, Calendar, RefreshCw, ExternalLink, Receipt } from 'lucide-react';
+import { ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, AlertCircle, Calendar, RefreshCw, ExternalLink, Receipt, ChevronDown } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 // duplicate Link import removed
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -396,6 +403,7 @@ export default function CaseDetail() {
   } : null);
   const { toast } = useToast();
   const [matchedDocs, setMatchedDocs] = useState<any[]>([]);
+  const [selectedMetric, setSelectedMetric] = useState('payout');
   const [activeTab, setActiveTab] = useState<'overview' | 'actions' | 'contact'>('overview');
 
   const normalizeStatus = (s?: string): 'Open' | 'In Progress' | 'Approved' | 'Denied' | 'Unknown' => {
@@ -776,30 +784,42 @@ export default function CaseDetail() {
                       )}
                     </div>
 
-                    {/* Key Details Grid - Institutional Style */}
-                    <div className="grid grid-cols-2 gap-px bg-gray-200 border border-gray-200">
-                      <div className="bg-white p-3">
-                        <div className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] mb-1">Expected Payout</div>
-                        <div className="text-sm font-mono text-gray-900 tabular-nums">
-                          {effectiveCase.expectedPayoutDate ? new Date(effectiveCase.expectedPayoutDate).toLocaleDateString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                            year: 'numeric'
-                          }) : '—'}
+                    {/* Metric Selector Dropdown - Replaces Quadrant Design */}
+                    <div className="border border-gray-200 rounded-sm overflow-hidden bg-white">
+                      <div className="px-3 pt-3">
+                        <Select value={selectedMetric} onValueChange={setSelectedMetric}>
+                          <SelectTrigger className="h-7 w-full border-0 bg-transparent p-0 text-[10px] font-semibold text-gray-500 uppercase tracking-[0.1em] focus:ring-0 shadow-none">
+                            <SelectValue placeholder="Select Metric" />
+                          </SelectTrigger>
+                          <SelectContent className="rounded-sm">
+                            <SelectItem value="payout" className="text-[10px] uppercase tracking-wider">Expected Payout</SelectItem>
+                            <SelectItem value="confidence" className="text-[10px] uppercase tracking-wider">Confidence</SelectItem>
+                            <SelectItem value="units" className="text-[10px] uppercase tracking-wider">Units Lost</SelectItem>
+                            <SelectItem value="cost" className="text-[10px] uppercase tracking-wider">Unit Cost</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="p-3 pt-1 pb-4">
+                        <div className="text-2xl font-light text-gray-900 tabular-nums tracking-tight">
+                          {selectedMetric === 'payout' && (
+                            effectiveCase.expectedPayoutDate ? new Date(effectiveCase.expectedPayoutDate).toLocaleDateString('en-US', {
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric'
+                            }) : '—'
+                          )}
+                          {selectedMetric === 'confidence' && `${derivedConfidencePct}%`}
+                          {selectedMetric === 'units' && (effectiveCase.unitsLost ?? '—')}
+                          {selectedMetric === 'cost' && (
+                            typeof effectiveCase.unitCost === 'number' ? `$${effectiveCase.unitCost.toFixed(2)}` : '—'
+                          )}
                         </div>
-                      </div>
-                      <div className="bg-white p-3">
-                        <div className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] mb-1">Confidence</div>
-                        <div className="text-sm font-mono text-gray-900 tabular-nums">{derivedConfidencePct}%</div>
-                      </div>
-                      <div className="bg-white p-3">
-                        <div className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] mb-1">Units Lost</div>
-                        <div className="text-sm font-mono text-gray-900 tabular-nums">{effectiveCase.unitsLost ?? '—'}</div>
-                      </div>
-                      <div className="bg-white p-3">
-                        <div className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] mb-1">Unit Cost</div>
-                        <div className="text-sm font-mono text-gray-900 tabular-nums">
-                          {typeof effectiveCase.unitCost === 'number' ? `$${effectiveCase.unitCost.toFixed(2)}` : '—'}
+                        <div className="text-[9px] text-gray-400 font-medium uppercase tracking-widest mt-0.5">
+                          {selectedMetric === 'payout' && 'Scheduled Reimbursement'}
+                          {selectedMetric === 'confidence' && 'AI Analysis Score'}
+                          {selectedMetric === 'units' && 'Inventory Discrepancy'}
+                          {selectedMetric === 'cost' && 'Estimated Value Per Unit'}
                         </div>
                       </div>
                     </div>
