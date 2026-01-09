@@ -323,7 +323,7 @@ export default function DocumentDetail() {
                     <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Order IDs</h4>
                   </div>
                   <div className="bg-white p-4">
-                    {extracted.order_ids?.length> 0 ? (
+                    {extracted.order_ids?.length > 0 ? (
                       <div className="flex flex-wrap gap-2">
                         {extracted.order_ids.map((id: string, idx: number) => (
                           <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-[10px]">
@@ -343,7 +343,7 @@ export default function DocumentDetail() {
                     <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">ASINs / SKUs</h4>
                   </div>
                   <div className="bg-white p-4">
-                    {(extracted.asins?.length> 0 || extracted.skus?.length> 0) ? (
+                    {(extracted.asins?.length > 0 || extracted.skus?.length > 0) ? (
                       <div className="flex flex-wrap gap-2">
                         {extracted.asins?.map((asin: string, idx: number) => (
                           <Badge key={`asin-${idx}`} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-[10px]">
@@ -371,7 +371,7 @@ export default function DocumentDetail() {
                     <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Tracking Numbers</h4>
                   </div>
                   <div className="bg-white p-4">
-                    {extracted.tracking_numbers?.length> 0 ? (
+                    {extracted.tracking_numbers?.length > 0 ? (
                       <div className="flex flex-wrap gap-2">
                         {extracted.tracking_numbers.map((num: string, idx: number) => (
                           <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-[10px]">
@@ -391,7 +391,7 @@ export default function DocumentDetail() {
                     <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Financial Amounts</h4>
                   </div>
                   <div className="bg-white p-4">
-                    {extracted.amounts?.length> 0 ? (
+                    {extracted.amounts?.length > 0 ? (
                       <div className="flex flex-wrap gap-2">
                         {extracted.amounts.map((amt: number | string, idx: number) => (
                           <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-[10px]">
@@ -414,7 +414,7 @@ export default function DocumentDetail() {
                     <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Invoice Numbers</h4>
                   </div>
                   <div className="bg-white p-4">
-                    {extracted.invoice_numbers?.length> 0 ? (
+                    {extracted.invoice_numbers?.length > 0 ? (
                       <div className="flex flex-wrap gap-2">
                         {extracted.invoice_numbers.map((inv: string, idx: number) => (
                           <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-[10px]">
@@ -434,7 +434,7 @@ export default function DocumentDetail() {
                     <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Dates Found</h4>
                   </div>
                   <div className="bg-white p-4">
-                    {extracted.dates?.length> 0 ? (
+                    {extracted.dates?.length > 0 ? (
                       <div className="flex flex-wrap gap-2">
                         {extracted.dates.map((date: string, idx: number) => (
                           <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 text-[10px]">
@@ -461,7 +461,7 @@ export default function DocumentDetail() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                {matchedClaims.length> 0 ? (
+                {matchedClaims.length > 0 ? (
                   <div className="space-y-3">
                     {matchedClaims.map((match, idx) => (
                       <div key={idx} className="p-4 rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-100 transition-colors">
@@ -555,31 +555,50 @@ export default function DocumentDetail() {
           </TabsContent>
         </Tabs>
 
-        {/* Document Metadata Footer */}
-        <Card className="bg-gray-50 border-gray-200">
-          <CardContent className="p-4">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-              <div>
-                <span className="text-gray-500">Document ID</span>
-                <div className="font-mono text-[#36454F]">{docId?.substring(0, 16)}...</div>
+        {/* Document Metadata Footer - Redesigned for Institutional Aesthetic */}
+        <div className="pt-8 border-t border-gray-100">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="h-1 w-3 bg-indigo-500" />
+                <span className="text-[10px] font-medium text-gray-400 uppercase tracking-[0.15em]">Document ID</span>
               </div>
-              <div>
-                <span className="text-gray-500">File Type</span>
-                <div className="text-[#36454F]">{documentData?.mime_type || documentData?.type || 'PDF'}</div>
-              </div>
-              <div>
-                <span className="text-gray-500">Source</span>
-                <div className="text-[#36454F]">{documentData?.source || 'Manual Upload'}</div>
-              </div>
-              <div>
-                <span className="text-gray-500">Created</span>
-                <div className="text-[#36454F]">
-                  {documentData?.created_at ? format(new Date(documentData.created_at), 'MMM dd, yyyy HH:mm') : '—'}
-                </div>
+              <div className="font-mono text-[11px] text-gray-900 break-all bg-gray-50 px-2 py-1.5 rounded-sm border border-gray-100">
+                {docId}
               </div>
             </div>
-          </CardContent>
-        </Card>
+
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="h-1 w-3 bg-gray-300" />
+                <span className="text-[10px] font-medium text-gray-400 uppercase tracking-[0.15em]">File Type</span>
+              </div>
+              <div className="text-sm font-medium text-gray-900 pl-5">
+                {documentData?.mime_type || documentData?.type || 'application/pdf'}
+              </div>
+            </div>
+
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="h-1 w-3 bg-gray-300" />
+                <span className="text-[10px] font-medium text-gray-400 uppercase tracking-[0.15em]">Source</span>
+              </div>
+              <div className="text-sm font-medium text-gray-900 pl-5 capitalize">
+                {documentData?.source || 'Manual Upload'}
+              </div>
+            </div>
+
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="h-1 w-3 bg-gray-300" />
+                <span className="text-[10px] font-medium text-gray-400 uppercase tracking-[0.15em]">Created</span>
+              </div>
+              <div className="text-sm font-medium text-gray-900 pl-5">
+                {documentData?.created_at ? format(new Date(documentData.created_at), 'MMM dd, yyyy HH:mm') : '—'}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </PageLayout>
   );
