@@ -14,7 +14,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { format, subDays, startOfYear, startOfQuarter } from 'date-fns';
-import { CalendarIcon, Search, MoreHorizontal, FileText, Eye, RefreshCw, Info, AlertTriangle, X, CheckCircle2, Clock, ExternalLink, ChevronDown, ChevronUp, ArrowUpFromLine, Upload, Mail } from 'lucide-react';
+import { CalendarIcon, Search, MoreHorizontal, FileText, Eye, RefreshCw, Info, AlertTriangle, X, CheckCircle2, Clock, ExternalLink, ChevronDown, ChevronUp, ArrowUpFromLine, Upload, Mail, Hexagon, ArrowRight, Loader2 } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
@@ -160,7 +160,7 @@ const validateEvidencePolicy = (claim: RecoveryClaim, matchedDocs?: any[]): Evid
   if (claim.quantity) availableFields['quantity'] = { present: true, confidence: 1.0 };
 
   // From matched documents (extracted data)
-  if (matchedDocs && matchedDocs.length> 0) {
+  if (matchedDocs && matchedDocs.length > 0) {
     for (const doc of matchedDocs) {
       const extracted = doc.extracted || doc.parsed_metadata || {};
       const confidence = doc.parser_confidence || doc.match_confidence || 0.7;
@@ -234,17 +234,17 @@ const validateEvidencePolicy = (claim: RecoveryClaim, matchedDocs?: any[]): Evid
   // Calculate quality score
   const requiredPresent = policy.required.filter(f => availableFields[f]?.present).length;
   const optionalPresent = policy.optional.filter(f => availableFields[f]?.present).length;
-  const requiredRatio = policy.required.length> 0 ? requiredPresent / policy.required.length : 1;
-  const optionalRatio = policy.optional.length> 0 ? optionalPresent / policy.optional.length : 1;
+  const requiredRatio = policy.required.length > 0 ? requiredPresent / policy.required.length : 1;
+  const optionalRatio = policy.optional.length > 0 ? optionalPresent / policy.optional.length : 1;
 
   // Score: 70% from required fields, 30% from optional
   const qualityScore = Math.round((requiredRatio * 70) + (optionalRatio * 30));
 
   // Determine quality tier
   let quality: 'strong' | 'medium' | 'weak';
-  if (qualityScore>= 80 && missingRequired.length === 0) {
+  if (qualityScore >= 80 && missingRequired.length === 0) {
     quality = 'strong';
-  } else if (qualityScore>= 50 || missingRequired.length <= 1) {
+  } else if (qualityScore >= 50 || missingRequired.length <= 1) {
     quality = 'medium';
   } else {
     quality = 'weak';
@@ -259,7 +259,7 @@ const validateEvidencePolicy = (claim: RecoveryClaim, matchedDocs?: any[]): Evid
     recommendationText = 'Strong evidence. Meets FBA requirements.';
   } else if (quality === 'medium') {
     recommendation = 'file_with_caution';
-    if (missingRequired.length> 0) {
+    if (missingRequired.length > 0) {
       recommendationText = `Adequate evidence. Missing: ${missingRequired.join(', ')}.`;
     } else {
       recommendationText = 'Adequate evidence. Could be stronger.';
@@ -276,7 +276,7 @@ const validateEvidencePolicy = (claim: RecoveryClaim, matchedDocs?: any[]): Evid
   if (claimType.includes('inbound') && !availableFields['tracking_number']?.present) {
     warnings.push('Tracking number strongly recommended for inbound shipment claims');
   }
-  if ((claim.amount || 0)> 500 && !availableFields['invoice_number']?.present) {
+  if ((claim.amount || 0) > 500 && !availableFields['invoice_number']?.present) {
     warnings.push('High-value claim ($500+) - invoice strongly recommended');
   }
 
@@ -310,9 +310,9 @@ const EvidenceQualityBadge = ({ validation, claim, matchedDocs }: { validation: 
 
   // Calculate readiness percentage (required fields)
   const requiredPresent = requiredFields.filter(f => presentFieldNames.includes(f)).length;
-  const readinessPercent = requiredFields.length> 0
+  const readinessPercent = requiredFields.length > 0
     ? Math.round((requiredPresent / requiredFields.length) * 100)
-    : (docCount> 0 ? 50 : 0);
+    : (docCount > 0 ? 50 : 0);
 
   // Status configuration
   const statusConfig = {
@@ -369,7 +369,7 @@ const EvidenceQualityBadge = ({ validation, claim, matchedDocs }: { validation: 
                   </div>
                 );
               })}
-              {requiredFields.length> 5 && (
+              {requiredFields.length > 5 && (
                 <div className="text-[9px] text-gray-400 mt-1">
                   +{requiredFields.length - 5} more required
                 </div>
@@ -383,15 +383,15 @@ const EvidenceQualityBadge = ({ validation, claim, matchedDocs }: { validation: 
               Matched Documents ({docCount})
             </div>
             <div className="space-y-0.5">
-              {docCount> 0 ? (
-                (matchedDocs || claim?.matchedDocs || []).length> 0 ? (
+              {docCount > 0 ? (
+                (matchedDocs || claim?.matchedDocs || []).length > 0 ? (
                   <>
                     {(matchedDocs || claim?.matchedDocs || []).slice(0, 3).map((doc: any, i: number) => (
                       <div key={i} className="text-[10px] text-gray-600 truncate">
                         {doc.filename || doc.title || doc.name || `Document ${i + 1}`}
                       </div>
                     ))}
-                    {docCount> 3 && (
+                    {docCount > 3 && (
                       <div className="text-[9px] text-gray-400">
                         +{docCount - 3} more documents
                       </div>
@@ -470,19 +470,19 @@ const calculateClaimStrength = (claim: RecoveryClaim): ClaimStrength => {
     label: 'Evidence',
     value: evidenceScore,
     max: 30,
-    reason: matchedDocs>= 3 ? 'Strong documentation' : matchedDocs>= 1 ? 'Partial evidence' : 'No evidence yet'
+    reason: matchedDocs >= 3 ? 'Strong documentation' : matchedDocs >= 1 ? 'Partial evidence' : 'No evidence yet'
   });
 
   // Factor 2: Policy Window (0-25 points) - 60-day Amazon window
   const claimDate = new Date(claim.discovery_date || claim.created || claim.created_at || Date.now());
   const daysOld = Math.floor((Date.now() - claimDate.getTime()) / (1000 * 60 * 60 * 24));
   const daysLeft = Math.max(0, 60 - daysOld);
-  const policyScore = daysLeft> 45 ? 25 : daysLeft> 30 ? 20 : daysLeft> 14 ? 15 : daysLeft> 7 ? 10 : daysLeft> 0 ? 5 : 0;
+  const policyScore = daysLeft > 45 ? 25 : daysLeft > 30 ? 20 : daysLeft > 14 ? 15 : daysLeft > 7 ? 10 : daysLeft > 0 ? 5 : 0;
   factors.push({
     label: 'Policy Window',
     value: policyScore,
     max: 25,
-    reason: daysLeft> 45 ? `${daysLeft} days left` : daysLeft> 14 ? `${daysLeft} days remaining` : daysLeft> 0 ? `Urgent: ${daysLeft} days left!` : 'Window expired'
+    reason: daysLeft > 45 ? `${daysLeft} days left` : daysLeft > 14 ? `${daysLeft} days remaining` : daysLeft > 0 ? `Urgent: ${daysLeft} days left!` : 'Window expired'
   });
 
   // Factor 3: Historical Win Rate by Type (0-25 points)
@@ -503,11 +503,11 @@ const calculateClaimStrength = (claim: RecoveryClaim): ClaimStrength => {
     label: 'AI Confidence',
     value: confidenceScore,
     max: 20,
-    reason: confidence>= 0.85 ? 'High certainty' : confidence>= 0.6 ? 'Moderate certainty' : 'Low certainty'
+    reason: confidence >= 0.85 ? 'High certainty' : confidence >= 0.6 ? 'Moderate certainty' : 'Low certainty'
   });
 
   const totalScore = factors.reduce((sum, f) => sum + f.value, 0);
-  const tier: ClaimStrength['tier'] = totalScore>= 75 ? 'high' : totalScore>= 45 ? 'medium' : 'low';
+  const tier: ClaimStrength['tier'] = totalScore >= 75 ? 'high' : totalScore >= 45 ? 'medium' : 'low';
 
   return { score: totalScore, tier, factors };
 };
@@ -564,7 +564,7 @@ const checkDoubleDip = (claim: RecoveryClaim, allClaims: RecoveryClaim[]): Dupli
     const skuMatch = sku && otherSku && sku === otherSku;
     const asinMatch = asin && otherAsin && asin === otherAsin;
     const typeMatch = claimType === otherType;
-    const inPeriod = otherDate>= periodStart && otherDate <= periodEnd;
+    const inPeriod = otherDate >= periodStart && otherDate <= periodEnd;
 
     if ((skuMatch || asinMatch) && typeMatch && inPeriod) {
       // Already paid/approved = prior reimbursement
@@ -648,7 +648,7 @@ const generateCasebookPDF = (claims: RecoveryClaim[], dateRange: { from: Date; t
   const recoveredValue = approvedClaims.reduce((sum, c) => sum + (c.guaranteedAmount || c.amount || 0), 0);
   const pendingClaims = claims.filter(c => ['submitted', 'pending', 'under review'].includes((c.status || '').toLowerCase()));
   const deniedClaims = claims.filter(c => ['denied', 'rejected'].includes((c.status || '').toLowerCase()));
-  const successRate = totalClaims> 0 ? ((approvedClaims.length / totalClaims) * 100).toFixed(1) : '0';
+  const successRate = totalClaims > 0 ? ((approvedClaims.length / totalClaims) * 100).toFixed(1) : '0';
 
   // Group by claim type
   const byType: Record<string, RecoveryClaim[]> = {};
@@ -1255,7 +1255,7 @@ export default function Recoveries() {
         const deltaX = Math.abs(x - startXRef.current);
 
         // Start dragging only if mouse moved more than 5 pixels (drag threshold)
-        if (deltaX> 5) {
+        if (deltaX > 5) {
           isDraggingRef.current = true;
           setIsDragging(true);
           hasDraggedRef.current = true;
@@ -1359,20 +1359,20 @@ export default function Recoveries() {
   const stableHash = (s: string): number => {
     let h = 2166136261;
     for (let i = 0; i < s.length; i++) h = (h ^ s.charCodeAt(i)) * 16777619;
-    return (h>>> 0);
+    return (h >>> 0);
   };
   const getConfidence = (id: string): number => {
     // Stable pseudo-confidence between 0.5 and 0.98
     const v = stableHash(id) % 4900; // 0..4899
     return Math.round((v + 500) / 100) / 100; // 0.5 .. 4.99 -> 0.5 .. 4.99, then /? ensure two decimals
   };
-  const getConfidenceTier = (c: number) => c>= 0.85 ? 'high' : c>= 0.6 ? 'medium' : 'low';
-  const getConfidenceColor = (c: number) => c>= 0.85 ? 'text-emerald-600' : c>= 0.6 ? 'text-amber-500' : 'text-blue-500';
-  const getConfidenceBadge = (c: number) => c>= 0.85 ? 'High' : c>= 0.6 ? 'Medium' : 'Low';
+  const getConfidenceTier = (c: number) => c >= 0.85 ? 'high' : c >= 0.6 ? 'medium' : 'low';
+  const getConfidenceColor = (c: number) => c >= 0.85 ? 'text-emerald-600' : c >= 0.6 ? 'text-amber-500' : 'text-blue-500';
+  const getConfidenceBadge = (c: number) => c >= 0.85 ? 'High' : c >= 0.6 ? 'Medium' : 'Low';
   const getEvidenceStatus = (id: string): 'Ready' | 'Needs Docs' | 'Collecting' => {
     const v = stableHash(id) % 100;
-    if (v>= 70) return 'Ready';
-    if (v>= 40) return 'Needs Docs';
+    if (v >= 70) return 'Ready';
+    if (v >= 40) return 'Needs Docs';
     return 'Collecting';
   };
 
@@ -1483,7 +1483,7 @@ export default function Recoveries() {
             // Find new claims that weren't in the previous set
             const newClaimIds = Array.from(currentClaimIds).filter(id => !previousClaimIds.has(id));
 
-            if (newClaimIds.length> 0) {
+            if (newClaimIds.length > 0) {
               const newClaimsData = newClaims.filter(c => newClaimIds.includes(c.id));
               const totalNewAmount = newClaimsData.reduce((sum, c) => sum + (c.guaranteedAmount || 0), 0);
 
@@ -1737,7 +1737,7 @@ export default function Recoveries() {
             } catch (error) {
               console.error('Error polling sync status:', error);
 
-              if (pollCount>= maxPolls) {
+              if (pollCount >= maxPolls) {
                 if (syncPollingRef.current) {
                   clearInterval(syncPollingRef.current);
                   syncPollingRef.current = null;
@@ -1818,7 +1818,7 @@ export default function Recoveries() {
           // Find new claims
           const newClaimIds = Array.from(currentClaimIds).filter(id => !previousClaimIds.has(id));
 
-          if (newClaimIds.length> 0) {
+          if (newClaimIds.length > 0) {
             // Update previous claim IDs
             previousClaimIdsRef.current = currentClaimIds;
             setClaims(newClaims);
@@ -1849,7 +1849,7 @@ export default function Recoveries() {
           if (data.dataSource) setDataSource(data.dataSource);
 
           // Show toast if recovered amount increased
-          if (newTotal> previousTotal && previousTotal> 0) {
+          if (newTotal > previousTotal && previousTotal > 0) {
             const increase = newTotal - previousTotal;
             toast({
               title: 'Recovery Amount Updated',
@@ -1975,15 +1975,15 @@ export default function Recoveries() {
     let sourceData: any[] = [];
     if (mergedRecoveries !== null) {
       // mergedRecoveries has been initialized
-      if (mergedRecoveries.length> 0) {
+      if (mergedRecoveries.length > 0) {
         sourceData = mergedRecoveries;
       } else {
         // mergedRecoveries is empty, fall back to claims
-        sourceData = (claims && claims.length> 0) ? claims : [];
+        sourceData = (claims && claims.length > 0) ? claims : [];
       }
     } else {
       // mergedRecoveries not initialized yet, use claims
-      sourceData = (claims && claims.length> 0) ? claims : [];
+      sourceData = (claims && claims.length > 0) ? claims : [];
     }
 
     // Debug logging
@@ -2006,8 +2006,8 @@ export default function Recoveries() {
       if (filterConfidence !== 'all' && filterSource === 'detected') {
         if (!claim.confidence_score) return false;
         if (filterConfidence === 'high' && claim.confidence_score < 0.85) return false;
-        if (filterConfidence === 'medium' && (claim.confidence_score < 0.50 || claim.confidence_score>= 0.85)) return false;
-        if (filterConfidence === 'low' && claim.confidence_score>= 0.50) return false;
+        if (filterConfidence === 'medium' && (claim.confidence_score < 0.50 || claim.confidence_score >= 0.85)) return false;
+        if (filterConfidence === 'low' && claim.confidence_score >= 0.50) return false;
       }
 
       // Search filter
@@ -2019,7 +2019,7 @@ export default function Recoveries() {
 
       // Date filter
       const claimDate = new Date(claim.created || claim.discovery_date || claim.created_at || 0);
-      const dateMatch = (!dateRange?.from || claimDate>= dateRange.from) &&
+      const dateMatch = (!dateRange?.from || claimDate >= dateRange.from) &&
         (!dateRange?.to || claimDate <= dateRange.to);
 
       // Claim type filter
@@ -2032,8 +2032,8 @@ export default function Recoveries() {
       if (filterUrgent !== 'all') {
         const daysRemaining = claim.days_remaining;
         if (daysRemaining === null || daysRemaining === undefined) return false;
-        if (filterUrgent === 'critical' && daysRemaining> 3) return false;
-        if (filterUrgent === 'urgent' && daysRemaining> 7) return false;
+        if (filterUrgent === 'critical' && daysRemaining > 3) return false;
+        if (filterUrgent === 'urgent' && daysRemaining > 7) return false;
       }
 
       return searchMatch && dateMatch && typeMatch && statusMatch;
@@ -2106,10 +2106,10 @@ export default function Recoveries() {
     const thirtyDaysAgo = subDays(new Date(), 30);
     const recentClaims = dataSource.filter(claim => {
       const claimDate = new Date(claim.created || claim.discovery_date || claim.created_at || 0);
-      return claimDate>= thirtyDaysAgo;
+      return claimDate >= thirtyDaysAgo;
     });
     const successfulClaims = recentClaims.filter(claim => claim.status === 'Paid');
-    const successRate = recentClaims.length> 0
+    const successRate = recentClaims.length > 0
       ? (successfulClaims.length / recentClaims.length) * 100
       : 0;
 
@@ -2168,7 +2168,7 @@ export default function Recoveries() {
     // Sort by count descending and keep only non-zero entries
     const sortedCounts: Record<string, number> = {};
     Object.entries(counts)
-      .filter(([_, count]) => count> 0)
+      .filter(([_, count]) => count > 0)
       .sort((a, b) => b[1] - a[1])
       .forEach(([name, count]) => {
         sortedCounts[name] = count;
@@ -2245,7 +2245,7 @@ export default function Recoveries() {
                   Submit Selected
                 </button>
               </div>
-              {selectedIds.size> 0 && (
+              {selectedIds.size > 0 && (
                 <span className="text-[10px] text-gray-500">{selectedIds.size} selected</span>
               )}
             </div>
@@ -2256,7 +2256,7 @@ export default function Recoveries() {
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.15em]">Recovered Value</span>
-                    {recoveredTotal != null && recoveredTotal> 0 && (
+                    {recoveredTotal != null && recoveredTotal > 0 && (
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <button
@@ -2273,7 +2273,7 @@ export default function Recoveries() {
                     )}
                   </div>
                   <div className="text-2xl font-light text-gray-900">
-                    {recoveredTotal != null && recoveredTotal> 0 ? (
+                    {recoveredTotal != null && recoveredTotal > 0 ? (
                       <>
                         {formatCurrencyWithSelection(recoveredTotal, recoveredCurrency)}
                         <div className="text-[10px] text-gray-500 font-normal mt-1">
@@ -2330,7 +2330,7 @@ export default function Recoveries() {
                           key={label}
                           className="flex justify-between items-center px-2 py-1.5 text-xs rounded hover:bg-gray-100 hover:text-[#36454F] focus:bg-gray-100 focus:text-[#36454F] cursor-default">
                           <span className="text-gray-700 truncate">{label}</span>
-                          <span className={`font-medium ml-2 ${count> 0 ? 'text-gray-700' : 'text-[#36454F]'}`}>{count}</span>
+                          <span className={`font-medium ml-2 ${count > 0 ? 'text-gray-700' : 'text-[#36454F]'}`}>{count}</span>
                         </DropdownMenuItem>
                       ))}
                   </DropdownMenuContent>
@@ -2428,7 +2428,7 @@ export default function Recoveries() {
 
                           {/* Claim Type Filter */}
                           <Select
-                            value={selectedClaimTypes.length> 0 ? selectedClaimTypes[0] : 'all'}
+                            value={selectedClaimTypes.length > 0 ? selectedClaimTypes[0] : 'all'}
                             onValueChange={(value) => {
                               if (value === 'all') {
                                 setSelectedClaimTypes([]);
@@ -2449,7 +2449,7 @@ export default function Recoveries() {
 
                           {/* Status Filter */}
                           <Select
-                            value={selectedStatuses.length> 0 ? selectedStatuses[0] : 'all'}
+                            value={selectedStatuses.length > 0 ? selectedStatuses[0] : 'all'}
                             onValueChange={(value) => {
                               if (value === 'all') {
                                 setSelectedStatuses([]);
@@ -2544,338 +2544,225 @@ export default function Recoveries() {
                   </div>
 
                   {/* Data Table */}
-                  <Card className="bg-white border-0 text-slate-900 w-full overflow-hidden shadow-none rounded-none">
-                    <CardContent className="p-0 w-full">
+                  <div className="bg-white border-0 text-slate-900 w-full overflow-hidden shadow-none rounded-none">
+                    <div className="p-0 w-full">
                       {loading && (
-                        <div className="p-8 text-center">
-                          <p className="text-sm text-gray-600">Loading claims...</p>
+                        <div className="py-12 flex flex-col items-center justify-center space-y-4">
+                          <Loader2 className="w-6 h-6 text-gray-300 animate-spin" />
+                          <span className="text-[11px] text-gray-400 uppercase tracking-[0.2em]">Synchronizing Intelligence</span>
                         </div>
                       )}
                       {error && (
-                        <div className="p-4 text-sm text-red-600">{error}</div>
-                      )}
-                      {!loading && !error && rankedClaims.length === 0 && (
-                        <div className="p-8 text-center">
-                          <p className="text-sm text-gray-600 mb-2">
-                            No claims found. {((mergedRecoveries === null || (mergedRecoveries && mergedRecoveries.length === 0)) && (!claims || claims.length === 0))
-                              ? 'Sync your Amazon account or run an analysis to identify recovery opportunities.'
-                              : 'Try adjusting your filters to see more results.'}
-                          </p>
+                        <div className="py-12 flex flex-col items-center justify-center space-y-4 text-center px-6">
+                          <AlertTriangle className="w-6 h-6 text-red-200" />
+                          <span className="text-[11px] text-gray-500 uppercase tracking-[0.2em]">Interface Error: {error}</span>
                         </div>
                       )}
-                      {!loading && rankedClaims.length> 0 && (
-                        <div
-                          ref={tableScrollRef}
-                          className="w-full overflow-x-auto overflow-y-visible recoveries-table-scroll"
-                          style={{
-                            scrollBehavior: 'smooth',
-                            WebkitOverflowScrolling: 'touch',
-                            width: '100%',
-                            maxWidth: '100%',
-                            cursor: isDragging ? 'grabbing' : 'grab'
-                          }}
-                          onMouseDown={handleMouseDown}
-                          onMouseLeave={handleMouseLeave}>
-                          <table className="w-full border-collapse" style={{ minWidth: '1400px' }}>
-                            <thead>
-                              <tr className="border-b border-gray-200">
-                                <th className="text-left py-2 px-3 w-10">
-                                  <Checkbox checked={selectedIds.size> 0 && selectedIds.size === filteredClaims.length} onCheckedChange={(checked) => {
-                                    if (checked) setSelectedIds(new Set(filteredClaims.map(c => c.id)));
-                                    else setSelectedIds(new Set());
-                                  }} />
-                                </th>
-                                <th className="text-left py-2 px-1 w-16">
-                                  <div className="flex items-center gap-1">
-                                    <button
-                                      onClick={() => {
-                                        setLoading(true);
-                                        // Refresh claims data
-                                        window.location.reload();
-                                      }}
-                                      className="h-6 w-6 flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors"
-                                      aria-label="Refresh claims">
-                                      <RefreshCw className="h-3.5 w-3.5" />
-                                    </button>
-                                    <DropdownMenu>
-                                      <DropdownMenuTrigger asChild>
-                                        <button
-                                          className="h-6 w-6 flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors"
-                                          aria-label="More options">
-                                          <MoreHorizontal className="h-3.5 w-3.5" />
-                                        </button>
-                                      </DropdownMenuTrigger>
-                                      <DropdownMenuContent align="start" className="w-48 bg-white border border-gray-200 shadow-lg rounded-sm p-1">
-                                        <DropdownMenuItem
-                                          className="text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer px-3 py-2 rounded-sm flex items-center gap-2"
-                                          onClick={() => setMarkAllReadModalOpen(true)}>
-                                          <Mail className="h-3.5 w-3.5" />
-                                          Mark all Read
-                                        </DropdownMenuItem>
-                                      </DropdownMenuContent>
-                                    </DropdownMenu>
-                                  </div>
-                                </th>
-                                <th className="text-left text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-2 px-3">Claim ID</th>
-                                <th className="text-left text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-2 px-3">Created</th>
-                                <th className="text-left text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-2 px-3">Details</th>
-                                <th className="text-left text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-2 px-3">Status</th>
-                                <th className="text-left text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-2 px-3">Duplicate</th>
-                                <th className="text-left text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-2 px-3">Days Left</th>
-                                <th className="text-left text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-2 px-3">Evidence</th>
-                                <th className="text-left text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] py-2 px-3">Est. Value</th>
-                                <th className="text-left py-2 px-3 w-10"></th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {claimsByMonth.map((monthGroup, groupIndex) => (
-                                <React.Fragment key={`${monthGroup.month}-${monthGroup.year}`}>
-                                  {/* Month Header Row */}
-                                  <tr className={cn(
-                                    "bg-gray-50",
-                                    groupIndex> 0 && "border-t-2 border-gray-200"
-                                  )}>
-                                    <td colSpan={11} className="py-2.5 px-3">
-                                      <div className="flex items-center justify-between">
-                                        <span className="text-xs font-medium text-gray-600 uppercase tracking-wide">
-                                          {monthGroup.month} {monthGroup.year}
-                                        </span>
-                                        <span className="text-[10px] text-gray-400">
-                                          {monthGroup.claims.length} claim{monthGroup.claims.length !== 1 ? 's' : ''}
-                                        </span>
-                                      </div>
-                                    </td>
-                                  </tr>
-                                  {/* Claims in this month */}
-                                  {monthGroup.claims.map((claim: any) => {
-                                    const confidenceBadge = claim.confidence_score !== null && claim.confidence_score !== undefined
-                                      ? (claim.confidence_score>= 0.85 ? { label: 'High', color: 'green' } : claim.confidence_score>= 0.50 ? { label: 'Medium', color: 'yellow' } : { label: 'Low', color: 'gray' })
-                                      : null;
-                                    const displayConfidence = claim.confidence_score !== null && claim.confidence_score !== undefined
-                                      ? claim.confidence_score
-                                      : claim._confidence;
+                      {!loading && !error && rankedClaims.length === 0 && (
+                        <div className="py-20 flex flex-col items-center justify-center space-y-4">
+                          <Search className="w-10 h-10 text-gray-100" />
+                          <div className="flex flex-col items-center text-center max-w-sm px-6">
+                            <span className="text-[11px] text-gray-900 font-semibold uppercase tracking-[0.2em]">Ledger Clean</span>
+                            <span className="text-[10px] text-gray-400 mt-2 leading-relaxed uppercase tracking-wider">
+                              {((mergedRecoveries === null || (mergedRecoveries && mergedRecoveries.length === 0)) && (!claims || claims.length === 0))
+                                ? 'SYNC YOUR AMAZON ACCOUNT OR RUN AN ANALYSIS TO IDENTIFY RECOVERY OPPORTUNITIES.'
+                                : 'TRY ADJUSTING YOUR FILTERS TO SEE MORE RESULTS.'}
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                      {!loading && rankedClaims.length > 0 && (
+                        <div className="mt-0 border-t border-gray-100 divide-y divide-gray-100 bg-white">
+                          <div className="flex items-center px-6 py-3 bg-gray-50/50 border-b border-gray-100">
+                            <Checkbox
+                              checked={selectedIds.size > 0 && selectedIds.size === filteredClaims.length}
+                              onCheckedChange={(checked) => {
+                                if (checked) setSelectedIds(new Set(filteredClaims.map(c => c.id)));
+                                else setSelectedIds(new Set());
+                              }}
+                              className="mr-4"
+                            />
+                            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-[0.15em]">Batch Operation Queue</span>
+                          </div>
 
-                                    const isUrgent = claim.days_remaining !== null && claim.days_remaining !== undefined && claim.days_remaining <= 7;
-                                    const isCritical = claim.days_remaining !== null && claim.days_remaining !== undefined && claim.days_remaining <= 3;
+                          {claimsByMonth.map((monthGroup, groupIndex) => (
+                            <React.Fragment key={`${monthGroup.month}-${monthGroup.year}`}>
+                              {/* Institutional Month Header */}
+                              <div className="sticky top-0 z-10 bg-gray-50/80 backdrop-blur-sm px-6 py-2.5 border-y border-gray-100 flex items-center justify-between">
+                                <span className="text-[11px] font-bold text-gray-900 uppercase tracking-[0.2em]">
+                                  {monthGroup.month} {monthGroup.year}
+                                </span>
+                                <span className="text-[9px] font-medium text-gray-400 uppercase tracking-widest">
+                                  {monthGroup.claims.length} AUDIT ENTRI{monthGroup.claims.length !== 1 ? 'ES' : 'Y'}
+                                </span>
+                              </div>
 
-                                    const claimDate = new Date(claim.created || claim.discovery_date || claim.created_at);
+                              {/* Claims in this month */}
+                              <div className="divide-y divide-gray-100">
+                                {monthGroup.claims.map((claim: any) => {
+                                  const isUrgent = claim.days_remaining !== null && claim.days_remaining !== undefined && claim.days_remaining <= 7;
+                                  const isCritical = claim.days_remaining !== null && claim.days_remaining !== undefined && claim.days_remaining <= 3;
+                                  const claimDate = new Date(claim.created || claim.discovery_date || claim.created_at);
 
-                                    return (
-                                      <tr
-                                        key={claim.id}
-                                        className={cn(
-                                          "border-b border-gray-100 hover:bg-gray-50/50 transition-colors",
-                                          isCritical && "bg-red-50/30",
-                                          isUrgent && !isCritical && "bg-amber-50/30"
-                                        )}>
-                                        <td className="py-1.5 px-3">
-                                          <Checkbox checked={selectedIds.has(claim.id)} onCheckedChange={(checked) => {
-                                            setSelectedIds(prev => {
-                                              const next = new Set(prev);
-                                              if (checked) next.add(claim.id); else next.delete(claim.id);
-                                              return next;
-                                            });
-                                          }} />
-                                        </td>
-                                        <td className="py-1.5 px-1 w-16"></td>
-                                        {/* Claim ID */}
-                                        <td className="py-1.5 px-3">
-                                          <Tooltip>
-                                            <TooltipTrigger asChild>
-                                              <Button asChild variant="link" className="p-0 h-auto text-xs text-slate-800 hover:text-slate-900 font-mono font-medium">
-                                                <Link to={`/recoveries/${claim.id}`} state={{ claim }}>
+                                  return (
+                                    <div
+                                      key={claim.id}
+                                      className={cn(
+                                        "group relative bg-white hover:bg-gray-50/40 transition-all duration-200",
+                                        isCritical && "bg-red-50/10",
+                                        isUrgent && !isCritical && "bg-amber-50/10"
+                                      )}
+                                    >
+                                      {/* Signature Left Accent */}
+                                      <div className={cn(
+                                        "absolute left-0 top-0 bottom-0 w-[2px] transition-all duration-200 origin-center scale-y-0 group-hover:scale-y-100",
+                                        isCritical ? "bg-red-500" : isUrgent ? "bg-amber-500" : "bg-gray-900"
+                                      )} />
+
+                                      <div className="flex items-center px-6 py-5">
+                                        <div className="flex-shrink-0 mr-5">
+                                          <Checkbox
+                                            checked={selectedIds.has(claim.id)}
+                                            onCheckedChange={(checked) => {
+                                              setSelectedIds(prev => {
+                                                const next = new Set(prev);
+                                                if (checked) next.add(claim.id); else next.delete(claim.id);
+                                                return next;
+                                              });
+                                            }}
+                                          />
+                                        </div>
+
+                                        <div className="flex items-center gap-5 min-w-0 flex-1">
+                                          <div className="flex-shrink-0">
+                                            <Hexagon className={cn(
+                                              "w-5 h-5 transition-colors duration-300",
+                                              isCritical ? "text-red-300" : isUrgent ? "text-amber-300" : "text-gray-200 group-hover:text-gray-900"
+                                            )} strokeWidth={1.5} />
+                                          </div>
+
+                                          <div className="flex flex-col min-w-0">
+                                            <div className="flex items-center gap-3">
+                                              <Link to={`/recoveries/${claim.id}`} state={{ claim }}>
+                                                <span className="text-[13px] font-mono font-medium text-gray-900 truncate hover:underline">
                                                   {claim.claim_number || claim.id.slice(0, 12)}
-                                                </Link>
-                                              </Button>
-                                            </TooltipTrigger>
-                                            <TooltipContent side="top" className="bg-slate-900 text-white text-xs font-mono rounded-none border-slate-700">
-                                              {claim.id}
-                                            </TooltipContent>
-                                          </Tooltip>
-                                        </td>
-                                        {/* Created - Format: "4 Jan, 02:19" */}
-                                        <td className="py-1.5 px-3">
-                                          <div className="flex flex-col">
-                                            <span className="text-xs text-gray-700 font-mono">{format(claimDate, 'd MMM')}</span>
-                                            <span className="text-[10px] text-gray-400 font-mono">{format(claimDate, 'HH:mm')}</span>
-                                          </div>
-                                        </td>
-                                        {/* Details */}
-                                        <td className="py-1.5 px-3 max-w-xs">
-                                          <div className="truncate text-sm text-gray-900" title={claim.details}>
-                                            {claim.details}
-                                          </div>
-                                          <div className="text-[10px] text-slate-500 mt-0.5 font-mono">
-                                            SKU: {claim.sku || 'N/A'} • ASIN: {claim.asin || 'N/A'}
-                                          </div>
-                                        </td>
-                                        {/* Status */}
-                                        <td className="py-1.5 px-3">
-                                          <Badge className={getStatusColor(claim.status)}>
-                                            {claim.status}
-                                          </Badge>
-                                        </td>
-                                        {/* Duplicate Warning */}
-                                        <td className="py-1.5 px-3">
-                                          {(() => {
-                                            const doubleDipWarning = checkDoubleDip(claim, rankedClaims);
-                                            return doubleDipWarning ? <DoubleDipBadge warning={doubleDipWarning} /> : <span className="text-xs text-slate-400">None</span>;
-                                          })()}
-                                        </td>
-                                        {/* Days Remaining */}
-                                        <td className="py-1.5 px-3">
-                                          {claim.days_remaining !== null && claim.days_remaining !== undefined ? (
-                                            <div className="flex items-center gap-1.5">
-                                              {isCritical && (
-                                                <AlertTriangle className="h-3 w-3 text-red-600 flex-shrink-0" />
-                                              )}
-                                              {isUrgent && !isCritical && (
-                                                <Clock className="h-3 w-3 text-amber-600 flex-shrink-0" />
-                                              )}
-                                              <span className={cn(
-                                                "text-xs",
-                                                isCritical && 'text-red-600 font-medium',
-                                                isUrgent && !isCritical && 'text-amber-600 font-medium',
-                                                !isUrgent && 'text-gray-700'
-                                              )}>
-                                                {claim.days_remaining} days
+                                                </span>
+                                              </Link>
+                                              <span className="text-[10px] text-gray-400 font-mono">
+                                                {format(claimDate, 'd MMM')} {format(claimDate, 'HH:mm')}
                                               </span>
                                             </div>
-                                          ) : (
-                                            <span className="text-xs text-gray-700">—</span>
-                                          )}
-                                        </td>
-                                        {/* Evidence */}
-                                        <td className="py-1.5 px-3">
-                                          {(() => {
-                                            const validation = validateEvidencePolicy(claim, claim.matchedDocs);
-                                            const docCount = claim.matchedDocs?.length || claim.matchedCount || 0;
-                                            return (
-                                              <div className="flex items-center gap-2">
-                                                <EvidenceQualityBadge validation={validation} claim={claim} matchedDocs={claim.matchedDocs} />
-                                                {docCount> 0 && (
-                                                  <span className="text-[10px] text-gray-500">
-                                                    {docCount} doc{docCount !== 1 ? 's' : ''}
-                                                  </span>
-                                                )}
+
+                                            <div className="text-[11px] text-gray-600 mt-1 line-clamp-1 flex items-center gap-2">
+                                              {claim.details}
+                                              <span className="text-gray-300">|</span>
+                                              <span className="font-mono text-[10px] text-gray-400">SKU: {claim.sku || 'N/A'}</span>
+                                            </div>
+
+                                            <div className="flex items-center gap-2 mt-2">
+                                              <div className="flex items-center gap-2 text-[10px] font-medium tracking-wider uppercase">
+                                                <span className={cn(
+                                                  "px-2 py-0.5 rounded-none border font-semibold",
+                                                  getStatusColor(claim.status)
+                                                )}>
+                                                  {claim.status}
+                                                </span>
+                                                <span className="text-gray-200">|</span>
+                                                <span className="text-gray-400">DUP:</span>
+                                                {(() => {
+                                                  const doubleDipWarning = checkDoubleDip(claim, rankedClaims);
+                                                  return doubleDipWarning ? <DoubleDipBadge warning={doubleDipWarning} /> : <span className="text-gray-500">NONE</span>;
+                                                })()}
+                                                <span className="text-gray-200">|</span>
+                                                <span className={cn(
+                                                  "font-mono",
+                                                  isCritical ? "text-red-600" : isUrgent ? "text-amber-600" : "text-gray-500"
+                                                )}>
+                                                  {claim.days_remaining !== null ? `${claim.days_remaining}D REMAINING` : 'EXPIRY N/A'}
+                                                </span>
+                                                <span className="text-gray-200">|</span>
+                                                <EvidenceQualityBadge validation={validateEvidencePolicy(claim, claim.matchedDocs)} claim={claim} matchedDocs={claim.matchedDocs} />
+                                                <span className="text-gray-200">|</span>
+                                                <span className="text-gray-900 font-mono font-bold">{formatCurrency(claim.guaranteedAmount, claim.currency || 'USD')}</span>
                                               </div>
-                                            );
-                                          })()}
-                                        </td>
-                                        {/* Est. Value */}
-                                        <td className="py-1.5 px-3 text-sm font-mono tabular-nums text-gray-900">{formatCurrency(claim.guaranteedAmount, claim.currency || 'USD')}</td>
-                                        {/* Actions */}
-                                        <td className="py-1.5 px-3">
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        <div className="flex items-center gap-4 ml-6">
                                           <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
-                                              <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-gray-500 hover:text-gray-900 hover:bg-gray-100">
+                                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-none">
                                                 <MoreHorizontal className="h-4 w-4" />
                                               </Button>
                                             </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end" className="w-48 bg-white border border-gray-200 shadow-lg rounded-sm p-1">
-                                              {claim.status === 'Denied' && (
-                                                <DropdownMenuItem
-                                                  className="text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer px-3 py-2 rounded-sm"
-                                                  onClick={async () => {
-                                                    const hasDocs = true;
-                                                    if (!hasDocs) return;
-                                                    try {
-                                                      await api.resubmitClaim(claim.id);
-                                                      toast({ title: 'Resubmitted', description: `${claim.id} resubmitted with stronger docs.` });
-                                                      setClaims(prev => prev.map(c => c.id === claim.id ? { ...c, status: 'Submitted' } as any : c));
-                                                    } catch (e: any) {
-                                                      toast({ title: 'Resubmission failed', description: e?.message || 'Please try again.' });
-                                                    }
-                                                  }}>
-                                                  Resubmit with stronger docs
-                                                </DropdownMenuItem>
-                                              )}
-                                              {claim.source === 'detected' ? (
-                                                <DropdownMenuItem
-                                                  className="text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer px-3 py-2 rounded-sm"
-                                                  onClick={() => {
-                                                    setDetectionDetails(claim);
-                                                    setDetailsModalOpen(true);
-                                                  }}>
-                                                  View Details
-                                                </DropdownMenuItem>
-                                              ) : (
-                                                <DropdownMenuItem asChild className="text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer px-3 py-2 rounded-sm">
-                                                  <Link to={`/recoveries/${claim.id}`} state={{ claim }}>
-                                                    View Details
-                                                  </Link>
-                                                </DropdownMenuItem>
-                                              )}
+                                            <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-100 shadow-2xl rounded-none p-1">
+                                              <DropdownMenuItem asChild className="text-[11px] font-medium uppercase tracking-wider text-gray-700 hover:bg-gray-50 cursor-pointer px-3 py-2">
+                                                <Link to={`/recoveries/${claim.id}`} state={{ claim }}>VIEW DETAILS</Link>
+                                              </DropdownMenuItem>
+
                                               <DropdownMenuItem
-                                                className="text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer px-3 py-2 rounded-sm"
+                                                className="text-[11px] font-medium uppercase tracking-wider text-gray-700 hover:bg-gray-50 cursor-pointer px-3 py-2"
                                                 onClick={async () => {
                                                   try {
                                                     const res = await api.getRecoveryDetail(claim.id);
                                                     const docs = (res && res.ok && Array.isArray((res as any).data?.documents)) ? (res as any).data!.documents : [];
-                                                    const matchedDocs = claim.matchedDocs || [];
-                                                    const allDocs = [...docs, ...matchedDocs.filter((md: any) => !docs.some((d: any) => d.id === md.id))];
-                                                    setProofDocs(allDocs);
+                                                    setProofDocs(docs);
                                                     setProofDocsClaim(claim);
                                                     setProofDocsModalOpen(true);
                                                   } catch (e: any) {
-                                                    toast({ title: 'Error loading documents', description: e?.message || 'Please try again.' });
+                                                    toast({ title: 'Error loading documents', description: e?.message });
                                                   }
                                                 }}>
-                                                <span className="flex items-center justify-between w-full">
-                                                  <span>Proof Documents</span>
-                                                  <span className="text-[10px] text-gray-400 ml-2">
-                                                    {(claim.matchedDocs?.length || claim.matchedCount || claim._matchedCount || (claim as any).matched_document_ids?.length || 0)}
-                                                  </span>
-                                                </span>
+                                                PROOF DOCUMENTS
                                               </DropdownMenuItem>
+
                                               <DropdownMenuItem
-                                                className="text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer px-3 py-2 rounded-sm"
-                                                onClick={async () => {
-                                                  try {
-                                                    const res = await api.getRecoveryDetail(claim.id);
-                                                    const docs = (res && res.ok && Array.isArray((res as any).data?.documents))
-                                                      ? (res as any).data!.documents
-                                                      : [];
-                                                    const matchedDocs = docs.map((doc: any) => ({
-                                                      id: doc.id,
-                                                      name: doc.filename || doc.title || `Document ${doc.id?.slice(0, 8)}`,
-                                                      type: doc.doc_type || doc.type,
-                                                      uploadDate: doc.created_at,
-                                                      supplier: doc.metadata?.supplier_name || doc.extracted?.supplier_name,
-                                                      invoice: doc.metadata?.invoice_number || doc.extracted?.invoice_numbers?.[0],
-                                                      amount: doc.metadata?.total_amount || doc.extracted?.amounts?.[0],
-                                                      confidence: doc.matchConfidence || doc.parser_confidence || 0.8,
-                                                      matchedFields: doc.matchedFields || [],
-                                                      extracted: doc.extracted || {},
-                                                    }));
-                                                    setEvidencePackClaim({
-                                                      ...claim,
-                                                      matchedDocs,
-                                                      matchedCount: matchedDocs.length,
-                                                    });
-                                                    setEvidencePackOpen(true);
-                                                  } catch (e: any) {
-                                                    setEvidencePackClaim(claim);
-                                                    setEvidencePackOpen(true);
-                                                    toast({ title: 'Note', description: 'Could not load additional document data.' });
-                                                  }
+                                                className="text-[11px] font-medium uppercase tracking-wider text-gray-700 hover:bg-gray-50 cursor-pointer px-3 py-2"
+                                                onClick={() => {
+                                                  setEvidencePackClaim(claim);
+                                                  setEvidencePackOpen(true);
                                                 }}>
-                                                View Evidence Pack
+                                                VIEW EVIDENCE PACK
                                               </DropdownMenuItem>
+
+                                              {claim.status === 'Denied' && (
+                                                <DropdownMenuItem
+                                                  className="text-[11px] font-bold uppercase tracking-wider text-red-600 hover:bg-red-50 cursor-pointer px-3 py-2"
+                                                  onClick={async () => {
+                                                    try {
+                                                      await api.resubmitClaim(claim.id);
+                                                      toast({ title: 'Resubmitted', description: 'Claim resubmitted with enhanced evidence.' });
+                                                    } catch (e: any) {
+                                                      toast({ title: 'Resubmission failed', description: e?.message });
+                                                    }
+                                                  }}>
+                                                  RESUBMIT WITH STRONGER DOCS
+                                                </DropdownMenuItem>
+                                              )}
                                             </DropdownMenuContent>
                                           </DropdownMenu>
-                                        </td>
-                                      </tr>
-                                    );
-                                  })}
-                                </React.Fragment>
-                              ))}
-                            </tbody>
-                          </table>
+
+                                          <Link
+                                            to={`/recoveries/${claim.id}`}
+                                            state={{ claim }}
+                                            className="flex items-center gap-2 text-[10px] font-bold text-gray-400 hover:text-gray-900 tracking-[0.15em] transition-all duration-200 group/link"
+                                          >
+                                            AUDIT
+                                            <ArrowRight className="w-3 h-3 translate-x-0 group-hover/link:translate-x-1 transition-transform duration-200" />
+                                          </Link>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </React.Fragment>
+                          ))}
                         </div>
                       )}
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
 
                   {/* Phase 3: Resolve Detection Modal */}
                   <Dialog open={resolveModalOpen} onOpenChange={setResolveModalOpen}>
@@ -3424,7 +3311,7 @@ export default function Recoveries() {
                                   </div>
 
                                   {/* Policy Notes */}
-                                  {validation.warnings.length> 0 && (
+                                  {validation.warnings.length > 0 && (
                                     <div className="space-y-2 pt-2 border-t border-gray-100">
                                       <p className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Policy Notes</p>
                                       <ul className="text-xs space-y-1">
@@ -3505,7 +3392,7 @@ export default function Recoveries() {
                         </div>
 
                         {/* Related Event IDs */}
-                        {detectionDetails.related_event_ids && detectionDetails.related_event_ids.length> 0 && (
+                        {detectionDetails.related_event_ids && detectionDetails.related_event_ids.length > 0 && (
                           <div className="border-t border-gray-100 pt-4">
                             <h4 className="text-sm font-semibold text-gray-900 mb-3">Related Event IDs</h4>
                             <div className="flex flex-wrap gap-2">
