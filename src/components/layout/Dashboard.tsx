@@ -709,7 +709,7 @@ export function Dashboard() {
                     <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
                       <div>
                         <div className="flex items-center gap-2">
-                          <h2 className="text-xs font-semibold text-gray-900">Recovered Funds</h2>
+                          <h2 className="text-xs font-semibold text-gray-900">Funds Successfully Recovered</h2>
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <button
@@ -725,7 +725,7 @@ export function Dashboard() {
                             </TooltipContent>
                           </Tooltip>
                         </div>
-                        <p className="text-[9px] text-gray-400 mt-1">Verified reimbursement recoveries since activation</p>
+                        <p className="text-[9px] text-gray-400 mt-1">Verified reimbursements secured since activation</p>
                       </div>
                       {submittedClaimsCount != null && submittedClaimsCount > 0 && (
                         <span className="text-[10px] text-gray-500">{submittedClaimsCount} claims submitted</span>
@@ -735,6 +735,17 @@ export function Dashboard() {
                       <div className="text-2xl font-light text-gray-900 tracking-tight">
                         {formatCurrencyWithSelection(recoveredTotal ?? 0, recoveredCurrency)}
                       </div>
+                      {/* Momentum indicator */}
+                      {reconciledCount != null && reconciledCount > 0 && (
+                        <div className="flex items-center gap-2 mt-2">
+                          <span className="text-emerald-600 text-[10px] font-medium flex items-center gap-1">
+                            <svg className="w-3 h-3" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M6 9V3M6 3L3 6M6 3L9 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                            +{reconciledCount} verified reimbursements this period
+                          </span>
+                        </div>
+                      )}
 
                       {/* Sync status */}
                       {(syncMessage || needsSync || syncTriggered) && (
@@ -751,7 +762,7 @@ export function Dashboard() {
                                   : syncMessage || (needsSync ? 'Syncing...' : '')}
                               </span>
                               {reconciledCount != null && reconciledCount > 0 && !syncTriggered && !needsSync && (
-                                <p className="text-[9px] text-gray-400 mt-0.5 font-medium">Fully traceable. Fully auditable.</p>
+                                <p className="text-[9px] text-gray-400 mt-0.5 font-medium">Recovered with verified proof. Fully traceable. Fully auditable.</p>
                               )}
                             </div>
                           </div>
@@ -789,8 +800,8 @@ export function Dashboard() {
 
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-4 flex flex-col justify-between h-full">
                       <div>
-                        <div className="text-[10px] font-semibold text-gray-500 mb-0.5">In Review</div>
-                        <p className="text-[9px] text-gray-400 font-medium mb-3">Actively processed with Amazon</p>
+                        <div className="text-[10px] font-semibold text-gray-500 mb-0.5">In Active Review</div>
+                        <p className="text-[9px] text-gray-400 font-medium mb-3">Currently being worked through with Amazon</p>
                         <div className="text-xl font-light text-gray-900 tracking-tight">
                           {formatCurrencyWithSelection((pendingRecoveryAmount ?? 0), recoveredCurrency)}
                         </div>
@@ -993,7 +1004,7 @@ export function Dashboard() {
                 <div className="lg:col-span-1">
                   <div className="bg-white border border-gray-200 rounded-sm h-full">
                     <div className="px-4 py-3 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
-                      <h3 className="text-xs font-semibold text-gray-900">Margin Logs Panel</h3>
+                      <h3 className="text-xs font-semibold text-gray-900">System Activity</h3>
                       {unreadCount > 0 && (
                         <span className="text-[9px] rounded px-1.5 py-0.5 bg-gray-900 text-white">
                           {unreadCount > 50 ? '50+' : unreadCount}
