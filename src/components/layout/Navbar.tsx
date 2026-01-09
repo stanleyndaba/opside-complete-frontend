@@ -126,13 +126,13 @@ export function Navbar({
       const domain = url.hostname.replace('www.', '');
       const path = url.pathname + url.search;
       // If domain is very long, show just the essential part
-      if (domain.length> 20) {
+      if (domain.length > 20) {
         return `...${domain.slice(-15)}${path}`;
       }
       return `${domain}${path}`;
     } catch {
       // Fallback if URL parsing fails
-      return link.length> 30 ? `...${link.slice(-25)}` : link;
+      return link.length > 30 ? `...${link.slice(-25)}` : link;
     }
   };
 
@@ -210,11 +210,11 @@ export function Navbar({
           isTransparent ? "bg-transparent border-transparent" : "bg-white border-b border-gray-200",
         className
       )}>
-        <div className="flex items-center h-14 px-6">
-          {/* Center - Search */}
-          <div className="flex-1 max-w-xl hidden md:block md:mx-4">
-            <div className="relative flex items-center gap-3" ref={searchContainerRef}>
-              <div className="relative flex-1 group">
+        <div className="flex items-center justify-between h-14 px-6">
+          {/* Left/Center Group - Search, Icons, Currency, Connect */}
+          <div className="flex items-center gap-x-8">
+            <div className="relative flex items-center gap-4" ref={searchContainerRef}>
+              <div className="relative w-80 lg:w-96 group">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400 group-focus-within:text-gray-600 transition-colors" />
                 <Input
                   ref={searchInputRef}
@@ -239,7 +239,7 @@ export function Navbar({
                 {isSearchFocused && (
                   <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-sm shadow-sm z-50 overflow-hidden">
                     {/* Recent Searches */}
-                    {recentSearches.length> 0 && (
+                    {recentSearches.length > 0 && (
                       <div className="p-2 border-b border-gray-100">
                         <div className="flex items-center justify-between px-2 mb-1">
                           <span className="text-[9px] font-medium text-gray-500 uppercase tracking-[0.15em]">Recent</span>
@@ -290,87 +290,91 @@ export function Navbar({
                   </div>
                 )}
               </div>
-              {/* Message icon */}
-              <NotificationBell
-                label="Margin Notifications"
-                iconOverride={Mail}
-                showLabel={false}
-                className="h-8 w-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-sm transition-colors"
-                iconClassName="h-4 w-4"
-              />
 
-              {/* Notes Icon - Center group between Mail and Gift */}
-              <div className="relative">
-                <button
-                  ref={noteIconRef}
-                  onClick={() => setShowNotesModal(true)}
-                  onMouseEnter={() => setIsNoteHovered(true)}
-                  onMouseLeave={() => setIsNoteHovered(false)}
-                  className="h-8 w-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-sm transition-colors relative"
-                  aria-label="Notes">
-                  <NotebookPen className="h-4 w-4" />
-                  {notes.length> 0 && (
-                    <span className="absolute top-1 right-1 h-1.5 w-1.5 bg-amber-500 rounded-full" />
+              {/* Functional Icons Group */}
+              <div className="flex items-center gap-x-2 border-l border-gray-100 pl-4 ml-2">
+                {/* Message icon */}
+                <NotificationBell
+                  label="Margin Notifications"
+                  iconOverride={Mail}
+                  showLabel={false}
+                  className="h-8 w-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-sm transition-colors"
+                  iconClassName="h-4 w-4"
+                />
+
+                {/* Notes Icon */}
+                <div className="relative">
+                  <button
+                    ref={noteIconRef}
+                    onClick={() => setShowNotesModal(true)}
+                    onMouseEnter={() => setIsNoteHovered(true)}
+                    onMouseLeave={() => setIsNoteHovered(false)}
+                    className="h-8 w-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-sm transition-colors relative"
+                    aria-label="Notes">
+                    <NotebookPen className="h-4 w-4" />
+                    {notes.length > 0 && (
+                      <span className="absolute top-1 right-1 h-1.5 w-1.5 bg-amber-500 rounded-full" />
+                    )}
+                  </button>
+
+                  {/* Hover tooltip showing recent notes */}
+                  {isNoteHovered && notes.length > 0 && (
+                    <div className="absolute top-full right-1/2 translate-x-1/2 mt-2 w-72 bg-white border border-gray-200 rounded-sm shadow-lg z-50 overflow-hidden">
+                      <div className="px-3 py-2 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                        <span className="text-[9px] font-medium text-gray-500 uppercase tracking-[0.15em]">Recent Notes</span>
+                        <span className="text-[9px] text-gray-400">{notes.length} total</span>
+                      </div>
+                      <div className="max-h-64 overflow-y-auto">
+                        {notes.slice(0, 5).map((note, index) => (
+                          <div key={note.id} className={`p-3 hover:bg-gray-50 transition-colors ${index !== Math.min(notes.length, 5) - 1 ? 'border-b border-gray-100' : ''}`}>
+                            <p className="text-xs text-gray-700 line-clamp-3">{note.text}</p>
+                            <p className="text-[9px] text-gray-400 mt-1.5 flex items-center justify-between">
+                              <span>{new Date(note.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   )}
-                </button>
+                </div>
 
-                {/* Hover tooltip showing recent notes */}
-                {isNoteHovered && notes.length> 0 && (
-                  <div className="absolute top-full right-1/2 translate-x-1/2 mt-2 w-72 bg-white border border-gray-200 rounded-sm shadow-lg z-50 overflow-hidden">
-                    <div className="px-3 py-2 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
-                      <span className="text-[9px] font-medium text-gray-500 uppercase tracking-[0.15em]">Recent Notes</span>
-                      <span className="text-[9px] text-gray-400">{notes.length} total</span>
-                    </div>
-                    <div className="max-h-64 overflow-y-auto">
-                      {notes.slice(0, 5).map((note, index) => (
-                        <div key={note.id} className={`p-3 hover:bg-gray-50 transition-colors ${index !== Math.min(notes.length, 5) - 1 ? 'border-b border-gray-100' : ''}`}>
-                          <p className="text-xs text-gray-700 line-clamp-3">{note.text}</p>
-                          <p className="text-[9px] text-gray-400 mt-1.5 flex items-center justify-between">
-                            <span>{new Date(note.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
-                          </p>
-                        </div>
-                      ))}
-                      {notes.length> 5 && (
-                        <div className="px-3 py-2 bg-gray-50 border-t border-gray-100 text-center">
-                          <span className="text-[9px] text-gray-500">Click to view all notes</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
+                {/* Gift icon */}
+                <button
+                  onClick={() => setShowReferralPopup(true)}
+                  className="h-8 w-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-sm transition-colors relative"
+                  aria-label="Referral program">
+                  <Gift className="h-4 w-4" />
+                  <span className="absolute top-1 right-1 h-1.5 w-1.5 bg-gray-900 rounded-full" />
+                </button>
               </div>
-              {/* Gift icon */}
-              <button
-                onClick={() => setShowReferralPopup(true)}
-                className="h-8 w-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-sm transition-colors relative"
-                aria-label="Referral program">
-                <Gift className="h-4 w-4" />
-                <span className="absolute top-1 right-1 h-1.5 w-1.5 bg-gray-900 rounded-full" />
-              </button>
+
+              {/* Tools Group - Currency & Connect */}
+              <div className="flex items-center gap-x-3 border-l border-gray-100 pl-4 ml-2">
+                <Select value={selectedCurrency} onValueChange={setSelectedCurrency}>
+                  <SelectTrigger className="h-8 w-16 bg-transparent border-0 text-gray-600 focus:ring-0 shadow-none px-2 text-[10px] font-medium uppercase tracking-wide">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-sm">
+                    {currencies.map(curr => (
+                      <SelectItem key={curr.code} value={curr.code} className="text-xs">
+                        {curr.symbol} {curr.code}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <div className="h-4 w-px bg-gray-200" />
+                <button
+                  onClick={() => navigate('/integrations-hub')}
+                  className="flex items-center gap-1.5 h-8 px-3 text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-sm transition-colors group/connect">
+                  <Link2 className="h-3.5 w-3.5 text-gray-400 group-hover/connect:text-gray-600" />
+                  <span className="hidden sm:inline font-medium">Connect</span>
+                </button>
+              </div>
             </div>
           </div>
-          {/* Right side - Currency and Connect */}
-          <div className="flex items-center gap-1">
-            <Select value={selectedCurrency} onValueChange={setSelectedCurrency}>
-              <SelectTrigger className="h-8 w-16 bg-transparent border-0 text-gray-600 focus:ring-0 shadow-none px-2 text-[10px] font-medium uppercase tracking-wide">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="rounded-sm">
-                {currencies.map(curr => (
-                  <SelectItem key={curr.code} value={curr.code} className="text-xs">
-                    {curr.symbol} {curr.code}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <div className="h-4 w-px bg-gray-200" />
-            <button
-              onClick={() => navigate('/integrations-hub')}
-              className="flex items-center gap-1.5 h-8 px-3 text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-sm transition-colors">
-              <Link2 className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">Connect</span>
-            </button>
-            <div className="h-4 w-px bg-gray-200" />
+
+          {/* Right Group - Sign Out (Isolated) */}
+          <div className="flex items-center border-l border-gray-100 pl-6 ml-6">
             <button
               onClick={async () => {
                 const ok = window.confirm('Sign out of Margin?');
@@ -378,12 +382,10 @@ export function Navbar({
                 try { await api.logout(); } catch (_) { }
                 window.location.href = '/';
               }}
-              className="flex items-center gap-1.5 h-8 px-3 text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-sm transition-colors">
-              <LogOut className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">Sign Out</span>
+              className="flex items-center gap-2 h-8 px-4 text-xs text-gray-600 hover:text-red-600 hover:bg-red-50/50 rounded-sm transition-all group/signout border border-transparent hover:border-red-100">
+              <LogOut className="h-3.5 w-3.5 text-gray-400 group-hover/signout:text-red-500" />
+              <span className="hidden sm:inline font-medium">Sign Out</span>
             </button>
-
-
           </div>
         </div>
       </header>
@@ -562,7 +564,7 @@ export function Navbar({
             </div>
 
             {/* Notes list */}
-            {notes.length> 0 && (
+            {notes.length > 0 && (
               <div className="border-t border-gray-100 pt-4">
                 <span className="text-[9px] font-medium text-gray-500 uppercase tracking-[0.15em]">Your Notes ({notes.length})</span>
                 <div className="mt-3 space-y-2 max-h-60 overflow-y-auto">
