@@ -198,7 +198,7 @@ export function Sidebar({
           isActive ? "font-bold" : "font-medium"
         )}>{item.title}</span>
         {item.title === 'Claims' && claimCount !== null && !isCollapsed && (
-          <span className="ml-auto text-[9px] text-gray-500 font-mono font-bold tabular-nums bg-gray-100 px-1.5 py-0.5 border border-gray-200">
+          <span className="ml-auto text-[10px] text-gray-400 font-mono tabular-nums">
             {claimCount}
           </span>
         )}
