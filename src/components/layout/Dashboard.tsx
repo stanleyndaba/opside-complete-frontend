@@ -158,19 +158,19 @@ export function Dashboard() {
       return Array.isArray(parsed) && parsed.length > 0 ? parsed : ['ingest_now', 'invite_teammate'];
     } catch { return ['ingest_now', 'invite_teammate']; }
   });
-  const QUICK_ACTIONS: Array<{ id: string; label: string }> = [
-    { id: 'connect_evidence', label: 'Connect evidence sources' },
-    { id: 'review_high_conf', label: 'Review high‑confidence cases' },
-    { id: 'resolve_new', label: 'Resolve new opportunities' },
-    { id: 'run_detector', label: 'Run detector' },
-    { id: 'ingest_now', label: 'Ingest documents now' },
-    { id: 'smart_sync', label: 'Smart Inventory Sync' },
-    { id: 'upcoming_payments', label: 'Payment recoveries' },
-    { id: 'export_history', label: 'Export recovery & payout history' },
-    { id: 'evidence_locker', label: 'Doc Locker' },
-    { id: 'invite_teammate', label: 'Invite a teammate' },
-    { id: 'configure_alerts', label: 'Configure alerts' },
-    { id: 'security_setup', label: 'Security quick setup' },
+  const QUICK_ACTIONS: Array<{ id: string; label: string; subtitle: string }> = [
+    { id: 'connect_evidence', label: 'Connect sources', subtitle: 'Sync evidence sources' },
+    { id: 'review_high_conf', label: 'High confidence', subtitle: 'Audit verified claims' },
+    { id: 'resolve_new', label: 'New opportunities', subtitle: 'Start new recoveries' },
+    { id: 'run_detector', label: 'Run detector', subtitle: 'Scan for FBA errors' },
+    { id: 'ingest_now', label: 'Ingest docs', subtitle: 'Process backlog' },
+    { id: 'smart_sync', label: 'Inventory sync', subtitle: 'Optimize stock' },
+    { id: 'upcoming_payments', label: 'Payments', subtitle: 'Track payouts' },
+    { id: 'export_history', label: 'Export', subtitle: 'Audit reports' },
+    { id: 'evidence_locker', label: 'Doc Locker', subtitle: 'Manage files' },
+    { id: 'invite_teammate', label: 'Invite teammate', subtitle: 'Add team members' },
+    { id: 'configure_alerts', label: 'Alerts', subtitle: 'System webhooks' },
+    { id: 'security_setup', label: 'Security', subtitle: 'Lock access' },
   ];
 
   // Handle OAuth redirect from backend (e.g., /dashboard?amazon_connected=true)
@@ -909,7 +909,7 @@ export function Dashboard() {
                   {/* Quick Actions */}
                   <div className="bg-white border border-gray-200 rounded-sm">
                     <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
-                      <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Actions</h2>
+                      <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Quick Actions</h2>
                       <button
                         aria-label="Customize quick actions"
                         className="text-gray-400 hover:text-gray-600"
@@ -923,28 +923,37 @@ export function Dashboard() {
                         {selectedQuickActions.includes('connect_evidence') && (
                           <button
                             onClick={() => setShowSourcesModal(true)}
-                            className="flex items-center gap-2 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-xs text-gray-700 transition-colors"
+                            className="flex items-center gap-3 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-left transition-colors"
                           >
-                            <Mail className="h-3.5 w-3.5 text-gray-400" />
-                            Connect sources
+                            <Mail className="h-3.5 w-3.5 text-gray-400 mt-0.5" />
+                            <div className="flex flex-col">
+                              <span className="text-xs text-gray-900 font-medium">Connect sources</span>
+                              <span className="text-[9px] text-gray-500">Sync evidence sources</span>
+                            </div>
                           </button>
                         )}
                         {selectedQuickActions.includes('review_high_conf') && (
                           <button
                             onClick={() => navigate('/recoveries', { state: { filter: 'high_confidence' } })}
-                            className="flex items-center gap-2 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-xs text-gray-700 transition-colors"
+                            className="flex items-center gap-3 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-left transition-colors"
                           >
-                            <CheckCircle className="h-3.5 w-3.5 text-gray-400" />
-                            High confidence
+                            <CheckCircle className="h-3.5 w-3.5 text-gray-400 mt-0.5" />
+                            <div className="flex flex-col">
+                              <span className="text-xs text-gray-900 font-medium">High confidence</span>
+                              <span className="text-[9px] text-gray-500">Audit verified claims</span>
+                            </div>
                           </button>
                         )}
                         {selectedQuickActions.includes('resolve_new') && (
                           <button
                             onClick={() => navigate('/recoveries', { state: { filter: 'new_pending' } })}
-                            className="flex items-center gap-2 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-xs text-gray-700 transition-colors"
+                            className="flex items-center gap-3 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-left transition-colors"
                           >
-                            <RotateCcw className="h-3.5 w-3.5 text-gray-400" />
-                            New opportunities
+                            <RotateCcw className="h-3.5 w-3.5 text-gray-400 mt-0.5" />
+                            <div className="flex flex-col">
+                              <span className="text-xs text-gray-900 font-medium">New opportunities</span>
+                              <span className="text-[9px] text-gray-500">Start new recoveries</span>
+                            </div>
                           </button>
                         )}
                         {selectedQuickActions.includes('run_detector') && (
@@ -953,10 +962,13 @@ export function Dashboard() {
                               try { await api.post('/api/detections/run'); toast({ title: 'Detector started', description: 'Scanning...' }); }
                               catch (e: any) { toast({ title: 'Failed', description: e?.message || 'Try again.', variant: 'destructive' }); }
                             }}
-                            className="flex items-center gap-2 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-xs text-gray-700 transition-colors"
+                            className="flex items-center gap-3 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-left transition-colors"
                           >
-                            <RefreshCw className="h-3.5 w-3.5 text-gray-400" />
-                            Run detector
+                            <RefreshCw className="h-3.5 w-3.5 text-gray-400 mt-0.5" />
+                            <div className="flex flex-col">
+                              <span className="text-xs text-gray-900 font-medium">Run detector</span>
+                              <span className="text-[9px] text-gray-500">Scan for FBA errors</span>
+                            </div>
                           </button>
                         )}
                         {selectedQuickActions.includes('ingest_now') && (
@@ -966,73 +978,97 @@ export function Dashboard() {
                               if ((r as any)?.ok) toast({ title: 'Started', description: 'Ingesting documents...' });
                               else toast({ title: 'Failed', description: (r as any)?.error || 'Try again.', variant: 'destructive' });
                             }}
-                            className="flex items-center gap-2 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-xs text-gray-700 transition-colors"
+                            className="flex items-center gap-3 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-left transition-colors"
                           >
-                            <Cloud className="h-3.5 w-3.5 text-gray-400" />
-                            Ingest docs
+                            <Cloud className="h-3.5 w-3.5 text-gray-400 mt-0.5" />
+                            <div className="flex flex-col">
+                              <span className="text-xs text-gray-900 font-medium">Ingest docs</span>
+                              <span className="text-[9px] text-gray-500">Process backlog</span>
+                            </div>
                           </button>
                         )}
                         {selectedQuickActions.includes('smart_sync') && (
                           <button
                             onClick={() => navigate('/smart-inventory-sync')}
-                            className="flex items-center gap-2 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-xs text-gray-700 transition-colors"
+                            className="flex items-center gap-3 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-left transition-colors"
                           >
-                            <RefreshCw className="h-3.5 w-3.5 text-gray-400" />
-                            Inventory sync
+                            <RefreshCw className="h-3.5 w-3.5 text-gray-400 mt-0.5" />
+                            <div className="flex flex-col">
+                              <span className="text-xs text-gray-900 font-medium">Inventory sync</span>
+                              <span className="text-[9px] text-gray-500">Optimize stock</span>
+                            </div>
                           </button>
                         )}
                         {selectedQuickActions.includes('upcoming_payments') && (
                           <button
                             onClick={() => navigate('/upcoming-payments')}
-                            className="flex items-center gap-2 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-xs text-gray-700 transition-colors"
+                            className="flex items-center gap-3 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-left transition-colors"
                           >
-                            <CircleDollarSign className="h-3.5 w-3.5 text-gray-400" />
-                            Payments
+                            <CircleDollarSign className="h-3.5 w-3.5 text-gray-400 mt-0.5" />
+                            <div className="flex flex-col">
+                              <span className="text-xs text-gray-900 font-medium">Payments</span>
+                              <span className="text-[9px] text-gray-500">Track payouts</span>
+                            </div>
                           </button>
                         )}
                         {selectedQuickActions.includes('export_history') && (
                           <button
                             onClick={() => navigate('/export-center')}
-                            className="flex items-center gap-2 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-xs text-gray-700 transition-colors"
+                            className="flex items-center gap-3 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-left transition-colors"
                           >
-                            <Download className="h-3.5 w-3.5 text-gray-400" />
-                            Export
+                            <Download className="h-3.5 w-3.5 text-gray-400 mt-0.5" />
+                            <div className="flex flex-col">
+                              <span className="text-xs text-gray-900 font-medium">Export</span>
+                              <span className="text-[9px] text-gray-500">Audit reports</span>
+                            </div>
                           </button>
                         )}
                         {selectedQuickActions.includes('evidence_locker') && (
                           <button
                             onClick={() => navigate('/evidence-locker')}
-                            className="flex items-center gap-2 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-xs text-gray-700 transition-colors"
+                            className="flex items-center gap-3 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-left transition-colors"
                           >
-                            <FileText className="h-3.5 w-3.5 text-gray-400" />
-                            Doc Locker
+                            <FileText className="h-3.5 w-3.5 text-gray-400 mt-0.5" />
+                            <div className="flex flex-col">
+                              <span className="text-xs text-gray-900 font-medium">Doc Locker</span>
+                              <span className="text-[9px] text-gray-500">Manage files</span>
+                            </div>
                           </button>
                         )}
                         {selectedQuickActions.includes('invite_teammate') && (
                           <button
                             onClick={() => setInviteOpen(true)}
-                            className="flex items-center gap-2 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-xs text-gray-700 transition-colors"
+                            className="flex items-center gap-3 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-left transition-colors"
                           >
-                            <Link2 className="h-3.5 w-3.5 text-gray-400" />
-                            Invite teammate
+                            <Link2 className="h-3.5 w-3.5 text-gray-400 mt-0.5" />
+                            <div className="flex flex-col">
+                              <span className="text-xs text-gray-900 font-medium">Invite teammate</span>
+                              <span className="text-[9px] text-gray-500">Add team members</span>
+                            </div>
                           </button>
                         )}
                         {selectedQuickActions.includes('configure_alerts') && (
                           <button
                             onClick={() => navigate('/notifications')}
-                            className="flex items-center gap-2 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-xs text-gray-700 transition-colors"
+                            className="flex items-center gap-3 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-left transition-colors"
                           >
-                            <Bell className="h-3.5 w-3.5 text-gray-400" />
-                            Alerts
+                            <Bell className="h-3.5 w-3.5 text-gray-400 mt-0.5" />
+                            <div className="flex flex-col">
+                              <span className="text-xs text-gray-900 font-medium">Alerts</span>
+                              <span className="text-[9px] text-gray-500">System webhooks</span>
+                            </div>
                           </button>
                         )}
                         {selectedQuickActions.includes('security_setup') && (
                           <button
                             onClick={() => navigate('/settings')}
-                            className="flex items-center gap-2 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-xs text-gray-700 transition-colors"
+                            className="flex items-center gap-3 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-left transition-colors"
                           >
-                            <Shield className="h-3.5 w-3.5 text-gray-400" />
-                            Security
+                            <Shield className="h-3.5 w-3.5 text-gray-400 mt-0.5" />
+                            <div className="flex flex-col">
+                              <span className="text-xs text-gray-900 font-medium">Security</span>
+                              <span className="text-[9px] text-gray-500">Lock access</span>
+                            </div>
                           </button>
                         )}
                       </div>
@@ -1320,7 +1356,7 @@ export function Dashboard() {
           </DialogHeader>
           <div className="p-6 space-y-3">
             {QUICK_ACTIONS.map(a => (
-              <label key={a.id} className="flex items-center gap-2 text-xs text-gray-700">
+              <label key={a.id} className="flex items-center gap-3 p-2 hover:bg-gray-50 transition-colors cursor-pointer rounded-sm border border-transparent hover:border-gray-100">
                 <Checkbox checked={selectedQuickActions.includes(a.id)} onCheckedChange={(c) => {
                   setSelectedQuickActions(prev => {
                     const next = new Set(prev);
@@ -1328,7 +1364,10 @@ export function Dashboard() {
                     return Array.from(next);
                   });
                 }} />
-                {a.label}
+                <div className="flex flex-col">
+                  <span className="text-xs text-gray-900 font-medium">{a.label}</span>
+                  <span className="text-[9px] text-gray-500">{a.subtitle}</span>
+                </div>
               </label>
             ))}
           </div>
