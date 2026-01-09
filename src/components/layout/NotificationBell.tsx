@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '@/components/ui/hover-card';
 import { Badge } from '@/components/ui/badge';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -125,12 +125,13 @@ export function NotificationBell({
   );
 
   return (
-    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-      <DropdownMenuTrigger asChild>
+    <HoverCard openDelay={100} closeDelay={200} onOpenChange={setIsOpen} open={isOpen}>
+      <HoverCardTrigger asChild>
         <Button
           variant="ghost"
           size={isSidebarStyle ? 'default' : 'icon'}
           className={triggerClassNames}
+          onClick={() => setIsOpen(true)}
         >
           <IconComponent className={cn(
             'h-4 w-4',
@@ -145,12 +146,13 @@ export function NotificationBell({
           {!isSidebarStyle && badge}
           {isSidebarStyle && !shouldShowLabel && badge}
         </Button>
-      </DropdownMenuTrigger>
+      </HoverCardTrigger>
 
       {/* Pentagon/JP Morgan Style - Minimal, Grayscale, Serious */}
-      <DropdownMenuContent
+      <HoverCardContent
         align="end"
-        className="w-[340px] max-h-[420px] bg-white border border-gray-200 shadow-lg z-50 rounded-sm flex flex-col overflow-hidden"
+        sideOffset={8}
+        className="w-[340px] max-h-[420px] bg-white border border-gray-200 shadow-lg z-50 rounded-sm flex flex-col overflow-hidden p-0"
       >
         {/* Header - Fixed, Clean, minimal */}
         <div className="px-4 py-3 border-b border-gray-100 flex-shrink-0">
@@ -242,7 +244,7 @@ export function NotificationBell({
             </button>
           </Link>
         </div>
-      </DropdownMenuContent>
-    </DropdownMenu>
+      </HoverCardContent>
+    </HoverCard>
   );
 }
