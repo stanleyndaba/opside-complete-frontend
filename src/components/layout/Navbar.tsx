@@ -392,73 +392,79 @@ export function Navbar({
         </div>
       </header>
 
-      {/* Referral Popup - Pentagon/JP Morgan Style: Minimal, Grayscale, Serious */}
+      {/* Referral Popup - Institutional Style */}
       <Dialog open={showReferralPopup} onOpenChange={setShowReferralPopup}>
-        <DialogContent className="max-w-xs bg-white border border-gray-200 shadow-lg rounded-sm p-0 overflow-hidden">
-          {/* Header - Clean, no icons */}
-          <div className="px-5 py-4 border-b border-gray-100">
-            <h3 className="text-[14px] font-semibold text-gray-900 tracking-tight">
-              No commission on referrals
+        <DialogContent className="max-w-sm bg-white border border-gray-200 shadow-2xl rounded-none p-0 overflow-hidden">
+          {/* Header - Institutional Dark */}
+          <div className="px-6 py-5 border-b border-gray-900 bg-gray-900">
+            <h3 className="text-xs font-bold text-white uppercase tracking-[0.2em]">
+              Referral Protocol
             </h3>
-            <p className="text-[12px] text-gray-500 mt-1 leading-relaxed">
-              Bring new sellers to Margin and keep 100% of their recovered funds.
+            <p className="text-[9px] text-gray-400 mt-1 uppercase tracking-widest font-mono">
+              COMMISSION-FREE NETWORK EXPANSION
             </p>
           </div>
 
-          {/* Content - Minimal, text-only */}
-          <div className="px-5 py-4">
-            <div className="space-y-4">
-              {/* Value Proposition - No icon, just text */}
-              <div className="p-3 bg-gray-50 border-l-2 border-gray-400">
-                <p className="text-[11px] text-gray-500">Your referrals earn</p>
-                <p className="text-[14px] font-semibold text-gray-900">100% of recovered funds</p>
+          <div className="p-6">
+            <div className="space-y-6">
+              <div className="space-y-4">
+                <p className="text-[11px] text-gray-500 leading-relaxed uppercase tracking-wider font-medium">
+                  PROVISION: Bring new sellers to Margin and secure 100% of their recovered funds without commission deductions.
+                </p>
+
+                {/* Value Proposition */}
+                <div className="p-4 bg-gray-50/50 border border-gray-100 relative group">
+                  <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gray-900" />
+                  <p className="text-[9px] text-gray-400 font-mono uppercase tracking-widest mb-1">NETWORK BENEFIT</p>
+                  <p className="text-[13px] font-bold text-gray-900 uppercase tracking-tight">100% OF RECOVERED FUNDS</p>
+                </div>
               </div>
 
-              {/* CTA Button - Dark charcoal */}
+              {/* Action */}
               <Button
                 onClick={() => {
                   setShowReferralPopup(false);
                   setShowInviteForm(true);
                 }}
-                className="w-full bg-gray-900 hover:bg-gray-800 text-white text-[12px] h-9 font-medium rounded-sm">
-                Invite a seller
+                className="w-full bg-gray-900 hover:bg-black text-white text-[10px] h-10 font-bold uppercase tracking-[0.2em] rounded-none transition-all">
+                Initiate Invitation
               </Button>
             </div>
           </div>
         </DialogContent>
       </Dialog>
 
-      {/* Invite Form Popup */}
+      {/* Invite Form Popup - Institutional style */}
       <Dialog open={showInviteForm} onOpenChange={setShowInviteForm}>
-        <DialogContent className="max-w-sm bg-white border border-gray-200 shadow-md rounded-lg p-4">
-          <div className="space-y-3">
-            <div>
-              <h3 className="text-sm font-semibold text-gray-900">Invite seller friend</h3>
-              <p className="text-[10px] text-gray-500">Send an invitation to join Margin</p>
-            </div>
+        <DialogContent className="max-w-md bg-white border border-gray-200 shadow-2xl rounded-none p-0 overflow-hidden">
+          <div className="px-6 py-5 border-b border-gray-100 bg-gray-50/50">
+            <h3 className="text-xs font-bold text-gray-900 uppercase tracking-[0.2em]">Transmit Invitation</h3>
+            <p className="text-[9px] text-gray-400 mt-1 font-mono uppercase tracking-widest">Target: External Seller Alliance</p>
+          </div>
 
-            <div className="space-y-1.5">
-              <label className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Email address</label>
+          <div className="p-6 space-y-5">
+            <div className="space-y-2">
+              <label className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-1 block">Recipient Email</label>
               <Input
                 type="email"
-                placeholder="seller@example.com"
+                placeholder="SELLER@ENTITY.COM"
                 value={inviteEmail}
                 onChange={(e) => setInviteEmail(e.target.value)}
-                className="w-full border-gray-200 h-8 text-xs"
+                className="w-full border-gray-100 h-10 text-[11px] font-mono rounded-none bg-gray-50/50 focus:bg-white focus:border-gray-900 transition-all uppercase"
               />
             </div>
 
-            <div className="space-y-1.5">
-              <label className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Referral link</label>
-              <div className="flex items-center gap-1.5 p-2 bg-gray-50 border border-gray-200 rounded-md">
-                <span className="flex-1 text-[10px] text-gray-700 break-all">{shortLink}</span>
+            <div className="space-y-2">
+              <label className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-1 block">Authentication Link</label>
+              <div className="flex items-center gap-0 p-3 bg-gray-50/50 border border-gray-100 rounded-none group hover:border-gray-200 transition-all">
+                <span className="flex-1 text-[10px] text-gray-500 font-mono break-all truncate overflow-hidden">{shortLink}</span>
                 <button
                   onClick={() => {
                     navigator.clipboard.writeText(referralLink);
                     setLinkCopied(true);
                     setTimeout(() => setLinkCopied(false), 2000);
                   }}
-                  className="flex items-center gap-1 px-1.5 py-0.5 text-[10px] text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded transition-colors">
+                  className="flex items-center gap-2 px-3 py-1 text-[9px] font-bold text-gray-400 hover:text-gray-900 uppercase tracking-widest transition-colors shrink-0">
                   {linkCopied ? (
                     <>
                       <Check className="h-3 w-3 text-emerald-600" />
@@ -477,7 +483,7 @@ export function Navbar({
             <Button
               onClick={async () => {
                 if (!inviteEmail || !inviteEmail.includes('@')) {
-                  alert('Please enter a valid email address');
+                  alert('Verification Failure: Invalid Email Address');
                   return;
                 }
 
@@ -497,19 +503,19 @@ export function Navbar({
                   const result = await response.json();
 
                   if (result.success) {
-                    alert(`Invitation sent to ${inviteEmail}!`);
+                    alert(`Transmission Successful: Invite dispatched to ${inviteEmail}`);
                     setShowInviteForm(false);
                     setInviteEmail('');
                   } else {
-                    alert(`Failed to send invite: ${result.error || 'Unknown error'}`);
+                    alert(`Transmission Failure: ${result.error || 'Unknown Error State'}`);
                   }
                 } catch (error: any) {
-                  console.error('Error sending invite:', error);
-                  alert('Failed to send invite. Please try again.');
+                  console.error('Transmission processing error:', error);
+                  alert('Internal Connection Failure');
                 }
               }}
-              className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-md transition-colors">
-              Send
+              className="w-full bg-gray-900 hover:bg-black text-white text-[10px] h-10 font-bold uppercase tracking-[0.2em] rounded-none transition-all">
+              Execute Transmission
             </Button>
           </div>
         </DialogContent>
