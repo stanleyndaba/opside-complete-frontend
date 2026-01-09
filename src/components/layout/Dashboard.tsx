@@ -866,6 +866,16 @@ export function Dashboard() {
                           </div>
                         </div>
                       </div>
+                      <div className="mt-3 pt-3 border-t border-gray-200">
+                        <div className="text-[10px] text-gray-500 font-medium uppercase tracking-wider">
+                          {(() => {
+                            const now = new Date();
+                            const quarter = Math.floor(now.getMonth() / 3) + 1;
+                            const month = now.toLocaleString('en-US', { month: 'long' });
+                            return `Quarter ${quarter} | ${month} ${now.getFullYear()}`;
+                          })()}
+                        </div>
+                      </div>
                     </div>
                   </div>
 
