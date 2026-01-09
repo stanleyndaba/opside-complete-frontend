@@ -236,7 +236,7 @@ export function Sidebar({
         {!isCollapsed && (
           <div className="flex items-center gap-1.5 mt-1.5">
             <div className="h-1 w-1 rounded-full bg-emerald-500" />
-            <span className="text-[8px] text-gray-400 font-mono uppercase tracking-[0.2em]">Live // Secured</span>
+            <span className="text-[8px] text-gray-400 font-mono uppercase tracking-[0.2em]">Secured</span>
           </div>
         )}
       </div>
