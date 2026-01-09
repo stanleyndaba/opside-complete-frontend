@@ -1210,19 +1210,19 @@ export default function CaseDetail() {
                                       </h4>
                                       <dl className="space-y-3">
                                         <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                          <dt className="text-[11px] text-gray-500 font-light italic">Units Affected</dt>
+                                          <dt className="text-[11px] text-gray-500 font-light">Units Affected</dt>
                                           <dd className="text-xs font-medium text-gray-900 tabular-nums font-mono">{units}</dd>
                                         </div>
                                         <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                          <dt className="text-[11px] text-gray-500 font-light italic">Value Per Unit</dt>
+                                          <dt className="text-[11px] text-gray-500 font-light">Value Per Unit</dt>
                                           <dd className="text-xs font-medium text-gray-900 tabular-nums font-mono">${perUnit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</dd>
                                         </div>
                                         <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                          <dt className="text-[11px] text-gray-500 font-light italic">Total Claimed</dt>
+                                          <dt className="text-[11px] text-gray-500 font-light">Total Claimed</dt>
                                           <dd className="text-xs font-semibold text-gray-900 tabular-nums font-mono">${Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</dd>
                                         </div>
                                         <div className="flex justify-between items-baseline">
-                                          <dt className="text-[11px] text-gray-500 font-light italic">Confidence Score</dt>
+                                          <dt className="text-[11px] text-gray-500 font-light">Confidence Score</dt>
                                           <dd className="text-xs font-medium text-gray-900 tabular-nums font-mono">
                                             {(() => {
                                               const conf = effectiveCase.confidence || effectiveCase.confidence_score || 0.85;
@@ -1241,15 +1241,15 @@ export default function CaseDetail() {
                                       </h4>
                                       <dl className="space-y-3">
                                         <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                          <dt className="text-[11px] text-gray-500 font-light italic">Issue Identified</dt>
+                                          <dt className="text-[11px] text-gray-500 font-light">Issue Identified</dt>
                                           <dd className="text-xs font-medium text-gray-900 tabular-nums font-mono">{detectionDate}</dd>
                                         </div>
                                         <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                          <dt className="text-[11px] text-gray-500 font-light italic">Audit Period</dt>
+                                          <dt className="text-[11px] text-gray-500 font-light">Audit Period</dt>
                                           <dd className="text-xs font-medium text-gray-900 tabular-nums font-mono">{auditDays} days</dd>
                                         </div>
                                         <div className="flex justify-between items-baseline">
-                                          <dt className="text-[11px] text-gray-500 font-light italic">Policy Compliance</dt>
+                                          <dt className="text-[11px] text-gray-500 font-light">Policy Compliance</dt>
                                           <dd className="text-xs font-medium text-emerald-600 font-mono uppercase tracking-wider">{auditDays <= 180 ? 'Compliant' : 'Exceeded'}</dd>
                                         </div>
                                       </dl>
@@ -1265,22 +1265,22 @@ export default function CaseDetail() {
                                       </h4>
                                       <dl className="space-y-3">
                                         <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                          <dt className="text-[11px] text-gray-500 font-light italic">ASIN / SKU</dt>
+                                          <dt className="text-[11px] text-gray-500 font-light">ASIN / SKU</dt>
                                           <dd className="text-[10px] font-mono text-gray-900">{asin} / {sku}</dd>
                                         </div>
                                         <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                          <dt className="text-[11px] text-gray-500 font-light italic">Fulfillment Center</dt>
+                                          <dt className="text-[11px] text-gray-500 font-light">Fulfillment Center</dt>
                                           <dd className="text-xs font-medium text-gray-900">{facility || 'N/A'}</dd>
                                         </div>
                                         {orderId && (
                                           <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                            <dt className="text-[11px] text-gray-500 font-light italic">Reference Trans.</dt>
+                                            <dt className="text-[11px] text-gray-500 font-light">Reference Trans.</dt>
                                             <dd className="text-[10px] font-mono text-gray-900 underline underline-offset-2">{orderId}</dd>
                                           </div>
                                         )}
                                         {shipmentId && (
                                           <div className="flex justify-between items-baseline">
-                                            <dt className="text-[11px] text-gray-500 font-light italic">Shipment Ref.</dt>
+                                            <dt className="text-[11px] text-gray-500 font-light">Shipment Ref.</dt>
                                             <dd className="text-[10px] font-mono text-gray-900">{shipmentId}</dd>
                                           </div>
                                         )}
@@ -1294,15 +1294,15 @@ export default function CaseDetail() {
                                       </h4>
                                       <dl className="space-y-3">
                                         <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                          <dt className="text-[11px] text-gray-500 font-light italic">Claim Category</dt>
+                                          <dt className="text-[11px] text-gray-500 font-light">Claim Category</dt>
                                           <dd className="text-xs font-medium text-gray-900 capitalize font-mono">{caseType.replace(/_/g, ' ') || 'Discrepancy'}</dd>
                                         </div>
                                         <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                          <dt className="text-[11px] text-gray-500 font-light italic">Engine Match</dt>
+                                          <dt className="text-[11px] text-gray-500 font-light">Engine Match</dt>
                                           <dd className="text-xs font-medium text-gray-900 capitalize font-mono">{(effectiveCase.match_type || 'order_id').replace(/_/g, ' ')}</dd>
                                         </div>
                                         <div className="flex justify-between items-baseline">
-                                          <dt className="text-[11px] text-gray-500 font-light italic">Audit Method</dt>
+                                          <dt className="text-[11px] text-gray-500 font-light">Audit Method</dt>
                                           <dd className="text-[10px] font-medium text-gray-700 uppercase tracking-wider">Autonomous Engine</dd>
                                         </div>
                                       </dl>
