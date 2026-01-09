@@ -612,19 +612,11 @@ export default function DocumentDetail() {
             </div>
           </TabsContent>
 
-          {/* Parsing Status Tab */}
-          <TabsContent value="parsing">
-            <Card className="bg-white border-gray-200">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-xs font-medium text-gray-600 uppercase tracking-[0.1em]">Parsing Status</CardTitle>
-                <CardDescription className="text-[10px] text-gray-500">
-                  Document parsing and extraction progress
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {docId && <ParsingStatus documentId={docId} autoPoll={true} />}
-              </CardContent>
-            </Card>
+          {/* Parsing Status Tab - Redesigned for Institutional Aesthetic */}
+          <TabsContent value="parsing" className="mt-0">
+            <div className="border-t border-gray-100">
+              {docId && <ParsingStatus documentId={docId} autoPoll={true} />}
+            </div>
           </TabsContent>
         </Tabs>
 

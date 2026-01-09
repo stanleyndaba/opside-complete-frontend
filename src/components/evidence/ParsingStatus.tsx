@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { api } from '@/lib/api';
-import { RefreshCw, CheckCircle2, XCircle, Clock, AlertTriangle } from 'lucide-react';
+import { RefreshCw, CheckCircle2, XCircle, Clock, AlertTriangle, Activity, Package } from 'lucide-react';
 
 interface ParsingStatusProps {
   documentId: string;
@@ -99,38 +99,38 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
     }, 10 * 60 * 1000);
   };
 
-  const getStatusBadge = () => {
+  const getStatusIndicator = () => {
     if (!jobStatus) return null;
 
     switch (jobStatus.status) {
       case 'completed':
         return (
-          <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
-            <CheckCircle2 className="w-3 h-3 mr-1" />
-            Completed
-          </Badge>
+          <div className="flex items-center gap-2 text-emerald-600">
+            <CheckCircle2 className="w-3.5 h-3.5" />
+            <span className="text-[10px] font-bold uppercase tracking-[0.1em]">Intelligence Verified</span>
+          </div>
         );
       case 'processing':
         return (
-          <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30">
-            <RefreshCw className="w-3 h-3 mr-1 animate-spin" />
-            Processing
-          </Badge>
+          <div className="flex items-center gap-2 text-indigo-600">
+            <Activity className="w-3.5 h-3.5 animate-pulse" />
+            <span className="text-[10px] font-bold uppercase tracking-[0.1em]">Neural Extraction Active</span>
+          </div>
         );
       case 'failed':
         return (
-          <Badge className="bg-red-500/20 text-red-400 border-red-500/30">
-            <XCircle className="w-3 h-3 mr-1" />
-            Failed
-          </Badge>
+          <div className="flex items-center gap-2 text-red-600">
+            <XCircle className="w-3.5 h-3.5" />
+            <span className="text-[10px] font-bold uppercase tracking-[0.1em]">Extraction Halted</span>
+          </div>
         );
       case 'pending':
       default:
         return (
-          <Badge className="bg-gray-500/20 text-gray-400 border-gray-500/30">
-            <Clock className="w-3 h-3 mr-1" />
-            Pending
-          </Badge>
+          <div className="flex items-center gap-2 text-gray-400">
+            <Clock className="w-3.5 h-3.5" />
+            <span className="text-[10px] font-bold uppercase tracking-[0.1em]">Queue Position Locked</span>
+          </div>
         );
     }
   };
@@ -149,102 +149,124 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
   }
 
   return (
-    <div className="space-y-4">
-      {/* Status Overview */}
-      <div className="border border-gray-200 rounded-lg overflow-hidden">
-        <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-          <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Status Overview</h4>
-        </div>
-        <div className="bg-white p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              {getStatusBadge()}
-              {jobStatus.confidence_score !== undefined && (
-                <span className="text-xs text-gray-600">
-                  Confidence: {(jobStatus.confidence_score * 100).toFixed(1)}%
+    <div className="space-y-0">
+      {/* Status Overview - Institutional Redesign */}
+      <div className="bg-gray-50/50 border-b border-gray-100 py-4 px-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Activity className="w-3.5 h-3.5 text-gray-400 fill-gray-100" />
+          <h4 className="text-[10px] font-semibold text-gray-400 uppercase tracking-[0.15em]">
+            Processing Status Overview
+          </h4>
+          <span className="text-gray-300">|</span>
+          <div className="flex items-center gap-4">
+            {getStatusIndicator()}
+            {jobStatus.confidence_score !== undefined && (
+              <div className="flex items-center gap-2">
+                <span className="text-gray-300">|</span>
+                <span className="text-[10px] font-medium text-gray-500 uppercase tracking-wider">
+                  Confidence: <span className="text-gray-900 font-bold">{(jobStatus.confidence_score * 100).toFixed(1)}%</span>
                 </span>
-              )}
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={fetchParsingStatus}
-              className="text-gray-600 hover:text-gray-900">
-              <RefreshCw className="w-4 h-4" />
-            </Button>
-          </div>
-
-          {jobStatus.status === 'processing' && jobStatus.progress !== undefined && (
-            <div className="space-y-2 mt-3 pt-3 border-t border-gray-100">
-              <Progress value={jobStatus.progress} className="h-2" />
-              <div className="text-xs text-gray-600">
-                Parsing document... {jobStatus.progress}%
-              </div>
-            </div>
-          )}
-
-          {jobStatus.status === 'failed' && jobStatus.error && (
-            <div className="mt-3 pt-3 border-t border-gray-100 p-3 rounded bg-red-50 border border-red-200 text-xs text-red-700">
-              <AlertTriangle className="w-4 h-4 inline mr-2" />
-              {jobStatus.error}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Parsed Data */}
-      {parsedData && jobStatus.status === 'completed' && (
-        <div className="border border-gray-200 rounded-lg overflow-hidden">
-          <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-            <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Parsed Metadata</h4>
-          </div>
-          <div className="bg-white">
-            <div className="divide-y divide-gray-100">
-              {parsedData.supplier_name && (
-                <div className="flex justify-between items-center px-4 py-2.5">
-                  <span className="text-xs text-gray-600">Supplier</span>
-                  <span className="text-xs font-medium text-gray-900">{parsedData.supplier_name}</span>
-                </div>
-              )}
-              {parsedData.invoice_number && (
-                <div className="flex justify-between items-center px-4 py-2.5">
-                  <span className="text-xs text-gray-600">Invoice #</span>
-                  <span className="text-xs font-medium text-gray-900">{parsedData.invoice_number}</span>
-                </div>
-              )}
-              {parsedData.invoice_date && (
-                <div className="flex justify-between items-center px-4 py-2.5">
-                  <span className="text-xs text-gray-600">Date</span>
-                  <span className="text-xs font-medium text-gray-900">
-                    {new Date(parsedData.invoice_date).toLocaleDateString()}
-                  </span>
-                </div>
-              )}
-              {parsedData.total_amount !== undefined && (
-                <div className="flex justify-between items-center px-4 py-2.5">
-                  <span className="text-xs text-gray-600">Total</span>
-                  <span className="text-xs font-medium text-gray-900">
-                    {parsedData.currency || '$'}{parsedData.total_amount.toFixed(2)}
-                  </span>
-                </div>
-              )}
-            </div>
-
-            {parsedData.line_items && parsedData.line_items.length> 0 && (
-              <div className="border-t border-gray-200 p-4">
-                <h5 className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-3">Line Items</h5>
-                <div className="space-y-2 max-h-40 overflow-y-auto">
-                  {parsedData.line_items.map((item: any, idx: number) => (
-                    <div key={idx} className="text-xs text-gray-700 p-2 rounded border border-gray-100 bg-gray-50">
-                      {item.description} - {item.quantity} x {parsedData.currency || '$'}{item.unit_price?.toFixed(2)} = {parsedData.currency || '$'}{item.total?.toFixed(2)}
-                    </div>
-                  ))}
-                </div>
               </div>
             )}
           </div>
         </div>
-      )}
+
+        <button
+          onClick={fetchParsingStatus}
+          disabled={loading}
+          className="flex items-center gap-2 text-[10px] font-bold text-gray-400 hover:text-indigo-600 uppercase tracking-[0.15em] transition-colors"
+        >
+          <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
+          Force Refresh
+        </button>
+      </div>
+
+      <div className="bg-white p-6 space-y-8">
+        {jobStatus.status === 'processing' && jobStatus.progress !== undefined && (
+          <div className="space-y-3 max-w-md">
+            <div className="flex justify-between items-end mb-1">
+              <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Extraction Progress</span>
+              <span className="text-xs font-mono text-indigo-600 font-bold">{jobStatus.progress}%</span>
+            </div>
+            <Progress value={jobStatus.progress} className="h-1 bg-gray-100" />
+            <p className="text-[10px] text-gray-400 italic">Synchronizing document nodes with neural intelligence engine...</p>
+          </div>
+        )}
+
+        {jobStatus.status === 'failed' && jobStatus.error && (
+          <div className="flex items-start gap-3 p-4 bg-red-50/50 border border-red-100 rounded-sm">
+            <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5" />
+            <div className="space-y-1">
+              <span className="text-[10px] font-bold text-red-800 uppercase tracking-widest leading-none">Extraction Fault Detected</span>
+              <p className="text-xs text-red-700 leading-relaxed font-light">{jobStatus.error}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Parsed Metadata - Dictionary View */}
+        {parsedData && jobStatus.status === 'completed' && (
+          <div className="space-y-6">
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="h-4 w-[2px] bg-indigo-500" />
+                <h4 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.2em]">Summary Intelligence</h4>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                {[
+                  { label: 'Supplier Entity', value: parsedData.supplier_name },
+                  { label: 'Reference Code', value: parsedData.invoice_number, mono: true },
+                  { label: 'Temporal Date', value: parsedData.invoice_date ? new Date(parsedData.invoice_date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : null },
+                  { label: 'Validated Total', value: parsedData.total_amount !== undefined ? `${parsedData.currency || '$'}${parsedData.total_amount.toFixed(2)}` : null, highlight: true }
+                ].map((item, i) => item.value && (
+                  <div key={i} className="space-y-1.5">
+                    <span className="text-[9px] font-semibold text-gray-400 uppercase tracking-[0.15em] block">{item.label}</span>
+                    <span className={`text-sm font-medium ${item.mono ? 'font-mono' : ''} ${item.highlight ? 'text-indigo-600 font-bold' : 'text-gray-900'}`}>
+                      {item.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {parsedData.line_items && parsedData.line_items.length > 0 && (
+              <div>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="h-4 w-[2px] bg-gray-300" />
+                  <h4 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.2em]">Detailed Extractions</h4>
+                </div>
+
+                <div className="border border-gray-100 rounded-sm overflow-hidden">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="bg-gray-50/50 border-b border-gray-100">
+                        <th className="px-4 py-2.5 text-[9px] font-semibold text-gray-400 uppercase tracking-widest">Entry Item</th>
+                        <th className="px-4 py-2.5 text-[9px] font-semibold text-gray-400 uppercase tracking-widest">Qty</th>
+                        <th className="px-4 py-2.5 text-[9px] font-semibold text-gray-400 uppercase tracking-widest text-right">Unit Price</th>
+                        <th className="px-4 py-2.5 text-[9px] font-semibold text-gray-400 uppercase tracking-widest text-right">Total Purity</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-50">
+                      {parsedData.line_items.map((item: any, idx: number) => (
+                        <tr key={idx} className="hover:bg-gray-50/30 transition-colors">
+                          <td className="px-4 py-3 text-xs font-medium text-gray-700">{item.description}</td>
+                          <td className="px-4 py-3 text-xs font-mono text-gray-500">{item.quantity}</td>
+                          <td className="px-4 py-3 text-xs font-mono text-gray-500 text-right">
+                            {parsedData.currency || '$'}{item.unit_price?.toFixed(2)}
+                          </td>
+                          <td className="px-4 py-3 text-xs font-mono font-bold text-gray-900 text-right">
+                            {parsedData.currency || '$'}{item.total?.toFixed(2)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
