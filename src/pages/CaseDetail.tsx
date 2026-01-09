@@ -1228,124 +1228,115 @@ export default function CaseDetail() {
                             const caseType = (effectiveCase.anomaly_type || effectiveCase.claim_type || effectiveCase.case_type || '').toLowerCase();
 
                             return (
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-gray-200">
-                                {/* Timeline Evidence */}
-                                <div className="bg-white p-5">
-                                  <h4 className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.15em] mb-4 border-b border-gray-100 pb-2">
-                                    Timeline Evidence
-                                  </h4>
-                                  <dl className="space-y-3 text-xs">
-                                    <div className="flex justify-between items-baseline">
-                                      <dt className="text-gray-400 font-light">Issue Identified</dt>
-                                      <dd className="font-mono text-gray-900 tabular-nums">{detectionDate}</dd>
-                                    </div>
-                                    <div className="flex justify-between items-baseline">
-                                      <dt className="text-gray-400 font-light">Audit Period</dt>
-                                      <dd className="font-mono text-gray-900 tabular-nums">{auditDays} days</dd>
-                                    </div>
-                                    <div className="flex justify-between items-baseline">
-                                      <dt className="text-gray-400 font-light">Policy Window</dt>
-                                      <dd className="font-mono text-gray-900">{auditDays <= 180 ? 'Compliant' : 'Exceeded'}</dd>
-                                    </div>
-                                    <div className="flex justify-between items-baseline">
-                                      <dt className="text-gray-400 font-light">Status</dt>
-                                      <dd className="font-mono text-gray-900 capitalize">{effectiveCase.status?.replace(/_/g, ' ') || 'Pending'}</dd>
-                                    </div>
-                                  </dl>
-                                </div>
+                              <div className="bg-white">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 py-6 border-t border-gray-100">
+                                  {/* Forensic & Timeline */}
+                                  <div className="space-y-8">
+                                    <section>
+                                      <h4 className="text-[10px] font-semibold text-gray-900 uppercase tracking-[0.15em] mb-4 flex items-center gap-2">
+                                        <div className="h-1 w-3 bg-emerald-500" />
+                                        Forensic Metrics
+                                      </h4>
+                                      <dl className="space-y-3">
+                                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
+                                          <dt className="text-[11px] text-gray-500 font-light italic">Units Affected</dt>
+                                          <dd className="text-xs font-medium text-gray-900 tabular-nums font-mono">{units}</dd>
+                                        </div>
+                                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
+                                          <dt className="text-[11px] text-gray-500 font-light italic">Value Per Unit</dt>
+                                          <dd className="text-xs font-medium text-gray-900 tabular-nums font-mono">${perUnit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</dd>
+                                        </div>
+                                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
+                                          <dt className="text-[11px] text-gray-500 font-light italic">Total Claimed</dt>
+                                          <dd className="text-xs font-semibold text-gray-900 tabular-nums font-mono">${Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</dd>
+                                        </div>
+                                        <div className="flex justify-between items-baseline">
+                                          <dt className="text-[11px] text-gray-500 font-light italic">Confidence Score</dt>
+                                          <dd className="text-xs font-medium text-gray-900 tabular-nums font-mono">
+                                            {(() => {
+                                              const conf = effectiveCase.confidence || effectiveCase.confidence_score || 0.85;
+                                              const normalized = conf > 1 ? conf : conf * 100;
+                                              return `${Math.min(Math.round(normalized), 100)}%`;
+                                            })()}
+                                          </dd>
+                                        </div>
+                                      </dl>
+                                    </section>
 
-                                {/* Quantitative Evidence */}
-                                <div className="bg-white p-5">
-                                  <h4 className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.15em] mb-4 border-b border-gray-100 pb-2">
-                                    Quantitative Evidence
-                                  </h4>
-                                  <dl className="space-y-3 text-xs">
-                                    <div className="flex justify-between items-baseline">
-                                      <dt className="text-gray-400 font-light">Units Affected</dt>
-                                      <dd className="font-mono text-gray-900 tabular-nums">{units}</dd>
-                                    </div>
-                                    <div className="flex justify-between items-baseline">
-                                      <dt className="text-gray-400 font-light">Value Per Unit</dt>
-                                      <dd className="font-mono text-gray-900 tabular-nums">${perUnit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</dd>
-                                    </div>
-                                    <div className="flex justify-between items-baseline">
-                                      <dt className="text-gray-400 font-light">Total Claim</dt>
-                                      <dd className="font-mono font-medium text-gray-900 tabular-nums">${Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</dd>
-                                    </div>
-                                    {effectiveCase.actual_payout_amount && (
-                                      <div className="flex justify-between items-baseline">
-                                        <dt className="text-gray-400 font-light">Paid Out</dt>
-                                        <dd className="font-mono font-medium text-gray-900 tabular-nums">${Number(effectiveCase.actual_payout_amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</dd>
-                                      </div>
-                                    )}
-                                  </dl>
-                                </div>
+                                    <section>
+                                      <h4 className="text-[10px] font-semibold text-gray-900 uppercase tracking-[0.15em] mb-4 flex items-center gap-2">
+                                        <div className="h-1 w-3 bg-blue-500" />
+                                        Timeline Accuracy
+                                      </h4>
+                                      <dl className="space-y-3">
+                                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
+                                          <dt className="text-[11px] text-gray-500 font-light italic">Issue Identified</dt>
+                                          <dd className="text-xs font-medium text-gray-900 tabular-nums font-mono">{detectionDate}</dd>
+                                        </div>
+                                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
+                                          <dt className="text-[11px] text-gray-500 font-light italic">Audit Period</dt>
+                                          <dd className="text-xs font-medium text-gray-900 tabular-nums font-mono">{auditDays} days</dd>
+                                        </div>
+                                        <div className="flex justify-between items-baseline">
+                                          <dt className="text-[11px] text-gray-500 font-light italic">Policy Compliance</dt>
+                                          <dd className="text-xs font-medium text-emerald-600 font-mono uppercase tracking-wider">{auditDays <= 180 ? 'Compliant' : 'Exceeded'}</dd>
+                                        </div>
+                                      </dl>
+                                    </section>
+                                  </div>
 
-                                {/* Location Evidence */}
-                                <div className="bg-white p-5">
-                                  <h4 className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.15em] mb-4 border-b border-gray-100 pb-2">
-                                    Location Evidence
-                                  </h4>
-                                  <dl className="space-y-3 text-xs">
-                                    <div className="flex justify-between items-baseline">
-                                      <dt className="text-gray-400 font-light">ASIN</dt>
-                                      <dd className="font-mono text-gray-900">{asin}</dd>
-                                    </div>
-                                    <div className="flex justify-between items-baseline">
-                                      <dt className="text-gray-400 font-light">SKU</dt>
-                                      <dd className="font-mono text-gray-900">{sku}</dd>
-                                    </div>
-                                    {facility && (
-                                      <div className="flex justify-between items-baseline">
-                                        <dt className="text-gray-400 font-light">Fulfillment Center</dt>
-                                        <dd className="font-mono text-gray-900">{facility}</dd>
-                                      </div>
-                                    )}
-                                    {orderId && (
-                                      <div className="flex justify-between items-baseline">
-                                        <dt className="text-gray-400 font-light">Order ID</dt>
-                                        <dd className="font-mono text-gray-900 text-[10px]">{orderId}</dd>
-                                      </div>
-                                    )}
-                                    {shipmentId && (
-                                      <div className="flex justify-between items-baseline">
-                                        <dt className="text-gray-400 font-light">Shipment ID</dt>
-                                        <dd className="font-mono text-gray-900">{shipmentId}</dd>
-                                      </div>
-                                    )}
-                                  </dl>
-                                </div>
+                                  {/* Logistical & Metadata */}
+                                  <div className="space-y-8">
+                                    <section>
+                                      <h4 className="text-[10px] font-semibold text-gray-900 uppercase tracking-[0.15em] mb-4 flex items-center gap-2">
+                                        <div className="h-1 w-3 bg-gray-400" />
+                                        Logistical Trace
+                                      </h4>
+                                      <dl className="space-y-3">
+                                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
+                                          <dt className="text-[11px] text-gray-500 font-light italic">ASIN / SKU</dt>
+                                          <dd className="text-[10px] font-mono text-gray-900">{asin} / {sku}</dd>
+                                        </div>
+                                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
+                                          <dt className="text-[11px] text-gray-500 font-light italic">Fulfillment Center</dt>
+                                          <dd className="text-xs font-medium text-gray-900">{facility || 'N/A'}</dd>
+                                        </div>
+                                        {orderId && (
+                                          <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
+                                            <dt className="text-[11px] text-gray-500 font-light italic">Reference Trans.</dt>
+                                            <dd className="text-[10px] font-mono text-gray-900 underline underline-offset-2">{orderId}</dd>
+                                          </div>
+                                        )}
+                                        {shipmentId && (
+                                          <div className="flex justify-between items-baseline">
+                                            <dt className="text-[11px] text-gray-500 font-light italic">Shipment Ref.</dt>
+                                            <dd className="text-[10px] font-mono text-gray-900">{shipmentId}</dd>
+                                          </div>
+                                        )}
+                                      </dl>
+                                    </section>
 
-                                {/* Pattern Evidence */}
-                                <div className="bg-white p-5">
-                                  <h4 className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.15em] mb-4 border-b border-gray-100 pb-2">
-                                    Pattern Evidence
-                                  </h4>
-                                  <dl className="space-y-3 text-xs">
-                                    <div className="flex justify-between items-baseline">
-                                      <dt className="text-gray-400 font-light">Claim Type</dt>
-                                      <dd className="font-mono text-gray-900 capitalize">{caseType.replace(/_/g, ' ') || 'Discrepancy'}</dd>
-                                    </div>
-                                    <div className="flex justify-between items-baseline">
-                                      <dt className="text-gray-400 font-light">Confidence</dt>
-                                      <dd className="font-mono text-gray-900 tabular-nums">
-                                        {(() => {
-                                          const conf = effectiveCase.confidence || effectiveCase.confidence_score || 0.85;
-                                          // Handle both 0-1 and 0-100 formats
-                                          const normalized = conf > 1 ? conf : conf * 100;
-                                          return `${Math.min(Math.round(normalized), 100)}%`;
-                                        })()}
-                                      </dd>
-                                    </div>
-                                    <div className="flex justify-between items-baseline">
-                                      <dt className="text-gray-400 font-light">Match Type</dt>
-                                      <dd className="font-mono text-gray-900 capitalize">{(effectiveCase.match_type || 'order_id').replace(/_/g, ' ')}</dd>
-                                    </div>
-                                    <div className="flex justify-between items-baseline">
-                                      <dt className="text-gray-400 font-light">Detection</dt>
-                                      <dd className="font-mono text-gray-900">Automated Audit</dd>
-                                    </div>
-                                  </dl>
+                                    <section>
+                                      <h4 className="text-[10px] font-semibold text-gray-900 uppercase tracking-[0.15em] mb-4 flex items-center gap-2">
+                                        <div className="h-1 w-3 bg-indigo-500" />
+                                        System Metadata
+                                      </h4>
+                                      <dl className="space-y-3">
+                                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
+                                          <dt className="text-[11px] text-gray-500 font-light italic">Claim Category</dt>
+                                          <dd className="text-xs font-medium text-gray-900 capitalize font-mono">{caseType.replace(/_/g, ' ') || 'Discrepancy'}</dd>
+                                        </div>
+                                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
+                                          <dt className="text-[11px] text-gray-500 font-light italic">Engine Match</dt>
+                                          <dd className="text-xs font-medium text-gray-900 capitalize font-mono">{(effectiveCase.match_type || 'order_id').replace(/_/g, ' ')}</dd>
+                                        </div>
+                                        <div className="flex justify-between items-baseline">
+                                          <dt className="text-[11px] text-gray-500 font-light italic">Audit Method</dt>
+                                          <dd className="text-[10px] font-medium text-gray-700 uppercase tracking-wider">Autonomous Engine</dd>
+                                        </div>
+                                      </dl>
+                                    </section>
+                                  </div>
                                 </div>
                               </div>
                             );
