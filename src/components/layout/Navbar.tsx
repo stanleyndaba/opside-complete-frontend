@@ -319,17 +319,27 @@ export function Navbar({
                   )}
                 </button>
 
-                {/* Hover tooltip showing last note */}
+                {/* Hover tooltip showing recent notes */}
                 {isNoteHovered && notes.length > 0 && (
-                  <div className="absolute top-full right-1/2 translate-x-1/2 mt-2 w-64 bg-white border border-gray-200 rounded-sm shadow-lg z-50 overflow-hidden">
-                    <div className="px-3 py-2 border-b border-gray-100 bg-gray-50">
-                      <span className="text-[9px] font-medium text-gray-500 uppercase tracking-[0.15em]">Last Note</span>
+                  <div className="absolute top-full right-1/2 translate-x-1/2 mt-2 w-72 bg-white border border-gray-200 rounded-sm shadow-lg z-50 overflow-hidden">
+                    <div className="px-3 py-2 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                      <span className="text-[9px] font-medium text-gray-500 uppercase tracking-[0.15em]">Recent Notes</span>
+                      <span className="text-[9px] text-gray-400">{notes.length} total</span>
                     </div>
-                    <div className="p-3">
-                      <p className="text-xs text-gray-700 line-clamp-3">{notes[0].text}</p>
-                      <p className="text-[9px] text-gray-400 mt-2">
-                        {new Date(notes[0].createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                      </p>
+                    <div className="max-h-64 overflow-y-auto">
+                      {notes.slice(0, 5).map((note, index) => (
+                        <div key={note.id} className={`p-3 hover:bg-gray-50 transition-colors ${index !== Math.min(notes.length, 5) - 1 ? 'border-b border-gray-100' : ''}`}>
+                          <p className="text-xs text-gray-700 line-clamp-3">{note.text}</p>
+                          <p className="text-[9px] text-gray-400 mt-1.5 flex items-center justify-between">
+                            <span>{new Date(note.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                          </p>
+                        </div>
+                      ))}
+                      {notes.length > 5 && (
+                        <div className="px-3 py-2 bg-gray-50 border-t border-gray-100 text-center">
+                          <span className="text-[9px] text-gray-500">Click to view all notes</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
