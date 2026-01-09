@@ -1068,84 +1068,112 @@ export function Dashboard() {
                   </div>
                 </div>
 
-                {/* Recent Logs - Right Sidebar */}
+                {/* System Activity - Right Sidebar */}
                 <div className="lg:col-span-1">
-                  <div className="bg-white border border-gray-200 rounded-sm h-full">
-                    <div className="px-4 py-3 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
-                      <h3 className="text-xs font-semibold text-gray-900">System Activity</h3>
+                  <div className="bg-white border border-gray-200 rounded-none h-full flex flex-col">
+                    <div className="px-5 py-4 border-b border-gray-100 bg-white flex items-center justify-between">
+                      <h3 className="text-[10px] font-semibold text-gray-900 uppercase tracking-[0.2em]">System Activity</h3>
                       {unreadCount > 0 && (
-                        <span className="text-[9px] rounded px-1.5 py-0.5 bg-gray-900 text-white">
-                          {unreadCount > 50 ? '50+' : unreadCount}
-                        </span>
+                        <div className="flex items-center justify-center bg-gray-900 px-1.5 py-0.5 rounded-none">
+                          <span className="text-[9px] font-bold text-white tabular-nums">
+                            {unreadCount > 50 ? '50+' : unreadCount}
+                          </span>
+                        </div>
                       )}
                     </div>
-                    <div className="max-h-[500px] overflow-y-auto scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+
+                    <div className="flex-1 max-h-[600px] overflow-y-auto scrollbar-hide divide-y divide-gray-50">
                       {displayNotifications.length === 0 ? (
-                        <div className="p-8 text-center">
-                          <Bell className="h-5 w-5 mx-auto mb-2 text-gray-300" />
-                          <p className="text-[10px] text-gray-600 font-medium">No issues requiring your attention</p>
-                          <p className="text-[9px] text-gray-400 mt-1">You're fully compliant</p>
+                        <div className="flex flex-col items-center justify-center py-12 px-6 text-center animate-in fade-in duration-500">
+                          <Bell className="h-5 w-5 text-gray-200 mb-3" />
+                          <span className="text-[10px] font-medium text-gray-400 uppercase tracking-[0.2em]">Activity Clear</span>
+                          <p className="text-[9px] text-gray-300 uppercase tracking-widest mt-1">Locker integrity verified • 0 alerts</p>
                         </div>
                       ) : (
-                        <div className="divide-y divide-gray-100">
-                          {displayNotifications.slice(0, 10).map((notification) => {
+                        <div className="flex flex-col">
+                          {displayNotifications.slice(0, 12).map((notification) => {
                             const isUnread = notification.status !== 'read';
                             const timeAgo = formatDistanceToNow(new Date(notification.created_at), { addSuffix: true });
 
-                            // Determine indicator color based on type
-                            let indicatorColor = 'bg-gray-200';
-                            if (notification.type === 'claim_detected' || notification.type === 'case_filed') indicatorColor = 'bg-blue-500';
-                            if (notification.type === 'refund_approved' || notification.type === 'funds_deposited') indicatorColor = 'bg-emerald-500';
-                            if (notification.type === 'amazon_challenge' || notification.type === 'user_action_required') indicatorColor = 'bg-amber-500';
-                            if (notification.type === 'evidence_found') indicatorColor = 'bg-indigo-400';
+                            // Status Dot Color
+                            let statusColor = 'bg-gray-200';
+                            if (notification.type === 'claim_detected' || notification.type === 'case_filed') statusColor = 'bg-blue-500';
+                            if (notification.type === 'refund_approved' || notification.type === 'funds_deposited') statusColor = 'bg-emerald-500';
+                            if (notification.type === 'amazon_challenge' || notification.type === 'user_action_required') statusColor = 'bg-amber-500';
+                            if (notification.type === 'evidence_found') statusColor = 'bg-indigo-400';
 
                             return (
                               <HoverCard key={notification.id} openDelay={100} closeDelay={100}>
                                 <HoverCardTrigger asChild>
                                   <div
-                                    className={`px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors relative ${isUnread ? 'bg-gray-50/20' : ''}`}
+                                    className={cn(
+                                      "group relative px-5 py-4 cursor-pointer transition-all duration-200 border-l-2 border-transparent hover:bg-gray-50/50",
+                                      isUnread ? "bg-gray-50/30" : "bg-white"
+                                    )}
                                     onClick={() => navigate('/recoveries')}>
-                                    <div className="flex items-start justify-between gap-2">
-                                      <p className={`text-[11px] leading-tight truncate pr-1 ${isUnread ? 'text-gray-900 font-bold' : 'text-gray-700 font-semibold'}`}>
-                                        {enrichNotificationTitle(notification.title)}
-                                      </p>
-                                      <span className="text-[9px] text-gray-400 font-medium shrink-0 pt-0.5">
-                                        {timeAgo.replace(' ago', '')}
+
+                                    {/* Hover Accent Bar */}
+                                    <div className="absolute left-[-2px] top-0 bottom-0 w-[2px] bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity" />
+
+                                    <div className="flex items-start justify-between gap-3 mb-1.5">
+                                      <div className="flex items-center gap-2 overflow-hidden">
+                                        <Hexagon className={cn("h-3 w-3 shrink-0 transition-colors",
+                                          isUnread ? "text-gray-900" : "text-gray-300 group-hover:text-gray-900"
+                                        )} />
+                                        <p className={cn(
+                                          "text-[11px] uppercase tracking-tight truncate",
+                                          isUnread ? "font-semibold text-gray-900" : "font-medium text-gray-600 group-hover:text-gray-900"
+                                        )}>
+                                          {enrichNotificationTitle(notification.title)}
+                                        </p>
+                                      </div>
+                                      <span className="text-[9px] text-gray-400 font-medium uppercase tracking-widest tabular-nums shrink-0 pt-0.5">
+                                        {timeAgo.replace('about ', '').replace(' ago', '')}
                                       </span>
                                     </div>
-                                    <div className="text-[10px] text-gray-500 mt-1 leading-relaxed truncate">
-                                      {renderNotificationMessage(notification.message)}
+
+                                    <div className="flex items-center gap-2">
+                                      <div className={cn("h-1 w-1 rounded-full shrink-0", statusColor)} />
+                                      <p className="text-[10px] text-gray-400 font-mono tracking-tighter leading-relaxed truncate">
+                                        {stripEmojis(notification.message)}
+                                      </p>
                                     </div>
                                   </div>
                                 </HoverCardTrigger>
-                                <HoverCardContent side="left" align="start" className="w-80 p-0 overflow-hidden border-gray-200 shadow-xl">
-                                  <div className="p-4">
-                                    <div className="flex items-center gap-2 mb-2">
-                                      <div className={cn("px-1.5 py-0.5 rounded-[2px] text-[8px] font-bold uppercase tracking-wider",
-                                        notification.type === 'funds_deposited' || notification.type === 'refund_approved' ? "bg-emerald-100 text-emerald-700" :
-                                          notification.type === 'amazon_challenge' ? "bg-amber-100 text-amber-700" : "bg-blue-100 text-blue-700"
+
+                                <HoverCardContent side="left" align="start" className="w-80 p-0 overflow-hidden border-gray-100 rounded-none shadow-2xl animate-in fade-in slide-in-from-right-1">
+                                  <div className="p-5">
+                                    <div className="flex items-center gap-3 mb-3">
+                                      <div className={cn(
+                                        "px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.15em]",
+                                        notification.type === 'funds_deposited' || notification.type === 'refund_approved' ? "bg-emerald-50 text-emerald-700 border border-emerald-100" :
+                                          notification.type === 'amazon_challenge' || notification.type === 'user_action_required' ? "bg-amber-50 text-amber-700 border border-amber-100" :
+                                            "bg-blue-50 text-blue-700 border border-blue-100"
                                       )}>
                                         {notification.type.replace(/_/g, ' ')}
                                       </div>
-                                      <span className="text-[9px] text-gray-400 font-medium flex items-center gap-1">
-                                        <Clock className="h-2.5 w-2.5" />
+                                      <span className="text-[10px] text-gray-400 font-medium uppercase tracking-widest flex items-center gap-1.5">
+                                        <Clock className="h-3 w-3" />
                                         {timeAgo}
                                       </span>
                                     </div>
-                                    <h4 className="text-xs font-bold text-gray-900 leading-snug mb-2">
-                                      {enrichNotificationTitle(notification.title)}
+
+                                    <h4 className="text-[13px] font-semibold text-gray-900 leading-snug mb-3">
+                                      {notification.title}
                                     </h4>
-                                    <div className="text-[11px] text-gray-600 leading-relaxed space-y-2 bg-gray-50/50 p-3 rounded-sm border border-gray-100">
+
+                                    <div className="text-[11px] text-gray-600 leading-relaxed bg-gray-50/50 p-4 border border-gray-100 font-mono">
                                       {renderNotificationMessage(notification.message)}
                                     </div>
-                                    <div className="mt-3 flex items-center justify-between pt-3 border-t border-gray-100">
-                                      <span className="text-[9px] text-gray-400 font-mono">
-                                        REF: {notification.id.substring(0, 8).toUpperCase()}
+
+                                    <div className="mt-4 flex items-center justify-between pt-4 border-t border-gray-50">
+                                      <span className="text-[9px] text-gray-400 font-mono uppercase tracking-widest">
+                                        LOG.{notification.id.substring(0, 8).toUpperCase()}
                                       </span>
                                       <button
                                         onClick={() => navigate('/recoveries')}
-                                        className="text-[9px] font-bold text-gray-900 flex items-center gap-1 hover:underline">
-                                        Case Details <ArrowRight className="h-2.5 w-2.5" />
+                                        className="text-[10px] font-bold text-gray-900 flex items-center gap-1.5 hover:underline uppercase tracking-wider">
+                                        Open Record <ArrowRight className="h-3 w-3" />
                                       </button>
                                     </div>
                                   </div>
@@ -1156,12 +1184,16 @@ export function Dashboard() {
                         </div>
                       )}
                     </div>
-                    <div className="border-t border-gray-200 p-3">
-                      <button
+
+                    <div className="border-t border-gray-100 p-4 bg-gray-50/30">
+                      <Button
+                        variant="ghost"
+                        size="sm"
                         onClick={() => navigate('/notifications')}
-                        className="w-full text-center text-[10px] text-gray-500 hover:text-gray-700 py-1">
-                        View all logs
-                      </button>
+                        className="w-full h-8 text-[9px] text-gray-400 hover:text-gray-900 uppercase tracking-[0.2em] font-medium transition-colors"
+                      >
+                        Archived Activity Logs
+                      </Button>
                     </div>
                   </div>
                 </div>
