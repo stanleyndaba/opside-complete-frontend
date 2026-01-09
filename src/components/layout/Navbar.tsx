@@ -91,6 +91,7 @@ export function Navbar({
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
   const [editingNoteContent, setEditingNoteContent] = useState('');
   const [isNoteHovered, setIsNoteHovered] = useState(false);
+  const [isSavingNote, setIsSavingNote] = useState(false);
   const noteIconRef = useRef<HTMLButtonElement>(null);
 
   // Fetch notes from backend on load
@@ -521,7 +522,8 @@ export function Navbar({
               />
               <Button
                 onClick={async () => {
-                  if (!currentNote.trim()) return;
+                  if (!currentNote.trim() || isSavingNote) return;
+                  setIsSavingNote(true);
                   try {
                     const response = await api.createNote(currentNote.trim());
                     if (response.ok && response.data?.success) {
@@ -532,15 +534,19 @@ export function Navbar({
                       };
                       setNotes([newNote, ...notes]);
                       setCurrentNote('');
+                    } else {
+                      console.error('Failed to save note:', response.error);
                     }
                   } catch (error) {
                     console.error('Failed to save note:', error);
+                  } finally {
+                    setIsSavingNote(false);
                   }
                 }}
                 className="w-full bg-gray-900 hover:bg-gray-800 text-white text-[12px] h-9 font-medium rounded-sm"
-                disabled={!currentNote.trim()}
+                disabled={!currentNote.trim() || isSavingNote}
               >
-                Save Note
+                {isSavingNote ? 'Saving...' : 'Save Note'}
               </Button>
             </div>
 
@@ -568,10 +574,11 @@ export function Navbar({
                             </button>
                             <button
                               onClick={async () => {
-                                if (!editingNoteContent.trim() || editingNoteContent === note.text) {
-                                  setEditingNoteId(null);
+                                if (!editingNoteContent.trim() || editingNoteContent === note.text || isSavingNote) {
+                                  if (!isSavingNote) setEditingNoteId(null);
                                   return;
                                 }
+                                setIsSavingNote(true);
                                 try {
                                   const response = await api.updateNote(note.id, editingNoteContent.trim());
                                   if (response.ok && response.data?.success) {
@@ -584,11 +591,14 @@ export function Navbar({
                                   }
                                 } catch (error) {
                                   console.error('Failed to update note:', error);
+                                } finally {
+                                  setIsSavingNote(false);
                                 }
                               }}
-                              className="text-[10px] text-gray-900 hover:text-black font-semibold"
+                              className="text-[10px] text-gray-900 hover:text-black font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                              disabled={isSavingNote}
                             >
-                              Save
+                              {isSavingNote ? 'Saving...' : 'Save'}
                             </button>
                           </div>
                         </div>
