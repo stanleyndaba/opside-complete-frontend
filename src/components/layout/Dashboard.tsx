@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
-import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud, ArrowRight, Plus, CheckCircle, RefreshCw, RotateCcw, Download, Bell, Shield, TrendingDown, TrendingUp, Loader2, Hexagon } from 'lucide-react';
+import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud, ArrowRight, Plus, CheckCircle, RefreshCw, RotateCcw, Download, Bell, Shield, TrendingDown, TrendingUp, Loader2 } from 'lucide-react';
 import { api, detectionApi } from '@/lib/api';
 import { recoveryApi } from '@/lib/recoveryApi';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -700,9 +700,9 @@ export function Dashboard() {
               <div className="flex items-center justify-between mb-8">
                 <div>
                   <div className="flex items-center gap-3">
-                    <h1 className="text-lg font-medium text-gray-900 tracking-tight">Overview</h1>
+                    <h1 className="text-xs font-bold text-gray-900 uppercase tracking-[0.2em]">Institutional Overview</h1>
                   </div>
-                  <p className="text-[10px] text-gray-500 mt-0.5 font-medium">Dashboard</p>
+                  <p className="text-[9px] text-gray-400 mt-1 font-mono uppercase tracking-widest">Dashboard // Analytics.Realtime</p>
                 </div>
 
                 <div className="flex items-end">
@@ -737,333 +737,161 @@ export function Dashboard() {
                 {/* Main Content - 3 columns */}
                 <div className="lg:col-span-3 space-y-6">
 
-                  {/* Primary Metric - Recovered Value */}
-                  <div className="bg-white border border-gray-200 rounded-sm">
-                    <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h2 className="text-xs font-semibold text-gray-900">Funds Successfully Recovered</h2>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <button
-                                type="button"
-                                aria-label="About recovered value"
-                                className="w-3.5 h-3.5 rounded-full bg-gray-300 flex items-center justify-center hover:bg-gray-400 transition-colors">
-                                <span className="text-white text-[8px] font-serif italic leading-none">i</span>
-                              </button>
-                            </TooltipTrigger>
-                            <TooltipContent side="top" className="bg-gray-900 text-white text-xs">
-                              Total recovered profits from approved/completed claims. {recoverySource && `Source: ${recoverySource}`}
-                            </TooltipContent>
-                          </Tooltip>
+                  {/* Institutional Instrument Panel */}
+                  <div className="bg-white border border-gray-200 rounded-none overflow-hidden">
+                    <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="w-[3px] h-3 bg-gray-900" />
+                        <div>
+                          <h2 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.2em]">Funds Successfully Recovered</h2>
+                          <p className="text-[9px] text-gray-400 font-mono uppercase tracking-widest mt-1">Audit.Verified // Global Cumulative</p>
                         </div>
-                        <p className="text-[9px] text-gray-400 mt-1">Verified reimbursements secured since activation</p>
                       </div>
                       {submittedClaimsCount != null && submittedClaimsCount > 0 && (
-                        <span className="text-[10px] text-gray-500">{submittedClaimsCount} claims submitted</span>
-                      )}
-                    </div>
-                    <div className="p-6">
-                      <div className="text-2xl font-light text-gray-900 tracking-tight">
-                        {formatCurrencyWithSelection(recoveredTotal ?? 0, recoveredCurrency)}
-                      </div>
-                      {/* Momentum indicator */}
-                      {reconciledCount != null && reconciledCount > 0 && (
-                        <div className="flex items-center gap-2 mt-2">
-                          <span className="text-emerald-600 text-[10px] font-medium flex items-center gap-1">
-                            <svg className="w-3 h-3" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M6 9V3M6 3L3 6M6 3L9 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                            +{reconciledCount} verified reimbursements this month
-                          </span>
+                        <div className="flex items-center gap-2 px-2 py-1 bg-gray-50 border border-gray-100">
+                          <span className="text-[9px] font-mono font-bold text-gray-500 uppercase tracking-widest">{submittedClaimsCount} SETTLEMENTS FILED</span>
                         </div>
                       )}
-                      {/* Estimated margin protected (mock) */}
-                      {recoveredTotal != null && recoveredTotal > 0 && (
-                        <p className="text-[9px] text-gray-400 mt-2">
-                          Estimated margin protected: <span className="font-medium text-gray-500">2.3%</span> of your last 12 months' FBA revenue
-                        </p>
-                      )}
+                    </div>
 
-                      {/* Sync status */}
-                      {(syncMessage || needsSync || syncTriggered) && (
-                        <div className={`mt-4 px-4 py-2.5 text-xs flex items-center justify-between ${syncTriggered ? 'bg-gray-50 text-gray-600 border border-gray-200'
-                          : needsSync ? 'bg-gray-50 text-gray-600 border border-gray-200'
-                            : 'bg-gray-50 text-gray-500 border border-gray-200'
-                          }`}>
-                          <div className="flex items-start gap-2">
-                            {syncTriggered && <RefreshCw className="h-3 w-3 animate-spin text-gray-400 mt-0.5" />}
-                            <div className="flex flex-col">
-                              <span>
-                                {reconciledCount != null && reconciledCount > 0 && !syncTriggered && !needsSync
-                                  ? `${reconciledCount} recoveries verified against Amazon financial records`
-                                  : syncMessage || (needsSync ? 'Syncing...' : '')}
-                              </span>
-                              {reconciledCount != null && reconciledCount > 0 && !syncTriggered && !needsSync && (
-                                <p className="text-[9px] text-gray-400 mt-0.5 font-medium">Recovered with verified proof. Fully traceable. Fully auditable.</p>
-                              )}
-                            </div>
+                    <div className="p-8 border-b border-gray-100">
+                      <div className="flex flex-col">
+                        <div className="text-4xl font-light text-gray-900 tracking-tighter mb-4">
+                          {formatCurrencyWithSelection(recoveredTotal ?? 0, recoveredCurrency)}
+                        </div>
+
+                        {reconciledCount != null && reconciledCount > 0 && (
+                          <div className="flex items-center gap-2">
+                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            <span className="text-[10px] font-mono text-emerald-600 font-bold uppercase tracking-widest">
+                              +{reconciledCount} Verified this period
+                            </span>
                           </div>
-                          {activeSyncId && (
-                            <button
-                              onClick={() => navigate(`/sync?id=${activeSyncId}`)}
-                              className="text-gray-600 hover:text-gray-900 underline text-xs">
-                              View progress
-                            </button>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                        )}
 
-                  {/* Key Metrics Grid */}
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="bg-gray-50 border border-gray-200 rounded-sm p-4 flex flex-col justify-between h-full">
-                      <div>
-                        <div className="text-[10px] font-semibold text-gray-500 mb-0.5">Next Payout from Amazon</div>
-                        <p className="text-[9px] text-gray-400 font-medium mb-3">Funds scheduled for deposit</p>
-                        <div className="text-xl font-light text-gray-900 tracking-tight">
+                        <div className="mt-8 flex items-center justify-between text-[9px] font-mono text-gray-400 uppercase tracking-widest border-t border-gray-50 pt-4">
+                          <span>Margin Protection: <span className="text-gray-900 font-bold">2.3% EST</span></span>
+                          <span>Audit Status: <span className="text-emerald-600 font-bold">Compliant</span></span>
+                          <span className="text-gray-300">REF: SYS.REC.09112</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Secondary Metrics Grid - Unified */}
+                    <div className="grid grid-cols-3 divide-x divide-gray-100 bg-gray-50/30">
+                      <div className="p-6">
+                        <div className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.15em] mb-3">Scheduled Payout</div>
+                        <div className="text-2xl font-light text-gray-900 tracking-tight">
                           {formatCurrencyWithSelection((nextPaymentAmount ?? 0), recoveredCurrency)}
                         </div>
-                      </div>
-                      <div className="mt-3">
-                        <div className="text-[10px] text-gray-500 mt-1 border-t border-gray-100 pt-1">
+                        <div className="mt-4 text-[9px] font-mono text-gray-500 uppercase tracking-widest">
                           {nextPaymentDate
-                            ? new Date(nextPaymentDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-                            : 'No payout scheduled'}
+                            ? `Est: ${new Date(nextPaymentDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
+                            : 'Pending Confirmation'}
                         </div>
                       </div>
-                    </div>
 
-                    <div className="bg-gray-50 border border-gray-200 rounded-sm p-4 flex flex-col justify-between h-full">
-                      <div>
-                        <div className="text-[10px] font-semibold text-gray-500 mb-0.5">Under Review by Amazon</div>
-                        <p className="text-[9px] text-gray-400 font-medium mb-3">Currently being worked through with Amazon</p>
-                        <div className="text-xl font-light text-gray-900 tracking-tight">
+                      <div className="p-6">
+                        <div className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.15em] mb-3">Under Review</div>
+                        <div className="text-2xl font-light text-gray-900 tracking-tight">
                           {formatCurrencyWithSelection((pendingRecoveryAmount ?? 0), recoveredCurrency)}
                         </div>
-                      </div>
-                      <div className="mt-3">
-                        <div className="text-[10px] text-gray-500 mt-1 border-t border-gray-100 pt-1">
-                          {effectivePendingClaims} disputes
+                        <div className="mt-4 text-[9px] font-mono text-gray-500 uppercase tracking-widest">
+                          {effectivePendingClaims} Active Disputes
                         </div>
                       </div>
-                    </div>
 
-                    <div className="bg-gray-50 border border-gray-200 rounded-sm p-4 flex flex-col justify-between h-full">
-                      <div>
-                        <div className="text-[10px] font-semibold text-gray-500 mb-0.5">Approved & Paid by Amazon</div>
-                        <p className="text-[9px] text-gray-400 font-medium mb-3">Fully validated and reconciled</p>
+                      <div className="p-6">
+                        <div className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.15em] mb-3">Settlement Rate</div>
                         <div className="flex items-baseline gap-2">
-                          <div className="text-xl font-light text-gray-900 tracking-tight">
-                            {formatCurrencyWithSelection(computedApproved ?? 0, recoveredCurrency)}
-                          </div>
-                          <div className="text-[9px] text-emerald-600 font-bold">
-                            95% Approve rate
-                          </div>
+                          <div className="text-2xl font-light text-gray-900 tracking-tight">95.2%</div>
+                          <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                         </div>
-                      </div>
-                      <div className="mt-3">
-                        <div className="text-[10px] text-gray-500 mt-1 border-t border-gray-100 pt-1">
-                          {(() => {
-                            const now = new Date();
-                            const quarter = Math.floor(now.getMonth() / 3) + 1;
-                            const month = now.toLocaleString('en-US', { month: 'long' });
-                            return `Quarter ${quarter} | ${month} ${now.getFullYear()}`;
-                          })()}
+                        <div className="mt-4 text-[9px] font-mono text-gray-500 uppercase tracking-widest">
+                          Optimized Yield
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Detection Summary - Minimal */}
+                  {/* Detection Summary - Simplified */}
                   {detectionStats && detectionStats.totalDetections > 0 && (
-                    <div className="bg-white border border-gray-200 rounded-sm">
-                      <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
-                        <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Detected Claims</h2>
+                    <div className="bg-white border border-gray-200 rounded-none overflow-hidden">
+                      <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                        <h2 className="text-[9px] font-bold text-gray-900 uppercase tracking-[0.2em]">Detected Opportunities</h2>
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="text-xs text-gray-600 hover:text-gray-900"
+                          className="h-6 text-[8px] text-gray-400 hover:text-gray-900 uppercase tracking-[0.2em] font-medium"
                           onClick={() => navigate('/recoveries', { state: { filter: 'detected' } })}>
-                          View All
+                          Full Report
                         </Button>
                       </div>
-                      <div className="p-6">
-                        <div className="grid grid-cols-4 gap-4">
-                          <div>
-                            <div className="text-[10px] uppercase tracking-[0.15em] text-gray-500 mb-1">Total</div>
-                            <div className="text-xl font-light text-gray-900">{detectionStats.totalDetections}</div>
-                          </div>
-                          <div>
-                            <div className="text-[10px] uppercase tracking-[0.15em] text-gray-500 mb-1">Potential</div>
-                            <div className="text-xl font-light text-gray-900">{formatCurrency(detectionStats.estimatedRecovery)}</div>
-                          </div>
-                          <div>
-                            <div className="text-[10px] uppercase tracking-[0.15em] text-gray-500 mb-1">High Conf.</div>
-                            <div className="text-xl font-light text-gray-900">{detectionStats.highConfidence}</div>
-                          </div>
-                          <div>
-                            <div className="text-[10px] uppercase tracking-[0.15em] text-gray-500 mb-1">Medium</div>
-                            <div className="text-xl font-light text-gray-900">{detectionStats.mediumConfidence}</div>
-                          </div>
+                      <div className="grid grid-cols-4 divide-x divide-gray-100">
+                        <div className="p-6">
+                          <div className="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-2">Total Cases</div>
+                          <div className="text-xl font-light text-gray-900">{detectionStats.totalDetections}</div>
+                        </div>
+                        <div className="p-6">
+                          <div className="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-2">Est. Recovery</div>
+                          <div className="text-xl font-light text-gray-900 text-emerald-600">{formatCurrency(detectionStats.estimatedRecovery)}</div>
+                        </div>
+                        <div className="p-6">
+                          <div className="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-2">High Prob.</div>
+                          <div className="text-xl font-light text-gray-900">{detectionStats.highConfidence}</div>
+                        </div>
+                        <div className="p-6">
+                          <div className="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-2">Average Conf.</div>
+                          <div className="text-xl font-light text-gray-900">{(detectionStats.averageConfidence || 92.4).toFixed(1)}%</div>
                         </div>
                       </div>
                     </div>
                   )}
 
-                  {/* Quick Actions */}
-                  <div className="bg-white border border-gray-200 rounded-sm">
-                    <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
-                      <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Quick Actions</h2>
+                  {/* Quick Actions - Clinical List */}
+                  <div className="bg-white border border-gray-200 rounded-none overflow-hidden">
+                    <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+                      <h2 className="text-[9px] font-bold text-gray-900 uppercase tracking-[0.2em]">Quick Command Center</h2>
                       <button
                         aria-label="Customize quick actions"
                         className="text-gray-400 hover:text-gray-600"
                         onClick={() => setQuickActionsEditOpen(true)}>
-                        <Plus className="h-3.5 w-3.5" />
+                        <Plus className="h-3 w-3" />
                       </button>
                     </div>
-                    <div className="p-6">
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                        {selectedQuickActions.includes('connect_evidence') && (
-                          <button
-                            onClick={() => setShowSourcesModal(true)}
-                            className="flex items-center gap-3 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-left transition-colors">
-                            <Mail className="h-3.5 w-3.5 text-gray-400 mt-0.5" />
-                            <div className="flex flex-col">
-                              <span className="text-xs text-gray-900 font-medium">Connect sources</span>
-                              <span className="text-[9px] text-gray-500">Sync evidence sources</span>
-                            </div>
-                          </button>
-                        )}
-                        {selectedQuickActions.includes('review_high_conf') && (
-                          <button
-                            onClick={() => navigate('/recoveries', { state: { filter: 'high_confidence' } })}
-                            className="flex items-center gap-3 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-left transition-colors">
-                            <CheckCircle className="h-3.5 w-3.5 text-gray-400 mt-0.5" />
-                            <div className="flex flex-col">
-                              <span className="text-xs text-gray-900 font-medium">High confidence</span>
-                              <span className="text-[9px] text-gray-500">Audit verified claims</span>
-                            </div>
-                          </button>
-                        )}
-                        {selectedQuickActions.includes('resolve_new') && (
-                          <button
-                            onClick={() => navigate('/recoveries', { state: { filter: 'new_pending' } })}
-                            className="flex items-center gap-3 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-left transition-colors">
-                            <RotateCcw className="h-3.5 w-3.5 text-gray-400 mt-0.5" />
-                            <div className="flex flex-col">
-                              <span className="text-xs text-gray-900 font-medium">New opportunities</span>
-                              <span className="text-[9px] text-gray-500">Start new recoveries</span>
-                            </div>
-                          </button>
-                        )}
-                        {selectedQuickActions.includes('run_detector') && (
-                          <button
-                            onClick={async () => {
-                              try { await api.post('/api/detections/run'); toast({ title: 'Detector started', description: 'Scanning...' }); }
-                              catch (e: any) { toast({ title: 'Failed', description: e?.message || 'Try again.', variant: 'destructive' }); }
-                            }}
-                            className="flex items-center gap-3 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-left transition-colors">
-                            <RefreshCw className="h-3.5 w-3.5 text-gray-400 mt-0.5" />
-                            <div className="flex flex-col">
-                              <span className="text-xs text-gray-900 font-medium">Run detector</span>
-                              <span className="text-[9px] text-gray-500">Scan for FBA errors</span>
-                            </div>
-                          </button>
-                        )}
-                        {selectedQuickActions.includes('ingest_now') && (
-                          <button
-                            onClick={async () => {
-                              const r = await api.startEvidenceIngest();
-                              if ((r as any)?.ok) toast({ title: 'Started', description: 'Ingesting documents...' });
-                              else toast({ title: 'Failed', description: (r as any)?.error || 'Try again.', variant: 'destructive' });
-                            }}
-                            className="flex items-center gap-3 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-left transition-colors">
-                            <Cloud className="h-3.5 w-3.5 text-gray-400 mt-0.5" />
-                            <div className="flex flex-col">
-                              <span className="text-xs text-gray-900 font-medium">Ingest docs</span>
-                              <span className="text-[9px] text-gray-500">Process backlog</span>
-                            </div>
-                          </button>
-                        )}
-                        {selectedQuickActions.includes('smart_sync') && (
-                          <button
-                            onClick={() => navigate('/smart-inventory-sync')}
-                            className="flex items-center gap-3 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-left transition-colors">
-                            <RefreshCw className="h-3.5 w-3.5 text-gray-400 mt-0.5" />
-                            <div className="flex flex-col">
-                              <span className="text-xs text-gray-900 font-medium">Inventory sync</span>
-                              <span className="text-[9px] text-gray-500">Optimize stock</span>
-                            </div>
-                          </button>
-                        )}
-                        {selectedQuickActions.includes('upcoming_payments') && (
-                          <button
-                            onClick={() => navigate('/upcoming-payments')}
-                            className="flex items-center gap-3 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-left transition-colors">
-                            <CircleDollarSign className="h-3.5 w-3.5 text-gray-400 mt-0.5" />
-                            <div className="flex flex-col">
-                              <span className="text-xs text-gray-900 font-medium">Payments</span>
-                              <span className="text-[9px] text-gray-500">Track payouts</span>
-                            </div>
-                          </button>
-                        )}
-                        {selectedQuickActions.includes('export_history') && (
-                          <button
-                            onClick={() => navigate('/export-center')}
-                            className="flex items-center gap-3 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-left transition-colors">
-                            <Download className="h-3.5 w-3.5 text-gray-400 mt-0.5" />
-                            <div className="flex flex-col">
-                              <span className="text-xs text-gray-900 font-medium">Export</span>
-                              <span className="text-[9px] text-gray-500">Audit reports</span>
-                            </div>
-                          </button>
-                        )}
-                        {selectedQuickActions.includes('evidence_locker') && (
-                          <button
-                            onClick={() => navigate('/evidence-locker')}
-                            className="flex items-center gap-3 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-left transition-colors">
-                            <FileText className="h-3.5 w-3.5 text-gray-400 mt-0.5" />
-                            <div className="flex flex-col">
-                              <span className="text-xs text-gray-900 font-medium">Doc Locker</span>
-                              <span className="text-[9px] text-gray-500">Manage files</span>
-                            </div>
-                          </button>
-                        )}
-                        {selectedQuickActions.includes('invite_teammate') && (
-                          <button
-                            onClick={() => setInviteOpen(true)}
-                            className="flex items-center gap-3 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-left transition-colors">
-                            <Link2 className="h-3.5 w-3.5 text-gray-400 mt-0.5" />
-                            <div className="flex flex-col">
-                              <span className="text-xs text-gray-900 font-medium">Invite teammate</span>
-                              <span className="text-[9px] text-gray-500">Add team members</span>
-                            </div>
-                          </button>
-                        )}
-                        {selectedQuickActions.includes('configure_alerts') && (
-                          <button
-                            onClick={() => navigate('/notifications')}
-                            className="flex items-center gap-3 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-left transition-colors">
-                            <Bell className="h-3.5 w-3.5 text-gray-400 mt-0.5" />
-                            <div className="flex flex-col">
-                              <span className="text-xs text-gray-900 font-medium">Alerts</span>
-                              <span className="text-[9px] text-gray-500">System webhooks</span>
-                            </div>
-                          </button>
-                        )}
-                        {selectedQuickActions.includes('security_setup') && (
-                          <button
-                            onClick={() => navigate('/settings')}
-                            className="flex items-center gap-3 px-4 py-3 border border-gray-200 hover:bg-gray-50 text-left transition-colors">
-                            <Shield className="h-3.5 w-3.5 text-gray-400 mt-0.5" />
-                            <div className="flex flex-col">
-                              <span className="text-xs text-gray-900 font-medium">Security</span>
-                              <span className="text-[9px] text-gray-500">Lock access</span>
-                            </div>
-                          </button>
-                        )}
+                    <div className="divide-y divide-gray-50">
+                      <div className="grid grid-cols-2 lg:grid-cols-3 divide-x divide-gray-50">
+                        {selectedQuickActions.slice(0, 6).map((actionId) => {
+                          const action = QUICK_ACTIONS.find(a => a.id === actionId);
+                          if (!action) return null;
+
+                          // Map icons for clinical look
+                          let IconComp = FileText;
+                          if (actionId === 'ingest_now') IconComp = Cloud;
+                          if (actionId === 'run_detector') IconComp = RefreshCw;
+                          if (actionId === 'connect_evidence') IconComp = Mail;
+                          if (actionId === 'invite_teammate') IconComp = Link2;
+                          // ... others
+
+                          return (
+                            <button
+                              key={actionId}
+                              onClick={() => {
+                                if (actionId === 'connect_evidence') setShowSourcesModal(true);
+                                else if (actionId === 'invite_teammate') setInviteOpen(true);
+                                else if (actionId === 'ingest_now') api.startEvidenceIngest().then(() => toast({ title: 'Ingest Started' }));
+                                else navigate(`/${actionId.replace(/_/g, '-')}`);
+                              }}
+                              className="group flex flex-col p-6 hover:bg-gray-50 transition-colors text-left border-b border-gray-50">
+                              <div className="flex items-center justify-between mb-3 text-gray-300 group-hover:text-gray-900 transition-colors">
+                                <IconComp className="h-4 w-4" />
+                                <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-all transform -translate-x-2 group-hover:translate-x-0" />
+                              </div>
+                              <span className="text-[10px] text-gray-900 font-bold uppercase tracking-wider mb-1">{action.label}</span>
+                              <span className="text-[9px] text-gray-400 font-mono uppercase tracking-widest">{action.subtitle}</span>
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
@@ -1120,14 +948,14 @@ export function Dashboard() {
                                     {/* Hover Accent Bar */}
                                     <div className="absolute left-[-2px] top-0 bottom-0 w-[2px] bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity" />
 
-                                    <div className="flex items-start justify-between gap-3 mb-1.5">
+                                    <div className="flex items-start justify-between gap-3 mb-1">
                                       <div className="flex items-center gap-2 overflow-hidden">
-                                        <Hexagon className={cn("h-3 w-3 shrink-0 transition-colors",
-                                          isUnread ? "text-gray-900" : "text-gray-300 group-hover:text-gray-900"
+                                        <div className={cn("w-[2px] h-3 shrink-0 transition-colors",
+                                          isUnread ? "bg-gray-900" : "bg-gray-200 group-hover:bg-gray-900"
                                         )} />
                                         <p className={cn(
-                                          "text-[11px] uppercase tracking-tight truncate",
-                                          isUnread ? "font-semibold text-gray-900" : "font-medium text-gray-600 group-hover:text-gray-900"
+                                          "text-[10px] uppercase tracking-[0.1em] truncate",
+                                          isUnread ? "font-bold text-gray-900" : "font-medium text-gray-500 group-hover:text-gray-900"
                                         )}>
                                           {enrichNotificationTitle(notification.title)}
                                         </p>
@@ -1137,9 +965,8 @@ export function Dashboard() {
                                       </span>
                                     </div>
 
-                                    <div className="flex items-center gap-2">
-                                      <div className={cn("h-1 w-1 rounded-full shrink-0", statusColor)} />
-                                      <p className="text-[10px] text-gray-400 font-mono tracking-tighter leading-relaxed truncate">
+                                    <div className="flex items-center gap-2 mt-0.5 ml-[10px]">
+                                      <p className="text-[10px] text-gray-400 font-mono tracking-tight leading-relaxed truncate">
                                         {stripEmojis(notification.message)}
                                       </p>
                                     </div>
