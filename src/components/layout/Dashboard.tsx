@@ -797,7 +797,7 @@ export function Dashboard() {
                       </div>
                       <div className="mt-3">
                         <div className="text-[10px] text-gray-500 mt-1 border-t border-gray-100 pt-1">
-                          {effectivePendingClaims} claims
+                          {effectivePendingClaims} disputes
                         </div>
                       </div>
                     </div>
