@@ -23,7 +23,8 @@ import {
   Clock,
   Link2,
   Eye,
-  Sparkles
+  Sparkles,
+  Hexagon
 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { ParsingStatus } from '@/components/evidence/ParsingStatus';
@@ -451,57 +452,81 @@ export default function DocumentDetail() {
             </div>
           </TabsContent>
 
-          {/* Matched Claims Tab */}
-          <TabsContent value="matches">
-            <Card className="bg-white border-gray-200">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-xs font-medium text-gray-600 uppercase tracking-[0.1em]">Matched Claims</CardTitle>
-                <CardDescription className="text-[10px] text-gray-500">
-                  Claims that this document matches based on extracted data
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {matchedClaims.length > 0 ? (
-                  <div className="space-y-3">
-                    {matchedClaims.map((match, idx) => (
-                      <div key={idx} className="p-4 rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-100 transition-colors">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="font-mono text-sm text-[#36454F]">
-                                {match.claim_id?.substring(0, 12)}...
-                              </span>
-                              <Badge className="bg-gray-100 text-gray-700 border-gray-200 text-[10px]">
-                                {(match.confidence_score * 100).toFixed(0)}%
-                              </Badge>
-                            </div>
-                            <div className="text-sm text-gray-600">
-                              {match.match_type?.replace(/_/g, ' ')} • {match.matched_fields?.join(', ')}
-                            </div>
-                            {match.reasoning && (
-                              <p className="text-xs text-gray-500 mt-1">{match.reasoning}</p>
-                            )}
+          {/* Matched Claims Tab - Redesigned for Institutional Aesthetic */}
+          <TabsContent value="matches" className="mt-0">
+            <div className="space-y-0 border-t border-gray-100">
+              {matchedClaims.length > 0 ? (
+                <div>
+                  {matchedClaims.map((match, idx) => (
+                    <div
+                      key={idx}
+                      className="group relative flex items-center justify-between py-6 px-4 border-b border-gray-100 transition-all hover:bg-gray-50/50"
+                    >
+                      {/* Left Accent Bar on Hover */}
+                      <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+
+                      <div className="flex items-start gap-4">
+                        <div className="mt-1">
+                          <Hexagon className="w-4 h-4 text-indigo-500 fill-indigo-50/50" />
+                        </div>
+
+                        <div className="space-y-1.5">
+                          <div className="flex items-center gap-3">
+                            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-[0.15em]">
+                              Claim Recovery ID
+                            </span>
+                            <span className="font-mono text-xs text-gray-900 bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">
+                              {match.claim_id}
+                            </span>
                           </div>
-                          <Link to={`/recoveries/${match.claim_id}`}>
-                            <Button variant="ghost" size="sm">
-                              <Eye className="w-4 h-4" />
-                            </Button>
-                          </Link>
+
+                          <div className="flex items-center gap-2 text-[10px] font-medium text-gray-500 uppercase tracking-[0.05em]">
+                            <span className="text-gray-900">
+                              {match.match_type?.replace(/_/g, ' ')}
+                            </span>
+                            <span className="text-gray-300">|</span>
+                            <span>
+                              Matched: <span className="text-gray-700">{match.matched_fields?.join(', ')}</span>
+                            </span>
+                            <span className="text-gray-300">|</span>
+                            <span className="flex items-center gap-1.5">
+                              <span className="text-indigo-600 font-bold">
+                                {(match.confidence_score * 100).toFixed(0)}%
+                              </span>
+                              <span>Confidence</span>
+                            </span>
+                          </div>
+
+                          {match.reasoning && (
+                            <p className="text-xs text-gray-400 font-light leading-relaxed max-w-2xl pt-1 italic">
+                              "{match.reasoning}"
+                            </p>
+                          )}
                         </div>
                       </div>
-                    ))}
+
+                      <Link
+                        to={`/recoveries/${match.claim_id}`}
+                        className="flex items-center gap-2 text-[10px] font-bold text-gray-400 hover:text-indigo-600 uppercase tracking-[0.15em] transition-colors pr-2"
+                      >
+                        View Recovery
+                        <ArrowLeft className="w-3 h-3 rotate-180" />
+                      </Link>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-20 bg-gray-50/30">
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white border border-gray-100 shadow-sm mb-4">
+                    <Link2 className="w-5 h-5 text-gray-300" />
                   </div>
-                ) : (
-                  <div className="text-center py-8">
-                    <Link2 className="w-12 h-12 mx-auto text-gray-300 mb-4" />
-                    <p className="text-gray-600 mb-2">No matched claims yet</p>
-                    <p className="text-sm text-gray-500">
-                      Run Evidence Matching to find claims that match this document
-                    </p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+                  <h3 className="text-sm font-semibold text-gray-900 mb-1 uppercase tracking-wider">No Matches Found</h3>
+                  <p className="text-xs text-gray-500 max-w-[240px] mx-auto leading-relaxed">
+                    This document hasn't been linked to any active claims yet. Use Evidence Matching to find matches.
+                  </p>
+                </div>
+              )}
+            </div>
           </TabsContent>
 
           {/* Raw Text Tab */}
