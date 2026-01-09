@@ -666,7 +666,7 @@ export function Dashboard() {
               <div className="flex items-center justify-between mb-8">
                 <div>
                   <div className="flex items-center gap-3">
-                    <h1 className="text-lg font-medium text-gray-900 tracking-tight">Recovery Overview</h1>
+                    <h1 className="text-lg font-medium text-gray-900 tracking-tight">Overview</h1>
                   </div>
                   <p className="text-[10px] text-gray-500 mt-0.5 font-medium">Dashboard</p>
                 </div>
