@@ -742,7 +742,7 @@ export function Dashboard() {
                             <svg className="w-3 h-3" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                               <path d="M6 9V3M6 3L3 6M6 3L9 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
-                            +{reconciledCount} verified reimbursements this period
+                            +{reconciledCount} verified reimbursements this month
                           </span>
                         </div>
                       )}
@@ -783,7 +783,7 @@ export function Dashboard() {
                   <div className="grid grid-cols-3 gap-4">
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-4 flex flex-col justify-between h-full">
                       <div>
-                        <div className="text-[10px] font-semibold text-gray-500 mb-0.5">Next Payout From Amazon</div>
+                        <div className="text-[10px] font-semibold text-gray-500 mb-0.5">Next Payout from Amazon</div>
                         <p className="text-[9px] text-gray-400 font-medium mb-3">Funds scheduled for deposit</p>
                         <div className="text-xl font-light text-gray-900 tracking-tight">
                           {formatCurrencyWithSelection((nextPaymentAmount ?? 0), recoveredCurrency)}
@@ -800,7 +800,7 @@ export function Dashboard() {
 
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-4 flex flex-col justify-between h-full">
                       <div>
-                        <div className="text-[10px] font-semibold text-gray-500 mb-0.5">In Active Review</div>
+                        <div className="text-[10px] font-semibold text-gray-500 mb-0.5">Under Review by Amazon</div>
                         <p className="text-[9px] text-gray-400 font-medium mb-3">Currently being worked through with Amazon</p>
                         <div className="text-xl font-light text-gray-900 tracking-tight">
                           {formatCurrencyWithSelection((pendingRecoveryAmount ?? 0), recoveredCurrency)}
