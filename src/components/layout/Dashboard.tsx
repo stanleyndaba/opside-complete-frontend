@@ -764,7 +764,7 @@ export function Dashboard() {
                           <div className="flex items-center gap-2">
                             <ArrowUp className="h-3 w-3 text-emerald-500" />
                             <span className="text-[10px] font-mono text-emerald-600 font-bold uppercase tracking-widest">
-                              +{reconciledCount} Verified this period
+                              {reconciledCount} Verified this period
                             </span>
                           </div>
                         )}
