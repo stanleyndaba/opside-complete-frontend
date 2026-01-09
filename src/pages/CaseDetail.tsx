@@ -675,35 +675,6 @@ export default function CaseDetail() {
                 <ArrowLeft className="h-3.5 w-3.5" />
                 Back to Cases
               </Link>
-              {/* Next Claim navigation - fetches cases and navigates to next */}
-              <button
-                className="flex items-center gap-2 text-xs text-gray-500 hover:text-gray-900 transition-colors"
-                onClick={async () => {
-                  try {
-                    // Fetch all cases using getRecoveries
-                    const cases = await recoveryApi.getRecoveries() as any[];
-                    if (!Array.isArray(cases) || cases.length === 0) {
-                      toast({ title: 'No more cases', description: 'You have reviewed all cases.' });
-                      return;
-                    }
-                    // Find current case index
-                    const currentIdx = cases.findIndex((c: any) => c.id === caseId);
-                    // Get next case (wrap around if at end)
-                    const nextIdx = (currentIdx + 1) % cases.length;
-                    const nextCase = cases[nextIdx];
-                    if (nextCase?.id && nextCase.id !== caseId) {
-                      window.location.href = `/case/${nextCase.id}`;
-                    } else {
-                      toast({ title: 'No more cases', description: 'This is the last case.' });
-                    }
-                  } catch (e) {
-                    console.error('Next claim error:', e);
-                    toast({ title: 'Error', description: 'Could not load next case.' });
-                  }
-                }}>
-                Next Claim
-                <ArrowLeft className="h-3.5 w-3.5 rotate-180" />
-              </button>
             </div>
 
             {/* Auto-Filing Banner - Institutional Style */}
