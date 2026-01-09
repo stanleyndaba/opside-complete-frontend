@@ -5,8 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Upload, FileText, Search, Mail, Check, AlertTriangle, Clock, Eye, Download, ExternalLink, Loader2, FolderSearch, ScanLine, FileCheck, Link2, Trash2, MoreHorizontal, RefreshCw } from 'lucide-react';
+import { Upload, FileText, Search, Mail, Check, AlertTriangle, Clock, Eye, Download, ExternalLink, Loader2, FolderSearch, ScanLine, FileCheck, Link2, Trash2, MoreHorizontal, RefreshCw, Hexagon, CheckCircle2, XCircle, Activity, AlertCircle, ArrowRight } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { useErrorToast } from '@/hooks/use-error-toast';
 import { api } from '@/lib/api';
@@ -165,8 +164,8 @@ export default function EvidenceLocker() {
   // Helper: Get match status based on confidence threshold
   const getMatchStatus = (confidence?: number): 'auto_submit' | 'smart_prompt' | 'hold' | null => {
     if (!confidence || confidence === 0) return null;
-    if (confidence>= 0.85) return 'auto_submit';
-    if (confidence>= 0.5) return 'smart_prompt';
+    if (confidence >= 0.85) return 'auto_submit';
+    if (confidence >= 0.5) return 'smart_prompt';
     return 'hold';
   };
 
@@ -253,7 +252,7 @@ export default function EvidenceLocker() {
     if (isProcessingDocQueueRef.current) return;
     isProcessingDocQueueRef.current = true;
 
-    while (docLogQueueRef.current.length> 0) {
+    while (docLogQueueRef.current.length > 0) {
       const item = docLogQueueRef.current.shift();
       if (item) {
         await new Promise(resolve => setTimeout(resolve, item.delay));
@@ -341,7 +340,7 @@ export default function EvidenceLocker() {
                 const matchRes = await api.getDocumentMatchingResults(doc.id);
                 if (matchRes.ok && matchRes.data?.results) {
                   const claimIds = matchRes.data.results.map((r: any) => r.claim_id);
-                  const highestConfidence = matchRes.data.results.length> 0
+                  const highestConfidence = matchRes.data.results.length > 0
                     ? Math.max(...matchRes.data.results.map((r: any) => r.confidence || 0))
                     : 0;
                   // Get match details from best match
@@ -443,14 +442,14 @@ export default function EvidenceLocker() {
             const matchStory = generateStoryMessage('match_found', { claimsLinked: matches, moneyAtRisk: evt.moneyAtRisk || 0 });
             addDocLog({ type: 'success', category: 'match', message: `[MATCHED] Found ${matches} claim-document match(es)`, storyMessage: matchStory.story, moneyImpact: matchStory.money, claimsAffected: matchStory.claims }, 600);
 
-            if (autoSubmitted> 0) {
+            if (autoSubmitted > 0) {
               const boostStory = generateStoryMessage('approval_boost', { claimsLinked: autoSubmitted });
               addDocLog({ type: 'success', category: 'match', message: `${autoSubmitted} claim(s) auto-submitted with high confidence`, storyMessage: boostStory.story, claimsAffected: autoSubmitted }, 800);
             }
-            if (smartPrompts> 0) {
+            if (smartPrompts > 0) {
               addDocLog({ type: 'info', category: 'match', message: `${smartPrompts} smart prompt(s) created for review`, storyMessage: `👀 ${smartPrompts} claim${smartPrompts !== 1 ? 's' : ''} need your review before submission` }, 800);
             }
-            if (held> 0) {
+            if (held > 0) {
               addDocLog({ type: 'warning', category: 'match', message: `${held} match(es) held for manual review (low confidence)`, storyMessage: `⏸️ ${held} low-confidence match${held !== 1 ? 'es' : ''} held – may need more evidence` }, 800);
             }
 
@@ -464,7 +463,7 @@ export default function EvidenceLocker() {
                       const matchRes = await api.getDocumentMatchingResults(doc.id);
                       if (matchRes.ok && matchRes.data?.results) {
                         const claimIds = matchRes.data.results.map((r: any) => r.claim_id);
-                        const highestConfidence = matchRes.data.results.length> 0
+                        const highestConfidence = matchRes.data.results.length > 0
                           ? Math.max(...matchRes.data.results.map((r: any) => r.confidence || 0))
                           : 0;
                         return {
@@ -514,13 +513,13 @@ export default function EvidenceLocker() {
 
             addDocLog({ type: 'success', category: 'match', message: `[MATCHED] Found ${matches} claim-document match(es)` }, 600);
 
-            if (autoSubmitted> 0) {
+            if (autoSubmitted > 0) {
               addDocLog({ type: 'success', category: 'match', message: `${autoSubmitted} claim(s) auto-submitted with high confidence` }, 800);
             }
-            if (smartPrompts> 0) {
+            if (smartPrompts > 0) {
               addDocLog({ type: 'info', category: 'match', message: `${smartPrompts} smart prompt(s) created for review` }, 800);
             }
-            if (held> 0) {
+            if (held > 0) {
               addDocLog({ type: 'warning', category: 'match', message: `${held} match(es) held for manual review (low confidence)` }, 800);
             }
 
@@ -534,7 +533,7 @@ export default function EvidenceLocker() {
                       const matchRes = await api.getDocumentMatchingResults(doc.id);
                       if (matchRes.ok && matchRes.data?.results) {
                         const claimIds = matchRes.data.results.map((r: any) => r.claim_id);
-                        const highestConfidence = matchRes.data.results.length> 0
+                        const highestConfidence = matchRes.data.results.length > 0
                           ? Math.max(...matchRes.data.results.map((r: any) => r.confidence || 0))
                           : 0;
                         return {
@@ -702,7 +701,7 @@ export default function EvidenceLocker() {
       if (refresh.ok && Array.isArray(refresh.data)) {
         setDocuments(refresh.data);
         // Show toast if new documents were added
-        if (refresh.data.length> documents.length) {
+        if (refresh.data.length > documents.length) {
           const newCount = refresh.data.length - documents.length;
           addDocLog({ type: 'success', category: 'parse', message: `[PARSED] ${newCount} document(s) added to library` }, 1500);
           addDocLog({ type: 'thinking', category: 'match', message: 'I\'ll look for matches with your open claims...' }, 1100);
@@ -781,10 +780,10 @@ export default function EvidenceLocker() {
       const matchSupplier = !supplier || (d.supplier || '').toLowerCase().includes(supplier.toLowerCase());
       const matchType = !type || (d.type || '').toLowerCase() === type.toLowerCase();
       const amt = typeof d.amount === 'number' ? d.amount : undefined;
-      const matchAmtMin = !amountMin || (amt !== undefined && amt>= parseFloat(amountMin));
+      const matchAmtMin = !amountMin || (amt !== undefined && amt >= parseFloat(amountMin));
       const matchAmtMax = !amountMax || (amt !== undefined && amt <= parseFloat(amountMax));
       const date = d.uploadDate ? new Date(d.uploadDate) : null;
-      const matchDateFrom = !dateFrom || (date && date>= new Date(dateFrom));
+      const matchDateFrom = !dateFrom || (date && date >= new Date(dateFrom));
       const matchDateTo = !dateTo || (date && date <= new Date(dateTo));
       return matchQ && matchSupplier && matchType && matchAmtMin && matchAmtMax && matchDateFrom && matchDateTo;
     });
@@ -1002,11 +1001,11 @@ export default function EvidenceLocker() {
                             {/* Show story message by default, dev message when toggled */}
                             {showDevLogs ? log.message : (log.storyMessage || log.message)}
                             {/* Inline money badge */}
-                            {!showDevLogs && log.moneyImpact && log.moneyImpact> 0 && (
+                            {!showDevLogs && log.moneyImpact && log.moneyImpact > 0 && (
                               <span className="ml-1.5 text-emerald-400 font-medium">+${log.moneyImpact.toLocaleString()}</span>
                             )}
                             {/* Inline claims badge */}
-                            {!showDevLogs && log.claimsAffected && log.claimsAffected> 0 && (
+                            {!showDevLogs && log.claimsAffected && log.claimsAffected > 0 && (
                               <span className="ml-1 text-blue-400">({log.claimsAffected} claim{log.claimsAffected !== 1 ? 's' : ''})</span>
                             )}
                           </span>
@@ -1076,7 +1075,7 @@ export default function EvidenceLocker() {
 
                     // Add upload logs
                     addDocLog({ type: 'info', category: 'upload', message: `Receiving ${files.length} document(s)...`, thinkingDuration: 2 }, 0);
-                    addDocLog({ type: 'thinking', category: 'upload', message: `Processing: ${files.map(f => f.name).slice(0, 3).join(', ')}${files.length> 3 ? '...' : ''}` }, 800);
+                    addDocLog({ type: 'thinking', category: 'upload', message: `Processing: ${files.map(f => f.name).slice(0, 3).join(', ')}${files.length > 3 ? '...' : ''}` }, 800);
 
                     // Show immediate feedback
                     toast({
@@ -1171,7 +1170,7 @@ export default function EvidenceLocker() {
                         const previousCount = documents.length;
                         setDocuments(refresh.data);
                         // Show toast if new documents were added
-                        if (refresh.data.length> previousCount) {
+                        if (refresh.data.length > previousCount) {
                           const newCount = refresh.data.length - previousCount;
                           addDocLog({ type: 'success', category: 'parse', message: `[PARSED] ${newCount} document(s) added to library` }, 1500);
                           addDocLog({ type: 'thinking', category: 'match', message: 'I\'ll look for matches with your open claims...' }, 1100);
@@ -1217,7 +1216,7 @@ export default function EvidenceLocker() {
                     </Link>
                   </div>
                   <Button variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={exportCsv}>Export CSV</Button>
-                  {documents.length> 0 && (
+                  {documents.length > 0 && (
                     <Button
                       variant="outline"
                       className="bg-white text-red-600 border-red-200 hover:bg-red-50"
@@ -1226,162 +1225,214 @@ export default function EvidenceLocker() {
                       Delete All
                     </Button>
                   )}
-                  <div className="text-[10px] text-gray-600 ml-2">{selectedIds.size> 0 ? `${selectedIds.size} selected` : ''}</div>
+                  <div className="text-[10px] text-gray-600 ml-2">{selectedIds.size > 0 ? `${selectedIds.size} selected` : ''}</div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Document Library */}
-          <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-              <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em] mb-0.5">Document Library</h2>
-              <p className="text-[10px] text-gray-500 mb-3">All uploaded evidence documents</p>
-              <div className="flex flex-wrap items-center gap-2 justify-end">
-                <div className="relative">
-                  <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 stroke-[2]" />
-                  <Input placeholder="Search ASIN, SKU, tracking #, invoice…" value={q} onChange={(e) => setQ(e.target.value)} className="pl-8 w-80 h-8 text-xs border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 rounded-sm" />
+          {/* Document Library Section */}
+          <div className="flex flex-col space-y-4 mb-6">
+            <div className="flex items-end justify-between border-b border-gray-100 pb-4">
+              <div>
+                <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.2em]">Document Library</h2>
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="text-[10px] text-gray-400 uppercase tracking-wider tabular-nums">
+                    {sorted.length} Documents • Agent 5 Extraction Vault
+                  </span>
+                  <div className="h-1 w-1 rounded-full bg-emerald-500/50" />
+                  <span className="text-[10px] text-emerald-600/80 font-medium uppercase tracking-wider">
+                    Ready for Matching
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <div className="relative group/search">
+                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-300 group-focus-within/search:text-gray-900 transition-colors" />
+                  <Input
+                    placeholder="Search Evidence..."
+                    value={q}
+                    onChange={(e) => setQ(e.target.value)}
+                    className="h-8 w-64 bg-gray-50/50 border-gray-100 text-[11px] pl-8 focus:bg-white focus:ring-0 focus:border-gray-200 transition-all rounded-none placeholder:text-gray-400"
+                  />
                   {q && (
                     <button
                       onClick={() => setQ('')}
-                      className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                      ✕
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gray-900"
+                    >
+                      <XCircle className="h-3.5 w-3.5" />
                     </button>
                   )}
                 </div>
-                <Input placeholder="Supplier" value={supplier} onChange={(e) => setSupplier(e.target.value)} className="w-40 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
-                <Input placeholder="Type (invoice/receipt/shipping)" value={type} onChange={(e) => setType(e.target.value)} className="w-56 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
-                <Input placeholder="Amount min" value={amountMin} onChange={(e) => setAmountMin(e.target.value)} className="w-28 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
-                <Input placeholder="Amount max" value={amountMax} onChange={(e) => setAmountMax(e.target.value)} className="w-28 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
-                <Input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-500" />
-                <Input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="h-8 text-xs border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 rounded-sm" />
+
+                <div className="flex items-center border border-gray-100 divide-x divide-gray-100">
+                  <Input
+                    placeholder="Supplier"
+                    value={supplier}
+                    onChange={(e) => setSupplier(e.target.value)}
+                    className="h-8 w-32 border-none shadow-none text-[11px] rounded-none focus-visible:ring-0 placeholder:text-gray-300"
+                  />
+                  <Input
+                    placeholder="Type"
+                    value={type}
+                    onChange={(e) => setType(e.target.value)}
+                    className="h-8 w-24 border-none shadow-none text-[11px] rounded-none focus-visible:ring-0 placeholder:text-gray-300"
+                  />
+                </div>
+
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 rounded-none border border-gray-100 text-[10px] font-medium uppercase tracking-wider text-gray-500 hover:text-gray-900 hover:bg-gray-50"
+                  onClick={() => {
+                    setQ('');
+                    setSupplier('');
+                    setType('');
+                    setAmountMin('');
+                    setAmountMax('');
+                    setDateFrom('');
+                    setDateTo('');
+                  }}
+                >
+                  <RefreshCw className="mr-2 h-3 w-3" />
+                  Reset
+                </Button>
               </div>
             </div>
           </div>
-          <div className="p-6">
-            {loading && <div className="text-xs text-gray-500">Loading documents…</div>}
-            {error && <div className="text-xs text-red-600">{error}</div>}
-            <div className="overflow-x-auto">
-              <Table className="min-w-[900px]">
-                <TableHeader className="border-b border-gray-200">
-                  <TableRow className="hover:bg-transparent">
-                    <TableHead className="text-gray-400 whitespace-nowrap py-3 border-b border-gray-200">
-                      <Checkbox checked={selectedIds.size> 0 && selectedIds.size === pageData.length} onCheckedChange={(c) => {
-                        if (c) setSelectedIds(new Set(pageData.map(d => d.id))); else setSelectedIds(new Set());
-                      }} />
-                    </TableHead>
-                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] whitespace-nowrap cursor-pointer py-3 border-b border-gray-200" onClick={() => toggleSort('name')}>Document Name</TableHead>
-                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] whitespace-nowrap cursor-pointer py-3 border-b border-gray-200" onClick={() => toggleSort('supplier')}>Supplier</TableHead>
-                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] whitespace-nowrap cursor-pointer py-3 border-b border-gray-200" onClick={() => toggleSort('invoice')}>Invoice #</TableHead>
-                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] whitespace-nowrap cursor-pointer py-3 border-b border-gray-200" onClick={() => toggleSort('uploadDate')}>Upload Date</TableHead>
-                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] whitespace-nowrap cursor-pointer py-3 border-b border-gray-200" onClick={() => toggleSort('parser_status')}>Status</TableHead>
-                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] whitespace-nowrap cursor-pointer py-3 border-b border-gray-200" onClick={() => toggleSort('amount')}>Amount</TableHead>
-                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] whitespace-nowrap cursor-pointer py-3 border-b border-gray-200" onClick={() => toggleSort('matchedClaims')}>Linked Claims</TableHead>
-                    <TableHead className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] whitespace-nowrap py-3 border-b border-gray-200"></TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {pageData.map(doc => <TableRow key={doc.id} className="border-b border-gray-100 hover:bg-gray-50/50">
-                    <TableCell className="whitespace-nowrap py-3">
-                      <Checkbox checked={selectedIds.has(doc.id)} onCheckedChange={(c) => {
-                        setSelectedIds(prev => { const next = new Set(prev); if (c) next.add(doc.id); else next.delete(doc.id); return next; });
-                      }} />
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap py-3">
-                      <div className="flex items-center gap-2">
-                        <FileText className="h-3.5 w-3.5 text-gray-300" />
-                        <span className="text-sm text-gray-900">{doc.name}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap py-3 text-sm text-gray-600">{doc.supplier || '—'}</TableCell>
-                    <TableCell className="whitespace-nowrap py-3 text-sm font-mono text-gray-600">{doc.invoice || '—'}</TableCell>
-                    <TableCell className="whitespace-nowrap py-3 text-sm font-mono tabular-nums text-gray-600">
-                      {new Date(doc.uploadDate).toLocaleDateString('en-CA')}
-                    </TableCell>
 
-                    {/* Status - Institutional: plain text, no badges */}
-                    <TableCell className="whitespace-nowrap py-3">
-                      <div className="flex items-center gap-2">
-                        <span className={`text-xs font-mono ${doc.parser_status === 'completed' ? 'text-gray-900' :
-                          doc.parser_status === 'processing' ? 'text-gray-500' :
-                            doc.parser_status === 'failed' ? 'text-red-600' :
-                              'text-gray-400'
-                          }`}>
-                          {doc.parser_status === 'completed' ? 'Parsed' :
-                            doc.parser_status === 'processing' ? 'Parsing' :
-                              doc.parser_status === 'failed' ? 'Failed' :
-                                doc.parser_status === 'pending' ? 'Pending' : '—'}
-                        </span>
-                        {doc.parser_confidence !== undefined && (
-                          <span className="text-[10px] font-mono text-gray-400">
-                            {(doc.parser_confidence * 100).toFixed(0)}%
+          <div className="flex flex-col min-h-[400px]">
+            {loading ? (
+              <div className="flex flex-col items-center justify-center py-20 animate-in fade-in duration-500">
+                <Loader2 className="h-6 w-6 text-gray-200 animate-spin mb-4" />
+                <span className="text-[10px] font-medium text-gray-400 uppercase tracking-[0.2em]">Synchronizing Intelligence</span>
+              </div>
+            ) : error ? (
+              <div className="flex flex-col items-center justify-center py-20 border border-dashed border-red-100 bg-red-50/30">
+                <AlertCircle className="h-6 w-6 text-red-200 mb-4" />
+                <span className="text-[10px] font-medium text-red-900 uppercase tracking-[0.2em] mb-1">Interface Error</span>
+                <p className="text-[10px] text-red-500 uppercase tracking-wider mb-4">{error}</p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-7 text-[10px] uppercase tracking-wider rounded-none border-red-200 text-red-600 hover:bg-red-50"
+                  onClick={() => window.location.reload()}
+                >
+                  Retry Connection
+                </Button>
+              </div>
+            ) : (
+              <div className="flex flex-col divide-y divide-gray-100 border-t border-gray-100">
+                {pageData.map((doc) => (
+                  <div
+                    key={doc.id}
+                    className="group relative flex items-center justify-between py-4 pl-4 pr-6 hover:bg-gray-50/50 transition-all duration-200"
+                  >
+                    {/* Hover Accent Bar */}
+                    <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity" />
+
+                    <div className="flex items-start gap-4 flex-1 pr-12">
+                      <div className="mt-1">
+                        <Checkbox
+                          checked={selectedIds.has(doc.id)}
+                          onCheckedChange={(c) => {
+                            setSelectedIds(prev => {
+                              const next = new Set(prev);
+                              if (c) next.add(doc.id); else next.delete(doc.id);
+                              return next;
+                            });
+                          }}
+                          className="h-3.5 w-3.5 border-gray-200 rounded-none data-[state=checked]:bg-gray-900 data-[state=checked]:border-gray-900 transition-colors"
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-1.5 flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <Hexagon className="h-3 w-3 text-gray-300 group-hover:text-gray-900 transition-colors" />
+                          <span className="text-[13px] font-medium text-gray-900 truncate">
+                            {doc.name}
                           </span>
-                        )}
-                      </div>
-                    </TableCell>
-
-                    {/* Amount */}
-                    <TableCell className="whitespace-nowrap py-3 text-sm font-mono tabular-nums text-gray-900">{typeof doc.amount === 'number' ? `$${doc.amount.toFixed(2)}` : '—'}</TableCell>
-
-                    {/* Linked Claims - Institutional: plain text links */}
-                    <TableCell className="whitespace-nowrap py-3">
-                      {(() => {
-                        const claims = doc.matchedClaims || [];
-
-                        if (claims.length === 0) {
-                          return <span className="text-gray-400 text-xs">—</span>;
-                        }
-
-                        return (
-                          <div className="flex flex-wrap gap-2 items-center">
-                            {claims.slice(0, 2).map((id: string) => (
-                              <Link
-                                key={id}
-                                to={`/case/${id}`}
-                                className="text-xs font-mono text-gray-600 hover:text-gray-900 hover:underline">
-                                {id.slice(0, 8)}
-                              </Link>
-                            ))}
-                            {claims.length> 2 && (
-                              <span className="text-[10px] text-gray-400">+{claims.length - 2}</span>
+                          <div className="flex items-center gap-1.5 ml-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            {doc.matchedClaims && doc.matchedClaims.length > 0 && (
+                              <div className="flex items-center gap-1 px-1.5 py-0.5 bg-emerald-50 text-[9px] font-medium text-emerald-700 uppercase tracking-wider border border-emerald-100">
+                                <Link2 className="h-2.5 w-2.5" />
+                                {doc.matchedClaims.length} Linked
+                              </div>
                             )}
                           </div>
-                        );
-                      })()}
-                    </TableCell>
+                        </div>
 
-                    {/* Actions - Institutional: subtle */}
-                    <TableCell className="whitespace-nowrap py-3">
+                        <div className="flex items-center text-[10px] text-gray-400 uppercase tracking-widest font-medium gap-2">
+                          <span>{doc.supplier || "INTERNAL"}</span>
+                          <span className="text-gray-200">|</span>
+                          <span className="font-mono">{doc.invoice || "NO_REF"}</span>
+                          <span className="text-gray-200">|</span>
+                          <div className="flex items-center gap-1.5">
+                            <div className={`h-1 w-1 rounded-full ${doc.parser_status === 'completed' ? 'bg-emerald-500' :
+                              doc.parser_status === 'processing' ? 'bg-amber-500 animate-pulse' :
+                                doc.parser_status === 'failed' ? 'bg-red-500' : 'bg-gray-300'
+                              }`} />
+                            <span className={
+                              doc.parser_status === 'completed' ? 'text-gray-600' :
+                                doc.parser_status === 'failed' ? 'text-red-500' : 'text-gray-400'
+                            }>
+                              {doc.parser_status || "PENDING"}
+                            </span>
+                          </div>
+                          <span className="text-gray-200">|</span>
+                          <span className="font-mono text-gray-500">
+                            {doc.parser_confidence !== undefined ? `${(doc.parser_confidence * 100).toFixed(0)}% CONF` : "NO_CONF"}
+                          </span>
+                          <span className="text-gray-200">|</span>
+                          <span className="font-mono text-gray-900">
+                            {typeof doc.amount === 'number' ? `$${doc.amount.toFixed(2)}` : "—"}
+                          </span>
+                          <span className="text-gray-200">|</span>
+                          <span className="font-mono tabular-nums text-gray-500">
+                            {new Date(doc.uploadDate).toLocaleDateString('en-CA')}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      {doc.matchedClaims && doc.matchedClaims.length > 0 && (
+                        <div className="flex items-center gap-1.5">
+                          {doc.matchedClaims.slice(0, 1).map((id: string) => (
+                            <Link
+                              key={id}
+                              to={`/case/${id}`}
+                              className="group/link flex items-center gap-1 text-[10px] font-mono text-gray-500 hover:text-gray-900 transition-colors"
+                            >
+                              {id.slice(0, 8)}
+                              <ArrowRight className="h-2.5 w-2.5 opacity-0 -translate-x-1 group-hover/link:opacity-100 group-hover/link:translate-x-0 transition-all" />
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm" className="h-6 w-6 p-0 text-gray-400 hover:text-gray-600">
-                            <MoreHorizontal className="h-4 w-4" />
+                          <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-gray-300 hover:text-gray-900 hover:bg-white border border-transparent hover:border-gray-100 rounded-none transition-all">
+                            <MoreHorizontal className="h-3.5 w-3.5" />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="bg-white">
-                          <DropdownMenuItem asChild>
+                        <DropdownMenuContent align="end" className="w-48 bg-white border border-gray-100 rounded-none shadow-sm animate-in fade-in slide-in-from-top-1">
+                          <DropdownMenuItem asChild className="text-[11px] uppercase tracking-wider text-gray-600 focus:bg-gray-50 focus:text-gray-900 rounded-none cursor-pointer">
                             <Link to={`/documents/${encodeURIComponent(doc.id)}`} className="flex items-center gap-2">
-                              <Eye className="w-4 h-4" />
-                              View
+                              <Eye className="w-3.5 h-3.5" />
+                              View Detail
                             </Link>
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => downloadDoc(doc.id)} className="flex items-center gap-2">
-                            <Download className="w-4 h-4" />
-                            Download
+                          <DropdownMenuItem
+                            onClick={() => downloadDoc(doc.id)}
+                            className="text-[11px] uppercase tracking-wider text-gray-600 focus:bg-gray-50 focus:text-gray-900 rounded-none cursor-pointer"
+                          >
+                            <Download className="w-3.5 h-3.5 mr-2" />
+                            Download Original
                           </DropdownMenuItem>
-                          {/* Claim Packet - only show if doc has matched claims */}
-                          {doc.matchedClaims && doc.matchedClaims.length> 0 && (
-                            <DropdownMenuItem asChild>
-                              <Link
-                                to={`/recoveries/${doc.matchedClaims[0]}?evidence=true`}
-                                className="flex items-center gap-2"
-                                title={`View claim packet for ${doc.matchedClaims.length} linked claim(s)`}>
-                                <FileText className="w-4 h-4" />
-                                View Claim Packet
-                              </Link>
-                            </DropdownMenuItem>
-                          )}
-                          {doc.parser_status && doc.parser_status !== 'completed' && doc.parser_status !== 'processing' && (
+                          {doc.parser_status !== 'completed' && doc.parser_status !== 'processing' && (
                             <DropdownMenuItem
                               onClick={async () => {
                                 try {
@@ -1396,46 +1447,87 @@ export default function EvidenceLocker() {
                                           : d
                                       ));
                                     }
-                                  } else {
-                                    toast({ title: 'Parse Failed', description: res.error || 'Failed to trigger parsing.', variant: 'destructive' });
                                   }
-                                } catch (error) {
-                                  toast({ title: 'Parse Failed', description: 'An error occurred.', variant: 'destructive' });
-                                }
+                                } catch (error) { }
                               }}
-                              className="flex items-center gap-2">
-                              <RefreshCw className="w-4 h-4" />
-                              Parse
+                              className="text-[11px] uppercase tracking-wider text-gray-600 focus:bg-gray-50 focus:text-gray-900 rounded-none cursor-pointer"
+                            >
+                              <Activity className="w-3.5 h-3.5 mr-2" />
+                              Re-Parse
                             </DropdownMenuItem>
                           )}
+                          <div className="h-[1px] bg-gray-100 my-1" />
                           <DropdownMenuItem
                             onClick={() => handleDeleteDocument(doc.id, doc.name)}
-                            className="flex items-center gap-2 text-red-600 focus:text-red-600">
-                            <Trash2 className="w-4 h-4" />
-                            Delete
+                            className="text-[11px] uppercase tracking-wider text-red-500 focus:bg-red-50 focus:text-red-700 rounded-none cursor-pointer"
+                          >
+                            <Trash2 className="w-3.5 h-3.5 mr-2" />
+                            Delete Permanent
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
-                    </TableCell>
-                  </TableRow>)}
-                </TableBody>
-              </Table>
-            </div>
-            {pageData.length === 0 && !loading && (
-              <div className="text-center text-sm text-[#36454F] py-6">No documents found. Try adjusting filters or <Link to="/integrations-hub" className="underline">connect evidence sources</Link>.</div>
-            )}
-            <div className="mt-4 flex items-center justify-between">
-              <div className="text-xs text-[#36454F]">Page {page} of {totalPages} • {sorted.length} items</div>
-              <div className="flex items-center gap-3">
-                <select className="bg-white/10 border border-white/10 rounded px-2 py-1 text-sm" value={pageSize} onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1); }}>
-                  <option value={10}>10 / page</option>
-                  <option value={25}>25 / page</option>
-                  <option value={50}>50 / page</option>
-                </select>
-                <Button variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" disabled={page <= 1} onClick={() => setPage(p => Math.max(1, p - 1))}>Prev</Button>
-                <Button variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" disabled={page>= totalPages} onClick={() => setPage(p => Math.min(totalPages, p + 1))}>Next</Button>
+                    </div>
+                  </div>
+                ))}
               </div>
-            </div>
+            )}
+
+            {/* Pagination / Footer */}
+            {!loading && sorted.length > 0 && (
+              <div className="mt-auto border-t border-gray-100 px-6 py-4 flex items-center justify-between bg-white text-gray-500">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      checked={selectedIds.size > 0 && selectedIds.size === pageData.length}
+                      onCheckedChange={(c) => {
+                        if (c) setSelectedIds(new Set(pageData.map(d => d.id)));
+                        else setSelectedIds(new Set());
+                      }}
+                      className="h-3 w-3 border-gray-200 rounded-none shadow-none"
+                    />
+                    <span className="text-[10px] text-gray-400 uppercase tracking-[0.15em]">Select Page</span>
+                  </div>
+                  <span className="text-gray-200">|</span>
+                  <span className="text-[10px] text-gray-400 uppercase tracking-[0.15em] tabular-nums">
+                    Page {page} of {totalPages} • {sorted.length} Records
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-6">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-gray-300 uppercase tracking-widest">Show</span>
+                    <select
+                      className="bg-transparent border-none text-[10px] font-mono text-gray-500 focus:ring-0 cursor-pointer p-0"
+                      value={pageSize}
+                      onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1); }}
+                    >
+                      <option value={10}>10</option>
+                      <option value={20}>20</option>
+                      <option value={50}>50</option>
+                    </select>
+                  </div>
+
+                  <div className="flex items-center gap-1">
+                    <Button
+                      variant="ghost"
+                      className="h-8 rounded-none border border-gray-100 text-[10px] font-medium uppercase tracking-wider text-gray-500 hover:text-gray-900 hover:bg-gray-50 disabled:opacity-30"
+                      disabled={page <= 1}
+                      onClick={() => setPage(p => Math.max(1, p - 1))}
+                    >
+                      Previous
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      className="h-8 rounded-none border border-gray-100 text-[10px] font-medium uppercase tracking-wider text-gray-500 hover:text-gray-900 hover:bg-gray-50 disabled:opacity-30"
+                      disabled={page >= totalPages}
+                      onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                    >
+                      Next
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
