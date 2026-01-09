@@ -33,8 +33,7 @@ const GmailConnectButton: React.FC<GmailConnectButtonProps> = ({
       onClick={handleConnectGmail} 
       disabled={isLoading}
       variant={variant}
-      className="flex items-center gap-2"
-    >
+      className="flex items-center gap-2">
       {isLoading ? 'Connecting...' : 'Connect Gmail'}
     </Button>
   );

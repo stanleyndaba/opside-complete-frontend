@@ -165,8 +165,8 @@ export default function EvidenceLocker() {
   // Helper: Get match status based on confidence threshold
   const getMatchStatus = (confidence?: number): 'auto_submit' | 'smart_prompt' | 'hold' | null => {
     if (!confidence || confidence === 0) return null;
-    if (confidence >= 0.85) return 'auto_submit';
-    if (confidence >= 0.5) return 'smart_prompt';
+    if (confidence>= 0.85) return 'auto_submit';
+    if (confidence>= 0.5) return 'smart_prompt';
     return 'hold';
   };
 
@@ -253,7 +253,7 @@ export default function EvidenceLocker() {
     if (isProcessingDocQueueRef.current) return;
     isProcessingDocQueueRef.current = true;
 
-    while (docLogQueueRef.current.length > 0) {
+    while (docLogQueueRef.current.length> 0) {
       const item = docLogQueueRef.current.shift();
       if (item) {
         await new Promise(resolve => setTimeout(resolve, item.delay));
@@ -341,7 +341,7 @@ export default function EvidenceLocker() {
                 const matchRes = await api.getDocumentMatchingResults(doc.id);
                 if (matchRes.ok && matchRes.data?.results) {
                   const claimIds = matchRes.data.results.map((r: any) => r.claim_id);
-                  const highestConfidence = matchRes.data.results.length > 0
+                  const highestConfidence = matchRes.data.results.length> 0
                     ? Math.max(...matchRes.data.results.map((r: any) => r.confidence || 0))
                     : 0;
                   // Get match details from best match
@@ -443,14 +443,14 @@ export default function EvidenceLocker() {
             const matchStory = generateStoryMessage('match_found', { claimsLinked: matches, moneyAtRisk: evt.moneyAtRisk || 0 });
             addDocLog({ type: 'success', category: 'match', message: `[MATCHED] Found ${matches} claim-document match(es)`, storyMessage: matchStory.story, moneyImpact: matchStory.money, claimsAffected: matchStory.claims }, 600);
 
-            if (autoSubmitted > 0) {
+            if (autoSubmitted> 0) {
               const boostStory = generateStoryMessage('approval_boost', { claimsLinked: autoSubmitted });
               addDocLog({ type: 'success', category: 'match', message: `${autoSubmitted} claim(s) auto-submitted with high confidence`, storyMessage: boostStory.story, claimsAffected: autoSubmitted }, 800);
             }
-            if (smartPrompts > 0) {
+            if (smartPrompts> 0) {
               addDocLog({ type: 'info', category: 'match', message: `${smartPrompts} smart prompt(s) created for review`, storyMessage: `👀 ${smartPrompts} claim${smartPrompts !== 1 ? 's' : ''} need your review before submission` }, 800);
             }
-            if (held > 0) {
+            if (held> 0) {
               addDocLog({ type: 'warning', category: 'match', message: `${held} match(es) held for manual review (low confidence)`, storyMessage: `⏸️ ${held} low-confidence match${held !== 1 ? 'es' : ''} held – may need more evidence` }, 800);
             }
 
@@ -464,7 +464,7 @@ export default function EvidenceLocker() {
                       const matchRes = await api.getDocumentMatchingResults(doc.id);
                       if (matchRes.ok && matchRes.data?.results) {
                         const claimIds = matchRes.data.results.map((r: any) => r.claim_id);
-                        const highestConfidence = matchRes.data.results.length > 0
+                        const highestConfidence = matchRes.data.results.length> 0
                           ? Math.max(...matchRes.data.results.map((r: any) => r.confidence || 0))
                           : 0;
                         return {
@@ -514,13 +514,13 @@ export default function EvidenceLocker() {
 
             addDocLog({ type: 'success', category: 'match', message: `[MATCHED] Found ${matches} claim-document match(es)` }, 600);
 
-            if (autoSubmitted > 0) {
+            if (autoSubmitted> 0) {
               addDocLog({ type: 'success', category: 'match', message: `${autoSubmitted} claim(s) auto-submitted with high confidence` }, 800);
             }
-            if (smartPrompts > 0) {
+            if (smartPrompts> 0) {
               addDocLog({ type: 'info', category: 'match', message: `${smartPrompts} smart prompt(s) created for review` }, 800);
             }
-            if (held > 0) {
+            if (held> 0) {
               addDocLog({ type: 'warning', category: 'match', message: `${held} match(es) held for manual review (low confidence)` }, 800);
             }
 
@@ -534,7 +534,7 @@ export default function EvidenceLocker() {
                       const matchRes = await api.getDocumentMatchingResults(doc.id);
                       if (matchRes.ok && matchRes.data?.results) {
                         const claimIds = matchRes.data.results.map((r: any) => r.claim_id);
-                        const highestConfidence = matchRes.data.results.length > 0
+                        const highestConfidence = matchRes.data.results.length> 0
                           ? Math.max(...matchRes.data.results.map((r: any) => r.confidence || 0))
                           : 0;
                         return {
@@ -702,7 +702,7 @@ export default function EvidenceLocker() {
       if (refresh.ok && Array.isArray(refresh.data)) {
         setDocuments(refresh.data);
         // Show toast if new documents were added
-        if (refresh.data.length > documents.length) {
+        if (refresh.data.length> documents.length) {
           const newCount = refresh.data.length - documents.length;
           addDocLog({ type: 'success', category: 'parse', message: `[PARSED] ${newCount} document(s) added to library` }, 1500);
           addDocLog({ type: 'thinking', category: 'match', message: 'I\'ll look for matches with your open claims...' }, 1100);
@@ -781,10 +781,10 @@ export default function EvidenceLocker() {
       const matchSupplier = !supplier || (d.supplier || '').toLowerCase().includes(supplier.toLowerCase());
       const matchType = !type || (d.type || '').toLowerCase() === type.toLowerCase();
       const amt = typeof d.amount === 'number' ? d.amount : undefined;
-      const matchAmtMin = !amountMin || (amt !== undefined && amt >= parseFloat(amountMin));
+      const matchAmtMin = !amountMin || (amt !== undefined && amt>= parseFloat(amountMin));
       const matchAmtMax = !amountMax || (amt !== undefined && amt <= parseFloat(amountMax));
       const date = d.uploadDate ? new Date(d.uploadDate) : null;
-      const matchDateFrom = !dateFrom || (date && date >= new Date(dateFrom));
+      const matchDateFrom = !dateFrom || (date && date>= new Date(dateFrom));
       const matchDateTo = !dateTo || (date && date <= new Date(dateTo));
       return matchQ && matchSupplier && matchType && matchAmtMin && matchAmtMax && matchDateFrom && matchDateTo;
     });
@@ -976,8 +976,7 @@ export default function EvidenceLocker() {
               {/* Log Container - Terminal Style */}
               <div
                 ref={docLogContainerRef}
-                className="bg-[#1f1f1f] rounded-lg p-4 font-mono text-xs h-48 overflow-y-auto scroll-smooth"
-              >
+                className="bg-[#1f1f1f] rounded-lg p-4 font-mono text-xs h-48 overflow-y-auto scroll-smooth">
                 {filteredDocLogs.length === 0 ? (
                   <div className="text-gray-500 flex items-center justify-center h-full">
                     {docLogs.length === 0 ? 'Waiting for document activity...' : 'No logs match your search'}
@@ -1003,11 +1002,11 @@ export default function EvidenceLocker() {
                             {/* Show story message by default, dev message when toggled */}
                             {showDevLogs ? log.message : (log.storyMessage || log.message)}
                             {/* Inline money badge */}
-                            {!showDevLogs && log.moneyImpact && log.moneyImpact > 0 && (
+                            {!showDevLogs && log.moneyImpact && log.moneyImpact> 0 && (
                               <span className="ml-1.5 text-emerald-400 font-medium">+${log.moneyImpact.toLocaleString()}</span>
                             )}
                             {/* Inline claims badge */}
-                            {!showDevLogs && log.claimsAffected && log.claimsAffected > 0 && (
+                            {!showDevLogs && log.claimsAffected && log.claimsAffected> 0 && (
                               <span className="ml-1 text-blue-400">({log.claimsAffected} claim{log.claimsAffected !== 1 ? 's' : ''})</span>
                             )}
                           </span>
@@ -1077,7 +1076,7 @@ export default function EvidenceLocker() {
 
                     // Add upload logs
                     addDocLog({ type: 'info', category: 'upload', message: `Receiving ${files.length} document(s)...`, thinkingDuration: 2 }, 0);
-                    addDocLog({ type: 'thinking', category: 'upload', message: `Processing: ${files.map(f => f.name).slice(0, 3).join(', ')}${files.length > 3 ? '...' : ''}` }, 800);
+                    addDocLog({ type: 'thinking', category: 'upload', message: `Processing: ${files.map(f => f.name).slice(0, 3).join(', ')}${files.length> 3 ? '...' : ''}` }, 800);
 
                     // Show immediate feedback
                     toast({
@@ -1172,7 +1171,7 @@ export default function EvidenceLocker() {
                         const previousCount = documents.length;
                         setDocuments(refresh.data);
                         // Show toast if new documents were added
-                        if (refresh.data.length > previousCount) {
+                        if (refresh.data.length> previousCount) {
                           const newCount = refresh.data.length - previousCount;
                           addDocLog({ type: 'success', category: 'parse', message: `[PARSED] ${newCount} document(s) added to library` }, 1500);
                           addDocLog({ type: 'thinking', category: 'match', message: 'I\'ll look for matches with your open claims...' }, 1100);
@@ -1218,17 +1217,16 @@ export default function EvidenceLocker() {
                     </Link>
                   </div>
                   <Button variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={exportCsv}>Export CSV</Button>
-                  {documents.length > 0 && (
+                  {documents.length> 0 && (
                     <Button
                       variant="outline"
                       className="bg-white text-red-600 border-red-200 hover:bg-red-50"
-                      onClick={handleDeleteAllDocuments}
-                    >
+                      onClick={handleDeleteAllDocuments}>
                       <Trash2 className="w-4 h-4 mr-1" />
                       Delete All
                     </Button>
                   )}
-                  <div className="text-[10px] text-gray-600 ml-2">{selectedIds.size > 0 ? `${selectedIds.size} selected` : ''}</div>
+                  <div className="text-[10px] text-gray-600 ml-2">{selectedIds.size> 0 ? `${selectedIds.size} selected` : ''}</div>
                 </div>
               </div>
             </div>
@@ -1246,8 +1244,7 @@ export default function EvidenceLocker() {
                   {q && (
                     <button
                       onClick={() => setQ('')}
-                      className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                    >
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
                       ✕
                     </button>
                   )}
@@ -1269,7 +1266,7 @@ export default function EvidenceLocker() {
                 <TableHeader className="border-b border-gray-200">
                   <TableRow className="hover:bg-transparent">
                     <TableHead className="text-gray-400 whitespace-nowrap py-3 border-b border-gray-200">
-                      <Checkbox checked={selectedIds.size > 0 && selectedIds.size === pageData.length} onCheckedChange={(c) => {
+                      <Checkbox checked={selectedIds.size> 0 && selectedIds.size === pageData.length} onCheckedChange={(c) => {
                         if (c) setSelectedIds(new Set(pageData.map(d => d.id))); else setSelectedIds(new Set());
                       }} />
                     </TableHead>
@@ -1341,12 +1338,11 @@ export default function EvidenceLocker() {
                               <Link
                                 key={id}
                                 to={`/case/${id}`}
-                                className="text-xs font-mono text-gray-600 hover:text-gray-900 hover:underline"
-                              >
+                                className="text-xs font-mono text-gray-600 hover:text-gray-900 hover:underline">
                                 {id.slice(0, 8)}
                               </Link>
                             ))}
-                            {claims.length > 2 && (
+                            {claims.length> 2 && (
                               <span className="text-[10px] text-gray-400">+{claims.length - 2}</span>
                             )}
                           </div>
@@ -1374,13 +1370,12 @@ export default function EvidenceLocker() {
                             Download
                           </DropdownMenuItem>
                           {/* Claim Packet - only show if doc has matched claims */}
-                          {doc.matchedClaims && doc.matchedClaims.length > 0 && (
+                          {doc.matchedClaims && doc.matchedClaims.length> 0 && (
                             <DropdownMenuItem asChild>
                               <Link
                                 to={`/recoveries/${doc.matchedClaims[0]}?evidence=true`}
                                 className="flex items-center gap-2"
-                                title={`View claim packet for ${doc.matchedClaims.length} linked claim(s)`}
-                              >
+                                title={`View claim packet for ${doc.matchedClaims.length} linked claim(s)`}>
                                 <FileText className="w-4 h-4" />
                                 View Claim Packet
                               </Link>
@@ -1408,16 +1403,14 @@ export default function EvidenceLocker() {
                                   toast({ title: 'Parse Failed', description: 'An error occurred.', variant: 'destructive' });
                                 }
                               }}
-                              className="flex items-center gap-2"
-                            >
+                              className="flex items-center gap-2">
                               <RefreshCw className="w-4 h-4" />
                               Parse
                             </DropdownMenuItem>
                           )}
                           <DropdownMenuItem
                             onClick={() => handleDeleteDocument(doc.id, doc.name)}
-                            className="flex items-center gap-2 text-red-600 focus:text-red-600"
-                          >
+                            className="flex items-center gap-2 text-red-600 focus:text-red-600">
                             <Trash2 className="w-4 h-4" />
                             Delete
                           </DropdownMenuItem>
@@ -1440,7 +1433,7 @@ export default function EvidenceLocker() {
                   <option value={50}>50 / page</option>
                 </select>
                 <Button variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" disabled={page <= 1} onClick={() => setPage(p => Math.max(1, p - 1))}>Prev</Button>
-                <Button variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" disabled={page >= totalPages} onClick={() => setPage(p => Math.min(totalPages, p + 1))}>Next</Button>
+                <Button variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" disabled={page>= totalPages} onClick={() => setPage(p => Math.min(totalPages, p + 1))}>Next</Button>
               </div>
             </div>
           </div>

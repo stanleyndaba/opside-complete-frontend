@@ -86,7 +86,7 @@ export default function OAuthSuccess() {
     setDisconnectOpen(false);
   };
 
-  const grantedScopes = scopes.length > 0 ? scopes : (statusData?.providers ? Object.keys(statusData.providers) : []);
+  const grantedScopes = scopes.length> 0 ? scopes : (statusData?.providers ? Object.keys(statusData.providers) : []);
 
   return (
     <PageLayout title="Connection Complete">
@@ -115,7 +115,7 @@ export default function OAuthSuccess() {
             <div>
               <p className="text-sm font-medium text-muted-foreground mb-2">Access we request — and why</p>
               <div className="grid sm:grid-cols-2 gap-2">
-                {grantedScopes.length > 0 ? (
+                {grantedScopes.length> 0 ? (
                   grantedScopes.map((scope, idx) => (
                     <div key={`${scope}-${idx}`} className="flex items-start gap-2 p-2 rounded-md border">
                       <Shield className="h-4 w-4 mt-0.5 text-muted-foreground" />

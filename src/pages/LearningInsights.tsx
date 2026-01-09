@@ -92,8 +92,7 @@ export function LearningInsights() {
     return (
         <PageLayout
             title="Learning Insights"
-            description="Your AI continuously learns from every claim to improve accuracy and recovery rates"
-        >
+            description="Your AI continuously learns from every claim to improve accuracy and recovery rates">
             <div className="space-y-6">
                 {/* Header with refresh button */}
                 <div className="flex items-center justify-between">
@@ -164,7 +163,7 @@ export function LearningInsights() {
                                 <div className="space-y-2">
                                     {Object.entries(insights.successRates).slice(0, 5).map(([agent, rate]: [string, any]) => {
                                         const percentage = (rate * 100).toFixed(0);
-                                        const isGood = rate > 0.7;
+                                        const isGood = rate> 0.7;
                                         return (
                                             <div key={agent} className="flex justify-between items-center text-sm">
                                                 <span className="text-gray-600 capitalize">
@@ -201,7 +200,7 @@ export function LearningInsights() {
                                     <div className="text-sm text-gray-500">Threshold adjustments</div>
                                     <div className="text-xs text-gray-400 mt-1">Last 30 days</div>
                                 </div>
-                                {thresholds.length > 0 && (
+                                {thresholds.length> 0 && (
                                     <div className="pt-2 border-t border-gray-200">
                                         <div className="text-xs text-gray-500">Most recent:</div>
                                         <div className="text-sm font-normal text-gray-600 mt-1">
@@ -218,7 +217,7 @@ export function LearningInsights() {
                 </div>
 
                 {/* Threshold History */}
-                {thresholds.length > 0 && (
+                {thresholds.length> 0 && (
                     <Card className="bg-white border-gray-200">
                         <CardHeader>
                             <CardTitle className="text-base font-normal text-gray-700">Threshold Optimization History</CardTitle>
@@ -226,7 +225,7 @@ export function LearningInsights() {
                         <CardContent>
                             <div className="space-y-3">
                                 {thresholds.map((threshold, index) => {
-                                    const isIncrease = threshold.new_value > threshold.old_value;
+                                    const isIncrease = threshold.new_value> threshold.old_value;
                                     return (
                                         <div key={index} className="flex items-start justify-between p-3 border border-gray-200 rounded-lg bg-gray-50">
                                             <div className="flex-1">
@@ -258,7 +257,7 @@ export function LearningInsights() {
                 )}
 
                 {/* Rejection Patterns */}
-                {insights?.patterns?.rejectionPatterns && Object.keys(insights.patterns.rejectionPatterns).length > 0 && (
+                {insights?.patterns?.rejectionPatterns && Object.keys(insights.patterns.rejectionPatterns).length> 0 && (
                     <Card className="bg-white border-gray-200">
                         <CardHeader>
                             <CardTitle className="text-base font-normal text-gray-700">Rejection Pattern Analysis</CardTitle>

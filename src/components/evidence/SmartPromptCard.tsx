@@ -153,8 +153,7 @@ export function SmartPromptCard({
                                     </div>
                                     <Link
                                         to={`/documents/${match.document_id}`}
-                                        className="flex items-center gap-1.5 text-sm text-gray-700 hover:text-gray-900 font-mono group"
-                                    >
+                                        className="flex items-center gap-1.5 text-sm text-gray-700 hover:text-gray-900 font-mono group">
                                         <FileText className="w-3.5 h-3.5 text-gray-400 group-hover:text-gray-600" />
                                         <span className="truncate">
                                             {match.document_details?.filename || match.document_id.substring(0, 12) + '...'}
@@ -174,8 +173,7 @@ export function SmartPromptCard({
                                     </div>
                                     <Link
                                         to={`/recoveries/${match.claim_id}`}
-                                        className="flex items-center gap-1.5 text-sm text-gray-700 hover:text-gray-900 font-mono group"
-                                    >
+                                        className="flex items-center gap-1.5 text-sm text-gray-700 hover:text-gray-900 font-mono group">
                                         <Link2 className="w-3.5 h-3.5 text-gray-400 group-hover:text-gray-600" />
                                         <span className="truncate">
                                             {match.claim_id.substring(0, 12)}...
@@ -199,8 +197,7 @@ export function SmartPromptCard({
                                     size="sm"
                                     onClick={handleApprove}
                                     disabled={isApproving || isRejecting || isRequestingMore}
-                                    className="bg-gray-900 hover:bg-gray-800 text-white text-xs font-medium px-4"
-                                >
+                                    className="bg-gray-900 hover:bg-gray-800 text-white text-xs font-medium px-4">
                                     {isApproving ? (
                                         <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
                                     ) : (
@@ -215,8 +212,7 @@ export function SmartPromptCard({
                                     variant="outline"
                                     onClick={() => setShowRejectDialog(true)}
                                     disabled={isApproving || isRejecting || isRequestingMore}
-                                    className="border-gray-200 text-gray-500 hover:text-gray-700 hover:bg-gray-50 text-xs"
-                                >
+                                    className="border-gray-200 text-gray-500 hover:text-gray-700 hover:bg-gray-50 text-xs">
                                     <XCircle className="w-3.5 h-3.5" />
                                 </Button>
 
@@ -224,8 +220,7 @@ export function SmartPromptCard({
                                     size="sm"
                                     variant="ghost"
                                     asChild
-                                    className="text-gray-400 hover:text-gray-600 text-xs"
-                                >
+                                    className="text-gray-400 hover:text-gray-600 text-xs">
                                     <Link to={`/recoveries/${match.claim_id}`}>
                                         <Eye className="w-3.5 h-3.5" />
                                     </Link>
@@ -234,7 +229,7 @@ export function SmartPromptCard({
                         </div>
 
                         {/* Matched Fields - Minimal Pills */}
-                        {match.matched_fields && match.matched_fields.length > 0 && (
+                        {match.matched_fields && match.matched_fields.length> 0 && (
                             <div className="mt-3 pt-3 border-t border-gray-100">
                                 <div className="flex items-center gap-2">
                                     <span className="text-[10px] text-gray-400 uppercase tracking-[0.1em]">
@@ -244,8 +239,7 @@ export function SmartPromptCard({
                                         {match.matched_fields.map((field, idx) => (
                                             <span
                                                 key={idx}
-                                                className="text-[10px] text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded capitalize"
-                                            >
+                                                className="text-[10px] text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded capitalize">
                                                 {field.replace(/_/g, ' ')}
                                             </span>
                                         ))}
@@ -289,16 +283,14 @@ export function SmartPromptCard({
                                 setShowRejectDialog(false);
                                 setRejectReason('');
                             }}
-                            className="text-xs border-gray-200"
-                        >
+                            className="text-xs border-gray-200">
                             Cancel
                         </Button>
                         <Button
                             size="sm"
                             onClick={handleReject}
                             disabled={isRejecting}
-                            className="bg-gray-900 hover:bg-gray-800 text-white text-xs"
-                        >
+                            className="bg-gray-900 hover:bg-gray-800 text-white text-xs">
                             {isRejecting && <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />}
                             Reject
                         </Button>

@@ -18,8 +18,7 @@ export const MockDataIndicator: React.FC<MockDataIndicatorProps> = ({
   return (
     <Badge 
       variant="outline" 
-      className={`inline-flex items-center gap-1.5 border-blue-500/30 bg-blue-500/10 text-blue-400 ${className}`}
-    >
+      className={`inline-flex items-center gap-1.5 border-blue-500/30 bg-blue-500/10 text-blue-400 ${className}`}>
       <TestTube className="h-3.5 w-3.5" />
       <span>Test Data{scenario ? ` (${scenario})` : ''}</span>
     </Badge>

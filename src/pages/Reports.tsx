@@ -432,7 +432,7 @@ export default function Reports() {
       try {
         const recoveries = await recoveryApi.getRecoveries();
         if (cancelled) return;
-        if (Array.isArray(recoveries) && recoveries.length > 0) {
+        if (Array.isArray(recoveries) && recoveries.length> 0) {
           const normalized = recoveries
             .map((record, index) => normalizeClaimRecord(record, index))
             .filter((claim) => Boolean(claim.dateCreated));
@@ -457,7 +457,7 @@ export default function Reports() {
       const matchesSearch = !term || claim.id.toLowerCase().includes(term) || claim.claimType.toLowerCase().includes(term) || claim.status.toLowerCase().includes(term);
       // Date filter
       const claimDate = new Date(claim.dateCreated);
-      const dateInRange = (!dateRange?.from || claimDate >= dateRange.from) && (!dateRange?.to || claimDate <= dateRange.to);
+      const dateInRange = (!dateRange?.from || claimDate>= dateRange.from) && (!dateRange?.to || claimDate <= dateRange.to);
 
       // Claim type filter
       const typeMatch = selectedClaimTypes.length === 0 || selectedClaimTypes.includes(claim.claimType);
@@ -480,7 +480,7 @@ export default function Reports() {
         bValue = Number(bValue);
       }
       if (sortDirection === 'asc') {
-        return aValue > bValue ? 1 : -1;
+        return aValue> bValue ? 1 : -1;
       } else {
         return aValue < bValue ? 1 : -1;
       }
@@ -499,11 +499,11 @@ export default function Reports() {
     const totalRecovered = filteredClaims.reduce((sum, claim) => sum + claim.amountRecovered, 0);
     const claimsSubmitted = filteredClaims.length;
     const paidClaims = filteredClaims.filter(claim => claim.status === 'Paid').length;
-    const successRate = claimsSubmitted > 0 ? paidClaims / claimsSubmitted * 100 : 0;
+    const successRate = claimsSubmitted> 0 ? paidClaims / claimsSubmitted * 100 : 0;
 
     // Calculate average recovery time (for paid claims only)
     const paidClaimsWithDates = filteredClaims.filter(claim => claim.status === 'Paid' && claim.payoutDate);
-    const avgRecoveryTime = paidClaimsWithDates.length > 0 ? paidClaimsWithDates.reduce((sum, claim) => {
+    const avgRecoveryTime = paidClaimsWithDates.length> 0 ? paidClaimsWithDates.reduce((sum, claim) => {
       const created = new Date(claim.dateCreated);
       const paid = new Date(claim.payoutDate!);
       return sum + Math.floor((paid.getTime() - created.getTime()) / (1000 * 60 * 60 * 24));
@@ -622,7 +622,7 @@ export default function Reports() {
         count: dataObj.count || dataObj.total || 0,
         value: dataObj.value || dataObj.amount || dataObj.total_value || 0
       };
-    }).filter(item => item.count > 0 || item.value > 0).sort((a, b) => b.value - a.value);
+    }).filter(item => item.count> 0 || item.value> 0).sort((a, b) => b.value - a.value);
   }, [detectionStats]);
 
   const severityChartData = useMemo(() => {
@@ -657,8 +657,8 @@ export default function Reports() {
       { level: 'Low', rate: recoveryRates.low || recoveryRates.low_confidence || 0 }
     ];
 
-    // Only return if at least one rate is > 0
-    return data.some(d => d.rate > 0) ? data : [];
+    // Only return if at least one rate is> 0
+    return data.some(d => d.rate> 0) ? data : [];
   }, [confidenceDistribution]);
 
   const confidenceHistogramData = useMemo(() => {
@@ -739,12 +739,12 @@ export default function Reports() {
                     <p className="font-semibold text-gray-900 text-base mt-1">
                       {detectionStats?.total_value
                         ? formatCurrency(detectionStats.total_value)
-                        : keyMetrics.totalRecovered > 0
+                        : keyMetrics.totalRecovered> 0
                           ? formatCurrency(keyMetrics.totalRecovered)
                           : null
                       }
                     </p>
-                    {detectionStats?.total_value && keyMetrics.totalRecovered > 0 && (
+                    {detectionStats?.total_value && keyMetrics.totalRecovered> 0 && (
                       <p className="text-xs text-gray-600 mt-1">
                         {formatCurrency(keyMetrics.totalRecovered)} from approved claims
                       </p>
@@ -762,12 +762,12 @@ export default function Reports() {
                     <p className="font-semibold text-gray-900 text-base">
                       {detectionStats?.total_anomalies
                         ? detectionStats.total_anomalies
-                        : keyMetrics.claimsSubmitted > 0
+                        : keyMetrics.claimsSubmitted> 0
                           ? keyMetrics.claimsSubmitted
                           : null
                       }
                     </p>
-                    {detectionStats?.total_anomalies && keyMetrics.claimsSubmitted > 0 && (
+                    {detectionStats?.total_anomalies && keyMetrics.claimsSubmitted> 0 && (
                       <p className="text-xs text-gray-600 mt-1">
                         {keyMetrics.claimsSubmitted} claims filed
                       </p>
@@ -791,7 +791,7 @@ export default function Reports() {
                       </div>
                     </div>
                     <p className="font-semibold text-gray-900 text-base mt-1">
-                      {keyMetrics.successRate > 0
+                      {keyMetrics.successRate> 0
                         ? `${keyMetrics.successRate.toFixed(1)}%`
                         : confidenceDistribution?.average_confidence
                           ? `${(confidenceDistribution.average_confidence * 100).toFixed(1)}%`
@@ -814,12 +814,12 @@ export default function Reports() {
                   <div>
                     <p className="text-sm font-medium text-gray-600">Avg. Recovery Time</p>
                     <p className="font-medium text-[#1f1f1f] text-lg">
-                      {keyMetrics.avgRecoveryTime > 0
+                      {keyMetrics.avgRecoveryTime> 0
                         ? `${keyMetrics.avgRecoveryTime} Days`
                         : null
                       }
                     </p>
-                    {detectionStats?.expiring_soon !== undefined && detectionStats.expiring_soon > 0 && (
+                    {detectionStats?.expiring_soon !== undefined && detectionStats.expiring_soon> 0 && (
                       <p className="text-xs text-amber-400 mt-1">
                         {detectionStats.expiring_soon} expiring soon
                       </p>
@@ -839,7 +839,7 @@ export default function Reports() {
               <div className="w-full h-64 gpu-accelerated">
                 {claimsLoading ? (
                   <ChartSkeleton />
-                ) : chartData.length > 0 ? (
+                ) : chartData.length> 0 ? (
                   <Suspense fallback={<ChartSkeleton />}>
                     <RecoveryChart data={chartData} />
                   </Suspense>
@@ -861,7 +861,7 @@ export default function Reports() {
               <h3 className="text-sm font-semibold text-[#1f1f1f] mb-4">Discrepancy Type Distribution</h3>
               <p className="text-xs text-gray-600 mb-4">Breakdown of detected discrepancies by type, showing count and total value</p>
               <div className="w-full h-80 gpu-accelerated">
-                {anomalyTypeChartData.length > 0 ? (
+                {anomalyTypeChartData.length> 0 ? (
                   <Suspense fallback={<ChartSkeleton />}>
                     <AnomalyTypeChart data={anomalyTypeChartData} />
                   </Suspense>
@@ -875,7 +875,7 @@ export default function Reports() {
           </Card>
 
           {/* Severity Distribution */}
-          {detectionStats && severityChartData.length > 0 && (
+          {detectionStats && severityChartData.length> 0 && (
             <Card className="mb-8 bg-white border-gray-200 text-gray-900 shadow-sm">
               <CardContent className="p-6">
                 <h3 className="text-sm font-semibold text-[#1f1f1f] mb-4">Severity Distribution</h3>
@@ -890,7 +890,7 @@ export default function Reports() {
           )}
 
           {/* Confidence Distribution */}
-          {(detectionStats || confidenceDistribution) && confidenceChartData.length > 0 && (
+          {(detectionStats || confidenceDistribution) && confidenceChartData.length> 0 && (
             <Card className="mb-8 bg-white border-gray-200 text-gray-900 shadow-sm">
               <CardContent className="p-6">
                 <h3 className="text-sm font-semibold text-[#1f1f1f] mb-4">Confidence Distribution</h3>
@@ -910,7 +910,7 @@ export default function Reports() {
               <h3 className="text-sm font-semibold text-[#1f1f1f] mb-4">Recovery Rates by Confidence Level</h3>
               <p className="text-xs text-gray-600 mb-4">Success rate of recovery claims based on detection confidence</p>
               <div className="w-full h-64 gpu-accelerated">
-                {recoveryRatesChartData.length > 0 ? (
+                {recoveryRatesChartData.length> 0 ? (
                   <Suspense fallback={<ChartSkeleton />}>
                     <RecoveryRatesChart data={recoveryRatesChartData} />
                   </Suspense>
@@ -924,7 +924,7 @@ export default function Reports() {
           </Card>
 
           {/* Confidence Range Histogram */}
-          {confidenceDistribution && confidenceHistogramData.length > 0 && (
+          {confidenceDistribution && confidenceHistogramData.length> 0 && (
             <Card className="mb-8 bg-white border-gray-200 text-gray-900 shadow-sm">
               <CardContent className="p-6">
                 <h3 className="text-sm font-semibold text-[#1f1f1f] mb-4">Confidence Score Distribution</h3>
@@ -977,7 +977,7 @@ export default function Reports() {
                         <TableCell>{type}</TableCell>
                         <TableCell>{t.count}</TableCell>
                         <TableCell className="font-medium">{formatCurrency(t.amount)}</TableCell>
-                        <TableCell>{grandTotal > 0 ? ((t.amount / grandTotal) * 100).toFixed(1) : '0.0'}%</TableCell>
+                        <TableCell>{grandTotal> 0 ? ((t.amount / grandTotal) * 100).toFixed(1) : '0.0'}%</TableCell>
                       </TableRow>
                     ));
                   })()}
@@ -992,7 +992,7 @@ export default function Reports() {
                     <option value={50}>50 / page</option>
                   </select>
                   <Button variant="outline" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" disabled={page <= 1} onClick={() => setPage(p => Math.max(1, p - 1))}>Prev</Button>
-                  <Button variant="outline" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" disabled={page >= totalPages} onClick={() => setPage(p => Math.min(totalPages, p + 1))}>Next</Button>
+                  <Button variant="outline" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" disabled={page>= totalPages} onClick={() => setPage(p => Math.min(totalPages, p + 1))}>Next</Button>
                 </div>
               </div>
             </CardContent>

@@ -111,8 +111,7 @@ export default function Careers() {
                       </div>
                       <a
                         href={`mailto:careers@opside.co?subject=${encodeURIComponent('Application: ' + position.title)}`}
-                        className="px-3 py-1.5 text-xs text-gray-700 border border-gray-300 bg-white hover:bg-gray-50 transition-colors flex items-center gap-1 shrink-0"
-                      >
+                        className="px-3 py-1.5 text-xs text-gray-700 border border-gray-300 bg-white hover:bg-gray-50 transition-colors flex items-center gap-1 shrink-0">
                         Apply
                         <ArrowRight className="h-3 w-3" />
                       </a>
@@ -133,8 +132,7 @@ export default function Careers() {
               </p>
               <a
                 href="mailto:careers@opside.co"
-                className="inline-block px-4 py-2 text-xs font-medium text-white bg-gray-900 hover:bg-gray-800 transition-colors"
-              >
+                className="inline-block px-4 py-2 text-xs font-medium text-white bg-gray-900 hover:bg-gray-800 transition-colors">
                 Contact Us
               </a>
             </section>

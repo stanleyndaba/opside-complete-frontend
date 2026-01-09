@@ -213,7 +213,7 @@ const getEventColor = (type: CaseEvent['type']) => {
 const stableHash = (s: string): number => {
   let h = 2166136261;
   for (let i = 0; i < s.length; i++) h = (h ^ s.charCodeAt(i)) * 16777619;
-  return (h >>> 0);
+  return (h>>> 0);
 };
 const deriveConfidence = (id: string): number => {
   const v = stableHash(id) % 4900; // 0..4899
@@ -223,8 +223,8 @@ const deriveConfidence = (id: string): number => {
 };
 const deriveEvidence = (id: string): 'Ready' | 'Needs Docs' | 'Collecting' => {
   const v = stableHash(id) % 100;
-  if (v >= 70) return 'Ready';
-  if (v >= 40) return 'Needs Docs';
+  if (v>= 70) return 'Ready';
+  if (v>= 40) return 'Needs Docs';
   return 'Collecting';
 };
 
@@ -471,7 +471,7 @@ export default function CaseDetail() {
             };
           });
           // Initialize matchedDocs from API response if documents exist
-          if (Array.isArray((res.data as any)?.documents) && (res.data as any).documents.length > 0) {
+          if (Array.isArray((res.data as any)?.documents) && (res.data as any).documents.length> 0) {
             setMatchedDocs((res.data as any).documents);
           }
           setError(null);
@@ -700,8 +700,7 @@ export default function CaseDetail() {
                     console.error('Next claim error:', e);
                     toast({ title: 'Error', description: 'Could not load next case.' });
                   }
-                }}
-              >
+                }}>
                 Next Claim
                 <ArrowLeft className="h-3.5 w-3.5 rotate-180" />
               </button>
@@ -727,9 +726,9 @@ export default function CaseDetail() {
                         <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
                           Case Summary
                         </h3>
-                        {derivedConfidencePct >= 85 ? (
+                        {derivedConfidencePct>= 85 ? (
                           <span className="text-[9px] text-emerald-600 font-medium mt-0.5">Auto-Filed</span>
-                        ) : derivedConfidencePct >= 60 ? (
+                        ) : derivedConfidencePct>= 60 ? (
                           <span className="text-[9px] text-blue-600 font-medium mt-0.5">Awaiting Seller Review</span>
                         ) : (
                           <span className="text-[9px] text-amber-600 font-medium mt-0.5">Parked — Needs Evidence</span>
@@ -859,14 +858,14 @@ export default function CaseDetail() {
                         </span>
                       </div>
 
-                      {matchedDocs.length > 0 && (
+                      {matchedDocs.length> 0 && (
                         <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-100">
                           {matchedDocs.slice(0, 2).map((d: any) => (
                             <button key={d.id} className="text-xs font-mono text-gray-500 hover:text-gray-900 hover:underline" onClick={() => window.open(`/documents/${encodeURIComponent(d.id)}`, '_blank')}>
                               {d.name || d.filename || d.id}
                             </button>
                           ))}
-                          {matchedDocs.length > 2 && (
+                          {matchedDocs.length> 2 && (
                             <Link to="/evidence-locker" className="text-xs text-gray-400 hover:text-gray-600">
                               +{matchedDocs.length - 2} more
                             </Link>
@@ -939,8 +938,7 @@ export default function CaseDetail() {
                             const files = Array.from(e.dataTransfer.files || []);
                             if (!files.length) return;
                             await recoveryApi.uploadRecoveryDocuments(effectiveCase.id, files as any).catch(() => { });
-                          }}
-                        >
+                          }}>
                           Drag and drop invoice here
                         </div>
                       </div>
@@ -1013,7 +1011,7 @@ export default function CaseDetail() {
                               <Button
                                 className={`w-full ${playbook.autoTriggerable ? 'bg-purple-600 hover:bg-purple-700' : 'bg-blue-600 hover:bg-blue-700'} text-white`}
                                 onClick={async () => {
-                                  const hasDocs = Array.isArray(effectiveCase.documents) && effectiveCase.documents.length > 0;
+                                  const hasDocs = Array.isArray(effectiveCase.documents) && effectiveCase.documents.length> 0;
                                   if (!hasDocs) {
                                     toast({ title: 'Attach evidence first', description: 'Add at least one supporting document before resubmitting.' });
                                     return;
@@ -1025,8 +1023,7 @@ export default function CaseDetail() {
                                   } else {
                                     toast({ title: 'Escalation failed', description: res.error || 'Please try again.' });
                                   }
-                                }}
-                              >
+                                }}>
                                 <RefreshCw className="h-4 w-4 mr-2" />
                                 {playbook.autoTriggerable ? 'Auto-Escalate' : 'Manual Escalation'} (Round {escalationCount + 1})
                               </Button>
@@ -1073,7 +1070,7 @@ export default function CaseDetail() {
                     </div>
                   </div>
                   <div className="space-y-3 p-4">
-                    {matchedDocs.length > 0 ? (
+                    {matchedDocs.length> 0 ? (
                       <div className="space-y-3">
                         {matchedDocs.map((doc: any, idx: number) => {
                           // Derive confidence from match data or generate stable value
@@ -1085,11 +1082,11 @@ export default function CaseDetail() {
                           // Determine matched fields from doc metadata
                           const matchedFields: string[] = [];
                           const extracted = doc.extracted || doc.parsed_metadata || {};
-                          if (extracted.order_ids?.length > 0) matchedFields.push('Order ID');
-                          if (extracted.asins?.length > 0 || extracted.skus?.length > 0) matchedFields.push('ASIN/SKU');
-                          if (extracted.tracking_numbers?.length > 0) matchedFields.push('Tracking #');
-                          if (extracted.amounts?.length > 0) matchedFields.push('Amount');
-                          if (extracted.invoice_numbers?.length > 0) matchedFields.push('Invoice #');
+                          if (extracted.order_ids?.length> 0) matchedFields.push('Order ID');
+                          if (extracted.asins?.length> 0 || extracted.skus?.length> 0) matchedFields.push('ASIN/SKU');
+                          if (extracted.tracking_numbers?.length> 0) matchedFields.push('Tracking #');
+                          if (extracted.amounts?.length> 0) matchedFields.push('Amount');
+                          if (extracted.invoice_numbers?.length> 0) matchedFields.push('Invoice #');
                           if (matchedFields.length === 0) matchedFields.push('Content Match');
 
                           return (
@@ -1108,8 +1105,8 @@ export default function CaseDetail() {
                                     <span className="text-[10px] text-gray-600">Match Confidence:</span>
                                     <Badge className={cn(
                                       "text-xs",
-                                      confidencePct >= 85 ? "bg-emerald-100 text-emerald-800 border-emerald-200" :
-                                        confidencePct >= 60 ? "bg-amber-100 text-amber-800 border-amber-200" :
+                                      confidencePct>= 85 ? "bg-emerald-100 text-emerald-800 border-emerald-200" :
+                                        confidencePct>= 60 ? "bg-amber-100 text-amber-800 border-amber-200" :
                                           "bg-gray-100 text-gray-800 border-gray-200"
                                     )}>
                                       {confidencePct}%
@@ -1138,8 +1135,7 @@ export default function CaseDetail() {
                                   variant="outline"
                                   size="sm"
                                   className="flex-shrink-0 text-gray-700 border-gray-300 hover:bg-gray-200 text-xs h-7"
-                                  onClick={() => window.open(`/documents/${encodeURIComponent(doc.id)}`, '_blank')}
-                                >
+                                  onClick={() => window.open(`/documents/${encodeURIComponent(doc.id)}`, '_blank')}>
                                   View
                                 </Button>
                               </div>
@@ -1169,8 +1165,7 @@ export default function CaseDetail() {
                           variant="outline"
                           size="sm"
                           className="mt-3 text-gray-700 border-gray-300 text-xs"
-                          asChild
-                        >
+                          asChild>
                           <Link to="/evidence-locker">Browse Evidence Locker</Link>
                         </Button>
                       </div>
@@ -1197,8 +1192,7 @@ export default function CaseDetail() {
                           activeTab === tab.id
                             ? "bg-gray-900 text-white"
                             : "bg-gray-50 text-gray-600 hover:bg-gray-100"
-                        )}
-                      >
+                        )}>
                         {tab.label}
                       </button>
                     ))}
@@ -1225,7 +1219,7 @@ export default function CaseDetail() {
                             const auditDays = Math.floor((Date.now() - createdDate.getTime()) / (1000 * 60 * 60 * 24));
                             const amount = effectiveCase.guaranteedAmount || effectiveCase.estimated_value || effectiveCase.claim_amount || 0;
                             const units = effectiveCase.unitsLost || effectiveCase.units_lost || effectiveCase.quantity || effectiveCase.units || 1;
-                            const perUnit = units > 0 ? (amount / units) : amount;
+                            const perUnit = units> 0 ? (amount / units) : amount;
                             const sku = effectiveCase.sku || effectiveCase.evidence?.sku || 'N/A';
                             const asin = effectiveCase.asin || effectiveCase.evidence?.asin || 'N/A';
                             const orderId = effectiveCase.order_id || effectiveCase.evidence?.order_id || effectiveCase.matched_fields?.[0]?.split(':')[1] || '';
@@ -1338,7 +1332,7 @@ export default function CaseDetail() {
                                         {(() => {
                                           const conf = effectiveCase.confidence || effectiveCase.confidence_score || 0.85;
                                           // Handle both 0-1 and 0-100 formats
-                                          const normalized = conf > 1 ? conf : conf * 100;
+                                          const normalized = conf> 1 ? conf : conf * 100;
                                           return `${Math.min(Math.round(normalized), 100)}%`;
                                         })()}
                                       </dd>
@@ -1471,7 +1465,7 @@ export default function CaseDetail() {
                                   const head = await fetch(url, { method: 'HEAD', credentials: 'include' });
                                   if (head.ok) { window.open(url, '_blank'); return; }
                                 } catch { }
-                                if (Array.isArray(matchedDocs) && matchedDocs.length > 0) {
+                                if (Array.isArray(matchedDocs) && matchedDocs.length> 0) {
                                   window.open(`/documents/${encodeURIComponent(matchedDocs[0].id)}`, '_blank');
                                 } else {
                                   toast({ title: 'No proof available yet', description: 'Evidence is still being collected for this case.' });

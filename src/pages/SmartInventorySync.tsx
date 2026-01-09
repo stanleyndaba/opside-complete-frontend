@@ -482,7 +482,7 @@ export default function SmartInventorySync() {
                     } else if (Array.isArray(claimsRes.data)) {
                       claimsData = claimsRes.data;
                     }
-                    if (claimsData.length > 0) {
+                    if (claimsData.length> 0) {
                       hasData = true;
                       setClaims(claimsData);
                       setClaimsIsMock(claimsRes.data.isMock || false);
@@ -504,7 +504,7 @@ export default function SmartInventorySync() {
                     } else if (Array.isArray(inventoryRes.data)) {
                       inventoryData = inventoryRes.data;
                     }
-                    if (inventoryData.length > 0) {
+                    if (inventoryData.length> 0) {
                       hasData = true;
                       setInventory(Array.isArray(inventoryData) ? inventoryData : []);
                       setInventoryIsMock(inventoryRes.data.isMock || false);
@@ -615,7 +615,7 @@ export default function SmartInventorySync() {
                       } else if (Array.isArray(claimsRes.data)) {
                         claimsData = claimsRes.data;
                       }
-                      if (claimsData.length > 0) {
+                      if (claimsData.length> 0) {
                         hasData = true;
                         setClaims(claimsData);
                         setClaimsIsMock(claimsRes.data.isMock || false);
@@ -637,7 +637,7 @@ export default function SmartInventorySync() {
                       } else if (Array.isArray(inventoryRes.data)) {
                         inventoryData = inventoryRes.data;
                       }
-                      if (inventoryData.length > 0) {
+                      if (inventoryData.length> 0) {
                         hasData = true;
                         setInventory(Array.isArray(inventoryData) ? inventoryData : []);
                         setInventoryIsMock(inventoryRes.data.isMock || false);
@@ -1235,7 +1235,7 @@ export default function SmartInventorySync() {
                 } else if (Array.isArray(claimsRes.data)) {
                   claimsData = claimsRes.data;
                 }
-                if (claimsData.length > 0) {
+                if (claimsData.length> 0) {
                   console.log('[Sync] Found', claimsData.length, 'claims after 409 - sync may have completed');
                   setClaims(claimsData);
                   setClaimsIsMock(claimsRes.data.isMock || false);
@@ -1257,7 +1257,7 @@ export default function SmartInventorySync() {
                 } else if (Array.isArray(inventoryRes.data)) {
                   inventoryData = inventoryRes.data;
                 }
-                if (inventoryData.length > 0) {
+                if (inventoryData.length> 0) {
                   console.log('[Sync] Found', inventoryData.length, 'inventory items after 409 - sync may have completed');
                   setInventory(Array.isArray(inventoryData) ? inventoryData : []);
                   setInventoryIsMock(inventoryRes.data.isMock || false);
@@ -1433,7 +1433,7 @@ export default function SmartInventorySync() {
     try {
       return {
         total: Array.isArray(shipments) ? shipments.length : 0,
-        missingItems: Array.isArray(shipments) ? shipments.filter(s => (s?.missing_quantity || 0) > 0).length : 0,
+        missingItems: Array.isArray(shipments) ? shipments.filter(s => (s?.missing_quantity || 0)> 0).length : 0,
         byStatus: Array.isArray(shipments) ? shipments.reduce((acc, shipment) => {
           const status = shipment?.status || 'Unknown';
           acc[status] = (acc[status] || 0) + 1;
@@ -1543,8 +1543,7 @@ export default function SmartInventorySync() {
               <Button 
                 onClick={handleSync} 
                 disabled={syncing || syncStatus.status === 'running' || !amazonConnected}
-                className="bg-emerald-500 hover:bg-emerald-400 text-white disabled:opacity-50 disabled:cursor-not-allowed"
-              >
+                className="bg-emerald-500 hover:bg-emerald-400 text-white disabled:opacity-50 disabled:cursor-not-allowed">
                 {syncing || syncStatus.status === 'running' ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -1582,61 +1581,55 @@ export default function SmartInventorySync() {
           <TabsList className="bg-white/10 backdrop-blur-xl border-white/10 rounded-lg p-1">
             <TabsTrigger 
               value="claims" 
-              className="data-[state=active]:bg-white/20 data-[state=active]:text-emerald-500 text-white hover:text-emerald-500 transition-colors"
-            >
+              className="data-[state=active]:bg-white/20 data-[state=active]:text-emerald-500 text-white hover:text-emerald-500 transition-colors">
               <DollarSign className="h-4 w-4 mr-2" />
               Claims
-              {claims.length > 0 && (
+              {claims.length> 0 && (
                 <Badge variant="secondary" className="ml-2">{claims.length}</Badge>
               )}
             </TabsTrigger>
             <TabsTrigger 
               value="inventory" 
-              className="data-[state=active]:bg-white/20 data-[state=active]:text-emerald-500 text-white hover:text-emerald-500 transition-colors"
-            >
+              className="data-[state=active]:bg-white/20 data-[state=active]:text-emerald-500 text-white hover:text-emerald-500 transition-colors">
               <Warehouse className="h-4 w-4 mr-2" />
               Inventory
-              {inventory.length > 0 && (
+              {inventory.length> 0 && (
                 <Badge variant="secondary" className="ml-2">{inventory.length}</Badge>
               )}
             </TabsTrigger>
             <TabsTrigger 
               value="orders" 
-              className="data-[state=active]:bg-white/20 data-[state=active]:text-emerald-500 text-white hover:text-emerald-500 transition-colors"
-            >
+              className="data-[state=active]:bg-white/20 data-[state=active]:text-emerald-500 text-white hover:text-emerald-500 transition-colors">
               <ShoppingCart className="h-4 w-4 mr-2" />
               Orders
-              {ordersSummary.total > 0 && (
+              {ordersSummary.total> 0 && (
                 <Badge variant="secondary" className="ml-2">{ordersSummary.total}</Badge>
               )}
             </TabsTrigger>
             <TabsTrigger 
               value="shipments" 
-              className="data-[state=active]:bg-white/20 data-[state=active]:text-emerald-500 text-white hover:text-emerald-500 transition-colors"
-            >
+              className="data-[state=active]:bg-white/20 data-[state=active]:text-emerald-500 text-white hover:text-emerald-500 transition-colors">
               <Truck className="h-4 w-4 mr-2" />
               Shipments
-              {shipmentsSummary.total > 0 && (
+              {shipmentsSummary.total> 0 && (
                 <Badge variant="secondary" className="ml-2">{shipmentsSummary.total}</Badge>
               )}
             </TabsTrigger>
             <TabsTrigger 
               value="returns" 
-              className="data-[state=active]:bg-white/20 data-[state=active]:text-emerald-500 text-white hover:text-emerald-500 transition-colors"
-            >
+              className="data-[state=active]:bg-white/20 data-[state=active]:text-emerald-500 text-white hover:text-emerald-500 transition-colors">
               <RotateCcw className="h-4 w-4 mr-2" />
               Returns
-              {returnsSummary.total > 0 && (
+              {returnsSummary.total> 0 && (
                 <Badge variant="secondary" className="ml-2">{returnsSummary.total}</Badge>
               )}
             </TabsTrigger>
             <TabsTrigger 
               value="settlements" 
-              className="data-[state=active]:bg-white/20 data-[state=active]:text-emerald-500 text-white hover:text-emerald-500 transition-colors"
-            >
+              className="data-[state=active]:bg-white/20 data-[state=active]:text-emerald-500 text-white hover:text-emerald-500 transition-colors">
               <DollarSign className="h-4 w-4 mr-2" />
               Settlements
-              {settlementsSummary.total > 0 && (
+              {settlementsSummary.total> 0 && (
                 <Badge variant="secondary" className="ml-2">{settlementsSummary.total}</Badge>
               )}
             </TabsTrigger>
@@ -1994,7 +1987,7 @@ export default function SmartInventorySync() {
                               <TableCell>{shipment.expected_quantity}</TableCell>
                               <TableCell>{shipment.received_quantity ?? '—'}</TableCell>
                               <TableCell>
-                                {shipment.missing_quantity > 0 ? (
+                                {shipment.missing_quantity> 0 ? (
                                   <span className="text-red-400 font-semibold">{shipment.missing_quantity}</span>
                                 ) : (
                                   <span className="text-green-400">0</span>
@@ -2263,8 +2256,7 @@ export default function SmartInventorySync() {
                     key={option.id}
                     className="flex w-full items-center justify-between px-4 py-3 text-left hover:bg-slate-50 transition disabled:cursor-not-allowed"
                     onClick={() => connectDocSource(option.id)}
-                    disabled={docPromptLoading === option.id}
-                  >
+                    disabled={docPromptLoading === option.id}>
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 rounded-lg bg-slate-100 flex items-center justify-center">
                         <img src={option.icon} alt={option.name} className="h-5 w-5 object-contain" />

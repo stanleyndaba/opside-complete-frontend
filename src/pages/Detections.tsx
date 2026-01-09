@@ -97,8 +97,8 @@ export default function Detections() {
   };
 
   const getConfidenceColor = (score: number) => {
-    if (score >= 0.85) return 'text-emerald-600';
-    if (score >= 0.5) return 'text-yellow-600';
+    if (score>= 0.85) return 'text-emerald-600';
+    if (score>= 0.5) return 'text-yellow-600';
     return 'text-red-600';
   };
 
@@ -215,7 +215,7 @@ export default function Detections() {
           <CardHeader>
             <CardTitle>Detection Results</CardTitle>
             <CardDescription>
-              {results.length > 0 
+              {results.length> 0 
                 ? `Showing ${results.length} detected anomalies` 
                 : 'No detection results yet. Run a detection to find claim opportunities.'}
             </CardDescription>
@@ -226,13 +226,12 @@ export default function Detections() {
                 <RefreshCw className="h-8 w-8 animate-spin mx-auto text-gray-400" />
                 <p className="text-sm text-muted-foreground mt-2">Loading detection results...</p>
               </div>
-            ) : results.length > 0 ? (
+            ) : results.length> 0 ? (
               <div className="space-y-3">
                 {results.map((result) => (
                   <div 
                     key={result.id} 
-                    className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50"
-                  >
+                    className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
                     <div className="flex items-center gap-4">
                       <Badge className={getSeverityColor(result.severity)}>
                         {result.severity}
@@ -240,7 +239,7 @@ export default function Detections() {
                       <div>
                         <p className="font-medium">{result.anomaly_type.replace(/_/g, ' ')}</p>
                         <p className="text-sm text-muted-foreground">
-                          {result.days_remaining > 0 
+                          {result.days_remaining> 0 
                             ? `${result.days_remaining} days remaining` 
                             : 'Deadline passed'}
                         </p>

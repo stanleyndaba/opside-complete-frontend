@@ -126,13 +126,13 @@ export function Navbar({
       const domain = url.hostname.replace('www.', '');
       const path = url.pathname + url.search;
       // If domain is very long, show just the essential part
-      if (domain.length > 20) {
+      if (domain.length> 20) {
         return `...${domain.slice(-15)}${path}`;
       }
       return `${domain}${path}`;
     } catch {
       // Fallback if URL parsing fails
-      return link.length > 30 ? `...${link.slice(-25)}` : link;
+      return link.length> 30 ? `...${link.slice(-25)}` : link;
     }
   };
 
@@ -230,8 +230,7 @@ export function Navbar({
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  >
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
                     <X className="h-3 w-3" />
                   </button>
                 )}
@@ -240,14 +239,13 @@ export function Navbar({
                 {isSearchFocused && (
                   <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-sm shadow-sm z-50 overflow-hidden">
                     {/* Recent Searches */}
-                    {recentSearches.length > 0 && (
+                    {recentSearches.length> 0 && (
                       <div className="p-2 border-b border-gray-100">
                         <div className="flex items-center justify-between px-2 mb-1">
                           <span className="text-[9px] font-medium text-gray-500 uppercase tracking-[0.15em]">Recent</span>
                           <button
                             onClick={clearRecentSearches}
-                            className="text-[9px] text-gray-400 hover:text-gray-600"
-                          >
+                            className="text-[9px] text-gray-400 hover:text-gray-600">
                             Clear
                           </button>
                         </div>
@@ -258,8 +256,7 @@ export function Navbar({
                               setSearchQuery(search);
                               handleSearch(search);
                             }}
-                            className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-gray-700 hover:bg-gray-50"
-                          >
+                            className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-gray-700 hover:bg-gray-50">
                             <Clock className="h-3 w-3 text-gray-400" />
                             {search}
                           </button>
@@ -277,8 +274,7 @@ export function Navbar({
                             setIsSearchFocused(false);
                             navigate(link.path);
                           }}
-                          className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-gray-700 hover:bg-gray-50 mt-0.5"
-                        >
+                          className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-gray-700 hover:bg-gray-50 mt-0.5">
                           <link.icon className="h-3 w-3 text-gray-400" />
                           {link.label}
                         </button>
@@ -311,16 +307,15 @@ export function Navbar({
                   onMouseEnter={() => setIsNoteHovered(true)}
                   onMouseLeave={() => setIsNoteHovered(false)}
                   className="h-8 w-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-sm transition-colors relative"
-                  aria-label="Notes"
-                >
+                  aria-label="Notes">
                   <NotebookPen className="h-4 w-4" />
-                  {notes.length > 0 && (
+                  {notes.length> 0 && (
                     <span className="absolute top-1 right-1 h-1.5 w-1.5 bg-amber-500 rounded-full" />
                   )}
                 </button>
 
                 {/* Hover tooltip showing recent notes */}
-                {isNoteHovered && notes.length > 0 && (
+                {isNoteHovered && notes.length> 0 && (
                   <div className="absolute top-full right-1/2 translate-x-1/2 mt-2 w-72 bg-white border border-gray-200 rounded-sm shadow-lg z-50 overflow-hidden">
                     <div className="px-3 py-2 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
                       <span className="text-[9px] font-medium text-gray-500 uppercase tracking-[0.15em]">Recent Notes</span>
@@ -335,7 +330,7 @@ export function Navbar({
                           </p>
                         </div>
                       ))}
-                      {notes.length > 5 && (
+                      {notes.length> 5 && (
                         <div className="px-3 py-2 bg-gray-50 border-t border-gray-100 text-center">
                           <span className="text-[9px] text-gray-500">Click to view all notes</span>
                         </div>
@@ -348,8 +343,7 @@ export function Navbar({
               <button
                 onClick={() => setShowReferralPopup(true)}
                 className="h-8 w-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-sm transition-colors relative"
-                aria-label="Referral program"
-              >
+                aria-label="Referral program">
                 <Gift className="h-4 w-4" />
                 <span className="absolute top-1 right-1 h-1.5 w-1.5 bg-gray-900 rounded-full" />
               </button>
@@ -372,8 +366,7 @@ export function Navbar({
             <div className="h-4 w-px bg-gray-200" />
             <button
               onClick={() => navigate('/integrations-hub')}
-              className="flex items-center gap-1.5 h-8 px-3 text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-sm transition-colors"
-            >
+              className="flex items-center gap-1.5 h-8 px-3 text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-sm transition-colors">
               <Link2 className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">Connect</span>
             </button>
@@ -385,8 +378,7 @@ export function Navbar({
                 try { await api.logout(); } catch (_) { }
                 window.location.href = '/';
               }}
-              className="flex items-center gap-1.5 h-8 px-3 text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-sm transition-colors"
-            >
+              className="flex items-center gap-1.5 h-8 px-3 text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-sm transition-colors">
               <LogOut className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">Sign Out</span>
             </button>
@@ -424,8 +416,7 @@ export function Navbar({
                   setShowReferralPopup(false);
                   setShowInviteForm(true);
                 }}
-                className="w-full bg-gray-900 hover:bg-gray-800 text-white text-[12px] h-9 font-medium rounded-sm"
-              >
+                className="w-full bg-gray-900 hover:bg-gray-800 text-white text-[12px] h-9 font-medium rounded-sm">
                 Invite a seller
               </Button>
             </div>
@@ -463,8 +454,7 @@ export function Navbar({
                     setLinkCopied(true);
                     setTimeout(() => setLinkCopied(false), 2000);
                   }}
-                  className="flex items-center gap-1 px-1.5 py-0.5 text-[10px] text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded transition-colors"
-                >
+                  className="flex items-center gap-1 px-1.5 py-0.5 text-[10px] text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded transition-colors">
                   {linkCopied ? (
                     <>
                       <Check className="h-3 w-3 text-emerald-600" />
@@ -514,8 +504,7 @@ export function Navbar({
                   alert('Failed to send invite. Please try again.');
                 }
               }}
-              className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-md transition-colors"
-            >
+              className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-md transition-colors">
               Send
             </Button>
           </div>
@@ -567,14 +556,13 @@ export function Navbar({
                   }
                 }}
                 className="w-full bg-gray-900 hover:bg-gray-800 text-white text-[12px] h-9 font-medium rounded-sm"
-                disabled={!currentNote.trim() || isSavingNote}
-              >
+                disabled={!currentNote.trim() || isSavingNote}>
                 {isSavingNote ? 'Saving...' : 'Save Note'}
               </Button>
             </div>
 
             {/* Notes list */}
-            {notes.length > 0 && (
+            {notes.length> 0 && (
               <div className="border-t border-gray-100 pt-4">
                 <span className="text-[9px] font-medium text-gray-500 uppercase tracking-[0.15em]">Your Notes ({notes.length})</span>
                 <div className="mt-3 space-y-2 max-h-60 overflow-y-auto">
@@ -591,8 +579,7 @@ export function Navbar({
                           <div className="flex justify-end gap-2">
                             <button
                               onClick={() => setEditingNoteId(null)}
-                              className="text-[10px] text-gray-500 hover:text-gray-700 font-medium"
-                            >
+                              className="text-[10px] text-gray-500 hover:text-gray-700 font-medium">
                               Cancel
                             </button>
                             <button
@@ -619,8 +606,7 @@ export function Navbar({
                                 }
                               }}
                               className="text-[10px] text-gray-900 hover:text-black font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-                              disabled={isSavingNote}
-                            >
+                              disabled={isSavingNote}>
                               {isSavingNote ? 'Saving...' : 'Save'}
                             </button>
                           </div>
@@ -638,8 +624,7 @@ export function Navbar({
                                   setEditingNoteId(note.id);
                                   setEditingNoteContent(note.text);
                                 }}
-                                className="text-[9px] text-gray-400 hover:text-gray-900"
-                              >
+                                className="text-[9px] text-gray-400 hover:text-gray-900">
                                 Edit
                               </button>
                               <button
@@ -653,8 +638,7 @@ export function Navbar({
                                     console.error('Failed to delete note:', error);
                                   }
                                 }}
-                                className="text-[9px] text-gray-400 hover:text-red-500"
-                              >
+                                className="text-[9px] text-gray-400 hover:text-red-500">
                                 Delete
                               </button>
                             </div>

@@ -109,7 +109,7 @@ export default function AdminRevenue() {
     }
 
     const mrrGrowth = metrics?.mrrGrowth || 0;
-    const isPositiveGrowth = mrrGrowth >= 0;
+    const isPositiveGrowth = mrrGrowth>= 0;
 
     return (
         <div className="min-h-screen bg-white">
@@ -127,8 +127,7 @@ export default function AdminRevenue() {
                         variant="ghost"
                         size="sm"
                         disabled={loading}
-                        className="text-gray-500 hover:text-gray-900 hover:bg-gray-100 text-xs"
-                    >
+                        className="text-gray-500 hover:text-gray-900 hover:bg-gray-100 text-xs">
                         <RefreshCw className={`w-3 h-3 mr-1.5 ${loading ? 'animate-spin' : ''}`} />
                         Refresh
                     </Button>
@@ -144,7 +143,7 @@ export default function AdminRevenue() {
                         <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1">MRR Growth</div>
                         <div className={`text-xl font-light tracking-tight flex items-center ${isPositiveGrowth ? 'text-emerald-600' : 'text-red-600'}`}>
                             {isPositiveGrowth ? <TrendingUp className="w-4 h-4 mr-1" /> : <TrendingDown className="w-4 h-4 mr-1" />}
-                            {mrrGrowth >= 0 ? '+' : ''}{mrrGrowth.toFixed(1)}%
+                            {mrrGrowth>= 0 ? '+' : ''}{mrrGrowth.toFixed(1)}%
                         </div>
                         <div className="text-[10px] text-gray-500 mt-1">month-over-month</div>
                     </div>
@@ -266,7 +265,7 @@ export default function AdminRevenue() {
                             <h3 className="text-xs font-medium text-gray-900 tracking-wide">Monthly Revenue</h3>
                         </div>
                         <div className="overflow-hidden">
-                            {metrics?.revenueByMonth && metrics.revenueByMonth.length > 0 ? (
+                            {metrics?.revenueByMonth && metrics.revenueByMonth.length> 0 ? (
                                 <table className="w-full">
                                     <thead>
                                         <tr className="border-b border-gray-200">
@@ -299,7 +298,7 @@ export default function AdminRevenue() {
                             <h3 className="text-xs font-medium text-gray-900 tracking-wide">Top Accounts</h3>
                         </div>
                         <div className="overflow-hidden">
-                            {metrics?.revenueByCustomer && metrics.revenueByCustomer.length > 0 ? (
+                            {metrics?.revenueByCustomer && metrics.revenueByCustomer.length> 0 ? (
                                 <table className="w-full">
                                     <thead>
                                         <tr className="border-b border-gray-200">

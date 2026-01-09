@@ -159,8 +159,7 @@ export function ProofDocumentsModal({
                                             <button
                                                 onClick={() => handleDownload(doc)}
                                                 className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors"
-                                                title="Download document"
-                                            >
+                                                title="Download document">
                                                 <Download className="h-4 w-4" />
                                             </button>
                                         </div>
@@ -176,8 +175,7 @@ export function ProofDocumentsModal({
                     <Button
                         variant="outline"
                         onClick={onClose}
-                        className="text-xs px-4 py-2 border-gray-300 text-gray-700 hover:bg-gray-50"
-                    >
+                        className="text-xs px-4 py-2 border-gray-300 text-gray-700 hover:bg-gray-50">
                         Close
                     </Button>
                 </div>

@@ -255,7 +255,7 @@ export function EvidenceAuditTrail({ claimId, documentId, compact = false }: Evi
                                                             {Math.round(event.details.confidence * 100)}% confidence
                                                         </Badge>
                                                     )}
-                                                    {event.details.extractedFields && event.details.extractedFields.length > 0 && (
+                                                    {event.details.extractedFields && event.details.extractedFields.length> 0 && (
                                                         <Badge variant="outline" className="text-xs">
                                                             {event.details.extractedFields.join(', ')}
                                                         </Badge>
@@ -283,7 +283,7 @@ export function EvidenceAuditTrail({ claimId, documentId, compact = false }: Evi
                         </div>
 
                         {/* Document summaries */}
-                        {documents.length > 0 && (
+                        {documents.length> 0 && (
                             <div className="mt-6 pt-4 border-t border-gray-200">
                                 <h4 className="text-sm font-medium text-gray-700 mb-3">Document Summaries</h4>
                                 <div className="space-y-2">

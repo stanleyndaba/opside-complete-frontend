@@ -49,7 +49,7 @@ export default function AnalyzingScreen() {
         setCurrentMessage(currentMessageIndex);
       }
 
-      if (currentProgress >= 100) {
+      if (currentProgress>= 100) {
         clearInterval(progressInterval);
         setShowResults(true);
 

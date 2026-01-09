@@ -143,8 +143,7 @@ export default function ExportCenter() {
                     key={preset.label}
                     variant="outline"
                     size="sm"
-                    onClick={() => handlePresetSelect(preset)}
-                  >
+                    onClick={() => handlePresetSelect(preset)}>
                     {preset.label}
                   </Button>
                 ))}
@@ -161,8 +160,7 @@ export default function ExportCenter() {
                         className={cn(
                           "w-full justify-start text-left font-normal",
                           !dateRange.from && "text-muted-foreground"
-                        )}
-                      >
+                        )}>
                         <CalendarIcon className="mr-2 h-4 w-4" />
                         {dateRange.from ? format(dateRange.from, "PPP") : "Pick a date"}
                       </Button>
@@ -188,8 +186,7 @@ export default function ExportCenter() {
                         className={cn(
                           "w-full justify-start text-left font-normal",
                           !dateRange.to && "text-muted-foreground"
-                        )}
-                      >
+                        )}>
                         <CalendarIcon className="mr-2 h-4 w-4" />
                         {dateRange.to ? format(dateRange.to, "PPP") : "Pick a date"}
                       </Button>
@@ -233,8 +230,7 @@ export default function ExportCenter() {
                 onClick={handleGenerate}
                 disabled={!isFormValid}
                 className="w-full"
-                size="lg"
-              >
+                size="lg">
                 <Download className="mr-2 h-4 w-4" />
                 Generate & Download
               </Button>

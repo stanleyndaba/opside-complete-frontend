@@ -148,8 +148,7 @@ export function Sidebar({
                     ? "bg-gray-100 text-gray-900"
                     : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                 )}
-                style={{ willChange: 'background-color' }}
-              >
+                style={{ willChange: 'background-color' }}>
                 <item.icon className="h-4 w-4" strokeWidth={1.5} />
               </Link>
             </TooltipTrigger>
@@ -170,8 +169,7 @@ export function Sidebar({
             ? "bg-gray-100 text-gray-900"
             : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
         )}
-        style={{ willChange: 'background-color' }}
-      >
+        style={{ willChange: 'background-color' }}>
         {isActive && (
           <span className="absolute left-0 h-4 w-[2px] bg-gray-900" />
         )}
@@ -189,15 +187,13 @@ export function Sidebar({
         "bg-white",
         className
       )}
-      style={{ willChange: 'width' }}
-    >
+      style={{ willChange: 'width' }}>
       {/* Branding + Collapse */}
       <div
         className={cn(
           "border-b border-gray-200 flex flex-col",
           isCollapsed ? "p-2 items-center justify-center" : "px-4 py-3 items-start justify-center"
-        )}
-      >
+        )}>
         <div className="flex items-center gap-2">
           <img
             src="/logoimagetwo.png"
@@ -225,8 +221,7 @@ export function Sidebar({
           className={cn(
             "h-full flex",
             isCollapsed ? "px-2" : "px-3"
-          )}
-        >
+          )}>
           <nav className={cn("w-full flex flex-col items-center pt-6 pb-4 space-y-1", isCollapsed ? "space-y-0.5" : "space-y-3")}>
             <div className={cn("w-full flex flex-col", isCollapsed ? "items-center space-y-0.5" : "items-start space-y-0.5")}>
               {primaryItems.map((item) => (
@@ -255,8 +250,7 @@ export function Sidebar({
                   className={cn(
                     "relative flex items-center justify-center w-8 h-8 transition-colors",
                     "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                  )}
-                >
+                  )}>
                   <User className="h-4 w-4" />
                 </Link>
               </TooltipTrigger>
@@ -273,8 +267,7 @@ export function Sidebar({
             className={cn(
               "w-full flex flex-col text-left hover:text-gray-900 hover:bg-gray-50 px-2 py-1.5 transition-colors",
               "text-gray-600"
-            )}
-          >
+            )}>
             <div className="flex items-center gap-1.5">
               <User className="h-3.5 w-3.5" />
               <span className="text-xs">Account</span>
@@ -296,8 +289,7 @@ export function Sidebar({
         onClick={onToggle}
         className={cn(
           'absolute top-14 -right-2.5 z-50 h-6 w-6 rounded-full border border-gray-300 bg-white backdrop-blur-sm flex items-center justify-center text-[#36454F] hover:bg-gray-200 shadow-sm',
-        )}
-      >
+        )}>
         {isCollapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
       </button>
     </aside>

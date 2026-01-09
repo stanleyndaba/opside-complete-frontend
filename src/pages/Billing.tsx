@@ -276,12 +276,11 @@ export default function Billing() {
                             setInvoiceRecipients(prev => prev.includes(email) ? prev : [...prev, email]);
                             setNewRecipient('');
                           }}
-                          className="px-3 h-8 text-xs text-gray-600 border border-gray-200 hover:bg-gray-50 transition-colors"
-                        >
+                          className="px-3 h-8 text-xs text-gray-600 border border-gray-200 hover:bg-gray-50 transition-colors">
                           Add
                         </button>
                       </div>
-                      {invoiceRecipients.length > 0 && (
+                      {invoiceRecipients.length> 0 && (
                         <div className="mt-2 flex flex-wrap gap-1.5">
                           {invoiceRecipients.map((em) => (
                             <span key={em} className="inline-flex items-center gap-1.5 px-2 py-1 bg-gray-50 border border-gray-200 text-[10px] text-gray-700">
@@ -304,14 +303,12 @@ export default function Billing() {
                     <div className="flex gap-2 pt-2">
                       <button
                         onClick={saveBillingSettings}
-                        className="px-4 py-2 text-xs text-white bg-gray-900 hover:bg-gray-800 transition-colors"
-                      >
+                        className="px-4 py-2 text-xs text-white bg-gray-900 hover:bg-gray-800 transition-colors">
                         Save Settings
                       </button>
                       <button
                         onClick={() => { window.location.href = '/stripe/callback'; }}
-                        className="px-4 py-2 text-xs text-gray-600 border border-gray-200 hover:bg-gray-50 transition-colors"
-                      >
+                        className="px-4 py-2 text-xs text-gray-600 border border-gray-200 hover:bg-gray-50 transition-colors">
                         Stripe Portal
                       </button>
                     </div>
@@ -329,8 +326,7 @@ export default function Billing() {
                 </div>
                 <button
                   onClick={() => setExportOpen(true)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-[10px] text-gray-600 border border-gray-200 hover:bg-gray-100 transition-colors"
-                >
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-[10px] text-gray-600 border border-gray-200 hover:bg-gray-100 transition-colors">
                   <Download className="h-3 w-3" />
                   Export
                 </button>
@@ -362,8 +358,7 @@ export default function Billing() {
                     <select
                       className="h-7 bg-gray-50 border border-gray-200 rounded-sm px-2 text-gray-600"
                       value={pageSize}
-                      onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1); }}
-                    >
+                      onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1); }}>
                       <option value={10}>10 / page</option>
                       <option value={25}>25 / page</option>
                       <option value={50}>50 / page</option>
@@ -371,15 +366,13 @@ export default function Billing() {
                     <button
                       disabled={page <= 1}
                       onClick={() => setPage(p => Math.max(1, p - 1))}
-                      className="px-2 py-1 text-gray-500 border border-gray-200 hover:bg-gray-50 disabled:opacity-40"
-                    >
+                      className="px-2 py-1 text-gray-500 border border-gray-200 hover:bg-gray-50 disabled:opacity-40">
                       Prev
                     </button>
                     <button
-                      disabled={page >= totalPages}
+                      disabled={page>= totalPages}
                       onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                      className="px-2 py-1 text-gray-500 border border-gray-200 hover:bg-gray-50 disabled:opacity-40"
-                    >
+                      className="px-2 py-1 text-gray-500 border border-gray-200 hover:bg-gray-50 disabled:opacity-40">
                       Next
                     </button>
                   </div>
@@ -402,7 +395,7 @@ export default function Billing() {
                     <p className="text-[10px]">Invoices will appear here once recoveries are processed.</p>
                   </div>
                 )}
-                {!loading && !error && pageData.length > 0 && (
+                {!loading && !error && pageData.length> 0 && (
                   <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
@@ -422,8 +415,7 @@ export default function Billing() {
                             <TableCell className="py-3">
                               <Link
                                 to={`/billing/invoice/${invoice.id}`}
-                                className="text-xs font-mono text-gray-900 hover:text-gray-600"
-                              >
+                                className="text-xs font-mono text-gray-900 hover:text-gray-600">
                                 {invoice.id}
                               </Link>
                             </TableCell>
@@ -456,8 +448,7 @@ export default function Billing() {
                             <TableCell>
                               <button
                                 onClick={() => window.print()}
-                                className="text-[10px] text-gray-500 hover:text-gray-700"
-                              >
+                                className="text-[10px] text-gray-500 hover:text-gray-700">
                                 <Download className="h-3.5 w-3.5" />
                               </button>
                             </TableCell>
@@ -549,14 +540,12 @@ export default function Billing() {
             <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end gap-2">
               <button
                 onClick={() => setExportOpen(false)}
-                className="px-3 py-1.5 text-xs text-gray-600 hover:text-gray-900"
-              >
+                className="px-3 py-1.5 text-xs text-gray-600 hover:text-gray-900">
                 Cancel
               </button>
               <button
                 onClick={exportAction}
-                className="px-4 py-1.5 text-xs text-white bg-gray-900 hover:bg-gray-800"
-              >
+                className="px-4 py-1.5 text-xs text-white bg-gray-900 hover:bg-gray-800">
                 Download
               </button>
             </div>

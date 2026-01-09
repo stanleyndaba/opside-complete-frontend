@@ -58,7 +58,7 @@ export default function UpcomingPayments() {
         const casesRes = await api.getDisputeCases({ limit: 500 });
 
         if (!cancelled) {
-          if (casesRes.ok && casesRes.data?.cases && casesRes.data.cases.length > 0) {
+          if (casesRes.ok && casesRes.data?.cases && casesRes.data.cases.length> 0) {
             const cases = casesRes.data.cases;
             setDisputeCases(cases);
 
@@ -160,7 +160,7 @@ export default function UpcomingPayments() {
     }
 
     // If no claims have dated payouts, use total claims value as projection
-    if (gross === 0 && claims.length > 0) {
+    if (gross === 0 && claims.length> 0) {
       gross = claims.reduce((sum, c) => sum + parseFloat(String(c.guaranteedAmount ?? 0)) || 0, 0);
       count = claims.length;
     }
@@ -251,8 +251,7 @@ export default function UpcomingPayments() {
                     <button
                       className="px-3 py-1.5 text-[10px] text-amber-800 border border-amber-300 bg-white hover:bg-amber-50 transition-colors"
                       onClick={() => setReloadToken((token) => token + 1)}
-                      disabled={loading}
-                    >
+                      disabled={loading}>
                       Retry
                     </button>
                   </div>
@@ -276,7 +275,7 @@ export default function UpcomingPayments() {
                 </div>
 
                 {/* Pipeline Summary */}
-                {pipelineStages.totalInPipeline > 0 && (
+                {pipelineStages.totalInPipeline> 0 && (
                   <div className="mt-6 border border-gray-200 bg-gray-50 p-4">
                     <div className="text-[10px] text-gray-500 uppercase tracking-[0.1em]">Total Currently Processing</div>
                     <div className="text-2xl font-light text-gray-900 mt-1">{formatCurrency(pipelineStages.totalInPipeline, currency)}</div>
@@ -321,7 +320,7 @@ export default function UpcomingPayments() {
                       <span className="w-24 text-gray-500 flex-shrink-0 uppercase tracking-[0.1em] text-[10px]">Detected</span>
                       <span className="text-gray-400">→</span>
                       <span className="text-gray-700">
-                        {pipelineStages.detected.count > 0
+                        {pipelineStages.detected.count> 0
                           ? `${pipelineStages.detected.count} claims (${formatCurrency(pipelineStages.detected.amount, currency)}) awaiting evidence`
                           : 'No claims at this stage'}
                       </span>
@@ -330,7 +329,7 @@ export default function UpcomingPayments() {
                       <span className="w-24 text-gray-500 flex-shrink-0 uppercase tracking-[0.1em] text-[10px]">Ready</span>
                       <span className="text-gray-400">→</span>
                       <span className="text-gray-700">
-                        {pipelineStages.ready.count > 0
+                        {pipelineStages.ready.count> 0
                           ? `${pipelineStages.ready.count} claims (${formatCurrency(pipelineStages.ready.amount, currency)}) ready for submission`
                           : 'No claims at this stage'}
                       </span>
@@ -339,7 +338,7 @@ export default function UpcomingPayments() {
                       <span className="w-24 text-gray-500 flex-shrink-0 uppercase tracking-[0.1em] text-[10px]">Pending</span>
                       <span className="text-gray-400">→</span>
                       <span className="text-gray-700">
-                        {pipelineStages.pending.count > 0
+                        {pipelineStages.pending.count> 0
                           ? `${pipelineStages.pending.count} claims (${formatCurrency(pipelineStages.pending.amount, currency)}) awaiting Amazon`
                           : 'No claims at this stage'}
                       </span>
@@ -348,7 +347,7 @@ export default function UpcomingPayments() {
                       <span className="w-24 text-gray-500 flex-shrink-0 uppercase tracking-[0.1em] text-[10px]">Approved</span>
                       <span className="text-gray-400">→</span>
                       <span className="text-gray-700">
-                        {pipelineStages.approved.count > 0
+                        {pipelineStages.approved.count> 0
                           ? `${pipelineStages.approved.count} claims (${formatCurrency(pipelineStages.approved.amount, currency)}) processing`
                           : 'No claims at this stage'}
                       </span>
@@ -357,7 +356,7 @@ export default function UpcomingPayments() {
                       <span className="w-24 text-gray-500 flex-shrink-0 uppercase tracking-[0.1em] text-[10px]">Paid</span>
                       <span className="text-gray-400">→</span>
                       <span className="text-gray-700">
-                        {pipelineStages.paid.count > 0
+                        {pipelineStages.paid.count> 0
                           ? `${pipelineStages.paid.count} claims (${formatCurrency(pipelineStages.paid.amount, currency)}) recovered`
                           : 'No payments received yet'}
                       </span>
@@ -409,17 +408,17 @@ export default function UpcomingPayments() {
                         <TableCell className="text-xs text-gray-700 py-2">{formatCurrency(g.commission, currency)}</TableCell>
                         <TableCell className="text-xs text-emerald-600 font-medium py-2">{formatCurrency(g.net, currency)}</TableCell>
                         <TableCell className="py-2">
-                          {g.claims.length > 0 && (
+                          {g.claims.length> 0 && (
                             <div className="flex flex-col gap-1">
                               {g.claims.slice(0, 2).map((claim: RecoveryClaim) => (
                                 <div key={claim.id}>{getFilingStatusBadge(claim.filing_status)}</div>
                               ))}
-                              {g.claims.length > 2 && <span className="text-xs text-gray-500">+{g.claims.length - 2} more</span>}
+                              {g.claims.length> 2 && <span className="text-xs text-gray-500">+{g.claims.length - 2} more</span>}
                             </div>
                           )}
                         </TableCell>
                         <TableCell>
-                          {g.claims.length > 0 && g.claims[0].case_id && (
+                          {g.claims.length> 0 && g.claims[0].case_id && (
                             <Button asChild variant="outline" size="sm">
                               <Link to={`/recoveries?tab=cases`}>View Cases</Link>
                             </Button>

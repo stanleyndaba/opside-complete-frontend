@@ -17,7 +17,7 @@ type ResolutionChoice = 'submit' | 'resubmit' | 'review' | 'park';
 const stableHash = (s: string): number => {
   let h = 2166136261;
   for (let i = 0; i < s.length; i++) h = (h ^ s.charCodeAt(i)) * 16777619;
-  return (h >>> 0);
+  return (h>>> 0);
 };
 const deriveConfidence = (id: string): number => {
   const v = stableHash(id) % 4900; // 0..4899
@@ -27,8 +27,8 @@ const deriveConfidence = (id: string): number => {
 };
 const deriveEvidence = (id: string): 'Ready' | 'Needs Docs' | 'Collecting' => {
   const v = stableHash(id) % 100;
-  if (v >= 70) return 'Ready';
-  if (v >= 40) return 'Needs Docs';
+  if (v>= 70) return 'Ready';
+  if (v>= 40) return 'Needs Docs';
   return 'Collecting';
 };
 
@@ -203,7 +203,7 @@ export default function ResolveCase() {
                       />
                       <div id="doc-help" className="text-xs text-gray-600 mt-1">You can also drag and drop into this field.</div>
                     </div>
-                    {attachedDocs.length > 0 && (
+                    {attachedDocs.length> 0 && (
                       <div>
                         <Label className="text-sm text-gray-600">Attached</Label>
                         <ul className="mt-1 space-y-1 text-sm">

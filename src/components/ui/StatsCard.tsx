@@ -24,8 +24,8 @@ export function StatsCard({
   valueClassName,
   onClick
 }: StatsCardProps) {
-  const formattedTrend = trend !== undefined ? trend > 0 ? `+${trend.toFixed(2)}%` : `${trend.toFixed(2)}%` : null;
-  const isTrendPositive = trend !== undefined ? trend > 0 : null;
+  const formattedTrend = trend !== undefined ? trend> 0 ? `+${trend.toFixed(2)}%` : `${trend.toFixed(2)}%` : null;
+  const isTrendPositive = trend !== undefined ? trend> 0 : null;
   return <Card className={cn("transition-all duration-300 hover:shadow-md overflow-hidden", onClick ? "cursor-pointer" : "", className)} onClick={onClick}>
       
       

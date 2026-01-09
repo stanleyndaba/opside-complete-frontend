@@ -121,8 +121,7 @@ export default function Help() {
                     <AccordionItem
                       key={faq.id}
                       value={faq.id}
-                      className={index !== filteredFaqs.length - 1 ? 'border-b border-gray-100' : 'border-0'}
-                    >
+                      className={index !== filteredFaqs.length - 1 ? 'border-b border-gray-100' : 'border-0'}>
                       <AccordionTrigger className="px-4 py-3 text-left hover:no-underline text-xs font-medium text-gray-900 hover:bg-gray-50">
                         {faq.question}
                       </AccordionTrigger>

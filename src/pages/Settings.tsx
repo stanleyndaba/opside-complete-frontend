@@ -379,8 +379,7 @@ const Settings = () => {
                   isAmazonConnected
                     ? 'bg-gray-100 text-gray-700 border border-gray-200'
                     : 'bg-gray-100 text-gray-500 border border-gray-200'
-                )}
-              >
+                )}>
                 {isAmazonConnected ? (
                   <>
                     <CheckCircle className="h-3 w-3 mr-1.5" />
@@ -457,7 +456,7 @@ const Settings = () => {
                     </div>
                   </div>
                 </div>
-                {marketplaces.length > 0 && (
+                {marketplaces.length> 0 && (
                   <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
                     <CardHeader className="bg-gray-50/50 border-b border-gray-200 pb-3">
                       <div className="flex items-center justify-between">
@@ -474,8 +473,7 @@ const Settings = () => {
                           return (
                             <div
                               key={marketplaceId}
-                              className="flex items-center gap-2.5 p-3 bg-gray-50 rounded-lg border border-gray-100"
-                            >
+                              className="flex items-center gap-2.5 p-3 bg-gray-50 rounded-lg border border-gray-100">
                               <span className="text-xl">{display.flag}</span>
                               <span className="text-sm text-gray-800 font-medium">{display.name}</span>
                             </div>
@@ -532,8 +530,7 @@ const Settings = () => {
                             ? 'border-gray-200 text-gray-700 hover:bg-gray-50'
                             : 'bg-emerald-500 hover:bg-emerald-600 text-white'
                         )}
-                        onClick={() => navigate('/integrations-hub')}
-                      >
+                        onClick={() => navigate('/integrations-hub')}>
                         {isAmazonConnected ? 'Manage' : 'Connect'}
                       </Button>
                     </div>
@@ -569,8 +566,7 @@ const Settings = () => {
                         variant="outline"
                         size="sm"
                         className="border-gray-200 text-gray-700 hover:bg-gray-50"
-                        onClick={() => navigate('/billing')}
-                      >
+                        onClick={() => navigate('/billing')}>
                         {isStripeConnected ? 'Manage' : 'Connect'}
                       </Button>
                     </div>
@@ -751,8 +747,7 @@ const Settings = () => {
                         <Button
                           size="sm"
                           className="bg-emerald-500 hover:bg-emerald-400 text-white"
-                          onClick={() => navigate('/integrations-hub')}
-                        >
+                          onClick={() => navigate('/integrations-hub')}>
                           {platform.connected ? 'Manage' : 'Connect'}
                         </Button>
                       </div>
@@ -895,8 +890,7 @@ const Settings = () => {
                     size="sm"
                     variant="outline"
                     className="border-gray-200 text-gray-600 hover:bg-gray-50 text-xs"
-                    onClick={exportLoginHistory}
-                  >
+                    onClick={exportLoginHistory}>
                     Export CSV
                   </Button>
                 </div>
@@ -964,8 +958,7 @@ const Settings = () => {
                         size="sm"
                         variant="outline"
                         className="border-gray-200 text-gray-700 hover:bg-gray-50"
-                        onClick={generateBackupCodes}
-                      >
+                        onClick={generateBackupCodes}>
                         Generate Backup Codes
                       </Button>
                     ) : (
@@ -1044,8 +1037,7 @@ const Settings = () => {
                     size="sm"
                     className="bg-gray-900 hover:bg-gray-800 text-white"
                     disabled={loggingOutOthers}
-                    onClick={logoutOtherDevices}
-                  >
+                    onClick={logoutOtherDevices}>
                     {loggingOutOthers ? 'Signing out...' : 'Log Out Others'}
                   </Button>
                 </div>
@@ -1085,8 +1077,7 @@ const Settings = () => {
                     onClick={() => {
                       setDeleteOpen(false);
                       toast({ title: 'Account deletion requested', description: 'Our support will contact you to confirm.' });
-                    }}
-                  >
+                    }}>
                     Delete Account
                   </Button>
                 </DialogFooter>
@@ -1128,8 +1119,7 @@ const Settings = () => {
                           activeSection === item.id
                             ? "bg-gray-100 text-gray-900"
                             : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                        )}
-                      >
+                        )}>
                         {activeSection === item.id && (
                           <span className="absolute left-0 h-4 w-[2px] bg-gray-900" />
                         )}

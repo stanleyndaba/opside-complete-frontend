@@ -41,7 +41,7 @@ const ApiLanding = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 768) {
+      if (window.innerWidth>= 768) {
         setMobileMenuOpen(false);
       }
     };
@@ -83,8 +83,7 @@ const ApiLanding = () => {
                 <DropdownMenuTrigger asChild>
                   <button
                     className="inline-flex items-center gap-2 h-9 px-3 rounded-md text-sm text-gray-700 hover:bg-white/60 transition-colors"
-                    aria-label="Language preference"
-                  >
+                    aria-label="Language preference">
                     <span>{selectedLanguage.language}</span>
                     <ChevronDown className="h-4 w-4 opacity-70" />
                   </button>
@@ -117,8 +116,7 @@ const ApiLanding = () => {
                 className="text-gray-800 hover:bg-gray-100 hover:text-gray-900"
                 type="button"
                 disabled={connecting}
-                onClick={handleLogin}
-              >
+                onClick={handleLogin}>
                 Login
               </Button>
             </nav>
@@ -127,8 +125,7 @@ const ApiLanding = () => {
               className="md:hidden flex flex-col items-end gap-1.5 rounded-[16px] border border-white/40 bg-white/50 px-3 py-2 transition-colors hover:bg-white/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
               aria-label="Toggle menu"
               aria-expanded={mobileMenuOpen}
-              onClick={() => setMobileMenuOpen(prev => !prev)}
-            >
+              onClick={() => setMobileMenuOpen(prev => !prev)}>
               <span className="block h-[1px] w-6 bg-gray-900 rounded-full" />
               <span className="block h-[1px] w-5 bg-gray-900 rounded-full" />
               <span className="block h-[1px] w-4 bg-gray-900 rounded-full" />
@@ -141,8 +138,7 @@ const ApiLanding = () => {
                   <DropdownMenuTrigger asChild>
                     <button
                       className="w-full rounded-lg px-3 py-2 text-left font-medium text-gray-800 hover:bg-white/70 transition-colors"
-                      aria-label="Language preference"
-                    >
+                      aria-label="Language preference">
                       Language: {selectedLanguage.language}
                     </button>
                   </DropdownMenuTrigger>
@@ -167,8 +163,7 @@ const ApiLanding = () => {
                               setLangQuery('');
                               setMobileMenuOpen(false);
                             }}
-                            className="gap-2 hover:bg-gray-100 focus:bg-gray-100"
-                          >
+                            className="gap-2 hover:bg-gray-100 focus:bg-gray-100">
                             <span className="font-medium">{opt.language}</span>
                           </DropdownMenuItem>
                         ))
@@ -185,8 +180,7 @@ const ApiLanding = () => {
                   onClick={() => {
                     setMobileMenuOpen(false);
                     handleLogin();
-                  }}
-                >
+                  }}>
                   Login
                 </Button>
               </div>

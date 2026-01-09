@@ -122,7 +122,7 @@ const policyTemplates: Record<string, PolicyTemplate> = {
     deadline: '60 days from discovery',
     windowDays: 60,
     argumentTemplate: (daysOld, amount, sku) =>
-      `Per Amazon's Inventory Reconciliation Policy, sellers are entitled to reimbursement when inventory counts show unexplained discrepancies not attributed to sales, returns, or removals. ${sku ? `For SKU ${sku}` : 'For this product'}, our records show a discrepancy identified ${daysOld} days ago. After reconciliation, ${amount > 0 ? `$${amount.toFixed(2)}` : 'units'} remain unaccounted for. We request investigation and appropriate reimbursement.`
+      `Per Amazon's Inventory Reconciliation Policy, sellers are entitled to reimbursement when inventory counts show unexplained discrepancies not attributed to sales, returns, or removals. ${sku ? `For SKU ${sku}` : 'For this product'}, our records show a discrepancy identified ${daysOld} days ago. After reconciliation, ${amount> 0 ? `$${amount.toFixed(2)}` : 'units'} remain unaccounted for. We request investigation and appropriate reimbursement.`
   },
   'default': {
     name: 'Amazon Seller Reimbursement Policy',
@@ -521,7 +521,7 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
 
   <div class="section">
     <div class="section-header">Matched Evidence Documents</div>
-    ${totalDocs > 0 ? `
+    ${totalDocs> 0 ? `
     <table class="docs-table">
       <thead>
         <tr>
@@ -677,7 +677,7 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
               <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Order & Inventory Evidence</h4>
             </div>
             <div className="bg-white">
-              {organizedDocs.orderDocs.length > 0 ? (
+              {organizedDocs.orderDocs.length> 0 ? (
                 <div className="divide-y divide-gray-100">
                   {organizedDocs.orderDocs.map((doc, i) => (
                     <div key={doc.id || i} className="px-4 py-3">
@@ -689,7 +689,7 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
                             {doc.invoice && <span>Invoice: {doc.invoice} • </span>}
                             {doc.amount && <span>{formatCurrency(doc.amount)}</span>}
                           </div>
-                          {doc.extracted?.order_ids && doc.extracted.order_ids.length > 0 && (
+                          {doc.extracted?.order_ids && doc.extracted.order_ids.length> 0 && (
                             <div className="flex flex-wrap gap-1 mt-2">
                               {doc.extracted.order_ids.map((id, j) => (
                                 <span key={j} className="px-1.5 py-0.5 bg-gray-100 text-gray-700 rounded text-[10px] font-medium">
@@ -718,14 +718,14 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
               <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Shipment & Delivery Evidence</h4>
             </div>
             <div className="bg-white">
-              {organizedDocs.shipmentDocs.length > 0 ? (
+              {organizedDocs.shipmentDocs.length> 0 ? (
                 <div className="divide-y divide-gray-100">
                   {organizedDocs.shipmentDocs.map((doc, i) => (
                     <div key={doc.id || i} className="px-4 py-3">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="text-xs font-medium text-gray-900">{doc.name}</div>
-                          {doc.extracted?.tracking_numbers && doc.extracted.tracking_numbers.length > 0 && (
+                          {doc.extracted?.tracking_numbers && doc.extracted.tracking_numbers.length> 0 && (
                             <div className="flex flex-wrap gap-1 mt-2">
                               {doc.extracted.tracking_numbers.map((t, j) => (
                                 <span key={j} className="px-1.5 py-0.5 bg-gray-100 text-gray-700 rounded text-[10px] font-medium">
@@ -788,7 +788,7 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
           </div>
 
           {/* Other Documents */}
-          {organizedDocs.otherDocs.length > 0 && (
+          {organizedDocs.otherDocs.length> 0 && (
             <div className="border border-gray-200 rounded-lg overflow-hidden">
               <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
                 <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Additional Supporting Documents</h4>
@@ -821,8 +821,7 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
             variant="outline"
             size="sm"
             onClick={onClose}
-            className="h-8 text-xs text-gray-600 border-gray-200 hover:bg-gray-100 rounded-sm"
-          >
+            className="h-8 text-xs text-gray-600 border-gray-200 hover:bg-gray-100 rounded-sm">
             Close
           </Button>
           <Button
@@ -907,7 +906,7 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
                 addText('MATCHED EVIDENCE DOCUMENTS', margin, yPos, 9, slateMed, 'bold');
                 yPos += 16;
 
-                if (totalDocs > 0 && claim.matchedDocs && claim.matchedDocs.length > 0) {
+                if (totalDocs> 0 && claim.matchedDocs && claim.matchedDocs.length> 0) {
                   const docsData = claim.matchedDocs.map((d: MatchedDocument) => [
                     d.name || 'Document',
                     (d.type || 'Document').replace(/_/g, ' '),
@@ -968,16 +967,14 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
                 toast({ title: 'PDF Failed', description: error?.message || 'Try Export as PDF instead.', variant: 'destructive' });
               }
             }}
-            className="h-8 text-xs text-gray-700 border-gray-200 hover:bg-gray-100 rounded-sm"
-          >
+            className="h-8 text-xs text-gray-700 border-gray-200 hover:bg-gray-100 rounded-sm">
             <Package className="h-3.5 w-3.5 mr-1.5" />
             Download PDF
           </Button>
           <Button
             size="sm"
             onClick={exportAsPdf}
-            className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-sm"
-          >
+            className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-sm">
             <Download className="h-3.5 w-3.5 mr-1.5" />
             Export as PDF
           </Button>

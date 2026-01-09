@@ -134,8 +134,7 @@ export function ParkedClaimCard({
                                 </div>
                                 <Link
                                     to={`/recoveries/${claim.claim_id}`}
-                                    className="flex items-center gap-1.5 text-sm text-gray-700 hover:text-gray-900 font-mono group"
-                                >
+                                    className="flex items-center gap-1.5 text-sm text-gray-700 hover:text-gray-900 font-mono group">
                                     <Link2 className="w-3.5 h-3.5 text-gray-400 group-hover:text-gray-600" />
                                     <span className="truncate">
                                         {claim.claim_id.substring(0, 12)}...
@@ -159,8 +158,7 @@ export function ParkedClaimCard({
                                 {claim.document_id ? (
                                     <Link
                                         to={`/documents/${claim.document_id}`}
-                                        className="flex items-center gap-1.5 text-sm text-gray-700 hover:text-gray-900 font-mono group"
-                                    >
+                                        className="flex items-center gap-1.5 text-sm text-gray-700 hover:text-gray-900 font-mono group">
                                         <FileText className="w-3.5 h-3.5 text-gray-400 group-hover:text-gray-600" />
                                         <span className="truncate">
                                             {claim.document_details?.filename || claim.document_id.substring(0, 12) + '...'}
@@ -183,8 +181,7 @@ export function ParkedClaimCard({
                                 variant="outline"
                                 onClick={handleRequestEvidence}
                                 disabled={isLoading}
-                                className="border-gray-200 text-gray-600 hover:text-gray-800 hover:bg-gray-50 text-xs"
-                            >
+                                className="border-gray-200 text-gray-600 hover:text-gray-800 hover:bg-gray-50 text-xs">
                                 {isRequestingEvidence ? (
                                     <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
                                 ) : (
@@ -200,8 +197,7 @@ export function ParkedClaimCard({
                                 onClick={handleForceApprove}
                                 disabled={isLoading}
                                 className="border-gray-200 text-gray-500 hover:text-gray-700 hover:bg-gray-50 text-xs"
-                                title="Force approve despite low confidence"
-                            >
+                                title="Force approve despite low confidence">
                                 {isForceApproving ? (
                                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
                                 ) : (
@@ -216,8 +212,7 @@ export function ParkedClaimCard({
                                 onClick={handleDismiss}
                                 disabled={isLoading}
                                 className="text-gray-400 hover:text-gray-600 text-xs"
-                                title="Dismiss this claim"
-                            >
+                                title="Dismiss this claim">
                                 {isDismissing ? (
                                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
                                 ) : (
@@ -228,7 +223,7 @@ export function ParkedClaimCard({
                     </div>
 
                     {/* Matched Fields - if any */}
-                    {claim.matched_fields && claim.matched_fields.length > 0 && (
+                    {claim.matched_fields && claim.matched_fields.length> 0 && (
                         <div className="mt-3 pt-3 border-t border-gray-100">
                             <div className="flex items-center gap-2">
                                 <span className="text-[10px] text-gray-400 uppercase tracking-[0.1em]">
@@ -238,8 +233,7 @@ export function ParkedClaimCard({
                                     {claim.matched_fields.map((field, idx) => (
                                         <span
                                             key={idx}
-                                            className="text-[10px] text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded capitalize"
-                                        >
+                                            className="text-[10px] text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded capitalize">
                                             {field.replace(/_/g, ' ')}
                                         </span>
                                     ))}

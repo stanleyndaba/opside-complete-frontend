@@ -41,8 +41,7 @@ const EvidenceOnboarding: React.FC = () => {
               </h3>
               <Button 
                 variant="outline" 
-                onClick={() => navigate('/evidence')}
-              >
+                onClick={() => navigate('/evidence')}>
                 Go to Evidence Search
               </Button>
             </CardContent>

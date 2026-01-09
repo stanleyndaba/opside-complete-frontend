@@ -77,7 +77,7 @@ export function DocumentReuseInfo({ documentId, onLinkClaim, compact = false }: 
                 <TooltipTrigger>
                     <Badge className="bg-purple-100 text-purple-700 border-purple-200 text-xs cursor-pointer">
                         <Link2 className="h-3 w-3 mr-1" />
-                        {linkedClaims.length} claim{linkedClaims.length > 1 ? 's' : ''}
+                        {linkedClaims.length} claim{linkedClaims.length> 1 ? 's' : ''}
                     </Badge>
                 </TooltipTrigger>
                 <TooltipContent className="bg-white text-gray-900 border border-gray-200 p-3 max-w-xs">
@@ -90,12 +90,11 @@ export function DocumentReuseInfo({ documentId, onLinkClaim, compact = false }: 
                                 <Link
                                     key={claim.claimId}
                                     to={`/recoveries/${claim.claimId}`}
-                                    className="text-xs text-blue-600 hover:underline"
-                                >
+                                    className="text-xs text-blue-600 hover:underline">
                                     {claim.claimNumber || claim.claimId.slice(0, 8)}
                                 </Link>
                             ))}
-                            {linkedClaims.length > 5 && (
+                            {linkedClaims.length> 5 && (
                                 <span className="text-xs text-gray-500">
                                     +{linkedClaims.length - 5} more
                                 </span>
@@ -122,8 +121,7 @@ export function DocumentReuseInfo({ documentId, onLinkClaim, compact = false }: 
                     <Link
                         key={claim.claimId}
                         to={`/recoveries/${claim.claimId}`}
-                        className="inline-flex items-center gap-1 px-2 py-1 bg-white border border-purple-200 rounded-md text-xs text-purple-700 hover:bg-purple-50 transition-colors"
-                    >
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-white border border-purple-200 rounded-md text-xs text-purple-700 hover:bg-purple-50 transition-colors">
                         <FileText className="h-3 w-3" />
                         {claim.claimNumber || claim.claimId.slice(0, 8)}
                         <span className="text-purple-400">•</span>
@@ -140,8 +138,7 @@ export function DocumentReuseInfo({ documentId, onLinkClaim, compact = false }: 
                     size="sm"
                     variant="outline"
                     className="text-xs border-purple-200 text-purple-600 hover:bg-purple-50"
-                    onClick={() => onLinkClaim(documentId)}
-                >
+                    onClick={() => onLinkClaim(documentId)}>
                     <Link2 className="h-3 w-3 mr-1" />
                     Link to another claim
                 </Button>
@@ -220,15 +217,14 @@ export function DocumentSuggestions({ claimId, onSelectDocument }: DocumentSugge
             {suggestions.map((suggestion) => (
                 <div
                     key={suggestion.documentId}
-                    className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg hover:border-purple-300 transition-colors"
-                >
+                    className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg hover:border-purple-300 transition-colors">
                     <div className="flex-1">
                         <div className="flex items-center gap-2">
                             <FileText className="h-4 w-4 text-gray-500" />
                             <span className="text-sm font-medium text-gray-900">
                                 {suggestion.filename}
                             </span>
-                            {suggestion.linkedClaimCount > 0 && (
+                            {suggestion.linkedClaimCount> 0 && (
                                 <Badge className="bg-purple-100 text-purple-700 border-purple-200 text-xs">
                                     {suggestion.linkedClaimCount} claims
                                 </Badge>
@@ -237,7 +233,7 @@ export function DocumentSuggestions({ claimId, onSelectDocument }: DocumentSugge
                         <p className="text-xs text-gray-500 mt-1">
                             {suggestion.matchReason}
                         </p>
-                        {suggestion.linkedClaimCount > 0 && (
+                        {suggestion.linkedClaimCount> 0 && (
                             <p className="text-xs text-purple-600 mt-1">
                                 ♻️ {suggestion.reuseMessage}
                             </p>
@@ -254,8 +250,7 @@ export function DocumentSuggestions({ claimId, onSelectDocument }: DocumentSugge
                             <Button
                                 size="sm"
                                 className="bg-purple-600 hover:bg-purple-700 text-white"
-                                onClick={() => onSelectDocument(suggestion.documentId)}
-                            >
+                                onClick={() => onSelectDocument(suggestion.documentId)}>
                                 Use
                             </Button>
                         )}

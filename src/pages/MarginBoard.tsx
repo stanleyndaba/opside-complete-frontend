@@ -73,16 +73,14 @@ const MarginBoard = () => {
                     <div className="flex flex-col sm:flex-row gap-4 pt-8">
                         <Button
                             className="h-12 px-8 bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium rounded-sm transition-all"
-                            onClick={() => window.open('https://forms.gle/882hpRYWinNzBt2r9', '_blank')}
-                        >
+                            onClick={() => window.open('https://forms.gle/882hpRYWinNzBt2r9', '_blank')}>
                             Request Immediate Access
                         </Button>
 
                         <Button
                             variant="outline"
                             className="h-12 px-8 border-gray-200 text-gray-900 hover:bg-gray-50 text-sm font-medium rounded-sm"
-                            onClick={() => window.location.href = 'mailto:sales@opside.com'}
-                        >
+                            onClick={() => window.location.href = 'mailto:sales@opside.com'}>
                             Contact Sales
                         </Button>
                     </div>

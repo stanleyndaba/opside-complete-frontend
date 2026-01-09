@@ -65,7 +65,7 @@ export function Timeline({ claimId }: { claimId: string }) {
             <div className="text-xs text-gray-600">{new Date(evt.at).toLocaleString()}</div>
             {evt.message && <div className="text-sm text-gray-700">{evt.message}</div>}
             {money && <div className="text-sm text-gray-700">Amount: {money}</div>}
-            {Array.isArray(evt.docIds) && evt.docIds.length > 0 && (
+            {Array.isArray(evt.docIds) && evt.docIds.length> 0 && (
               <div className="text-sm text-gray-700">
                 Documents: {evt.docIds.slice(0, 3).map((id, i) => (
                   <React.Fragment key={id}>
@@ -73,7 +73,7 @@ export function Timeline({ claimId }: { claimId: string }) {
                     {i < Math.min(evt.docIds!.length, 3) - 1 ? ', ' : ''}
                   </React.Fragment>
                 ))}
-                {evt.docIds.length > 3 ? '…' : ''}
+                {evt.docIds.length> 3 ? '…' : ''}
               </div>
             )}
           </div>

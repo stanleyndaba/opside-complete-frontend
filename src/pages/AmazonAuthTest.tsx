@@ -96,8 +96,7 @@ export default function AmazonAuthTest() {
                     onClick={() => runTest(test.name, test.fn)}
                     disabled={loading[test.name]}
                     size="sm"
-                    variant="outline"
-                  >
+                    variant="outline">
                     {loading[test.name] ? 'Testing...' : 'Run Test'}
                   </Button>
                   {testResults[test.name] && (

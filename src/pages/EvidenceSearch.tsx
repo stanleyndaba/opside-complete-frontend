@@ -49,8 +49,7 @@ const EvidenceSearch: React.FC = () => {
             />
             <Button
               onClick={handleSearch}
-              disabled={loading}
-            >
+              disabled={loading}>
               <Search className="mr-2 h-4 w-4 stroke-[2]" />
               {loading ? 'Searching...' : 'Search'}
             </Button>
@@ -58,7 +57,7 @@ const EvidenceSearch: React.FC = () => {
         </CardContent>
       </Card>
 
-      {results.length > 0 && (
+      {results.length> 0 && (
         <Card>
           <CardHeader>
             <CardTitle>Search Results ({results.length})</CardTitle>

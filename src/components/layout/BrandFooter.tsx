@@ -58,8 +58,7 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
                     target="_blank"
                     rel="noreferrer"
                     aria-label={social.label}
-                    className="inline-flex h-10 w-10 items-center justify-center transition hover:scale-105"
-                  >
+                    className="inline-flex h-10 w-10 items-center justify-center transition hover:scale-105">
                     <Icon />
                   </a>
                 );

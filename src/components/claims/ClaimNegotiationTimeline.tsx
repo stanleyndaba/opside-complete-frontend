@@ -242,7 +242,7 @@ const generateMockTimeline = (claim: ClaimNegotiationTimelineProps['claim']): Ti
             rejectionReason: classifyRejection(claim.rejection_reason || status)
         });
 
-        if ((claim.escalation_count || 0) > 0) {
+        if ((claim.escalation_count || 0)> 0) {
             timeline.push({
                 id: '3',
                 date: new Date(new Date(baseDate).getTime() + 86400000 * 5).toISOString(),
@@ -293,7 +293,7 @@ export function ClaimNegotiationTimeline({ claim, onEscalate, maxEscalations = 2
                 setLoading(true);
                 setError(null);
                 const res = await detectionApi.getClaimTimeline(claim.id);
-                if (res.ok && res.data?.timeline && res.data.timeline.length > 0) {
+                if (res.ok && res.data?.timeline && res.data.timeline.length> 0) {
                     // Map API response to TimelineEvent format
                     const mappedTimeline: TimelineEvent[] = res.data.timeline.map((e: any) => ({
                         id: e.id,
@@ -322,8 +322,8 @@ export function ClaimNegotiationTimeline({ claim, onEscalate, maxEscalations = 2
 
     // Get or generate timeline - prefer prop, then fetched, then mock
     const timeline = useMemo(() => {
-        if (claim.timeline && claim.timeline.length > 0) return claim.timeline;
-        if (fetchedTimeline && fetchedTimeline.length > 0) return fetchedTimeline;
+        if (claim.timeline && claim.timeline.length> 0) return claim.timeline;
+        if (fetchedTimeline && fetchedTimeline.length> 0) return fetchedTimeline;
         return generateMockTimeline(claim);
     }, [claim, fetchedTimeline]);
 
@@ -442,8 +442,7 @@ export function ClaimNegotiationTimeline({ claim, onEscalate, maxEscalations = 2
                                     <Button
                                         onClick={() => onEscalate?.(currentRejection)}
                                         className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-sm"
-                                        size="sm"
-                                    >
+                                        size="sm">
                                         <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
                                         Auto-Escalate
                                     </Button>
@@ -452,8 +451,7 @@ export function ClaimNegotiationTimeline({ claim, onEscalate, maxEscalations = 2
                                         onClick={() => onEscalate?.(currentRejection)}
                                         variant="outline"
                                         className="h-8 text-xs border-gray-200 text-gray-700 rounded-sm"
-                                        size="sm"
-                                    >
+                                        size="sm">
                                         <Shield className="h-3.5 w-3.5 mr-1.5" />
                                         Manual Review Required
                                     </Button>
@@ -464,7 +462,7 @@ export function ClaimNegotiationTimeline({ claim, onEscalate, maxEscalations = 2
                             </div>
                         )}
 
-                        {!canEscalate && escalationCount >= maxEscalations && (
+                        {!canEscalate && escalationCount>= maxEscalations && (
                             <div className="flex items-center gap-2 pt-2 text-gray-600 bg-gray-50 p-2 rounded-sm border border-gray-200">
                                 <AlertTriangle className="h-4 w-4 text-gray-500" />
                                 <span className="text-xs">Max escalations reached. Manual review recommended.</span>

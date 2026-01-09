@@ -174,8 +174,7 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
               size="sm"
               onClick={handleDisconnect}
               disabled={disconnecting}
-              className="bg-transparent border-0 text-red-400 hover:bg-red-500/10"
-            >
+              className="bg-transparent border-0 text-red-400 hover:bg-red-500/10">
               {disconnecting ? (
                 <>
                   <RefreshCw className="w-4 h-4 mr-2 animate-spin" />

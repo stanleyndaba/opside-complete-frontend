@@ -267,7 +267,7 @@ export default function Agent1Test() {
                     </>
                   )}
                 </Button>
-                {totalTests > 0 && (
+                {totalTests> 0 && (
                   <div className="text-sm text-muted-foreground">
                     {passedCount} passed, {failedCount} failed, {totalTests - passedCount - failedCount} pending
                   </div>
@@ -324,8 +324,7 @@ export default function Agent1Test() {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => runTest(testCases[index], index)}
-                        >
+                          onClick={() => runTest(testCases[index], index)}>
                           Run
                         </Button>
                       )}

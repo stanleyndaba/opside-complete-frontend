@@ -212,14 +212,13 @@ export function DocumentChecklist({ claimId, compact = false }: DocumentChecklis
                                             <p className="text-[11px] text-gray-500 mt-1">{proof.message}</p>
 
                                             {/* Found fields */}
-                                            {proof.fields.filter(f => f.found).length > 0 && (
+                                            {proof.fields.filter(f => f.found).length> 0 && (
                                                 <div className="mt-2 flex flex-wrap gap-1.5">
                                                     {proof.fields.filter(f => f.found).map((field, i) => (
                                                         <span
                                                             key={i}
                                                             className="text-[10px] px-1.5 py-0.5 bg-gray-50 text-gray-600 border border-gray-200 rounded"
-                                                            title={field.source ? `From: ${field.source}` : undefined}
-                                                        >
+                                                            title={field.source ? `From: ${field.source}` : undefined}>
                                                             {field.name.replace(/_/g, ' ')}: {field.value}
                                                         </span>
                                                     ))}
@@ -239,7 +238,7 @@ export function DocumentChecklist({ claimId, compact = false }: DocumentChecklis
                         </div>
 
                         {/* Recommendations */}
-                        {checklist.recommendations.length > 0 && (
+                        {checklist.recommendations.length> 0 && (
                             <div className="px-4 py-3 border-t border-gray-200 bg-gray-50">
                                 <h5 className="text-[10px] text-gray-500 uppercase tracking-wide font-medium mb-2">
                                     Recommendations

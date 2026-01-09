@@ -223,8 +223,7 @@ export function DisputeCasesTable() {
           onClick={() => handleRetryFiling(caseItem)}
           disabled={isProcessing}
           size="sm"
-          className="h-7 px-2.5 bg-slate-800 hover:bg-slate-700 text-white border border-slate-600 rounded-none text-[10px] font-mono uppercase tracking-wide"
-        >
+          className="h-7 px-2.5 bg-slate-800 hover:bg-slate-700 text-white border border-slate-600 rounded-none text-[10px] font-mono uppercase tracking-wide">
           {isProcessing ? (
             <Loader2 className="w-3 h-3 mr-1 animate-spin" />
           ) : (
@@ -242,8 +241,7 @@ export function DisputeCasesTable() {
           onClick={() => handleFileNow(caseItem)}
           disabled={isProcessing}
           size="sm"
-          className="h-7 px-2.5 bg-slate-900 hover:bg-slate-800 text-white border border-slate-700 rounded-none text-[10px] font-mono uppercase tracking-wide"
-        >
+          className="h-7 px-2.5 bg-slate-900 hover:bg-slate-800 text-white border border-slate-700 rounded-none text-[10px] font-mono uppercase tracking-wide">
           {isProcessing ? (
             <Loader2 className="w-3 h-3 mr-1 animate-spin" />
           ) : (
@@ -318,8 +316,7 @@ export function DisputeCasesTable() {
             onClick={() => fetchCases(statusFilter !== 'all' ? statusFilter : undefined)}
             variant="outline"
             size="sm"
-            className="h-8 bg-white text-gray-700 border-gray-200 hover:bg-gray-50 rounded-sm"
-          >
+            className="h-8 bg-white text-gray-700 border-gray-200 hover:bg-gray-50 rounded-sm">
             <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
             Refresh
           </Button>
@@ -393,7 +390,7 @@ export function DisputeCasesTable() {
                         )}
                       </TableCell>
                       <TableCell className="py-3">
-                        {caseItem.retry_count && caseItem.retry_count > 0 ? (
+                        {caseItem.retry_count && caseItem.retry_count> 0 ? (
                           <span className="text-[10px] px-1.5 py-0.5 bg-amber-100 text-amber-800 border border-amber-300 rounded-none font-mono">
                             {caseItem.retry_count}
                           </span>

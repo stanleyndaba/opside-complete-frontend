@@ -160,7 +160,7 @@ const validateEvidencePolicy = (claim: RecoveryClaim, matchedDocs?: any[]): Evid
   if (claim.quantity) availableFields['quantity'] = { present: true, confidence: 1.0 };
 
   // From matched documents (extracted data)
-  if (matchedDocs && matchedDocs.length > 0) {
+  if (matchedDocs && matchedDocs.length> 0) {
     for (const doc of matchedDocs) {
       const extracted = doc.extracted || doc.parsed_metadata || {};
       const confidence = doc.parser_confidence || doc.match_confidence || 0.7;
@@ -234,17 +234,17 @@ const validateEvidencePolicy = (claim: RecoveryClaim, matchedDocs?: any[]): Evid
   // Calculate quality score
   const requiredPresent = policy.required.filter(f => availableFields[f]?.present).length;
   const optionalPresent = policy.optional.filter(f => availableFields[f]?.present).length;
-  const requiredRatio = policy.required.length > 0 ? requiredPresent / policy.required.length : 1;
-  const optionalRatio = policy.optional.length > 0 ? optionalPresent / policy.optional.length : 1;
+  const requiredRatio = policy.required.length> 0 ? requiredPresent / policy.required.length : 1;
+  const optionalRatio = policy.optional.length> 0 ? optionalPresent / policy.optional.length : 1;
 
   // Score: 70% from required fields, 30% from optional
   const qualityScore = Math.round((requiredRatio * 70) + (optionalRatio * 30));
 
   // Determine quality tier
   let quality: 'strong' | 'medium' | 'weak';
-  if (qualityScore >= 80 && missingRequired.length === 0) {
+  if (qualityScore>= 80 && missingRequired.length === 0) {
     quality = 'strong';
-  } else if (qualityScore >= 50 || missingRequired.length <= 1) {
+  } else if (qualityScore>= 50 || missingRequired.length <= 1) {
     quality = 'medium';
   } else {
     quality = 'weak';
@@ -259,7 +259,7 @@ const validateEvidencePolicy = (claim: RecoveryClaim, matchedDocs?: any[]): Evid
     recommendationText = 'Strong evidence. Meets FBA requirements.';
   } else if (quality === 'medium') {
     recommendation = 'file_with_caution';
-    if (missingRequired.length > 0) {
+    if (missingRequired.length> 0) {
       recommendationText = `Adequate evidence. Missing: ${missingRequired.join(', ')}.`;
     } else {
       recommendationText = 'Adequate evidence. Could be stronger.';
@@ -276,7 +276,7 @@ const validateEvidencePolicy = (claim: RecoveryClaim, matchedDocs?: any[]): Evid
   if (claimType.includes('inbound') && !availableFields['tracking_number']?.present) {
     warnings.push('Tracking number strongly recommended for inbound shipment claims');
   }
-  if ((claim.amount || 0) > 500 && !availableFields['invoice_number']?.present) {
+  if ((claim.amount || 0)> 500 && !availableFields['invoice_number']?.present) {
     warnings.push('High-value claim ($500+) - invoice strongly recommended');
   }
 
@@ -310,9 +310,9 @@ const EvidenceQualityBadge = ({ validation, claim, matchedDocs }: { validation: 
 
   // Calculate readiness percentage (required fields)
   const requiredPresent = requiredFields.filter(f => presentFieldNames.includes(f)).length;
-  const readinessPercent = requiredFields.length > 0
+  const readinessPercent = requiredFields.length> 0
     ? Math.round((requiredPresent / requiredFields.length) * 100)
-    : (docCount > 0 ? 50 : 0);
+    : (docCount> 0 ? 50 : 0);
 
   // Status configuration
   const statusConfig = {
@@ -335,8 +335,7 @@ const EvidenceQualityBadge = ({ validation, claim, matchedDocs }: { validation: 
       <TooltipContent
         side="right"
         align="start"
-        className="w-72 p-0 bg-white border border-gray-200 shadow-lg rounded-none"
-      >
+        className="w-72 p-0 bg-white border border-gray-200 shadow-lg rounded-none">
         {/* Header */}
         <div className="px-3 py-2 border-b border-gray-200 bg-gray-50">
           <div className="flex items-center justify-between">
@@ -370,7 +369,7 @@ const EvidenceQualityBadge = ({ validation, claim, matchedDocs }: { validation: 
                   </div>
                 );
               })}
-              {requiredFields.length > 5 && (
+              {requiredFields.length> 5 && (
                 <div className="text-[9px] text-gray-400 mt-1">
                   +{requiredFields.length - 5} more required
                 </div>
@@ -384,15 +383,15 @@ const EvidenceQualityBadge = ({ validation, claim, matchedDocs }: { validation: 
               Matched Documents ({docCount})
             </div>
             <div className="space-y-0.5">
-              {docCount > 0 ? (
-                (matchedDocs || claim?.matchedDocs || []).length > 0 ? (
+              {docCount> 0 ? (
+                (matchedDocs || claim?.matchedDocs || []).length> 0 ? (
                   <>
                     {(matchedDocs || claim?.matchedDocs || []).slice(0, 3).map((doc: any, i: number) => (
                       <div key={i} className="text-[10px] text-gray-600 truncate">
                         {doc.filename || doc.title || doc.name || `Document ${i + 1}`}
                       </div>
                     ))}
-                    {docCount > 3 && (
+                    {docCount> 3 && (
                       <div className="text-[9px] text-gray-400">
                         +{docCount - 3} more documents
                       </div>
@@ -471,19 +470,19 @@ const calculateClaimStrength = (claim: RecoveryClaim): ClaimStrength => {
     label: 'Evidence',
     value: evidenceScore,
     max: 30,
-    reason: matchedDocs >= 3 ? 'Strong documentation' : matchedDocs >= 1 ? 'Partial evidence' : 'No evidence yet'
+    reason: matchedDocs>= 3 ? 'Strong documentation' : matchedDocs>= 1 ? 'Partial evidence' : 'No evidence yet'
   });
 
   // Factor 2: Policy Window (0-25 points) - 60-day Amazon window
   const claimDate = new Date(claim.discovery_date || claim.created || claim.created_at || Date.now());
   const daysOld = Math.floor((Date.now() - claimDate.getTime()) / (1000 * 60 * 60 * 24));
   const daysLeft = Math.max(0, 60 - daysOld);
-  const policyScore = daysLeft > 45 ? 25 : daysLeft > 30 ? 20 : daysLeft > 14 ? 15 : daysLeft > 7 ? 10 : daysLeft > 0 ? 5 : 0;
+  const policyScore = daysLeft> 45 ? 25 : daysLeft> 30 ? 20 : daysLeft> 14 ? 15 : daysLeft> 7 ? 10 : daysLeft> 0 ? 5 : 0;
   factors.push({
     label: 'Policy Window',
     value: policyScore,
     max: 25,
-    reason: daysLeft > 45 ? `${daysLeft} days left` : daysLeft > 14 ? `${daysLeft} days remaining` : daysLeft > 0 ? `Urgent: ${daysLeft} days left!` : 'Window expired'
+    reason: daysLeft> 45 ? `${daysLeft} days left` : daysLeft> 14 ? `${daysLeft} days remaining` : daysLeft> 0 ? `Urgent: ${daysLeft} days left!` : 'Window expired'
   });
 
   // Factor 3: Historical Win Rate by Type (0-25 points)
@@ -504,11 +503,11 @@ const calculateClaimStrength = (claim: RecoveryClaim): ClaimStrength => {
     label: 'AI Confidence',
     value: confidenceScore,
     max: 20,
-    reason: confidence >= 0.85 ? 'High certainty' : confidence >= 0.6 ? 'Moderate certainty' : 'Low certainty'
+    reason: confidence>= 0.85 ? 'High certainty' : confidence>= 0.6 ? 'Moderate certainty' : 'Low certainty'
   });
 
   const totalScore = factors.reduce((sum, f) => sum + f.value, 0);
-  const tier: ClaimStrength['tier'] = totalScore >= 75 ? 'high' : totalScore >= 45 ? 'medium' : 'low';
+  const tier: ClaimStrength['tier'] = totalScore>= 75 ? 'high' : totalScore>= 45 ? 'medium' : 'low';
 
   return { score: totalScore, tier, factors };
 };
@@ -565,7 +564,7 @@ const checkDoubleDip = (claim: RecoveryClaim, allClaims: RecoveryClaim[]): Dupli
     const skuMatch = sku && otherSku && sku === otherSku;
     const asinMatch = asin && otherAsin && asin === otherAsin;
     const typeMatch = claimType === otherType;
-    const inPeriod = otherDate >= periodStart && otherDate <= periodEnd;
+    const inPeriod = otherDate>= periodStart && otherDate <= periodEnd;
 
     if ((skuMatch || asinMatch) && typeMatch && inPeriod) {
       // Already paid/approved = prior reimbursement
@@ -649,7 +648,7 @@ const generateCasebookPDF = (claims: RecoveryClaim[], dateRange: { from: Date; t
   const recoveredValue = approvedClaims.reduce((sum, c) => sum + (c.guaranteedAmount || c.amount || 0), 0);
   const pendingClaims = claims.filter(c => ['submitted', 'pending', 'under review'].includes((c.status || '').toLowerCase()));
   const deniedClaims = claims.filter(c => ['denied', 'rejected'].includes((c.status || '').toLowerCase()));
-  const successRate = totalClaims > 0 ? ((approvedClaims.length / totalClaims) * 100).toFixed(1) : '0';
+  const successRate = totalClaims> 0 ? ((approvedClaims.length / totalClaims) * 100).toFixed(1) : '0';
 
   // Group by claim type
   const byType: Record<string, RecoveryClaim[]> = {};
@@ -946,7 +945,7 @@ const amazonEventCategories = {
   // Storage Fees
   storageFees: [
     { id: 'FBAStorageFee', name: 'FBA Storage Fee', description: 'Monthly storage' },
-    { id: 'FBALongTermStorageFee', name: 'FBA Long Term Storage Fee', description: 'Aged inventory >180/365 days' },
+    { id: 'FBALongTermStorageFee', name: 'FBA Long Term Storage Fee', description: 'Aged inventory>180/365 days' },
     { id: 'FBAInventoryStorageOverageFee', name: 'FBA Storage Overage Fee', description: 'Exceeding storage limits' },
     { id: 'FBAExtraLargeStorageFee', name: 'FBA Extra Large Storage Fee', description: 'Oversize items' },
   ],
@@ -1256,7 +1255,7 @@ export default function Recoveries() {
         const deltaX = Math.abs(x - startXRef.current);
 
         // Start dragging only if mouse moved more than 5 pixels (drag threshold)
-        if (deltaX > 5) {
+        if (deltaX> 5) {
           isDraggingRef.current = true;
           setIsDragging(true);
           hasDraggedRef.current = true;
@@ -1360,20 +1359,20 @@ export default function Recoveries() {
   const stableHash = (s: string): number => {
     let h = 2166136261;
     for (let i = 0; i < s.length; i++) h = (h ^ s.charCodeAt(i)) * 16777619;
-    return (h >>> 0);
+    return (h>>> 0);
   };
   const getConfidence = (id: string): number => {
     // Stable pseudo-confidence between 0.5 and 0.98
     const v = stableHash(id) % 4900; // 0..4899
     return Math.round((v + 500) / 100) / 100; // 0.5 .. 4.99 -> 0.5 .. 4.99, then /? ensure two decimals
   };
-  const getConfidenceTier = (c: number) => c >= 0.85 ? 'high' : c >= 0.6 ? 'medium' : 'low';
-  const getConfidenceColor = (c: number) => c >= 0.85 ? 'text-emerald-600' : c >= 0.6 ? 'text-amber-500' : 'text-blue-500';
-  const getConfidenceBadge = (c: number) => c >= 0.85 ? 'High' : c >= 0.6 ? 'Medium' : 'Low';
+  const getConfidenceTier = (c: number) => c>= 0.85 ? 'high' : c>= 0.6 ? 'medium' : 'low';
+  const getConfidenceColor = (c: number) => c>= 0.85 ? 'text-emerald-600' : c>= 0.6 ? 'text-amber-500' : 'text-blue-500';
+  const getConfidenceBadge = (c: number) => c>= 0.85 ? 'High' : c>= 0.6 ? 'Medium' : 'Low';
   const getEvidenceStatus = (id: string): 'Ready' | 'Needs Docs' | 'Collecting' => {
     const v = stableHash(id) % 100;
-    if (v >= 70) return 'Ready';
-    if (v >= 40) return 'Needs Docs';
+    if (v>= 70) return 'Ready';
+    if (v>= 40) return 'Needs Docs';
     return 'Collecting';
   };
 
@@ -1484,7 +1483,7 @@ export default function Recoveries() {
             // Find new claims that weren't in the previous set
             const newClaimIds = Array.from(currentClaimIds).filter(id => !previousClaimIds.has(id));
 
-            if (newClaimIds.length > 0) {
+            if (newClaimIds.length> 0) {
               const newClaimsData = newClaims.filter(c => newClaimIds.includes(c.id));
               const totalNewAmount = newClaimsData.reduce((sum, c) => sum + (c.guaranteedAmount || 0), 0);
 
@@ -1738,7 +1737,7 @@ export default function Recoveries() {
             } catch (error) {
               console.error('Error polling sync status:', error);
 
-              if (pollCount >= maxPolls) {
+              if (pollCount>= maxPolls) {
                 if (syncPollingRef.current) {
                   clearInterval(syncPollingRef.current);
                   syncPollingRef.current = null;
@@ -1819,7 +1818,7 @@ export default function Recoveries() {
           // Find new claims
           const newClaimIds = Array.from(currentClaimIds).filter(id => !previousClaimIds.has(id));
 
-          if (newClaimIds.length > 0) {
+          if (newClaimIds.length> 0) {
             // Update previous claim IDs
             previousClaimIdsRef.current = currentClaimIds;
             setClaims(newClaims);
@@ -1850,7 +1849,7 @@ export default function Recoveries() {
           if (data.dataSource) setDataSource(data.dataSource);
 
           // Show toast if recovered amount increased
-          if (newTotal > previousTotal && previousTotal > 0) {
+          if (newTotal> previousTotal && previousTotal> 0) {
             const increase = newTotal - previousTotal;
             toast({
               title: 'Recovery Amount Updated',
@@ -1976,15 +1975,15 @@ export default function Recoveries() {
     let sourceData: any[] = [];
     if (mergedRecoveries !== null) {
       // mergedRecoveries has been initialized
-      if (mergedRecoveries.length > 0) {
+      if (mergedRecoveries.length> 0) {
         sourceData = mergedRecoveries;
       } else {
         // mergedRecoveries is empty, fall back to claims
-        sourceData = (claims && claims.length > 0) ? claims : [];
+        sourceData = (claims && claims.length> 0) ? claims : [];
       }
     } else {
       // mergedRecoveries not initialized yet, use claims
-      sourceData = (claims && claims.length > 0) ? claims : [];
+      sourceData = (claims && claims.length> 0) ? claims : [];
     }
 
     // Debug logging
@@ -2007,8 +2006,8 @@ export default function Recoveries() {
       if (filterConfidence !== 'all' && filterSource === 'detected') {
         if (!claim.confidence_score) return false;
         if (filterConfidence === 'high' && claim.confidence_score < 0.85) return false;
-        if (filterConfidence === 'medium' && (claim.confidence_score < 0.50 || claim.confidence_score >= 0.85)) return false;
-        if (filterConfidence === 'low' && claim.confidence_score >= 0.50) return false;
+        if (filterConfidence === 'medium' && (claim.confidence_score < 0.50 || claim.confidence_score>= 0.85)) return false;
+        if (filterConfidence === 'low' && claim.confidence_score>= 0.50) return false;
       }
 
       // Search filter
@@ -2020,7 +2019,7 @@ export default function Recoveries() {
 
       // Date filter
       const claimDate = new Date(claim.created || claim.discovery_date || claim.created_at || 0);
-      const dateMatch = (!dateRange?.from || claimDate >= dateRange.from) &&
+      const dateMatch = (!dateRange?.from || claimDate>= dateRange.from) &&
         (!dateRange?.to || claimDate <= dateRange.to);
 
       // Claim type filter
@@ -2033,8 +2032,8 @@ export default function Recoveries() {
       if (filterUrgent !== 'all') {
         const daysRemaining = claim.days_remaining;
         if (daysRemaining === null || daysRemaining === undefined) return false;
-        if (filterUrgent === 'critical' && daysRemaining > 3) return false;
-        if (filterUrgent === 'urgent' && daysRemaining > 7) return false;
+        if (filterUrgent === 'critical' && daysRemaining> 3) return false;
+        if (filterUrgent === 'urgent' && daysRemaining> 7) return false;
       }
 
       return searchMatch && dateMatch && typeMatch && statusMatch;
@@ -2107,10 +2106,10 @@ export default function Recoveries() {
     const thirtyDaysAgo = subDays(new Date(), 30);
     const recentClaims = dataSource.filter(claim => {
       const claimDate = new Date(claim.created || claim.discovery_date || claim.created_at || 0);
-      return claimDate >= thirtyDaysAgo;
+      return claimDate>= thirtyDaysAgo;
     });
     const successfulClaims = recentClaims.filter(claim => claim.status === 'Paid');
-    const successRate = recentClaims.length > 0
+    const successRate = recentClaims.length> 0
       ? (successfulClaims.length / recentClaims.length) * 100
       : 0;
 
@@ -2169,7 +2168,7 @@ export default function Recoveries() {
     // Sort by count descending and keep only non-zero entries
     const sortedCounts: Record<string, number> = {};
     Object.entries(counts)
-      .filter(([_, count]) => count > 0)
+      .filter(([_, count]) => count> 0)
       .sort((a, b) => b[1] - a[1])
       .forEach(([name, count]) => {
         sortedCounts[name] = count;
@@ -2241,13 +2240,12 @@ export default function Recoveries() {
                       }
                     }
                     setSubmittingBulk(false);
-                  }}
-                >
+                  }}>
                   <Upload className="h-3.5 w-3.5" />
                   Submit Selected
                 </button>
               </div>
-              {selectedIds.size > 0 && (
+              {selectedIds.size> 0 && (
                 <span className="text-[10px] text-gray-500">{selectedIds.size} selected</span>
               )}
             </div>
@@ -2258,14 +2256,13 @@ export default function Recoveries() {
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.15em]">Recovered Value</span>
-                    {recoveredTotal != null && recoveredTotal > 0 && (
+                    {recoveredTotal != null && recoveredTotal> 0 && (
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <button
                             type="button"
                             aria-label="About recovered value"
-                            className="w-3 h-3 rounded-full bg-gray-400 flex items-center justify-center hover:bg-gray-500 transition-colors"
-                          >
+                            className="w-3 h-3 rounded-full bg-gray-400 flex items-center justify-center hover:bg-gray-500 transition-colors">
                             <span className="text-white text-[7px] font-serif italic leading-none">i</span>
                           </button>
                         </TooltipTrigger>
@@ -2276,7 +2273,7 @@ export default function Recoveries() {
                     )}
                   </div>
                   <div className="text-2xl font-light text-gray-900">
-                    {recoveredTotal != null && recoveredTotal > 0 ? (
+                    {recoveredTotal != null && recoveredTotal> 0 ? (
                       <>
                         {formatCurrencyWithSelection(recoveredTotal, recoveredCurrency)}
                         <div className="text-[10px] text-gray-500 font-normal mt-1">
@@ -2306,8 +2303,7 @@ export default function Recoveries() {
                         {activeSyncId && (
                           <Link
                             to={`/sync?id=${activeSyncId}`}
-                            className="text-blue-400 hover:text-blue-300 underline text-xs ml-2"
-                          >
+                            className="text-blue-400 hover:text-blue-300 underline text-xs ml-2">
                             View progress
                           </Link>
                         )}
@@ -2332,10 +2328,9 @@ export default function Recoveries() {
                       .map(([label, count]) => (
                         <DropdownMenuItem
                           key={label}
-                          className="flex justify-between items-center px-2 py-1.5 text-xs rounded hover:bg-gray-100 hover:text-[#36454F] focus:bg-gray-100 focus:text-[#36454F] cursor-default"
-                        >
+                          className="flex justify-between items-center px-2 py-1.5 text-xs rounded hover:bg-gray-100 hover:text-[#36454F] focus:bg-gray-100 focus:text-[#36454F] cursor-default">
                           <span className="text-gray-700 truncate">{label}</span>
-                          <span className={`font-medium ml-2 ${count > 0 ? 'text-gray-700' : 'text-[#36454F]'}`}>{count}</span>
+                          <span className={`font-medium ml-2 ${count> 0 ? 'text-gray-700' : 'text-[#36454F]'}`}>{count}</span>
                         </DropdownMenuItem>
                       ))}
                   </DropdownMenuContent>
@@ -2351,20 +2346,17 @@ export default function Recoveries() {
                 <TabsList className="mb-6 inline-flex h-auto items-center justify-start gap-6 bg-transparent border-b border-gray-200 rounded-none p-0">
                   <TabsTrigger
                     value="claims"
-                    className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900"
-                  >
+                    className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
                     Claims
                   </TabsTrigger>
                   <TabsTrigger
                     value="matching"
-                    className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900"
-                  >
+                    className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
                     Evidence Matching
                   </TabsTrigger>
                   <TabsTrigger
                     value="cases"
-                    className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900"
-                  >
+                    className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
                     Dispute Cases
                   </TabsTrigger>
                 </TabsList>
@@ -2436,15 +2428,14 @@ export default function Recoveries() {
 
                           {/* Claim Type Filter */}
                           <Select
-                            value={selectedClaimTypes.length > 0 ? selectedClaimTypes[0] : 'all'}
+                            value={selectedClaimTypes.length> 0 ? selectedClaimTypes[0] : 'all'}
                             onValueChange={(value) => {
                               if (value === 'all') {
                                 setSelectedClaimTypes([]);
                               } else {
                                 setSelectedClaimTypes([value]);
                               }
-                            }}
-                          >
+                            }}>
                             <SelectTrigger className="w-auto min-w-[140px] bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs h-8">
                               <SelectValue placeholder="Filter by Claim Type" />
                             </SelectTrigger>
@@ -2458,15 +2449,14 @@ export default function Recoveries() {
 
                           {/* Status Filter */}
                           <Select
-                            value={selectedStatuses.length > 0 ? selectedStatuses[0] : 'all'}
+                            value={selectedStatuses.length> 0 ? selectedStatuses[0] : 'all'}
                             onValueChange={(value) => {
                               if (value === 'all') {
                                 setSelectedStatuses([]);
                               } else {
                                 setSelectedStatuses([value]);
                               }
-                            }}
-                          >
+                            }}>
                             <SelectTrigger className="w-auto min-w-[140px] bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs h-8">
                               <SelectValue placeholder="Filter by Status" />
                             </SelectTrigger>
@@ -2544,8 +2534,7 @@ export default function Recoveries() {
                                 : null;
                               generateCasebookPDF(rankedClaims, exportRange);
                               toast({ title: 'Statement Generated', description: 'Press Ctrl+P to save as PDF for audits and accounting.' });
-                            }}
-                          >
+                            }}>
                             <ArrowUpFromLine className="h-3 w-3 mr-2" />
                             Share
                           </Button>
@@ -2574,7 +2563,7 @@ export default function Recoveries() {
                           </p>
                         </div>
                       )}
-                      {!loading && rankedClaims.length > 0 && (
+                      {!loading && rankedClaims.length> 0 && (
                         <div
                           ref={tableScrollRef}
                           className="w-full overflow-x-auto overflow-y-visible recoveries-table-scroll"
@@ -2586,13 +2575,12 @@ export default function Recoveries() {
                             cursor: isDragging ? 'grabbing' : 'grab'
                           }}
                           onMouseDown={handleMouseDown}
-                          onMouseLeave={handleMouseLeave}
-                        >
+                          onMouseLeave={handleMouseLeave}>
                           <table className="w-full border-collapse" style={{ minWidth: '1400px' }}>
                             <thead>
                               <tr className="border-b border-gray-200">
                                 <th className="text-left py-2 px-3 w-10">
-                                  <Checkbox checked={selectedIds.size > 0 && selectedIds.size === filteredClaims.length} onCheckedChange={(checked) => {
+                                  <Checkbox checked={selectedIds.size> 0 && selectedIds.size === filteredClaims.length} onCheckedChange={(checked) => {
                                     if (checked) setSelectedIds(new Set(filteredClaims.map(c => c.id)));
                                     else setSelectedIds(new Set());
                                   }} />
@@ -2606,24 +2594,21 @@ export default function Recoveries() {
                                         window.location.reload();
                                       }}
                                       className="h-6 w-6 flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors"
-                                      aria-label="Refresh claims"
-                                    >
+                                      aria-label="Refresh claims">
                                       <RefreshCw className="h-3.5 w-3.5" />
                                     </button>
                                     <DropdownMenu>
                                       <DropdownMenuTrigger asChild>
                                         <button
                                           className="h-6 w-6 flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors"
-                                          aria-label="More options"
-                                        >
+                                          aria-label="More options">
                                           <MoreHorizontal className="h-3.5 w-3.5" />
                                         </button>
                                       </DropdownMenuTrigger>
                                       <DropdownMenuContent align="start" className="w-48 bg-white border border-gray-200 shadow-lg rounded-sm p-1">
                                         <DropdownMenuItem
                                           className="text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer px-3 py-2 rounded-sm flex items-center gap-2"
-                                          onClick={() => setMarkAllReadModalOpen(true)}
-                                        >
+                                          onClick={() => setMarkAllReadModalOpen(true)}>
                                           <Mail className="h-3.5 w-3.5" />
                                           Mark all Read
                                         </DropdownMenuItem>
@@ -2648,7 +2633,7 @@ export default function Recoveries() {
                                   {/* Month Header Row */}
                                   <tr className={cn(
                                     "bg-gray-50",
-                                    groupIndex > 0 && "border-t-2 border-gray-200"
+                                    groupIndex> 0 && "border-t-2 border-gray-200"
                                   )}>
                                     <td colSpan={11} className="py-2.5 px-3">
                                       <div className="flex items-center justify-between">
@@ -2664,7 +2649,7 @@ export default function Recoveries() {
                                   {/* Claims in this month */}
                                   {monthGroup.claims.map((claim: any) => {
                                     const confidenceBadge = claim.confidence_score !== null && claim.confidence_score !== undefined
-                                      ? (claim.confidence_score >= 0.85 ? { label: 'High', color: 'green' } : claim.confidence_score >= 0.50 ? { label: 'Medium', color: 'yellow' } : { label: 'Low', color: 'gray' })
+                                      ? (claim.confidence_score>= 0.85 ? { label: 'High', color: 'green' } : claim.confidence_score>= 0.50 ? { label: 'Medium', color: 'yellow' } : { label: 'Low', color: 'gray' })
                                       : null;
                                     const displayConfidence = claim.confidence_score !== null && claim.confidence_score !== undefined
                                       ? claim.confidence_score
@@ -2682,8 +2667,7 @@ export default function Recoveries() {
                                           "border-b border-gray-100 hover:bg-gray-50/50 transition-colors",
                                           isCritical && "bg-red-50/30",
                                           isUrgent && !isCritical && "bg-amber-50/30"
-                                        )}
-                                      >
+                                        )}>
                                         <td className="py-1.5 px-3">
                                           <Checkbox checked={selectedIds.has(claim.id)} onCheckedChange={(checked) => {
                                             setSelectedIds(prev => {
@@ -2769,7 +2753,7 @@ export default function Recoveries() {
                                             return (
                                               <div className="flex items-center gap-2">
                                                 <EvidenceQualityBadge validation={validation} claim={claim} matchedDocs={claim.matchedDocs} />
-                                                {docCount > 0 && (
+                                                {docCount> 0 && (
                                                   <span className="text-[10px] text-gray-500">
                                                     {docCount} doc{docCount !== 1 ? 's' : ''}
                                                   </span>
@@ -2948,8 +2932,7 @@ export default function Recoveries() {
                             setResolveNotes('');
                             setResolveAmount('');
                           }}
-                          className="h-8 text-xs text-gray-600 border-gray-200 hover:bg-gray-100 rounded-sm"
-                        >
+                          className="h-8 text-xs text-gray-600 border-gray-200 hover:bg-gray-100 rounded-sm">
                           Cancel
                         </Button>
                         <Button
@@ -2995,8 +2978,7 @@ export default function Recoveries() {
                               });
                             }
                           }}
-                          className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-sm"
-                        >
+                          className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-sm">
                           Complete Resolution
                         </Button>
                       </DialogFooter>
@@ -3054,8 +3036,7 @@ export default function Recoveries() {
                             setStatusUpdateNotes('');
                             setSelectedStatus('pending');
                           }}
-                          className="h-8 text-xs text-gray-600 border-gray-200 hover:bg-gray-100 rounded-sm"
-                        >
+                          className="h-8 text-xs text-gray-600 border-gray-200 hover:bg-gray-100 rounded-sm">
                           Cancel
                         </Button>
                         <Button
@@ -3096,8 +3077,7 @@ export default function Recoveries() {
                               });
                             }
                           }}
-                          className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-sm"
-                        >
+                          className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-sm">
                           Update Status
                         </Button>
                       </DialogFooter>
@@ -3122,8 +3102,7 @@ export default function Recoveries() {
                             variant="outline"
                             size="sm"
                             onClick={() => setMarkAllReadModalOpen(false)}
-                            className="h-8 text-xs text-gray-600 border-gray-200 hover:bg-gray-100 rounded-sm px-4"
-                          >
+                            className="h-8 text-xs text-gray-600 border-gray-200 hover:bg-gray-100 rounded-sm px-4">
                             Cancel
                           </Button>
                           <Button
@@ -3134,8 +3113,7 @@ export default function Recoveries() {
                               });
                               setMarkAllReadModalOpen(false);
                             }}
-                            className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-sm px-4"
-                          >
+                            className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-sm px-4">
                             Confirm
                           </Button>
                         </div>
@@ -3237,8 +3215,7 @@ export default function Recoveries() {
                           setFileAnywayModalOpen(false);
                           setClaimToFile(null);
                         }}
-                        className="border-gray-200"
-                      >
+                        className="border-gray-200">
                         Cancel
                       </Button>
                       <Button
@@ -3261,8 +3238,7 @@ export default function Recoveries() {
                             setClaimToFile(null);
                           }
                         }}
-                        className="bg-gray-200 hover:bg-gray-300 text-[#36454F]"
-                      >
+                        className="bg-gray-200 hover:bg-gray-300 text-[#36454F]">
                         <ArrowUpFromLine className="h-4 w-4 mr-2" />
                         File Anyway
                       </Button>
@@ -3316,8 +3292,7 @@ export default function Recoveries() {
                                   navigator.clipboard.writeText(detectionDetails.id || '');
                                   toast({ title: 'Copied', description: 'Claim ID copied to clipboard' });
                                 }}
-                                title="Click to copy"
-                              >
+                                title="Click to copy">
                                 REF: {(detectionDetails.claim_number || detectionDetails.id?.slice(0, 12) || '').toUpperCase()}
                               </div>
                               <div className="text-[10px] text-gray-400 mt-0.5">
@@ -3339,8 +3314,7 @@ export default function Recoveries() {
                         <Link
                           to={`/recoveries/${detectionDetails.id}`}
                           state={{ claim: detectionDetails }}
-                          className="mt-2 inline-flex items-center text-xs text-gray-600 hover:text-gray-900 hover:underline transition-colors"
-                        >
+                          className="mt-2 inline-flex items-center text-xs text-gray-600 hover:text-gray-900 hover:underline transition-colors">
                           View Full Claim Details →
                         </Link>
                       )}
@@ -3450,7 +3424,7 @@ export default function Recoveries() {
                                   </div>
 
                                   {/* Policy Notes */}
-                                  {validation.warnings.length > 0 && (
+                                  {validation.warnings.length> 0 && (
                                     <div className="space-y-2 pt-2 border-t border-gray-100">
                                       <p className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Policy Notes</p>
                                       <ul className="text-xs space-y-1">
@@ -3531,7 +3505,7 @@ export default function Recoveries() {
                         </div>
 
                         {/* Related Event IDs */}
-                        {detectionDetails.related_event_ids && detectionDetails.related_event_ids.length > 0 && (
+                        {detectionDetails.related_event_ids && detectionDetails.related_event_ids.length> 0 && (
                           <div className="border-t border-gray-100 pt-4">
                             <h4 className="text-sm font-semibold text-gray-900 mb-3">Related Event IDs</h4>
                             <div className="flex flex-wrap gap-2">
@@ -3587,8 +3561,7 @@ export default function Recoveries() {
                         variant="outline"
                         size="sm"
                         onClick={() => setDetailsModalOpen(false)}
-                        className="h-8 text-xs text-gray-600 border-gray-200 hover:bg-gray-100 rounded-sm"
-                      >
+                        className="h-8 text-xs text-gray-600 border-gray-200 hover:bg-gray-100 rounded-sm">
                         Close
                       </Button>
                       <Button
@@ -3598,8 +3571,7 @@ export default function Recoveries() {
                           setEvidencePackOpen(true);
                           setDetailsModalOpen(false);
                         }}
-                        className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-sm"
-                      >
+                        className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-sm">
                         <FileText className="h-3.5 w-3.5 mr-1.5" />
                         View Evidence Pack
                       </Button>

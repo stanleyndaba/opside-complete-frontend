@@ -105,7 +105,7 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
         if (isProcessingQueueRef.current) return;
         isProcessingQueueRef.current = true;
 
-        while (displayQueueRef.current.length > 0) {
+        while (displayQueueRef.current.length> 0) {
             const nextLog = displayQueueRef.current.shift();
             if (nextLog) {
                 setDisplayedLogs(prev => [...prev, nextLog]);
@@ -337,15 +337,13 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
                             <button
                                 onClick={handleCancelSync}
                                 disabled={isCancelling}
-                                className="px-3 py-1.5 text-xs text-gray-600 border border-gray-300 hover:bg-gray-100 transition-colors disabled:opacity-50"
-                            >
+                                className="px-3 py-1.5 text-xs text-gray-600 border border-gray-300 hover:bg-gray-100 transition-colors disabled:opacity-50">
                                 {isCancelling ? 'Cancelling...' : 'Cancel'}
                             </button>
                         )}
                         <button
                             onClick={onClose}
-                            className="p-1 hover:bg-gray-100 transition-colors"
-                        >
+                            className="p-1 hover:bg-gray-100 transition-colors">
                             <X className="h-4 w-4 text-gray-500" />
                         </button>
                     </div>
@@ -354,8 +352,7 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
                 {/* Log content - Single flat log stream */}
                 <div
                     ref={logContainerRef}
-                    className="flex-1 overflow-y-auto px-5 py-3 bg-white"
-                >
+                    className="flex-1 overflow-y-auto px-5 py-3 bg-white">
                     <style>{`
                         @keyframes fadeSlideIn {
                             from { opacity: 0; transform: translateY(-4px); }
@@ -365,7 +362,7 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
                             animation: fadeSlideIn 0.2s ease-out forwards;
                         }
                     `}</style>
-                    {displayedLogs.length > 0 ? (
+                    {displayedLogs.length> 0 ? (
                         <div className="space-y-1.5">
                             {displayedLogs.map(log => (
                                 <div key={log.id} className="flex items-start gap-3 text-xs log-entry-animate">
@@ -400,7 +397,7 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
                 </div>
 
                 {/* Footer with CTA */}
-                {status === 'completed' && detectionCount > 0 && (
+                {status === 'completed' && detectionCount> 0 && (
                     <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
                         <div className="flex items-center justify-between">
                             <div className="text-xs text-gray-700">
@@ -414,8 +411,7 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
                                     onClose();
                                     navigate('/recoveries');
                                 }}
-                                className="px-4 py-1.5 text-xs font-medium text-white bg-gray-900 hover:bg-gray-800 transition-colors"
-                            >
+                                className="px-4 py-1.5 text-xs font-medium text-white bg-gray-900 hover:bg-gray-800 transition-colors">
                                 View potential claims
                             </button>
                         </div>

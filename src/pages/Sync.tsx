@@ -131,7 +131,7 @@ export default function Sync() {
     if (isProcessingQueueRef.current) return;
     isProcessingQueueRef.current = true;
 
-    while (logQueueRef.current.length > 0) {
+    while (logQueueRef.current.length> 0) {
       const item = logQueueRef.current.shift();
       if (item) {
         await new Promise(resolve => setTimeout(resolve, item.delay));
@@ -150,7 +150,7 @@ export default function Sync() {
       if (logQueueRef.current.length === 0 && !logsFinishedRef.current) {
         logsFinishedRef.current = true;
         setLogsFinished(true);
-      } else if (logQueueRef.current.length > 0) {
+      } else if (logQueueRef.current.length> 0) {
         // More logs were added, process them
         processLogQueue();
       }
@@ -287,7 +287,7 @@ export default function Sync() {
       const moneyMatch = log.message.match(/\$([0-9,]+(?:\.\d{2})?)/);
       if (moneyMatch) {
         const value = parseFloat(moneyMatch[1].replace(/,/g, ''));
-        if (!isNaN(value) && value > (storyMap[category].potentialValue || 0)) {
+        if (!isNaN(value) && value> (storyMap[category].potentialValue || 0)) {
           storyMap[category].potentialValue = value;
         }
       }
@@ -301,7 +301,7 @@ export default function Sync() {
     // Build enhanced summaries for each story with money context
     for (const story of Object.values(storyMap)) {
       // Special handling for detection - use plain language
-      if (story.category === 'detection' && story.anomaliesFound && story.anomaliesFound > 0) {
+      if (story.category === 'detection' && story.anomaliesFound && story.anomaliesFound> 0) {
         const value = story.potentialValue || 0;
         const issues = story.anomaliesFound;
 
@@ -334,21 +334,21 @@ export default function Sync() {
 
       const label = itemLabels[story.category] || 'items';
 
-      if (story.itemCount && story.itemCount > 0) {
+      if (story.itemCount && story.itemCount> 0) {
         parts.push(`${story.itemCount} ${label} checked`);
       }
 
       // Add anomalies if found
-      if (story.anomaliesFound && story.anomaliesFound > 0) {
+      if (story.anomaliesFound && story.anomaliesFound> 0) {
         parts.push(`${story.anomaliesFound} issues found`);
       }
 
       // Add potential value inline in summary if present
-      if (story.potentialValue && story.potentialValue > 0) {
+      if (story.potentialValue && story.potentialValue> 0) {
         parts.push(`— +$${story.potentialValue.toLocaleString()} potential`);
       }
 
-      story.summary = parts.length > 0 ? parts.join(' — ') : `${story.logs.length} events`;
+      story.summary = parts.length> 0 ? parts.join(' — ') : `${story.logs.length} events`;
     }
 
     // Sort stories: system first, then by first log timestamp
@@ -403,13 +403,13 @@ export default function Sync() {
       if (log.type === 'error') {
         group.status = 'error';
         // Extract a short description of the issue
-        const shortIssue = log.message.length > 60 ? log.message.slice(0, 60) + '...' : log.message;
+        const shortIssue = log.message.length> 60 ? log.message.slice(0, 60) + '...' : log.message;
         if (!group.issues.includes(shortIssue)) {
           group.issues.push(shortIssue);
         }
       } else if (log.type === 'warning' && group.status !== 'error') {
         group.status = 'warning';
-        const shortIssue = log.message.length > 60 ? log.message.slice(0, 60) + '...' : log.message;
+        const shortIssue = log.message.length> 60 ? log.message.slice(0, 60) + '...' : log.message;
         if (!group.issues.includes(shortIssue)) {
           group.issues.push(shortIssue);
         }
@@ -422,11 +422,11 @@ export default function Sync() {
   // Get the most important issue to surface below the strip
   const surfacedIssue = useMemo(() => {
     const errorGroup = healthGroups.find(g => g.status === 'error');
-    if (errorGroup && errorGroup.issues.length > 0) {
+    if (errorGroup && errorGroup.issues.length> 0) {
       return { type: 'error' as const, message: errorGroup.issues[0], group: errorGroup.name };
     }
     const warningGroup = healthGroups.find(g => g.status === 'warning');
-    if (warningGroup && warningGroup.issues.length > 0) {
+    if (warningGroup && warningGroup.issues.length> 0) {
       return { type: 'warning' as const, message: warningGroup.issues[0], group: warningGroup.name };
     }
     return null;
@@ -530,7 +530,7 @@ export default function Sync() {
     // Generic fallback for any other error
     if (type === 'error') {
       return {
-        text: `[NOTICED] Something unexpected happened — We're handling it automatically. If issues persist, try running sync again. Details: ${message.slice(0, 100)}${message.length > 100 ? '...' : ''}`,
+        text: `[NOTICED] Something unexpected happened — We're handling it automatically. If issues persist, try running sync again. Details: ${message.slice(0, 100)}${message.length> 100 ? '...' : ''}`,
         isHumanized: true
       };
     }
@@ -538,7 +538,7 @@ export default function Sync() {
     // Generic warning fallback
     if (type === 'warning') {
       return {
-        text: `[HEADS UP] ${message.slice(0, 150)}${message.length > 150 ? '...' : ''} — Usually resolves on its own.`,
+        text: `[HEADS UP] ${message.slice(0, 150)}${message.length> 150 ? '...' : ''} — Usually resolves on its own.`,
         isHumanized: true
       };
     }
@@ -559,7 +559,7 @@ export default function Sync() {
     for (const keyword of moneyKeywords) {
       if (lowerMsg.includes(keyword)) {
         // ONLY use real potential value from story if available - no fake estimates
-        if (story.potentialValue && story.potentialValue > 0) {
+        if (story.potentialValue && story.potentialValue> 0) {
           return {
             text: message,
             hint: `+$${story.potentialValue.toLocaleString()} potential`
@@ -593,37 +593,37 @@ export default function Sync() {
     const prev = previousDataRef.current;
 
     // Only track counts/state, NOT logs - all logs come from backend SSE events
-    if (data.ordersProcessed && data.ordersProcessed > 0) {
+    if (data.ordersProcessed && data.ordersProcessed> 0) {
       prev.orders.count = data.ordersProcessed;
-      prev.orders.completed = data.ordersProcessed >= (data.totalOrders || data.ordersProcessed);
+      prev.orders.completed = data.ordersProcessed>= (data.totalOrders || data.ordersProcessed);
     }
 
-    if (data.inventoryCount && data.inventoryCount > 0) {
+    if (data.inventoryCount && data.inventoryCount> 0) {
       prev.inventory.count = data.inventoryCount;
       prev.inventory.completed = true;
     }
 
-    if (data.shipmentsCount && data.shipmentsCount > 0) {
+    if (data.shipmentsCount && data.shipmentsCount> 0) {
       prev.shipments.count = data.shipmentsCount;
       prev.shipments.completed = true;
     }
 
-    if (data.returnsCount && data.returnsCount > 0) {
+    if (data.returnsCount && data.returnsCount> 0) {
       prev.returns.count = data.returnsCount;
       prev.returns.completed = true;
     }
 
-    if (data.settlementsCount && data.settlementsCount > 0) {
+    if (data.settlementsCount && data.settlementsCount> 0) {
       prev.settlements.count = data.settlementsCount;
       prev.settlements.completed = true;
     }
 
-    if (data.feesCount && data.feesCount > 0) {
+    if (data.feesCount && data.feesCount> 0) {
       prev.fees.count = data.feesCount;
       prev.fees.completed = true;
     }
 
-    if (data.claimsDetected && data.claimsDetected > 0) {
+    if (data.claimsDetected && data.claimsDetected> 0) {
       prev.claims.count = data.claimsDetected;
       prev.claims.completed = true;
     }
@@ -681,7 +681,7 @@ export default function Sync() {
         const totalDetections = event.total_detections ?? null;
         const estimatedValue = event.estimated_value ?? event.totalRecoverableValue ?? null;
 
-        if (totalDetections !== null && totalDetections > 0) {
+        if (totalDetections !== null && totalDetections> 0) {
           // ⭐ UPDATE syncData so "Potential Recovery Identified" shows when logsFinished
           // No addLog here - main SSE handler at line 500+ already handles logs
           setSyncData(prev => prev ? {
@@ -690,7 +690,7 @@ export default function Sync() {
             totalRecoverableValue: estimatedValue ?? prev.totalRecoverableValue
           } : prev);
         }
-      } else if (event.new_detections_count && event.new_detections_count > 0) {
+      } else if (event.new_detections_count && event.new_detections_count> 0) {
         const estimatedValue = event.estimated_value ?? null;
 
         // ⭐ UPDATE syncData for incremental updates too
@@ -718,7 +718,7 @@ export default function Sync() {
     }));
     // Hold progress at 98% until logs finish, then show 100%
     if (typeof s.progress === 'number') {
-      if (s.progress >= 100 && !logsFinished) {
+      if (s.progress>= 100 && !logsFinished) {
         setProgress(98); // Hold at 98% while logs are still displaying
       } else {
         setProgress(s.progress);
@@ -938,7 +938,7 @@ export default function Sync() {
               totalRecoverableValue: estimatedValue ?? prev.totalRecoverableValue
             } : prev);
 
-            if (detectedCount !== null && detectedCount > 0) {
+            if (detectedCount !== null && detectedCount> 0) {
               // Only log value if backend provides it
               if (estimatedValue !== null) {
                 const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimatedValue);
@@ -979,7 +979,7 @@ export default function Sync() {
         if (s.status === 'completed' || s.status === 'failed' || s.status === 'cancelled') {
           pollsAfterComplete++;
 
-          if (pollsAfterComplete >= MAX_POLLS_AFTER_COMPLETE || s.status === 'failed' || s.status === 'cancelled') {
+          if (pollsAfterComplete>= MAX_POLLS_AFTER_COMPLETE || s.status === 'failed' || s.status === 'cancelled') {
             if (interval) {
               clearInterval(interval);
               interval = null;
@@ -1344,7 +1344,7 @@ export default function Sync() {
 
 
               {/* Status Strip */}
-              {logs.length > 0 && status === 'completed' && (
+              {logs.length> 0 && status === 'completed' && (
                 <div className="flex items-center gap-3 text-xs font-montserrat">
                   {syncData?.completedAt && (
                     <span className="text-gray-400">
@@ -1401,8 +1401,7 @@ export default function Sync() {
                       className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${logFilter === 'all'
                         ? 'bg-white text-gray-900 shadow-sm'
                         : 'text-gray-500 hover:text-gray-700'
-                        }`}
-                    >
+                        }`}>
                       All
                     </button>
                     <button
@@ -1410,8 +1409,7 @@ export default function Sync() {
                       className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${logFilter === 'money'
                         ? 'bg-emerald-500 text-white shadow-sm'
                         : 'text-gray-500 hover:text-gray-700'
-                        }`}
-                    >
+                        }`}>
                       Recoveries
                     </button>
                     <button
@@ -1419,19 +1417,17 @@ export default function Sync() {
                       className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${logFilter === 'issues'
                         ? 'bg-amber-500 text-white shadow-sm'
                         : 'text-gray-500 hover:text-gray-700'
-                        }`}
-                    >
+                        }`}>
                       Issues
                     </button>
                   </div>
 
                   {/* Export Button */}
-                  {logs.length > 0 && (
+                  {logs.length> 0 && (
                     <button
                       onClick={exportLogs}
                       className="ml-auto flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-all"
-                      title="Export logs for support"
-                    >
+                      title="Export logs for support">
                       <Download className="h-3.5 w-3.5" />
                       Export
                     </button>
@@ -1472,8 +1468,7 @@ export default function Sync() {
 
                   <div
                     ref={logContainerRef}
-                    className="bg-black rounded-lg pt-10 pb-4 px-4 font-montserrat text-xs h-80 overflow-y-auto scroll-smooth border border-neutral-800 shadow-2xl relative"
-                  >
+                    className="bg-black rounded-lg pt-10 pb-4 px-4 font-montserrat text-xs h-80 overflow-y-auto scroll-smooth border border-neutral-800 shadow-2xl relative">
                     {/* Subtle grid overlay */}
                     <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none rounded-lg"></div>
 
@@ -1528,8 +1523,7 @@ export default function Sync() {
                               {/* Story Header - Clickable */}
                               <button
                                 onClick={() => toggleStory(story.id)}
-                                className="w-full text-left flex items-center gap-2.5 py-2 px-3 rounded hover:bg-neutral-900 transition-colors group"
-                              >
+                                className="w-full text-left flex items-center gap-2.5 py-2 px-3 rounded hover:bg-neutral-900 transition-colors group">
                                 {/* Expand/Collapse Icon */}
                                 <span className="text-neutral-500 group-hover:text-neutral-300 transition-colors">
                                   {isExpanded ? (
@@ -1565,13 +1559,11 @@ export default function Sync() {
                                     return (
                                       <React.Fragment key={log.id}>
                                         <div
-                                          className={`flex items-start gap-3 py-1 text-xs ${log.type === 'thinking' ? 'opacity-50' : ''} ${humanized.isHumanized ? 'bg-neutral-900/50 -mx-2 px-2 py-1.5 rounded' : ''}`}
-                                        >
+                                          className={`flex items-start gap-3 py-1 text-xs ${log.type === 'thinking' ? 'opacity-50' : ''} ${humanized.isHumanized ? 'bg-neutral-900/50 -mx-2 px-2 py-1.5 rounded' : ''}`}>
                                           {/* Timestamp with hover for exact time */}
                                           <span
                                             className="hidden sm:inline text-neutral-600 shrink-0 text-[10px] font-mono cursor-help"
-                                            title={formatTimestamp(log.timestamp).full}
-                                          >
+                                            title={formatTimestamp(log.timestamp).full}>
                                             {formatTimestamp(log.timestamp).short}
                                           </span>
 
@@ -1594,7 +1586,7 @@ export default function Sync() {
                                           )}
                                         </div>
                                         {/* Render context.details if present */}
-                                        {log.context?.details && log.context.details.length > 0 && (
+                                        {log.context?.details && log.context.details.length> 0 && (
                                           <div className="ml-12 mt-1 mb-2 space-y-0.5 text-[11px] text-gray-300">
                                             {log.context.details.map((detail, i) => (
                                               <div key={i} className={detail.startsWith('✅') ? 'text-emerald-400' : ''}>
@@ -1608,12 +1600,11 @@ export default function Sync() {
                                   })}
 
                                   {/* Link to Claims - show when there's money potential or anomalies */}
-                                  {story.linkTo && story.isCompleted && ((story.anomaliesFound || 0) > 0 || (story.potentialValue || 0) > 0) && (
+                                  {story.linkTo && story.isCompleted && ((story.anomaliesFound || 0)> 0 || (story.potentialValue || 0)> 0) && (
                                     <div className="mt-2">
                                       <button
                                         onClick={(e) => { e.stopPropagation(); navigate(story.linkTo!); }}
-                                        className="flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 transition-colors"
-                                      >
+                                        className="flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 transition-colors">
                                         View potential claims <ExternalLink className="h-3 w-3" />
                                       </button>
                                       <span className="text-[10px] text-gray-500 mt-1 block">
@@ -1690,8 +1681,7 @@ export default function Sync() {
                   }
                 }}
                 disabled={status === 'running'}
-                className="bg-gray-900 text-white border-gray-900 hover:bg-gray-800 disabled:bg-gray-600 disabled:cursor-not-allowed"
-              >
+                className="bg-gray-900 text-white border-gray-900 hover:bg-gray-800 disabled:bg-gray-600 disabled:cursor-not-allowed">
                 {status === 'running' ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -1732,8 +1722,7 @@ export default function Sync() {
                   variant="outline"
                   onClick={handleCancelSync}
                   disabled={isCancelling}
-                  className="bg-gray-900 text-white border-gray-900 hover:bg-gray-800"
-                >
+                  className="bg-gray-900 text-white border-gray-900 hover:bg-gray-800">
                   {isCancelling ? (
                     <>
                       <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -1755,8 +1744,7 @@ export default function Sync() {
                       variant="outline"
                       onClick={handleForceClear}
                       disabled={isClearing}
-                      className="border-amber-300 text-amber-700 hover:bg-amber-50 bg-amber-50"
-                    >
+                      className="border-amber-300 text-amber-700 hover:bg-amber-50 bg-amber-50">
                       {isClearing ? (
                         <>
                           <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -1773,8 +1761,7 @@ export default function Sync() {
                     <Button
                       variant="outline"
                       onClick={handleRetry}
-                      className="border-gray-200 text-gray-700 hover:bg-gray-50"
-                    >
+                      className="border-gray-200 text-gray-700 hover:bg-gray-50">
                       <RefreshCw className="h-4 w-4 mr-2" />
                       Retry Sync
                     </Button>
@@ -1794,8 +1781,7 @@ export default function Sync() {
                   status === 'completed'
                     ? 'bg-gray-900 text-white border-gray-900 hover:bg-gray-800'
                     : 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
-                }
-              >
+                }>
                 Dashboard
               </Button>
             </div>
@@ -1809,8 +1795,7 @@ export default function Sync() {
                   modalDismissedRef.current = true;
                 }
                 setShowSourcesModal(open);
-              }}
-            >
+              }}>
               <DialogContent className="sm:max-w-xl bg-white border border-gray-200 rounded-sm p-0">
                 <DialogHeader className="px-6 py-4 border-b border-gray-200 bg-gray-50">
                   <DialogTitle className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
@@ -1849,8 +1834,7 @@ export default function Sync() {
                         }
                       }}
                       disabled={providerLoading === 'gmail'}
-                      className="flex flex-col items-center justify-center gap-3 p-4 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50"
-                    >
+                      className="flex flex-col items-center justify-center gap-3 p-4 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50">
                       {providerLoading === 'gmail' ? (
                         <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
                       ) : (
@@ -1885,8 +1869,7 @@ export default function Sync() {
                         }
                       }}
                       disabled={providerLoading === 'outlook'}
-                      className="flex flex-col items-center justify-center gap-3 p-4 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50"
-                    >
+                      className="flex flex-col items-center justify-center gap-3 p-4 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50">
                       {providerLoading === 'outlook' ? (
                         <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
                       ) : (
@@ -1921,8 +1904,7 @@ export default function Sync() {
                         }
                       }}
                       disabled={providerLoading === 'gdrive'}
-                      className="flex flex-col items-center justify-center gap-3 p-4 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50"
-                    >
+                      className="flex flex-col items-center justify-center gap-3 p-4 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50">
                       {providerLoading === 'gdrive' ? (
                         <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
                       ) : (
@@ -1957,8 +1939,7 @@ export default function Sync() {
                         }
                       }}
                       disabled={providerLoading === 'dropbox'}
-                      className="flex flex-col items-center justify-center gap-3 p-4 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50"
-                    >
+                      className="flex flex-col items-center justify-center gap-3 p-4 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50">
                       {providerLoading === 'dropbox' ? (
                         <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
                       ) : (

@@ -169,8 +169,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
               variant="ghost"
               size="sm"
               onClick={fetchParsingStatus}
-              className="text-gray-600 hover:text-gray-900"
-            >
+              className="text-gray-600 hover:text-gray-900">
               <RefreshCw className="w-4 h-4" />
             </Button>
           </div>
@@ -231,7 +230,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
               )}
             </div>
 
-            {parsedData.line_items && parsedData.line_items.length > 0 && (
+            {parsedData.line_items && parsedData.line_items.length> 0 && (
               <div className="border-t border-gray-200 p-4">
                 <h5 className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-3">Line Items</h5>
                 <div className="space-y-2 max-h-40 overflow-y-auto">

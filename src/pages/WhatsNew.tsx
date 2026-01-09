@@ -77,8 +77,7 @@ export default function WhatsNew() {
                     {groups[month].map((update) => (
                       <div
                         key={update.id}
-                        className="bg-white border border-gray-200 rounded-sm p-4"
-                      >
+                        className="bg-white border border-gray-200 rounded-sm p-4">
                         {/* Top row: Tag + Date */}
                         <div className="flex items-center justify-between mb-3">
                           <span className="px-2 py-0.5 text-[10px] font-medium bg-gray-100 text-gray-700 border border-gray-200 uppercase tracking-[0.05em]">
@@ -114,8 +113,7 @@ export default function WhatsNew() {
                         {update.cta && (
                           <a
                             href={update.cta.href}
-                            className="inline-flex items-center gap-1 text-xs font-medium text-gray-900 hover:text-gray-600 transition-colors"
-                          >
+                            className="inline-flex items-center gap-1 text-xs font-medium text-gray-900 hover:text-gray-600 transition-colors">
                             {update.cta.text}
                             <ArrowRight className="h-3 w-3" />
                           </a>

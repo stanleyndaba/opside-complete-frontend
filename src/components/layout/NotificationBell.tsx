@@ -103,7 +103,7 @@ export function NotificationBell({
     className
   ].filter(Boolean).join(' ');
 
-  const badge = unreadCount > 0 && (
+  const badge = unreadCount> 0 && (
     <>
       <div
         className={
@@ -117,9 +117,8 @@ export function NotificationBell({
           (isSidebarStyle
             ? 'top-2 right-3 w-4 h-4 bg-emerald-500 text-white'
             : '-top-1 -right-1 w-4 h-4 bg-emerald-500 text-white')
-        }
-      >
-        {unreadCount > 9 ? '9+' : unreadCount}
+        }>
+        {unreadCount> 9 ? '9+' : unreadCount}
       </div>
     </>
   );
@@ -131,16 +130,15 @@ export function NotificationBell({
           variant="ghost"
           size={isSidebarStyle ? 'default' : 'icon'}
           className={triggerClassNames}
-          onClick={() => setIsOpen(true)}
-        >
+          onClick={() => setIsOpen(true)}>
           <IconComponent className={cn(
             'h-4 w-4',
             iconClassName || (isSidebarStyle ? '' : isTransparentNavbar ? 'text-gray-200' : '')
           )} />
           {shouldShowLabel && <span className="text-sm font-medium">{label}</span>}
-          {isSidebarStyle && shouldShowLabel && unreadCount > 0 && (
+          {isSidebarStyle && shouldShowLabel && unreadCount> 0 && (
             <Badge variant="outline" className="ml-auto text-[10px] border-emerald-500 text-white bg-emerald-500">
-              {unreadCount > 9 ? '9+' : unreadCount}
+              {unreadCount> 9 ? '9+' : unreadCount}
             </Badge>
           )}
           {!isSidebarStyle && badge}
@@ -152,8 +150,7 @@ export function NotificationBell({
       <HoverCardContent
         align="end"
         sideOffset={8}
-        className="w-[340px] max-h-[420px] bg-white border border-gray-200 shadow-lg z-50 rounded-sm flex flex-col overflow-hidden p-0"
-      >
+        className="w-[340px] max-h-[420px] bg-white border border-gray-200 shadow-lg z-50 rounded-sm flex flex-col overflow-hidden p-0">
         {/* Header - Fixed, Clean, minimal */}
         <div className="px-4 py-3 border-b border-gray-100 flex-shrink-0">
           <div className="flex items-center justify-between">
@@ -161,15 +158,14 @@ export function NotificationBell({
               {label}
             </h3>
             <div className="flex items-center gap-3">
-              {unreadCount > 0 && (
+              {unreadCount> 0 && (
                 <button
                   onClick={handleMarkAllRead}
-                  className="text-[11px] font-medium text-blue-600 hover:text-blue-700 transition-colors"
-                >
+                  className="text-[11px] font-medium text-blue-600 hover:text-blue-700 transition-colors">
                   Mark all read
                 </button>
               )}
-              {unreadCount > 0 && (
+              {unreadCount> 0 && (
                 <span className="text-[10px] font-medium text-gray-500">
                   {unreadCount} new
                 </span>
@@ -194,8 +190,7 @@ export function NotificationBell({
                       ? 'bg-gray-50 border-l-gray-400'
                       : 'bg-white border-l-transparent hover:bg-gray-50'
                   )}
-                  onClick={() => handleNotificationClick(notification.id)}
-                >
+                  onClick={() => handleNotificationClick(notification.id)}>
                   <div className="flex items-start justify-between gap-3">
                     {/* Content */}
                     <div className="flex-1 min-w-0">

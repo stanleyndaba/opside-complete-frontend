@@ -199,8 +199,7 @@ export default function Admin() {
                       size="sm"
                       onClick={refreshMetrics}
                       disabled={loadingMetrics}
-                      className="bg-white text-gray-900 border-gray-200 hover:bg-gray-50"
-                    >
+                      className="bg-white text-gray-900 border-gray-200 hover:bg-gray-50">
                       {loadingMetrics ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
                       ) : (
@@ -224,8 +223,7 @@ export default function Admin() {
                     <Button
                       variant="outline"
                       onClick={refreshMetrics}
-                      className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
-                    >
+                      className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50">
                       Retry
                     </Button>
                   </div>
@@ -319,7 +317,7 @@ export default function Admin() {
                     </div>
 
                     {/* Agent Performance Table */}
-                    {learningMetrics.by_agent && Object.keys(learningMetrics.by_agent).length > 0 && (
+                    {learningMetrics.by_agent && Object.keys(learningMetrics.by_agent).length> 0 && (
                       <Card className="bg-white border-gray-200">
                         <CardHeader className="pb-2">
                           <CardTitle className="text-xs font-semibold text-gray-900 uppercase tracking-wide">Agent Performance</CardTitle>
@@ -339,8 +337,8 @@ export default function Admin() {
                               <TableBody>
                                 {Object.entries(learningMetrics.by_agent).map(([agent, data]: [string, any]) => {
                                   const successRate = data.success_rate || 0;
-                                  const isHealthy = successRate >= 0.8;
-                                  const isWarning = successRate >= 0.5 && successRate < 0.8;
+                                  const isHealthy = successRate>= 0.8;
+                                  const isWarning = successRate>= 0.5 && successRate < 0.8;
 
                                   return (
                                     <TableRow key={agent} className="border-gray-200 hover:bg-gray-50">
@@ -351,10 +349,10 @@ export default function Admin() {
                                         {data.events?.toLocaleString() || 0}
                                       </TableCell>
                                       <TableCell className="text-gray-600">
-                                        {successRate > 0 ? `${(successRate * 100).toFixed(1)}%` : 'N/A'}
+                                        {successRate> 0 ? `${(successRate * 100).toFixed(1)}%` : 'N/A'}
                                       </TableCell>
                                       <TableCell>
-                                        {successRate > 0 && (
+                                        {successRate> 0 && (
                                           <Badge
                                             className={
                                               isHealthy
@@ -362,8 +360,7 @@ export default function Admin() {
                                                 : isWarning
                                                   ? 'bg-amber-100 text-amber-800 border-amber-200'
                                                   : 'bg-red-100 text-red-800 border-red-200'
-                                            }
-                                          >
+                                            }>
                                             {isHealthy ? 'Healthy' : isWarning ? 'Warning' : 'Critical'}
                                           </Badge>
                                         )}
@@ -379,7 +376,7 @@ export default function Admin() {
                     )}
 
                     {/* Threshold Optimization History */}
-                    {thresholds.length > 0 && (
+                    {thresholds.length> 0 && (
                       <Card className="bg-white border-gray-200">
                         <CardHeader className="pb-2">
                           <CardTitle className="text-xs font-semibold text-gray-900 uppercase tracking-wide">Threshold Optimization History</CardTitle>
@@ -416,7 +413,7 @@ export default function Admin() {
                     )}
 
                     {/* Rejection Pattern Analysis */}
-                    {learningInsights?.patterns?.rejectionPatterns && Object.keys(learningInsights.patterns.rejectionPatterns).length > 0 && (
+                    {learningInsights?.patterns?.rejectionPatterns && Object.keys(learningInsights.patterns.rejectionPatterns).length> 0 && (
                       <Card className="bg-white border-gray-200">
                         <CardHeader className="pb-2">
                           <CardTitle className="text-xs font-semibold text-gray-900 uppercase tracking-wide">Rejection Pattern Analysis</CardTitle>
@@ -438,7 +435,7 @@ export default function Admin() {
                     )}
 
                     {/* Learning Insights */}
-                    {learningInsights && learningInsights.length > 0 && (
+                    {learningInsights && learningInsights.length> 0 && (
                       <Card className="bg-white border-gray-200">
                         <CardHeader className="pb-2">
                           <CardTitle className="text-xs font-semibold text-gray-900 uppercase tracking-wide">Optimization Insights</CardTitle>
@@ -448,8 +445,7 @@ export default function Admin() {
                             {learningInsights.slice(0, 10).map((insight: any) => (
                               <div
                                 key={insight.id}
-                                className="p-4 rounded-lg bg-gray-50 border border-gray-200"
-                              >
+                                className="p-4 rounded-lg bg-gray-50 border border-gray-200">
                                 <div className="flex-1">
                                   <h4 className="text-sm font-normal text-gray-700 mb-1">
                                     {insight.title || 'Optimization Insight'}

@@ -210,8 +210,7 @@ export default function DocumentDetail() {
                 size="sm"
                 className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
                 onClick={handleTriggerParsing}
-                disabled={triggeringParse}
-              >
+                disabled={triggeringParse}>
                 {triggeringParse ? <RefreshCw className="w-4 h-4 mr-2 animate-spin" /> : null}
                 {triggeringParse ? 'Parsing...' : 'Re-Parse'}
               </Button>
@@ -231,8 +230,7 @@ export default function DocumentDetail() {
                   } catch (err: any) {
                     toast({ title: 'Download Error', description: err?.message || 'Failed to download', variant: 'destructive' });
                   }
-                }}
-              >
+                }}>
                 <Download className="w-4 h-4 mr-2" />
                 Download
               </Button>
@@ -245,8 +243,7 @@ export default function DocumentDetail() {
           <button
             type="button"
             onClick={() => setSummaryOpen(!summaryOpen)}
-            className="inline-flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 hover:text-gray-900 bg-white border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
-          >
+            className="inline-flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 hover:text-gray-900 bg-white border border-gray-200 rounded-md hover:bg-gray-50 transition-colors">
             <span>Document Summary</span>
             <span className="text-gray-400">
               ({(extracted.order_ids?.length || 0) + (extracted.asins?.length || 0) + (extracted.tracking_numbers?.length || 0) + (extracted.amounts?.length || 0) + matchedClaims.length} total)
@@ -294,27 +291,23 @@ export default function DocumentDetail() {
           <TabsList className="inline-flex h-auto items-center justify-start gap-6 bg-transparent border-b border-gray-200 rounded-none p-0 mb-6">
             <TabsTrigger
               value="extracted"
-              className="relative px-1 pb-3 pt-1 text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900"
-            >
+              className="relative px-1 pb-3 pt-1 text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
               Extracted Data
             </TabsTrigger>
             <TabsTrigger
               value="matches"
-              className="relative px-1 pb-3 pt-1 text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900"
-            >
+              className="relative px-1 pb-3 pt-1 text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
               Matched Claims
               <span className="ml-1.5 text-[9px] text-gray-400">({matchedClaims.length})</span>
             </TabsTrigger>
             <TabsTrigger
               value="raw"
-              className="relative px-1 pb-3 pt-1 text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900"
-            >
+              className="relative px-1 pb-3 pt-1 text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
               Raw Text
             </TabsTrigger>
             <TabsTrigger
               value="parsing"
-              className="relative px-1 pb-3 pt-1 text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900"
-            >
+              className="relative px-1 pb-3 pt-1 text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
               Parsing Status
             </TabsTrigger>
           </TabsList>
@@ -330,7 +323,7 @@ export default function DocumentDetail() {
                     <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Order IDs</h4>
                   </div>
                   <div className="bg-white p-4">
-                    {extracted.order_ids?.length > 0 ? (
+                    {extracted.order_ids?.length> 0 ? (
                       <div className="flex flex-wrap gap-2">
                         {extracted.order_ids.map((id: string, idx: number) => (
                           <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-[10px]">
@@ -350,7 +343,7 @@ export default function DocumentDetail() {
                     <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">ASINs / SKUs</h4>
                   </div>
                   <div className="bg-white p-4">
-                    {(extracted.asins?.length > 0 || extracted.skus?.length > 0) ? (
+                    {(extracted.asins?.length> 0 || extracted.skus?.length> 0) ? (
                       <div className="flex flex-wrap gap-2">
                         {extracted.asins?.map((asin: string, idx: number) => (
                           <Badge key={`asin-${idx}`} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-[10px]">
@@ -378,7 +371,7 @@ export default function DocumentDetail() {
                     <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Tracking Numbers</h4>
                   </div>
                   <div className="bg-white p-4">
-                    {extracted.tracking_numbers?.length > 0 ? (
+                    {extracted.tracking_numbers?.length> 0 ? (
                       <div className="flex flex-wrap gap-2">
                         {extracted.tracking_numbers.map((num: string, idx: number) => (
                           <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-[10px]">
@@ -398,7 +391,7 @@ export default function DocumentDetail() {
                     <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Financial Amounts</h4>
                   </div>
                   <div className="bg-white p-4">
-                    {extracted.amounts?.length > 0 ? (
+                    {extracted.amounts?.length> 0 ? (
                       <div className="flex flex-wrap gap-2">
                         {extracted.amounts.map((amt: number | string, idx: number) => (
                           <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-[10px]">
@@ -421,7 +414,7 @@ export default function DocumentDetail() {
                     <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Invoice Numbers</h4>
                   </div>
                   <div className="bg-white p-4">
-                    {extracted.invoice_numbers?.length > 0 ? (
+                    {extracted.invoice_numbers?.length> 0 ? (
                       <div className="flex flex-wrap gap-2">
                         {extracted.invoice_numbers.map((inv: string, idx: number) => (
                           <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-[10px]">
@@ -441,7 +434,7 @@ export default function DocumentDetail() {
                     <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Dates Found</h4>
                   </div>
                   <div className="bg-white p-4">
-                    {extracted.dates?.length > 0 ? (
+                    {extracted.dates?.length> 0 ? (
                       <div className="flex flex-wrap gap-2">
                         {extracted.dates.map((date: string, idx: number) => (
                           <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 text-[10px]">
@@ -468,7 +461,7 @@ export default function DocumentDetail() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                {matchedClaims.length > 0 ? (
+                {matchedClaims.length> 0 ? (
                   <div className="space-y-3">
                     {matchedClaims.map((match, idx) => (
                       <div key={idx} className="p-4 rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-100 transition-colors">
@@ -537,8 +530,7 @@ export default function DocumentDetail() {
                       size="sm"
                       className="mt-4"
                       onClick={handleTriggerParsing}
-                      disabled={triggeringParse}
-                    >
+                      disabled={triggeringParse}>
                       {triggeringParse ? 'Parsing...' : 'Trigger Parsing'}
                     </Button>
                   </div>

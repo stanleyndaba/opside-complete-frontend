@@ -172,8 +172,7 @@ export function SyncHistory() {
           {syncs.map((sync) => (
             <div
               key={sync.syncId}
-              className="border border-white/10 rounded-lg p-4 bg-white/5 hover:bg-white/10 transition-all duration-300"
-            >
+              className="border border-white/10 rounded-lg p-4 bg-white/5 hover:bg-white/10 transition-all duration-300">
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-3 flex-1">
                   <div className="mt-0.5">{getStatusIcon(sync.status)}</div>
@@ -213,7 +212,7 @@ export function SyncHistory() {
                         
                         return (
                           <>
-                            {totalItemsSynced > 0 && (
+                            {totalItemsSynced> 0 && (
                               <div className="mt-2 pt-2 border-t border-white/10">
                                 <div className="text-blue-400 font-medium mb-1">
                                   Total: {totalItemsSynced.toLocaleString()} items synced
@@ -222,19 +221,19 @@ export function SyncHistory() {
                                   {sync.ordersProcessed !== undefined && sync.totalOrders !== undefined && (
                                     <div>Orders: <span className="text-gray-300">{sync.ordersProcessed.toLocaleString()} / {sync.totalOrders.toLocaleString()}</span></div>
                                   )}
-                                  {inventoryCount > 0 && (
+                                  {inventoryCount> 0 && (
                                     <div>Inventory: <span className="text-gray-300">{inventoryCount.toLocaleString()}</span></div>
                                   )}
-                                  {shipmentsCount > 0 && (
+                                  {shipmentsCount> 0 && (
                                     <div>Shipments: <span className="text-gray-300">{shipmentsCount.toLocaleString()}</span></div>
                                   )}
-                                  {returnsCount > 0 && (
+                                  {returnsCount> 0 && (
                                     <div>Returns: <span className="text-gray-300">{returnsCount.toLocaleString()}</span></div>
                                   )}
-                                  {settlementsCount > 0 && (
+                                  {settlementsCount> 0 && (
                                     <div>Settlements: <span className="text-gray-300">{settlementsCount.toLocaleString()}</span></div>
                                   )}
-                                  {feesCount > 0 && (
+                                  {feesCount> 0 && (
                                     <div>Fees: <span className="text-gray-300">{feesCount.toLocaleString()}</span></div>
                                   )}
                                 </div>
@@ -248,7 +247,7 @@ export function SyncHistory() {
                         );
                       })()}
                       
-                      {sync.claimsDetected !== undefined && sync.claimsDetected > 0 && (
+                      {sync.claimsDetected !== undefined && sync.claimsDetected> 0 && (
                         <div className="text-emerald-400 font-medium mt-1">
                           Claims detected: {sync.claimsDetected.toLocaleString()}
                         </div>

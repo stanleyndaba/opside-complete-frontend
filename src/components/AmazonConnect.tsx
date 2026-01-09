@@ -239,8 +239,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
           borderRadius: '0px',
           color: '#ffffff'
         }}
-        size="lg"
-      >
+        size="lg">
         {connecting && usingExisting ? (
           <>
             <Loader2 className="mr-2 h-5 w-5 animate-spin" />

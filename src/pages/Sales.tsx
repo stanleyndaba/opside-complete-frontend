@@ -173,8 +173,7 @@ export default function Sales() {
                                     <Button
                                         onClick={() => setIsSubmitted(false)}
                                         variant="outline"
-                                        className="font-montserrat"
-                                    >
+                                        className="font-montserrat">
                                         Submit another inquiry
                                     </Button>
                                 </div>
@@ -274,8 +273,7 @@ export default function Sales() {
                                     <Button
                                         type="submit"
                                         disabled={isSubmitting}
-                                        className="w-full h-12 bg-black hover:bg-gray-900 text-white font-semibold font-montserrat rounded-none"
-                                    >
+                                        className="w-full h-12 bg-black hover:bg-gray-900 text-white font-semibold font-montserrat rounded-none">
                                         {isSubmitting ? (
                                             <>Preparing...</>
                                         ) : (

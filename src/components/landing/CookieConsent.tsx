@@ -59,8 +59,7 @@ export function CookieConsent() {
             className={cn(
                 "fixed bottom-0 left-0 right-0 z-50 transition-transform duration-500 ease-in-out transform",
                 isVisible ? "translate-y-0" : "translate-y-full"
-            )}
-        >
+            )}>
             <div className="bg-white border-t border-gray-200 shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
 
                 {/* Banner View */}
@@ -77,14 +76,12 @@ export function CookieConsent() {
                                 <Button
                                     onClick={() => setView('settings')}
                                     variant="outline"
-                                    className="bg-white text-black border-gray-200 hover:bg-gray-50 font-medium h-11"
-                                >
+                                    className="bg-white text-black border-gray-200 hover:bg-gray-50 font-medium h-11">
                                     Manage Settings
                                 </Button>
                                 <Button
                                     onClick={handleAgreeAll}
-                                    className="bg-black text-white hover:bg-gray-900 font-medium h-11"
-                                >
+                                    className="bg-black text-white hover:bg-gray-900 font-medium h-11">
                                     Agree
                                 </Button>
                             </div>
@@ -100,8 +97,7 @@ export function CookieConsent() {
                             <button
                                 onClick={() => setView('banner')}
                                 className="text-gray-500 hover:text-gray-900 transition-colors"
-                                aria-label="Back"
-                            >
+                                aria-label="Back">
                                 <X className="h-5 w-5" />
                             </button>
                         </div>
@@ -153,15 +149,13 @@ export function CookieConsent() {
                                 <Button
                                     onClick={handleTurnOnOptional}
                                     variant="outline"
-                                    className="w-full sm:w-auto text-black border-gray-200 hover:bg-gray-50 font-medium h-11"
-                                >
+                                    className="w-full sm:w-auto text-black border-gray-200 hover:bg-gray-50 font-medium h-11">
                                     Turn on optional cookies
                                 </Button>
                                 <div className="flex-1" />
                                 <Button
                                     onClick={handleSaveSettings}
-                                    className="w-full sm:w-auto bg-black text-white hover:bg-gray-900 font-medium h-11 min-w-[160px]"
-                                >
+                                    className="w-full sm:w-auto bg-black text-white hover:bg-gray-900 font-medium h-11 min-w-[160px]">
                                     Save and Accept
                                 </Button>
                             </div>

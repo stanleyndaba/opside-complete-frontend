@@ -368,8 +368,7 @@ export default function TransactionHistory() {
                         size="sm"
                         onClick={exportStatement}
                         disabled={transactions.length === 0}
-                        className="h-8 text-xs border-gray-200 text-gray-700 rounded-sm"
-                    >
+                        className="h-8 text-xs border-gray-200 text-gray-700 rounded-sm">
                         <Download className="h-3.5 w-3.5 mr-1.5" />
                         Download Statement
                     </Button>
@@ -409,8 +408,7 @@ export default function TransactionHistory() {
                                             className={cn(
                                                 "border-b border-gray-100 hover:bg-gray-50 transition-colors",
                                                 index % 2 === 1 && "bg-gray-50/30"
-                                            )}
-                                        >
+                                            )}>
                                             <td className="px-4 py-3 text-xs text-gray-700">
                                                 {format(new Date(transaction.date), 'MMM dd, yyyy')}
                                             </td>
@@ -420,8 +418,7 @@ export default function TransactionHistory() {
                                                         href={transaction.amazonCaseUrl}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="text-xs text-gray-900 hover:text-gray-600 flex items-center gap-1 font-mono"
-                                                    >
+                                                        className="text-xs text-gray-900 hover:text-gray-600 flex items-center gap-1 font-mono">
                                                         {transaction.caseId}
                                                         <ExternalLink className="h-3 w-3" />
                                                     </a>
@@ -457,8 +454,7 @@ export default function TransactionHistory() {
                                                     variant="ghost"
                                                     size="sm"
                                                     className="h-7 text-[10px] text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-                                                    onClick={() => handleReportIssue(transaction)}
-                                                >
+                                                    onClick={() => handleReportIssue(transaction)}>
                                                     <AlertCircle className="h-3 w-3 mr-1" />
                                                     Report Issue
                                                 </Button>
@@ -539,16 +535,14 @@ export default function TransactionHistory() {
                             variant="outline"
                             size="sm"
                             onClick={() => setReportModalOpen(false)}
-                            className="h-8 text-xs border-gray-200 text-gray-600 rounded-sm"
-                        >
+                            className="h-8 text-xs border-gray-200 text-gray-600 rounded-sm">
                             Cancel
                         </Button>
                         <Button
                             size="sm"
                             onClick={handleSubmitReport}
                             disabled={!issueType || isSubmitting}
-                            className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-sm"
-                        >
+                            className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-sm">
                             {isSubmitting ? 'Submitting...' : 'Submit Report'}
                         </Button>
                     </DialogFooter>

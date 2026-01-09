@@ -389,8 +389,7 @@ export default function IntegrationsHub() {
                 </div>
                 <button
                   onClick={() => navigate('/evidence-locker')}
-                  className="text-xs font-medium text-gray-900 hover:text-gray-700 transition-colors uppercase tracking-[0.1em] border border-gray-300 px-4 py-2 bg-white hover:bg-gray-50"
-                >
+                  className="text-xs font-medium text-gray-900 hover:text-gray-700 transition-colors uppercase tracking-[0.1em] border border-gray-300 px-4 py-2 bg-white hover:bg-gray-50">
                   Open Evidence Locker
                 </button>
               </div>
@@ -432,8 +431,7 @@ export default function IntegrationsHub() {
                         description: 'Redirecting to Amazon SP-API...',
                       });
                       navigate('/integrations/reconnect/amazon');
-                    }}
-                  >
+                    }}>
                     {(isSandbox || status?.amazon_connected) ? 'Manage Connection' : 'Connect Amazon'}
                   </button>
                 </div>
@@ -446,7 +444,7 @@ export default function IntegrationsHub() {
                   <p className="text-[10px] text-gray-500 mt-0.5">Email and cloud for auto-ingestion</p>
                 </div>
                 <div className="p-6 space-y-4">
-                  {evidenceSources.length > 0 && (
+                  {evidenceSources.length> 0 && (
                     <div className="mb-4 p-3 bg-gray-50 border border-gray-200">
                       <p className="text-[10px] uppercase tracking-[0.1em] text-gray-500 font-medium mb-2">Connected Sources</p>
                       <div className="flex flex-wrap gap-1.5">
@@ -500,8 +498,7 @@ export default function IntegrationsHub() {
                                     size="sm"
                                     className="bg-gray-900 hover:bg-gray-800 text-white text-xs"
                                     onClick={() => handleConnectDocSource(p)}
-                                    disabled={providerLoading !== null || disconnectingProvider === p}
-                                  >
+                                    disabled={providerLoading !== null || disconnectingProvider === p}>
                                     {providerLoading === p ? (
                                       <>
                                         <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
@@ -555,8 +552,7 @@ export default function IntegrationsHub() {
                                         setDisconnectingProvider(null);
                                       }
                                     }}
-                                    disabled={providerLoading === p || disconnectingProvider === p}
-                                  >
+                                    disabled={providerLoading === p || disconnectingProvider === p}>
                                     {disconnectingProvider === p ? (
                                       <>
                                         <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
@@ -625,8 +621,7 @@ export default function IntegrationsHub() {
                                   size="sm"
                                   className="bg-gray-900 hover:bg-gray-800 text-white text-xs"
                                   onClick={() => handleConnectDocSource(p)}
-                                  disabled={providerLoading !== null || disconnectingProvider === p}
-                                >
+                                  disabled={providerLoading !== null || disconnectingProvider === p}>
                                   {providerLoading === p ? (
                                     <>
                                       <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
@@ -680,8 +675,7 @@ export default function IntegrationsHub() {
                                       setDisconnectingProvider(null);
                                     }
                                   }}
-                                  disabled={providerLoading === p || disconnectingProvider === p}
-                                >
+                                  disabled={providerLoading === p || disconnectingProvider === p}>
                                   {disconnectingProvider === p ? (
                                     <>
                                       <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
@@ -737,8 +731,7 @@ export default function IntegrationsHub() {
                             setUpdatingAutoCollect(false);
                           }
                         }}
-                        disabled={updatingAutoCollect}
-                      >
+                        disabled={updatingAutoCollect}>
                         {updatingAutoCollect ? (
                           <>
                             <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
@@ -804,8 +797,7 @@ export default function IntegrationsHub() {
                               } finally {
                                 setUpdatingSchedule(false);
                               }
-                            }}
-                          >
+                            }}>
                             {updatingSchedule && schedule === opt.value ? (
                               <RefreshCw className="h-3 w-3 animate-spin mx-auto" />
                             ) : (
@@ -935,8 +927,7 @@ export default function IntegrationsHub() {
                                   filters.dateRange === opt.value
                                     ? "bg-gray-900 text-white border-gray-900"
                                     : "bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100"
-                                )}
-                              >
+                                )}>
                                 <input
                                   type="radio"
                                   name="dateRange"
@@ -1046,8 +1037,7 @@ export default function IntegrationsHub() {
                               setSavingFilters(false);
                             }
                           }}
-                          disabled={savingFilters}
-                        >
+                          disabled={savingFilters}>
                           {savingFilters ? (
                             <>
                               <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
@@ -1066,8 +1056,7 @@ export default function IntegrationsHub() {
                               title: 'Test Run',
                               description: 'Preview functionality coming soon. Save filters and run ingestion to test.',
                             });
-                          }}
-                        >
+                          }}>
                           Test Run
                         </Button>
                       </div>
@@ -1130,13 +1119,12 @@ export default function IntegrationsHub() {
                         }}
                         disabled={ingestingGmail || ingestingAll || (() => {
                           const connectedSources = evidenceSources.filter(s => s.status === 'connected');
-                          if (connectedSources.length > 0) return false;
+                          if (connectedSources.length> 0) return false;
                           if (status?.providerIngest) {
                             return !Object.values(status.providerIngest).some((p: any) => p?.connected === true);
                           }
                           return true;
-                        })()}
-                      >
+                        })()}>
                         {ingestingAll ? (
                           <>
                             <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
@@ -1147,7 +1135,7 @@ export default function IntegrationsHub() {
                         )}
                       </Button>
                       <p className="text-xs text-gray-500 text-center">
-                        {evidenceSources.filter(s => s.status === 'connected').length > 0 ||
+                        {evidenceSources.filter(s => s.status === 'connected').length> 0 ||
                           (status?.providerIngest && Object.values(status.providerIngest).some((p: any) => p?.connected === true))
                           ? 'Uses unified orchestrator – processes all connected sources simultaneously in parallel.'
                           : 'Connect at least one evidence source to begin ingestion.'}
@@ -1194,7 +1182,7 @@ export default function IntegrationsHub() {
                                 </div>
                               </div>
                             )}
-                            {ingestionResult.errors && ingestionResult.errors.length > 0 && (
+                            {ingestionResult.errors && ingestionResult.errors.length> 0 && (
                               <div className="mt-3 pt-3 border-t border-gray-300">
                                 <p className="text-[9px] font-semibold text-gray-600 uppercase tracking-[0.1em] mb-2">Errors</p>
                                 <ul className="text-xs text-gray-700 space-y-1">
@@ -1247,8 +1235,7 @@ export default function IntegrationsHub() {
                               setIngestingGmail(false);
                             }
                           }}
-                          disabled={ingestingGmail || ingestingAll}
-                        >
+                          disabled={ingestingGmail || ingestingAll}>
                           {ingestingGmail ? (
                             <>
                               <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
@@ -1284,7 +1271,7 @@ export default function IntegrationsHub() {
                     const totalDocs = ingestionResult?.totalDocumentsIngested || ingestionResult?.documentsIngested || 0;
                     const parts = [];
 
-                    if (connectedProviders.length > 0) {
+                    if (connectedProviders.length> 0) {
                       parts.push(`Connected: ${connectedProviders.join(', ')}`);
                     }
 
@@ -1300,7 +1287,7 @@ export default function IntegrationsHub() {
                       parts.push('Amazon SP-API synced');
                     }
 
-                    return parts.length > 0 ? parts.join(' • ') : 'No activity yet';
+                    return parts.length> 0 ? parts.join(' • ') : 'No activity yet';
                   })()}
                 </p>
               </div>

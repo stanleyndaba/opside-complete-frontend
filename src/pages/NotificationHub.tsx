@@ -456,16 +456,14 @@ export default function NotificationHub() {
                   <button
                     onClick={handleMarkAllRead}
                     disabled={loading || notifications.length === 0 || notifications.every(n => n.read)}
-                    className="px-3 py-1.5 text-xs text-gray-700 border border-gray-300 bg-white hover:bg-gray-50 transition-colors flex items-center gap-1 disabled:opacity-50"
-                  >
+                    className="px-3 py-1.5 text-xs text-gray-700 border border-gray-300 bg-white hover:bg-gray-50 transition-colors flex items-center gap-1 disabled:opacity-50">
                     <CheckCheck className="h-3.5 w-3.5" />
                     Mark all read
                   </button>
                   <button
                     onClick={handleRefresh}
                     disabled={loading}
-                    className="px-3 py-1.5 text-xs text-gray-700 border border-gray-300 bg-white hover:bg-gray-50 transition-colors flex items-center gap-1 disabled:opacity-50"
-                  >
+                    className="px-3 py-1.5 text-xs text-gray-700 border border-gray-300 bg-white hover:bg-gray-50 transition-colors flex items-center gap-1 disabled:opacity-50">
                     {loading ? (
                       <Loader2 className="h-3.5 w-3.5 animate-spin" />
                     ) : (
@@ -491,8 +489,7 @@ export default function NotificationHub() {
                     {searchQuery && (
                       <button
                         onClick={() => setSearchQuery('')}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                      >
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
                         <X className="h-3 w-3" />
                       </button>
                     )}
@@ -542,8 +539,7 @@ export default function NotificationHub() {
                     {(searchQuery || typeFilter !== 'all' || dateFilter !== 'all' || statusFilter !== 'all') && (
                       <button
                         onClick={clearFilters}
-                        className="px-2 h-8 text-xs text-gray-500 hover:text-gray-700 border border-gray-200 bg-white hover:bg-gray-50"
-                      >
+                        className="px-2 h-8 text-xs text-gray-500 hover:text-gray-700 border border-gray-200 bg-white hover:bg-gray-50">
                         Clear
                       </button>
                     )}
@@ -572,14 +568,13 @@ export default function NotificationHub() {
                     <p className="text-xs text-gray-600 mb-2">{error}</p>
                     <button
                       onClick={handleRefresh}
-                      className="px-3 py-1.5 text-xs text-gray-700 border border-gray-300 bg-white hover:bg-gray-50 transition-colors"
-                    >
+                      className="px-3 py-1.5 text-xs text-gray-700 border border-gray-300 bg-white hover:bg-gray-50 transition-colors">
                       Retry
                     </button>
                   </div>
                 )}
 
-                {!loading && !error && filteredNotifications.length === 0 && notifications.length > 0 && (
+                {!loading && !error && filteredNotifications.length === 0 && notifications.length> 0 && (
                   <div className="text-center py-6 text-gray-600">
                     <p className="text-xs mb-1">No notifications match your filters.</p>
                     <button onClick={clearFilters} className="text-[10px] text-blue-600 hover:text-blue-700">
@@ -595,7 +590,7 @@ export default function NotificationHub() {
                   </div>
                 )}
 
-                {!loading && !error && filteredNotifications.length > 0 && (
+                {!loading && !error && filteredNotifications.length> 0 && (
                   <div className="space-y-2">
                     {filteredNotifications.map((notification) => {
                       const IconComponent = notification.icon;
@@ -606,8 +601,7 @@ export default function NotificationHub() {
                             ? 'bg-gray-50 border-gray-200'
                             : 'bg-white hover:bg-gray-50 border-gray-100'
                             }`}
-                          onClick={() => !notification.read && handleMarkAsRead(notification.id)}
-                        >
+                          onClick={() => !notification.read && handleMarkAsRead(notification.id)}>
                           <div className="flex-shrink-0">
                             <div className="w-6 h-6 bg-gray-100 flex items-center justify-center">
                               <IconComponent className="w-3 h-3 text-gray-600" />

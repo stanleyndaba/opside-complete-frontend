@@ -87,7 +87,7 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
     loadSources();
   }, []);
 
-  const hasConnectedSources = sources.length > 0;
+  const hasConnectedSources = sources.length> 0;
 
   // Listen for SSE events
   useEffect(() => {
@@ -154,11 +154,11 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
         // Log success with details
         onLogEvent?.({ type: 'success', category: 'system', message: `[CONNECTED] All sources responded` }, 800);
 
-        if (res.data.totalItemsProcessed > 0) {
+        if (res.data.totalItemsProcessed> 0) {
           onLogEvent?.({ type: 'thinking', category: 'parse', message: `Found ${res.data.totalItemsProcessed} items to process...` }, 900);
         }
 
-        if (res.data.totalDocumentsIngested > 0) {
+        if (res.data.totalDocumentsIngested> 0) {
           onLogEvent?.({ type: 'success', category: 'parse', message: `[INGESTED] ${res.data.totalDocumentsIngested} document(s) extracted` }, 1100);
           onLogEvent?.({ type: 'thinking', category: 'parse', message: 'Running OCR and text extraction on new documents...' }, 1000);
           onLogEvent?.({ type: 'info', category: 'match', message: 'Queuing documents for claim matching...', thinkingDuration: 4 }, 1300);
@@ -196,7 +196,7 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
           totalItemsProcessed: res.data.totalItemsProcessed || 0,
         });
 
-        if (res.data.errors && res.data.errors.length > 0) {
+        if (res.data.errors && res.data.errors.length> 0) {
           onLogEvent?.({ type: 'warning', category: 'system', message: `Completed with ${res.data.errors.length} error(s)` }, 500);
           toast({
             title: 'Ingestion Completed with Errors',
@@ -272,7 +272,7 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
           </div>
         ) : (
           <>
-            {sources.length > 0 && (
+            {sources.length> 0 && (
               <div className="p-3 rounded-lg bg-gray-50 border border-gray-200">
                 <div className="text-xs font-medium text-gray-500 mb-2">Connected Sources:</div>
                 <div className="flex flex-wrap gap-2">
@@ -288,8 +288,7 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
             <Button
               onClick={handleIngest}
               disabled={ingesting || !hasConnectedSources}
-              className="w-full bg-emerald-500 hover:bg-emerald-400 text-white text-sm h-9"
-            >
+              className="w-full bg-emerald-500 hover:bg-emerald-400 text-white text-sm h-9">
               {ingesting ? (
                 <>
                   <RefreshCw className="w-3.5 h-3.5 mr-2 animate-spin" />
@@ -373,7 +372,7 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
                     </div>
                   </div>
                 )}
-                {result.errors && result.errors.length > 0 && (
+                {result.errors && result.errors.length> 0 && (
                   <div className="mt-2 p-2 rounded bg-red-500/10 border border-red-500/20">
                     <div className="text-xs font-medium text-red-400 mb-1">Errors:</div>
                     <ul className="text-xs text-red-300 list-disc list-inside">
