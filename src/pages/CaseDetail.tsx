@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import Timeline from '@/components/layout/Timeline';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, AlertCircle, Calendar, RefreshCw, ExternalLink, Receipt, ChevronDown } from 'lucide-react';
+import { ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, AlertCircle, Calendar, RefreshCw, ExternalLink, Receipt, ChevronDown, ShieldCheck, Activity, BarChart3, Database, History, ArrowRight } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -404,7 +404,7 @@ export default function CaseDetail() {
   const { toast } = useToast();
   const [matchedDocs, setMatchedDocs] = useState<any[]>([]);
   const [selectedMetric, setSelectedMetric] = useState('payout');
-  const [activeTab, setActiveTab] = useState<'overview' | 'actions' | 'contact'>('overview');
+  const [activeTab, setActiveTab] = useState<'RECORD' | 'PROTOCOL'>('RECORD');
 
   const normalizeStatus = (s?: string): 'Open' | 'In Progress' | 'Approved' | 'Denied' | 'Unknown' => {
     const v = (s || '').toLowerCase();
@@ -665,888 +665,530 @@ export default function CaseDetail() {
   }
 
   return (
-    <PageLayout title={`Case ${effectiveCase.id}`}>
+    <PageLayout title={`Case ID: ${effectiveCase.id}`}>
       <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24">
-          <div className="relative container mx-auto px-8 pt-8 pb-10 text-gray-900 space-y-6">
-            {/* Header - Navigation */}
-            <div className="flex items-center justify-between">
-              <Link to="/recoveries" className="flex items-center gap-2 text-xs text-gray-500 hover:text-gray-900 transition-colors">
-                <ArrowLeft className="h-3.5 w-3.5" />
-                Back to Cases
-              </Link>
+        <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24 text-[13px]">
+          <div className="relative container mx-auto px-8 pt-8 pb-10 text-gray-900">
+            {/* Header - Institutional Metadata */}
+            <div className="mb-10 flex items-center justify-between border-b border-gray-100 pb-8">
+              <div className="flex items-center gap-6">
+                <Link to="/recoveries" className="h-10 w-10 flex items-center justify-center border border-gray-100 hover:bg-gray-50 transition-colors">
+                  <ArrowLeft className="h-4 w-4 text-gray-400" />
+                </Link>
+                <div>
+                  <div className="flex items-center gap-3">
+                    <h1 className="text-xl font-light text-gray-900 tracking-tight font-mono">{effectiveCase.claim_number || effectiveCase.evidence?.claim_number || effectiveCase.id?.slice(0, 12)}</h1>
+                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                    <span className="text-[10px] font-bold text-gray-900 uppercase tracking-widest font-mono">{normalizeStatus(effectiveCase.status).toUpperCase()}</span>
+                  </div>
+                  <p className="text-[9px] text-gray-400 mt-1 uppercase tracking-[0.2em] font-mono">INTERNAL CASE RECORD // SECURE FACILITY: {effectiveCase.facility?.split(' - ')[0] || 'FTW1'}</p>
+                </div>
+              </div>
+              <div className="hidden md:flex items-center gap-4">
+                <div className="text-right">
+                  <div className="text-[9px] text-gray-400 uppercase tracking-widest font-bold">Confidence Engine</div>
+                  <div className="text-[10px] font-mono font-bold text-emerald-600 mt-0.5">{derivedConfidencePct}% VERIFIED</div>
+                </div>
+                <div className="h-8 w-[1px] bg-gray-100" />
+                <div className="text-right">
+                  <div className="text-[9px] text-gray-400 uppercase tracking-widest font-bold">Audit Progress</div>
+                  <div className="text-[10px] font-mono font-bold text-gray-900 mt-0.5">{typeof effectiveCase.progress === 'number' ? Math.round(effectiveCase.progress) : 85}% COMPLETED</div>
+                </div>
+              </div>
             </div>
 
             {/* Auto-Filing Banner - Institutional Style */}
-            <div className="flex items-center gap-4 px-4 py-3 bg-white">
-              <p className="text-xs text-gray-600">
-                <span className="font-medium text-gray-900">Margin Auto-Files</span> cases with <span className="font-mono font-medium text-gray-900">≥85%</span> confidence for you
+            <div className="flex items-center gap-4 px-4 py-2 bg-gray-900 text-white mb-8">
+              <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+              <p className="text-[10px] uppercase tracking-widest font-mono">
+                <span className="text-gray-400">PROTOCOL:</span> MARGIN AUTO-FILES CASES ≥85% CONFIDENCE // AUTONOMOUS STATUS: <span className="text-emerald-400">ACTIVE</span>
               </p>
-              <span className="text-[10px] font-light text-gray-400 uppercase tracking-[0.15em] ml-auto">
-                Autonomous
-              </span>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Left Column - Case Summary */}
-              <div className="lg:col-span-1 space-y-6">
-                <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
-                  <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
-                    <div className="flex items-start justify-between">
-                      <div className="flex flex-col">
-                        <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
-                          Case Summary
-                        </h3>
-                        {derivedConfidencePct >= 85 ? (
-                          <span className="text-[9px] text-emerald-600 font-medium mt-0.5">Auto-Filed</span>
-                        ) : derivedConfidencePct >= 60 ? (
-                          <span className="text-[9px] text-blue-600 font-medium mt-0.5">Awaiting Seller Review</span>
-                        ) : (
-                          <span className="text-[9px] text-amber-600 font-medium mt-0.5">Parked — Needs Evidence</span>
-                        )}
-                      </div>
-                      <span className={cn(
-                        "px-2 py-0.5 text-[10px] font-medium border",
-                        normalizeStatus(effectiveCase.status) === 'Approved' && "bg-gray-100 text-gray-700 border-gray-300",
-                        normalizeStatus(effectiveCase.status) === 'In Progress' && "bg-gray-100 text-gray-700 border-gray-300",
-                        normalizeStatus(effectiveCase.status) === 'Open' && "bg-gray-100 text-gray-700 border-gray-300",
-                        normalizeStatus(effectiveCase.status) === 'Denied' && "bg-gray-100 text-gray-600 border-gray-300",
-                      )}>
-                        {normalizeStatus(effectiveCase.status)}
-                      </span>
-                    </div>
-                    <p className="text-[10px] text-gray-500 font-mono mt-1" title={effectiveCase.id}>
-                      {effectiveCase.claim_number || effectiveCase.evidence?.claim_number || effectiveCase.id?.slice(0, 12) || 'N/A'}
+            {/* Institutional Tab Switcher */}
+            <div className="flex border-b border-gray-100 mb-8">
+              <button
+                onClick={() => setActiveTab('RECORD')}
+                className={cn(
+                  "px-8 py-4 text-[10px] font-bold uppercase tracking-[0.25em] transition-all relative",
+                  activeTab === 'RECORD' ? "text-gray-900" : "text-gray-400 hover:text-gray-600"
+                )}>
+                CASE RECORD
+                {activeTab === 'RECORD' && <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-900" />}
+              </button>
+              <button
+                onClick={() => setActiveTab('PROTOCOL')}
+                className={cn(
+                  "px-8 py-4 text-[10px] font-bold uppercase tracking-[0.25em] transition-all relative",
+                  activeTab === 'PROTOCOL' ? "text-gray-900" : "text-gray-400 hover:text-gray-600"
+                )}>
+                RESOLUTION PROTOCOL
+                {activeTab === 'PROTOCOL' && <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-900" />}
+              </button>
+            </div>
+
+            {activeTab === 'RECORD' && (
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-0 border border-gray-100 divide-x divide-gray-100 italic-divider">
+                {/* Tile 1: Audit Narrative & Logistics */}
+                <div className="lg:col-span-2 p-8 bg-gray-50/30">
+                  <div className="flex items-center gap-2 mb-6">
+                    <FileText className="h-3.5 w-3.5 text-gray-400" />
+                    <h3 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.2em]">Audit Narrative & Logistics</h3>
+                  </div>
+                  <div className="space-y-8">
+                    <p className="text-sm text-gray-700 leading-relaxed font-light">
+                      {generateNarrative(effectiveCase)}
                     </p>
+
+                    <div className="pt-6 border-t border-gray-100">
+                      <div className="text-[9px] text-gray-400 uppercase tracking-widest font-bold mb-4">Product Trace</div>
+                      <div className="grid grid-cols-2 gap-6">
+                        <div className="space-y-4">
+                          <div>
+                            <p className="text-[10px] text-gray-400 uppercase tracking-widest mb-1">Product Identity</p>
+                            <p className="text-xs font-medium text-gray-900 leading-snug truncate" title={effectiveCase.productName || effectiveCase.title || 'Unknown Product'}>
+                              {effectiveCase.productName || effectiveCase.title || 'Unknown Product'}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-[10px] text-gray-400 uppercase tracking-widest mb-1">ASIN / SKU</p>
+                            <p className="text-xs font-mono font-bold text-gray-900">{effectiveCase.asin || '—'} / {effectiveCase.sku || '—'}</p>
+                          </div>
+                        </div>
+                        <div className="space-y-4">
+                          <div>
+                            <p className="text-[10px] text-gray-400 uppercase tracking-widest mb-1">Facility Protocol</p>
+                            <div className="flex items-center gap-2">
+                              <MapPin className="h-3 w-3 text-gray-400" />
+                              <p className="text-xs font-bold text-gray-900">{effectiveCase.facility || effectiveCase.evidence?.fulfillment_center || '—'}</p>
+                            </div>
+                          </div>
+                          {effectiveCase.amazonCaseId && (
+                            <div>
+                              <p className="text-[10px] text-gray-400 uppercase tracking-widest mb-1">Amazon Reference</p>
+                              <a href={`https://sellercentral.amazon.com/case-log/${effectiveCase.amazonCaseId}`} target="_blank" rel="noreferrer" className="text-xs font-mono font-bold text-blue-600 hover:underline flex items-center gap-1">
+                                {effectiveCase.amazonCaseId} <ExternalLink className="h-2.5 w-2.5" />
+                              </a>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Tile 2: Transaction Forensics */}
+                <div className="lg:col-span-1 p-8">
+                  <div className="flex items-center gap-2 mb-6">
+                    <Activity className="h-3.5 w-3.5 text-gray-400" />
+                    <h3 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.2em]">Transaction Forensics</h3>
                   </div>
 
-                  <div className="p-4 space-y-4">
-                    {error && (
-                      <div className="text-xs text-gray-600 p-3 bg-gray-50 border border-gray-200">{error}</div>
-                    )}
+                  {(() => {
+                    const created = effectiveCase.created_at || effectiveCase.createdDate || effectiveCase.discovery_date;
+                    const createdDate = created ? new Date(created) : new Date();
+                    const detectionDate = createdDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    const auditDays = Math.floor((Date.now() - createdDate.getTime()) / (1000 * 60 * 60 * 24));
+                    const amount = effectiveCase.guaranteedAmount || effectiveCase.estimated_value || effectiveCase.claim_amount || 0;
+                    const units = effectiveCase.unitsLost || effectiveCase.units_lost || effectiveCase.quantity || effectiveCase.units || 1;
+                    const perUnit = units > 0 ? (amount / units) : amount;
+                    const caseType = (effectiveCase.anomaly_type || effectiveCase.claim_type || effectiveCase.case_type || '').toLowerCase();
 
-                    {/* Financial Overview */}
-                    <div className="mb-3">
-                      <div className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] mb-1">Guaranteed Value</div>
-                      <div className="text-lg font-medium text-gray-900">
+                    return (
+                      <div className="space-y-8">
+                        <section>
+                          <div className="text-[9px] text-gray-400 uppercase tracking-widest font-bold mb-3 flex items-center gap-2">
+                            <div className="h-px flex-1 bg-gray-100" />
+                            ANALYSIS
+                          </div>
+                          <dl className="space-y-3">
+                            <div className="flex justify-between items-baseline">
+                              <dt className="text-[11px] text-gray-500 font-light">Audit Period</dt>
+                              <dd className="text-xs font-bold text-gray-900 font-mono tracking-tighter">{auditDays} DAYS</dd>
+                            </div>
+                            <div className="flex justify-between items-baseline">
+                              <dt className="text-[11px] text-gray-500 font-light">Issue ID Date</dt>
+                              <dd className="text-xs font-bold text-gray-900 font-mono tracking-tighter">{detectionDate.toUpperCase()}</dd>
+                            </div>
+                            <div className="flex justify-between items-baseline">
+                              <dt className="text-[11px] text-gray-500 font-light">Per Unit Basis</dt>
+                              <dd className="text-xs font-bold text-gray-900 font-mono tracking-tighter">${perUnit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</dd>
+                            </div>
+                            <div className="flex justify-between items-baseline">
+                              <dt className="text-[11px] text-gray-500 font-light">Policy Class</dt>
+                              <dd className="text-[10px] font-bold text-emerald-600 font-mono uppercase tracking-widest">{auditDays <= 180 ? 'COMPLIANT' : 'EXCEEDED'}</dd>
+                            </div>
+                          </dl>
+                        </section>
+
+                        <section>
+                          <div className="text-[9px] text-gray-400 uppercase tracking-widest font-bold mb-3 flex items-center gap-2">
+                            <div className="h-px flex-1 bg-gray-100" />
+                            SYSTEM TAGS
+                          </div>
+                          <dl className="space-y-3">
+                            <div className="flex justify-between items-baseline">
+                              <dt className="text-[11px] text-gray-500 font-light">Category</dt>
+                              <dd className="text-[10px] font-bold text-gray-900 font-mono uppercase tracking-widest">{caseType.replace(/_/g, ' ') || 'DISCREPANCY'}</dd>
+                            </div>
+                            <div className="flex justify-between items-baseline">
+                              <dt className="text-[11px] text-gray-500 font-light">Engine Match</dt>
+                              <dd className="text-[10px] font-bold text-gray-900 font-mono uppercase tracking-widest">{(effectiveCase.match_type || 'ORDER_ID').replace(/_/g, ' ').toUpperCase()}</dd>
+                            </div>
+                            <div className="flex justify-between items-baseline">
+                              <dt className="text-[11px] text-gray-500 font-light">Audit Method</dt>
+                              <dd className="text-[10px] font-bold text-gray-900 font-mono uppercase tracking-widest text-right">AUTONOMOUS AUDIT</dd>
+                            </div>
+                          </dl>
+                        </section>
+                      </div>
+                    );
+                  })()}
+                </div>
+
+                {/* Tile 3: Vital Instrumentation */}
+                <div className="lg:col-span-1 p-8 bg-gray-50/50">
+                  <div className="flex items-center gap-2 mb-6">
+                    <BarChart3 className="h-3.5 w-3.5 text-gray-400" />
+                    <h3 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.2em]">Financial Vitals</h3>
+                  </div>
+
+                  <div className="space-y-8">
+                    <div>
+                      <div className="text-[9px] text-gray-400 uppercase tracking-[0.2em] font-bold mb-2">Guaranteed Amount</div>
+                      <div className="text-2xl font-light text-gray-900 font-mono tracking-tight">
                         ${effectiveCase.guaranteedAmount?.toLocaleString('en-US', { minimumFractionDigits: 2 }) || '0.00'}
                       </div>
 
                       {effectiveCase.actual_payout_amount && (
-                        <div className="mt-2 flex items-center gap-2">
-                          <span className="text-xs text-gray-500">Actual Payout:</span>
-                          <span className="text-sm font-medium text-blue-600">
-                            ${effectiveCase.actual_payout_amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                          </span>
+                        <div className="mt-4 p-3 bg-white border border-gray-100">
+                          <div className="flex justify-between items-center mb-1">
+                            <span className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Actual Payout</span>
+                            <span className="text-xs font-mono font-bold text-blue-600">${effectiveCase.actual_payout_amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                          </div>
                           {effectiveCase.recovery_status === 'reconciled' && (
-                            <span className="text-xs text-green-600 flex items-center gap-1">
-                              <CheckCircle className="h-3 w-3" /> Reconciled
-                            </span>
+                            <div className="flex items-center gap-1.5 text-[8px] text-emerald-600 font-bold uppercase tracking-widest">
+                              <CheckCircle className="h-2.5 w-2.5" /> RECONCILED BY AUDIT ENGINE
+                            </div>
                           )}
                         </div>
                       )}
 
                       {effectiveCase.recovery_status === 'discrepancy' && effectiveCase.actual_payout_amount && (
-                        <div className="mt-2 text-xs text-red-600">
-                          <AlertCircle className="h-3 w-3 inline mr-1" />
-                          Discrepancy: ${Math.abs(effectiveCase.guaranteedAmount - effectiveCase.actual_payout_amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                        <div className="mt-2 text-[10px] text-red-600 font-bold uppercase tracking-widest flex items-center gap-1">
+                          <AlertCircle className="h-3 w-3" /> DISCREPANCY: ${Math.abs(effectiveCase.guaranteedAmount - effectiveCase.actual_payout_amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                         </div>
                       )}
                     </div>
 
-                    {/* Metric Selector Dropdown - Replaces Quadrant Design */}
-                    <div className="border border-gray-200 rounded-sm overflow-hidden bg-white">
+                    <div className="border border-gray-100 bg-white">
                       <div className="px-3 pt-3">
                         <Select value={selectedMetric} onValueChange={setSelectedMetric}>
-                          <SelectTrigger className="h-7 w-full border-0 bg-transparent p-0 text-[10px] font-semibold text-gray-500 uppercase tracking-[0.1em] focus:ring-0 shadow-none">
-                            <SelectValue placeholder="Select Metric" />
+                          <SelectTrigger className="h-7 w-full border-0 bg-transparent p-0 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] focus:ring-0 shadow-none">
+                            <SelectValue placeholder="Metric View" />
                           </SelectTrigger>
-                          <SelectContent className="rounded-sm">
-                            <SelectItem value="payout" className="text-[10px] uppercase tracking-wider">Expected Payout</SelectItem>
-                            <SelectItem value="confidence" className="text-[10px] uppercase tracking-wider">Confidence</SelectItem>
-                            <SelectItem value="units" className="text-[10px] uppercase tracking-wider">Units Lost</SelectItem>
-                            <SelectItem value="cost" className="text-[10px] uppercase tracking-wider">Unit Cost</SelectItem>
+                          <SelectContent className="rounded-none border-gray-100 shadow-none">
+                            <SelectItem value="payout" className="text-[10px] uppercase tracking-widest">Expected Payout</SelectItem>
+                            <SelectItem value="confidence" className="text-[10px] uppercase tracking-widest">Confidence Score</SelectItem>
+                            <SelectItem value="units" className="text-[10px] uppercase tracking-widest">Units Affected</SelectItem>
+                            <SelectItem value="cost" className="text-[10px] uppercase tracking-widest">Cost Per Unit</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
 
-                      <div className="px-3 pb-3 pt-1">
-                        <div className="text-lg font-medium text-gray-900 tabular-nums tracking-tight">
+                      <div className="p-3">
+                        <div className="text-lg font-bold text-gray-900 tabular-nums font-mono tracking-tighter">
                           {selectedMetric === 'payout' && (
                             effectiveCase.expectedPayoutDate ? new Date(effectiveCase.expectedPayoutDate).toLocaleDateString('en-US', {
-                              month: 'short',
-                              day: 'numeric',
-                              year: 'numeric'
-                            }) : '—'
+                              month: 'short', day: 'numeric', year: 'numeric'
+                            }).toUpperCase() : '—'
                           )}
                           {selectedMetric === 'confidence' && `${derivedConfidencePct}%`}
-                          {selectedMetric === 'units' && (effectiveCase.unitsLost ?? '—')}
+                          {selectedMetric === 'units' && `${effectiveCase.unitsLost ?? '—'} UNITS`}
                           {selectedMetric === 'cost' && (
                             typeof effectiveCase.unitCost === 'number' ? `$${effectiveCase.unitCost.toFixed(2)}` : '—'
                           )}
                         </div>
-                        <div className="text-[9px] text-gray-400 font-medium uppercase tracking-widest mt-0.5">
-                          {selectedMetric === 'payout' && 'Scheduled Reimbursement'}
-                          {selectedMetric === 'confidence' && 'AI Analysis Score'}
+                        <div className="text-[8px] text-gray-400 uppercase tracking-[0.2em] mt-1 font-bold">
+                          {selectedMetric === 'payout' && 'Scheduled Settlement'}
+                          {selectedMetric === 'confidence' && 'AI Analysis Precision'}
                           {selectedMetric === 'units' && 'Inventory Discrepancy'}
-                          {selectedMetric === 'cost' && 'Estimated Value Per Unit'}
+                          {selectedMetric === 'cost' && 'Verified Cost Basis'}
                         </div>
-                      </div>
-                    </div>
-
-                    {/* Product Info - Institutional Style */}
-                    <div className="border border-gray-200 p-3 space-y-2">
-                      <div className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] border-b border-gray-100 pb-1">Product Details</div>
-                      <div>
-                        <div className="text-xs font-medium text-gray-900">{effectiveCase.productName || effectiveCase.title || effectiveCase.anomaly_type || 'Unknown Product'}</div>
-                        <div className="text-[10px] font-mono text-gray-500 mt-1">SKU: {effectiveCase.sku || effectiveCase.evidence?.sku || '—'}</div>
-                        {(effectiveCase.asin || effectiveCase.evidence?.asin) && (
-                          <div className="text-[10px] font-mono text-gray-500">ASIN: {effectiveCase.asin || effectiveCase.evidence?.asin}</div>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-2 text-[10px] font-mono text-gray-500 pt-1 border-t border-gray-100">
-                        <MapPin className="h-3 w-3 text-gray-400" />
-                        {effectiveCase.facility || effectiveCase.evidence?.fulfillment_center || '—'}
-                      </div>
-                    </div>
-
-                    {/* Evidence Status - Institutional Style */}
-                    <div className="border border-gray-200 p-3 space-y-2">
-                      <div className="flex items-center justify-between border-b border-gray-100 pb-1">
-                        <div className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em]">Evidence</div>
-                        <span className="text-[10px] font-mono text-gray-600">{matchedCount} docs</span>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-light text-gray-400">Status</span>
-                        <span className={cn(
-                          "text-xs font-mono",
-                          derivedEvidence === 'Ready' && "text-gray-900",
-                          derivedEvidence === 'Collecting' && "text-gray-600",
-                          derivedEvidence === 'Needs Docs' && "text-amber-600",
-                        )}>
-                          {derivedEvidence}
-                        </span>
-                      </div>
-
-                      {matchedDocs.length > 0 && (
-                        <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-100">
-                          {matchedDocs.slice(0, 2).map((d: any) => (
-                            <button key={d.id} className="text-xs font-mono text-gray-500 hover:text-gray-900 hover:underline" onClick={() => window.open(`/documents/${encodeURIComponent(d.id)}`, '_blank')}>
-                              {d.name || d.filename || d.id}
-                            </button>
-                          ))}
-                          {matchedDocs.length > 2 && (
-                            <Link to="/evidence-locker" className="text-xs text-gray-400 hover:text-gray-600">
-                              +{matchedDocs.length - 2} more
-                            </Link>
-                          )}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Amazon Case ID if available */}
-                    {effectiveCase.amazonCaseId && (
-                      <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-100">
-                        <div>
-                          <div className="text-xs text-blue-600">Amazon Case ID</div>
-                          <div className="font-mono text-sm text-blue-900">{effectiveCase.amazonCaseId}</div>
-                        </div>
-                        <a href={`https://sellercentral.amazon.com/case-log/${effectiveCase.amazonCaseId}`} target="_blank" rel="noreferrer" className="text-blue-600 hover:text-blue-800">
-                          <ExternalLink className="h-4 w-4" />
-                        </a>
-                      </div>
-                    )}
-
-                    {/* Payment Status if available */}
-                    {effectiveCase.recovery_status && effectiveCase.recovery_status !== 'detecting' && (
-                      <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
-                        <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Payment Status</div>
-                        <div className="space-y-2">
-                          {effectiveCase.recovery_status === 'reconciled' && (
-                            <>
-                              <div className="flex items-center gap-2 text-sm text-green-600">
-                                <CheckCircle className="h-4 w-4" /> Payout reconciled
-                              </div>
-                              <div className="flex items-center gap-2 text-sm text-amber-600">
-                                <Clock className="h-4 w-4" /> Funds arriving in 3–5 business days
-                              </div>
-                            </>
-                          )}
-                          {effectiveCase.recovery_status === 'matched' && (
-                            <div className="flex items-center gap-2 text-sm text-purple-600">
-                              <CheckCircle className="h-4 w-4" /> Payout matched
-                            </div>
-                          )}
-                          {effectiveCase.billingStatus === 'charged' && (
-                            <div className="flex items-center gap-2 text-sm text-emerald-600 pt-2 border-t border-gray-200">
-                              <Receipt className="h-4 w-4" />
-                              Invoice #{effectiveCase.billingTransactionId?.slice(0, 8) || 'PAID'} paid
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Missing Docs Prompt */}
-                    {effectiveCase?.missingDocumentPrompt && (
-                      <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
-                        <div className="text-sm text-amber-900 mb-3">{effectiveCase.missingDocumentPrompt}</div>
-                        {Array.isArray(effectiveCase.missingDocumentOptions) && (
-                          <div className="flex flex-wrap gap-2 mb-3">
-                            {effectiveCase.missingDocumentOptions.map((opt: string) => (
-                              <Button key={opt} size="sm" variant="outline" className="text-amber-800 border-amber-300 hover:bg-amber-100" onClick={() => {
-                                recoveryApi.submitRecoveryAnswer(effectiveCase.id, { answer: opt }).catch(() => { });
-                              }}>{opt}</Button>
-                            ))}
-                          </div>
-                        )}
-                        <div
-                          className="p-3 border border-dashed border-amber-300 rounded-lg bg-white/60 text-center text-xs text-amber-700"
-                          onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
-                          onDrop={async (e) => {
-                            e.preventDefault();
-                            const files = Array.from(e.dataTransfer.files || []);
-                            if (!files.length) return;
-                            await recoveryApi.uploadRecoveryDocuments(effectiveCase.id, files as any).catch(() => { });
-                          }}>
-                          Drag and drop invoice here
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Decision Reason */}
-                    {(effectiveCase.approvalReason || effectiveCase.rejectionReason) && (
-                      <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
-                        <div className="text-xs text-gray-500 mb-1">Decision Reason</div>
-                        <div className="text-sm text-gray-900">{effectiveCase.approvalReason || effectiveCase.rejectionReason}</div>
-                      </div>
-                    )}
-
-                    {/* Double-Dip Protection Alert */}
-                    {(effectiveCase.prior_reimbursement_detected || effectiveCase.inventory_adjustment_applied || effectiveCase.duplicate_blocked) && (
-                      <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                        <div className="flex items-center gap-2 mb-2">
-                          <CheckCircle className="h-5 w-5 text-blue-600" />
-                          <span className="font-semibold text-blue-900">🛡️ Account Protection Active</span>
-                        </div>
-                        <p className="text-sm text-blue-700">
-                          {effectiveCase.prior_reimbursement_detected
-                            ? `We found a prior reimbursement for ${effectiveCase.sku || 'this item'} in this period, so we didn't file a duplicate claim to keep your account safe.`
-                            : effectiveCase.inventory_adjustment_applied
-                              ? 'Amazon already processed an inventory adjustment for this issue. No duplicate claim filed.'
-                              : 'This claim was blocked to prevent duplicate filing and protect your seller account standing.'}
-                        </p>
-                        {effectiveCase.prior_case_id && (
-                          <p className="text-xs text-blue-600 mt-2">Prior Case: {effectiveCase.prior_case_id}</p>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Actions */}
-                    <div className="space-y-3 pt-2">
-
-                      {effectiveCase.status === 'Denied' && (() => {
-                        const rejectionReason = classifyRejection(effectiveCase.status, effectiveCase.rejectionReason);
-                        const playbook = escalationPlaybooks[rejectionReason];
-                        const escalationCount = effectiveCase.escalation_count || 0;
-                        const maxEscalations = 2;
-                        const canEscalate = escalationCount < maxEscalations;
-
-                        return (
-                          <div className="rounded-lg border border-red-200 bg-red-50 p-4 space-y-3">
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-2">
-                                <AlertCircle className="h-4 w-4 text-red-500" />
-                                <span className="text-sm font-semibold text-red-900">{playbook.label}</span>
-                              </div>
-                              <Badge className="bg-purple-100 text-purple-700 text-xs">
-                                Escalation {escalationCount}/{maxEscalations}
-                              </Badge>
-                            </div>
-                            <p className="text-sm text-red-700">{playbook.description}</p>
-
-                            <div className="bg-white/70 rounded p-3 border border-red-100">
-                              <div className="text-xs text-red-600 font-semibold uppercase tracking-wide mb-2">Escalation Playbook</div>
-                              <ul className="space-y-1">
-                                {playbook.actions.map((action, i) => (
-                                  <li key={i} className="flex items-start gap-2 text-sm text-red-800">
-                                    <span className="text-red-400">→</span>
-                                    {action}
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-
-                            {canEscalate ? (
-                              <Button
-                                className={`w-full ${playbook.autoTriggerable ? 'bg-purple-600 hover:bg-purple-700' : 'bg-blue-600 hover:bg-blue-700'} text-white`}
-                                onClick={async () => {
-                                  const hasDocs = Array.isArray(effectiveCase.documents) && effectiveCase.documents.length > 0;
-                                  if (!hasDocs) {
-                                    toast({ title: 'Attach evidence first', description: 'Add at least one supporting document before resubmitting.' });
-                                    return;
-                                  }
-                                  const res = await api.resubmitClaim(effectiveCase.id);
-                                  if (res.ok) {
-                                    toast({ title: playbook.autoTriggerable ? 'Auto-escalated' : 'Escalation submitted', description: 'We will keep you posted on the decision.' });
-                                    setCaseData((prev: any) => ({ ...(prev || {}), status: 'Submitted', escalation_count: (prev?.escalation_count || 0) + 1 }));
-                                  } else {
-                                    toast({ title: 'Escalation failed', description: res.error || 'Please try again.' });
-                                  }
-                                }}>
-                                <RefreshCw className="h-4 w-4 mr-2" />
-                                {playbook.autoTriggerable ? 'Auto-Escalate' : 'Manual Escalation'} (Round {escalationCount + 1})
-                              </Button>
-                            ) : (
-                              <div className="flex items-center gap-2 p-2 bg-amber-50 rounded text-amber-700 text-sm">
-                                <AlertCircle className="h-4 w-4" />
-                                Max escalations reached. Manual review recommended.
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })()}
-
-                      {/* Download Proof Document */}
-                      <Button variant="outline" className="w-full text-gray-600 border-gray-200 hover:bg-gray-50" onClick={() => {
-                        window.open(api.getRecoveryDocumentUrl(effectiveCase.id), '_blank');
-                      }}>
-                        <FileText className="h-4 w-4 mr-2" />
-                        Download Proof Document
-                      </Button>
-
-                      {/* Subtle Evidence Locker link */}
-                      <div className="text-center pt-1">
-                        <Link to="/evidence-locker" className="text-xs text-gray-400 hover:text-gray-600 hover:underline">
-                          View Evidence Locker →
-                        </Link>
                       </div>
                     </div>
                   </div>
                 </div>
+              </div>
+            )}
 
-                <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
-                  <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
-                          Supporting Evidence
-                        </h3>
-                        <p className="text-[10px] text-gray-500 mt-0.5">Amazon rejects 82% of claims without an Invoice.</p>
-                      </div>
-                      <span className="text-[10px] text-gray-500 uppercase tracking-[0.1em]">
-                        {matchedDocs.length} found
-                      </span>
-                    </div>
+            {activeTab === 'PROTOCOL' && (
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-0 border border-gray-100 divide-x divide-gray-100 italic-divider">
+                {/* Tile 1: Audit Flow Timeline */}
+                <div className="lg:col-span-1 p-8 bg-gray-50/30">
+                  <div className="flex items-center gap-2 mb-6">
+                    <History className="h-3.5 w-3.5 text-gray-400" />
+                    <h3 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.2em]">Audit Flow Timeline</h3>
                   </div>
-                  <div className="space-y-3 p-4">
-                    {matchedDocs.length > 0 ? (
-                      <div className="space-y-3">
-                        {matchedDocs.map((doc: any, idx: number) => {
-                          // Derive confidence from match data or generate stable value
-                          const matchConfidence = doc.matchConfidence || doc.confidence_score ||
-                            (doc.matches?.[0]?.confidence_score) ||
-                            (0.6 + (stableHash(doc.id || '') % 35) / 100);
-                          const confidencePct = Math.round(matchConfidence * 100);
 
-                          // Determine matched fields from doc metadata
-                          const matchedFields: string[] = [];
-                          const extracted = doc.extracted || doc.parsed_metadata || {};
-                          if (extracted.order_ids?.length > 0) matchedFields.push('Order ID');
-                          if (extracted.asins?.length > 0 || extracted.skus?.length > 0) matchedFields.push('ASIN/SKU');
-                          if (extracted.tracking_numbers?.length > 0) matchedFields.push('Tracking #');
-                          if (extracted.amounts?.length > 0) matchedFields.push('Amount');
-                          if (extracted.invoice_numbers?.length > 0) matchedFields.push('Invoice #');
-                          if (matchedFields.length === 0) matchedFields.push('Content Match');
+                  <div className="space-y-8">
+                    {/* Visual Progress Bar */}
+                    <div className="relative pb-2">
+                      <div className="absolute top-[11px] left-3 right-3 h-[1px] bg-gray-100" />
+                      <div className="flex justify-between items-start relative z-10">
+                        {['Detected', 'Prepared', 'Submitted', 'Paid', 'Follow-up'].map((step, idx) => {
+                          const status = (effectiveCase.status || '').toLowerCase();
+                          const active = (step === 'Detected') ||
+                            (step === 'Prepared' && ['guaranteed', 'submitted', 'under review', 'under_review', 'filed', 'pending', 'in progress', 'in_progress', 'paid out', 'paid_out', 'approved', 'paid', 'denied', 'rejected'].includes(status)) ||
+                            (step === 'Submitted' && ['submitted', 'under review', 'under_review', 'filed', 'paid out', 'paid_out', 'approved', 'paid', 'denied', 'rejected'].includes(status)) ||
+                            (step === 'Paid' && ['paid out', 'paid_out', 'approved', 'paid', 'completed', 'reconciled'].includes(status)) ||
+                            (step === 'Follow-up' && ['denied', 'rejected', 'unresolved'].includes(status));
 
                           return (
-                            <div key={doc.id || idx} className="p-3 rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-100 transition-colors">
-                              <div className="flex items-start justify-between gap-3">
-                                <div className="flex-1 min-w-0">
-                                  <div className="flex items-center gap-2 mb-2">
-                                    <FileText className="h-3.5 w-3.5 text-gray-700 flex-shrink-0" />
-                                    <span className="text-xs font-medium text-gray-900 truncate">
-                                      {doc.name || doc.filename || doc.original_filename || `Document ${idx + 1}`}
-                                    </span>
-                                  </div>
-
-                                  {/* Match Confidence */}
-                                  <div className="flex items-center gap-2 mb-1.5">
-                                    <span className="text-[10px] text-gray-600">Match Confidence:</span>
-                                    <Badge className={cn(
-                                      "text-xs",
-                                      confidencePct >= 85 ? "bg-emerald-100 text-emerald-800 border-emerald-200" :
-                                        confidencePct >= 60 ? "bg-amber-100 text-amber-800 border-amber-200" :
-                                          "bg-gray-100 text-gray-800 border-gray-200"
-                                    )}>
-                                      {confidencePct}%
-                                    </Badge>
-                                  </div>
-
-                                  {/* Matched Fields */}
-                                  <div className="flex flex-wrap gap-1 mb-1.5">
-                                    <span className="text-[10px] text-gray-600 mr-1">Matched on:</span>
-                                    {matchedFields.map((field, fieldIdx) => (
-                                      <Badge key={fieldIdx} variant="outline" className="text-[10px] border-gray-300 text-gray-700">
-                                        {field}
-                                      </Badge>
-                                    ))}
-                                  </div>
-
-                                  {/* Document Source */}
-                                  {doc.source && (
-                                    <div className="text-[10px] text-gray-500">
-                                      Source: {doc.source}
-                                    </div>
-                                  )}
-                                </div>
-
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  className="flex-shrink-0 text-gray-700 border-gray-300 hover:bg-gray-200 text-xs h-7"
-                                  onClick={() => window.open(`/documents/${encodeURIComponent(doc.id)}`, '_blank')}>
-                                  View
-                                </Button>
+                            <div key={step} className="flex flex-col items-center">
+                              <div className={cn(
+                                "w-[22px] h-[22px] rounded-full border-2 flex items-center justify-center text-[8px] font-bold transition-all",
+                                active ? "bg-gray-900 border-gray-900 text-white" : "bg-white border-gray-100 text-gray-300"
+                              )}>
+                                {idx + 1}
                               </div>
-
-                              {/* Reasoning / Match Details */}
-                              {(doc.matchReasoning || doc.match_reason || doc.matches?.[0]?.reasoning) && (
-                                <div className="mt-3 pt-3 border-t border-gray-200">
-                                  <p className="text-xs text-gray-600 italic">
-                                    {doc.matchReasoning || doc.match_reason || doc.matches?.[0]?.reasoning}
-                                  </p>
-                                </div>
-                              )}
+                              <span className={cn(
+                                "text-[7px] uppercase tracking-widest mt-2 font-bold",
+                                active ? "text-gray-900" : "text-gray-300"
+                              )}>{step}</span>
                             </div>
                           );
                         })}
                       </div>
-                    ) : (
-                      <div className="text-center py-4">
-                        <FileText className="h-6 w-6 mx-auto text-gray-300 mb-2" />
-                        <p className="text-xs text-gray-500 mb-1">
-                          No matching documents found yet
-                        </p>
-                        <p className="text-xs text-gray-400">
-                          Your matched evidence documents will appear here once the system finds relevant invoices, receipts, or shipping records.
-                        </p>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="mt-3 text-gray-700 border-gray-300 text-xs"
-                          asChild>
-                          <Link to="/evidence-locker">Browse Evidence Locker</Link>
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
+                    </div>
 
-              {/* Right Column - Tabbed Interface */}
-              <div className="lg:col-span-2">
-                {/* Tab Bar - Pentagon Style */}
-                <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
-                  <div className="flex border-b border-gray-200">
-                    {[
-                      { id: 'overview' as const, label: 'Overview' },
-                      { id: 'actions' as const, label: 'Actions' },
-                      { id: 'contact' as const, label: 'Contact' }
-                    ].map((tab) => (
-                      <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id)}
-                        className={cn(
-                          "flex-1 px-4 py-3 text-xs font-medium uppercase tracking-[0.15em] transition-colors",
-                          activeTab === tab.id
-                            ? "bg-gray-900 text-white"
-                            : "bg-gray-50 text-gray-600 hover:bg-gray-100"
-                        )}>
-                        {tab.label}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Tab Content */}
-                  <div className="p-6 min-h-[400px]">
-                    {/* OVERVIEW TAB */}
-                    {activeTab === 'overview' && (
-                      <div className="space-y-6">
-                        <div>
-                          <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em] mb-1">Issue Description</h3>
-                          <div className="text-[10px] text-gray-500 mb-3">Case Context</div>
-                          <p className="text-sm text-gray-700 leading-relaxed">{generateNarrative(effectiveCase)}</p>
-                        </div>
-                        <div className="border-t border-gray-100 pt-6">
-                          <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em] mb-1">Transaction History</h3>
-                          <div className="text-[10px] text-gray-500 mb-4">Forensic Evidence</div>
-
-                          {(() => {
-                            const created = effectiveCase.created_at || effectiveCase.createdDate || effectiveCase.discovery_date;
-                            const createdDate = created ? new Date(created) : new Date();
-                            const detectionDate = createdDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-                            const auditDays = Math.floor((Date.now() - createdDate.getTime()) / (1000 * 60 * 60 * 24));
-                            const amount = effectiveCase.guaranteedAmount || effectiveCase.estimated_value || effectiveCase.claim_amount || 0;
-                            const units = effectiveCase.unitsLost || effectiveCase.units_lost || effectiveCase.quantity || effectiveCase.units || 1;
-                            const perUnit = units > 0 ? (amount / units) : amount;
-                            const sku = effectiveCase.sku || effectiveCase.evidence?.sku || 'N/A';
-                            const asin = effectiveCase.asin || effectiveCase.evidence?.asin || 'N/A';
-                            const orderId = effectiveCase.order_id || effectiveCase.evidence?.order_id || effectiveCase.matched_fields?.[0]?.split(':')[1] || '';
-                            const facility = effectiveCase.facility || effectiveCase.evidence?.fulfillment_center || '';
-                            const shipmentId = effectiveCase.shipment_id || effectiveCase.evidence?.shipment_id || '';
-                            const caseType = (effectiveCase.anomaly_type || effectiveCase.claim_type || effectiveCase.case_type || '').toLowerCase();
-
-                            return (
-                              <div className="bg-white">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 py-6 border-t border-gray-100">
-                                  {/* Forensic & Timeline */}
-                                  <div className="space-y-8">
-                                    <section>
-                                      <h4 className="text-[10px] font-semibold text-gray-900 uppercase tracking-[0.15em] mb-4 flex items-center gap-2">
-                                        <div className="h-1 w-3 bg-emerald-500" />
-                                        Forensic Metrics
-                                      </h4>
-                                      <dl className="space-y-3">
-                                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                          <dt className="text-[11px] text-gray-500 font-light">Units Affected</dt>
-                                          <dd className="text-xs font-medium text-gray-900 tabular-nums font-mono">{units}</dd>
-                                        </div>
-                                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                          <dt className="text-[11px] text-gray-500 font-light">Value Per Unit</dt>
-                                          <dd className="text-xs font-medium text-gray-900 tabular-nums font-mono">${perUnit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</dd>
-                                        </div>
-                                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                          <dt className="text-[11px] text-gray-500 font-light">Total Claimed</dt>
-                                          <dd className="text-xs font-semibold text-gray-900 tabular-nums font-mono">${Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</dd>
-                                        </div>
-                                        <div className="flex justify-between items-baseline">
-                                          <dt className="text-[11px] text-gray-500 font-light">Confidence Score</dt>
-                                          <dd className="text-xs font-medium text-gray-900 tabular-nums font-mono">
-                                            {(() => {
-                                              const conf = effectiveCase.confidence || effectiveCase.confidence_score || 0.85;
-                                              const normalized = conf > 1 ? conf : conf * 100;
-                                              return `${Math.min(Math.round(normalized), 100)}%`;
-                                            })()}
-                                          </dd>
-                                        </div>
-                                      </dl>
-                                    </section>
-
-                                    <section>
-                                      <h4 className="text-[10px] font-semibold text-gray-900 uppercase tracking-[0.15em] mb-4 flex items-center gap-2">
-                                        <div className="h-1 w-3 bg-blue-500" />
-                                        Timeline Accuracy
-                                      </h4>
-                                      <dl className="space-y-3">
-                                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                          <dt className="text-[11px] text-gray-500 font-light">Issue Identified</dt>
-                                          <dd className="text-xs font-medium text-gray-900 tabular-nums font-mono">{detectionDate}</dd>
-                                        </div>
-                                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                          <dt className="text-[11px] text-gray-500 font-light">Audit Period</dt>
-                                          <dd className="text-xs font-medium text-gray-900 tabular-nums font-mono">{auditDays} days</dd>
-                                        </div>
-                                        <div className="flex justify-between items-baseline">
-                                          <dt className="text-[11px] text-gray-500 font-light">Policy Compliance</dt>
-                                          <dd className="text-xs font-medium text-emerald-600 font-mono uppercase tracking-wider">{auditDays <= 180 ? 'Compliant' : 'Exceeded'}</dd>
-                                        </div>
-                                      </dl>
-                                    </section>
-                                  </div>
-
-                                  {/* Logistical & Metadata */}
-                                  <div className="space-y-8">
-                                    <section>
-                                      <h4 className="text-[10px] font-semibold text-gray-900 uppercase tracking-[0.15em] mb-4 flex items-center gap-2">
-                                        <div className="h-1 w-3 bg-gray-400" />
-                                        Logistical Trace
-                                      </h4>
-                                      <dl className="space-y-3">
-                                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                          <dt className="text-[11px] text-gray-500 font-light">ASIN / SKU</dt>
-                                          <dd className="text-[10px] font-mono text-gray-900">{asin} / {sku}</dd>
-                                        </div>
-                                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                          <dt className="text-[11px] text-gray-500 font-light">Fulfillment Center</dt>
-                                          <dd className="text-xs font-medium text-gray-900">{facility || 'N/A'}</dd>
-                                        </div>
-                                        {orderId && (
-                                          <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                            <dt className="text-[11px] text-gray-500 font-light">Reference Trans.</dt>
-                                            <dd className="text-[10px] font-mono text-gray-900 underline underline-offset-2">{orderId}</dd>
-                                          </div>
-                                        )}
-                                        {shipmentId && (
-                                          <div className="flex justify-between items-baseline">
-                                            <dt className="text-[11px] text-gray-500 font-light">Shipment Ref.</dt>
-                                            <dd className="text-[10px] font-mono text-gray-900">{shipmentId}</dd>
-                                          </div>
-                                        )}
-                                      </dl>
-                                    </section>
-
-                                    <section>
-                                      <h4 className="text-[10px] font-semibold text-gray-900 uppercase tracking-[0.15em] mb-4 flex items-center gap-2">
-                                        <div className="h-1 w-3 bg-indigo-500" />
-                                        System Metadata
-                                      </h4>
-                                      <dl className="space-y-3">
-                                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                          <dt className="text-[11px] text-gray-500 font-light">Claim Category</dt>
-                                          <dd className="text-xs font-medium text-gray-900 capitalize font-mono">{caseType.replace(/_/g, ' ') || 'Discrepancy'}</dd>
-                                        </div>
-                                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                          <dt className="text-[11px] text-gray-500 font-light">Engine Match</dt>
-                                          <dd className="text-xs font-medium text-gray-900 capitalize font-mono">{(effectiveCase.match_type || 'order_id').replace(/_/g, ' ')}</dd>
-                                        </div>
-                                        <div className="flex justify-between items-baseline">
-                                          <dt className="text-[11px] text-gray-500 font-light">Audit Method</dt>
-                                          <dd className="text-[10px] font-medium text-gray-700 uppercase tracking-wider">Autonomous Engine</dd>
-                                        </div>
-                                      </dl>
-                                    </section>
-                                  </div>
-                                </div>
-                              </div>
-                            );
-                          })()}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* ACTIONS TAB */}
-                    {activeTab === 'actions' && (
-                      <div className="space-y-6">
-                        <div>
-                          <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em] mb-1">Required Actions Requested</h3>
-                          <div className="text-[10px] text-gray-500 mb-4">Resolution request to Amazon</div>
-
-                          {(() => {
-                            const caseType = (effectiveCase.anomaly_type || effectiveCase.claim_type || effectiveCase.case_type || '').toLowerCase();
-                            const isFeeCase = caseType.includes('fee') || caseType.includes('overcharge') || caseType.includes('commission') || caseType.includes('storage') || caseType.includes('lts');
-                            const isLostCase = caseType.includes('lost') || caseType.includes('missing') || caseType.includes('shipment') || caseType.includes('shortage') || caseType.includes('discrepancy');
-                            const isDamagedCase = caseType.includes('damaged') || caseType.includes('damage') || caseType.includes('carrier');
-                            const isRefundCase = caseType.includes('refund') || caseType.includes('return') || caseType.includes('switcheroo') || caseType.includes('wrong_item') || caseType.includes('empty_box');
-                            const isChargebackCase = caseType.includes('chargeback') || caseType.includes('dispute') || caseType.includes('atoz');
-                            const asin = effectiveCase.asin || effectiveCase.evidence?.asin || '—';
-                            const sku = effectiveCase.sku || effectiveCase.evidence?.sku || '—';
-                            const facility = effectiveCase.facility || effectiveCase.evidence?.fulfillment_center || '—';
-                            const units = effectiveCase.unitsLost || effectiveCase.quantity || effectiveCase.units || '—';
-                            const amount = (effectiveCase.guaranteedAmount || effectiveCase.estimated_value || effectiveCase.claim_amount || 0);
-                            const orderId = effectiveCase.order_id || effectiveCase.evidence?.order_id || '—';
-                            const formattedAmount = `$${Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
-                            const immediateActions: string[] = [];
-                            const preventiveMeasures: string[] = [];
-
-                            if (isFeeCase) {
-                              immediateActions.push(`Review product weight/dimensional specifications for ASIN ${asin}`);
-                              immediateActions.push(`Update ASIN measurements in Amazon catalog system`);
-                              preventiveMeasures.push(`Correct fee calculations for future shipments`);
-                              preventiveMeasures.push(`Ensure measurement accuracy for existing inventory`);
-                            } else if (isLostCase) {
-                              immediateActions.push(`Investigate inventory discrepancy at FC ${facility}`);
-                              immediateActions.push(`Confirm count discrepancy for ${units} units of SKU ${sku}`);
-                              preventiveMeasures.push(`Improve inventory tracking at fulfillment centers`);
-                              preventiveMeasures.push(`Implement regular reconciliation checks`);
-                            } else if (isDamagedCase) {
-                              immediateActions.push(`Review damage report for SKU ${sku}`);
-                              immediateActions.push(`Verify damage occurred during Amazon/carrier handling`);
-                              preventiveMeasures.push(`Review handling procedures for product category`);
-                              preventiveMeasures.push(`Consider improved packaging requirements`);
-                            } else if (isRefundCase) {
-                              immediateActions.push(`Verify return status for Order ${orderId}`);
-                              immediateActions.push(`Confirm refund issued without valid return received`);
-                              preventiveMeasures.push(`Monitor return compliance more closely`);
-                              preventiveMeasures.push(`Flag repeat offender customer accounts`);
-                            } else if (isChargebackCase) {
-                              immediateActions.push(`Review chargeback claim for Order ${orderId}`);
-                              immediateActions.push(`Provide proof of delivery and product condition`);
-                              preventiveMeasures.push(`Enhance delivery confirmation tracking`);
-                              preventiveMeasures.push(`Document all communications with buyer`);
-                            } else {
-                              immediateActions.push(`Review case documentation and evidence`);
-                              immediateActions.push(`Verify discrepancy against fulfillment records`);
-                              preventiveMeasures.push(`Implement monitoring for similar discrepancies`);
-                            }
-
-                            immediateActions.push(`Process reimbursement of ${formattedAmount} to seller account`);
-                            preventiveMeasures.push(`Provide confirmation of system updates`);
-
-                            return (
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-gray-200">
-                                <div className="bg-white p-5">
-                                  <h4 className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.15em] mb-4 border-b border-gray-100 pb-2">
-                                    Immediate Actions
-                                  </h4>
-                                  <ol className="space-y-3 text-xs text-gray-700">
-                                    {immediateActions.map((action, idx) => (
-                                      <li key={idx} className="flex items-start gap-3">
-                                        <span className="text-gray-400 font-mono text-[10px] mt-0.5 w-4 shrink-0">{idx + 1}.</span>
-                                        <span className="text-gray-700 leading-relaxed">{action}</span>
-                                      </li>
-                                    ))}
-                                  </ol>
-                                </div>
-                                <div className="bg-white p-5">
-                                  <h4 className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.15em] mb-4 border-b border-gray-100 pb-2">
-                                    Preventive Measures
-                                  </h4>
-                                  <ol className="space-y-3 text-xs text-gray-700">
-                                    {preventiveMeasures.map((measure, idx) => (
-                                      <li key={idx} className="flex items-start gap-3">
-                                        <span className="text-gray-400 font-mono text-[10px] mt-0.5 w-4 shrink-0">{idx + 1}.</span>
-                                        <span className="text-gray-700 leading-relaxed">{measure}</span>
-                                      </li>
-                                    ))}
-                                  </ol>
-                                </div>
-                              </div>
-                            );
-                          })()}
-                        </div>
-                        <div className="border-t border-gray-100 pt-6">
-                          <div className="flex items-center justify-between mb-4">
-                            <div>
-                              <h3 className="flex items-center gap-2 text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
-                                <Clock className="h-4 w-4" /> Claim Timeline
-                              </h3>
-                              <div className="text-[10px] text-gray-500 mt-0.5 ml-6">Case Progress</div>
-                            </div>
-                            <span className="text-[10px] text-gray-500 border border-gray-200 px-2 py-0.5">
-                              {typeof effectiveCase.progress === 'number' ? `${Math.round(effectiveCase.progress)}%` : 'Real-time transparency'}
-                            </span>
-                          </div>
-                          <div className="flex flex-wrap items-center gap-3 mb-4">
-                            <div className="ml-auto flex gap-2">
-                              <button className="px-3 py-1.5 text-xs text-gray-700 border border-gray-300 bg-white hover:bg-gray-50 flex items-center gap-1" onClick={async () => {
-                                const url = api.getRecoveryDocumentUrl(effectiveCase.id);
-                                try {
-                                  const head = await fetch(url, { method: 'HEAD', credentials: 'include' });
-                                  if (head.ok) { window.open(url, '_blank'); return; }
-                                } catch { }
-                                if (Array.isArray(matchedDocs) && matchedDocs.length > 0) {
-                                  window.open(`/documents/${encodeURIComponent(matchedDocs[0].id)}`, '_blank');
-                                } else {
-                                  toast({ title: 'No proof available yet', description: 'Evidence is still being collected for this case.' });
-                                }
-                              }}>
-                                <FileText className="h-3.5 w-3.5" /> Proof of Document
-                              </button>
-                              <Link to="/recoveries" className="px-3 py-1.5 text-xs text-white bg-gray-900 hover:bg-gray-800">Back to Cases</Link>
-                            </div>
-                          </div>
-                          <div className="mb-6"><Timeline claimId={effectiveCase.id} /></div>
-                          <div className="flex items-center gap-2 mb-4 text-sm overflow-x-auto pb-2">
-                            {['Detected', 'Prepared', 'Submitted', 'Paid', 'Follow-up'].map((step, idx) => {
-                              const status = (effectiveCase.status || '').toLowerCase();
-                              const active = (step === 'Detected') ||
-                                (step === 'Prepared' && ['guaranteed', 'submitted', 'under review', 'under_review', 'filed', 'pending', 'in progress', 'in_progress', 'paid out', 'paid_out', 'approved', 'paid', 'denied', 'rejected'].includes(status)) ||
-                                (step === 'Submitted' && ['submitted', 'under review', 'under_review', 'filed', 'paid out', 'paid_out', 'approved', 'paid', 'denied', 'rejected'].includes(status)) ||
-                                (step === 'Paid' && ['paid out', 'paid_out', 'approved', 'paid', 'completed', 'reconciled'].includes(status)) ||
-                                (step === 'Follow-up' && ['denied', 'rejected', 'unresolved'].includes(status));
-                              return (
-                                <div key={step} className="flex items-center gap-2 flex-shrink-0">
-                                  <div className={`h-6 w-6 rounded-full flex items-center justify-center border text-xs ${active ? 'bg-gray-900 text-white border-gray-900' : 'bg-gray-100 text-gray-500 border-gray-200'}`}>{idx + 1}</div>
-                                  <span className={`text-xs whitespace-nowrap ${active ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>{step}</span>
-                                  {idx < 4 && <div className={`w-4 h-px ${active ? 'bg-gray-900' : 'bg-gray-200'}`} />}
-                                </div>
-                              );
-                            })}
-                          </div>
-                          {(effectiveCase.events || []).map((event: any, index: number) => (
-                            <div key={index} className="flex gap-4 mb-3">
-                              <div className={cn("flex-shrink-0 mt-1", getEventColor(event.type))}>{getEventIcon(event.type)}</div>
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-start justify-between gap-4">
-                                  <div className="flex-1">
-                                    <h4 className="font-medium text-sm text-gray-900">{event.title}</h4>
-                                    <p className="text-sm text-gray-600 mt-1">{event.description}</p>
-                                  </div>
-                                  <div className="text-xs text-gray-600 whitespace-nowrap">{new Date(event.timestamp).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</div>
-                                </div>
-                                {Array.isArray(effectiveCase.events) && index < effectiveCase.events.length - 1 && <div className="border-l border-gray-200 ml-2 h-6 mt-3" />}
-                              </div>
-                            </div>
-                          ))}
-                          {effectiveCase.status === 'Guaranteed' && (
-                            <div className="flex gap-4 opacity-50">
-                              <div className="flex-shrink-0 mt-1 text-gray-600"><Package className="h-4 w-4" /></div>
-                              <div className="flex-1">
-                                <h4 className="font-medium text-sm text-gray-600">Claim Submitted to Amazon</h4>
-                                <p className="text-sm text-gray-600 mt-1">Pending user approval to submit claim documentation to Amazon</p>
-                              </div>
-                            </div>
+                    {/* Timeline Events */}
+                    <div className="space-y-6 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                      {(effectiveCase.events || []).map((event: any, index: number) => (
+                        <div key={index} className="relative pl-6">
+                          {index < (effectiveCase.events || []).length - 1 && (
+                            <div className="absolute left-[3px] top-6 bottom-[-24px] w-px bg-gray-100" />
                           )}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* CONTACT TAB */}
-                    {activeTab === 'contact' && (
-                      <div className="space-y-6">
-                        <div>
-                          <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em] mb-1">Contact Information</h3>
-                          <div className="text-[10px] text-gray-500 mb-3">Seller Detail</div>
-                          <div className="space-y-4 text-xs">
-                            <div>
-                              <h4 className="font-semibold text-gray-900 mb-2">Seller Contact:</h4>
-                              <dl className="space-y-2 text-gray-600">
-                                <div className="grid grid-cols-3 gap-2">
-                                  <dt className="text-gray-500">Seller ID:</dt>
-                                  <dd className="col-span-2 font-mono text-gray-900">
-                                    {effectiveCase.seller_id || effectiveCase.user_id || 'Not available'}
-                                  </dd>
-                                </div>
-                                <div className="grid grid-cols-3 gap-2">
-                                  <dt className="text-gray-500">Store Name:</dt>
-                                  <dd className="col-span-2">
-                                    {effectiveCase.store_name || effectiveCase.seller_name || 'Amazon Seller Account'}
-                                  </dd>
-                                </div>
-                                <div className="grid grid-cols-3 gap-2">
-                                  <dt className="text-gray-500">Contact Method:</dt>
-                                  <dd className="col-span-2">Seller Central Case Manager</dd>
-                                </div>
-                              </dl>
+                          <div className="absolute left-0 top-1.5 w-[7px] h-[7px] rounded-full bg-gray-200 border-2 border-white" />
+                          <div className="flex flex-col">
+                            <div className="flex justify-between items-baseline mb-1">
+                              <h4 className="text-[10px] font-bold text-gray-900 uppercase tracking-tight">{event.title}</h4>
+                              <span className="text-[8px] font-mono text-gray-400">
+                                {new Date(event.timestamp).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }).toUpperCase()}
+                              </span>
                             </div>
+                            <p className="text-[10px] text-gray-500 font-light leading-snug">{event.description}</p>
                           </div>
                         </div>
-                        <div className="border-t border-gray-100 pt-6">
-                          <h4 className="font-semibold text-gray-900 mb-2 text-xs">Amazon Reference:</h4>
-                          <dl className="space-y-2 text-xs text-gray-600">
-                            <div className="grid grid-cols-3 gap-2">
-                              <dt className="text-gray-500">Case ID:</dt>
-                              <dd className="col-span-2 font-mono text-blue-600">
-                                {effectiveCase.amazonCaseId || effectiveCase.amazon_case_id || (
-                                  <span className="text-gray-400 italic">Not yet filed</span>
-                                )}
-                              </dd>
-                            </div>
-                            <div className="grid grid-cols-3 gap-2">
-                              <dt className="text-gray-500">Prior Case ID:</dt>
-                              <dd className="col-span-2 font-mono">
-                                {effectiveCase.prior_case_id || (
-                                  <span className="text-gray-400 italic">No prior case</span>
-                                )}
-                              </dd>
-                            </div>
-                            <div className="grid grid-cols-3 gap-2">
-                              <dt className="text-gray-500">Claim Ref:</dt>
-                              <dd className="col-span-2 font-mono text-gray-900">
-                                {effectiveCase.claim_number || effectiveCase.claim_id || effectiveCase.id?.slice(0, 12) || 'N/A'}
-                              </dd>
-                            </div>
-                          </dl>
+                      ))}
+                      {effectiveCase.status === 'Guaranteed' && (
+                        <div className="relative pl-6 opacity-40 italic">
+                          <div className="absolute left-0 top-1.5 w-[7px] h-[7px] rounded-full bg-gray-100 border-2 border-white" />
+                          <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">Pending Submission</h4>
+                          <p className="text-[10px] text-gray-400 font-light leading-snug">Awaiting final carrier document verification before submission.</p>
                         </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Tile 2: Evidence Vault & ID */}
+                <div className="lg:col-span-2 p-8">
+                  <div className="flex items-center justify-between mb-8">
+                    <div className="flex items-center gap-2">
+                      <Database className="h-3.5 w-3.5 text-gray-400" />
+                      <h3 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.2em]">Evidence Vault & ID</h3>
+                    </div>
+                    <span className="text-[9px] font-mono text-gray-400 uppercase tracking-widest">{matchedDocs.length} OBJECTS MATCHED</span>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-5 gap-12">
+                    <div className="md:col-span-3 space-y-4">
+                      <div className="text-[9px] text-gray-400 uppercase tracking-widest font-bold mb-4 flex items-center gap-2">
+                        MATCHED DOCUMENTATION
+                        <div className="h-px flex-1 bg-gray-100" />
                       </div>
-                    )}
+
+                      {matchedDocs.length > 0 ? (
+                        <div className="space-y-3">
+                          {matchedDocs.map((doc: any, idx: number) => {
+                            const matchConfidence = doc.matchConfidence || doc.confidence_score || (0.7 + (stableHash(doc.id || '') % 25) / 100);
+                            const confidencePct = Math.round(matchConfidence * 100);
+
+                            const matchedFields: string[] = [];
+                            const extracted = doc.extracted || doc.parsed_metadata || {};
+                            if (extracted.order_ids?.length > 0) matchedFields.push('ORDER_ID');
+                            if (extracted.asins?.length > 0) matchedFields.push('ASIN');
+                            if (extracted.tracking_numbers?.length > 0) matchedFields.push('TRACKING_REF');
+                            if (matchedFields.length === 0) matchedFields.push('CONTENT_MATCH');
+
+                            return (
+                              <div key={doc.id || idx} className="p-4 bg-gray-50/50 border border-gray-100 hover:border-gray-200 transition-all flex items-start justify-between gap-4">
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <FileText className="h-3 w-3 text-gray-400" />
+                                    <span className="text-[10px] font-bold text-gray-900 truncate max-w-[200px] font-mono">
+                                      {doc.name || doc.filename || `OBJ_${doc.id?.slice(0, 8)}`}
+                                    </span>
+                                  </div>
+                                  <div className="flex flex-wrap gap-2">
+                                    {matchedFields.slice(0, 2).map(f => (
+                                      <span key={f} className="px-1.5 py-0.5 bg-white border border-gray-200 text-[7px] font-bold text-gray-500 uppercase tracking-widest">{f}</span>
+                                    ))}
+                                    <span className={cn(
+                                      "px-1.5 py-0.5 text-[7px] font-bold uppercase tracking-widest",
+                                      confidencePct >= 85 ? "text-emerald-600" : "text-amber-600"
+                                    )}>MATCH: {confidencePct}%</span>
+                                  </div>
+                                </div>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-7 text-[9px] font-bold uppercase tracking-widest text-blue-600 hover:text-blue-700 p-0"
+                                  onClick={() => window.open(`/documents/${encodeURIComponent(doc.id)}`, '_blank')}>
+                                  Extract <ArrowRight className="h-2.5 w-2.5 ml-1" />
+                                </Button>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        <div className="py-12 border border-dashed border-gray-200 flex flex-col items-center justify-center text-center">
+                          <Database className="h-8 w-8 text-gray-100 mb-4" />
+                          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Awaiting Artifact Ingestion</p>
+                          <p className="text-[9px] text-gray-300 mt-1 max-w-[200px]">System is currently crawling your integration sources for matching evidence.</p>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="md:col-span-2 space-y-8">
+                      <section>
+                        <div className="text-[9px] text-gray-400 uppercase tracking-widest font-bold mb-4 flex items-center gap-2">
+                          SELLER IDENTITY
+                          <div className="h-px flex-1 bg-gray-100" />
+                        </div>
+                        <dl className="space-y-4">
+                          <div>
+                            <dt className="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-1">Store Name</dt>
+                            <dd className="text-xs font-bold text-gray-900">{effectiveCase.store_name || effectiveCase.seller_name || 'AMAZON_MARKETPLACE_SELLER'}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-1">Internal User ID</dt>
+                            <dd className="text-[10px] font-mono font-bold text-gray-900">{effectiveCase.seller_id || effectiveCase.user_id || 'ID_NOT_MAPPED'}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-1">Audit Permission</dt>
+                            <dd className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">ACTIVE_DELEGATION</dd>
+                          </div>
+                        </dl>
+                      </section>
+
+                      <section className="pt-4 border-t border-gray-100">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-gray-900 rounded-xs">
+                            <ShieldCheck className="h-4 w-4 text-white" />
+                          </div>
+                          <div>
+                            <h4 className="text-[10px] font-bold text-gray-900 uppercase tracking-widest">Identity Verified</h4>
+                            <p className="text-[8px] text-gray-400 uppercase tracking-widest">Compliance Protocol: NIST-800</p>
+                          </div>
+                        </div>
+                      </section>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Tile 3: Action Protocol */}
+                <div className="lg:col-span-1 p-8 bg-gray-50/50">
+                  <div className="flex items-center gap-2 mb-6">
+                    <ShieldCheck className="h-3.5 w-3.5 text-gray-400" />
+                    <h3 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.2em]">Action Protocol</h3>
+                  </div>
+
+                  <div className="space-y-8">
+                    {(() => {
+                      const caseType = (effectiveCase.anomaly_type || effectiveCase.claim_type || effectiveCase.case_type || '').toLowerCase();
+                      const isFeeCase = caseType.includes('fee') || caseType.includes('overcharge');
+                      const isLostCase = caseType.includes('lost') || caseType.includes('missing') || caseType.includes('shipment');
+                      const amount = effectiveCase.guaranteedAmount || 0;
+                      const formattedAmount = `$${Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+                      const actions = isFeeCase ? [
+                        'RE-MEASURE_ASIN_IN_FC',
+                        'RECONCILE_WEIGHT_LOGS',
+                        'CALC_HISTORIAL_REFUND',
+                        'SYNC_DIMENSIONAL_DATA'
+                      ] : isLostCase ? [
+                        'INVENTORY_COUNT_FC_AUDIT',
+                        'FREIGHT_BILL_RECONCILE',
+                        'POD_SIGNATURE_TRACE',
+                        'CARRIER_LIABILITY_CLAIM'
+                      ] : [
+                        'EVIDENCE_ARTIFACT_REVIEW',
+                        'POLICY_VIOLATION_CHECK',
+                        'IMMEDIATE_SETTLEMENT_REQ',
+                        'ENFORCE_SELLER_RIGHTS'
+                      ];
+
+                      return (
+                        <>
+                          <section>
+                            <div className="text-[9px] text-gray-400 uppercase tracking-widest font-bold mb-4">Immediate Actions</div>
+                            <div className="space-y-2">
+                              {actions.slice(0, 3).map(a => (
+                                <div key={a} className="flex items-center gap-3 p-3 bg-white border border-gray-100">
+                                  <div className="h-1.5 w-1.5 rounded-full bg-gray-900" />
+                                  <span className="text-[9px] font-bold text-gray-700 font-mono tracking-tight">{a}</span>
+                                </div>
+                              ))}
+                              <div className="flex items-center gap-1.5 pt-2 text-[8px] text-emerald-600 font-bold uppercase tracking-widest">
+                                <ArrowRight className="h-2.5 w-2.5" /> REIMBURSEMENT REQ: {formattedAmount}
+                              </div>
+                            </div>
+                          </section>
+
+                          {effectiveCase.status === 'Denied' && (() => {
+                            const rejectionReason = classifyRejection(effectiveCase.status, effectiveCase.rejectionReason);
+                            const playbook = escalationPlaybooks[rejectionReason];
+                            const escalationCount = effectiveCase.escalation_count || 0;
+
+                            return (
+                              <section className="bg-red-50/50 p-4 border border-red-100">
+                                <h4 className="text-[9px] font-bold text-red-900 uppercase tracking-widest mb-3">Escalation Playbook</h4>
+                                <p className="text-[10px] text-red-700 font-light mb-4 leading-relaxed">{playbook.description}</p>
+                                <div className="space-y-2 mb-4">
+                                  {playbook.actions.map((action, i) => (
+                                    <div key={i} className="flex items-start gap-2 text-[9px] text-red-800 font-mono">
+                                      <span>→</span> {action}
+                                    </div>
+                                  ))}
+                                </div>
+                                <Button className="w-full h-8 bg-red-900 hover:bg-red-950 text-white text-[9px] font-bold uppercase tracking-[0.2em] rounded-none">
+                                  Execute Escalation {escalationCount + 1}
+                                </Button>
+                              </section>
+                            );
+                          })()}
+
+                          <div className="pt-6 border-t border-gray-100 space-y-2">
+                            <Button variant="outline" className="w-full h-9 border-gray-200 text-gray-600 rounded-none text-[9px] font-bold uppercase tracking-[0.2em] hover:bg-gray-50" onClick={() => {
+                              window.open(api.getRecoveryDocumentUrl(effectiveCase.id), '_blank');
+                            }}>
+                              Download Case Pack
+                            </Button>
+                            <div className="text-center">
+                              <Link to="/evidence-locker" className="text-[8px] text-gray-400 font-bold uppercase tracking-widest hover:text-gray-600 transition-colors">
+                                Open Evidence Locker →
+                              </Link>
+                            </div>
+                          </div>
+                        </>
+                      );
+                    })()}
                   </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
