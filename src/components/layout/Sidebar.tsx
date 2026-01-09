@@ -66,6 +66,7 @@ export function Sidebar({
   const location = useLocation();
   const queryClient = useQueryClient();
   const [connectedEmail, setConnectedEmail] = useState<string | null>(null);
+  const [claimCount, setClaimCount] = useState<number | null>(null);
 
   // Fetch connected email from evidence sources
   React.useEffect(() => {
@@ -77,6 +78,18 @@ export function Sidebar({
           if (gmailSource?.account_email) {
             setConnectedEmail(gmailSource.account_email);
           }
+        }
+      } catch { }
+    })();
+  }, []);
+
+  // Fetch claim count
+  React.useEffect(() => {
+    (async () => {
+      try {
+        const r = await api.getRecoveriesMetrics();
+        if (r.ok && r.data?.totalClaimsFound !== undefined) {
+          setClaimCount(r.data.totalClaimsFound);
         }
       } catch { }
     })();
@@ -175,6 +188,11 @@ export function Sidebar({
         )}
         <item.icon strokeWidth={1.5} className="h-4 w-4 shrink-0" />
         <span className="text-[11px] font-medium">{item.title}</span>
+        {item.title === 'Claims' && claimCount !== null && !isCollapsed && (
+          <span className="ml-auto text-[10px] text-gray-600 font-medium tabular-nums">
+            {claimCount}
+          </span>
+        )}
       </Link>
     );
   });
