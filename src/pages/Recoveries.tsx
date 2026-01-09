@@ -820,7 +820,7 @@ const generateCasebookPDF = (claims: RecoveryClaim[], dateRange: { from: Date; t
 <body>
   <div class="header">
     <div>
-      <div class="logo">OPSIDE</div>
+      <div class="logo">MARGIN</div>
       <div class="logo-sub">Recovery Statement</div>
     </div>
     <div class="header-right">
@@ -906,7 +906,7 @@ const generateCasebookPDF = (claims: RecoveryClaim[], dateRange: { from: Date; t
   </div>
 
   <div class="footer">
-    <p>Opside Recovery Platform — Confidential</p>
+    <p>Margin Recovery Platform — Confidential</p>
     <p>For audit and accounting purposes only</p>
     <p class="no-print" style="margin-top: 12px; color: #64748b;"><strong>Press Ctrl+P (Cmd+P) to save as PDF</strong></p>
   </div>
@@ -3302,7 +3302,7 @@ export default function Recoveries() {
                     <div className="px-6 py-4 border-b border-gray-200">
                       <div className="flex justify-between items-start">
                         <div>
-                          <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-[0.2em] mb-1">OPSIDE</div>
+                          <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-[0.2em] mb-1">MARGIN</div>
                           <DialogTitle className="text-base font-semibold text-gray-900">
                             Claim Details
                           </DialogTitle>

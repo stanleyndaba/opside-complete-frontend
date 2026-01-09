@@ -6,8 +6,8 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 
 const RefundPolicy = () => {
     usePageMeta({
-        title: 'Opside Refund & Cancellation Policy',
-        description: 'Review our refund and cancellation policy for the Opside FBA reimbursement platform.',
+        title: 'Margin Refund & Cancellation Policy',
+        description: 'Review our refund and cancellation policy for the Margin FBA reimbursement platform.',
         url: `${SITE_META.url}/refund-policy`,
         image: SITE_META.image
     });
@@ -25,13 +25,13 @@ const RefundPolicy = () => {
 
                     <div className="space-y-8 text-sm leading-relaxed text-gray-700">
                         <p>
-                            This policy describes how you can cancel your Opside subscription and our approach to refunds.
+                            This policy describes how you can cancel your Margin subscription and our approach to refunds.
                         </p>
 
                         <section className="space-y-4">
                             <h2 className="text-base font-medium text-gray-900">1. Subscription Cancellation</h2>
                             <p>
-                                You may cancel your Opside subscription at any time via your account dashboard or by emailing clariooai@gmail.com.
+                                You may cancel your Margin subscription at any time via your account dashboard or by emailing clariooai@gmail.com.
                             </p>
                             <p>
                                 Cancellation takes effect at the end of your current billing cycle. You will retain full access until that date and will not be charged again.
@@ -41,7 +41,7 @@ const RefundPolicy = () => {
                         <section className="space-y-4">
                             <h2 className="text-base font-medium text-gray-900">2. Refund Policy</h2>
                             <p>
-                                Opside is a recurring monthly subscription service with instant access to automated FBA reimbursement auditing.
+                                Margin is a recurring monthly subscription service with instant access to automated FBA reimbursement auditing.
                             </p>
                             <p>
                                 No refunds or credits are provided for partial months, unused periods, or months remaining on an active account.
@@ -57,7 +57,7 @@ const RefundPolicy = () => {
                         <section className="space-y-4">
                             <h2 className="text-base font-medium text-gray-900">3. Service Delivery</h2>
                             <p>
-                                Upon successful payment, access to the Opside platform and all its features is activated instantly. As this is a fully digital service, no physical delivery or shipping is involved.
+                                Upon successful payment, access to the Margin platform and all its features is activated instantly. As this is a fully digital service, no physical delivery or shipping is involved.
                             </p>
                         </section>
 

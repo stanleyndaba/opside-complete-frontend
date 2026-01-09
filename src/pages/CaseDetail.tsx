@@ -134,7 +134,7 @@ const mockCaseData = {
       {
         timestamp: '2025-01-08T12:07:22Z',
         title: 'Claim Draft Generated',
-        description: 'Opside AI Agent generated comprehensive claim documentation with supporting evidence',
+        description: 'Margin AI Agent generated comprehensive claim documentation with supporting evidence',
         type: 'generation'
       },
       {

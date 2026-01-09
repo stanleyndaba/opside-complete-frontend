@@ -77,14 +77,14 @@ export default function ExportCenter() {
     if (!reportType || !dateRange.from || !dateRange.to) {
       return;
     }
-    
+
     // Mock file download logic
     console.log('Generating report:', {
       reportType,
       dateRange,
       fileFormat
     });
-    
+
     // In a real implementation, this would trigger the actual download
     const filename = `${reportType}-${format(dateRange.from, 'yyyy-MM-dd')}-to-${format(dateRange.to, 'yyyy-MM-dd')}.${fileFormat}`;
     console.log('Download would start for:', filename);
@@ -93,10 +93,10 @@ export default function ExportCenter() {
   const isFormValid = reportType && dateRange.from && dateRange.to && fileFormat;
 
   return (
-    <PageLayout title="Export Your Clario Data">
+    <PageLayout title="Export Your Margin Data">
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="text-center space-y-2">
-          <h1 className="text-3xl font-bold text-foreground">Export Your Clario Data</h1>
+          <h1 className="text-3xl font-bold text-foreground">Export Your Margin Data</h1>
           <p className="text-muted-foreground">
             This is your data. Export it in the format you need, whenever you need it.
           </p>
@@ -135,7 +135,7 @@ export default function ExportCenter() {
             {/* Step 2: Select Date Range */}
             <div className="space-y-4">
               <Label className="text-base font-medium">Step 2: Select Date Range</Label>
-              
+
               {/* Quick Presets */}
               <div className="flex flex-wrap gap-2">
                 {datePresets.map((preset) => (
@@ -229,7 +229,7 @@ export default function ExportCenter() {
 
             {/* Generate Button */}
             <div className="pt-4 border-t">
-              <Button 
+              <Button
                 onClick={handleGenerate}
                 disabled={!isFormValid}
                 className="w-full"
@@ -253,28 +253,28 @@ export default function ExportCenter() {
                 <div className="space-y-2">
                   <h4 className="font-medium">Recovery & Payout History</h4>
                   <p className="text-sm text-muted-foreground">
-                    This master report includes: Case ID, Status, Detection Date, Submission Date, 
-                    Guarantee Date, Payout Date, Product SKU, Product Name, Discrepancy Type, 
-                    Guaranteed Amount, Opside Fee, Net Payout Amount, and Amazon Case ID.
+                    This master report includes: Case ID, Status, Detection Date, Submission Date,
+                    Guarantee Date, Payout Date, Product SKU, Product Name, Discrepancy Type,
+                    Guaranteed Amount, Margin Fee, Net Payout Amount, and Amazon Case ID.
                   </p>
                 </div>
               )}
-              
+
               {reportType === 'fee-dispute' && (
                 <div className="space-y-2">
                   <h4 className="font-medium">Fee Dispute History</h4>
                   <p className="text-sm text-muted-foreground">
-                    This report focuses on fee overcharge recoveries and includes: Dispute ID, 
+                    This report focuses on fee overcharge recoveries and includes: Dispute ID,
                     Status, Detection Date, Product SKU, Dispute Type, and Amount Recovered.
                   </p>
                 </div>
               )}
-              
+
               {reportType === 'evidence-locker' && (
                 <div className="space-y-2">
                   <h4 className="font-medium">Evidence Locker Log</h4>
                   <p className="text-sm text-muted-foreground">
-                    This document inventory includes: Document Name, File Type, Upload Date, 
+                    This document inventory includes: Document Name, File Type, Upload Date,
                     Processing Status, and Linked SKUs Count.
                   </p>
                 </div>
