@@ -700,9 +700,9 @@ export function Dashboard() {
               <div className="flex items-center justify-between mb-8">
                 <div>
                   <div className="flex items-center gap-3">
-                    <h1 className="text-xs font-bold text-gray-900 uppercase tracking-[0.2em]">Institutional Overview</h1>
+                    <h1 className="text-xs font-bold text-gray-900 uppercase tracking-[0.2em]">Overview</h1>
                   </div>
-                  <p className="text-[9px] text-gray-400 mt-1 font-mono uppercase tracking-widest">Dashboard // Analytics.Realtime</p>
+                  <p className="text-[9px] text-gray-400 mt-1 font-mono uppercase tracking-widest">Dashboard</p>
                 </div>
 
                 <div className="flex items-end">
