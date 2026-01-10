@@ -466,12 +466,12 @@ const Index = () => {
           {mobileMenuOpen && (
             <div className="mt-4 md:hidden relative z-50">
               <div className="flex flex-col gap-2 rounded-[20px] border border-white/40 bg-white/80 supports-[backdrop-filter]:bg-white/70 backdrop-blur-2xl p-4 shadow-2xl">
-                <div className="rounded-[18px] border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700 shadow-sm">
+                <div className="rounded-[18px] border-gray-200 bg-gray-50 px-3 py-2 text-sm font-semibold text-gray-800 shadow-sm">
                   <div className="flex items-center gap-2">
                     <Gift className="h-4 w-4" aria-hidden="true" />
                     <span>No commission on referrals</span>
                   </div>
-                  <p className="mt-1 text-xs font-normal text-emerald-700/80">
+                  <p className="mt-1 text-xs font-normal text-gray-700/80">
                     Sellers who bring new sellers to Margin keep 100% value of their recovered funds
                   </p>
                 </div>
@@ -486,7 +486,7 @@ const Index = () => {
                         <h5 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Core Platform</h5>
                         <div className="grid gap-3">
                           <a href="#reimbursements" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-3 p-2 rounded-lg hover:bg-white/50 transition-colors">
-                            <div className="p-1.5 bg-emerald-50 rounded-md text-emerald-600">
+                            <div className="p-1.5 bg-gray-100 rounded-md text-gray-900">
                               <CircleDollarSign className="h-4 w-4" />
                             </div>
                             <div>
@@ -565,7 +565,7 @@ const Index = () => {
                         value={langQuery}
                         onChange={(e) => setLangQuery(e.target.value)}
                         placeholder="Search language..."
-                        className="h-8 bg-gray-50 border border-gray-200 text-gray-900 placeholder:text-gray-500 focus-visible:ring-emerald-500"
+                        className="h-8 bg-gray-50 border border-gray-200 text-gray-900 placeholder:text-gray-500 focus-visible:ring-gray-400"
                       />
                     </div>
                     <div className="max-h-64 overflow-auto">
