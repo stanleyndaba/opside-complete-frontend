@@ -137,16 +137,18 @@ export const ClaimPdfService = {
         yPos += 5;
 
         const historyData = [
-            ['DATE', 'EVENT TYPE', 'REFERENCE', 'AMOUNT'],
+            ['DATE', 'EVENT', 'FC', 'REF', 'AMT'],
             [
                 new Date(data.created_at || Date.now()).toLocaleDateString(),
                 'Issue Detected',
+                data.facility || 'N/A', // FC
                 data.id || 'N/A',
                 `$${Number(data.guaranteedAmount || 0).toFixed(2)}`
             ],
             [
                 data.evidence?.date ? new Date(data.evidence.date).toLocaleDateString() : '-',
                 'Evidence Matched',
+                '-',
                 data.evidence?.document_id || 'DOC-MATCH',
                 '-'
             ]
@@ -159,11 +161,37 @@ export const ClaimPdfService = {
             theme: 'plain',
             headStyles: { fontStyle: 'bold', fontSize: 7, textColor: THEME.textLight, cellPadding: 1 },
             bodyStyles: { fontSize: 8, font: 'courier', cellPadding: 2 },
+            columnStyles: { 0: { cellWidth: 25 }, 1: { cellWidth: 40 }, 2: { cellWidth: 20 } },
             alternateRowStyles: { fillColor: THEME.bg },
             margin: { left: FORMAT.margin }
         });
 
         yPos = (doc as any).lastAutoTable.finalY + 15;
+
+        // 1.3 Required Actions (Tier 1 - Mandatory Core)
+        doc.setFont(THEME.font, 'bold');
+        doc.setFontSize(9);
+        doc.setTextColor(THEME.text);
+        doc.text('REQUIRED ACTIONS', FORMAT.margin, yPos);
+        yPos += 4;
+
+        doc.setDrawColor(THEME.accent);
+        doc.setLineWidth(0.3);
+        doc.rect(FORMAT.margin, yPos, 180, 26);
+
+        doc.setFont(THEME.font, 'normal');
+        doc.setFontSize(8);
+        const coreActions = [
+            `1. Review inventory discrepancy for SKU ${data.sku || 'N/A'}`,
+            `2. Verify count against shipment ID ${data.shipment_id || 'N/A'}`,
+            `3. Process reimbursement of $${Number(data.guaranteedAmount || 0).toFixed(2)}`
+        ];
+
+        coreActions.forEach((action, i) => {
+            doc.text(action, FORMAT.margin + 5, yPos + 7 + (i * 6));
+        });
+
+        yPos += 35; // Space after required actions
 
 
         // --- TIER 2: ESSENTIAL SUPPORT (Financials & Evidence) ---
@@ -176,6 +204,11 @@ export const ClaimPdfService = {
         yPos += 8;
 
         // Financial Table
+        doc.setFont(THEME.font, 'bold');
+        doc.setFontSize(9);
+        doc.text('CALCULATIONS BREAKDOWN', FORMAT.margin, yPos); // Explicit Sub-header
+        yPos += 4;
+
         const financials = [
             ['Units Affected', String(data.unitsLost || 0)],
             ['Value Per Unit', `$${Number(data.unitCost || (data.guaranteedAmount / (data.unitsLost || 1))).toFixed(2)}`],
@@ -250,16 +283,16 @@ export const ClaimPdfService = {
 
         // Right: Timeline & References
         doc.setFont(THEME.font, 'bold');
-        doc.text('TIMELINE & TARGET S LAs', 110, yPos);
+        doc.text('TIMELINE & RELATED CASES', 110, yPos);
         doc.setFont(THEME.fontMono, 'normal');
         doc.text(`DETECTED: ${new Date(data.created_at || Date.now()).toLocaleDateString()}`, 110, yPos + 5);
         doc.text(`RESOLVE BY: ${new Date(Date.now() + (30 * 24 * 60 * 60 * 1000)).toLocaleDateString()} (+30 DAYS)`, 110, yPos + 10); // Follow-up dates
-        doc.text(`PRIOR CASE: ${data.prior_case_id || 'NONE'}`, 110, yPos + 15); // Tier 3 Related References
+        doc.text(`RELATED REF: ${data.prior_case_id || 'NONE'}`, 110, yPos + 15); // Tier 3 Related References
 
         yPos += 25;
 
 
-        // --- TIER 4: PROFESSIONAL POLISH (RCA & Actions) ---
+        // --- TIER 4: ROOT CAUSE & PREVENTIVE MEASURES ---
 
         // Page Break Check (Tier 4)
         if (yPos + 60 > doc.internal.pageSize.height - 20) {
@@ -275,31 +308,9 @@ export const ClaimPdfService = {
         doc.setTextColor(THEME.text);
         doc.setFont(THEME.font, 'bold');
         doc.setFontSize(FORMAT.headerSize);
-        doc.text('4.0 RESOLUTION PROTOCOL', FORMAT.margin, yPos);
+        doc.text('4.0 ROOT CAUSE & PREVENTIVE MEASURES', FORMAT.margin, yPos);
         drawSeparator(yPos + 2);
         yPos += 8;
-
-        // Box for Actions
-        doc.setDrawColor(THEME.line);
-        doc.rect(FORMAT.margin, yPos, 180, 50); // Increased height for polish items
-
-        doc.setFont(THEME.font, 'bold');
-        doc.setFontSize(8);
-        doc.text('REQUIRED ACTIONS & PREVENTIVE MEASURES', FORMAT.margin + 5, yPos + 6);
-
-        doc.setFont(THEME.font, 'normal');
-        const actions = [
-            `1. Review inventory discrepancy for SKU ${data.sku || 'N/A'}`,
-            `2. Verify count against shipment ID ${data.shipment_id || 'N/A'}`,
-            `3. Process reimbursement of $${Number(data.guaranteedAmount || 0).toFixed(2)}`,
-            `4. Check for duplicate reimbursements or inventory adjustments`
-        ];
-
-        actions.forEach((action, i) => {
-            doc.text(action, FORMAT.margin + 5, yPos + 12 + (i * 5));
-        });
-
-        yPos += 35; // Space after actions box
 
         // Root Cause Analysis (Tier 4 - Explicit Section)
         doc.setFont(THEME.font, 'bold');
@@ -318,11 +329,19 @@ export const ClaimPdfService = {
 
         yPos += 25;
 
-        // Verification & Compliance (Tier 4)
-        doc.setFont(THEME.font, 'italic');
-        doc.setTextColor(THEME.textLight);
-        doc.text('VERIFICATION: Data reconciled against Amazon Settlement Reports & Inventory Ledgers.', FORMAT.margin, yPos + 5);
-        doc.text('COMPLIANCE: Claim submitted within 18-month Audit window per FBA Policy.', FORMAT.margin, yPos + 10);
+        // Compliance & Verification Notes (Tier 4)
+        doc.setFont(THEME.font, 'bold');
+        doc.setTextColor(THEME.text); // Reset color
+        doc.text('COMPLIANCE NOTES', FORMAT.margin, yPos + 5);
+        doc.setFont(THEME.font, 'normal');
+        doc.text('Claim submitted within 18-month Audit window per FBA Policy.', FORMAT.margin, yPos + 10);
+
+        yPos += 15;
+
+        doc.setFont(THEME.font, 'bold');
+        doc.text('VERIFICATION NOTES', FORMAT.margin, yPos + 5);
+        doc.setFont(THEME.font, 'normal');
+        doc.text('Data reconciled against Amazon Settlement Reports & Inventory Ledgers.', FORMAT.margin, yPos + 10);
 
         yPos += 20;
 
