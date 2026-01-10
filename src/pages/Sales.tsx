@@ -81,7 +81,6 @@ export default function Sales() {
                 {/* Hero Section */}
                 <div className="text-center mb-16">
                     <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black text-white text-xs font-semibold font-montserrat mb-6">
-                        <Sparkles className="h-3 w-3" />
                         Enterprise
                     </div>
                     <h1 className="text-4xl font-semibold text-gray-900 font-montserrat mb-4">
