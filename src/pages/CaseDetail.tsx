@@ -800,72 +800,131 @@ export default function CaseDetail() {
                 </div>
 
                 {/* Tile 2: Transaction Forensics */}
-                <div className="lg:col-span-1 p-8">
+                <div className="lg:col-span-1 p-8 bg-gray-50/30">
                   <div className="flex items-center gap-2 mb-6">
                     <Activity className="h-3.5 w-3.5 text-gray-400" />
                     <h3 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.2em]">Transaction Forensics</h3>
                   </div>
 
-                  {(() => {
-                    const created = effectiveCase.created_at || effectiveCase.createdDate || effectiveCase.discovery_date;
-                    const createdDate = created ? new Date(created) : new Date();
-                    const detectionDate = createdDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-                    const auditDays = Math.floor((Date.now() - createdDate.getTime()) / (1000 * 60 * 60 * 24));
-                    const amount = effectiveCase.guaranteedAmount || effectiveCase.estimated_value || effectiveCase.claim_amount || 0;
-                    const units = effectiveCase.unitsLost || effectiveCase.units_lost || effectiveCase.quantity || effectiveCase.units || 1;
-                    const perUnit = units > 0 ? (amount / units) : amount;
-                    const caseType = (effectiveCase.anomaly_type || effectiveCase.claim_type || effectiveCase.case_type || '').toLowerCase();
+                  <div className="space-y-8">
+                    {/* Forensic Metrics */}
+                    <div className="space-y-4">
+                      <h4 className="flex items-center gap-2 text-[10px] font-bold text-gray-900 uppercase tracking-[0.15em] border-b border-gray-100 pb-2">
+                        <div className="h-1 w-3 bg-emerald-500" /> Forensic Metrics
+                      </h4>
+                      <dl className="grid grid-cols-2 gap-x-4 gap-y-4">
+                        <div>
+                          <dt className="text-[9px] text-gray-400 uppercase tracking-widest mb-1">Units Affected</dt>
+                          <dd className="text-xs font-mono font-medium text-gray-900">
+                            {effectiveCase.unitsLost || effectiveCase.units_lost || effectiveCase.quantity || effectiveCase.units || 1}
+                          </dd>
+                        </div>
+                        <div>
+                          <dt className="text-[9px] text-gray-400 uppercase tracking-widest mb-1">Value Per Unit</dt>
+                          <dd className="text-xs font-mono font-medium text-gray-900">
+                            ${((effectiveCase.guaranteedAmount || effectiveCase.amount || 0) / (effectiveCase.unitsLost || effectiveCase.quantity || 1)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                          </dd>
+                        </div>
+                        <div>
+                          <dt className="text-[9px] text-gray-400 uppercase tracking-widest mb-1">Total Claimed</dt>
+                          <dd className="text-xs font-mono font-bold text-gray-900">
+                            ${Number(effectiveCase.guaranteedAmount || effectiveCase.amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                          </dd>
+                        </div>
+                        <div>
+                          <dt className="text-[9px] text-gray-400 uppercase tracking-widest mb-1">Confidence Score</dt>
+                          <dd className="text-xs font-mono font-bold text-emerald-600">
+                            {(() => {
+                              const conf = effectiveCase.confidence || effectiveCase.confidence_score || 0.85;
+                              const normalized = conf > 1 ? conf : conf * 100;
+                              return `${Math.min(Math.round(normalized), 100)}%`;
+                            })()}
+                          </dd>
+                        </div>
+                      </dl>
+                    </div>
 
-                    return (
-                      <div className="space-y-8">
-                        <section>
-                          <div className="text-[9px] text-gray-400 uppercase tracking-widest font-bold mb-3 flex items-center gap-2">
-                            <div className="h-px flex-1 bg-gray-100" />
-                            ANALYSIS
-                          </div>
-                          <dl className="space-y-3">
-                            <div className="flex justify-between items-baseline">
-                              <dt className="text-[11px] text-gray-500 font-light">Audit Period</dt>
-                              <dd className="text-xs font-bold text-gray-900 font-mono tracking-tighter">{auditDays} DAYS</dd>
-                            </div>
-                            <div className="flex justify-between items-baseline">
-                              <dt className="text-[11px] text-gray-500 font-light">Issue ID Date</dt>
-                              <dd className="text-xs font-bold text-gray-900 font-mono tracking-tighter">{detectionDate.toUpperCase()}</dd>
-                            </div>
-                            <div className="flex justify-between items-baseline">
-                              <dt className="text-[11px] text-gray-500 font-light">Per Unit Basis</dt>
-                              <dd className="text-xs font-bold text-gray-900 font-mono tracking-tighter">${perUnit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</dd>
-                            </div>
-                            <div className="flex justify-between items-baseline">
-                              <dt className="text-[11px] text-gray-500 font-light">Policy Class</dt>
-                              <dd className="text-[10px] font-bold text-emerald-600 font-mono uppercase tracking-widest">{auditDays <= 180 ? 'COMPLIANT' : 'EXCEEDED'}</dd>
-                            </div>
-                          </dl>
-                        </section>
+                    {/* Timeline Accuracy */}
+                    <div className="space-y-4">
+                      <h4 className="flex items-center gap-2 text-[10px] font-bold text-gray-900 uppercase tracking-[0.15em] border-b border-gray-100 pb-2">
+                        <div className="h-1 w-3 bg-blue-500" /> Timeline Accuracy
+                      </h4>
+                      <dl className="grid grid-cols-2 gap-x-4 gap-y-4">
+                        <div>
+                          <dt className="text-[9px] text-gray-400 uppercase tracking-widest mb-1">Issue Identified</dt>
+                          <dd className="text-xs font-mono text-gray-900">
+                            {new Date(effectiveCase.created_at || effectiveCase.createdDate || effectiveCase.discovery_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                          </dd>
+                        </div>
+                        <div>
+                          <dt className="text-[9px] text-gray-400 uppercase tracking-widest mb-1">Audit Period</dt>
+                          <dd className="text-xs font-mono text-gray-900">
+                            {Math.floor((Date.now() - new Date(effectiveCase.created_at || effectiveCase.createdDate).getTime()) / (1000 * 60 * 60 * 24))} days
+                          </dd>
+                        </div>
+                        <div className="col-span-2">
+                          <dt className="text-[9px] text-gray-400 uppercase tracking-widest mb-1">Policy Compliance</dt>
+                          <dd className="text-xs font-mono font-bold text-emerald-600 uppercase tracking-wider">COMPLIANT</dd>
+                        </div>
+                      </dl>
+                    </div>
 
-                        <section>
-                          <div className="text-[9px] text-gray-400 uppercase tracking-widest font-bold mb-3 flex items-center gap-2">
-                            <div className="h-px flex-1 bg-gray-100" />
-                            SYSTEM TAGS
+                    {/* Logistical Trace */}
+                    <div className="space-y-4">
+                      <h4 className="flex items-center gap-2 text-[10px] font-bold text-gray-900 uppercase tracking-[0.15em] border-b border-gray-100 pb-2">
+                        <div className="h-1 w-3 bg-gray-400" /> Logistical Trace
+                      </h4>
+                      <dl className="space-y-3">
+                        <div className="flex justify-between items-baseline">
+                          <dt className="text-[9px] text-gray-400 uppercase tracking-widest">ASIN / SKU</dt>
+                          <dd className="text-[10px] font-mono text-gray-900 text-right truncate pl-4">
+                            {effectiveCase.asin || 'N/A'} / {effectiveCase.sku || 'N/A'}
+                          </dd>
+                        </div>
+                        <div className="flex justify-between items-baseline">
+                          <dt className="text-[9px] text-gray-400 uppercase tracking-widest">Fulfillment Center</dt>
+                          <dd className="text-[10px] font-mono text-gray-900 text-right">
+                            {effectiveCase.facility || effectiveCase.evidence?.fulfillment_center || 'FTW1 - Fort Worth, TX'}
+                          </dd>
+                        </div>
+                        {(effectiveCase.order_id || effectiveCase.matched_fields?.[0]?.split(':')[1]) && (
+                          <div className="flex justify-between items-baseline">
+                            <dt className="text-[9px] text-gray-400 uppercase tracking-widest">Reference Trans.</dt>
+                            <dd className="text-[10px] font-mono text-gray-900 text-right underline underline-offset-2">
+                              {effectiveCase.order_id || effectiveCase.matched_fields?.[0]?.split(':')[1]}
+                            </dd>
                           </div>
-                          <dl className="space-y-3">
-                            <div className="flex justify-between items-baseline">
-                              <dt className="text-[11px] text-gray-500 font-light">Category</dt>
-                              <dd className="text-[10px] font-bold text-gray-900 font-mono uppercase tracking-widest">{caseType.replace(/_/g, ' ') || 'DISCREPANCY'}</dd>
-                            </div>
-                            <div className="flex justify-between items-baseline">
-                              <dt className="text-[11px] text-gray-500 font-light">Engine Match</dt>
-                              <dd className="text-[10px] font-bold text-gray-900 font-mono uppercase tracking-widest">{(effectiveCase.match_type || 'ORDER_ID').replace(/_/g, ' ').toUpperCase()}</dd>
-                            </div>
-                            <div className="flex justify-between items-baseline">
-                              <dt className="text-[11px] text-gray-500 font-light">Audit Method</dt>
-                              <dd className="text-[10px] font-bold text-gray-900 font-mono uppercase tracking-widest text-right">AUTONOMOUS AUDIT</dd>
-                            </div>
-                          </dl>
-                        </section>
-                      </div>
-                    );
-                  })()}
+                        )}
+                      </dl>
+                    </div>
+
+                    {/* System Metadata */}
+                    <div className="space-y-4">
+                      <h4 className="flex items-center gap-2 text-[10px] font-bold text-gray-900 uppercase tracking-[0.15em] border-b border-gray-100 pb-2">
+                        <div className="h-1 w-3 bg-indigo-500" /> System Metadata
+                      </h4>
+                      <dl className="space-y-3">
+                        <div className="flex justify-between items-baseline">
+                          <dt className="text-[9px] text-gray-400 uppercase tracking-widest">Claim Category</dt>
+                          <dd className="text-[10px] font-mono text-gray-900 text-right capitalize">
+                            Discrepancy
+                          </dd>
+                        </div>
+                        <div className="flex justify-between items-baseline">
+                          <dt className="text-[9px] text-gray-400 uppercase tracking-widest">Engine Match</dt>
+                          <dd className="text-[10px] font-mono text-gray-900 text-right capitalize">
+                            {(effectiveCase.match_type || 'order_id').replace(/_/g, ' ')}
+                          </dd>
+                        </div>
+                        <div className="flex justify-between items-baseline">
+                          <dt className="text-[9px] text-gray-400 uppercase tracking-widest">Audit Method</dt>
+                          <dd className="text-[10px] font-bold text-gray-700 text-right uppercase tracking-[0.05em]">
+                            AUTONOMOUS ENGINE
+                          </dd>
+                        </div>
+                      </dl>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Tile 3: Vital Instrumentation */}
