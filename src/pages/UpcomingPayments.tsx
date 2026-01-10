@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { api } from '@/lib/api';
+import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
 
 interface RecoveryClaim {
