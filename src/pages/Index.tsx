@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ChevronDown, ChevronRight, Gift, Globe, Sparkles } from 'lucide-react';
+import { ArrowRight, ChevronDown, ChevronRight, Gift, Globe, Sparkles, CircleDollarSign, ShieldAlert, FileText, Search, Briefcase } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AmazonConnect } from '@/components/AmazonConnect';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -475,12 +475,73 @@ const Index = () => {
                     Sellers who bring new sellers to Margin keep 100% value of their recovered funds
                   </p>
                 </div>
-                <a
-                  href="#reimbursements"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-gray-800 hover:bg-white/70 hover:text-gray-900 transition-colors">
-                  Products
-                </a>
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="products" className="border-none">
+                    <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-gray-800 hover:bg-white/70 hover:text-gray-900 transition-colors hover:no-underline">
+                      Products
+                    </AccordionTrigger>
+                    <AccordionContent className="pt-1 pb-2 px-4 space-y-4">
+                      {/* Core Platform Section */}
+                      <div className="space-y-3">
+                        <h5 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Core Platform</h5>
+                        <div className="grid gap-3">
+                          <a href="#reimbursements" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-3 p-2 rounded-lg hover:bg-white/50 transition-colors">
+                            <div className="p-1.5 bg-emerald-50 rounded-md text-emerald-600">
+                              <CircleDollarSign className="h-4 w-4" />
+                            </div>
+                            <div>
+                              <div className="text-xs font-bold text-gray-900">FBA Reimbursements</div>
+                              <p className="text-[10px] text-gray-500 leading-tight">Automated recovery for lost & damaged inventory.</p>
+                            </div>
+                          </a>
+                          <a href="#fee-guard" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-3 p-2 rounded-lg hover:bg-white/50 transition-colors">
+                            <div className="p-1.5 bg-blue-50 rounded-md text-blue-600">
+                              <ShieldAlert className="h-4 w-4" />
+                            </div>
+                            <div>
+                              <div className="text-xs font-bold text-gray-900">2026 Fee Guard</div>
+                              <p className="text-[10px] text-gray-500 leading-tight">Audit Inbound Placement & Defect fees.</p>
+                            </div>
+                          </a>
+                          <a href="#invoice-sync" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-3 p-2 rounded-lg hover:bg-white/50 transition-colors">
+                            <div className="p-1.5 bg-purple-50 rounded-md text-purple-600">
+                              <FileText className="h-4 w-4" />
+                            </div>
+                            <div>
+                              <div className="text-xs font-bold text-gray-900">Agentic Invoice Sync</div>
+                              <p className="text-[10px] text-gray-500 leading-tight">Zero-touch Gmail integration.</p>
+                            </div>
+                          </a>
+                        </div>
+                      </div>
+
+                      {/* Trust & Scale Section */}
+                      <div className="space-y-3">
+                        <h5 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Trust & Scale</h5>
+                        <div className="grid gap-3">
+                          <a href="#forensic-auditor" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-3 p-2 rounded-lg hover:bg-white/50 transition-colors">
+                            <div className="p-1.5 bg-gray-100 rounded-md text-gray-600">
+                              <Search className="h-4 w-4" />
+                            </div>
+                            <div>
+                              <div className="text-xs font-bold text-gray-900">Forensic Log Auditor</div>
+                              <p className="text-[10px] text-gray-500 leading-tight">Line-by-line proof for every claim.</p>
+                            </div>
+                          </a>
+                          <a href="#portfolio-manager" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-3 p-2 rounded-lg hover:bg-white/50 transition-colors">
+                            <div className="p-1.5 bg-gray-100 rounded-md text-gray-600">
+                              <Briefcase className="h-4 w-4" />
+                            </div>
+                            <div>
+                              <div className="text-xs font-bold text-gray-900">Whale Portfolio Mgr</div>
+                              <p className="text-[10px] text-gray-500 leading-tight">Multi-account reconciliation.</p>
+                            </div>
+                          </a>
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
                 {primaryLinks.map((link) => (
                   <Link
                     key={link.label}
