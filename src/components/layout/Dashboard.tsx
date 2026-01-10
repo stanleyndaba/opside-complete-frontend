@@ -744,13 +744,16 @@ export function Dashboard() {
                         <div className="w-[3px] h-3 bg-gray-900" />
                         <div>
                           <h2 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.2em]">Funds Successfully Recovered</h2>
-                          <p className="text-[9px] text-gray-400 font-mono uppercase tracking-widest mt-1">Audit.Verified</p>
+                          <p className="text-[9px] text-gray-400 font-mono uppercase tracking-widest mt-1">Audit-verified reimbursements secured.</p>
                         </div>
                       </div>
                       {submittedClaimsCount != null && submittedClaimsCount > 0 && (
-                        <div className="flex items-center gap-2 px-2 py-1 bg-gray-50 border border-gray-100">
-                          <span className="text-[9px] font-mono font-bold text-gray-500 uppercase tracking-widest">{submittedClaimsCount} SETTLEMENTS FILED</span>
-                        </div>
+                        <button
+                          onClick={() => navigate('/recoveries')}
+                          className="flex items-center gap-2 px-2 py-1 bg-gray-50 border border-gray-100 hover:bg-gray-100 hover:border-gray-200 transition-colors cursor-pointer"
+                        >
+                          <span className="text-[9px] font-mono font-bold text-gray-500 uppercase tracking-widest hover:text-gray-700">{submittedClaimsCount} SETTLEMENTS FILED</span>
+                        </button>
                       )}
                     </div>
 
@@ -770,7 +773,14 @@ export function Dashboard() {
                         )}
 
                         <div className="mt-8 flex items-center justify-between text-[9px] font-mono text-gray-400 uppercase tracking-widest border-t border-gray-50 pt-4">
-                          <span>Margin Protection: <span className="text-gray-900 font-bold">2.3% EST</span></span>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <span className="cursor-help border-b border-dotted border-gray-300">Margin Protection: <span className="text-gray-900 font-bold">2.3% EST</span></span>
+                            </TooltipTrigger>
+                            <TooltipContent side="bottom" className="max-w-xs text-xs">
+                              <p>Calculated as percentage of last 12 months FBA revenue recovered through audit-verified reimbursements.</p>
+                            </TooltipContent>
+                          </Tooltip>
                           <span>Audit Status: <span className="text-emerald-600 font-bold">Compliant</span></span>
                           <span className="text-gray-300">REF: SYS.REC.09112</span>
                         </div>
@@ -792,12 +802,12 @@ export function Dashboard() {
                       </div>
 
                       <div className="p-6">
-                        <div className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.15em] mb-3">Under Review</div>
+                        <div className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.15em] mb-3">In Active Review</div>
                         <div className="text-2xl font-light text-gray-900 tracking-tight">
                           {formatCurrencyWithSelection((pendingRecoveryAmount ?? 0), recoveredCurrency)}
                         </div>
                         <div className="mt-4 text-[9px] font-mono text-gray-500 uppercase tracking-widest">
-                          {effectivePendingClaims} Active Disputes
+                          {effectivePendingClaims} Disputes currently being worked
                         </div>
                       </div>
 
