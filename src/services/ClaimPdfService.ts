@@ -237,6 +237,17 @@ export const ClaimPdfService = {
 
         // --- TIER 4: PROFESSIONAL POLISH (RCA & Actions) ---
 
+        // Page Break Check (Tier 4)
+        if (yPos + 60 > doc.internal.pageSize.height - 20) {
+            doc.addPage();
+            yPos = 20;
+            doc.setFont(THEME.font, 'bold');
+            doc.setFontSize(10);
+            doc.setTextColor(THEME.textLight);
+            doc.text(`CASE ID: ${data.case_id || 'REF-000'} // CONTINUED`, FORMAT.margin, yPos);
+            yPos += 15;
+        }
+
         doc.setTextColor(THEME.text);
         doc.setFont(THEME.font, 'bold');
         doc.setFontSize(FORMAT.headerSize);
@@ -275,6 +286,18 @@ export const ClaimPdfService = {
 
 
         // --- TIER 5: ADMIN METADATA (Footer tags) ---
+
+        // Page Break Check (Tier 5)
+        if (yPos + 30 > doc.internal.pageSize.height - 20) {
+            doc.addPage();
+            yPos = 20;
+            doc.setFont(THEME.font, 'bold');
+            doc.setFontSize(10);
+            doc.setTextColor(THEME.textLight);
+            doc.text(`CASE ID: ${data.case_id || 'REF-000'} // CONTINUED`, FORMAT.margin, yPos);
+            yPos += 15;
+        }
+
         // Product Specs (Tier 5)
         doc.setFont(THEME.fontMono, 'normal');
         doc.setFontSize(7);
@@ -287,21 +310,26 @@ export const ClaimPdfService = {
         doc.text(`FACILITY_TRACE: ${data.facility || 'FTW1'} - AMAZON FULFILLMENT SERVICES`, FORMAT.margin, yPos + 12);
 
 
-        // --- TIER 6: FOOTER ---
-        const pageHeight = doc.internal.pageSize.height;
-        doc.setDrawColor(THEME.primary);
-        doc.setLineWidth(0.5);
-        doc.line(FORMAT.margin, pageHeight - 15, 195, pageHeight - 15);
+        // --- TIER 6: FOOTER (All Pages) ---
+        const pageCount = doc.getNumberOfPages();
+        for (let i = 1; i <= pageCount; i++) {
+            doc.setPage(i);
+            const pageHeight = doc.internal.pageSize.height;
 
-        doc.setFont(THEME.font, 'bold');
-        doc.setFontSize(8);
-        doc.setTextColor(THEME.primary);
-        doc.text('MARGIN // INSTITUTIONAL RECOVERY', FORMAT.margin, pageHeight - 10);
+            doc.setDrawColor(THEME.primary);
+            doc.setLineWidth(0.5);
+            doc.line(FORMAT.margin, pageHeight - 15, 195, pageHeight - 15);
 
-        doc.setFont(THEME.font, 'normal');
-        doc.setFontSize(7);
-        doc.setTextColor(THEME.textLight);
-        doc.text('CONFIDENTIAL - FOR INTERNAL USE ONLY', 195, pageHeight - 10, { align: 'right' });
+            doc.setFont(THEME.font, 'bold');
+            doc.setFontSize(8);
+            doc.setTextColor(THEME.primary);
+            doc.text('MARGIN // INSTITUTIONAL RECOVERY', FORMAT.margin, pageHeight - 10);
+
+            doc.setFont(THEME.font, 'normal');
+            doc.setFontSize(7);
+            doc.setTextColor(THEME.textLight);
+            doc.text(`CONFIDENTIAL - FOR INTERNAL USE ONLY | PAGE ${i} OF ${pageCount}`, 195, pageHeight - 10, { align: 'right' });
+        }
 
         // Save
         doc.save(`CASE_${data.case_id || 'RECORD'}_${new Date().getTime()}.pdf`);
