@@ -708,10 +708,12 @@ export default function CaseDetail() {
             </div>
 
             {/* Auto-Filing Banner - Institutional Style */}
-            <div className="flex items-center gap-4 px-4 py-2 bg-gray-900 text-white mb-8">
-              <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+            <div className="flex items-center justify-between px-4 py-2 bg-gray-900 text-white mb-8">
               <p className="text-[10px] uppercase tracking-widest font-mono">
-                <span className="text-gray-400">PROTOCOL:</span> MARGIN AUTO-FILES CASES ≥85% CONFIDENCE // AUTONOMOUS STATUS: <span className="text-emerald-400">ACTIVE</span>
+                <span className="text-gray-400">PROTOCOL:</span> MARGIN AUTO-FILES CASES ≥85% CONFIDENCE
+              </p>
+              <p className="text-[10px] uppercase tracking-widest font-mono">
+                AUTONOMOUS STATUS: <span className="text-emerald-400">ACTIVE</span>
               </p>
             </div>
 
@@ -1023,10 +1025,10 @@ export default function CaseDetail() {
                   </div>
 
                   <div className="space-y-8">
-                    {/* Visual Progress Bar */}
-                    <div className="relative pb-2">
-                      <div className="absolute top-[11px] left-3 right-3 h-[1px] bg-gray-100" />
-                      <div className="flex justify-between items-start relative z-10">
+                    {/* Visual Progress Bar - VERTICAL */}
+                    <div className="relative">
+                      <div className="absolute left-[10px] top-3 bottom-3 w-[1px] bg-gray-100" />
+                      <div className="flex flex-col space-y-4 relative z-10">
                         {['Detected', 'Prepared', 'Submitted', 'Paid', 'Follow-up'].map((step, idx) => {
                           const status = (effectiveCase.status || '').toLowerCase();
                           const active = (step === 'Detected') ||
@@ -1036,15 +1038,15 @@ export default function CaseDetail() {
                             (step === 'Follow-up' && ['denied', 'rejected', 'unresolved'].includes(status));
 
                           return (
-                            <div key={step} className="flex flex-col items-center">
+                            <div key={step} className="flex items-center gap-3">
                               <div className={cn(
-                                "w-[22px] h-[22px] rounded-full border-2 flex items-center justify-center text-[8px] font-bold transition-all",
+                                "w-[22px] h-[22px] rounded-full border-2 flex items-center justify-center text-[8px] font-bold transition-all shrink-0",
                                 active ? "bg-gray-900 border-gray-900 text-white" : "bg-white border-gray-100 text-gray-300"
                               )}>
                                 {idx + 1}
                               </div>
                               <span className={cn(
-                                "text-[7px] uppercase tracking-widest mt-2 font-bold",
+                                "text-[9px] uppercase tracking-widest font-bold",
                                 active ? "text-gray-900" : "text-gray-300"
                               )}>{step}</span>
                             </div>
