@@ -822,6 +822,13 @@ export function Dashboard() {
                         </div>
                       </div>
                     </div>
+
+                    {/* Emotional Anchor Line */}
+                    <div className="px-6 py-3 bg-gray-50/50 border-t border-gray-100">
+                      <p className="text-[9px] text-gray-400 italic text-center tracking-wide">
+                        Margin continuously protects your revenue and recovers what would have been lost.
+                      </p>
+                    </div>
                   </div>
 
                   {/* Detection Summary - Simplified */}
