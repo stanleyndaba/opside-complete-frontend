@@ -465,7 +465,7 @@ const Index = () => {
           </div>
           {mobileMenuOpen && (
             <div className="mt-4 md:hidden relative z-50">
-              <div className="flex flex-col gap-2 rounded-[20px] border border-white/40 bg-white/80 supports-[backdrop-filter]:bg-white/70 backdrop-blur-2xl p-4 shadow-2xl">
+              <div className="flex flex-col gap-2 rounded-[20px] border border-white/40 bg-white/80 supports-[backdrop-filter]:bg-white/70 backdrop-blur-2xl p-4 shadow-2xl max-h-[calc(100vh-120px)] overflow-y-auto">
                 <div className="rounded-[18px] border-gray-200 bg-gray-50 px-3 py-2 text-sm font-semibold text-gray-800 shadow-sm">
                   <div className="flex items-center gap-2">
                     <Gift className="h-4 w-4" aria-hidden="true" />
