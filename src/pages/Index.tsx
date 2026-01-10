@@ -633,7 +633,7 @@ const Index = () => {
                   onClick={() => window.location.href = '/margin-board'}
                   className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50/50 px-2 py-1 pr-3 text-xs font-medium text-gray-900 transition-colors hover:bg-blue-50 hover:border-blue-200 cursor-pointer">
                   <span className="rounded-full bg-blue-600 px-2.5 py-0.5 text-[10px] font-bold text-white uppercase tracking-wide">NEW</span>
-                  <span className="inline-block text-gray-700">Introducing Margin Board: Transforming Identity Verification and Customer Onboarding experiences</span>
+                  <span className="inline-block text-gray-700">Introducing Margin Board: Customer Onboarding</span>
                   <ChevronRight className="h-3 w-3 text-gray-400" />
                 </div>
 
@@ -671,7 +671,7 @@ const Index = () => {
                 </h1>
 
                 <p className="font-montserrat text-base md:text-lg text-gray-600 font-normal max-w-xl leading-relaxed">
-                  Our agents provide the infrastructure for Amazon profit recovery. We link directly to your Seller Central to audit every transaction, recover lost inventory, and automate reimbursements—turning messy data into immediate capital.
+                  Margin provides the infrastructure for Amazon profit recovery. We link directly to your Seller Central to audit every micro transaction, recover lost inventory, and automate reimbursements—turning messy data into immediate capital.
                 </p>
 
                 <div className="w-full flex flex-col gap-6">
