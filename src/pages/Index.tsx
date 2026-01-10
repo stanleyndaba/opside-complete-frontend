@@ -16,7 +16,7 @@ import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
 import { CookieConsent } from '@/components/landing/CookieConsent';
 import { ProductsMegaMenu } from '@/components/landing/ProductsMegaMenu';
-import heroImage from '@/assets/landingpp.png';
+const heroImage = '/FRONTIMAGE.png';
 
 const PadlockIcon: React.FC = () => (
   <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
@@ -156,7 +156,7 @@ const Index = () => {
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const handleResize = () => {
-      if (window.innerWidth>= 768) {
+      if (window.innerWidth >= 768) {
         setMobileMenuOpen(false);
       }
     };
@@ -200,7 +200,7 @@ const Index = () => {
       const newValue = Math.min(increment * currentStep, targetValue);
       setPrecisionCount(parseFloat(newValue.toFixed(2)));
 
-      if (newValue>= targetValue) {
+      if (newValue >= targetValue) {
         clearInterval(interval);
       }
     }, stepDuration);
@@ -232,7 +232,7 @@ const Index = () => {
       const diff = currentScrollY - lastScrollY;
 
       // Lower threshold for mobile touch scrolling
-      if (diff> 8) {
+      if (diff > 8) {
         setShowBanner(false);
         lastScrollYRef.current = currentScrollY;
       } else if (diff < -8) {
@@ -339,7 +339,7 @@ const Index = () => {
           const next = [...prev];
           const nextValue = Math.min(next[index] + increment, metric.target);
           next[index] = nextValue;
-          if (nextValue>= metric.target) {
+          if (nextValue >= metric.target) {
             window.clearInterval(metricIntervals.current[index]);
           }
           return next;
