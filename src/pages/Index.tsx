@@ -854,7 +854,7 @@ const Index = () => {
         </section>
       </div>
 
-      <section className="bg-white py-32 md:py-48 flex flex-col items-center text-center px-6">
+      <section className="bg-white pt-24 pb-12 md:pt-32 md:pb-16 flex flex-col items-center text-center px-6">
         <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-gray-900 mb-10 max-w-4xl">
           Get started with Margin
         </h2>

@@ -37,12 +37,8 @@ const SOCIAL_LINKS = [
 const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
   return (
     <div className="relative z-10 w-full bg-white">
-      <section className="relative bg-white py-12 w-full overflow-x-hidden" style={{ width: '100%', maxWidth: '100%' }}>
-        {/* Opside AI text removed */}
-      </section>
-
-      <footer id="core-footer" className="relative bg-white text-gray-900 w-full" style={{ width: '100%', maxWidth: '100%' }}>
-        <div className="container mx-auto px-6 py-14 space-y-8">
+      <footer id="core-footer" className="relative bg-white text-gray-900 w-full border-t border-gray-100" style={{ width: '100%', maxWidth: '100%' }}>
+        <div className="container mx-auto px-6 pt-12 pb-14 space-y-8">
           <div className="space-y-4">
             <p className="font-montserrat text-sm text-gray-600 leading-relaxed max-w-sm">
               Autonomous reimbursements crafted for modern Amazon operators. Secure data flows, transparent claims,
