@@ -372,8 +372,10 @@ const Index = () => {
                 />
                 <span className="font-montserrat text-gray-900" style={{ fontWeight: 600 }}>Margin</span>
               </Link>
-              <span className="text-gray-300">|</span>
-              <ProductsMegaMenu />
+              <span className="hidden md:inline text-gray-300">|</span>
+              <div className="hidden md:block">
+                <ProductsMegaMenu />
+              </div>
             </div>
 
 
@@ -473,6 +475,12 @@ const Index = () => {
                     Sellers who bring new sellers to Margin keep 100% value of their recovered funds
                   </p>
                 </div>
+                <a
+                  href="#reimbursements"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-gray-800 hover:bg-white/70 hover:text-gray-900 transition-colors">
+                  Products
+                </a>
                 {primaryLinks.map((link) => (
                   <Link
                     key={link.label}
