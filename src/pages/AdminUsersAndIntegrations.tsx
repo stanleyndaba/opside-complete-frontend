@@ -33,17 +33,17 @@ export default function AdminUsersAndIntegrations() {
         } else {
           // Fallback to demo data if backend not available
           setUsers([
-            { id: 'u1', email: 'founder@getclario.com', role: 'admin', status: 'active' },
-            { id: 'u2', email: 'ops@getclario.com', role: 'user', status: 'active' },
-            { id: 'u3', email: 'analyst@getclario.com', role: 'user', status: 'locked' },
+            { id: 'u1', email: 'founder@margin.app', role: 'admin', status: 'active' },
+            { id: 'u2', email: 'ops@margin.app', role: 'user', status: 'active' },
+            { id: 'u3', email: 'analyst@margin.app', role: 'user', status: 'locked' },
           ]);
         }
       } catch {
         // Fallback to demo data
         setUsers([
-          { id: 'u1', email: 'founder@getclario.com', role: 'admin', status: 'active' },
-          { id: 'u2', email: 'ops@getclario.com', role: 'user', status: 'active' },
-          { id: 'u3', email: 'analyst@getclario.com', role: 'user', status: 'locked' },
+          { id: 'u1', email: 'founder@margin.app', role: 'admin', status: 'active' },
+          { id: 'u2', email: 'ops@margin.app', role: 'user', status: 'active' },
+          { id: 'u3', email: 'analyst@margin.app', role: 'user', status: 'locked' },
         ]);
       } finally {
         setUsersLoading(false);

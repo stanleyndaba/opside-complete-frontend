@@ -131,7 +131,7 @@ export default function Sync() {
     if (isProcessingQueueRef.current) return;
     isProcessingQueueRef.current = true;
 
-    while (logQueueRef.current.length> 0) {
+    while (logQueueRef.current.length > 0) {
       const item = logQueueRef.current.shift();
       if (item) {
         await new Promise(resolve => setTimeout(resolve, item.delay));
@@ -150,7 +150,7 @@ export default function Sync() {
       if (logQueueRef.current.length === 0 && !logsFinishedRef.current) {
         logsFinishedRef.current = true;
         setLogsFinished(true);
-      } else if (logQueueRef.current.length> 0) {
+      } else if (logQueueRef.current.length > 0) {
         // More logs were added, process them
         processLogQueue();
       }
@@ -287,7 +287,7 @@ export default function Sync() {
       const moneyMatch = log.message.match(/\$([0-9,]+(?:\.\d{2})?)/);
       if (moneyMatch) {
         const value = parseFloat(moneyMatch[1].replace(/,/g, ''));
-        if (!isNaN(value) && value> (storyMap[category].potentialValue || 0)) {
+        if (!isNaN(value) && value > (storyMap[category].potentialValue || 0)) {
           storyMap[category].potentialValue = value;
         }
       }
@@ -301,7 +301,7 @@ export default function Sync() {
     // Build enhanced summaries for each story with money context
     for (const story of Object.values(storyMap)) {
       // Special handling for detection - use plain language
-      if (story.category === 'detection' && story.anomaliesFound && story.anomaliesFound> 0) {
+      if (story.category === 'detection' && story.anomaliesFound && story.anomaliesFound > 0) {
         const value = story.potentialValue || 0;
         const issues = story.anomaliesFound;
 
@@ -334,21 +334,21 @@ export default function Sync() {
 
       const label = itemLabels[story.category] || 'items';
 
-      if (story.itemCount && story.itemCount> 0) {
+      if (story.itemCount && story.itemCount > 0) {
         parts.push(`${story.itemCount} ${label} checked`);
       }
 
       // Add anomalies if found
-      if (story.anomaliesFound && story.anomaliesFound> 0) {
+      if (story.anomaliesFound && story.anomaliesFound > 0) {
         parts.push(`${story.anomaliesFound} issues found`);
       }
 
       // Add potential value inline in summary if present
-      if (story.potentialValue && story.potentialValue> 0) {
+      if (story.potentialValue && story.potentialValue > 0) {
         parts.push(`— +$${story.potentialValue.toLocaleString()} potential`);
       }
 
-      story.summary = parts.length> 0 ? parts.join(' — ') : `${story.logs.length} events`;
+      story.summary = parts.length > 0 ? parts.join(' — ') : `${story.logs.length} events`;
     }
 
     // Sort stories: system first, then by first log timestamp
@@ -403,13 +403,13 @@ export default function Sync() {
       if (log.type === 'error') {
         group.status = 'error';
         // Extract a short description of the issue
-        const shortIssue = log.message.length> 60 ? log.message.slice(0, 60) + '...' : log.message;
+        const shortIssue = log.message.length > 60 ? log.message.slice(0, 60) + '...' : log.message;
         if (!group.issues.includes(shortIssue)) {
           group.issues.push(shortIssue);
         }
       } else if (log.type === 'warning' && group.status !== 'error') {
         group.status = 'warning';
-        const shortIssue = log.message.length> 60 ? log.message.slice(0, 60) + '...' : log.message;
+        const shortIssue = log.message.length > 60 ? log.message.slice(0, 60) + '...' : log.message;
         if (!group.issues.includes(shortIssue)) {
           group.issues.push(shortIssue);
         }
@@ -422,11 +422,11 @@ export default function Sync() {
   // Get the most important issue to surface below the strip
   const surfacedIssue = useMemo(() => {
     const errorGroup = healthGroups.find(g => g.status === 'error');
-    if (errorGroup && errorGroup.issues.length> 0) {
+    if (errorGroup && errorGroup.issues.length > 0) {
       return { type: 'error' as const, message: errorGroup.issues[0], group: errorGroup.name };
     }
     const warningGroup = healthGroups.find(g => g.status === 'warning');
-    if (warningGroup && warningGroup.issues.length> 0) {
+    if (warningGroup && warningGroup.issues.length > 0) {
       return { type: 'warning' as const, message: warningGroup.issues[0], group: warningGroup.name };
     }
     return null;
@@ -530,7 +530,7 @@ export default function Sync() {
     // Generic fallback for any other error
     if (type === 'error') {
       return {
-        text: `[NOTICED] Something unexpected happened — We're handling it automatically. If issues persist, try running sync again. Details: ${message.slice(0, 100)}${message.length> 100 ? '...' : ''}`,
+        text: `[NOTICED] Something unexpected happened — We're handling it automatically. If issues persist, try running sync again. Details: ${message.slice(0, 100)}${message.length > 100 ? '...' : ''}`,
         isHumanized: true
       };
     }
@@ -538,7 +538,7 @@ export default function Sync() {
     // Generic warning fallback
     if (type === 'warning') {
       return {
-        text: `[HEADS UP] ${message.slice(0, 150)}${message.length> 150 ? '...' : ''} — Usually resolves on its own.`,
+        text: `[HEADS UP] ${message.slice(0, 150)}${message.length > 150 ? '...' : ''} — Usually resolves on its own.`,
         isHumanized: true
       };
     }
@@ -559,7 +559,7 @@ export default function Sync() {
     for (const keyword of moneyKeywords) {
       if (lowerMsg.includes(keyword)) {
         // ONLY use real potential value from story if available - no fake estimates
-        if (story.potentialValue && story.potentialValue> 0) {
+        if (story.potentialValue && story.potentialValue > 0) {
           return {
             text: message,
             hint: `+$${story.potentialValue.toLocaleString()} potential`
@@ -593,37 +593,37 @@ export default function Sync() {
     const prev = previousDataRef.current;
 
     // Only track counts/state, NOT logs - all logs come from backend SSE events
-    if (data.ordersProcessed && data.ordersProcessed> 0) {
+    if (data.ordersProcessed && data.ordersProcessed > 0) {
       prev.orders.count = data.ordersProcessed;
-      prev.orders.completed = data.ordersProcessed>= (data.totalOrders || data.ordersProcessed);
+      prev.orders.completed = data.ordersProcessed >= (data.totalOrders || data.ordersProcessed);
     }
 
-    if (data.inventoryCount && data.inventoryCount> 0) {
+    if (data.inventoryCount && data.inventoryCount > 0) {
       prev.inventory.count = data.inventoryCount;
       prev.inventory.completed = true;
     }
 
-    if (data.shipmentsCount && data.shipmentsCount> 0) {
+    if (data.shipmentsCount && data.shipmentsCount > 0) {
       prev.shipments.count = data.shipmentsCount;
       prev.shipments.completed = true;
     }
 
-    if (data.returnsCount && data.returnsCount> 0) {
+    if (data.returnsCount && data.returnsCount > 0) {
       prev.returns.count = data.returnsCount;
       prev.returns.completed = true;
     }
 
-    if (data.settlementsCount && data.settlementsCount> 0) {
+    if (data.settlementsCount && data.settlementsCount > 0) {
       prev.settlements.count = data.settlementsCount;
       prev.settlements.completed = true;
     }
 
-    if (data.feesCount && data.feesCount> 0) {
+    if (data.feesCount && data.feesCount > 0) {
       prev.fees.count = data.feesCount;
       prev.fees.completed = true;
     }
 
-    if (data.claimsDetected && data.claimsDetected> 0) {
+    if (data.claimsDetected && data.claimsDetected > 0) {
       prev.claims.count = data.claimsDetected;
       prev.claims.completed = true;
     }
@@ -681,7 +681,7 @@ export default function Sync() {
         const totalDetections = event.total_detections ?? null;
         const estimatedValue = event.estimated_value ?? event.totalRecoverableValue ?? null;
 
-        if (totalDetections !== null && totalDetections> 0) {
+        if (totalDetections !== null && totalDetections > 0) {
           // ⭐ UPDATE syncData so "Potential Recovery Identified" shows when logsFinished
           // No addLog here - main SSE handler at line 500+ already handles logs
           setSyncData(prev => prev ? {
@@ -690,7 +690,7 @@ export default function Sync() {
             totalRecoverableValue: estimatedValue ?? prev.totalRecoverableValue
           } : prev);
         }
-      } else if (event.new_detections_count && event.new_detections_count> 0) {
+      } else if (event.new_detections_count && event.new_detections_count > 0) {
         const estimatedValue = event.estimated_value ?? null;
 
         // ⭐ UPDATE syncData for incremental updates too
@@ -718,7 +718,7 @@ export default function Sync() {
     }));
     // Hold progress at 98% until logs finish, then show 100%
     if (typeof s.progress === 'number') {
-      if (s.progress>= 100 && !logsFinished) {
+      if (s.progress >= 100 && !logsFinished) {
         setProgress(98); // Hold at 98% while logs are still displaying
       } else {
         setProgress(s.progress);
@@ -938,7 +938,7 @@ export default function Sync() {
               totalRecoverableValue: estimatedValue ?? prev.totalRecoverableValue
             } : prev);
 
-            if (detectedCount !== null && detectedCount> 0) {
+            if (detectedCount !== null && detectedCount > 0) {
               // Only log value if backend provides it
               if (estimatedValue !== null) {
                 const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimatedValue);
@@ -979,7 +979,7 @@ export default function Sync() {
         if (s.status === 'completed' || s.status === 'failed' || s.status === 'cancelled') {
           pollsAfterComplete++;
 
-          if (pollsAfterComplete>= MAX_POLLS_AFTER_COMPLETE || s.status === 'failed' || s.status === 'cancelled') {
+          if (pollsAfterComplete >= MAX_POLLS_AFTER_COMPLETE || s.status === 'failed' || s.status === 'cancelled') {
             if (interval) {
               clearInterval(interval);
               interval = null;
@@ -1140,7 +1140,7 @@ export default function Sync() {
     const html = `<!DOCTYPE html>
 <html>
 <head>
-  <title>Opside | Sync Logs - ${exportDate}</title>
+  <title>Margin | Sync Logs - ${exportDate}</title>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 40px; max-width: 1200px; margin: 0 auto; }
     h1 { color: #111827; font-size: 24px; margin-bottom: 8px; }
@@ -1153,7 +1153,7 @@ export default function Sync() {
 </head>
 <body>
   <div style="margin-bottom: 20px;">
-    <img src="/logoimagetwo.png" alt="Opside Logo" style="height: 48px; object-fit: contain;" />
+    <img src="/logoimagetwo.png" alt="Margin Logo" style="height: 48px; object-fit: contain;" />
   </div>
   <div class="meta">
     <span><strong>Exported:</strong> ${exportDate}</span>
@@ -1344,7 +1344,7 @@ export default function Sync() {
 
 
               {/* Status Strip */}
-              {logs.length> 0 && status === 'completed' && (
+              {logs.length > 0 && status === 'completed' && (
                 <div className="flex items-center gap-3 text-xs font-montserrat">
                   {syncData?.completedAt && (
                     <span className="text-gray-400">
@@ -1423,7 +1423,7 @@ export default function Sync() {
                   </div>
 
                   {/* Export Button */}
-                  {logs.length> 0 && (
+                  {logs.length > 0 && (
                     <button
                       onClick={exportLogs}
                       className="ml-auto flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-all"
@@ -1586,7 +1586,7 @@ export default function Sync() {
                                           )}
                                         </div>
                                         {/* Render context.details if present */}
-                                        {log.context?.details && log.context.details.length> 0 && (
+                                        {log.context?.details && log.context.details.length > 0 && (
                                           <div className="ml-12 mt-1 mb-2 space-y-0.5 text-[11px] text-gray-300">
                                             {log.context.details.map((detail, i) => (
                                               <div key={i} className={detail.startsWith('✅') ? 'text-emerald-400' : ''}>
@@ -1600,7 +1600,7 @@ export default function Sync() {
                                   })}
 
                                   {/* Link to Claims - show when there's money potential or anomalies */}
-                                  {story.linkTo && story.isCompleted && ((story.anomaliesFound || 0)> 0 || (story.potentialValue || 0)> 0) && (
+                                  {story.linkTo && story.isCompleted && ((story.anomaliesFound || 0) > 0 || (story.potentialValue || 0) > 0) && (
                                     <div className="mt-2">
                                       <button
                                         onClick={(e) => { e.stopPropagation(); navigate(story.linkTo!); }}

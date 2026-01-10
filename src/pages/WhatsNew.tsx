@@ -62,7 +62,7 @@ export default function WhatsNew() {
                 Product Updates & Releases
               </p>
               <p className="mt-4 text-sm text-gray-600 max-w-2xl leading-relaxed">
-                We're constantly improving Opside to find and recover more for you.
+                We're constantly improving Margin to find and recover more for you.
               </p>
             </header>
 
@@ -129,7 +129,7 @@ export default function WhatsNew() {
             <footer className="mt-10 pt-6 border-t border-gray-200">
               <p className="text-[10px] text-gray-500">
                 Have a feature request?{' '}
-                <a href="mailto:hello@opside.co" className="text-gray-900 hover:text-gray-600 font-medium">
+                <a href="mailto:support@margin.app" className="text-gray-900 hover:text-gray-600 font-medium">
                   Let us know
                 </a>
               </p>

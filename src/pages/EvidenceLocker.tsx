@@ -1209,7 +1209,7 @@ export default function EvidenceLocker() {
                     <Mail className="w-3.5 h-3.5" />
                     <span>or email to:</span>
                     <code className="bg-gray-50 border border-gray-200 px-1.5 py-0.5 rounded text-[10px] text-gray-900">
-                      store@invoices.opside.ai
+                      store@invoices.margin.app
                     </code>
                     <Link to="/integrations-hub" className="ml-2 inline-flex items-center gap-1 text-blue-600 hover:text-blue-700 text-xs">
                       Connect Sources <ExternalLink className="h-3 w-3" />

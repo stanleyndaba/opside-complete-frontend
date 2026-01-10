@@ -115,7 +115,7 @@ export default function Admin() {
             <div className="p-6">
               <blockquote className="border-l-2 border-gray-300 pl-4 py-2 mb-6">
                 <p className="text-sm text-gray-700 italic leading-relaxed">
-                  "Opside tirelessly finds, proves, and recovers every dollar Amazon owes you, with almost zero work or risk on your side—and shows you exactly how it did it."
+                  "Margin tirelessly finds, proves, and recovers every dollar Amazon owes you, with almost zero work or risk on your side—and shows you exactly how it did it."
                 </p>
               </blockquote>
 
@@ -134,7 +134,7 @@ export default function Admin() {
                 <div>
                   <h4 className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.15em] mb-3">Competitive Differentiation</h4>
                   <p className="text-xs text-gray-600 italic mb-3">
-                    "Opside is the one place where your Amazon money is never forgotten, never guessed, and never risky—just automatically found, fought for, and deposited."
+                    "Margin is the one place where your Amazon money is never forgotten, never guessed, and never risky—just automatically found, fought for, and deposited."
                   </p>
                   <ul className="text-xs text-gray-600 space-y-1.5">
                     <li><span className="text-gray-400">Others sell "we file claims"</span> — we remove the entire burden</li>
@@ -317,7 +317,7 @@ export default function Admin() {
                     </div>
 
                     {/* Agent Performance Table */}
-                    {learningMetrics.by_agent && Object.keys(learningMetrics.by_agent).length> 0 && (
+                    {learningMetrics.by_agent && Object.keys(learningMetrics.by_agent).length > 0 && (
                       <Card className="bg-white border-gray-200">
                         <CardHeader className="pb-2">
                           <CardTitle className="text-xs font-semibold text-gray-900 uppercase tracking-wide">Agent Performance</CardTitle>
@@ -337,8 +337,8 @@ export default function Admin() {
                               <TableBody>
                                 {Object.entries(learningMetrics.by_agent).map(([agent, data]: [string, any]) => {
                                   const successRate = data.success_rate || 0;
-                                  const isHealthy = successRate>= 0.8;
-                                  const isWarning = successRate>= 0.5 && successRate < 0.8;
+                                  const isHealthy = successRate >= 0.8;
+                                  const isWarning = successRate >= 0.5 && successRate < 0.8;
 
                                   return (
                                     <TableRow key={agent} className="border-gray-200 hover:bg-gray-50">
@@ -349,10 +349,10 @@ export default function Admin() {
                                         {data.events?.toLocaleString() || 0}
                                       </TableCell>
                                       <TableCell className="text-gray-600">
-                                        {successRate> 0 ? `${(successRate * 100).toFixed(1)}%` : 'N/A'}
+                                        {successRate > 0 ? `${(successRate * 100).toFixed(1)}%` : 'N/A'}
                                       </TableCell>
                                       <TableCell>
-                                        {successRate> 0 && (
+                                        {successRate > 0 && (
                                           <Badge
                                             className={
                                               isHealthy
@@ -376,7 +376,7 @@ export default function Admin() {
                     )}
 
                     {/* Threshold Optimization History */}
-                    {thresholds.length> 0 && (
+                    {thresholds.length > 0 && (
                       <Card className="bg-white border-gray-200">
                         <CardHeader className="pb-2">
                           <CardTitle className="text-xs font-semibold text-gray-900 uppercase tracking-wide">Threshold Optimization History</CardTitle>
@@ -413,7 +413,7 @@ export default function Admin() {
                     )}
 
                     {/* Rejection Pattern Analysis */}
-                    {learningInsights?.patterns?.rejectionPatterns && Object.keys(learningInsights.patterns.rejectionPatterns).length> 0 && (
+                    {learningInsights?.patterns?.rejectionPatterns && Object.keys(learningInsights.patterns.rejectionPatterns).length > 0 && (
                       <Card className="bg-white border-gray-200">
                         <CardHeader className="pb-2">
                           <CardTitle className="text-xs font-semibold text-gray-900 uppercase tracking-wide">Rejection Pattern Analysis</CardTitle>
@@ -435,7 +435,7 @@ export default function Admin() {
                     )}
 
                     {/* Learning Insights */}
-                    {learningInsights && learningInsights.length> 0 && (
+                    {learningInsights && learningInsights.length > 0 && (
                       <Card className="bg-white border-gray-200">
                         <CardHeader className="pb-2">
                           <CardTitle className="text-xs font-semibold text-gray-900 uppercase tracking-wide">Optimization Insights</CardTitle>

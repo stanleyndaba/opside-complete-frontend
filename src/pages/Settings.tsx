@@ -456,7 +456,7 @@ const Settings = () => {
                     </div>
                   </div>
                 </div>
-                {marketplaces.length> 0 && (
+                {marketplaces.length > 0 && (
                   <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
                     <CardHeader className="bg-gray-50/50 border-b border-gray-200 pb-3">
                       <div className="flex items-center justify-between">
@@ -670,14 +670,14 @@ const Settings = () => {
           <div className="space-y-6">
             <div>
               <h2 className="text-base font-semibold text-gray-900">API Access</h2>
-              <p className="text-xs text-gray-600">Programmatic access to your Clario data for automation and integrations</p>
+              <p className="text-xs text-gray-600">Programmatic access to your Margin data for automation and integrations</p>
             </div>
 
             <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
               <CardContent className="p-4">
                 <div className="space-y-3">
                   <p className="text-xs text-gray-600">
-                    Use Clario APIs to pull recovery data, sync evidence statuses, and reconcile payouts in your own systems.
+                    Use Margin APIs to pull recovery data, sync evidence statuses, and reconcile payouts in your own systems.
                     Access tokens are scoped and can be rotated at any time. SDKs and examples are available.
                   </p>
                   <ul className="list-disc pl-5 text-xs text-gray-600 space-y-1">
@@ -688,7 +688,7 @@ const Settings = () => {
                 </div>
                 <div className="mt-6">
                   <Button className="bg-emerald-500 hover:bg-emerald-400 text-white" onClick={() => navigate('/api-access')}>
-                    Clario APIs
+                    Margin APIs
                   </Button>
                 </div>
               </CardContent>
@@ -723,7 +723,7 @@ const Settings = () => {
             <div>
               <Button className="bg-emerald-500 hover:bg-emerald-400 text-white gap-2" onClick={() => navigate('/integrations-hub')}>
                 <Plug className="h-4 w-4" />
-                Clario Integrations
+                Margin Integrations
               </Button>
             </div>
 

@@ -19,10 +19,10 @@ export function Toaster() {
             <div className="grid gap-1">
               <img
                 src="/logoimagetwo.png"
-                alt="Clario"
+                alt="Margin"
                 className="h-2.5 w-auto object-contain"
               />
-              {title && title !== 'CLARIO' && (
+              {title && title !== 'MARGIN' && (
                 <ToastTitle className="text-xs font-semibold text-gray-900">{title}</ToastTitle>
               )}
               {description && (

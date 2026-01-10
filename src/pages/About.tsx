@@ -10,7 +10,7 @@ export default function About() {
   ];
 
   return (
-    <PageLayout title="About Clario">
+    <PageLayout title="About Margin">
       <div className="max-w-5xl mx-auto space-y-10">
         {/* Mission */}
         <section className="space-y-3 text-center">
@@ -63,7 +63,7 @@ export default function About() {
               <CardDescription>Seed stage (raising)</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">We’re raising to accelerate detection, evidence automation, and global coverage. Interested? Email <a className="underline" href="mailto:investors@getclario.com">investors@getclario.com</a>.</p>
+              <p className="text-sm text-muted-foreground">We’re raising to accelerate detection, evidence automation, and global coverage. Interested? Email <a className="underline" href="mailto:investors@margin.app">investors@margin.app</a>.</p>
             </CardContent>
           </Card>
           <Card>

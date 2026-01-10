@@ -47,7 +47,7 @@ export function PageLayout({
             <div className="fixed top-3 left-4 z-50 pointer-events-none">
               <img
                 src="/logoimagetwo.png"
-                alt="Clario"
+                alt="Margin"
                 className="h-5 w-auto object-contain"
               />
             </div>

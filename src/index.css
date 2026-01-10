@@ -134,7 +134,7 @@
   }
 
   /* All text elements use Inter - comprehensive coverage */
-  /* Exception for .font-montserrat which is used for Opside branding */
+  /* Exception for .font-montserrat which is used for Margin branding */
   *:not(.font-montserrat),
   *::before,
   *::after,
@@ -448,8 +448,8 @@
     font-weight: 500 !important;
   }
 
-  /* CLARIO logo with Nunito Sans - override global font */
-  .clario-logo-nunito {
+  /* MARGIN logo with Nunito Sans - override global font */
+  .margin-logo-nunito {
     font-family: "Nunito Sans", sans-serif !important;
     font-weight: 900 !important;
     font-style: normal !important;

@@ -31,7 +31,7 @@ const RefundPolicy = () => {
                         <section className="space-y-4">
                             <h2 className="text-base font-medium text-gray-900">1. Subscription Cancellation</h2>
                             <p>
-                                You may cancel your Margin subscription at any time via your account dashboard or by emailing clariooai@gmail.com.
+                                You may cancel your Margin subscription at any time via your account dashboard or by emailing support@margin.app.
                             </p>
                             <p>
                                 Cancellation takes effect at the end of your current billing cycle. You will retain full access until that date and will not be charged again.
@@ -50,7 +50,7 @@ const RefundPolicy = () => {
                                 If you cancel mid-cycle, you continue to receive the full service until the end of the paid period.
                             </p>
                             <p>
-                                <strong>Billing Errors:</strong> In the event of a genuine billing error (for example, a charge after cancellation or a double charge), contact clariooai@gmail.com within 7 days of the charge. We will investigate promptly and refund any erroneous amount immediately.
+                                <strong>Billing Errors:</strong> In the event of a genuine billing error (for example, a charge after cancellation or a double charge), contact support@margin.app within 7 days of the charge. We will investigate promptly and refund any erroneous amount immediately.
                             </p>
                         </section>
 
@@ -64,7 +64,7 @@ const RefundPolicy = () => {
                         <section className="space-y-4">
                             <h2 className="text-base font-medium text-gray-900">4. Contact Information</h2>
                             <p>If you have any questions about our refund or cancellation policy, please contact us:</p>
-                            <p>Email: clariooai@gmail.com</p>
+                            <p>Email: support@margin.app</p>
                             <p>Response Time: Within 48 hours</p>
                         </section>
                     </div>

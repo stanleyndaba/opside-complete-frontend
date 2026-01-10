@@ -10,7 +10,7 @@ export default function Careers() {
       type: 'Full-time',
       salary: '$90k – $140k',
       tags: ['React', 'Design Systems', 'Figma'],
-      description: 'Own our design system and craft delightful product experiences across the Opside platform.',
+      description: 'Own our design system and craft delightful product experiences across the Margin platform.',
     },
     {
       title: 'Chief Financial Officer',
@@ -110,7 +110,7 @@ export default function Careers() {
                         </div>
                       </div>
                       <a
-                        href={`mailto:careers@opside.co?subject=${encodeURIComponent('Application: ' + position.title)}`}
+                        href={`mailto:careers@margin.app?subject=${encodeURIComponent('Application: ' + position.title)}`}
                         className="px-3 py-1.5 text-xs text-gray-700 border border-gray-300 bg-white hover:bg-gray-50 transition-colors flex items-center gap-1 shrink-0">
                         Apply
                         <ArrowRight className="h-3 w-3" />
@@ -131,7 +131,7 @@ export default function Careers() {
                 We value a fast, respectful process. Reach out and let's talk.
               </p>
               <a
-                href="mailto:careers@opside.co"
+                href="mailto:careers@margin.app"
                 className="inline-block px-4 py-2 text-xs font-medium text-white bg-gray-900 hover:bg-gray-800 transition-colors">
                 Contact Us
               </a>

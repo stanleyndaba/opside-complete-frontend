@@ -49,7 +49,7 @@ export default function Contact() {
         const body = encodeURIComponent(
             `Name: ${form.name}\nEmail: ${form.email}\nCompany: ${form.company || 'N/A'}\n\n${form.message}`
         );
-        window.open(`mailto:clariooai@gmail.com?subject=${subject}&body=${body}`, '_blank');
+        window.open(`mailto:support@margin.app?subject=${subject}&body=${body}`, '_blank');
 
         setIsSubmitting(false);
         setIsSubmitted(true);
@@ -199,14 +199,14 @@ export default function Contact() {
                                 Direct Contact
                             </h2>
                             <a
-                                href="mailto:clariooai@gmail.com"
+                                href="mailto:support@margin.app"
                                 className="flex items-center gap-3 p-4 rounded-lg border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors group">
                                 <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center group-hover:bg-gray-200 transition-colors">
                                     <Mail className="h-5 w-5 text-gray-600" />
                                 </div>
                                 <div>
                                     <p className="text-sm font-medium text-gray-900 font-montserrat">Email Us</p>
-                                    <p className="text-xs text-gray-500 font-montserrat">clariooai@gmail.com</p>
+                                    <p className="text-xs text-gray-500 font-montserrat">support@margin.app</p>
                                 </div>
                             </a>
                         </div>

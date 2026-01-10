@@ -34,7 +34,7 @@ const Privacy = () => {
                 <strong>Company</strong> ('We', 'Us', or 'Our') refers to Margin, operating from Durban, South Africa.
               </p>
               <p>
-                <strong>Service</strong> refers to the Margin application accessible from https://opside-complete-frontend-ni6o7xnko-mvelo-ndabas-projects.vercel.app/.
+                <strong>Service</strong> refers to the Margin application accessible from https://margin.app.
               </p>
               <p>
                 <strong>Personal Data</strong> means any information that relates to an identified or identifiable individual.
@@ -143,7 +143,7 @@ const Privacy = () => {
               <h2 className="text-base font-medium text-gray-900">8. Contact Information</h2>
               <p>If you have questions about this Privacy Policy or our compliance with the Amazon DPP, contact us at:</p>
               <p>Margin</p>
-              <p>Email: clariooai@gmail.com</p>
+              <p>Email: support@margin.app</p>
             </section>
           </div>
         </article>

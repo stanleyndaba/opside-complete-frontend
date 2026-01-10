@@ -14,10 +14,10 @@ const ApiAccess = () => {
             {/* Header */}
             <header className="mb-16">
               <h1 className="text-3xl md:text-4xl font-semibold text-gray-900 leading-tight tracking-tight">
-                The Opside API: The Financial Engine for Modern Commerce
+                The Margin API: The Financial Engine for Modern Commerce
               </h1>
-              <p className="mt-6 text-lg text-gray-600 leading-relaxed">
-                At Opside, we are building more than a dashboard. We are building the intelligent financial recovery layer for e-commerce. Our future-facing API will allow developers, agencies, and enterprise brands to programmatically access the full power of our platform, integrating automated reimbursement data and workflows directly into their own systems.
+              <p className="mt-5 text-lg md:text-xl text-gray-600 font-body">
+                At Margin, we are building more than a dashboard. We are building the intelligent financial recovery layer for e-commerce. Our future-facing API will allow developers, agencies, and enterprise brands to programmatically access the full power of our platform, integrating automated reimbursement data and workflows directly into their own systems.
               </p>
             </header>
 
@@ -33,11 +33,11 @@ const ApiAccess = () => {
                 <CardContent className="p-0">
                   <pre className="p-6 overflow-x-auto text-[11px] md:text-xs leading-loose" style={{ fontFamily: "'Fira Code', 'JetBrains Mono', 'SF Mono', 'Monaco', 'Consolas', monospace" }}>
                     <code style={{ fontFamily: 'inherit' }}>
-                      <span className="text-purple-400">import</span> <span className="text-blue-300">opside</span>{'\n'}
+                      <span className="text-purple-400">import</span> <span className="text-blue-300">margin</span>{'\n'}
                       <span className="text-purple-400">from</span> <span className="text-blue-300">datetime</span> <span className="text-purple-400">import</span> <span className="text-yellow-300">datetime</span>, <span className="text-yellow-300">timedelta</span>{'\n'}
                       {'\n'}
-                      <span className="text-gray-500"># Initialize the Opside client</span>{'\n'}
-                      <span className="text-gray-300">client</span> <span className="text-pink-400">=</span> <span className="text-blue-300">opside</span>.<span className="text-yellow-300">Client</span>(<span className="text-orange-400">api_key</span><span className="text-pink-400">=</span><span className="text-green-400">"os_live_xxxxxxxxxxxxxxxx"</span>){'\n'}
+                      <span className="text-gray-500"># Initialize the Margin client</span>{'\n'}
+                      <span className="text-gray-300">client</span> <span className="text-pink-400">=</span> <span className="text-blue-300">Margin</span>(<span className="text-orange-400">api_key</span><span className="text-pink-400">=</span><span className="text-green-400">"os_live_xxxxxxxxxxxxxxxx"</span>){'\n'}
                       {'\n'}
                       <span className="text-gray-500"># Fetch all recoverable claims from the last 30 days</span>{'\n'}
                       <span className="text-gray-300">claims</span> <span className="text-pink-400">=</span> <span className="text-gray-300">client</span>.<span className="text-gray-300">claims</span>.<span className="text-yellow-300">list</span>({'\n'}
@@ -114,7 +114,7 @@ const ApiAccess = () => {
             <footer className="text-center">
               <p className="text-sm text-gray-500">
                 Questions about API access?{' '}
-                <a href="mailto:api@opside.com" className="text-gray-900 hover:text-gray-600 font-medium">
+                <a href="mailto:support@margin.app" className="text-gray-900 hover:text-gray-600 font-medium">
                   Contact our team
                 </a>
               </p>

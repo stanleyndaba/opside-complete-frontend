@@ -109,7 +109,7 @@ export default function AdminRevenue() {
     }
 
     const mrrGrowth = metrics?.mrrGrowth || 0;
-    const isPositiveGrowth = mrrGrowth>= 0;
+    const isPositiveGrowth = mrrGrowth >= 0;
 
     return (
         <div className="min-h-screen bg-white">
@@ -119,7 +119,7 @@ export default function AdminRevenue() {
                     <div>
                         <h1 className="text-lg font-medium text-gray-900 tracking-tight">Revenue Analytics</h1>
                         <p className="text-xs text-gray-500 mt-0.5 tracking-wide">
-                            OPSIDE • {feePercentage}% Recovery Fee
+                            MARGIN • {feePercentage}% Recovery Fee
                         </p>
                     </div>
                     <Button
@@ -143,7 +143,7 @@ export default function AdminRevenue() {
                         <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1">MRR Growth</div>
                         <div className={`text-xl font-light tracking-tight flex items-center ${isPositiveGrowth ? 'text-emerald-600' : 'text-red-600'}`}>
                             {isPositiveGrowth ? <TrendingUp className="w-4 h-4 mr-1" /> : <TrendingDown className="w-4 h-4 mr-1" />}
-                            {mrrGrowth>= 0 ? '+' : ''}{mrrGrowth.toFixed(1)}%
+                            {mrrGrowth >= 0 ? '+' : ''}{mrrGrowth.toFixed(1)}%
                         </div>
                         <div className="text-[10px] text-gray-500 mt-1">month-over-month</div>
                     </div>
@@ -265,7 +265,7 @@ export default function AdminRevenue() {
                             <h3 className="text-xs font-medium text-gray-900 tracking-wide">Monthly Revenue</h3>
                         </div>
                         <div className="overflow-hidden">
-                            {metrics?.revenueByMonth && metrics.revenueByMonth.length> 0 ? (
+                            {metrics?.revenueByMonth && metrics.revenueByMonth.length > 0 ? (
                                 <table className="w-full">
                                     <thead>
                                         <tr className="border-b border-gray-200">
@@ -298,7 +298,7 @@ export default function AdminRevenue() {
                             <h3 className="text-xs font-medium text-gray-900 tracking-wide">Top Accounts</h3>
                         </div>
                         <div className="overflow-hidden">
-                            {metrics?.revenueByCustomer && metrics.revenueByCustomer.length> 0 ? (
+                            {metrics?.revenueByCustomer && metrics.revenueByCustomer.length > 0 ? (
                                 <table className="w-full">
                                     <thead>
                                         <tr className="border-b border-gray-200">
@@ -329,7 +329,7 @@ export default function AdminRevenue() {
                 {/* Footer */}
                 <div className="pt-4 border-t border-gray-200">
                     <p className="text-[10px] text-gray-400 tracking-wide">
-                        OPSIDE TECHNOLOGIES • CONFIDENTIAL • FOR INTERNAL USE ONLY
+                        MARGIN AI • CONFIDENTIAL • FOR INTERNAL USE ONLY
                     </p>
                 </div>
             </div>

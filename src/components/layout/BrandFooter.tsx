@@ -4,12 +4,12 @@ import { Button } from '@/components/ui/button';
 import { Globe } from 'lucide-react';
 
 type Props = {
-  selectedLanguageLabel: string;
+  selectedLanguageLabel?: string;
 };
 
 const SOCIAL_LINKS = [
   {
-    label: 'LinkedIn', href: 'https://www.linkedin.com/company/clario-ai', icon: () => (
+    label: 'LinkedIn', href: 'https://www.linkedin.com/company/margin-ai', icon: () => (
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-5 w-5">
         <rect width="24" height="24" rx="4" fill="#0A66C2" />
         <path
@@ -22,7 +22,7 @@ const SOCIAL_LINKS = [
     )
   },
   {
-    label: 'X (Formerly Twitter)', href: 'https://x.com/ClarioAI', icon: () => (
+    label: 'X (Formerly Twitter)', href: 'https://x.com/MarginAI', icon: () => (
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-5 w-5">
         <rect width="24" height="24" rx="4" fill="black" />
         <path
@@ -80,10 +80,12 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
               <Link to="/refund-policy" className="transition hover:text-gray-900">
                 Refund Policy
               </Link>
-              <span className="inline-flex items-center gap-2">
-                <Globe className="h-3.5 w-3.5" />
-                {selectedLanguageLabel}
-              </span>
+              {selectedLanguageLabel && (
+                <span className="inline-flex items-center gap-2">
+                  <Globe className="h-3.5 w-3.5" />
+                  {selectedLanguageLabel}
+                </span>
+              )}
             </div>
             {/* Copyright - centered on mobile, left on desktop */}
             <p className="text-center text-gray-600 md:text-left">

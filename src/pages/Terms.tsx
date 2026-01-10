@@ -137,7 +137,7 @@ const Terms = () => {
             <section className="space-y-4">
               <h2 className="text-base font-medium text-gray-900">10. Contact Us</h2>
               <p>Margin</p>
-              <p>Email: clariooai@gmail.com</p>
+              <p>Email: support@margin.app</p>
             </section>
           </div>
         </article>

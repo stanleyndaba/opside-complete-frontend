@@ -27,9 +27,9 @@ export default function OAuthCallback() {
     const error = query.get('error') || query.get('error_description');
     const success = query.get('success') || query.get('code') || query.get('state');
     const state = query.get('state');
-    
+
     if (p) setProvider(p);
-    
+
     if (error) {
       setErrorMessage(decodeURIComponent(error));
       setStatusMessage('Connection failed');
@@ -37,11 +37,11 @@ export default function OAuthCallback() {
       toast({ title: 'Connection failed', description: decodeURIComponent(error) });
       return;
     }
-    
+
     if (success || state) {
       setStatusMessage('Connection successful. Analyzing your account...');
       api.trackEvent('oauth_callback_success', { provider: p, state });
-      
+
       // For real OAuth: Amazon automatically redirected here with code=... parameter
       // Backend should handle the callback automatically - frontend just displays status
       // DO NOT call callback endpoint directly - Amazon redirects here automatically
@@ -66,14 +66,14 @@ export default function OAuthCallback() {
         if (res.data?.amazon_connected || res.data?.docs_connected) {
           if (!cancelled) {
             setStatusMessage('Connected. Fetching recovery data...');
-            
+
             // If Amazon is connected, check if sync needs to be triggered
             if (res.data?.amazon_connected && provider === 'amazon') {
               try {
                 // Check if backend has already started sync (check sync status)
                 const syncStatusRes = await api.getSyncStatus();
                 const hasActiveSync = syncStatusRes.ok && syncStatusRes.data?.hasActiveSync;
-                
+
                 // If backend hasn't started sync automatically, trigger it from frontend
                 if (!hasActiveSync) {
                   try {
@@ -90,7 +90,7 @@ export default function OAuthCallback() {
                     // Continue to normal flow even if sync start fails
                   }
                 }
-                
+
                 // Try to get recovery data for the reveal
                 const recoveryRes = await api.getAmazonRecoveries();
                 if (recoveryRes.ok && recoveryRes.data?.totalAmount) {
@@ -123,69 +123,69 @@ export default function OAuthCallback() {
 
           <div className="relative max-w-xl mx-auto">
             <Card className="bg-white/5 border-white/10">
-          <CardHeader>
-            <CardTitle>OAuth Callback</CardTitle>
-            <CardDescription>
-              {provider ? `Provider: ${provider}` : 'Completing connection'}
-            </CardDescription>
-          </CardHeader>
+              <CardHeader>
+                <CardTitle>OAuth Callback</CardTitle>
+                <CardDescription>
+                  {provider ? `Provider: ${provider}` : 'Completing connection'}
+                </CardDescription>
+              </CardHeader>
               <CardContent>
-            {!errorMessage ? (
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 text-emerald-400">
-                  <span className="relative inline-flex items-center">
-                    <span className="absolute -inset-3 rounded-full bg-emerald-400/20 blur-2xl" />
-                    <img src="/donelogo.png" alt="Clario cube" className="relative h-5 w-5 opacity-90" />
-                  </span>
-                  <span className="font-medium">{statusMessage}</span>
-                  {statusMessage.includes('Analyzing') && (
-                    <div className="mt-2 text-xs text-muted-foreground">
-                      Scanning FBA transactions, fees, and inventory data...
+                {!errorMessage ? (
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2 text-emerald-400">
+                      <span className="relative inline-flex items-center">
+                        <span className="absolute -inset-3 rounded-full bg-emerald-400/20 blur-2xl" />
+                        <img src="/donelogo.png" alt="Margin" className="relative h-5 w-5 opacity-90" />
+                      </span>
+                      <span className="font-medium">{statusMessage}</span>
+                      {statusMessage.includes('Analyzing') && (
+                        <div className="mt-2 text-xs text-muted-foreground">
+                          Scanning FBA transactions, fees, and inventory data...
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  You can safely close this page. We’ll take you back to Integrations.
-                </div>
-                <div>
-                  <Button onClick={() => navigate('/integrations-hub')} className="gap-2">
-                    <ExternalLink className="h-4 w-4" />
-                    Go to Integrations Hub
-                  </Button>
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 text-amber-700">
-                  <AlertTriangle className="h-5 w-5" />
-                  <span className="font-medium">{errorMessage}</span>
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  Access was denied or failed. You can retry connecting with the correct account and read-only permissions.
-                </div>
-                <div className="flex gap-2">
-                  <Button variant="outline" onClick={() => navigate('/integrations-hub')} className="gap-2">
-                    Back to Integrations
-                  </Button>
-                  {provider && (
-                    <Button onClick={async () => {
-                      const p = provider as 'gmail' | 'outlook' | 'gdrive' | 'dropbox';
-                      const res = await api.connectDocs(p);
-                      if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url;
-                    }} className="gap-2">
-                      <RefreshCw className="h-4 w-4" />
-                      Try Again
-                    </Button>
-                  )}
-                </div>
-                <div>
-                  <Badge variant="secondary">Scopes</Badge>
-                  <div className="text-xs text-muted-foreground mt-1">
-                    We request read-only access to emails and files for invoice ingestion. We never send email, alter files, or delete content.
+                    <div className="text-sm text-muted-foreground">
+                      You can safely close this page. We’ll take you back to Integrations.
+                    </div>
+                    <div>
+                      <Button onClick={() => navigate('/integrations-hub')} className="gap-2">
+                        <ExternalLink className="h-4 w-4" />
+                        Go to Integrations Hub
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              </div>
-            )}
+                ) : (
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2 text-amber-700">
+                      <AlertTriangle className="h-5 w-5" />
+                      <span className="font-medium">{errorMessage}</span>
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      Access was denied or failed. You can retry connecting with the correct account and read-only permissions.
+                    </div>
+                    <div className="flex gap-2">
+                      <Button variant="outline" onClick={() => navigate('/integrations-hub')} className="gap-2">
+                        Back to Integrations
+                      </Button>
+                      {provider && (
+                        <Button onClick={async () => {
+                          const p = provider as 'gmail' | 'outlook' | 'gdrive' | 'dropbox';
+                          const res = await api.connectDocs(p);
+                          if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url;
+                        }} className="gap-2">
+                          <RefreshCw className="h-4 w-4" />
+                          Try Again
+                        </Button>
+                      )}
+                    </div>
+                    <div>
+                      <Badge variant="secondary">Scopes</Badge>
+                      <div className="text-xs text-muted-foreground mt-1">
+                        We request read-only access to emails and files for invoice ingestion. We never send email, alter files, or delete content.
+                      </div>
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>

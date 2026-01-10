@@ -51,7 +51,7 @@ export default function Sales() {
         const body = encodeURIComponent(
             `ENTERPRISE SALES INQUIRY\n${'='.repeat(40)}\n\nName: ${form.name}\nEmail: ${form.email}\nCompany: ${form.company}\nAnnual Revenue: ${form.revenue || 'Not specified'}\nAmazon Seller ID: ${form.sellerId || 'Not provided'}\n\n${'='.repeat(40)}\nMESSAGE:\n\n${form.message || 'No additional message provided.'}\n\n${'='.repeat(40)}\nSent via Margin Enterprise Sales Form`
         );
-        window.open(`mailto:clariooai@gmail.com?subject=${subject}&body=${body}`, '_blank');
+        window.open(`mailto:support@margin.app?subject=${subject}&body=${body}`, '_blank');
 
         setIsSubmitting(false);
         setIsSubmitted(true);
@@ -295,8 +295,8 @@ export default function Sales() {
                         <div className="mt-6 text-center">
                             <p className="text-sm text-gray-500 font-montserrat">
                                 Prefer email? Reach out directly at{' '}
-                                <a href="mailto:clariooai@gmail.com" className="text-gray-900 underline hover:no-underline font-medium">
-                                    clariooai@gmail.com
+                                <a href="mailto:support@margin.app" className="text-gray-900 underline hover:no-underline font-medium">
+                                    support@margin.app
                                 </a>
                             </p>
                         </div>
