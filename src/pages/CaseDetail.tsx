@@ -19,6 +19,7 @@ import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { api } from '@/lib/api';
 import { recoveryApi } from '@/lib/recoveryApi';
+import { ClaimPdfService } from '@/services/ClaimPdfService';
 
 interface CaseEvent {
   timestamp: string;
@@ -685,6 +686,15 @@ export default function CaseDetail() {
                 </div>
               </div>
               <div className="hidden md:flex items-center gap-4">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-8 border-gray-100 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-gray-900 hover:border-gray-900 transition-colors"
+                  onClick={() => ClaimPdfService.generate(effectiveCase)}
+                >
+                  <FileText className="h-3.5 w-3.5 mr-2" />
+                  GET PDF
+                </Button>
                 <div className="text-right">
                   <div className="text-[9px] text-gray-400 uppercase tracking-widest font-bold">Confidence Engine</div>
                   <div className="text-[10px] font-mono font-bold text-emerald-600 mt-0.5">{derivedConfidencePct}% VERIFIED</div>
