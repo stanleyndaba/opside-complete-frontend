@@ -842,10 +842,20 @@ const Index = () => {
               </div>
             </div>
           </div>
-        </section>
-
-
       </div>
+
+      <section className="bg-white py-32 md:py-48 flex flex-col items-center text-center px-6">
+        <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-gray-900 mb-10 max-w-4xl">
+          Get started with Margin
+        </h2>
+        <div className="flex flex-col items-center gap-4">
+          <AmazonConnect className="min-w-[240px] h-14 text-lg rounded-full shadow-lg hover:shadow-xl transition-all" />
+          <p className="text-sm text-gray-500 font-medium">
+            Audit your last 18 months for free. No credit card required.
+          </p>
+        </div>
+      </section>
+
       <BrandFooter selectedLanguageLabel={selectedLanguage.language} />
 
       {/* Founders Council Banner - HIDDEN - Moved to navbar Immediate Access
