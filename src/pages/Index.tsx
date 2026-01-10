@@ -663,7 +663,7 @@ const Index = () => {
                   </div>
                 </div>
 
-                <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight text-gray-900 leading-[1.1]">
+                <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight text-gray-900 leading-[1.1]" style={{ fontFamily: "'Merriweather', serif" }}>
                   FBA Reimbursements on{" "}
                   <span className="bg-gradient-to-r from-[#1f4037] to-[#10B981] bg-clip-text text-transparent">
                     Autopilot
@@ -719,7 +719,7 @@ const Index = () => {
       <div className="relative z-10 w-full" style={{ background: 'white' }}>
 
 
-        <section className="bg-white py-32 md:py-48 w-full overflow-x-hidden">
+        <section className="bg-white pt-32 pb-8 md:pt-48 md:pb-12 w-full overflow-x-hidden">
           <div className="container mx-auto px-6 max-w-4xl">
             <div className="text-center mb-20 space-y-6">
               <span className="inline-block px-4 py-1.5 rounded-full bg-gray-50 border border-gray-100 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">
@@ -854,7 +854,7 @@ const Index = () => {
         </section>
       </div>
 
-      <section className="bg-white pt-24 pb-12 md:pt-32 md:pb-16 flex flex-col items-center text-center px-6">
+      <section className="bg-white pt-12 pb-12 md:pt-16 md:pb-16 flex flex-col items-center text-center px-6">
         <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-gray-900 mb-10 max-w-4xl">
           Get started with Margin
         </h2>
