@@ -138,24 +138,24 @@
   }
 
   /* All text elements use Inter - comprehensive coverage */
-  /* Exception for .font-montserrat which is used for Margin branding */
-  *:not(.font-montserrat),
+  /* Exception for .font-montserrat, .font-code, .font-merriweather which are used for specific branding */
+  *:not(.font-montserrat):not(.font-merriweather),
   *::before,
   *::after,
-  h1:not(.font-montserrat),
-  h2:not(.font-montserrat),
-  h3:not(.font-montserrat),
-  h4:not(.font-montserrat),
-  h5:not(.font-montserrat),
-  h6:not(.font-montserrat),
-  p:not(.font-montserrat),
+  h1:not(.font-montserrat):not(.font-merriweather),
+  h2:not(.font-montserrat):not(.font-merriweather),
+  h3:not(.font-montserrat):not(.font-merriweather),
+  h4:not(.font-montserrat):not(.font-merriweather),
+  h5:not(.font-montserrat):not(.font-merriweather),
+  h6:not(.font-montserrat):not(.font-merriweather),
+  p:not(.font-montserrat):not(.font-merriweather),
   label,
   input,
   textarea,
   select,
   button,
-  span:not(.font-montserrat),
-  div:not(.font-montserrat),
+  span:not(.font-montserrat):not(.font-merriweather),
+  div:not(.font-montserrat):not(.font-merriweather),
   a,
   li,
   td,
@@ -196,7 +196,7 @@
   abbr,
   acronym,
   address,
-  [class*="font-"]:not(.font-montserrat):not(.font-code) {
+  [class*="font-"]:not(.font-montserrat):not(.font-code):not(.font-merriweather) {
     font-family: 'Inter', system-ui, sans-serif !important;
   }
 
@@ -476,4 +476,12 @@
 .landing .font-extralight-200,
 .landing div.font-extralight-200 {
   font-weight: 200 !important;
+}
+
+/* Merriweather font override - highest specificity */
+.font-merriweather,
+h1.font-merriweather,
+.landing .font-merriweather,
+.landing h1.font-merriweather {
+  font-family: 'Merriweather', serif !important;
 }
