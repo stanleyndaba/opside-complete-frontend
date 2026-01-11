@@ -129,7 +129,7 @@ const App = () => (
                   <Route path="/api/v1/integrations/amazon/callback" element={<OAuthCallback />} />
                   <Route path="/stripe/callback" element={<StripeCallback />} />
                   <Route path="/auth/amazon-sandbox" element={<AmazonSandbox />} />
-                  <Route path="/auth/analyzing" element={<AnalyzingScreen />} />
+                  <Route path="/sync" element={<Sync />} />
                   <Route path="/auth/gmail-sandbox" element={<OAuthProviderSandbox />} />
                   <Route path="/auth/outlook-sandbox" element={<OAuthProviderSandbox />} />
                   <Route path="/auth/gdrive-sandbox" element={<OAuthProviderSandbox />} />

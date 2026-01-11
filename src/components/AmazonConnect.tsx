@@ -124,7 +124,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
           console.log('[AmazonConnect] ✅ Amazon already connected, starting sync...');
           setConnecting(false);
           setUsingExisting(false);
-          window.location.href = '/auth/analyzing';
+          window.location.href = '/sync';
           return;
         } else {
           console.log('[AmazonConnect] ⚠️ Amazon not connected yet, attempting bypass...');
@@ -168,7 +168,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
           }
 
           // Redirect to sync page to show the live dialogue logs
-          window.location.href = '/auth/analyzing';
+          window.location.href = '/sync';
           return;
         }
 
