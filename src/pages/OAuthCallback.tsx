@@ -85,7 +85,7 @@ export default function OAuthCallback() {
                       navigate(`/sync?id=${syncRes.syncId}`);
                       return;
                     }
-                  } catch (syncErr: any) {
+                  } catch (syncErr: unknown) {
                     console.error('[OAuthCallback] Failed to start sync:', syncErr);
                     // Continue to normal flow even if sync start fails
                   }

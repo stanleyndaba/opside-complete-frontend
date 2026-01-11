@@ -132,7 +132,7 @@ export default function AdminUsersAndIntegrations() {
                             <tr key={u.id} className="border-b border-gray-100">
                               <td className="py-2 pr-4 text-gray-600">{u.email}</td>
                               <td className="py-2 pr-4">
-                                <select className="bg-white border-gray-200 text-gray-700 rounded px-2 py-1 text-sm" value={u.role} onChange={e => updateUser(u.id, { role: e.target.value as any })}>
+                                <select className="bg-white border-gray-200 text-gray-700 rounded px-2 py-1 text-sm" value={u.role} onChange={e => updateUser(u.id, { role: e.target.value as UserRow['role'] })}>
                                   <option value="user">user</option>
                                   <option value="admin">admin</option>
                                 </select>
