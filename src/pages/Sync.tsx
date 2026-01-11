@@ -1773,7 +1773,7 @@ export default function Sync() {
                 variant="outline"
                 onClick={() => {
                   if (status === 'completed') {
-                    navigate('/app');
+                    navigate('/app/default/dashboard');
                   }
                 }}
                 disabled={status !== 'completed'}
