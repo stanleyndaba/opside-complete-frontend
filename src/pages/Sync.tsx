@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { startSync, getSyncStatus, cancelSync, forceClearSync, subscribeSyncProgress, type SyncStatusResponse } from '@/lib/inventoryApi';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, useParams } from 'react-router-dom';
+import { useTenant } from '@/context/TenantContext';
 import { RefreshCw, XCircle, CheckCircle2, AlertCircle, Loader2, Search, Package, Truck, RotateCcw, DollarSign, Archive, Target, Clock, ChevronDown, ChevronUp, ChevronRight, ExternalLink, Download } from 'lucide-react';
 import GmailIcon from '/G.png';
 import OutlookIcon from '/OL.png';
@@ -76,6 +77,10 @@ const formatTimestamp = (date: Date) => {
 export default function Sync() {
   const navigate = useNavigate();
   const [params] = useSearchParams();
+  const { tenantSlug: urlTenantSlug } = useParams<{ tenantSlug?: string }>();
+  const { tenant } = useTenant();
+  // Tenant priority: URL param > context > fallback
+  const currentTenantSlug = urlTenantSlug || tenant?.slug || 'default';
   const urlSyncId = params.get('id') || undefined;
   const [syncId, setSyncId] = useState<string | undefined>(urlSyncId);
   const [progress, setProgress] = useState<number>(0);
@@ -1773,7 +1778,7 @@ export default function Sync() {
                 variant="outline"
                 onClick={() => {
                   if (status === 'completed') {
-                    navigate('/app/default/dashboard');
+                    navigate(`/app/${currentTenantSlug}/dashboard`);
                   }
                 }}
                 disabled={status !== 'completed'}
