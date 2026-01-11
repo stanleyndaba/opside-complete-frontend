@@ -663,7 +663,7 @@ const Index = () => {
                   </div>
                 </div>
 
-                <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight text-gray-900 leading-[1.1]" style={{ fontFamily: "'Merriweather', serif" }}>
+                <h1 className="font-merriweather text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight text-gray-900 leading-[1.1]">
                   FBA Reimbursements on{" "}
                   <span className="bg-gradient-to-r from-[#1f4037] to-[#10B981] bg-clip-text text-transparent">
                     Autopilot
