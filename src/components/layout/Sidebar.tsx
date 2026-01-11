@@ -6,9 +6,10 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api';
+import { useTenant } from '@/contexts/TenantContext';
 
 // Lightweight prefetch using dynamic import hints matching route chunks
 const prefetchRoute = (path: string) => {
@@ -65,8 +66,13 @@ export function Sidebar({
 }: SidebarProps) {
   const location = useLocation();
   const queryClient = useQueryClient();
+  const { tenantSlug } = useParams<{ tenantSlug?: string }>();
+  const { tenant } = useTenant();
   const [connectedEmail, setConnectedEmail] = useState<string | null>(null);
   const [claimCount, setClaimCount] = useState<number | null>(null);
+
+  // Get tenant slug from URL or context
+  const currentTenantSlug = tenantSlug || tenant?.slug || 'default';
 
   // Fetch connected email from evidence sources
   React.useEffect(() => {
@@ -99,19 +105,19 @@ export function Sidebar({
   const isDashboard = location.pathname === '/dashboard' || location.pathname === '/app' || location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/app');
 
   const primaryItems: NavItem[] = [
-    { title: 'Overview', icon: LayoutDashboard, href: '/app' },
-    { title: 'Claims', icon: ShieldCheck, href: '/recoveries' },
-    { title: 'Documents and Files', icon: FileText, href: '/evidence-locker' },
-    // { title: 'Reports', icon: BarChart3, href: '/reports' }, // Hidden for MVP
-    { title: 'Refund Recoveries', icon: Plug, href: '/upcoming-payments' },
-    { title: 'Transaction History', icon: BarChart3, href: '/transaction-history' },
-    { title: 'Integrations', icon: Box, href: '/integrations-hub' }
+    { title: 'Overview', icon: LayoutDashboard, href: `/app/${currentTenantSlug}` },
+    { title: 'Claims', icon: ShieldCheck, href: `/app/${currentTenantSlug}/recoveries` },
+    { title: 'Documents and Files', icon: FileText, href: `/app/${currentTenantSlug}/evidence-locker` },
+    // { title: 'Reports', icon: BarChart3, href: `/app/${currentTenantSlug}/reports` }, // Hidden for MVP
+    { title: 'Refund Recoveries', icon: Plug, href: `/app/${currentTenantSlug}/upcoming-payments` },
+    { title: 'Transaction History', icon: BarChart3, href: `/app/${currentTenantSlug}/transaction-history` },
+    { title: 'Integrations', icon: Box, href: `/app/${currentTenantSlug}/integrations-hub` }
   ];
 
   const secondaryItems: NavItem[] = [
-    { title: 'Settings', icon: Settings2, href: '/settings' },
-    { title: 'Help Centre', icon: LifeBuoy, href: '/help' },
-    // { title: "What's New", icon: Sparkles, href: '/whats-new' } // Hidden for now
+    { title: 'Settings', icon: Settings2, href: `/app/${currentTenantSlug}/settings` },
+    { title: 'Help Centre', icon: LifeBuoy, href: `/app/${currentTenantSlug}/help` },
+    // { title: "What's New", icon: Sparkles, href: `/app/${currentTenantSlug}/whats-new` } // Hidden for now
   ];
   const NavItemComponent = React.memo(({
     item

@@ -5,10 +5,11 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Skeleton } from "@/components/ui/skeleton";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import NotificationsProvider from '@/components/providers/NotificationsProvider';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import DemoOverlay from "@/components/demo/DemoOverlay";
 import AdminOnly from "@/components/routes/AdminOnly";
 import { CurrencyProvider } from '@/components/providers/CurrencyProvider';
+import { TenantProvider } from '@/contexts/TenantContext';
 
 // Route-level code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -101,75 +102,94 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <NotificationsProvider>
-            <Suspense fallback={<RouteSkeleton />}>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/app" element={<Dashboard />} />
-                <Route path="/dashboard" element={<Dashboard />} /> {/* Backend redirect compatibility */}
-                <Route path="/sync" element={<Sync />} />
-                {/* Market/Stocks pages removed for FBA MVP focus */}
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/integrations-hub" element={<IntegrationsHub />} />
-                <Route path="/integrations/reconnect/:provider" element={<ReconnectProvider />} />
-                <Route path="/reports" element={<Reports />} />
-                <Route path="/upcoming-payments" element={<UpcomingPayments />} />
-                <Route path="/transaction-history" element={<TransactionHistory />} />
-                <Route path="/admin" element={<Admin />} />
-                <Route path="/admin/users-integrations" element={<AdminOnly><AdminUsersAndIntegrations /></AdminOnly>} />
-                <Route path="/admin/amazon-auth-test" element={<AdminOnly><AmazonAuthTest /></AdminOnly>} />
-                <Route path="/test/agent1" element={<Agent1Test />} />
-                <Route path="/revenue-model" element={<AdminOnly><RevenueModel /></AdminOnly>} />
-                <Route path="/admin/revenue" element={<AdminOnly><AdminRevenue /></AdminOnly>} />
-                <Route path="/recoveries" element={<Recoveries />} />
-                <Route path="/recoveries/:caseId" element={<CaseDetail />} />
-                <Route path="/recoveries/:caseId/resolve" element={<ResolveCase />} />
-                <Route path="/smart-inventory-sync" element={<SmartInventorySync />} />
-                <Route path="/evidence-locker" element={<EvidenceLocker />} />
-                <Route path="/documents/:id" element={<DocumentDetail />} />
-                <Route path="/billing" element={<Billing />} />
-                <Route path="/billing/invoice/:id" element={<InvoiceDetail />} />
-                <Route path="/team" element={<TeamManagement />} />
-                <Route path="/export-center" element={<ExportCenter />} />
-                <Route path="/notifications" element={<NotificationHub />} />
-                <Route path="/learning-insights" element={<LearningInsights />} />
-                <Route path="/api-access" element={<ApiAccess />} />
-                <Route path="/developer-api" element={<ApiLanding />} />
-                <Route path="/help" element={<Help />} />
-                <Route path="/whats-new" element={<WhatsNew />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/careers" element={<Careers />} />
-                <Route path="/docs" element={<Docs />} />
-                <Route path="/privacy" element={<Privacy />} />
-                <Route path="/terms" element={<Terms />} />
-                <Route path="/refund-policy" element={<RefundPolicy />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/sales" element={<Sales />} />
-                <Route path="/evidence-onboarding" element={<EvidenceOnboarding />} />
-                <Route path="/evidence-search" element={<EvidenceSearch />} />
-                <Route path="/margin-board" element={<MarginBoard />} />
+          <TenantProvider>
+            <NotificationsProvider>
+              <Suspense fallback={<RouteSkeleton />}>
+                <Routes>
+                  {/* ============================================ */}
+                  {/* PUBLIC ROUTES - No tenant required */}
+                  {/* ============================================ */}
+                  <Route path="/" element={<Index />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/careers" element={<Careers />} />
+                  <Route path="/docs" element={<Docs />} />
+                  <Route path="/privacy" element={<Privacy />} />
+                  <Route path="/terms" element={<Terms />} />
+                  <Route path="/refund-policy" element={<RefundPolicy />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/sales" element={<Sales />} />
+                  <Route path="/developer-api" element={<ApiLanding />} />
 
-                {/* Auth & OAuth Routes */}
-                <Route path="/auth/callback" element={<OAuthCallback />} />
-                <Route path="/auth/callback/integrations-hub" element={<OAuthCallbackRedirect />} />
-                <Route path="/auth/success" element={<OAuthSuccess />} />
-                <Route path="/api/v1/integrations/amazon/callback" element={<OAuthCallback />} />
-                <Route path="/stripe/callback" element={<StripeCallback />} />
+                  {/* ============================================ */}
+                  {/* AUTH & OAUTH ROUTES - No tenant required */}
+                  {/* ============================================ */}
+                  <Route path="/auth/callback" element={<OAuthCallback />} />
+                  <Route path="/auth/callback/integrations-hub" element={<OAuthCallbackRedirect />} />
+                  <Route path="/auth/success" element={<OAuthSuccess />} />
+                  <Route path="/api/v1/integrations/amazon/callback" element={<OAuthCallback />} />
+                  <Route path="/stripe/callback" element={<StripeCallback />} />
+                  <Route path="/auth/amazon-sandbox" element={<AmazonSandbox />} />
+                  <Route path="/auth/analyzing" element={<AnalyzingScreen />} />
+                  <Route path="/auth/gmail-sandbox" element={<OAuthProviderSandbox />} />
+                  <Route path="/auth/outlook-sandbox" element={<OAuthProviderSandbox />} />
+                  <Route path="/auth/gdrive-sandbox" element={<OAuthProviderSandbox />} />
+                  <Route path="/auth/dropbox-sandbox" element={<OAuthProviderSandbox />} />
 
-                {/* Shock & Awe Flow Routes */}
-                <Route path="/auth/amazon-sandbox" element={<AmazonSandbox />} />
-                <Route path="/auth/analyzing" element={<AnalyzingScreen />} />
-                <Route path="/auth/gmail-sandbox" element={<OAuthProviderSandbox />} />
-                <Route path="/auth/outlook-sandbox" element={<OAuthProviderSandbox />} />
-                <Route path="/auth/gdrive-sandbox" element={<OAuthProviderSandbox />} />
-                <Route path="/auth/dropbox-sandbox" element={<OAuthProviderSandbox />} />
+                  {/* ============================================ */}
+                  {/* TENANT-SCOPED ROUTES - /app/:tenantSlug/* */}
+                  {/* Professional SaaS URL pattern (Slack, Linear, Notion) */}
+                  {/* ============================================ */}
+                  <Route path="/app/:tenantSlug" element={<Dashboard />} />
+                  <Route path="/app/:tenantSlug/dashboard" element={<Dashboard />} />
+                  <Route path="/app/:tenantSlug/sync" element={<Sync />} />
+                  <Route path="/app/:tenantSlug/settings" element={<Settings />} />
+                  <Route path="/app/:tenantSlug/integrations-hub" element={<IntegrationsHub />} />
+                  <Route path="/app/:tenantSlug/integrations/reconnect/:provider" element={<ReconnectProvider />} />
+                  <Route path="/app/:tenantSlug/reports" element={<Reports />} />
+                  <Route path="/app/:tenantSlug/upcoming-payments" element={<UpcomingPayments />} />
+                  <Route path="/app/:tenantSlug/transaction-history" element={<TransactionHistory />} />
+                  <Route path="/app/:tenantSlug/recoveries" element={<Recoveries />} />
+                  <Route path="/app/:tenantSlug/recoveries/:caseId" element={<CaseDetail />} />
+                  <Route path="/app/:tenantSlug/recoveries/:caseId/resolve" element={<ResolveCase />} />
+                  <Route path="/app/:tenantSlug/smart-inventory-sync" element={<SmartInventorySync />} />
+                  <Route path="/app/:tenantSlug/evidence-locker" element={<EvidenceLocker />} />
+                  <Route path="/app/:tenantSlug/documents/:id" element={<DocumentDetail />} />
+                  <Route path="/app/:tenantSlug/billing" element={<Billing />} />
+                  <Route path="/app/:tenantSlug/billing/invoice/:id" element={<InvoiceDetail />} />
+                  <Route path="/app/:tenantSlug/team" element={<TeamManagement />} />
+                  <Route path="/app/:tenantSlug/export-center" element={<ExportCenter />} />
+                  <Route path="/app/:tenantSlug/notifications" element={<NotificationHub />} />
+                  <Route path="/app/:tenantSlug/learning-insights" element={<LearningInsights />} />
+                  <Route path="/app/:tenantSlug/api-access" element={<ApiAccess />} />
+                  <Route path="/app/:tenantSlug/help" element={<Help />} />
+                  <Route path="/app/:tenantSlug/whats-new" element={<WhatsNew />} />
+                  <Route path="/app/:tenantSlug/evidence-onboarding" element={<EvidenceOnboarding />} />
+                  <Route path="/app/:tenantSlug/evidence-search" element={<EvidenceSearch />} />
+                  <Route path="/app/:tenantSlug/margin-board" element={<MarginBoard />} />
 
-                {/* 404 Catch All */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-              <DemoOverlay />
-            </Suspense>
-          </NotificationsProvider>
+                  {/* Admin routes - still tenant-scoped */}
+                  <Route path="/app/:tenantSlug/admin" element={<Admin />} />
+                  <Route path="/app/:tenantSlug/admin/users-integrations" element={<AdminOnly><AdminUsersAndIntegrations /></AdminOnly>} />
+                  <Route path="/app/:tenantSlug/admin/amazon-auth-test" element={<AdminOnly><AmazonAuthTest /></AdminOnly>} />
+                  <Route path="/app/:tenantSlug/test/agent1" element={<Agent1Test />} />
+                  <Route path="/app/:tenantSlug/revenue-model" element={<AdminOnly><RevenueModel /></AdminOnly>} />
+                  <Route path="/app/:tenantSlug/admin/revenue" element={<AdminOnly><AdminRevenue /></AdminOnly>} />
+
+                  {/* ============================================ */}
+                  {/* LEGACY REDIRECTS - For backwards compatibility */}
+                  {/* Redirect old routes to tenant-scoped versions */}
+                  {/* TODO: These will redirect to default tenant once user is logged in */}
+                  {/* ============================================ */}
+                  <Route path="/app" element={<Navigate to="/" replace />} />
+                  <Route path="/dashboard" element={<Navigate to="/" replace />} />
+
+                  {/* 404 Catch All */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+                <DemoOverlay />
+              </Suspense>
+            </NotificationsProvider>
+          </TenantProvider>
         </BrowserRouter>
       </CurrencyProvider>
     </TooltipProvider>
@@ -178,5 +198,3 @@ const App = () => (
 
 export default App;
 
-// redeploy
-// Deployment trigger
