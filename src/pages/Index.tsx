@@ -3,14 +3,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ChevronDown, ChevronRight, Gift, Globe, Sparkles, CircleDollarSign, ShieldAlert, FileText, Search, Briefcase } from 'lucide-react';
+import { ArrowRight, ChevronRight, Gift, Sparkles, CircleDollarSign, ShieldAlert, FileText, Search, Briefcase } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AmazonConnect } from '@/components/AmazonConnect';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { BrandFooter } from '@/components/layout/BrandFooter';
-import type { LanguageOption } from '@/config/site';
-import { AGENT_HIGHLIGHTS, HERO_METRICS, LANGUAGE_OPTIONS, SITE_META } from '@/config/site';
+import { AGENT_HIGHLIGHTS, HERO_METRICS, SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
@@ -43,10 +42,6 @@ const Index = () => {
   const [signingIn, setSigningIn] = useState(false);
   const [showBanner, setShowBanner] = useState(true);
 
-  const [selectedLanguageCode, setSelectedLanguageCode] = useState<string>(() =>
-    typeof window !== 'undefined' ? localStorage.getItem('Margin.langPreference') || 'en' : 'en'
-  );
-  const [langQuery, setLangQuery] = useState<string>('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [agentHighlightIndex, setAgentHighlightIndex] = useState(0);
 
@@ -208,11 +203,7 @@ const Index = () => {
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    try {
-      localStorage.setItem('Margin.langPreference', selectedLanguageCode);
-    } catch { }
-  }, [selectedLanguageCode]);
+
 
   // Scroll detection for banner visibility
   // Banner hides when scrolling down (towards footer)
@@ -275,18 +266,6 @@ const Index = () => {
     // { label: 'API', href: '/developer-api' } // Hidden temporarily
   ];
 
-  const selectedLanguage: LanguageOption =
-    LANGUAGE_OPTIONS.find((o) => o.code === selectedLanguageCode) || LANGUAGE_OPTIONS[0];
-
-  const filteredLanguages = useMemo(() => {
-    const q = langQuery.trim().toLowerCase();
-    if (!q) return LANGUAGE_OPTIONS;
-    return LANGUAGE_OPTIONS.filter(o =>
-      o.language.toLowerCase().includes(q) ||
-      o.country.toLowerCase().includes(q) ||
-      o.code.toLowerCase().includes(q)
-    );
-  }, [langQuery]);
 
   // Intersection Observer to detect when metrics section scrolls into view
   useEffect(() => {
@@ -414,37 +393,7 @@ const Index = () => {
                   {link.label}
                 </Link>
               ))}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button
-                    className="inline-flex items-center gap-2 h-9 px-3 rounded-md text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                    aria-label="Language preference">
-                    <span>{selectedLanguage.language}</span>
-                    <ChevronDown className="h-4 w-4 opacity-70" />
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="min-w-[240px] bg-white/80 supports-[backdrop-filter]:bg-white/70 backdrop-blur-xl border border-white/30 text-gray-900 shadow-2xl p-0">
-                  <div className="p-2 sticky top-0 bg-white border-b border-black/5" onKeyDown={(e) => e.stopPropagation()}>
-                    <Input
-                      value={langQuery}
-                      onChange={(e) => setLangQuery(e.target.value)}
-                      placeholder="Search language..."
-                      className="h-8 bg-gray-50 border border-gray-200 text-gray-900 placeholder:text-gray-500 focus-visible:ring-emerald-500"
-                    />
-                  </div>
-                  <div className="max-h-64 overflow-auto">
-                    {filteredLanguages.length === 0 ? (
-                      <DropdownMenuItem disabled className="text-gray-400">No matches</DropdownMenuItem>
-                    ) : (
-                      filteredLanguages.map((opt) => (
-                        <DropdownMenuItem key={opt.code} onClick={() => { setSelectedLanguageCode(opt.code); setLangQuery(''); }} className="gap-2 hover:bg-gray-100 focus:bg-gray-100">
-                          <span className="font-medium">{opt.language}</span>
-                        </DropdownMenuItem>
-                      ))
-                    )}
-                  </div>
-                </DropdownMenuContent>
-              </DropdownMenu>
+
               <Link
                 to="/contact"
                 className="h-9 px-5 text-sm font-medium text-white bg-black hover:bg-gray-900 transition-colors inline-flex items-center"
@@ -552,43 +501,7 @@ const Index = () => {
                     {link.label}
                   </Link>
                 ))}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button
-                      className="w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-gray-800 hover:bg-white/70 transition-colors"
-                      aria-label="Language preference">
-                      Language: {selectedLanguage.language}
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" className="min-w-[220px] bg-white/80 supports-[backdrop-filter]:bg-white/70 backdrop-blur-xl border border-white/30 text-gray-900 shadow-2xl p-0">
-                    <div className="p-2 sticky top-0 bg-white border-b border-black/5" onKeyDown={(e) => e.stopPropagation()}>
-                      <Input
-                        value={langQuery}
-                        onChange={(e) => setLangQuery(e.target.value)}
-                        placeholder="Search language..."
-                        className="h-8 bg-gray-50 border border-gray-200 text-gray-900 placeholder:text-gray-500 focus-visible:ring-gray-400"
-                      />
-                    </div>
-                    <div className="max-h-64 overflow-auto">
-                      {filteredLanguages.length === 0 ? (
-                        <DropdownMenuItem disabled className="text-gray-400">No matches</DropdownMenuItem>
-                      ) : (
-                        filteredLanguages.map((opt) => (
-                          <DropdownMenuItem
-                            key={opt.code}
-                            onClick={() => {
-                              setSelectedLanguageCode(opt.code);
-                              setLangQuery('');
-                              setMobileMenuOpen(false);
-                            }}
-                            className="gap-2 hover:bg-gray-100 focus:bg-gray-100">
-                            <span className="font-medium">{opt.language}</span>
-                          </DropdownMenuItem>
-                        ))
-                      )}
-                    </div>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+
                 <Button
                   onClick={() => {
                     setMobileMenuOpen(false);
