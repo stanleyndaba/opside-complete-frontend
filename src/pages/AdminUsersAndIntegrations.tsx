@@ -18,7 +18,9 @@ export default function AdminUsersAndIntegrations() {
   const [filter, setFilter] = useState('');
 
   // Integrations summary
-  const [status, setStatus] = useState<any>(null);
+  const [status, setStatus] = useState<{
+    providerIngest?: Record<string, { connected?: boolean; lastSync?: string; last_synced_at?: string; tokenAgeDays?: number }>;
+  } | null>(null);
   const [autoCollect, setAutoCollect] = useState<boolean>(true);
   const [schedule, setSchedule] = useState<string>('daily 02:00 UTC');
 
@@ -55,8 +57,9 @@ export default function AdminUsersAndIntegrations() {
       if (s.ok) setStatus(s.data);
       const es = await api.getEvidenceSummary();
       if (es.ok && es.data) {
-        if (typeof (es.data as any).autoCollect === 'boolean') setAutoCollect((es.data as any).autoCollect);
-        if (typeof (es.data as any).schedule === 'string') setSchedule((es.data as any).schedule);
+        const data = es.data as { autoCollect?: boolean; schedule?: string };
+        if (typeof data.autoCollect === 'boolean') setAutoCollect(data.autoCollect);
+        if (typeof data.schedule === 'string') setSchedule(data.schedule);
       }
     })();
   }, []);
