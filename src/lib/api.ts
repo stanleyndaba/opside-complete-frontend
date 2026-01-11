@@ -584,6 +584,7 @@ export const api = {
       totalAmount: number;
       currency: string;
       claimCount: number;
+      recoveredCount?: number;
       source?: string;
       dataSource?: string;
       message?: string;
@@ -593,6 +594,7 @@ export const api = {
         totalAmount: number;
         currency: string;
         claimCount: number;
+        recoveredCount?: number;
         source?: string;
         dataSource?: string;
         message?: string;
