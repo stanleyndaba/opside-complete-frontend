@@ -6,8 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { ChevronDown, Link2, ScrollText } from 'lucide-react';
 import { api } from '@/lib/api';
 import { BrandFooter } from '@/components/layout/BrandFooter';
-import type { LanguageOption } from '@/config/site';
-import { LANGUAGE_OPTIONS, SITE_META } from '@/config/site';
+import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
 
 const ApiLanding = () => {
@@ -17,24 +16,7 @@ const ApiLanding = () => {
     url: `${SITE_META.url}/developer-api`,
     image: SITE_META.image
   });
-  const [selectedLanguageCode, setSelectedLanguageCode] = useState<string>(() =>
-    typeof window !== 'undefined' ? localStorage.getItem('Opside.langPreference') || 'en' : 'en'
-  );
-  const [langQuery, setLangQuery] = useState<string>('');
-  useEffect(() => {
-    try { localStorage.setItem('Opside.langPreference', selectedLanguageCode); } catch { }
-  }, [selectedLanguageCode]);
-  const selectedLanguage: LanguageOption =
-    LANGUAGE_OPTIONS.find((o) => o.code === selectedLanguageCode) || LANGUAGE_OPTIONS[0];
 
-  const filteredLanguages = useMemo(() => {
-    const q = langQuery.trim().toLowerCase();
-    if (!q) return LANGUAGE_OPTIONS;
-    return LANGUAGE_OPTIONS.filter(o =>
-      o.language.toLowerCase().includes(q) ||
-      o.country.toLowerCase().includes(q)
-    );
-  }, [langQuery]);
 
   const [connecting, setConnecting] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -79,37 +61,7 @@ const ApiLanding = () => {
               </Link>
             </div>
             <nav className="hidden md:flex items-center gap-3 text-sm text-gray-700">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button
-                    className="inline-flex items-center gap-2 h-9 px-3 rounded-md text-sm text-gray-700 hover:bg-white/60 transition-colors"
-                    aria-label="Language preference">
-                    <span>{selectedLanguage.language}</span>
-                    <ChevronDown className="h-4 w-4 opacity-70" />
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="min-w-[240px] bg-white/80 supports-[backdrop-filter]:bg-white/70 backdrop-blur-xl border border-white/30 text-gray-900 shadow-2xl p-0">
-                  <div className="p-2 sticky top-0 bg-white border-b border-black/5" onKeyDown={(e) => e.stopPropagation()}>
-                    <Input
-                      value={langQuery}
-                      onChange={(e) => setLangQuery(e.target.value)}
-                      placeholder="Search language..."
-                      className="h-8 bg-gray-50 border border-gray-200 text-gray-900 placeholder:text-gray-500 focus-visible:ring-emerald-500"
-                    />
-                  </div>
-                  <div className="max-h-64 overflow-auto">
-                    {filteredLanguages.length === 0 ? (
-                      <DropdownMenuItem disabled className="text-gray-400">No matches</DropdownMenuItem>
-                    ) : (
-                      filteredLanguages.map((opt) => (
-                        <DropdownMenuItem key={opt.code} onClick={() => { setSelectedLanguageCode(opt.code); setLangQuery(''); }} className="gap-2 hover:bg-gray-100 focus:bg-gray-100">
-                          <span className="font-medium">{opt.language}</span>
-                        </DropdownMenuItem>
-                      ))
-                    )}
-                  </div>
-                </DropdownMenuContent>
-              </DropdownMenu>
+
 
               <Button
                 variant="ghost"
@@ -134,43 +86,7 @@ const ApiLanding = () => {
           {mobileMenuOpen && (
             <div className="mt-4 md:hidden">
               <div className="flex flex-col gap-3 rounded-[20px] border border-white/40 bg-white/80 supports-[backdrop-filter]:bg-white/70 backdrop-blur-2xl p-4 shadow-2xl text-sm text-gray-700">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button
-                      className="w-full rounded-lg px-3 py-2 text-left font-medium text-gray-800 hover:bg-white/70 transition-colors"
-                      aria-label="Language preference">
-                      Language: {selectedLanguage.language}
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" className="min-w-[220px] bg-white/80 supports-[backdrop-filter]:bg-white/70 backdrop-blur-xl border border-white/30 text-gray-900 shadow-2xl p-0">
-                    <div className="p-2 sticky top-0 bg-white border-b border-black/5" onKeyDown={(e) => e.stopPropagation()}>
-                      <Input
-                        value={langQuery}
-                        onChange={(e) => setLangQuery(e.target.value)}
-                        placeholder="Search language..."
-                        className="h-8 bg-gray-50 border border-gray-200 text-gray-900 placeholder:text-gray-500 focus-visible:ring-emerald-500"
-                      />
-                    </div>
-                    <div className="max-h-64 overflow-auto">
-                      {filteredLanguages.length === 0 ? (
-                        <DropdownMenuItem disabled className="text-gray-400">No matches</DropdownMenuItem>
-                      ) : (
-                        filteredLanguages.map((opt) => (
-                          <DropdownMenuItem
-                            key={opt.code}
-                            onClick={() => {
-                              setSelectedLanguageCode(opt.code);
-                              setLangQuery('');
-                              setMobileMenuOpen(false);
-                            }}
-                            className="gap-2 hover:bg-gray-100 focus:bg-gray-100">
-                            <span className="font-medium">{opt.language}</span>
-                          </DropdownMenuItem>
-                        ))
-                      )}
-                    </div>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+
 
                 <Button
                   variant="ghost"
@@ -267,7 +183,7 @@ const ApiLanding = () => {
           </div>
         </div>
       </main>
-      <BrandFooter selectedLanguageLabel={selectedLanguage.language} />
+      <BrandFooter />
     </div>
   );
 };

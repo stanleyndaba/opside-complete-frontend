@@ -780,7 +780,7 @@ const Index = () => {
         </div>
       </section>
 
-      <BrandFooter selectedLanguageLabel={selectedLanguage.language} />
+      <BrandFooter />
 
       {/* Founders Council Banner - HIDDEN - Moved to navbar Immediate Access
       <div
