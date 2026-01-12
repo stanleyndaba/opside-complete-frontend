@@ -85,6 +85,7 @@ export function Dashboard() {
   const [lastUpdated, setLastUpdated] = useState<string>('');
   const [approvedClaimsThisMonth, setApprovedClaimsThisMonth] = useState<number | null>(null);
   const [settlementRate, setSettlementRate] = useState<number | null>(null);
+  const [isActivityExpanded, setIsActivityExpanded] = useState<boolean>(true);
   const [showSourcesModal, setShowSourcesModal] = useState<boolean>(false);
   const [showSyncModal, setShowSyncModal] = useState<boolean>(false);
   const [providerLoading, setProviderLoading] = useState<'gmail' | 'outlook' | 'gdrive' | 'dropbox' | null>(null);
@@ -976,136 +977,144 @@ export function Dashboard() {
                 {/* System Activity - Right Sidebar */}
                 <div className="lg:col-span-1">
                   <div className="bg-white border border-gray-200 rounded-none h-full flex flex-col">
-                    <div className="px-5 py-4 border-b border-gray-100 bg-white flex items-center justify-between">
-                      <h3 className="text-[10px] font-semibold text-gray-900 uppercase tracking-[0.2em]">System Activity</h3>
-                      {unreadCount > 0 && (
-                        <div className="flex items-center justify-center bg-gray-900 px-1.5 py-0.5 rounded-none">
-                          <span className="text-[9px] font-bold text-white tabular-nums">
-                            {unreadCount > 50 ? '50+' : unreadCount}
-                          </span>
-                        </div>
-                      )}
-                    </div>
+                    <button
+                      onClick={() => setIsActivityExpanded(!isActivityExpanded)}
+                      className="px-5 py-4 border-b border-gray-100 bg-white flex items-center justify-between w-full hover:bg-gray-50/50 transition-colors">
+                      <div className="flex items-center gap-3">
+                        <h3 className="text-[10px] font-semibold text-gray-900 uppercase tracking-[0.2em]">System Activity</h3>
+                        {unreadCount > 0 && (
+                          <div className="flex items-center justify-center bg-gray-900 px-1.5 py-0.5 rounded-none">
+                            <span className="text-[9px] font-bold text-white tabular-nums">
+                              {unreadCount > 50 ? '50+' : unreadCount}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      <ChevronDown className={cn("h-4 w-4 text-gray-400 transition-transform duration-200", isActivityExpanded ? "" : "-rotate-180")} />
+                    </button>
 
-                    <div className="flex-1 max-h-[600px] overflow-y-auto scrollbar-hide divide-y divide-gray-50">
-                      {displayNotifications.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-12 px-6 text-center animate-in fade-in duration-500">
-                          <Bell className="h-5 w-5 text-gray-200 mb-3" />
-                          <span className="text-[10px] font-medium text-gray-400 uppercase tracking-[0.2em]">Activity Clear</span>
-                          <p className="text-[9px] text-gray-300 uppercase tracking-widest mt-1">Locker integrity verified • 0 alerts</p>
-                        </div>
-                      ) : (
-                        <div className="flex flex-col">
-                          {displayNotifications.slice(0, 12).map((notification) => {
-                            const isUnread = notification.status !== 'read';
-                            const notificationDate = new Date(notification.created_at);
-                            const isValidDate = notificationDate instanceof Date && !isNaN(notificationDate.getTime());
-                            const timeAgo = isValidDate
-                              ? formatDistanceToNow(notificationDate, { addSuffix: true })
-                              : 'recently';
+                    {isActivityExpanded && (
+                      <>
+                        <div className="flex-1 max-h-[600px] overflow-y-auto scrollbar-hide divide-y divide-gray-50">
+                          {displayNotifications.length === 0 ? (
+                            <div className="flex flex-col items-center justify-center py-12 px-6 text-center animate-in fade-in duration-500">
+                              <Bell className="h-5 w-5 text-gray-200 mb-3" />
+                              <span className="text-[10px] font-medium text-gray-400 uppercase tracking-[0.2em]">Activity Clear</span>
+                              <p className="text-[9px] text-gray-300 uppercase tracking-widest mt-1">Locker integrity verified • 0 alerts</p>
+                            </div>
+                          ) : (
+                            <div className="flex flex-col">
+                              {displayNotifications.slice(0, 12).map((notification) => {
+                                const isUnread = notification.status !== 'read';
+                                const notificationDate = new Date(notification.created_at);
+                                const isValidDate = notificationDate instanceof Date && !isNaN(notificationDate.getTime());
+                                const timeAgo = isValidDate
+                                  ? formatDistanceToNow(notificationDate, { addSuffix: true })
+                                  : 'recently';
 
-                            // Status Dot Color
-                            let statusColor = 'bg-gray-200';
-                            if (notification.type === 'claim_detected' || notification.type === 'case_filed') statusColor = 'bg-blue-500';
-                            if (notification.type === 'refund_approved' || notification.type === 'funds_deposited') statusColor = 'bg-emerald-500';
-                            if (notification.type === 'amazon_challenge' || notification.type === 'user_action_required') statusColor = 'bg-amber-500';
-                            if (notification.type === 'evidence_found') statusColor = 'bg-indigo-400';
+                                // Status Dot Color
+                                let statusColor = 'bg-gray-200';
+                                if (notification.type === 'claim_detected' || notification.type === 'case_filed') statusColor = 'bg-blue-500';
+                                if (notification.type === 'refund_approved' || notification.type === 'funds_deposited') statusColor = 'bg-emerald-500';
+                                if (notification.type === 'amazon_challenge' || notification.type === 'user_action_required') statusColor = 'bg-amber-500';
+                                if (notification.type === 'evidence_found') statusColor = 'bg-indigo-400';
 
-                            return (
-                              <HoverCard key={notification.id} openDelay={100} closeDelay={100}>
-                                <HoverCardTrigger asChild>
-                                  <div
-                                    className={cn(
-                                      "group relative px-5 py-4 cursor-pointer transition-all duration-200 border-l-2 border-transparent hover:bg-gray-50/50",
-                                      isUnread ? "bg-gray-50/30" : "bg-white"
-                                    )}
-                                    onClick={() => navigate('/recoveries')}>
+                                return (
+                                  <HoverCard key={notification.id} openDelay={100} closeDelay={100}>
+                                    <HoverCardTrigger asChild>
+                                      <div
+                                        className={cn(
+                                          "group relative px-5 py-4 cursor-pointer transition-all duration-200 border-l-2 border-transparent hover:bg-gray-50/50",
+                                          isUnread ? "bg-gray-50/30" : "bg-white"
+                                        )}
+                                        onClick={() => navigate('/recoveries')}>
 
-                                    {/* Hover Accent Bar */}
-                                    <div className="absolute left-[-2px] top-0 bottom-0 w-[2px] bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                        {/* Hover Accent Bar */}
+                                        <div className="absolute left-[-2px] top-0 bottom-0 w-[2px] bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity" />
 
-                                    <div className="flex items-start justify-between gap-3 mb-1">
-                                      <div className="flex items-center gap-2 overflow-hidden">
-                                        <div className={cn("h-1.5 w-1.5 rounded-full shrink-0 transition-colors", statusColor)} />
-                                        <p className={cn(
-                                          "text-[10px] uppercase tracking-[0.1em] truncate",
-                                          isUnread ? "font-bold text-gray-900" : "font-medium text-gray-500 group-hover:text-gray-900"
-                                        )}>
-                                          {enrichNotificationTitle(notification.title)}
-                                        </p>
+                                        <div className="flex items-start justify-between gap-3 mb-1">
+                                          <div className="flex items-center gap-2 overflow-hidden">
+                                            <div className={cn("h-1.5 w-1.5 rounded-full shrink-0 transition-colors", statusColor)} />
+                                            <p className={cn(
+                                              "text-[10px] uppercase tracking-[0.1em] truncate",
+                                              isUnread ? "font-bold text-gray-900" : "font-medium text-gray-500 group-hover:text-gray-900"
+                                            )}>
+                                              {enrichNotificationTitle(notification.title)}
+                                            </p>
+                                          </div>
+                                          <span className="text-[9px] text-gray-400 font-medium uppercase tracking-widest tabular-nums shrink-0 pt-0.5">
+                                            {timeAgo.replace('about ', '').replace(' ago', '')}
+                                          </span>
+                                        </div>
+
+                                        <div className="flex items-center gap-2 mt-0.5 ml-3.5">
+                                          <p className="text-[10px] text-gray-400 font-mono tracking-tight leading-relaxed truncate">
+                                            {stripEmojis(notification.message)}
+                                          </p>
+                                        </div>
                                       </div>
-                                      <span className="text-[9px] text-gray-400 font-medium uppercase tracking-widest tabular-nums shrink-0 pt-0.5">
-                                        {timeAgo.replace('about ', '').replace(' ago', '')}
-                                      </span>
-                                    </div>
+                                    </HoverCardTrigger>
 
-                                    <div className="flex items-center gap-2 mt-0.5 ml-3.5">
-                                      <p className="text-[10px] text-gray-400 font-mono tracking-tight leading-relaxed truncate">
-                                        {stripEmojis(notification.message)}
-                                      </p>
-                                    </div>
-                                  </div>
-                                </HoverCardTrigger>
+                                    <HoverCardContent side="left" align="start" className="w-80 p-0 overflow-hidden border-gray-100 rounded-none shadow-2xl animate-in fade-in slide-in-from-right-1">
+                                      <div className="p-5">
+                                        <div className="flex items-center gap-3 mb-3">
+                                          <div className={cn(
+                                            "px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.15em]",
+                                            notification.type === 'funds_deposited' || notification.type === 'refund_approved' ? "bg-emerald-50 text-emerald-700 border border-emerald-100" :
+                                              notification.type === 'amazon_challenge' || notification.type === 'user_action_required' ? "bg-amber-50 text-amber-700 border border-amber-100" :
+                                                "bg-blue-50 text-blue-700 border border-blue-100"
+                                          )}>
+                                            {notification.type.replace(/_/g, ' ')}
+                                          </div>
+                                          <span className="text-[10px] text-gray-400 font-medium uppercase tracking-widest flex items-center gap-1.5">
+                                            <Clock className="h-3 w-3" />
+                                            {timeAgo}
+                                          </span>
+                                        </div>
 
-                                <HoverCardContent side="left" align="start" className="w-80 p-0 overflow-hidden border-gray-100 rounded-none shadow-2xl animate-in fade-in slide-in-from-right-1">
-                                  <div className="p-5">
-                                    <div className="flex items-center gap-3 mb-3">
-                                      <div className={cn(
-                                        "px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.15em]",
-                                        notification.type === 'funds_deposited' || notification.type === 'refund_approved' ? "bg-emerald-50 text-emerald-700 border border-emerald-100" :
-                                          notification.type === 'amazon_challenge' || notification.type === 'user_action_required' ? "bg-amber-50 text-amber-700 border border-amber-100" :
-                                            "bg-blue-50 text-blue-700 border border-blue-100"
-                                      )}>
-                                        {notification.type.replace(/_/g, ' ')}
+                                        <h4 className="text-[13px] font-semibold text-gray-900 leading-snug mb-3">
+                                          {notification.title}
+                                        </h4>
+
+                                        <div className="text-[11px] text-gray-600 leading-relaxed bg-gray-50/50 p-4 border border-gray-100 font-mono">
+                                          {renderNotificationMessage(notification.message)}
+                                        </div>
+
+                                        <div className="mt-4 flex items-center justify-between pt-4 border-t border-gray-50">
+                                          <span className="text-[9px] text-gray-400 font-mono uppercase tracking-widest">
+                                            LOG.{notification.id.substring(0, 8).toUpperCase()}
+                                          </span>
+                                          <button
+                                            onClick={() => navigate('/recoveries')}
+                                            className="text-[10px] font-bold text-gray-900 flex items-center gap-1.5 hover:underline uppercase tracking-wider">
+                                            Open Record <ArrowRight className="h-3 w-3" />
+                                          </button>
+                                        </div>
                                       </div>
-                                      <span className="text-[10px] text-gray-400 font-medium uppercase tracking-widest flex items-center gap-1.5">
-                                        <Clock className="h-3 w-3" />
-                                        {timeAgo}
-                                      </span>
-                                    </div>
-
-                                    <h4 className="text-[13px] font-semibold text-gray-900 leading-snug mb-3">
-                                      {notification.title}
-                                    </h4>
-
-                                    <div className="text-[11px] text-gray-600 leading-relaxed bg-gray-50/50 p-4 border border-gray-100 font-mono">
-                                      {renderNotificationMessage(notification.message)}
-                                    </div>
-
-                                    <div className="mt-4 flex items-center justify-between pt-4 border-t border-gray-50">
-                                      <span className="text-[9px] text-gray-400 font-mono uppercase tracking-widest">
-                                        LOG.{notification.id.substring(0, 8).toUpperCase()}
-                                      </span>
-                                      <button
-                                        onClick={() => navigate('/recoveries')}
-                                        className="text-[10px] font-bold text-gray-900 flex items-center gap-1.5 hover:underline uppercase tracking-wider">
-                                        Open Record <ArrowRight className="h-3 w-3" />
-                                      </button>
-                                    </div>
-                                  </div>
-                                </HoverCardContent>
-                              </HoverCard>
-                            );
-                          })}
+                                    </HoverCardContent>
+                                  </HoverCard>
+                                );
+                              })}
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
 
-                    <div className="border-t border-gray-100 p-4 bg-gray-50/30">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => navigate('/notifications')}
-                        className="w-full h-8 text-[9px] text-gray-400 hover:text-gray-900 uppercase tracking-[0.2em] font-medium transition-colors"
-                      >
-                        Archived Activity Logs
-                      </Button>
-                    </div>
+                        <div className="border-t border-gray-100 p-4 bg-gray-50/30">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => navigate('/notifications')}
+                            className="w-full h-8 text-[9px] text-gray-400 hover:text-gray-900 uppercase tracking-[0.2em] font-medium transition-colors"
+                          >
+                            Archived Activity Logs
+                          </Button>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
-          </div>
         </main>
       </div>
       {/* Document Sources Modal */}

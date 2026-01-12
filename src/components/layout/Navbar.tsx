@@ -350,21 +350,8 @@ export function Navbar({
                 </button>
               </div>
 
-              {/* Tools Group - Currency & Connect */}
-              <div className="flex items-center gap-x-3 border-l border-gray-100 pl-4 ml-2">
-                <Select value={selectedCurrency} onValueChange={setSelectedCurrency}>
-                  <SelectTrigger className="h-8 w-16 bg-transparent border-0 text-gray-600 focus:ring-0 shadow-none px-2 text-[10px] font-medium uppercase tracking-wide">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="rounded-sm">
-                    {currencies.map(curr => (
-                      <SelectItem key={curr.code} value={curr.code} className="text-xs">
-                        {curr.symbol} {curr.code}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <div className="h-4 w-px bg-gray-200" />
+              {/* Tools Group - Connect */}
+              <div className="flex items-center border-l border-gray-100 pl-4 ml-2">
                 <button
                   onClick={() => navigate('/integrations-hub')}
                   className="flex items-center gap-1.5 h-8 px-3 text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-sm transition-colors group/connect">
