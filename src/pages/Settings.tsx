@@ -357,264 +357,107 @@ const Settings = () => {
       case 'business':
         const marketplaces = sellerProfile.linked_marketplaces || amazonSellersInfo?.marketplaces?.map((m: any) => m.id) || [];
         const isAmazonConnected = sellerProfile.amazon_connected || false;
-        const isStripeConnected = sellerProfile.stripe_connected || false;
 
         return (
           <div className="space-y-6">
-            {/* Header Section */}
-            <div className="flex items-start justify-between pb-4 border-b border-gray-200">
-              <div>
-                <h2 className="text-sm font-medium text-gray-900 uppercase tracking-[0.1em]">
-                  {sellerProfile.company_name || 'Seller Profile'}
-                </h2>
-                {sellerProfile.amazon_seller_id && (
-                  <p className="text-[10px] text-gray-500 mt-1 font-mono">
-                    {sellerProfile.amazon_seller_id}
-                  </p>
-                )}
-              </div>
-              <Badge
-                className={cn(
-                  'px-3 py-1.5 text-[10px] font-medium',
-                  isAmazonConnected
-                    ? 'bg-gray-100 text-gray-700 border border-gray-200'
-                    : 'bg-gray-100 text-gray-500 border border-gray-200'
-                )}>
-                {isAmazonConnected ? (
-                  <>
-                    <CheckCircle className="h-3 w-3 mr-1.5" />
-                    Connected
-                  </>
-                ) : (
-                  <>
-                    <XCircle className="h-3 w-3 mr-1.5" />
-                    Not Connected
-                  </>
-                )}
-              </Badge>
+            <div>
+              <h2 className="text-base font-semibold text-gray-900">Seller Profile</h2>
+              <p className="text-xs text-gray-600">Manage your institutional identity and linked Amazon accounts</p>
             </div>
 
-            {loadingProfile ? (
-              <div className="flex items-center justify-center py-12">
-                <RefreshCw className="h-5 w-5 animate-spin text-gray-400" />
-                <span className="ml-3 text-xs text-gray-500">Loading profile...</span>
+            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm relative overflow-hidden rounded-sm">
+              <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
+                <Building2 className="h-32 w-32" />
               </div>
-            ) : (
-              <>
-                {/* Account Information */}
-                <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
-                  <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
-                    <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Account Information</h3>
-                  </div>
-                  <div className="p-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                      <div className="space-y-1">
-                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Company</p>
-                        <div className="flex items-center gap-2">
-                          <Store className="h-4 w-4 text-gray-400" />
-                          <p className="text-sm text-gray-900 font-medium">
-                            {sellerProfile.company_name || 'Not set'}
-                          </p>
-                        </div>
+
+              <CardContent className="p-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-900 tracking-tight">
+                        {sellerProfile.company_name || 'Verification Required'}
+                      </h3>
+                      <div className="flex items-center gap-3 mt-1">
+                        <Badge variant="secondary" className="bg-gray-100 text-gray-700 text-[10px] uppercase tracking-wider border-gray-200 px-2 py-0.5">
+                          {isAmazonConnected ? 'Institutional Account' : 'Pending Verification'}
+                        </Badge>
+                        {sellerProfile.amazon_seller_id && (
+                          <span className="text-[10px] text-gray-400 font-mono tracking-tighter">
+                            ID: {sellerProfile.amazon_seller_id}
+                          </span>
+                        )}
                       </div>
-
-                      {sellerProfile.amazon_seller_id && (
-                        <div className="space-y-1">
-                          <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Seller ID</p>
-                          <div className="flex items-center gap-2">
-                            <Key className="h-4 w-4 text-gray-400" />
-                            <p className="text-sm text-gray-900 font-mono">
-                              {sellerProfile.amazon_seller_id}
-                            </p>
-                          </div>
-                        </div>
-                      )}
-
-                      {sellerProfile.created_at && (
-                        <div className="space-y-1">
-                          <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Member Since</p>
-                          <div className="flex items-center gap-2">
-                            <Calendar className="h-4 w-4 text-gray-400" />
-                            <p className="text-sm text-gray-900">
-                              {formatDate(sellerProfile.created_at)}
-                            </p>
-                          </div>
-                        </div>
-                      )}
-
-                      {sellerProfile.last_login && (
-                        <div className="space-y-1">
-                          <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Last Active</p>
-                          <div className="flex items-center gap-2">
-                            <Clock className="h-4 w-4 text-gray-400" />
-                            <p className="text-sm text-gray-900">
-                              {formatDate(sellerProfile.last_login)}
-                            </p>
-                          </div>
-                        </div>
-                      )}
                     </div>
+
+                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 pt-2">
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">Marketplaces</p>
+                        <p className="text-sm font-semibold text-gray-900">{marketplaces.length} Active</p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">Last Sync</p>
+                        <p className="text-sm font-semibold text-gray-900">{formatDate(sellerProfile.last_sync_completed_at)}</p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">Network Age</p>
+                        <p className="text-sm font-semibold text-gray-900">{formatDate(sellerProfile.created_at)}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-3">
+                    <Button
+                      className="bg-emerald-500 hover:bg-emerald-600 text-white shadow-sm ring-1 ring-emerald-500/10 active:scale-[0.98] rounded-sm h-10 px-6 font-medium"
+                      onClick={() => navigate('/integrations-hub')}
+                    >
+                      Manage Profile
+                    </Button>
                   </div>
                 </div>
-                {marketplaces.length > 0 && (
-                  <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
-                    <CardHeader className="bg-gray-50/50 border-b border-gray-200 pb-3">
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="text-sm font-semibold text-gray-900">Marketplaces</CardTitle>
-                        <Badge variant="secondary" className="bg-gray-100 text-gray-600 text-xs">
-                          {marketplaces.length} active
-                        </Badge>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="p-4">
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                        {marketplaces.map((marketplaceId: string) => {
-                          const display = getMarketplaceDisplay(marketplaceId);
-                          return (
-                            <div
-                              key={marketplaceId}
-                              className="flex items-center gap-2.5 p-3 bg-gray-50 rounded-lg border border-gray-100">
-                              <span className="text-xl">{display.flag}</span>
-                              <span className="text-sm text-gray-800 font-medium">{display.name}</span>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
+              </CardContent>
+            </Card>
 
-                {/* Connected Platforms */}
-                <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
-                  <CardHeader className="bg-gray-50/50 border-b border-gray-200 pb-3">
-                    <CardTitle className="text-sm font-semibold text-gray-900">Connected Platforms</CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-0 divide-y divide-gray-100">
-                    {/* Amazon */}
-                    <div className="flex items-center justify-between p-4">
-                      <div className="flex items-center gap-4">
-                        <div className="h-11 w-11 rounded-xl bg-[#FF9900]/10 flex items-center justify-center">
-                          <img
-                            src="/Amazon-logo.png"
-                            alt="Amazon"
-                            className="h-6 w-6 object-contain"
-                          />
-                        </div>
-                        <div>
-                          <p className="text-sm font-semibold text-gray-900">Amazon Seller Central</p>
-                          <div className="flex items-center gap-1.5 mt-0.5">
-                            {isAmazonConnected ? (
-                              <>
-                                <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                                <span className="text-xs text-emerald-600 font-medium">Connected</span>
-                                {sellerProfile.last_sync_completed_at && (
-                                  <span className="text-xs text-gray-400 ml-1">
-                                    — synced {formatDate(sellerProfile.last_sync_completed_at)}
-                                  </span>
-                                )}
-                              </>
-                            ) : (
-                              <>
-                                <div className="h-1.5 w-1.5 rounded-full bg-gray-300" />
-                                <span className="text-xs text-gray-500">Not connected</span>
-                              </>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                      <Button
-                        variant={isAmazonConnected ? 'outline' : 'default'}
-                        size="sm"
-                        className={cn(
-                          isAmazonConnected
-                            ? 'border-gray-200 text-gray-700 hover:bg-gray-50'
-                            : 'bg-emerald-500 hover:bg-emerald-600 text-white'
-                        )}
-                        onClick={() => navigate('/integrations-hub')}>
-                        {isAmazonConnected ? 'Manage' : 'Connect'}
-                      </Button>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card className="bg-white border-gray-200 text-gray-700 shadow-sm rounded-sm">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-[11px] font-bold text-gray-500 uppercase tracking-[0.15em]">Platform Status</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Store className="h-4 w-4 text-gray-400" />
+                      <span className="text-sm font-medium text-gray-900">Amazon SP-API</span>
                     </div>
-
-                    {/* Stripe */}
-                    <div className="flex items-center justify-between p-4">
-                      <div className="flex items-center gap-4">
-                        <div className="h-11 w-11 rounded-xl bg-[#635BFF]/10 flex items-center justify-center">
-                          <img
-                            src="/Stripe-logo.png"
-                            alt="Stripe"
-                            className="h-6 w-6 object-contain"
-                          />
-                        </div>
-                        <div>
-                          <p className="text-sm font-semibold text-gray-900">Stripe</p>
-                          <div className="flex items-center gap-1.5 mt-0.5">
-                            {isStripeConnected ? (
-                              <>
-                                <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                                <span className="text-xs text-emerald-600 font-medium">Connected</span>
-                              </>
-                            ) : (
-                              <>
-                                <div className="h-1.5 w-1.5 rounded-full bg-gray-300" />
-                                <span className="text-xs text-gray-500">Not connected</span>
-                              </>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="border-gray-200 text-gray-700 hover:bg-gray-50"
-                        onClick={() => navigate('/billing')}>
-                        {isStripeConnected ? 'Manage' : 'Connect'}
-                      </Button>
+                    <Badge className={cn("text-[10px] px-2 py-0.5", isAmazonConnected ? "bg-emerald-50 text-emerald-700 border-emerald-100" : "bg-gray-50 text-gray-500 border-gray-100")}>
+                      {isAmazonConnected ? 'Enabled' : 'Disconnected'}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <CreditCard className="h-4 w-4 text-gray-400" />
+                      <span className="text-sm font-medium text-gray-900">Stripe Billing</span>
                     </div>
-                  </CardContent>
-                </Card>
+                    <Badge className={cn("text-[10px] px-2 py-0.5", sellerProfile.stripe_connected ? "bg-emerald-50 text-emerald-700 border-emerald-100" : "bg-gray-50 text-gray-500 border-gray-100")}>
+                      {sellerProfile.stripe_connected ? 'Enabled' : 'Inactive'}
+                    </Badge>
+                  </div>
+                </CardContent>
+              </Card>
 
-                {/* Sync Status */}
-                {(sellerProfile.last_sync_attempt_at || sellerProfile.last_sync_completed_at) && (
-                  <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
-                    <CardHeader className="bg-gray-50/50 border-b border-gray-200 pb-3">
-                      <CardTitle className="text-sm font-semibold text-gray-900">Sync Status</CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-4">
-                      <div className="space-y-4">
-                        {sellerProfile.last_sync_completed_at && (
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                              <div className="h-8 w-8 rounded-full bg-emerald-50 flex items-center justify-center">
-                                <CheckCircle className="h-4 w-4 text-emerald-500" />
-                              </div>
-                              <div>
-                                <p className="text-sm font-medium text-gray-900">Last Successful Sync</p>
-                                <p className="text-xs text-gray-500">{formatDateTime(sellerProfile.last_sync_completed_at)}</p>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-
-                        {sellerProfile.last_sync_job_id && (
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                              <div className="h-8 w-8 rounded-full bg-blue-50 flex items-center justify-center">
-                                <RefreshCw className="h-4 w-4 text-blue-500 animate-spin" />
-                              </div>
-                              <div>
-                                <p className="text-sm font-medium text-gray-900">Sync in Progress</p>
-                                <p className="text-xs text-gray-500 font-mono">{sellerProfile.last_sync_job_id}</p>
-                              </div>
-                            </div>
-                            <Badge className="bg-blue-50 text-blue-600 border-blue-100">Running</Badge>
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
-              </>
-            )}
+              <Card className="bg-white border-gray-200 text-gray-700 shadow-sm rounded-sm">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-[11px] font-bold text-gray-500 uppercase tracking-[0.15em]">Institutional Support</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-xs text-gray-600 leading-relaxed mb-4">
+                    Your account is currently under institutional audit. For white-glove support or bulk account management, contact our dedicated desk.
+                  </p>
+                  <Button variant="outline" size="sm" className="w-full text-[11px] font-semibold border-gray-200 hover:bg-gray-50 rounded-sm" onClick={() => navigate('/contact')}>
+                    Contact Dedicated Support
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         );
 
@@ -624,41 +467,74 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-base font-semibold text-gray-900">Billing Invoices</h2>
-              <p className="text-xs text-gray-600">View your ROI and manage billing preferences</p>
+              <h2 className="text-base font-semibold text-gray-900">Billing & Value Reporting</h2>
+              <p className="text-xs text-gray-600">Audit recovery billing, ROI analysis, and institutional fee management</p>
             </div>
 
-            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
-              <CardContent className="p-4">
-                <div className="text-center py-8">
-                  <CreditCard className="h-12 w-12 mx-auto text-gray-500 mb-4" />
-                  <h3 className="text-lg font-medium mb-2 text-gray-900">Complete Billing Dashboard</h3>
-                  <p className="text-gray-600 mb-4">
-                    Access your comprehensive billing and value report with ROI calculations,
-                    invoice history, and plan management.
-                  </p>
-                  <Button className="bg-emerald-500 hover:bg-emerald-400 text-white" onClick={() => navigate('/billing')}>
-                    View Billing Invoices
-                  </Button>
+            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm relative overflow-hidden rounded-sm">
+              <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
+                <CreditCard className="h-32 w-32" />
+              </div>
+
+              <CardContent className="p-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-900 tracking-tight">Billing Dashboard</h3>
+                      <div className="flex items-center gap-3 mt-1">
+                        <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 text-[10px] uppercase tracking-wider border-emerald-100 px-2 py-0.5">
+                          Active Account
+                        </Badge>
+                        <span className="text-[10px] text-gray-400 font-mono tracking-tighter uppercase">
+                          Valuation: Real-Time
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 pt-2">
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">Subscription</p>
+                        <p className="text-sm font-semibold text-gray-900">Enterprise Audit</p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">ROI Coverage</p>
+                        <p className="text-sm font-semibold text-gray-900">100% Guaranteed</p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">Fee Structure</p>
+                        <p className="text-sm font-semibold text-gray-900">Commission-Based</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-3">
+                    <Button
+                      className="bg-emerald-500 hover:bg-emerald-600 text-white shadow-sm ring-1 ring-emerald-500/10 active:scale-[0.98] rounded-sm h-10 px-6 font-medium"
+                      onClick={() => navigate('/billing')}
+                    >
+                      View Documents
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
-              <CardHeader className="border-b border-gray-200 pb-3">
-                <CardTitle className="text-sm font-semibold text-gray-900">Auto-Claim (ACG)</CardTitle>
-                <CardDescription className="text-xs text-gray-600">Automatically submit approved claims once evidence is verified</CardDescription>
+            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm rounded-sm">
+              <CardHeader className="border-b border-gray-100 pb-3">
+                <CardTitle className="text-[11px] font-bold text-gray-500 uppercase tracking-[0.15em]">Auto-Claim (ACG)</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
+              <CardContent className="pt-4 space-y-4">
                 <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium text-gray-900">Enable Auto-Claim</p>
-                    <p className="text-sm text-gray-600">Claims are auto-filed to Amazon when evidence is complete</p>
+                  <div className="space-y-0.5">
+                    <p className="text-sm font-medium text-gray-900">Automated Filing Presence</p>
+                    <p className="text-xs text-gray-500">Automatically submit approved claims once evidence is strictly verified by risk desk.</p>
                   </div>
                   <Switch defaultChecked />
                 </div>
-                <div className="text-xs text-gray-600">
-                  Note: You can always review individual cases in Recoveries and pause Auto-Claim from here.
+                <div className="p-3 bg-gray-50 border border-gray-100 rounded-sm">
+                  <p className="text-[10px] text-gray-400 leading-relaxed font-medium">
+                    Note: Enabled by default for VIP accounts. You can manually override individual cases in the Recoveries terminal.
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -669,30 +545,77 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-base font-semibold text-gray-900">API Access</h2>
-              <p className="text-xs text-gray-600">Programmatic access to your Margin data for automation and integrations</p>
+              <h2 className="text-base font-semibold text-gray-900">Developer & API Access</h2>
+              <p className="text-xs text-gray-600">Programmatic access to your recovery data for institutional automation systems</p>
             </div>
 
-            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
-              <CardContent className="p-4">
-                <div className="space-y-3">
-                  <p className="text-xs text-gray-600">
-                    Use Margin APIs to pull recovery data, sync evidence statuses, and reconcile payouts in your own systems.
-                    Access tokens are scoped and can be rotated at any time. SDKs and examples are available.
-                  </p>
-                  <ul className="list-disc pl-5 text-xs text-gray-600 space-y-1">
-                    <li>Recoveries, claims, and payout endpoints</li>
-                    <li>Webhooks for status changes</li>
-                    <li>Fine-grained API keys and scopes</li>
-                  </ul>
-                </div>
-                <div className="mt-6">
-                  <Button className="bg-emerald-500 hover:bg-emerald-400 text-white" onClick={() => navigate('/api-access')}>
-                    Margin APIs
-                  </Button>
+            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm relative overflow-hidden rounded-sm">
+              <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
+                <Key className="h-32 w-32" />
+              </div>
+
+              <CardContent className="p-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-900 tracking-tight">API Management</h3>
+                      <div className="flex items-center gap-3 mt-1">
+                        <Badge variant="secondary" className="bg-blue-50 text-blue-700 text-[10px] uppercase tracking-wider border-blue-100 px-2 py-0.5">
+                          Production Environment
+                        </Badge>
+                        <span className="text-[10px] text-gray-400 font-mono tracking-tighter uppercase">
+                          mgn_live_v2
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 pt-2">
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">Available Scopes</p>
+                        <p className="text-sm font-semibold text-gray-900">7 Active Endpoints</p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">Webhooks</p>
+                        <p className="text-sm font-semibold text-gray-900">Operational</p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">Rate Limit</p>
+                        <p className="text-sm font-semibold text-gray-900">Institutional High</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-3">
+                    <Button
+                      className="bg-emerald-500 hover:bg-emerald-600 text-white shadow-sm ring-1 ring-emerald-500/10 active:scale-[0.98] rounded-sm h-10 px-6 font-medium"
+                      onClick={() => navigate('/api-access')}
+                    >
+                      Access Gateway
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
+
+            <div className="p-4 border border-gray-200 rounded-sm bg-gray-50">
+              <h4 className="text-[11px] font-bold text-gray-500 uppercase tracking-[0.15em] mb-4">Integration Resources</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="flex items-start gap-3">
+                  <Monitor className="h-4 w-4 text-gray-400 mt-0.5" />
+                  <div>
+                    <p className="text-xs font-semibold text-gray-900">Documentation</p>
+                    <p className="text-[10px] text-gray-500">API references and authentication guides.</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Zap className="h-4 w-4 text-gray-400 mt-0.5" />
+                  <div>
+                    <p className="text-xs font-semibold text-gray-900">Webhooks</p>
+                    <p className="text-[10px] text-gray-500">Standardized events for claim lifecycle.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         );
 
@@ -704,90 +627,95 @@ const Settings = () => {
             icon: '/lovable-uploads/14f98d63-9a1a-4128-8021-1d840d778ea5.png',
             description: 'SP‑API sync for reimbursements, shipments, and claims.',
             connected: sellerProfile.amazon_connected ?? true,
-            lastSync: sellerProfile.last_sync_completed_at ? formatDate(sellerProfile.last_sync_completed_at) : '5 mins ago'
+            lastSync: sellerProfile.last_sync_completed_at ? formatDate(sellerProfile.last_sync_completed_at) : 'Active'
           }
         ];
         const upcomingPlatforms = [
           { id: 'shopify', name: 'Shopify', icon: '/lovable-uploads/8efb84ba-e777-4413-ae5a-f7f54bfa6cab.png' },
           { id: 'walmart', name: 'Walmart Marketplace', icon: '/lovable-uploads/cef56367-b57b-46cc-b0cb-a2ffad47fb03.png' },
           { id: 'quickbooks', name: 'QuickBooks', icon: '/lovable-uploads/02ff2e6e-9e67-4481-99a8-4b9caead4540.png' },
-          { id: 'xero', name: 'Xero', icon: '/lovable-uploads/ac3dc504-c896-4f73-9e7e-aefc77dd6e9f.png' },
-          { id: 'ebay', name: 'eBay', icon: '/lovable-uploads/f894a44c-fd04-4ec2-8af3-a7235951d82d.png' },
         ];
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-base font-semibold text-gray-900">Integrations</h2>
-              <p className="text-xs text-gray-600">Manage your platform connections and data sources</p>
-            </div>
-            <div>
-              <Button className="bg-emerald-500 hover:bg-emerald-400 text-white gap-2" onClick={() => navigate('/integrations-hub')}>
-                <Plug className="h-4 w-4" />
-                Margin Integrations
-              </Button>
+              <h2 className="text-base font-semibold text-gray-900">Ecosystem Integrations</h2>
+              <p className="text-xs text-gray-600">Connect your e-commerce platforms and financial stack to the Margin intelligence layer.</p>
             </div>
 
-            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
-              <CardHeader />
-              <CardContent className="space-y-4">
-                <div className="rounded-2xl border border-gray-200 bg-gray-50 divide-y divide-gray-200">
-                  {activePlatforms.map(platform => (
-                    <div key={platform.id} className="flex flex-col gap-4 px-4 py-3 md:flex-row md:items-center md:justify-between">
-                      <div className="flex items-center gap-3 flex-1">
-                        <div className="h-12 w-12 rounded-xl bg-white flex items-center justify-center border border-gray-200 shadow-sm">
-                          <img src={platform.icon} alt={`${platform.name} logo`} className="h-8 w-8 object-contain" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-gray-900">{platform.name}</p>
-                          <p className="text-xs text-gray-600">{platform.description}</p>
-                          <p className="text-xs text-gray-500 mt-1">Last sync: {platform.lastSync}</p>
-                        </div>
-                      </div>
-                      <div className="flex flex-col gap-2 md:items-end">
-                        <Button
-                          size="sm"
-                          className="bg-emerald-500 hover:bg-emerald-400 text-white"
-                          onClick={() => navigate('/integrations-hub')}>
-                          {platform.connected ? 'Manage' : 'Connect'}
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm relative overflow-hidden rounded-sm">
+              <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
+                <Plug className="h-32 w-32" />
+              </div>
 
-            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm">
-              <CardHeader className="border-b border-gray-200 pb-3">
-                <CardTitle className="text-sm font-semibold text-gray-900">Coming</CardTitle>
-                <CardDescription className="text-xs text-gray-600">Coming soon to expand your recovery capabilities</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="rounded-2xl border border-gray-200 bg-gray-50 divide-y divide-gray-200">
-                  {upcomingPlatforms.map(platform => (
-                    <div key={platform.id} className="flex flex-col gap-4 px-4 py-3 md:flex-row md:items-center md:justify-between opacity-80">
-                      <div className="flex items-center gap-3 flex-1">
-                        <div className="h-12 w-12 rounded-xl bg-white flex items-center justify-center border border-gray-200 shadow-sm">
-                          <img src={platform.icon} alt={`${platform.name} logo`} className="h-8 w-8 object-contain" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-gray-900">{platform.name}</p>
-                          <p className="text-sm text-gray-500">Coming soon</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <Badge variant="outline" className="text-xs border-amber-300 text-amber-700 bg-amber-50">
-                          Roadmap
+              <CardContent className="p-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-900 tracking-tight">Integrations Hub</h3>
+                      <div className="flex items-center gap-3 mt-1">
+                        <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 text-[10px] uppercase tracking-wider border-emerald-100 px-2 py-0.5">
+                          {activePlatforms.length} Direct Connection
                         </Badge>
-                        <Button size="sm" disabled className="bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed">
-                          Connect
-                        </Button>
+                        <span className="text-[10px] text-gray-400 font-mono tracking-tighter uppercase">
+                          Last Handshake: {activePlatforms[0].lastSync}
+                        </span>
                       </div>
                     </div>
-                  ))}
+
+                    <div className="flex flex-wrap gap-4 pt-2">
+                      {activePlatforms.map(p => (
+                        <div key={p.id} className="flex items-center gap-2 p-2 px-3 border border-gray-100 bg-gray-50 rounded-sm">
+                          <img src={p.icon} alt="" className="h-4 w-4 grayscale" />
+                          <span className="text-xs font-semibold text-gray-900">{p.name}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-3">
+                    <Button
+                      className="bg-emerald-500 hover:bg-emerald-600 text-white shadow-sm ring-1 ring-emerald-500/10 active:scale-[0.98] rounded-sm h-10 px-6 font-medium"
+                      onClick={() => navigate('/integrations-hub')}
+                    >
+                      Institutional Hub
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card className="bg-white border-gray-200 text-gray-700 shadow-sm rounded-sm">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-[11px] font-bold text-gray-500 uppercase tracking-[0.15em]">Integration Roadmap</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {upcomingPlatforms.map(p => (
+                    <div key={p.id} className="flex items-center justify-between opacity-60">
+                      <div className="flex items-center gap-2">
+                        <img src={p.icon} alt="" className="h-3.5 w-3.5 grayscale" />
+                        <span className="text-xs text-gray-900 font-medium">{p.name}</span>
+                      </div>
+                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Planned</span>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+
+              <Card className="bg-white border-gray-200 text-gray-700 shadow-sm rounded-sm">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-[11px] font-bold text-gray-500 uppercase tracking-[0.15em]">Custom Integrations</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-xs text-gray-600 leading-relaxed mb-4">
+                    Require a custom connector for your proprietary ERP or specialized accounting stack? Our systems engineers can facilitate private deployments.
+                  </p>
+                  <Button variant="outline" size="sm" className="w-full text-[11px] font-semibold border-gray-200 hover:bg-gray-50 rounded-sm" onClick={() => navigate('/contact')}>
+                    Request Private Connector
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         );
       }
@@ -795,285 +723,210 @@ const Settings = () => {
       case 'notifications':
         return (
           <div className="space-y-6">
-            {/* Header */}
-            <div className="pb-4 border-b border-gray-100">
-              <h2 className="text-base font-semibold text-gray-900">Notifications</h2>
-              <p className="text-xs text-gray-500 mt-1">Control how and when we communicate with you</p>
+            <div>
+              <h2 className="text-base font-semibold text-gray-900">Communication & Alerting</h2>
+              <p className="text-xs text-gray-600">Configure institutional alert channels and event notifications for your audit network.</p>
             </div>
 
-            {/* Email Notifications */}
-            <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
-              <CardHeader className="bg-gray-50/50 border-b border-gray-200 pb-3">
-                <CardTitle className="text-sm font-semibold text-gray-900">Email Notifications</CardTitle>
-              </CardHeader>
-              <CardContent className="p-0 divide-y divide-gray-100">
-                {/* Recovery Alerts */}
-                <div className="flex items-center justify-between p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center">
-                      <CheckCircle className="h-5 w-5 text-gray-500" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">New Recovery Guaranteed</p>
-                      <p className="text-xs text-gray-500">Get notified when a new recovery is confirmed</p>
-                    </div>
-                  </div>
-                  <Switch defaultChecked={true} />
-                </div>
+            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm relative overflow-hidden rounded-sm">
+              <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
+                <Bell className="h-32 w-32" />
+              </div>
 
-                {/* Monthly Summary */}
-                <div className="flex items-center justify-between p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center">
-                      <BarChart3 className="h-5 w-5 text-gray-500" />
-                    </div>
+              <CardContent className="p-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                  <div className="space-y-4">
                     <div>
-                      <p className="text-sm font-medium text-gray-900">Monthly Performance Summary</p>
-                      <p className="text-xs text-gray-500">Receive monthly reports on your account performance</p>
+                      <h3 className="text-lg font-medium text-gray-900 tracking-tight">Notification Protocol</h3>
+                      <div className="flex items-center gap-3 mt-1">
+                        <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 text-[10px] uppercase tracking-wider border-emerald-100 px-2 py-0.5">
+                          Active Monitoring
+                        </Badge>
+                        <span className="text-[10px] text-gray-400 font-mono tracking-tighter uppercase">
+                          Standard Priority
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                  <Switch defaultChecked={true} />
-                </div>
 
-                {/* Invoice Alerts */}
-                <div className="flex items-center justify-between p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center">
-                      <CreditCard className="h-5 w-5 text-gray-500" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">New Invoice Issued</p>
-                      <p className="text-xs text-gray-500">Get alerts when new invoices are generated</p>
+                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 pt-2">
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">Email Alerts</p>
+                        <p className="text-sm font-semibold text-gray-900">Enabled</p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">Web Push</p>
+                        <p className="text-sm font-semibold text-gray-900">Inactive</p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">Slack/Webhook</p>
+                        <p className="text-sm font-semibold text-gray-900">Premium Required</p>
+                      </div>
                     </div>
                   </div>
-                  <Switch defaultChecked={true} />
-                </div>
 
-                {/* Product Updates */}
-                <div className="flex items-center justify-between p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center">
-                      <Bell className="h-5 w-5 text-gray-500" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">Product News & Updates</p>
-                      <p className="text-xs text-gray-500">Stay informed about new features and improvements</p>
-                    </div>
+                  <div className="flex flex-col gap-3">
+                    <Button
+                      className="bg-emerald-500 hover:bg-emerald-600 text-white shadow-sm ring-1 ring-emerald-500/10 active:scale-[0.98] rounded-sm h-10 px-6 font-medium"
+                      onClick={() => toast({ title: "Settings Saved", description: "Your notification preferences are active." })}
+                    >
+                      Update Preferences
+                    </Button>
                   </div>
-                  <Switch defaultChecked={false} />
                 </div>
               </CardContent>
             </Card>
 
-            {/* Preferences Note */}
-            <p className="text-xs text-gray-400 text-center">
-              You can update these preferences at any time. We'll never share your email.
-            </p>
+            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm rounded-sm">
+              <CardHeader className="border-b border-gray-100 pb-3">
+                <CardTitle className="text-[11px] font-bold text-gray-500 uppercase tracking-[0.15em]">Audit Events</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4 divide-y divide-gray-100">
+                {notificationSettings.map((setting) => (
+                  <div key={setting.id} className="flex items-center justify-between py-3 first:pt-0 last:pb-0">
+                    <div className="space-y-0.5">
+                      <p className="text-sm font-medium text-gray-900">{setting.label}</p>
+                      <p className="text-[11px] text-gray-500">{setting.description}</p>
+                    </div>
+                    <Switch defaultChecked={setting.enabled} />
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
           </div>
         );
 
       case 'security':
         return (
           <div className="space-y-6">
-            {/* Header */}
-            <div className="pb-4 border-b border-gray-100">
-              <h2 className="text-base font-semibold text-gray-900">Security</h2>
-              <p className="text-xs text-gray-500 mt-1">Manage your account security and access</p>
+            <div>
+              <h2 className="text-base font-semibold text-gray-900">Infrastructure & Account Security</h2>
+              <p className="text-xs text-gray-600">Protect your institutional assets with advanced authentication protocols and audit logs.</p>
             </div>
 
-            {/* Login History */}
-            <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
-              <CardHeader className="bg-gray-50/50 border-b border-gray-200 pb-3">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-sm font-semibold text-gray-900">Login History</CardTitle>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="border-gray-200 text-gray-600 hover:bg-gray-50 text-xs"
-                    onClick={exportLoginHistory}>
-                    Export CSV
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent className="p-0 divide-y divide-gray-100">
-                {loginHistory.map((login, index) => (
-                  <div key={index} className="flex items-center justify-between p-4">
-                    <div className="flex items-center gap-3">
-                      <div className={cn(
-                        'h-10 w-10 rounded-lg flex items-center justify-center',
-                        login.device.includes('iPhone') ? 'bg-blue-50' : 'bg-gray-100'
-                      )}>
-                        {login.device.includes('iPhone') ?
-                          <Smartphone className="h-5 w-5 text-blue-600" /> :
-                          <Monitor className="h-5 w-5 text-gray-600" />
-                        }
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-gray-900">{login.device}</p>
-                        <p className="text-xs text-gray-500">
-                          {login.location} · {login.time}
-                        </p>
+            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm relative overflow-hidden rounded-sm">
+              <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
+                <Shield className="h-32 w-32" />
+              </div>
+
+              <CardContent className="p-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-900 tracking-tight">Security Backbone</h3>
+                      <div className="flex items-center gap-3 mt-1">
+                        <Badge variant="secondary" className="bg-blue-50 text-blue-700 text-[10px] uppercase tracking-wider border-blue-100 px-2 py-0.5">
+                          Enterprise Protection
+                        </Badge>
+                        <span className="text-[10px] text-gray-400 font-mono tracking-tighter uppercase">
+                          Level: High
+                        </span>
                       </div>
                     </div>
-                    {login.current && (
-                      <Badge className="bg-emerald-50 text-emerald-700 border-emerald-100 text-xs">
-                        Current
-                      </Badge>
-                    )}
+
+                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 pt-2">
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">2FA Status</p>
+                        <p className="text-sm font-semibold text-gray-900">{twoFactorEnabled ? 'Active' : 'Disabled'}</p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">Active Sessions</p>
+                        <p className="text-sm font-semibold text-gray-900">{loginHistory.length} Authorized</p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">Login Alerts</p>
+                        <p className="text-sm font-semibold text-gray-900">{loginAlertsEnabled ? 'Monitored' : 'Off'}</p>
+                      </div>
+                    </div>
                   </div>
-                ))}
+
+                  <div className="flex flex-col gap-3">
+                    <Button
+                      className="bg-emerald-500 hover:bg-emerald-600 text-white shadow-sm ring-1 ring-emerald-500/10 active:scale-[0.98] rounded-sm h-10 px-6 font-medium"
+                      onClick={() => toast({ title: "Account Fortified", description: "Security protocols updated." })}
+                    >
+                      Fortify Account
+                    </Button>
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
-            {/* Two-Factor Authentication */}
-            <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
-              <CardHeader className="bg-gray-50/50 border-b border-gray-200 pb-3">
-                <CardTitle className="text-sm font-semibold text-gray-900">Two-Factor Authentication</CardTitle>
-              </CardHeader>
-              <CardContent className="p-4 space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className={cn(
-                      'h-10 w-10 rounded-lg flex items-center justify-center',
-                      twoFactorEnabled ? 'bg-emerald-50' : 'bg-gray-100'
-                    )}>
-                      <Shield className={cn('h-5 w-5', twoFactorEnabled ? 'text-emerald-600' : 'text-gray-500')} />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">Enable 2FA</p>
-                      <p className="text-xs text-gray-500">Add an extra layer of security</p>
-                    </div>
-                  </div>
-                  <Switch
-                    checked={twoFactorEnabled}
-                    onCheckedChange={(v) => { setTwoFactorEnabled(!!v); persistSecurity({ twoFactorEnabled: !!v }); }}
-                  />
-                </div>
-
-                {twoFactorEnabled && (
-                  <div className="pt-4 border-t border-gray-100">
-                    <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-3">Backup Codes</p>
-                    {backupCodes.length === 0 ? (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="border-gray-200 text-gray-700 hover:bg-gray-50"
-                        onClick={generateBackupCodes}>
-                        Generate Backup Codes
-                      </Button>
-                    ) : (
-                      <div className="space-y-3">
-                        <div className="grid grid-cols-4 gap-2">
-                          {backupCodes.map(c => (
-                            <code key={c} className="px-2 py-1.5 rounded-md bg-gray-50 border border-gray-200 text-xs font-mono text-gray-800 text-center">
-                              {c}
-                            </code>
-                          ))}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card className="bg-white border-gray-200 text-gray-700 shadow-sm rounded-sm">
+                <CardHeader className="pb-2 flex flex-row items-center justify-between">
+                  <CardTitle className="text-[11px] font-bold text-gray-500 uppercase tracking-[0.15em]">Login History</CardTitle>
+                  <Button variant="ghost" size="sm" className="h-6 text-[10px] font-bold text-blue-600 uppercase tracking-widest hover:bg-blue-50" onClick={exportLoginHistory}>
+                    Export Logs
+                  </Button>
+                </CardHeader>
+                <CardContent className="pt-2 divide-y divide-gray-100">
+                  {loginHistory.map((login, idx) => (
+                    <div key={idx} className="flex items-center justify-between py-3 first:pt-0 last:pb-0">
+                      <div className="flex items-center gap-3">
+                        <div className="h-8 w-8 rounded-sm bg-gray-50 flex items-center justify-center border border-gray-100">
+                          {login.device.includes('iPhone') ? <Smartphone className="h-4 w-4 text-gray-400" /> : <Monitor className="h-4 w-4 text-gray-400" />}
                         </div>
-                        <div className="flex gap-2">
-                          <Button size="sm" variant="outline" className="border-gray-200 text-gray-600 hover:bg-gray-50" onClick={downloadBackupCodes}>
-                            Download
-                          </Button>
-                          <Button size="sm" variant="outline" className="border-gray-200 text-gray-600 hover:bg-gray-50" onClick={generateBackupCodes}>
-                            Regenerate
-                          </Button>
+                        <div>
+                          <p className="text-xs font-semibold text-gray-900">{login.device}</p>
+                          <p className="text-[10px] text-gray-500">{login.location} · {login.time}</p>
                         </div>
                       </div>
-                    )}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+                      {login.current && <Badge className="bg-emerald-50 text-emerald-700 border-emerald-100 text-[9px] px-1.5 py-0">Current</Badge>}
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
 
-            {/* Security Settings */}
-            <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
-              <CardHeader className="bg-gray-50/50 border-b border-gray-200 pb-3">
-                <CardTitle className="text-sm font-semibold text-gray-900">Security Settings</CardTitle>
-              </CardHeader>
-              <CardContent className="p-0 divide-y divide-gray-100">
-                <div className="flex items-center justify-between p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-lg bg-blue-50 flex items-center justify-center">
-                      <Bell className="h-5 w-5 text-blue-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">Login Alerts</p>
-                      <p className="text-xs text-gray-500">Email me when a new device logs in</p>
-                    </div>
+              <Card className="bg-white border-gray-200 text-gray-700 shadow-sm rounded-sm">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-[11px] font-bold text-gray-500 uppercase tracking-[0.15em]">Security Protocols</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4 pt-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium text-gray-900">Two-Factor Auth</span>
+                    <Switch checked={twoFactorEnabled} onCheckedChange={(val) => { setTwoFactorEnabled(val); persistSecurity({ twoFactorEnabled: val }); }} />
                   </div>
-                  <Switch
-                    checked={loginAlertsEnabled}
-                    onCheckedChange={(v) => { setLoginAlertsEnabled(!!v); persistSecurity({ loginAlertsEnabled: !!v }); }}
-                  />
-                </div>
-
-                <div className="flex items-center justify-between p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-lg bg-purple-50 flex items-center justify-center">
-                      <Monitor className="h-5 w-5 text-purple-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">Trust this Device</p>
-                      <p className="text-xs text-gray-500">Skip 2FA on this device for faster sign-in</p>
-                    </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium text-gray-900">Trusted Device</span>
+                    <Switch checked={trustedDevice} onCheckedChange={(val) => { setTrustedDevice(val); persistSecurity({ trustedDevice: val }); }} />
                   </div>
-                  <Switch
-                    checked={trustedDevice}
-                    onCheckedChange={(v) => { setTrustedDevice(!!v); persistSecurity({ trustedDevice: !!v }); }}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Session Management */}
-            <Card className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">Log Out All Devices</p>
-                    <p className="text-xs text-gray-500 mt-0.5">Sign out from all other active sessions</p>
-                  </div>
-                  <Button
-                    size="sm"
-                    className="bg-gray-900 hover:bg-gray-800 text-white"
-                    disabled={loggingOutOthers}
-                    onClick={logoutOtherDevices}>
-                    {loggingOutOthers ? 'Signing out...' : 'Log Out Others'}
+                  <Separator className="bg-gray-100" />
+                  <Button variant="outline" size="sm" className="w-full text-[11px] font-semibold border-red-100 text-red-600 hover:bg-red-50 hover:border-red-200 rounded-sm" onClick={logoutOtherDevices} disabled={loggingOutOthers}>
+                    {loggingOutOthers ? 'Processing...' : 'Terminate Other Sessions'}
                   </Button>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </div>
 
-            {/* Danger Zone */}
-            <Card className="bg-white border border-red-200 shadow-sm rounded-xl overflow-hidden">
-              <CardHeader className="bg-red-50/50 border-b border-red-100 pb-3">
-                <CardTitle className="text-sm font-semibold text-red-700 flex items-center gap-2">
-                  <AlertTriangle className="h-4 w-4" />
-                  Danger Zone
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-4">
-                <p className="text-sm text-gray-600 mb-4">
-                  Permanently delete your account and all associated data. This action cannot be undone.
-                </p>
-                <Button variant="destructive" size="sm" onClick={() => setDeleteOpen(true)}>
+            <Card className="bg-white border-red-100 text-gray-700 shadow-sm rounded-sm overflow-hidden border">
+              <div className="bg-red-50/50 px-6 py-3 border-b border-red-100 flex items-center gap-2">
+                <AlertTriangle className="h-4 w-4 text-red-600" />
+                <h4 className="text-[11px] font-bold text-red-700 uppercase tracking-[0.15em]">Danger Zone</h4>
+              </div>
+              <CardContent className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-gray-900">Decommission Account</p>
+                  <p className="text-xs text-gray-500">Permanently remove all institutional data, audit logs, and access keys. This process is irreversible.</p>
+                </div>
+                <Button variant="destructive" size="sm" className="h-9 px-6 font-semibold rounded-sm" onClick={() => setDeleteOpen(true)}>
                   Delete Account
                 </Button>
               </CardContent>
             </Card>
 
             <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
-              <DialogContent className="bg-white">
+              <DialogContent className="bg-white max-w-md rounded-sm border-gray-200">
                 <DialogHeader>
-                  <DialogTitle className="text-gray-900">Delete your account?</DialogTitle>
-                  <DialogDescription className="text-gray-600">
+                  <DialogTitle className="text-gray-900 text-lg font-medium tracking-tight">Confirm Decommissioning</DialogTitle>
+                  <DialogDescription className="text-gray-500 text-sm">
                     This will permanently remove your account and all associated data including recovery history, team members, and integrations.
                   </DialogDescription>
                 </DialogHeader>
-                <DialogFooter className="gap-2">
-                  <Button variant="outline" onClick={() => setDeleteOpen(false)}>Cancel</Button>
+                <DialogFooter className="gap-2 pt-4">
+                  <Button variant="outline" className="rounded-sm text-xs font-semibold" onClick={() => setDeleteOpen(false)}>Cancel</Button>
                   <Button
                     variant="destructive"
+                    className="rounded-sm text-xs font-semibold"
                     onClick={() => {
                       setDeleteOpen(false);
                       toast({ title: 'Account deletion requested', description: 'Our support will contact you to confirm.' });
@@ -1097,10 +950,10 @@ const Settings = () => {
         <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24">
           <div className="relative container mx-auto px-8 pt-8 pb-10 text-gray-700">
             {/* Header */}
-            <div className="mb-8">
+            <header className="mb-10">
               <h1 className="text-lg font-medium text-gray-900 tracking-tight">Settings</h1>
               <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-[0.15em]">Account Configuration</p>
-            </div>
+            </header>
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
               {/* Navigation Menu */}
