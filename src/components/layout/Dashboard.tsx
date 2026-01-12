@@ -1090,7 +1090,7 @@ export function Dashboard() {
                 {providerLoading === 'gmail' ? (
                   <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
                 ) : (
-                  <img src={GmailIcon} alt="Gmail" className="h-8 w-8 object-contain transition-all duration-300" />
+                  <img src={GmailIcon} alt="Gmail" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
                 )}
                 <span className="text-[10px] font-bold text-gray-900 uppercase tracking-wider group-hover:text-black">Gmail</span>
               </button>
@@ -1124,7 +1124,7 @@ export function Dashboard() {
                 {providerLoading === 'outlook' ? (
                   <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
                 ) : (
-                  <img src={OutlookIcon} alt="Outlook" className="h-8 w-8 object-contain transition-all duration-300" />
+                  <img src={OutlookIcon} alt="Outlook" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
                 )}
                 <span className="text-[10px] font-bold text-gray-900 uppercase tracking-wider group-hover:text-black">Outlook</span>
               </button>
@@ -1158,7 +1158,7 @@ export function Dashboard() {
                 {providerLoading === 'gdrive' ? (
                   <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
                 ) : (
-                  <img src={GoogleDriveIcon} alt="Google Drive" className="h-8 w-8 object-contain transition-all duration-300" />
+                  <img src={GoogleDriveIcon} alt="Google Drive" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
                 )}
                 <span className="text-[10px] font-bold text-gray-900 uppercase tracking-wider group-hover:text-black">Drive</span>
               </button>
@@ -1192,7 +1192,7 @@ export function Dashboard() {
                 {providerLoading === 'dropbox' ? (
                   <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
                 ) : (
-                  <img src={DropboxIcon} alt="Dropbox" className="h-8 w-8 object-contain transition-all duration-300" />
+                  <img src={DropboxIcon} alt="Dropbox" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
                 )}
                 <span className="text-[10px] font-bold text-gray-900 uppercase tracking-wider group-hover:text-black">Dropbox</span>
               </button>
