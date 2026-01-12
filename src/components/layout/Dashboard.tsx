@@ -1115,6 +1115,7 @@ export function Dashboard() {
                 </div>
               </div>
             </div>
+          </div>
         </main>
       </div>
       {/* Document Sources Modal */}
