@@ -291,264 +291,273 @@ export default function TransactionHistory() {
     };
 
     const getStatusBadge = (status: Transaction['status']) => {
-        switch (status) {
-            case 'paid':
-                return <span className="text-[10px] px-2 py-0.5 bg-gray-100 text-gray-700 border border-gray-200 rounded-sm">Paid</span>;
-            case 'approved':
-                return <span className="text-[10px] px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-sm">Approved</span>;
-            case 'pending':
-                return <span className="text-[10px] px-2 py-0.5 bg-gray-50 text-gray-600 border border-gray-200 rounded-sm">Pending</span>;
-            case 'disputed':
-                return <span className="text-[10px] px-2 py-0.5 bg-gray-100 text-gray-700 border border-gray-300 rounded-sm">Disputed</span>;
-            case 'refunded':
-                return <span className="text-[10px] px-2 py-0.5 bg-gray-50 text-gray-600 border border-gray-200 rounded-sm">Refunded</span>;
-            default:
-                return null;
-        }
+        const config: Record<string, { dot: string; label: string }> = {
+            paid: { dot: 'bg-emerald-500', label: 'PAID' },
+            approved: { dot: 'bg-blue-500', label: 'APPROVED' },
+            pending: { dot: 'bg-gray-400', label: 'PENDING' },
+            disputed: { dot: 'bg-amber-500', label: 'DISPUTED' },
+            refunded: { dot: 'bg-purple-500', label: 'REFUNDED' },
+        };
+
+        const { dot, label } = config[status] || { dot: 'bg-gray-400', label: 'UNKNOWN' };
+
+        return (
+            <div className="flex items-center gap-2">
+                <div className={cn("h-1.5 w-1.5 rounded-full", dot)} />
+                <span className="text-[9px] font-bold text-gray-900 uppercase tracking-widest font-mono">{label}</span>
+            </div>
+        );
     };
 
     return (
         <PageLayout title="Transaction History">
-            <div className="max-w-7xl mx-auto px-6 py-8">
-                {/* Header */}
-                <div className="mb-8">
-                    <h1 className="text-lg font-medium text-gray-900 tracking-tight">
-                        Transaction History
-                    </h1>
-                    <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-[0.15em]">
-                        Your complete ledger of recovered funds and fees
-                    </p>
-                </div>
+            <div className="relative -m-4 lg:-m-6">
+                <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24">
+                    <div className="relative container mx-auto px-8 pt-8 pb-10 text-gray-700">
 
-                {/* Summary Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                    <div className="border border-gray-200 bg-gray-50 p-4">
-                        <div className="text-[10px] text-gray-500 uppercase tracking-[0.1em]">Total Recovered</div>
-                        <div className="text-xl font-light text-emerald-600 mt-1">
-                            +${summary.totalRecovered.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                        </div>
-                    </div>
-
-                    <div className="border border-gray-200 bg-gray-50 p-4">
-                        <div className="text-[10px] text-gray-500 uppercase tracking-[0.1em]">Total Fees (20%)</div>
-                        <div className="text-xl font-light text-gray-600 mt-1">
-                            -${summary.totalFees.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                        </div>
-                    </div>
-
-                    <div className="border border-gray-200 bg-gray-50 p-4">
-                        <div className="text-[10px] text-gray-500 uppercase tracking-[0.1em]">Net Profit</div>
-                        <div className="text-xl font-light text-gray-900 mt-1">
-                            ${summary.netProfit.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                        </div>
-                    </div>
-
-                    <div className="border border-gray-200 bg-gray-50 p-4">
-                        <div className="text-[10px] text-gray-500 uppercase tracking-[0.1em]">Transactions</div>
-                        <div className="text-xl font-light text-gray-900 mt-1">
-                            {summary.transactionCount}
-                        </div>
-                    </div>
-                </div>
-
-                {/* Search and Actions */}
-                <div className="flex items-center justify-between mb-4">
-                    <div className="relative w-72">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                        <Input
-                            placeholder="Search by Case ID, Reimb ID..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="pl-10 h-9 text-xs border-gray-200 rounded-sm"
-                        />
-                    </div>
-
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={exportStatement}
-                        disabled={transactions.length === 0}
-                        className="h-8 text-xs border-gray-200 text-gray-700 rounded-sm">
-                        <Download className="h-3.5 w-3.5 mr-1.5" />
-                        Download Statement
-                    </Button>
-                </div>
-
-                {/* Transaction Table */}
-                <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
-                    <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
-                        <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
-                            Ledger
-                        </h2>
-                    </div>
-
-                    <div className="overflow-x-auto">
-                        {loading ? (
-                            <div className="px-4 py-12 text-center">
-                                <Loader2 className="h-6 w-6 animate-spin mx-auto text-gray-400" />
-                                <p className="text-sm text-gray-500 mt-2">Loading transactions...</p>
+                        {/* Header */}
+                        <div className="mb-10 flex items-end justify-between border-b border-gray-100 pb-8">
+                            <div>
+                                <h1 className="text-xl font-light text-gray-900 tracking-tight">Transaction Ledger</h1>
+                                <p className="text-[10px] text-gray-400 mt-1 uppercase tracking-[0.2em] font-mono">INTERNAL AUDIT // COMPLETED TRANSACTIONS</p>
                             </div>
-                        ) : (
-                            <table className="w-full">
-                                <thead>
-                                    <tr className="border-b border-gray-100 bg-gray-50/50">
-                                        <th className="text-left px-4 py-3 text-[10px] font-semibold text-gray-500 uppercase tracking-wide">Date</th>
-                                        <th className="text-left px-4 py-3 text-[10px] font-semibold text-gray-500 uppercase tracking-wide">Case ID</th>
-                                        <th className="text-left px-4 py-3 text-[10px] font-semibold text-gray-500 uppercase tracking-wide">Reimbursement ID</th>
-                                        <th className="text-right px-4 py-3 text-[10px] font-semibold text-gray-500 uppercase tracking-wide">Recovered</th>
-                                        <th className="text-right px-4 py-3 text-[10px] font-semibold text-gray-500 uppercase tracking-wide">Margin Fee</th>
-                                        <th className="text-left px-4 py-3 text-[10px] font-semibold text-gray-500 uppercase tracking-wide">Status</th>
-                                        <th className="text-right px-4 py-3 text-[10px] font-semibold text-gray-500 uppercase tracking-wide">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {filteredTransactions.map((transaction, index) => (
-                                        <tr
-                                            key={transaction.id}
-                                            className={cn(
-                                                "border-b border-gray-100 hover:bg-gray-50 transition-colors",
-                                                index % 2 === 1 && "bg-gray-50/30"
-                                            )}>
-                                            <td className="px-4 py-3 text-xs text-gray-700">
-                                                {format(new Date(transaction.date), 'MMM dd, yyyy')}
-                                            </td>
-                                            <td className="px-4 py-3">
-                                                {transaction.amazonCaseUrl !== '#' ? (
-                                                    <a
-                                                        href={transaction.amazonCaseUrl}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="text-xs text-gray-900 hover:text-gray-600 flex items-center gap-1 font-mono">
-                                                        {transaction.caseId}
-                                                        <ExternalLink className="h-3 w-3" />
-                                                    </a>
-                                                ) : (
-                                                    <span className="text-xs text-gray-900 font-mono">{transaction.caseId}</span>
-                                                )}
-                                            </td>
-                                            <td className="px-4 py-3 text-xs text-gray-600 font-mono">
-                                                {transaction.reimbursementId}
-                                            </td>
-                                            <td className="px-4 py-3 text-right">
-                                                <span className="text-xs font-medium text-emerald-600">
-                                                    +${transaction.recoveredAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                                                </span>
-                                            </td>
-                                            <td className="px-4 py-3 text-right">
-                                                <span className="text-xs text-gray-500">
-                                                    -${transaction.feeAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                                                </span>
-                                            </td>
-                                            <td className="px-4 py-3">
-                                                <div className="flex flex-col gap-0.5">
-                                                    {getStatusBadge(transaction.status)}
-                                                    {transaction.stripeLastFour && (
-                                                        <span className="text-[9px] text-gray-400">
-                                                            ···{transaction.stripeLastFour}
+                        </div>
+
+
+                        {/* Summary Cards */}
+                        <div className="bg-white border border-gray-200 rounded-sm mb-8">
+                            <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                                <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Financial Overview</h2>
+                                <p className="text-[10px] text-gray-500 mt-0.5">Aggregated metrics for realized recoveries</p>
+                            </div>
+                            <div className="p-6">
+                                <div className="grid grid-cols-1 md:grid-cols-4 gap-0 border border-gray-100 italic-divider">
+                                    <div className="p-6 bg-gray-50/50">
+                                        <div className="text-[9px] text-gray-400 uppercase tracking-[0.2em] font-bold mb-2">Total Recovered</div>
+                                        <div className="text-2xl font-light text-gray-900 font-mono tracking-tight">
+                                            +${summary.totalRecovered.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                                        </div>
+                                    </div>
+                                    <div className="p-6 border-l border-gray-100 bg-gray-50/50">
+                                        <div className="text-[9px] text-gray-400 uppercase tracking-[0.2em] font-bold mb-2">Total Fees (20%)</div>
+                                        <div className="text-2xl font-light text-gray-600 font-mono tracking-tight">
+                                            -${summary.totalFees.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                                        </div>
+                                    </div>
+                                    <div className="p-6 border-l border-gray-100 bg-gray-50/50">
+                                        <div className="text-[9px] text-gray-400 uppercase tracking-[0.2em] font-bold mb-2">Net Profit</div>
+                                        <div className="text-2xl font-light text-emerald-600 font-mono tracking-tight">
+                                            ${summary.netProfit.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                                        </div>
+                                    </div>
+                                    <div className="p-6 border-l border-gray-100 bg-gray-50/50">
+                                        <div className="text-[9px] text-gray-400 uppercase tracking-[0.2em] font-bold mb-2">Transactions</div>
+                                        <div className="text-2xl font-light text-gray-900 font-mono tracking-tight">
+                                            {summary.transactionCount}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Search and Actions */}
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="relative w-72">
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                                <Input
+                                    placeholder="SEARCH REFERENCE ID..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    className="pl-10 h-9 text-[10px] border-gray-200 rounded-none bg-white font-mono uppercase placeholder:text-gray-400"
+                                />
+                            </div>
+
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={exportStatement}
+                                disabled={transactions.length === 0}
+                                className="h-9 text-[10px] border-gray-200 text-gray-700 rounded-none hover:bg-gray-50 uppercase tracking-widest font-bold">
+                                <Download className="h-3.5 w-3.5 mr-2" />
+                                Download Statement
+                            </Button>
+                        </div>
+
+                        {/* Transaction Table */}
+                        <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
+                            <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                                <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
+                                    Detailed Ledger
+                                </h2>
+                            </div>
+
+                            <div className="overflow-x-auto p-0">
+                                {loading ? (
+                                    <div className="px-4 py-12 text-center">
+                                        <Loader2 className="h-6 w-6 animate-spin mx-auto text-gray-400" />
+                                        <p className="text-[10px] font-mono text-gray-500 mt-2 uppercase tracking-widest">Initialising Secure Ledger...</p>
+                                    </div>
+                                ) : (
+                                    <table className="w-full">
+                                        <thead>
+                                            <tr className="bg-gray-900 border-none">
+                                                <th className="text-left px-6 py-4 text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em]">Date</th>
+                                                <th className="text-left px-6 py-4 text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em]">Case ID</th>
+                                                <th className="text-left px-6 py-4 text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em]">Reimbursement ID</th>
+                                                <th className="text-right px-6 py-4 text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em]">Recovered</th>
+                                                <th className="text-right px-6 py-4 text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em]">Margin Fee</th>
+                                                <th className="text-left px-6 py-4 text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em]">Status</th>
+                                                <th className="text-right px-6 py-4 text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em]">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {filteredTransactions.map((transaction, index) => (
+                                                <tr
+                                                    key={transaction.id}
+                                                    className="hover:bg-gray-50/50 border-b border-gray-100 group relative transition-colors"
+                                                >
+                                                    <td className="px-6 py-4 text-[11px] font-mono text-gray-700 font-bold tracking-tighter relative">
+                                                        <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                                        {format(new Date(transaction.date), 'MMM dd, yyyy').toUpperCase()}
+                                                    </td>
+                                                    <td className="px-6 py-4">
+                                                        {transaction.amazonCaseUrl !== '#' ? (
+                                                            <a
+                                                                href={transaction.amazonCaseUrl}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="text-[11px] text-gray-900 hover:text-gray-600 flex items-center gap-1 font-mono tracking-tighter font-bold">
+                                                                {transaction.caseId}
+                                                                <ExternalLink className="h-2.5 w-2.5 text-gray-400" />
+                                                            </a>
+                                                        ) : (
+                                                            <span className="text-[11px] text-gray-900 font-mono tracking-tighter font-bold">{transaction.caseId}</span>
+                                                        )}
+                                                    </td>
+                                                    <td className="px-6 py-4 text-[11px] text-gray-600 font-mono tracking-tighter">
+                                                        {transaction.reimbursementId}
+                                                    </td>
+                                                    <td className="px-6 py-4 text-right">
+                                                        <span className="text-[11px] font-bold text-gray-900 font-mono tracking-tight">
+                                                            +${transaction.recoveredAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                                                         </span>
-                                                    )}
-                                                </div>
-                                            </td>
-                                            <td className="px-4 py-3 text-right">
-                                                <Button
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    className="h-7 text-[10px] text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-                                                    onClick={() => handleReportIssue(transaction)}>
-                                                    <AlertCircle className="h-3 w-3 mr-1" />
-                                                    Report Issue
-                                                </Button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        )}
+                                                    </td>
+                                                    <td className="px-6 py-4 text-right">
+                                                        <span className="text-[11px] text-gray-500 font-mono tracking-tight">
+                                                            -${transaction.feeAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                                                        </span>
+                                                    </td>
+                                                    <td className="px-6 py-4">
+                                                        <div className="flex flex-col gap-1">
+                                                            {getStatusBadge(transaction.status)}
+                                                            {transaction.stripeLastFour && (
+                                                                <span className="text-[9px] text-gray-400 font-mono tracking-widest pl-3.5">
+                                                                    CARD ···{transaction.stripeLastFour}
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-6 py-4 text-right">
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            className="h-7 text-[9px] font-bold text-gray-500 hover:text-gray-900 hover:bg-transparent uppercase tracking-widest"
+                                                            onClick={() => handleReportIssue(transaction)}>
+                                                            REPORT
+                                                        </Button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                )}
 
-                        {!loading && filteredTransactions.length === 0 && (
-                            <div className="px-4 py-12 text-center">
-                                <p className="text-sm text-gray-400">
-                                    {transactions.length === 0
-                                        ? 'No transactions yet. Transactions will appear here once disputes are approved or paid.'
-                                        : 'No transactions match your search'}
-                                </p>
+                                {!loading && filteredTransactions.length === 0 && (
+                                    <div className="px-4 py-16 text-center">
+                                        <p className="text-[11px] font-mono text-gray-400 uppercase tracking-widest">
+                                            {transactions.length === 0
+                                                ? 'No Records Found in Ledger'
+                                                : 'No Matches for Query'}
+                                        </p>
+                                    </div>
+                                )}
                             </div>
-                        )}
-                    </div>
-                </div>
+                        </div>
 
-                {/* Footer Note */}
-                <div className="mt-4 text-center">
-                    <p className="text-[10px] text-gray-400">
-                        Monthly statements are available on the 1st of each month. Questions? Contact support@margin.ai
-                    </p>
+                        {/* Footer Note */}
+                        <div className="mt-6 text-center border-t border-gray-100 pt-6">
+                            <p className="text-[9px] text-gray-400 font-mono uppercase tracking-[0.1em]">
+                                Official Ledger • Generated by Margin Audit Engine • support@margin.ai
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             {/* Report Issue Modal */}
             <Dialog open={reportModalOpen} onOpenChange={setReportModalOpen}>
-                <DialogContent className="sm:max-w-md bg-white border border-gray-200 rounded-sm">
-                    <DialogHeader className="border-b border-gray-100 pb-4">
-                        <DialogTitle className="text-sm font-semibold text-gray-900 uppercase tracking-wide">
-                            Report an Issue
+                <DialogContent className="sm:max-w-md bg-white border border-gray-200 rounded-none p-0 gap-0 overflow-hidden">
+                    <DialogHeader className="border-b border-gray-100 px-6 py-4 bg-gray-50">
+                        <DialogTitle className="text-xs font-bold text-gray-900 uppercase tracking-[0.15em]">
+                            Flag Transaction
                         </DialogTitle>
-                        <DialogDescription className="text-xs text-gray-500 mt-1">
+                        <DialogDescription className="text-[10px] text-gray-500 mt-1 uppercase tracking-wide font-mono">
                             {selectedTransaction && (
-                                <>Transaction {selectedTransaction.reimbursementId} • ${selectedTransaction.recoveredAmount.toFixed(2)}</>
+                                <>REF: {selectedTransaction.reimbursementId} • ${selectedTransaction.recoveredAmount.toFixed(2)}</>
                             )}
                         </DialogDescription>
                     </DialogHeader>
 
-                    <div className="py-4 space-y-4">
+                    <div className="p-6 space-y-4">
                         <div className="space-y-2">
-                            <Label className="text-xs font-medium text-gray-700 uppercase tracking-wide">
-                                Why is this incorrect?
+                            <Label className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.1em]">
+                                Issue Classification
                             </Label>
                             <Select value={issueType} onValueChange={setIssueType}>
-                                <SelectTrigger className="h-9 text-xs border-gray-200 rounded-sm">
-                                    <SelectValue placeholder="Select reason..." />
+                                <SelectTrigger className="h-9 text-xs border-gray-200 rounded-none bg-white">
+                                    <SelectValue placeholder="Select classification..." />
                                 </SelectTrigger>
-                                <SelectContent className="bg-white border-gray-200">
-                                    <SelectItem value="not_my_claim" className="text-xs">Not my claim</SelectItem>
-                                    <SelectItem value="amount_wrong" className="text-xs">Amount is wrong</SelectItem>
-                                    <SelectItem value="duplicate" className="text-xs">Duplicate charge</SelectItem>
-                                    <SelectItem value="other" className="text-xs">Other issue</SelectItem>
+                                <SelectContent className="bg-white border-gray-200 rounded-none">
+                                    <SelectItem value="not_my_claim" className="text-xs">Incorrect Entity Attribution</SelectItem>
+                                    <SelectItem value="amount_wrong" className="text-xs">Discrepancy in Amount</SelectItem>
+                                    <SelectItem value="duplicate" className="text-xs">Duplicate Ledger Entry</SelectItem>
+                                    <SelectItem value="other" className="text-xs">Other Anomaly</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
 
                         <div className="space-y-2">
-                            <Label className="text-xs font-medium text-gray-700 uppercase tracking-wide">
-                                Additional Details (Optional)
+                            <Label className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.1em]">
+                                Technical Notes
                             </Label>
                             <Textarea
                                 value={issueNotes}
                                 onChange={(e) => setIssueNotes(e.target.value)}
-                                placeholder="Provide any additional details..."
-                                className="min-h-[80px] text-xs border-gray-200 rounded-sm resize-none"
+                                placeholder="Provide detailed context..."
+                                className="min-h-[80px] text-xs border-gray-200 rounded-none resize-none bg-white placeholder:text-gray-300"
                             />
                         </div>
                     </div>
 
-                    <DialogFooter className="border-t border-gray-100 pt-4">
+                    <DialogFooter className="border-t border-gray-100 p-4 bg-gray-50/50 gap-2">
                         <Button
                             variant="outline"
                             size="sm"
                             onClick={() => setReportModalOpen(false)}
-                            className="h-8 text-xs border-gray-200 text-gray-600 rounded-sm">
+                            className="h-8 text-[10px] border-gray-200 text-gray-600 rounded-none uppercase font-bold tracking-wider hover:bg-white">
                             Cancel
                         </Button>
                         <Button
                             size="sm"
                             onClick={handleSubmitReport}
                             disabled={!issueType || isSubmitting}
-                            className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-sm">
+                            className="h-8 text-[10px] bg-[#0a0a0f] hover:bg-[#1a1a1f] text-white rounded-none uppercase font-bold tracking-wider shadow-sm">
                             {isSubmitting ? 'Submitting...' : 'Submit Report'}
                         </Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-        </PageLayout>
+        </PageLayout >
     );
 }
 

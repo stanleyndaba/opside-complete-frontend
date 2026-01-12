@@ -139,7 +139,6 @@ export default function Careers() {
         toast({
           title: "Application Received",
           description: "Your credentials have been securely transmitted to our Talent Committee.",
-          className: "bg-[#0a0a0f] text-white border-gray-800",
         });
       } else {
         setUploadStatus('error');
