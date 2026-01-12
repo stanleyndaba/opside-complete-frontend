@@ -541,13 +541,15 @@ export function Dashboard() {
                 typeof d.claimsApproved === 'number' ? d.claimsApproved :
                   null
         );
-        if (pending !== null && !upcomingPaymentsLoadedRef.current) setPendingRecoveryAmount(pending);
+        // Note: pendingRecoveryAmount is now sourced from fetchDisputeMetrics (dispute_cases) to avoid race conditions
+        // if (pending !== null && !upcomingPaymentsLoadedRef.current) setPendingRecoveryAmount(pending);
         if (rate !== null) setSuccessRate(rate);
         if (approved !== null) setApprovedRecoveryAmount(approved);
-        if (nextPay !== null && !upcomingPaymentsLoadedRef.current) {
-          setNextPaymentAmount(nextPay);
-          setNextPaymentDate(null);
-        }
+        // Note: nextPaymentAmount is now sourced from fetchDisputeMetrics (dispute_cases) to avoid race conditions
+        // if (nextPay !== null && !upcomingPaymentsLoadedRef.current) {
+        //   setNextPaymentAmount(nextPay);
+        //   setNextPaymentDate(null);
+        // }
         if (approvedClaimsMonth !== null) setApprovedClaimsThisMonth(approvedClaimsMonth);
         setLastUpdated(new Date().toLocaleTimeString());
       }
