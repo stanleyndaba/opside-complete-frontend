@@ -407,7 +407,7 @@ const Settings = () => {
 
                   <div className="flex flex-col gap-3">
                     <Button
-                      className="bg-emerald-500 hover:bg-emerald-600 text-white shadow-sm ring-1 ring-emerald-500/10 active:scale-[0.98] rounded-sm h-10 px-6 font-medium"
+                      className="bg-[#0a0a0f] hover:bg-[#1a1a1f] text-white shadow-sm ring-1 ring-white/5 active:scale-[0.98] rounded-none h-10 px-6 font-medium"
                       onClick={() => navigate('/integrations-hub')}
                     >
                       Manage Profile
@@ -452,7 +452,7 @@ const Settings = () => {
                   <p className="text-xs text-gray-600 leading-relaxed mb-4">
                     Your account is currently under institutional audit. For white-glove support or bulk account management, contact our dedicated desk.
                   </p>
-                  <Button variant="outline" size="sm" className="w-full text-[11px] font-semibold border-gray-200 hover:bg-gray-50 rounded-sm" onClick={() => navigate('/contact')}>
+                  <Button variant="outline" size="sm" className="w-full text-[11px] font-semibold border-gray-200 hover:bg-gray-50 rounded-none" onClick={() => navigate('/help')}>
                     Contact Dedicated Support
                   </Button>
                 </CardContent>
@@ -509,7 +509,7 @@ const Settings = () => {
 
                   <div className="flex flex-col gap-3">
                     <Button
-                      className="bg-emerald-500 hover:bg-emerald-600 text-white shadow-sm ring-1 ring-emerald-500/10 active:scale-[0.98] rounded-sm h-10 px-6 font-medium"
+                      className="bg-[#0a0a0f] hover:bg-[#1a1a1f] text-white shadow-sm ring-1 ring-white/5 active:scale-[0.98] rounded-none h-10 px-6 font-medium"
                       onClick={() => navigate('/billing')}
                     >
                       View Documents
@@ -587,7 +587,7 @@ const Settings = () => {
 
                   <div className="flex flex-col gap-3">
                     <Button
-                      className="bg-emerald-500 hover:bg-emerald-600 text-white shadow-sm ring-1 ring-emerald-500/10 active:scale-[0.98] rounded-sm h-10 px-6 font-medium"
+                      className="bg-[#0a0a0f] hover:bg-[#1a1a1f] text-white shadow-sm ring-1 ring-white/5 active:scale-[0.98] rounded-none h-10 px-6 font-medium"
                       onClick={() => navigate('/api-access')}
                     >
                       Access Gateway
@@ -674,7 +674,7 @@ const Settings = () => {
 
                   <div className="flex flex-col gap-3">
                     <Button
-                      className="bg-emerald-500 hover:bg-emerald-600 text-white shadow-sm ring-1 ring-emerald-500/10 active:scale-[0.98] rounded-sm h-10 px-6 font-medium"
+                      className="bg-[#0a0a0f] hover:bg-[#1a1a1f] text-white shadow-sm ring-1 ring-white/5 active:scale-[0.98] rounded-none h-10 px-6 font-medium"
                       onClick={() => navigate('/integrations-hub')}
                     >
                       Institutional Hub
@@ -710,7 +710,7 @@ const Settings = () => {
                   <p className="text-xs text-gray-600 leading-relaxed mb-4">
                     Require a custom connector for your proprietary ERP or specialized accounting stack? Our systems engineers can facilitate private deployments.
                   </p>
-                  <Button variant="outline" size="sm" className="w-full text-[11px] font-semibold border-gray-200 hover:bg-gray-50 rounded-sm" onClick={() => navigate('/contact')}>
+                  <Button variant="outline" size="sm" className="w-full text-[11px] font-semibold border-gray-200 hover:bg-gray-50 rounded-none" onClick={() => navigate('/help')}>
                     Request Private Connector
                   </Button>
                 </CardContent>
@@ -766,7 +766,7 @@ const Settings = () => {
 
                   <div className="flex flex-col gap-3">
                     <Button
-                      className="bg-emerald-500 hover:bg-emerald-600 text-white shadow-sm ring-1 ring-emerald-500/10 active:scale-[0.98] rounded-sm h-10 px-6 font-medium"
+                      className="bg-[#0a0a0f] hover:bg-[#1a1a1f] text-white shadow-sm ring-1 ring-white/5 active:scale-[0.98] rounded-none h-10 px-6 font-medium"
                       onClick={() => toast({ title: "Settings Saved", description: "Your notification preferences are active." })}
                     >
                       Update Preferences
@@ -841,7 +841,7 @@ const Settings = () => {
 
                   <div className="flex flex-col gap-3">
                     <Button
-                      className="bg-emerald-500 hover:bg-emerald-600 text-white shadow-sm ring-1 ring-emerald-500/10 active:scale-[0.98] rounded-sm h-10 px-6 font-medium"
+                      className="bg-[#0a0a0f] hover:bg-[#1a1a1f] text-white shadow-sm ring-1 ring-white/5 active:scale-[0.98] rounded-none h-10 px-6 font-medium"
                       onClick={() => toast({ title: "Account Fortified", description: "Security protocols updated." })}
                     >
                       Fortify Account
@@ -891,7 +891,7 @@ const Settings = () => {
                     <Switch checked={trustedDevice} onCheckedChange={(val) => { setTrustedDevice(val); persistSecurity({ trustedDevice: val }); }} />
                   </div>
                   <Separator className="bg-gray-100" />
-                  <Button variant="outline" size="sm" className="w-full text-[11px] font-semibold border-red-100 text-red-600 hover:bg-red-50 hover:border-red-200 rounded-sm" onClick={logoutOtherDevices} disabled={loggingOutOthers}>
+                  <Button variant="outline" size="sm" className="w-full text-[11px] font-semibold border-red-100 text-red-600 hover:bg-red-50 hover:border-red-200 rounded-none" onClick={logoutOtherDevices} disabled={loggingOutOthers}>
                     {loggingOutOthers ? 'Processing...' : 'Terminate Other Sessions'}
                   </Button>
                 </CardContent>
@@ -908,7 +908,7 @@ const Settings = () => {
                   <p className="text-sm font-medium text-gray-900">Decommission Account</p>
                   <p className="text-xs text-gray-500">Permanently remove all institutional data, audit logs, and access keys. This process is irreversible.</p>
                 </div>
-                <Button variant="destructive" size="sm" className="h-9 px-6 font-semibold rounded-sm" onClick={() => setDeleteOpen(true)}>
+                <Button variant="destructive" size="sm" className="h-9 px-6 font-semibold rounded-none" onClick={() => setDeleteOpen(true)}>
                   Delete Account
                 </Button>
               </CardContent>
@@ -923,10 +923,10 @@ const Settings = () => {
                   </DialogDescription>
                 </DialogHeader>
                 <DialogFooter className="gap-2 pt-4">
-                  <Button variant="outline" className="rounded-sm text-xs font-semibold" onClick={() => setDeleteOpen(false)}>Cancel</Button>
+                  <Button variant="outline" className="rounded-none text-xs font-semibold" onClick={() => setDeleteOpen(false)}>Cancel</Button>
                   <Button
                     variant="destructive"
-                    className="rounded-sm text-xs font-semibold"
+                    className="rounded-none text-xs font-semibold"
                     onClick={() => {
                       setDeleteOpen(false);
                       toast({ title: 'Account deletion requested', description: 'Our support will contact you to confirm.' });
@@ -958,7 +958,7 @@ const Settings = () => {
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
               {/* Navigation Menu */}
               <div className="lg:col-span-1">
-                <div className="lg:sticky lg:top-6 h-fit bg-white border border-gray-200 rounded-sm">
+                <div className="lg:sticky lg:top-6 h-fit bg-white border border-gray-200 rounded-none">
                   <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
                     <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Quick Settings</h2>
                   </div>
