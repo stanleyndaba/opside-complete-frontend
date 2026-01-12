@@ -7,10 +7,10 @@ import { startSync, getSyncStatus, cancelSync, forceClearSync, subscribeSyncProg
 import { useNavigate, useSearchParams, useParams } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
 import { RefreshCw, XCircle, CheckCircle2, AlertCircle, Loader2, Search, Package, Truck, RotateCcw, DollarSign, Archive, Target, Clock, ChevronDown, ChevronUp, ChevronRight, ExternalLink, Download } from 'lucide-react';
-import GmailIcon from '/G.png';
-import OutlookIcon from '/OL.png';
-import GoogleDriveIcon from '/gd.png';
-import DropboxIcon from '/Dropbox_Icon.svg.png';
+const GmailIcon = '/G.png';
+const OutlookIcon = '/outlookicon.webp';
+const GoogleDriveIcon = '/gd.png';
+const DropboxIcon = '/Dropbox_Icon.svg.png';
 import { useToast } from '@/hooks/use-toast';
 import { useDetectionUpdates } from '@/hooks/use-detection-updates';
 import { api } from '@/lib/api';
@@ -1801,18 +1801,18 @@ export default function Sync() {
                 }
                 setShowSourcesModal(open);
               }}>
-              <DialogContent className="sm:max-w-xl bg-white border border-gray-200 rounded-sm p-0">
-                <DialogHeader className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                  <DialogTitle className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
+              <DialogContent className="sm:max-w-md p-0 gap-0 overflow-hidden border-gray-200 rounded-sm shadow-2xl bg-white">
+                <DialogHeader className="px-6 py-5 bg-[#111827] border-b border-[#111827]">
+                  <DialogTitle className="text-xs font-semibold text-white uppercase tracking-[0.2em]">
                     Connect Document Sources
                   </DialogTitle>
-                  <DialogDescription className="text-[10px] text-gray-500 mt-0.5">
-                    Read-only access for document ingestion
+                  <DialogDescription className="text-[10px] text-gray-400 mt-1 font-medium tracking-wide uppercase">
+                    AUTHORIZED ACCESS FOR DOCUMENT INGESTION
                   </DialogDescription>
                 </DialogHeader>
 
                 <div className="p-6">
-                  <div className="grid grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 gap-4">
                     <button
                       onClick={async () => {
                         try {
@@ -1823,29 +1823,28 @@ export default function Sync() {
                           } else {
                             toast({
                               title: 'Connection Failed',
-                              description: r.error || 'Failed to initiate Gmail connection. Please try again.',
+                              description: r.error || 'Failed to initiate Gmail connection.',
                               variant: 'destructive',
                             });
                             setProviderLoading(null);
                           }
                         } catch (error) {
-                          console.error('Failed to connect Gmail:', error);
                           toast({
                             title: 'Connection Failed',
-                            description: 'An error occurred while connecting Gmail. Please try again.',
+                            description: 'An error occurred. Please try again.',
                             variant: 'destructive',
                           });
                           setProviderLoading(null);
                         }
                       }}
                       disabled={providerLoading === 'gmail'}
-                      className="flex flex-col items-center justify-center gap-3 p-4 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50">
+                      className="group flex flex-col items-center justify-center gap-3 p-6 border border-gray-200 hover:border-gray-900 hover:bg-gray-50 transition-all duration-200 rounded-sm disabled:opacity-50">
                       {providerLoading === 'gmail' ? (
-                        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                        <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
                       ) : (
-                        <img src={GmailIcon} alt="Gmail" className="h-8 w-8 object-contain" />
+                        <img src={GmailIcon} alt="Gmail" className="h-8 w-8 object-contain transition-all duration-300" />
                       )}
-                      <span className="text-xs font-medium text-gray-700">Gmail</span>
+                      <span className="text-[10px] font-bold text-gray-900 uppercase tracking-wider group-hover:text-black">Gmail</span>
                     </button>
 
                     <button
@@ -1858,29 +1857,28 @@ export default function Sync() {
                           } else {
                             toast({
                               title: 'Connection Failed',
-                              description: r.error || 'Failed to initiate Outlook connection. Please try again.',
+                              description: r.error || 'Failed to initiate Outlook connection.',
                               variant: 'destructive',
                             });
                             setProviderLoading(null);
                           }
                         } catch (error) {
-                          console.error('Failed to connect Outlook:', error);
                           toast({
                             title: 'Connection Failed',
-                            description: 'An error occurred while connecting Outlook. Please try again.',
+                            description: 'An error occurred. Please try again.',
                             variant: 'destructive',
                           });
                           setProviderLoading(null);
                         }
                       }}
                       disabled={providerLoading === 'outlook'}
-                      className="flex flex-col items-center justify-center gap-3 p-4 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50">
+                      className="group flex flex-col items-center justify-center gap-3 p-6 border border-gray-200 hover:border-gray-900 hover:bg-gray-50 transition-all duration-200 rounded-sm disabled:opacity-50">
                       {providerLoading === 'outlook' ? (
-                        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                        <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
                       ) : (
-                        <img src={OutlookIcon} alt="Outlook" className="h-8 w-8 object-contain" />
+                        <img src={OutlookIcon} alt="Outlook" className="h-8 w-8 object-contain transition-all duration-300" />
                       )}
-                      <span className="text-xs font-medium text-gray-700">Outlook</span>
+                      <span className="text-[10px] font-bold text-gray-900 uppercase tracking-wider group-hover:text-black">Outlook</span>
                     </button>
 
                     <button
@@ -1893,29 +1891,28 @@ export default function Sync() {
                           } else {
                             toast({
                               title: 'Connection Failed',
-                              description: r.error || 'Failed to initiate Google Drive connection. Please try again.',
+                              description: r.error || 'Failed to initiate Google Drive connection.',
                               variant: 'destructive',
                             });
                             setProviderLoading(null);
                           }
                         } catch (error) {
-                          console.error('Failed to connect Google Drive:', error);
                           toast({
                             title: 'Connection Failed',
-                            description: 'An error occurred while connecting Google Drive. Please try again.',
+                            description: 'An error occurred. Please try again.',
                             variant: 'destructive',
                           });
                           setProviderLoading(null);
                         }
                       }}
                       disabled={providerLoading === 'gdrive'}
-                      className="flex flex-col items-center justify-center gap-3 p-4 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50">
+                      className="group flex flex-col items-center justify-center gap-3 p-6 border border-gray-200 hover:border-gray-900 hover:bg-gray-50 transition-all duration-200 rounded-sm disabled:opacity-50">
                       {providerLoading === 'gdrive' ? (
-                        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                        <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
                       ) : (
-                        <img src={GoogleDriveIcon} alt="Google Drive" className="h-8 w-8 object-contain" />
+                        <img src={GoogleDriveIcon} alt="Google Drive" className="h-8 w-8 object-contain transition-all duration-300" />
                       )}
-                      <span className="text-xs font-medium text-gray-700">Drive</span>
+                      <span className="text-[10px] font-bold text-gray-900 uppercase tracking-wider group-hover:text-black">Drive</span>
                     </button>
 
                     <button
@@ -1928,31 +1925,40 @@ export default function Sync() {
                           } else {
                             toast({
                               title: 'Connection Failed',
-                              description: r.error || 'Failed to initiate Dropbox connection. Please try again.',
+                              description: r.error || 'Failed to initiate Dropbox connection.',
                               variant: 'destructive',
                             });
                             setProviderLoading(null);
                           }
                         } catch (error) {
-                          console.error('Failed to connect Dropbox:', error);
                           toast({
                             title: 'Connection Failed',
-                            description: 'An error occurred while connecting Dropbox. Please try again.',
+                            description: 'An error occurred. Please try again.',
                             variant: 'destructive',
                           });
                           setProviderLoading(null);
                         }
                       }}
                       disabled={providerLoading === 'dropbox'}
-                      className="flex flex-col items-center justify-center gap-3 p-4 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50">
+                      className="group flex flex-col items-center justify-center gap-3 p-6 border border-gray-200 hover:border-gray-900 hover:bg-gray-50 transition-all duration-200 rounded-sm disabled:opacity-50">
                       {providerLoading === 'dropbox' ? (
-                        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                        <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
                       ) : (
-                        <img src={DropboxIcon} alt="Dropbox" className="h-8 w-8 object-contain" />
+                        <img src={DropboxIcon} alt="Dropbox" className="h-8 w-8 object-contain transition-all duration-300" />
                       )}
-                      <span className="text-xs font-medium text-gray-700">Dropbox</span>
+                      <span className="text-[10px] font-bold text-gray-900 uppercase tracking-wider group-hover:text-black">Dropbox</span>
                     </button>
                   </div>
+                </div>
+
+                <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowSourcesModal(false)}
+                    className="text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100 font-medium">
+                    Skip for Now
+                  </Button>
                 </div>
               </DialogContent>
             </Dialog>
