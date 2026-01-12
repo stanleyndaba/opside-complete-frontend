@@ -82,6 +82,7 @@ export function Navbar({
   const [showInviteForm, setShowInviteForm] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
   const [linkCopied, setLinkCopied] = useState(false);
+  const [showSignOutModal, setShowSignOutModal] = useState(false);
   const { selectedCurrency, setSelectedCurrency } = useCurrency();
 
   // State for notes feature
@@ -365,14 +366,9 @@ export function Navbar({
           {/* Right Group - Sign Out (Isolated) */}
           <div className="flex items-center border-l border-gray-100 pl-6 ml-6">
             <button
-              onClick={async () => {
-                const ok = window.confirm('Sign out of Margin?');
-                if (!ok) return;
-                try { await api.logout(); } catch (_) { }
-                window.location.href = '/';
-              }}
-              className="flex items-center gap-2 h-8 px-4 text-xs text-gray-600 hover:text-red-600 hover:bg-red-50/50 rounded-sm transition-all group/signout border border-transparent hover:border-red-100">
-              <LogOut className="h-3.5 w-3.5 text-gray-400 group-hover/signout:text-red-500" />
+              onClick={() => setShowSignOutModal(true)}
+              className="flex items-center gap-2 h-8 px-4 text-xs text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-sm transition-all group/signout">
+              <LogOut className="h-3.5 w-3.5 text-gray-400 group-hover/signout:text-gray-600" />
               <span className="hidden sm:inline font-medium">Sign Out</span>
             </button>
           </div>
@@ -661,6 +657,47 @@ export function Navbar({
                 <p className="text-xs text-gray-400">No notes yet. Start by adding one above.</p>
               </div>
             )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Sign Out Confirmation Modal */}
+      <Dialog open={showSignOutModal} onOpenChange={setShowSignOutModal}>
+        <DialogContent className="max-w-sm bg-white border border-gray-200 shadow-2xl rounded-none p-0 overflow-hidden">
+          <div className="p-8 text-center">
+            {/* Icon */}
+            <div className="w-12 h-12 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
+              <LogOut className="h-5 w-5 text-gray-500" />
+            </div>
+
+            {/* Title */}
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">
+              Leaving already?
+            </h3>
+
+            {/* Body */}
+            <p className="text-sm text-gray-500 leading-relaxed mb-8">
+              We're still protecting your money and monitoring your account for recoveries.
+              You can sign back in anytime to see updates.
+            </p>
+
+            {/* Actions */}
+            <div className="flex flex-col gap-3">
+              <Button
+                onClick={async () => {
+                  setShowSignOutModal(false);
+                  try { await api.logout(); } catch (_) { }
+                  window.location.href = '/';
+                }}
+                className="w-full bg-gray-900 hover:bg-black text-white text-xs h-10 font-medium rounded-sm transition-all">
+                Sign Out
+              </Button>
+              <button
+                onClick={() => setShowSignOutModal(false)}
+                className="w-full text-xs text-gray-500 hover:text-gray-700 font-medium py-2 transition-colors">
+                Stay signed in
+              </button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
