@@ -84,6 +84,7 @@ export function Dashboard() {
   const [reconciledCount, setReconciledCount] = useState<number | null>(null);
   const [lastUpdated, setLastUpdated] = useState<string>('');
   const [approvedClaimsThisMonth, setApprovedClaimsThisMonth] = useState<number | null>(null);
+  const [settlementRate, setSettlementRate] = useState<number | null>(null);
   const [showSourcesModal, setShowSourcesModal] = useState<boolean>(false);
   const [showSyncModal, setShowSyncModal] = useState<boolean>(false);
   const [providerLoading, setProviderLoading] = useState<'gmail' | 'outlook' | 'gdrive' | 'dropbox' | null>(null);
@@ -599,9 +600,20 @@ export function Dashboard() {
           setPendingRecoveryAmount(pendingTotal);
           setPendingClaimsCount(pendingCases.length);
 
+          // Calculate settlement rate (approved / (approved + pending + rejected))
+          const rejectedCases = cases.filter((c: any) => {
+            const status = (c.status || '').toLowerCase();
+            return status === 'rejected' || status === 'denied' || status === 'lost';
+          });
+          const totalSettled = approvedCases.length + rejectedCases.length;
+          const rate = totalSettled > 0 ? (approvedCases.length / totalSettled) * 100 : 0;
+          setSettlementRate(rate);
+
           console.log('[Dashboard] Dispute metrics:', {
             approved: { count: approvedCases.length, total: approvedTotal },
-            pending: { count: pendingCases.length, total: pendingTotal }
+            pending: { count: pendingCases.length, total: pendingTotal },
+            rejected: { count: rejectedCases.length },
+            settlementRate: rate.toFixed(1)
           });
         } else {
           console.warn('[Dashboard] No dispute cases returned');
@@ -846,8 +858,8 @@ export function Dashboard() {
                           <div className="p-6 cursor-help hover:bg-gray-50/50 transition-colors">
                             <div className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.15em] mb-3">Settlement Rate</div>
                             <div className="flex items-baseline gap-2">
-                              <div className="text-2xl font-light text-gray-900 tracking-tight">95.2%</div>
-                              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                              <div className="text-2xl font-light text-gray-900 tracking-tight">{settlementRate !== null ? `${settlementRate.toFixed(1)}%` : '—'}</div>
+                              <div className={`w-1.5 h-1.5 rounded-full ${(settlementRate ?? 0) >= 80 ? 'bg-emerald-500' : (settlementRate ?? 0) >= 50 ? 'bg-yellow-500' : 'bg-gray-300'}`} />
                             </div>
                             <div className="mt-4 text-[9px] font-mono text-gray-500 uppercase tracking-widest">
                               Optimized Yield
