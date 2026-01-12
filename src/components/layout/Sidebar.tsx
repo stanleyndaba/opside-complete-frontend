@@ -93,13 +93,13 @@ export function Sidebar({
   React.useEffect(() => {
     (async () => {
       try {
-        const r = await api.getRecoveriesMetrics();
+        const r = await api.getRecoveriesMetrics(currentTenantSlug);
         if (r.ok && r.data?.totalClaimsFound !== undefined) {
           setClaimCount(r.data.totalClaimsFound);
         }
       } catch { }
     })();
-  }, []);
+  }, [currentTenantSlug]);
 
   // Check if we're on the Dashboard (Command Center) page
   const isDashboard = location.pathname === '/dashboard' || location.pathname === '/app' || location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/app');

@@ -686,7 +686,7 @@ export const api = {
   getDashboardAggregates: (window?: '7d' | '30d' | '90d') => requestJson<any>(
     `/api/metrics/dashboard${window ? `?window=${encodeURIComponent(window)}` : ''}`
   ),
-  getRecoveriesMetrics: () => requestJson<any>('/api/metrics/recoveries'),
+  getRecoveriesMetrics: (tenantSlug?: string) => requestJson<any>(`/api/metrics/recoveries${tenantSlug ? `?tenant=${encodeURIComponent(tenantSlug)}` : ''}`),
   setAutoClaimEnabled: (enabled: boolean) => requestJson<any>('/api/recoveries/auto-claim', { method: 'POST', body: JSON.stringify({ enabled }) }),
 
   // Refund Engine endpoints
