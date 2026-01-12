@@ -407,7 +407,7 @@ const Settings = () => {
 
                   <div className="flex flex-col gap-3">
                     <Button
-                      className="bg-[#0a0a0f] hover:bg-[#1a1a1f] text-white shadow-sm ring-1 ring-white/5 active:scale-[0.98] rounded-none h-10 px-6 font-medium"
+                      className="bg-[#0a0a0f] hover:bg-[#1a1a1f] text-white shadow-sm ring-1 ring-white/5 active:scale-[0.98] rounded-none h-10 px-6 font-normal"
                       onClick={() => navigate('/integrations-hub')}
                     >
                       Manage Profile
@@ -509,7 +509,7 @@ const Settings = () => {
 
                   <div className="flex flex-col gap-3">
                     <Button
-                      className="bg-[#0a0a0f] hover:bg-[#1a1a1f] text-white shadow-sm ring-1 ring-white/5 active:scale-[0.98] rounded-none h-10 px-6 font-medium"
+                      className="bg-[#0a0a0f] hover:bg-[#1a1a1f] text-white shadow-sm ring-1 ring-white/5 active:scale-[0.98] rounded-none h-10 px-6 font-normal"
                       onClick={() => navigate('/billing')}
                     >
                       View Documents
@@ -587,7 +587,7 @@ const Settings = () => {
 
                   <div className="flex flex-col gap-3">
                     <Button
-                      className="bg-[#0a0a0f] hover:bg-[#1a1a1f] text-white shadow-sm ring-1 ring-white/5 active:scale-[0.98] rounded-none h-10 px-6 font-medium"
+                      className="bg-[#0a0a0f] hover:bg-[#1a1a1f] text-white shadow-sm ring-1 ring-white/5 active:scale-[0.98] rounded-none h-10 px-6 font-normal"
                       onClick={() => navigate('/api-access')}
                     >
                       Access Gateway
@@ -674,7 +674,7 @@ const Settings = () => {
 
                   <div className="flex flex-col gap-3">
                     <Button
-                      className="bg-[#0a0a0f] hover:bg-[#1a1a1f] text-white shadow-sm ring-1 ring-white/5 active:scale-[0.98] rounded-none h-10 px-6 font-medium"
+                      className="bg-[#0a0a0f] hover:bg-[#1a1a1f] text-white shadow-sm ring-1 ring-white/5 active:scale-[0.98] rounded-none h-10 px-6 font-normal"
                       onClick={() => navigate('/integrations-hub')}
                     >
                       Institutional Hub
@@ -766,7 +766,7 @@ const Settings = () => {
 
                   <div className="flex flex-col gap-3">
                     <Button
-                      className="bg-[#0a0a0f] hover:bg-[#1a1a1f] text-white shadow-sm ring-1 ring-white/5 active:scale-[0.98] rounded-none h-10 px-6 font-medium"
+                      className="bg-[#0a0a0f] hover:bg-[#1a1a1f] text-white shadow-sm ring-1 ring-white/5 active:scale-[0.98] rounded-none h-10 px-6 font-normal"
                       onClick={() => toast({ title: "Settings Saved", description: "Your notification preferences are active." })}
                     >
                       Update Preferences
@@ -841,7 +841,7 @@ const Settings = () => {
 
                   <div className="flex flex-col gap-3">
                     <Button
-                      className="bg-[#0a0a0f] hover:bg-[#1a1a1f] text-white shadow-sm ring-1 ring-white/5 active:scale-[0.98] rounded-none h-10 px-6 font-medium"
+                      className="bg-[#0a0a0f] hover:bg-[#1a1a1f] text-white shadow-sm ring-1 ring-white/5 active:scale-[0.98] rounded-none h-10 px-6 font-normal"
                       onClick={() => toast({ title: "Account Fortified", description: "Security protocols updated." })}
                     >
                       Fortify Account
