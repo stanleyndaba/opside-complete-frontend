@@ -677,7 +677,7 @@ export function Navbar({
 
             {/* Body */}
             <p className="text-sm text-gray-500 leading-relaxed mb-8">
-              We're still protecting your money and monitoring your account for recoveries.
+              Your account is still being monitored for new recovery opportunities.
               You can sign back in anytime to see updates.
             </p>
 
