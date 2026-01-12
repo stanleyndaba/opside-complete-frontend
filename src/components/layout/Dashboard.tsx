@@ -789,38 +789,83 @@ export function Dashboard() {
 
                     {/* Secondary Metrics Grid - Unified */}
                     <div className="grid grid-cols-3 divide-x divide-gray-100 bg-gray-50/30">
-                      <div className="p-6">
-                        <div className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.15em] mb-3">Scheduled Payout</div>
-                        <div className="text-2xl font-light text-gray-900 tracking-tight">
-                          {formatCurrencyWithSelection((nextPaymentAmount ?? 0), recoveredCurrency)}
-                        </div>
-                        <div className="mt-4 text-[9px] font-mono text-gray-500 uppercase tracking-widest">
-                          {nextPaymentDate
-                            ? `Est: ${new Date(nextPaymentDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
-                            : 'Pending Confirmation'}
-                        </div>
-                      </div>
+                      <HoverCard openDelay={200} closeDelay={100}>
+                        <HoverCardTrigger asChild>
+                          <div className="p-6 cursor-help hover:bg-gray-50/50 transition-colors">
+                            <div className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.15em] mb-3">Scheduled Payout</div>
+                            <div className="text-2xl font-light text-gray-900 tracking-tight">
+                              {formatCurrencyWithSelection((nextPaymentAmount ?? 0), recoveredCurrency)}
+                            </div>
+                            <div className="mt-4 text-[9px] font-mono text-gray-500 uppercase tracking-widest">
+                              {nextPaymentDate
+                                ? `Est: ${new Date(nextPaymentDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
+                                : 'Pending Confirmation'}
+                            </div>
+                          </div>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-72 p-0 border border-gray-200 shadow-2xl" side="bottom" align="start">
+                          <div className="p-4">
+                            <h4 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.15em] mb-2">Scheduled Payout</h4>
+                            <p className="text-[11px] text-gray-600 leading-relaxed">
+                              Amount confirmed by Amazon and scheduled for your next payout cycle. Typically processed within 7-14 business days after approval.
+                            </p>
+                            <a href={`/app/${location.pathname.split('/')[2] || 'default'}/help`} className="inline-flex items-center gap-1 mt-3 text-[10px] text-gray-500 hover:text-gray-900 hover:underline transition-colors">
+                              Learn more <ArrowRight className="h-3 w-3" />
+                            </a>
+                          </div>
+                        </HoverCardContent>
+                      </HoverCard>
 
-                      <div className="p-6">
-                        <div className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.15em] mb-3">In Active Review</div>
-                        <div className="text-2xl font-light text-gray-900 tracking-tight">
-                          {formatCurrencyWithSelection((pendingRecoveryAmount ?? 0), recoveredCurrency)}
-                        </div>
-                        <div className="mt-4 text-[9px] font-mono text-gray-500 uppercase tracking-widest">
-                          {effectivePendingClaims} Disputes currently being worked
-                        </div>
-                      </div>
+                      <HoverCard openDelay={200} closeDelay={100}>
+                        <HoverCardTrigger asChild>
+                          <div className="p-6 cursor-help hover:bg-gray-50/50 transition-colors">
+                            <div className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.15em] mb-3">In Active Review</div>
+                            <div className="text-2xl font-light text-gray-900 tracking-tight">
+                              {formatCurrencyWithSelection((pendingRecoveryAmount ?? 0), recoveredCurrency)}
+                            </div>
+                            <div className="mt-4 text-[9px] font-mono text-gray-500 uppercase tracking-widest">
+                              {effectivePendingClaims} Disputes currently being worked
+                            </div>
+                          </div>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-72 p-0 border border-gray-200 shadow-2xl" side="bottom" align="center">
+                          <div className="p-4">
+                            <h4 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.15em] mb-2">In Active Review</h4>
+                            <p className="text-[11px] text-gray-600 leading-relaxed">
+                              Claims currently being reviewed by Amazon. Our AI agents are actively gathering evidence and tracking these disputes to maximize recovery.
+                            </p>
+                            <a href={`/app/${location.pathname.split('/')[2] || 'default'}/help`} className="inline-flex items-center gap-1 mt-3 text-[10px] text-gray-500 hover:text-gray-900 hover:underline transition-colors">
+                              Learn more <ArrowRight className="h-3 w-3" />
+                            </a>
+                          </div>
+                        </HoverCardContent>
+                      </HoverCard>
 
-                      <div className="p-6">
-                        <div className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.15em] mb-3">Settlement Rate</div>
-                        <div className="flex items-baseline gap-2">
-                          <div className="text-2xl font-light text-gray-900 tracking-tight">95.2%</div>
-                          <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                        </div>
-                        <div className="mt-4 text-[9px] font-mono text-gray-500 uppercase tracking-widest">
-                          Optimized Yield
-                        </div>
-                      </div>
+                      <HoverCard openDelay={200} closeDelay={100}>
+                        <HoverCardTrigger asChild>
+                          <div className="p-6 cursor-help hover:bg-gray-50/50 transition-colors">
+                            <div className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.15em] mb-3">Settlement Rate</div>
+                            <div className="flex items-baseline gap-2">
+                              <div className="text-2xl font-light text-gray-900 tracking-tight">95.2%</div>
+                              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                            </div>
+                            <div className="mt-4 text-[9px] font-mono text-gray-500 uppercase tracking-widest">
+                              Optimized Yield
+                            </div>
+                          </div>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-72 p-0 border border-gray-200 shadow-2xl" side="bottom" align="end">
+                          <div className="p-4">
+                            <h4 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.15em] mb-2">Settlement Rate</h4>
+                            <p className="text-[11px] text-gray-600 leading-relaxed">
+                              Percentage of submitted claims that resulted in successful reimbursements. Higher rates indicate stronger evidence matching and optimized claim strategies.
+                            </p>
+                            <a href={`/app/${location.pathname.split('/')[2] || 'default'}/help`} className="inline-flex items-center gap-1 mt-3 text-[10px] text-gray-500 hover:text-gray-900 hover:underline transition-colors">
+                              Learn more <ArrowRight className="h-3 w-3" />
+                            </a>
+                          </div>
+                        </HoverCardContent>
+                      </HoverCard>
                     </div>
 
                     {/* Emotional Anchor Line */}
