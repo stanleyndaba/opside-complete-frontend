@@ -647,6 +647,7 @@ const Index = () => {
 
             <div className="space-y-4">
               <Accordion type="single" collapsible className="w-full space-y-4">
+                {/* Hidden for now
                 <AccordionItem value="safety" className="border border-gray-100 rounded-2xl bg-gray-50/30 px-6 py-1 transition-all hover:bg-gray-50/50 hover:border-gray-200 group">
                   <AccordionTrigger className="font-montserrat text-left text-lg font-semibold text-gray-900 hover:no-underline py-6">
                     Is this safe? Will linking my account get me suspended by Amazon?
@@ -660,6 +661,7 @@ const Index = () => {
                     </p>
                   </AccordionContent>
                 </AccordionItem>
+                */}
 
                 <AccordionItem value="data" className="border border-gray-100 rounded-2xl bg-gray-50/30 px-6 py-1 transition-all hover:bg-gray-50/50 hover:border-gray-200 group">
                   <AccordionTrigger className="font-montserrat text-left text-lg font-semibold text-gray-900 hover:no-underline py-6">
