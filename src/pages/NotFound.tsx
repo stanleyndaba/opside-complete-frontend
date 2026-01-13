@@ -19,10 +19,10 @@ const NotFound = () => {
         {/* Large Icon */}
         <div className="relative mb-8">
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="h-32 w-32 rounded-full bg-emerald-50 animate-pulse" />
+            <div className="h-32 w-32 rounded-full bg-gray-100 animate-pulse" />
           </div>
           <div className="relative flex items-center justify-center">
-            <Search className="h-20 w-20 text-emerald-500 opacity-80" />
+            <Search className="h-20 w-20 text-gray-400 opacity-80" />
           </div>
         </div>
 
@@ -45,7 +45,7 @@ const NotFound = () => {
         <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
           <Button
             asChild
-            className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-lg shadow-sm"
+            className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-2.5 rounded-lg shadow-sm"
           >
             <Link to="/">
               <Home className="h-4 w-4 mr-2" />
