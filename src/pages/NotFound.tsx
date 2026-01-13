@@ -45,7 +45,7 @@ const NotFound = () => {
         <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
           <Button
             asChild
-            className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-2.5 rounded-lg shadow-sm"
+            className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-2.5 rounded-none shadow-sm"
           >
             <Link to="/">
               <Home className="h-4 w-4 mr-2" />
@@ -55,7 +55,7 @@ const NotFound = () => {
           <Button
             asChild
             variant="outline"
-            className="border-gray-200 text-gray-700 hover:bg-gray-50 px-6 py-2.5 rounded-lg"
+            className="border-gray-200 text-gray-700 hover:bg-gray-50 px-6 py-2.5 rounded-none"
           >
             <Link to="/contact">
               <HelpCircle className="h-4 w-4 mr-2" />
