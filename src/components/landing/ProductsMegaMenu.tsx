@@ -62,7 +62,7 @@ export function ProductsMegaMenu() {
                                                     <ShieldAlert className="h-5 w-5" />
                                                 </div>
                                                 <div>
-                                                    <span className="text-[13px] font-semibold text-gray-900 tracking-tight">2026 Fee Guard</span>
+                                                    <span className="text-[13px] font-semibold text-gray-900 tracking-tight">Live Fee Guard</span>
                                                     <p className="text-[11px] text-gray-400 mt-1 leading-snug">
                                                         Audit Inbound Placement & Defect fees in real-time.
                                                     </p>
@@ -76,7 +76,7 @@ export function ProductsMegaMenu() {
                                                     <FileText className="h-5 w-5" />
                                                 </div>
                                                 <div>
-                                                    <span className="text-[13px] font-semibold text-gray-900 tracking-tight">Agentic Invoice Sync</span>
+                                                    <span className="text-[13px] font-semibold text-gray-900 tracking-tight">Auto-Invoice Sync</span>
                                                     <p className="text-[11px] text-gray-400 mt-1 leading-snug">
                                                         Zero-touch Gmail integration for claim evidence matching.
                                                     </p>
@@ -117,7 +117,7 @@ export function ProductsMegaMenu() {
                                                     <Briefcase className="h-5 w-5" />
                                                 </div>
                                                 <div>
-                                                    <span className="text-[13px] font-semibold text-gray-900 tracking-tight">Whale Portfolio Mgr</span>
+                                                    <span className="text-[13px] font-semibold text-gray-900 tracking-tight">Agency Portfolio Manager</span>
                                                     <p className="text-[11px] text-gray-400 mt-1 leading-snug">
                                                         Multi-account reconciliation for high-volume agencies.
                                                     </p>
@@ -154,10 +154,10 @@ export function ProductsMegaMenu() {
                                             </div>
                                             <div>
                                                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wide leading-tight">
-                                                    Featured in
+                                                    Trusted by
                                                 </p>
                                                 <p className="text-xs font-bold text-gray-900 leading-tight">
-                                                    Amazon Collective
+                                                    67k+ Sellers
                                                 </p>
                                             </div>
                                         </div>

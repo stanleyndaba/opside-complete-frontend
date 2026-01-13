@@ -449,7 +449,7 @@ const Index = () => {
                               <ShieldAlert className="h-4 w-4" />
                             </div>
                             <div>
-                              <div className="text-[13px] font-semibold text-gray-900 tracking-tight">2026 Fee Guard</div>
+                              <div className="text-[13px] font-semibold text-gray-900 tracking-tight">Live Fee Guard</div>
                               <p className="text-[10px] text-gray-400 leading-tight mt-0.5 font-medium">Audit Inbound Placement & Defect fees in real-time.</p>
                             </div>
                           </a>
@@ -458,7 +458,7 @@ const Index = () => {
                               <FileText className="h-4 w-4" />
                             </div>
                             <div>
-                              <div className="text-[13px] font-semibold text-gray-900 tracking-tight">Agentic Invoice Sync</div>
+                              <div className="text-[13px] font-semibold text-gray-900 tracking-tight">Auto-Invoice Sync</div>
                               <p className="text-[10px] text-gray-400 leading-tight mt-0.5 font-medium">Zero-touch Gmail integration for evidence matching.</p>
                             </div>
                           </a>
@@ -483,7 +483,7 @@ const Index = () => {
                               <Briefcase className="h-4 w-4" />
                             </div>
                             <div>
-                              <div className="text-[13px] font-semibold text-gray-900 tracking-tight">Whale Portfolio Mgr</div>
+                              <div className="text-[13px] font-semibold text-gray-900 tracking-tight">Agency Portfolio Manager</div>
                               <p className="text-[10px] text-gray-400 leading-tight mt-0.5 font-medium">Multi-account reconciliation for high-volume agencies.</p>
                             </div>
                           </a>
