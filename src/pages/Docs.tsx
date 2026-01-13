@@ -19,8 +19,8 @@ const Docs = () => {
       <main className="flex-1 container mx-auto px-6 py-12 md:py-16">
         <article className="max-w-3xl mx-auto">
           <header className="mb-8 pb-8 border-b border-gray-200">
-            <p className="text-sm text-gray-500 mb-2">Effective Date: December 22, 2025</p>
-            <p className="text-sm text-gray-500 mb-6">Last Updated: December 22, 2025</p>
+            <p className="text-sm text-gray-500 mb-2">Effective Date: January 13, 2026</p>
+            <p className="text-sm text-gray-500 mb-6">Last Updated: January 13, 2026</p>
             <h1 className="text-2xl font-medium text-gray-900">Acceptable Use Policy</h1>
             <p className="text-sm text-gray-600 mt-2">Part of Margin Terms of Service</p>
           </header>
@@ -46,11 +46,14 @@ const Docs = () => {
                 <li>Submission of claims via Amazon's official channels</li>
               </ul>
 
+              <p className="font-medium text-gray-900 mt-4">Agencies & Aggregators:</p>
+              <p className="pl-4 border-l-2 border-gray-300 text-gray-700">
+                Management of third-party Seller Central accounts is permitted ONLY where the User has explicit written authorization from the account owner.
+              </p>
+
               <p className="font-medium text-gray-900 mt-4">Prohibited:</p>
               <ul className="list-disc pl-6 space-y-1">
-                <li>Using Margin for third-party accounts, agency services, or account management on behalf of others</li>
-                <li>Reselling, redistributing, or repurposing Margin data or functionality</li>
-                <li>Any use outside the User's own internal FBA operations</li>
+                <li>Reselling, redistributing, or repurposing Margin data or functionality without a license</li>
               </ul>
             </section>
 
@@ -130,7 +133,7 @@ const Docs = () => {
 
             <section className="space-y-4">
               <h2 className="text-base font-medium text-gray-900">5. Contact for AUP Violations</h2>
-              <p>Report suspected abuse: support@margin.app</p>
+              <p>Report suspected abuse: clariooai@gmail.com</p>
               <p className="text-gray-600">Internal escalation only — not for user support.</p>
             </section>
           </div>
