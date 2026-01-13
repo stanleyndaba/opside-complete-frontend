@@ -19,52 +19,55 @@ const RefundPolicy = () => {
             <main className="flex-1 container mx-auto px-6 py-12 md:py-16">
                 <article className="max-w-3xl mx-auto">
                     <header className="mb-8 pb-8 border-b border-gray-200">
-                        <p className="text-sm text-gray-500 mb-6">Last Updated: 14 December 2025</p>
+                        <p className="text-sm text-gray-500 mb-6">Last Updated: January 13, 2026</p>
                         <h1 className="text-2xl font-medium text-gray-900">Refund and Cancellation Policy</h1>
+                        <p className="text-sm text-gray-600 mt-2">This policy describes how Margin handles billing, cancellations, and refunds for our recovery services.</p>
                     </header>
 
                     <div className="space-y-8 text-sm leading-relaxed text-gray-700">
-                        <p>
-                            This policy describes how you can cancel your Margin subscription and our approach to refunds.
-                        </p>
 
                         <section className="space-y-4">
-                            <h2 className="text-base font-medium text-gray-900">1. Subscription Cancellation</h2>
+                            <h2 className="text-base font-medium text-gray-900">1. Commission-Based Pricing (No Upfront Fees)</h2>
                             <p>
-                                You may cancel your Margin subscription at any time via your account dashboard or by emailing support@margin.app.
+                                Margin operates on a strict "Success Fee" model. We charge a commission (currently 20%) only on funds that are successfully recovered and credited to your Amazon Seller Central account.
+                            </p>
+                            <ul className="list-disc pl-6 space-y-1">
+                                <li>There are no monthly subscription fees.</li>
+                                <li>There are no setup fees.</li>
+                                <li>If we recover nothing, you pay nothing.</li>
+                            </ul>
+                        </section>
+
+                        <section className="space-y-4">
+                            <h2 className="text-base font-medium text-gray-900">2. Refund Policy (Service Credits)</h2>
+                            <p>
+                                Since our fees are charged after a successful recovery, traditional "refunds" rarely apply. However, we protect you in the event of an Amazon reversal:
                             </p>
                             <p>
-                                Cancellation takes effect at the end of your current billing cycle. You will retain full access until that date and will not be charged again.
+                                <strong>Reversal Protection:</strong> If Amazon reverses a reimbursement claim that you have already paid us for (e.g., they claw back the funds), Margin will issue a Service Credit equal to the commission fee you paid for that specific claim. This credit will be applied to future invoices.
+                            </p>
+                            <p>
+                                <strong>Billing Errors:</strong> If you believe you were charged a commission for a claim that was not actually reimbursed, contact clariooai@gmail.com within 30 days. We will verify the transaction logs and issue a full refund for that specific charge if confirmed.
                             </p>
                         </section>
 
                         <section className="space-y-4">
-                            <h2 className="text-base font-medium text-gray-900">2. Refund Policy</h2>
+                            <h2 className="text-base font-medium text-gray-900">3. Cancellation Policy</h2>
                             <p>
-                                Margin is a recurring monthly subscription service with instant access to automated FBA reimbursement auditing.
+                                You may stop using Margin at any time by disconnecting your Amazon Seller Central account in the dashboard or emailing clariooai@gmail.com.
                             </p>
                             <p>
-                                No refunds or credits are provided for partial months, unused periods, or months remaining on an active account.
+                                <strong>Effect of Cancellation:</strong> We will immediately stop auditing your account and filing new claims.
                             </p>
                             <p>
-                                If you cancel mid-cycle, you continue to receive the full service until the end of the paid period.
-                            </p>
-                            <p>
-                                <strong>Billing Errors:</strong> In the event of a genuine billing error (for example, a charge after cancellation or a double charge), contact support@margin.app within 7 days of the charge. We will investigate promptly and refund any erroneous amount immediately.
-                            </p>
-                        </section>
-
-                        <section className="space-y-4">
-                            <h2 className="text-base font-medium text-gray-900">3. Service Delivery</h2>
-                            <p>
-                                Upon successful payment, access to the Margin platform and all its features is activated instantly. As this is a fully digital service, no physical delivery or shipping is involved.
+                                <strong>Outstanding Invoices:</strong> You remain responsible for paying the success fee on any claims that were successfully filed before your cancellation date, even if the reimbursement arrives after you cancel.
                             </p>
                         </section>
 
                         <section className="space-y-4">
                             <h2 className="text-base font-medium text-gray-900">4. Contact Information</h2>
-                            <p>If you have any questions about our refund or cancellation policy, please contact us:</p>
-                            <p>Email: support@margin.app</p>
+                            <p>If you have questions about billing or refunds, contact us:</p>
+                            <p>Email: clariooai@gmail.com</p>
                             <p>Response Time: Within 48 hours</p>
                         </section>
                     </div>
