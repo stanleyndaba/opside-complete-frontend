@@ -62,28 +62,33 @@ const Terms = () => {
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-base font-medium text-gray-900">4. Fees and Billing</h2>
-
-              <h3 className="text-sm font-medium text-gray-900">4.1 Subscription Fees</h3>
-              <p>Margin operates on a recurring subscription basis.</p>
+              <h2 className="text-base font-medium text-gray-900">4. Fees and Billing (Commission Model)</h2>
               <p>
-                <strong>Billing:</strong> Subscription fees are billed in advance via our payment processor, Paystack.
+                <strong>Service Fee:</strong> Margin charges a 20% success fee on all funds successfully recovered or reimbursed by Amazon.
               </p>
               <p>
-                <strong>Authorization:</strong> You authorize Margin to charge your payment method for all fees.
+                <strong>Billing Cycle:</strong> Fees are calculated and invoiced automatically after the reimbursement is successfully credited to your Amazon Seller account.
               </p>
               <p>
-                <strong>Changes:</strong> Margin reserves the right to change pricing with 30 days' notice.
-              </p>
-
-              <h3 className="text-sm font-medium text-gray-900 mt-4">4.2 Refunds</h3>
-              <p>
-                As stated in our <Link to="/refund-policy" className="underline text-gray-900 hover:text-gray-700">Refund Policy</Link>, we do not offer refunds for partial months of service or unused time.
+                <strong>Payment Method:</strong> You authorize Margin to charge your payment method on file for these success fees.
               </p>
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-base font-medium text-gray-900">5. User Responsibilities and Data</h2>
+              <h2 className="text-base font-medium text-gray-900">5. Refund Policy</h2>
+              <p>
+                <strong>Success-Based:</strong> Since our fees are only charged after a successful recovery, there are no upfront costs to refund.
+              </p>
+              <p>
+                <strong>Reversals:</strong> If Amazon later reverses a reimbursement that you have already paid us for, Margin will provide a service credit equal to the fee paid for that specific claim.
+              </p>
+              <p>
+                <strong>Disputes:</strong> If you believe a fee was charged in error, contact clariooai@gmail.com within 30 days.
+              </p>
+            </section>
+
+            <section className="space-y-4">
+              <h2 className="text-base font-medium text-gray-900">6. User Responsibilities and Data</h2>
               <p>You are solely responsible for your use of Margin. You agree to:</p>
               <p>
                 <strong>Security:</strong> Maintain the strict confidentiality of your Amazon Seller Central credentials.
@@ -97,14 +102,14 @@ const Terms = () => {
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-base font-medium text-gray-900">6. Intellectual Property</h2>
+              <h2 className="text-base font-medium text-gray-900">7. Intellectual Property</h2>
               <p>
                 Margin retains full ownership of the platform, algorithms, and source code. You are granted a limited, non-exclusive, non-transferable license to use the Service for your internal business operations.
               </p>
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-base font-medium text-gray-900">7. Termination</h2>
+              <h2 className="text-base font-medium text-gray-900">8. Termination</h2>
               <p>
                 <strong>By You:</strong> You may cancel your subscription at any time via your dashboard.
               </p>
@@ -114,7 +119,7 @@ const Terms = () => {
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-base font-medium text-gray-900">8. Limitation of Liability</h2>
+              <h2 className="text-base font-medium text-gray-900">9. Limitation of Liability</h2>
               <p>To the fullest extent permitted by South African law:</p>
               <p>
                 <strong>Liability Cap:</strong> Margin's total liability to you shall not exceed the total fees paid by you to Margin in the 6 months preceding the claim.
@@ -125,7 +130,7 @@ const Terms = () => {
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-base font-medium text-gray-900">9. Governing Law and Dispute Resolution</h2>
+              <h2 className="text-base font-medium text-gray-900">10. Governing Law and Dispute Resolution</h2>
               <p>
                 These Terms shall be governed by the laws of the Republic of South Africa.
               </p>
@@ -135,9 +140,9 @@ const Terms = () => {
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-base font-medium text-gray-900">10. Contact Us</h2>
+              <h2 className="text-base font-medium text-gray-900">11. Contact Us</h2>
               <p>Margin</p>
-              <p>Email: support@margin.app</p>
+              <p>Email: clariooai@gmail.com</p>
             </section>
           </div>
         </article>
