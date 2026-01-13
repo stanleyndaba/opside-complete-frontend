@@ -34,7 +34,7 @@ const Privacy = () => {
                 <strong>Company</strong> ('We', 'Us', or 'Our') refers to Margin, operating from Durban, South Africa.
               </p>
               <p>
-                <strong>Service</strong> refers to the Margin application accessible from https://opside-complete-frontend.vercel.app.
+                <strong>Service</strong> refers to the Margin application accessible from https://opside-complete-frontend-4i95picoc-mvelo-ndabas-projects.vercel.app/.
               </p>
               <p>
                 <strong>Personal Data</strong> means any information that relates to an identified or identifiable individual.
