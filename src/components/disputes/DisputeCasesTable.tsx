@@ -22,6 +22,14 @@ interface DisputeCase {
   retry_count?: number;
   filing_error?: string;
   last_filing_attempt?: string;
+  metadata?: {
+    approval_reason?: string;
+    claim_amount?: number;
+    invoice_amount?: number;
+    variance?: number;
+    quarantine_reason?: string;
+    dangerous_findings?: Array<{ filename: string; pattern: string }>;
+  };
 }
 
 export function DisputeCasesTable() {
@@ -225,7 +233,7 @@ export function DisputeCasesTable() {
     }
   };
 
-  const getFilingStatusBadge = (filingStatus?: string, filingError?: string) => {
+  const getFilingStatusBadge = (filingStatus?: string, filingError?: string, metadata?: DisputeCase['metadata']) => {
     if (!filingStatus) return null;
 
     const statusLower = filingStatus.toLowerCase();
@@ -252,6 +260,17 @@ export function DisputeCasesTable() {
         </TooltipProvider>
       );
     } else if (statusLower === 'pending_approval') {
+      // Determine reason for approval
+      const approvalReason = metadata?.approval_reason;
+      let tooltipText = 'High-value claim ($500+). Manual approval required before filing.';
+
+      if (approvalReason === 'amount_mismatch') {
+        const claimAmt = metadata?.claim_amount;
+        const invoiceAmt = metadata?.invoice_amount;
+        const variance = metadata?.variance;
+        tooltipText = `Amount mismatch: Claim $${claimAmt?.toFixed(2)} differs from invoice $${invoiceAmt?.toFixed(2)} (${((variance || 0) * 100).toFixed(0)}% variance)`;
+      }
+
       return (
         <TooltipProvider>
           <Tooltip>
@@ -262,7 +281,7 @@ export function DisputeCasesTable() {
               </span>
             </TooltipTrigger>
             <TooltipContent side="top" className="max-w-[300px] bg-white text-gray-900 border-gray-200 shadow-xl rounded-none">
-              <p className="text-[10px] font-mono leading-relaxed">High-value claim ($500+). Manual approval required before filing.</p>
+              <p className="text-[10px] font-mono leading-relaxed">{tooltipText}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -509,7 +528,7 @@ export function DisputeCasesTable() {
                       <div className="flex items-center gap-2 text-[10px] font-medium tracking-wider uppercase text-gray-400">
                         <span>{getStatusBadge(caseItem.status || 'unknown')}</span>
                         <span className="text-gray-200">|</span>
-                        <span>{getFilingStatusBadge(caseItem.filing_status, caseItem.filing_error)}</span>
+                        <span>{getFilingStatusBadge(caseItem.filing_status, caseItem.filing_error, caseItem.metadata)}</span>
                         <span className="text-gray-200">|</span>
                         <span className="text-gray-900 font-mono tabular-nums">{formatCurrency(caseItem.amount || 0, caseItem.currency || 'USD')}</span>
                         <span className="text-gray-200">|</span>
