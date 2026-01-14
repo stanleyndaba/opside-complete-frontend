@@ -598,7 +598,7 @@ const Index = () => {
                     </Link>
                   </div>
                   {/* Trust text */}
-                  <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500">
+                  <div className="flex flex-col gap-2 text-sm text-gray-500">
                     <span className="inline-flex items-center gap-1.5">
                       <ShieldAlert className="h-4 w-4 text-emerald-600" />
                       Verified Amazon SP-API Developer
