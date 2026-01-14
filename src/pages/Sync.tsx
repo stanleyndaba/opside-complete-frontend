@@ -105,7 +105,7 @@ export default function Sync() {
   const [logSearch, setLogSearch] = useState('');
   const [logFilter, setLogFilter] = useState<'all' | 'money' | 'issues'>('all'); // Filter: All / Money / Issues
   const [healthExpanded, setHealthExpanded] = useState(false); // Toggle health details dropdown
-  const [expandedStories, setExpandedStories] = useState<Set<string>>(new Set()); // Track expanded story groups
+  const [expandedStories, setExpandedStories] = useState<Set<string>>(new Set()); // Tracks COLLAPSED stories (inverted - empty = all open)
   const [logsFinished, setLogsFinished] = useState(false); // Track when all queued logs have been displayed
   const logsFinishedRef = useRef(false); // Ref version for async function
   const logContainerRef = useRef<HTMLDivElement>(null);
@@ -1636,7 +1636,9 @@ export default function Sync() {
                     ) : (
                       <div className="space-y-2 relative z-10">
                         {logStories.map((story) => {
-                          const isExpanded = expandedStories.has(story.id);
+                          // Default to OPEN - users can close if they want
+                          // expandedStories now tracks COLLAPSED stories (inverted logic)
+                          const isExpanded = !expandedStories.has(story.id);
                           const isRunning = !story.isCompleted && (status === 'running' || status === 'detecting');
 
                           // Highlight function for log content
