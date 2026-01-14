@@ -1201,17 +1201,17 @@ export default function Sync() {
   const getStatusIcon = () => {
     switch (status) {
       case 'completed':
-        return <CheckCircle2 className="h-5 w-5 text-emerald-500" />;
+        return <CheckCircle2 className="h-5 w-5 text-neutral-400" />;
       case 'failed':
-        return <XCircle className="h-5 w-5 text-red-500" />;
+        return <XCircle className="h-5 w-5 text-neutral-400" />;
       case 'cancelled':
-        return <AlertCircle className="h-5 w-5 text-gray-500" />;
+        return <AlertCircle className="h-5 w-5 text-neutral-400" />;
       case 'detecting':
-        return <Target className="h-5 w-5 text-purple-500 animate-pulse" />;
+        return <div className="h-5 w-5 rounded-full border-2 border-neutral-200 border-t-neutral-800 animate-spin" />;
       case 'running':
-        return <Loader2 className="h-5 w-5 text-blue-500 animate-spin" />;
+        return <Loader2 className="h-5 w-5 text-neutral-400 animate-spin" />;
       default:
-        return <Loader2 className="h-5 w-5 text-gray-400 animate-spin" />;
+        return <Loader2 className="h-5 w-5 text-neutral-200 animate-spin" />;
     }
   };
 
@@ -1229,69 +1229,31 @@ export default function Sync() {
     return { short, full };
   };
 
-  // Get agent-specific color based on category
-  // Maps backend data categories to agent colors
+  // Get agent-specific color based on category - Monochrome refined style
   const getAgentColor = (category: string) => {
     switch (category) {
-      // Agent 1: OAuth/Auth
-      case 'auth':
-      case 'oauth':
-        return 'text-blue-500';
-
-      // Agent 2: Sync - all data ingestion
-      case 'orders':
-      case 'inventory':
-      case 'shipments':
-      case 'returns':
-      case 'settlements':
-      case 'fees':
-      case 'sync':
-        return 'text-cyan-500';
-
-      // Agent 3: Detection - finds discrepancies
-      case 'detection':
-        return 'text-purple-500';
-
-      // Agent 4: Evidence Collection
-      case 'evidence':
-        return 'text-green-500';
-
-      // Agent 5: Parsing - document parsing
-      case 'parsing':
-        return 'text-yellow-500';
-
-      // Agent 6: Matching - evidence to claims
-      case 'matching':
-        return 'text-pink-500';
-
-      // Agent 7: Filing - files claims to Amazon
-      case 'claims':
-      case 'filing':
-        return 'text-orange-500';
-
-      // Agent 8: Recovery - tracks payouts
-      case 'recovery':
-        return 'text-teal-500';
-
-      // Agent 9: Billing - commission billing
-      case 'billing':
-        return 'text-indigo-500';
-
-      // Agent 10: Notify - notifications
-      case 'notify':
-      case 'notification':
-        return 'text-red-500';
-
-      // Agent 11: Learning - learns from rejections
-      case 'learning':
-        return 'text-violet-500';
-
-      // System messages
       case 'system':
-        return 'text-gray-500';
-
+        return 'text-neutral-600';
       default:
-        return 'text-cyan-500'; // Default to sync color
+        return 'text-neutral-400';
+    }
+  };
+
+  const getLogColor = (type: string) => {
+    switch (type) {
+      case 'error':
+        return 'text-neutral-500';
+      case 'warning':
+        return 'text-neutral-500';
+      case 'success':
+        return 'text-neutral-200';
+      case 'income':
+      case 'money':
+        return 'text-white';
+      case 'thinking':
+        return 'text-neutral-600 italic';
+      default:
+        return 'text-neutral-400';
     }
   };
 
@@ -1367,17 +1329,7 @@ export default function Sync() {
     }
   };
 
-  // Get log entry color - using lighter colors for dark theme terminal
-  const getLogColor = (type: LogEntry['type']) => {
-    switch (type) {
-      case 'success': return 'text-emerald-400';
-      case 'error': return 'text-red-400';
-      case 'warning': return 'text-amber-400';
-      case 'progress': return 'text-blue-400';
-      case 'thinking': return 'text-gray-500 italic';
-      default: return 'text-gray-300'; // Light gray for regular messages on dark bg
-    }
-  };
+
 
   // Calculate totals
   const totalItemsSynced = syncData ? (
@@ -1468,14 +1420,17 @@ export default function Sync() {
 
             {/* Main Content */}
             <div className="space-y-4">
-              {/* Detecting Phase */}
+              {/* Detecting Phase - OpenAI minimal style */}
               {status === 'detecting' && (
-                <div className="py-4 bg-gray-50 px-5 rounded-lg border border-gray-200">
-                  <div className="flex items-center gap-3">
-                    <Target className="h-4 w-4 text-gray-500 animate-pulse" />
+                <div className="py-6 border-b border-gray-100 mb-4">
+                  <div className="flex items-center gap-4">
+                    <div className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-neutral-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-neutral-900"></span>
+                    </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-800 font-montserrat">Analyzing for discrepancies</p>
-                      <p className="text-xs text-gray-500 font-montserrat">AI-powered detection scanning your data</p>
+                      <p className="text-[15px] font-normal text-gray-900">Scanning for discrepancies</p>
+                      <p className="text-[13px] text-gray-400 mt-1 font-normal">AI agents are auditing every transaction in real-time</p>
                     </div>
                   </div>
                 </div>
@@ -1579,16 +1534,16 @@ export default function Sync() {
 
                 {/* Log Container - Institutional Dark Theme */}
                 <div className="relative group">
-                  {/* Header bar - true black */}
-                  <div className="absolute top-0 left-0 right-0 h-8 bg-[#111111] rounded-t-lg border-b border-neutral-800 flex items-center px-4 z-10">
-                    <span className="text-xs font-medium text-neutral-400 font-montserrat">Agent Activity</span>
+                  {/* Header bar - OpenAI minimal terminal */}
+                  <div className="absolute top-0 left-0 right-0 h-10 bg-[#0D0D0D] rounded-t-lg border-b border-neutral-900 flex items-center px-5 z-10">
+                    <span className="text-[10px] font-normal text-neutral-600 uppercase tracking-[0.2em]">Activity Feed</span>
                   </div>
 
                   <div
                     ref={logContainerRef}
-                    className="bg-black rounded-lg pt-10 pb-4 px-4 font-montserrat text-xs h-80 overflow-y-auto scroll-smooth border border-neutral-800 shadow-2xl relative">
-                    {/* Subtle grid overlay */}
-                    <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none rounded-lg"></div>
+                    className="bg-[#0D0D0D] rounded-lg pt-12 pb-6 px-5 font-normal text-[13px] h-96 overflow-y-auto scroll-smooth border border-neutral-900 shadow-sm relative leading-relaxed tracking-tight text-neutral-400">
+                    {/* Simplified subtle gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent pointer-events-none rounded-lg"></div>
 
                     {filteredLogs.length === 0 ? (
                       <div className="text-gray-400 flex flex-col items-center justify-center h-full relative z-10">
@@ -1621,18 +1576,22 @@ export default function Sync() {
                           const isExpanded = !expandedStories.has(story.id);
                           const isRunning = !story.isCompleted && (status === 'running' || status === 'detecting');
 
-                          // Highlight function for log content
+                          // Highlight function for log content - OpenAI monochrome style
                           const highlightContent = (text: string) => {
                             const parts = text.split(/(\$[\d,]+\.?\d*|\b\d+\b|\[.*?\])/g);
                             return parts.map((part, i) => {
                               if (part.match(/^\$[\d,]+\.?\d*$/)) {
-                                return <span key={i} className="text-emerald-600 font-bold">{part}</span>;
+                                return <span key={i} className="text-white font-medium">{part}</span>;
                               }
                               if (part.match(/^\d+$/)) {
-                                return <span key={i} className="text-blue-600 font-bold">{part}</span>;
+                                return <span key={i} className="text-neutral-300">{part}</span>;
                               }
                               if (part.match(/^\[.*?\]$/)) {
-                                return <span key={i} className="text-purple-600 font-bold">{part}</span>;
+                                return (
+                                  <span key={i} className="text-neutral-400 text-[11px] border border-neutral-800 px-1 rounded-sm uppercase tracking-tighter">
+                                    {part.replace(/[\[\]]/g, '')}
+                                  </span>
+                                );
                               }
                               return part;
                             });
@@ -1653,23 +1612,23 @@ export default function Sync() {
                                   )}
                                 </span>
 
-                                {/* Status Icon */}
+                                {/* Status Icon - minimal */}
                                 {isRunning ? (
-                                  <Loader2 className="h-3.5 w-3.5 text-blue-500 animate-spin" />
+                                  <Loader2 className="h-3 w-3 text-neutral-500 animate-spin" />
                                 ) : story.isCompleted ? (
-                                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
+                                  <CheckCircle2 className="h-3 w-3 text-neutral-500" />
                                 ) : (
-                                  <Clock className="h-3.5 w-3.5 text-gray-400" />
+                                  <div className="h-1 w-1 rounded-full bg-neutral-700" />
                                 )}
 
                                 {/* Title & Summary */}
-                                <span className="font-medium text-neutral-200 text-xs">{story.title}</span>
-                                <span className="text-neutral-500 text-xs">— {story.summary}</span>
+                                <span className="font-normal text-neutral-200 text-[13px]">{story.title}</span>
+                                <span className="text-neutral-600 text-[13px] font-normal">— {story.summary}</span>
                               </button>
 
                               {/* Expanded Log Details */}
                               {isExpanded && (
-                                <div className="ml-7 pl-3 border-l border-neutral-800 mt-1 space-y-1">
+                                <div className="ml-5 pl-4 border-l border-neutral-900 mt-1 space-y-0.5">
                                   {story.logs.map((log, index) => {
                                     // First, humanize any error/warning messages
                                     const humanized = humanizeErrorMessage(log.message, log.type);
@@ -1679,10 +1638,10 @@ export default function Sync() {
                                     return (
                                       <React.Fragment key={log.id}>
                                         <div
-                                          className={`flex items-start gap-3 py-1 text-xs ${log.type === 'thinking' ? 'opacity-50' : ''} ${humanized.isHumanized ? 'bg-neutral-900/50 -mx-2 px-2 py-1.5 rounded' : ''}`}>
-                                          {/* Timestamp with hover for exact time */}
+                                          className={`flex items-start gap-3 py-1.5 text-[13px] ${log.type === 'thinking' ? 'opacity-30 italic' : ''} ${humanized.isHumanized ? 'bg-white/5 -mx-2 px-2 py-2 rounded' : ''}`}>
+                                          {/* Timestamp - very subtle */}
                                           <span
-                                            className="hidden sm:inline text-neutral-600 shrink-0 text-[10px] font-mono cursor-help"
+                                            className="hidden sm:inline text-neutral-700 shrink-0 text-[11px] font-normal"
                                             title={formatTimestamp(log.timestamp).full}>
                                             {formatTimestamp(log.timestamp).short}
                                           </span>
