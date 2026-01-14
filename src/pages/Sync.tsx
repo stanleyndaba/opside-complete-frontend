@@ -3,10 +3,10 @@ import { PageLayout } from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { startSync, getSyncStatus, cancelSync, forceClearSync, subscribeSyncProgress, type SyncStatusResponse } from '@/lib/inventoryApi';
+import { startSync, getSyncStatus, cancelSync, forceClearSync, subscribeSyncProgress, type SyncStatusResponse, type SSEConnectionState } from '@/lib/inventoryApi';
 import { useNavigate, useSearchParams, useParams } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
-import { RefreshCw, XCircle, CheckCircle2, AlertCircle, Loader2, Search, Package, Truck, RotateCcw, DollarSign, Archive, Target, Clock, ChevronDown, ChevronUp, ChevronRight, ExternalLink, Download } from 'lucide-react';
+import { RefreshCw, XCircle, CheckCircle2, AlertCircle, Loader2, Search, Package, Truck, RotateCcw, DollarSign, Archive, Target, Clock, ChevronDown, ChevronUp, ChevronRight, ExternalLink, Download, Wifi, WifiOff } from 'lucide-react';
 const GmailIcon = '/G.png';
 const OutlookIcon = '/outlookicon.webp';
 const GoogleDriveIcon = '/gd.png';
@@ -98,6 +98,7 @@ export default function Sync() {
   const sourcesModalTimeoutRef = useRef<number | null>(null);
   const modalDismissedRef = useRef<boolean>(false); // Track if user dismissed modal for this sync session
   const [providerLoading, setProviderLoading] = useState<'gmail' | 'outlook' | 'gdrive' | 'dropbox' | null>(null);
+  const [sseStatus, setSseStatus] = useState<SSEConnectionState>('disconnected'); // SSE connection status
 
   // Log system state
   const [logs, setLogs] = useState<LogEntry[]>([]);
@@ -964,6 +965,9 @@ export default function Sync() {
               interval = null;
             }
           }
+        }, (connectionState) => {
+          // SSE connection state callback
+          setSseStatus(connectionState);
         });
       } catch (err) {
         console.error('SSE connection failed, falling back to polling:', err);
@@ -1418,9 +1422,38 @@ export default function Sync() {
       <div className="bg-white min-h-screen">
         <div className="container mx-auto px-8 py-8 text-gray-900">
           {/* Page Header */}
-          <div className="mb-8">
-            <h1 className="text-xl font-semibold text-gray-900 font-montserrat">Data Synchronization</h1>
-            <p className="text-xs text-gray-400 mt-1 font-montserrat">Amazon SP-API Sync</p>
+          <div className="mb-8 flex items-center justify-between">
+            <div>
+              <h1 className="text-xl font-semibold text-gray-900 font-montserrat">Data Synchronization</h1>
+              <p className="text-xs text-gray-400 mt-1 font-montserrat">Amazon SP-API Sync</p>
+            </div>
+
+            {/* SSE Connection Status Indicator */}
+            {status === 'running' && (
+              <div className="flex items-center gap-2">
+                {sseStatus === 'connected' ? (
+                  <span className="flex items-center gap-1.5 text-[10px] font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-sm border border-emerald-100">
+                    <Wifi className="h-3 w-3" />
+                    LIVE
+                  </span>
+                ) : sseStatus === 'connecting' ? (
+                  <span className="flex items-center gap-1.5 text-[10px] font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-sm border border-blue-100">
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                    CONNECTING
+                  </span>
+                ) : sseStatus === 'error' ? (
+                  <span className="flex items-center gap-1.5 text-[10px] font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded-sm border border-amber-100">
+                    <WifiOff className="h-3 w-3" />
+                    POLLING
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-1.5 text-[10px] font-medium text-gray-500 bg-gray-50 px-2 py-1 rounded-sm border border-gray-100">
+                    <WifiOff className="h-3 w-3" />
+                    OFFLINE
+                  </span>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="max-w-4xl mx-auto space-y-4">

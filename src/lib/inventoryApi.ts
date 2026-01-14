@@ -204,13 +204,41 @@ export const getSyncStatistics = async (): Promise<SyncStatisticsResponse> => {
   return response.data;
 };
 
+// SSE Connection state type
+export type SSEConnectionState = 'connecting' | 'connected' | 'disconnected' | 'error';
+
 // Subscribe to SSE sync progress - GET /api/sse/sync-progress/:syncId
-export const subscribeSyncProgress = (syncId: string, onUpdate: (data: any) => void) => {
+// Returns an unsubscribe function
+export const subscribeSyncProgress = (
+  syncId: string,
+  onUpdate: (data: any) => void,
+  onConnectionChange?: (state: SSEConnectionState) => void
+) => {
   const url = api.buildApiUrl(`/api/sse/sync-progress/${syncId}`);
+
+  // Report connecting state
+  onConnectionChange?.('connecting');
+
   const eventSource = new EventSource(url, { withCredentials: true } as any);
+
+  // Track if we've successfully connected
+  let hasConnected = false;
+
+  // Handle open event - SSE connected
+  eventSource.onopen = () => {
+    hasConnected = true;
+    onConnectionChange?.('connected');
+    console.log('[SSE] Connection established');
+  };
 
   // Handle default 'message' events (sync status updates)
   eventSource.onmessage = (e) => {
+    // If this is first message, connection is established
+    if (!hasConnected) {
+      hasConnected = true;
+      onConnectionChange?.('connected');
+    }
+
     try {
       const data = JSON.parse(e.data);
       onUpdate(data);
@@ -218,6 +246,7 @@ export const subscribeSyncProgress = (syncId: string, onUpdate: (data: any) => v
       // Close connection if sync is complete or failed
       if (data.status === 'completed' || data.status === 'failed' || data.status === 'cancelled') {
         eventSource.close();
+        onConnectionChange?.('disconnected');
       }
     } catch (err) {
       console.error('Error parsing SSE message:', err);
@@ -226,6 +255,10 @@ export const subscribeSyncProgress = (syncId: string, onUpdate: (data: any) => v
 
   // Handle custom 'sync.log' events from Agent 2
   eventSource.addEventListener('sync.log', (e: any) => {
+    if (!hasConnected) {
+      hasConnected = true;
+      onConnectionChange?.('connected');
+    }
     try {
       const data = JSON.parse(e.data);
       console.log('[SSE] Received sync.log event:', data);
@@ -237,6 +270,10 @@ export const subscribeSyncProgress = (syncId: string, onUpdate: (data: any) => v
 
   // Handle 'sync_progress' events from sseLogEmitter (Agents 2, 3, etc.)
   eventSource.addEventListener('sync_progress', (e: any) => {
+    if (!hasConnected) {
+      hasConnected = true;
+      onConnectionChange?.('connected');
+    }
     try {
       const data = JSON.parse(e.data);
       console.log('[SSE] Received sync_progress event:', data);
@@ -248,6 +285,10 @@ export const subscribeSyncProgress = (syncId: string, onUpdate: (data: any) => v
 
   // Handle 'message' events (backward compatibility)
   eventSource.addEventListener('message', (e: any) => {
+    if (!hasConnected) {
+      hasConnected = true;
+      onConnectionChange?.('connected');
+    }
     try {
       const data = JSON.parse(e.data);
       console.log('[SSE] Received message event:', data);
@@ -260,11 +301,13 @@ export const subscribeSyncProgress = (syncId: string, onUpdate: (data: any) => v
   // Handle connection errors
   eventSource.onerror = (error) => {
     console.error('SSE error:', error);
+    onConnectionChange?.('error');
     eventSource.close();
   };
 
   return () => {
     eventSource.close();
+    onConnectionChange?.('disconnected');
   };
 };
 
