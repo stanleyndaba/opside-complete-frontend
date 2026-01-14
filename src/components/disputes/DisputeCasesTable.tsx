@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { api } from '@/lib/api';
 import { Link } from 'react-router-dom';
-import { Eye, RefreshCw, CheckCircle2, XCircle, Clock, AlertCircle, ExternalLink, Send, RotateCcw, AlertTriangle, Loader2, Hexagon, ArrowRight, Search } from 'lucide-react';
+import { Eye, RefreshCw, CheckCircle2, XCircle, Clock, AlertCircle, ExternalLink, Send, RotateCcw, AlertTriangle, Loader2, Hexagon, ArrowRight, Search, ShieldAlert, Ban, DollarSign, FileWarning } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
@@ -146,6 +146,46 @@ export function DisputeCasesTable() {
     }
   };
 
+  // Agent 7: Approve Filing - Approve high-value claims pending manual review
+  const handleApproveFiling = async (caseItem: DisputeCase) => {
+    const caseId = caseItem.id;
+    setFilingInProgress(prev => new Set(prev).add(caseId));
+
+    try {
+      toast({
+        title: "APPROVAL PROCESSING",
+        description: `Approving high-value claim ${caseItem.case_number || caseId.substring(0, 8)} for filing...`,
+      });
+
+      const response = await api.post('/api/disputes/approve-filing', {
+        dispute_id: caseId,
+        claim_id: caseItem.claim_id
+      });
+
+      if (response.ok) {
+        toast({
+          title: "CLAIM APPROVED",
+          description: `Case approved and queued for filing.`,
+        });
+        await fetchCases(statusFilter !== 'all' ? statusFilter : undefined);
+      } else {
+        throw new Error(response.error || 'Approval failed');
+      }
+    } catch (err: any) {
+      toast({
+        variant: "destructive",
+        title: "APPROVAL FAILED",
+        description: err.message || 'Unable to approve claim',
+      });
+    } finally {
+      setFilingInProgress(prev => {
+        const next = new Set(prev);
+        next.delete(caseId);
+        return next;
+      });
+    }
+  };
+
   useEffect(() => {
     fetchCases(statusFilter !== 'all' ? statusFilter : undefined);
   }, [statusFilter]);
@@ -195,6 +235,70 @@ export function DisputeCasesTable() {
       return <span className="text-[10px] font-mono text-blue-600 animate-pulse font-medium">FILING...</span>;
     } else if (statusLower === 'retrying') {
       return <span className="text-[10px] font-mono text-amber-600 font-medium">RETRYING</span>;
+    } else if (statusLower === 'quarantined_dangerous_doc') {
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="flex items-center gap-1 text-red-600 cursor-help">
+                <FileWarning className="w-3 h-3" />
+                <span className="text-[10px] font-mono font-medium">QUARANTINED</span>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="max-w-[300px] bg-white text-gray-900 border-gray-200 shadow-xl rounded-none">
+              <p className="text-[10px] font-mono leading-relaxed">Dangerous document detected (credit note, return, refund). Review documents before filing.</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      );
+    } else if (statusLower === 'pending_approval') {
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="flex items-center gap-1 text-amber-600 cursor-help">
+                <ShieldAlert className="w-3 h-3" />
+                <span className="text-[10px] font-mono font-medium">NEEDS APPROVAL</span>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="max-w-[300px] bg-white text-gray-900 border-gray-200 shadow-xl rounded-none">
+              <p className="text-[10px] font-mono leading-relaxed">High-value claim ($500+). Manual approval required before filing.</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      );
+    } else if (statusLower === 'duplicate_blocked') {
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="flex items-center gap-1 text-gray-500 cursor-help">
+                <Ban className="w-3 h-3" />
+                <span className="text-[10px] font-mono font-medium">DUPLICATE</span>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="max-w-[300px] bg-white text-gray-900 border-gray-200 shadow-xl rounded-none">
+              <p className="text-[10px] font-mono leading-relaxed">Active claim already exists for this order. Blocked to prevent abuse flag.</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      );
+    } else if (statusLower === 'already_reimbursed') {
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="flex items-center gap-1 text-emerald-600 cursor-help">
+                <DollarSign className="w-3 h-3" />
+                <span className="text-[10px] font-mono font-medium">ALREADY PAID</span>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="max-w-[300px] bg-white text-gray-900 border-gray-200 shadow-xl rounded-none">
+              <p className="text-[10px] font-mono leading-relaxed">Amazon already reimbursed this item. Filing blocked to prevent fraud flag.</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      );
     } else if (statusLower === 'failed') {
       return (
         <TooltipProvider>
@@ -230,6 +334,39 @@ export function DisputeCasesTable() {
 
     if (filingStatus === 'filed' || filingStatus === 'submitted' || filingStatus === 'approved') {
       return null;
+    }
+
+    // Blocked statuses - no action available
+    if (filingStatus === 'duplicate_blocked' || filingStatus === 'already_reimbursed') {
+      return (
+        <span className="text-[10px] text-gray-400 font-medium tracking-[0.1em] uppercase px-3">BLOCKED</span>
+      );
+    }
+
+    // Quarantined - needs document review (no auto-action)
+    if (filingStatus === 'quarantined_dangerous_doc') {
+      return (
+        <span className="text-[10px] text-red-400 font-medium tracking-[0.1em] uppercase px-3">REVIEW REQUIRED</span>
+      );
+    }
+
+    // Pending approval - show approve button
+    if (filingStatus === 'pending_approval') {
+      return (
+        <Button
+          onClick={() => handleApproveFiling(caseItem)}
+          disabled={isProcessing}
+          variant="ghost"
+          size="sm"
+          className="h-7 px-3 text-amber-600 hover:text-amber-700 hover:bg-amber-50 rounded-none text-[10px] font-medium tracking-[0.1em] uppercase">
+          {isProcessing ? (
+            <Loader2 className="w-3 h-3 mr-1.5 animate-spin" />
+          ) : (
+            <CheckCircle2 className="w-3 h-3 mr-1.5" />
+          )}
+          APPROVE FILING
+        </Button>
+      );
     }
 
     if (filingStatus === 'failed') {
