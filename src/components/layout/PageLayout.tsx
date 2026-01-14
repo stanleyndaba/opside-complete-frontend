@@ -44,11 +44,11 @@ export function PageLayout({
       <main className={`flex-1 transition-all duration-300 ${mainIndent} overflow-hidden`}>
         <div className="w-full max-w-full mx-auto p-4 lg:p-6 animate-fade-in overflow-x-hidden">
           {(hideNavbar && hideSidebar) && (
-            <div className="fixed top-3 left-4 z-50 pointer-events-none">
+            <div className="fixed top-4 left-5 z-50 pointer-events-none">
               <img
                 src="/logoimagetwo.png"
                 alt="Margin"
-                className="h-5 w-auto object-contain"
+                className="h-4 w-auto object-contain opacity-80"
               />
             </div>
           )}

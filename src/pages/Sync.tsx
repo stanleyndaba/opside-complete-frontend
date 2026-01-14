@@ -1421,35 +1421,36 @@ export default function Sync() {
     <PageLayout title="" hideNavbar hideSidebar plainBackground logoFontFamily='"Nunito Sans", sans-serif'>
       <div className="bg-white min-h-screen">
         <div className="container mx-auto px-8 py-8 text-gray-900">
-          {/* Page Header */}
-          <div className="mb-8 flex items-center justify-between">
+          {/* Page Header - OpenAI minimal style */}
+          <div className="mb-10 flex items-center justify-between">
             <div>
-              <h1 className="text-xl font-semibold text-gray-900 font-montserrat">Data Synchronization</h1>
-              <p className="text-xs text-gray-400 mt-1 font-montserrat">Amazon SP-API Sync</p>
+              <h1 className="text-[17px] font-normal text-gray-900">Data Synchronization</h1>
+              <p className="text-[13px] text-gray-400 mt-0.5 font-normal">Amazon SP-API Sync</p>
             </div>
 
-            {/* SSE Connection Status Indicator */}
+            {/* SSE Connection Status Indicator - minimal */}
             {status === 'running' && (
               <div className="flex items-center gap-2">
                 {sseStatus === 'connected' ? (
-                  <span className="flex items-center gap-1.5 text-[10px] font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-sm border border-emerald-100">
-                    <Wifi className="h-3 w-3" />
-                    LIVE
+                  <span className="flex items-center gap-1.5 text-[11px] font-normal text-gray-500">
+                    <span className="relative flex h-1.5 w-1.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                    </span>
+                    Live
                   </span>
                 ) : sseStatus === 'connecting' ? (
-                  <span className="flex items-center gap-1.5 text-[10px] font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-sm border border-blue-100">
+                  <span className="flex items-center gap-1.5 text-[11px] font-normal text-gray-400">
                     <Loader2 className="h-3 w-3 animate-spin" />
-                    CONNECTING
+                    Connecting
                   </span>
                 ) : sseStatus === 'error' ? (
-                  <span className="flex items-center gap-1.5 text-[10px] font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded-sm border border-amber-100">
-                    <WifiOff className="h-3 w-3" />
-                    POLLING
+                  <span className="flex items-center gap-1.5 text-[11px] font-normal text-gray-400">
+                    Polling
                   </span>
                 ) : (
-                  <span className="flex items-center gap-1.5 text-[10px] font-medium text-gray-500 bg-gray-50 px-2 py-1 rounded-sm border border-gray-100">
-                    <WifiOff className="h-3 w-3" />
-                    OFFLINE
+                  <span className="flex items-center gap-1.5 text-[11px] font-normal text-gray-400">
+                    Offline
                   </span>
                 )}
               </div>
