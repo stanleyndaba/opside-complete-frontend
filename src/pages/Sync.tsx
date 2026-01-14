@@ -1821,7 +1821,7 @@ export default function Sync() {
                   }
                 }}
                 disabled={status === 'running'}
-                className="bg-gray-900 text-white border-gray-900 hover:bg-gray-800 disabled:bg-gray-600 disabled:cursor-not-allowed">
+                className="bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200 hover:text-gray-800 font-normal disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed">
                 {status === 'running' ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -1862,7 +1862,7 @@ export default function Sync() {
                   variant="outline"
                   onClick={handleCancelSync}
                   disabled={isCancelling}
-                  className="bg-gray-900 text-white border-gray-900 hover:bg-gray-800">
+                  className="bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200 hover:text-gray-800 font-normal">
                   {isCancelling ? (
                     <>
                       <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -1919,8 +1919,8 @@ export default function Sync() {
                 disabled={status !== 'completed'}
                 className={
                   status === 'completed'
-                    ? 'bg-gray-900 text-white border-gray-900 hover:bg-gray-800'
-                    : 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
+                    ? 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200 hover:text-gray-800 font-normal'
+                    : 'bg-gray-50 text-gray-400 border-gray-100 cursor-not-allowed font-normal'
                 }>
                 Dashboard
               </Button>
