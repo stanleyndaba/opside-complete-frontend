@@ -637,7 +637,7 @@ const Index = () => {
       <div className="relative z-10 w-full" style={{ background: 'white' }}>
 
 
-        <section className="bg-white pt-32 pb-8 md:pt-48 md:pb-12 w-full overflow-x-hidden">
+        <section className="bg-white pt-16 pb-8 md:pt-24 md:pb-12 w-full overflow-x-hidden">
           <div className="container mx-auto px-6 max-w-4xl">
             <div className="text-center mb-20 space-y-6">
               <span className="inline-block px-4 py-1.5 rounded-full bg-gray-50 border border-gray-100 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">
