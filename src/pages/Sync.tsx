@@ -1226,40 +1226,140 @@ export default function Sync() {
   };
 
   // Get agent-specific color based on category
+  // Maps backend data categories to agent colors
   const getAgentColor = (category: string) => {
     switch (category) {
-      case 'agent1': return 'text-blue-500';
-      case 'agent2': return 'text-cyan-500';
-      case 'agent3': return 'text-purple-500';
-      case 'agent4': return 'text-green-500';
-      case 'agent5': return 'text-yellow-500';
-      case 'agent6': return 'text-pink-500';
-      case 'agent7': return 'text-orange-500';
-      case 'agent8': return 'text-teal-500';
-      case 'agent9': return 'text-indigo-500';
-      case 'agent10': return 'text-red-500';
-      case 'agent11': return 'text-violet-500';
-      case 'system': return 'text-gray-500';
-      default: return 'text-cyan-500'; // Default to cyan for unknown categories
+      // Agent 1: OAuth/Auth
+      case 'auth':
+      case 'oauth':
+        return 'text-blue-500';
+
+      // Agent 2: Sync - all data ingestion
+      case 'orders':
+      case 'inventory':
+      case 'shipments':
+      case 'returns':
+      case 'settlements':
+      case 'fees':
+      case 'sync':
+        return 'text-cyan-500';
+
+      // Agent 3: Detection - finds discrepancies
+      case 'detection':
+        return 'text-purple-500';
+
+      // Agent 4: Evidence Collection
+      case 'evidence':
+        return 'text-green-500';
+
+      // Agent 5: Parsing - document parsing
+      case 'parsing':
+        return 'text-yellow-500';
+
+      // Agent 6: Matching - evidence to claims
+      case 'matching':
+        return 'text-pink-500';
+
+      // Agent 7: Filing - files claims to Amazon
+      case 'claims':
+      case 'filing':
+        return 'text-orange-500';
+
+      // Agent 8: Recovery - tracks payouts
+      case 'recovery':
+        return 'text-teal-500';
+
+      // Agent 9: Billing - commission billing
+      case 'billing':
+        return 'text-indigo-500';
+
+      // Agent 10: Notify - notifications
+      case 'notify':
+      case 'notification':
+        return 'text-red-500';
+
+      // Agent 11: Learning - learns from rejections
+      case 'learning':
+        return 'text-violet-500';
+
+      // System messages
+      case 'system':
+        return 'text-gray-500';
+
+      default:
+        return 'text-cyan-500'; // Default to sync color
     }
   };
 
   // Get agent label based on category
+  // Maps backend data categories to human-readable agent names
   const getAgentLabel = (category: string) => {
     switch (category) {
-      case 'agent1': return '[Agent 1: OAuth]';
-      case 'agent2': return '[Agent 2: Sync]';
-      case 'agent3': return '[Agent 3: Detection]';
-      case 'agent4': return '[Agent 4: Evidence]';
-      case 'agent5': return '[Agent 5: Parsing]';
-      case 'agent6': return '[Agent 6: Matching]';
-      case 'agent7': return '[Agent 7: Filing]';
-      case 'agent8': return '[Agent 8: Recovery]';
-      case 'agent9': return '[Agent 9: Billing]';
-      case 'agent10': return '[Agent 10: Notify]';
-      case 'agent11': return '[Agent 11: Learning]';
-      case 'system': return '[System]';
-      default: return `[${category}]`;
+      // Agent 1: OAuth/Auth
+      case 'auth':
+      case 'oauth':
+        return '[Agent 1: Auth]';
+
+      // Agent 2: Sync - all data ingestion categories
+      case 'orders':
+        return '[Agent 2: Orders]';
+      case 'inventory':
+        return '[Agent 2: Inventory]';
+      case 'shipments':
+        return '[Agent 2: Shipments]';
+      case 'returns':
+        return '[Agent 2: Returns]';
+      case 'settlements':
+        return '[Agent 2: Settlements]';
+      case 'fees':
+        return '[Agent 2: Fees]';
+      case 'sync':
+        return '[Agent 2: Sync]';
+
+      // Agent 3: Detection
+      case 'detection':
+        return '[Agent 3: Detection]';
+
+      // Agent 4: Evidence
+      case 'evidence':
+        return '[Agent 4: Evidence]';
+
+      // Agent 5: Parsing
+      case 'parsing':
+        return '[Agent 5: Parsing]';
+
+      // Agent 6: Matching
+      case 'matching':
+        return '[Agent 6: Matching]';
+
+      // Agent 7: Filing
+      case 'claims':
+      case 'filing':
+        return '[Agent 7: Filing]';
+
+      // Agent 8: Recovery
+      case 'recovery':
+        return '[Agent 8: Recovery]';
+
+      // Agent 9: Billing
+      case 'billing':
+        return '[Agent 9: Billing]';
+
+      // Agent 10: Notify
+      case 'notify':
+      case 'notification':
+        return '[Agent 10: Notify]';
+
+      // Agent 11: Learning
+      case 'learning':
+        return '[Agent 11: Learning]';
+
+      // System
+      case 'system':
+        return '[System]';
+
+      default:
+        return `[${category}]`;
     }
   };
 
