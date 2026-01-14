@@ -1481,11 +1481,11 @@ export default function Sync() {
               )}
 
 
-              {/* Status Strip */}
+              {/* Status Strip - OpenAI minimal style */}
               {logs.length > 0 && status === 'completed' && (
-                <div className="flex items-center gap-3 text-xs font-montserrat">
+                <div className="flex items-center gap-4 text-[13px]">
                   {syncData?.completedAt && (
-                    <span className="text-gray-400">
+                    <span className="text-gray-400 font-normal">
                       Last sync: {(() => {
                         const completedTime = new Date(syncData.completedAt).getTime();
                         const now = Date.now();
@@ -1498,63 +1498,55 @@ export default function Sync() {
                       })()}
                     </span>
                   )}
-                  {/* Overall status - issues show in the Issues filter */}
+                  {/* Minimal status indicator */}
                   {(() => {
                     const hasError = healthGroups.some(g => g.status === 'error');
                     const hasWarning = healthGroups.some(g => g.status === 'warning');
                     const hasZeroClaims = claimsCount !== null && claimsCount === 0;
 
                     if (hasError) {
-                      return <span className="bg-gray-100 text-gray-700 px-2 py-0.5 text-[10px] font-medium border border-gray-200">Issues detected</span>;
+                      return <span className="text-gray-500 font-normal">· Issues detected</span>;
                     } else if (hasWarning) {
-                      return <span className="bg-gray-100 text-gray-600 px-2 py-0.5 text-[10px] font-medium border border-gray-200">Warnings</span>;
+                      return <span className="text-gray-500 font-normal">· Warnings</span>;
                     } else if (hasZeroClaims) {
-                      return (
-                        <span className="bg-gray-100 text-gray-700 px-2 py-0.5 text-[10px] font-medium flex items-center gap-1 border border-gray-200">
-                          <CheckCircle2 className="h-3 w-3" />
-                          Account clean
-                        </span>
-                      );
+                      return <span className="text-gray-500 font-normal flex items-center gap-1">· <CheckCircle2 className="h-3.5 w-3.5 text-gray-400" /> Account clean</span>;
                     }
-                    return <span className="bg-gray-100 text-gray-700 px-2 py-0.5 text-[10px] font-medium border border-gray-200">All systems OK</span>;
+                    return <span className="text-gray-500 font-normal">· All systems OK</span>;
                   })()}
                 </div>
               )}
 
               {/* Real-time Logs Section */}
-              <div className="space-y-2">
-                <div className="space-y-0.5">
-                  <div className="flex items-center justify-between">
-                    <h4 className="text-sm font-medium text-gray-900">Activity Log</h4>
-                    <span className="text-xs text-gray-400 font-mono">{filteredLogs.length} entries</span>
-                  </div>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-[15px] font-normal text-gray-900">Activity Log</h4>
+                  <span className="text-[13px] text-gray-400 font-normal">{filteredLogs.length} entries</span>
                 </div>
 
-                {/* Filter Toggles */}
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-500 mr-1">Filter:</span>
-                  <div className="flex rounded-lg bg-gray-100 p-0.5">
+                {/* Filter Toggles - OpenAI minimal style */}
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-1">
                     <button
                       onClick={() => setLogFilter('all')}
-                      className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${logFilter === 'all'
-                        ? 'bg-white text-gray-900 shadow-sm'
-                        : 'text-gray-500 hover:text-gray-700'
+                      className={`px-3 py-1.5 text-[13px] font-normal transition-all ${logFilter === 'all'
+                        ? 'text-gray-900 border-b-2 border-gray-900'
+                        : 'text-gray-400 hover:text-gray-600 border-b-2 border-transparent'
                         }`}>
                       All
                     </button>
                     <button
                       onClick={() => setLogFilter('money')}
-                      className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${logFilter === 'money'
-                        ? 'bg-emerald-500 text-white shadow-sm'
-                        : 'text-gray-500 hover:text-gray-700'
+                      className={`px-3 py-1.5 text-[13px] font-normal transition-all ${logFilter === 'money'
+                        ? 'text-gray-900 border-b-2 border-gray-900'
+                        : 'text-gray-400 hover:text-gray-600 border-b-2 border-transparent'
                         }`}>
                       Recoveries
                     </button>
                     <button
                       onClick={() => setLogFilter('issues')}
-                      className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${logFilter === 'issues'
-                        ? 'bg-amber-500 text-white shadow-sm'
-                        : 'text-gray-500 hover:text-gray-700'
+                      className={`px-3 py-1.5 text-[13px] font-normal transition-all ${logFilter === 'issues'
+                        ? 'text-gray-900 border-b-2 border-gray-900'
+                        : 'text-gray-400 hover:text-gray-600 border-b-2 border-transparent'
                         }`}>
                       Issues
                     </button>
@@ -1564,7 +1556,7 @@ export default function Sync() {
                   {logs.length > 0 && (
                     <button
                       onClick={exportLogs}
-                      className="ml-auto flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-all"
+                      className="ml-auto flex items-center gap-1.5 text-[13px] font-normal text-gray-400 hover:text-gray-600 transition-all"
                       title="Export logs for support">
                       <Download className="h-3.5 w-3.5" />
                       Export
