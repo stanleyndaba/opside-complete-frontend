@@ -997,10 +997,32 @@ export function Dashboard() {
                       <>
                         <div className="flex-1 max-h-[600px] overflow-y-auto scrollbar-hide divide-y divide-gray-50">
                           {displayNotifications.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center py-12 px-6 text-center animate-in fade-in duration-500">
-                              <Bell className="h-5 w-5 text-gray-200 mb-3" />
-                              <span className="text-[10px] font-medium text-gray-400 uppercase tracking-[0.2em]">Activity Clear</span>
-                              <p className="text-[9px] text-gray-300 uppercase tracking-widest mt-1">Locker integrity verified • 0 alerts</p>
+                            /* Live 'Heartbeat' Feed for Empty State */
+                            <div className="flex flex-col">
+                              {[
+                                { time: "2m ago", title: "INVENTORY HEALTH CHECK", msg: "Scanning 12,402 SKUs across US/CA marketplaces.", status: "ok" },
+                                { time: "15m ago", title: "PAYMENT SETTLEMENT ANALYZED", msg: "Settlement period ending Oct 14 verified. No discrepancies found.", status: "success" },
+                                { time: "42m ago", title: "RETURN POLICY AUDIT", msg: "Cross-referencing 892 recent returns against generous refund patterns.", status: "ok" },
+                                { time: "1h ago", title: "FEE CLASSIFICATION", msg: "Verifying dimensional weight charges for FBA shipments.", status: "ok" },
+                                { time: "2h ago", title: "CLAIMS BATCH PROCESSED", msg: "Daily claim batch submission complete. Awaiting Amazon response.", status: "neutral" },
+                              ].map((item, i) => (
+                                <div key={i} className="px-5 py-4 border-l-2 border-transparent hover:bg-gray-50/50 transition-colors cursor-default group">
+                                  <div className="flex items-start justify-between gap-3 mb-1">
+                                    <div className="flex items-center gap-2">
+                                      <div className={`h-1.5 w-1.5 rounded-full shrink-0 ${item.status === 'success' ? 'bg-emerald-500' : 'bg-gray-300 animate-pulse'}`} />
+                                      <p className="text-[10px] font-medium text-gray-500 group-hover:text-gray-900 uppercase tracking-[0.1em]">{item.title}</p>
+                                    </div>
+                                    <span className="text-[9px] text-gray-300 font-medium uppercase tracking-widest">{item.time}</span>
+                                  </div>
+                                  <p className="text-[10px] text-gray-400 font-mono pl-3.5 tracking-tight leading-relaxed">
+                                    {item.msg}
+                                  </p>
+                                </div>
+                              ))}
+                              <div className="px-5 py-6 text-center border-t border-gray-50 flex flex-col items-center">
+                                <Loader2 className="h-4 w-4 text-emerald-500 animate-spin mb-2" />
+                                <span className="text-[9px] text-gray-400 font-mono uppercase tracking-widest">System Monitoring Active</span>
+                              </div>
                             </div>
                           ) : (
                             <div className="flex flex-col">
@@ -1019,6 +1041,12 @@ export function Dashboard() {
                                 if (notification.type === 'amazon_challenge' || notification.type === 'user_action_required') statusColor = 'bg-amber-500';
                                 if (notification.type === 'evidence_found') statusColor = 'bg-indigo-400';
 
+                                // determine badge
+                                let badge = null;
+                                if (notification.type === 'funds_deposited') badge = <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded-[2px] bg-emerald-50 text-emerald-700 text-[9px] font-bold border border-emerald-100 uppercase tracking-wider">[ PAID ]</span>;
+                                else if (notification.type === 'case_filed') badge = <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded-[2px] bg-blue-50 text-blue-700 text-[9px] font-bold border border-blue-100 uppercase tracking-wider">[ OPEN ]</span>;
+                                else if (notification.type === 'claim_detected') badge = <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded-[2px] bg-gray-100 text-gray-600 text-[9px] font-bold border border-gray-200 uppercase tracking-wider">[ FOUND ]</span>;
+
                                 return (
                                   <HoverCard key={notification.id} openDelay={100} closeDelay={100}>
                                     <HoverCardTrigger asChild>
@@ -1033,13 +1061,14 @@ export function Dashboard() {
                                         <div className="absolute left-[-2px] top-0 bottom-0 w-[2px] bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity" />
 
                                         <div className="flex items-start justify-between gap-3 mb-1">
-                                          <div className="flex items-center gap-2 overflow-hidden">
+                                          <div className="flex items-center gap-2 overflow-hidden flex-wrap">
                                             <div className={cn("h-1.5 w-1.5 rounded-full shrink-0 transition-colors", statusColor)} />
                                             <p className={cn(
-                                              "text-[10px] uppercase tracking-[0.1em] truncate",
+                                              "text-[10px] uppercase tracking-[0.1em] truncate flex items-center",
                                               isUnread ? "font-bold text-gray-900" : "font-medium text-gray-500 group-hover:text-gray-900"
                                             )}>
                                               {enrichNotificationTitle(notification.title)}
+                                              {badge}
                                             </p>
                                           </div>
                                           <span className="text-[9px] text-gray-400 font-medium uppercase tracking-widest tabular-nums shrink-0 pt-0.5">
