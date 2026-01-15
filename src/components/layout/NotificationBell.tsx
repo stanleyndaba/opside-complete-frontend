@@ -213,31 +213,60 @@ export function NotificationBell({
                   {/* Hover Accent Bar */}
                   <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity" />
 
-                  <div className="flex items-start justify-between gap-3 mb-1">
-                    <div className="flex items-center gap-2 overflow-hidden">
+                  <div className="flex items-center justify-between gap-3 mb-0.5">
+                    <div className="flex items-center gap-2 overflow-hidden min-w-0">
                       <div className={cn(
-                        "h-1.5 w-1.5 rounded-full shrink-0",
-                        !notification.read ? "bg-emerald-500" : "bg-gray-200"
+                        "h-1.5 w-1.5 rounded-full shrink-0 transition-colors",
+                        notification.type === 'claim_detected' || notification.type === 'case_filed' ? 'bg-blue-500' :
+                          notification.type === 'refund_approved' || notification.type === 'funds_deposited' ? 'bg-emerald-500' :
+                            notification.type === 'amazon_challenge' || notification.type === 'user_action_required' ? 'bg-amber-500' :
+                              notification.type === 'evidence_found' ? 'bg-purple-500' : 'bg-gray-300'
                       )} />
                       <p className={cn(
-                        'text-[10px] uppercase tracking-widest font-bold truncate',
-                        !notification.read ? 'text-gray-900' : 'text-gray-400 group-hover:text-gray-900'
+                        'text-[10px] uppercase tracking-widest truncate flex items-center gap-2',
+                        !notification.read ? 'font-bold text-gray-900' : 'font-medium text-gray-600 group-hover:text-gray-900'
                       )}>
-                        {notification.read ? 'System Update' : 'Action Required'}
+                        {/* We use the type as title since bell notifications don't strictly separate title/body in the object structure passed here same as dashboard, 
+                            but looking at the code above, the 'message' seems to be the main content. 
+                            Wait, the dashboard used notification.title. NotificationBell uses notification.type or generic "System Update" vs "Action Required".
+                            Let's try to match the Dashboard's title logic if possible, or stick to the existing "Action Required" / "System Update" 
+                            but honestly the user probably wants the specific titles like "FUNDS DEPOSITED". 
+                            The current code just says "Action Required" or "System Update". 
+                            Let's try to use the type to make a better title like "FUNDS DEPOSITED" instead of generic "Action Required".
+                        */}
+                        {notification.type.replace(/_/g, ' ')}
                       </p>
                     </div>
-                    <span className="text-[9px] text-gray-400 font-medium uppercase tracking-widest shrink-0 tabular-nums">
-                      {notification.timestamp.replace('about ', '').replace(' ago', '')}
+                    <span className="text-[9px] text-gray-300 font-mono text-right uppercase shrink-0 pt-0.5 whitespace-nowrap">
+                      {notification.timestamp.replace('about ', '').replace(' ago', '').replace('minute', 'm').replace('hour', 'h').replace('day', 'd')}
                     </span>
                   </div>
 
-                  <div className="ml-3.5">
+                  <div className="flex items-baseline justify-between gap-4 ml-3.5">
                     <p className={cn(
-                      'text-[11px] leading-relaxed font-mono tracking-tight',
-                      !notification.read ? 'text-gray-700' : 'text-gray-400 group-hover:text-gray-700'
+                      'text-[10px] leading-relaxed font-normal tracking-wide truncate',
+                      !notification.read ? 'text-gray-600' : 'text-gray-400 group-hover:text-gray-500'
                     )}>
                       {stripEmojis(notification.message)}
                     </p>
+                    {(() => {
+                      let statusText = '';
+                      if (notification.type === 'funds_deposited') statusText = 'PAID';
+                      else if (notification.type === 'case_filed') statusText = 'OPEN';
+                      else if (notification.type === 'claim_detected') statusText = 'FOUND';
+
+                      if (!statusText) return null;
+
+                      return (
+                        <span className={cn(
+                          "text-[8px] font-bold uppercase tracking-widest shrink-0 transition-colors",
+                          notification.type === 'funds_deposited' ? "text-emerald-600" :
+                            notification.type === 'case_filed' ? "text-blue-600" : "text-gray-400"
+                        )}>
+                          {statusText}
+                        </span>
+                      );
+                    })()}
                   </div>
                 </div>
               );
