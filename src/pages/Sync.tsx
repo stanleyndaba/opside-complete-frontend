@@ -1377,8 +1377,8 @@ export default function Sync() {
           {/* Page Header - OpenAI minimal style */}
           <div className="mb-10 flex items-center justify-between">
             <div>
-              <h1 className="text-[17px] font-normal text-gray-900">Data Synchronization</h1>
-              <p className="text-[13px] text-gray-400 mt-0.5 font-normal">Amazon SP-API Sync</p>
+              <h1 className="text-[17px] font-normal text-gray-900">Financial Audit Engine</h1>
+              <p className="text-[13px] text-gray-400 mt-0.5 font-normal">Powered by Amazon SP-API</p>
             </div>
 
             {/* SSE Connection Status Indicator - minimal */}
