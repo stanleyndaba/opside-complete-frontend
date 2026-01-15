@@ -1476,7 +1476,31 @@ export default function Sync() {
               {/* Real-time Logs Section */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-[15px] font-normal text-gray-900">Activity Log</h4>
+                  <div className="flex items-center gap-2">
+                    <h4 className="text-[15px] font-normal text-gray-900">Activity Log</h4>
+                    <TooltipProvider>
+                      <Tooltip delayDuration={300}>
+                        <TooltipTrigger asChild>
+                          <Info className="h-3.5 w-3.5 text-gray-400 hover:text-gray-600 transition-colors cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent side="right" className="bg-[#1A1A1A] border-neutral-800 text-neutral-200 p-4 max-w-[320px] shadow-xl ml-2">
+                          <div className="space-y-3">
+                            <div className="space-y-1">
+                              <p className="font-medium text-white text-xs tracking-tight">Agent Activity</p>
+                              <p className="text-[11px] leading-relaxed text-neutral-400 font-normal">
+                                This agent performs a continuous forensic audit of your Amazon SP-API data—cross-referencing inventory movements, shipments, returns, reimbursements, fees, and claims across 26 detection models to uncover financial discrepancies and recovery opportunities that standard tools miss.
+                              </p>
+                            </div>
+                            <div className="pt-2 border-t border-neutral-800/50">
+                              <p className="text-[10px] text-neutral-500 italic">
+                                Activity updates as new SP-API data is synced.
+                              </p>
+                            </div>
+                          </div>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
                   <span className="text-[13px] text-gray-400 font-normal">{filteredLogs.length} entries</span>
                 </div>
 
@@ -1537,32 +1561,9 @@ export default function Sync() {
                 <div className="relative group">
                   {/* Header bar - OpenAI minimal terminal */}
                   <div className="absolute top-0 left-0 right-0 h-10 bg-[#0D0D0D] rounded-t-lg border-b border-neutral-900 flex items-center px-5 z-10">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-normal text-neutral-600 uppercase tracking-[0.2em]">Activity Feed</span>
-                      <TooltipProvider>
-                        <Tooltip delayDuration={300}>
-                          <TooltipTrigger asChild>
-                            <Info className="h-3 w-3 text-neutral-600 hover:text-neutral-400 transition-colors cursor-help opacity-70 hover:opacity-100" />
-                          </TooltipTrigger>
-                          <TooltipContent side="right" className="bg-[#1A1A1A] border-neutral-800 text-neutral-200 p-4 max-w-[320px] shadow-xl ml-2">
-                            <div className="space-y-3">
-                              <div className="space-y-1">
-                                <p className="font-medium text-white text-xs tracking-tight">Agent Activity</p>
-                                <p className="text-[11px] leading-relaxed text-neutral-400 font-normal">
-                                  This agent performs a continuous forensic audit of your Amazon SP-API data—cross-referencing inventory movements, shipments, returns, reimbursements, fees, and claims across 26 detection models to uncover financial discrepancies and recovery opportunities that standard tools miss.
-                                </p>
-                              </div>
-                              <div className="pt-2 border-t border-neutral-800/50">
-                                <p className="text-[10px] text-neutral-500 italic">
-                                  Activity updates as new SP-API data is synced.
-                                </p>
-                              </div>
-                            </div>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
+                    <span className="text-[10px] font-normal text-neutral-600 uppercase tracking-[0.2em]">Activity Feed</span>
                   </div>
+
 
                   <div
                     ref={logContainerRef}
@@ -2064,6 +2065,6 @@ export default function Sync() {
           </div>
         </div>
       </div>
-    </PageLayout>
+    </PageLayout >
   );
 }
