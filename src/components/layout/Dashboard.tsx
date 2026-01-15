@@ -774,16 +774,32 @@ export function Dashboard() {
 
                     <div className="p-8 border-b border-gray-100">
                       <div className="flex flex-col">
-                        <div className="text-4xl font-light text-gray-900 tracking-tighter mb-4">
-                          {formatCurrencyWithSelection(recoveredTotal ?? 0, recoveredCurrency)}
-                        </div>
-
-                        {reconciledCount != null && reconciledCount > 0 && (
-                          <div className="flex items-center gap-2">
-                            <ArrowUp className="h-3 w-3 text-emerald-500" />
-                            <span className="text-[10px] font-mono text-emerald-600 font-bold uppercase tracking-widest">
-                              {reconciledCount} Verified this period
-                            </span>
+                        {(recoveredTotal ?? 0) > 0 ? (
+                          <>
+                            <div className="text-4xl font-light text-gray-900 tracking-tighter mb-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                              {formatCurrencyWithSelection(recoveredTotal ?? 0, recoveredCurrency)}
+                            </div>
+                            {reconciledCount != null && reconciledCount > 0 && (
+                              <div className="flex items-center gap-2 animate-in fade-in zoom-in duration-500 delay-100">
+                                <ArrowUp className="h-3 w-3 text-emerald-500" />
+                                <span className="text-[10px] font-mono text-emerald-600 font-bold uppercase tracking-widest">
+                                  {reconciledCount} Verified this period
+                                </span>
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <div className="flex flex-col gap-2 py-1 animate-in fade-in duration-700">
+                            <div className="flex items-center gap-2 mb-1">
+                              <Loader2 className="h-3 w-3 text-emerald-600 animate-spin" />
+                              <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-widest">Analysis in Progress</span>
+                            </div>
+                            <div className="text-3xl font-light text-gray-200 tracking-tighter blur-[2px] select-none">
+                              $0.00
+                            </div>
+                            <p className="text-[10px] text-gray-400 font-medium max-w-sm mt-2 leading-relaxed">
+                              Your recovery data is being compiled. Once the forensic audit completes its initial cycle, recovered funds will appear here.
+                            </p>
                           </div>
                         )}
 
