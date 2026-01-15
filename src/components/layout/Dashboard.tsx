@@ -1014,9 +1014,14 @@ export function Dashboard() {
                                     </div>
                                     <span className="text-[9px] text-gray-300 font-mono shrink-0">{item.time}</span>
                                   </div>
-                                  <p className="text-[10px] text-gray-400 font-normal pl-3.5 tracking-wide leading-relaxed truncate">
-                                    {item.msg}
-                                  </p>
+                                  <div className="flex items-baseline justify-between gap-4 ml-3.5">
+                                    <p className="text-[10px] text-gray-400 font-normal tracking-wide leading-relaxed truncate">
+                                      {item.msg}
+                                    </p>
+                                    {item.status === 'success' && (
+                                      <span className="text-[8px] font-bold text-emerald-600/80 uppercase tracking-widest shrink-0">CLEAN</span>
+                                    )}
+                                  </div>
                                 </div>
                               ))}
                               <div className="px-5 py-4 text-center border-t border-gray-50 flex flex-col items-center mt-2">
@@ -1069,19 +1074,10 @@ export function Dashboard() {
                                           <div className="flex items-center gap-2 min-w-0">
                                             <div className={cn("h-1.5 w-1.5 rounded-full shrink-0 transition-colors", statusColor)} />
                                             <p className={cn(
-                                              "text-[10px] uppercase tracking-widest truncate flex items-center gap-2",
+                                              "text-[10px] uppercase tracking-widest truncate",
                                               isUnread ? "font-bold text-gray-900" : "font-medium text-gray-600 group-hover:text-gray-900"
                                             )}>
                                               {enrichNotificationTitle(notification.title)}
-                                              {statusText && (
-                                                <span className={cn(
-                                                  "text-[8px] font-bold opacity-60",
-                                                  notification.type === 'funds_deposited' ? "text-emerald-600" :
-                                                    notification.type === 'case_filed' ? "text-blue-600" : "text-gray-500"
-                                                )}>
-                                                  — {statusText}
-                                                </span>
-                                              )}
                                             </p>
                                           </div>
                                           <span className="text-[9px] text-gray-300 font-mono shrink-0 pt-0.5 whitespace-nowrap">
@@ -1089,10 +1085,19 @@ export function Dashboard() {
                                           </span>
                                         </div>
 
-                                        <div className="flex items-center gap-2 ml-3.5">
+                                        <div className="flex items-baseline justify-between gap-4 ml-3.5">
                                           <p className="text-[10px] text-gray-400 font-normal tracking-wide leading-relaxed truncate group-hover:text-gray-500 transition-colors">
                                             {stripEmojis(notification.message)}
                                           </p>
+                                          {statusText && (
+                                            <span className={cn(
+                                              "text-[8px] font-bold uppercase tracking-widest shrink-0",
+                                              notification.type === 'funds_deposited' ? "text-emerald-600" :
+                                                notification.type === 'case_filed' ? "text-blue-600" : "text-gray-400"
+                                            )}>
+                                              {statusText}
+                                            </span>
+                                          )}
                                         </div>
                                       </div>
                                     </HoverCardTrigger>
