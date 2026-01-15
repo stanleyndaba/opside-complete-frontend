@@ -997,31 +997,36 @@ export function Dashboard() {
                       <>
                         <div className="flex-1 max-h-[600px] overflow-y-auto scrollbar-hide divide-y divide-gray-50">
                           {displayNotifications.length === 0 ? (
-                            /* Live 'Heartbeat' Feed for Empty State */
+                            /* Live 'Heartbeat' Feed for Empty State - Minimalist */
                             <div className="flex flex-col">
                               {[
-                                { time: "2m ago", title: "INVENTORY HEALTH CHECK", msg: "Scanning 12,402 SKUs across US/CA marketplaces.", status: "ok" },
-                                { time: "15m ago", title: "PAYMENT SETTLEMENT ANALYZED", msg: "Settlement period ending Oct 14 verified. No discrepancies found.", status: "success" },
-                                { time: "42m ago", title: "RETURN POLICY AUDIT", msg: "Cross-referencing 892 recent returns against generous refund patterns.", status: "ok" },
-                                { time: "1h ago", title: "FEE CLASSIFICATION", msg: "Verifying dimensional weight charges for FBA shipments.", status: "ok" },
-                                { time: "2h ago", title: "CLAIMS BATCH PROCESSED", msg: "Daily claim batch submission complete. Awaiting Amazon response.", status: "neutral" },
+                                { time: "2m", title: "INVENTORY CHECK", msg: "Scanning 12,402 SKUs across marketplaces", status: "ok" },
+                                { time: "15m", title: "SETTLEMENT VERIFIED", msg: "Period ending Oct 14 analyzed • Clean", status: "success" },
+                                { time: "42m", title: "RETURN POLICY AUDIT", msg: "Cross-referencing 892 recent returns", status: "ok" },
+                                { time: "1h", title: "FEE CLASSIFICATION", msg: "Verifying dimensional weight charges", status: "ok" },
+                                { time: "2h", title: "CLAIMS BATCHED", msg: "Submission complete • Awaiting response", status: "neutral" },
                               ].map((item, i) => (
-                                <div key={i} className="px-5 py-4 border-l-2 border-transparent hover:bg-gray-50/50 transition-colors cursor-default group">
-                                  <div className="flex items-start justify-between gap-3 mb-1">
-                                    <div className="flex items-center gap-2">
-                                      <div className={`h-1.5 w-1.5 rounded-full shrink-0 ${item.status === 'success' ? 'bg-emerald-500' : 'bg-gray-300 animate-pulse'}`} />
-                                      <p className="text-[10px] font-medium text-gray-500 group-hover:text-gray-900 uppercase tracking-[0.1em]">{item.title}</p>
+                                <div key={i} className="px-5 py-3 border-l-2 border-transparent hover:bg-gray-50/50 transition-colors cursor-default group">
+                                  <div className="flex items-center justify-between gap-3 mb-0.5">
+                                    <div className="flex items-center gap-2 min-w-0">
+                                      <div className={`h-1.5 w-1.5 rounded-full shrink-0 ${item.status === 'success' ? 'bg-emerald-500' : 'bg-gray-300'}`} />
+                                      <p className="text-[10px] font-medium text-gray-600 group-hover:text-gray-900 uppercase tracking-widest truncate">{item.title}</p>
                                     </div>
-                                    <span className="text-[9px] text-gray-300 font-medium uppercase tracking-widest">{item.time}</span>
+                                    <span className="text-[9px] text-gray-300 font-mono shrink-0">{item.time}</span>
                                   </div>
-                                  <p className="text-[10px] text-gray-400 font-mono pl-3.5 tracking-tight leading-relaxed">
+                                  <p className="text-[10px] text-gray-400 font-normal pl-3.5 tracking-wide leading-relaxed truncate">
                                     {item.msg}
                                   </p>
                                 </div>
                               ))}
-                              <div className="px-5 py-6 text-center border-t border-gray-50 flex flex-col items-center">
-                                <Loader2 className="h-4 w-4 text-emerald-500 animate-spin mb-2" />
-                                <span className="text-[9px] text-gray-400 font-mono uppercase tracking-widest">System Monitoring Active</span>
+                              <div className="px-5 py-4 text-center border-t border-gray-50 flex flex-col items-center mt-2">
+                                <span className="flex items-center gap-2 text-[9px] text-emerald-600 font-mono uppercase tracking-widest">
+                                  <span className="relative flex h-1.5 w-1.5">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                                  </span>
+                                  System Monitoring Active
+                                </span>
                               </div>
                             </div>
                           ) : (
@@ -1034,25 +1039,25 @@ export function Dashboard() {
                                   ? formatDistanceToNow(notificationDate, { addSuffix: true })
                                   : 'recently';
 
-                                // Status Dot Color
-                                let statusColor = 'bg-gray-200';
+                                // Status Dot Color - OpenAI style: Subtler colors
+                                let statusColor = 'bg-gray-300';
                                 if (notification.type === 'claim_detected' || notification.type === 'case_filed') statusColor = 'bg-blue-500';
                                 if (notification.type === 'refund_approved' || notification.type === 'funds_deposited') statusColor = 'bg-emerald-500';
                                 if (notification.type === 'amazon_challenge' || notification.type === 'user_action_required') statusColor = 'bg-amber-500';
-                                if (notification.type === 'evidence_found') statusColor = 'bg-indigo-400';
+                                if (notification.type === 'evidence_found') statusColor = 'bg-purple-500';
 
-                                // determine badge
-                                let badge = null;
-                                if (notification.type === 'funds_deposited') badge = <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded-[2px] bg-emerald-50 text-emerald-700 text-[9px] font-bold border border-emerald-100 uppercase tracking-wider">[ PAID ]</span>;
-                                else if (notification.type === 'case_filed') badge = <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded-[2px] bg-blue-50 text-blue-700 text-[9px] font-bold border border-blue-100 uppercase tracking-wider">[ OPEN ]</span>;
-                                else if (notification.type === 'claim_detected') badge = <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded-[2px] bg-gray-100 text-gray-600 text-[9px] font-bold border border-gray-200 uppercase tracking-wider">[ FOUND ]</span>;
+                                // Textual Status (instead of pills)
+                                let statusText = '';
+                                if (notification.type === 'funds_deposited') statusText = 'PAID';
+                                else if (notification.type === 'case_filed') statusText = 'OPEN';
+                                else if (notification.type === 'claim_detected') statusText = 'FOUND';
 
                                 return (
                                   <HoverCard key={notification.id} openDelay={100} closeDelay={100}>
                                     <HoverCardTrigger asChild>
                                       <div
                                         className={cn(
-                                          "group relative px-5 py-4 cursor-pointer transition-all duration-200 border-l-2 border-transparent hover:bg-gray-50/50",
+                                          "group relative px-5 py-3 cursor-pointer transition-all duration-200 border-l-2 border-transparent hover:bg-gray-50/50",
                                           isUnread ? "bg-gray-50/30" : "bg-white"
                                         )}
                                         onClick={() => navigate('/recoveries')}>
@@ -1060,24 +1065,32 @@ export function Dashboard() {
                                         {/* Hover Accent Bar */}
                                         <div className="absolute left-[-2px] top-0 bottom-0 w-[2px] bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity" />
 
-                                        <div className="flex items-start justify-between gap-3 mb-1">
-                                          <div className="flex items-center gap-2 overflow-hidden flex-wrap">
+                                        <div className="flex items-center justify-between gap-3 mb-0.5">
+                                          <div className="flex items-center gap-2 min-w-0">
                                             <div className={cn("h-1.5 w-1.5 rounded-full shrink-0 transition-colors", statusColor)} />
                                             <p className={cn(
-                                              "text-[10px] uppercase tracking-[0.1em] truncate flex items-center",
-                                              isUnread ? "font-bold text-gray-900" : "font-medium text-gray-500 group-hover:text-gray-900"
+                                              "text-[10px] uppercase tracking-widest truncate flex items-center gap-2",
+                                              isUnread ? "font-bold text-gray-900" : "font-medium text-gray-600 group-hover:text-gray-900"
                                             )}>
                                               {enrichNotificationTitle(notification.title)}
-                                              {badge}
+                                              {statusText && (
+                                                <span className={cn(
+                                                  "text-[8px] font-bold opacity-60",
+                                                  notification.type === 'funds_deposited' ? "text-emerald-600" :
+                                                    notification.type === 'case_filed' ? "text-blue-600" : "text-gray-500"
+                                                )}>
+                                                  — {statusText}
+                                                </span>
+                                              )}
                                             </p>
                                           </div>
-                                          <span className="text-[9px] text-gray-400 font-medium uppercase tracking-widest tabular-nums shrink-0 pt-0.5">
-                                            {timeAgo.replace('about ', '').replace(' ago', '')}
+                                          <span className="text-[9px] text-gray-300 font-mono shrink-0 pt-0.5 whitespace-nowrap">
+                                            {timeAgo.replace('about ', '').replace(' ago', '').replace('minute', 'm').replace('hour', 'h').replace('day', 'd')}
                                           </span>
                                         </div>
 
-                                        <div className="flex items-center gap-2 mt-0.5 ml-3.5">
-                                          <p className="text-[10px] text-gray-400 font-mono tracking-tight leading-relaxed truncate">
+                                        <div className="flex items-center gap-2 ml-3.5">
+                                          <p className="text-[10px] text-gray-400 font-normal tracking-wide leading-relaxed truncate group-hover:text-gray-500 transition-colors">
                                             {stripEmojis(notification.message)}
                                           </p>
                                         </div>
@@ -1085,13 +1098,14 @@ export function Dashboard() {
                                     </HoverCardTrigger>
 
                                     <HoverCardContent side="left" align="start" className="w-80 p-0 overflow-hidden border-gray-100 rounded-none shadow-2xl animate-in fade-in slide-in-from-right-1">
+                                      {/* ... Tooltip content remains same ... */}
                                       <div className="p-5">
                                         <div className="flex items-center gap-3 mb-3">
                                           <div className={cn(
-                                            "px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.15em]",
-                                            notification.type === 'funds_deposited' || notification.type === 'refund_approved' ? "bg-emerald-50 text-emerald-700 border border-emerald-100" :
-                                              notification.type === 'amazon_challenge' || notification.type === 'user_action_required' ? "bg-amber-50 text-amber-700 border border-amber-100" :
-                                                "bg-blue-50 text-blue-700 border border-blue-100"
+                                            "px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.15em] border",
+                                            notification.type === 'funds_deposited' || notification.type === 'refund_approved' ? "bg-emerald-50 text-emerald-700 border-emerald-100" :
+                                              notification.type === 'amazon_challenge' || notification.type === 'user_action_required' ? "bg-amber-50 text-amber-700 border-amber-100" :
+                                                "bg-blue-50 text-blue-700 border-blue-100"
                                           )}>
                                             {notification.type.replace(/_/g, ' ')}
                                           </div>
