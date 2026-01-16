@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, RotateCw, CheckCircle2, AlertCircle, Fingerprint, Search, ShieldCheck, ArrowRight } from 'lucide-react';
+import { Play, RotateCw, CheckCircle2, AlertCircle, Fingerprint, Search, ShieldCheck, ArrowRight, Mail, FileText, Loader2, Database } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 // Mock data for the simulation
 const SIMULATED_LOGS = [
@@ -18,7 +19,7 @@ const SIMULATED_LOGS = [
 ];
 
 export const InteractiveDemo = () => {
-    const [status, setStatus] = useState<'idle' | 'scanning' | 'complete' | 'results'>('idle');
+    const [status, setStatus] = useState<'idle' | 'scanning' | 'complete' | 'results' | 'connecting_source' | 'searching_docs' | 'matched'>('idle');
     const [logs, setLogs] = useState<any[]>([]);
     const [fundsFound, setFundsFound] = useState(0);
     const [itemsScanned, setItemsScanned] = useState(0);
@@ -33,7 +34,6 @@ export const InteractiveDemo = () => {
     useEffect(() => {
         if (status !== 'scanning') return;
 
-        let startTime = Date.now();
         let timeouts: NodeJS.Timeout[] = [];
 
         // Reset
@@ -74,16 +74,39 @@ export const InteractiveDemo = () => {
         };
     }, [status]);
 
+    // Evidence Matching Simulation
+    useEffect(() => {
+        if (status === 'connecting_source') {
+            const t = setTimeout(() => {
+                setStatus('searching_docs');
+            }, 2000);
+            return () => clearTimeout(t);
+        }
+        if (status === 'searching_docs') {
+            const t = setTimeout(() => {
+                setStatus('matched');
+            }, 3000);
+            return () => clearTimeout(t);
+        }
+    }, [status]);
+
     const handleStart = () => {
         setStatus('scanning');
+    };
+
+    const handleReset = () => {
+        setStatus('idle');
+        setLogs([]);
+        setFundsFound(0);
+        setItemsScanned(0);
     };
 
     return (
         <div className="relative w-full max-w-4xl mx-auto">
             {/* Window Frame */}
-            <div className="rounded-xl overflow-hidden bg-white shadow-2xl border border-gray-200/50 backdrop-blur-sm">
+            <div className="rounded-xl overflow-hidden bg-white shadow-2xl border border-gray-200/50 backdrop-blur-sm flex flex-col relative h-[520px]">
                 {/* Title Bar */}
-                <div className="bg-gray-50/80 border-b border-gray-100 px-4 py-3 flex items-center gap-4">
+                <div className="bg-gray-50/80 border-b border-gray-100 px-4 py-3 flex items-center gap-4 shrink-0">
                     <div className="flex gap-2">
                         <div className="w-3 h-3 rounded-full bg-red-400/80" />
                         <div className="w-3 h-3 rounded-full bg-amber-400/80" />
@@ -95,14 +118,14 @@ export const InteractiveDemo = () => {
                     </div>
                 </div>
 
-                {/* Main Interface */}
-                <div className="p-6 bg-white min-h-[400px] flex flex-col md:flex-row gap-6">
+                {/* Main Interface Content */}
+                <div className="flex-1 p-6 bg-white flex flex-col md:flex-row gap-6 overflow-hidden">
 
                     {/* Left Panel: Metrics & Controls */}
                     <div className="flex-1 flex flex-col gap-6">
 
                         {/* Action Area */}
-                        <div className="p-6 rounded-2xl bg-gradient-to-br from-gray-900 to-gray-800 text-white shadow-xl relative overflow-hidden">
+                        <div className="p-6 rounded-2xl bg-gradient-to-br from-gray-900 to-gray-800 text-white shadow-xl relative overflow-hidden flex-1 flex flex-col justify-center">
                             <div className="absolute top-0 right-0 p-3 opacity-10">
                                 <Fingerprint className="w-32 h-32" />
                             </div>
@@ -139,30 +162,11 @@ export const InteractiveDemo = () => {
                                         </div>
                                     </div>
                                 )}
-
-                                {status === 'complete' && (
-                                    <div className="space-y-4">
-                                        <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg flex items-start gap-3">
-                                            <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-                                            <div>
-                                                <p className="text-sm font-medium text-emerald-100">Audit Successful</p>
-                                                <p className="text-xs text-emerald-200/70 mt-1">We found verified discrepancies in your past 18 months.</p>
-                                            </div>
-                                        </div>
-                                        <Button
-                                            onClick={handleStart}
-                                            variant="outline"
-                                            className="w-full border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white">
-                                            <RotateCw className="w-4 h-4 mr-2" />
-                                            Run Simulation Again
-                                        </Button>
-                                    </div>
-                                )}
                             </div>
                         </div>
 
                         {/* Minor Metrics */}
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-2 gap-4 h-24 shrink-0">
                             <div className="p-4 rounded-xl border border-gray-100 bg-gray-50/50">
                                 <div className="text-xs text-gray-500 mb-1">Events Analyzed</div>
                                 <div className="text-xl font-bold text-gray-800">{itemsScanned.toLocaleString()}</div>
@@ -176,7 +180,7 @@ export const InteractiveDemo = () => {
                     </div>
 
                     {/* Right Panel: Live Feed (Sync.tsx Style) */}
-                    <div className="flex-1 relative group bg-[#0D0D0D] rounded-lg border border-neutral-900 shadow-sm h-[350px] md:h-auto overflow-hidden">
+                    <div className="flex-1 relative group bg-[#0D0D0D] rounded-lg border border-neutral-900 shadow-sm h-full overflow-hidden">
 
                         {/* Header bar */}
                         <div className="absolute top-0 left-0 right-0 h-10 bg-[#0D0D0D] rounded-t-lg border-b border-neutral-900 flex items-center px-5 z-10">
@@ -240,10 +244,12 @@ export const InteractiveDemo = () => {
 
                 </div>
 
-                {/* RESULTS VIEW OVERLAY (Absolute over the main interface) */}
+                {/* RESULTS VIEW OVERLAY */}
                 <div className={cn(
                     "absolute inset-0 bg-white z-20 transition-all duration-700 flex flex-col",
-                    status === 'results' ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
+                    (status === 'results' || status === 'connecting_source' || status === 'searching_docs' || status === 'matched')
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 translate-y-4 pointer-events-none"
                 )}>
                     {/* Results Header */}
                     <div className="border-b border-gray-100 px-6 py-4 flex items-center justify-between bg-gray-50/50">
@@ -252,8 +258,14 @@ export const InteractiveDemo = () => {
                                 <CheckCircle2 className="w-5 h-5 text-emerald-600" />
                             </div>
                             <div>
-                                <h3 className="text-sm font-bold text-gray-900">Audit Complete</h3>
-                                <p className="text-xs text-gray-500">14 recoverable claims identified</p>
+                                <h3 className="text-sm font-bold text-gray-900">
+                                    {status === 'matched' ? 'Recovery Ready' : 'Audit Complete'}
+                                </h3>
+                                <p className="text-xs text-gray-500">
+                                    {status === 'matched'
+                                        ? '14 claims matched with evidence'
+                                        : '14 potential claims identified'}
+                                </p>
                             </div>
                         </div>
                         <div className="text-right">
@@ -264,73 +276,126 @@ export const InteractiveDemo = () => {
                         </div>
                     </div>
 
-                    {/* Claims Table (Recoveries.tsx Style) */}
-                    <div className="flex-1 overflow-auto bg-white">
-                        <table className="w-full text-left text-xs">
-                            <thead className="bg-gray-50/50 sticky top-0 z-10">
-                                <tr>
-                                    <th className="px-6 py-3 font-semibold text-gray-400 uppercase tracking-wider w-8">#</th>
-                                    <th className="px-6 py-3 font-semibold text-gray-400 uppercase tracking-wider">Claim Type</th>
-                                    <th className="px-6 py-3 font-semibold text-gray-400 uppercase tracking-wider">SKU / Order</th>
-                                    <th className="px-6 py-3 font-semibold text-gray-400 uppercase tracking-wider">Status</th>
-                                    <th className="px-6 py-3 font-semibold text-gray-400 uppercase tracking-wider text-right">Value</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-50">
-                                {[
-                                    { id: 'C-7821', type: 'Lost in Transit', desc: 'Inbound Shipment FBA15X', status: 'Ready to File', val: 850.00, badge: 'emerald' },
-                                    { id: 'C-7822', type: 'Damaged Warehouse', desc: 'SKU-9982 (Main Inv)', status: 'Ready to File', val: 125.50, badge: 'emerald' },
-                                    { id: 'C-7823', type: 'Unpaid Refund', desc: 'Order #114-33291', status: 'Processing', val: 45.20, badge: 'blue' },
-                                    { id: 'C-7824', type: 'Weight Fee Error', desc: 'SKU-7721 (Overcharge)', status: 'Analyzing', val: 18.40, badge: 'gray' },
-                                    { id: 'C-7825', type: 'Lost in Warehouse', desc: 'Units missing from bin', status: 'Ready to File', val: 240.00, badge: 'emerald' },
-                                ].map((row, i) => (
-                                    <tr key={i} className="group hover:bg-gray-50/50 transition-colors">
-                                        <td className="px-6 py-4 text-gray-300 font-mono">{i + 1}</td>
-                                        <td className="px-6 py-4">
-                                            <div className="font-medium text-gray-900">{row.type}</div>
-                                        </td>
-                                        <td className="px-6 py-4 text-gray-500 font-mono text-[11px]">{row.desc}</td>
-                                        <td className="px-6 py-4">
-                                            <span className={cn(
-                                                "px-2 py-0.5 rounded-full text-[10px] font-semibold border uppercase tracking-wide",
-                                                row.badge === 'emerald' && "bg-emerald-50 text-emerald-700 border-emerald-100",
-                                                row.badge === 'blue' && "bg-blue-50 text-blue-700 border-blue-100",
-                                                row.badge === 'gray' && "bg-gray-100 text-gray-500 border-gray-200"
-                                            )}>
-                                                {row.status}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 text-right font-medium text-gray-900">
-                                            ${row.val.toFixed(2)}
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                    {/* Main Content Area - Switches based on sub-status */}
+                    <div className="flex-1 overflow-auto bg-white flex flex-col">
 
-                        <div className="p-6 text-center border-t border-gray-50 bg-gray-50/30">
-                            <span className="text-xs text-gray-400 italic">
-                                + 9 more claims hidden in demo preview
-                            </span>
-                        </div>
+                        {/* 1. Claims Table (Blurred or Active) */}
+                        {(status === 'results' || status === 'matched') && (
+                            <table className="w-full text-left text-xs">
+                                <thead className="bg-gray-50/50 sticky top-0 z-10">
+                                    <tr>
+                                        <th className="px-6 py-3 font-semibold text-gray-400 uppercase tracking-wider w-8">#</th>
+                                        <th className="px-6 py-3 font-semibold text-gray-400 uppercase tracking-wider">Claim Type</th>
+                                        <th className="px-6 py-3 font-semibold text-gray-400 uppercase tracking-wider">SKU / Order</th>
+                                        <th className="px-6 py-3 font-semibold text-gray-400 uppercase tracking-wider">Status</th>
+                                        <th className="px-6 py-3 font-semibold text-gray-400 uppercase tracking-wider text-right">Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-50">
+                                    {[
+                                        { id: 'C-7821', type: 'Lost in Transit', desc: 'Inbound Shipment FBA15X', val: 850.00 },
+                                        { id: 'C-7822', type: 'Damaged Warehouse', desc: 'SKU-9982 (Main Inv)', val: 125.50 },
+                                        { id: 'C-7823', type: 'Unpaid Refund', desc: 'Order #114-33291', val: 45.20 },
+                                        { id: 'C-7824', type: 'Weight Fee Error', desc: 'SKU-7721 (Overcharge)', val: 18.40 },
+                                        { id: 'C-7825', type: 'Lost in Warehouse', desc: 'Units missing from bin', val: 240.00 },
+                                    ].map((row, i) => (
+                                        <tr key={i} className="group hover:bg-gray-50/50 transition-colors">
+                                            <td className="px-6 py-4 text-gray-300 font-mono">{i + 1}</td>
+                                            <td className="px-6 py-4">
+                                                <div className="font-medium text-gray-900">{row.type}</div>
+                                            </td>
+                                            <td className="px-6 py-4 text-gray-500 font-mono text-[11px]">{row.desc}</td>
+                                            <td className="px-6 py-4">
+                                                {status === 'matched' ? (
+                                                    <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold border uppercase tracking-wide bg-emerald-50 text-emerald-700 border-emerald-100">
+                                                        <FileText className="w-3 h-3" /> Ready to File
+                                                    </span>
+                                                ) : (
+                                                    <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold border uppercase tracking-wide bg-amber-50 text-amber-700 border-amber-100">
+                                                        <AlertCircle className="w-3 h-3" /> Missing Evidence
+                                                    </span>
+                                                )}
+                                            </td>
+                                            <td className="px-6 py-4 text-right font-medium text-gray-900">
+                                                ${row.val.toFixed(2)}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        )}
+
+                        {/* 2. Loading / Processing States */}
+                        {(status === 'connecting_source' || status === 'searching_docs') && (
+                            <div className="flex-1 flex flex-col items-center justify-center p-8 space-y-6 animate-in fade-in duration-500">
+                                <div className="relative">
+                                    <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center animate-pulse">
+                                        {status === 'connecting_source' ? (
+                                            <Mail className="w-8 h-8 text-blue-500" />
+                                        ) : (
+                                            <Search className="w-8 h-8 text-blue-500" />
+                                        )}
+                                    </div>
+                                    <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-1 shadow-sm">
+                                        <Loader2 className="w-4 h-4 text-blue-600 animate-spin" />
+                                    </div>
+                                </div>
+                                <div className="text-center space-y-2">
+                                    <h3 className="text-lg font-medium text-gray-900">
+                                        {status === 'connecting_source' ? 'Connecting to Gmail...' : 'Scanning for Invoices...'}
+                                    </h3>
+                                    <div className="text-sm text-gray-500 font-mono">
+                                        {status === 'connecting_source' ? 'Authenticating via OAuth 2.0' : 'Searching: "Amazon", "Shipment", "Invoice"'}
+                                    </div>
+                                </div>
+                                {/* Mock Terminal Output */}
+                                <div className="w-full max-w-sm bg-gray-900 rounded-lg p-4 font-mono text-[10px] text-gray-300 space-y-1 opacity-80 shadow-inner border border-gray-800">
+                                    <div>&gt; Initiating secure connection... OK</div>
+                                    <div>&gt; Accessing read-only scope... OK</div>
+                                    {status === 'searching_docs' && (
+                                        <>
+                                            <div className="text-emerald-400">&gt; Found: Invoice-FBA15X.pdf</div>
+                                            <div className="text-emerald-400">&gt; Found: SKU-9982-PackingList.pdf</div>
+                                            <div>&gt; extracting_metadata()...</div>
+                                            <div>&gt; matching_claims()...</div>
+                                        </>
+                                    )}
+                                    <div className="animate-pulse">_</div>
+                                </div>
+                            </div>
+                        )}
+
                     </div>
 
                     {/* Footer CTA */}
-                    <div className="p-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
+                    <div className="p-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center shrink-0">
                         <Button
-                            onClick={handleStart}
+                            onClick={handleReset}
                             variant="ghost"
                             size="sm"
                             className="text-gray-500 hover:text-gray-900">
                             <RotateCw className="w-3.5 h-3.5 mr-2" />
-                            Reset Demo
+                            Reset
                         </Button>
-                        <Button
-                            onClick={() => window.location.href = '/auth/signup'}
-                            size="sm"
-                            className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-500/20">
-                            Sign Up to Recover Funds <ArrowRight className="w-4 h-4 ml-2" />
-                        </Button>
+
+                        {status === 'results' && (
+                            <Button
+                                onClick={() => setStatus('connecting_source')}
+                                size="sm"
+                                className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/20">
+                                <Mail className="w-4 h-4 mr-2" />
+                                Connect Evidence Source
+                            </Button>
+                        )}
+
+                        {status === 'matched' && (
+                            <Button
+                                onClick={() => window.location.href = '/auth/signup'}
+                                size="sm"
+                                className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-500/20 animate-in fade-in slide-in-from-right-4">
+                                Sign Up to Recover Funds <ArrowRight className="w-4 h-4 ml-2" />
+                            </Button>
+                        )}
                     </div>
                 </div>
             </div>
