@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ChevronRight, Gift, Sparkles, CircleDollarSign, ShieldAlert, FileText, Search, Briefcase } from 'lucide-react';
+import { ArrowRight, ChevronRight, Gift, Sparkles, CircleDollarSign, ShieldAlert, ShieldCheck, FileText, Search, Briefcase } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AmazonConnect } from '@/components/AmazonConnect';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -600,7 +600,7 @@ const Index = () => {
                   {/* Trust text */}
                   <div className="flex flex-col gap-2 text-sm text-gray-500">
                     <span className="inline-flex items-center gap-1.5">
-                      <ShieldAlert className="h-4 w-4 text-emerald-600" />
+                      <ShieldCheck className="h-4 w-4 text-[#36454F]" />
                       Verified Amazon SP-API Developer
                     </span>
                     <span>Cancel anytime</span>
