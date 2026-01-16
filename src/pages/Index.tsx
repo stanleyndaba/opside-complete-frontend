@@ -687,6 +687,16 @@ const Index = () => {
                           Approved reimbursements are deposited directly into your Amazon account. You get paid first, and we only invoice our 20% commission after the funds are safely in your bank.
                         </p>
                       </div>
+
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-2">Live Notifications</h4>
+                        <div className="h-0.5 w-12 bg-gray-800 rounded-full overflow-hidden">
+                          <div className="h-full w-full bg-emerald-500/50" />
+                        </div>
+                        <p className="mt-4 text-sm text-gray-500 leading-relaxed font-normal">
+                          Stay in the loop with real-time alerts for every action—from new discrepancies found to successful reimbursements deposited. You never have to guess what Margin is doing.
+                        </p>
+                      </div>
                     </div>
                   </div>
 
