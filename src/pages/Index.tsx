@@ -634,6 +634,22 @@ const Index = () => {
                   </div>
                 </div>
                 */}
+                {/* Verified SP-API Badge is above this closing Tag */}
+              </div>
+
+            </div>
+
+            {/* Interactive Demo Section - Standalone Block Below Grid */}
+            <div className="w-full relative z-20 mt-20 md:mt-32">
+              <div className="max-w-5xl mx-auto">
+                <div className="text-center mb-10">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">See how it works</h2>
+                  <p className="text-gray-500">Run a simulation to see what Margin can find in seconds.</p>
+                </div>
+                {/* Demo Component with explicit z-index and shadow for lift */}
+                <div className="relative z-20 shadow-2xl rounded-xl">
+                  <InteractiveDemo />
+                </div>
               </div>
             </div>
           </section>
@@ -823,7 +839,7 @@ const Index = () => {
       </div>
       */}
       <CookieConsent />
-    </div>
+    </div >
   );
 };
 
