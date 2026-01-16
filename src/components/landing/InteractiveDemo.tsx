@@ -113,7 +113,6 @@ export const InteractiveDemo = ({ className }: { className?: string }) => {
                         </div>
                         <div className="h-4 w-px bg-gray-200 mx-2" />
                         <div className="px-3 py-1 bg-white border border-gray-200 rounded-md text-[10px] font-mono text-gray-500 flex items-center gap-2 shadow-sm">
-                            <ShieldCheck className="w-3 h-3 text-emerald-500" />
                             Scenario: High-Volume Seller ($1M+/yr)
                         </div>
                     </div>

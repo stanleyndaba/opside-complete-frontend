@@ -637,13 +637,7 @@ const Index = () => {
                       </p>
                     </div>
 
-                    <div className="pt-8 flex flex-col sm:flex-row gap-4">
-                      <Button
-                        onClick={() => window.location.href = '/auth/signup'}
-                        className="h-12 px-8 rounded-full bg-white text-black hover:bg-gray-100 transition-all font-medium text-sm">
-                        Explore Agent Margin
-                      </Button>
-                    </div>
+
 
                     <div className="pt-12 border-t border-white/10 mt-12 space-y-8">
                       <div>
