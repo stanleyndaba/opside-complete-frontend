@@ -138,7 +138,7 @@ export const InteractiveDemo = () => {
                     </div>
                     <div className="px-3 py-1 bg-white border border-gray-200 rounded-md text-[10px] font-mono text-gray-500 flex items-center gap-2">
                         <ShieldCheck className="w-3 h-3 text-emerald-500" />
-                        SECURE_AUDIT_PROTOCOL_V4.EXE
+                        📄 Scenario: High-Volume Seller ($1M/yr)
                     </div>
                 </div>
 
