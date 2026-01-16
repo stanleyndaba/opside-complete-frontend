@@ -230,7 +230,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         disabled={connecting}
         className={cn(
           isFullWidth ? 'w-full' : 'w-auto',
-          'justify-center font-semibold shadow-lg transition-colors px-8',
+          'justify-center font-medium shadow-lg transition-colors px-8',
           connecting && usingExisting && 'opacity-80',
           className
         )}

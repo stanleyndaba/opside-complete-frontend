@@ -593,7 +593,7 @@ const Index = () => {
                     <AmazonConnect className="w-full sm:w-auto min-w-[200px]" />
                     <Link
                       to="/contact"
-                      className="w-full sm:w-auto min-w-[160px] h-11 rounded-lg bg-transparent text-gray-700 font-semibold inline-flex items-center justify-center gap-2 hover:text-gray-900 transition-colors">
+                      className="w-full sm:w-auto min-w-[160px] h-11 rounded-lg bg-transparent text-gray-700 font-medium inline-flex items-center justify-center gap-2 hover:text-gray-900 transition-colors">
                       Talk to Sales <span aria-hidden="true">→</span>
                     </Link>
                   </div>
