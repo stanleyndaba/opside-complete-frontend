@@ -84,7 +84,7 @@ export default function Sales() {
                         Enterprise
                     </div>
                     <h1 className="text-4xl font-semibold text-gray-900 font-montserrat mb-4">
-                        Partner with Margin
+                        Margin Enterprise
                     </h1>
                     <p className="text-gray-500 font-montserrat max-w-xl mx-auto text-lg">
                         For Amazon sellers doing $1M+ annually. Get priority support, custom integrations, and direct access to our team.
