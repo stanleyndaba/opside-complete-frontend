@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ChevronRight, Gift, Sparkles, CircleDollarSign, ShieldAlert, ShieldCheck, FileText, Search, Briefcase } from 'lucide-react';
+import { ArrowRight, Gift, Sparkles, CircleDollarSign, ShieldAlert, ShieldCheck, FileText, Search, Briefcase } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AmazonConnect } from '@/components/AmazonConnect';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -551,14 +551,6 @@ const Index = () => {
 
               {/* Right Column: Text content */}
               <div className="order-1 lg:order-1 flex flex-col items-start text-left space-y-6">
-                {/* New Feature Banner */}
-                <div
-                  onClick={() => window.location.href = '/margin-board'}
-                  className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50/50 px-2 py-1 pr-3 text-xs font-medium text-gray-900 transition-colors hover:bg-blue-50 hover:border-blue-200 cursor-pointer">
-                  <span className="rounded-full bg-blue-600 px-2.5 py-0.5 text-[10px] font-bold text-white uppercase tracking-wide">NEW</span>
-                  <span className="inline-block text-gray-700">Introducing Margin Board: Customer Onboarding</span>
-                  <ChevronRight className="h-3 w-3 text-gray-400" />
-                </div>
 
                 {/* Trust chip */}
                 <div className="relative inline-flex items-center gap-2 md:gap-4 rounded-[20px] md:rounded-[25px] border border-emerald-100 bg-white/85 px-3 py-1.5 md:px-5 md:py-2 shadow-[0_12px_45px_rgba(16,185,129,0.25)] backdrop-blur supports-[backdrop-filter]:bg-white/70 overflow-hidden">
