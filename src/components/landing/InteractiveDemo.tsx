@@ -119,66 +119,16 @@ export const InteractiveDemo = ({ className }: { className?: string }) => {
                 </div>
 
                 {/* MAIN BODY */}
-                <div className="flex-1 p-8 flex flex-col md:flex-row gap-8 overflow-hidden bg-white">
-
-                    {/* LEFT PANEL */}
-                    <div className="w-72 shrink-0 flex flex-col justify-center gap-10 py-4 px-2">
-                        <div>
-                            <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2 flex items-center gap-2">
-                                <Database className="w-3 h-3" /> Recoverable Revenue
-                            </h3>
-                            <div className="text-5xl font-mono font-bold text-emerald-500 tracking-tighter">
-                                ${fundsFound.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                            </div>
-                        </div>
-
-                        {status === 'idle' && (
-                            <Button onClick={handleStart} className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-7 text-xl shadow-lg shadow-emerald-500/20 transition-all hover:scale-[1.02]">
-                                <Play className="w-6 h-6 mr-3 fill-current" />
-                                Run Audit
-                            </Button>
-                        )}
-
-                        {status === 'scanning' && (
-                            <div className="space-y-4">
-                                <div className="flex justify-between text-[11px] text-gray-500 font-bold uppercase tracking-wider">
-                                    <span className="flex items-center gap-2">
-                                        <Loader2 className="w-3 h-3 animate-spin" /> Analyzing...
-                                    </span>
-                                    <span>{itemsScanned.toLocaleString()}</span>
-                                </div>
-                                <div className="h-2 bg-gray-100 rounded-full overflow-hidden shadow-inner">
-                                    <div className="h-full bg-emerald-500 animate-pulse transition-all duration-300 shadow-[0_0_10px_rgba(16,185,129,0.5)]" style={{ width: `${Math.min((itemsScanned / 14205) * 100, 100)}%` }} />
-                                </div>
-                                <p className="text-[10px] text-gray-400 font-medium italic">Scanning 18 months of inventory history...</p>
-                            </div>
-                        )}
-
-                        {status === 'results' && (
-                            <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-700">
-                                <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100 flex items-start gap-3 mb-2">
-                                    <CheckCircle2 className="w-5 h-5 text-emerald-500 mt-0.5" />
-                                    <p className="text-xs text-emerald-800 font-medium leading-relaxed">Audit complete. 14 claims ready for evidence matching.</p>
-                                </div>
-                                <Button onClick={() => setStatus('connecting_source')} className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-7 text-xl shadow-xl shadow-emerald-500/30">
-                                    Verify Evidence <ArrowRight className="w-6 h-6 ml-3" />
-                                </Button>
-                                <Button onClick={() => window.location.href = '/auth/signup'} variant="outline" className="w-full text-xs text-gray-400 border-gray-100 font-bold uppercase tracking-widest">
-                                    Go Live
-                                </Button>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* RIGHT PANEL (TERMINAL) */}
-                    <div className="flex-1 bg-[#0a0a0a] rounded-xl border border-neutral-900 h-full overflow-hidden hidden md:block relative shadow-2xl">
+                <div className="flex-1 p-6 flex flex-col gap-6 overflow-hidden bg-white">
+                    {/* TERMINAL (Full Width) */}
+                    <div className="flex-1 bg-[#0a0a0a] rounded-xl border border-neutral-900 overflow-hidden relative shadow-2xl flex flex-col">
                         <div className="absolute top-0 left-0 right-0 h-12 bg-neutral-950/80 border-b border-neutral-900 flex items-center px-6 z-10 backdrop-blur-md">
                             <span className="text-[10px] text-neutral-600 uppercase tracking-widest font-bold flex items-center gap-3">
                                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                                 Kernel Activity Log
                             </span>
                         </div>
-                        <div className="pt-16 pb-8 px-8 text-[13px] h-full overflow-y-auto text-neutral-400 leading-7 font-mono">
+                        <div className="pt-16 pb-8 px-8 text-[13px] flex-1 overflow-y-auto text-neutral-400 leading-7 font-mono">
                             {logs.length === 0 ? (
                                 <div className="h-full flex flex-col items-center justify-center text-neutral-800 space-y-4 opacity-50">
                                     <div className="p-4 bg-neutral-900/50 rounded-full border border-neutral-800">
@@ -208,6 +158,31 @@ export const InteractiveDemo = ({ className }: { className?: string }) => {
                                 </div>
                             )}
                         </div>
+                    </div>
+
+                    {/* ACTION BUTTONS (Below Terminal) */}
+                    <div className="flex justify-center shrink-0">
+                        {status === 'idle' && (
+                            <Button onClick={handleStart} size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20 font-bold px-6 h-9 transition-all hover:scale-[1.02]">
+                                <Play className="w-3.5 h-3.5 mr-2 fill-current" />
+                                Run Audit
+                            </Button>
+                        )}
+
+                        {status === 'scanning' && (
+                            <div className="flex items-center gap-4 text-xs font-mono text-gray-400">
+                                <Loader2 className="w-3.5 h-3.5 animate-spin text-emerald-500" />
+                                <span>SCANNING_RECORDS... {itemsScanned.toLocaleString()}</span>
+                            </div>
+                        )}
+
+                        {status === 'results' && (
+                            <div className="flex gap-3 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                                <Button onClick={() => setStatus('connecting_source')} size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20 font-bold px-6 h-9">
+                                    Verify Evidence <ArrowRight className="w-3.5 h-3.5 ml-2" />
+                                </Button>
+                            </div>
+                        )}
                     </div>
                 </div>
 
