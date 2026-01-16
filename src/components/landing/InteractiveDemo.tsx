@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, RotateCw, CheckCircle2, AlertCircle, Fingerprint, Search, ShieldCheck, ArrowRight, Mail, FileText, Loader2, Database, Briefcase, FileCheck, DollarSign, Bell, CheckCheck } from 'lucide-react';
+import { Play, RotateCw, CheckCircle2, AlertCircle, Search, ShieldCheck, ArrowRight, Mail, FileText, Loader2, Database, Briefcase, FileCheck, DollarSign, Bell, CheckCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
-// Mock data for the simulation
+// --- MOCK DATA ---
 const SIMULATED_LOGS = [
     { id: 1, type: 'scan', msg: 'Initiating FBA Audit Protocol v4.2...', delay: 100 },
     { id: 2, type: 'info', msg: 'Connecting to Seller Central (US-EAST)...', delay: 800 },
@@ -16,6 +16,7 @@ const SIMULATED_LOGS = [
     { id: 8, type: 'alert', msg: 'DISCREPANCY FOUND: Shipment FBA15X (Shortage)', value: 850.00, delay: 5100 },
     { id: 9, type: 'info', msg: 'Verifying claim eligibility against policy...', delay: 6000 },
     { id: 10, type: 'success', msg: 'Audit Complete. 14 actionable cases identified.', delay: 7200 },
+    { id: 11, type: 'info', msg: 'Generating recovery roadmap...', delay: 7500 },
 ];
 
 const NOTIFICATIONS_DATA = [
@@ -29,61 +30,44 @@ const NOTIFICATIONS_DATA = [
     { id: 8, message: "Funds have been cleared and deposited to your account.", time: "7 days ago", type: 'success' },
     { id: 9, message: "Margin identified discrepancies Amazon likely owes you for. Reviewing and validating evidence now.", time: "7 days ago", type: 'alert' },
     { id: 10, message: "Funds have been cleared and deposited to your account.", time: "7 days ago", type: 'success' },
-    { id: 11, message: "Funds have been cleared and deposited to your account.", time: "7 days ago", type: 'success' },
-    { id: 12, message: "Funds have been cleared and deposited to your account.", time: "7 days ago", type: 'success' },
-    { id: 13, message: "Margin identified discrepancies Amazon likely owes you for. Reviewing and validating evidence now.", time: "7 days ago", type: 'alert' },
-    { id: 14, message: "Funds have been cleared and deposited to your account.", time: "7 days ago", type: 'success' },
-    { id: 15, message: "Funds have been cleared and deposited to your account.", time: "7 days ago", type: 'success' },
-    { id: 16, message: "Funds have been cleared and deposited to your account.", time: "7 days ago", type: 'success' },
+    { id: 11, message: "New discrepancy detected in SKU-1002.", time: "8 days ago", type: 'alert' },
+    { id: 12, message: "Recovery payment received for Case #FBA-882.", time: "8 days ago", type: 'success' },
 ];
 
 export const InteractiveDemo = ({ className }: { className?: string }) => {
-    const [status, setStatus] = useState<'idle' | 'scanning' | 'complete' | 'results' | 'connecting_source' | 'searching_docs' | 'matched' | 'filing' | 'disputes' | 'notifications'>('idle');
+    const [status, setStatus] = useState<'idle' | 'scanning' | 'results' | 'connecting_source' | 'searching_docs' | 'matched' | 'filing' | 'disputes' | 'notifications'>('idle');
     const [logs, setLogs] = useState<any[]>([]);
     const [fundsFound, setFundsFound] = useState(0);
     const [itemsScanned, setItemsScanned] = useState(0);
     const logsEndRef = useRef<HTMLDivElement>(null);
 
-    // Auto-scroll logs
     useEffect(() => {
         logsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [logs]);
 
-    // Simulation Logic
     useEffect(() => {
         if (status !== 'scanning') return;
-
         let timeouts: NodeJS.Timeout[] = [];
-
-        // Reset
         setLogs([]);
         setFundsFound(0);
         setItemsScanned(0);
 
-        // 1. Log Sequence
         SIMULATED_LOGS.forEach(log => {
             const t = setTimeout(() => {
                 setLogs(prev => [...prev, log]);
-                if (log.value) {
-                    setFundsFound(prev => prev + log.value);
-                }
+                if (log.value) setFundsFound(prev => prev + log.value);
             }, log.delay);
             timeouts.push(t);
         });
 
-        // 2. "Items Scanned" Counter
         const interval = setInterval(() => {
-            setItemsScanned(prev => {
-                if (prev > 14000) return prev;
-                return prev + Math.floor(Math.random() * 350);
-            });
+            setItemsScanned(prev => (prev > 14000 ? prev : prev + Math.floor(Math.random() * 350)));
         }, 100);
 
-        // 3. Completion
         const completeTimeout = setTimeout(() => {
             setStatus('results');
             clearInterval(interval);
-        }, 7500);
+        }, 7800);
         timeouts.push(completeTimeout);
 
         return () => {
@@ -92,32 +76,22 @@ export const InteractiveDemo = ({ className }: { className?: string }) => {
         };
     }, [status]);
 
-    // Evidence Matching & Filing Simulation
     useEffect(() => {
         if (status === 'connecting_source') {
-            const t = setTimeout(() => {
-                setStatus('searching_docs');
-            }, 2000);
+            const t = setTimeout(() => setStatus('searching_docs'), 2000);
             return () => clearTimeout(t);
         }
         if (status === 'searching_docs') {
-            const t = setTimeout(() => {
-                setStatus('matched');
-            }, 3000);
+            const t = setTimeout(() => setStatus('matched'), 3000);
             return () => clearTimeout(t);
         }
         if (status === 'filing') {
-            const t = setTimeout(() => {
-                setStatus('disputes');
-            }, 2500);
+            const t = setTimeout(() => setStatus('disputes'), 2500);
             return () => clearTimeout(t);
         }
     }, [status]);
 
-    const handleStart = () => {
-        setStatus('scanning');
-    };
-
+    const handleStart = () => setStatus('scanning');
     const handleReset = () => {
         setStatus('idle');
         setLogs([]);
@@ -127,440 +101,379 @@ export const InteractiveDemo = ({ className }: { className?: string }) => {
 
     return (
         <div className={cn("relative w-full max-w-4xl mx-auto", className)}>
-            {/* Window Frame */}
-            <div className="rounded-xl overflow-hidden bg-white shadow-2xl border border-gray-200/50 backdrop-blur-sm flex flex-col relative h-[600px] md:h-[550px]">
-                {/* Title Bar */}
-                <div className="bg-gray-50/80 border-b border-gray-100 px-4 py-3 flex items-center gap-4 shrink-0">
-                    <div className="flex gap-2">
-                        {/* Traffic lights removed */}
-                    </div>
-                    <div className="px-3 py-1 bg-white border border-gray-200 rounded-md text-[10px] font-mono text-gray-500 flex items-center gap-2">
-                        <ShieldCheck className="w-3 h-3 text-emerald-500" />
-                        📄 Scenario: High-Volume Seller ($1M/yr)
+            <div className="rounded-2xl overflow-hidden bg-white shadow-2xl border border-gray-200 flex flex-col relative h-[620px] md:h-[580px]">
+
+                {/* WINDOW HEADER */}
+                <div className="bg-gray-50 border-b border-gray-100 px-6 py-4 flex items-center justify-between shrink-0">
+                    <div className="flex items-center gap-3">
+                        <div className="flex gap-1.5">
+                            <div className="w-2.5 h-2.5 rounded-full bg-gray-200" />
+                            <div className="w-2.5 h-2.5 rounded-full bg-gray-200" />
+                            <div className="w-2.5 h-2.5 rounded-full bg-gray-200" />
+                        </div>
+                        <div className="h-4 w-px bg-gray-200 mx-2" />
+                        <div className="px-3 py-1 bg-white border border-gray-200 rounded-md text-[10px] font-mono text-gray-500 flex items-center gap-2 shadow-sm">
+                            <ShieldCheck className="w-3 h-3 text-emerald-500" />
+                            Scenario: High-Volume Seller ($1M/yr)
+                        </div>
                     </div>
                 </div>
 
-                {/* Main Interface Content */}
-                <div className="flex-1 p-6 bg-white flex flex-col md:flex-row gap-6 overflow-hidden">
+                {/* MAIN BODY */}
+                <div className="flex-1 p-8 flex flex-col md:flex-row gap-8 overflow-hidden bg-white">
 
-                    {/* Left Panel: Simple Controls (Narrower) */}
-                    <div className="w-64 shrink-0 flex flex-col justify-center gap-8 py-8 pl-2">
+                    {/* LEFT PANEL */}
+                    <div className="w-72 shrink-0 flex flex-col justify-center gap-10 py-4 px-2">
                         <div>
-                            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Recoverable Funds</h3>
-                            <div className="text-4xl font-mono font-bold text-emerald-500 tracking-tight">
-                                ${fundsFound.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2 flex items-center gap-2">
+                                <Database className="w-3 h-3" /> Recoverable Revenue
+                            </h3>
+                            <div className="text-5xl font-mono font-bold text-emerald-500 tracking-tighter">
+                                ${fundsFound.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                             </div>
                         </div>
 
                         {status === 'idle' && (
-                            <Button
-                                onClick={handleStart}
-                                className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-6 text-lg shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all hover:scale-[1.02]">
-                                <Play className="w-5 h-5 mr-2 fill-current" />
-                                Start recovery
+                            <Button onClick={handleStart} className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-7 text-xl shadow-lg shadow-emerald-500/20 transition-all hover:scale-[1.02]">
+                                <Play className="w-6 h-6 mr-3 fill-current" />
+                                Run Audit
                             </Button>
                         )}
 
                         {status === 'scanning' && (
-                            <div className="space-y-3">
-                                <div className="flex justify-between text-xs text-gray-400">
-                                    <span>Scanning Inventory Events...</span>
+                            <div className="space-y-4">
+                                <div className="flex justify-between text-[11px] text-gray-500 font-bold uppercase tracking-wider">
+                                    <span className="flex items-center gap-2">
+                                        <Loader2 className="w-3 h-3 animate-spin" /> Analyzing...
+                                    </span>
                                     <span>{itemsScanned.toLocaleString()}</span>
                                 </div>
-                                <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                                    <div
-                                        className="h-full bg-emerald-500 animate-pulse transition-all duration-300 ease-out"
-                                        style={{ width: `${Math.min((itemsScanned / 14205) * 100, 100)}%` }}
-                                    />
+                                <div className="h-2 bg-gray-100 rounded-full overflow-hidden shadow-inner">
+                                    <div className="h-full bg-emerald-500 animate-pulse transition-all duration-300 shadow-[0_0_10px_rgba(16,185,129,0.5)]" style={{ width: `${Math.min((itemsScanned / 14205) * 100, 100)}%` }} />
                                 </div>
+                                <p className="text-[10px] text-gray-400 font-medium italic">Scanning 18 months of inventory history...</p>
                             </div>
                         )}
 
                         {status === 'results' && (
-                            <Button
-                                onClick={() => window.location.href = '/auth/signup'}
-                                className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-6 text-lg shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all hover:scale-[1.02] animate-in fade-in duration-500">
-                                Start Live Audit <ArrowRight className="w-5 h-5 ml-2" />
-                            </Button>
+                            <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-700">
+                                <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100 flex items-start gap-3 mb-2">
+                                    <CheckCircle2 className="w-5 h-5 text-emerald-500 mt-0.5" />
+                                    <p className="text-xs text-emerald-800 font-medium leading-relaxed">Audit complete. 14 claims ready for evidence matching.</p>
+                                </div>
+                                <Button onClick={() => setStatus('connecting_source')} className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-7 text-xl shadow-xl shadow-emerald-500/30">
+                                    Verify Evidence <ArrowRight className="w-6 h-6 ml-3" />
+                                </Button>
+                                <Button onClick={() => window.location.href = '/auth/signup'} variant="outline" className="w-full text-xs text-gray-400 border-gray-100 font-bold uppercase tracking-widest">
+                                    Go Live
+                                </Button>
+                            </div>
                         )}
                     </div>
 
-                    {/* Right Panel: Live Feed (Sync.tsx Style) */}
-                    <div className="flex-1 relative group bg-[#0D0D0D] rounded-lg border border-neutral-900 shadow-sm h-full overflow-hidden hidden md:block">
-
-                        {/* Header bar */}
-                        <div className="absolute top-0 left-0 right-0 h-10 bg-[#0D0D0D] rounded-t-lg border-b border-neutral-900 flex items-center px-5 z-10">
-                            <span className="text-[10px] font-normal text-neutral-600 uppercase tracking-[0.2em]">Activity Feed</span>
+                    {/* RIGHT PANEL (TERMINAL) */}
+                    <div className="flex-1 bg-[#0a0a0a] rounded-xl border border-neutral-900 h-full overflow-hidden hidden md:block relative shadow-2xl">
+                        <div className="absolute top-0 left-0 right-0 h-12 bg-neutral-950/80 border-b border-neutral-900 flex items-center px-6 z-10 backdrop-blur-md">
+                            <span className="text-[10px] text-neutral-600 uppercase tracking-widest font-bold flex items-center gap-3">
+                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                Kernel Activity Log
+                            </span>
                         </div>
-
-                        {/* Scrollable Container */}
-                        <div className="pt-12 pb-6 px-5 font-normal text-[13px] h-full overflow-y-auto scroll-smooth relative leading-relaxed tracking-tight text-neutral-400">
-                            {/* Simplified subtle gradient */}
-                            <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent pointer-events-none sticky top-0"></div>
-
+                        <div className="pt-16 pb-8 px-8 text-[13px] h-full overflow-y-auto text-neutral-400 leading-7 font-mono">
                             {logs.length === 0 ? (
-                                <div className="h-full flex flex-col items-center justify-center text-neutral-700 space-y-3 opacity-60">
-                                    <div className="relative">
-                                        <div className="absolute inset-0 bg-emerald-500/20 blur-xl rounded-full"></div>
-                                        <Search className="w-8 h-8 relative z-10" />
+                                <div className="h-full flex flex-col items-center justify-center text-neutral-800 space-y-4 opacity-50">
+                                    <div className="p-4 bg-neutral-900/50 rounded-full border border-neutral-800">
+                                        <Search className="w-10 h-10" />
                                     </div>
                                     <div className="text-center">
-                                        <p className="text-xs tracking-widest uppercase opacity-80">Waiting for Signal...</p>
-                                        <p className="text-[10px] text-neutral-600 mt-1 font-mono">SYSTEM_IDLE</p>
+                                        <p className="text-[10px] uppercase font-bold tracking-[0.3em] font-sans">Awaiting Command</p>
+                                        <p className="text-[9px] mt-2 opacity-50">SYSTEM_READY :: VERSION_4.2.0</p>
                                     </div>
                                 </div>
                             ) : (
-                                <div className="space-y-1 relative z-10">
-                                    {logs.map((log) => (
-                                        <div key={log.id} className="flex items-start gap-3 py-1.5 text-[13px] animate-in fade-in slide-in-from-bottom-1 duration-300">
-                                            {/* Timestamp style dot for alignment */}
-                                            <div className={cn(
-                                                "mt-1.5 w-1.5 h-1.5 rounded-full shrink-0",
-                                                log.type === 'scan' && "bg-blue-500/50",
-                                                log.type === 'info' && "bg-neutral-700",
-                                                log.type === 'alert' && "bg-amber-500",
-                                                log.type === 'success' && "bg-emerald-500"
-                                            )} />
-
-                                            <span className="break-all flex-1">
-                                                <span className={cn(
-                                                    "transition-colors duration-300",
-                                                    log.type === 'scan' && "text-neutral-500",
-                                                    log.type === 'info' && "text-neutral-400",
-                                                    log.type === 'alert' && "text-neutral-300",
-                                                    log.type === 'success' && "text-neutral-200"
-                                                )}>
-                                                    {log.msg}
-                                                </span>
-
-                                                {/* Value Highlight */}
-                                                {log.value && (
-                                                    <span className="ml-2 inline-flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/20 px-1.5 rounded text-emerald-400 font-medium text-[11px] tracking-wide">
-                                                        +${log.value.toFixed(2)}
-                                                    </span>
-                                                )}
-                                            </span>
-                                        </div>
-                                    ))}
+                                <div className="space-y-2">
+                                    {logs.map((log) => {
+                                        return (
+                                            <div key={log.id} className="flex items-start gap-4 py-1.5 border-b border-white/[0.02] animate-in fade-in slide-in-from-bottom-2 duration-300">
+                                                <span className="text-neutral-700 select-none">[{new Date().toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })}]</span>
+                                                <div className={cn("mt-2.5 w-1 h-1 rounded-full shrink-0",
+                                                    log.type === 'alert' ? 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.6)]' :
+                                                        log.type === 'success' ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]' :
+                                                            'bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]')} />
+                                                <span className="flex-1 transition-colors hover:text-white">{log.msg}</span>
+                                                {log.value && <span className="text-emerald-400 font-bold bg-emerald-500/5 px-2 rounded tracking-tighter">+$ {log.value.toFixed(2)}</span>}
+                                            </div>
+                                        );
+                                    })}
                                     <div ref={logsEndRef} />
                                 </div>
                             )}
                         </div>
                     </div>
-
                 </div>
 
-                {/* Footer CTA */}
-                <div className="p-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center shrink-0">
-                    <div className="flex gap-2">
-                        <Button
-                            onClick={handleReset}
-                            variant="ghost"
-                            size="sm"
-                            className="text-gray-500 hover:text-gray-900">
-                            <RotateCw className="w-3.5 h-3.5 mr-2" />
-                            Reset
-                        </Button>
-                    </div>
-
-                    {status === 'results' && (
-                        <div className="flex gap-2">
-                            {/* Hidden flow buttons for now, can be restored if user wants flow */}
-                            <Button
-                                onClick={() => setStatus('connecting_source')}
-                                size="sm"
-                                variant="outline"
-                                className="opacity-0 pointer-events-none">
-                                Connect Evidence Source
+                {/* FOOTER */}
+                <div className="p-6 bg-gray-50/50 border-t border-gray-100 flex justify-between items-center shrink-0">
+                    <Button onClick={handleReset} variant="ghost" size="sm" className="text-gray-400 hover:bg-white hover:text-gray-900 transition-all font-bold uppercase tracking-tighter text-[10px]">
+                        <RotateCw className="w-4 h-4 mr-2" /> Reset Session
+                    </Button>
+                    <div className="flex gap-3">
+                        {status === 'results' && (
+                            <Button onClick={() => setStatus('connecting_source')} size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-xl shadow-emerald-600/20 font-bold h-10 px-6">
+                                Auto-Match Evidence <ArrowRight className="w-4 h-4 ml-2" />
                             </Button>
+                        )}
+                        {status === 'matched' && (
+                            <Button onClick={() => setStatus('filing')} size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-xl shadow-emerald-600/20 font-bold h-10 px-6">
+                                <FileCheck className="w-4 h-4 mr-2" /> Submit 14 Claims
+                            </Button>
+                        )}
+                        {status === 'disputes' && (
+                            <Button onClick={() => setStatus('notifications')} size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-xl shadow-emerald-600/20 font-bold h-10 px-6">
+                                View Account Logs <Bell className="w-4 h-4 ml-2" />
+                            </Button>
+                        )}
+                        {status === 'notifications' && (
+                            <Button onClick={() => window.location.href = '/auth/signup'} size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-2xl shadow-emerald-600/40 font-bold h-10 px-8">
+                                Start Live Audit <ArrowRight className="w-4 h-4 ml-2" />
+                            </Button>
+                        )}
+                    </div>
+                </div>
+
+                {/* OVERLAY LAYERS */}
+                <div className={cn(
+                    "absolute inset-0 bg-white z-20 transition-all duration-700 flex flex-col",
+                    (status === 'connecting_source' || status === 'searching_docs' || status === 'matched' || status === 'filing' || status === 'disputes' || status === 'notifications')
+                        ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
+                )}>
+                    {/* A. LOADING / TERMINAL OVERLAY */}
+                    {(status === 'connecting_source' || status === 'searching_docs' || status === 'filing') && (
+                        <div className="flex-1 flex flex-col items-center justify-center p-12 space-y-12 animate-in fade-in zoom-in-95 duration-500">
+                            <div className="relative">
+                                <div className="w-24 h-24 bg-blue-50/50 rounded-full flex items-center justify-center animate-pulse relative shadow-inner border border-blue-100">
+                                    {status === 'connecting_source' && <Mail className="w-12 h-12 text-blue-500" />}
+                                    {status === 'searching_docs' && <Search className="w-12 h-12 text-blue-500" />}
+                                    {status === 'filing' && <Briefcase className="w-12 h-12 text-blue-500" />}
+                                    <div className="absolute -bottom-2 -right-2 bg-white rounded-full p-2.5 shadow-2xl border border-gray-100">
+                                        <Loader2 className="w-6 h-6 text-blue-600 animate-spin" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="text-center space-y-4">
+                                <h3 className="text-2xl font-bold text-gray-900 tracking-tight">
+                                    {status === 'connecting_source' ? 'Connecting to Source...' :
+                                        status === 'searching_docs' ? 'Analyzing Documents...' :
+                                            'Submitting Case Files...'}
+                                </h3>
+                                <p className="text-sm text-gray-500 font-medium max-w-sm mx-auto leading-relaxed">
+                                    {status === 'connecting_source' && 'Authenticating with Google OAuth 2.0 to access evidence documents.'}
+                                    {status === 'searching_docs' && 'Performing OCR and metadata extraction on found invoice PDFs.'}
+                                    {status === 'filing' && 'Transmitting encrypted evidence packets to Amazon SP-API endpoints.'}
+                                </p>
+                            </div>
+                            <div className="w-full max-w-sm bg-neutral-950 rounded-2xl p-8 font-mono text-[12px] text-neutral-400 space-y-3 border border-neutral-900 shadow-2xl relative overflow-hidden">
+                                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
+                                <div className="text-neutral-700 flex justify-between border-b border-neutral-900 pb-3 mb-4 text-[10px] tracking-widest uppercase">
+                                    <span>V-CORE_v4.2</span>
+                                    <span>AUTH_OK</span>
+                                </div>
+                                {status === 'filing' ? (
+                                    <>
+                                        <div className="text-emerald-500">&gt; push(CasePacket_114-552): OK</div>
+                                        <div>&gt; payload: AES_256_ENCRYPTED</div>
+                                        <div className="animate-pulse text-blue-500">&gt; waiting_for_case_id...</div>
+                                    </>
+                                ) : (
+                                    <>
+                                        <div className="text-emerald-500">&gt; bridge: channel_established</div>
+                                        <div>&gt; query: "Amazon Invoice", "Shipment"</div>
+                                        {status === 'searching_docs' && (
+                                            <>
+                                                <div className="text-emerald-500">&gt; matched: Invoice-FBA15X.pdf</div>
+                                                <div className="text-emerald-500">&gt; matched: SKU-9982-PL.pdf</div>
+                                                <div className="text-neutral-600 mt-3">&gt; analyzing_fields()...</div>
+                                            </>
+                                        )}
+                                    </>
+                                )}
+                                <div className="h-4 w-2 bg-neutral-700 animate-pulse inline-block" />
+                            </div>
                         </div>
                     )}
 
-                    {/* Restored Footer Flow Buttons (Present but maybe not triggered unless status changes) */}
+                    {/* B. MATCHED CLAIMS TABLE OVERLAY */}
                     {status === 'matched' && (
-                        <Button
-                            onClick={() => setStatus('filing')}
-                            size="sm"
-                            className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-500/20 animate-in fade-in slide-in-from-right-4">
-                            <FileCheck className="w-4 h-4 mr-2" />
-                            File 14 Claims
-                        </Button>
+                        <div className="flex-1 flex flex-col bg-white overflow-hidden animate-in fade-in slide-in-from-bottom-6 duration-700">
+                            <div className="p-10 border-b border-gray-100 bg-gray-50/30 flex items-center justify-between shadow-sm relative z-10">
+                                <div className="flex items-center gap-5">
+                                    <div className="p-4 bg-emerald-100/50 rounded-2xl shadow-inner border border-emerald-200/30">
+                                        <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-2xl font-bold text-gray-900 tracking-tight leading-tight">Evidence Verified</h3>
+                                        <p className="text-[11px] text-gray-400 uppercase tracking-[0.3em] font-bold mt-1">14 Claims Matched with Documentation</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex-1 overflow-auto bg-white px-4">
+                                <table className="w-full text-left text-[14px]">
+                                    <thead className="bg-white sticky top-0 z-10 border-b border-gray-100">
+                                        <tr className="text-gray-400 uppercase tracking-[0.25em] font-bold text-[10px]">
+                                            <th className="px-10 py-6">Audit Category</th>
+                                            <th className="px-10 py-6">Reference ID</th>
+                                            <th className="px-10 py-6">Filing Readiness</th>
+                                            <th className="px-10 py-6 text-right">Potential Recovery</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-50">
+                                        {[
+                                            { type: 'Lost in Transit', ref: 'FBA15XJ-22', val: 850.00 },
+                                            { type: 'Warehouse Damage', ref: 'SKU-9982-DMG', val: 125.50 },
+                                            { type: 'Unpaid Customer Refund', ref: 'ORD-33291-RR', val: 45.20 },
+                                            { type: 'Weight & Dimension Fee', ref: 'FEE-7721-ERR', val: 18.40 },
+                                            { type: 'Missing in Shipment', ref: 'SHP-FBA-992', val: 312.00 },
+                                            { type: 'Incorrect Disposal', ref: 'DSP-8821-X', val: 55.00 },
+                                            { type: 'Inbound Discrepancy', ref: 'INC-2291', val: 198.50 },
+                                            { type: 'Late Return Policy', ref: 'RET-3310', val: 42.00 },
+                                            { type: 'Removals Lost', ref: 'RMV-112', val: 95.75 },
+                                            { type: 'Overage Fee Recovery', ref: 'OVG-998', val: 12.40 }
+                                        ].map((row, i) => {
+                                            return (
+                                                <tr key={i} className="hover:bg-gray-50 transition-all group">
+                                                    <td className="px-10 py-6 font-bold text-gray-900">{row.type}</td>
+                                                    <td className="px-10 py-6 text-gray-500 font-mono tracking-tighter opacity-70 group-hover:opacity-100 transition-opacity">{row.ref}</td>
+                                                    <td className="px-10 py-6">
+                                                        <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-100 text-[10px] px-3 py-0.5 font-bold uppercase tracking-wider">High Strength</Badge>
+                                                    </td>
+                                                    <td className="px-10 py-6 text-right font-mono font-bold text-gray-900 text-base">
+                                                        ${row.val.toFixed(2)}
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     )}
 
+                    {/* C. DISPUTE CASES OVERLAY */}
                     {status === 'disputes' && (
-                        <Button
-                            onClick={() => setStatus('notifications')}
-                            size="sm"
-                            className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-500/20 animate-in fade-in slide-in-from-right-4">
-                            View Notifications <ArrowRight className="w-4 h-4 ml-2" />
-                        </Button>
+                        <div className="flex-1 p-12 flex flex-col bg-gray-50/50 overflow-auto animate-in fade-in slide-in-from-bottom-10 duration-700">
+                            <div className="flex items-center justify-between mb-10">
+                                <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-4 tracking-tight">
+                                    <Briefcase className="w-7 h-7 text-emerald-600" /> Resolution Tracking
+                                </h3>
+                                <Badge variant="secondary" className="bg-white border-gray-200 px-4 py-1 text-xs font-bold shadow-sm">14 Live Cases</Badge>
+                            </div>
+                            <div className="bg-white border border-gray-200 rounded-3xl overflow-hidden shadow-2xl">
+                                <div className="p-10 border-b border-gray-100 flex justify-between items-start bg-gradient-to-r from-gray-50/50 via-white to-gray-50/50">
+                                    <div>
+                                        <div className="flex items-center gap-4 mb-3">
+                                            <span className="text-[11px] font-bold text-gray-500 font-mono tracking-widest uppercase bg-gray-100 px-3 py-1 rounded-lg">AMZ_CASE_114-552311</span>
+                                            <Badge className="bg-emerald-50 text-emerald-700 border-emerald-100 text-xs font-black tracking-tight">SUBMITTED</Badge>
+                                        </div>
+                                        <h4 className="text-xl font-bold text-gray-900 tracking-tight">Lost Inbound Shipment - Transaction FBA15X</h4>
+                                    </div>
+                                    <div className="text-right">
+                                        <div className="text-3xl font-mono font-bold text-gray-900 tracking-tighter">$850.00</div>
+                                        <p className="text-[11px] text-gray-400 font-bold uppercase tracking-widest mt-2">Recovery Estimate</p>
+                                    </div>
+                                </div>
+                                <div className="p-16 bg-white relative">
+                                    <div className="relative flex items-center justify-between max-w-4xl mx-auto">
+                                        <div className="absolute left-0 top-4 w-full h-1 bg-gray-100 rounded-full" />
+                                        <div className="absolute left-0 top-4 w-[66%] h-1 bg-emerald-500 rounded-full shadow-[0_0_15px_rgba(16,185,129,0.4)] transition-all duration-1500 ease-out" />
+                                        {['Detected', 'Prepared', 'Submitted', 'Paid', 'Finalized'].map((step, i) => {
+                                            return (
+                                                <div key={i} className="relative z-10 flex flex-col items-center gap-5 bg-white px-6">
+                                                    <div className={cn(
+                                                        "w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-700",
+                                                        i <= 2 ? "bg-emerald-500 border-emerald-500 text-white shadow-xl shadow-emerald-500/20 scale-110" : "bg-white border-gray-200 text-gray-300"
+                                                    )}>
+                                                        {i <= 2 ? <CheckCheck className="w-5 h-5" /> : (i === 3 ? <DollarSign className="w-5 h-5" /> : <ShieldCheck className="w-5 h-5" />)}
+                                                    </div>
+                                                    <span className={cn("text-[10px] font-black uppercase tracking-[0.2em]", i <= 2 ? "text-emerald-700" : "text-gray-400")}>{step}</span>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="mt-8 grid grid-cols-2 gap-6">
+                                <div className="bg-white border border-gray-100 p-6 rounded-2xl flex items-center justify-between opacity-50 hover:opacity-100 transition-opacity">
+                                    <div className="flex items-center gap-5">
+                                        <div className="w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.6)]" />
+                                        <div>
+                                            <p className="text-[10px] font-mono text-gray-400 mb-0.5 tracking-tight">#CASE-SKU-9982</p>
+                                            <span className="text-base font-bold text-gray-900 tracking-tight">Warehouse Damage</span>
+                                        </div>
+                                    </div>
+                                    <Badge variant="outline" className="text-[10px] font-black uppercase tracking-widest bg-gray-50 border-gray-200">Processing</Badge>
+                                </div>
+                                <div className="bg-white border border-gray-100 p-6 rounded-2xl flex items-center justify-between opacity-50">
+                                    <div className="flex items-center gap-5">
+                                        <div className="w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.6)]" />
+                                        <div>
+                                            <p className="text-[10px] font-mono text-gray-400 mb-0.5 tracking-tight">#CASE-ORD-3329</p>
+                                            <span className="text-base font-bold text-gray-900 tracking-tight">Unpaid Refund</span>
+                                        </div>
+                                    </div>
+                                    <Badge variant="outline" className="text-[10px] font-black uppercase tracking-widest bg-gray-50 border-gray-200">Processing</Badge>
+                                </div>
+                            </div>
+                        </div>
                     )}
 
+                    {/* D. NOTIFICATION LOG OVERLAY */}
                     {status === 'notifications' && (
-                        <Button
-                            onClick={() => window.location.href = '/auth/signup'}
-                            size="sm"
-                            className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-500/20 animate-in fade-in slide-in-from-right-4">
-                            Sign Up <ArrowRight className="w-4 h-4 ml-2" />
-                        </Button>
+                        <div className="flex-1 p-12 flex flex-col bg-white overflow-hidden animate-in fade-in duration-700">
+                            <div className="flex items-center justify-between mb-10">
+                                <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-4 tracking-tight">
+                                    <Bell className="w-7 h-7 text-emerald-600" /> Account Activity History
+                                </h3>
+                                <Button variant="outline" size="sm" className="h-10 text-[10px] font-black uppercase tracking-[0.2em] bg-gray-50 border-gray-100 hover:bg-gray-100 shadow-sm">
+                                    <CheckCheck className="w-4 h-4 mr-3" /> Mark All Read
+                                </Button>
+                            </div>
+                            <div className="flex-1 overflow-auto pr-6 space-y-5 custom-scrollbar">
+                                {NOTIFICATIONS_DATA.map((n, i) => {
+                                    return (
+                                        <div key={i} className="p-7 border border-gray-50 rounded-[2.5rem] bg-gray-50/40 flex gap-7 items-start hover:bg-white hover:border-gray-200 hover:shadow-2xl transition-all duration-400 group">
+                                            <div className="mt-1 shrink-0 transition-all duration-400 group-hover:scale-110 group-hover:rotate-6">
+                                                {n.type === 'alert' ?
+                                                    <div className="w-14 h-14 rounded-3xl bg-amber-50 flex items-center justify-center border border-amber-100 shadow-inner">
+                                                        <Search className="w-7 h-7 text-amber-500" />
+                                                    </div> :
+                                                    <div className="w-14 h-14 rounded-3xl bg-emerald-50 flex items-center justify-center border border-emerald-100 shadow-inner">
+                                                        <CheckCircle2 className="w-7 h-7 text-emerald-500" />
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div className="flex-1">
+                                                <div className="flex items-center gap-4 mb-2">
+                                                    <span className="text-[10px] font-black font-mono uppercase tracking-widest text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">{n.type === 'alert' ? 'Audit Alert' : 'Fund Deposit'}</span>
+                                                    <span className="text-[10px] text-gray-400 font-bold font-mono uppercase tracking-tight opacity-50">{n.time}</span>
+                                                </div>
+                                                <p className="text-[15px] text-gray-800 font-medium leading-[1.6] group-hover:text-gray-900 transition-colors">{n.message}</p>
+                                                <div className="mt-4 flex gap-2">
+                                                    <div className="h-1 w-8 bg-gray-200 rounded-full" />
+                                                    <div className="h-1 w-4 bg-gray-100 rounded-full" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
                     )}
                 </div>
             </div>
 
-            {/* RESULTS VIEW OVERLAY */}
-            <div className={cn(
-                "absolute inset-0 bg-white z-20 transition-all duration-700 flex flex-col",
-                (status === 'connecting_source' || status === 'searching_docs' || status === 'matched' || status === 'filing' || status === 'disputes' || status === 'notifications')
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-4 pointer-events-none"
-            )}>
-
-                {/* 1. SYNC COMPLETE VIEW (Modified to be Simple Amount) */}
-                {status === 'results' && (
-                    <div className="flex-1 flex flex-col items-center justify-center bg-[#0D0D0D] relative overflow-hidden text-center z-10 space-y-2">
-                        <div className="text-xs text-gray-500 font-bold uppercase tracking-widest">Recoverable Funds</div>
-                        <div className="text-6xl md:text-7xl font-mono font-bold text-emerald-400 tracking-tighter">
-                            ${fundsFound.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                        </div>
-
-                        <div className="absolute right-0 top-0 opacity-10 pointer-events-none">
-                            <Fingerprint className="w-96 h-96 text-white" />
-                        </div>
-
-                        <div className="pt-8">
-                            {/* CTA for this view */}
-                            <Button
-                                onClick={() => setStatus('connecting_source')} /* Optional: Connect flow or signup directly? User said "just show Amount". I will leave a button to SignUp or Continue? I'll link to Signup for 'Simple' view */
-                                // Actually, I'll make it "Start Live Audit" leading to Signup
-                                onClick={() => window.location.href = '/auth/signup'}
-                                className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold h-12 px-8 rounded-full shadow-[0_0_30px_rgba(16,185,129,0.4)] transition-all hover:scale-[1.05]">
-                                Start Live Audit
-                            </Button>
-                        </div>
-                    </div>
-                )}
-
-                {/* 2. Loading / Processing States (Restored) */}
-                {(status === 'connecting_source' || status === 'searching_docs' || status === 'filing') && (
-                    <div className="flex-1 flex flex-col items-center justify-center p-8 space-y-6 animate-in fade-in duration-500">
-                        <div className="relative">
-                            <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center animate-pulse">
-                                {status === 'connecting_source' && <Mail className="w-8 h-8 text-blue-500" />}
-                                {status === 'searching_docs' && <Search className="w-8 h-8 text-blue-500" />}
-                                {status === 'filing' && <Briefcase className="w-8 h-8 text-blue-500" />}
-                            </div>
-                            <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-1 shadow-sm">
-                                <Loader2 className="w-4 h-4 text-blue-600 animate-spin" />
-                            </div>
-                        </div>
-                        <div className="text-center space-y-2">
-                            <h3 className="text-lg font-medium text-gray-900">
-                                {status === 'connecting_source' && 'Connecting to Gmail...'}
-                                {status === 'searching_docs' && 'Scanning for Invoices...'}
-                                {status === 'filing' && 'Filing Claims with Amazon...'}
-                            </h3>
-                            <div className="text-sm text-gray-500 font-mono">
-                                {status === 'connecting_source' && 'Authenticating via OAuth 2.0'}
-                                {status === 'searching_docs' && 'Searching: "Amazon", "Shipment", "Invoice"'}
-                                {status === 'filing' && 'Generating PDF packets & submitting to Seller Central'}
-                            </div>
-                        </div>
-                        {/* Mock Terminal Output */}
-                        <div className="w-full max-w-sm bg-gray-900 rounded-lg p-4 font-mono text-[10px] text-gray-300 space-y-1 opacity-80 shadow-inner border border-gray-800">
-                            <div>&gt; System Protocol v4.2</div>
-                            {status === 'filing' ? (
-                                <>
-                                    <div className="text-emerald-400">&gt; Compiling evidence dossier... OK</div>
-                                    <div>&gt; Generating C-7821-Evidence.pdf...</div>
-                                    <div>&gt; Submitting via API (Seller Central)...</div>
-                                    <div className="animate-pulse">&gt; Case ID created: 114552311</div>
-                                </>
-                            ) : (
-                                <>
-                                    <div>&gt; Initiating secure connection... OK</div>
-                                    <div>&gt; Accessing read-only scope... OK</div>
-                                    {status === 'searching_docs' && (
-                                        <>
-                                            <div className="text-emerald-400">&gt; Found: Invoice-FBA15X.pdf</div>
-                                            <div className="text-emerald-400">&gt; Found: SKU-9982-PackingList.pdf</div>
-                                            <div>&gt; extracting_metadata()...</div>
-                                            <div>&gt; matching_claims()...</div>
-                                        </>
-                                    )}
-                                </>
-                            )}
-                            <div className="animate-pulse">_</div>
-                        </div>
-                    </div>
-                )}
-
-                {/* 3. Matched Claims View (Restored, triggers after searching) */}
-                {status === 'matched' && (
-                    <div className="flex-1 flex flex-col bg-white">
-                        <div className="border-b border-gray-100 px-6 py-4 flex items-center justify-between bg-gray-50/50">
-                            <div className="flex items-center gap-3">
-                                <div className="p-2 bg-emerald-100/50 rounded-lg">
-                                    <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-                                </div>
-                                <div>
-                                    <h3 className="text-sm font-bold text-gray-900">Recovery Ready</h3>
-                                    <p className="text-xs text-gray-500">14 claims matched with evidence</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="flex-1 overflow-auto">
-                            <table className="w-full text-left text-xs">
-                                <thead className="bg-gray-50/50 sticky top-0 z-10">
-                                    <tr>
-                                        <th className="px-6 py-3 font-semibold text-gray-400 uppercase tracking-wider w-8">#</th>
-                                        <th className="px-6 py-3 font-semibold text-gray-400 uppercase tracking-wider">Claim Type</th>
-                                        <th className="px-6 py-3 font-semibold text-gray-400 uppercase tracking-wider">SKU / Order</th>
-                                        <th className="px-6 py-3 font-semibold text-gray-400 uppercase tracking-wider">Status</th>
-                                        <th className="px-6 py-3 font-semibold text-gray-400 uppercase tracking-wider text-right">Value</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-50">
-                                    {[
-                                        { id: 'C-7821', type: 'Lost in Transit', desc: 'Inbound Shipment FBA15X', val: 850.00 },
-                                        { id: 'C-7822', type: 'Damaged Warehouse', desc: 'SKU-9982 (Main Inv)', val: 125.50 },
-                                        { id: 'C-7823', type: 'Unpaid Refund', desc: 'Order #114-33291', val: 45.20 },
-                                        { id: 'C-7824', type: 'Weight Fee Error', desc: 'SKU-7721 (Overcharge)', val: 18.40 },
-                                        { id: 'C-7825', type: 'Lost in Warehouse', desc: 'Units missing from bin', val: 240.00 },
-                                    ].map((row, i) => (
-                                        <tr key={i} className="group hover:bg-gray-50/50 transition-colors">
-                                            <td className="px-6 py-4 text-gray-300 font-mono">{i + 1}</td>
-                                            <td className="px-6 py-4">
-                                                <div className="font-medium text-gray-900">{row.type}</div>
-                                            </td>
-                                            <td className="px-6 py-4 text-gray-500 font-mono text-[11px]">{row.desc}</td>
-                                            <td className="px-6 py-4">
-                                                <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold border uppercase tracking-wide bg-emerald-50 text-emerald-700 border-emerald-100">
-                                                    <FileText className="w-3 h-3" /> Ready to File
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-4 text-right font-medium text-gray-900">
-                                                ${row.val.toFixed(2)}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                )}
-
-
-                {/* 4. Dispute Cases View (Restored) */}
-                {status === 'disputes' && (
-                    <div className="flex-1 overflow-auto bg-gray-50/30 p-6 space-y-4">
-                        {/* Dispute Card */}
-                        <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-                            <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-start">
-                                <div>
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <span className="font-mono text-xs font-bold text-gray-900">CASE #114-552311</span>
-                                        <Badge variant="outline" className="text-[10px] bg-blue-50 text-blue-700 border-blue-100 uppercase tracking-widest">Submitted</Badge>
-                                    </div>
-                                    <h4 className="text-sm font-medium text-gray-800">Lost Inbound Shipment - FBA15X</h4>
-                                </div>
-                                <div className="text-right">
-                                    <div className="text-sm font-bold text-gray-900">$850.00</div>
-                                    <div className="text-[10px] text-gray-400 uppercase tracking-wide">Expected Value</div>
-                                </div>
-                            </div>
-
-                            {/* Horizontal Timeline */}
-                            <div className="px-6 py-6 bg-white">
-                                <div className="relative flex items-center justify-between">
-                                    {/* Progress Line Background */}
-                                    <div className="absolute left-0 top-3 w-full h-0.5 bg-gray-100 -z-10" />
-                                    {/* Progress Line Active */}
-                                    <div className="absolute left-0 top-3 w-[50%] h-0.5 bg-emerald-500 -z-10" />
-
-                                    {/* Steps */}
-                                    {[
-                                        { label: 'Detected', status: 'done', icon: Search },
-                                        { label: 'Prepared', status: 'done', icon: FileText },
-                                        { label: 'Submitted', status: 'done', icon: Briefcase }, // Just done
-                                        { label: 'Paid', status: 'pending', icon: DollarSign },
-                                        { label: 'Follow-up', status: 'pending', icon: CheckCircle2 },
-                                    ].map((step, i) => (
-                                        <div key={i} className="flex flex-col items-center gap-2 bg-white px-2">
-                                            <div className={cn(
-                                                "w-6 h-6 rounded-full flex items-center justify-center border-2 transition-colors duration-500",
-                                                step.status === 'done'
-                                                    ? "bg-emerald-500 border-emerald-500 text-white"
-                                                    : "bg-white border-gray-200 text-gray-300"
-                                            )}>
-                                                <step.icon className="w-3 h-3" />
-                                            </div>
-                                            <span className={cn(
-                                                "text-[10px] font-medium uppercase tracking-wide",
-                                                step.status === 'done' ? "text-emerald-700" : "text-gray-400"
-                                            )}>{step.label}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                        {/* Other rows (collapsed) */}
-                        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4 flex items-center justify-between opacity-60 hover:opacity-100 transition-opacity">
-                            <div className="flex items-center gap-4">
-                                <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                                <div>
-                                    <div className="text-xs font-mono text-gray-500">CASE #114-552312</div>
-                                    <div className="text-sm font-medium text-gray-900">Damaged Inventory - SKU-9982</div>
-                                </div>
-                            </div>
-                            <Badge variant="outline" className="text-[10px]">Processing</Badge>
-                        </div>
-                    </div>
-                )}
-
-                {/* 5. Notifications View (Restored) */}
-                {status === 'notifications' && (
-                    <div className="flex-1 overflow-auto bg-white p-6 space-y-4">
-                        <div className="flex items-center justify-between mb-2">
-                            <h4 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Notification Log</h4>
-                            <Button variant="outline" size="sm" className="h-7 text-[10px] bg-white text-gray-600 hover:bg-gray-50">
-                                <CheckCheck className="w-3 h-3 mr-1" /> Mark all read
-                            </Button>
-                        </div>
-                        <div className="space-y-1">
-                            {NOTIFICATIONS_DATA.map((notif) => (
-                                <div
-                                    key={notif.id}
-                                    className="flex items-start gap-3 p-3 border border-gray-100 transition-colors cursor-pointer hover:bg-gray-50/50 bg-white">
-                                    <div className="flex-shrink-0">
-                                        <div className="w-6 h-6 bg-gray-100 flex items-center justify-center rounded-sm">
-                                            {notif.type === 'alert' ?
-                                                <Search className="w-3 h-3 text-gray-600" /> :
-                                                <DollarSign className="w-3 h-3 text-gray-600" />
-                                            }
-                                        </div>
-                                    </div>
-
-                                    <div className="flex-1 min-w-0">
-                                        <p className="text-xs font-medium text-gray-900 mb-0.5 leading-relaxed">
-                                            {notif.message}
-                                        </p>
-                                        <div className="flex items-center gap-2 text-[10px] text-gray-500">
-                                            <span>{notif.time}</span>
-                                            <div className="flex gap-1">
-                                                <span className="px-1 py-0 text-[9px] border border-gray-200 text-gray-600 bg-gray-50 rounded-sm">In-App</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
-
-            </div>
-
-            {/* Decorative Glow */}
-            <div className="absolute -inset-4 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 blur-3xl -z-10 rounded-full opacity-50 pointer-events-none" />
+            {/* BACKDROP DECORATION */}
+            <div className="absolute -inset-20 bg-gradient-to-tr from-emerald-500/5 via-transparent to-blue-500/5 blur-[120px] -z-30 opacity-40 pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/20 via-transparent to-transparent -z-20 opacity-50 pointer-events-none" />
         </div>
     );
 };
