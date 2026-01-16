@@ -395,10 +395,10 @@ const Index = () => {
               ))}
 
               <Link
-                to="/contact"
+                to="/sales"
                 className="h-9 px-5 text-sm font-medium text-white bg-black hover:bg-gray-900 transition-colors inline-flex items-center"
                 style={{ borderRadius: '0px' }}>
-                Contact Sales
+                Enterprise
               </Link>
             </nav>
             <button
