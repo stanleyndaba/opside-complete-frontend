@@ -175,43 +175,66 @@ export const InteractiveDemo = () => {
 
                     </div>
 
-                    {/* Right Panel: Live Feed */}
-                    <div className="flex-1 rounded-xl border border-gray-100 bg-gray-50/50 flex flex-col overflow-hidden max-h-[350px]">
-                        <div className="px-4 py-3 border-b border-gray-100 bg-white flex justify-between items-center">
-                            <span className="text-xs font-semibold text-gray-600 uppercase tracking-wider">System Activity Log</span>
-                            <div className="flex gap-1">
-                                <div className="w-1.5 h-1.5 rounded-full bg-gray-300" />
-                                <div className="w-1.5 h-1.5 rounded-full bg-gray-300" />
-                            </div>
+                    {/* Right Panel: Live Feed (Sync.tsx Style) */}
+                    <div className="flex-1 relative group bg-[#0D0D0D] rounded-lg border border-neutral-900 shadow-sm h-[350px] md:h-auto overflow-hidden">
+
+                        {/* Header bar */}
+                        <div className="absolute top-0 left-0 right-0 h-10 bg-[#0D0D0D] rounded-t-lg border-b border-neutral-900 flex items-center px-5 z-10">
+                            <span className="text-[10px] font-normal text-neutral-600 uppercase tracking-[0.2em]">Activity Feed</span>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto p-4 space-y-3 font-mono text-xs">
-                            {logs.length === 0 && (
-                                <div className="h-full flex flex-col items-center justify-center text-gray-400 space-y-2 opacity-60">
-                                    <Search className="w-8 h-8" />
-                                    <p>Waiting to start...</p>
-                                </div>
-                            )}
+                        {/* Scrollable Container */}
+                        <div className="pt-12 pb-6 px-5 font-normal text-[13px] h-full overflow-y-auto scroll-smooth relative leading-relaxed tracking-tight text-neutral-400">
+                            {/* Simplified subtle gradient */}
+                            <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent pointer-events-none sticky top-0"></div>
 
-                            {logs.map((log) => (
-                                <div key={log.id} className={cn(
-                                    "p-2 rounded border-l-2 transition-all duration-300 animate-in slide-in-from-left-2",
-                                    log.type === 'scan' && "border-blue-400 bg-blue-50/50 text-blue-700",
-                                    log.type === 'info' && "border-gray-400 bg-white text-gray-600",
-                                    log.type === 'alert' && "border-amber-500 bg-amber-50 text-amber-800 font-semibold",
-                                    log.type === 'success' && "border-emerald-500 bg-emerald-50 text-emerald-800"
-                                )}>
-                                    <div className="flex justify-between items-start">
-                                        <span>{log.msg}</span>
-                                        {log.value && (
-                                            <span className="text-emerald-600 bg-white px-1.5 rounded border border-emerald-100">
-                                                +${log.value.toFixed(2)}
-                                            </span>
-                                        )}
+                            {logs.length === 0 ? (
+                                <div className="h-full flex flex-col items-center justify-center text-neutral-700 space-y-3 opacity-60">
+                                    <div className="relative">
+                                        <div className="absolute inset-0 bg-emerald-500/20 blur-xl rounded-full"></div>
+                                        <Search className="w-8 h-8 relative z-10" />
+                                    </div>
+                                    <div className="text-center">
+                                        <p className="text-xs tracking-widest uppercase opacity-80">Waiting for Signal...</p>
+                                        <p className="text-[10px] text-neutral-600 mt-1 font-mono">SYSTEM_IDLE</p>
                                     </div>
                                 </div>
-                            ))}
-                            <div ref={logsEndRef} />
+                            ) : (
+                                <div className="space-y-1 relative z-10">
+                                    {logs.map((log) => (
+                                        <div key={log.id} className="flex items-start gap-3 py-1.5 text-[13px] animate-in fade-in slide-in-from-bottom-1 duration-300">
+                                            {/* Timestamp style dot for alignment */}
+                                            <div className={cn(
+                                                "mt-1.5 w-1.5 h-1.5 rounded-full shrink-0",
+                                                log.type === 'scan' && "bg-blue-500/50",
+                                                log.type === 'info' && "bg-neutral-700",
+                                                log.type === 'alert' && "bg-amber-500",
+                                                log.type === 'success' && "bg-emerald-500"
+                                            )} />
+
+                                            <span className="break-all flex-1">
+                                                <span className={cn(
+                                                    "transition-colors duration-300",
+                                                    log.type === 'scan' && "text-neutral-500",
+                                                    log.type === 'info' && "text-neutral-400",
+                                                    log.type === 'alert' && "text-neutral-300",
+                                                    log.type === 'success' && "text-neutral-200"
+                                                )}>
+                                                    {log.msg}
+                                                </span>
+
+                                                {/* Value Highlight */}
+                                                {log.value && (
+                                                    <span className="ml-2 inline-flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/20 px-1.5 rounded text-emerald-400 font-medium text-[11px] tracking-wide">
+                                                        +${log.value.toFixed(2)}
+                                                    </span>
+                                                )}
+                                            </span>
+                                        </div>
+                                    ))}
+                                    <div ref={logsEndRef} />
+                                </div>
+                            )}
                         </div>
                     </div>
 
