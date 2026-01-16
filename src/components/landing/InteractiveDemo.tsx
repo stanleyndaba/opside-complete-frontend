@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, RotateCw, CheckCircle2, AlertCircle, Fingerprint, Search, ShieldCheck, ArrowRight, Mail, FileText, Loader2, Database, Briefcase, FileCheck, DollarSign } from 'lucide-react';
+import { Play, RotateCw, CheckCircle2, AlertCircle, Fingerprint, Search, ShieldCheck, ArrowRight, Mail, FileText, Loader2, Database, Briefcase, FileCheck, DollarSign, Bell, CheckCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -18,8 +18,27 @@ const SIMULATED_LOGS = [
     { id: 10, type: 'success', msg: 'Audit Complete. 14 actionable cases identified.', delay: 7200 },
 ];
 
+const NOTIFICATIONS_DATA = [
+    { id: 1, message: "Margin identified discrepancies Amazon likely owes you for. Reviewing and validating evidence now.", time: "6 days ago", type: 'alert' },
+    { id: 2, message: "Funds have been cleared and deposited to your account.", time: "6 days ago", type: 'success' },
+    { id: 3, message: "Funds have been cleared and deposited to your account.", time: "6 days ago", type: 'success' },
+    { id: 4, message: "Funds have been cleared and deposited to your account.", time: "6 days ago", type: 'success' },
+    { id: 5, message: "Margin identified discrepancies Amazon likely owes you for. Reviewing and validating evidence now.", time: "7 days ago", type: 'alert' },
+    { id: 6, message: "Funds have been cleared and deposited to your account.", time: "7 days ago", type: 'success' },
+    { id: 7, message: "Funds have been cleared and deposited to your account.", time: "7 days ago", type: 'success' },
+    { id: 8, message: "Funds have been cleared and deposited to your account.", time: "7 days ago", type: 'success' },
+    { id: 9, message: "Margin identified discrepancies Amazon likely owes you for. Reviewing and validating evidence now.", time: "7 days ago", type: 'alert' },
+    { id: 10, message: "Funds have been cleared and deposited to your account.", time: "7 days ago", type: 'success' },
+    { id: 11, message: "Funds have been cleared and deposited to your account.", time: "7 days ago", type: 'success' },
+    { id: 12, message: "Funds have been cleared and deposited to your account.", time: "7 days ago", type: 'success' },
+    { id: 13, message: "Margin identified discrepancies Amazon likely owes you for. Reviewing and validating evidence now.", time: "7 days ago", type: 'alert' },
+    { id: 14, message: "Funds have been cleared and deposited to your account.", time: "7 days ago", type: 'success' },
+    { id: 15, message: "Funds have been cleared and deposited to your account.", time: "7 days ago", type: 'success' },
+    { id: 16, message: "Funds have been cleared and deposited to your account.", time: "7 days ago", type: 'success' },
+];
+
 export const InteractiveDemo = () => {
-    const [status, setStatus] = useState<'idle' | 'scanning' | 'complete' | 'results' | 'connecting_source' | 'searching_docs' | 'matched' | 'filing' | 'disputes'>('idle');
+    const [status, setStatus] = useState<'idle' | 'scanning' | 'complete' | 'results' | 'connecting_source' | 'searching_docs' | 'matched' | 'filing' | 'disputes' | 'notifications'>('idle');
     const [logs, setLogs] = useState<any[]>([]);
     const [fundsFound, setFundsFound] = useState(0);
     const [itemsScanned, setItemsScanned] = useState(0);
@@ -46,7 +65,6 @@ export const InteractiveDemo = () => {
             const t = setTimeout(() => {
                 setLogs(prev => [...prev, log]);
                 if (log.value) {
-                    // Animate money addition smoothly could be done here, but simple add is fine for now
                     setFundsFound(prev => prev + log.value);
                 }
             }, log.delay);
@@ -253,7 +271,7 @@ export const InteractiveDemo = () => {
                 {/* RESULTS VIEW OVERLAY */}
                 <div className={cn(
                     "absolute inset-0 bg-white z-20 transition-all duration-700 flex flex-col",
-                    (status === 'results' || status === 'connecting_source' || status === 'searching_docs' || status === 'matched' || status === 'filing' || status === 'disputes')
+                    (status === 'results' || status === 'connecting_source' || status === 'searching_docs' || status === 'matched' || status === 'filing' || status === 'disputes' || status === 'notifications')
                         ? "opacity-100 translate-y-0"
                         : "opacity-0 translate-y-4 pointer-events-none"
                 )}>
@@ -261,15 +279,19 @@ export const InteractiveDemo = () => {
                     <div className="border-b border-gray-100 px-6 py-4 flex items-center justify-between bg-gray-50/50">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-emerald-100/50 rounded-lg">
-                                {status === 'disputes' ? <Briefcase className="w-5 h-5 text-emerald-600" /> : <CheckCircle2 className="w-5 h-5 text-emerald-600" />}
+                                {status === 'notifications' ? <Bell className="w-5 h-5 text-emerald-600" /> :
+                                    (status === 'disputes' ? <Briefcase className="w-5 h-5 text-emerald-600" /> : <CheckCircle2 className="w-5 h-5 text-emerald-600" />)}
                             </div>
                             <div>
                                 <h3 className="text-sm font-bold text-gray-900">
-                                    {status === 'disputes' ? 'Active Dispute Cases' : (status === 'matched' ? 'Recovery Ready' : 'Audit Complete')}
+                                    {status === 'notifications' ? 'Notifications' :
+                                        (status === 'disputes' ? 'Active Dispute Cases' :
+                                            (status === 'matched' ? 'Recovery Ready' : 'Audit Complete'))}
                                 </h3>
                                 <p className="text-xs text-gray-500">
-                                    {status === 'disputes' ? 'Tracking 14 active cases with Amazon' :
-                                        (status === 'matched' ? '14 claims matched with evidence' : '14 potential claims identified')}
+                                    {status === 'notifications' ? 'Real-time updates on your recovery status' :
+                                        (status === 'disputes' ? 'Tracking 14 active cases with Amazon' :
+                                            (status === 'matched' ? '14 claims matched with evidence' : '14 potential claims identified'))}
                                 </p>
                             </div>
                         </div>
@@ -462,6 +484,46 @@ export const InteractiveDemo = () => {
                             </div>
                         )}
 
+                        {/* 4. Notifications View */}
+                        {status === 'notifications' && (
+                            <div className="flex-1 overflow-auto bg-white p-6 space-y-4">
+                                <div className="flex items-center justify-between mb-2">
+                                    <h4 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Notification Log</h4>
+                                    <Button variant="outline" size="sm" className="h-7 text-[10px] bg-white text-gray-600 hover:bg-gray-50">
+                                        <CheckCheck className="w-3 h-3 mr-1" /> Mark all read
+                                    </Button>
+                                </div>
+                                <div className="space-y-1">
+                                    {NOTIFICATIONS_DATA.map((notif) => (
+                                        <div
+                                            key={notif.id}
+                                            className="flex items-start gap-3 p-3 border border-gray-100 transition-colors cursor-pointer hover:bg-gray-50/50 bg-white">
+                                            <div className="flex-shrink-0">
+                                                <div className="w-6 h-6 bg-gray-100 flex items-center justify-center rounded-sm">
+                                                    {notif.type === 'alert' ?
+                                                        <Search className="w-3 h-3 text-gray-600" /> :
+                                                        <DollarSign className="w-3 h-3 text-gray-600" />
+                                                    }
+                                                </div>
+                                            </div>
+
+                                            <div className="flex-1 min-w-0">
+                                                <p className="text-xs font-medium text-gray-900 mb-0.5 leading-relaxed">
+                                                    {notif.message}
+                                                </p>
+                                                <div className="flex items-center gap-2 text-[10px] text-gray-500">
+                                                    <span>{notif.time}</span>
+                                                    <div className="flex gap-1">
+                                                        <span className="px-1 py-0 text-[9px] border border-gray-200 text-gray-600 bg-gray-50 rounded-sm">In-App</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
                     </div>
 
                     {/* Footer CTA */}
@@ -499,10 +561,19 @@ export const InteractiveDemo = () => {
 
                         {status === 'disputes' && (
                             <Button
+                                onClick={() => setStatus('notifications')}
+                                size="sm"
+                                className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-500/20 animate-in fade-in slide-in-from-right-4">
+                                View Notifications <ArrowRight className="w-4 h-4 ml-2" />
+                            </Button>
+                        )}
+
+                        {status === 'notifications' && (
+                            <Button
                                 onClick={() => window.location.href = '/auth/signup'}
                                 size="sm"
                                 className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-500/20 animate-in fade-in slide-in-from-right-4">
-                                Sign Up (View All Cases) <ArrowRight className="w-4 h-4 ml-2" />
+                                Sign Up <ArrowRight className="w-4 h-4 ml-2" />
                             </Button>
                         )}
                     </div>
