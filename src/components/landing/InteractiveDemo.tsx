@@ -143,62 +143,38 @@ export const InteractiveDemo = ({ className }: { className?: string }) => {
                 {/* Main Interface Content */}
                 <div className="flex-1 p-6 bg-white flex flex-col md:flex-row gap-6 overflow-hidden">
 
-                    {/* Left Panel: Metrics & Controls */}
-                    <div className="flex-1 flex flex-col gap-6">
-
-                        {/* Action Area */}
-                        <div className="p-6 rounded-2xl bg-gradient-to-br from-gray-900 to-gray-800 text-white shadow-xl relative overflow-hidden flex-1 flex flex-col justify-center">
-                            <div className="absolute top-0 right-0 p-3 opacity-10">
-                                <Fingerprint className="w-32 h-32" />
+                    {/* Left Panel: Simple Controls (Narrower) */}
+                    <div className="w-64 shrink-0 flex flex-col justify-center gap-8 py-8 pl-2">
+                        <div>
+                            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Recoverable Funds</h3>
+                            <div className="text-4xl font-mono font-bold text-emerald-500 tracking-tight">
+                                ${fundsFound.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </div>
+                        </div>
 
-                            <div className="relative z-10">
-                                <h3 className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1">Recoverable Funds</h3>
-                                <div className="text-4xl md:text-5xl font-mono font-bold text-emerald-400 mb-6 tracking-tight">
-                                    ${fundsFound.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        {status === 'idle' && (
+                            <Button
+                                onClick={handleStart}
+                                className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-6 text-lg shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all hover:scale-[1.02]">
+                                <Play className="w-5 h-5 mr-2 fill-current" />
+                                Start recovery
+                            </Button>
+                        )}
+
+                        {status === 'scanning' && (
+                            <div className="space-y-3">
+                                <div className="flex justify-between text-xs text-gray-400">
+                                    <span>Scanning Inventory Events...</span>
+                                    <span>{itemsScanned.toLocaleString()}</span>
                                 </div>
-
-                                {status === 'idle' && (
-                                    <Button
-                                        onClick={handleStart}
-                                        className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-6 text-lg shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all hover:scale-[1.02]">
-                                        <Play className="w-5 h-5 mr-2 fill-current" />
-                                        Start recovery
-                                    </Button>
-                                )}
-
-                                {status === 'scanning' && (
-                                    <div className="space-y-3">
-                                        <div className="flex justify-between text-xs text-gray-400">
-                                            <span>Scanning Inventory Events...</span>
-                                            <span>{itemsScanned.toLocaleString()} / 14,205</span>
-                                        </div>
-                                        <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
-                                            <div
-                                                className="h-full bg-emerald-500 animate-pulse transition-all duration-300 ease-out"
-                                                style={{ width: `${Math.min((itemsScanned / 14205) * 100, 100)}%` }}
-                                            />
-                                        </div>
-                                        <div className="text-center text-xs text-emerald-400/80 font-mono animate-pulse">
-                                            PROCESSING...
-                                        </div>
-                                    </div>
-                                )}
+                                <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                                    <div
+                                        className="h-full bg-emerald-500 animate-pulse transition-all duration-300 ease-out"
+                                        style={{ width: `${Math.min((itemsScanned / 14205) * 100, 100)}%` }}
+                                    />
+                                </div>
                             </div>
-                        </div>
-
-                        {/* Minor Metrics */}
-                        <div className="grid grid-cols-2 gap-4 h-24 shrink-0">
-                            <div className="p-4 rounded-xl border border-gray-100 bg-gray-50/50">
-                                <div className="text-xs text-gray-500 mb-1">Events Analyzed</div>
-                                <div className="text-xl font-bold text-gray-800">{itemsScanned.toLocaleString()}</div>
-                            </div>
-                            <div className="p-4 rounded-xl border border-gray-100 bg-gray-50/50">
-                                <div className="text-xs text-gray-500 mb-1">Platform Confidence</div>
-                                <div className="text-xl font-bold text-emerald-600">99.8%</div>
-                            </div>
-                        </div>
-
+                        )}
                     </div>
 
                     {/* Right Panel: Live Feed (Sync.tsx Style) */}
