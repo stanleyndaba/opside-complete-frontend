@@ -30,7 +30,7 @@ const LegalFooter: React.FC = () => {
                     </nav>
                 </div>
                 <div className="mt-6 pt-6 border-t border-gray-100 text-xs text-gray-500">
-                    <p>© 2025 Margin AI. Operating globally from Durban, South Africa.</p>
+                    <p>Built for operators.</p>
                 </div>
             </div>
         </footer>
