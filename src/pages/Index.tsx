@@ -537,9 +537,13 @@ const Index = () => {
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
               {/* Right Column: Product Visualization */}
               <div className="order-2 lg:order-2 relative">
-                {/* Interactive Demo Dashboard */}
-                <div className="relative w-full transform transition-transform duration-700 hover:scale-[1.01]">
-                  <InteractiveDemo />
+                {/* Main Dashboard Image */}
+                <div className="relative rounded-2xl bg-gradient-to-b from-gray-50/50 to-white/50 p-2 shadow-2xl backdrop-blur-sm border border-gray-100/50 transform transition-transform duration-700 hover:scale-[1.01]">
+                  <img
+                    src={heroImage}
+                    alt="Margin Dashboard"
+                    className="w-full h-auto rounded-xl shadow-sm border border-black/5"
+                  />
                 </div>
                 {/* Decorative blob behind image */}
                 <div className="absolute -inset-4 bg-gradient-to-r from-emerald-100/30 to-sky-100/30 blur-3xl -z-10 rounded-full opacity-70" />
@@ -603,12 +607,9 @@ const Index = () => {
                     </Link>
                   </div>
                   {/* Trust text */}
-                  <div className="flex flex-col gap-2 text-sm text-gray-500">
-                    <span className="inline-flex items-center gap-1.5">
-                      <ShieldCheck className="h-4 w-4 text-[#36454F]" />
-                      Verified Amazon SP-API Developer
-                    </span>
-                    <span>Cancel anytime</span>
+                  <div className="flex items-center gap-2 text-xs md:text-sm text-gray-500 font-medium">
+                    <ShieldCheck className="h-4 w-4 md:h-5 md:w-5 text-[#36454F]" />
+                    <span>Verified Amazon SP-API Developer</span>
                   </div>
                 </div>
 
