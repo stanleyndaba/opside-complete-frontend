@@ -107,9 +107,9 @@ export const InteractiveDemo = ({ className }: { className?: string }) => {
                 <div className="bg-gray-50 border-b border-gray-100 px-6 py-4 flex items-center justify-between shrink-0">
                     <div className="flex items-center gap-3">
                         <div className="flex gap-1.5">
-                            <div className="w-2.5 h-2.5 rounded-full bg-gray-200" />
-                            <div className="w-2.5 h-2.5 rounded-full bg-gray-200" />
-                            <div className="w-2.5 h-2.5 rounded-full bg-gray-200" />
+                            <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
+                            <div className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+                            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
                         </div>
                         <div className="h-4 w-px bg-gray-200 mx-2" />
                         <div className="px-3 py-1 bg-white border border-gray-200 rounded-md text-[10px] font-mono text-gray-500 flex items-center gap-2 shadow-sm">
@@ -244,7 +244,7 @@ export const InteractiveDemo = ({ className }: { className?: string }) => {
                 {/* OVERLAY LAYERS */}
                 <div className={cn(
                     "absolute inset-0 bg-white z-20 transition-all duration-700 flex flex-col",
-                    (status === 'connecting_source' || status === 'searching_docs' || status === 'matched' || status === 'filing' || status === 'disputes' || status === 'notifications')
+                    (status === 'results' || status === 'connecting_source' || status === 'searching_docs' || status === 'matched' || status === 'filing' || status === 'disputes' || status === 'notifications')
                         ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
                 )}>
                     {/* A. LOADING / TERMINAL OVERLAY */}
@@ -302,19 +302,31 @@ export const InteractiveDemo = ({ className }: { className?: string }) => {
                         </div>
                     )}
 
-                    {/* B. MATCHED CLAIMS TABLE OVERLAY */}
-                    {status === 'matched' && (
+                    {/* B. DETECTED CLAIMS / EVIDENCE MATCHED TABLE */}
+                    {(status === 'results' || status === 'matched') && (
                         <div className="flex-1 flex flex-col bg-white overflow-hidden animate-in fade-in slide-in-from-bottom-6 duration-700">
                             <div className="p-10 border-b border-gray-100 bg-gray-50/30 flex items-center justify-between shadow-sm relative z-10">
                                 <div className="flex items-center gap-5">
-                                    <div className="p-4 bg-emerald-100/50 rounded-2xl shadow-inner border border-emerald-200/30">
-                                        <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+                                    <div className={cn(
+                                        "p-4 rounded-2xl shadow-inner border transition-colors duration-500",
+                                        status === 'results' ? "bg-amber-100/50 border-amber-200/30" : "bg-emerald-100/50 border-emerald-200/30"
+                                    )}>
+                                        {status === 'results' ? <Search className="w-8 h-8 text-amber-600" /> : <CheckCircle2 className="w-8 h-8 text-emerald-600" />}
                                     </div>
                                     <div>
-                                        <h3 className="text-2xl font-bold text-gray-900 tracking-tight leading-tight">Evidence Verified</h3>
-                                        <p className="text-[11px] text-gray-400 uppercase tracking-[0.3em] font-bold mt-1">14 Claims Matched with Documentation</p>
+                                        <h3 className="text-2xl font-bold text-gray-900 tracking-tight leading-tight">
+                                            {status === 'results' ? '14 Potential Claims Detected' : 'Evidence Verified'}
+                                        </h3>
+                                        <p className="text-[11px] text-gray-400 uppercase tracking-[0.3em] font-bold mt-1">
+                                            {status === 'results' ? 'Awaiting Evidence Matching' : '14 Claims Matched with Documentation'}
+                                        </p>
                                     </div>
                                 </div>
+                                {status === 'results' && (
+                                    <Button onClick={() => setStatus('connecting_source')} className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-xl shadow-emerald-600/20 font-bold h-10 px-6">
+                                        Auto-Match Evidence <ArrowRight className="w-4 h-4 ml-2" />
+                                    </Button>
+                                )}
                             </div>
                             <div className="flex-1 overflow-auto bg-white px-4">
                                 <table className="w-full text-left text-[14px]">
@@ -322,7 +334,7 @@ export const InteractiveDemo = ({ className }: { className?: string }) => {
                                         <tr className="text-gray-400 uppercase tracking-[0.25em] font-bold text-[10px]">
                                             <th className="px-10 py-6">Audit Category</th>
                                             <th className="px-10 py-6">Reference ID</th>
-                                            <th className="px-10 py-6">Filing Readiness</th>
+                                            <th className="px-10 py-6">Status</th>
                                             <th className="px-10 py-6 text-right">Potential Recovery</th>
                                         </tr>
                                     </thead>
@@ -338,20 +350,22 @@ export const InteractiveDemo = ({ className }: { className?: string }) => {
                                             { type: 'Late Return Policy', ref: 'RET-3310', val: 42.00 },
                                             { type: 'Removals Lost', ref: 'RMV-112', val: 95.75 },
                                             { type: 'Overage Fee Recovery', ref: 'OVG-998', val: 12.40 }
-                                        ].map((row, i) => {
-                                            return (
-                                                <tr key={i} className="hover:bg-gray-50 transition-all group">
-                                                    <td className="px-10 py-6 font-bold text-gray-900">{row.type}</td>
-                                                    <td className="px-10 py-6 text-gray-500 font-mono tracking-tighter opacity-70 group-hover:opacity-100 transition-opacity">{row.ref}</td>
-                                                    <td className="px-10 py-6">
+                                        ].map((row, i) => (
+                                            <tr key={i} className="hover:bg-gray-50 transition-all group">
+                                                <td className="px-10 py-6 font-bold text-gray-900">{row.type}</td>
+                                                <td className="px-10 py-6 text-gray-500 font-mono tracking-tighter opacity-70 group-hover:opacity-100 transition-opacity">{row.ref}</td>
+                                                <td className="px-10 py-6">
+                                                    {status === 'results' ? (
+                                                        <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-100 text-[10px] px-3 py-0.5 font-bold uppercase tracking-wider">Awaiting Signal</Badge>
+                                                    ) : (
                                                         <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-100 text-[10px] px-3 py-0.5 font-bold uppercase tracking-wider">High Strength</Badge>
-                                                    </td>
-                                                    <td className="px-10 py-6 text-right font-mono font-bold text-gray-900 text-base">
-                                                        ${row.val.toFixed(2)}
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })}
+                                                    )}
+                                                </td>
+                                                <td className="px-10 py-6 text-right font-mono font-bold text-gray-900 text-base">
+                                                    ${row.val.toFixed(2)}
+                                                </td>
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
                             </div>
@@ -440,14 +454,15 @@ export const InteractiveDemo = ({ className }: { className?: string }) => {
                                     return (
                                         <div key={i} className="p-7 border border-gray-50 rounded-[2.5rem] bg-gray-50/40 flex gap-7 items-start hover:bg-white hover:border-gray-200 hover:shadow-2xl transition-all duration-400 group">
                                             <div className="mt-1 shrink-0 transition-all duration-400 group-hover:scale-110 group-hover:rotate-6">
-                                                {n.type === 'alert' ?
+                                                {n.type === 'alert' ? (
                                                     <div className="w-14 h-14 rounded-3xl bg-amber-50 flex items-center justify-center border border-amber-100 shadow-inner">
                                                         <Search className="w-7 h-7 text-amber-500" />
-                                                    </div> :
+                                                    </div>
+                                                ) : (
                                                     <div className="w-14 h-14 rounded-3xl bg-emerald-50 flex items-center justify-center border border-emerald-100 shadow-inner">
                                                         <CheckCircle2 className="w-7 h-7 text-emerald-500" />
                                                     </div>
-                                                }
+                                                )}
                                             </div>
                                             <div className="flex-1">
                                                 <div className="flex items-center gap-4 mb-2">
