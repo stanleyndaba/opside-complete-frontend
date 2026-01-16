@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, RotateCw, CheckCircle2, AlertCircle, Fingerprint, Search, ShieldCheck, ArrowRight, Mail, FileText, Loader2, Database } from 'lucide-react';
+import { Play, RotateCw, CheckCircle2, AlertCircle, Fingerprint, Search, ShieldCheck, ArrowRight, Mail, FileText, Loader2, Database, Briefcase, FileCheck, DollarSign } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -19,7 +19,7 @@ const SIMULATED_LOGS = [
 ];
 
 export const InteractiveDemo = () => {
-    const [status, setStatus] = useState<'idle' | 'scanning' | 'complete' | 'results' | 'connecting_source' | 'searching_docs' | 'matched'>('idle');
+    const [status, setStatus] = useState<'idle' | 'scanning' | 'complete' | 'results' | 'connecting_source' | 'searching_docs' | 'matched' | 'filing' | 'disputes'>('idle');
     const [logs, setLogs] = useState<any[]>([]);
     const [fundsFound, setFundsFound] = useState(0);
     const [itemsScanned, setItemsScanned] = useState(0);
@@ -74,7 +74,7 @@ export const InteractiveDemo = () => {
         };
     }, [status]);
 
-    // Evidence Matching Simulation
+    // Evidence Matching & Filing Simulation
     useEffect(() => {
         if (status === 'connecting_source') {
             const t = setTimeout(() => {
@@ -86,6 +86,12 @@ export const InteractiveDemo = () => {
             const t = setTimeout(() => {
                 setStatus('matched');
             }, 3000);
+            return () => clearTimeout(t);
+        }
+        if (status === 'filing') {
+            const t = setTimeout(() => {
+                setStatus('disputes');
+            }, 2500);
             return () => clearTimeout(t);
         }
     }, [status]);
@@ -104,7 +110,7 @@ export const InteractiveDemo = () => {
     return (
         <div className="relative w-full max-w-4xl mx-auto">
             {/* Window Frame */}
-            <div className="rounded-xl overflow-hidden bg-white shadow-2xl border border-gray-200/50 backdrop-blur-sm flex flex-col relative h-[520px]">
+            <div className="rounded-xl overflow-hidden bg-white shadow-2xl border border-gray-200/50 backdrop-blur-sm flex flex-col relative h-[600px] md:h-[550px]">
                 {/* Title Bar */}
                 <div className="bg-gray-50/80 border-b border-gray-100 px-4 py-3 flex items-center gap-4 shrink-0">
                     <div className="flex gap-2">
@@ -180,7 +186,7 @@ export const InteractiveDemo = () => {
                     </div>
 
                     {/* Right Panel: Live Feed (Sync.tsx Style) */}
-                    <div className="flex-1 relative group bg-[#0D0D0D] rounded-lg border border-neutral-900 shadow-sm h-full overflow-hidden">
+                    <div className="flex-1 relative group bg-[#0D0D0D] rounded-lg border border-neutral-900 shadow-sm h-full overflow-hidden hidden md:block">
 
                         {/* Header bar */}
                         <div className="absolute top-0 left-0 right-0 h-10 bg-[#0D0D0D] rounded-t-lg border-b border-neutral-900 flex items-center px-5 z-10">
@@ -247,7 +253,7 @@ export const InteractiveDemo = () => {
                 {/* RESULTS VIEW OVERLAY */}
                 <div className={cn(
                     "absolute inset-0 bg-white z-20 transition-all duration-700 flex flex-col",
-                    (status === 'results' || status === 'connecting_source' || status === 'searching_docs' || status === 'matched')
+                    (status === 'results' || status === 'connecting_source' || status === 'searching_docs' || status === 'matched' || status === 'filing' || status === 'disputes')
                         ? "opacity-100 translate-y-0"
                         : "opacity-0 translate-y-4 pointer-events-none"
                 )}>
@@ -255,16 +261,15 @@ export const InteractiveDemo = () => {
                     <div className="border-b border-gray-100 px-6 py-4 flex items-center justify-between bg-gray-50/50">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-emerald-100/50 rounded-lg">
-                                <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+                                {status === 'disputes' ? <Briefcase className="w-5 h-5 text-emerald-600" /> : <CheckCircle2 className="w-5 h-5 text-emerald-600" />}
                             </div>
                             <div>
                                 <h3 className="text-sm font-bold text-gray-900">
-                                    {status === 'matched' ? 'Recovery Ready' : 'Audit Complete'}
+                                    {status === 'disputes' ? 'Active Dispute Cases' : (status === 'matched' ? 'Recovery Ready' : 'Audit Complete')}
                                 </h3>
                                 <p className="text-xs text-gray-500">
-                                    {status === 'matched'
-                                        ? '14 claims matched with evidence'
-                                        : '14 potential claims identified'}
+                                    {status === 'disputes' ? 'Tracking 14 active cases with Amazon' :
+                                        (status === 'matched' ? '14 claims matched with evidence' : '14 potential claims identified')}
                                 </p>
                             </div>
                         </div>
@@ -326,15 +331,13 @@ export const InteractiveDemo = () => {
                         )}
 
                         {/* 2. Loading / Processing States */}
-                        {(status === 'connecting_source' || status === 'searching_docs') && (
+                        {(status === 'connecting_source' || status === 'searching_docs' || status === 'filing') && (
                             <div className="flex-1 flex flex-col items-center justify-center p-8 space-y-6 animate-in fade-in duration-500">
                                 <div className="relative">
                                     <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center animate-pulse">
-                                        {status === 'connecting_source' ? (
-                                            <Mail className="w-8 h-8 text-blue-500" />
-                                        ) : (
-                                            <Search className="w-8 h-8 text-blue-500" />
-                                        )}
+                                        {status === 'connecting_source' && <Mail className="w-8 h-8 text-blue-500" />}
+                                        {status === 'searching_docs' && <Search className="w-8 h-8 text-blue-500" />}
+                                        {status === 'filing' && <Briefcase className="w-8 h-8 text-blue-500" />}
                                     </div>
                                     <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-1 shadow-sm">
                                         <Loader2 className="w-4 h-4 text-blue-600 animate-spin" />
@@ -342,25 +345,119 @@ export const InteractiveDemo = () => {
                                 </div>
                                 <div className="text-center space-y-2">
                                     <h3 className="text-lg font-medium text-gray-900">
-                                        {status === 'connecting_source' ? 'Connecting to Gmail...' : 'Scanning for Invoices...'}
+                                        {status === 'connecting_source' && 'Connecting to Gmail...'}
+                                        {status === 'searching_docs' && 'Scanning for Invoices...'}
+                                        {status === 'filing' && 'Filing Claims with Amazon...'}
                                     </h3>
                                     <div className="text-sm text-gray-500 font-mono">
-                                        {status === 'connecting_source' ? 'Authenticating via OAuth 2.0' : 'Searching: "Amazon", "Shipment", "Invoice"'}
+                                        {status === 'connecting_source' && 'Authenticating via OAuth 2.0'}
+                                        {status === 'searching_docs' && 'Searching: "Amazon", "Shipment", "Invoice"'}
+                                        {status === 'filing' && 'Generating PDF packets & submitting to Seller Central'}
                                     </div>
                                 </div>
                                 {/* Mock Terminal Output */}
                                 <div className="w-full max-w-sm bg-gray-900 rounded-lg p-4 font-mono text-[10px] text-gray-300 space-y-1 opacity-80 shadow-inner border border-gray-800">
-                                    <div>&gt; Initiating secure connection... OK</div>
-                                    <div>&gt; Accessing read-only scope... OK</div>
-                                    {status === 'searching_docs' && (
+                                    <div>&gt; System Protocol v4.2</div>
+                                    {status === 'filing' ? (
                                         <>
-                                            <div className="text-emerald-400">&gt; Found: Invoice-FBA15X.pdf</div>
-                                            <div className="text-emerald-400">&gt; Found: SKU-9982-PackingList.pdf</div>
-                                            <div>&gt; extracting_metadata()...</div>
-                                            <div>&gt; matching_claims()...</div>
+                                            <div className="text-emerald-400">&gt; Compiling evidence dossier... OK</div>
+                                            <div>&gt; Generating C-7821-Evidence.pdf...</div>
+                                            <div>&gt; Submitting via API (Seller Central)...</div>
+                                            <div className="animate-pulse">&gt; Case ID created: 114552311</div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div>&gt; Initiating secure connection... OK</div>
+                                            <div>&gt; Accessing read-only scope... OK</div>
+                                            {status === 'searching_docs' && (
+                                                <>
+                                                    <div className="text-emerald-400">&gt; Found: Invoice-FBA15X.pdf</div>
+                                                    <div className="text-emerald-400">&gt; Found: SKU-9982-PackingList.pdf</div>
+                                                    <div>&gt; extracting_metadata()...</div>
+                                                    <div>&gt; matching_claims()...</div>
+                                                </>
+                                            )}
                                         </>
                                     )}
                                     <div className="animate-pulse">_</div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* 3. Dispute Cases View */}
+                        {status === 'disputes' && (
+                            <div className="flex-1 overflow-auto bg-gray-50/30 p-6 space-y-4">
+                                {/* Dispute Card */}
+                                <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+                                    <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-start">
+                                        <div>
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <span className="font-mono text-xs font-bold text-gray-900">CASE #114-552311</span>
+                                                <Badge variant="outline" className="text-[10px] bg-blue-50 text-blue-700 border-blue-100 uppercase tracking-widest">Submitted</Badge>
+                                            </div>
+                                            <h4 className="text-sm font-medium text-gray-800">Lost Inbound Shipment - FBA15X</h4>
+                                        </div>
+                                        <div className="text-right">
+                                            <div className="text-sm font-bold text-gray-900">$850.00</div>
+                                            <div className="text-[10px] text-gray-400 uppercase tracking-wide">Expected Value</div>
+                                        </div>
+                                    </div>
+
+                                    {/* Horizontal Timeline */}
+                                    <div className="px-6 py-6 bg-white">
+                                        <div className="relative flex items-center justify-between">
+                                            {/* Progress Line Background */}
+                                            <div className="absolute left-0 top-3 w-full h-0.5 bg-gray-100 -z-10" />
+                                            {/* Progress Line Active */}
+                                            <div className="absolute left-0 top-3 w-[50%] h-0.5 bg-emerald-500 -z-10" />
+
+                                            {/* Steps */}
+                                            {[
+                                                { label: 'Detected', status: 'done', icon: Search },
+                                                { label: 'Prepared', status: 'done', icon: FileText },
+                                                { label: 'Submitted', status: 'done', icon: Briefcase }, // Just done
+                                                { label: 'Paid', status: 'pending', icon: DollarSign },
+                                                { label: 'Follow-up', status: 'pending', icon: CheckCircle2 },
+                                            ].map((step, i) => (
+                                                <div key={i} className="flex flex-col items-center gap-2 bg-white px-2">
+                                                    <div className={cn(
+                                                        "w-6 h-6 rounded-full flex items-center justify-center border-2 transition-colors duration-500",
+                                                        step.status === 'done'
+                                                            ? "bg-emerald-500 border-emerald-500 text-white"
+                                                            : "bg-white border-gray-200 text-gray-300"
+                                                    )}>
+                                                        <step.icon className="w-3 h-3" />
+                                                    </div>
+                                                    <span className={cn(
+                                                        "text-[10px] font-medium uppercase tracking-wide",
+                                                        step.status === 'done' ? "text-emerald-700" : "text-gray-400"
+                                                    )}>{step.label}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Other rows (collapsed) */}
+                                <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4 flex items-center justify-between opacity-60 hover:opacity-100 transition-opacity">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                                        <div>
+                                            <div className="text-xs font-mono text-gray-500">CASE #114-552312</div>
+                                            <div className="text-sm font-medium text-gray-900">Damaged Inventory - SKU-9982</div>
+                                        </div>
+                                    </div>
+                                    <Badge variant="outline" className="text-[10px]">Processing</Badge>
+                                </div>
+                                <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4 flex items-center justify-between opacity-60 hover:opacity-100 transition-opacity">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                                        <div>
+                                            <div className="text-xs font-mono text-gray-500">CASE #114-552313</div>
+                                            <div className="text-sm font-medium text-gray-900">Unpaid Refund - Order #114...</div>
+                                        </div>
+                                    </div>
+                                    <Badge variant="outline" className="text-[10px]">Processing</Badge>
                                 </div>
                             </div>
                         )}
@@ -369,14 +466,16 @@ export const InteractiveDemo = () => {
 
                     {/* Footer CTA */}
                     <div className="p-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center shrink-0">
-                        <Button
-                            onClick={handleReset}
-                            variant="ghost"
-                            size="sm"
-                            className="text-gray-500 hover:text-gray-900">
-                            <RotateCw className="w-3.5 h-3.5 mr-2" />
-                            Reset
-                        </Button>
+                        <div className="flex gap-2">
+                            <Button
+                                onClick={handleReset}
+                                variant="ghost"
+                                size="sm"
+                                className="text-gray-500 hover:text-gray-900">
+                                <RotateCw className="w-3.5 h-3.5 mr-2" />
+                                Reset
+                            </Button>
+                        </div>
 
                         {status === 'results' && (
                             <Button
@@ -390,10 +489,20 @@ export const InteractiveDemo = () => {
 
                         {status === 'matched' && (
                             <Button
+                                onClick={() => setStatus('filing')}
+                                size="sm"
+                                className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-500/20 animate-in fade-in slide-in-from-right-4">
+                                <FileCheck className="w-4 h-4 mr-2" />
+                                File 14 Claims
+                            </Button>
+                        )}
+
+                        {status === 'disputes' && (
+                            <Button
                                 onClick={() => window.location.href = '/auth/signup'}
                                 size="sm"
                                 className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-500/20 animate-in fade-in slide-in-from-right-4">
-                                Sign Up to Recover Funds <ArrowRight className="w-4 h-4 ml-2" />
+                                Sign Up (View All Cases) <ArrowRight className="w-4 h-4 ml-2" />
                             </Button>
                         )}
                     </div>
