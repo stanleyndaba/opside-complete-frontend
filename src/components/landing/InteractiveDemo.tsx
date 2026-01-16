@@ -175,6 +175,14 @@ export const InteractiveDemo = ({ className }: { className?: string }) => {
                                 </div>
                             </div>
                         )}
+
+                        {status === 'results' && (
+                            <Button
+                                onClick={() => window.location.href = '/auth/signup'}
+                                className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-6 text-lg shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all hover:scale-[1.02] animate-in fade-in duration-500">
+                                Start Live Audit <ArrowRight className="w-5 h-5 ml-2" />
+                            </Button>
+                        )}
                     </div>
 
                     {/* Right Panel: Live Feed (Sync.tsx Style) */}
@@ -302,7 +310,7 @@ export const InteractiveDemo = ({ className }: { className?: string }) => {
             {/* RESULTS VIEW OVERLAY */}
             <div className={cn(
                 "absolute inset-0 bg-white z-20 transition-all duration-700 flex flex-col",
-                (status === 'results' || status === 'connecting_source' || status === 'searching_docs' || status === 'matched' || status === 'filing' || status === 'disputes' || status === 'notifications')
+                (status === 'connecting_source' || status === 'searching_docs' || status === 'matched' || status === 'filing' || status === 'disputes' || status === 'notifications')
                     ? "opacity-100 translate-y-0"
                     : "opacity-0 translate-y-4 pointer-events-none"
             )}>
