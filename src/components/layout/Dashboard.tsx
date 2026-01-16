@@ -1014,41 +1014,13 @@ export function Dashboard() {
                         <div className="flex-1 max-h-[600px] overflow-y-auto scrollbar-hide divide-y divide-gray-50">
                           {displayNotifications.length === 0 ? (
                             /* Live 'Heartbeat' Feed for Empty State - Minimalist */
-                            <div className="flex flex-col">
-                              {[
-                                { time: "2m", title: "INVENTORY CHECK", msg: "Scanning 12,402 SKUs across marketplaces", status: "ok" },
-                                { time: "15m", title: "SETTLEMENT VERIFIED", msg: "Period ending Oct 14 analyzed • Clean", status: "success" },
-                                { time: "42m", title: "RETURN POLICY AUDIT", msg: "Cross-referencing 892 recent returns", status: "ok" },
-                                { time: "1h", title: "FEE CLASSIFICATION", msg: "Verifying dimensional weight charges", status: "ok" },
-                                { time: "2h", title: "CLAIMS BATCHED", msg: "Submission complete • Awaiting response", status: "neutral" },
-                              ].map((item, i) => (
-                                <div key={i} className="px-5 py-3 border-l-2 border-transparent hover:bg-gray-50/50 transition-colors cursor-default group">
-                                  <div className="flex items-center justify-between gap-3 mb-0.5">
-                                    <div className="flex items-center gap-2 min-w-0">
-                                      <div className={`h-1.5 w-1.5 rounded-full shrink-0 ${item.status === 'success' ? 'bg-emerald-500' : 'bg-gray-300'}`} />
-                                      <p className="text-[10px] font-medium text-gray-600 group-hover:text-gray-900 uppercase tracking-widest truncate">{item.title}</p>
-                                    </div>
-                                    <span className="text-[9px] text-gray-300 font-mono shrink-0">{item.time}</span>
-                                  </div>
-                                  <div className="flex items-baseline justify-between gap-4 ml-3.5">
-                                    <p className="text-[10px] text-gray-400 font-normal tracking-wide leading-relaxed truncate">
-                                      {item.msg}
-                                    </p>
-                                    {item.status === 'success' && (
-                                      <span className="text-[8px] font-bold text-emerald-600/80 uppercase tracking-widest shrink-0">CLEAN</span>
-                                    )}
-                                  </div>
-                                </div>
-                              ))}
-                              <div className="px-5 py-4 text-center border-t border-gray-50 flex flex-col items-center mt-2">
-                                <span className="flex items-center gap-2 text-[9px] text-emerald-600 font-mono uppercase tracking-widest">
-                                  <span className="relative flex h-1.5 w-1.5">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
-                                  </span>
-                                  System Monitoring Active
-                                </span>
+                            <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
+                              <div className="relative flex h-3 w-3 mb-4">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
                               </div>
+                              <p className="text-[10px] text-gray-400 font-mono uppercase tracking-widest">System Monitoring Active</p>
+                              <p className="text-xs text-gray-300 mt-2">No new alerts or discrepancies found.</p>
                             </div>
                           ) : (
                             <div className="flex flex-col">
