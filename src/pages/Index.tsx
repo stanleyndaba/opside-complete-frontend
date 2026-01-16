@@ -637,8 +637,6 @@ const Index = () => {
                       </p>
                     </div>
 
-
-
                     <div className="pt-12 border-t border-white/10 mt-12 space-y-8">
                       <div>
                         <h4 className="text-sm font-medium text-white mb-2">Sync your FBA data</h4>
@@ -647,6 +645,46 @@ const Index = () => {
                         </div>
                         <p className="mt-4 text-sm text-gray-500 leading-relaxed font-normal">
                           This agent performs a continuous forensic audit of your Amazon SP-API data—cross-referencing inventory movements, shipments, returns, reimbursements, fees, and claims across 26 detection models to uncover financial discrepancies and recovery opportunities that standard tools miss.
+                        </p>
+                      </div>
+
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-2">Detect Discrepancies</h4>
+                        <div className="h-0.5 w-12 bg-gray-800 rounded-full overflow-hidden">
+                          <div className="h-full w-full bg-amber-500/50" />
+                        </div>
+                        <p className="mt-4 text-sm text-gray-500 leading-relaxed font-normal">
+                          The engine automatically analyzes 18 months of inventory history to identify over 26 types of FBA errors, from lost inbound shipments to unpaid refunds, identifying funds that Amazon owes you.
+                        </p>
+                      </div>
+
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-2">Match Evidence</h4>
+                        <div className="h-0.5 w-12 bg-gray-800 rounded-full overflow-hidden">
+                          <div className="h-full w-full bg-emerald-500/50" />
+                        </div>
+                        <p className="mt-4 text-sm text-gray-500 leading-relaxed font-normal">
+                          Our Evidence Engine autonomously locates and matches required documentation—like BOLs, PODs, and supplier invoices—directly from your email or Google Drive to build a watertight case.
+                        </p>
+                      </div>
+
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-2">File Disputes</h4>
+                        <div className="h-0.5 w-12 bg-gray-800 rounded-full overflow-hidden">
+                          <div className="h-full w-full bg-blue-500/50" />
+                        </div>
+                        <p className="mt-4 text-sm text-gray-500 leading-relaxed font-normal">
+                          Margin constructs a perfect claim package and submits it directly to Amazon Seller Support. Our AI case managers handle all follow-up correspondence until the case is resolved.
+                        </p>
+                      </div>
+
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-2">Recover Funds</h4>
+                        <div className="h-0.5 w-12 bg-gray-800 rounded-full overflow-hidden">
+                          <div className="h-full w-full bg-emerald-500/50" />
+                        </div>
+                        <p className="mt-4 text-sm text-gray-500 leading-relaxed font-normal">
+                          Approved reimbursements are deposited directly into your Amazon account. You get paid first, and we only invoice our 20% commission after the funds are safely in your bank.
                         </p>
                       </div>
                     </div>
