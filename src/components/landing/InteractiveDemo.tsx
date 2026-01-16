@@ -218,7 +218,7 @@ export const InteractiveDemo = ({ className }: { className?: string }) => {
                 {/* OVERLAY LAYERS */}
                 <div className={cn(
                     "absolute inset-0 bg-white z-20 transition-all duration-700 flex flex-col",
-                    (status === 'results' || status === 'connecting_source' || status === 'searching_docs' || status === 'matched' || status === 'filing' || status === 'disputes' || status === 'notifications')
+                    (status === 'connecting_source' || status === 'searching_docs' || status === 'matched' || status === 'filing' || status === 'disputes' || status === 'notifications')
                         ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
                 )}>
                     {/* A. LOADING / TERMINAL OVERLAY */}
@@ -302,17 +302,29 @@ export const InteractiveDemo = ({ className }: { className?: string }) => {
                                     </Button>
                                 )}
                             </div>
-                            <div className="flex-1 overflow-auto bg-white px-4">
-                                <table className="w-full text-left text-[14px]">
-                                    <thead className="bg-white sticky top-0 z-10 border-b border-gray-100">
+                        </div>
+                    )}
+
+                    {/* B. MATCHED / RESULTS TABLE */}
+                    {status === 'matched' && (
+                        <div className="flex-1 overflow-auto bg-white px-8 py-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                            <h3 className="text-xl font-bold text-gray-900 mb-8 flex items-center gap-3 tracking-tight">
+                                <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center border border-emerald-100 shadow-sm">
+                                    <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+                                </div>
+                                14 CLAIMS MATCHED WITH DOCUMENTATION
+                            </h3>
+                            <div className="rounded-2xl border border-gray-100 overflow-hidden shadow-lg">
+                                <table className="w-full text-left text-[13px]">
+                                    <thead className="bg-gray-50/50 border-b border-gray-100">
                                         <tr className="text-gray-400 uppercase tracking-[0.25em] font-bold text-[10px]">
-                                            <th className="px-10 py-6">Audit Category</th>
-                                            <th className="px-10 py-6">Reference ID</th>
-                                            <th className="px-10 py-6">Status</th>
-                                            <th className="px-10 py-6 text-right">Potential Recovery</th>
+                                            <th className="px-6 py-4">Audit Category</th>
+                                            <th className="px-6 py-4">Reference ID</th>
+                                            <th className="px-6 py-4">Status</th>
+                                            <th className="px-6 py-4 text-right">Potential Recovery</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-gray-50">
+                                    <tbody className="divide-y divide-gray-50 bg-white">
                                         {[
                                             { type: 'Lost in Transit', ref: 'FBA15XJ-22', val: 850.00 },
                                             { type: 'Warehouse Damage', ref: 'SKU-9982-DMG', val: 125.50 },
@@ -326,16 +338,12 @@ export const InteractiveDemo = ({ className }: { className?: string }) => {
                                             { type: 'Overage Fee Recovery', ref: 'OVG-998', val: 12.40 }
                                         ].map((row, i) => (
                                             <tr key={i} className="hover:bg-gray-50 transition-all group">
-                                                <td className="px-10 py-6 font-bold text-gray-900">{row.type}</td>
-                                                <td className="px-10 py-6 text-gray-500 font-mono tracking-tighter opacity-70 group-hover:opacity-100 transition-opacity">{row.ref}</td>
-                                                <td className="px-10 py-6">
-                                                    {status === 'results' ? (
-                                                        <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-100 text-[10px] px-3 py-0.5 font-bold uppercase tracking-wider">Awaiting Signal</Badge>
-                                                    ) : (
-                                                        <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-100 text-[10px] px-3 py-0.5 font-bold uppercase tracking-wider">High Strength</Badge>
-                                                    )}
+                                                <td className="px-6 py-4 font-bold text-gray-900">{row.type}</td>
+                                                <td className="px-6 py-4 text-gray-500 font-mono tracking-tighter opacity-70 group-hover:opacity-100 transition-opacity">{row.ref}</td>
+                                                <td className="px-6 py-4">
+                                                    <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-100 text-[10px] px-2 py-0.5 font-bold uppercase tracking-wider">High Strength</Badge>
                                                 </td>
-                                                <td className="px-10 py-6 text-right font-mono font-bold text-gray-900 text-base">
+                                                <td className="px-6 py-4 text-right font-mono font-bold text-gray-900 text-base">
                                                     ${row.val.toFixed(2)}
                                                 </td>
                                             </tr>
