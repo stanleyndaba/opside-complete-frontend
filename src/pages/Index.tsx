@@ -502,6 +502,14 @@ const Index = () => {
                   </Link>
                 ))}
 
+                <Link
+                  to="/sales"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-gray-800 hover:bg-white/70 hover:text-gray-900 transition-colors flex items-center justify-between">
+                  <span>Margin Enterprise</span>
+                  <span className="text-xs bg-black text-white px-2 py-0.5 rounded-full">VIP</span>
+                </Link>
+
                 <Button
                   onClick={() => {
                     setMobileMenuOpen(false);

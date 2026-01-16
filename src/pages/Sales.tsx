@@ -67,7 +67,7 @@ export default function Sales() {
             <header className="border-b border-gray-100">
                 <div className="container mx-auto px-6 py-4 flex items-center justify-between">
                     <Link to="/" className="flex items-center gap-2 group">
-                        <ArrowLeft className="h-4 w-4 text-gray-400 group-hover:text-gray-600 transition-colors" />
+
                         <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto" />
                         <span className="text-base font-semibold text-gray-900 font-montserrat">Margin</span>
                     </Link>
@@ -91,7 +91,7 @@ export default function Sales() {
                     </p>
                 </div>
 
-                <div className="grid lg:grid-cols-5 gap-16">
+                <div className="grid lg:grid-cols-5 gap-8 lg:gap-16">
                     {/* Enterprise Benefits */}
                     <div className="lg:col-span-2 space-y-6">
                         <h2 className="text-sm font-semibold text-gray-900 font-montserrat uppercase tracking-wide">
