@@ -639,16 +639,70 @@ const Index = () => {
 
             </div>
 
-            {/* Interactive Demo Section - Standalone Block Below Grid */}
-            <div className="w-full relative z-20 mt-20 md:mt-32">
-              <div className="max-w-5xl mx-auto">
-                <div className="text-center mb-10">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">See Margin in Action</h2>
-                  <p className="text-gray-500">Run a live simulation to see how our engine detects lost revenue.</p>
-                </div>
-                {/* Demo Component with explicit z-index and shadow for lift */}
-                <div className="relative z-20 shadow-2xl rounded-xl">
-                  <InteractiveDemo />
+            {/* Interactive Demo Section - Standalone Polished Block */}
+            <div className="w-full relative z-20 mt-24 md:mt-36 mb-24">
+              <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+                {/* Dark container for "Startup" feel */}
+                <div className="bg-[#050505] rounded-[32px] p-8 md:p-12 lg:p-16 relative overflow-hidden shadow-2xl border border-white/5">
+
+                  {/* Background Accents (Subtle) */}
+                  <div className="absolute top-0 right-0 w-[800px] h-[600px] bg-gradient-to-b from-indigo-500/5 to-purple-500/5 blur-[120px] pointer-events-none opacity-40" />
+                  <div className="absolute bottom-0 left-0 w-[600px] h-[500px] bg-gradient-to-t from-emerald-500/5 to-blue-500/5 blur-[100px] pointer-events-none opacity-30" />
+
+                  <div className="grid lg:grid-cols-12 gap-12 items-start relative z-10">
+                    {/* Left Column: Copy */}
+                    <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-12 pt-4">
+                      {/* Icon Grid */}
+                      <div className="grid grid-cols-2 gap-1 w-8 mb-6 opacity-80">
+                        <div className="w-3 h-3 rounded-full border border-rose-400 bg-rose-400/20" />
+                        <div className="w-3 h-3 rounded-full border border-sky-400 bg-sky-400/20" />
+                        <div className="w-3 h-3 rounded-full border border-amber-400 bg-amber-400/20" />
+                        <div className="w-3 h-3 rounded-full border border-emerald-400 bg-emerald-400/20" />
+                      </div>
+
+                      <div className="space-y-4">
+                        <h2 className="text-3xl md:text-4xl lg:text-5xl font-normal tracking-tight text-white leading-[1.1]">
+                          Agent Margin
+                        </h2>
+                        <p className="text-lg text-gray-400 font-normal leading-relaxed max-w-sm">
+                          The fastest way to detect, manage, and recover accurately at Scale!
+                        </p>
+                      </div>
+
+                      <div className="pt-8 flex flex-col sm:flex-row gap-4">
+                        <Button
+                          onClick={() => window.location.href = '/auth/signup'}
+                          className="h-12 px-8 rounded-full bg-white text-black hover:bg-gray-100 transition-all font-medium text-sm">
+                          Explore Agent Margin
+                        </Button>
+                      </div>
+
+                      <div className="pt-12 border-t border-white/10 mt-12 space-y-8">
+                        <div>
+                          <h4 className="text-sm font-medium text-white mb-2">Create the agent</h4>
+                          <div className="h-0.5 w-12 bg-gray-800 rounded-full overflow-hidden">
+                            <div className="h-full w-full bg-emerald-500/50" />
+                          </div>
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-medium text-gray-500 mb-2">Define policies</h4>
+                          <div className="h-0.5 w-12 bg-gray-800 rounded-full" />
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-medium text-gray-500 mb-2">Deploy & Recover</h4>
+                          <div className="h-0.5 w-12 bg-gray-800 rounded-full" />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Right Column: Demo (Enlarged) */}
+                    <div className="lg:col-span-8 w-full">
+                      {/* Negative margin on large screens to pull it closer to edge or make it feel "bursting out" */}
+                      <div className="relative rounded-xl overflow-hidden shadow-2xl ring-1 ring-white/10 lg:-mr-12 lg:translate-x-6 transition-transform hover:scale-[1.01] duration-700">
+                        <InteractiveDemo className="max-w-none w-full !h-[600px] md:!h-[700px] shadow-none border-0 rounded-none bg-transparent" />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

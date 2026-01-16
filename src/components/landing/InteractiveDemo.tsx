@@ -37,7 +37,7 @@ const NOTIFICATIONS_DATA = [
     { id: 16, message: "Funds have been cleared and deposited to your account.", time: "7 days ago", type: 'success' },
 ];
 
-export const InteractiveDemo = () => {
+export const InteractiveDemo = ({ className }: { className?: string }) => {
     const [status, setStatus] = useState<'idle' | 'scanning' | 'complete' | 'results' | 'connecting_source' | 'searching_docs' | 'matched' | 'filing' | 'disputes' | 'notifications'>('idle');
     const [logs, setLogs] = useState<any[]>([]);
     const [fundsFound, setFundsFound] = useState(0);
@@ -126,7 +126,7 @@ export const InteractiveDemo = () => {
     };
 
     return (
-        <div className="relative w-full max-w-4xl mx-auto">
+        <div className={cn("relative w-full max-w-4xl mx-auto", className)}>
             {/* Window Frame */}
             <div className="rounded-xl overflow-hidden bg-white shadow-2xl border border-gray-200/50 backdrop-blur-sm flex flex-col relative h-[600px] md:h-[550px]">
                 {/* Title Bar */}
