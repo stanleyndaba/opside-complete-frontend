@@ -15,6 +15,7 @@ import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
 import { CookieConsent } from '@/components/landing/CookieConsent';
 import { ProductsMegaMenu } from '@/components/landing/ProductsMegaMenu';
+import { InteractiveDemo } from '@/components/landing/InteractiveDemo';
 const heroImage = '/FRONTIMAGE.png';
 
 const PadlockIcon: React.FC = () => (
@@ -536,13 +537,9 @@ const Index = () => {
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
               {/* Right Column: Product Visualization */}
               <div className="order-2 lg:order-2 relative">
-                {/* Main Dashboard Image */}
-                <div className="relative rounded-2xl bg-gradient-to-b from-gray-50/50 to-white/50 p-2 shadow-2xl backdrop-blur-sm border border-gray-100/50 transform transition-transform duration-700 hover:scale-[1.01]">
-                  <img
-                    src={heroImage}
-                    alt="Margin Dashboard"
-                    className="w-full h-auto rounded-xl shadow-sm border border-black/5"
-                  />
+                {/* Interactive Demo Dashboard */}
+                <div className="relative w-full transform transition-transform duration-700 hover:scale-[1.01]">
+                  <InteractiveDemo />
                 </div>
                 {/* Decorative blob behind image */}
                 <div className="absolute -inset-4 bg-gradient-to-r from-emerald-100/30 to-sky-100/30 blur-3xl -z-10 rounded-full opacity-70" />
