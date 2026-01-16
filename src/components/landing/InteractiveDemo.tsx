@@ -114,7 +114,7 @@ export const InteractiveDemo = ({ className }: { className?: string }) => {
                         <div className="h-4 w-px bg-gray-200 mx-2" />
                         <div className="px-3 py-1 bg-white border border-gray-200 rounded-md text-[10px] font-mono text-gray-500 flex items-center gap-2 shadow-sm">
                             <ShieldCheck className="w-3 h-3 text-emerald-500" />
-                            Scenario: High-Volume Seller ($1M/yr)
+                            Scenario: High-Volume Seller ($1M+/yr)
                         </div>
                     </div>
                 </div>
@@ -385,19 +385,17 @@ export const InteractiveDemo = ({ className }: { className?: string }) => {
                                     <div className="relative flex items-center justify-between max-w-4xl mx-auto">
                                         <div className="absolute left-0 top-4 w-full h-1 bg-gray-100 rounded-full" />
                                         <div className="absolute left-0 top-4 w-[66%] h-1 bg-emerald-500 rounded-full shadow-[0_0_15px_rgba(16,185,129,0.4)] transition-all duration-1500 ease-out" />
-                                        {['Detected', 'Prepared', 'Submitted', 'Paid', 'Finalized'].map((step, i) => {
-                                            return (
-                                                <div key={i} className="relative z-10 flex flex-col items-center gap-5 bg-white px-6">
-                                                    <div className={cn(
-                                                        "w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-700",
-                                                        i <= 2 ? "bg-emerald-500 border-emerald-500 text-white shadow-xl shadow-emerald-500/20 scale-110" : "bg-white border-gray-200 text-gray-300"
-                                                    )}>
-                                                        {i <= 2 ? <CheckCheck className="w-5 h-5" /> : (i === 3 ? <DollarSign className="w-5 h-5" /> : <ShieldCheck className="w-5 h-5" />)}
-                                                    </div>
-                                                    <span className={cn("text-[10px] font-black uppercase tracking-[0.2em]", i <= 2 ? "text-emerald-700" : "text-gray-400")}>{step}</span>
+                                        {['Detected', 'Prepared', 'Submitted', 'Paid', 'Finalized'].map((step, i) => (
+                                            <div key={i} className="relative z-10 flex flex-col items-center gap-5 bg-white px-6">
+                                                <div className={cn(
+                                                    "w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-700",
+                                                    i <= 2 ? "bg-emerald-500 border-emerald-500 text-white shadow-xl shadow-emerald-500/20 scale-110" : "bg-white border-gray-200 text-gray-300"
+                                                )}>
+                                                    {i <= 2 ? <CheckCheck className="w-5 h-5" /> : (i === 3 ? <DollarSign className="w-5 h-5" /> : <ShieldCheck className="w-5 h-5" />)}
                                                 </div>
-                                            );
-                                        })}
+                                                <span className={cn("text-[10px] font-black uppercase tracking-[0.2em]", i <= 2 ? "text-emerald-700" : "text-gray-400")}>{step}</span>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             </div>

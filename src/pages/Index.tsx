@@ -654,10 +654,10 @@ const Index = () => {
 
                       <div className="space-y-4">
                         <h2 className="text-3xl md:text-4xl lg:text-5xl font-normal tracking-tight text-white leading-[1.1]">
-                          Agent Margin
+                          See Margin in Action
                         </h2>
                         <p className="text-lg text-gray-400 font-normal leading-relaxed max-w-sm">
-                          The fastest way to detect, manage, and recover accurately at Scale!
+                          Run a live simulation to see how our engine detects lost revenue.
                         </p>
                       </div>
 
@@ -684,7 +684,6 @@ const Index = () => {
 
                     {/* Right Column: Demo (Enlarged) */}
                     <div className="lg:col-span-8 w-full">
-                      {/* Negative margin on large screens to pull it closer to edge or make it feel "bursting out" */}
                       <div className="relative rounded-xl overflow-hidden shadow-2xl ring-1 ring-white/10 lg:-mr-12 lg:translate-x-6 transition-transform hover:scale-[1.01] duration-700">
                         <InteractiveDemo className="max-w-none w-full !h-[600px] md:!h-[700px] shadow-none border-0 rounded-none bg-transparent" />
                       </div>
@@ -851,36 +850,8 @@ const Index = () => {
 
       <BrandFooter />
 
-      {/* Founders Council Banner - HIDDEN - Moved to navbar Immediate Access
-      <div
-        className={`fixed bottom-0 left-0 right-0 z-50 w-full px-3 py-2.5 md:px-6 md:py-5 transition-transform duration-300 ease-in-out ${showBanner ? 'translate-y-0' : 'translate-y-full'
-          }`}
-        style={{
-          backgroundColor: '#000000',
-          fontFamily: 'Inter, sans-serif'
-        }}>
-        <div className="container mx-auto max-w-6xl">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-2 md:gap-6">
-            <p className="font-montserrat text-white text-xs md:text-base font-light text-center md:text-left flex-1">
-              Join the exclusive group of 20 high-volume sellers stress-testing our 7-second AI Audit. Lock in a permanent 15% commission rate (vs. 20% public rate).
-            </p>
-            <a
-              href="https://forms.gle/882hpRYWinNzBt2r9"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-shrink-0">
-              <Button
-                className="bg-black hover:bg-gray-900 text-white font-medium px-4 py-2 md:px-6 md:py-2.5 text-sm md:text-base shadow-lg transition-colors whitespace-nowrap"
-                style={{ fontFamily: 'Inter, sans-serif' }}>
-                Immediate Access →
-              </Button>
-            </a>
-          </div>
-        </div>
-      </div>
-      */}
       <CookieConsent />
-    </div >
+    </div>
   );
 };
 
