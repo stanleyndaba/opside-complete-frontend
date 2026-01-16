@@ -679,18 +679,13 @@ const Index = () => {
 
                       <div className="pt-12 border-t border-white/10 mt-12 space-y-8">
                         <div>
-                          <h4 className="text-sm font-medium text-white mb-2">Create the agent</h4>
+                          <h4 className="text-sm font-medium text-white mb-2">Sync your FBA data</h4>
                           <div className="h-0.5 w-12 bg-gray-800 rounded-full overflow-hidden">
                             <div className="h-full w-full bg-emerald-500/50" />
                           </div>
-                        </div>
-                        <div>
-                          <h4 className="text-sm font-medium text-gray-500 mb-2">Define policies</h4>
-                          <div className="h-0.5 w-12 bg-gray-800 rounded-full" />
-                        </div>
-                        <div>
-                          <h4 className="text-sm font-medium text-gray-500 mb-2">Deploy & Recover</h4>
-                          <div className="h-0.5 w-12 bg-gray-800 rounded-full" />
+                          <p className="mt-4 text-sm text-gray-500 leading-relaxed font-normal">
+                            This agent performs a continuous forensic audit of your Amazon SP-API data—cross-referencing inventory movements, shipments, returns, reimbursements, fees, and claims across 26 detection models to uncover financial discrepancies and recovery opportunities that standard tools miss.
+                          </p>
                         </div>
                       </div>
                     </div>
