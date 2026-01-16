@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, RotateCw, CheckCircle2, AlertCircle, Fingerprint, Search, ShieldCheck } from 'lucide-react';
+import { Play, RotateCw, CheckCircle2, AlertCircle, Fingerprint, Search, ShieldCheck, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
@@ -18,7 +18,7 @@ const SIMULATED_LOGS = [
 ];
 
 export const InteractiveDemo = () => {
-    const [status, setStatus] = useState<'idle' | 'scanning' | 'complete'>('idle');
+    const [status, setStatus] = useState<'idle' | 'scanning' | 'complete' | 'results'>('idle');
     const [logs, setLogs] = useState<any[]>([]);
     const [fundsFound, setFundsFound] = useState(0);
     const [itemsScanned, setItemsScanned] = useState(0);
@@ -63,7 +63,7 @@ export const InteractiveDemo = () => {
 
         // 3. Completion
         const completeTimeout = setTimeout(() => {
-            setStatus('complete');
+            setStatus('results');
             clearInterval(interval);
         }, 7500);
         timeouts.push(completeTimeout);
@@ -238,6 +238,100 @@ export const InteractiveDemo = () => {
                         </div>
                     </div>
 
+                </div>
+
+                {/* RESULTS VIEW OVERLAY (Absolute over the main interface) */}
+                <div className={cn(
+                    "absolute inset-0 bg-white z-20 transition-all duration-700 flex flex-col",
+                    status === 'results' ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
+                )}>
+                    {/* Results Header */}
+                    <div className="border-b border-gray-100 px-6 py-4 flex items-center justify-between bg-gray-50/50">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 bg-emerald-100/50 rounded-lg">
+                                <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+                            </div>
+                            <div>
+                                <h3 className="text-sm font-bold text-gray-900">Audit Complete</h3>
+                                <p className="text-xs text-gray-500">14 recoverable claims identified</p>
+                            </div>
+                        </div>
+                        <div className="text-right">
+                            <div className="text-xs text-gray-400 font-medium uppercase tracking-wider">Total Recoverable</div>
+                            <div className="text-xl font-bold text-emerald-600 tracking-tight">
+                                ${fundsFound.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Claims Table (Recoveries.tsx Style) */}
+                    <div className="flex-1 overflow-auto bg-white">
+                        <table className="w-full text-left text-xs">
+                            <thead className="bg-gray-50/50 sticky top-0 z-10">
+                                <tr>
+                                    <th className="px-6 py-3 font-semibold text-gray-400 uppercase tracking-wider w-8">#</th>
+                                    <th className="px-6 py-3 font-semibold text-gray-400 uppercase tracking-wider">Claim Type</th>
+                                    <th className="px-6 py-3 font-semibold text-gray-400 uppercase tracking-wider">SKU / Order</th>
+                                    <th className="px-6 py-3 font-semibold text-gray-400 uppercase tracking-wider">Status</th>
+                                    <th className="px-6 py-3 font-semibold text-gray-400 uppercase tracking-wider text-right">Value</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-50">
+                                {[
+                                    { id: 'C-7821', type: 'Lost in Transit', desc: 'Inbound Shipment FBA15X', status: 'Ready to File', val: 850.00, badge: 'emerald' },
+                                    { id: 'C-7822', type: 'Damaged Warehouse', desc: 'SKU-9982 (Main Inv)', status: 'Ready to File', val: 125.50, badge: 'emerald' },
+                                    { id: 'C-7823', type: 'Unpaid Refund', desc: 'Order #114-33291', status: 'Processing', val: 45.20, badge: 'blue' },
+                                    { id: 'C-7824', type: 'Weight Fee Error', desc: 'SKU-7721 (Overcharge)', status: 'Analyzing', val: 18.40, badge: 'gray' },
+                                    { id: 'C-7825', type: 'Lost in Warehouse', desc: 'Units missing from bin', status: 'Ready to File', val: 240.00, badge: 'emerald' },
+                                ].map((row, i) => (
+                                    <tr key={i} className="group hover:bg-gray-50/50 transition-colors">
+                                        <td className="px-6 py-4 text-gray-300 font-mono">{i + 1}</td>
+                                        <td className="px-6 py-4">
+                                            <div className="font-medium text-gray-900">{row.type}</div>
+                                        </td>
+                                        <td className="px-6 py-4 text-gray-500 font-mono text-[11px]">{row.desc}</td>
+                                        <td className="px-6 py-4">
+                                            <span className={cn(
+                                                "px-2 py-0.5 rounded-full text-[10px] font-semibold border uppercase tracking-wide",
+                                                row.badge === 'emerald' && "bg-emerald-50 text-emerald-700 border-emerald-100",
+                                                row.badge === 'blue' && "bg-blue-50 text-blue-700 border-blue-100",
+                                                row.badge === 'gray' && "bg-gray-100 text-gray-500 border-gray-200"
+                                            )}>
+                                                {row.status}
+                                            </span>
+                                        </td>
+                                        <td className="px-6 py-4 text-right font-medium text-gray-900">
+                                            ${row.val.toFixed(2)}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+
+                        <div className="p-6 text-center border-t border-gray-50 bg-gray-50/30">
+                            <span className="text-xs text-gray-400 italic">
+                                + 9 more claims hidden in demo preview
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Footer CTA */}
+                    <div className="p-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
+                        <Button
+                            onClick={handleStart}
+                            variant="ghost"
+                            size="sm"
+                            className="text-gray-500 hover:text-gray-900">
+                            <RotateCw className="w-3.5 h-3.5 mr-2" />
+                            Reset Demo
+                        </Button>
+                        <Button
+                            onClick={() => window.location.href = '/auth/signup'}
+                            size="sm"
+                            className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-500/20">
+                            Sign Up to Recover Funds <ArrowRight className="w-4 h-4 ml-2" />
+                        </Button>
+                    </div>
                 </div>
             </div>
 
