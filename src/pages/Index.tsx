@@ -779,7 +779,7 @@ const Index = () => {
           Get started with Margin
         </h2>
         <div className="flex flex-col items-center gap-4">
-          <AmazonConnect className="min-w-[240px] h-14 text-lg rounded-full shadow-lg hover:shadow-xl transition-all" />
+          <AmazonConnect className="min-w-[240px] h-14 text-lg rounded-full shadow-lg hover:shadow-xl transition-all font-normal" />
           <p className="text-sm text-gray-500 font-medium">
             Audit your last 18 months for free. No credit card required.
           </p>
