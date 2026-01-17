@@ -674,7 +674,7 @@ const Index = () => {
                   {/* 3. Horizontal Timeline */}
                   <div className="w-full relative mt-8 px-4 md:px-12">
                     {/* Connecting Line */}
-                    <div className="absolute top-3 left-12 right-12 h-px bg-gray-600/30 rounded-full overflow-hidden -z-10" />
+                    <div className="absolute top-[4.5px] left-12 right-12 h-px bg-gray-600/30 rounded-full overflow-hidden -z-10" />
 
                     <div className="flex justify-between items-start w-full gap-4">
                       {WORKFLOW_STEPS.map((step, index) => (
