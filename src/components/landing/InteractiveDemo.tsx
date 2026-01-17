@@ -128,7 +128,7 @@ export const InteractiveDemo = ({ className }: { className?: string }) => {
                                 Kernel Activity Log
                             </span>
                         </div>
-                        <div className="pt-16 pb-8 px-8 text-[13px] flex-1 overflow-y-auto text-neutral-400 leading-7 font-mono">
+                        <div className="pt-16 pb-8 px-8 text-[13px] flex-1 overflow-auto text-neutral-400 leading-7 font-mono whitespace-nowrap">
                             {logs.length === 0 ? (
                                 <div className="h-full flex flex-col items-center justify-center text-neutral-800 space-y-4 opacity-50">
                                     <div className="p-4 bg-neutral-900/50 rounded-full border border-neutral-800">
@@ -173,7 +173,7 @@ export const InteractiveDemo = ({ className }: { className?: string }) => {
 
                         {status === 'results' && (
                             <div className="flex gap-3 animate-in fade-in slide-in-from-bottom-2 duration-500">
-                                <Button onClick={() => setStatus('connecting_source')} size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20 font-bold px-6 h-9">
+                                <Button onClick={() => setStatus('connecting_source')} size="sm" className="bg-gray-200 hover:bg-gray-300 text-black font-normal shadow-sm px-6 h-9 transition-all">
                                     Verify Evidence <ArrowRight className="w-3.5 h-3.5 ml-2" />
                                 </Button>
                             </div>
@@ -193,22 +193,22 @@ export const InteractiveDemo = ({ className }: { className?: string }) => {
                             </Button>
                         )}
                         {status === 'results' && (
-                            <Button onClick={() => setStatus('connecting_source')} size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-xl shadow-emerald-600/20 font-bold h-10 px-6">
+                            <Button onClick={() => setStatus('connecting_source')} size="sm" className="bg-gray-200 hover:bg-gray-300 text-black font-normal shadow-sm h-10 px-6 transition-all">
                                 Auto-Match Evidence <ArrowRight className="w-4 h-4 ml-2" />
                             </Button>
                         )}
                         {status === 'matched' && (
-                            <Button onClick={() => setStatus('filing')} size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-xl shadow-emerald-600/20 font-bold h-10 px-6">
+                            <Button onClick={() => setStatus('filing')} size="sm" className="bg-gray-200 hover:bg-gray-300 text-black font-normal shadow-sm h-10 px-6 transition-all">
                                 <FileCheck className="w-4 h-4 mr-2" /> Submit 14 Claims
                             </Button>
                         )}
                         {status === 'disputes' && (
-                            <Button onClick={() => setStatus('notifications')} size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-xl shadow-emerald-600/20 font-bold h-10 px-6">
+                            <Button onClick={() => setStatus('notifications')} size="sm" className="bg-gray-200 hover:bg-gray-300 text-black font-normal shadow-sm h-10 px-6 transition-all">
                                 View Account Logs <Bell className="w-4 h-4 ml-2" />
                             </Button>
                         )}
                         {status === 'notifications' && (
-                            <Button onClick={() => window.location.href = '/auth/signup'} size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-2xl shadow-emerald-600/40 font-bold h-10 px-8">
+                            <Button onClick={() => window.location.href = '/auth/signup'} size="sm" className="bg-gray-200 hover:bg-gray-300 text-black font-normal shadow-sm h-10 px-8 transition-all">
                                 Start Live Audit <ArrowRight className="w-4 h-4 ml-2" />
                             </Button>
                         )}
@@ -297,7 +297,7 @@ export const InteractiveDemo = ({ className }: { className?: string }) => {
                                     </div>
                                 </div>
                                 {status === 'results' && (
-                                    <Button onClick={() => setStatus('connecting_source')} className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-xl shadow-emerald-600/20 font-bold h-10 px-6">
+                                    <Button onClick={() => setStatus('connecting_source')} className="bg-gray-200 hover:bg-gray-300 text-black font-normal shadow-sm h-10 px-6 transition-all">
                                         Auto-Match Evidence <ArrowRight className="w-4 h-4 ml-2" />
                                     </Button>
                                 )}
