@@ -676,10 +676,10 @@ const Index = () => {
                   {/* 1. Centered Header */}
                   <div className="text-center space-y-4 max-w-2xl mx-auto mb-4">
                     <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-white leading-tight">
-                      See Margin in Action
+                      See Margin Find 18+ Hidden Discrepancies in 30s
                     </h2>
                     <p className="text-base md:text-lg text-gray-400 font-normal leading-relaxed">
-                      Run a live simulation to see how our engine detects lost revenue.
+                      Margin's real-time audit engine on a $1M+ seller portfolio.
                     </p>
                   </div>
 
