@@ -684,9 +684,7 @@ const Index = () => {
                           onClick={() => setActiveStep(activeStep === index ? -1 : index)}
                         >
                           {/* Dot / Indicator */}
-                          <div className={`w-6 h-6 rounded-full border-2 transition-all duration-300 z-10 flex items-center justify-center ${activeStep === index ? 'bg-white border-white scale-125 shadow-glow' : 'bg-gray-900 border-gray-600 group-hover:border-gray-400'}`}>
-                            {activeStep === index && <div className="w-2 h-2 rounded-full bg-black" />}
-                          </div>
+                          <div className={`w-2.5 h-2.5 rounded-full transition-all duration-300 z-10 ${activeStep === index ? 'bg-white scale-150 shadow-[0_0_15px_rgba(255,255,255,0.6)]' : 'bg-gray-600 group-hover:bg-gray-400'}`} />
 
                           {/* Label */}
                           <div className="text-center space-y-2">
