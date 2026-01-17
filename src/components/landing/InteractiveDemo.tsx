@@ -233,7 +233,7 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
                 {/* OVERLAY LAYERS */}
                 <div className={cn(
                     "absolute inset-0 bg-white z-20 transition-all duration-700 flex flex-col",
-                    (status === 'connecting_source' || status === 'searching_docs' || status === 'matched' || status === 'filing' || status === 'disputes' || status === 'notifications')
+                    (status === 'results' || status === 'connecting_source' || status === 'searching_docs' || status === 'matched' || status === 'filing' || status === 'disputes' || status === 'notifications')
                         ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
                 )}>
                     {/* A. LOADING / TERMINAL OVERLAY */}
