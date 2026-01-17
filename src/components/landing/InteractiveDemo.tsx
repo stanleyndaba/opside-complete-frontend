@@ -171,13 +171,7 @@ export const InteractiveDemo = ({ className }: { className?: string }) => {
                             </div>
                         )}
 
-                        {status === 'results' && (
-                            <div className="flex gap-3 animate-in fade-in slide-in-from-bottom-2 duration-500">
-                                <Button onClick={() => setStatus('connecting_source')} size="sm" className="bg-gray-200 hover:bg-gray-300 text-black font-normal shadow-sm px-6 h-9 transition-all">
-                                    Verify Evidence <ArrowRight className="w-3.5 h-3.5 ml-2" />
-                                </Button>
-                            </div>
-                        )}
+
                     </div>
                 </div>
 
