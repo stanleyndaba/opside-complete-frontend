@@ -659,11 +659,7 @@ const Index = () => {
 
                   <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-12 pt-4">
                     {/* Mac Dots */}
-                    <div className="flex gap-2 mb-6">
-                      <div className="w-3 h-3 rounded-full bg-[#FF5F57] shadow-sm shadow-red-500/20" />
-                      <div className="w-3 h-3 rounded-full bg-[#FEBC2E] shadow-sm shadow-amber-500/20" />
-                      <div className="w-3 h-3 rounded-full bg-[#28C840] shadow-sm shadow-emerald-500/20" />
-                    </div>
+
 
                     <div className="space-y-3">
                       <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-white leading-tight">
@@ -681,11 +677,11 @@ const Index = () => {
                           className={`cursor-pointer group transition-all duration-300 ${activeStep === index ? 'opacity-100' : 'opacity-50 hover:opacity-80'}`}
                           onClick={() => setActiveStep(index)}
                         >
-                          <h4 className={`text-sm font-medium mb-2 transition-colors ${activeStep === index ? 'text-white' : 'text-gray-400 group-hover:text-gray-300'}`}>
+                          <h4 className={`text-sm font-normal mb-2 transition-colors ${activeStep === index ? 'text-white' : 'text-gray-400 group-hover:text-gray-300'}`}>
                             {step.title}
                           </h4>
                           <div className="h-0.5 w-12 bg-gray-800 rounded-full overflow-hidden">
-                            <div className={`h-full w-full ${step.color} transition-all duration-300`} />
+                            <div className={`h-full w-full bg-gray-600 transition-all duration-300`} />
                           </div>
 
                           <div

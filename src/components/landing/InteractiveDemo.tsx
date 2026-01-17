@@ -122,7 +122,7 @@ export const InteractiveDemo = ({ className }: { className?: string }) => {
                 <div className="flex-1 p-6 flex flex-col gap-6 overflow-hidden bg-white">
                     {/* TERMINAL (Full Width) */}
                     <div className="flex-1 bg-[#0a0a0a] rounded-xl border border-neutral-900 overflow-hidden relative shadow-2xl flex flex-col">
-                        <div className="absolute top-0 left-0 right-0 h-12 bg-neutral-950/80 border-b border-neutral-900 flex items-center px-6 z-10 backdrop-blur-md">
+                        <div className="absolute top-0 left-0 right-0 h-12 bg-neutral-950/80 border-b border-neutral-900 rounded-t-xl flex items-center px-6 z-10 backdrop-blur-md">
                             <span className="text-[10px] text-neutral-600 uppercase tracking-widest font-bold flex items-center gap-3">
                                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                                 Kernel Activity Log
@@ -162,12 +162,7 @@ export const InteractiveDemo = ({ className }: { className?: string }) => {
 
                     {/* ACTION BUTTONS (Below Terminal) */}
                     <div className="flex justify-center shrink-0">
-                        {status === 'idle' && (
-                            <Button onClick={handleStart} size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20 font-bold px-6 h-9 transition-all hover:scale-[1.02]">
-                                <Play className="w-3.5 h-3.5 mr-2 fill-current" />
-                                Run Audit
-                            </Button>
-                        )}
+
 
                         {status === 'scanning' && (
                             <div className="flex items-center gap-4 text-xs font-mono text-gray-400">
@@ -192,6 +187,11 @@ export const InteractiveDemo = ({ className }: { className?: string }) => {
                         <RotateCw className="w-4 h-4 mr-2" /> Reset Session
                     </Button>
                     <div className="flex gap-3">
+                        {status === 'idle' && (
+                            <Button onClick={handleStart} size="sm" className="bg-gray-200 hover:bg-gray-300 text-black font-normal shadow-sm px-6 h-9 transition-all">
+                                Recover
+                            </Button>
+                        )}
                         {status === 'results' && (
                             <Button onClick={() => setStatus('connecting_source')} size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-xl shadow-emerald-600/20 font-bold h-10 px-6">
                                 Auto-Match Evidence <ArrowRight className="w-4 h-4 ml-2" />
