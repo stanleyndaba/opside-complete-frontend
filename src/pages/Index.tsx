@@ -652,46 +652,50 @@ const Index = () => {
                 <div className="absolute top-0 right-0 w-[800px] h-[600px] bg-gradient-to-b from-indigo-500/5 to-purple-500/5 blur-[120px] pointer-events-none opacity-40" />
                 <div className="absolute bottom-0 left-0 w-[600px] h-[500px] bg-gradient-to-t from-emerald-500/5 to-blue-500/5 blur-[100px] pointer-events-none opacity-30" />
 
-                <div className="grid lg:grid-cols-12 gap-12 items-start relative z-10">
-                  {/* Left Column: Copy */}
+                <div className="flex flex-col gap-12 items-center relative z-10 w-full max-w-6xl mx-auto">
 
+                  {/* 1. Centered Header */}
+                  <div className="text-center space-y-4 max-w-2xl mx-auto mb-4">
+                    <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-white leading-tight">
+                      See Margin in Action
+                    </h2>
+                    <p className="text-base md:text-lg text-gray-400 font-normal leading-relaxed">
+                      Run a live simulation to see how our engine detects lost revenue.
+                    </p>
+                  </div>
 
-
-                  <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-12 pt-4">
-                    {/* Mac Dots */}
-
-
-                    <div className="space-y-3">
-                      <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-white leading-tight">
-                        See Margin in Action
-                      </h2>
-                      <p className="text-sm md:text-base text-gray-400 font-normal leading-relaxed max-w-sm">
-                        Run a live simulation to see how our engine detects lost revenue.
-                      </p>
+                  {/* 2. Full-Width Demo */}
+                  <div className="w-full">
+                    <div className="relative rounded-xl overflow-hidden shadow-2xl ring-1 ring-white/10 transition-transform hover:scale-[1.005] duration-700 bg-black/40 backdrop-blur-sm">
+                      <InteractiveDemo className="max-w-none w-full !h-[600px] md:!h-[650px] shadow-none border-0 rounded-none bg-transparent" />
                     </div>
+                  </div>
 
-                    <div className="pt-12 border-t border-white/10 mt-12 space-y-8">
+                  {/* 3. Horizontal Timeline */}
+                  <div className="w-full relative mt-8 px-4 md:px-12">
+                    {/* Connecting Line */}
+                    <div className="absolute top-3 left-12 right-12 h-0.5 bg-gray-800 rounded-full overflow-hidden -z-10" />
+
+                    <div className="flex justify-between items-start w-full gap-4">
                       {WORKFLOW_STEPS.map((step, index) => (
                         <div
                           key={index}
-                          className={`cursor-pointer group transition-all duration-300 ${activeStep === index ? 'opacity-100' : 'opacity-50 hover:opacity-80'}`}
+                          className={`flex flex-col items-center gap-4 cursor-pointer group flex-1 ${activeStep === index ? 'opacity-100' : 'opacity-40 hover:opacity-70'} transition-all duration-300`}
                           onClick={() => setActiveStep(activeStep === index ? -1 : index)}
                         >
-                          <h4 className={`text-sm font-normal mb-2 transition-colors ${activeStep === index ? 'text-white' : 'text-gray-400 group-hover:text-gray-300'}`}>
-                            {step.title}
-                          </h4>
-                          <div className="h-0.5 w-12 bg-gray-800 rounded-full overflow-hidden">
-                            <div className={`h-full w-full bg-gray-600 transition-all duration-300`} />
+                          {/* Dot / Indicator */}
+                          <div className={`w-6 h-6 rounded-full border-2 transition-all duration-300 z-10 flex items-center justify-center ${activeStep === index ? 'bg-white border-white scale-125 shadow-glow' : 'bg-gray-900 border-gray-600 group-hover:border-gray-400'}`}>
+                            {activeStep === index && <div className="w-2 h-2 rounded-full bg-black" />}
                           </div>
 
-                          <div
-                            className={`grid transition-all duration-300 ease-in-out ${activeStep === index
-                              ? 'grid-rows-[1fr] opacity-100 mt-4'
-                              : 'grid-rows-[0fr] opacity-0 mt-0'
-                              }`}
-                          >
-                            <div className="overflow-hidden">
-                              <p className="text-sm text-gray-500 leading-relaxed font-normal">
+                          {/* Label */}
+                          <div className="text-center space-y-2">
+                            <h4 className={`text-sm md:text-base font-medium transition-colors ${activeStep === index ? 'text-white' : 'text-gray-400'}`}>
+                              {step.title}
+                            </h4>
+                            {/* Description Dropdown (Absolute or inline?) Inline fits better for timeline if text is short, but description is long. Let's make it a small tooltip-like block below. */}
+                            <div className={`transition-all duration-500 overflow-hidden ${activeStep === index ? 'max-h-24 opacity-100' : 'max-h-0 opacity-0'}`}>
+                              <p className="text-xs text-gray-500 max-w-[180px] mx-auto leading-relaxed">
                                 {step.description}
                               </p>
                             </div>
@@ -701,12 +705,6 @@ const Index = () => {
                     </div>
                   </div>
 
-                  {/* Right Column: Demo (Enlarged) */}
-                  <div className="lg:col-span-8 w-full">
-                    <div className="relative rounded-xl overflow-hidden shadow-2xl ring-1 ring-white/10 lg:-mr-12 lg:translate-x-6 transition-transform hover:scale-[1.01] duration-700">
-                      <InteractiveDemo className="max-w-none w-full !h-[600px] md:!h-[700px] shadow-none border-0 rounded-none bg-transparent" />
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
