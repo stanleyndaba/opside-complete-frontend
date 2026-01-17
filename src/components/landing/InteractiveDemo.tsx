@@ -122,10 +122,10 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
 
     return (
         <div className={cn("relative w-full max-w-4xl mx-auto", className)}>
-            <div className="rounded-2xl overflow-hidden bg-white shadow-2xl border border-gray-200 flex flex-col relative h-[620px] md:h-[580px]">
+            <div className="rounded-2xl overflow-hidden bg-white shadow-2xl border border-gray-200 flex flex-col relative h-full">
 
                 {/* WINDOW HEADER */}
-                <div className="bg-gray-50 border-b border-gray-100 px-6 py-4 flex items-center justify-between shrink-0">
+                <div className="bg-gray-50 border-b border-gray-100 px-6 py-3 flex items-center justify-between shrink-0">
                     <div className="flex items-center gap-3">
                         <div className="flex gap-1.5">
                             <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
@@ -140,7 +140,7 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
                 </div>
 
                 {/* MAIN BODY */}
-                <div className="flex-1 p-6 flex flex-col gap-6 overflow-hidden bg-white">
+                <div className="flex-1 p-4 flex flex-col gap-4 overflow-hidden bg-white">
                     {/* TERMINAL (Full Width) */}
                     <div className="flex-1 bg-[#0a0a0a] rounded-xl border border-neutral-900 overflow-hidden relative shadow-2xl flex flex-col">
                         <div className="absolute top-0 left-0 right-0 h-12 bg-neutral-950/80 border-b border-neutral-900 rounded-t-xl flex items-center px-6 z-10 backdrop-blur-md">
@@ -197,7 +197,7 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
                 </div>
 
                 {/* FOOTER */}
-                <div className="p-6 bg-gray-50/50 border-t border-gray-100 flex justify-between items-center shrink-0 relative z-30">
+                <div className="p-3 bg-gray-50/50 border-t border-gray-100 flex justify-between items-center shrink-0 relative z-30">
                     <Button onClick={handleReset} variant="ghost" size="sm" className="text-gray-400 hover:bg-white hover:text-gray-900 transition-all font-bold uppercase tracking-tighter text-[10px]">
                         <RotateCw className="w-4 h-4 mr-2" /> Reset Session
                     </Button>

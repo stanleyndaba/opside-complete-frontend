@@ -671,7 +671,7 @@ const Index = () => {
                 <div className="absolute top-0 right-0 w-[800px] h-[600px] bg-gradient-to-b from-indigo-500/5 to-purple-500/5 blur-[120px] pointer-events-none opacity-40" />
                 <div className="absolute bottom-0 left-0 w-[600px] h-[500px] bg-gradient-to-t from-emerald-500/5 to-blue-500/5 blur-[100px] pointer-events-none opacity-30" />
 
-                <div className="flex flex-col gap-12 items-center relative z-10 w-full max-w-6xl mx-auto">
+                <div className="flex flex-col gap-6 items-center relative z-10 w-full max-w-6xl mx-auto">
 
                   {/* 1. Centered Header */}
                   <div className="text-center space-y-4 max-w-2xl mx-auto mb-4">
@@ -686,12 +686,12 @@ const Index = () => {
                   {/* 2. Full-Width Demo */}
                   <div className="w-full" onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
                     <div className="relative rounded-xl overflow-hidden shadow-2xl ring-1 ring-white/10 transition-transform hover:scale-[1.005] duration-700 bg-black/40 backdrop-blur-sm">
-                      <InteractiveDemo currentStep={activeStep === -1 ? 0 : activeStep} className="max-w-none w-full !h-[600px] md:!h-[650px] shadow-none border-0 rounded-none bg-transparent" />
+                      <InteractiveDemo currentStep={activeStep === -1 ? 0 : activeStep} className="max-w-none w-full !h-[400px] md:!h-[460px] shadow-none border-0 rounded-none bg-transparent" />
                     </div>
                   </div>
 
                   {/* 3. Horizontal Timeline */}
-                  <div className="w-full relative mt-8 px-4 md:px-12">
+                  <div className="w-full relative mt-4 px-4 md:px-12">
                     {/* Connecting Line */}
                     <div className="absolute top-[4.5px] left-12 right-12 h-px bg-gray-600/30 rounded-full overflow-hidden -z-10" />
 
