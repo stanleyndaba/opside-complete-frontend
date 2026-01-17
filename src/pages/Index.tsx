@@ -20,34 +20,40 @@ const heroImage = '/FRONTIMAGE.png';
 
 const WORKFLOW_STEPS = [
   {
-    title: "Sync your FBA data",
+    title: "Import History",
     color: "bg-emerald-500/50",
-    description: "This agent performs a continuous forensic audit of your Amazon SP-API data—cross-referencing inventory movements, shipments, returns, reimbursements, fees, and claims across 26 detection models to uncover financial discrepancies and recovery opportunities that standard tools miss."
+    description: "This agent performs a continuous forensic audit of your Amazon SP-API data—cross-referencing inventory movements, shipments, returns, reimbursements, fees, and claims across 26 detection models to uncover financial discrepancies and recovery opportunities that standard tools miss.",
+    duration: 3000
   },
   {
-    title: "Detect Discrepancies",
+    title: "Deep Audit Review 18Mo",
     color: "bg-amber-500/50",
-    description: "The engine automatically analyzes 18 months of inventory history to identify over 26 types of FBA errors, from lost inbound shipments to unpaid refunds, identifying funds that Amazon owes you."
+    description: "The engine automatically analyzes 18 months of inventory history to identify over 26 types of FBA errors, from lost inbound shipments to unpaid refunds, identifying funds that Amazon owes you.",
+    duration: 9000
   },
   {
-    title: "Match Evidence",
+    title: "Verify Claims",
     color: "bg-emerald-500/50",
-    description: "Our Evidence Engine autonomously locates and matches required documentation—like BOLs, PODs, and supplier invoices—directly from your email or Google Drive to build a watertight case."
+    description: "Our Evidence Engine autonomously locates and matches required documentation—like BOLs, PODs, and supplier invoices—directly from your email or Google Drive to build a watertight case.",
+    duration: 6000
   },
   {
-    title: "File Disputes",
+    title: "Hands-Free Filing",
     color: "bg-blue-500/50",
-    description: "Margin constructs a perfect claim package and submits it directly to Amazon Seller Support. Our AI case managers handle all follow-up correspondence until the case is resolved."
+    description: "Margin constructs a perfect claim package and submits it directly to Amazon Seller Support. Our AI case managers handle all follow-up correspondence until the case is resolved.",
+    duration: 5000
   },
   {
-    title: "Recover Funds",
+    title: "Reimbursement Payout",
     color: "bg-emerald-500/50",
-    description: "Approved reimbursements are deposited directly into your Amazon account. You get paid first, and we only invoice our 20% commission after the funds are safely in your bank."
+    description: "Approved reimbursements are deposited directly into your Amazon account. You get paid first, and we only invoice our 20% commission after the funds are safely in your bank.",
+    duration: 4000
   },
   {
-    title: "Live Notifications",
+    title: "Instant Ledger Update",
     color: "bg-emerald-500/50",
-    description: "Stay in the loop with real-time alerts for every action—from new discrepancies found to successful reimbursements deposited. You never have to guess what Margin is doing."
+    description: "Stay in the loop with real-time alerts for every action—from new discrepancies found to successful reimbursements deposited. You never have to guess what Margin is doing.",
+    duration: 6000
   }
 ];
 
@@ -77,8 +83,21 @@ const Index = () => {
   const [showBanner, setShowBanner] = useState(true);
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeStep, setActiveStep] = useState(-1);
+  const [activeStep, setActiveStep] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
   const [agentHighlightIndex, setAgentHighlightIndex] = useState(0);
+
+  // Auto-Play Effect
+  useEffect(() => {
+    if (activeStep === -1 || isPaused) return;
+
+    const stepDuration = WORKFLOW_STEPS[activeStep]?.duration || 5000;
+    const timer = setTimeout(() => {
+      setActiveStep((prev) => (prev + 1) % WORKFLOW_STEPS.length);
+    }, stepDuration);
+
+    return () => clearTimeout(timer);
+  }, [activeStep, isPaused]);
 
   const handleSignIn = async () => {
     try {
@@ -665,9 +684,9 @@ const Index = () => {
                   </div>
 
                   {/* 2. Full-Width Demo */}
-                  <div className="w-full">
+                  <div className="w-full" onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
                     <div className="relative rounded-xl overflow-hidden shadow-2xl ring-1 ring-white/10 transition-transform hover:scale-[1.005] duration-700 bg-black/40 backdrop-blur-sm">
-                      <InteractiveDemo className="max-w-none w-full !h-[600px] md:!h-[650px] shadow-none border-0 rounded-none bg-transparent" />
+                      <InteractiveDemo currentStep={activeStep === -1 ? 0 : activeStep} className="max-w-none w-full !h-[600px] md:!h-[650px] shadow-none border-0 rounded-none bg-transparent" />
                     </div>
                   </div>
 
@@ -684,11 +703,11 @@ const Index = () => {
                           onClick={() => setActiveStep(activeStep === index ? -1 : index)}
                         >
                           {/* Dot / Indicator */}
-                          <div className={`w-2.5 h-2.5 rounded-full transition-all duration-300 z-10 ${activeStep === index ? 'bg-white scale-150 shadow-[0_0_15px_rgba(255,255,255,0.6)]' : 'bg-gray-600 group-hover:bg-gray-400'}`} />
+                          <div className={`w-2.5 h-2.5 rounded-full transition-all duration-300 z-10 ${activeStep === index ? 'bg-white scale-150 shadow-[0_0_15px_rgba(255,255,255,0.6)]' : 'bg-gray-800 group-hover:bg-gray-600'}`} />
 
                           {/* Label */}
                           <div className="text-center space-y-2">
-                            <h4 className={`text-sm md:text-base font-normal transition-colors ${activeStep === index ? 'text-white' : 'text-gray-400'}`}>
+                            <h4 className={`text-xs md:text-sm font-normal transition-colors ${activeStep === index ? 'text-white' : 'text-gray-400'}`}>
                               {step.title}
                             </h4>
                             {/* Description Dropdown (Absolute or inline?) Inline fits better for timeline if text is short, but description is long. Let's make it a small tooltip-like block below. */}

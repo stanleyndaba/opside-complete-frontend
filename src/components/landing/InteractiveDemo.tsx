@@ -34,7 +34,7 @@ const NOTIFICATIONS_DATA = [
     { id: 12, message: "Recovery payment received for Case #FBA-882.", time: "8 days ago", type: 'success' },
 ];
 
-export const InteractiveDemo = ({ className }: { className?: string }) => {
+export const InteractiveDemo = ({ className, currentStep }: { className?: string, currentStep?: number }) => {
     const [status, setStatus] = useState<'idle' | 'scanning' | 'results' | 'connecting_source' | 'searching_docs' | 'matched' | 'filing' | 'disputes' | 'notifications'>('idle');
     const [logs, setLogs] = useState<any[]>([]);
     const [fundsFound, setFundsFound] = useState(0);
@@ -44,6 +44,27 @@ export const InteractiveDemo = ({ className }: { className?: string }) => {
     useEffect(() => {
         logsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [logs]);
+
+    // Sync status with currentStep prop
+    useEffect(() => {
+        if (currentStep === undefined) return;
+
+        if (currentStep === 0) {
+            handleReset();
+        } else if (currentStep === 1) {
+            // Only start scanning if not already results or scanning (to avoid restart loop if step refreshes)
+            // But for movie mode, we WANT to force it if it changes.
+            // Let's force it if status is idle or from another step.
+            setStatus('scanning');
+        } else if (currentStep === 2) {
+            // Jump start the evidence flow
+            setStatus('connecting_source');
+        } else if (currentStep === 3) {
+            setStatus('filing');
+        } else if (currentStep === 4) {
+            setStatus('notifications');
+        }
+    }, [currentStep]);
 
     useEffect(() => {
         if (status !== 'scanning') return;
