@@ -664,6 +664,16 @@ const Index = () => {
           {/* Interactive Demo Section - Standalone Polished Block */}
           <div className="w-full relative z-20 mt-24 md:mt-36 mb-24">
             <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+              {/* 1. Centered Header - Moved Outside Container */}
+              <div className="text-center space-y-4 max-w-2xl mx-auto mb-12 relative z-10">
+                <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-gray-900 leading-tight">
+                  See Margin Find 18+ Hidden Discrepancies in 30s
+                </h2>
+                <p className="text-base md:text-lg text-gray-600 font-normal leading-relaxed">
+                  Margin's real-time audit engine on a $1M+ seller portfolio.
+                </p>
+              </div>
+
               {/* Dark container for "Startup" feel */}
               <div className="bg-[#050505] rounded-[24px] p-6 md:p-8 relative overflow-hidden shadow-2xl border border-white/5">
 
@@ -673,15 +683,7 @@ const Index = () => {
 
                 <div className="flex flex-col gap-6 items-center relative z-10 w-full mx-auto">
 
-                  {/* 1. Centered Header */}
-                  <div className="text-center space-y-4 max-w-2xl mx-auto mb-4">
-                    <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-white leading-tight">
-                      See Margin Find 18+ Hidden Discrepancies in 30s
-                    </h2>
-                    <p className="text-base md:text-lg text-gray-400 font-normal leading-relaxed">
-                      Margin's real-time audit engine on a $1M+ seller portfolio.
-                    </p>
-                  </div>
+
 
                   {/* 2. Full-Width Demo */}
                   <div className="w-full" onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
