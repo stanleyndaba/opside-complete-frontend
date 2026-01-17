@@ -182,7 +182,7 @@ export const InteractiveDemo = ({ className }: { className?: string }) => {
                 </div>
 
                 {/* FOOTER */}
-                <div className="p-6 bg-gray-50/50 border-t border-gray-100 flex justify-between items-center shrink-0">
+                <div className="p-6 bg-gray-50/50 border-t border-gray-100 flex justify-between items-center shrink-0 relative z-30">
                     <Button onClick={handleReset} variant="ghost" size="sm" className="text-gray-400 hover:bg-white hover:text-gray-900 transition-all font-bold uppercase tracking-tighter text-[10px]">
                         <RotateCw className="w-4 h-4 mr-2" /> Reset Session
                     </Button>

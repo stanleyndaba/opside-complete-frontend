@@ -675,7 +675,7 @@ const Index = () => {
                         <div
                           key={index}
                           className={`cursor-pointer group transition-all duration-300 ${activeStep === index ? 'opacity-100' : 'opacity-50 hover:opacity-80'}`}
-                          onClick={() => setActiveStep(index)}
+                          onClick={() => setActiveStep(activeStep === index ? -1 : index)}
                         >
                           <h4 className={`text-sm font-normal mb-2 transition-colors ${activeStep === index ? 'text-white' : 'text-gray-400 group-hover:text-gray-300'}`}>
                             {step.title}
