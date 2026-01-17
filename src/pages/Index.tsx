@@ -665,13 +665,13 @@ const Index = () => {
           <div className="w-full relative z-20 mt-24 md:mt-36 mb-24">
             <div className="max-w-[1400px] mx-auto px-4 md:px-8">
               {/* Dark container for "Startup" feel */}
-              <div className="bg-[#050505] rounded-[32px] p-8 md:p-12 lg:p-16 relative overflow-hidden shadow-2xl border border-white/5">
+              <div className="bg-[#050505] rounded-[24px] p-6 md:p-8 relative overflow-hidden shadow-2xl border border-white/5">
 
                 {/* Background Accents (Subtle) */}
                 <div className="absolute top-0 right-0 w-[800px] h-[600px] bg-gradient-to-b from-indigo-500/5 to-purple-500/5 blur-[120px] pointer-events-none opacity-40" />
                 <div className="absolute bottom-0 left-0 w-[600px] h-[500px] bg-gradient-to-t from-emerald-500/5 to-blue-500/5 blur-[100px] pointer-events-none opacity-30" />
 
-                <div className="flex flex-col gap-6 items-center relative z-10 w-full max-w-6xl mx-auto">
+                <div className="flex flex-col gap-6 items-center relative z-10 w-full mx-auto">
 
                   {/* 1. Centered Header */}
                   <div className="text-center space-y-4 max-w-2xl mx-auto mb-4">
