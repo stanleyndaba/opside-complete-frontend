@@ -674,7 +674,7 @@ const Index = () => {
                   {/* 3. Horizontal Timeline */}
                   <div className="w-full relative mt-8 px-4 md:px-12">
                     {/* Connecting Line */}
-                    <div className="absolute top-3 left-12 right-12 h-0.5 bg-gray-800 rounded-full overflow-hidden -z-10" />
+                    <div className="absolute top-3 left-12 right-12 h-px bg-gray-600/30 rounded-full overflow-hidden -z-10" />
 
                     <div className="flex justify-between items-start w-full gap-4">
                       {WORKFLOW_STEPS.map((step, index) => (
@@ -690,7 +690,7 @@ const Index = () => {
 
                           {/* Label */}
                           <div className="text-center space-y-2">
-                            <h4 className={`text-sm md:text-base font-medium transition-colors ${activeStep === index ? 'text-white' : 'text-gray-400'}`}>
+                            <h4 className={`text-sm md:text-base font-normal transition-colors ${activeStep === index ? 'text-white' : 'text-gray-400'}`}>
                               {step.title}
                             </h4>
                             {/* Description Dropdown (Absolute or inline?) Inline fits better for timeline if text is short, but description is long. Let's make it a small tooltip-like block below. */}
