@@ -357,51 +357,86 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
                         </div>
                     )}
 
-                    {/* B. MATCHED / RESULTS TABLE */}
+                    {/* B. MATCHED / RESULTS - Card Style matching Recoveries.tsx */}
                     {status === 'matched' && (
-                        <div className="flex-1 overflow-auto bg-white px-8 py-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                            <h3 className="text-xl font-bold text-gray-900 mb-8 flex items-center gap-3 tracking-tight">
-                                <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center border border-emerald-100 shadow-sm">
-                                    <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-                                </div>
-                                14 CLAIMS MATCHED WITH DOCUMENTATION
-                            </h3>
-                            <div className="rounded-2xl border border-gray-100 overflow-hidden shadow-lg">
-                                <table className="w-full text-left text-[13px]">
-                                    <thead className="bg-gray-50/50 border-b border-gray-100">
-                                        <tr className="text-gray-400 uppercase tracking-[0.25em] font-bold text-[10px]">
-                                            <th className="px-6 py-4">Audit Category</th>
-                                            <th className="px-6 py-4">Reference ID</th>
-                                            <th className="px-6 py-4">Status</th>
-                                            <th className="px-6 py-4 text-right">Potential Recovery</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-gray-50 bg-white">
-                                        {[
-                                            { type: 'Lost in Transit', ref: 'FBA15XJ-22', val: 850.00 },
-                                            { type: 'Warehouse Damage', ref: 'SKU-9982-DMG', val: 125.50 },
-                                            { type: 'Unpaid Customer Refund', ref: 'ORD-33291-RR', val: 45.20 },
-                                            { type: 'Weight & Dimension Fee', ref: 'FEE-7721-ERR', val: 18.40 },
-                                            { type: 'Missing in Shipment', ref: 'SHP-FBA-992', val: 312.00 },
-                                            { type: 'Incorrect Disposal', ref: 'DSP-8821-X', val: 55.00 },
-                                            { type: 'Inbound Discrepancy', ref: 'INC-2291', val: 198.50 },
-                                            { type: 'Late Return Policy', ref: 'RET-3310', val: 42.00 },
-                                            { type: 'Removals Lost', ref: 'RMV-112', val: 95.75 },
-                                            { type: 'Overage Fee Recovery', ref: 'OVG-998', val: 12.40 }
-                                        ].map((row, i) => (
-                                            <tr key={i} className="hover:bg-gray-50 transition-all group">
-                                                <td className="px-6 py-4 font-bold text-gray-900">{row.type}</td>
-                                                <td className="px-6 py-4 text-gray-500 font-mono tracking-tighter opacity-70 group-hover:opacity-100 transition-opacity">{row.ref}</td>
-                                                <td className="px-6 py-4">
-                                                    <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-100 text-[10px] px-2 py-0.5 font-bold uppercase tracking-wider">High Strength</Badge>
-                                                </td>
-                                                <td className="px-6 py-4 text-right font-mono font-bold text-gray-900 text-base">
-                                                    ${row.val.toFixed(2)}
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                        <div className="flex-1 overflow-auto bg-white animate-in fade-in duration-500">
+                            {/* Batch Header */}
+                            <div className="flex items-center px-6 py-3 bg-gray-50/50 border-b border-gray-100">
+                                <div className="w-3.5 h-3.5 border border-gray-300 rounded-sm mr-4" />
+                                <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-[0.15em]">Batch Operation Queue</span>
+                            </div>
+
+                            {/* Month Group Header */}
+                            <div className="sticky top-0 z-10 bg-gray-50/80 backdrop-blur-sm px-6 py-2.5 border-y border-gray-100 flex items-center justify-between">
+                                <span className="text-[11px] font-bold text-gray-900 uppercase tracking-[0.2em]">January 2026</span>
+                                <span className="text-[9px] font-medium text-gray-400 uppercase tracking-widest">14 AUDIT ENTRIES</span>
+                            </div>
+
+                            {/* Claims List */}
+                            <div className="divide-y divide-gray-100">
+                                {[
+                                    { id: 'LI-2601-29472-ec8d', details: 'lost_inventory detected with 92% confidence', status: 'PENDING', amount: 1500.00 },
+                                    { id: 'TEST-MATCH-001', details: 'missing_inbound_shipment detected with 85% confidence', status: 'DISPUTED', amount: 150.00 },
+                                    { id: 'TEST-MATCH-002', details: 'inventory_discrepancy detected with 80% confidence', status: 'DISPUTED', amount: 100.00 },
+                                    { id: 'FBA-DMG-3391', details: 'warehouse_damage detected with 88% confidence', status: 'PENDING', amount: 225.50 },
+                                    { id: 'FEE-ERR-7721', details: 'weight_dimension_fee_error detected with 95% confidence', status: 'PENDING', amount: 45.20 },
+                                ].map((claim, i) => (
+                                    <div key={i} className="group relative bg-white hover:bg-gray-50/40 transition-all duration-200">
+                                        {/* Left Accent on Hover */}
+                                        <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gray-900 origin-center scale-y-0 group-hover:scale-y-100 transition-all duration-200" />
+
+                                        <div className="flex items-center px-6 py-4">
+                                            {/* Checkbox */}
+                                            <div className="w-3.5 h-3.5 border border-gray-300 rounded-sm mr-4 shrink-0" />
+                                            {/* Hexagon Icon */}
+                                            <div className="text-gray-200 group-hover:text-gray-900 transition-colors mr-4 shrink-0">
+                                                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                                                    <path d="M12 2l8 4.5v9L12 20l-8-4.5v-9L12 2z" />
+                                                </svg>
+                                            </div>
+
+                                            <div className="flex flex-col min-w-0 flex-1">
+                                                {/* Claim ID + Date */}
+                                                <div className="flex items-center gap-3">
+                                                    <span className="text-[13px] font-mono font-medium text-gray-900 hover:underline cursor-pointer">{claim.id}</span>
+                                                    <span className="text-[10px] text-gray-400 font-mono">11 Jan 20:49</span>
+                                                </div>
+                                                {/* Details + SKU */}
+                                                <div className="text-[11px] text-gray-600 mt-1 flex items-center gap-2">
+                                                    <span>{claim.details}</span>
+                                                    <span className="text-gray-300">|</span>
+                                                    <span className="font-mono text-[10px] text-gray-400">SKU: N/A</span>
+                                                </div>
+                                                {/* Status Row */}
+                                                <div className="flex items-center gap-2 mt-2 text-[10px] font-medium tracking-wider uppercase">
+                                                    <span className={cn(
+                                                        "px-2 py-0.5 border font-semibold",
+                                                        claim.status === 'PENDING' ? "bg-gray-100 text-gray-700 border-gray-200" : "bg-blue-50 text-blue-700 border-blue-200"
+                                                    )}>{claim.status}</span>
+                                                    <span className="text-gray-200">|</span>
+                                                    <span className="text-gray-400">DUP:</span>
+                                                    <span className="text-gray-500">NONE</span>
+                                                    <span className="text-gray-200">|</span>
+                                                    <span className="text-gray-500 font-mono">EXPIRY N/A</span>
+                                                    <span className="text-gray-200">|</span>
+                                                    <span className="flex items-center gap-1">
+                                                        <Info className="w-3 h-3 text-gray-400" />
+                                                    </span>
+                                                    <span className="text-gray-900 font-mono font-bold">${claim.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                                                </div>
+                                            </div>
+
+                                            {/* Right Actions */}
+                                            <div className="flex items-center gap-4 ml-4">
+                                                <span className="text-gray-400 hover:text-gray-900 cursor-pointer">•••</span>
+                                                <span className="flex items-center gap-1 text-[10px] font-bold text-gray-400 hover:text-gray-900 uppercase tracking-[0.15em] cursor-pointer group/link">
+                                                    AUDIT
+                                                    <ArrowRight className="w-3 h-3 translate-x-0 group-hover/link:translate-x-1 transition-transform duration-200" />
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     )}
