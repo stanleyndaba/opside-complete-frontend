@@ -687,9 +687,7 @@ const Index = () => {
 
                   {/* 2. Full-Width Demo */}
                   <div className="w-full" onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
-                    <div className="relative rounded-xl overflow-hidden shadow-2xl ring-1 ring-white/10 transition-transform hover:scale-[1.005] duration-700 bg-black/40 backdrop-blur-sm">
-                      <InteractiveDemo currentStep={activeStep === -1 ? 0 : activeStep} className="max-w-none w-full !h-[400px] md:!h-[460px] shadow-none border-0 rounded-none bg-transparent" />
-                    </div>
+                    <InteractiveDemo currentStep={activeStep === -1 ? 0 : activeStep} className="max-w-none w-full !h-[400px] md:!h-[460px]" />
                   </div>
 
                   {/* 3. Horizontal Timeline */}
