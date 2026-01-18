@@ -142,14 +142,11 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
                 {/* MAIN BODY */}
                 <div className="flex-1 p-2 flex flex-col gap-2 overflow-hidden bg-white">
                     {/* TERMINAL (Full Width) */}
-                    <div className="flex-1 bg-[#0a0a0a] rounded-lg border border-neutral-900 overflow-hidden relative shadow-2xl flex flex-col">
-                        <div className="absolute top-0 left-0 right-0 h-12 bg-neutral-950/80 border-b border-neutral-900 rounded-t-xl flex items-center px-6 z-10 backdrop-blur-md">
-                            <span className="text-[10px] text-neutral-600 uppercase tracking-widest font-bold flex items-center gap-3">
-                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                                Kernel Activity Log
-                            </span>
+                    <div className="flex-1 bg-[#0D0D0D] rounded-lg border border-neutral-900 overflow-hidden relative shadow-sm flex flex-col">
+                        <div className="absolute top-0 left-0 right-0 h-10 bg-[#0D0D0D] border-b border-neutral-900 rounded-t-lg flex items-center px-5 z-10">
+                            <span className="text-[10px] text-neutral-600 uppercase tracking-[0.2em] font-normal">Activity Feed</span>
                         </div>
-                        <div className="pt-14 pb-4 px-6 text-[13px] flex-1 overflow-y-scroll text-neutral-400 leading-7 font-mono whitespace-nowrap">
+                        <div className="pt-12 pb-4 px-5 text-[13px] flex-1 overflow-y-scroll text-neutral-400 leading-relaxed font-normal tracking-tight">
                             {logs.length === 0 ? (
                                 <div className="h-full flex flex-col items-center justify-center text-neutral-800 space-y-4 opacity-50">
                                     <div className="p-4 bg-neutral-900/50 rounded-full border border-neutral-800">
@@ -161,17 +158,57 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
                                     </div>
                                 </div>
                             ) : (
-                                <div className="space-y-2">
+                                <div className="space-y-0.5">
                                     {logs.map((log) => {
+                                        // Get agent label based on log type
+                                        const getAgentLabel = () => {
+                                            if (log.type === 'success') return '[Agent 2: Sync]';
+                                            if (log.type === 'alert') return '[Agent 3: Detection]';
+                                            return '[Agent 2: Sync]';
+                                        };
+
+                                        // Highlight numbers and money in the message
+                                        const highlightContent = (text: string) => {
+                                            const parts = text.split(/(\$[\d,]+\.?\d*|\b\d+\b)/g);
+                                            return parts.map((part, i) => {
+                                                if (part.match(/^\$[\d,]+\.?\d*$/)) {
+                                                    return <span key={i} className="text-white font-medium">{part}</span>;
+                                                }
+                                                if (part.match(/^\d+$/)) {
+                                                    return <span key={i} className="text-neutral-300">{part}</span>;
+                                                }
+                                                return part;
+                                            });
+                                        };
+
                                         return (
-                                            <div key={log.id} className="flex items-start gap-4 py-1.5 border-b border-white/[0.02] animate-in fade-in slide-in-from-bottom-2 duration-300">
-                                                <span className="text-neutral-700 select-none">[{new Date().toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })}]</span>
-                                                <div className={cn("mt-2.5 w-1 h-1 rounded-full shrink-0",
-                                                    log.type === 'alert' ? 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.6)]' :
-                                                        log.type === 'success' ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]' :
-                                                            'bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]')} />
-                                                <span className="flex-1 transition-colors hover:text-white">{log.msg}</span>
-                                                {log.value && <span className="text-emerald-400 font-bold bg-emerald-500/5 px-2 rounded tracking-tighter">+$ {log.value.toFixed(2)}</span>}
+                                            <div key={log.id} className="flex items-start gap-3 py-1.5 text-[13px] animate-in fade-in slide-in-from-bottom-1 duration-300">
+                                                {/* Timestamp - very subtle */}
+                                                <span className="text-neutral-700 text-[11px] shrink-0 font-normal">
+                                                    {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                </span>
+
+                                                {/* Agent Label */}
+                                                <span className="text-neutral-500 text-[10px] border border-neutral-800 px-1.5 py-0.5 rounded-sm uppercase tracking-tight shrink-0">
+                                                    {getAgentLabel()}
+                                                </span>
+
+                                                {/* Message */}
+                                                <span className={cn(
+                                                    "flex-1 break-words",
+                                                    log.type === 'success' ? 'text-neutral-200' :
+                                                        log.type === 'alert' ? 'text-neutral-300' :
+                                                            'text-neutral-400'
+                                                )}>
+                                                    {highlightContent(log.msg)}
+                                                </span>
+
+                                                {/* Money Value - white highlight */}
+                                                {log.value && (
+                                                    <span className="text-white font-medium shrink-0">
+                                                        +${log.value.toFixed(2)}
+                                                    </span>
+                                                )}
                                             </div>
                                         );
                                     })}
