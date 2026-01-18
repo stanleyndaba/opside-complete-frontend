@@ -121,8 +121,8 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
     };
 
     return (
-        <div className={cn("relative w-full max-w-4xl mx-auto", className)}>
-            <div className="rounded-2xl overflow-hidden bg-white shadow-2xl border border-gray-200 flex flex-col relative h-full">
+        <div className={cn("relative w-full mx-auto", className)}>
+            <div className="rounded-2xl overflow-hidden bg-white shadow-2xl flex flex-col relative h-full">
 
                 {/* WINDOW HEADER */}
                 <div className="bg-gray-50 border-b border-gray-100 px-6 py-3 flex items-center justify-between shrink-0">
