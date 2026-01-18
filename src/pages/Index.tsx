@@ -587,23 +587,10 @@ const Index = () => {
               <div className="absolute -top-40 -right-40 w-[600px] h-[600px] bg-gradient-to-br from-emerald-100/60 via-teal-50/40 to-sky-100/50 rounded-full blur-3xl" />
               <div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] bg-gradient-to-tr from-emerald-50/40 via-white to-teal-50/30 rounded-full blur-3xl" />
             </div>
-            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-              {/* Right Column: Product Visualization */}
-              <div className="order-2 lg:order-2 relative">
-                {/* Main Dashboard Image */}
-                <div className="relative rounded-2xl bg-gradient-to-b from-gray-50/50 to-white/50 p-2 shadow-2xl backdrop-blur-sm border border-gray-100/50 transform transition-transform duration-700 hover:scale-[1.01]">
-                  <img
-                    src={heroImage}
-                    alt="Margin Dashboard"
-                    className="w-full h-auto rounded-xl shadow-sm border border-black/5"
-                  />
-                </div>
-                {/* Decorative blob behind image */}
-                <div className="absolute -inset-4 bg-gradient-to-r from-emerald-100/30 to-sky-100/30 blur-3xl -z-10 rounded-full opacity-70" />
-              </div>
+            <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
 
-              {/* Right Column: Text content */}
-              <div className="order-1 lg:order-1 flex flex-col items-start text-left space-y-6">
+              {/* Text content - now centered */}
+              <div className="flex flex-col items-center space-y-6">
 
                 {/* Trust chip */}
                 <div className="relative inline-flex items-center gap-2 md:gap-4 rounded-[20px] md:rounded-[25px] border border-emerald-100 bg-white/85 px-3 py-1.5 md:px-5 md:py-2 shadow-[0_12px_45px_rgba(16,185,129,0.25)] backdrop-blur supports-[backdrop-filter]:bg-white/70 overflow-hidden">
