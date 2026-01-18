@@ -61,9 +61,9 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
               })}
             </div>
           </div>
-          <div className="flex flex-col gap-6 border-t border-gray-200 pt-6 text-xs text-gray-500">
-            {/* Links - stack on mobile, row on desktop */}
-            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-gray-600 md:justify-end">
+          <div className="flex flex-col gap-4 border-t border-gray-200 pt-6 text-xs text-gray-500">
+            {/* Links - vertical on mobile, horizontal on desktop */}
+            <div className="flex flex-col items-center gap-2 text-gray-600 md:flex-row md:flex-wrap md:justify-center md:gap-x-4">
               <Link to="/privacy" className="transition hover:text-gray-900">
                 Privacy Policy
               </Link>
@@ -83,12 +83,12 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
                 </span>
               )}
             </div>
-            {/* Copyright - centered on mobile, left on desktop */}
-            <div className="flex flex-col md:flex-row items-center justify-between gap-2 text-center md:text-left">
-              <p className="text-gray-600">
+            {/* Copyright - always centered, stacked on mobile */}
+            <div className="flex flex-col items-center gap-1.5 text-center text-gray-600">
+              <p>
                 © {new Date().getFullYear()} Margin. Built for operators.
               </p>
-              <span className="inline-flex items-center gap-1.5 text-gray-600">
+              <span className="inline-flex items-center gap-1.5">
                 <svg className="h-4 w-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
                 </svg>
