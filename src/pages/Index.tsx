@@ -683,43 +683,26 @@ const Index = () => {
 
                 <div className="flex flex-col gap-6 items-center relative z-10 w-full mx-auto">
 
+                  {/* Video Demo Placeholder */}
+                  <div className="w-full aspect-video rounded-xl overflow-hidden relative bg-neutral-900 border border-white/10 shadow-2xl group cursor-pointer">
+                    {/* Placeholder Background Pattern */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-900" />
 
-
-                  {/* 2. Full-Width Demo */}
-                  <div className="w-full" onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
-                    <InteractiveDemo currentStep={activeStep === -1 ? 0 : activeStep} className="max-w-none w-full !h-[400px] md:!h-[460px]" />
-                  </div>
-
-                  {/* 3. Horizontal Timeline */}
-                  <div className="w-full relative mt-4 px-4 md:px-12">
-                    {/* Connecting Line */}
-                    <div className="absolute top-[4.5px] left-12 right-12 h-px bg-gray-600/30 rounded-full overflow-hidden -z-10" />
-
-                    <div className="flex justify-between items-start w-full gap-4">
-                      {WORKFLOW_STEPS.map((step, index) => (
-                        <div
-                          key={index}
-                          className={`flex flex-col items-center gap-4 cursor-pointer group flex-1 ${activeStep === index ? 'opacity-100' : 'opacity-40 hover:opacity-70'} transition-all duration-300`}
-                          onClick={() => setActiveStep(activeStep === index ? -1 : index)}
-                        >
-                          {/* Dot / Indicator */}
-                          <div className={`w-2.5 h-2.5 rounded-full transition-all duration-300 z-10 ${activeStep === index ? 'bg-white scale-150 shadow-[0_0_15px_rgba(255,255,255,0.6)]' : 'bg-gray-800 group-hover:bg-gray-600'}`} />
-
-                          {/* Label */}
-                          <div className="text-center space-y-2">
-                            <h4 className={`text-xs md:text-sm font-normal transition-colors ${activeStep === index ? 'text-white' : 'text-gray-400'}`}>
-                              {step.title}
-                            </h4>
-                            {/* Description Dropdown (Absolute or inline?) Inline fits better for timeline if text is short, but description is long. Let's make it a small tooltip-like block below. */}
-                            <div className={`transition-all duration-500 overflow-hidden ${activeStep === index ? 'max-h-24 opacity-100' : 'max-h-0 opacity-0'}`}>
-                              <p className="text-xs text-gray-500 max-w-[180px] mx-auto leading-relaxed">
-                                {step.description}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
+                    {/* Play Button Overlay */}
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-6">
+                      <div className="w-20 h-20 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/20 group-hover:scale-110 group-hover:bg-white/20 transition-all duration-300">
+                        <svg className="w-8 h-8 text-white ml-1" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                      </div>
+                      <div className="text-center space-y-2">
+                        <p className="text-white/60 text-sm font-medium uppercase tracking-widest">Demo Coming Soon</p>
+                        <p className="text-white/40 text-xs">Watch Margin detect $1,500+ in discrepancies</p>
+                      </div>
                     </div>
+
+                    {/* TODO: Replace with actual video once recorded */}
+                    {/* <video src="/demo.mp4" controls className="w-full h-full object-cover" /> */}
                   </div>
 
                 </div>
