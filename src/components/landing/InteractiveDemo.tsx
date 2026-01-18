@@ -122,7 +122,7 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
 
     return (
         <div className={cn("relative w-full mx-auto", className)}>
-            <div className="rounded-2xl overflow-hidden bg-white shadow-2xl flex flex-col relative h-full">
+            <div className="rounded-xl overflow-hidden bg-white shadow-2xl flex flex-col relative h-full">
 
                 {/* WINDOW HEADER */}
                 <div className="bg-gray-50 border-b border-gray-100 px-6 py-3 flex items-center justify-between shrink-0">
@@ -140,16 +140,16 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
                 </div>
 
                 {/* MAIN BODY */}
-                <div className="flex-1 p-4 flex flex-col gap-4 overflow-hidden bg-white">
+                <div className="flex-1 p-2 flex flex-col gap-2 overflow-hidden bg-white">
                     {/* TERMINAL (Full Width) */}
-                    <div className="flex-1 bg-[#0a0a0a] rounded-xl border border-neutral-900 overflow-hidden relative shadow-2xl flex flex-col">
+                    <div className="flex-1 bg-[#0a0a0a] rounded-lg border border-neutral-900 overflow-hidden relative shadow-2xl flex flex-col">
                         <div className="absolute top-0 left-0 right-0 h-12 bg-neutral-950/80 border-b border-neutral-900 rounded-t-xl flex items-center px-6 z-10 backdrop-blur-md">
                             <span className="text-[10px] text-neutral-600 uppercase tracking-widest font-bold flex items-center gap-3">
                                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                                 Kernel Activity Log
                             </span>
                         </div>
-                        <div className="pt-16 pb-8 px-8 text-[13px] flex-1 overflow-auto text-neutral-400 leading-7 font-mono whitespace-nowrap">
+                        <div className="pt-14 pb-4 px-6 text-[13px] flex-1 overflow-y-scroll text-neutral-400 leading-7 font-mono whitespace-nowrap">
                             {logs.length === 0 ? (
                                 <div className="h-full flex flex-col items-center justify-center text-neutral-800 space-y-4 opacity-50">
                                     <div className="p-4 bg-neutral-900/50 rounded-full border border-neutral-800">
