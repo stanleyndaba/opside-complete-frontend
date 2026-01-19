@@ -362,16 +362,6 @@ export function Navbar({
               </div>
             </div>
           </div>
-
-          {/* Right Group - Sign Out (Isolated) */}
-          <div className="flex items-center border-l border-gray-100 pl-6 ml-6">
-            <button
-              onClick={() => setShowSignOutModal(true)}
-              className="flex items-center gap-2 h-8 px-4 text-xs text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-sm transition-all group/signout">
-              <LogOut className="h-3.5 w-3.5 text-gray-400 group-hover/signout:text-gray-600" />
-              <span className="hidden sm:inline font-medium">Sign Out</span>
-            </button>
-          </div>
         </div>
       </header>
 

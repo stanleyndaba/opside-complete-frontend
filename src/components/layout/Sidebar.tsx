@@ -271,7 +271,7 @@ export function Sidebar({
 
       {/* Profile + Status + Logout */}
       {isCollapsed ? (
-        <div className="mt-auto border-t border-gray-100 py-4 flex flex-col items-center justify-center">
+        <div className="mt-auto border-t border-gray-100 py-4 flex flex-col items-center justify-center gap-2">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -287,6 +287,27 @@ export function Sidebar({
               </TooltipTrigger>
               <TooltipContent side="right" className="bg-gray-900 text-white text-[10px] uppercase tracking-widest rounded-none">
                 Account
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={async () => {
+                    try { await api.logout(); } catch (_) { }
+                    window.location.href = '/';
+                  }}
+                  aria-label="Sign Out"
+                  className={cn(
+                    "relative flex items-center justify-center w-8 h-8 transition-colors rounded-none",
+                    "text-gray-400 hover:bg-gray-50 hover:text-gray-900"
+                  )}>
+                  <LogOut className="h-4 w-4" strokeWidth={1.5} />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right" className="bg-gray-900 text-white text-[10px] uppercase tracking-widest rounded-none">
+                Sign Out
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -309,6 +330,15 @@ export function Sidebar({
               </span>
             )}
           </Link>
+          <button
+            onClick={async () => {
+              try { await api.logout(); } catch (_) { }
+              window.location.href = '/';
+            }}
+            className="w-full flex items-center gap-2.5 px-6 py-3 text-left hover:bg-gray-50 transition-all group text-gray-500">
+            <LogOut className="h-3.5 w-3.5 text-gray-400 group-hover:text-gray-900" strokeWidth={1.5} />
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] group-hover:text-gray-900">Sign Out</span>
+          </button>
         </div>
       )}
       {/* Edge toggle handle */}
