@@ -992,7 +992,7 @@ export function Dashboard() {
 
                 {/* System Activity - Right Sidebar */}
                 <div className="lg:col-span-1">
-                  <div className="bg-white border border-gray-200 rounded-none h-full flex flex-col">
+                  <div className="bg-gray-50/80 border border-gray-200 rounded-none h-full flex flex-col">
                     <button
                       onClick={() => setIsActivityExpanded(!isActivityExpanded)}
                       className="px-5 py-4 border-b border-gray-100 bg-white flex items-center justify-between w-full hover:bg-gray-50/50 transition-colors">

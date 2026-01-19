@@ -269,27 +269,9 @@ export function Sidebar({
         </div>
       </ScrollArea>
 
-      {/* Profile + Status + Logout */}
+      {/* Logout Only */}
       {isCollapsed ? (
-        <div className="mt-auto border-t border-gray-100 py-4 flex flex-col items-center justify-center gap-2">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  to="/settings"
-                  aria-label="Account"
-                  className={cn(
-                    "relative flex items-center justify-center w-8 h-8 transition-colors rounded-none",
-                    "text-gray-400 hover:bg-gray-50 hover:text-gray-900"
-                  )}>
-                  <User className="h-4 w-4" strokeWidth={1.5} />
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right" className="bg-gray-900 text-white text-[10px] uppercase tracking-widest rounded-none">
-                Account
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+        <div className="mt-auto border-t border-gray-100 py-4 flex flex-col items-center justify-center">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -314,22 +296,6 @@ export function Sidebar({
         </div>
       ) : (
         <div className="mt-auto border-t border-gray-100 py-2">
-          <Link
-            to="/settings"
-            className={cn(
-              "w-full flex flex-col text-left hover:bg-gray-50 px-6 py-4 transition-all group",
-              "text-gray-500"
-            )}>
-            <div className="flex items-center gap-2.5">
-              <User className="h-3.5 w-3.5 text-gray-400 group-hover:text-gray-900" strokeWidth={1.5} />
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] group-hover:text-gray-900">Account</span>
-            </div>
-            {connectedEmail && (
-              <span className="text-[9px] text-gray-400 font-mono mt-1 blur-[0px] group-hover:text-gray-600 truncate max-w-full" title={connectedEmail}>
-                ID: {connectedEmail.toUpperCase()}
-              </span>
-            )}
-          </Link>
           <button
             onClick={async () => {
               try { await api.logout(); } catch (_) { }
