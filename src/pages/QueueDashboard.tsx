@@ -71,7 +71,7 @@ export default function QueueDashboard() {
 
     const getStatusColor = (status: string) => {
         switch (status) {
-            case 'healthy': return '#0D9488';
+            case 'healthy': return '#059669';
             case 'unavailable': return '#D97706';
             case 'error': return '#DC2626';
             default: return '#6B7280';
@@ -89,17 +89,18 @@ export default function QueueDashboard() {
         <PageLayout>
             <div style={{
                 minHeight: '100vh',
-                backgroundColor: '#0A0A0A',
-                color: '#E5E5E5',
+                backgroundColor: '#FAFAFA',
+                color: '#1F2937',
                 fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
             }}>
                 {/* Header */}
                 <div style={{
-                    borderBottom: '1px solid #262626',
+                    borderBottom: '1px solid #E5E7EB',
                     padding: '24px 40px',
                     display: 'flex',
                     justifyContent: 'space-between',
-                    alignItems: 'center'
+                    alignItems: 'center',
+                    backgroundColor: '#FFFFFF'
                 }}>
                     <div>
                         <h1 style={{
@@ -107,7 +108,7 @@ export default function QueueDashboard() {
                             fontWeight: 500,
                             letterSpacing: '0.1em',
                             textTransform: 'uppercase',
-                            color: '#737373',
+                            color: '#9CA3AF',
                             marginBottom: '4px'
                         }}>
                             Operations Center
@@ -115,7 +116,7 @@ export default function QueueDashboard() {
                         <h2 style={{
                             fontSize: '24px',
                             fontWeight: 600,
-                            color: '#FAFAFA',
+                            color: '#111827',
                             margin: 0
                         }}>
                             Queue Processing Status
@@ -126,7 +127,7 @@ export default function QueueDashboard() {
                             fontSize: '11px',
                             letterSpacing: '0.05em',
                             textTransform: 'uppercase',
-                            color: '#525252',
+                            color: '#9CA3AF',
                             marginBottom: '4px'
                         }}>
                             Last Updated
@@ -134,7 +135,7 @@ export default function QueueDashboard() {
                         <div style={{
                             fontSize: '13px',
                             fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
-                            color: '#A3A3A3'
+                            color: '#6B7280'
                         }}>
                             {formatTimestamp(lastRefresh.toISOString())}
                         </div>
@@ -145,14 +146,15 @@ export default function QueueDashboard() {
                 <div style={{ padding: '40px' }}>
                     {/* Status Banner */}
                     <div style={{
-                        backgroundColor: '#141414',
-                        border: '1px solid #262626',
-                        borderRadius: '2px',
+                        backgroundColor: '#FFFFFF',
+                        border: '1px solid #E5E7EB',
+                        borderRadius: '4px',
                         padding: '24px 32px',
                         marginBottom: '32px',
                         display: 'flex',
                         justifyContent: 'space-between',
-                        alignItems: 'center'
+                        alignItems: 'center',
+                        boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
                     }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
                             <div>
@@ -160,7 +162,7 @@ export default function QueueDashboard() {
                                     fontSize: '11px',
                                     letterSpacing: '0.1em',
                                     textTransform: 'uppercase',
-                                    color: '#525252',
+                                    color: '#9CA3AF',
                                     marginBottom: '4px'
                                 }}>
                                     System Status
@@ -178,14 +180,14 @@ export default function QueueDashboard() {
                             <div style={{
                                 width: '1px',
                                 height: '40px',
-                                backgroundColor: '#262626'
+                                backgroundColor: '#E5E7EB'
                             }} />
                             <div>
                                 <div style={{
                                     fontSize: '11px',
                                     letterSpacing: '0.1em',
                                     textTransform: 'uppercase',
-                                    color: '#525252',
+                                    color: '#9CA3AF',
                                     marginBottom: '4px'
                                 }}>
                                     Alert Level
@@ -193,7 +195,7 @@ export default function QueueDashboard() {
                                 <div style={{
                                     fontSize: '18px',
                                     fontWeight: 600,
-                                    color: getAlertLevel() === 'NOMINAL' ? '#0D9488' : '#D97706',
+                                    color: getAlertLevel() === 'NOMINAL' ? '#059669' : '#D97706',
                                     textTransform: 'uppercase',
                                     letterSpacing: '0.05em'
                                 }}>
@@ -203,14 +205,14 @@ export default function QueueDashboard() {
                             <div style={{
                                 width: '1px',
                                 height: '40px',
-                                backgroundColor: '#262626'
+                                backgroundColor: '#E5E7EB'
                             }} />
                             <div>
                                 <div style={{
                                     fontSize: '11px',
                                     letterSpacing: '0.1em',
                                     textTransform: 'uppercase',
-                                    color: '#525252',
+                                    color: '#9CA3AF',
                                     marginBottom: '4px'
                                 }}>
                                     Queue Instance
@@ -218,7 +220,7 @@ export default function QueueDashboard() {
                                 <div style={{
                                     fontSize: '14px',
                                     fontFamily: "'JetBrains Mono', monospace",
-                                    color: '#A3A3A3'
+                                    color: '#6B7280'
                                 }}>
                                     {stats?.queueName || 'onboarding-sync'}
                                 </div>
@@ -228,11 +230,11 @@ export default function QueueDashboard() {
                             <button
                                 onClick={() => setAutoRefresh(!autoRefresh)}
                                 style={{
-                                    backgroundColor: autoRefresh ? '#1C1C1C' : 'transparent',
-                                    border: '1px solid #404040',
-                                    borderRadius: '2px',
+                                    backgroundColor: autoRefresh ? '#F0FDF4' : '#FFFFFF',
+                                    border: '1px solid #D1D5DB',
+                                    borderRadius: '4px',
                                     padding: '10px 20px',
-                                    color: autoRefresh ? '#10B981' : '#737373',
+                                    color: autoRefresh ? '#059669' : '#6B7280',
                                     fontSize: '12px',
                                     fontWeight: 500,
                                     letterSpacing: '0.05em',
@@ -249,12 +251,12 @@ export default function QueueDashboard() {
                     {/* Error Display */}
                     {error && (
                         <div style={{
-                            backgroundColor: '#1C1917',
-                            border: '1px solid #7C2D12',
-                            borderRadius: '2px',
+                            backgroundColor: '#FEF2F2',
+                            border: '1px solid #FECACA',
+                            borderRadius: '4px',
                             padding: '16px 24px',
                             marginBottom: '32px',
-                            color: '#FCA5A5'
+                            color: '#DC2626'
                         }}>
                             <span style={{ fontWeight: 600 }}>CONNECTION ERROR:</span> {error}
                         </div>
@@ -265,11 +267,12 @@ export default function QueueDashboard() {
                         display: 'grid',
                         gridTemplateColumns: 'repeat(5, 1fr)',
                         gap: '1px',
-                        backgroundColor: '#262626',
-                        border: '1px solid #262626',
-                        borderRadius: '2px',
+                        backgroundColor: '#E5E7EB',
+                        border: '1px solid #E5E7EB',
+                        borderRadius: '4px',
                         overflow: 'hidden',
-                        marginBottom: '32px'
+                        marginBottom: '32px',
+                        boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
                     }}>
                         {[
                             { label: 'Waiting', value: stats?.metrics.waiting ?? 0, desc: 'Jobs in queue' },
@@ -281,7 +284,7 @@ export default function QueueDashboard() {
                             <div
                                 key={metric.label}
                                 style={{
-                                    backgroundColor: '#141414',
+                                    backgroundColor: '#FFFFFF',
                                     padding: '28px 24px',
                                     textAlign: 'center'
                                 }}
@@ -290,7 +293,7 @@ export default function QueueDashboard() {
                                     fontSize: '11px',
                                     letterSpacing: '0.1em',
                                     textTransform: 'uppercase',
-                                    color: '#525252',
+                                    color: '#9CA3AF',
                                     marginBottom: '8px'
                                 }}>
                                     {metric.label}
@@ -299,7 +302,7 @@ export default function QueueDashboard() {
                                     fontSize: '36px',
                                     fontWeight: 700,
                                     fontFamily: "'JetBrains Mono', monospace",
-                                    color: metric.label === 'Failed' && metric.value > 0 ? '#EF4444' : '#FAFAFA',
+                                    color: metric.label === 'Failed' && metric.value > 0 ? '#DC2626' : '#111827',
                                     lineHeight: 1,
                                     marginBottom: '8px'
                                 }}>
@@ -307,7 +310,7 @@ export default function QueueDashboard() {
                                 </div>
                                 <div style={{
                                     fontSize: '11px',
-                                    color: '#525252'
+                                    color: '#9CA3AF'
                                 }}>
                                     {metric.desc}
                                 </div>
@@ -317,21 +320,22 @@ export default function QueueDashboard() {
 
                     {/* Alerts Section */}
                     <div style={{
-                        backgroundColor: '#141414',
-                        border: '1px solid #262626',
-                        borderRadius: '2px',
-                        marginBottom: '32px'
+                        backgroundColor: '#FFFFFF',
+                        border: '1px solid #E5E7EB',
+                        borderRadius: '4px',
+                        marginBottom: '32px',
+                        boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
                     }}>
                         <div style={{
                             padding: '16px 24px',
-                            borderBottom: '1px solid #262626'
+                            borderBottom: '1px solid #E5E7EB'
                         }}>
                             <h3 style={{
                                 fontSize: '12px',
                                 fontWeight: 600,
                                 letterSpacing: '0.1em',
                                 textTransform: 'uppercase',
-                                color: '#737373',
+                                color: '#6B7280',
                                 margin: 0
                             }}>
                                 System Alerts
@@ -341,7 +345,7 @@ export default function QueueDashboard() {
                             {stats?.alerts ? (
                                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                                     <thead>
-                                        <tr style={{ borderBottom: '1px solid #262626' }}>
+                                        <tr style={{ borderBottom: '1px solid #E5E7EB' }}>
                                             <th style={{
                                                 textAlign: 'left',
                                                 padding: '12px 0',
@@ -349,7 +353,7 @@ export default function QueueDashboard() {
                                                 fontWeight: 600,
                                                 letterSpacing: '0.05em',
                                                 textTransform: 'uppercase',
-                                                color: '#525252'
+                                                color: '#9CA3AF'
                                             }}>
                                                 Condition
                                             </th>
@@ -360,7 +364,7 @@ export default function QueueDashboard() {
                                                 fontWeight: 600,
                                                 letterSpacing: '0.05em',
                                                 textTransform: 'uppercase',
-                                                color: '#525252'
+                                                color: '#9CA3AF'
                                             }}>
                                                 Threshold
                                             </th>
@@ -371,7 +375,7 @@ export default function QueueDashboard() {
                                                 fontWeight: 600,
                                                 letterSpacing: '0.05em',
                                                 textTransform: 'uppercase',
-                                                color: '#525252'
+                                                color: '#9CA3AF'
                                             }}>
                                                 Status
                                             </th>
@@ -383,11 +387,11 @@ export default function QueueDashboard() {
                                             { name: 'Backlog Building', threshold: '> 50 waiting jobs', active: stats.alerts.backlogBuilding },
                                             { name: 'Workers Overloaded', threshold: '>= 5 concurrent active', active: stats.alerts.workersOverloaded },
                                         ].map((alert) => (
-                                            <tr key={alert.name} style={{ borderBottom: '1px solid #1C1C1C' }}>
+                                            <tr key={alert.name} style={{ borderBottom: '1px solid #F3F4F6' }}>
                                                 <td style={{
                                                     padding: '14px 0',
                                                     fontSize: '13px',
-                                                    color: '#E5E5E5'
+                                                    color: '#374151'
                                                 }}>
                                                     {alert.name}
                                                 </td>
@@ -395,7 +399,7 @@ export default function QueueDashboard() {
                                                     padding: '14px 0',
                                                     fontSize: '13px',
                                                     fontFamily: "'JetBrains Mono', monospace",
-                                                    color: '#737373'
+                                                    color: '#6B7280'
                                                 }}>
                                                     {alert.threshold}
                                                 </td>
@@ -406,13 +410,13 @@ export default function QueueDashboard() {
                                                     <span style={{
                                                         display: 'inline-block',
                                                         padding: '4px 12px',
-                                                        borderRadius: '2px',
+                                                        borderRadius: '4px',
                                                         fontSize: '11px',
                                                         fontWeight: 600,
                                                         letterSpacing: '0.05em',
                                                         textTransform: 'uppercase',
-                                                        backgroundColor: alert.active ? '#7C2D12' : '#14532D',
-                                                        color: alert.active ? '#FCA5A5' : '#86EFAC'
+                                                        backgroundColor: alert.active ? '#FEF2F2' : '#F0FDF4',
+                                                        color: alert.active ? '#DC2626' : '#059669'
                                                     }}>
                                                         {alert.active ? 'TRIGGERED' : 'CLEAR'}
                                                     </span>
@@ -425,7 +429,7 @@ export default function QueueDashboard() {
                                 <div style={{
                                     textAlign: 'center',
                                     padding: '24px',
-                                    color: '#525252'
+                                    color: '#9CA3AF'
                                 }}>
                                     No alert data available
                                 </div>
@@ -440,16 +444,17 @@ export default function QueueDashboard() {
                         gap: '24px'
                     }}>
                         <div style={{
-                            backgroundColor: '#141414',
-                            border: '1px solid #262626',
-                            borderRadius: '2px',
-                            padding: '24px'
+                            backgroundColor: '#FFFFFF',
+                            border: '1px solid #E5E7EB',
+                            borderRadius: '4px',
+                            padding: '24px',
+                            boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
                         }}>
                             <div style={{
                                 fontSize: '11px',
                                 letterSpacing: '0.1em',
                                 textTransform: 'uppercase',
-                                color: '#525252',
+                                color: '#9CA3AF',
                                 marginBottom: '12px'
                             }}>
                                 Success Rate
@@ -458,7 +463,7 @@ export default function QueueDashboard() {
                                 fontSize: '28px',
                                 fontWeight: 700,
                                 fontFamily: "'JetBrains Mono', monospace",
-                                color: '#10B981'
+                                color: '#059669'
                             }}>
                                 {stats?.metrics.completed && stats?.metrics.failed !== undefined
                                     ? ((stats.metrics.completed / (stats.metrics.completed + stats.metrics.failed)) * 100).toFixed(1)
@@ -467,7 +472,7 @@ export default function QueueDashboard() {
                             <div style={{
                                 marginTop: '12px',
                                 height: '4px',
-                                backgroundColor: '#1C1C1C',
+                                backgroundColor: '#E5E7EB',
                                 borderRadius: '2px',
                                 overflow: 'hidden'
                             }}>
@@ -476,23 +481,24 @@ export default function QueueDashboard() {
                                     width: stats?.metrics.completed && stats?.metrics.failed !== undefined
                                         ? `${(stats.metrics.completed / (stats.metrics.completed + stats.metrics.failed)) * 100}%`
                                         : '100%',
-                                    backgroundColor: '#10B981',
+                                    backgroundColor: '#059669',
                                     transition: 'width 0.3s ease'
                                 }} />
                             </div>
                         </div>
 
                         <div style={{
-                            backgroundColor: '#141414',
-                            border: '1px solid #262626',
-                            borderRadius: '2px',
-                            padding: '24px'
+                            backgroundColor: '#FFFFFF',
+                            border: '1px solid #E5E7EB',
+                            borderRadius: '4px',
+                            padding: '24px',
+                            boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
                         }}>
                             <div style={{
                                 fontSize: '11px',
                                 letterSpacing: '0.1em',
                                 textTransform: 'uppercase',
-                                color: '#525252',
+                                color: '#9CA3AF',
                                 marginBottom: '12px'
                             }}>
                                 Queue Utilization
@@ -501,37 +507,38 @@ export default function QueueDashboard() {
                                 fontSize: '28px',
                                 fontWeight: 700,
                                 fontFamily: "'JetBrains Mono', monospace",
-                                color: '#3B82F6'
+                                color: '#2563EB'
                             }}>
                                 {stats?.metrics.active ?? 0} / 5
                             </div>
                             <div style={{
                                 marginTop: '12px',
                                 height: '4px',
-                                backgroundColor: '#1C1C1C',
+                                backgroundColor: '#E5E7EB',
                                 borderRadius: '2px',
                                 overflow: 'hidden'
                             }}>
                                 <div style={{
                                     height: '100%',
                                     width: `${((stats?.metrics.active ?? 0) / 5) * 100}%`,
-                                    backgroundColor: '#3B82F6',
+                                    backgroundColor: '#2563EB',
                                     transition: 'width 0.3s ease'
                                 }} />
                             </div>
                         </div>
 
                         <div style={{
-                            backgroundColor: '#141414',
-                            border: '1px solid #262626',
-                            borderRadius: '2px',
-                            padding: '24px'
+                            backgroundColor: '#FFFFFF',
+                            border: '1px solid #E5E7EB',
+                            borderRadius: '4px',
+                            padding: '24px',
+                            boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
                         }}>
                             <div style={{
                                 fontSize: '11px',
                                 letterSpacing: '0.1em',
                                 textTransform: 'uppercase',
-                                color: '#525252',
+                                color: '#9CA3AF',
                                 marginBottom: '12px'
                             }}>
                                 Total Processed
@@ -540,14 +547,14 @@ export default function QueueDashboard() {
                                 fontSize: '28px',
                                 fontWeight: 700,
                                 fontFamily: "'JetBrains Mono', monospace",
-                                color: '#FAFAFA'
+                                color: '#111827'
                             }}>
                                 {((stats?.metrics.completed ?? 0) + (stats?.metrics.failed ?? 0)).toLocaleString()}
                             </div>
                             <div style={{
                                 marginTop: '12px',
                                 fontSize: '12px',
-                                color: '#525252'
+                                color: '#9CA3AF'
                             }}>
                                 Lifetime job count
                             </div>
@@ -558,21 +565,21 @@ export default function QueueDashboard() {
                     <div style={{
                         marginTop: '48px',
                         paddingTop: '24px',
-                        borderTop: '1px solid #1C1C1C',
+                        borderTop: '1px solid #E5E7EB',
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'center'
                     }}>
                         <div style={{
                             fontSize: '11px',
-                            color: '#404040',
+                            color: '#9CA3AF',
                             letterSpacing: '0.05em'
                         }}>
                             QUEUE MONITORING SYSTEM v1.0 — MARGIN OPERATIONS
                         </div>
                         <div style={{
                             fontSize: '11px',
-                            color: '#404040'
+                            color: '#9CA3AF'
                         }}>
                             Refresh interval: 5 seconds when auto-refresh enabled
                         </div>
