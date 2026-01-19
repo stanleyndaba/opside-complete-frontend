@@ -93,7 +93,7 @@ export default function Help() {
               <h1 className="text-lg font-medium text-gray-900 tracking-tight">
                 Help Center
               </h1>
-              <p className="text-[10px] text-gray-500 mt-0.5 tracking-[0.15em]">
+              <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-[0.15em]">
                 Support & Resources
               </p>
               <p className="mt-4 text-sm text-gray-600 max-w-2xl leading-relaxed">
@@ -114,7 +114,7 @@ export default function Help() {
 
             {/* FAQs */}
             <section className="mb-10">
-              <h2 className="text-xs font-medium text-gray-900 tracking-[0.15em] mb-4">Frequently Asked Questions</h2>
+              <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em] mb-4">Frequently Asked Questions</h2>
               <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
                 <Accordion type="single" collapsible className="w-full">
                   {filteredFaqs.map((faq, index) => (
@@ -141,7 +141,7 @@ export default function Help() {
 
             {/* Getting Started & Guides */}
             <section className="mb-10">
-              <h2 className="text-xs font-medium text-gray-900 tracking-[0.15em] mb-4">Learn the Platform</h2>
+              <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em] mb-4">Learn the Platform</h2>
               <div className="grid md:grid-cols-2 gap-4">
                 {/* Getting Started */}
                 <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
@@ -212,7 +212,7 @@ export default function Help() {
 
             {/* Contact Support */}
             <section>
-              <h2 className="text-xs font-medium text-gray-900 tracking-[0.15em] mb-4">Contact Support</h2>
+              <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em] mb-4">Contact Support</h2>
               <div className="grid md:grid-cols-2 gap-4">
                 {/* Email Form */}
                 <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
@@ -227,7 +227,7 @@ export default function Help() {
                   <div className="p-4">
                     <form onSubmit={handleContactSubmit} className="space-y-3">
                       <div>
-                        <Label htmlFor="name" className="text-[10px] font-medium text-gray-500 tracking-[0.1em]">Name</Label>
+                        <Label htmlFor="name" className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em]">Name</Label>
                         <Input
                           id="name"
                           value={contactForm.name}
@@ -237,7 +237,7 @@ export default function Help() {
                         />
                       </div>
                       <div>
-                        <Label htmlFor="sellerId" className="text-[10px] font-medium text-gray-500 tracking-[0.1em]">Seller ID</Label>
+                        <Label htmlFor="sellerId" className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em]">Seller ID</Label>
                         <Input
                           id="sellerId"
                           value={contactForm.sellerId}
@@ -247,7 +247,7 @@ export default function Help() {
                         />
                       </div>
                       <div>
-                        <Label htmlFor="category" className="text-[10px] font-medium text-gray-500 tracking-[0.1em]">Category</Label>
+                        <Label htmlFor="category" className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em]">Category</Label>
                         <Select value={contactForm.category} onValueChange={(value) => setContactForm({ ...contactForm, category: value })}>
                           <SelectTrigger className="mt-1 h-8 text-xs border-gray-200 rounded-sm">
                             <SelectValue placeholder="Select..." />
@@ -262,7 +262,7 @@ export default function Help() {
                         </Select>
                       </div>
                       <div>
-                        <Label htmlFor="message" className="text-[10px] font-medium text-gray-500 tracking-[0.1em]">Message</Label>
+                        <Label htmlFor="message" className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em]">Message</Label>
                         <Textarea
                           id="message"
                           value={contactForm.message}

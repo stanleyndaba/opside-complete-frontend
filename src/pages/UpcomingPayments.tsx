@@ -48,7 +48,7 @@ function getFilingStatusMarker(status?: string) {
   return (
     <div className="flex items-center gap-2">
       <div className={cn("h-1.5 w-1.5 rounded-full", dot)} />
-      <span className="text-[9px] font-bold text-gray-900 tracking-widest font-mono">{label}</span>
+      <span className="text-[9px] font-bold text-gray-900 uppercase tracking-widest font-mono">{label}</span>
     </div>
   );
 }
@@ -249,18 +249,18 @@ export default function UpcomingPayments() {
             <div className="mb-10 flex items-end justify-between border-b border-gray-100 pb-8">
               <div>
                 <h1 className="text-xl font-light text-gray-900 tracking-tight">Payment Recoveries</h1>
-                <p className="text-[10px] text-gray-400 mt-1 tracking-[0.2em] font-mono">INTERNAL AUDIT // PROJECTED PAYOUTS</p>
+                <p className="text-[10px] text-gray-400 mt-1 uppercase tracking-[0.2em] font-mono">INTERNAL AUDIT // PROJECTED PAYOUTS</p>
               </div>
               <div className="flex items-center gap-3">
                 <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                <span className="text-[9px] font-bold text-gray-900 tracking-[0.2em]">LIVE ENGINE</span>
+                <span className="text-[9px] font-bold text-gray-900 uppercase tracking-[0.2em]">LIVE ENGINE</span>
               </div>
             </div>
 
             {/* Payment Recoveries Card */}
             <div className="bg-white border border-gray-200 rounded-sm mb-8">
               <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                <h2 className="text-xs font-medium text-gray-900 tracking-[0.15em]">Recovery Overview</h2>
+                <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Recovery Overview</h2>
                 <p className="text-[10px] text-gray-500 mt-0.5">Projected recoveries based on claim status</p>
               </div>
               <div className="p-6">
@@ -277,19 +277,19 @@ export default function UpcomingPayments() {
                 )}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-gray-100 italic-divider">
                   <div className="p-6 bg-gray-50/50">
-                    <div className="text-[9px] text-gray-400 tracking-[0.2em] font-bold mb-2">Next Expected Payout</div>
+                    <div className="text-[9px] text-gray-400 uppercase tracking-[0.2em] font-bold mb-2">Next Expected Payout</div>
                     <div className="text-2xl font-light text-gray-900 font-mono tracking-tight">{nextPayout ? formatCurrency(nextPayout.gross, currency) : formatCurrency(0, currency)}</div>
-                    <div className="text-[9px] text-gray-500 mt-2 tracking-widest font-mono">{nextPayout ? nextPayout.label : '—'}</div>
+                    <div className="text-[9px] text-gray-500 mt-2 uppercase tracking-widest font-mono">{nextPayout ? nextPayout.label : '—'}</div>
                   </div>
                   <div className="p-6 border-l border-gray-100 bg-gray-50/50">
-                    <div className="text-[9px] text-gray-400 tracking-[0.2em] font-bold mb-2">This Month (Projected)</div>
+                    <div className="text-[9px] text-gray-400 uppercase tracking-[0.2em] font-bold mb-2">This Month (Projected)</div>
                     <div className="text-2xl font-light text-gray-900 font-mono tracking-tight">{formatCurrency(monthTotals.gross, currency)}</div>
-                    <div className="text-[9px] text-gray-500 mt-2 tracking-widest font-mono">VOL.{monthTotals.count} CLAIMS</div>
+                    <div className="text-[9px] text-gray-500 mt-2 uppercase tracking-widest font-mono">VOL.{monthTotals.count} CLAIMS</div>
                   </div>
                   <div className="p-6 border-l border-gray-100 bg-gray-50/50">
-                    <div className="text-[9px] text-gray-400 tracking-[0.2em] font-bold mb-2">Net To You (Projected)</div>
+                    <div className="text-[9px] text-gray-400 uppercase tracking-[0.2em] font-bold mb-2">Net To You (Projected)</div>
                     <div className="text-2xl font-light text-emerald-600 font-mono tracking-tight">{formatCurrency(monthTotals.net, currency)}</div>
-                    <div className="text-[9px] text-gray-500 mt-2 tracking-widest font-mono">AFTR 20% COMM.</div>
+                    <div className="text-[9px] text-gray-500 mt-2 uppercase tracking-widest font-mono">AFTR 20% COMM.</div>
                   </div>
                 </div>
 
@@ -300,9 +300,9 @@ export default function UpcomingPayments() {
                       <BarChart3 className="h-32 w-32" />
                     </div>
                     <div className="relative z-10">
-                      <div className="text-[9px] text-gray-400 tracking-[0.2em] font-bold mb-1">Total Pipeline Liquidity</div>
+                      <div className="text-[9px] text-gray-400 uppercase tracking-[0.2em] font-bold mb-1">Total Pipeline Liquidity</div>
                       <div className="text-3xl font-light text-white font-mono tracking-tight">{formatCurrency(pipelineStages.totalInPipeline, currency)}</div>
-                      <div className="text-[9px] text-gray-500 mt-2 tracking-widest font-mono">
+                      <div className="text-[9px] text-gray-500 mt-2 uppercase tracking-widest font-mono">
                         AGGREGATE: {pipelineStages.detected.count + pipelineStages.ready.count + pipelineStages.pending.count + pipelineStages.approved.count} ENTITIES IN PROCESS
                       </div>
                     </div>
@@ -312,29 +312,29 @@ export default function UpcomingPayments() {
                 {/* Pipeline Stage Cards */}
                 <div className="mt-8 grid grid-cols-2 md:grid-cols-5 gap-0 border border-gray-100">
                   <div className="p-4 border-r border-gray-100">
-                    <div className="text-[8px] text-gray-400 tracking-[0.2em] font-bold mb-1">Detected</div>
+                    <div className="text-[8px] text-gray-400 uppercase tracking-[0.2em] font-bold mb-1">Detected</div>
                     <div className="text-[13px] font-bold text-gray-900 font-mono">{formatCurrency(pipelineStages.detected.amount, currency)}</div>
-                    <div className="text-[9px] text-gray-400 mt-1 font-mono tracking-tighter">{pipelineStages.detected.count} REC</div>
+                    <div className="text-[9px] text-gray-400 mt-1 uppercase font-mono tracking-tighter">{pipelineStages.detected.count} REC</div>
                   </div>
                   <div className="p-4 border-r border-gray-100">
-                    <div className="text-[8px] text-gray-400 tracking-[0.2em] font-bold mb-1">Ready</div>
+                    <div className="text-[8px] text-gray-400 uppercase tracking-[0.2em] font-bold mb-1">Ready</div>
                     <div className="text-[13px] font-bold text-gray-900 font-mono">{formatCurrency(pipelineStages.ready.amount, currency)}</div>
-                    <div className="text-[9px] text-gray-400 mt-1 font-mono tracking-tighter">{pipelineStages.ready.count} REC</div>
+                    <div className="text-[9px] text-gray-400 mt-1 uppercase font-mono tracking-tighter">{pipelineStages.ready.count} REC</div>
                   </div>
                   <div className="p-4 border-r border-gray-100">
-                    <div className="text-[8px] text-gray-400 tracking-[0.2em] font-bold mb-1">Pending</div>
+                    <div className="text-[8px] text-gray-400 uppercase tracking-[0.2em] font-bold mb-1">Pending</div>
                     <div className="text-[13px] font-bold text-gray-900 font-mono">{formatCurrency(pipelineStages.pending.amount, currency)}</div>
-                    <div className="text-[9px] text-gray-400 mt-1 font-mono tracking-tighter">{pipelineStages.pending.count} REC</div>
+                    <div className="text-[9px] text-gray-400 mt-1 uppercase font-mono tracking-tighter">{pipelineStages.pending.count} REC</div>
                   </div>
                   <div className="p-4 border-r border-gray-100">
-                    <div className="text-[8px] text-gray-400 tracking-[0.2em] font-bold mb-1">Approved</div>
+                    <div className="text-[8px] text-gray-400 uppercase tracking-[0.2em] font-bold mb-1">Approved</div>
                     <div className="text-[13px] font-bold text-gray-900 font-mono">{formatCurrency(pipelineStages.approved.amount, currency)}</div>
-                    <div className="text-[9px] text-gray-400 mt-1 font-mono tracking-tighter">{pipelineStages.approved.count} REC</div>
+                    <div className="text-[9px] text-gray-400 mt-1 uppercase font-mono tracking-tighter">{pipelineStages.approved.count} REC</div>
                   </div>
                   <div className="p-4 bg-gray-50/50">
-                    <div className="text-[8px] text-gray-400 tracking-[0.2em] font-bold mb-1">Paid</div>
+                    <div className="text-[8px] text-gray-400 uppercase tracking-[0.2em] font-bold mb-1">Paid</div>
                     <div className="text-[13px] font-bold text-emerald-600 font-mono">{formatCurrency(pipelineStages.paid.amount, currency)}</div>
-                    <div className="text-[9px] text-gray-400 mt-1 font-mono tracking-tighter">{pipelineStages.paid.count} REC</div>
+                    <div className="text-[9px] text-gray-400 mt-1 uppercase font-mono tracking-tighter">{pipelineStages.paid.count} REC</div>
                   </div>
                 </div>
 
@@ -343,7 +343,7 @@ export default function UpcomingPayments() {
                   <div className="text-sm font-medium text-gray-700 mb-4">Pipeline Status</div>
                   <div className="space-y-2 text-xs">
                     <div className="flex items-start gap-3">
-                      <span className="w-24 text-gray-500 flex-shrink-0 tracking-[0.1em] text-[10px]">Detected</span>
+                      <span className="w-24 text-gray-500 flex-shrink-0 uppercase tracking-[0.1em] text-[10px]">Detected</span>
                       <span className="text-gray-400">→</span>
                       <span className="text-gray-700">
                         {pipelineStages.detected.count > 0
@@ -352,7 +352,7 @@ export default function UpcomingPayments() {
                       </span>
                     </div>
                     <div className="flex items-start gap-3">
-                      <span className="w-24 text-gray-500 flex-shrink-0 tracking-[0.1em] text-[10px]">Ready</span>
+                      <span className="w-24 text-gray-500 flex-shrink-0 uppercase tracking-[0.1em] text-[10px]">Ready</span>
                       <span className="text-gray-400">→</span>
                       <span className="text-gray-700">
                         {pipelineStages.ready.count > 0
@@ -361,7 +361,7 @@ export default function UpcomingPayments() {
                       </span>
                     </div>
                     <div className="flex items-start gap-3">
-                      <span className="w-24 text-gray-500 flex-shrink-0 tracking-[0.1em] text-[10px]">Pending</span>
+                      <span className="w-24 text-gray-500 flex-shrink-0 uppercase tracking-[0.1em] text-[10px]">Pending</span>
                       <span className="text-gray-400">→</span>
                       <span className="text-gray-700">
                         {pipelineStages.pending.count > 0
@@ -370,7 +370,7 @@ export default function UpcomingPayments() {
                       </span>
                     </div>
                     <div className="flex items-start gap-3">
-                      <span className="w-24 text-gray-500 flex-shrink-0 tracking-[0.1em] text-[10px]">Approved</span>
+                      <span className="w-24 text-gray-500 flex-shrink-0 uppercase tracking-[0.1em] text-[10px]">Approved</span>
                       <span className="text-gray-400">→</span>
                       <span className="text-gray-700">
                         {pipelineStages.approved.count > 0
@@ -379,7 +379,7 @@ export default function UpcomingPayments() {
                       </span>
                     </div>
                     <div className="flex items-start gap-3">
-                      <span className="w-24 text-gray-500 flex-shrink-0 tracking-[0.1em] text-[10px]">Paid</span>
+                      <span className="w-24 text-gray-500 flex-shrink-0 uppercase tracking-[0.1em] text-[10px]">Paid</span>
                       <span className="text-gray-400">→</span>
                       <span className="text-gray-700">
                         {pipelineStages.paid.count > 0
@@ -399,31 +399,31 @@ export default function UpcomingPayments() {
             {/* Schedule Card */}
             <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
               <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                <h2 className="text-xs font-medium text-gray-900 tracking-[0.15em]">Payment Schedule</h2>
+                <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Payment Schedule</h2>
                 <p className="text-[10px] text-gray-500 mt-0.5">Daily rollup of expected payouts</p>
               </div>
               <div className="p-0">
                 <Table>
                   <TableHeader>
                     <TableRow className="bg-gray-900 hover:bg-gray-900 border-none">
-                      <TableHead className="text-[9px] font-bold text-gray-400 tracking-[0.2em] py-4 px-6">Payout Date</TableHead>
-                      <TableHead className="text-[9px] font-bold text-gray-400 tracking-[0.2em] py-4 px-6 text-center">Claims</TableHead>
-                      <TableHead className="text-[9px] font-bold text-gray-400 tracking-[0.2em] py-4 px-6">Gross</TableHead>
-                      <TableHead className="text-[9px] font-bold text-gray-400 tracking-[0.2em] py-4 px-6">Commission</TableHead>
-                      <TableHead className="text-[9px] font-bold text-gray-400 tracking-[0.2em] py-4 px-6">Net</TableHead>
-                      <TableHead className="text-[9px] font-bold text-gray-400 tracking-[0.2em] py-4 px-6">Status</TableHead>
-                      <TableHead className="text-[9px] font-bold text-gray-400 tracking-[0.2em] py-4 px-6 text-right">Actions</TableHead>
+                      <TableHead className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em] py-4 px-6">Payout Date</TableHead>
+                      <TableHead className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em] py-4 px-6 text-center">Claims</TableHead>
+                      <TableHead className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em] py-4 px-6">Gross</TableHead>
+                      <TableHead className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em] py-4 px-6">Commission</TableHead>
+                      <TableHead className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em] py-4 px-6">Net</TableHead>
+                      <TableHead className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em] py-4 px-6">Status</TableHead>
+                      <TableHead className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em] py-4 px-6 text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {loading && (
                       <TableRow>
-                        <TableCell colSpan={7} className="text-[11px] font-mono text-gray-500 p-8 text-center tracking-widest">Initialising Secure Data Feed...</TableCell>
+                        <TableCell colSpan={7} className="text-[11px] font-mono text-gray-500 p-8 text-center uppercase tracking-widest">Initialising Secure Data Feed...</TableCell>
                       </TableRow>
                     )}
                     {!loading && upcomingGroups.length === 0 && (
                       <TableRow>
-                        <TableCell colSpan={7} className="text-[11px] font-mono text-gray-500 p-8 text-center tracking-widest">Zero (0) Records Detected for Projection</TableCell>
+                        <TableCell colSpan={7} className="text-[11px] font-mono text-gray-500 p-8 text-center uppercase tracking-widest">Zero (0) Records Detected for Projection</TableCell>
                       </TableRow>
                     )}
                     {!loading && upcomingGroups.map((g) => (
@@ -443,7 +443,7 @@ export default function UpcomingPayments() {
                                 <div key={claim.id}>{getFilingStatusMarker(claim.filing_status)}</div>
                               ))}
                               {g.claims.length > 2 && (
-                                <span className="text-[9px] text-gray-400 font-mono tracking-widest ml-3.5">
+                                <span className="text-[9px] text-gray-400 font-mono uppercase tracking-widest ml-3.5">
                                   + {g.claims.length - 2} ADDTL RECORDS
                                 </span>
                               )}
@@ -452,7 +452,7 @@ export default function UpcomingPayments() {
                         </TableCell>
                         <TableCell className="py-4 px-6 text-right">
                           {g.claims.length > 0 && g.claims[0].case_id && (
-                            <Button asChild variant="ghost" className="h-8 rounded-none border border-gray-200 text-[9px] font-bold tracking-[0.2em] hover:bg-gray-900 hover:text-white transition-all">
+                            <Button asChild variant="ghost" className="h-8 rounded-none border border-gray-200 text-[9px] font-bold uppercase tracking-[0.2em] hover:bg-gray-900 hover:text-white transition-all">
                               <Link to={`/recoveries?tab=cases`}>View Cases</Link>
                             </Button>
                           )}

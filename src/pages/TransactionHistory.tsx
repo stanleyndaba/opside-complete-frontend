@@ -304,7 +304,7 @@ export default function TransactionHistory() {
         return (
             <div className="flex items-center gap-2">
                 <div className={cn("h-1.5 w-1.5 rounded-full", dot)} />
-                <span className="text-[9px] font-bold text-gray-900 tracking-widest font-mono">{label}</span>
+                <span className="text-[9px] font-bold text-gray-900 uppercase tracking-widest font-mono">{label}</span>
             </div>
         );
     };
@@ -319,7 +319,7 @@ export default function TransactionHistory() {
                         <div className="mb-10 flex items-end justify-between border-b border-gray-100 pb-8">
                             <div>
                                 <h1 className="text-xl font-light text-gray-900 tracking-tight">Transaction Ledger</h1>
-                                <p className="text-[10px] text-gray-400 mt-1 tracking-[0.2em] font-mono">INTERNAL AUDIT // COMPLETED TRANSACTIONS</p>
+                                <p className="text-[10px] text-gray-400 mt-1 uppercase tracking-[0.2em] font-mono">INTERNAL AUDIT // COMPLETED TRANSACTIONS</p>
                             </div>
                         </div>
 
@@ -327,31 +327,31 @@ export default function TransactionHistory() {
                         {/* Summary Cards */}
                         <div className="bg-white border border-gray-200 rounded-sm mb-8">
                             <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                                <h2 className="text-xs font-medium text-gray-900 tracking-[0.15em]">Financial Overview</h2>
+                                <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Financial Overview</h2>
                                 <p className="text-[10px] text-gray-500 mt-0.5">Aggregated metrics for realized recoveries</p>
                             </div>
                             <div className="p-6">
                                 <div className="grid grid-cols-1 md:grid-cols-4 gap-0 border border-gray-100 italic-divider">
                                     <div className="p-6 bg-gray-50/50">
-                                        <div className="text-[9px] text-gray-400 tracking-[0.2em] font-bold mb-2">Total Recovered</div>
+                                        <div className="text-[9px] text-gray-400 uppercase tracking-[0.2em] font-bold mb-2">Total Recovered</div>
                                         <div className="text-2xl font-light text-gray-900 font-mono tracking-tight">
                                             +${summary.totalRecovered.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                                         </div>
                                     </div>
                                     <div className="p-6 border-l border-gray-100 bg-gray-50/50">
-                                        <div className="text-[9px] text-gray-400 tracking-[0.2em] font-bold mb-2">Total Fees (20%)</div>
+                                        <div className="text-[9px] text-gray-400 uppercase tracking-[0.2em] font-bold mb-2">Total Fees (20%)</div>
                                         <div className="text-2xl font-light text-gray-600 font-mono tracking-tight">
                                             -${summary.totalFees.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                                         </div>
                                     </div>
                                     <div className="p-6 border-l border-gray-100 bg-gray-50/50">
-                                        <div className="text-[9px] text-gray-400 tracking-[0.2em] font-bold mb-2">Net Profit</div>
+                                        <div className="text-[9px] text-gray-400 uppercase tracking-[0.2em] font-bold mb-2">Net Profit</div>
                                         <div className="text-2xl font-light text-emerald-600 font-mono tracking-tight">
                                             ${summary.netProfit.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                                         </div>
                                     </div>
                                     <div className="p-6 border-l border-gray-100 bg-gray-50/50">
-                                        <div className="text-[9px] text-gray-400 tracking-[0.2em] font-bold mb-2">Transactions</div>
+                                        <div className="text-[9px] text-gray-400 uppercase tracking-[0.2em] font-bold mb-2">Transactions</div>
                                         <div className="text-2xl font-light text-gray-900 font-mono tracking-tight">
                                             {summary.transactionCount}
                                         </div>
@@ -368,7 +368,7 @@ export default function TransactionHistory() {
                                     placeholder="SEARCH REFERENCE ID..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="pl-10 h-9 text-[10px] border-gray-200 rounded-none bg-white font-mono placeholder:text-gray-400"
+                                    className="pl-10 h-9 text-[10px] border-gray-200 rounded-none bg-white font-mono uppercase placeholder:text-gray-400"
                                 />
                             </div>
 
@@ -377,7 +377,7 @@ export default function TransactionHistory() {
                                 size="sm"
                                 onClick={exportStatement}
                                 disabled={transactions.length === 0}
-                                className="h-9 text-[10px] border-gray-200 text-gray-700 rounded-none hover:bg-gray-50 tracking-widest font-bold">
+                                className="h-9 text-[10px] border-gray-200 text-gray-700 rounded-none hover:bg-gray-50 uppercase tracking-widest font-bold">
                                 <Download className="h-3.5 w-3.5 mr-2" />
                                 Download Statement
                             </Button>
@@ -386,7 +386,7 @@ export default function TransactionHistory() {
                         {/* Transaction Table */}
                         <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
                             <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                                <h2 className="text-xs font-medium text-gray-900 tracking-[0.15em]">
+                                <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
                                     Detailed Ledger
                                 </h2>
                             </div>
@@ -395,19 +395,19 @@ export default function TransactionHistory() {
                                 {loading ? (
                                     <div className="px-4 py-12 text-center">
                                         <Loader2 className="h-6 w-6 animate-spin mx-auto text-gray-400" />
-                                        <p className="text-[10px] font-mono text-gray-500 mt-2 tracking-widest">Initialising Secure Ledger...</p>
+                                        <p className="text-[10px] font-mono text-gray-500 mt-2 uppercase tracking-widest">Initialising Secure Ledger...</p>
                                     </div>
                                 ) : (
                                     <table className="w-full">
                                         <thead>
                                             <tr className="bg-gray-900 border-none">
-                                                <th className="text-left px-6 py-4 text-[9px] font-bold text-gray-400 tracking-[0.2em]">Date</th>
-                                                <th className="text-left px-6 py-4 text-[9px] font-bold text-gray-400 tracking-[0.2em]">Case ID</th>
-                                                <th className="text-left px-6 py-4 text-[9px] font-bold text-gray-400 tracking-[0.2em]">Reimbursement ID</th>
-                                                <th className="text-right px-6 py-4 text-[9px] font-bold text-gray-400 tracking-[0.2em]">Recovered</th>
-                                                <th className="text-right px-6 py-4 text-[9px] font-bold text-gray-400 tracking-[0.2em]">Margin Fee</th>
-                                                <th className="text-left px-6 py-4 text-[9px] font-bold text-gray-400 tracking-[0.2em]">Status</th>
-                                                <th className="text-right px-6 py-4 text-[9px] font-bold text-gray-400 tracking-[0.2em]">Action</th>
+                                                <th className="text-left px-6 py-4 text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em]">Date</th>
+                                                <th className="text-left px-6 py-4 text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em]">Case ID</th>
+                                                <th className="text-left px-6 py-4 text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em]">Reimbursement ID</th>
+                                                <th className="text-right px-6 py-4 text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em]">Recovered</th>
+                                                <th className="text-right px-6 py-4 text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em]">Margin Fee</th>
+                                                <th className="text-left px-6 py-4 text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em]">Status</th>
+                                                <th className="text-right px-6 py-4 text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em]">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -461,7 +461,7 @@ export default function TransactionHistory() {
                                                         <Button
                                                             variant="ghost"
                                                             size="sm"
-                                                            className="h-7 text-[9px] font-bold text-gray-500 hover:text-gray-900 hover:bg-transparent tracking-widest"
+                                                            className="h-7 text-[9px] font-bold text-gray-500 hover:text-gray-900 hover:bg-transparent uppercase tracking-widest"
                                                             onClick={() => handleReportIssue(transaction)}>
                                                             REPORT
                                                         </Button>
@@ -474,7 +474,7 @@ export default function TransactionHistory() {
 
                                 {!loading && filteredTransactions.length === 0 && (
                                     <div className="px-4 py-16 text-center">
-                                        <p className="text-[11px] font-mono text-gray-400 tracking-widest">
+                                        <p className="text-[11px] font-mono text-gray-400 uppercase tracking-widest">
                                             {transactions.length === 0
                                                 ? 'No Records Found in Ledger'
                                                 : 'No Matches for Query'}
@@ -486,7 +486,7 @@ export default function TransactionHistory() {
 
                         {/* Footer Note */}
                         <div className="mt-6 text-center border-t border-gray-100 pt-6">
-                            <p className="text-[9px] text-gray-400 font-mono tracking-[0.1em]">
+                            <p className="text-[9px] text-gray-400 font-mono uppercase tracking-[0.1em]">
                                 Official Ledger • Generated by Margin Audit Engine • support@margin.ai
                             </p>
                         </div>
@@ -498,10 +498,10 @@ export default function TransactionHistory() {
             <Dialog open={reportModalOpen} onOpenChange={setReportModalOpen}>
                 <DialogContent className="sm:max-w-md bg-white border border-gray-200 rounded-none p-0 gap-0 overflow-hidden">
                     <DialogHeader className="border-b border-gray-100 px-6 py-4 bg-gray-50">
-                        <DialogTitle className="text-xs font-bold text-gray-900 tracking-[0.15em]">
+                        <DialogTitle className="text-xs font-bold text-gray-900 uppercase tracking-[0.15em]">
                             Flag Transaction
                         </DialogTitle>
-                        <DialogDescription className="text-[10px] text-gray-500 mt-1 tracking-wide font-mono">
+                        <DialogDescription className="text-[10px] text-gray-500 mt-1 uppercase tracking-wide font-mono">
                             {selectedTransaction && (
                                 <>REF: {selectedTransaction.reimbursementId} • ${selectedTransaction.recoveredAmount.toFixed(2)}</>
                             )}
@@ -510,7 +510,7 @@ export default function TransactionHistory() {
 
                     <div className="p-6 space-y-4">
                         <div className="space-y-2">
-                            <Label className="text-[10px] font-bold text-gray-500 tracking-[0.1em]">
+                            <Label className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.1em]">
                                 Issue Classification
                             </Label>
                             <Select value={issueType} onValueChange={setIssueType}>
@@ -527,7 +527,7 @@ export default function TransactionHistory() {
                         </div>
 
                         <div className="space-y-2">
-                            <Label className="text-[10px] font-bold text-gray-500 tracking-[0.1em]">
+                            <Label className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.1em]">
                                 Technical Notes
                             </Label>
                             <Textarea
@@ -544,14 +544,14 @@ export default function TransactionHistory() {
                             variant="outline"
                             size="sm"
                             onClick={() => setReportModalOpen(false)}
-                            className="h-8 text-[10px] border-gray-200 text-gray-600 rounded-none font-bold tracking-wider hover:bg-white">
+                            className="h-8 text-[10px] border-gray-200 text-gray-600 rounded-none uppercase font-bold tracking-wider hover:bg-white">
                             Cancel
                         </Button>
                         <Button
                             size="sm"
                             onClick={handleSubmitReport}
                             disabled={!issueType || isSubmitting}
-                            className="h-8 text-[10px] bg-[#0a0a0f] hover:bg-[#1a1a1f] text-white rounded-none font-bold tracking-wider shadow-sm">
+                            className="h-8 text-[10px] bg-[#0a0a0f] hover:bg-[#1a1a1f] text-white rounded-none uppercase font-bold tracking-wider shadow-sm">
                             {isSubmitting ? 'Submitting...' : 'Submit Report'}
                         </Button>
                     </DialogFooter>

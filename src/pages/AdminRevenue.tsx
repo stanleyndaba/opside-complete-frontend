@@ -140,7 +140,7 @@ export default function AdminRevenue() {
                 <div className="grid grid-cols-5 gap-4">
                     {/* MRR Growth */}
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-4">
-                        <div className="text-[10px] tracking-[0.2em] text-gray-500 mb-1">MRR Growth</div>
+                        <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1">MRR Growth</div>
                         <div className={`text-xl font-light tracking-tight flex items-center ${isPositiveGrowth ? 'text-emerald-600' : 'text-red-600'}`}>
                             {isPositiveGrowth ? <TrendingUp className="w-4 h-4 mr-1" /> : <TrendingDown className="w-4 h-4 mr-1" />}
                             {mrrGrowth >= 0 ? '+' : ''}{mrrGrowth.toFixed(1)}%
@@ -150,7 +150,7 @@ export default function AdminRevenue() {
 
                     {/* Current MRR */}
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-4">
-                        <div className="text-[10px] tracking-[0.2em] text-gray-500 mb-1">Current MRR</div>
+                        <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1">Current MRR</div>
                         <div className="text-xl font-light text-gray-900 tracking-tight">
                             {formatCurrency(metrics?.currentMrr || 0)}
                         </div>
@@ -159,7 +159,7 @@ export default function AdminRevenue() {
 
                     {/* Previous MRR */}
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-4">
-                        <div className="text-[10px] tracking-[0.2em] text-gray-500 mb-1">Previous MRR</div>
+                        <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1">Previous MRR</div>
                         <div className="text-xl font-light text-gray-900 tracking-tight">
                             {formatCurrency(metrics?.previousMrr || 0)}
                         </div>
@@ -168,7 +168,7 @@ export default function AdminRevenue() {
 
                     {/* Active Customers */}
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-4">
-                        <div className="text-[10px] tracking-[0.2em] text-gray-500 mb-1">Active Accounts</div>
+                        <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1">Active Accounts</div>
                         <div className="text-xl font-light text-gray-900 tracking-tight">
                             {metrics?.activeCustomers || 0}
                         </div>
@@ -177,7 +177,7 @@ export default function AdminRevenue() {
 
                     {/* Avg Revenue Per Customer */}
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-4">
-                        <div className="text-[10px] tracking-[0.2em] text-gray-500 mb-1">ARPC</div>
+                        <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1">ARPC</div>
                         <div className="text-xl font-light text-gray-900 tracking-tight">
                             {formatCurrency(metrics?.avgRevenuePerCustomer || 0)}
                         </div>
@@ -189,7 +189,7 @@ export default function AdminRevenue() {
                 <div className="grid grid-cols-4 gap-6">
                     {/* Net Revenue */}
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-5">
-                        <div className="text-[10px] tracking-[0.2em] text-gray-500 mb-2">Total Revenue</div>
+                        <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-2">Total Revenue</div>
                         <div className="text-2xl font-light text-gray-900 tracking-tight">
                             {formatCurrency(metrics?.opsideRevenue || 0)}
                         </div>
@@ -200,7 +200,7 @@ export default function AdminRevenue() {
 
                     {/* 30-Day Revenue */}
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-5">
-                        <div className="text-[10px] tracking-[0.2em] text-gray-500 mb-2">30-Day Revenue</div>
+                        <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-2">30-Day Revenue</div>
                         <div className="text-2xl font-light text-gray-900 tracking-tight">
                             {formatCurrency(metrics?.last30Days?.revenue || 0)}
                         </div>
@@ -211,7 +211,7 @@ export default function AdminRevenue() {
 
                     {/* Approval Rate */}
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-5">
-                        <div className="text-[10px] tracking-[0.2em] text-gray-500 mb-2">Approval Rate</div>
+                        <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-2">Approval Rate</div>
                         <div className="text-2xl font-light text-gray-900 tracking-tight">
                             {(metrics?.approvalRate || 0).toFixed(1)}%
                         </div>
@@ -222,7 +222,7 @@ export default function AdminRevenue() {
 
                     {/* Avg Claim Value */}
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-5">
-                        <div className="text-[10px] tracking-[0.2em] text-gray-500 mb-2">Avg Claim Value</div>
+                        <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-2">Avg Claim Value</div>
                         <div className="text-2xl font-light text-gray-900 tracking-tight">
                             {formatCurrency(metrics?.averageClaimValue || 0)}
                         </div>
@@ -236,21 +236,21 @@ export default function AdminRevenue() {
                 <div className="grid grid-cols-3 gap-6">
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-5 flex items-center justify-between">
                         <div>
-                            <div className="text-[10px] tracking-[0.2em] text-gray-500 mb-1">Approved</div>
+                            <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1">Approved</div>
                             <div className="text-xl font-light text-emerald-600">{metrics?.approvedClaims || 0}</div>
                         </div>
                         <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
                     </div>
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-5 flex items-center justify-between">
                         <div>
-                            <div className="text-[10px] tracking-[0.2em] text-gray-500 mb-1">Pending</div>
+                            <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1">Pending</div>
                             <div className="text-xl font-light text-amber-600">{metrics?.pendingClaims || 0}</div>
                         </div>
                         <div className="w-2 h-2 rounded-full bg-amber-500"></div>
                     </div>
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-5 flex items-center justify-between">
                         <div>
-                            <div className="text-[10px] tracking-[0.2em] text-gray-500 mb-1">Denied</div>
+                            <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1">Denied</div>
                             <div className="text-xl font-light text-red-600">{metrics?.deniedClaims || 0}</div>
                         </div>
                         <div className="w-2 h-2 rounded-full bg-red-500"></div>
@@ -269,10 +269,10 @@ export default function AdminRevenue() {
                                 <table className="w-full">
                                     <thead>
                                         <tr className="border-b border-gray-200">
-                                            <th className="px-5 py-3 text-left text-[10px] tracking-[0.15em] text-gray-500 font-medium">Period</th>
-                                            <th className="px-5 py-3 text-right text-[10px] tracking-[0.15em] text-gray-500 font-medium">Revenue</th>
-                                            <th className="px-5 py-3 text-right text-[10px] tracking-[0.15em] text-gray-500 font-medium">Recovered</th>
-                                            <th className="px-5 py-3 text-right text-[10px] tracking-[0.15em] text-gray-500 font-medium">Claims</th>
+                                            <th className="px-5 py-3 text-left text-[10px] uppercase tracking-[0.15em] text-gray-500 font-medium">Period</th>
+                                            <th className="px-5 py-3 text-right text-[10px] uppercase tracking-[0.15em] text-gray-500 font-medium">Revenue</th>
+                                            <th className="px-5 py-3 text-right text-[10px] uppercase tracking-[0.15em] text-gray-500 font-medium">Recovered</th>
+                                            <th className="px-5 py-3 text-right text-[10px] uppercase tracking-[0.15em] text-gray-500 font-medium">Claims</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -302,10 +302,10 @@ export default function AdminRevenue() {
                                 <table className="w-full">
                                     <thead>
                                         <tr className="border-b border-gray-200">
-                                            <th className="px-5 py-3 text-left text-[10px] tracking-[0.15em] text-gray-500 font-medium">Account</th>
-                                            <th className="px-5 py-3 text-right text-[10px] tracking-[0.15em] text-gray-500 font-medium">Revenue</th>
-                                            <th className="px-5 py-3 text-right text-[10px] tracking-[0.15em] text-gray-500 font-medium">Recovered</th>
-                                            <th className="px-5 py-3 text-right text-[10px] tracking-[0.15em] text-gray-500 font-medium">Claims</th>
+                                            <th className="px-5 py-3 text-left text-[10px] uppercase tracking-[0.15em] text-gray-500 font-medium">Account</th>
+                                            <th className="px-5 py-3 text-right text-[10px] uppercase tracking-[0.15em] text-gray-500 font-medium">Revenue</th>
+                                            <th className="px-5 py-3 text-right text-[10px] uppercase tracking-[0.15em] text-gray-500 font-medium">Recovered</th>
+                                            <th className="px-5 py-3 text-right text-[10px] uppercase tracking-[0.15em] text-gray-500 font-medium">Claims</th>
                                         </tr>
                                     </thead>
                                     <tbody>

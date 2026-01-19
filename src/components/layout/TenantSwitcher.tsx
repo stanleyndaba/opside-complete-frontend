@@ -118,7 +118,7 @@ export function TenantSwitcher({ className, showPlan = true, compact = false }: 
 
             {tenants.length > 1 && (
                 <DropdownMenuContent align="start" className="w-64">
-                    <DropdownMenuLabel className="text-xs text-gray-500 tracking-wider">
+                    <DropdownMenuLabel className="text-xs text-gray-500 uppercase tracking-wider">
                         Switch Workspace
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />

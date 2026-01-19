@@ -154,7 +154,7 @@ export function NotificationBell({
             'h-4 w-4',
             iconClassName || (isSidebarStyle ? '' : isTransparentNavbar ? 'text-gray-200' : 'text-gray-500')
           )} />
-          {shouldShowLabel && <span className="text-[10px] font-bold tracking-wider">{label}</span>}
+          {shouldShowLabel && <span className="text-[10px] font-bold uppercase tracking-wider">{label}</span>}
           {unreadCount > 0 && (
             <span className={cn(
               "absolute flex items-center justify-center bg-gray-900 text-white text-[8px] font-bold leading-none p-0.5 min-w-[12px] h-[12px]",
@@ -174,14 +174,14 @@ export function NotificationBell({
         {/* Header - Fixed, Institutional Style */}
         <div className="px-5 py-4 border-b border-gray-100 flex-shrink-0 bg-gray-50/50">
           <div className="flex items-center justify-between">
-            <h3 className="text-[10px] font-bold text-gray-900 tracking-[0.2em]">
+            <h3 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.2em]">
               {label}
             </h3>
             <div className="flex items-center gap-3">
               {unreadCount > 0 && (
                 <button
                   onClick={handleMarkAllRead}
-                  className="text-[9px] font-bold text-gray-400 hover:text-gray-900 tracking-widest transition-colors">
+                  className="text-[9px] font-bold text-gray-400 hover:text-gray-900 uppercase tracking-widest transition-colors">
                   Clear All
                 </button>
               )}
@@ -223,7 +223,7 @@ export function NotificationBell({
                               notification.type === 'evidence_found' ? 'bg-purple-500' : 'bg-gray-300'
                       )} />
                       <p className={cn(
-                        'text-[10px] tracking-widest truncate flex items-center gap-2',
+                        'text-[10px] uppercase tracking-widest truncate flex items-center gap-2',
                         !notification.read ? 'font-bold text-gray-900' : 'font-medium text-gray-600 group-hover:text-gray-900'
                       )}>
                         {/* We use the type as title since bell notifications don't strictly separate title/body in the object structure passed here same as dashboard, 
@@ -237,7 +237,7 @@ export function NotificationBell({
                         {notification.type.replace(/_/g, ' ')}
                       </p>
                     </div>
-                    <span className="text-[9px] text-gray-300 font-mono text-right shrink-0 pt-0.5 whitespace-nowrap">
+                    <span className="text-[9px] text-gray-300 font-mono text-right uppercase shrink-0 pt-0.5 whitespace-nowrap">
                       {notification.timestamp.replace('about ', '').replace(' ago', '').replace('minute', 'm').replace('hour', 'h').replace('day', 'd')}
                     </span>
                   </div>
@@ -259,7 +259,7 @@ export function NotificationBell({
 
                       return (
                         <span className={cn(
-                          "text-[8px] font-bold tracking-widest shrink-0 transition-colors",
+                          "text-[8px] font-bold uppercase tracking-widest shrink-0 transition-colors",
                           notification.type === 'funds_deposited' ? "text-emerald-600" :
                             notification.type === 'case_filed' ? "text-blue-600" : "text-gray-400"
                         )}>
@@ -292,7 +292,7 @@ export function NotificationBell({
         {/* Footer - Institutional Style */}
         <div className="px-4 py-3 border-t border-gray-100 flex-shrink-0 bg-gray-50/20">
           <Link to="/notifications" onClick={() => setIsOpen(false)} reloadDocument>
-            <button className="w-full text-center text-[9px] font-bold text-gray-400 hover:text-gray-900 transition-colors tracking-[0.2em]">
+            <button className="w-full text-center text-[9px] font-bold text-gray-400 hover:text-gray-900 transition-colors uppercase tracking-[0.2em]">
               Archive // All Records
             </button>
           </Link>

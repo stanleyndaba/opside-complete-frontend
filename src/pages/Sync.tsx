@@ -1561,7 +1561,7 @@ export default function Sync() {
                 <div className="relative group">
                   {/* Header bar - OpenAI minimal terminal */}
                   <div className="absolute top-0 left-0 right-0 h-10 bg-[#0D0D0D] rounded-t-lg border-b border-neutral-900 flex items-center px-5 z-10">
-                    <span className="text-[10px] font-normal text-neutral-600 tracking-[0.2em]">Activity Feed</span>
+                    <span className="text-[10px] font-normal text-neutral-600 uppercase tracking-[0.2em]">Activity Feed</span>
                   </div>
 
 
@@ -1614,7 +1614,7 @@ export default function Sync() {
                               }
                               if (part.match(/^\[.*?\]$/)) {
                                 return (
-                                  <span key={i} className="text-neutral-400 text-[11px] border border-neutral-800 px-1 rounded-sm tracking-tighter">
+                                  <span key={i} className="text-neutral-400 text-[11px] border border-neutral-800 px-1 rounded-sm uppercase tracking-tighter">
                                     {part.replace(/[\[\]]/g, '')}
                                   </span>
                                 );
@@ -1903,10 +1903,10 @@ export default function Sync() {
               }}>
               <DialogContent className="sm:max-w-md p-0 gap-0 overflow-hidden border-gray-200 rounded-sm shadow-2xl bg-white">
                 <DialogHeader className="px-6 py-5 bg-[#111827] border-b border-[#111827]">
-                  <DialogTitle className="text-xs font-semibold text-white tracking-[0.2em]">
+                  <DialogTitle className="text-xs font-semibold text-white uppercase tracking-[0.2em]">
                     Connect Document Sources
                   </DialogTitle>
-                  <DialogDescription className="text-[10px] text-gray-400 mt-1 font-medium tracking-wide">
+                  <DialogDescription className="text-[10px] text-gray-400 mt-1 font-medium tracking-wide uppercase">
                     AUTHORIZED ACCESS FOR DOCUMENT INGESTION
                   </DialogDescription>
                 </DialogHeader>
@@ -1944,7 +1944,7 @@ export default function Sync() {
                       ) : (
                         <img src={GmailIcon} alt="Gmail" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
                       )}
-                      <span className="text-[10px] font-bold text-gray-900 tracking-wider group-hover:text-black">Gmail</span>
+                      <span className="text-[10px] font-bold text-gray-900 uppercase tracking-wider group-hover:text-black">Gmail</span>
                     </button>
 
                     <button
@@ -1978,7 +1978,7 @@ export default function Sync() {
                       ) : (
                         <img src={OutlookIcon} alt="Outlook" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
                       )}
-                      <span className="text-[10px] font-bold text-gray-900 tracking-wider group-hover:text-black">Outlook</span>
+                      <span className="text-[10px] font-bold text-gray-900 uppercase tracking-wider group-hover:text-black">Outlook</span>
                     </button>
 
                     <button
@@ -2012,7 +2012,7 @@ export default function Sync() {
                       ) : (
                         <img src={GoogleDriveIcon} alt="Google Drive" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
                       )}
-                      <span className="text-[10px] font-bold text-gray-900 tracking-wider group-hover:text-black">Drive</span>
+                      <span className="text-[10px] font-bold text-gray-900 uppercase tracking-wider group-hover:text-black">Drive</span>
                     </button>
 
                     <button
@@ -2046,7 +2046,7 @@ export default function Sync() {
                       ) : (
                         <img src={DropboxIcon} alt="Dropbox" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
                       )}
-                      <span className="text-[10px] font-bold text-gray-900 tracking-wider group-hover:text-black">Dropbox</span>
+                      <span className="text-[10px] font-bold text-gray-900 uppercase tracking-wider group-hover:text-black">Dropbox</span>
                     </button>
                   </div>
                 </div>

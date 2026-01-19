@@ -715,9 +715,9 @@ export function Dashboard() {
               <div className="flex items-center justify-between mb-8">
                 <div>
                   <div className="flex items-center gap-3">
-                    <h1 className="text-xs font-bold text-gray-900 tracking-[0.2em]">Overview</h1>
+                    <h1 className="text-xs font-bold text-gray-900 uppercase tracking-[0.2em]">Overview</h1>
                   </div>
-                  <p className="text-[9px] text-gray-400 mt-1 font-mono tracking-widest">Dashboard</p>
+                  <p className="text-[9px] text-gray-400 mt-1 font-mono uppercase tracking-widest">Dashboard</p>
                 </div>
 
                 <div className="flex items-end">
@@ -758,8 +758,8 @@ export function Dashboard() {
                       <div className="flex items-center gap-4">
                         <div className="w-[3px] h-3 bg-gray-900" />
                         <div>
-                          <h2 className="text-[10px] font-bold text-gray-900 tracking-[0.2em]">Funds Successfully Recovered</h2>
-                          <p className="text-[9px] text-gray-400 font-mono tracking-widest mt-1">Audit-verified reimbursements secured.</p>
+                          <h2 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.2em]">Funds Successfully Recovered</h2>
+                          <p className="text-[9px] text-gray-400 font-mono uppercase tracking-widest mt-1">Audit-verified reimbursements secured.</p>
                         </div>
                       </div>
                       {submittedClaimsCount != null && submittedClaimsCount > 0 && (
@@ -767,7 +767,7 @@ export function Dashboard() {
                           onClick={() => navigate('/recoveries')}
                           className="flex items-center gap-2 px-2 py-1 bg-gray-50 border border-gray-100 hover:bg-gray-100 hover:border-gray-200 transition-colors cursor-pointer"
                         >
-                          <span className="text-[9px] font-mono font-bold text-gray-500 tracking-widest hover:text-gray-700">{submittedClaimsCount} SETTLEMENTS FILED</span>
+                          <span className="text-[9px] font-mono font-bold text-gray-500 uppercase tracking-widest hover:text-gray-700">{submittedClaimsCount} SETTLEMENTS FILED</span>
                         </button>
                       )}
                     </div>
@@ -782,7 +782,7 @@ export function Dashboard() {
                             {reconciledCount != null && reconciledCount > 0 && (
                               <div className="flex items-center gap-2 animate-in fade-in zoom-in duration-500 delay-100">
                                 <ArrowUp className="h-3 w-3 text-emerald-500" />
-                                <span className="text-[10px] font-mono text-emerald-600 font-bold tracking-widest">
+                                <span className="text-[10px] font-mono text-emerald-600 font-bold uppercase tracking-widest">
                                   {reconciledCount} Verified this period
                                 </span>
                               </div>
@@ -792,7 +792,7 @@ export function Dashboard() {
                           <div className="flex flex-col gap-2 py-1 animate-in fade-in duration-700">
                             <div className="flex items-center gap-2 mb-1">
                               <Loader2 className="h-3 w-3 text-emerald-600 animate-spin" />
-                              <span className="text-[10px] font-bold text-emerald-700 tracking-widest">Analysis in Progress</span>
+                              <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-widest">Analysis in Progress</span>
                             </div>
                             <div className="text-3xl font-light text-gray-200 tracking-tighter blur-[2px] select-none">
                               $0.00
@@ -803,7 +803,7 @@ export function Dashboard() {
                           </div>
                         )}
 
-                        <div className="mt-8 flex items-center justify-between text-[9px] font-mono text-gray-400 tracking-widest border-t border-gray-50 pt-4">
+                        <div className="mt-8 flex items-center justify-between text-[9px] font-mono text-gray-400 uppercase tracking-widest border-t border-gray-50 pt-4">
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <span className="cursor-help border-b border-dotted border-gray-300">Margin Protection: <span className="text-gray-900 font-bold">2.3% EST</span></span>
@@ -823,11 +823,11 @@ export function Dashboard() {
                       <HoverCard openDelay={200} closeDelay={100}>
                         <HoverCardTrigger asChild>
                           <div className="p-6 cursor-help hover:bg-gray-50/50 transition-colors">
-                            <div className="text-[9px] font-bold text-gray-400 tracking-[0.15em] mb-3">Scheduled Payout</div>
+                            <div className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.15em] mb-3">Scheduled Payout</div>
                             <div className="text-2xl font-light text-gray-900 tracking-tight">
                               {formatCurrencyWithSelection((nextPaymentAmount ?? 0), recoveredCurrency)}
                             </div>
-                            <div className="mt-4 text-[9px] font-mono text-gray-500 tracking-widest">
+                            <div className="mt-4 text-[9px] font-mono text-gray-500 uppercase tracking-widest">
                               {nextPaymentDate
                                 ? `Est: ${new Date(nextPaymentDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
                                 : 'Pending Confirmation'}
@@ -836,7 +836,7 @@ export function Dashboard() {
                         </HoverCardTrigger>
                         <HoverCardContent className="w-72 p-0 border border-gray-200 shadow-2xl" side="bottom" align="start">
                           <div className="p-4">
-                            <h4 className="text-[10px] font-bold text-gray-900 tracking-[0.15em] mb-2">Scheduled Payout</h4>
+                            <h4 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.15em] mb-2">Scheduled Payout</h4>
                             <p className="text-[11px] text-gray-600 leading-relaxed">
                               Amount confirmed by Amazon and scheduled for your next payout cycle. Typically processed within 7-14 business days after approval.
                             </p>
@@ -850,18 +850,18 @@ export function Dashboard() {
                       <HoverCard openDelay={200} closeDelay={100}>
                         <HoverCardTrigger asChild>
                           <div className="p-6 cursor-help hover:bg-gray-50/50 transition-colors">
-                            <div className="text-[9px] font-bold text-gray-400 tracking-[0.15em] mb-3">In Active Review</div>
+                            <div className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.15em] mb-3">In Active Review</div>
                             <div className="text-2xl font-light text-gray-900 tracking-tight">
                               {formatCurrencyWithSelection((pendingRecoveryAmount ?? 0), recoveredCurrency)}
                             </div>
-                            <div className="mt-4 text-[9px] font-mono text-gray-500 tracking-widest">
+                            <div className="mt-4 text-[9px] font-mono text-gray-500 uppercase tracking-widest">
                               {effectivePendingClaims} Disputes currently being worked
                             </div>
                           </div>
                         </HoverCardTrigger>
                         <HoverCardContent className="w-72 p-0 border border-gray-200 shadow-2xl" side="bottom" align="center">
                           <div className="p-4">
-                            <h4 className="text-[10px] font-bold text-gray-900 tracking-[0.15em] mb-2">In Active Review</h4>
+                            <h4 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.15em] mb-2">In Active Review</h4>
                             <p className="text-[11px] text-gray-600 leading-relaxed">
                               Claims currently being reviewed by Amazon. Our AI agents are actively gathering evidence and tracking these disputes to maximize recovery.
                             </p>
@@ -875,19 +875,19 @@ export function Dashboard() {
                       <HoverCard openDelay={200} closeDelay={100}>
                         <HoverCardTrigger asChild>
                           <div className="p-6 cursor-help hover:bg-gray-50/50 transition-colors">
-                            <div className="text-[9px] font-bold text-gray-400 tracking-[0.15em] mb-3">Settlement Rate</div>
+                            <div className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.15em] mb-3">Settlement Rate</div>
                             <div className="flex items-baseline gap-2">
                               <div className="text-2xl font-light text-gray-900 tracking-tight">{settlementRate !== null ? `${settlementRate.toFixed(1)}%` : '—'}</div>
                               <div className={`w-1.5 h-1.5 rounded-full ${(settlementRate ?? 0) >= 80 ? 'bg-emerald-500' : (settlementRate ?? 0) >= 50 ? 'bg-yellow-500' : 'bg-gray-300'}`} />
                             </div>
-                            <div className="mt-4 text-[9px] font-mono text-gray-500 tracking-widest">
+                            <div className="mt-4 text-[9px] font-mono text-gray-500 uppercase tracking-widest">
                               Optimized Yield
                             </div>
                           </div>
                         </HoverCardTrigger>
                         <HoverCardContent className="w-72 p-0 border border-gray-200 shadow-2xl" side="bottom" align="end">
                           <div className="p-4">
-                            <h4 className="text-[10px] font-bold text-gray-900 tracking-[0.15em] mb-2">Settlement Rate</h4>
+                            <h4 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.15em] mb-2">Settlement Rate</h4>
                             <p className="text-[11px] text-gray-600 leading-relaxed">
                               Percentage of submitted claims that resulted in successful reimbursements. Higher rates indicate stronger evidence matching and optimized claim strategies.
                             </p>
@@ -911,30 +911,30 @@ export function Dashboard() {
                   {detectionStats && detectionStats.totalDetections > 0 && (
                     <div className="bg-white border border-gray-200 rounded-none overflow-hidden">
                       <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-                        <h2 className="text-[9px] font-bold text-gray-900 tracking-[0.2em]">Detected Opportunities</h2>
+                        <h2 className="text-[9px] font-bold text-gray-900 uppercase tracking-[0.2em]">Detected Opportunities</h2>
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-6 text-[8px] text-gray-400 hover:text-gray-900 tracking-[0.2em] font-medium"
+                          className="h-6 text-[8px] text-gray-400 hover:text-gray-900 uppercase tracking-[0.2em] font-medium"
                           onClick={() => navigate('/recoveries', { state: { filter: 'detected' } })}>
                           Full Report
                         </Button>
                       </div>
                       <div className="grid grid-cols-4 divide-x divide-gray-100">
                         <div className="p-6">
-                          <div className="text-[8px] font-bold text-gray-400 tracking-widest mb-2">Total Cases</div>
+                          <div className="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-2">Total Cases</div>
                           <div className="text-xl font-light text-gray-900">{detectionStats.totalDetections}</div>
                         </div>
                         <div className="p-6">
-                          <div className="text-[8px] font-bold text-gray-400 tracking-widest mb-2">Est. Recovery</div>
+                          <div className="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-2">Est. Recovery</div>
                           <div className="text-xl font-light text-gray-900 text-emerald-600">{formatCurrency(detectionStats.estimatedRecovery)}</div>
                         </div>
                         <div className="p-6">
-                          <div className="text-[8px] font-bold text-gray-400 tracking-widest mb-2">High Prob.</div>
+                          <div className="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-2">High Prob.</div>
                           <div className="text-xl font-light text-gray-900">{detectionStats.highConfidence}</div>
                         </div>
                         <div className="p-6">
-                          <div className="text-[8px] font-bold text-gray-400 tracking-widest mb-2">Average Conf.</div>
+                          <div className="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-2">Average Conf.</div>
                           <div className="text-xl font-light text-gray-900">{(detectionStats.averageConfidence || 92.4).toFixed(1)}%</div>
                         </div>
                       </div>
@@ -944,7 +944,7 @@ export function Dashboard() {
                   {/* Quick Actions - Clinical List */}
                   <div className="bg-white border border-gray-200 rounded-none overflow-hidden">
                     <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
-                      <h2 className="text-[9px] font-bold text-gray-900 tracking-[0.2em]">Quick Command Center</h2>
+                      <h2 className="text-[9px] font-bold text-gray-900 uppercase tracking-[0.2em]">Quick Command Center</h2>
                       <button
                         aria-label="Customize quick actions"
                         className="text-gray-400 hover:text-gray-600"
@@ -980,8 +980,8 @@ export function Dashboard() {
                                 <IconComp className="h-4 w-4" />
                                 <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-all transform -translate-x-2 group-hover:translate-x-0" />
                               </div>
-                              <span className="text-[10px] text-gray-900 font-bold tracking-wider mb-1">{action.label}</span>
-                              <span className="text-[9px] text-gray-400 font-mono tracking-widest">{action.subtitle}</span>
+                              <span className="text-[10px] text-gray-900 font-bold uppercase tracking-wider mb-1">{action.label}</span>
+                              <span className="text-[9px] text-gray-400 font-mono uppercase tracking-widest">{action.subtitle}</span>
                             </button>
                           );
                         })}
@@ -997,7 +997,7 @@ export function Dashboard() {
                       onClick={() => setIsActivityExpanded(!isActivityExpanded)}
                       className="px-5 py-4 border-b border-gray-100 bg-white flex items-center justify-between w-full hover:bg-gray-50/50 transition-colors">
                       <div className="flex items-center gap-3">
-                        <h3 className="text-[10px] font-semibold text-gray-900 tracking-[0.2em]">System Activity</h3>
+                        <h3 className="text-[10px] font-semibold text-gray-900 uppercase tracking-[0.2em]">System Activity</h3>
                         {unreadCount > 0 && (
                           <div className="flex items-center justify-center bg-gray-900 px-1.5 py-0.5 rounded-none">
                             <span className="text-[9px] font-bold text-white tabular-nums">
@@ -1019,7 +1019,7 @@ export function Dashboard() {
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                                 <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
                               </div>
-                              <p className="text-[10px] text-gray-400 font-mono tracking-widest">System Monitoring Active</p>
+                              <p className="text-[10px] text-gray-400 font-mono uppercase tracking-widest">System Monitoring Active</p>
                               <p className="text-xs text-gray-300 mt-2">No new alerts or discrepancies found.</p>
                             </div>
                           ) : (
@@ -1062,7 +1062,7 @@ export function Dashboard() {
                                           <div className="flex items-center gap-2 min-w-0">
                                             <div className={cn("h-1.5 w-1.5 rounded-full shrink-0 transition-colors", statusColor)} />
                                             <p className={cn(
-                                              "text-[10px] tracking-widest truncate",
+                                              "text-[10px] uppercase tracking-widest truncate",
                                               isUnread ? "font-bold text-gray-900" : "font-medium text-gray-600 group-hover:text-gray-900"
                                             )}>
                                               {enrichNotificationTitle(notification.title)}
@@ -1079,7 +1079,7 @@ export function Dashboard() {
                                           </p>
                                           {statusText && (
                                             <span className={cn(
-                                              "text-[8px] font-bold tracking-widest shrink-0",
+                                              "text-[8px] font-bold uppercase tracking-widest shrink-0",
                                               notification.type === 'funds_deposited' ? "text-emerald-600" :
                                                 notification.type === 'case_filed' ? "text-blue-600" : "text-gray-400"
                                             )}>
@@ -1095,14 +1095,14 @@ export function Dashboard() {
                                       <div className="p-5">
                                         <div className="flex items-center gap-3 mb-3">
                                           <div className={cn(
-                                            "px-2 py-0.5 text-[8px] font-bold tracking-[0.15em] border",
+                                            "px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.15em] border",
                                             notification.type === 'funds_deposited' || notification.type === 'refund_approved' ? "bg-emerald-50 text-emerald-700 border-emerald-100" :
                                               notification.type === 'amazon_challenge' || notification.type === 'user_action_required' ? "bg-amber-50 text-amber-700 border-amber-100" :
                                                 "bg-blue-50 text-blue-700 border-blue-100"
                                           )}>
                                             {notification.type.replace(/_/g, ' ')}
                                           </div>
-                                          <span className="text-[10px] text-gray-400 font-medium tracking-widest flex items-center gap-1.5">
+                                          <span className="text-[10px] text-gray-400 font-medium uppercase tracking-widest flex items-center gap-1.5">
                                             <Clock className="h-3 w-3" />
                                             {timeAgo}
                                           </span>
@@ -1117,12 +1117,12 @@ export function Dashboard() {
                                         </div>
 
                                         <div className="mt-4 flex items-center justify-between pt-4 border-t border-gray-50">
-                                          <span className="text-[9px] text-gray-400 font-mono tracking-widest">
+                                          <span className="text-[9px] text-gray-400 font-mono uppercase tracking-widest">
                                             LOG.{notification.id.substring(0, 8).toUpperCase()}
                                           </span>
                                           <button
                                             onClick={() => navigate('/recoveries')}
-                                            className="text-[10px] font-bold text-gray-900 flex items-center gap-1.5 hover:underline tracking-wider">
+                                            className="text-[10px] font-bold text-gray-900 flex items-center gap-1.5 hover:underline uppercase tracking-wider">
                                             Open Record <ArrowRight className="h-3 w-3" />
                                           </button>
                                         </div>
@@ -1140,7 +1140,7 @@ export function Dashboard() {
                             variant="ghost"
                             size="sm"
                             onClick={() => navigate('/notifications')}
-                            className="w-full h-8 text-[9px] text-gray-400 hover:text-gray-900 tracking-[0.2em] font-medium transition-colors"
+                            className="w-full h-8 text-[9px] text-gray-400 hover:text-gray-900 uppercase tracking-[0.2em] font-medium transition-colors"
                           >
                             Archived Activity Logs
                           </Button>
@@ -1158,7 +1158,7 @@ export function Dashboard() {
       <Dialog open={showSourcesModal} onOpenChange={setShowSourcesModal}>
         <DialogContent className="sm:max-w-md p-0 gap-0 overflow-hidden border-gray-200 rounded-sm shadow-2xl">
           <DialogHeader className="px-6 py-5 bg-gray-900 border-b border-gray-900">
-            <DialogTitle className="text-xs font-semibold text-white tracking-[0.2em]">Connect Document Sources</DialogTitle>
+            <DialogTitle className="text-xs font-semibold text-white uppercase tracking-[0.2em]">Connect Document Sources</DialogTitle>
             <DialogDescription className="text-[10px] text-gray-400 mt-1 font-medium tracking-wide">
               AUTHORIZED ACCESS FOR DOCUMENT INGESTION
             </DialogDescription>
@@ -1197,7 +1197,7 @@ export function Dashboard() {
                 ) : (
                   <img src={GmailIcon} alt="Gmail" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
                 )}
-                <span className="text-[10px] font-bold text-gray-900 tracking-wider group-hover:text-black">Gmail</span>
+                <span className="text-[10px] font-bold text-gray-900 uppercase tracking-wider group-hover:text-black">Gmail</span>
               </button>
 
               <button
@@ -1231,7 +1231,7 @@ export function Dashboard() {
                 ) : (
                   <img src={OutlookIcon} alt="Outlook" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
                 )}
-                <span className="text-[10px] font-bold text-gray-900 tracking-wider group-hover:text-black">Outlook</span>
+                <span className="text-[10px] font-bold text-gray-900 uppercase tracking-wider group-hover:text-black">Outlook</span>
               </button>
 
               <button
@@ -1265,7 +1265,7 @@ export function Dashboard() {
                 ) : (
                   <img src={GoogleDriveIcon} alt="Google Drive" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
                 )}
-                <span className="text-[10px] font-bold text-gray-900 tracking-wider group-hover:text-black">Drive</span>
+                <span className="text-[10px] font-bold text-gray-900 uppercase tracking-wider group-hover:text-black">Drive</span>
               </button>
 
               <button
@@ -1299,7 +1299,7 @@ export function Dashboard() {
                 ) : (
                   <img src={DropboxIcon} alt="Dropbox" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
                 )}
-                <span className="text-[10px] font-bold text-gray-900 tracking-wider group-hover:text-black">Dropbox</span>
+                <span className="text-[10px] font-bold text-gray-900 uppercase tracking-wider group-hover:text-black">Dropbox</span>
               </button>
             </div>
           </div>
@@ -1319,7 +1319,7 @@ export function Dashboard() {
       <Dialog open={quickActionsEditOpen} onOpenChange={setQuickActionsEditOpen}>
         <DialogContent className="max-w-md bg-white border border-gray-200 rounded-sm p-0">
           <DialogHeader className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-            <DialogTitle className="text-xs font-medium text-gray-900 tracking-[0.15em]">Customize Quick Actions</DialogTitle>
+            <DialogTitle className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Customize Quick Actions</DialogTitle>
             <DialogDescription className="text-[10px] text-gray-500 mt-0.5">Select which actions to show.</DialogDescription>
           </DialogHeader>
           <div className="p-6 space-y-3">
@@ -1349,7 +1349,7 @@ export function Dashboard() {
       <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
         <DialogContent className="max-w-sm bg-white border border-gray-200 rounded-sm p-0">
           <DialogHeader className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-            <DialogTitle className="text-xs font-medium text-gray-900 tracking-[0.15em]">Invite a Teammate</DialogTitle>
+            <DialogTitle className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Invite a Teammate</DialogTitle>
             <DialogDescription className="text-[10px] text-gray-500 mt-0.5">Send a read-only invite to finance/ops.</DialogDescription>
           </DialogHeader>
           <div className="p-6">

@@ -109,7 +109,7 @@ export default function Admin() {
           {/* Mission Promise - For Founder Reminder */}
           <div className="bg-white border border-gray-200 rounded-sm">
             <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-              <h2 className="text-xs font-medium text-gray-900 tracking-[0.15em]">The Promise</h2>
+              <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">The Promise</h2>
               <p className="text-[10px] text-gray-500 mt-0.5">Read this when you drift off mission</p>
             </div>
             <div className="p-6">
@@ -121,7 +121,7 @@ export default function Admin() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h4 className="text-[10px] font-medium text-gray-500 tracking-[0.15em] mb-3">What We Do</h4>
+                  <h4 className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.15em] mb-3">What We Do</h4>
                   <ul className="text-xs text-gray-600 space-y-2">
                     <li className="flex"><span className="text-gray-400 mr-2">1.</span>Find everything: Always-on scan for lost/damaged inventory, fee errors, underpaid reimbursements</li>
                     <li className="flex"><span className="text-gray-400 mr-2">2.</span>Prove everything: Auto-grab invoices/PODs, build clean claim packets, keep full audit trails</li>
@@ -132,7 +132,7 @@ export default function Admin() {
                 </div>
 
                 <div>
-                  <h4 className="text-[10px] font-medium text-gray-500 tracking-[0.15em] mb-3">Competitive Differentiation</h4>
+                  <h4 className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.15em] mb-3">Competitive Differentiation</h4>
                   <p className="text-xs text-gray-600 italic mb-3">
                     "Margin is the one place where your Amazon money is never forgotten, never guessed, and never risky—just automatically found, fought for, and deposited."
                   </p>
@@ -237,7 +237,7 @@ export default function Admin() {
                       {modelPerformance && (
                         <Card className="bg-white border-gray-200">
                           <CardHeader className="pb-2">
-                            <CardTitle className="text-xs font-semibold text-gray-900 tracking-wide">
+                            <CardTitle className="text-xs font-semibold text-gray-900 uppercase tracking-wide">
                               Model Performance
                             </CardTitle>
                           </CardHeader>
@@ -320,7 +320,7 @@ export default function Admin() {
                     {learningMetrics.by_agent && Object.keys(learningMetrics.by_agent).length > 0 && (
                       <Card className="bg-white border-gray-200">
                         <CardHeader className="pb-2">
-                          <CardTitle className="text-xs font-semibold text-gray-900 tracking-wide">Agent Performance</CardTitle>
+                          <CardTitle className="text-xs font-semibold text-gray-900 uppercase tracking-wide">Agent Performance</CardTitle>
                           <CardDescription className="text-[10px] text-gray-500">Success rates and event counts by agent</CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -328,10 +328,10 @@ export default function Admin() {
                             <Table>
                               <TableHeader>
                                 <TableRow className="border-gray-200 bg-gray-50">
-                                  <TableHead className="text-xs font-semibold text-gray-700 tracking-wide py-2">Agent</TableHead>
-                                  <TableHead className="text-xs font-semibold text-gray-700 tracking-wide py-2">Events</TableHead>
-                                  <TableHead className="text-xs font-semibold text-gray-700 tracking-wide py-2">Success Rate</TableHead>
-                                  <TableHead className="text-xs font-semibold text-gray-700 tracking-wide py-2">Status</TableHead>
+                                  <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Agent</TableHead>
+                                  <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Events</TableHead>
+                                  <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Success Rate</TableHead>
+                                  <TableHead className="text-xs font-semibold text-gray-700 uppercase tracking-wide py-2">Status</TableHead>
                                 </TableRow>
                               </TableHeader>
                               <TableBody>
@@ -379,7 +379,7 @@ export default function Admin() {
                     {thresholds.length > 0 && (
                       <Card className="bg-white border-gray-200">
                         <CardHeader className="pb-2">
-                          <CardTitle className="text-xs font-semibold text-gray-900 tracking-wide">Threshold Optimization History</CardTitle>
+                          <CardTitle className="text-xs font-semibold text-gray-900 uppercase tracking-wide">Threshold Optimization History</CardTitle>
                         </CardHeader>
                         <CardContent>
                           <div className="space-y-3">
@@ -416,7 +416,7 @@ export default function Admin() {
                     {learningInsights?.patterns?.rejectionPatterns && Object.keys(learningInsights.patterns.rejectionPatterns).length > 0 && (
                       <Card className="bg-white border-gray-200">
                         <CardHeader className="pb-2">
-                          <CardTitle className="text-xs font-semibold text-gray-900 tracking-wide">Rejection Pattern Analysis</CardTitle>
+                          <CardTitle className="text-xs font-semibold text-gray-900 uppercase tracking-wide">Rejection Pattern Analysis</CardTitle>
                         </CardHeader>
                         <CardContent>
                           <div className="space-y-2">
@@ -438,7 +438,7 @@ export default function Admin() {
                     {learningInsights && learningInsights.length > 0 && (
                       <Card className="bg-white border-gray-200">
                         <CardHeader className="pb-2">
-                          <CardTitle className="text-xs font-semibold text-gray-900 tracking-wide">Optimization Insights</CardTitle>
+                          <CardTitle className="text-xs font-semibold text-gray-900 uppercase tracking-wide">Optimization Insights</CardTitle>
                         </CardHeader>
                         <CardContent>
                           <div className="space-y-3">

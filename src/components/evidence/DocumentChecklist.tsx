@@ -150,7 +150,7 @@ export function DocumentChecklist({ claimId, compact = false }: DocumentChecklis
                 {/* Header */}
                 <CollapsibleTrigger asChild>
                     <button className="flex items-center gap-3 w-full px-4 py-2 bg-gray-50 border-b border-gray-200 text-left hover:bg-gray-100 transition-colors">
-                        <h4 className="text-xs font-semibold text-gray-700 tracking-wide">
+                        <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
                             Amazon Proof Requirements
                         </h4>
                         <span className="text-[10px] text-gray-500 ml-auto mr-2">
@@ -240,7 +240,7 @@ export function DocumentChecklist({ claimId, compact = false }: DocumentChecklis
                         {/* Recommendations */}
                         {checklist.recommendations.length> 0 && (
                             <div className="px-4 py-3 border-t border-gray-200 bg-gray-50">
-                                <h5 className="text-[10px] text-gray-500 tracking-wide font-medium mb-2">
+                                <h5 className="text-[10px] text-gray-500 uppercase tracking-wide font-medium mb-2">
                                     Recommendations
                                 </h5>
                                 <ul className="space-y-1.5">
