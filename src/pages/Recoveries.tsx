@@ -2219,8 +2219,7 @@ export default function Recoveries() {
                   <h1 className="text-lg font-medium text-gray-900 tracking-tight">Audit Ledger</h1>
                   <div className="mt-2 pl-3 border-l-2 border-gray-200">
                     <p className="text-xs text-gray-500 italic">
-                      This is your Recovery HQ. Once the audit detects a discrepancy (lost inventory, <br />
-                      damage, or fee overcharge), the claim will appear here for your final approval.
+                      All detected discrepancies and submitted claims appear here.
                     </p>
                   </div>
                 </div>
