@@ -226,12 +226,12 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
   return (
     <div className="flex flex-col gap-2">
       <Button
-        onClick={handleUseExisting}
+        onClick={handleConnect}
         disabled={connecting}
         className={cn(
           isFullWidth ? 'w-full' : 'w-auto',
           'justify-center font-medium shadow-lg transition-colors px-8',
-          connecting && usingExisting && 'opacity-80',
+          connecting && 'opacity-80',
           className
         )}
         style={{
@@ -240,10 +240,10 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
           color: '#ffffff'
         }}
         size="lg">
-        {connecting && usingExisting ? (
+        {connecting ? (
           <>
             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-            Reconnecting...
+            Connecting...
           </>
         ) : (
           'Start Recovery'
