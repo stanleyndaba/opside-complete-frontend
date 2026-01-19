@@ -626,7 +626,7 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
           {/* Summary Information */}
           <div className="border border-gray-200 rounded-lg overflow-hidden">
             <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-              <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Claim Summary</h4>
+              <h4 className="text-xs font-semibold text-gray-700 tracking-wide">Claim Summary</h4>
             </div>
             <div className="bg-white">
               <div className="divide-y divide-gray-100">
@@ -674,7 +674,7 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
           {/* Order & Inventory Evidence */}
           <div className="border border-gray-200 rounded-lg overflow-hidden">
             <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-              <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Order & Inventory Evidence</h4>
+              <h4 className="text-xs font-semibold text-gray-700 tracking-wide">Order & Inventory Evidence</h4>
             </div>
             <div className="bg-white">
               {organizedDocs.orderDocs.length > 0 ? (
@@ -715,7 +715,7 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
           {/* Shipment & Delivery Evidence */}
           <div className="border border-gray-200 rounded-lg overflow-hidden">
             <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-              <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Shipment & Delivery Evidence</h4>
+              <h4 className="text-xs font-semibold text-gray-700 tracking-wide">Shipment & Delivery Evidence</h4>
             </div>
             <div className="bg-white">
               {organizedDocs.shipmentDocs.length > 0 ? (
@@ -751,7 +751,7 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
           {/* Policy Reference & Legal Argument */}
           <div className="border border-gray-200 rounded-lg overflow-hidden">
             <div className="bg-gray-50 border-b border-gray-200 px-4 py-2 flex items-center justify-between">
-              <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Policy Reference & Argument</h4>
+              <h4 className="text-xs font-semibold text-gray-700 tracking-wide">Policy Reference & Argument</h4>
               <span className={`text-[10px] font-medium px-2 py-0.5 rounded ${policyArgument.withinWindow ? 'bg-emerald-100 text-emerald-700' : 'text-gray-600'}`}>
                 {policyArgument.withinWindow ? 'Within Window' : 'Outside Window'}
               </span>
@@ -765,11 +765,11 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
                 </div>
                 <div className="flex px-4 py-2.5">
                   <div className="flex-1">
-                    <span className="text-[10px] text-gray-500 uppercase tracking-wide">Filing Deadline</span>
+                    <span className="text-[10px] text-gray-500 tracking-wide">Filing Deadline</span>
                     <div className="text-xs font-medium text-gray-900">{policy.deadline}</div>
                   </div>
                   <div className="flex-1">
-                    <span className="text-[10px] text-gray-500 uppercase tracking-wide">Claim Age</span>
+                    <span className="text-[10px] text-gray-500 tracking-wide">Claim Age</span>
                     <div className="text-xs font-medium text-gray-900">{policyArgument.daysOld} days</div>
                   </div>
                 </div>
@@ -777,7 +777,7 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
 
               {/* Legal Argument */}
               <div className="border-t border-gray-200 px-4 py-3 bg-gray-50">
-                <div className="text-[10px] text-gray-500 uppercase tracking-wide font-medium mb-2">Reimbursement Argument</div>
+                <div className="text-[10px] text-gray-500 tracking-wide font-medium mb-2">Reimbursement Argument</div>
                 <div className="bg-white border border-gray-200 rounded p-3">
                   <p className="text-xs text-gray-700 leading-relaxed">
                     "{policyArgument.argument}"
@@ -791,7 +791,7 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
           {organizedDocs.otherDocs.length > 0 && (
             <div className="border border-gray-200 rounded-lg overflow-hidden">
               <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-                <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Additional Supporting Documents</h4>
+                <h4 className="text-xs font-semibold text-gray-700 tracking-wide">Additional Supporting Documents</h4>
               </div>
               <div className="bg-white">
                 <div className="divide-y divide-gray-100">

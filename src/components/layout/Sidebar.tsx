@@ -200,7 +200,7 @@ export function Sidebar({
         )}
         <item.icon strokeWidth={isActive ? 2 : 1.5} className={cn("h-4 w-4 shrink-0 transition-colors", isActive ? "text-gray-900" : "text-gray-400 group-hover:text-gray-900")} />
         <span className={cn(
-          "text-[10px] uppercase tracking-[0.15em] transition-colors",
+          "text-[10px] tracking-[0.15em] transition-colors",
           isActive ? "font-bold" : "font-medium"
         )}>{item.title}</span>
         {item.title === 'Claims' && claimCount !== null && !isCollapsed && (
@@ -234,7 +234,7 @@ export function Sidebar({
             className={cn(isCollapsed ? "h-3.5" : "h-4", "w-auto object-contain")}
           />
           {!isCollapsed && (
-            <span className="text-[12px] font-bold text-gray-900 uppercase tracking-[0.25em]">
+            <span className="text-[12px] font-bold text-gray-900 tracking-[0.25em]">
               Margin
             </span>
           )}
@@ -242,7 +242,7 @@ export function Sidebar({
         {!isCollapsed && (
           <div className="flex items-center gap-1.5 mt-1.5">
             <div className="h-1 w-1 rounded-full bg-emerald-500" />
-            <span className="text-[8px] text-gray-400 font-mono uppercase tracking-[0.2em]">Secured</span>
+            <span className="text-[8px] text-gray-400 font-mono tracking-[0.2em]">Secured</span>
           </div>
         )}
       </div>
@@ -285,7 +285,7 @@ export function Sidebar({
                   <User className="h-4 w-4" strokeWidth={1.5} />
                 </Link>
               </TooltipTrigger>
-              <TooltipContent side="right" className="bg-gray-900 text-white text-[10px] uppercase tracking-widest rounded-none">
+              <TooltipContent side="right" className="bg-gray-900 text-white text-[10px] tracking-widest rounded-none">
                 Account
               </TooltipContent>
             </Tooltip>
@@ -301,7 +301,7 @@ export function Sidebar({
             )}>
             <div className="flex items-center gap-2.5">
               <User className="h-3.5 w-3.5 text-gray-400 group-hover:text-gray-900" strokeWidth={1.5} />
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] group-hover:text-gray-900">Account</span>
+              <span className="text-[10px] font-bold tracking-[0.2em] group-hover:text-gray-900">Account</span>
             </div>
             {connectedEmail && (
               <span className="text-[9px] text-gray-400 font-mono mt-1 blur-[0px] group-hover:text-gray-600 truncate max-w-full" title={connectedEmail}>

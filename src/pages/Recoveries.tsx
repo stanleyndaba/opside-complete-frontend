@@ -339,10 +339,10 @@ const EvidenceQualityBadge = ({ validation, claim, matchedDocs }: { validation: 
         {/* Header */}
         <div className="px-3 py-2 border-b border-gray-200 bg-gray-50">
           <div className="flex items-center justify-between">
-            <span className="text-[9px] font-semibold text-gray-500 uppercase tracking-[0.1em]">
+            <span className="text-[9px] font-semibold text-gray-500 tracking-[0.1em]">
               Evidence Status
             </span>
-            <span className={`text-[9px] font-medium uppercase tracking-[0.05em] px-1.5 py-0.5 ${status.bgColor} ${status.textColor}`}>
+            <span className={`text-[9px] font-medium tracking-[0.05em] px-1.5 py-0.5 ${status.bgColor} ${status.textColor}`}>
               {status.label}
             </span>
           </div>
@@ -352,7 +352,7 @@ const EvidenceQualityBadge = ({ validation, claim, matchedDocs }: { validation: 
         <div className="px-3 py-2 space-y-3">
           {/* Required Documents */}
           <div>
-            <div className="text-[9px] font-semibold text-gray-500 uppercase tracking-[0.08em] mb-1.5">
+            <div className="text-[9px] font-semibold text-gray-500 tracking-[0.08em] mb-1.5">
               Required Documents
             </div>
             <div className="space-y-1">
@@ -379,7 +379,7 @@ const EvidenceQualityBadge = ({ validation, claim, matchedDocs }: { validation: 
 
           {/* Matched Documents - Always show */}
           <div className="pt-2 border-t border-gray-100">
-            <div className="text-[9px] font-semibold text-gray-500 uppercase tracking-[0.08em] mb-1.5">
+            <div className="text-[9px] font-semibold text-gray-500 tracking-[0.08em] mb-1.5">
               Matched Documents ({docCount})
             </div>
             <div className="space-y-0.5">
@@ -413,7 +413,7 @@ const EvidenceQualityBadge = ({ validation, claim, matchedDocs }: { validation: 
           {/* Readiness Bar */}
           <div className="pt-2 border-t border-gray-100">
             <div className="flex items-center justify-between text-[9px] mb-1">
-              <span className="text-gray-500 uppercase tracking-[0.05em]">Claim Readiness</span>
+              <span className="text-gray-500 tracking-[0.05em]">Claim Readiness</span>
               <span className="text-gray-700 font-medium">{readinessPercent}%</span>
             </div>
             <div className="h-1 bg-gray-100 w-full">
@@ -2260,7 +2260,7 @@ export default function Recoveries() {
               <div className="flex items-center justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.15em]">Recovered Value</span>
+                    <span className="text-[10px] font-medium text-gray-500 tracking-[0.15em]">Recovered Value</span>
                     {recoveredTotal != null && recoveredTotal > 0 && (
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -2346,7 +2346,7 @@ export default function Recoveries() {
 
             {/* Tabs for Claims, Evidence Matching, and Cases */}
             <div className="mb-6">
-              <h2 className="text-sm font-medium text-gray-900 mb-4 uppercase tracking-[0.1em]">Revenue Recovery</h2>
+              <h2 className="text-sm font-medium text-gray-900 mb-4 tracking-[0.1em]">Revenue Recovery</h2>
               <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'claims' | 'matching' | 'cases')} className="w-full">
                 <TabsList className="mb-6 inline-flex h-auto items-center justify-start gap-6 bg-transparent border-b border-gray-200 rounded-none p-0">
                   <TabsTrigger
@@ -2371,7 +2371,7 @@ export default function Recoveries() {
                   {/* Controls */}
                   <div className="mb-6 bg-white border border-white rounded-sm">
                     <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                      <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Capital Recovery</h3>
+                      <h3 className="text-xs font-medium text-gray-900 tracking-[0.15em]">Capital Recovery</h3>
                       <p className="text-[10px] text-gray-500 mt-0.5">Track finalized reimbursements and measure your automated ROI.</p>
                     </div>
                     <div className="p-6">
@@ -2554,21 +2554,21 @@ export default function Recoveries() {
                       {loading && (
                         <div className="py-12 flex flex-col items-center justify-center space-y-4">
                           <Loader2 className="w-6 h-6 text-gray-300 animate-spin" />
-                          <span className="text-[11px] text-gray-400 uppercase tracking-[0.2em]">Synchronizing Intelligence</span>
+                          <span className="text-[11px] text-gray-400 tracking-[0.2em]">Synchronizing Intelligence</span>
                         </div>
                       )}
                       {error && (
                         <div className="py-12 flex flex-col items-center justify-center space-y-4 text-center px-6">
                           <AlertTriangle className="w-6 h-6 text-red-200" />
-                          <span className="text-[11px] text-gray-500 uppercase tracking-[0.2em]">Interface Error: {error}</span>
+                          <span className="text-[11px] text-gray-500 tracking-[0.2em]">Interface Error: {error}</span>
                         </div>
                       )}
                       {!loading && !error && rankedClaims.length === 0 && (
                         <div className="py-20 flex flex-col items-center justify-center space-y-4">
                           <Search className="w-10 h-10 text-gray-100" />
                           <div className="flex flex-col items-center text-center max-w-sm px-6">
-                            <span className="text-[11px] text-gray-900 font-semibold uppercase tracking-[0.2em]">Ledger Clean</span>
-                            <span className="text-[10px] text-gray-400 mt-2 leading-relaxed uppercase tracking-wider">
+                            <span className="text-[11px] text-gray-900 font-semibold tracking-[0.2em]">Ledger Clean</span>
+                            <span className="text-[10px] text-gray-400 mt-2 leading-relaxed tracking-wider">
                               {((mergedRecoveries === null || (mergedRecoveries && mergedRecoveries.length === 0)) && (!claims || claims.length === 0))
                                 ? 'SYNC YOUR AMAZON ACCOUNT OR RUN AN ANALYSIS TO IDENTIFY RECOVERY OPPORTUNITIES.'
                                 : 'TRY ADJUSTING YOUR FILTERS TO SEE MORE RESULTS.'}
@@ -2587,17 +2587,17 @@ export default function Recoveries() {
                               }}
                               className="mr-4"
                             />
-                            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-[0.15em]">Batch Operation Queue</span>
+                            <span className="text-[10px] font-semibold text-gray-400 tracking-[0.15em]">Batch Operation Queue</span>
                           </div>
 
                           {claimsByMonth.map((monthGroup, groupIndex) => (
                             <React.Fragment key={`${monthGroup.month}-${monthGroup.year}`}>
                               {/* Institutional Month Header */}
                               <div className="sticky top-0 z-10 bg-gray-50/80 backdrop-blur-sm px-6 py-2.5 border-y border-gray-100 flex items-center justify-between">
-                                <span className="text-[11px] font-bold text-gray-900 uppercase tracking-[0.2em]">
+                                <span className="text-[11px] font-bold text-gray-900 tracking-[0.2em]">
                                   {monthGroup.month} {monthGroup.year}
                                 </span>
-                                <span className="text-[9px] font-medium text-gray-400 uppercase tracking-widest">
+                                <span className="text-[9px] font-medium text-gray-400 tracking-widest">
                                   {monthGroup.claims.length} AUDIT ENTRI{monthGroup.claims.length !== 1 ? 'ES' : 'Y'}
                                 </span>
                               </div>
@@ -2665,7 +2665,7 @@ export default function Recoveries() {
                                             </div>
 
                                             <div className="flex items-center gap-2 mt-2">
-                                              <div className="flex items-center gap-2 text-[10px] font-medium tracking-wider uppercase">
+                                              <div className="flex items-center gap-2 text-[10px] font-medium tracking-wider">
                                                 <span className={cn(
                                                   "px-2 py-0.5 rounded-none border font-semibold",
                                                   getStatusColor(claim.status)
@@ -2702,12 +2702,12 @@ export default function Recoveries() {
                                               </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-100 shadow-2xl rounded-none p-1">
-                                              <DropdownMenuItem asChild className="text-[11px] font-medium uppercase tracking-wider text-gray-700 hover:bg-gray-50 cursor-pointer px-3 py-2">
+                                              <DropdownMenuItem asChild className="text-[11px] font-medium tracking-wider text-gray-700 hover:bg-gray-50 cursor-pointer px-3 py-2">
                                                 <Link to={`/recoveries/${claim.id}`} state={{ claim }}>VIEW DETAILS</Link>
                                               </DropdownMenuItem>
 
                                               <DropdownMenuItem
-                                                className="text-[11px] font-medium uppercase tracking-wider text-gray-700 hover:bg-gray-50 cursor-pointer px-3 py-2"
+                                                className="text-[11px] font-medium tracking-wider text-gray-700 hover:bg-gray-50 cursor-pointer px-3 py-2"
                                                 onClick={async () => {
                                                   try {
                                                     const res = await api.getRecoveryDetail(claim.id);
@@ -2723,7 +2723,7 @@ export default function Recoveries() {
                                               </DropdownMenuItem>
 
                                               <DropdownMenuItem
-                                                className="text-[11px] font-medium uppercase tracking-wider text-gray-700 hover:bg-gray-50 cursor-pointer px-3 py-2"
+                                                className="text-[11px] font-medium tracking-wider text-gray-700 hover:bg-gray-50 cursor-pointer px-3 py-2"
                                                 onClick={() => {
                                                   setEvidencePackClaim(claim);
                                                   setEvidencePackOpen(true);
@@ -2733,7 +2733,7 @@ export default function Recoveries() {
 
                                               {claim.status === 'Denied' && (
                                                 <DropdownMenuItem
-                                                  className="text-[11px] font-bold uppercase tracking-wider text-red-600 hover:bg-red-50 cursor-pointer px-3 py-2"
+                                                  className="text-[11px] font-bold tracking-wider text-red-600 hover:bg-red-50 cursor-pointer px-3 py-2"
                                                   onClick={async () => {
                                                     try {
                                                       await api.resubmitClaim(claim.id);
@@ -2773,7 +2773,7 @@ export default function Recoveries() {
                   <Dialog open={resolveModalOpen} onOpenChange={setResolveModalOpen}>
                     <DialogContent className="max-w-md bg-white border border-gray-200 shadow-lg rounded-sm p-0 overflow-hidden">
                       <DialogHeader className="px-5 py-4 border-b border-gray-100 bg-gray-50">
-                        <DialogTitle className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Resolution Record</DialogTitle>
+                        <DialogTitle className="text-xs font-medium text-gray-900 tracking-[0.15em]">Resolution Record</DialogTitle>
                         <DialogDescription className="text-[10px] text-gray-500 mt-0.5">
                           Complete resolution details and mark claim as resolved
                         </DialogDescription>
@@ -2781,17 +2781,17 @@ export default function Recoveries() {
                       {selectedDetection && (
                         <div className="space-y-4 px-5 py-4">
                           <div>
-                            <Label className="text-[10px] text-gray-500 uppercase tracking-wide">Detection ID</Label>
+                            <Label className="text-[10px] text-gray-500 tracking-wide">Detection ID</Label>
                             <p className="text-xs text-gray-900 font-mono mt-0.5">{selectedDetection.id}</p>
                           </div>
                           <div>
-                            <Label className="text-[10px] text-gray-500 uppercase tracking-wide">Anomaly Type</Label>
+                            <Label className="text-[10px] text-gray-500 tracking-wide">Anomaly Type</Label>
                             <p className="text-xs text-gray-900 capitalize mt-0.5">
                               {selectedDetection.type?.replace(/_/g, ' ') || selectedDetection.anomaly_type?.replace(/_/g, ' ')}
                             </p>
                           </div>
                           <div>
-                            <Label htmlFor="resolve-amount" className="text-[10px] text-gray-500 uppercase tracking-wide">Resolution Amount</Label>
+                            <Label htmlFor="resolve-amount" className="text-[10px] text-gray-500 tracking-wide">Resolution Amount</Label>
                             <Input
                               id="resolve-amount"
                               type="number"
@@ -2803,7 +2803,7 @@ export default function Recoveries() {
                             />
                           </div>
                           <div>
-                            <Label htmlFor="resolve-notes" className="text-[10px] text-gray-500 uppercase tracking-wide">Notes</Label>
+                            <Label htmlFor="resolve-notes" className="text-[10px] text-gray-500 tracking-wide">Notes</Label>
                             <Textarea
                               id="resolve-notes"
                               value={resolveNotes}
@@ -2881,7 +2881,7 @@ export default function Recoveries() {
                   <Dialog open={statusUpdateModalOpen} onOpenChange={setStatusUpdateModalOpen}>
                     <DialogContent className="max-w-md bg-white border border-gray-200 shadow-lg rounded-sm p-0 overflow-hidden">
                       <DialogHeader className="px-5 py-4 border-b border-gray-100 bg-gray-50">
-                        <DialogTitle className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Status Update</DialogTitle>
+                        <DialogTitle className="text-xs font-medium text-gray-900 tracking-[0.15em]">Status Update</DialogTitle>
                         <DialogDescription className="text-[10px] text-gray-500 mt-0.5">
                           Update claim status and record change notes
                         </DialogDescription>
@@ -2889,11 +2889,11 @@ export default function Recoveries() {
                       {selectedDetection && (
                         <div className="space-y-4 px-5 py-4">
                           <div>
-                            <Label className="text-[10px] text-gray-500 uppercase tracking-wide">Detection ID</Label>
+                            <Label className="text-[10px] text-gray-500 tracking-wide">Detection ID</Label>
                             <p className="text-xs text-gray-900 font-mono mt-0.5">{selectedDetection.id}</p>
                           </div>
                           <div>
-                            <Label htmlFor="status-select" className="text-[10px] text-gray-500 uppercase tracking-wide">Status</Label>
+                            <Label htmlFor="status-select" className="text-[10px] text-gray-500 tracking-wide">Status</Label>
                             <Select value={selectedStatus} onValueChange={setSelectedStatus}>
                               <SelectTrigger id="status-select" className="mt-1 h-8 text-xs bg-gray-50 border-gray-200 text-gray-900 rounded-sm">
                                 <SelectValue />
@@ -2907,7 +2907,7 @@ export default function Recoveries() {
                             </Select>
                           </div>
                           <div>
-                            <Label htmlFor="status-notes" className="text-[10px] text-gray-500 uppercase tracking-wide">Notes</Label>
+                            <Label htmlFor="status-notes" className="text-[10px] text-gray-500 tracking-wide">Notes</Label>
                             <Textarea
                               id="status-notes"
                               value={statusUpdateNotes}
@@ -3036,7 +3036,7 @@ export default function Recoveries() {
                           {/* Claim Details */}
                           <div className="border border-gray-200 rounded-lg overflow-hidden">
                             <div className="bg-gray-50 border-b border-gray-200 px-3 py-2">
-                              <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Claim Details</h4>
+                              <h4 className="text-xs font-semibold text-gray-700 tracking-wide">Claim Details</h4>
                             </div>
                             <div className="bg-white divide-y divide-gray-100">
                               <div className="flex justify-between items-center px-3 py-2">
@@ -3063,7 +3063,7 @@ export default function Recoveries() {
                           {/* Assessment Summary */}
                           <div className="border border-gray-200 rounded-lg overflow-hidden">
                             <div className="bg-gray-50 border-b border-gray-200 px-3 py-2">
-                              <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Claim Strength Assessment</h4>
+                              <h4 className="text-xs font-semibold text-gray-700 tracking-wide">Claim Strength Assessment</h4>
                             </div>
                             <div className="bg-white px-3 py-2">
                               <div className="flex justify-between items-center">
@@ -3076,7 +3076,7 @@ export default function Recoveries() {
                           {/* Detailed Breakdown */}
                           <div className="border border-gray-200 rounded-lg overflow-hidden">
                             <div className="bg-gray-50 border-b border-gray-200 px-3 py-2">
-                              <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Component Analysis</h4>
+                              <h4 className="text-xs font-semibold text-gray-700 tracking-wide">Component Analysis</h4>
                             </div>
                             <div className="bg-white divide-y divide-gray-100">
                               {strength.factors.map((f, i) => (
@@ -3170,7 +3170,7 @@ export default function Recoveries() {
                     <div className="px-6 py-4 border-b border-gray-200">
                       <div className="flex justify-between items-start">
                         <div>
-                          <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-[0.2em] mb-1">MARGIN</div>
+                          <div className="text-[10px] font-semibold text-gray-400 tracking-[0.2em] mb-1">MARGIN</div>
                           <DialogTitle className="text-base font-semibold text-gray-900">
                             Claim Details
                           </DialogTitle>
@@ -3198,7 +3198,7 @@ export default function Recoveries() {
                         </div>
                       </div>
                       {detectionDetails && (
-                        <div className="mt-2 text-xs text-gray-500 uppercase tracking-wide">
+                        <div className="mt-2 text-xs text-gray-500 tracking-wide">
                           {(detectionDetails.anomaly_type || detectionDetails.type || 'Recovery Claim').replace(/_/g, ' ').toUpperCase()}
                         </div>
                       )}
@@ -3217,21 +3217,21 @@ export default function Recoveries() {
                         {/* Summary Card - Institutional Style */}
                         <div className="border border-gray-200">
                           <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-                            <h4 className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.15em]">Claim Summary</h4>
+                            <h4 className="text-[10px] font-semibold text-gray-500 tracking-[0.15em]">Claim Summary</h4>
                           </div>
                           <div className="divide-y divide-gray-100">
                             <div className="flex justify-between items-center px-4 py-2.5">
-                              <span className="text-[11px] text-gray-500 uppercase tracking-wide">Amount</span>
+                              <span className="text-[11px] text-gray-500 tracking-wide">Amount</span>
                               <span className="text-sm font-semibold text-gray-900 font-mono">
                                 {formatCurrency(detectionDetails.guaranteedAmount || detectionDetails.amount || detectionDetails.estimated_value || 0, detectionDetails.currency || 'USD')}
                               </span>
                             </div>
                             <div className="flex justify-between items-center px-4 py-2.5">
-                              <span className="text-[11px] text-gray-500 uppercase tracking-wide">Status</span>
-                              <span className="text-xs font-medium text-gray-900 uppercase">{detectionDetails.status || 'Pending'}</span>
+                              <span className="text-[11px] text-gray-500 tracking-wide">Status</span>
+                              <span className="text-xs font-medium text-gray-900">{detectionDetails.status || 'Pending'}</span>
                             </div>
                             <div className="flex justify-between items-center px-4 py-2.5">
-                              <span className="text-[11px] text-gray-500 uppercase tracking-wide">Evidence</span>
+                              <span className="text-[11px] text-gray-500 tracking-wide">Evidence</span>
                               <span className="text-xs font-medium text-gray-900">{detectionDetails.matchedCount || detectionDetails.matchedDocs?.length || 0} document{(detectionDetails.matchedCount || 0) !== 1 ? 's' : ''}</span>
                             </div>
                           </div>
@@ -3243,34 +3243,34 @@ export default function Recoveries() {
                           <h4 className="text-sm font-semibold text-gray-900 mb-3">Claim Information</h4>
                           <div className="grid grid-cols-2 gap-4">
                             <div>
-                              <div className="text-xs text-gray-500 uppercase tracking-wide">Claim ID</div>
+                              <div className="text-xs text-gray-500 tracking-wide">Claim ID</div>
                               <div className="text-sm font-mono text-gray-900 mt-1">{detectionDetails.id?.slice(0, 12) || '—'}...</div>
                             </div>
                             <div>
-                              <div className="text-xs text-gray-500 uppercase tracking-wide">Sync ID</div>
+                              <div className="text-xs text-gray-500 tracking-wide">Sync ID</div>
                               <div className="text-sm font-mono text-gray-900 mt-1">{detectionDetails.sync_id || 'N/A'}</div>
                             </div>
                             <div>
-                              <div className="text-xs text-gray-500 uppercase tracking-wide">Type</div>
+                              <div className="text-xs text-gray-500 tracking-wide">Type</div>
                               <div className="text-sm text-gray-900 mt-1">
                                 {detectionDetails.anomaly_type?.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || '—'}
                               </div>
                             </div>
                             <div>
-                              <div className="text-xs text-gray-500 uppercase tracking-wide">Severity</div>
+                              <div className="text-xs text-gray-500 tracking-wide">Severity</div>
                               <Badge className="mt-1 bg-gray-100 text-[#36454F] border-gray-400">
                                 {detectionDetails.severity?.charAt(0).toUpperCase() + detectionDetails.severity?.slice(1) || 'Unknown'}
                               </Badge>
                             </div>
                             {detectionDetails.sku && (
                               <div>
-                                <div className="text-xs text-gray-500 uppercase tracking-wide">SKU</div>
+                                <div className="text-xs text-gray-500 tracking-wide">SKU</div>
                                 <div className="text-sm font-mono text-gray-900 mt-1">{detectionDetails.sku}</div>
                               </div>
                             )}
                             {detectionDetails.asin && (
                               <div>
-                                <div className="text-xs text-gray-500 uppercase tracking-wide">ASIN</div>
+                                <div className="text-xs text-gray-500 tracking-wide">ASIN</div>
                                 <div className="text-sm font-mono text-gray-900 mt-1">{detectionDetails.asin}</div>
                               </div>
                             )}
@@ -3286,7 +3286,7 @@ export default function Recoveries() {
                             <div className="border-t border-gray-100 pt-4">
                               <div className="border border-gray-200 rounded-lg overflow-hidden">
                                 <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-                                  <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Evidence Assessment</h4>
+                                  <h4 className="text-xs font-semibold text-gray-700 tracking-wide">Evidence Assessment</h4>
                                 </div>
                                 <div className="bg-white p-4 space-y-4">
                                   {/* Quality Summary */}
@@ -3302,7 +3302,7 @@ export default function Recoveries() {
 
                                   {/* Field Verification */}
                                   <div className="space-y-2">
-                                    <p className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Field Verification</p>
+                                    <p className="text-xs font-semibold text-gray-700 tracking-wide">Field Verification</p>
                                     <div className="space-y-1">
                                       {validation.fieldChecks.map((check, i) => (
                                         <div key={i} className="flex items-center justify-between text-xs py-1 border-b border-gray-50 last:border-0">
@@ -3318,7 +3318,7 @@ export default function Recoveries() {
                                   {/* Policy Notes */}
                                   {validation.warnings.length > 0 && (
                                     <div className="space-y-2 pt-2 border-t border-gray-100">
-                                      <p className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Policy Notes</p>
+                                      <p className="text-xs font-semibold text-gray-700 tracking-wide">Policy Notes</p>
                                       <ul className="text-xs space-y-1">
                                         {validation.warnings.map((w, i) => (
                                           <li key={i} className="text-gray-600 pl-3 relative before:content-['•'] before:absolute before:left-0">{w}</li>
@@ -3335,18 +3335,18 @@ export default function Recoveries() {
                         {/* Financial Information - Institutional Style */}
                         <div className="border border-gray-200">
                           <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-                            <h4 className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.15em]">Financial Information</h4>
+                            <h4 className="text-[10px] font-semibold text-gray-500 tracking-[0.15em]">Financial Information</h4>
                           </div>
                           <div className="divide-y divide-gray-100">
                             <div className="flex justify-between items-center px-4 py-2.5">
-                              <span className="text-[11px] text-gray-500 uppercase tracking-wide">Estimated Value</span>
+                              <span className="text-[11px] text-gray-500 tracking-wide">Estimated Value</span>
                               <span className="text-sm font-semibold text-gray-900 font-mono">
                                 {formatCurrency(detectionDetails.estimated_value || detectionDetails.guaranteedAmount || 0, detectionDetails.currency || 'USD')}
                               </span>
                             </div>
                             <div className="flex justify-between items-center px-4 py-2.5">
-                              <span className="text-[11px] text-gray-500 uppercase tracking-wide">Currency</span>
-                              <span className="text-xs font-medium text-gray-900 uppercase">{detectionDetails.currency || 'USD'}</span>
+                              <span className="text-[11px] text-gray-500 tracking-wide">Currency</span>
+                              <span className="text-xs font-medium text-gray-900">{detectionDetails.currency || 'USD'}</span>
                             </div>
                           </div>
                         </div>
@@ -3357,7 +3357,7 @@ export default function Recoveries() {
                           <div className="grid grid-cols-2 gap-4">
                             {detectionDetails.discovery_date && (
                               <div>
-                                <div className="text-xs text-gray-500 uppercase tracking-wide">Discovery Date</div>
+                                <div className="text-xs text-gray-500 tracking-wide">Discovery Date</div>
                                 <div className="text-sm text-gray-900 mt-1">
                                   {format(new Date(detectionDetails.discovery_date), 'MMM dd, yyyy')}
                                 </div>
@@ -3365,7 +3365,7 @@ export default function Recoveries() {
                             )}
                             {detectionDetails.deadline_date && (
                               <div>
-                                <div className="text-xs text-gray-500 uppercase tracking-wide">Deadline Date</div>
+                                <div className="text-xs text-gray-500 tracking-wide">Deadline Date</div>
                                 <div className={`text-sm font-medium mt-1 ${detectionDetails.days_remaining !== undefined && detectionDetails.days_remaining <= 7
                                   ? 'text-amber-600'
                                   : 'text-gray-900'
@@ -3376,7 +3376,7 @@ export default function Recoveries() {
                             )}
                             {detectionDetails.days_remaining !== undefined && (
                               <div>
-                                <div className="text-xs text-gray-500 uppercase tracking-wide">Days Remaining</div>
+                                <div className="text-xs text-gray-500 tracking-wide">Days Remaining</div>
                                 <div className={`text-sm font-medium mt-1 ${detectionDetails.days_remaining <= 3 ? 'text-red-600' :
                                   detectionDetails.days_remaining <= 7 ? 'text-amber-600' :
                                     'text-gray-900'
@@ -3387,7 +3387,7 @@ export default function Recoveries() {
                             )}
                             {detectionDetails.created_at && (
                               <div>
-                                <div className="text-xs text-gray-500 uppercase tracking-wide">Created At</div>
+                                <div className="text-xs text-gray-500 tracking-wide">Created At</div>
                                 <div className="text-sm text-gray-900 mt-1">
                                   {format(new Date(detectionDetails.created_at), 'MMM dd, yyyy HH:mm')}
                                 </div>

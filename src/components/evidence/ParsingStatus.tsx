@@ -107,21 +107,21 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
         return (
           <div className="flex items-center gap-2 text-emerald-600">
             <CheckCircle2 className="w-3.5 h-3.5" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.1em]">Intelligence Verified</span>
+            <span className="text-[10px] font-bold tracking-[0.1em]">Intelligence Verified</span>
           </div>
         );
       case 'processing':
         return (
           <div className="flex items-center gap-2 text-indigo-600">
             <Activity className="w-3.5 h-3.5 animate-pulse" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.1em]">Neural Extraction Active</span>
+            <span className="text-[10px] font-bold tracking-[0.1em]">Neural Extraction Active</span>
           </div>
         );
       case 'failed':
         return (
           <div className="flex items-center gap-2 text-red-600">
             <XCircle className="w-3.5 h-3.5" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.1em]">Extraction Halted</span>
+            <span className="text-[10px] font-bold tracking-[0.1em]">Extraction Halted</span>
           </div>
         );
       case 'pending':
@@ -129,7 +129,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
         return (
           <div className="flex items-center gap-2 text-gray-400">
             <Clock className="w-3.5 h-3.5" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.1em]">Queue Position Locked</span>
+            <span className="text-[10px] font-bold tracking-[0.1em]">Queue Position Locked</span>
           </div>
         );
     }
@@ -154,7 +154,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
       <div className="bg-gray-50/50 border-b border-gray-100 py-4 px-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Activity className="w-3.5 h-3.5 text-gray-400 fill-gray-100" />
-          <h4 className="text-[10px] font-semibold text-gray-400 uppercase tracking-[0.15em]">
+          <h4 className="text-[10px] font-semibold text-gray-400 tracking-[0.15em]">
             Processing Status Overview
           </h4>
           <span className="text-gray-300">|</span>
@@ -163,7 +163,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
             {jobStatus.confidence_score !== undefined && (
               <div className="flex items-center gap-2">
                 <span className="text-gray-300">|</span>
-                <span className="text-[10px] font-medium text-gray-500 uppercase tracking-wider">
+                <span className="text-[10px] font-medium text-gray-500 tracking-wider">
                   Confidence: <span className="text-gray-900 font-bold">{(jobStatus.confidence_score * 100).toFixed(1)}%</span>
                 </span>
               </div>
@@ -174,7 +174,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
         <button
           onClick={fetchParsingStatus}
           disabled={loading}
-          className="flex items-center gap-2 text-[10px] font-bold text-gray-400 hover:text-indigo-600 uppercase tracking-[0.15em] transition-colors"
+          className="flex items-center gap-2 text-[10px] font-bold text-gray-400 hover:text-indigo-600 tracking-[0.15em] transition-colors"
         >
           <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
           Force Refresh
@@ -185,7 +185,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
         {jobStatus.status === 'processing' && jobStatus.progress !== undefined && (
           <div className="space-y-3 max-w-md">
             <div className="flex justify-between items-end mb-1">
-              <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Extraction Progress</span>
+              <span className="text-[10px] font-semibold text-gray-400 tracking-widest">Extraction Progress</span>
               <span className="text-xs font-mono text-indigo-600 font-bold">{jobStatus.progress}%</span>
             </div>
             <Progress value={jobStatus.progress} className="h-1 bg-gray-100" />
@@ -197,7 +197,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
           <div className="flex items-start gap-3 p-4 bg-red-50/50 border border-red-100 rounded-sm">
             <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5" />
             <div className="space-y-1">
-              <span className="text-[10px] font-bold text-red-800 uppercase tracking-widest leading-none">Extraction Fault Detected</span>
+              <span className="text-[10px] font-bold text-red-800 tracking-widest leading-none">Extraction Fault Detected</span>
               <p className="text-xs text-red-700 leading-relaxed font-light">{jobStatus.error}</p>
             </div>
           </div>
@@ -209,7 +209,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
             <div>
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-4 w-[2px] bg-indigo-500" />
-                <h4 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.2em]">Summary Intelligence</h4>
+                <h4 className="text-[10px] font-bold text-gray-900 tracking-[0.2em]">Summary Intelligence</h4>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -220,7 +220,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
                   { label: 'Validated Total', value: parsedData.total_amount !== undefined ? `${parsedData.currency || '$'}${parsedData.total_amount.toFixed(2)}` : null, highlight: true }
                 ].map((item, i) => item.value && (
                   <div key={i} className="space-y-1.5">
-                    <span className="text-[9px] font-semibold text-gray-400 uppercase tracking-[0.15em] block">{item.label}</span>
+                    <span className="text-[9px] font-semibold text-gray-400 tracking-[0.15em] block">{item.label}</span>
                     <span className={`text-sm font-medium ${item.mono ? 'font-mono' : ''} ${item.highlight ? 'text-indigo-600 font-bold' : 'text-gray-900'}`}>
                       {item.value}
                     </span>
@@ -233,17 +233,17 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
               <div>
                 <div className="flex items-center gap-3 mb-4">
                   <div className="h-4 w-[2px] bg-gray-300" />
-                  <h4 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.2em]">Detailed Extractions</h4>
+                  <h4 className="text-[10px] font-bold text-gray-900 tracking-[0.2em]">Detailed Extractions</h4>
                 </div>
 
                 <div className="border border-gray-100 rounded-sm overflow-hidden">
                   <table className="w-full text-left border-collapse">
                     <thead>
                       <tr className="bg-gray-50/50 border-b border-gray-100">
-                        <th className="px-4 py-2.5 text-[9px] font-semibold text-gray-400 uppercase tracking-widest">Entry Item</th>
-                        <th className="px-4 py-2.5 text-[9px] font-semibold text-gray-400 uppercase tracking-widest">Qty</th>
-                        <th className="px-4 py-2.5 text-[9px] font-semibold text-gray-400 uppercase tracking-widest text-right">Unit Price</th>
-                        <th className="px-4 py-2.5 text-[9px] font-semibold text-gray-400 uppercase tracking-widest text-right">Total Purity</th>
+                        <th className="px-4 py-2.5 text-[9px] font-semibold text-gray-400 tracking-widest">Entry Item</th>
+                        <th className="px-4 py-2.5 text-[9px] font-semibold text-gray-400 tracking-widest">Qty</th>
+                        <th className="px-4 py-2.5 text-[9px] font-semibold text-gray-400 tracking-widest text-right">Unit Price</th>
+                        <th className="px-4 py-2.5 text-[9px] font-semibold text-gray-400 tracking-widest text-right">Total Purity</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-50">

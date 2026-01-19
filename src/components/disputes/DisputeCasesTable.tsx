@@ -204,32 +204,32 @@ export function DisputeCasesTable() {
       return (
         <span className="flex items-center gap-1.5 text-emerald-600">
           <CheckCircle2 className="w-3 h-3" />
-          <span className="text-[10px] font-medium uppercase tracking-wider">{status}</span>
+          <span className="text-[10px] font-medium tracking-wider">{status}</span>
         </span>
       );
     } else if (statusLower === 'rejected' || statusLower === 'denied' || statusLower === 'failed') {
       return (
         <span className="flex items-center gap-1.5 text-red-600">
           <XCircle className="w-3 h-3" />
-          <span className="text-[10px] font-medium uppercase tracking-wider">{status}</span>
+          <span className="text-[10px] font-medium tracking-wider">{status}</span>
         </span>
       );
     } else if (statusLower === 'pending' || statusLower === 'submitted') {
       return (
         <span className="flex items-center gap-1.5 text-amber-600">
           <Clock className="w-3 h-3" />
-          <span className="text-[10px] font-medium uppercase tracking-wider">{status}</span>
+          <span className="text-[10px] font-medium tracking-wider">{status}</span>
         </span>
       );
     } else if (statusLower === 'in_progress' || statusLower === 'filing') {
       return (
         <span className="flex items-center gap-1.5 text-blue-600">
           <Loader2 className="w-3 h-3 animate-spin" />
-          <span className="text-[10px] font-medium uppercase tracking-wider">{status}</span>
+          <span className="text-[10px] font-medium tracking-wider">{status}</span>
         </span>
       );
     } else {
-      return <span className="text-[10px] text-gray-500 font-medium uppercase tracking-wider">{status}</span>;
+      return <span className="text-[10px] text-gray-500 font-medium tracking-wider">{status}</span>;
     }
   };
 
@@ -335,7 +335,7 @@ export function DisputeCasesTable() {
         </TooltipProvider>
       );
     } else {
-      return <span className="text-[10px] font-mono text-gray-500 font-medium uppercase">PENDING</span>;
+      return <span className="text-[10px] font-mono text-gray-500 font-medium">PENDING</span>;
     }
   };
 
@@ -358,14 +358,14 @@ export function DisputeCasesTable() {
     // Blocked statuses - no action available
     if (filingStatus === 'duplicate_blocked' || filingStatus === 'already_reimbursed') {
       return (
-        <span className="text-[10px] text-gray-400 font-medium tracking-[0.1em] uppercase px-3">BLOCKED</span>
+        <span className="text-[10px] text-gray-400 font-medium tracking-[0.1em] px-3">BLOCKED</span>
       );
     }
 
     // Quarantined - needs document review (no auto-action)
     if (filingStatus === 'quarantined_dangerous_doc') {
       return (
-        <span className="text-[10px] text-red-400 font-medium tracking-[0.1em] uppercase px-3">REVIEW REQUIRED</span>
+        <span className="text-[10px] text-red-400 font-medium tracking-[0.1em] px-3">REVIEW REQUIRED</span>
       );
     }
 
@@ -377,7 +377,7 @@ export function DisputeCasesTable() {
           disabled={isProcessing}
           variant="ghost"
           size="sm"
-          className="h-7 px-3 text-amber-600 hover:text-amber-700 hover:bg-amber-50 rounded-none text-[10px] font-medium tracking-[0.1em] uppercase">
+          className="h-7 px-3 text-amber-600 hover:text-amber-700 hover:bg-amber-50 rounded-none text-[10px] font-medium tracking-[0.1em]">
           {isProcessing ? (
             <Loader2 className="w-3 h-3 mr-1.5 animate-spin" />
           ) : (
@@ -395,7 +395,7 @@ export function DisputeCasesTable() {
           disabled={isProcessing}
           variant="ghost"
           size="sm"
-          className="h-7 px-3 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-none text-[10px] font-medium tracking-[0.1em] uppercase">
+          className="h-7 px-3 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-none text-[10px] font-medium tracking-[0.1em]">
           {isProcessing ? (
             <Loader2 className="w-3 h-3 mr-1.5 animate-spin" />
           ) : (
@@ -413,7 +413,7 @@ export function DisputeCasesTable() {
           disabled={isProcessing}
           variant="ghost"
           size="sm"
-          className="h-7 px-3 text-gray-900 hover:bg-gray-100 rounded-none text-[10px] font-medium tracking-[0.1em] uppercase">
+          className="h-7 px-3 text-gray-900 hover:bg-gray-100 rounded-none text-[10px] font-medium tracking-[0.1em]">
           {isProcessing ? (
             <Loader2 className="w-3 h-3 mr-1.5 animate-spin" />
           ) : (
@@ -426,7 +426,7 @@ export function DisputeCasesTable() {
 
     if (filingStatus === 'filing' || filingStatus === 'retrying') {
       return (
-        <span className="text-[10px] text-gray-400 font-medium tracking-[0.1em] uppercase px-3">PROCESSING...</span>
+        <span className="text-[10px] text-gray-400 font-medium tracking-[0.1em] px-3">PROCESSING...</span>
       );
     }
 
@@ -437,7 +437,7 @@ export function DisputeCasesTable() {
     return (
       <div className="py-12 flex flex-col items-center justify-center space-y-4">
         <Loader2 className="w-6 h-6 text-gray-300 animate-spin" />
-        <span className="text-[11px] text-gray-400 uppercase tracking-[0.2em]">Synchronizing Intelligence</span>
+        <span className="text-[11px] text-gray-400 tracking-[0.2em]">Synchronizing Intelligence</span>
       </div>
     );
   }
@@ -446,7 +446,7 @@ export function DisputeCasesTable() {
     return (
       <div className="py-12 flex flex-col items-center justify-center space-y-4">
         <AlertTriangle className="w-6 h-6 text-red-200" />
-        <span className="text-[11px] text-gray-500 uppercase tracking-[0.2em]">Interface Error: {error}</span>
+        <span className="text-[11px] text-gray-500 tracking-[0.2em]">Interface Error: {error}</span>
         <Button variant="outline" size="sm" onClick={() => fetchCases()} className="h-8 rounded-none border-gray-200">
           RETRY CONNECTION
         </Button>
@@ -459,8 +459,8 @@ export function DisputeCasesTable() {
       {/* Header with Filters */}
       <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-white">
         <div>
-          <h3 className="text-[11px] font-semibold text-gray-900 uppercase tracking-[0.15em]">Dispute Cases</h3>
-          <p className="text-[10px] text-gray-400 mt-1 uppercase tracking-wider font-medium">
+          <h3 className="text-[11px] font-semibold text-gray-900 tracking-[0.15em]">Dispute Cases</h3>
+          <p className="text-[10px] text-gray-400 mt-1 tracking-wider font-medium">
             {cases.length} cases • Agent 7 Filing System
           </p>
         </div>
@@ -470,12 +470,12 @@ export function DisputeCasesTable() {
               <SelectValue placeholder="STATUS: ALL" />
             </SelectTrigger>
             <SelectContent className="rounded-none border-gray-100 shadow-2xl">
-              <SelectItem value="all" className="text-[11px] uppercase tracking-wider">ALL STATUSES</SelectItem>
-              <SelectItem value="pending" className="text-[11px] uppercase tracking-wider">PENDING</SelectItem>
-              <SelectItem value="submitted" className="text-[11px] uppercase tracking-wider">SUBMITTED</SelectItem>
-              <SelectItem value="in_progress" className="text-[11px] uppercase tracking-wider">IN PROGRESS</SelectItem>
-              <SelectItem value="approved" className="text-[11px] uppercase tracking-wider">APPROVED</SelectItem>
-              <SelectItem value="rejected" className="text-[11px] uppercase tracking-wider">REJECTED</SelectItem>
+              <SelectItem value="all" className="text-[11px] tracking-wider">ALL STATUSES</SelectItem>
+              <SelectItem value="pending" className="text-[11px] tracking-wider">PENDING</SelectItem>
+              <SelectItem value="submitted" className="text-[11px] tracking-wider">SUBMITTED</SelectItem>
+              <SelectItem value="in_progress" className="text-[11px] tracking-wider">IN PROGRESS</SelectItem>
+              <SelectItem value="approved" className="text-[11px] tracking-wider">APPROVED</SelectItem>
+              <SelectItem value="rejected" className="text-[11px] tracking-wider">REJECTED</SelectItem>
             </SelectContent>
           </Select>
           <Button
@@ -495,8 +495,8 @@ export function DisputeCasesTable() {
           <div className="py-20 flex flex-col items-center justify-center space-y-4">
             <Search className="w-8 h-8 text-gray-100" />
             <div className="flex flex-col items-center">
-              <span className="text-[11px] text-gray-900 font-semibold uppercase tracking-[0.2em]">Queue Clean</span>
-              <span className="text-[10px] text-gray-400 mt-1 uppercase tracking-wider">No cases require immediate filing</span>
+              <span className="text-[11px] text-gray-900 font-semibold tracking-[0.2em]">Queue Clean</span>
+              <span className="text-[10px] text-gray-400 mt-1 tracking-wider">No cases require immediate filing</span>
             </div>
           </div>
         ) : (
@@ -525,7 +525,7 @@ export function DisputeCasesTable() {
                     </div>
 
                     <div className="flex items-center gap-2 mt-2">
-                      <div className="flex items-center gap-2 text-[10px] font-medium tracking-wider uppercase text-gray-400">
+                      <div className="flex items-center gap-2 text-[10px] font-medium tracking-wider text-gray-400">
                         <span>{getStatusBadge(caseItem.status || 'unknown')}</span>
                         <span className="text-gray-200">|</span>
                         <span>{getFilingStatusBadge(caseItem.filing_status, caseItem.filing_error, caseItem.metadata)}</span>

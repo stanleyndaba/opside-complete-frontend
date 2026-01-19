@@ -102,7 +102,7 @@ export function ProofDocumentsModal({
                         /* Document List */
                         <div className="border border-gray-200 rounded-lg overflow-hidden">
                             <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
-                                <span className="text-[10px] text-gray-500 uppercase tracking-wide font-medium">
+                                <span className="text-[10px] text-gray-500 tracking-wide font-medium">
                                     {documents.length} Document{documents.length !== 1 ? 's' : ''} Available
                                 </span>
                             </div>

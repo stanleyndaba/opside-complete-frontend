@@ -435,7 +435,7 @@ export default function NotificationHub() {
               <h1 className="text-lg font-medium text-gray-900 tracking-tight">
                 Notifications
               </h1>
-              <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-[0.15em]">
+              <p className="text-[10px] text-gray-500 mt-0.5 tracking-[0.15em]">
                 Hub & Preferences
               </p>
             </header>
@@ -445,7 +445,7 @@ export default function NotificationHub() {
               {/* Fixed Header */}
               <div className="px-4 py-3 border-b border-gray-200 bg-gray-50 flex items-center justify-between flex-shrink-0">
                 <div>
-                  <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
+                  <h2 className="text-xs font-medium text-gray-900 tracking-[0.15em]">
                     Notification Log
                   </h2>
                   <p className="text-[10px] text-gray-500 mt-0.5">
@@ -636,7 +636,7 @@ export default function NotificationHub() {
             {/* Notification Preferences */}
             <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
               <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
-                <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
+                <h2 className="text-xs font-medium text-gray-900 tracking-[0.15em]">
                   Notification Preferences
                 </h2>
                 <p className="text-[10px] text-gray-500 mt-0.5">
@@ -651,7 +651,7 @@ export default function NotificationHub() {
                   return (
                     <div key={category}>
                       <div className="mb-3">
-                        <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.1em] mb-0.5">
+                        <h3 className="text-xs font-medium text-gray-900 tracking-[0.1em] mb-0.5">
                           {category}
                         </h3>
                         <p className="text-[10px] text-gray-500">

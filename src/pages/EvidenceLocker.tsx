@@ -915,7 +915,7 @@ export default function EvidenceLocker() {
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-lg font-medium text-gray-900 tracking-tight">Evidence Locker</h1>
-            <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-[0.15em]">Document Management</p>
+            <p className="text-[10px] text-gray-500 mt-0.5 tracking-[0.15em]">Document Management</p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
@@ -943,7 +943,7 @@ export default function EvidenceLocker() {
           <div className="bg-white border border-gray-200 rounded-sm mb-8">
             <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
               <div>
-                <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Document Activity</h2>
+                <h2 className="text-xs font-medium text-gray-900 tracking-[0.15em]">Document Activity</h2>
                 <p className="text-[10px] text-gray-500 mt-0.5">Real-time document processing log</p>
               </div>
               <div className="flex items-center gap-4">
@@ -1041,10 +1041,10 @@ export default function EvidenceLocker() {
           <div className="bg-white border border-gray-200 rounded-sm mb-8">
             <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-start justify-between">
               <div>
-                <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Upload Documents</h2>
+                <h2 className="text-xs font-medium text-gray-900 tracking-[0.15em]">Upload Documents</h2>
                 <p className="text-[10px] text-gray-500 mt-0.5">Invoices, purchase orders, and receipts</p>
               </div>
-              <p className="text-[9px] text-gray-500 font-medium whitespace-nowrap uppercase tracking-[0.1em]">
+              <p className="text-[9px] text-gray-500 font-medium whitespace-nowrap tracking-[0.1em]">
                 82% of claims rejected without invoice
               </p>
             </div>
@@ -1235,13 +1235,13 @@ export default function EvidenceLocker() {
           <div className="flex flex-col space-y-4 mb-6">
             <div className="flex items-end justify-between border-b border-gray-100 pb-4">
               <div>
-                <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.2em]">Document Library</h2>
+                <h2 className="text-xs font-medium text-gray-900 tracking-[0.2em]">Document Library</h2>
                 <div className="flex items-center gap-2 mt-1">
-                  <span className="text-[10px] text-gray-400 uppercase tracking-wider tabular-nums">
+                  <span className="text-[10px] text-gray-400 tracking-wider tabular-nums">
                     {sorted.length} Documents • Agent 5 Extraction Vault
                   </span>
                   <div className="h-1 w-1 rounded-full bg-emerald-500/50" />
-                  <span className="text-[10px] text-emerald-600/80 font-medium uppercase tracking-wider">
+                  <span className="text-[10px] text-emerald-600/80 font-medium tracking-wider">
                     Ready for Matching
                   </span>
                 </div>
@@ -1284,7 +1284,7 @@ export default function EvidenceLocker() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-8 rounded-none border border-gray-100 text-[10px] font-medium uppercase tracking-wider text-gray-500 hover:text-gray-900 hover:bg-gray-50"
+                  className="h-8 rounded-none border border-gray-100 text-[10px] font-medium tracking-wider text-gray-500 hover:text-gray-900 hover:bg-gray-50"
                   onClick={() => {
                     setQ('');
                     setSupplier('');
@@ -1306,17 +1306,17 @@ export default function EvidenceLocker() {
             {loading ? (
               <div className="flex flex-col items-center justify-center py-20 animate-in fade-in duration-500">
                 <Loader2 className="h-6 w-6 text-gray-200 animate-spin mb-4" />
-                <span className="text-[10px] font-medium text-gray-400 uppercase tracking-[0.2em]">Synchronizing Intelligence</span>
+                <span className="text-[10px] font-medium text-gray-400 tracking-[0.2em]">Synchronizing Intelligence</span>
               </div>
             ) : error ? (
               <div className="flex flex-col items-center justify-center py-20 border border-dashed border-red-100 bg-red-50/30">
                 <AlertCircle className="h-6 w-6 text-red-200 mb-4" />
-                <span className="text-[10px] font-medium text-red-900 uppercase tracking-[0.2em] mb-1">Interface Error</span>
-                <p className="text-[10px] text-red-500 uppercase tracking-wider mb-4">{error}</p>
+                <span className="text-[10px] font-medium text-red-900 tracking-[0.2em] mb-1">Interface Error</span>
+                <p className="text-[10px] text-red-500 tracking-wider mb-4">{error}</p>
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-7 text-[10px] uppercase tracking-wider rounded-none border-red-200 text-red-600 hover:bg-red-50"
+                  className="h-7 text-[10px] tracking-wider rounded-none border-red-200 text-red-600 hover:bg-red-50"
                   onClick={() => window.location.reload()}
                 >
                   Retry Connection
@@ -1355,7 +1355,7 @@ export default function EvidenceLocker() {
                           </span>
                           <div className="flex items-center gap-1.5 ml-2 opacity-0 group-hover:opacity-100 transition-opacity">
                             {doc.matchedClaims && doc.matchedClaims.length > 0 && (
-                              <div className="flex items-center gap-1 px-1.5 py-0.5 bg-emerald-50 text-[9px] font-medium text-emerald-700 uppercase tracking-wider border border-emerald-100">
+                              <div className="flex items-center gap-1 px-1.5 py-0.5 bg-emerald-50 text-[9px] font-medium text-emerald-700 tracking-wider border border-emerald-100">
                                 <Link2 className="h-2.5 w-2.5" />
                                 {doc.matchedClaims.length} Linked
                               </div>
@@ -1363,7 +1363,7 @@ export default function EvidenceLocker() {
                           </div>
                         </div>
 
-                        <div className="flex items-center text-[10px] text-gray-400 uppercase tracking-widest font-medium gap-2">
+                        <div className="flex items-center text-[10px] text-gray-400 tracking-widest font-medium gap-2">
                           <span>{doc.supplier || "INTERNAL"}</span>
                           <span className="text-gray-200">|</span>
                           <span className="font-mono">{doc.invoice || "NO_REF"}</span>
@@ -1419,7 +1419,7 @@ export default function EvidenceLocker() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-48 bg-white border border-gray-100 rounded-none shadow-sm animate-in fade-in slide-in-from-top-1">
-                          <DropdownMenuItem asChild className="text-[11px] uppercase tracking-wider text-gray-600 focus:bg-gray-50 focus:text-gray-900 rounded-none cursor-pointer">
+                          <DropdownMenuItem asChild className="text-[11px] tracking-wider text-gray-600 focus:bg-gray-50 focus:text-gray-900 rounded-none cursor-pointer">
                             <Link to={`/documents/${encodeURIComponent(doc.id)}`} className="flex items-center gap-2">
                               <Eye className="w-3.5 h-3.5" />
                               View Detail
@@ -1427,7 +1427,7 @@ export default function EvidenceLocker() {
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => downloadDoc(doc.id)}
-                            className="text-[11px] uppercase tracking-wider text-gray-600 focus:bg-gray-50 focus:text-gray-900 rounded-none cursor-pointer"
+                            className="text-[11px] tracking-wider text-gray-600 focus:bg-gray-50 focus:text-gray-900 rounded-none cursor-pointer"
                           >
                             <Download className="w-3.5 h-3.5 mr-2" />
                             Download Original
@@ -1450,7 +1450,7 @@ export default function EvidenceLocker() {
                                   }
                                 } catch (error) { }
                               }}
-                              className="text-[11px] uppercase tracking-wider text-gray-600 focus:bg-gray-50 focus:text-gray-900 rounded-none cursor-pointer"
+                              className="text-[11px] tracking-wider text-gray-600 focus:bg-gray-50 focus:text-gray-900 rounded-none cursor-pointer"
                             >
                               <Activity className="w-3.5 h-3.5 mr-2" />
                               Re-Parse
@@ -1459,7 +1459,7 @@ export default function EvidenceLocker() {
                           <div className="h-[1px] bg-gray-100 my-1" />
                           <DropdownMenuItem
                             onClick={() => handleDeleteDocument(doc.id, doc.name)}
-                            className="text-[11px] uppercase tracking-wider text-red-500 focus:bg-red-50 focus:text-red-700 rounded-none cursor-pointer"
+                            className="text-[11px] tracking-wider text-red-500 focus:bg-red-50 focus:text-red-700 rounded-none cursor-pointer"
                           >
                             <Trash2 className="w-3.5 h-3.5 mr-2" />
                             Delete Permanent
@@ -1485,17 +1485,17 @@ export default function EvidenceLocker() {
                       }}
                       className="h-3 w-3 border-gray-200 rounded-none shadow-none"
                     />
-                    <span className="text-[10px] text-gray-400 uppercase tracking-[0.15em]">Select Page</span>
+                    <span className="text-[10px] text-gray-400 tracking-[0.15em]">Select Page</span>
                   </div>
                   <span className="text-gray-200">|</span>
-                  <span className="text-[10px] text-gray-400 uppercase tracking-[0.15em] tabular-nums">
+                  <span className="text-[10px] text-gray-400 tracking-[0.15em] tabular-nums">
                     Page {page} of {totalPages} • {sorted.length} Records
                   </span>
                 </div>
 
                 <div className="flex items-center gap-6">
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] text-gray-300 uppercase tracking-widest">Show</span>
+                    <span className="text-[10px] text-gray-300 tracking-widest">Show</span>
                     <select
                       className="bg-transparent border-none text-[10px] font-mono text-gray-500 focus:ring-0 cursor-pointer p-0"
                       value={pageSize}
@@ -1510,7 +1510,7 @@ export default function EvidenceLocker() {
                   <div className="flex items-center gap-1">
                     <Button
                       variant="ghost"
-                      className="h-8 rounded-none border border-gray-100 text-[10px] font-medium uppercase tracking-wider text-gray-500 hover:text-gray-900 hover:bg-gray-50 disabled:opacity-30"
+                      className="h-8 rounded-none border border-gray-100 text-[10px] font-medium tracking-wider text-gray-500 hover:text-gray-900 hover:bg-gray-50 disabled:opacity-30"
                       disabled={page <= 1}
                       onClick={() => setPage(p => Math.max(1, p - 1))}
                     >
@@ -1518,7 +1518,7 @@ export default function EvidenceLocker() {
                     </Button>
                     <Button
                       variant="ghost"
-                      className="h-8 rounded-none border border-gray-100 text-[10px] font-medium uppercase tracking-wider text-gray-500 hover:text-gray-900 hover:bg-gray-50 disabled:opacity-30"
+                      className="h-8 rounded-none border border-gray-100 text-[10px] font-medium tracking-wider text-gray-500 hover:text-gray-900 hover:bg-gray-50 disabled:opacity-30"
                       disabled={page >= totalPages}
                       onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                     >
