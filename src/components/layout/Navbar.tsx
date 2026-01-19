@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { Button } from '@/components/ui/button';
 import { NotificationBell } from './NotificationBell';
 import { useCurrency, currencies } from '@/components/providers/CurrencyProvider';
@@ -341,14 +342,38 @@ export function Navbar({
                   )}
                 </div>
 
-                {/* Gift icon */}
-                <button
-                  onClick={() => setShowReferralPopup(true)}
-                  className="h-8 w-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-sm transition-colors relative"
-                  aria-label="Referral program">
-                  <Gift className="h-4 w-4" />
-                  <span className="absolute top-1 right-1 h-1.5 w-1.5 bg-gray-900 rounded-full" />
-                </button>
+                {/* Gift icon with hover tooltip */}
+                <HoverCard openDelay={100} closeDelay={200}>
+                  <HoverCardTrigger asChild>
+                    <button
+                      onClick={() => setShowReferralPopup(true)}
+                      className="h-8 w-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-sm transition-colors relative"
+                      aria-label="Referral program">
+                      <Gift className="h-4 w-4" />
+                      <span className="absolute top-1 right-1 h-1.5 w-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                    </button>
+                  </HoverCardTrigger>
+                  <HoverCardContent
+                    side="bottom"
+                    align="center"
+                    className="w-72 p-0 bg-white border border-gray-200 shadow-2xl rounded-sm overflow-hidden">
+                    <div className="p-5">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="h-8 w-8 rounded-full bg-emerald-50 flex items-center justify-center">
+                          <Gift className="h-4 w-4 text-emerald-600" />
+                        </div>
+                        <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-[0.15em]">Limited Offer</span>
+                      </div>
+                      <h4 className="text-sm font-semibold text-gray-900 mb-2">6 Month Referral Program</h4>
+                      <p className="text-xs text-gray-600 leading-relaxed">
+                        Sellers that invite sellers to Margin secure <span className="font-bold text-emerald-600">100% of their recovered funds</span> without commission deductions.
+                      </p>
+                      <div className="mt-4 pt-3 border-t border-gray-100">
+                        <span className="text-[9px] text-gray-400 uppercase tracking-widest">Click to learn more</span>
+                      </div>
+                    </div>
+                  </HoverCardContent>
+                </HoverCard>
               </div>
 
               {/* Tools Group - Connect */}
