@@ -715,7 +715,7 @@ export function Dashboard() {
               <div className="flex items-center justify-between mb-8">
                 <div>
                   <div className="flex items-center gap-3">
-                    <h1 className="text-xs font-bold text-gray-900">Overview</h1>
+                    <h1 className="text-xs font-bold text-gray-900">Reimbursements View</h1>
                   </div>
                   <p className="text-xs text-gray-400 mt-1 font-mono">Dashboard</p>
                 </div>
