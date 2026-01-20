@@ -1069,7 +1069,7 @@ export function Dashboard() {
                                             </p>
                                           </div>
                                           <span className="text-xs text-gray-300 font-mono shrink-0 pt-0.5 whitespace-nowrap">
-                                            {timeAgo.replace('about ', '').replace(' ago', '').replace('minute', 'm').replace('hour', 'h').replace('day', 'd')}
+                                            {timeAgo.replace('about ', '').replace(' ago', '').replace('minutes', 'm').replace('minute', 'm').replace('hours', 'h').replace('hour', 'h').replace('days', 'd').replace('day', 'd')}
                                           </span>
                                         </div>
 
