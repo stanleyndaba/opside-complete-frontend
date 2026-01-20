@@ -294,23 +294,23 @@ export default function DocumentDetail() {
           <TabsList className="inline-flex h-auto items-center justify-start gap-6 bg-transparent border-b border-gray-200 rounded-none p-0 mb-6">
             <TabsTrigger
               value="extracted"
-              className="relative px-1 pb-3 pt-1 text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
+              className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
               Extracted Data
             </TabsTrigger>
             <TabsTrigger
               value="matches"
-              className="relative px-1 pb-3 pt-1 text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
+              className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
               Matched Claims
-              <span className="ml-1.5 text-[9px] text-gray-400">({matchedClaims.length})</span>
+              <span className="ml-1.5 text-xs text-gray-400">({matchedClaims.length})</span>
             </TabsTrigger>
             <TabsTrigger
               value="raw"
-              className="relative px-1 pb-3 pt-1 text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
+              className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
               Raw Text
             </TabsTrigger>
             <TabsTrigger
               value="parsing"
-              className="relative px-1 pb-3 pt-1 text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
+              className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
               Parsing Status
             </TabsTrigger>
           </TabsList>
@@ -323,13 +323,13 @@ export default function DocumentDetail() {
                 {/* Order IDs */}
                 <div className="border border-gray-200 rounded-lg overflow-hidden">
                   <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-                    <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Order IDs</h4>
+                    <h4 className="text-xs font-semibold text-gray-700">Order IDs</h4>
                   </div>
                   <div className="bg-white p-4">
                     {extracted.order_ids?.length > 0 ? (
                       <div className="flex flex-wrap gap-2">
                         {extracted.order_ids.map((id: string, idx: number) => (
-                          <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-[10px]">
+                          <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-xs">
                             {id}
                           </Badge>
                         ))}
@@ -343,18 +343,18 @@ export default function DocumentDetail() {
                 {/* ASINs / SKUs */}
                 <div className="border border-gray-200 rounded-lg overflow-hidden">
                   <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-                    <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">ASINs / SKUs</h4>
+                    <h4 className="text-xs font-semibold text-gray-700">ASINs / SKUs</h4>
                   </div>
                   <div className="bg-white p-4">
                     {(extracted.asins?.length > 0 || extracted.skus?.length > 0) ? (
                       <div className="flex flex-wrap gap-2">
                         {extracted.asins?.map((asin: string, idx: number) => (
-                          <Badge key={`asin-${idx}`} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-[10px]">
+                          <Badge key={`asin-${idx}`} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-xs">
                             {asin}
                           </Badge>
                         ))}
                         {extracted.skus?.map((sku: string, idx: number) => (
-                          <Badge key={`sku-${idx}`} className="bg-gray-50 text-gray-600 border-gray-200 font-mono text-[10px]">
+                          <Badge key={`sku-${idx}`} className="bg-gray-50 text-gray-600 border-gray-200 font-mono text-xs">
                             {sku}
                           </Badge>
                         ))}
@@ -371,13 +371,13 @@ export default function DocumentDetail() {
                 {/* Tracking Numbers */}
                 <div className="border border-gray-200 rounded-lg overflow-hidden">
                   <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-                    <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Tracking Numbers</h4>
+                    <h4 className="text-xs font-semibold text-gray-700">Tracking Numbers</h4>
                   </div>
                   <div className="bg-white p-4">
                     {extracted.tracking_numbers?.length > 0 ? (
                       <div className="flex flex-wrap gap-2">
                         {extracted.tracking_numbers.map((num: string, idx: number) => (
-                          <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-[10px]">
+                          <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-xs">
                             {num}
                           </Badge>
                         ))}
@@ -391,13 +391,13 @@ export default function DocumentDetail() {
                 {/* Amounts */}
                 <div className="border border-gray-200 rounded-lg overflow-hidden">
                   <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-                    <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Financial Amounts</h4>
+                    <h4 className="text-xs font-semibold text-gray-700">Financial Amounts</h4>
                   </div>
                   <div className="bg-white p-4">
                     {extracted.amounts?.length > 0 ? (
                       <div className="flex flex-wrap gap-2">
                         {extracted.amounts.map((amt: number | string, idx: number) => (
-                          <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-[10px]">
+                          <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-xs">
                             ${typeof amt === 'number' ? amt.toFixed(2) : amt}
                           </Badge>
                         ))}
@@ -414,13 +414,13 @@ export default function DocumentDetail() {
                 {/* Invoice Numbers */}
                 <div className="border border-gray-200 rounded-lg overflow-hidden">
                   <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-                    <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Invoice Numbers</h4>
+                    <h4 className="text-xs font-semibold text-gray-700">Invoice Numbers</h4>
                   </div>
                   <div className="bg-white p-4">
                     {extracted.invoice_numbers?.length > 0 ? (
                       <div className="flex flex-wrap gap-2">
                         {extracted.invoice_numbers.map((inv: string, idx: number) => (
-                          <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-[10px]">
+                          <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-xs">
                             {inv}
                           </Badge>
                         ))}
@@ -434,13 +434,13 @@ export default function DocumentDetail() {
                 {/* Dates */}
                 <div className="border border-gray-200 rounded-lg overflow-hidden">
                   <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-                    <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Dates Found</h4>
+                    <h4 className="text-xs font-semibold text-gray-700">Dates Found</h4>
                   </div>
                   <div className="bg-white p-4">
                     {extracted.dates?.length > 0 ? (
                       <div className="flex flex-wrap gap-2">
                         {extracted.dates.map((date: string, idx: number) => (
-                          <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 text-[10px]">
+                          <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 text-xs">
                             {date}
                           </Badge>
                         ))}
@@ -474,7 +474,7 @@ export default function DocumentDetail() {
 
                         <div className="space-y-1.5">
                           <div className="flex items-center gap-3">
-                            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-[0.15em]">
+                            <span className="text-xs font-semibold text-gray-400">
                               Claim Recovery ID
                             </span>
                             <span className="font-mono text-xs text-gray-900 bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">
@@ -482,7 +482,7 @@ export default function DocumentDetail() {
                             </span>
                           </div>
 
-                          <div className="flex items-center gap-2 text-[10px] font-medium text-gray-500 uppercase tracking-[0.05em]">
+                          <div className="flex items-center gap-2 text-xs font-medium text-gray-500">
                             <span className="text-gray-900">
                               {match.match_type?.replace(/_/g, ' ')}
                             </span>
@@ -509,7 +509,7 @@ export default function DocumentDetail() {
 
                       <Link
                         to={`/recoveries/${match.claim_id}`}
-                        className="flex items-center gap-2 text-[10px] font-bold text-gray-400 hover:text-indigo-600 uppercase tracking-[0.15em] transition-colors pr-2"
+                        className="flex items-center gap-2 text-xs font-bold text-gray-400 hover:text-indigo-600 transition-colors pr-2"
                       >
                         View Recovery
                         <ArrowLeft className="w-3 h-3 rotate-180" />
@@ -522,7 +522,7 @@ export default function DocumentDetail() {
                   <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white border border-gray-100 shadow-sm mb-4">
                     <Link2 className="w-5 h-5 text-gray-300" />
                   </div>
-                  <h3 className="text-sm font-semibold text-gray-900 mb-1 uppercase tracking-wider">No Matches Found</h3>
+                  <h3 className="text-sm font-semibold text-gray-900 mb-1">No Matches Found</h3>
                   <p className="text-xs text-gray-500 max-w-[240px] mx-auto leading-relaxed">
                     This document hasn't been linked to any active claims yet. Use Evidence Matching to find matches.
                   </p>
@@ -543,11 +543,11 @@ export default function DocumentDetail() {
                     <div className="flex items-center justify-between py-4 px-4 bg-gray-50/50">
                       <div className="flex items-center gap-3">
                         <Square className="w-3.5 h-3.5 text-gray-400 fill-gray-100" />
-                        <h4 className="text-[10px] font-semibold text-gray-400 uppercase tracking-[0.15em]">
+                        <h4 className="text-xs font-semibold text-gray-400">
                           Extracted Intelligence Output
                         </h4>
                         <span className="text-gray-300">|</span>
-                        <span className="text-[9px] font-medium text-gray-500 uppercase tracking-wider">
+                        <span className="text-xs font-medium text-gray-500">
                           {lines.length} Entries Detected
                         </span>
                       </div>
@@ -557,7 +557,7 @@ export default function DocumentDetail() {
                             navigator.clipboard.writeText(rawText);
                             toast({ title: 'Intelligence Data Copied', description: 'Raw document output has been copied to your clipboard.' });
                           }}
-                          className="flex items-center gap-2 text-[10px] font-bold text-gray-400 hover:text-indigo-600 uppercase tracking-[0.15em] transition-colors"
+                          className="flex items-center gap-2 text-xs font-bold text-gray-400 hover:text-indigo-600 transition-colors"
                         >
                           <Copy className="w-3 h-3" />
                           Copy Raw Intelligence
@@ -567,7 +567,7 @@ export default function DocumentDetail() {
 
                     <div className="border-b border-gray-100 bg-white">
                       {rawText ? (
-                        <div className="flex font-mono text-[11px] leading-relaxed max-h-[600px] overflow-hidden">
+                        <div className="flex font-mono text-sm leading-relaxed max-h-[600px] overflow-hidden">
                           {/* Institutional Line Numbers */}
                           <div className="bg-gray-50/80 border-r border-gray-100 px-3 py-6 text-right select-none text-gray-300 min-w-[3.5rem] flex-shrink-0">
                             {lines.map((_, i) => (
@@ -589,14 +589,14 @@ export default function DocumentDetail() {
                           <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white border border-gray-100 shadow-sm mb-4">
                             <FileText className="w-5 h-5 text-gray-300" />
                           </div>
-                          <h3 className="text-sm font-semibold text-gray-900 mb-1 uppercase tracking-wider">Intelligence Data Pending</h3>
+                          <h3 className="text-sm font-semibold text-gray-900 mb-1">Intelligence Data Pending</h3>
                           <p className="text-xs text-gray-500 max-w-[240px] mx-auto leading-relaxed mb-6">
                             This document hasn't been processed by the intelligence engine yet.
                           </p>
                           <Button
                             variant="outline"
                             size="sm"
-                            className="bg-white text-[10px] h-8 px-4 font-bold border-gray-200 hover:bg-gray-50 hover:text-indigo-600 uppercase tracking-widest transition-all"
+                            className="bg-white text-xs h-8 px-4 font-bold border-gray-200 hover:bg-gray-50 hover:text-indigo-600 transition-all"
                             onClick={handleTriggerParsing}
                             disabled={triggeringParse}
                           >
@@ -626,9 +626,9 @@ export default function DocumentDetail() {
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <div className="h-1 w-3 bg-indigo-500" />
-                <span className="text-[10px] font-medium text-gray-400 uppercase tracking-[0.15em]">Document ID</span>
+                <span className="text-xs font-medium text-gray-400">Document ID</span>
               </div>
-              <div className="font-mono text-[11px] text-gray-900 break-all bg-gray-50 px-2 py-1.5 rounded-sm border border-gray-100">
+              <div className="font-mono text-sm text-gray-900 break-all bg-gray-50 px-2 py-1.5 rounded-sm border border-gray-100">
                 {docId}
               </div>
             </div>
@@ -636,7 +636,7 @@ export default function DocumentDetail() {
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <div className="h-1 w-3 bg-gray-300" />
-                <span className="text-[10px] font-medium text-gray-400 uppercase tracking-[0.15em]">File Type</span>
+                <span className="text-xs font-medium text-gray-400">File Type</span>
               </div>
               <div className="text-sm font-medium text-gray-900 pl-5">
                 {documentData?.mime_type || documentData?.type || 'application/pdf'}
@@ -646,7 +646,7 @@ export default function DocumentDetail() {
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <div className="h-1 w-3 bg-gray-300" />
-                <span className="text-[10px] font-medium text-gray-400 uppercase tracking-[0.15em]">Source</span>
+                <span className="text-xs font-medium text-gray-400">Source</span>
               </div>
               <div className="text-sm font-medium text-gray-900 pl-5 capitalize">
                 {documentData?.source || 'Manual Upload'}
@@ -656,7 +656,7 @@ export default function DocumentDetail() {
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <div className="h-1 w-3 bg-gray-300" />
-                <span className="text-[10px] font-medium text-gray-400 uppercase tracking-[0.15em]">Created</span>
+                <span className="text-xs font-medium text-gray-400">Created</span>
               </div>
               <div className="text-sm font-medium text-gray-900 pl-5">
                 {documentData?.created_at ? format(new Date(documentData.created_at), 'MMM dd, yyyy HH:mm') : '—'}

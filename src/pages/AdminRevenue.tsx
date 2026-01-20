@@ -88,7 +88,7 @@ export default function AdminRevenue() {
             <div className="min-h-screen bg-white flex items-center justify-center">
                 <div className="text-center">
                     <RefreshCw className="w-6 h-6 animate-spin mx-auto text-gray-400 mb-3" />
-                    <p className="text-gray-500 text-sm tracking-wide">Loading metrics...</p>
+                    <p className="text-gray-500 text-sm">Loading metrics...</p>
                 </div>
             </div>
         );
@@ -118,7 +118,7 @@ export default function AdminRevenue() {
                 <div className="max-w-7xl mx-auto px-8 py-4 flex items-center justify-between">
                     <div>
                         <h1 className="text-lg font-medium text-gray-900 tracking-tight">Revenue Analytics</h1>
-                        <p className="text-xs text-gray-500 mt-0.5 tracking-wide">
+                        <p className="text-xs text-gray-500 mt-0.5">
                             MARGIN • {feePercentage}% Recovery Fee
                         </p>
                     </div>
@@ -140,48 +140,48 @@ export default function AdminRevenue() {
                 <div className="grid grid-cols-5 gap-4">
                     {/* MRR Growth */}
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-4">
-                        <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1">MRR Growth</div>
+                        <div className="text-xs text-gray-500 mb-1">MRR Growth</div>
                         <div className={`text-xl font-light tracking-tight flex items-center ${isPositiveGrowth ? 'text-emerald-600' : 'text-red-600'}`}>
                             {isPositiveGrowth ? <TrendingUp className="w-4 h-4 mr-1" /> : <TrendingDown className="w-4 h-4 mr-1" />}
                             {mrrGrowth >= 0 ? '+' : ''}{mrrGrowth.toFixed(1)}%
                         </div>
-                        <div className="text-[10px] text-gray-500 mt-1">month-over-month</div>
+                        <div className="text-xs text-gray-500 mt-1">month-over-month</div>
                     </div>
 
                     {/* Current MRR */}
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-4">
-                        <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1">Current MRR</div>
+                        <div className="text-xs text-gray-500 mb-1">Current MRR</div>
                         <div className="text-xl font-light text-gray-900 tracking-tight">
                             {formatCurrency(metrics?.currentMrr || 0)}
                         </div>
-                        <div className="text-[10px] text-gray-500 mt-1">this month</div>
+                        <div className="text-xs text-gray-500 mt-1">this month</div>
                     </div>
 
                     {/* Previous MRR */}
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-4">
-                        <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1">Previous MRR</div>
+                        <div className="text-xs text-gray-500 mb-1">Previous MRR</div>
                         <div className="text-xl font-light text-gray-900 tracking-tight">
                             {formatCurrency(metrics?.previousMrr || 0)}
                         </div>
-                        <div className="text-[10px] text-gray-500 mt-1">last month</div>
+                        <div className="text-xs text-gray-500 mt-1">last month</div>
                     </div>
 
                     {/* Active Customers */}
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-4">
-                        <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1">Active Accounts</div>
+                        <div className="text-xs text-gray-500 mb-1">Active Accounts</div>
                         <div className="text-xl font-light text-gray-900 tracking-tight">
                             {metrics?.activeCustomers || 0}
                         </div>
-                        <div className="text-[10px] text-gray-500 mt-1">total customers</div>
+                        <div className="text-xs text-gray-500 mt-1">total customers</div>
                     </div>
 
                     {/* Avg Revenue Per Customer */}
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-4">
-                        <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1">ARPC</div>
+                        <div className="text-xs text-gray-500 mb-1">ARPC</div>
                         <div className="text-xl font-light text-gray-900 tracking-tight">
                             {formatCurrency(metrics?.avgRevenuePerCustomer || 0)}
                         </div>
-                        <div className="text-[10px] text-gray-500 mt-1">avg rev / customer</div>
+                        <div className="text-xs text-gray-500 mt-1">avg rev / customer</div>
                     </div>
                 </div>
 
@@ -189,44 +189,44 @@ export default function AdminRevenue() {
                 <div className="grid grid-cols-4 gap-6">
                     {/* Net Revenue */}
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-5">
-                        <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-2">Total Revenue</div>
+                        <div className="text-xs text-gray-500 mb-2">Total Revenue</div>
                         <div className="text-2xl font-light text-gray-900 tracking-tight">
                             {formatCurrency(metrics?.opsideRevenue || 0)}
                         </div>
-                        <div className="text-[10px] text-gray-500 mt-2">
+                        <div className="text-xs text-gray-500 mt-2">
                             {feePercentage}% of {formatCurrency(metrics?.totalRecovered || 0)}
                         </div>
                     </div>
 
                     {/* 30-Day Revenue */}
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-5">
-                        <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-2">30-Day Revenue</div>
+                        <div className="text-xs text-gray-500 mb-2">30-Day Revenue</div>
                         <div className="text-2xl font-light text-gray-900 tracking-tight">
                             {formatCurrency(metrics?.last30Days?.revenue || 0)}
                         </div>
-                        <div className="text-[10px] text-gray-500 mt-2">
+                        <div className="text-xs text-gray-500 mt-2">
                             {metrics?.last30Days?.approvedClaims || 0} approved claims
                         </div>
                     </div>
 
                     {/* Approval Rate */}
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-5">
-                        <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-2">Approval Rate</div>
+                        <div className="text-xs text-gray-500 mb-2">Approval Rate</div>
                         <div className="text-2xl font-light text-gray-900 tracking-tight">
                             {(metrics?.approvalRate || 0).toFixed(1)}%
                         </div>
-                        <div className="text-[10px] text-gray-500 mt-2">
+                        <div className="text-xs text-gray-500 mt-2">
                             {metrics?.approvedClaims || 0} of {metrics?.totalClaims || 0}
                         </div>
                     </div>
 
                     {/* Avg Claim Value */}
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-5">
-                        <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-2">Avg Claim Value</div>
+                        <div className="text-xs text-gray-500 mb-2">Avg Claim Value</div>
                         <div className="text-2xl font-light text-gray-900 tracking-tight">
                             {formatCurrency(metrics?.averageClaimValue || 0)}
                         </div>
-                        <div className="text-[10px] text-gray-500 mt-2">
+                        <div className="text-xs text-gray-500 mt-2">
                             ≈ {formatCurrency((metrics?.averageClaimValue || 0) * (feePercentage / 100))} fee
                         </div>
                     </div>
@@ -236,21 +236,21 @@ export default function AdminRevenue() {
                 <div className="grid grid-cols-3 gap-6">
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-5 flex items-center justify-between">
                         <div>
-                            <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1">Approved</div>
+                            <div className="text-xs text-gray-500 mb-1">Approved</div>
                             <div className="text-xl font-light text-emerald-600">{metrics?.approvedClaims || 0}</div>
                         </div>
                         <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
                     </div>
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-5 flex items-center justify-between">
                         <div>
-                            <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1">Pending</div>
+                            <div className="text-xs text-gray-500 mb-1">Pending</div>
                             <div className="text-xl font-light text-amber-600">{metrics?.pendingClaims || 0}</div>
                         </div>
                         <div className="w-2 h-2 rounded-full bg-amber-500"></div>
                     </div>
                     <div className="bg-gray-50 border border-gray-200 rounded-sm p-5 flex items-center justify-between">
                         <div>
-                            <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1">Denied</div>
+                            <div className="text-xs text-gray-500 mb-1">Denied</div>
                             <div className="text-xl font-light text-red-600">{metrics?.deniedClaims || 0}</div>
                         </div>
                         <div className="w-2 h-2 rounded-full bg-red-500"></div>
@@ -262,17 +262,17 @@ export default function AdminRevenue() {
                     {/* Monthly Revenue */}
                     <div className="bg-white border border-gray-200 rounded-sm">
                         <div className="px-5 py-4 border-b border-gray-200 bg-gray-50">
-                            <h3 className="text-xs font-medium text-gray-900 tracking-wide">Monthly Revenue</h3>
+                            <h3 className="text-xs font-medium text-gray-900">Monthly Revenue</h3>
                         </div>
                         <div className="overflow-hidden">
                             {metrics?.revenueByMonth && metrics.revenueByMonth.length > 0 ? (
                                 <table className="w-full">
                                     <thead>
                                         <tr className="border-b border-gray-200">
-                                            <th className="px-5 py-3 text-left text-[10px] uppercase tracking-[0.15em] text-gray-500 font-medium">Period</th>
-                                            <th className="px-5 py-3 text-right text-[10px] uppercase tracking-[0.15em] text-gray-500 font-medium">Revenue</th>
-                                            <th className="px-5 py-3 text-right text-[10px] uppercase tracking-[0.15em] text-gray-500 font-medium">Recovered</th>
-                                            <th className="px-5 py-3 text-right text-[10px] uppercase tracking-[0.15em] text-gray-500 font-medium">Claims</th>
+                                            <th className="px-5 py-3 text-left text-xs text-gray-500 font-medium">Period</th>
+                                            <th className="px-5 py-3 text-right text-xs text-gray-500 font-medium">Revenue</th>
+                                            <th className="px-5 py-3 text-right text-xs text-gray-500 font-medium">Recovered</th>
+                                            <th className="px-5 py-3 text-right text-xs text-gray-500 font-medium">Claims</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -295,17 +295,17 @@ export default function AdminRevenue() {
                     {/* Top Accounts */}
                     <div className="bg-white border border-gray-200 rounded-sm">
                         <div className="px-5 py-4 border-b border-gray-200 bg-gray-50">
-                            <h3 className="text-xs font-medium text-gray-900 tracking-wide">Top Accounts</h3>
+                            <h3 className="text-xs font-medium text-gray-900">Top Accounts</h3>
                         </div>
                         <div className="overflow-hidden">
                             {metrics?.revenueByCustomer && metrics.revenueByCustomer.length > 0 ? (
                                 <table className="w-full">
                                     <thead>
                                         <tr className="border-b border-gray-200">
-                                            <th className="px-5 py-3 text-left text-[10px] uppercase tracking-[0.15em] text-gray-500 font-medium">Account</th>
-                                            <th className="px-5 py-3 text-right text-[10px] uppercase tracking-[0.15em] text-gray-500 font-medium">Revenue</th>
-                                            <th className="px-5 py-3 text-right text-[10px] uppercase tracking-[0.15em] text-gray-500 font-medium">Recovered</th>
-                                            <th className="px-5 py-3 text-right text-[10px] uppercase tracking-[0.15em] text-gray-500 font-medium">Claims</th>
+                                            <th className="px-5 py-3 text-left text-xs text-gray-500 font-medium">Account</th>
+                                            <th className="px-5 py-3 text-right text-xs text-gray-500 font-medium">Revenue</th>
+                                            <th className="px-5 py-3 text-right text-xs text-gray-500 font-medium">Recovered</th>
+                                            <th className="px-5 py-3 text-right text-xs text-gray-500 font-medium">Claims</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -328,7 +328,7 @@ export default function AdminRevenue() {
 
                 {/* Footer */}
                 <div className="pt-4 border-t border-gray-200">
-                    <p className="text-[10px] text-gray-400 tracking-wide">
+                    <p className="text-xs text-gray-400">
                         MARGIN AI • CONFIDENTIAL • FOR INTERNAL USE ONLY
                     </p>
                 </div>

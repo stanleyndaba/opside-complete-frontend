@@ -435,7 +435,7 @@ export default function NotificationHub() {
               <h1 className="text-lg font-medium text-gray-900 tracking-tight">
                 Notifications
               </h1>
-              <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-[0.15em]">
+              <p className="text-xs text-gray-500 mt-0.5">
                 Hub & Preferences
               </p>
             </header>
@@ -445,10 +445,10 @@ export default function NotificationHub() {
               {/* Fixed Header */}
               <div className="px-4 py-3 border-b border-gray-200 bg-gray-50 flex items-center justify-between flex-shrink-0">
                 <div>
-                  <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
+                  <h2 className="text-xs font-medium text-gray-900">
                     Notification Log
                   </h2>
-                  <p className="text-[10px] text-gray-500 mt-0.5">
+                  <p className="text-xs text-gray-500 mt-0.5">
                     Complete history of all notifications sent to you.
                   </p>
                 </div>
@@ -548,7 +548,7 @@ export default function NotificationHub() {
 
                 {/* Filter Summary */}
                 {(searchQuery || typeFilter !== 'all' || statusFilter !== 'all') && (
-                  <p className="text-[10px] text-gray-500 mt-2">
+                  <p className="text-xs text-gray-500 mt-2">
                     Showing {filteredNotifications.length} of {notifications.length} notifications
                   </p>
                 )}
@@ -577,7 +577,7 @@ export default function NotificationHub() {
                 {!loading && !error && filteredNotifications.length === 0 && notifications.length> 0 && (
                   <div className="text-center py-6 text-gray-600">
                     <p className="text-xs mb-1">No notifications match your filters.</p>
-                    <button onClick={clearFilters} className="text-[10px] text-blue-600 hover:text-blue-700">
+                    <button onClick={clearFilters} className="text-xs text-blue-600 hover:text-blue-700">
                       Clear filters
                     </button>
                   </div>
@@ -586,7 +586,7 @@ export default function NotificationHub() {
                 {!loading && !error && notifications.length === 0 && (
                   <div className="text-center py-6 text-gray-600">
                     <p className="text-xs mb-1">No notifications found.</p>
-                    <p className="text-[10px] text-gray-500">Notifications will appear here as events occur.</p>
+                    <p className="text-xs text-gray-500">Notifications will appear here as events occur.</p>
                   </div>
                 )}
 
@@ -612,11 +612,11 @@ export default function NotificationHub() {
                             <p className="text-xs font-medium text-gray-900 mb-0.5">
                               {renderNotificationMessage(notification.message)}
                             </p>
-                            <div className="flex items-center gap-2 text-[10px] text-gray-500">
+                            <div className="flex items-center gap-2 text-xs text-gray-500">
                               <span>{notification.timestamp}</span>
                               <div className="flex gap-1">
                                 {notification.channels.map((channel) => (
-                                  <span key={channel} className="px-1 py-0 text-[9px] border border-gray-200 text-gray-600 bg-gray-50">{channel}</span>
+                                  <span key={channel} className="px-1 py-0 text-xs border border-gray-200 text-gray-600 bg-gray-50">{channel}</span>
                                 ))}
                               </div>
                             </div>
@@ -636,10 +636,10 @@ export default function NotificationHub() {
             {/* Notification Preferences */}
             <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
               <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
-                <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
+                <h2 className="text-xs font-medium text-gray-900">
                   Notification Preferences
                 </h2>
-                <p className="text-[10px] text-gray-500 mt-0.5">
+                <p className="text-xs text-gray-500 mt-0.5">
                   Control how and when you hear from us.
                 </p>
               </div>
@@ -651,10 +651,10 @@ export default function NotificationHub() {
                   return (
                     <div key={category}>
                       <div className="mb-3">
-                        <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.1em] mb-0.5">
+                        <h3 className="text-xs font-medium text-gray-900 mb-0.5">
                           {category}
                         </h3>
-                        <p className="text-[10px] text-gray-500">
+                        <p className="text-xs text-gray-500">
                           {category === 'Financial Milestones' && 'High-signal, essential updates about your money'}
                           {category === 'Account & Security' && 'Important account and security notifications'}
                           {category === 'Platform & Performance' && 'Updates about platform features and performance'}
@@ -676,7 +676,7 @@ export default function NotificationHub() {
                                 <h4 className="text-xs font-medium text-gray-900 mb-0.5">
                                   {pref.title}
                                 </h4>
-                                <p className="text-[10px] text-gray-500 mb-2">
+                                <p className="text-xs text-gray-500 mb-2">
                                   {pref.description}
                                 </p>
 
@@ -689,7 +689,7 @@ export default function NotificationHub() {
                                       }
                                       className="scale-90"
                                     />
-                                    <span className="text-[10px] text-gray-600">Email</span>
+                                    <span className="text-xs text-gray-600">Email</span>
                                   </div>
 
                                   <div className="flex items-center gap-1.5">
@@ -700,7 +700,7 @@ export default function NotificationHub() {
                                       }
                                       className="scale-90"
                                     />
-                                    <span className="text-[10px] text-gray-600">In-App</span>
+                                    <span className="text-xs text-gray-600">In-App</span>
                                   </div>
                                 </div>
                               </div>

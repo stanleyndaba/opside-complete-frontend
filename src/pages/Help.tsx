@@ -93,7 +93,7 @@ export default function Help() {
               <h1 className="text-lg font-medium text-gray-900 tracking-tight">
                 Help Center
               </h1>
-              <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-[0.15em]">
+              <p className="text-xs text-gray-500 mt-0.5">
                 Support & Resources
               </p>
               <p className="mt-4 text-sm text-gray-600 max-w-2xl leading-relaxed">
@@ -114,7 +114,7 @@ export default function Help() {
 
             {/* FAQs */}
             <section className="mb-10">
-              <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em] mb-4">Frequently Asked Questions</h2>
+              <h2 className="text-xs font-medium text-gray-900 mb-4">Frequently Asked Questions</h2>
               <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
                 <Accordion type="single" collapsible className="w-full">
                   {filteredFaqs.map((faq, index) => (
@@ -125,7 +125,7 @@ export default function Help() {
                       <AccordionTrigger className="px-4 py-3 text-left hover:no-underline text-xs font-medium text-gray-900 hover:bg-gray-50">
                         {faq.question}
                       </AccordionTrigger>
-                      <AccordionContent className="px-4 pb-3 text-[10px] text-gray-600 leading-relaxed">
+                      <AccordionContent className="px-4 pb-3 text-xs text-gray-600 leading-relaxed">
                         {faq.answer}
                       </AccordionContent>
                     </AccordionItem>
@@ -141,7 +141,7 @@ export default function Help() {
 
             {/* Getting Started & Guides */}
             <section className="mb-10">
-              <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em] mb-4">Learn the Platform</h2>
+              <h2 className="text-xs font-medium text-gray-900 mb-4">Learn the Platform</h2>
               <div className="grid md:grid-cols-2 gap-4">
                 {/* Getting Started */}
                 <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
@@ -158,12 +158,12 @@ export default function Help() {
                       {gettingStartedSteps.map((item) => (
                         <div key={item.step} className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <div className="h-5 w-5 bg-gray-900 text-white text-[9px] font-medium flex items-center justify-center">
+                            <div className="h-5 w-5 bg-gray-900 text-white text-xs font-medium flex items-center justify-center">
                               {item.step}
                             </div>
                             <span className="text-xs text-gray-700">{item.title}</span>
                           </div>
-                          <span className="px-1.5 py-0 text-[9px] bg-gray-100 text-gray-500 border border-gray-200">
+                          <span className="px-1.5 py-0 text-xs bg-gray-100 text-gray-500 border border-gray-200">
                             {item.time}
                           </span>
                         </div>
@@ -190,15 +190,15 @@ export default function Help() {
                     <div className="space-y-2 mb-4">
                       <div className="p-2.5 bg-gray-50 border border-gray-100">
                         <p className="text-xs font-medium text-gray-900">Total Guaranteed</p>
-                        <p className="text-[10px] text-gray-500">Amount committed to recover for active claims</p>
+                        <p className="text-xs text-gray-500">Amount committed to recover for active claims</p>
                       </div>
                       <div className="p-2.5 bg-gray-50 border border-gray-100">
                         <p className="text-xs font-medium text-gray-900">Recovery Success Rate</p>
-                        <p className="text-[10px] text-gray-500">Percentage of claims that result in payouts</p>
+                        <p className="text-xs text-gray-500">Percentage of claims that result in payouts</p>
                       </div>
                       <div className="p-2.5 bg-gray-50 border border-gray-100">
                         <p className="text-xs font-medium text-gray-900">Avg Processing Time</p>
-                        <p className="text-[10px] text-gray-500">Time from submission to payout</p>
+                        <p className="text-xs text-gray-500">Time from submission to payout</p>
                       </div>
                     </div>
                     <a href="#" className="inline-flex items-center gap-1 text-xs font-medium text-gray-900 hover:text-gray-600 transition-colors">
@@ -212,7 +212,7 @@ export default function Help() {
 
             {/* Contact Support */}
             <section>
-              <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em] mb-4">Contact Support</h2>
+              <h2 className="text-xs font-medium text-gray-900 mb-4">Contact Support</h2>
               <div className="grid md:grid-cols-2 gap-4">
                 {/* Email Form */}
                 <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
@@ -227,7 +227,7 @@ export default function Help() {
                   <div className="p-4">
                     <form onSubmit={handleContactSubmit} className="space-y-3">
                       <div>
-                        <Label htmlFor="name" className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em]">Name</Label>
+                        <Label htmlFor="name" className="text-xs font-medium text-gray-500">Name</Label>
                         <Input
                           id="name"
                           value={contactForm.name}
@@ -237,7 +237,7 @@ export default function Help() {
                         />
                       </div>
                       <div>
-                        <Label htmlFor="sellerId" className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em]">Seller ID</Label>
+                        <Label htmlFor="sellerId" className="text-xs font-medium text-gray-500">Seller ID</Label>
                         <Input
                           id="sellerId"
                           value={contactForm.sellerId}
@@ -247,7 +247,7 @@ export default function Help() {
                         />
                       </div>
                       <div>
-                        <Label htmlFor="category" className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em]">Category</Label>
+                        <Label htmlFor="category" className="text-xs font-medium text-gray-500">Category</Label>
                         <Select value={contactForm.category} onValueChange={(value) => setContactForm({ ...contactForm, category: value })}>
                           <SelectTrigger className="mt-1 h-8 text-xs border-gray-200 rounded-sm">
                             <SelectValue placeholder="Select..." />
@@ -262,7 +262,7 @@ export default function Help() {
                         </Select>
                       </div>
                       <div>
-                        <Label htmlFor="message" className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em]">Message</Label>
+                        <Label htmlFor="message" className="text-xs font-medium text-gray-500">Message</Label>
                         <Textarea
                           id="message"
                           value={contactForm.message}
@@ -295,28 +295,28 @@ export default function Help() {
                         <Phone className="h-3 w-3 text-gray-400" />
                         <div>
                           <p className="text-xs font-medium text-gray-900">Direct Access</p>
-                          <p className="text-[10px] text-gray-500">Speak with a recovery specialist</p>
+                          <p className="text-xs text-gray-500">Speak with a recovery specialist</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-2 p-2.5 bg-gray-50 border border-gray-100">
                         <Calendar className="h-3 w-3 text-gray-400" />
                         <div>
                           <p className="text-xs font-medium text-gray-900">Flexible Scheduling</p>
-                          <p className="text-[10px] text-gray-500">Choose a time that works for you</p>
+                          <p className="text-xs text-gray-500">Choose a time that works for you</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-2 p-2.5 bg-gray-50 border border-gray-100">
                         <Video className="h-3 w-3 text-gray-400" />
                         <div>
                           <p className="text-xs font-medium text-gray-900">Screen Sharing</p>
-                          <p className="text-[10px] text-gray-500">Walk through your dashboard together</p>
+                          <p className="text-xs text-gray-500">Walk through your dashboard together</p>
                         </div>
                       </div>
                     </div>
                     <button className="w-full px-4 py-2 text-xs font-medium text-white bg-gray-900 hover:bg-gray-800 transition-colors">
                       Schedule 15-min Call
                     </button>
-                    <p className="text-[9px] text-gray-400 mt-2 text-center">
+                    <p className="text-xs text-gray-400 mt-2 text-center">
                       Mon-Fri, 9 AM - 6 PM EST
                     </p>
                   </div>

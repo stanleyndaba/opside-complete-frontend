@@ -1763,19 +1763,19 @@ export default function SmartInventorySync() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Card className="bg-white/10 backdrop-blur-xl border-white/10">
                 <CardContent className="p-4">
-                  <p className="text-xs text-gray-400 uppercase">Total Orders</p>
+                  <p className="text-xs text-gray-400">Total Orders</p>
                   <p className="text-2xl font-semibold text-gray-100">{ordersSummary.total}</p>
                 </CardContent>
               </Card>
               <Card className="bg-white/10 backdrop-blur-xl border-white/10">
                 <CardContent className="p-4">
-                  <p className="text-xs text-gray-400 uppercase">Total Revenue</p>
+                  <p className="text-xs text-gray-400">Total Revenue</p>
                   <p className="text-2xl font-semibold text-gray-100">{formatCurrency(ordersSummary.totalAmount)}</p>
                 </CardContent>
               </Card>
               <Card className="bg-white/10 backdrop-blur-xl border-white/10">
                 <CardContent className="p-4">
-                  <p className="text-xs text-gray-400 uppercase">Statuses</p>
+                  <p className="text-xs text-gray-400">Statuses</p>
                   <div className="flex gap-2 mt-2 flex-wrap">
                     {Object.entries(ordersSummary.byStatus).map(([status, count]) => (
                       <Badge key={status} variant="secondary">{status}: {count}</Badge>
@@ -1891,19 +1891,19 @@ export default function SmartInventorySync() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Card className="bg-white/10 backdrop-blur-xl border-white/10">
                 <CardContent className="p-4">
-                  <p className="text-xs text-gray-400 uppercase">Total Shipments</p>
+                  <p className="text-xs text-gray-400">Total Shipments</p>
                   <p className="text-2xl font-semibold text-gray-100">{shipmentsSummary.total}</p>
                 </CardContent>
               </Card>
               <Card className="bg-white/10 backdrop-blur-xl border-white/10">
                 <CardContent className="p-4">
-                  <p className="text-xs text-gray-400 uppercase">Missing Items</p>
+                  <p className="text-xs text-gray-400">Missing Items</p>
                   <p className="text-2xl font-semibold text-red-400">{shipmentsSummary.missingItems}</p>
                 </CardContent>
               </Card>
               <Card className="bg-white/10 backdrop-blur-xl border-white/10">
                 <CardContent className="p-4">
-                  <p className="text-xs text-gray-400 uppercase">Statuses</p>
+                  <p className="text-xs text-gray-400">Statuses</p>
                   <div className="flex gap-2 mt-2 flex-wrap">
                     {Object.entries(shipmentsSummary.byStatus).map(([status, count]) => (
                       <Badge key={status} variant="secondary">{status}: {count}</Badge>
@@ -2011,19 +2011,19 @@ export default function SmartInventorySync() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Card className="bg-white/10 backdrop-blur-xl border-white/10">
                 <CardContent className="p-4">
-                  <p className="text-xs text-gray-400 uppercase">Total Returns</p>
+                  <p className="text-xs text-gray-400">Total Returns</p>
                   <p className="text-2xl font-semibold text-gray-100">{returnsSummary.total}</p>
                 </CardContent>
               </Card>
               <Card className="bg-white/10 backdrop-blur-xl border-white/10">
                 <CardContent className="p-4">
-                  <p className="text-xs text-gray-400 uppercase">Total Refunded</p>
+                  <p className="text-xs text-gray-400">Total Refunded</p>
                   <p className="text-2xl font-semibold text-gray-100">{formatCurrency(returnsSummary.totalRefunded)}</p>
                 </CardContent>
               </Card>
               <Card className="bg-white/10 backdrop-blur-xl border-white/10">
                 <CardContent className="p-4">
-                  <p className="text-xs text-gray-400 uppercase">Partial Returns</p>
+                  <p className="text-xs text-gray-400">Partial Returns</p>
                   <p className="text-2xl font-semibold text-gray-100">{returnsSummary.partial}</p>
                 </CardContent>
               </Card>
@@ -2124,19 +2124,19 @@ export default function SmartInventorySync() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Card className="bg-white/10 backdrop-blur-xl border-white/10">
                 <CardContent className="p-4">
-                  <p className="text-xs text-gray-400 uppercase">Total Settlements</p>
+                  <p className="text-xs text-gray-400">Total Settlements</p>
                   <p className="text-2xl font-semibold text-gray-100">{settlementsSummary.total}</p>
                 </CardContent>
               </Card>
               <Card className="bg-white/10 backdrop-blur-xl border-white/10">
                 <CardContent className="p-4">
-                  <p className="text-xs text-gray-400 uppercase">Total Fees</p>
+                  <p className="text-xs text-gray-400">Total Fees</p>
                   <p className="text-2xl font-semibold text-red-400">{formatCurrency(settlementsSummary.totalFees)}</p>
                 </CardContent>
               </Card>
               <Card className="bg-white/10 backdrop-blur-xl border-white/10">
                 <CardContent className="p-4">
-                  <p className="text-xs text-gray-400 uppercase">Total Amount</p>
+                  <p className="text-xs text-gray-400">Total Amount</p>
                   <p className="text-2xl font-semibold text-gray-100">{formatCurrency(settlementsSummary.totalAmount)}</p>
                 </CardContent>
               </Card>

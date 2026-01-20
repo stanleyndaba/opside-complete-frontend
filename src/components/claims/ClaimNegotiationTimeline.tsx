@@ -349,8 +349,8 @@ export function ClaimNegotiationTimeline({ claim, onEscalate, maxEscalations = 2
         <div className="space-y-6">
             {/* Timeline Header */}
             <div className="flex items-center justify-between">
-                <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-[0.15em]">Claim Timeline</h4>
-                <span className="text-[10px] px-2 py-0.5 bg-gray-100 text-gray-600 border border-gray-200 rounded-sm">
+                <h4 className="text-xs font-semibold text-gray-900">Claim Timeline</h4>
+                <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 border border-gray-200 rounded-sm">
                     Escalation {escalationCount}/{maxEscalations}
                 </span>
             </div>
@@ -381,7 +381,7 @@ export function ClaimNegotiationTimeline({ claim, onEscalate, maxEscalations = 2
                                         </Badge>
                                     )}
                                     {event.escalationRound && (
-                                        <span className="text-[10px] px-1.5 py-0.5 bg-gray-100 text-gray-600 border border-gray-200 rounded-sm">
+                                        <span className="text-xs px-1.5 py-0.5 bg-gray-100 text-gray-600 border border-gray-200 rounded-sm">
                                             Round {event.escalationRound}
                                         </span>
                                     )}
@@ -414,7 +414,7 @@ export function ClaimNegotiationTimeline({ claim, onEscalate, maxEscalations = 2
             {currentRejection && (
                 <div className="border border-gray-200 rounded-lg overflow-hidden">
                     <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-                        <h5 className="text-xs font-semibold text-gray-700 uppercase tracking-wide flex items-center gap-2">
+                        <h5 className="text-xs font-semibold text-gray-700 flex items-center gap-2">
                             {currentRejection.icon}
                             Rejection Analysis: {currentRejection.label}
                         </h5>
@@ -423,7 +423,7 @@ export function ClaimNegotiationTimeline({ claim, onEscalate, maxEscalations = 2
                         <p className="text-xs text-gray-600">{currentRejection.description}</p>
 
                         <div className="bg-gray-50 rounded-sm p-3 border border-gray-100">
-                            <div className="text-[10px] text-gray-500 uppercase tracking-wide font-semibold mb-2">
+                            <div className="text-xs text-gray-500 font-semibold mb-2">
                                 Escalation Playbook
                             </div>
                             <ul className="space-y-2">
@@ -456,7 +456,7 @@ export function ClaimNegotiationTimeline({ claim, onEscalate, maxEscalations = 2
                                         Manual Review Required
                                     </Button>
                                 )}
-                                <span className="text-[10px] text-gray-500">
+                                <span className="text-xs text-gray-500">
                                     {maxEscalations - escalationCount} escalation(s) remaining
                                 </span>
                             </div>
@@ -481,7 +481,7 @@ export function ClaimNegotiationTimeline({ claim, onEscalate, maxEscalations = 2
                             <div className="flex items-center gap-3">
                                 <CheckCircle2 className="h-5 w-5 text-gray-600" />
                                 <div>
-                                    <div className="text-xs font-semibold text-gray-900 uppercase tracking-wide">Claim Resolved</div>
+                                    <div className="text-xs font-semibold text-gray-900">Claim Resolved</div>
                                     <p className="text-xs text-gray-600 mt-0.5">
                                         Reimbursement of ${(claim.guaranteedAmount || claim.amount || 0).toFixed(2)} has been processed.
                                     </p>

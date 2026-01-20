@@ -728,12 +728,12 @@ export default function Reports() {
                 <div className="flex items-center">
                   <div className="flex-1">
                     <div className="relative inline-flex items-start">
-                      <p className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Total Recovered</p>
+                      <p className="text-xs font-medium text-gray-500">Total Recovered</p>
                       <div className="absolute -top-0.5 left-full ml-1 flex items-center gap-0.5 leading-none">
                         <TrendingDown className="h-3 w-3 text-red-500" />
-                        <span className="text-[9px] text-red-500 font-medium">8%</span>
+                        <span className="text-xs text-red-500 font-medium">8%</span>
                         <TrendingUp className="h-3 w-3 text-green-600" />
-                        <span className="text-[9px] text-green-600 font-medium">92%</span>
+                        <span className="text-xs text-green-600 font-medium">92%</span>
                       </div>
                     </div>
                     <p className="font-semibold text-gray-900 text-base mt-1">
@@ -758,7 +758,7 @@ export default function Reports() {
               <CardContent className="p-6">
                 <div className="flex items-center">
                   <div>
-                    <p className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Claims Submitted</p>
+                    <p className="text-xs font-medium text-gray-500">Claims Submitted</p>
                     <p className="font-semibold text-gray-900 text-base">
                       {detectionStats?.total_anomalies
                         ? detectionStats.total_anomalies
@@ -782,12 +782,12 @@ export default function Reports() {
                 <div className="flex items-center">
                   <div className="flex-1">
                     <div className="relative inline-flex items-start">
-                      <p className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Success Rate</p>
+                      <p className="text-xs font-medium text-gray-500">Success Rate</p>
                       <div className="absolute -top-0.5 left-full ml-1 flex items-center gap-0.5 leading-none">
                         <TrendingDown className="h-3 w-3 text-red-500" />
-                        <span className="text-[9px] text-red-500 font-medium">8%</span>
+                        <span className="text-xs text-red-500 font-medium">8%</span>
                         <TrendingUp className="h-3 w-3 text-green-600" />
-                        <span className="text-[9px] text-green-600 font-medium">92%</span>
+                        <span className="text-xs text-green-600 font-medium">92%</span>
                       </div>
                     </div>
                     <p className="font-semibold text-gray-900 text-base mt-1">

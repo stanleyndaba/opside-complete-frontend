@@ -150,10 +150,10 @@ export function DocumentChecklist({ claimId, compact = false }: DocumentChecklis
                 {/* Header */}
                 <CollapsibleTrigger asChild>
                     <button className="flex items-center gap-3 w-full px-4 py-2 bg-gray-50 border-b border-gray-200 text-left hover:bg-gray-100 transition-colors">
-                        <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
+                        <h4 className="text-xs font-semibold text-gray-700">
                             Amazon Proof Requirements
                         </h4>
-                        <span className="text-[10px] text-gray-500 ml-auto mr-2">
+                        <span className="text-xs text-gray-500 ml-auto mr-2">
                             {checklist.overallScore}% Complete
                         </span>
                         {expanded ? (
@@ -174,7 +174,7 @@ export function DocumentChecklist({ claimId, compact = false }: DocumentChecklis
                                     style={{ width: `${checklist.overallScore}%` }}
                                 />
                             </div>
-                            <div className="text-[10px] text-gray-500">
+                            <div className="text-xs text-gray-500">
                                 {completeCount} of 4 complete
                             </div>
                         </div>
@@ -202,14 +202,14 @@ export function DocumentChecklist({ claimId, compact = false }: DocumentChecklis
                                                 <h5 className="text-xs font-medium text-gray-900">
                                                     {categoryLabels[key]}
                                                 </h5>
-                                                <span className={`text-[10px] px-1.5 py-0.5 rounded ${proof.status === 'complete'
+                                                <span className={`text-xs px-1.5 py-0.5 rounded ${proof.status === 'complete'
                                                         ? 'bg-gray-100 text-gray-700'
                                                         : 'bg-gray-50 text-gray-500'
                                                     }`}>
                                                     {proof.status}
                                                 </span>
                                             </div>
-                                            <p className="text-[11px] text-gray-500 mt-1">{proof.message}</p>
+                                            <p className="text-sm text-gray-500 mt-1">{proof.message}</p>
 
                                             {/* Found fields */}
                                             {proof.fields.filter(f => f.found).length> 0 && (
@@ -217,7 +217,7 @@ export function DocumentChecklist({ claimId, compact = false }: DocumentChecklis
                                                     {proof.fields.filter(f => f.found).map((field, i) => (
                                                         <span
                                                             key={i}
-                                                            className="text-[10px] px-1.5 py-0.5 bg-gray-50 text-gray-600 border border-gray-200 rounded"
+                                                            className="text-xs px-1.5 py-0.5 bg-gray-50 text-gray-600 border border-gray-200 rounded"
                                                             title={field.source ? `From: ${field.source}` : undefined}>
                                                             {field.name.replace(/_/g, ' ')}: {field.value}
                                                         </span>
@@ -227,7 +227,7 @@ export function DocumentChecklist({ claimId, compact = false }: DocumentChecklis
 
                                             {/* Action required */}
                                             {proof.actionRequired && (
-                                                <div className="mt-2 text-[10px] text-gray-500 italic">
+                                                <div className="mt-2 text-xs text-gray-500 italic">
                                                     {proof.actionRequired}
                                                 </div>
                                             )}
@@ -240,7 +240,7 @@ export function DocumentChecklist({ claimId, compact = false }: DocumentChecklis
                         {/* Recommendations */}
                         {checklist.recommendations.length> 0 && (
                             <div className="px-4 py-3 border-t border-gray-200 bg-gray-50">
-                                <h5 className="text-[10px] text-gray-500 uppercase tracking-wide font-medium mb-2">
+                                <h5 className="text-xs text-gray-500 font-medium mb-2">
                                     Recommendations
                                 </h5>
                                 <ul className="space-y-1.5">
@@ -256,7 +256,7 @@ export function DocumentChecklist({ claimId, compact = false }: DocumentChecklis
 
                         {/* Product identifier */}
                         {(checklist.sku || checklist.asin) && (
-                            <div className="px-4 py-2 border-t border-gray-100 text-[10px] text-gray-400 text-center">
+                            <div className="px-4 py-2 border-t border-gray-100 text-xs text-gray-400 text-center">
                                 {checklist.asin && <span>ASIN: {checklist.asin}</span>}
                                 {checklist.sku && checklist.asin && <span> • </span>}
                                 {checklist.sku && <span>SKU: {checklist.sku}</span>}

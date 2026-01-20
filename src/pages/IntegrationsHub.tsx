@@ -375,21 +375,21 @@ export default function IntegrationsHub() {
             {/* Header */}
             <div className="mb-8">
               <h1 className="text-lg font-medium text-gray-900 tracking-tight">Integrations</h1>
-              <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-[0.15em]">Platform Connections</p>
+              <p className="text-xs text-gray-500 mt-0.5">Platform Connections</p>
             </div>
 
             {/* Hardcopy Document Notice - Institutional Banking Style */}
             <div className="bg-gray-50 border border-gray-200 mb-8">
               <div className="px-6 py-4 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                 <div>
-                  <p className="text-[9px] font-semibold text-gray-500 uppercase tracking-[0.15em]">Manual Upload</p>
+                  <p className="text-xs font-semibold text-gray-500">Manual Upload</p>
                   <p className="text-xs text-gray-700 mt-0.5">
                     For hardcopy documents, scanned images, or files not available via connected sources.
                   </p>
                 </div>
                 <button
                   onClick={() => navigate('/evidence-locker')}
-                  className="text-xs font-medium text-gray-900 hover:text-gray-700 transition-colors uppercase tracking-[0.1em] border border-gray-300 px-4 py-2 bg-white hover:bg-gray-50">
+                  className="text-xs font-medium text-gray-900 hover:text-gray-700 transition-colors border border-gray-300 px-4 py-2 bg-white hover:bg-gray-50">
                   Open Evidence Locker
                 </button>
               </div>
@@ -405,12 +405,12 @@ export default function IntegrationsHub() {
                       <img src="/Amazon-logo.png" alt="Amazon" className="h-5 w-5 object-contain brightness-0 invert" />
                     </div>
                     <div>
-                      <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Amazon SP-API</h2>
-                      <p className="text-[10px] text-gray-500 mt-0.5">Inventory, orders, fees & returns</p>
+                      <h2 className="text-xs font-medium text-gray-900">Amazon SP-API</h2>
+                      <p className="text-xs text-gray-500 mt-0.5">Inventory, orders, fees & returns</p>
                     </div>
                   </div>
                   <span className={cn(
-                    'text-[9px] uppercase tracking-[0.1em] font-medium',
+                    'text-xs font-medium',
                     (isSandbox || status?.amazon_connected)
                       ? 'text-emerald-600'
                       : 'text-gray-500'
@@ -440,16 +440,16 @@ export default function IntegrationsHub() {
               {/* Document Sources */}
               <div className="bg-white border border-gray-200 rounded-sm">
                 <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                  <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Document Sources</h2>
-                  <p className="text-[10px] text-gray-500 mt-0.5">Email and cloud for auto-ingestion</p>
+                  <h2 className="text-xs font-medium text-gray-900">Document Sources</h2>
+                  <p className="text-xs text-gray-500 mt-0.5">Email and cloud for auto-ingestion</p>
                 </div>
                 <div className="p-6 space-y-4">
                   {evidenceSources.length> 0 && (
                     <div className="mb-4 p-3 bg-gray-50 border border-gray-200">
-                      <p className="text-[10px] uppercase tracking-[0.1em] text-gray-500 font-medium mb-2">Connected Sources</p>
+                      <p className="text-xs text-gray-500 font-medium mb-2">Connected Sources</p>
                       <div className="flex flex-wrap gap-1.5">
                         {evidenceSources.filter(s => s.status === 'connected').map((source) => (
-                          <span key={source.id} className="text-[10px] px-2 py-0.5 bg-white border border-gray-200 text-gray-700">
+                          <span key={source.id} className="text-xs px-2 py-0.5 bg-white border border-gray-200 text-gray-700">
                             {source.provider === 'gdrive' ? 'Google Drive' : source.provider}: {source.account_email}
                           </span>
                         ))}
@@ -812,8 +812,8 @@ export default function IntegrationsHub() {
                       {/* Section Header */}
                       <div className="flex items-center justify-between border-b border-gray-200 pb-3">
                         <div>
-                          <p className="text-xs font-semibold text-gray-900 uppercase tracking-[0.15em]">Ingestion Filters</p>
-                          <p className="text-[10px] text-gray-500 mt-0.5">Configure rules for maximum document yield</p>
+                          <p className="text-xs font-semibold text-gray-900">Ingestion Filters</p>
+                          <p className="text-xs text-gray-500 mt-0.5">Configure rules for maximum document yield</p>
                         </div>
                       </div>
 
@@ -822,8 +822,8 @@ export default function IntegrationsHub() {
 
                         {/* Sender Patterns */}
                         <div className="space-y-2">
-                          <label className="block text-[9px] font-semibold text-gray-500 uppercase tracking-[0.1em]">Sender Patterns (OR)</label>
-                          <p className="text-[10px] text-gray-400 -mt-1">Match emails from these senders. Use * as wildcard.</p>
+                          <label className="block text-xs font-semibold text-gray-500">Sender Patterns (OR)</label>
+                          <p className="text-xs text-gray-400 -mt-1">Match emails from these senders. Use * as wildcard.</p>
                           <Input
                             placeholder="*@amazon.com, *invoice*, *@alibaba.com"
                             value={filters.senderPatterns.join(', ')}
@@ -834,8 +834,8 @@ export default function IntegrationsHub() {
 
                         {/* Subject Keywords */}
                         <div className="space-y-2">
-                          <label className="block text-[9px] font-semibold text-gray-500 uppercase tracking-[0.1em]">Subject Keywords (OR)</label>
-                          <p className="text-[10px] text-gray-400 -mt-1">Match emails containing these subject terms.</p>
+                          <label className="block text-xs font-semibold text-gray-500">Subject Keywords (OR)</label>
+                          <p className="text-xs text-gray-400 -mt-1">Match emails containing these subject terms.</p>
                           <Input
                             placeholder="invoice, receipt, reimbursement, case, shipment"
                             value={filters.subjectKeywords.join(', ')}
@@ -846,7 +846,7 @@ export default function IntegrationsHub() {
 
                         {/* File Types */}
                         <div className="space-y-2">
-                          <label className="block text-[9px] font-semibold text-gray-500 uppercase tracking-[0.1em]">File Types</label>
+                          <label className="block text-xs font-semibold text-gray-500">File Types</label>
                           <div className="grid grid-cols-2 gap-2">
                             <label className="flex items-center gap-2 px-3 py-2 bg-gray-50 border border-gray-200 cursor-pointer hover:bg-gray-100">
                               <input
@@ -898,8 +898,8 @@ export default function IntegrationsHub() {
 
                         {/* File Name Patterns */}
                         <div className="space-y-2">
-                          <label className="block text-[9px] font-semibold text-gray-500 uppercase tracking-[0.1em]">File Name Contains</label>
-                          <p className="text-[10px] text-gray-400 -mt-1">Match attachment names containing these terms.</p>
+                          <label className="block text-xs font-semibold text-gray-500">File Name Contains</label>
+                          <p className="text-xs text-gray-400 -mt-1">Match attachment names containing these terms.</p>
                           <Input
                             placeholder="invoice, receipt, order, FBA, shipment, tracking, BOL, POD, manifest, freight"
                             value={filters.fileNamePatterns.join(', ')}
@@ -910,7 +910,7 @@ export default function IntegrationsHub() {
 
                         {/* Date Range */}
                         <div className="space-y-2">
-                          <label className="block text-[9px] font-semibold text-gray-500 uppercase tracking-[0.1em]">Date Range</label>
+                          <label className="block text-xs font-semibold text-gray-500">Date Range</label>
                           <div className="grid grid-cols-3 gap-1">
                             {[
                               { value: 'last_30', label: 'Last 30 days' },
@@ -923,7 +923,7 @@ export default function IntegrationsHub() {
                               <label
                                 key={opt.value}
                                 className={cn(
-                                  "flex items-center justify-center px-2 py-1.5 text-[10px] border cursor-pointer transition-colors",
+                                  "flex items-center justify-center px-2 py-1.5 text-xs border cursor-pointer transition-colors",
                                   filters.dateRange === opt.value
                                     ? "bg-gray-900 text-white border-gray-900"
                                     : "bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100"
@@ -944,8 +944,8 @@ export default function IntegrationsHub() {
 
                         {/* Folders */}
                         <div className="space-y-2">
-                          <label className="block text-[9px] font-semibold text-gray-500 uppercase tracking-[0.1em]">Folders (Cloud Drives)</label>
-                          <p className="text-[10px] text-gray-400 -mt-1">Comma-separated folder paths to scan.</p>
+                          <label className="block text-xs font-semibold text-gray-500">Folders (Cloud Drives)</label>
+                          <p className="text-xs text-gray-400 -mt-1">Comma-separated folder paths to scan.</p>
                           <Input
                             placeholder="/Finance, /Invoices, /Amazon, /Receipts"
                             value={filters.folders.join(', ')}
@@ -957,10 +957,10 @@ export default function IntegrationsHub() {
 
                       {/* Exclusions Section */}
                       <div className="pt-4 border-t border-gray-200">
-                        <label className="block text-[9px] font-semibold text-gray-500 uppercase tracking-[0.1em] mb-3">Exclusion Rules</label>
+                        <label className="block text-xs font-semibold text-gray-500 mb-3">Exclusion Rules</label>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="space-y-1">
-                            <label className="text-[10px] text-gray-500">Exclude Senders</label>
+                            <label className="text-xs text-gray-500">Exclude Senders</label>
                             <Input
                               placeholder="*newsletter*, *marketing*, *promo*"
                               value={filters.excludeSenders.join(', ')}
@@ -969,7 +969,7 @@ export default function IntegrationsHub() {
                             />
                           </div>
                           <div className="space-y-1">
-                            <label className="text-[10px] text-gray-500">Exclude Subjects</label>
+                            <label className="text-xs text-gray-500">Exclude Subjects</label>
                             <Input
                               placeholder="unsubscribe, promotional, marketing"
                               value={filters.excludeSubjects.join(', ')}
@@ -982,7 +982,7 @@ export default function IntegrationsHub() {
 
                       {/* Deduplication Section */}
                       <div className="pt-4 border-t border-gray-200">
-                        <label className="block text-[9px] font-semibold text-gray-500 uppercase tracking-[0.1em] mb-3">Deduplication</label>
+                        <label className="block text-xs font-semibold text-gray-500 mb-3">Deduplication</label>
                         <div className="flex flex-wrap gap-4">
                           <label className="flex items-center gap-2 cursor-pointer">
                             <input
@@ -1143,7 +1143,7 @@ export default function IntegrationsHub() {
                       {ingestionResult && (
                         <div className="border border-gray-200 bg-gray-50">
                           <div className="px-4 py-3 border-b border-gray-200">
-                            <p className={`text-[9px] font-semibold uppercase tracking-[0.15em] ${ingestionResult.success ? 'text-gray-700' : 'text-gray-600'}`}>
+                            <p className={`text-xs font-semibold ${ingestionResult.success ? 'text-gray-700' : 'text-gray-600'}`}>
                               {ingestionResult.success ? 'Ingestion Complete' : 'Ingestion Completed with Errors'}
                             </p>
                           </div>
@@ -1151,16 +1151,16 @@ export default function IntegrationsHub() {
                             {ingestionResult.totalDocumentsIngested !== undefined ? (
                               <div className="space-y-1.5 text-xs">
                                 <div className="flex justify-between">
-                                  <span className="text-gray-500 uppercase tracking-[0.05em]">Documents Ingested</span>
+                                  <span className="text-gray-500">Documents Ingested</span>
                                   <span className="text-gray-900 font-medium">{ingestionResult.totalDocumentsIngested}</span>
                                 </div>
                                 <div className="flex justify-between">
-                                  <span className="text-gray-500 uppercase tracking-[0.05em]">Items Processed</span>
+                                  <span className="text-gray-500">Items Processed</span>
                                   <span className="text-gray-900 font-medium">{ingestionResult.totalItemsProcessed}</span>
                                 </div>
                                 {ingestionResult.results && (
                                   <div className="mt-3 pt-3 border-t border-gray-200 space-y-1">
-                                    <p className="text-[9px] font-semibold text-gray-500 uppercase tracking-[0.1em] mb-2">Breakdown</p>
+                                    <p className="text-xs font-semibold text-gray-500 mb-2">Breakdown</p>
                                     {Object.entries(ingestionResult.results).map(([provider, result]) => (
                                       <div key={provider} className="flex items-center justify-between text-xs">
                                         <span className="text-gray-600">{provider === 'gdrive' ? 'Google Drive' : provider.charAt(0).toUpperCase() + provider.slice(1)}</span>
@@ -1173,18 +1173,18 @@ export default function IntegrationsHub() {
                             ) : (
                               <div className="space-y-1.5 text-xs">
                                 <div className="flex justify-between">
-                                  <span className="text-gray-500 uppercase tracking-[0.05em]">Documents Ingested</span>
+                                  <span className="text-gray-500">Documents Ingested</span>
                                   <span className="text-gray-900 font-medium">{ingestionResult.documentsIngested || 0}</span>
                                 </div>
                                 <div className="flex justify-between">
-                                  <span className="text-gray-500 uppercase tracking-[0.05em]">Items Processed</span>
+                                  <span className="text-gray-500">Items Processed</span>
                                   <span className="text-gray-900 font-medium">{ingestionResult.emailsProcessed || ingestionResult.filesProcessed || 0}</span>
                                 </div>
                               </div>
                             )}
                             {ingestionResult.errors && ingestionResult.errors.length> 0 && (
                               <div className="mt-3 pt-3 border-t border-gray-300">
-                                <p className="text-[9px] font-semibold text-gray-600 uppercase tracking-[0.1em] mb-2">Errors</p>
+                                <p className="text-xs font-semibold text-gray-600 mb-2">Errors</p>
                                 <ul className="text-xs text-gray-700 space-y-1">
                                   {ingestionResult.errors.map((error, i) => (
                                     <li key={i} className="text-gray-600">- {error}</li>
@@ -1259,7 +1259,7 @@ export default function IntegrationsHub() {
             {/* Recent Activity */}
             <div className="bg-white border border-gray-200 rounded-sm">
               <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Recent Activity</h2>
+                <h2 className="text-xs font-medium text-gray-900">Recent Activity</h2>
               </div>
               <div className="p-6">
                 <p className="text-xs text-gray-600">

@@ -244,10 +244,10 @@ export function Navbar({
                     {recentSearches.length > 0 && (
                       <div className="p-2 border-b border-gray-100">
                         <div className="flex items-center justify-between px-2 mb-1">
-                          <span className="text-[9px] font-medium text-gray-500 uppercase tracking-[0.15em]">Recent</span>
+                          <span className="text-xs font-medium text-gray-500">Recent</span>
                           <button
                             onClick={clearRecentSearches}
-                            className="text-[9px] text-gray-400 hover:text-gray-600">
+                            className="text-xs text-gray-400 hover:text-gray-600">
                             Clear
                           </button>
                         </div>
@@ -268,7 +268,7 @@ export function Navbar({
 
                     {/* Quick Links */}
                     <div className="p-2">
-                      <span className="text-[9px] font-medium text-gray-500 uppercase tracking-[0.15em] px-2">Quick Links</span>
+                      <span className="text-xs font-medium text-gray-500 px-2">Quick Links</span>
                       {quickLinks.map((link) => (
                         <button
                           key={link.id}
@@ -285,8 +285,8 @@ export function Navbar({
 
                     {/* Search Tip */}
                     <div className="px-3 py-2 bg-gray-50 border-t border-gray-100">
-                      <p className="text-[9px] text-gray-500">
-                        Press <kbd className="px-1 py-0.5 bg-gray-200 rounded-sm text-gray-600 font-mono text-[8px]">Enter</kbd> to search
+                      <p className="text-xs text-gray-500">
+                        Press <kbd className="px-1 py-0.5 bg-gray-200 rounded-sm text-gray-600 font-mono text-xs">Enter</kbd> to search
                       </p>
                     </div>
                   </div>
@@ -323,15 +323,15 @@ export function Navbar({
                   {isNoteHovered && notes.length > 0 && (
                     <div className="absolute top-full right-1/2 translate-x-1/2 mt-2 w-72 bg-white border border-gray-200 rounded-none shadow-xl z-50 overflow-hidden">
                       <div className="px-4 py-3 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
-                        <span className="text-[9px] font-bold text-gray-900 uppercase tracking-[0.2em]">External Records</span>
-                        <span className="text-[9px] text-gray-400 font-mono">{notes.length} REC</span>
+                        <span className="text-xs font-bold text-gray-900">External Records</span>
+                        <span className="text-xs text-gray-400 font-mono">{notes.length} REC</span>
                       </div>
                       <div className="max-h-64 overflow-y-auto divide-y divide-gray-50">
                         {notes.slice(0, 5).map((note, index) => (
                           <div key={note.id} className="group relative p-4 hover:bg-gray-50/50 transition-colors">
                             <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity" />
-                            <p className="text-[11px] text-gray-700 font-mono tracking-tight line-clamp-3 leading-relaxed">{note.text}</p>
-                            <p className="text-[9px] text-gray-400 mt-2 font-mono uppercase tracking-widest flex items-center justify-between">
+                            <p className="text-sm text-gray-700 font-mono tracking-tight line-clamp-3 leading-relaxed">{note.text}</p>
+                            <p className="text-xs text-gray-400 mt-2 font-mono flex items-center justify-between">
                               <span>TS.{new Date(note.createdAt).getTime().toString().slice(-8)}</span>
                               <span>{new Date(note.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                             </p>
@@ -362,14 +362,14 @@ export function Navbar({
                         <div className="h-8 w-8 rounded-full bg-emerald-50 flex items-center justify-center">
                           <Gift className="h-4 w-4 text-emerald-600" />
                         </div>
-                        <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-[0.15em]">Limited Offer</span>
+                        <span className="text-xs font-bold text-emerald-600">Limited Offer</span>
                       </div>
                       <h4 className="text-sm font-semibold text-gray-900 mb-2">6 Month Referral Program</h4>
                       <p className="text-xs text-gray-600 leading-relaxed">
                         Sellers that invite sellers to Margin secure <span className="font-bold text-emerald-600">100% of their recovered funds</span> without commission deductions.
                       </p>
                       <div className="mt-4 pt-3 border-t border-gray-100">
-                        <span className="text-[9px] text-gray-400 uppercase tracking-widest">Click to learn more</span>
+                        <span className="text-xs text-gray-400">Click to learn more</span>
                       </div>
                     </div>
                   </HoverCardContent>
@@ -440,10 +440,10 @@ export function Navbar({
         <DialogContent className="max-w-sm bg-white border border-gray-200 shadow-2xl rounded-none p-0 overflow-hidden">
           {/* Header - Institutional Dark */}
           <div className="px-6 py-5 border-b border-gray-900 bg-gray-900">
-            <h3 className="text-xs font-bold text-white uppercase tracking-[0.2em]">
+            <h3 className="text-xs font-bold text-white">
               Referral Protocol
             </h3>
-            <p className="text-[9px] text-gray-400 mt-1 uppercase tracking-widest font-mono">
+            <p className="text-xs text-gray-400 mt-1 font-mono">
               COMMISSION-FREE NETWORK EXPANSION
             </p>
           </div>
@@ -451,15 +451,15 @@ export function Navbar({
           <div className="p-6">
             <div className="space-y-6">
               <div className="space-y-4">
-                <p className="text-[11px] text-gray-500 leading-relaxed uppercase tracking-wider font-medium">
+                <p className="text-sm text-gray-500 leading-relaxed font-medium">
                   PROVISION: Bring new sellers to Margin and secure 100% of their recovered funds without commission deductions.
                 </p>
 
                 {/* Value Proposition */}
                 <div className="p-4 bg-gray-50/50 border border-gray-100 relative group">
                   <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gray-900" />
-                  <p className="text-[9px] text-gray-400 font-mono uppercase tracking-widest mb-1">NETWORK BENEFIT</p>
-                  <p className="text-[13px] font-bold text-gray-900 uppercase tracking-tight">100% OF RECOVERED FUNDS</p>
+                  <p className="text-xs text-gray-400 font-mono mb-1">NETWORK BENEFIT</p>
+                  <p className="text-[13px] font-bold text-gray-900 tracking-tight">100% OF RECOVERED FUNDS</p>
                 </div>
               </div>
 
@@ -469,7 +469,7 @@ export function Navbar({
                   setShowReferralPopup(false);
                   setShowInviteForm(true);
                 }}
-                className="w-full bg-gray-900 hover:bg-black text-white text-[10px] h-10 font-bold uppercase tracking-[0.2em] rounded-none transition-all">
+                className="w-full bg-gray-900 hover:bg-black text-white text-xs h-10 font-bold rounded-none transition-all">
                 Initiate Invitation
               </Button>
             </div>
@@ -481,33 +481,33 @@ export function Navbar({
       <Dialog open={showInviteForm} onOpenChange={setShowInviteForm}>
         <DialogContent className="max-w-md bg-white border border-gray-200 shadow-2xl rounded-none p-0 overflow-hidden">
           <div className="px-6 py-5 border-b border-gray-100 bg-gray-50/50">
-            <h3 className="text-xs font-bold text-gray-900 uppercase tracking-[0.2em]">Transmit Invitation</h3>
-            <p className="text-[9px] text-gray-400 mt-1 font-mono uppercase tracking-widest">Target: External Seller Alliance</p>
+            <h3 className="text-xs font-bold text-gray-900">Transmit Invitation</h3>
+            <p className="text-xs text-gray-400 mt-1 font-mono">Target: External Seller Alliance</p>
           </div>
 
           <div className="p-6 space-y-5">
             <div className="space-y-2">
-              <label className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-1 block">Recipient Email</label>
+              <label className="text-xs font-bold text-gray-400 mb-1 block">Recipient Email</label>
               <Input
                 type="email"
                 placeholder="SELLER@ENTITY.COM"
                 value={inviteEmail}
                 onChange={(e) => setInviteEmail(e.target.value)}
-                className="w-full border-gray-100 h-10 text-[11px] font-mono rounded-none bg-gray-50/50 focus:bg-white focus:border-gray-900 transition-all uppercase"
+                className="w-full border-gray-100 h-10 text-sm font-mono rounded-none bg-gray-50/50 focus:bg-white focus:border-gray-900 transition-all"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-1 block">Authentication Link</label>
+              <label className="text-xs font-bold text-gray-400 mb-1 block">Authentication Link</label>
               <div className="flex items-center gap-0 p-3 bg-gray-50/50 border border-gray-100 rounded-none group hover:border-gray-200 transition-all">
-                <span className="flex-1 text-[10px] text-gray-500 font-mono break-all truncate overflow-hidden">{shortLink}</span>
+                <span className="flex-1 text-xs text-gray-500 font-mono break-all truncate overflow-hidden">{shortLink}</span>
                 <button
                   onClick={() => {
                     navigator.clipboard.writeText(referralLink);
                     setLinkCopied(true);
                     setTimeout(() => setLinkCopied(false), 2000);
                   }}
-                  className="flex items-center gap-2 px-3 py-1 text-[9px] font-bold text-gray-400 hover:text-gray-900 uppercase tracking-widest transition-colors shrink-0">
+                  className="flex items-center gap-2 px-3 py-1 text-xs font-bold text-gray-400 hover:text-gray-900 transition-colors shrink-0">
                   {linkCopied ? (
                     <>
                       <Check className="h-3 w-3 text-emerald-600" />
@@ -557,7 +557,7 @@ export function Navbar({
                   alert('Internal Connection Failure');
                 }
               }}
-              className="w-full bg-gray-900 hover:bg-black text-white text-[10px] h-10 font-bold uppercase tracking-[0.2em] rounded-none transition-all">
+              className="w-full bg-gray-900 hover:bg-black text-white text-xs h-10 font-bold rounded-none transition-all">
               Execute Transmission
             </Button>
           </div>
@@ -568,10 +568,10 @@ export function Navbar({
       <Dialog open={showNotesModal} onOpenChange={setShowNotesModal}>
         <DialogContent className="max-w-md bg-white border border-gray-200 shadow-2xl rounded-none p-0 overflow-hidden flex flex-col max-h-[90vh]">
           <div className="px-6 py-5 border-b border-gray-900 bg-gray-900">
-            <h3 className="text-xs font-bold text-white uppercase tracking-[0.2em]">
+            <h3 className="text-xs font-bold text-white">
               Note Ingestion Engine
             </h3>
-            <p className="text-[9px] text-gray-400 mt-1 uppercase tracking-widest font-mono">
+            <p className="text-xs text-gray-400 mt-1 font-mono">
               INTERNAL DOCUMENTATION // AUDIT LOGS
             </p>
           </div>
@@ -583,7 +583,7 @@ export function Navbar({
                 value={currentNote}
                 onChange={(e) => setCurrentNote(e.target.value)}
                 placeholder="INPUT TECHNICAL DATA OR REMINDERS HERE..."
-                className="w-full h-32 p-4 text-[11px] border border-gray-100 rounded-none resize-none focus:outline-none focus:border-gray-900 bg-gray-50/50 focus:bg-white font-mono leading-relaxed transition-all"
+                className="w-full h-32 p-4 text-sm border border-gray-100 rounded-none resize-none focus:outline-none focus:border-gray-900 bg-gray-50/50 focus:bg-white font-mono leading-relaxed transition-all"
               />
               <Button
                 onClick={async () => {
@@ -608,7 +608,7 @@ export function Navbar({
                     setIsSavingNote(false);
                   }
                 }}
-                className="w-full bg-gray-900 hover:bg-black text-white text-[10px] h-10 font-bold uppercase tracking-[0.2em] rounded-none transition-all"
+                className="w-full bg-gray-900 hover:bg-black text-white text-xs h-10 font-bold rounded-none transition-all"
                 disabled={!currentNote.trim() || isSavingNote}>
                 {isSavingNote ? 'Processing...' : 'Ingest Note Record'}
               </Button>
@@ -618,8 +618,8 @@ export function Navbar({
             {notes.length > 0 && (
               <div className="border-t border-gray-100 pt-6">
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em]">Stored Records</span>
-                  <span className="text-[9px] font-mono text-gray-400 uppercase">VOL.{notes.length}</span>
+                  <span className="text-xs font-bold text-gray-400">Stored Records</span>
+                  <span className="text-xs font-mono text-gray-400">VOL.{notes.length}</span>
                 </div>
                 <div className="space-y-3 max-h-60 overflow-y-auto pr-2 scrollbar-hide">
                   {notes.map((note) => (
@@ -631,13 +631,13 @@ export function Navbar({
                           <textarea
                             value={editingNoteContent}
                             onChange={(e) => setEditingNoteContent(e.target.value)}
-                            className="w-full h-24 p-3 text-[11px] border border-gray-200 rounded-none resize-none focus:outline-none focus:border-gray-900 bg-white font-mono"
+                            className="w-full h-24 p-3 text-sm border border-gray-200 rounded-none resize-none focus:outline-none focus:border-gray-900 bg-white font-mono"
                             autoFocus
                           />
                           <div className="flex justify-end gap-3">
                             <button
                               onClick={() => setEditingNoteId(null)}
-                              className="text-[9px] text-gray-400 hover:text-gray-900 font-bold uppercase tracking-widest transition-colors">
+                              className="text-xs text-gray-400 hover:text-gray-900 font-bold transition-colors">
                               Discard
                             </button>
                             <button
@@ -663,7 +663,7 @@ export function Navbar({
                                   setIsSavingNote(false);
                                 }
                               }}
-                              className="text-[9px] text-gray-900 hover:text-black font-bold uppercase tracking-widest disabled:opacity-50"
+                              className="text-xs text-gray-900 hover:text-black font-bold disabled:opacity-50"
                               disabled={isSavingNote}>
                               {isSavingNote ? 'Syncing...' : 'Confirm Change'}
                             </button>
@@ -674,18 +674,18 @@ export function Navbar({
                           <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-2">
                               <div className="h-1.5 w-1.5 rounded-full bg-gray-400 group-hover:bg-gray-900" />
-                              <span className="text-[9px] text-gray-400 font-mono uppercase tracking-widest">RECORD.{note.id.substring(0, 8).toUpperCase()}</span>
+                              <span className="text-xs text-gray-400 font-mono">RECORD.{note.id.substring(0, 8).toUpperCase()}</span>
                             </div>
-                            <span className="text-[9px] text-gray-400 font-mono">{new Date(note.createdAt).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' })}</span>
+                            <span className="text-xs text-gray-400 font-mono">{new Date(note.createdAt).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' })}</span>
                           </div>
-                          <p className="text-[11px] text-gray-700 font-mono leading-relaxed mb-3">{note.text}</p>
+                          <p className="text-sm text-gray-700 font-mono leading-relaxed mb-3">{note.text}</p>
                           <div className="flex items-center justify-end gap-4 opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0">
                             <button
                               onClick={() => {
                                 setEditingNoteId(note.id);
                                 setEditingNoteContent(note.text);
                               }}
-                              className="text-[9px] font-bold text-gray-400 hover:text-gray-900 uppercase tracking-widest">
+                              className="text-xs font-bold text-gray-400 hover:text-gray-900">
                               Modify
                             </button>
                             <button
@@ -699,7 +699,7 @@ export function Navbar({
                                   console.error('Failed to delete note:', error);
                                 }
                               }}
-                              className="text-[9px] font-bold text-gray-400 hover:text-red-600 uppercase tracking-widest">
+                              className="text-xs font-bold text-gray-400 hover:text-red-600">
                               Purge
                             </button>
                           </div>

@@ -682,7 +682,7 @@ export default function CaseDetail() {
               <p className="text-xs text-gray-600">
                 <span className="font-medium text-gray-900">Margin Auto-Files</span> cases with <span className="font-mono font-medium text-gray-900">≥85%</span> confidence for you
               </p>
-              <span className="text-[10px] font-light text-gray-400 uppercase tracking-[0.15em] ml-auto">
+              <span className="text-xs font-light text-gray-400 ml-auto">
                 Autonomous
               </span>
             </div>
@@ -694,19 +694,19 @@ export default function CaseDetail() {
                   <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
                     <div className="flex items-start justify-between">
                       <div className="flex flex-col">
-                        <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
+                        <h3 className="text-xs font-medium text-gray-900">
                           Case Summary
                         </h3>
                         {derivedConfidencePct >= 85 ? (
-                          <span className="text-[9px] text-emerald-600 font-medium mt-0.5">Auto-Filed</span>
+                          <span className="text-xs text-emerald-600 font-medium mt-0.5">Auto-Filed</span>
                         ) : derivedConfidencePct >= 60 ? (
-                          <span className="text-[9px] text-blue-600 font-medium mt-0.5">Awaiting Seller Review</span>
+                          <span className="text-xs text-blue-600 font-medium mt-0.5">Awaiting Seller Review</span>
                         ) : (
-                          <span className="text-[9px] text-amber-600 font-medium mt-0.5">Parked — Needs Evidence</span>
+                          <span className="text-xs text-amber-600 font-medium mt-0.5">Parked — Needs Evidence</span>
                         )}
                       </div>
                       <span className={cn(
-                        "px-2 py-0.5 text-[10px] font-medium border",
+                        "px-2 py-0.5 text-xs font-medium border",
                         normalizeStatus(effectiveCase.status) === 'Approved' && "bg-gray-100 text-gray-700 border-gray-300",
                         normalizeStatus(effectiveCase.status) === 'In Progress' && "bg-gray-100 text-gray-700 border-gray-300",
                         normalizeStatus(effectiveCase.status) === 'Open' && "bg-gray-100 text-gray-700 border-gray-300",
@@ -715,7 +715,7 @@ export default function CaseDetail() {
                         {normalizeStatus(effectiveCase.status)}
                       </span>
                     </div>
-                    <p className="text-[10px] text-gray-500 font-mono mt-1" title={effectiveCase.id}>
+                    <p className="text-xs text-gray-500 font-mono mt-1" title={effectiveCase.id}>
                       {effectiveCase.claim_number || effectiveCase.evidence?.claim_number || effectiveCase.id?.slice(0, 12) || 'N/A'}
                     </p>
                   </div>
@@ -727,7 +727,7 @@ export default function CaseDetail() {
 
                     {/* Financial Overview */}
                     <div className="mb-3">
-                      <div className="text-[10px] font-medium text-gray-500 uppercase tracking-[0.1em] mb-1">Guaranteed Value</div>
+                      <div className="text-xs font-medium text-gray-500 mb-1">Guaranteed Value</div>
                       <div className="text-lg font-medium text-gray-900">
                         ${effectiveCase.guaranteedAmount?.toLocaleString('en-US', { minimumFractionDigits: 2 }) || '0.00'}
                       </div>
@@ -758,14 +758,14 @@ export default function CaseDetail() {
                     <div className="border border-gray-200 rounded-sm overflow-hidden bg-white">
                       <div className="px-3 pt-3">
                         <Select value={selectedMetric} onValueChange={setSelectedMetric}>
-                          <SelectTrigger className="h-7 w-full border-0 bg-transparent p-0 text-[10px] font-semibold text-gray-500 uppercase tracking-[0.1em] focus:ring-0 shadow-none">
+                          <SelectTrigger className="h-7 w-full border-0 bg-transparent p-0 text-xs font-semibold text-gray-500 focus:ring-0 shadow-none">
                             <SelectValue placeholder="Select Metric" />
                           </SelectTrigger>
                           <SelectContent className="rounded-sm">
-                            <SelectItem value="payout" className="text-[10px] uppercase tracking-wider">Expected Payout</SelectItem>
-                            <SelectItem value="confidence" className="text-[10px] uppercase tracking-wider">Confidence</SelectItem>
-                            <SelectItem value="units" className="text-[10px] uppercase tracking-wider">Units Lost</SelectItem>
-                            <SelectItem value="cost" className="text-[10px] uppercase tracking-wider">Unit Cost</SelectItem>
+                            <SelectItem value="payout" className="text-xs">Expected Payout</SelectItem>
+                            <SelectItem value="confidence" className="text-xs">Confidence</SelectItem>
+                            <SelectItem value="units" className="text-xs">Units Lost</SelectItem>
+                            <SelectItem value="cost" className="text-xs">Unit Cost</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -785,7 +785,7 @@ export default function CaseDetail() {
                             typeof effectiveCase.unitCost === 'number' ? `$${effectiveCase.unitCost.toFixed(2)}` : '—'
                           )}
                         </div>
-                        <div className="text-[9px] text-gray-400 font-medium uppercase tracking-widest mt-0.5">
+                        <div className="text-xs text-gray-400 font-medium mt-0.5">
                           {selectedMetric === 'payout' && 'Scheduled Reimbursement'}
                           {selectedMetric === 'confidence' && 'AI Analysis Score'}
                           {selectedMetric === 'units' && 'Inventory Discrepancy'}
@@ -796,15 +796,15 @@ export default function CaseDetail() {
 
                     {/* Product Info - Institutional Style */}
                     <div className="border border-gray-200 p-3 space-y-2">
-                      <div className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em] border-b border-gray-100 pb-1">Product Details</div>
+                      <div className="text-xs font-light text-gray-400 border-b border-gray-100 pb-1">Product Details</div>
                       <div>
                         <div className="text-xs font-medium text-gray-900">{effectiveCase.productName || effectiveCase.title || effectiveCase.anomaly_type || 'Unknown Product'}</div>
-                        <div className="text-[10px] font-mono text-gray-500 mt-1">SKU: {effectiveCase.sku || effectiveCase.evidence?.sku || '—'}</div>
+                        <div className="text-xs font-mono text-gray-500 mt-1">SKU: {effectiveCase.sku || effectiveCase.evidence?.sku || '—'}</div>
                         {(effectiveCase.asin || effectiveCase.evidence?.asin) && (
-                          <div className="text-[10px] font-mono text-gray-500">ASIN: {effectiveCase.asin || effectiveCase.evidence?.asin}</div>
+                          <div className="text-xs font-mono text-gray-500">ASIN: {effectiveCase.asin || effectiveCase.evidence?.asin}</div>
                         )}
                       </div>
-                      <div className="flex items-center gap-2 text-[10px] font-mono text-gray-500 pt-1 border-t border-gray-100">
+                      <div className="flex items-center gap-2 text-xs font-mono text-gray-500 pt-1 border-t border-gray-100">
                         <MapPin className="h-3 w-3 text-gray-400" />
                         {effectiveCase.facility || effectiveCase.evidence?.fulfillment_center || '—'}
                       </div>
@@ -813,12 +813,12 @@ export default function CaseDetail() {
                     {/* Evidence Status - Institutional Style */}
                     <div className="border border-gray-200 p-3 space-y-2">
                       <div className="flex items-center justify-between border-b border-gray-100 pb-1">
-                        <div className="text-[10px] font-light text-gray-400 uppercase tracking-[0.1em]">Evidence</div>
-                        <span className="text-[10px] font-mono text-gray-600">{matchedCount} docs</span>
+                        <div className="text-xs font-light text-gray-400">Evidence</div>
+                        <span className="text-xs font-mono text-gray-600">{matchedCount} docs</span>
                       </div>
 
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-light text-gray-400">Status</span>
+                        <span className="text-xs font-light text-gray-400">Status</span>
                         <span className={cn(
                           "text-xs font-mono",
                           derivedEvidence === 'Ready' && "text-gray-900",
@@ -861,7 +861,7 @@ export default function CaseDetail() {
                     {/* Payment Status if available */}
                     {effectiveCase.recovery_status && effectiveCase.recovery_status !== 'detecting' && (
                       <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
-                        <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Payment Status</div>
+                        <div className="text-xs font-medium text-gray-500 mb-2">Payment Status</div>
                         <div className="space-y-2">
                           {effectiveCase.recovery_status === 'reconciled' && (
                             <>
@@ -967,7 +967,7 @@ export default function CaseDetail() {
                             <p className="text-sm text-red-700">{playbook.description}</p>
 
                             <div className="bg-white/70 rounded p-3 border border-red-100">
-                              <div className="text-xs text-red-600 font-semibold uppercase tracking-wide mb-2">Escalation Playbook</div>
+                              <div className="text-xs text-red-600 font-semibold mb-2">Escalation Playbook</div>
                               <ul className="space-y-1">
                                 {playbook.actions.map((action, i) => (
                                   <li key={i} className="flex items-start gap-2 text-sm text-red-800">
@@ -1030,12 +1030,12 @@ export default function CaseDetail() {
                   <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
                     <div className="flex items-center justify-between">
                       <div>
-                        <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
+                        <h3 className="text-xs font-medium text-gray-900">
                           Supporting Evidence
                         </h3>
-                        <p className="text-[10px] text-gray-500 mt-0.5">Amazon rejects 82% of claims without an Invoice.</p>
+                        <p className="text-xs text-gray-500 mt-0.5">Amazon rejects 82% of claims without an Invoice.</p>
                       </div>
-                      <span className="text-[10px] text-gray-500 uppercase tracking-[0.1em]">
+                      <span className="text-xs text-gray-500">
                         {matchedDocs.length} found
                       </span>
                     </div>
@@ -1073,7 +1073,7 @@ export default function CaseDetail() {
 
                                   {/* Match Confidence */}
                                   <div className="flex items-center gap-2 mb-1.5">
-                                    <span className="text-[10px] text-gray-600">Match Confidence:</span>
+                                    <span className="text-xs text-gray-600">Match Confidence:</span>
                                     <Badge className={cn(
                                       "text-xs",
                                       confidencePct >= 85 ? "bg-emerald-100 text-emerald-800 border-emerald-200" :
@@ -1086,9 +1086,9 @@ export default function CaseDetail() {
 
                                   {/* Matched Fields */}
                                   <div className="flex flex-wrap gap-1 mb-1.5">
-                                    <span className="text-[10px] text-gray-600 mr-1">Matched on:</span>
+                                    <span className="text-xs text-gray-600 mr-1">Matched on:</span>
                                     {matchedFields.map((field, fieldIdx) => (
-                                      <Badge key={fieldIdx} variant="outline" className="text-[10px] border-gray-300 text-gray-700">
+                                      <Badge key={fieldIdx} variant="outline" className="text-xs border-gray-300 text-gray-700">
                                         {field}
                                       </Badge>
                                     ))}
@@ -1096,7 +1096,7 @@ export default function CaseDetail() {
 
                                   {/* Document Source */}
                                   {doc.source && (
-                                    <div className="text-[10px] text-gray-500">
+                                    <div className="text-xs text-gray-500">
                                       Source: {doc.source}
                                     </div>
                                   )}
@@ -1159,7 +1159,7 @@ export default function CaseDetail() {
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
                         className={cn(
-                          "flex-1 px-4 py-3 text-xs font-medium uppercase tracking-[0.15em] transition-colors",
+                          "flex-1 px-4 py-3 text-xs font-medium transition-colors",
                           activeTab === tab.id
                             ? "bg-gray-900 text-white"
                             : "bg-gray-50 text-gray-600 hover:bg-gray-100"
@@ -1175,13 +1175,13 @@ export default function CaseDetail() {
                     {activeTab === 'overview' && (
                       <div className="space-y-6">
                         <div>
-                          <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em] mb-1">Issue Description</h3>
-                          <div className="text-[10px] text-gray-500 mb-3">Case Context</div>
+                          <h3 className="text-xs font-medium text-gray-900 mb-1">Issue Description</h3>
+                          <div className="text-xs text-gray-500 mb-3">Case Context</div>
                           <p className="text-sm text-gray-700 leading-relaxed">{generateNarrative(effectiveCase)}</p>
                         </div>
                         <div className="border-t border-gray-100 pt-6">
-                          <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em] mb-1">Transaction History</h3>
-                          <div className="text-[10px] text-gray-500 mb-4">Forensic Evidence</div>
+                          <h3 className="text-xs font-medium text-gray-900 mb-1">Transaction History</h3>
+                          <div className="text-xs text-gray-500 mb-4">Forensic Evidence</div>
 
                           {(() => {
                             const created = effectiveCase.created_at || effectiveCase.createdDate || effectiveCase.discovery_date;
@@ -1204,25 +1204,25 @@ export default function CaseDetail() {
                                   {/* Forensic & Timeline */}
                                   <div className="space-y-8">
                                     <section>
-                                      <h4 className="text-[10px] font-semibold text-gray-900 uppercase tracking-[0.15em] mb-4 flex items-center gap-2">
+                                      <h4 className="text-xs font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                         <div className="h-1 w-3 bg-emerald-500" />
                                         Forensic Metrics
                                       </h4>
                                       <dl className="space-y-3">
                                         <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                          <dt className="text-[11px] text-gray-500 font-light">Units Affected</dt>
+                                          <dt className="text-sm text-gray-500 font-light">Units Affected</dt>
                                           <dd className="text-xs font-medium text-gray-900 tabular-nums font-mono">{units}</dd>
                                         </div>
                                         <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                          <dt className="text-[11px] text-gray-500 font-light">Value Per Unit</dt>
+                                          <dt className="text-sm text-gray-500 font-light">Value Per Unit</dt>
                                           <dd className="text-xs font-medium text-gray-900 tabular-nums font-mono">${perUnit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</dd>
                                         </div>
                                         <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                          <dt className="text-[11px] text-gray-500 font-light">Total Claimed</dt>
+                                          <dt className="text-sm text-gray-500 font-light">Total Claimed</dt>
                                           <dd className="text-xs font-semibold text-gray-900 tabular-nums font-mono">${Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</dd>
                                         </div>
                                         <div className="flex justify-between items-baseline">
-                                          <dt className="text-[11px] text-gray-500 font-light">Confidence Score</dt>
+                                          <dt className="text-sm text-gray-500 font-light">Confidence Score</dt>
                                           <dd className="text-xs font-medium text-gray-900 tabular-nums font-mono">
                                             {(() => {
                                               const conf = effectiveCase.confidence || effectiveCase.confidence_score || 0.85;
@@ -1235,22 +1235,22 @@ export default function CaseDetail() {
                                     </section>
 
                                     <section>
-                                      <h4 className="text-[10px] font-semibold text-gray-900 uppercase tracking-[0.15em] mb-4 flex items-center gap-2">
+                                      <h4 className="text-xs font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                         <div className="h-1 w-3 bg-blue-500" />
                                         Timeline Accuracy
                                       </h4>
                                       <dl className="space-y-3">
                                         <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                          <dt className="text-[11px] text-gray-500 font-light">Issue Identified</dt>
+                                          <dt className="text-sm text-gray-500 font-light">Issue Identified</dt>
                                           <dd className="text-xs font-medium text-gray-900 tabular-nums font-mono">{detectionDate}</dd>
                                         </div>
                                         <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                          <dt className="text-[11px] text-gray-500 font-light">Audit Period</dt>
+                                          <dt className="text-sm text-gray-500 font-light">Audit Period</dt>
                                           <dd className="text-xs font-medium text-gray-900 tabular-nums font-mono">{auditDays} days</dd>
                                         </div>
                                         <div className="flex justify-between items-baseline">
-                                          <dt className="text-[11px] text-gray-500 font-light">Policy Compliance</dt>
-                                          <dd className="text-xs font-medium text-emerald-600 font-mono uppercase tracking-wider">{auditDays <= 180 ? 'Compliant' : 'Exceeded'}</dd>
+                                          <dt className="text-sm text-gray-500 font-light">Policy Compliance</dt>
+                                          <dd className="text-xs font-medium text-emerald-600 font-mono">{auditDays <= 180 ? 'Compliant' : 'Exceeded'}</dd>
                                         </div>
                                       </dl>
                                     </section>
@@ -1259,51 +1259,51 @@ export default function CaseDetail() {
                                   {/* Logistical & Metadata */}
                                   <div className="space-y-8">
                                     <section>
-                                      <h4 className="text-[10px] font-semibold text-gray-900 uppercase tracking-[0.15em] mb-4 flex items-center gap-2">
+                                      <h4 className="text-xs font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                         <div className="h-1 w-3 bg-gray-400" />
                                         Logistical Trace
                                       </h4>
                                       <dl className="space-y-3">
                                         <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                          <dt className="text-[11px] text-gray-500 font-light">ASIN / SKU</dt>
-                                          <dd className="text-[10px] font-mono text-gray-900">{asin} / {sku}</dd>
+                                          <dt className="text-sm text-gray-500 font-light">ASIN / SKU</dt>
+                                          <dd className="text-xs font-mono text-gray-900">{asin} / {sku}</dd>
                                         </div>
                                         <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                          <dt className="text-[11px] text-gray-500 font-light">Fulfillment Center</dt>
+                                          <dt className="text-sm text-gray-500 font-light">Fulfillment Center</dt>
                                           <dd className="text-xs font-medium text-gray-900">{facility || 'N/A'}</dd>
                                         </div>
                                         {orderId && (
                                           <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                            <dt className="text-[11px] text-gray-500 font-light">Reference Trans.</dt>
-                                            <dd className="text-[10px] font-mono text-gray-900 underline underline-offset-2">{orderId}</dd>
+                                            <dt className="text-sm text-gray-500 font-light">Reference Trans.</dt>
+                                            <dd className="text-xs font-mono text-gray-900 underline underline-offset-2">{orderId}</dd>
                                           </div>
                                         )}
                                         {shipmentId && (
                                           <div className="flex justify-between items-baseline">
-                                            <dt className="text-[11px] text-gray-500 font-light">Shipment Ref.</dt>
-                                            <dd className="text-[10px] font-mono text-gray-900">{shipmentId}</dd>
+                                            <dt className="text-sm text-gray-500 font-light">Shipment Ref.</dt>
+                                            <dd className="text-xs font-mono text-gray-900">{shipmentId}</dd>
                                           </div>
                                         )}
                                       </dl>
                                     </section>
 
                                     <section>
-                                      <h4 className="text-[10px] font-semibold text-gray-900 uppercase tracking-[0.15em] mb-4 flex items-center gap-2">
+                                      <h4 className="text-xs font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                         <div className="h-1 w-3 bg-indigo-500" />
                                         System Metadata
                                       </h4>
                                       <dl className="space-y-3">
                                         <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                          <dt className="text-[11px] text-gray-500 font-light">Claim Category</dt>
+                                          <dt className="text-sm text-gray-500 font-light">Claim Category</dt>
                                           <dd className="text-xs font-medium text-gray-900 capitalize font-mono">{caseType.replace(/_/g, ' ') || 'Discrepancy'}</dd>
                                         </div>
                                         <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
-                                          <dt className="text-[11px] text-gray-500 font-light">Engine Match</dt>
+                                          <dt className="text-sm text-gray-500 font-light">Engine Match</dt>
                                           <dd className="text-xs font-medium text-gray-900 capitalize font-mono">{(effectiveCase.match_type || 'order_id').replace(/_/g, ' ')}</dd>
                                         </div>
                                         <div className="flex justify-between items-baseline">
-                                          <dt className="text-[11px] text-gray-500 font-light">Audit Method</dt>
-                                          <dd className="text-[10px] font-medium text-gray-700 uppercase tracking-wider">Autonomous Engine</dd>
+                                          <dt className="text-sm text-gray-500 font-light">Audit Method</dt>
+                                          <dd className="text-xs font-medium text-gray-700">Autonomous Engine</dd>
                                         </div>
                                       </dl>
                                     </section>
@@ -1320,8 +1320,8 @@ export default function CaseDetail() {
                     {activeTab === 'actions' && (
                       <div className="space-y-6">
                         <div>
-                          <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em] mb-1">Required Actions Requested</h3>
-                          <div className="text-[10px] text-gray-500 mb-4">Resolution request to Amazon</div>
+                          <h3 className="text-xs font-medium text-gray-900 mb-1">Required Actions Requested</h3>
+                          <div className="text-xs text-gray-500 mb-4">Resolution request to Amazon</div>
 
                           {(() => {
                             const caseType = (effectiveCase.anomaly_type || effectiveCase.claim_type || effectiveCase.case_type || '').toLowerCase();
@@ -1378,26 +1378,26 @@ export default function CaseDetail() {
                             return (
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-gray-200">
                                 <div className="bg-white p-5">
-                                  <h4 className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.15em] mb-4 border-b border-gray-100 pb-2">
+                                  <h4 className="text-xs font-semibold text-gray-500 mb-4 border-b border-gray-100 pb-2">
                                     Immediate Actions
                                   </h4>
                                   <ol className="space-y-3 text-xs text-gray-700">
                                     {immediateActions.map((action, idx) => (
                                       <li key={idx} className="flex items-start gap-3">
-                                        <span className="text-gray-400 font-mono text-[10px] mt-0.5 w-4 shrink-0">{idx + 1}.</span>
+                                        <span className="text-gray-400 font-mono text-xs mt-0.5 w-4 shrink-0">{idx + 1}.</span>
                                         <span className="text-gray-700 leading-relaxed">{action}</span>
                                       </li>
                                     ))}
                                   </ol>
                                 </div>
                                 <div className="bg-white p-5">
-                                  <h4 className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.15em] mb-4 border-b border-gray-100 pb-2">
+                                  <h4 className="text-xs font-semibold text-gray-500 mb-4 border-b border-gray-100 pb-2">
                                     Preventive Measures
                                   </h4>
                                   <ol className="space-y-3 text-xs text-gray-700">
                                     {preventiveMeasures.map((measure, idx) => (
                                       <li key={idx} className="flex items-start gap-3">
-                                        <span className="text-gray-400 font-mono text-[10px] mt-0.5 w-4 shrink-0">{idx + 1}.</span>
+                                        <span className="text-gray-400 font-mono text-xs mt-0.5 w-4 shrink-0">{idx + 1}.</span>
                                         <span className="text-gray-700 leading-relaxed">{measure}</span>
                                       </li>
                                     ))}
@@ -1410,12 +1410,12 @@ export default function CaseDetail() {
                         <div className="border-t border-gray-100 pt-6">
                           <div className="flex items-center justify-between mb-4">
                             <div>
-                              <h3 className="flex items-center gap-2 text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">
+                              <h3 className="flex items-center gap-2 text-xs font-medium text-gray-900">
                                 <Clock className="h-4 w-4" /> Claim Timeline
                               </h3>
-                              <div className="text-[10px] text-gray-500 mt-0.5 ml-6">Case Progress</div>
+                              <div className="text-xs text-gray-500 mt-0.5 ml-6">Case Progress</div>
                             </div>
-                            <span className="text-[10px] text-gray-500 border border-gray-200 px-2 py-0.5">
+                            <span className="text-xs text-gray-500 border border-gray-200 px-2 py-0.5">
                               {typeof effectiveCase.progress === 'number' ? `${Math.round(effectiveCase.progress)}%` : 'Real-time transparency'}
                             </span>
                           </div>
@@ -1488,8 +1488,8 @@ export default function CaseDetail() {
                     {activeTab === 'contact' && (
                       <div className="space-y-6">
                         <div>
-                          <h3 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em] mb-1">Contact Information</h3>
-                          <div className="text-[10px] text-gray-500 mb-3">Seller Detail</div>
+                          <h3 className="text-xs font-medium text-gray-900 mb-1">Contact Information</h3>
+                          <div className="text-xs text-gray-500 mb-3">Seller Detail</div>
                           <div className="space-y-4 text-xs">
                             <div>
                               <h4 className="font-semibold text-gray-900 mb-2">Seller Contact:</h4>

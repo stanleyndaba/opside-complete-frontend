@@ -306,27 +306,27 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
                 {/* Header */}
                 <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gray-50">
                     <div className="flex items-center gap-3">
-                        <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Sync Logs</h2>
+                        <h2 className="text-xs font-medium text-gray-900">Sync Logs</h2>
                         {status === 'syncing' && (
-                            <div className="flex items-center gap-1.5 text-[10px] text-gray-500">
+                            <div className="flex items-center gap-1.5 text-xs text-gray-500">
                                 <Loader2 className="h-3 w-3 animate-spin" />
                                 <span>Scanning...</span>
                             </div>
                         )}
                         {status === 'completed' && (
-                            <div className="flex items-center gap-1.5 text-[10px] text-gray-700">
+                            <div className="flex items-center gap-1.5 text-xs text-gray-700">
                                 <CheckCircle2 className="h-3 w-3" />
                                 <span>Complete</span>
                             </div>
                         )}
                         {status === 'failed' && (
-                            <div className="flex items-center gap-1.5 text-[10px] text-gray-500">
+                            <div className="flex items-center gap-1.5 text-xs text-gray-500">
                                 <AlertCircle className="h-3 w-3" />
                                 <span>Failed</span>
                             </div>
                         )}
                         {status === 'cancelled' && (
-                            <div className="flex items-center gap-1.5 text-[10px] text-gray-500">
+                            <div className="flex items-center gap-1.5 text-xs text-gray-500">
                                 <AlertCircle className="h-3 w-3" />
                                 <span>Cancelled</span>
                             </div>
@@ -415,7 +415,7 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
                                 View potential claims
                             </button>
                         </div>
-                        <p className="text-[10px] text-gray-500 mt-1.5">Next: review and approve for filing</p>
+                        <p className="text-xs text-gray-500 mt-1.5">Next: review and approve for filing</p>
                     </div>
                 )}
 

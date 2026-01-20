@@ -213,7 +213,7 @@ export default function Billing() {
             {/* Header */}
             <div className="mb-8">
               <h1 className="text-lg font-medium text-gray-900 tracking-tight">Billing & Invoices</h1>
-              <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-[0.15em]">Payment Management</p>
+              <p className="text-xs text-gray-500 mt-0.5">Payment Management</p>
             </div>
 
             {/* Current Plan & Payment Method */}
@@ -221,7 +221,7 @@ export default function Billing() {
               {/* Your Plan Card */}
               <div className="bg-white border border-gray-200 rounded-sm">
                 <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                  <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Current Plan</h2>
+                  <h2 className="text-xs font-medium text-gray-900">Current Plan</h2>
                 </div>
                 <div className="p-6 space-y-4">
                   <div>
@@ -243,7 +243,7 @@ export default function Billing() {
               {/* Payment & Billing Settings Card */}
               <div className="bg-white border border-gray-200 rounded-sm">
                 <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                  <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Payment Method</h2>
+                  <h2 className="text-xs font-medium text-gray-900">Payment Method</h2>
                 </div>
                 <div className="p-6 space-y-4">
                   <div className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200">
@@ -253,15 +253,15 @@ export default function Billing() {
                       </div>
                       <div>
                         <p className="text-xs font-medium text-gray-900">Visa ending in 4242</p>
-                        <p className="text-[10px] text-gray-500">Expires 12/2027</p>
+                        <p className="text-xs text-gray-500">Expires 12/2027</p>
                       </div>
                     </div>
-                    <span className="text-[9px] uppercase tracking-[0.1em] text-emerald-600 font-medium">Active</span>
+                    <span className="text-xs text-emerald-600 font-medium">Active</span>
                   </div>
 
                   <div className="space-y-3">
                     <div>
-                      <label className="text-[10px] uppercase tracking-[0.1em] text-gray-500 font-medium">Invoice Recipients</label>
+                      <label className="text-xs text-gray-500 font-medium">Invoice Recipients</label>
                       <div className="flex gap-2 mt-1">
                         <Input
                           placeholder="Add recipient email"
@@ -283,7 +283,7 @@ export default function Billing() {
                       {invoiceRecipients.length> 0 && (
                         <div className="mt-2 flex flex-wrap gap-1.5">
                           {invoiceRecipients.map((em) => (
-                            <span key={em} className="inline-flex items-center gap-1.5 px-2 py-1 bg-gray-50 border border-gray-200 text-[10px] text-gray-700">
+                            <span key={em} className="inline-flex items-center gap-1.5 px-2 py-1 bg-gray-50 border border-gray-200 text-xs text-gray-700">
                               {em}
                               <button className="text-gray-400 hover:text-gray-600" onClick={() => setInvoiceRecipients(prev => prev.filter(x => x !== em))}>×</button>
                             </span>
@@ -292,7 +292,7 @@ export default function Billing() {
                       )}
                     </div>
                     <div>
-                      <label className="text-[10px] uppercase tracking-[0.1em] text-gray-500 font-medium">Tax / VAT Number</label>
+                      <label className="text-xs text-gray-500 font-medium">Tax / VAT Number</label>
                       <Input
                         placeholder="Optional — shown on invoices"
                         value={taxId}
@@ -321,12 +321,12 @@ export default function Billing() {
             <div className="bg-white border border-gray-200 rounded-sm mb-8">
               <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
                 <div>
-                  <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Billing History</h2>
-                  <p className="text-[10px] text-gray-500 mt-0.5">Complete transparency into every charge</p>
+                  <h2 className="text-xs font-medium text-gray-900">Billing History</h2>
+                  <p className="text-xs text-gray-500 mt-0.5">Complete transparency into every charge</p>
                 </div>
                 <button
                   onClick={() => setExportOpen(true)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-[10px] text-gray-600 border border-gray-200 hover:bg-gray-100 transition-colors">
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-gray-600 border border-gray-200 hover:bg-gray-100 transition-colors">
                   <Download className="h-3 w-3" />
                   Export
                 </button>
@@ -353,7 +353,7 @@ export default function Billing() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="flex items-center gap-2 text-[10px] text-gray-500">
+                  <div className="flex items-center gap-2 text-xs text-gray-500">
                     <span>{filteredInvoices.length} invoices</span>
                     <select
                       className="h-7 bg-gray-50 border border-gray-200 rounded-sm px-2 text-gray-600"
@@ -392,7 +392,7 @@ export default function Billing() {
                 {!loading && !error && pageData.length === 0 && (
                   <div className="text-center py-12 text-gray-500 text-xs">
                     <p className="mb-1">No billing invoices found.</p>
-                    <p className="text-[10px]">Invoices will appear here once recoveries are processed.</p>
+                    <p className="text-xs">Invoices will appear here once recoveries are processed.</p>
                   </div>
                 )}
                 {!loading && !error && pageData.length> 0 && (
@@ -400,13 +400,13 @@ export default function Billing() {
                     <Table>
                       <TableHeader>
                         <TableRow className="border-b border-gray-200">
-                          <TableHead className="text-[10px] uppercase tracking-[0.1em] text-gray-500 font-medium">Invoice</TableHead>
-                          <TableHead className="text-[10px] uppercase tracking-[0.1em] text-gray-500 font-medium">Date</TableHead>
-                          <TableHead className="text-[10px] uppercase tracking-[0.1em] text-gray-500 font-medium">Status</TableHead>
-                          <TableHead className="text-[10px] uppercase tracking-[0.1em] text-gray-500 font-medium text-right">Recovered</TableHead>
-                          <TableHead className="text-[10px] uppercase tracking-[0.1em] text-gray-500 font-medium text-right">Commission</TableHead>
-                          <TableHead className="text-[10px] uppercase tracking-[0.1em] text-gray-500 font-medium text-right">Charged</TableHead>
-                          <TableHead className="text-[10px] uppercase tracking-[0.1em] text-gray-500 font-medium"></TableHead>
+                          <TableHead className="text-xs text-gray-500 font-medium">Invoice</TableHead>
+                          <TableHead className="text-xs text-gray-500 font-medium">Date</TableHead>
+                          <TableHead className="text-xs text-gray-500 font-medium">Status</TableHead>
+                          <TableHead className="text-xs text-gray-500 font-medium text-right">Recovered</TableHead>
+                          <TableHead className="text-xs text-gray-500 font-medium text-right">Commission</TableHead>
+                          <TableHead className="text-xs text-gray-500 font-medium text-right">Charged</TableHead>
+                          <TableHead className="text-xs text-gray-500 font-medium"></TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -428,7 +428,7 @@ export default function Billing() {
                             </TableCell>
                             <TableCell>
                               <span className={cn(
-                                "text-[10px] px-2 py-0.5",
+                                "text-xs px-2 py-0.5",
                                 invoice.status === 'Paid' && "bg-gray-100 text-gray-700",
                                 invoice.status === 'Due' && "bg-amber-50 text-amber-700",
                                 invoice.status === 'Overdue' && "bg-red-50 text-red-700"
@@ -448,7 +448,7 @@ export default function Billing() {
                             <TableCell>
                               <button
                                 onClick={() => window.print()}
-                                className="text-[10px] text-gray-500 hover:text-gray-700">
+                                className="text-xs text-gray-500 hover:text-gray-700">
                                 <Download className="h-3.5 w-3.5" />
                               </button>
                             </TableCell>
@@ -464,7 +464,7 @@ export default function Billing() {
             {/* FAQ */}
             <div className="bg-white border border-gray-200 rounded-sm mb-8">
               <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Frequently Asked Questions</h2>
+                <h2 className="text-xs font-medium text-gray-900">Frequently Asked Questions</h2>
               </div>
               <div className="p-6">
                 <Accordion type="single" collapsible className="w-full">
@@ -509,7 +509,7 @@ export default function Billing() {
 
             {/* Support Link */}
             <div className="text-center py-4">
-              <p className="text-[10px] text-gray-500">
+              <p className="text-xs text-gray-500">
                 Have a billing question?{' '}
                 <Link to="/help" className="text-gray-700 underline hover:text-gray-900">Contact support</Link>
               </p>
@@ -521,8 +521,8 @@ export default function Billing() {
         <Dialog open={exportOpen} onOpenChange={setExportOpen}>
           <DialogContent className="sm:max-w-sm bg-white border border-gray-200 rounded-sm p-0">
             <DialogHeader className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-              <DialogTitle className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Export Data</DialogTitle>
-              <DialogDescription className="text-[10px] text-gray-500 mt-0.5">
+              <DialogTitle className="text-xs font-medium text-gray-900">Export Data</DialogTitle>
+              <DialogDescription className="text-xs text-gray-500 mt-0.5">
                 Download your billing history
               </DialogDescription>
             </DialogHeader>

@@ -102,7 +102,7 @@ export function ProofDocumentsModal({
                         /* Document List */
                         <div className="border border-gray-200 rounded-lg overflow-hidden">
                             <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
-                                <span className="text-[10px] text-gray-500 uppercase tracking-wide font-medium">
+                                <span className="text-xs text-gray-500 font-medium">
                                     {documents.length} Document{documents.length !== 1 ? 's' : ''} Available
                                 </span>
                             </div>
@@ -121,13 +121,13 @@ export function ProofDocumentsModal({
                                                     {getDocumentName(doc)}
                                                 </div>
                                                 <div className="flex items-center gap-2 mt-1">
-                                                    <span className="text-[10px] text-gray-500">
+                                                    <span className="text-xs text-gray-500">
                                                         {getDocumentType(doc)}
                                                     </span>
                                                     {getDocumentDate(doc) && (
                                                         <>
                                                             <span className="text-gray-300">•</span>
-                                                            <span className="text-[10px] text-gray-400">
+                                                            <span className="text-xs text-gray-400">
                                                                 {getDocumentDate(doc)}
                                                             </span>
                                                         </>
@@ -137,17 +137,17 @@ export function ProofDocumentsModal({
                                                 {(doc.supplier || doc.invoice_number || doc.amount) && (
                                                     <div className="flex flex-wrap gap-2 mt-2">
                                                         {doc.supplier && (
-                                                            <span className="text-[10px] px-1.5 py-0.5 bg-gray-50 text-gray-600 border border-gray-200 rounded">
+                                                            <span className="text-xs px-1.5 py-0.5 bg-gray-50 text-gray-600 border border-gray-200 rounded">
                                                                 {doc.supplier}
                                                             </span>
                                                         )}
                                                         {doc.invoice_number && (
-                                                            <span className="text-[10px] px-1.5 py-0.5 bg-gray-50 text-gray-600 border border-gray-200 rounded">
+                                                            <span className="text-xs px-1.5 py-0.5 bg-gray-50 text-gray-600 border border-gray-200 rounded">
                                                                 #{doc.invoice_number}
                                                             </span>
                                                         )}
                                                         {doc.amount && (
-                                                            <span className="text-[10px] px-1.5 py-0.5 bg-gray-50 text-gray-600 border border-gray-200 rounded">
+                                                            <span className="text-xs px-1.5 py-0.5 bg-gray-50 text-gray-600 border border-gray-200 rounded">
                                                                 ${doc.amount.toFixed(2)}
                                                             </span>
                                                         )}

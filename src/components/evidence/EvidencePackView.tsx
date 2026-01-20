@@ -626,7 +626,7 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
           {/* Summary Information */}
           <div className="border border-gray-200 rounded-lg overflow-hidden">
             <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-              <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Claim Summary</h4>
+              <h4 className="text-xs font-semibold text-gray-700">Claim Summary</h4>
             </div>
             <div className="bg-white">
               <div className="divide-y divide-gray-100">
@@ -674,7 +674,7 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
           {/* Order & Inventory Evidence */}
           <div className="border border-gray-200 rounded-lg overflow-hidden">
             <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-              <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Order & Inventory Evidence</h4>
+              <h4 className="text-xs font-semibold text-gray-700">Order & Inventory Evidence</h4>
             </div>
             <div className="bg-white">
               {organizedDocs.orderDocs.length > 0 ? (
@@ -684,7 +684,7 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="text-xs font-medium text-gray-900">{doc.name}</div>
-                          <div className="text-[10px] text-gray-500 mt-1">
+                          <div className="text-xs text-gray-500 mt-1">
                             {doc.supplier && <span>Supplier: {doc.supplier} • </span>}
                             {doc.invoice && <span>Invoice: {doc.invoice} • </span>}
                             {doc.amount && <span>{formatCurrency(doc.amount)}</span>}
@@ -692,14 +692,14 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
                           {doc.extracted?.order_ids && doc.extracted.order_ids.length > 0 && (
                             <div className="flex flex-wrap gap-1 mt-2">
                               {doc.extracted.order_ids.map((id, j) => (
-                                <span key={j} className="px-1.5 py-0.5 bg-gray-100 text-gray-700 rounded text-[10px] font-medium">
+                                <span key={j} className="px-1.5 py-0.5 bg-gray-100 text-gray-700 rounded text-xs font-medium">
                                   Order #{id}
                                 </span>
                               ))}
                             </div>
                           )}
                         </div>
-                        <span className="text-[10px] text-gray-600 ml-3">
+                        <span className="text-xs text-gray-600 ml-3">
                           {Math.round((doc.confidence || 0) * 100)}% match
                         </span>
                       </div>
@@ -715,7 +715,7 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
           {/* Shipment & Delivery Evidence */}
           <div className="border border-gray-200 rounded-lg overflow-hidden">
             <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-              <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Shipment & Delivery Evidence</h4>
+              <h4 className="text-xs font-semibold text-gray-700">Shipment & Delivery Evidence</h4>
             </div>
             <div className="bg-white">
               {organizedDocs.shipmentDocs.length > 0 ? (
@@ -728,14 +728,14 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
                           {doc.extracted?.tracking_numbers && doc.extracted.tracking_numbers.length > 0 && (
                             <div className="flex flex-wrap gap-1 mt-2">
                               {doc.extracted.tracking_numbers.map((t, j) => (
-                                <span key={j} className="px-1.5 py-0.5 bg-gray-100 text-gray-700 rounded text-[10px] font-medium">
+                                <span key={j} className="px-1.5 py-0.5 bg-gray-100 text-gray-700 rounded text-xs font-medium">
                                   {t}
                                 </span>
                               ))}
                             </div>
                           )}
                         </div>
-                        <span className="text-[10px] text-gray-600 ml-3">
+                        <span className="text-xs text-gray-600 ml-3">
                           {Math.round((doc.confidence || 0) * 100)}% match
                         </span>
                       </div>
@@ -751,8 +751,8 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
           {/* Policy Reference & Legal Argument */}
           <div className="border border-gray-200 rounded-lg overflow-hidden">
             <div className="bg-gray-50 border-b border-gray-200 px-4 py-2 flex items-center justify-between">
-              <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Policy Reference & Argument</h4>
-              <span className={`text-[10px] font-medium px-2 py-0.5 rounded ${policyArgument.withinWindow ? 'bg-emerald-100 text-emerald-700' : 'text-gray-600'}`}>
+              <h4 className="text-xs font-semibold text-gray-700">Policy Reference & Argument</h4>
+              <span className={`text-xs font-medium px-2 py-0.5 rounded ${policyArgument.withinWindow ? 'bg-emerald-100 text-emerald-700' : 'text-gray-600'}`}>
                 {policyArgument.withinWindow ? 'Within Window' : 'Outside Window'}
               </span>
             </div>
@@ -765,11 +765,11 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
                 </div>
                 <div className="flex px-4 py-2.5">
                   <div className="flex-1">
-                    <span className="text-[10px] text-gray-500 uppercase tracking-wide">Filing Deadline</span>
+                    <span className="text-xs text-gray-500">Filing Deadline</span>
                     <div className="text-xs font-medium text-gray-900">{policy.deadline}</div>
                   </div>
                   <div className="flex-1">
-                    <span className="text-[10px] text-gray-500 uppercase tracking-wide">Claim Age</span>
+                    <span className="text-xs text-gray-500">Claim Age</span>
                     <div className="text-xs font-medium text-gray-900">{policyArgument.daysOld} days</div>
                   </div>
                 </div>
@@ -777,7 +777,7 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
 
               {/* Legal Argument */}
               <div className="border-t border-gray-200 px-4 py-3 bg-gray-50">
-                <div className="text-[10px] text-gray-500 uppercase tracking-wide font-medium mb-2">Reimbursement Argument</div>
+                <div className="text-xs text-gray-500 font-medium mb-2">Reimbursement Argument</div>
                 <div className="bg-white border border-gray-200 rounded p-3">
                   <p className="text-xs text-gray-700 leading-relaxed">
                     "{policyArgument.argument}"
@@ -791,14 +791,14 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
           {organizedDocs.otherDocs.length > 0 && (
             <div className="border border-gray-200 rounded-lg overflow-hidden">
               <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-                <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Additional Supporting Documents</h4>
+                <h4 className="text-xs font-semibold text-gray-700">Additional Supporting Documents</h4>
               </div>
               <div className="bg-white">
                 <div className="divide-y divide-gray-100">
                   {organizedDocs.otherDocs.map((doc, i) => (
                     <div key={doc.id || i} className="px-4 py-3 flex items-center justify-between">
                       <span className="text-xs font-medium text-gray-900">{doc.name}</span>
-                      <span className="text-[10px] text-gray-600">
+                      <span className="text-xs text-gray-600">
                         {Math.round((doc.confidence || 0) * 100)}% match
                       </span>
                     </div>

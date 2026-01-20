@@ -58,7 +58,7 @@ export default function WhatsNew() {
               <h1 className="text-lg font-medium text-gray-900 tracking-tight">
                 What's New
               </h1>
-              <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-[0.15em]">
+              <p className="text-xs text-gray-500 mt-0.5">
                 Product Updates & Releases
               </p>
               <p className="mt-4 text-sm text-gray-600 max-w-2xl leading-relaxed">
@@ -70,7 +70,7 @@ export default function WhatsNew() {
             <div className="space-y-8">
               {orderedMonths.map((month) => (
                 <section key={month}>
-                  <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em] mb-4">
+                  <h2 className="text-xs font-medium text-gray-900 mb-4">
                     {month}
                   </h2>
                   <div className="space-y-4">
@@ -80,10 +80,10 @@ export default function WhatsNew() {
                         className="bg-white border border-gray-200 rounded-sm p-4">
                         {/* Top row: Tag + Date */}
                         <div className="flex items-center justify-between mb-3">
-                          <span className="px-2 py-0.5 text-[10px] font-medium bg-gray-100 text-gray-700 border border-gray-200 uppercase tracking-[0.05em]">
+                          <span className="px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200">
                             {update.tag}
                           </span>
-                          <div className="flex items-center gap-1 text-[10px] text-gray-500">
+                          <div className="flex items-center gap-1 text-xs text-gray-500">
                             <Calendar className="h-3 w-3" />
                             {update.date}
                           </div>
@@ -127,7 +127,7 @@ export default function WhatsNew() {
 
             {/* Feedback Footer */}
             <footer className="mt-10 pt-6 border-t border-gray-200">
-              <p className="text-[10px] text-gray-500">
+              <p className="text-xs text-gray-500">
                 Have a feature request?{' '}
                 <a href="mailto:support@margin.app" className="text-gray-900 hover:text-gray-600 font-medium">
                   Let us know

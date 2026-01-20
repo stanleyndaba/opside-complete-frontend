@@ -378,11 +378,11 @@ const Settings = () => {
                         {sellerProfile.company_name || 'Verification Required'}
                       </h3>
                       <div className="flex items-center gap-3 mt-1">
-                        <Badge variant="secondary" className="bg-gray-100 text-gray-700 text-[10px] uppercase tracking-wider border-gray-200 px-2 py-0.5">
+                        <Badge variant="secondary" className="bg-gray-100 text-gray-700 text-xs border-gray-200 px-2 py-0.5">
                           {isAmazonConnected ? 'Institutional Account' : 'Pending Verification'}
                         </Badge>
                         {sellerProfile.amazon_seller_id && (
-                          <span className="text-[10px] text-gray-400 font-mono tracking-tighter">
+                          <span className="text-xs text-gray-400 font-mono tracking-tighter">
                             ID: {sellerProfile.amazon_seller_id}
                           </span>
                         )}
@@ -391,15 +391,15 @@ const Settings = () => {
 
                     <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 pt-2">
                       <div className="space-y-1">
-                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">Marketplaces</p>
+                        <p className="text-xs font-bold text-gray-500">Marketplaces</p>
                         <p className="text-sm font-semibold text-gray-900">{marketplaces.length} Active</p>
                       </div>
                       <div className="space-y-1">
-                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">Last Sync</p>
+                        <p className="text-xs font-bold text-gray-500">Last Sync</p>
                         <p className="text-sm font-semibold text-gray-900">{formatDate(sellerProfile.last_sync_completed_at)}</p>
                       </div>
                       <div className="space-y-1">
-                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">Network Age</p>
+                        <p className="text-xs font-bold text-gray-500">Network Age</p>
                         <p className="text-sm font-semibold text-gray-900">{formatDate(sellerProfile.created_at)}</p>
                       </div>
                     </div>
@@ -420,7 +420,7 @@ const Settings = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card className="bg-white border-gray-200 text-gray-700 shadow-sm rounded-sm">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-[11px] font-bold text-gray-500 uppercase tracking-[0.15em]">Platform Status</CardTitle>
+                  <CardTitle className="text-sm font-bold text-gray-500">Platform Status</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-center justify-between">
@@ -428,7 +428,7 @@ const Settings = () => {
                       <Store className="h-4 w-4 text-gray-400" />
                       <span className="text-sm font-medium text-gray-900">Amazon SP-API</span>
                     </div>
-                    <Badge className={cn("text-[10px] px-2 py-0.5", isAmazonConnected ? "bg-emerald-50 text-emerald-700 border-emerald-100" : "bg-gray-50 text-gray-500 border-gray-100")}>
+                    <Badge className={cn("text-xs px-2 py-0.5", isAmazonConnected ? "bg-emerald-50 text-emerald-700 border-emerald-100" : "bg-gray-50 text-gray-500 border-gray-100")}>
                       {isAmazonConnected ? 'Enabled' : 'Disconnected'}
                     </Badge>
                   </div>
@@ -437,7 +437,7 @@ const Settings = () => {
                       <CreditCard className="h-4 w-4 text-gray-400" />
                       <span className="text-sm font-medium text-gray-900">Stripe Billing</span>
                     </div>
-                    <Badge className={cn("text-[10px] px-2 py-0.5", sellerProfile.stripe_connected ? "bg-emerald-50 text-emerald-700 border-emerald-100" : "bg-gray-50 text-gray-500 border-gray-100")}>
+                    <Badge className={cn("text-xs px-2 py-0.5", sellerProfile.stripe_connected ? "bg-emerald-50 text-emerald-700 border-emerald-100" : "bg-gray-50 text-gray-500 border-gray-100")}>
                       {sellerProfile.stripe_connected ? 'Enabled' : 'Inactive'}
                     </Badge>
                   </div>
@@ -446,13 +446,13 @@ const Settings = () => {
 
               <Card className="bg-white border-gray-200 text-gray-700 shadow-sm rounded-sm">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-[11px] font-bold text-gray-500 uppercase tracking-[0.15em]">Institutional Support</CardTitle>
+                  <CardTitle className="text-sm font-bold text-gray-500">Institutional Support</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-xs text-gray-600 leading-relaxed mb-4">
                     Your account is currently under institutional audit. For white-glove support or bulk account management, contact our dedicated desk.
                   </p>
-                  <Button variant="outline" size="sm" className="w-full text-[11px] font-semibold border-gray-200 hover:bg-gray-50 rounded-none" onClick={() => navigate('/help')}>
+                  <Button variant="outline" size="sm" className="w-full text-sm font-semibold border-gray-200 hover:bg-gray-50 rounded-none" onClick={() => navigate('/help')}>
                     Contact Dedicated Support
                   </Button>
                 </CardContent>
@@ -482,10 +482,10 @@ const Settings = () => {
                     <div>
                       <h3 className="text-lg font-medium text-gray-900 tracking-tight">Billing Dashboard</h3>
                       <div className="flex items-center gap-3 mt-1">
-                        <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 text-[10px] uppercase tracking-wider border-emerald-100 px-2 py-0.5">
+                        <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 text-xs border-emerald-100 px-2 py-0.5">
                           Active Account
                         </Badge>
-                        <span className="text-[10px] text-gray-400 font-mono tracking-tighter uppercase">
+                        <span className="text-xs text-gray-400 font-mono tracking-tighter">
                           Valuation: Real-Time
                         </span>
                       </div>
@@ -493,15 +493,15 @@ const Settings = () => {
 
                     <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 pt-2">
                       <div className="space-y-1">
-                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">Subscription</p>
+                        <p className="text-xs font-bold text-gray-500">Subscription</p>
                         <p className="text-sm font-semibold text-gray-900">Enterprise Audit</p>
                       </div>
                       <div className="space-y-1">
-                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">ROI Coverage</p>
+                        <p className="text-xs font-bold text-gray-500">ROI Coverage</p>
                         <p className="text-sm font-semibold text-gray-900">100% Guaranteed</p>
                       </div>
                       <div className="space-y-1">
-                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">Fee Structure</p>
+                        <p className="text-xs font-bold text-gray-500">Fee Structure</p>
                         <p className="text-sm font-semibold text-gray-900">Commission-Based</p>
                       </div>
                     </div>
@@ -521,7 +521,7 @@ const Settings = () => {
 
             <Card className="bg-white border-gray-200 text-gray-700 shadow-sm rounded-sm">
               <CardHeader className="border-b border-gray-100 pb-3">
-                <CardTitle className="text-[11px] font-bold text-gray-500 uppercase tracking-[0.15em]">Auto-Claim (ACG)</CardTitle>
+                <CardTitle className="text-sm font-bold text-gray-500">Auto-Claim (ACG)</CardTitle>
               </CardHeader>
               <CardContent className="pt-4 space-y-4">
                 <div className="flex items-center justify-between">
@@ -532,7 +532,7 @@ const Settings = () => {
                   <Switch defaultChecked />
                 </div>
                 <div className="p-3 bg-gray-50 border border-gray-100 rounded-sm">
-                  <p className="text-[10px] text-gray-400 leading-relaxed font-medium">
+                  <p className="text-xs text-gray-400 leading-relaxed font-medium">
                     Note: Enabled by default for VIP accounts. You can manually override individual cases in the Recoveries terminal.
                   </p>
                 </div>
@@ -560,10 +560,10 @@ const Settings = () => {
                     <div>
                       <h3 className="text-lg font-medium text-gray-900 tracking-tight">API Management</h3>
                       <div className="flex items-center gap-3 mt-1">
-                        <Badge variant="secondary" className="bg-blue-50 text-blue-700 text-[10px] uppercase tracking-wider border-blue-100 px-2 py-0.5">
+                        <Badge variant="secondary" className="bg-blue-50 text-blue-700 text-xs border-blue-100 px-2 py-0.5">
                           Production Environment
                         </Badge>
-                        <span className="text-[10px] text-gray-400 font-mono tracking-tighter uppercase">
+                        <span className="text-xs text-gray-400 font-mono tracking-tighter">
                           mgn_live_v2
                         </span>
                       </div>
@@ -571,15 +571,15 @@ const Settings = () => {
 
                     <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 pt-2">
                       <div className="space-y-1">
-                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">Available Scopes</p>
+                        <p className="text-xs font-bold text-gray-500">Available Scopes</p>
                         <p className="text-sm font-semibold text-gray-900">7 Active Endpoints</p>
                       </div>
                       <div className="space-y-1">
-                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">Webhooks</p>
+                        <p className="text-xs font-bold text-gray-500">Webhooks</p>
                         <p className="text-sm font-semibold text-gray-900">Operational</p>
                       </div>
                       <div className="space-y-1">
-                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">Rate Limit</p>
+                        <p className="text-xs font-bold text-gray-500">Rate Limit</p>
                         <p className="text-sm font-semibold text-gray-900">Institutional High</p>
                       </div>
                     </div>
@@ -598,20 +598,20 @@ const Settings = () => {
             </Card>
 
             <div className="p-4 border border-gray-200 rounded-sm bg-gray-50">
-              <h4 className="text-[11px] font-bold text-gray-500 uppercase tracking-[0.15em] mb-4">Integration Resources</h4>
+              <h4 className="text-sm font-bold text-gray-500 mb-4">Integration Resources</h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="flex items-start gap-3">
                   <Monitor className="h-4 w-4 text-gray-400 mt-0.5" />
                   <div>
                     <p className="text-xs font-semibold text-gray-900">Documentation</p>
-                    <p className="text-[10px] text-gray-500">API references and authentication guides.</p>
+                    <p className="text-xs text-gray-500">API references and authentication guides.</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <Zap className="h-4 w-4 text-gray-400 mt-0.5" />
                   <div>
                     <p className="text-xs font-semibold text-gray-900">Webhooks</p>
-                    <p className="text-[10px] text-gray-500">Standardized events for claim lifecycle.</p>
+                    <p className="text-xs text-gray-500">Standardized events for claim lifecycle.</p>
                   </div>
                 </div>
               </div>
@@ -653,10 +653,10 @@ const Settings = () => {
                     <div>
                       <h3 className="text-lg font-medium text-gray-900 tracking-tight">Integrations Hub</h3>
                       <div className="flex items-center gap-3 mt-1">
-                        <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 text-[10px] uppercase tracking-wider border-emerald-100 px-2 py-0.5">
+                        <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 text-xs border-emerald-100 px-2 py-0.5">
                           {activePlatforms.length} Direct Connection
                         </Badge>
-                        <span className="text-[10px] text-gray-400 font-mono tracking-tighter uppercase">
+                        <span className="text-xs text-gray-400 font-mono tracking-tighter">
                           Last Handshake: {activePlatforms[0].lastSync}
                         </span>
                       </div>
@@ -687,7 +687,7 @@ const Settings = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card className="bg-white border-gray-200 text-gray-700 shadow-sm rounded-sm">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-[11px] font-bold text-gray-500 uppercase tracking-[0.15em]">Integration Roadmap</CardTitle>
+                  <CardTitle className="text-sm font-bold text-gray-500">Integration Roadmap</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {upcomingPlatforms.map(p => (
@@ -696,7 +696,7 @@ const Settings = () => {
                         <img src={p.icon} alt="" className="h-3.5 w-3.5 grayscale" />
                         <span className="text-xs text-gray-900 font-medium">{p.name}</span>
                       </div>
-                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Planned</span>
+                      <span className="text-xs font-bold text-gray-400">Planned</span>
                     </div>
                   ))}
                 </CardContent>
@@ -704,13 +704,13 @@ const Settings = () => {
 
               <Card className="bg-white border-gray-200 text-gray-700 shadow-sm rounded-sm">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-[11px] font-bold text-gray-500 uppercase tracking-[0.15em]">Custom Integrations</CardTitle>
+                  <CardTitle className="text-sm font-bold text-gray-500">Custom Integrations</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-xs text-gray-600 leading-relaxed mb-4">
                     Require a custom connector for your proprietary ERP or specialized accounting stack? Our systems engineers can facilitate private deployments.
                   </p>
-                  <Button variant="outline" size="sm" className="w-full text-[11px] font-semibold border-gray-200 hover:bg-gray-50 rounded-none" onClick={() => navigate('/help')}>
+                  <Button variant="outline" size="sm" className="w-full text-sm font-semibold border-gray-200 hover:bg-gray-50 rounded-none" onClick={() => navigate('/help')}>
                     Request Private Connector
                   </Button>
                 </CardContent>
@@ -739,10 +739,10 @@ const Settings = () => {
                     <div>
                       <h3 className="text-lg font-medium text-gray-900 tracking-tight">Notification Protocol</h3>
                       <div className="flex items-center gap-3 mt-1">
-                        <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 text-[10px] uppercase tracking-wider border-emerald-100 px-2 py-0.5">
+                        <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 text-xs border-emerald-100 px-2 py-0.5">
                           Active Monitoring
                         </Badge>
-                        <span className="text-[10px] text-gray-400 font-mono tracking-tighter uppercase">
+                        <span className="text-xs text-gray-400 font-mono tracking-tighter">
                           Standard Priority
                         </span>
                       </div>
@@ -750,15 +750,15 @@ const Settings = () => {
 
                     <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 pt-2">
                       <div className="space-y-1">
-                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">Email Alerts</p>
+                        <p className="text-xs font-bold text-gray-500">Email Alerts</p>
                         <p className="text-sm font-semibold text-gray-900">Enabled</p>
                       </div>
                       <div className="space-y-1">
-                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">Web Push</p>
+                        <p className="text-xs font-bold text-gray-500">Web Push</p>
                         <p className="text-sm font-semibold text-gray-900">Inactive</p>
                       </div>
                       <div className="space-y-1">
-                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">Slack/Webhook</p>
+                        <p className="text-xs font-bold text-gray-500">Slack/Webhook</p>
                         <p className="text-sm font-semibold text-gray-900">Premium Required</p>
                       </div>
                     </div>
@@ -778,14 +778,14 @@ const Settings = () => {
 
             <Card className="bg-white border-gray-200 text-gray-700 shadow-sm rounded-sm">
               <CardHeader className="border-b border-gray-100 pb-3">
-                <CardTitle className="text-[11px] font-bold text-gray-500 uppercase tracking-[0.15em]">Audit Events</CardTitle>
+                <CardTitle className="text-sm font-bold text-gray-500">Audit Events</CardTitle>
               </CardHeader>
               <CardContent className="pt-4 divide-y divide-gray-100">
                 {notificationSettings.map((setting) => (
                   <div key={setting.id} className="flex items-center justify-between py-3 first:pt-0 last:pb-0">
                     <div className="space-y-0.5">
                       <p className="text-sm font-medium text-gray-900">{setting.label}</p>
-                      <p className="text-[11px] text-gray-500">{setting.description}</p>
+                      <p className="text-sm text-gray-500">{setting.description}</p>
                     </div>
                     <Switch defaultChecked={setting.enabled} />
                   </div>
@@ -814,10 +814,10 @@ const Settings = () => {
                     <div>
                       <h3 className="text-lg font-medium text-gray-900 tracking-tight">Security Backbone</h3>
                       <div className="flex items-center gap-3 mt-1">
-                        <Badge variant="secondary" className="bg-blue-50 text-blue-700 text-[10px] uppercase tracking-wider border-blue-100 px-2 py-0.5">
+                        <Badge variant="secondary" className="bg-blue-50 text-blue-700 text-xs border-blue-100 px-2 py-0.5">
                           Enterprise Protection
                         </Badge>
-                        <span className="text-[10px] text-gray-400 font-mono tracking-tighter uppercase">
+                        <span className="text-xs text-gray-400 font-mono tracking-tighter">
                           Level: High
                         </span>
                       </div>
@@ -825,15 +825,15 @@ const Settings = () => {
 
                     <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 pt-2">
                       <div className="space-y-1">
-                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">2FA Status</p>
+                        <p className="text-xs font-bold text-gray-500">2FA Status</p>
                         <p className="text-sm font-semibold text-gray-900">{twoFactorEnabled ? 'Active' : 'Disabled'}</p>
                       </div>
                       <div className="space-y-1">
-                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">Active Sessions</p>
+                        <p className="text-xs font-bold text-gray-500">Active Sessions</p>
                         <p className="text-sm font-semibold text-gray-900">{loginHistory.length} Authorized</p>
                       </div>
                       <div className="space-y-1">
-                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">Login Alerts</p>
+                        <p className="text-xs font-bold text-gray-500">Login Alerts</p>
                         <p className="text-sm font-semibold text-gray-900">{loginAlertsEnabled ? 'Monitored' : 'Off'}</p>
                       </div>
                     </div>
@@ -854,8 +854,8 @@ const Settings = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card className="bg-white border-gray-200 text-gray-700 shadow-sm rounded-sm">
                 <CardHeader className="pb-2 flex flex-row items-center justify-between">
-                  <CardTitle className="text-[11px] font-bold text-gray-500 uppercase tracking-[0.15em]">Login History</CardTitle>
-                  <Button variant="ghost" size="sm" className="h-6 text-[10px] font-bold text-blue-600 uppercase tracking-widest hover:bg-blue-50" onClick={exportLoginHistory}>
+                  <CardTitle className="text-sm font-bold text-gray-500">Login History</CardTitle>
+                  <Button variant="ghost" size="sm" className="h-6 text-xs font-bold text-blue-600 hover:bg-blue-50" onClick={exportLoginHistory}>
                     Export Logs
                   </Button>
                 </CardHeader>
@@ -868,10 +868,10 @@ const Settings = () => {
                         </div>
                         <div>
                           <p className="text-xs font-semibold text-gray-900">{login.device}</p>
-                          <p className="text-[10px] text-gray-500">{login.location} · {login.time}</p>
+                          <p className="text-xs text-gray-500">{login.location} · {login.time}</p>
                         </div>
                       </div>
-                      {login.current && <Badge className="bg-emerald-50 text-emerald-700 border-emerald-100 text-[9px] px-1.5 py-0">Current</Badge>}
+                      {login.current && <Badge className="bg-emerald-50 text-emerald-700 border-emerald-100 text-xs px-1.5 py-0">Current</Badge>}
                     </div>
                   ))}
                 </CardContent>
@@ -879,7 +879,7 @@ const Settings = () => {
 
               <Card className="bg-white border-gray-200 text-gray-700 shadow-sm rounded-sm">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-[11px] font-bold text-gray-500 uppercase tracking-[0.15em]">Security Protocols</CardTitle>
+                  <CardTitle className="text-sm font-bold text-gray-500">Security Protocols</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4 pt-2">
                   <div className="flex items-center justify-between">
@@ -891,7 +891,7 @@ const Settings = () => {
                     <Switch checked={trustedDevice} onCheckedChange={(val) => { setTrustedDevice(val); persistSecurity({ trustedDevice: val }); }} />
                   </div>
                   <Separator className="bg-gray-100" />
-                  <Button variant="outline" size="sm" className="w-full text-[11px] font-semibold border-red-100 text-red-600 hover:bg-red-50 hover:border-red-200 rounded-none" onClick={logoutOtherDevices} disabled={loggingOutOthers}>
+                  <Button variant="outline" size="sm" className="w-full text-sm font-semibold border-red-100 text-red-600 hover:bg-red-50 hover:border-red-200 rounded-none" onClick={logoutOtherDevices} disabled={loggingOutOthers}>
                     {loggingOutOthers ? 'Processing...' : 'Terminate Other Sessions'}
                   </Button>
                 </CardContent>
@@ -901,7 +901,7 @@ const Settings = () => {
             <Card className="bg-white border-red-100 text-gray-700 shadow-sm rounded-sm overflow-hidden border">
               <div className="bg-red-50/50 px-6 py-3 border-b border-red-100 flex items-center gap-2">
                 <AlertTriangle className="h-4 w-4 text-red-600" />
-                <h4 className="text-[11px] font-bold text-red-700 uppercase tracking-[0.15em]">Danger Zone</h4>
+                <h4 className="text-sm font-bold text-red-700">Danger Zone</h4>
               </div>
               <CardContent className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="space-y-1">
@@ -952,7 +952,7 @@ const Settings = () => {
             {/* Header */}
             <header className="mb-10">
               <h1 className="text-lg font-medium text-gray-900 tracking-tight">Settings</h1>
-              <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-[0.15em]">Account Configuration</p>
+              <p className="text-xs text-gray-500 mt-0.5">Account Configuration</p>
             </header>
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -960,7 +960,7 @@ const Settings = () => {
               <div className="lg:col-span-1">
                 <div className="lg:sticky lg:top-6 h-fit bg-white border border-gray-200 rounded-none">
                   <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
-                    <h2 className="text-xs font-medium text-gray-900 uppercase tracking-[0.15em]">Quick Settings</h2>
+                    <h2 className="text-xs font-medium text-gray-900">Quick Settings</h2>
                   </div>
                   <nav className="p-2 space-y-0.5">
                     {menuItems.map((item) => (
@@ -968,7 +968,7 @@ const Settings = () => {
                         key={item.id}
                         onClick={() => item.id === 'careers' ? navigate('/careers') : setActiveSection(item.id)}
                         className={cn(
-                          "relative w-full flex items-center gap-3 px-3 py-2 text-[11px] transition-colors text-left",
+                          "relative w-full flex items-center gap-3 px-3 py-2 text-sm transition-colors text-left",
                           activeSection === item.id
                             ? "bg-gray-100 text-gray-900"
                             : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"

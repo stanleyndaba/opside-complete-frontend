@@ -21,7 +21,7 @@ const MarginBoard = () => {
                     <div className="space-y-6 text-center md:text-left">
                         <div className="inline-flex items-center gap-2 px-3 py-1 bg-gray-100 rounded-sm">
                             <span className="h-1.5 w-1.5 bg-gray-900 rounded-full" />
-                            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-900">
+                            <span className="text-xs font-bold text-gray-900">
                                 Compliance Infrastructure
                             </span>
                         </div>
@@ -40,7 +40,7 @@ const MarginBoard = () => {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-gray-100 pt-12">
                         <div className="space-y-3">
                             <ShieldCheck className="h-5 w-5 text-gray-900" strokeWidth={1.5} />
-                            <h3 className="text-sm font-bold uppercase tracking-wide text-gray-900">
+                            <h3 className="text-sm font-bold text-gray-900">
                                 Automated KYC
                             </h3>
                             <p className="text-sm text-gray-500 leading-relaxed">
@@ -50,7 +50,7 @@ const MarginBoard = () => {
 
                         <div className="space-y-3">
                             <Building2 className="h-5 w-5 text-gray-900" strokeWidth={1.5} />
-                            <h3 className="text-sm font-bold uppercase tracking-wide text-gray-900">
+                            <h3 className="text-sm font-bold text-gray-900">
                                 Entity Management
                             </h3>
                             <p className="text-sm text-gray-500 leading-relaxed">
@@ -60,7 +60,7 @@ const MarginBoard = () => {
 
                         <div className="space-y-3">
                             <Lock className="h-5 w-5 text-gray-900" strokeWidth={1.5} />
-                            <h3 className="text-sm font-bold uppercase tracking-wide text-gray-900">
+                            <h3 className="text-sm font-bold text-gray-900">
                                 Bank-Grade Security
                             </h3>
                             <p className="text-sm text-gray-500 leading-relaxed">

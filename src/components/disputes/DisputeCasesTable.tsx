@@ -204,32 +204,32 @@ export function DisputeCasesTable() {
       return (
         <span className="flex items-center gap-1.5 text-emerald-600">
           <CheckCircle2 className="w-3 h-3" />
-          <span className="text-[10px] font-medium uppercase tracking-wider">{status}</span>
+          <span className="text-xs font-medium">{status}</span>
         </span>
       );
     } else if (statusLower === 'rejected' || statusLower === 'denied' || statusLower === 'failed') {
       return (
         <span className="flex items-center gap-1.5 text-red-600">
           <XCircle className="w-3 h-3" />
-          <span className="text-[10px] font-medium uppercase tracking-wider">{status}</span>
+          <span className="text-xs font-medium">{status}</span>
         </span>
       );
     } else if (statusLower === 'pending' || statusLower === 'submitted') {
       return (
         <span className="flex items-center gap-1.5 text-amber-600">
           <Clock className="w-3 h-3" />
-          <span className="text-[10px] font-medium uppercase tracking-wider">{status}</span>
+          <span className="text-xs font-medium">{status}</span>
         </span>
       );
     } else if (statusLower === 'in_progress' || statusLower === 'filing') {
       return (
         <span className="flex items-center gap-1.5 text-blue-600">
           <Loader2 className="w-3 h-3 animate-spin" />
-          <span className="text-[10px] font-medium uppercase tracking-wider">{status}</span>
+          <span className="text-xs font-medium">{status}</span>
         </span>
       );
     } else {
-      return <span className="text-[10px] text-gray-500 font-medium uppercase tracking-wider">{status}</span>;
+      return <span className="text-xs text-gray-500 font-medium">{status}</span>;
     }
   };
 
@@ -238,11 +238,11 @@ export function DisputeCasesTable() {
 
     const statusLower = filingStatus.toLowerCase();
     if (statusLower === 'filed' || statusLower === 'submitted') {
-      return <span className="text-[10px] font-mono text-gray-900 font-medium">FILED</span>;
+      return <span className="text-xs font-mono text-gray-900 font-medium">FILED</span>;
     } else if (statusLower === 'filing') {
-      return <span className="text-[10px] font-mono text-blue-600 animate-pulse font-medium">FILING...</span>;
+      return <span className="text-xs font-mono text-blue-600 animate-pulse font-medium">FILING...</span>;
     } else if (statusLower === 'retrying') {
-      return <span className="text-[10px] font-mono text-amber-600 font-medium">RETRYING</span>;
+      return <span className="text-xs font-mono text-amber-600 font-medium">RETRYING</span>;
     } else if (statusLower === 'quarantined_dangerous_doc') {
       return (
         <TooltipProvider>
@@ -250,11 +250,11 @@ export function DisputeCasesTable() {
             <TooltipTrigger asChild>
               <span className="flex items-center gap-1 text-red-600 cursor-help">
                 <FileWarning className="w-3 h-3" />
-                <span className="text-[10px] font-mono font-medium">QUARANTINED</span>
+                <span className="text-xs font-mono font-medium">QUARANTINED</span>
               </span>
             </TooltipTrigger>
             <TooltipContent side="top" className="max-w-[300px] bg-white text-gray-900 border-gray-200 shadow-xl rounded-none">
-              <p className="text-[10px] font-mono leading-relaxed">Dangerous document detected (credit note, return, refund). Review documents before filing.</p>
+              <p className="text-xs font-mono leading-relaxed">Dangerous document detected (credit note, return, refund). Review documents before filing.</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -277,11 +277,11 @@ export function DisputeCasesTable() {
             <TooltipTrigger asChild>
               <span className="flex items-center gap-1 text-amber-600 cursor-help">
                 <ShieldAlert className="w-3 h-3" />
-                <span className="text-[10px] font-mono font-medium">NEEDS APPROVAL</span>
+                <span className="text-xs font-mono font-medium">NEEDS APPROVAL</span>
               </span>
             </TooltipTrigger>
             <TooltipContent side="top" className="max-w-[300px] bg-white text-gray-900 border-gray-200 shadow-xl rounded-none">
-              <p className="text-[10px] font-mono leading-relaxed">{tooltipText}</p>
+              <p className="text-xs font-mono leading-relaxed">{tooltipText}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -293,11 +293,11 @@ export function DisputeCasesTable() {
             <TooltipTrigger asChild>
               <span className="flex items-center gap-1 text-gray-500 cursor-help">
                 <Ban className="w-3 h-3" />
-                <span className="text-[10px] font-mono font-medium">DUPLICATE</span>
+                <span className="text-xs font-mono font-medium">DUPLICATE</span>
               </span>
             </TooltipTrigger>
             <TooltipContent side="top" className="max-w-[300px] bg-white text-gray-900 border-gray-200 shadow-xl rounded-none">
-              <p className="text-[10px] font-mono leading-relaxed">Active claim already exists for this order. Blocked to prevent abuse flag.</p>
+              <p className="text-xs font-mono leading-relaxed">Active claim already exists for this order. Blocked to prevent abuse flag.</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -309,11 +309,11 @@ export function DisputeCasesTable() {
             <TooltipTrigger asChild>
               <span className="flex items-center gap-1 text-emerald-600 cursor-help">
                 <DollarSign className="w-3 h-3" />
-                <span className="text-[10px] font-mono font-medium">ALREADY PAID</span>
+                <span className="text-xs font-mono font-medium">ALREADY PAID</span>
               </span>
             </TooltipTrigger>
             <TooltipContent side="top" className="max-w-[300px] bg-white text-gray-900 border-gray-200 shadow-xl rounded-none">
-              <p className="text-[10px] font-mono leading-relaxed">Amazon already reimbursed this item. Filing blocked to prevent fraud flag.</p>
+              <p className="text-xs font-mono leading-relaxed">Amazon already reimbursed this item. Filing blocked to prevent fraud flag.</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -325,17 +325,17 @@ export function DisputeCasesTable() {
             <TooltipTrigger asChild>
               <span className="flex items-center gap-1 text-red-600 cursor-help">
                 <AlertTriangle className="w-3 h-3" />
-                <span className="text-[10px] font-mono font-medium">FAILED</span>
+                <span className="text-xs font-mono font-medium">FAILED</span>
               </span>
             </TooltipTrigger>
             <TooltipContent side="top" className="max-w-[300px] bg-white text-gray-900 border-gray-200 shadow-xl rounded-none">
-              <p className="text-[10px] font-mono leading-relaxed">{filingError || 'Unknown error - check logs'}</p>
+              <p className="text-xs font-mono leading-relaxed">{filingError || 'Unknown error - check logs'}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
       );
     } else {
-      return <span className="text-[10px] font-mono text-gray-500 font-medium uppercase">PENDING</span>;
+      return <span className="text-xs font-mono text-gray-500 font-medium">PENDING</span>;
     }
   };
 
@@ -358,14 +358,14 @@ export function DisputeCasesTable() {
     // Blocked statuses - no action available
     if (filingStatus === 'duplicate_blocked' || filingStatus === 'already_reimbursed') {
       return (
-        <span className="text-[10px] text-gray-400 font-medium tracking-[0.1em] uppercase px-3">BLOCKED</span>
+        <span className="text-xs text-gray-400 font-medium px-3">BLOCKED</span>
       );
     }
 
     // Quarantined - needs document review (no auto-action)
     if (filingStatus === 'quarantined_dangerous_doc') {
       return (
-        <span className="text-[10px] text-red-400 font-medium tracking-[0.1em] uppercase px-3">REVIEW REQUIRED</span>
+        <span className="text-xs text-red-400 font-medium px-3">REVIEW REQUIRED</span>
       );
     }
 
@@ -377,7 +377,7 @@ export function DisputeCasesTable() {
           disabled={isProcessing}
           variant="ghost"
           size="sm"
-          className="h-7 px-3 text-amber-600 hover:text-amber-700 hover:bg-amber-50 rounded-none text-[10px] font-medium tracking-[0.1em] uppercase">
+          className="h-7 px-3 text-amber-600 hover:text-amber-700 hover:bg-amber-50 rounded-none text-xs font-medium">
           {isProcessing ? (
             <Loader2 className="w-3 h-3 mr-1.5 animate-spin" />
           ) : (
@@ -395,7 +395,7 @@ export function DisputeCasesTable() {
           disabled={isProcessing}
           variant="ghost"
           size="sm"
-          className="h-7 px-3 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-none text-[10px] font-medium tracking-[0.1em] uppercase">
+          className="h-7 px-3 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-none text-xs font-medium">
           {isProcessing ? (
             <Loader2 className="w-3 h-3 mr-1.5 animate-spin" />
           ) : (
@@ -413,7 +413,7 @@ export function DisputeCasesTable() {
           disabled={isProcessing}
           variant="ghost"
           size="sm"
-          className="h-7 px-3 text-gray-900 hover:bg-gray-100 rounded-none text-[10px] font-medium tracking-[0.1em] uppercase">
+          className="h-7 px-3 text-gray-900 hover:bg-gray-100 rounded-none text-xs font-medium">
           {isProcessing ? (
             <Loader2 className="w-3 h-3 mr-1.5 animate-spin" />
           ) : (
@@ -426,7 +426,7 @@ export function DisputeCasesTable() {
 
     if (filingStatus === 'filing' || filingStatus === 'retrying') {
       return (
-        <span className="text-[10px] text-gray-400 font-medium tracking-[0.1em] uppercase px-3">PROCESSING...</span>
+        <span className="text-xs text-gray-400 font-medium px-3">PROCESSING...</span>
       );
     }
 
@@ -437,7 +437,7 @@ export function DisputeCasesTable() {
     return (
       <div className="py-12 flex flex-col items-center justify-center space-y-4">
         <Loader2 className="w-6 h-6 text-gray-300 animate-spin" />
-        <span className="text-[11px] text-gray-400 uppercase tracking-[0.2em]">Synchronizing Intelligence</span>
+        <span className="text-sm text-gray-400">Synchronizing Intelligence</span>
       </div>
     );
   }
@@ -446,7 +446,7 @@ export function DisputeCasesTable() {
     return (
       <div className="py-12 flex flex-col items-center justify-center space-y-4">
         <AlertTriangle className="w-6 h-6 text-red-200" />
-        <span className="text-[11px] text-gray-500 uppercase tracking-[0.2em]">Interface Error: {error}</span>
+        <span className="text-sm text-gray-500">Interface Error: {error}</span>
         <Button variant="outline" size="sm" onClick={() => fetchCases()} className="h-8 rounded-none border-gray-200">
           RETRY CONNECTION
         </Button>
@@ -459,30 +459,30 @@ export function DisputeCasesTable() {
       {/* Header with Filters */}
       <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-white">
         <div>
-          <h3 className="text-[11px] font-semibold text-gray-900 uppercase tracking-[0.15em]">Dispute Cases</h3>
-          <p className="text-[10px] text-gray-400 mt-1 uppercase tracking-wider font-medium">
+          <h3 className="text-sm font-semibold text-gray-900">Dispute Cases</h3>
+          <p className="text-xs text-gray-400 mt-1 font-medium">
             {cases.length} cases • Agent 7 Filing System
           </p>
         </div>
         <div className="flex items-center gap-3">
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[160px] h-9 text-[11px] bg-white text-gray-600 border-gray-200 hover:bg-gray-50 rounded-none focus:ring-0">
+            <SelectTrigger className="w-[160px] h-9 text-sm bg-white text-gray-600 border-gray-200 hover:bg-gray-50 rounded-none focus:ring-0">
               <SelectValue placeholder="STATUS: ALL" />
             </SelectTrigger>
             <SelectContent className="rounded-none border-gray-100 shadow-2xl">
-              <SelectItem value="all" className="text-[11px] uppercase tracking-wider">ALL STATUSES</SelectItem>
-              <SelectItem value="pending" className="text-[11px] uppercase tracking-wider">PENDING</SelectItem>
-              <SelectItem value="submitted" className="text-[11px] uppercase tracking-wider">SUBMITTED</SelectItem>
-              <SelectItem value="in_progress" className="text-[11px] uppercase tracking-wider">IN PROGRESS</SelectItem>
-              <SelectItem value="approved" className="text-[11px] uppercase tracking-wider">APPROVED</SelectItem>
-              <SelectItem value="rejected" className="text-[11px] uppercase tracking-wider">REJECTED</SelectItem>
+              <SelectItem value="all" className="text-sm">ALL STATUSES</SelectItem>
+              <SelectItem value="pending" className="text-sm">PENDING</SelectItem>
+              <SelectItem value="submitted" className="text-sm">SUBMITTED</SelectItem>
+              <SelectItem value="in_progress" className="text-sm">IN PROGRESS</SelectItem>
+              <SelectItem value="approved" className="text-sm">APPROVED</SelectItem>
+              <SelectItem value="rejected" className="text-sm">REJECTED</SelectItem>
             </SelectContent>
           </Select>
           <Button
             onClick={() => fetchCases(statusFilter !== 'all' ? statusFilter : undefined)}
             variant="ghost"
             size="sm"
-            className="h-9 px-4 text-gray-400 hover:text-gray-900 border border-gray-100 hover:border-gray-200 rounded-none text-[11px] font-medium tracking-wider">
+            className="h-9 px-4 text-gray-400 hover:text-gray-900 border border-gray-100 hover:border-gray-200 rounded-none text-sm font-medium">
             <RefreshCw className="w-3.5 h-3.5 mr-2" />
             SYNCHRONIZE
           </Button>
@@ -495,8 +495,8 @@ export function DisputeCasesTable() {
           <div className="py-20 flex flex-col items-center justify-center space-y-4">
             <Search className="w-8 h-8 text-gray-100" />
             <div className="flex flex-col items-center">
-              <span className="text-[11px] text-gray-900 font-semibold uppercase tracking-[0.2em]">Queue Clean</span>
-              <span className="text-[10px] text-gray-400 mt-1 uppercase tracking-wider">No cases require immediate filing</span>
+              <span className="text-sm text-gray-900 font-semibold">Queue Clean</span>
+              <span className="text-xs text-gray-400 mt-1">No cases require immediate filing</span>
             </div>
           </div>
         ) : (
@@ -517,7 +517,7 @@ export function DisputeCasesTable() {
                         {caseItem.case_number || 'CASE-ID-PENDING'}
                       </span>
                       {caseItem.amazon_case_id && (
-                        <span className="flex items-center gap-1.5 px-2 py-0.5 bg-gray-100 text-[10px] font-mono text-gray-600">
+                        <span className="flex items-center gap-1.5 px-2 py-0.5 bg-gray-100 text-xs font-mono text-gray-600">
                           AMZ: {caseItem.amazon_case_id}
                           <ExternalLink className="w-2.5 h-2.5" />
                         </span>
@@ -525,14 +525,14 @@ export function DisputeCasesTable() {
                     </div>
 
                     <div className="flex items-center gap-2 mt-2">
-                      <div className="flex items-center gap-2 text-[10px] font-medium tracking-wider uppercase text-gray-400">
+                      <div className="flex items-center gap-2 text-xs font-medium text-gray-400">
                         <span>{getStatusBadge(caseItem.status || 'unknown')}</span>
                         <span className="text-gray-200">|</span>
                         <span>{getFilingStatusBadge(caseItem.filing_status, caseItem.filing_error, caseItem.metadata)}</span>
                         <span className="text-gray-200">|</span>
                         <span className="text-gray-900 font-mono tabular-nums">{formatCurrency(caseItem.amount || 0, caseItem.currency || 'USD')}</span>
                         <span className="text-gray-200">|</span>
-                        <span className="font-mono text-[9px] lowercase tracking-normal">id: {caseItem.claim_id?.substring(0, 8)}...</span>
+                        <span className="font-mono text-xs lowercase tracking-normal">id: {caseItem.claim_id?.substring(0, 8)}...</span>
                         {caseItem.retry_count && caseItem.retry_count > 0 && (
                           <>
                             <span className="text-gray-200">|</span>
@@ -550,7 +550,7 @@ export function DisputeCasesTable() {
                   {caseItem.claim_id && (
                     <Link
                       to={`/recoveries/${caseItem.claim_id}`}
-                      className="flex items-center gap-2.5 text-[10px] font-bold text-gray-400 hover:text-gray-900 tracking-[0.15em] transition-all duration-200 group/link"
+                      className="flex items-center gap-2.5 text-xs font-bold text-gray-400 hover:text-gray-900 transition-all duration-200 group/link"
                     >
                       VIEW RECOVERY
                       <ArrowRight className="w-3 h-3 translate-x-0 group-hover/link:translate-x-1 transition-transform duration-200" />
