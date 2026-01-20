@@ -997,7 +997,7 @@ export function Dashboard() {
                       onClick={() => setIsActivityExpanded(!isActivityExpanded)}
                       className="px-5 py-4 border-b border-gray-100 bg-white flex items-center justify-between w-full hover:bg-gray-50/50 transition-colors">
                       <div className="flex items-center gap-3">
-                        <h3 className="text-xs font-semibold text-gray-900">System Activity</h3>
+                        <h3 className="text-xs font-semibold text-gray-900">Reimbursement Activity</h3>
                         {unreadCount > 0 && (
                           <div className="flex items-center justify-center bg-gray-900 px-1.5 py-0.5 rounded-none">
                             <span className="text-xs font-bold text-white tabular-nums">
