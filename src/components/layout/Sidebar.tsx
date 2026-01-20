@@ -6,6 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api';
@@ -70,6 +71,12 @@ export function Sidebar({
   const { tenant } = useTenant();
   const [connectedEmail, setConnectedEmail] = useState<string | null>(null);
   const [claimCount, setClaimCount] = useState<number | null>(null);
+  const [signOutOpen, setSignOutOpen] = useState(false);
+
+  const handleSignOut = async () => {
+    try { await api.logout(); } catch (_) { }
+    window.location.href = '/';
+  };
 
   // Get tenant slug from URL or context
   const currentTenantSlug = tenantSlug || tenant?.slug || 'default';
@@ -289,10 +296,7 @@ export function Sidebar({
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
-                  onClick={async () => {
-                    try { await api.logout(); } catch (_) { }
-                    window.location.href = '/';
-                  }}
+                  onClick={() => setSignOutOpen(true)}
                   aria-label="Sign Out"
                   className={cn(
                     "relative flex items-center justify-center w-8 h-8 transition-colors rounded-none",
@@ -310,16 +314,42 @@ export function Sidebar({
       ) : (
         <div className="mt-auto border-t border-gray-100 py-2">
           <button
-            onClick={async () => {
-              try { await api.logout(); } catch (_) { }
-              window.location.href = '/';
-            }}
+            onClick={() => setSignOutOpen(true)}
             className="w-full flex items-center gap-2.5 px-6 py-3 text-left hover:bg-gray-50 transition-all group text-gray-500">
             <LogOut className="h-3.5 w-3.5 text-gray-400 group-hover:text-gray-900" strokeWidth={1.5} />
             <span className="text-xs font-bold group-hover:text-gray-900">Sign Out</span>
           </button>
         </div>
       )}
+
+      {/* Sign Out Confirmation Dialog */}
+      <Dialog open={signOutOpen} onOpenChange={setSignOutOpen}>
+        <DialogContent className="sm:max-w-[400px] bg-white border-gray-200 p-0 gap-0 rounded-none">
+          <DialogHeader className="px-6 pt-6 pb-4 border-b border-gray-100">
+            <DialogTitle className="text-base font-semibold text-gray-900">
+              Signing out already?
+            </DialogTitle>
+            <DialogDescription className="text-sm text-gray-500 mt-2 leading-relaxed">
+              Opside continues to monitor your margins and recover funds around the clock. Log back in anytime to review the latest recoveries.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="px-6 py-4 bg-gray-50/50 flex gap-3 sm:justify-end">
+            <Button
+              variant="outline"
+              onClick={() => setSignOutOpen(false)}
+              className="border-gray-200 text-gray-700 hover:bg-gray-100 rounded-none font-medium"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSignOut}
+              className="bg-gray-900 hover:bg-gray-800 text-white rounded-none font-medium"
+            >
+              Sign Out
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       {/* Edge toggle handle */}
       <button
         aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
