@@ -251,17 +251,17 @@ export function NotificationBell({
                     </p>
                     {(() => {
                       let statusText = '';
-                      if (notification.type === 'funds_deposited') statusText = 'PAID';
-                      else if (notification.type === 'case_filed') statusText = 'OPEN';
-                      else if (notification.type === 'claim_detected') statusText = 'FOUND';
+                      if (notification.type === 'funds_deposited') statusText = 'Paid';
+                      else if (notification.type === 'case_filed') statusText = 'Open';
+                      else if (notification.type === 'claim_detected') statusText = 'Found';
 
                       if (!statusText) return null;
 
                       return (
                         <span className={cn(
-                          "text-xs font-bold shrink-0 transition-colors",
-                          notification.type === 'funds_deposited' ? "text-emerald-600" :
-                            notification.type === 'case_filed' ? "text-blue-600" : "text-gray-400"
+                          "text-xs font-medium shrink-0 transition-colors",
+                          notification.type === 'funds_deposited' ? "text-emerald-500" :
+                            notification.type === 'case_filed' ? "text-blue-500" : "text-gray-400"
                         )}>
                           {statusText}
                         </span>
