@@ -330,7 +330,7 @@ export function Sidebar({
               Signing out already?
             </DialogTitle>
             <DialogDescription className="text-sm text-gray-500 mt-2 leading-relaxed">
-              Opside continues to monitor your margins and recover funds around the clock. Log back in anytime to review the latest recoveries.
+              Margin continues to monitor your margins and recover funds around the clock. Log back in anytime to review the latest recoveries.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="px-6 py-4 bg-gray-50/50 flex gap-3 sm:justify-end">
