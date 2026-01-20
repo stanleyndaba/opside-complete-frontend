@@ -269,6 +269,19 @@ export function Sidebar({
         </div>
       </ScrollArea>
 
+      {/* Version Badge */}
+      <div className={cn(
+        "border-t border-gray-100 py-2",
+        isCollapsed ? "px-2 text-center" : "px-4"
+      )}>
+        <span className={cn(
+          "text-[10px] font-mono text-gray-400",
+          isCollapsed ? "block" : ""
+        )}>
+          {isCollapsed ? "v1" : "v1.0.0-GOLD"}
+        </span>
+      </div>
+
       {/* Logout Only */}
       {isCollapsed ? (
         <div className="mt-auto border-t border-gray-100 py-4 flex flex-col items-center justify-center">
