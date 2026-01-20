@@ -108,7 +108,7 @@ export function Sidebar({
     { title: 'Overview', icon: LayoutDashboard, href: `/app/${currentTenantSlug}` },
     { title: 'Claims', icon: ShieldCheck, href: `/app/${currentTenantSlug}/recoveries` },
     { title: 'Documents and Files', icon: FileText, href: `/app/${currentTenantSlug}/evidence-locker` },
-    // { title: 'Reports', icon: BarChart3, href: `/app/${currentTenantSlug}/reports` }, // Hidden for MVP
+    { title: 'Reports', icon: BarChart3, href: `/app/${currentTenantSlug}/reports` },
     { title: 'Refund Recoveries', icon: Plug, href: `/app/${currentTenantSlug}/upcoming-payments` },
     { title: 'Transaction History', icon: BarChart3, href: `/app/${currentTenantSlug}/transaction-history` },
     { title: 'Integrations', icon: Box, href: `/app/${currentTenantSlug}/integrations-hub` }
