@@ -592,12 +592,6 @@ const Index = () => {
               {/* Text content - now centered */}
               <div className="flex flex-col items-center space-y-6">
 
-                {/* Verified badge - moved to top */}
-                <div className="flex items-center justify-center gap-2 text-xs md:text-sm text-gray-500 font-medium">
-                  <ShieldCheck className="h-4 w-4 md:h-5 md:w-5 text-[#36454F]" />
-                  <span>Verified Amazon SP-API Developer</span>
-                </div>
-
                 {/* Trust chip */}
                 <div className="relative inline-flex items-center gap-2 md:gap-4 rounded-[20px] md:rounded-[25px] border border-emerald-100 bg-white/85 px-3 py-1.5 md:px-5 md:py-2 shadow-[0_12px_45px_rgba(16,185,129,0.25)] backdrop-blur supports-[backdrop-filter]:bg-white/70 overflow-hidden">
                   <span className="pointer-events-none absolute inset-0 rounded-[20px] md:rounded-[25px] bg-gradient-to-r from-emerald-200/40 via-white/10 to-sky-200/40 blur-xl" aria-hidden="true" />
