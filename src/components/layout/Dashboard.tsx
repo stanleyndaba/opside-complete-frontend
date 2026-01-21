@@ -130,7 +130,7 @@ export function Dashboard() {
       return [{
         id: 'synthetic-recovery-root',
         type: 'funds_deposited',
-        title: 'Funds Successfully Recovered',
+        title: 'Reimbursement Overview',
         message: `Verified total of ${formatCurrencyWithSelection(recoveredTotal, recoveredCurrency)} has been secured across ${reconciledCount || 'active'} settlements.`,
         status: 'read' as const,
         priority: 'high' as const,
@@ -758,7 +758,7 @@ export function Dashboard() {
                       <div className="flex items-center gap-4">
                         <div className="w-[3px] h-3 bg-gray-900" />
                         <div>
-                          <h2 className="text-xs font-bold text-gray-900">Funds Successfully Recovered</h2>
+                          <h2 className="text-sm font-bold text-gray-900">Reimbursement Overview</h2>
                           <p className="text-xs text-gray-400 font-mono mt-1">Audit-verified reimbursements secured.</p>
                         </div>
                       </div>
