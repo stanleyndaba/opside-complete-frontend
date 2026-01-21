@@ -170,8 +170,15 @@ export default function Billing() {
   };
 
   const exportAction = () => {
-    if (exportFormat === 'csv') exportBillingCSV();
-    if (exportFormat === 'pdf') window.print();
+    if (exportFormat === 'csv') {
+      exportBillingCSV();
+    }
+    if (exportFormat === 'pdf') {
+      toast({
+        title: 'Download Individual Invoices',
+        description: 'Click the download icon on any invoice row to get a PDF for that specific invoice.',
+      });
+    }
     setExportOpen(false);
   };
 
