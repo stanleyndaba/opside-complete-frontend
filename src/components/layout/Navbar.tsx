@@ -293,33 +293,35 @@ export function Navbar({
                 )}
               </div>
 
-              {/* Functional Icons Group */}
-              <div className="flex items-center gap-x-2 border-l border-gray-100 pl-4 ml-2">
-                {/* Notification bell */}
-                <div className="flex flex-col items-center">
+
+              {/* Functional Icons Group - Institutional Layout */}
+              <div className="flex items-center gap-x-6 border-l border-gray-200/60 pl-6 ml-4">
+                {/* Notifications */}
+                <div className="flex flex-col items-center gap-0.5">
                   <NotificationBell
                     label="Margin Notifications"
                     showLabel={false}
-                    className="h-8 w-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-sm transition-colors"
-                    iconClassName="h-4 w-4"
+                    className="h-9 w-9 flex items-center justify-center text-gray-600 hover:text-gray-900 hover:bg-gray-100/80 rounded-md transition-all"
+                    iconClassName="h-[18px] w-[18px]"
                   />
-                  <span className="text-[9px] text-gray-400 font-medium -mt-0.5">Updates</span>
+                  <span className="text-[10px] text-gray-500 font-medium tracking-wide">Updates</span>
                 </div>
 
-                {/* Notes Icon */}
-                <div className="relative">
+                {/* Notes */}
+                <div className="flex flex-col items-center gap-0.5">
                   <button
                     ref={noteIconRef}
                     onClick={() => setShowNotesModal(true)}
                     onMouseEnter={() => setIsNoteHovered(true)}
                     onMouseLeave={() => setIsNoteHovered(false)}
-                    className="h-8 w-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-sm transition-colors relative"
+                    className="h-9 w-9 flex items-center justify-center text-gray-600 hover:text-gray-900 hover:bg-gray-100/80 rounded-md transition-all relative"
                     aria-label="Notes">
-                    <NotebookPen className="h-4 w-4" />
+                    <NotebookPen className="h-[18px] w-[18px]" />
                     {notes.length > 0 && (
-                      <span className="absolute top-1 right-1 h-1.5 w-1.5 bg-amber-500 rounded-full" />
+                      <span className="absolute top-1 right-1 h-2 w-2 bg-amber-500 rounded-full" />
                     )}
                   </button>
+                  <span className="text-[10px] text-gray-500 font-medium tracking-wide">Notes</span>
 
                   {/* Hover tooltip showing recent notes */}
                   {isNoteHovered && notes.length > 0 && (
@@ -344,47 +346,50 @@ export function Navbar({
                   )}
                 </div>
 
-                {/* Gift icon with hover tooltip */}
-                <HoverCard openDelay={100} closeDelay={200}>
-                  <HoverCardTrigger asChild>
-                    <button
-                      onClick={() => setShowReferralPopup(true)}
-                      className="h-8 w-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-sm transition-colors relative"
-                      aria-label="Referral program">
-                      <Gift className="h-4 w-4" />
-                      <span className="absolute top-1 right-1 h-1.5 w-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                    </button>
-                  </HoverCardTrigger>
-                  <HoverCardContent
-                    side="bottom"
-                    align="center"
-                    className="w-72 p-0 bg-white border border-gray-200 shadow-2xl rounded-sm overflow-hidden">
-                    <div className="p-5">
-                      <div className="flex items-center gap-2 mb-3">
-                        <div className="h-8 w-8 rounded-full bg-emerald-50 flex items-center justify-center">
-                          <Gift className="h-4 w-4 text-emerald-600" />
+                {/* Referral */}
+                <div className="flex flex-col items-center gap-0.5">
+                  <HoverCard openDelay={100} closeDelay={200}>
+                    <HoverCardTrigger asChild>
+                      <button
+                        onClick={() => setShowReferralPopup(true)}
+                        className="h-9 w-9 flex items-center justify-center text-gray-600 hover:text-gray-900 hover:bg-gray-100/80 rounded-md transition-all relative"
+                        aria-label="Referral program">
+                        <Gift className="h-[18px] w-[18px]" />
+                        <span className="absolute top-1 right-1 h-2 w-2 bg-emerald-500 rounded-full animate-pulse" />
+                      </button>
+                    </HoverCardTrigger>
+                    <HoverCardContent
+                      side="bottom"
+                      align="center"
+                      className="w-72 p-0 bg-white border border-gray-200 shadow-2xl rounded-sm overflow-hidden">
+                      <div className="p-5">
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className="h-8 w-8 rounded-full bg-emerald-50 flex items-center justify-center">
+                            <Gift className="h-4 w-4 text-emerald-600" />
+                          </div>
+                          <span className="text-xs font-bold text-emerald-600">Limited Offer</span>
                         </div>
-                        <span className="text-xs font-bold text-emerald-600">Limited Offer</span>
+                        <h4 className="text-sm font-semibold text-gray-900 mb-2">6 Month Referral Program</h4>
+                        <p className="text-xs text-gray-600 leading-relaxed">
+                          Sellers that invite sellers to Margin secure <span className="font-bold text-emerald-600">100% of their recovered funds</span> without commission deductions.
+                        </p>
+                        <div className="mt-4 pt-3 border-t border-gray-100">
+                          <span className="text-xs text-gray-400">Click to learn more</span>
+                        </div>
                       </div>
-                      <h4 className="text-sm font-semibold text-gray-900 mb-2">6 Month Referral Program</h4>
-                      <p className="text-xs text-gray-600 leading-relaxed">
-                        Sellers that invite sellers to Margin secure <span className="font-bold text-emerald-600">100% of their recovered funds</span> without commission deductions.
-                      </p>
-                      <div className="mt-4 pt-3 border-t border-gray-100">
-                        <span className="text-xs text-gray-400">Click to learn more</span>
-                      </div>
-                    </div>
-                  </HoverCardContent>
-                </HoverCard>
+                    </HoverCardContent>
+                  </HoverCard>
+                  <span className="text-[10px] text-gray-500 font-medium tracking-wide">Refer</span>
+                </div>
               </div>
 
-              {/* Tools Group - Connect */}
-              <div className="flex items-center border-l border-gray-100 pl-4 ml-2">
+              {/* Connect - Separate Zone */}
+              <div className="flex items-center border-l border-gray-200/60 pl-6 ml-2">
                 <button
                   onClick={() => navigate('/integrations-hub')}
-                  className="flex items-center gap-1.5 h-8 px-3 text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-sm transition-colors group/connect">
-                  <Link2 className="h-3.5 w-3.5 text-gray-400 group-hover/connect:text-gray-600" />
-                  <span className="hidden sm:inline font-medium">Connect</span>
+                  className="flex items-center gap-2 h-9 px-4 text-xs text-gray-700 hover:text-gray-900 bg-gray-50 hover:bg-gray-100 rounded-md transition-all font-medium border border-gray-200/50">
+                  <Link2 className="h-4 w-4 text-gray-500" />
+                  <span className="hidden sm:inline">Connect</span>
                 </button>
               </div>
             </div>
