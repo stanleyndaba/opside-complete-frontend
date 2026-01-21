@@ -622,13 +622,20 @@ export default function Reports() {
     document.body.removeChild(a);
   };
   const exportAction = () => {
-    if (exportFormat === 'csv') exportToCSV();
-    if (exportFormat === 'pdf') window.print();
+    if (exportFormat === 'csv') {
+      exportToCSV();
+      toast({
+        title: "Export Complete",
+        description: "Report exported as CSV",
+      });
+    }
+    if (exportFormat === 'pdf') {
+      toast({
+        title: "PDF Export",
+        description: "CSV export recommended for detailed reports. PDF summary feature coming soon.",
+      });
+    }
     setExportOpen(false);
-    toast({
-      title: "Export Complete",
-      description: `Report exported as ${exportFormat.toUpperCase()}`,
-    });
   };
   // Memoize chart data to prevent unnecessary recalculations
   const chartData = useMemo(() => {
