@@ -228,30 +228,30 @@ export function Sidebar({
         className
       )}
       style={{ willChange: 'width' }}>
-      {/* Branding + Collapse */}
+      {/* Branding Header */}
       <div
         className={cn(
-          "border-b border-gray-100 flex flex-col",
-          isCollapsed ? "py-6 items-center justify-center" : "px-6 py-5 items-start justify-center"
+          "border-b border-gray-100 flex items-center h-14",
+          isCollapsed ? "justify-center px-2" : "justify-between px-4"
         )}>
-        <div className="flex items-center gap-3">
+        <div className={cn("flex items-center", isCollapsed ? "gap-0" : "gap-2.5")}>
           <img
             src="/logoimagetwo.png"
             alt="Margin"
-            className={cn(isCollapsed ? "h-3.5" : "h-4", "w-auto object-contain")}
+            className={cn(isCollapsed ? "h-4" : "h-4", "w-auto object-contain")}
           />
           {!isCollapsed && (
-            <span className="text-[12px] font-bold text-gray-900">
-              Margin
-            </span>
+            <div className="flex flex-col">
+              <span className="text-sm font-semibold text-gray-900 leading-tight">
+                Margin
+              </span>
+              <div className="flex items-center gap-1">
+                <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                <span className="text-[10px] text-gray-400">Secured</span>
+              </div>
+            </div>
           )}
         </div>
-        {!isCollapsed && (
-          <div className="flex items-center gap-1.5 mt-1.5">
-            <div className="h-1 w-1 rounded-full bg-emerald-500" />
-            <span className="text-xs text-gray-400 font-mono">Secured</span>
-          </div>
-        )}
       </div>
 
       <ScrollArea className="flex-1">
