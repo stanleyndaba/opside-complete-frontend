@@ -2177,6 +2177,30 @@ export default function Recoveries() {
     return sortedCounts;
   }, [claims, metrics, mergedRecoveries]);
 
+  // Tab counts - real data for Claims, Evidence Matching, Dispute Cases tabs
+  const tabCounts = useMemo(() => {
+    const dataSource = mergedRecoveries !== null ? mergedRecoveries : claims;
+
+    // Claims: total claims count
+    const claimsCount = dataSource.length;
+
+    // Evidence Matching: claims with matched documents or high confidence matches
+    const evidenceMatchingCount = dataSource.filter(c =>
+      (c.matchedDocs && c.matchedDocs.length > 0) ||
+      (c.matchedCount && c.matchedCount > 0) ||
+      (c.evidence_count && c.evidence_count > 0)
+    ).length;
+
+    // Dispute Cases: claims that have been submitted or are under active review
+    const disputeStatuses = ['submitted', 'under_review', 'under review', 'in_progress', 'disputed', 'pending_review'];
+    const disputeCasesCount = dataSource.filter(c =>
+      disputeStatuses.includes((c.status || '').toLowerCase()) ||
+      c.case_id || c.case_number
+    ).length;
+
+    return { claimsCount, evidenceMatchingCount, disputeCasesCount };
+  }, [claims, mergedRecoveries]);
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'New': return 'bg-gray-100 text-gray-700 border border-gray-200';
@@ -2351,17 +2375,17 @@ export default function Recoveries() {
                   <TabsTrigger
                     value="claims"
                     className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
-                    Claims
+                    Claims {tabCounts.claimsCount > 0 && <span className="ml-1.5 text-gray-400">{tabCounts.claimsCount}</span>}
                   </TabsTrigger>
                   <TabsTrigger
                     value="matching"
                     className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
-                    Evidence Matching
+                    Evidence Matching {tabCounts.evidenceMatchingCount > 0 && <span className="ml-1.5 text-gray-400">{tabCounts.evidenceMatchingCount}</span>}
                   </TabsTrigger>
                   <TabsTrigger
                     value="cases"
                     className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
-                    Dispute Cases
+                    Dispute Cases {tabCounts.disputeCasesCount > 0 && <span className="ml-1.5 text-gray-400">{tabCounts.disputeCasesCount}</span>}
                   </TabsTrigger>
                 </TabsList>
 
