@@ -12,8 +12,8 @@ import { useToast } from '@/components/ui/use-toast';
 const PROVIDER_META: Record<string, { label: string; icon: React.ReactNode; colorClass: string; scopes: string[] }> = {
   amazon: {
     label: 'Amazon SP-API',
-    icon: <Shield className="h-6 w-6 text-emerald-400" />,
-    colorClass: 'bg-emerald-500 hover:bg-emerald-400',
+    icon: <Shield className="h-6 w-6 text-gray-600" />,
+    colorClass: 'bg-gray-900 hover:bg-gray-800',
     scopes: ['orders.read', 'inventory.read', 'transactions.read'],
   },
   gmail: {
@@ -126,11 +126,10 @@ export default function ReconnectProvider() {
                 </div>
                 <Separator className="bg-gray-200" />
                 <div className="flex flex-col sm:flex-row items-center gap-3">
-                  <Button onClick={begin} className="bg-emerald-500 hover:bg-emerald-600 text-white w-full sm:w-auto" disabled={loading}>
+                  <Button onClick={begin} className="bg-gray-900 hover:bg-gray-800 text-white rounded-none w-full sm:w-auto" disabled={loading}>
                     {loading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />} Continue to {meta.label}
-                    <ExternalLink className="h-4 w-4 ml-2" />
                   </Button>
-                  <Button variant="outline" className="w-full sm:w-auto border-gray-200 text-gray-700 hover:bg-gray-50" onClick={() => navigate('/integrations-hub')}>Cancel</Button>
+                  <Button variant="outline" className="w-full sm:w-auto border-gray-200 text-gray-700 hover:bg-gray-50 rounded-none" onClick={() => navigate('/integrations-hub')}>Cancel</Button>
                 </div>
                 <p className="text-xs text-gray-500">
                   You can revoke access at any time from Integrations. Tokens are stored securely and never shared.
