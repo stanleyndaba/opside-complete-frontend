@@ -295,14 +295,16 @@ export function Navbar({
 
               {/* Functional Icons Group */}
               <div className="flex items-center gap-x-2 border-l border-gray-100 pl-4 ml-2">
-                {/* Message icon */}
-                <NotificationBell
-                  label="Margin Notifications"
-                  iconOverride={Mail}
-                  showLabel={false}
-                  className="h-8 w-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-sm transition-colors"
-                  iconClassName="h-4 w-4"
-                />
+                {/* Notification bell */}
+                <div className="flex flex-col items-center">
+                  <NotificationBell
+                    label="Margin Notifications"
+                    showLabel={false}
+                    className="h-8 w-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-sm transition-colors"
+                    iconClassName="h-4 w-4"
+                  />
+                  <span className="text-[9px] text-gray-400 font-medium -mt-0.5">Updates</span>
+                </div>
 
                 {/* Notes Icon */}
                 <div className="relative">
