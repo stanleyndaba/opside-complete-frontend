@@ -280,7 +280,7 @@ export default function Billing() {
                           Add
                         </button>
                       </div>
-                      {invoiceRecipients.length> 0 && (
+                      {invoiceRecipients.length > 0 && (
                         <div className="mt-2 flex flex-wrap gap-1.5">
                           {invoiceRecipients.map((em) => (
                             <span key={em} className="inline-flex items-center gap-1.5 px-2 py-1 bg-gray-50 border border-gray-200 text-xs text-gray-700">
@@ -370,7 +370,7 @@ export default function Billing() {
                       Prev
                     </button>
                     <button
-                      disabled={page>= totalPages}
+                      disabled={page >= totalPages}
                       onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                       className="px-2 py-1 text-gray-500 border border-gray-200 hover:bg-gray-50 disabled:opacity-40">
                       Next
@@ -395,7 +395,7 @@ export default function Billing() {
                     <p className="text-xs">Invoices will appear here once recoveries are processed.</p>
                   </div>
                 )}
-                {!loading && !error && pageData.length> 0 && (
+                {!loading && !error && pageData.length > 0 && (
                   <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
@@ -447,7 +447,14 @@ export default function Billing() {
                             </TableCell>
                             <TableCell>
                               <button
-                                onClick={() => window.print()}
+                                onClick={async () => {
+                                  try {
+                                    await api.downloadInvoicePdf(invoice.id);
+                                    toast({ title: 'Invoice Downloaded', description: `Downloaded invoice ${invoice.id}` });
+                                  } catch (err) {
+                                    toast({ title: 'Download Failed', description: 'Could not download invoice PDF', variant: 'destructive' });
+                                  }
+                                }}
                                 className="text-xs text-gray-500 hover:text-gray-700">
                                 <Download className="h-3.5 w-3.5" />
                               </button>

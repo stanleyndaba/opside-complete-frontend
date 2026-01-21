@@ -1363,6 +1363,31 @@ export const api = {
       total: number;
     }>(`/api/billing/invoices${query ? `?${query}` : ''}`);
   },
+  downloadInvoicePdf: async (invoiceId: string, userId?: string): Promise<void> => {
+    const queryParams = new URLSearchParams();
+    if (userId) queryParams.append('userId', userId);
+    const query = queryParams.toString();
+    const url = `${apiUrl}/api/billing/invoices/${encodeURIComponent(invoiceId)}/pdf${query ? `?${query}` : ''}`;
+
+    const response = await fetch(url, {
+      method: 'GET',
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to download invoice PDF');
+    }
+
+    const blob = await response.blob();
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = downloadUrl;
+    a.download = `invoice-${invoiceId}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(downloadUrl);
+  },
   getBillingStatus: (userId?: string) => {
     const query = userId ? `?userId=${encodeURIComponent(userId)}` : '';
     return requestJson<{
