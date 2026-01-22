@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Send, ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { Mail, Send, CheckCircle2, Globe, Clock, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
+import { BrandFooter } from '@/components/layout/BrandFooter';
 
 export default function Contact() {
     usePageMeta({
@@ -40,11 +41,8 @@ export default function Contact() {
         }
 
         setIsSubmitting(true);
-
-        // Simulate submission (in reality, this would send to backend or email service)
         await new Promise(resolve => setTimeout(resolve, 1500));
 
-        // Open mailto as fallback
         const subject = encodeURIComponent(form.subject || 'Contact from Margin Website');
         const body = encodeURIComponent(
             `Name: ${form.name}\nEmail: ${form.email}\nCompany: ${form.company || 'N/A'}\n\n${form.message}`
@@ -60,117 +58,130 @@ export default function Contact() {
     };
 
     return (
-        <div className="min-h-screen bg-white">
-            {/* Minimal Header */}
-            <header className="border-b border-gray-100">
-                <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-                    <Link to="/" className="flex items-center gap-2 group">
+        <div className="min-h-screen bg-white text-gray-900 relative">
+            {/* Background Gradients */}
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_-10%,rgba(16,185,129,0.06),transparent_40%),radial-gradient(circle_at_80%_-10%,rgba(59,130,246,0.04),transparent_45%)]" />
 
+            {/* Header */}
+            <header className="sticky top-0 z-40 bg-white/5 backdrop-blur-md border-b border-gray-100/50">
+                <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+                    <Link to="/" className="flex items-center gap-3 group">
                         <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto" />
-                        <span className="text-base font-semibold text-gray-900 font-montserrat">Margin</span>
+                        <span className="text-base font-bold text-gray-900 font-montserrat tracking-tight">Margin</span>
                     </Link>
+                    <div className="flex items-center gap-2">
+                        <span className="relative flex h-2 w-2">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                        </span>
+                        <span className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase">Operations Active</span>
+                    </div>
                 </div>
             </header>
 
-            <main className="container mx-auto px-6 py-16 max-w-4xl">
+            <main className="container mx-auto px-6 py-20 max-w-5xl relative z-10">
                 {/* Page Header */}
-                <div className="text-center mb-16">
-                    <h1 className="text-3xl font-semibold text-gray-900 font-montserrat mb-4">
-                        Get in Touch
+                <div className="max-w-2xl mb-20 text-left">
+                    <div className="flex items-center gap-2 mb-4">
+                        <div className="h-[1px] w-8 bg-gray-900" />
+                        <span className="text-[11px] font-bold text-gray-500 font-mono tracking-[0.2em] uppercase">Communication Node</span>
+                    </div>
+                    <h1 className="text-4xl md:text-5xl font-merriweather font-bold text-gray-900 leading-tight mb-6">
+                        Contact Support & <br />Enterprise Sales
                     </h1>
-                    <p className="text-gray-500 font-montserrat max-w-lg mx-auto">
-                        Have questions about Margin? We're here to help. Reach out and we'll respond within 24 hours.
+                    <p className="text-lg text-gray-600 font-montserrat max-w-xl leading-relaxed">
+                        Secure a forensic audit of your Amazon portfolio. Our technical team responds to global inquiries within 24 operational hours.
                     </p>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-8 md:gap-16">
-                    {/* Contact Form */}
-                    <div>
+                <div className="grid lg:grid-cols-12 gap-12 lg:gap-20">
+                    {/* Contact Form Container */}
+                    <div className="lg:col-span-7">
                         {isSubmitted ? (
-                            <div className="text-center py-12">
-                                <div className="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-6">
-                                    <CheckCircle2 className="h-8 w-8 text-emerald-500" />
+                            <div className="text-center py-20 bg-blue-50/30 rounded-3xl border border-blue-100/50 backdrop-blur-xl">
+                                <div className="w-20 h-20 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-8">
+                                    <CheckCircle2 className="h-10 w-10 text-emerald-500" />
                                 </div>
-                                <h2 className="text-xl font-semibold text-gray-900 font-montserrat mb-2">
-                                    Thank you
+                                <h2 className="text-2xl font-bold text-gray-900 font-merriweather mb-3">
+                                    Transmission Prepared
                                 </h2>
-                                <p className="text-gray-500 font-montserrat mb-6">
-                                    Please send the prepared email to complete your inquiry.
+                                <p className="text-gray-500 font-montserrat mb-10 max-w-xs mx-auto text-sm leading-relaxed">
+                                    Your secure inquiry has been formatted. Please complete the transmission via your email client.
                                 </p>
                                 <Button
                                     onClick={() => setIsSubmitted(false)}
                                     variant="outline"
-                                    className="font-montserrat">
-                                    Send another message
+                                    className="font-bold text-xs uppercase tracking-widest border-gray-200">
+                                    New Transmission
                                 </Button>
                             </div>
                         ) : (
-                            <form onSubmit={handleSubmit} className="space-y-5">
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-xs font-medium text-gray-700 mb-1.5 font-montserrat">
-                                            Name *
+                            <form onSubmit={handleSubmit} className="space-y-8">
+                                <div className="grid md:grid-cols-2 gap-8">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase mb-2 block">
+                                            Sender Name
                                         </label>
                                         <Input
                                             type="text"
                                             value={form.name}
                                             onChange={(e) => setForm({ ...form, name: e.target.value })}
-                                            placeholder="Your name"
-                                            className="h-11 font-montserrat"
+                                            placeholder="FULL NAME"
+                                            className="h-12 border-gray-100 text-sm font-mono tracking-tight bg-blue-50/30 focus:bg-white focus:border-gray-900 transition-all rounded-none"
                                             required
                                         />
                                     </div>
-                                    <div>
-                                        <label className="block text-xs font-medium text-gray-700 mb-1.5 font-montserrat">
-                                            Email *
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase mb-2 block">
+                                            Electronic Mail
                                         </label>
                                         <Input
                                             type="email"
                                             value={form.email}
                                             onChange={(e) => setForm({ ...form, email: e.target.value })}
-                                            placeholder="you@company.com"
-                                            className="h-11 font-montserrat"
+                                            placeholder="SENDER@DOMAIN.COM"
+                                            className="h-12 border-gray-100 text-sm font-mono tracking-tight bg-blue-50/30 focus:bg-white focus:border-gray-900 transition-all rounded-none"
                                             required
                                         />
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-xs font-medium text-gray-700 mb-1.5 font-montserrat">
-                                            Company
+                                <div className="grid md:grid-cols-2 gap-8">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase mb-2 block">
+                                            Entity / Company
                                         </label>
                                         <Input
                                             type="text"
                                             value={form.company}
                                             onChange={(e) => setForm({ ...form, company: e.target.value })}
-                                            placeholder="Your company"
-                                            className="h-11 font-montserrat"
+                                            placeholder="COMPANY NAME"
+                                            className="h-12 border-gray-100 text-sm font-mono tracking-tight bg-blue-50/30 focus:bg-white focus:border-gray-900 transition-all rounded-none"
                                         />
                                     </div>
-                                    <div>
-                                        <label className="block text-xs font-medium text-gray-700 mb-1.5 font-montserrat">
-                                            Subject
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase mb-2 block">
+                                            Subject Header
                                         </label>
                                         <Input
                                             type="text"
                                             value={form.subject}
                                             onChange={(e) => setForm({ ...form, subject: e.target.value })}
-                                            placeholder="How can we help?"
-                                            className="h-11 font-montserrat"
+                                            placeholder="INQUIRY TYPE"
+                                            className="h-12 border-gray-100 text-sm font-mono tracking-tight bg-blue-50/30 focus:bg-white focus:border-gray-900 transition-all rounded-none"
                                         />
                                     </div>
                                 </div>
 
-                                <div>
-                                    <label className="block text-xs font-medium text-gray-700 mb-1.5 font-montserrat">
-                                        Message *
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase mb-2 block">
+                                        Message Body
                                     </label>
                                     <Textarea
                                         value={form.message}
                                         onChange={(e) => setForm({ ...form, message: e.target.value })}
-                                        placeholder="Tell us about your inquiry..."
-                                        className="min-h-[140px] font-montserrat resize-none"
+                                        placeholder="DECRYPTED MESSAGE CONTENT..."
+                                        className="min-h-[160px] border-gray-100 text-sm font-mono tracking-tight bg-blue-50/30 focus:bg-white focus:border-gray-900 transition-all rounded-none resize-none px-4 py-4"
                                         required
                                     />
                                 </div>
@@ -178,13 +189,13 @@ export default function Contact() {
                                 <Button
                                     type="submit"
                                     disabled={isSubmitting}
-                                    className="w-full h-12 bg-black hover:bg-gray-900 text-white font-semibold font-montserrat rounded-none">
+                                    className="w-full h-14 bg-gray-900 hover:bg-black text-white text-xs font-bold font-mono tracking-widest uppercase rounded-none transition-all shadow-xl">
                                     {isSubmitting ? (
-                                        <>Preparing...</>
+                                        <>Formatting Transmission...</>
                                     ) : (
                                         <>
-                                            <Send className="h-4 w-4 mr-2" />
-                                            Send Message
+                                            Execute Transmission // Send
+                                            <Send className="h-3.5 w-3.5 ml-3" />
                                         </>
                                     )}
                                 </Button>
@@ -192,72 +203,72 @@ export default function Contact() {
                         )}
                     </div>
 
-                    {/* Contact Info */}
-                    <div className="space-y-8">
-                        <div>
-                            <h2 className="text-sm font-semibold text-gray-900 font-montserrat mb-4">
-                                Direct Contact
+                    {/* Contact Info Sidebar */}
+                    <div className="lg:col-span-5 space-y-12">
+                        {/* Status Module */}
+                        <div className="p-8 bg-blue-50/40 rounded-3xl border border-blue-100/50 backdrop-blur-xl relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 p-4 opacity-5">
+                                <Globe className="h-20 w-20 text-blue-900" />
+                            </div>
+                            <h2 className="text-[10px] font-bold text-blue-500 font-mono tracking-widest uppercase mb-6 flex items-center gap-2">
+                                <div className="h-1.5 w-1.5 rounded-full bg-blue-500" />
+                                Operations Status
                             </h2>
+                            <div className="space-y-6">
+                                <div className="flex items-start gap-4">
+                                    <div className="mt-1 p-2 bg-blue-100/50 rounded-lg text-blue-600">
+                                        <Clock className="h-4 w-4" />
+                                    </div>
+                                    <div>
+                                        <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1">Response Latency</p>
+                                        <p className="text-sm font-bold text-gray-900">LT &lt; 24 Hours</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-4">
+                                    <div className="mt-1 p-2 bg-blue-100/50 rounded-lg text-blue-600">
+                                        <Globe className="h-4 w-4" />
+                                    </div>
+                                    <div>
+                                        <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1">Communication Hub</p>
+                                        <p className="text-sm font-bold text-gray-900">Durban, ZA // Global Sync</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Direct Access Gateways */}
+                        <div className="space-y-4">
+                            <h2 className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase pl-2 mb-4">Direct Gateways</h2>
+
                             <a
                                 href="mailto:support@margin.app"
-                                className="flex items-center gap-3 p-4 rounded-lg border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors group">
-                                <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center group-hover:bg-gray-200 transition-colors">
-                                    <Mail className="h-5 w-5 text-gray-600" />
+                                className="flex items-center gap-4 p-5 rounded-2xl bg-white border border-gray-100 hover:border-blue-200 hover:bg-blue-50/20 transition-all group">
+                                <div className="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-blue-100/50 transition-all border border-gray-100">
+                                    <Mail className="h-5 w-5 text-gray-600 group-hover:text-blue-600" />
                                 </div>
                                 <div>
-                                    <p className="text-sm font-medium text-gray-900 font-montserrat">Email Us</p>
-                                    <p className="text-xs text-gray-500 font-montserrat">support@margin.app</p>
+                                    <p className="text-xs font-bold text-gray-900 uppercase tracking-tight">Technical Support</p>
+                                    <p className="text-sm text-gray-500 font-mono">support@margin.app</p>
                                 </div>
                             </a>
-                        </div>
 
-                        <div>
-                            <h2 className="text-sm font-semibold text-gray-900 font-montserrat mb-4">
-                                For Enterprise Sellers
-                            </h2>
                             <Link
                                 to="/sales"
-                                className="flex items-center gap-3 p-4 rounded-lg border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors group">
-                                <div className="w-10 h-10 rounded-full bg-black flex items-center justify-center">
-                                    <span className="text-white text-xs font-bold font-montserrat">VIP</span>
+                                className="flex items-center gap-4 p-5 rounded-2xl bg-gray-900 border border-gray-900 hover:bg-black transition-all group shadow-lg">
+                                <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center border border-white/10 transition-all">
+                                    <ShieldCheck className="h-5 w-5 text-emerald-400" />
                                 </div>
                                 <div>
-                                    <p className="text-sm font-medium text-gray-900 font-montserrat">Talk to Sales</p>
-                                    <p className="text-xs text-gray-500 font-montserrat">For high-volume sellers ($1M+ revenue)</p>
+                                    <p className="text-xs font-bold text-white uppercase tracking-tight">Enterprise Sales</p>
+                                    <p className="text-[11px] text-gray-400 font-mono uppercase tracking-widest mt-0.5">VIP Priority Gateway</p>
                                 </div>
                             </Link>
-                        </div>
-
-                        <div className="pt-6 border-t border-gray-100">
-                            <h2 className="text-sm font-semibold text-gray-900 font-montserrat mb-3">
-                                Response Time
-                            </h2>
-                            <p className="text-sm text-gray-500 font-montserrat leading-relaxed">
-                                We typically respond within 24 hours during business days. For urgent matters, please indicate "URGENT" in your subject line.
-                            </p>
-                        </div>
-
-                        <div className="pt-6 border-t border-gray-100">
-                            <h2 className="text-sm font-semibold text-gray-900 font-montserrat mb-3">
-                                Location
-                            </h2>
-                            <p className="text-sm text-gray-500 font-montserrat leading-relaxed">
-                                Margin operates globally from Durban, South Africa.<br />
-                                Supporting Amazon sellers worldwide.
-                            </p>
                         </div>
                     </div>
                 </div>
             </main>
 
-            {/* Minimal Footer */}
-            <footer className="border-t border-gray-100 py-8 mt-16">
-                <div className="container mx-auto px-6 text-center">
-                    <p className="text-xs text-gray-400 font-montserrat">
-                        © {new Date().getFullYear()} Margin AI. All rights reserved.
-                    </p>
-                </div>
-            </footer>
+            <BrandFooter />
         </div>
     );
 }
