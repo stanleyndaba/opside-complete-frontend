@@ -141,16 +141,27 @@ export function Dashboard() {
     return [];
   }, [notifications, recoveredTotal, recoveredCurrency, reconciledCount, formatCurrencyWithSelection]);
 
-  // Helper to intercept "Detected X High-Probability Claims" and append value if missing
+  // Helper to intercept and shorten notification titles for ledger display
   const enrichNotificationTitle = useCallback((title: any) => {
     if (!title || typeof title !== 'string') return '';
     const cleanTitle = stripEmojis(title);
-    // Pattern match "Detected <number> High-Probability Claims" (without existing amount)
-    // Check if it ends with "Claims" or "Claim" to ensure we don't append twice if backend already handled it
-    if ((cleanTitle.match(/Detected \d+ High-Probability Claims$/) || cleanTitle === 'Detected High-Probability Claim') &&
-      pendingRecoveryAmount && pendingRecoveryAmount > 0) {
-      return `${cleanTitle} - ${formatCurrencyWithSelection(pendingRecoveryAmount, recoveredCurrency)}`;
+
+    // Shorten "Detected X High-Probability Claims" to "X Discrepancies Found"
+    const claimMatch = cleanTitle.match(/Detected (\d+) High-Probability Claims?/i);
+    if (claimMatch) {
+      const count = claimMatch[1];
+      // If there's an amount appended, preserve it
+      const amountMatch = cleanTitle.match(/\$[\d,]+\.?\d*/);
+      if (amountMatch) {
+        return `${count} Discrepancies Found: ${amountMatch[0]}`;
+      }
+      // If pending amount available, append it
+      if (pendingRecoveryAmount && pendingRecoveryAmount > 0) {
+        return `${count} Discrepancies Found: ${formatCurrencyWithSelection(pendingRecoveryAmount, recoveredCurrency)}`;
+      }
+      return `${count} Discrepancies Found`;
     }
+
     return cleanTitle;
   }, [pendingRecoveryAmount, recoveredCurrency, formatCurrencyWithSelection]);
 
