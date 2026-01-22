@@ -468,7 +468,7 @@ const Index = () => {
           </div>
           {mobileMenuOpen && (
             <div className="mt-4 md:hidden relative z-50">
-              <div className="flex flex-col gap-2 rounded-[20px] border border-white/40 bg-white/80 supports-[backdrop-filter]:bg-white/70 backdrop-blur-2xl p-4 shadow-2xl max-h-[calc(100vh-120px)] overflow-y-auto">
+              <div className="flex flex-col gap-2 rounded-[20px] border border-blue-100/50 bg-blue-50/90 [backdrop-filter:blur(32px)_saturate(180%)] p-4 shadow-2xl max-h-[calc(100vh-120px)] overflow-y-auto">
                 <div className="rounded-[18px] border-gray-200 bg-gray-50 px-3 py-2 text-sm font-semibold text-gray-800 shadow-sm">
                   <div className="flex items-center gap-2">
                     <Gift className="h-4 w-4" aria-hidden="true" />
@@ -488,8 +488,8 @@ const Index = () => {
                       <div className="space-y-4">
                         <h5 className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.15em] pl-1">Core Platform</h5>
                         <div className="grid gap-2">
-                          <a href="#reimbursements" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/50 transition-colors border border-transparent hover:border-gray-100">
-                            <div className="p-2 bg-gray-50 rounded-lg text-gray-600 border border-gray-100">
+                          <a href="#reimbursements" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/60 transition-colors border border-transparent hover:border-blue-200/50">
+                            <div className="p-2 bg-white/40 rounded-lg text-gray-600 border border-white/40">
                               <CircleDollarSign className="h-4 w-4" />
                             </div>
                             <div>
@@ -498,8 +498,8 @@ const Index = () => {
                               <div className="mt-1.5 inline-block text-[9px] font-bold text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded uppercase tracking-wider">18-month lookback</div>
                             </div>
                           </a>
-                          <a href="#fee-guard" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/50 transition-colors border border-transparent hover:border-gray-100">
-                            <div className="p-2 bg-gray-50 rounded-lg text-gray-600 border border-gray-100">
+                          <a href="#fee-guard" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/60 transition-colors border border-transparent hover:border-blue-200/50">
+                            <div className="p-2 bg-white/40 rounded-lg text-gray-600 border border-white/40">
                               <ShieldAlert className="h-4 w-4" />
                             </div>
                             <div>
@@ -507,8 +507,8 @@ const Index = () => {
                               <p className="text-[10px] text-gray-400 leading-tight mt-0.5 font-medium">Audit Inbound Placement & Defect fees in real-time.</p>
                             </div>
                           </a>
-                          <a href="#invoice-sync" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/50 transition-colors border border-transparent hover:border-gray-100">
-                            <div className="p-2 bg-gray-50 rounded-lg text-gray-600 border border-gray-100">
+                          <a href="#invoice-sync" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/60 transition-colors border border-transparent hover:border-blue-200/50">
+                            <div className="p-2 bg-white/40 rounded-lg text-gray-600 border border-white/40">
                               <FileText className="h-4 w-4" />
                             </div>
                             <div>
@@ -523,8 +523,8 @@ const Index = () => {
                       <div className="space-y-4">
                         <h5 className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.15em] pl-1">Trust & Scale</h5>
                         <div className="grid gap-2">
-                          <a href="#forensic-auditor" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/50 transition-colors border border-transparent hover:border-gray-100">
-                            <div className="p-2 bg-gray-50 rounded-lg text-gray-600 border border-gray-100">
+                          <a href="#forensic-auditor" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/60 transition-colors border border-transparent hover:border-blue-200/50">
+                            <div className="p-2 bg-white/40 rounded-lg text-gray-600 border border-white/40">
                               <Search className="h-4 w-4" />
                             </div>
                             <div>
@@ -532,8 +532,8 @@ const Index = () => {
                               <p className="text-[10px] text-gray-400 leading-tight mt-0.5 font-medium">Line-by-line proof for every claim filed.</p>
                             </div>
                           </a>
-                          <a href="#portfolio-manager" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/50 transition-colors border border-transparent hover:border-gray-100">
-                            <div className="p-2 bg-gray-50 rounded-lg text-gray-600 border border-gray-100">
+                          <a href="#portfolio-manager" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/60 transition-colors border border-transparent hover:border-blue-200/50">
+                            <div className="p-2 bg-white/40 rounded-lg text-gray-600 border border-white/40">
                               <Briefcase className="h-4 w-4" />
                             </div>
                             <div>

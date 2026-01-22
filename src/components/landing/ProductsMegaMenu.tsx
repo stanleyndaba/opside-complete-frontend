@@ -27,7 +27,7 @@ export function ProductsMegaMenu() {
                         Products
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                        <div className="flex w-[820px] bg-white rounded-xl overflow-hidden shadow-lg shadow-black/5 border border-gray-200/80">
+                        <div className="flex w-[820px] bg-blue-50/95 [backdrop-filter:blur(32px)_saturate(180%)] rounded-xl overflow-hidden shadow-2xl shadow-blue-900/10 border border-blue-100/50">
                             {/* Left Side: Features */}
                             <div className="flex-1 p-8 grid gap-8">
 
@@ -37,9 +37,9 @@ export function ProductsMegaMenu() {
                                         Core Platform
                                     </h4>
                                     <div className="grid grid-cols-2 gap-4">
-                                        <a href="#reimbursements" className="group block p-4 rounded-xl hover:bg-gray-50/70 transition-all duration-200">
+                                        <a href="#reimbursements" className="group block p-4 rounded-xl hover:bg-white/60 transition-all duration-300">
                                             <div className="flex items-start gap-4">
-                                                <div className="p-2.5 bg-gray-50 rounded-lg text-gray-600 border border-gray-100 group-hover:border-gray-200 group-hover:bg-white group-hover:shadow-sm transition-all">
+                                                <div className="p-2.5 bg-blue-100/30 rounded-lg text-gray-600 border border-blue-100/50 group-hover:border-blue-200 group-hover:bg-white group-hover:shadow-sm transition-all">
                                                     <CircleDollarSign className="h-5 w-5" />
                                                 </div>
                                                 <div>
@@ -56,9 +56,9 @@ export function ProductsMegaMenu() {
                                             </div>
                                         </a>
 
-                                        <a href="#fee-guard" className="group block p-4 rounded-xl hover:bg-gray-50/70 transition-all duration-200">
+                                        <a href="#fee-guard" className="group block p-4 rounded-xl hover:bg-white/60 transition-all duration-300">
                                             <div className="flex items-start gap-4">
-                                                <div className="p-2.5 bg-gray-50 rounded-lg text-gray-600 border border-gray-100 group-hover:border-gray-200 group-hover:bg-white group-hover:shadow-sm transition-all">
+                                                <div className="p-2.5 bg-blue-100/30 rounded-lg text-gray-600 border border-blue-100/50 group-hover:border-blue-200 group-hover:bg-white group-hover:shadow-sm transition-all">
                                                     <ShieldAlert className="h-5 w-5" />
                                                 </div>
                                                 <div>
@@ -70,9 +70,9 @@ export function ProductsMegaMenu() {
                                             </div>
                                         </a>
 
-                                        <a href="#invoice-sync" className="group block p-4 rounded-xl hover:bg-gray-50/70 transition-all duration-200 col-span-2">
+                                        <a href="#invoice-sync" className="group block p-4 rounded-xl hover:bg-white/60 transition-all duration-300 col-span-2">
                                             <div className="flex items-start gap-4">
-                                                <div className="p-2.5 bg-gray-50 rounded-lg text-gray-600 border border-gray-100 group-hover:border-gray-200 group-hover:bg-white group-hover:shadow-sm transition-all">
+                                                <div className="p-2.5 bg-blue-100/30 rounded-lg text-gray-600 border border-blue-100/50 group-hover:border-blue-200 group-hover:bg-white group-hover:shadow-sm transition-all">
                                                     <FileText className="h-5 w-5" />
                                                 </div>
                                                 <div>
@@ -97,9 +97,9 @@ export function ProductsMegaMenu() {
                                         Trust & Scale
                                     </h4>
                                     <div className="grid grid-cols-2 gap-4">
-                                        <a href="#forensic-auditor" className="group block p-4 rounded-xl hover:bg-gray-50/70 transition-all duration-200">
+                                        <a href="#forensic-auditor" className="group block p-4 rounded-xl hover:bg-white/60 transition-all duration-300">
                                             <div className="flex items-start gap-4">
-                                                <div className="p-2.5 bg-gray-50 rounded-lg text-gray-600 border border-gray-100 group-hover:border-gray-200 group-hover:bg-white group-hover:shadow-sm transition-all">
+                                                <div className="p-2.5 bg-blue-100/30 rounded-lg text-gray-600 border border-blue-100/50 group-hover:border-blue-200 group-hover:bg-white group-hover:shadow-sm transition-all">
                                                     <Search className="h-5 w-5" />
                                                 </div>
                                                 <div>
@@ -111,9 +111,9 @@ export function ProductsMegaMenu() {
                                             </div>
                                         </a>
 
-                                        <a href="#portfolio-manager" className="group block p-4 rounded-xl hover:bg-gray-50/70 transition-all duration-200">
+                                        <a href="#portfolio-manager" className="group block p-4 rounded-xl hover:bg-white/60 transition-all duration-300">
                                             <div className="flex items-start gap-4">
-                                                <div className="p-2.5 bg-gray-50 rounded-lg text-gray-600 border border-gray-100 group-hover:border-gray-200 group-hover:bg-white group-hover:shadow-sm transition-all">
+                                                <div className="p-2.5 bg-blue-100/30 rounded-lg text-gray-600 border border-blue-100/50 group-hover:border-blue-200 group-hover:bg-white group-hover:shadow-sm transition-all">
                                                     <Briefcase className="h-5 w-5" />
                                                 </div>
                                                 <div>
@@ -136,7 +136,7 @@ export function ProductsMegaMenu() {
                                         Live Impact
                                     </h4>
                                     <div className="space-y-5">
-                                        <div className="p-5 bg-white rounded-xl border border-gray-200/80 shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
+                                        <div className="p-5 bg-white/60 rounded-xl border border-blue-100 shadow-[0_4px_12px_rgba(59,130,246,0.05)]">
                                             <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
                                                 Recovered this week
                                             </p>
