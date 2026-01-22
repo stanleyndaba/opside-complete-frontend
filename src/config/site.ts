@@ -45,7 +45,7 @@ export const AGENT_HIGHLIGHTS = [
 ];
 
 export const SITE_META = {
-  title: 'Margin | AI Agents for Amazon FBA',
+  title: 'AI Agents for Amazon FBA | Margin',
   description: "Margin's 11-agent system finds, files, and tracks Amazon FBA reimbursements automatically with 99.2% accuracy.",
   url: 'https://Margin.app',
   image: '/og-image.png',
