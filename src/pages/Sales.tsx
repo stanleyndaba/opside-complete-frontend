@@ -71,17 +71,10 @@ export default function Sales() {
                         <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto" />
                         <span className="text-base font-bold text-gray-900 font-montserrat tracking-tight">Margin</span>
                     </Link>
-                    <div className="flex items-center gap-3 sm:gap-5">
+                    <div className="flex items-center gap-5">
                         <Link to="/contact" className="hidden sm:block text-[10px] font-bold text-gray-400 hover:text-gray-900 font-mono tracking-widest uppercase transition-colors">
                             General Support
                         </Link>
-                        <div className="flex items-center gap-2">
-                            <span className="relative flex h-2 w-2">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                            </span>
-                            <span className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase hidden xs:inline">Verified Hub</span>
-                        </div>
                     </div>
                 </div>
             </header>
@@ -128,27 +121,14 @@ export default function Sales() {
                             ))}
                         </div>
 
-                        {/* Founder Note Module */}
-                        <div className="p-8 bg-gray-900 rounded-3xl relative overflow-hidden group shadow-2xl">
-                            <div className="absolute top-0 right-0 p-4 opacity-10">
-                                <ShieldCheck className="h-20 w-20 text-white" />
-                            </div>
-                            <h2 className="text-[10px] font-bold text-emerald-400 font-mono tracking-widest uppercase mb-6 flex items-center gap-2">
-                                <div className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                                Founder's Commitment
-                            </h2>
-                            <p className="text-lg font-merriweather text-white leading-relaxed mb-6 italic">
+                        {/* Founder Note Simplified */}
+                        <div className="pt-10 border-t border-gray-100">
+                            <p className="text-xl font-merriweather text-gray-900 leading-relaxed mb-6 italic">
                                 "I personally review every institutional inquiry. If you're processing serious volume, our team will build a custom audit engine for your specific supply chain."
                             </p>
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-[10px] font-bold text-white font-mono">
-                                    CEO
-                                </div>
-                                <div>
-                                    <p className="text-xs font-bold text-white uppercase tracking-widest">Founder & CEO</p>
-                                    <p className="text-[10px] text-gray-400 font-mono uppercase tracking-widest">Margin AI Global</p>
-                                </div>
-                            </div>
+                            <p className="text-sm font-bold text-gray-900 uppercase tracking-widest">
+                                — Founder & CEO, Margin
+                            </p>
                         </div>
                     </div>
 
@@ -269,12 +249,12 @@ export default function Sales() {
                                     <Button
                                         type="submit"
                                         disabled={isSubmitting}
-                                        className="w-full h-16 bg-gray-900 hover:bg-black text-white text-xs font-bold font-mono tracking-widest uppercase rounded-none transition-all shadow-xl">
+                                        className="w-full h-16 bg-black hover:bg-gray-900 text-white text-xs font-bold font-mono tracking-widest uppercase rounded-none transition-all shadow-xl">
                                         {isSubmitting ? (
                                             <>Encrypting Transmission...</>
                                         ) : (
                                             <>
-                                                Request Priority Access // Execute
+                                                Request Priority Access
                                                 <Send className="h-3.5 w-3.5 ml-3" />
                                             </>
                                         )}
