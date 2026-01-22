@@ -84,9 +84,9 @@ export default function Contact() {
                 <div className="max-w-2xl mb-20 text-left">
                     <div className="flex items-center gap-2 mb-4">
                         <div className="h-[1px] w-8 bg-gray-900" />
-                        <span className="text-[11px] font-bold text-gray-500 font-mono tracking-[0.2em] uppercase">Communication Node</span>
+                        <span className="text-[11px] font-bold text-gray-500 font-mono tracking-wider sm:tracking-[0.2em] uppercase">Communication Node</span>
                     </div>
-                    <h1 className="text-4xl md:text-5xl font-merriweather font-bold text-gray-900 leading-tight mb-6">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-merriweather font-bold text-gray-900 leading-tight mb-6 break-words">
                         Contact Support & <br />Enterprise Sales
                     </h1>
                     <p className="text-lg text-gray-600 font-montserrat max-w-xl leading-relaxed">
@@ -119,7 +119,7 @@ export default function Contact() {
                             <form onSubmit={handleSubmit} className="space-y-8">
                                 <div className="grid md:grid-cols-2 gap-8">
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase mb-2 block">
+                                        <label className="text-[10px] font-bold text-gray-400 font-mono tracking-wider sm:tracking-widest uppercase mb-2 block">
                                             Sender Name
                                         </label>
                                         <Input
@@ -132,7 +132,7 @@ export default function Contact() {
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase mb-2 block">
+                                        <label className="text-[10px] font-bold text-gray-400 font-mono tracking-wider sm:tracking-widest uppercase mb-2 block">
                                             Electronic Mail
                                         </label>
                                         <Input
@@ -148,7 +148,7 @@ export default function Contact() {
 
                                 <div className="grid md:grid-cols-2 gap-8">
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase mb-2 block">
+                                        <label className="text-[10px] font-bold text-gray-400 font-mono tracking-wider sm:tracking-widest uppercase mb-2 block">
                                             Entity / Company
                                         </label>
                                         <Input
@@ -160,7 +160,7 @@ export default function Contact() {
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase mb-2 block">
+                                        <label className="text-[10px] font-bold text-gray-400 font-mono tracking-wider sm:tracking-widest uppercase mb-2 block">
                                             Subject Header
                                         </label>
                                         <Input

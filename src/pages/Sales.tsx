@@ -71,8 +71,8 @@ export default function Sales() {
                         <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto" />
                         <span className="text-base font-bold text-gray-900 font-montserrat tracking-tight">Margin</span>
                     </Link>
-                    <div className="flex items-center gap-5">
-                        <Link to="/contact" className="text-[10px] font-bold text-gray-400 hover:text-gray-900 font-mono tracking-widest uppercase transition-colors">
+                    <div className="flex items-center gap-3 sm:gap-5">
+                        <Link to="/contact" className="hidden sm:block text-[10px] font-bold text-gray-400 hover:text-gray-900 font-mono tracking-widest uppercase transition-colors">
                             General Support
                         </Link>
                         <div className="flex items-center gap-2">
@@ -80,7 +80,7 @@ export default function Sales() {
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                             </span>
-                            <span className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase">Verified Hub</span>
+                            <span className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase hidden xs:inline">Verified Hub</span>
                         </div>
                     </div>
                 </div>
@@ -96,10 +96,10 @@ export default function Sales() {
                         <div className="h-[1px] w-12 bg-gray-200" />
                         <span className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase">High Volume Gateway</span>
                     </div>
-                    <h1 className="text-5xl md:text-6xl font-merriweather font-bold text-gray-900 leading-[1.1] mb-8">
+                    <h1 className="text-3xl sm:text-5xl md:text-6xl font-merriweather font-bold text-gray-900 leading-[1.2] md:leading-[1.1] mb-8 break-words">
                         Scale Autonomously with Margin Enterprise
                     </h1>
-                    <p className="text-xl text-gray-600 font-montserrat max-w-2xl leading-relaxed">
+                    <p className="text-base sm:text-lg md:text-xl text-gray-600 font-montserrat max-w-2xl leading-relaxed">
                         For institutional sellers processing $1M+ in monthly GMV. Secure priority infrastructure, dedicated forensic auditors, and custom API integrations.
                     </p>
                 </div>
@@ -154,7 +154,7 @@ export default function Sales() {
 
                     {/* Enterprise Inquiry Form */}
                     <div className="lg:col-span-7">
-                        <div className="p-10 bg-blue-50/40 rounded-3xl border border-blue-100/50 backdrop-blur-xl relative">
+                        <div className="p-6 sm:p-10 bg-blue-50/40 rounded-2xl sm:rounded-3xl border border-blue-100/50 backdrop-blur-xl relative">
                             {isSubmitted ? (
                                 <div className="text-center py-20">
                                     <div className="w-20 h-20 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-8">
@@ -175,13 +175,13 @@ export default function Sales() {
                                 </div>
                             ) : (
                                 <form onSubmit={handleSubmit} className="space-y-8">
-                                    <h3 className="text-xs font-bold text-blue-500 font-mono tracking-[0.2em] uppercase mb-10">
+                                    <h3 className="text-[10px] sm:text-xs font-bold text-blue-500 font-mono tracking-wider sm:tracking-[0.2em] uppercase mb-10">
                                         Enterprise Transmission // Form 02
                                     </h3>
 
                                     <div className="grid md:grid-cols-2 gap-8">
                                         <div className="space-y-2">
-                                            <label className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase mb-2 block">
+                                            <label className="text-[10px] font-bold text-gray-400 font-mono tracking-wider sm:tracking-widest uppercase mb-2 block">
                                                 Auditor / Lead Name
                                             </label>
                                             <Input
@@ -194,7 +194,7 @@ export default function Sales() {
                                             />
                                         </div>
                                         <div className="space-y-2">
-                                            <label className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase mb-2 block">
+                                            <label className="text-[10px] font-bold text-gray-400 font-mono tracking-wider sm:tracking-widest uppercase mb-2 block">
                                                 Professional Email
                                             </label>
                                             <Input
@@ -209,7 +209,7 @@ export default function Sales() {
                                     </div>
 
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase mb-2 block">
+                                        <label className="text-[10px] font-bold text-gray-400 font-mono tracking-wider sm:tracking-widest uppercase mb-2 block">
                                             Institutional Entity
                                         </label>
                                         <Input
@@ -224,7 +224,7 @@ export default function Sales() {
 
                                     <div className="grid md:grid-cols-2 gap-8">
                                         <div className="space-y-2">
-                                            <label className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase mb-2 block">
+                                            <label className="text-[10px] font-bold text-gray-400 font-mono tracking-wider sm:tracking-widest uppercase mb-2 block">
                                                 Annual GMV Volume
                                             </label>
                                             <Select value={form.revenue} onValueChange={(value) => setForm({ ...form, revenue: value })}>
@@ -241,7 +241,7 @@ export default function Sales() {
                                             </Select>
                                         </div>
                                         <div className="space-y-2">
-                                            <label className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase mb-2 block">
+                                            <label className="text-[10px] font-bold text-gray-400 font-mono tracking-wider sm:tracking-widest uppercase mb-2 block">
                                                 Seller ID Hash
                                             </label>
                                             <Input
@@ -255,7 +255,7 @@ export default function Sales() {
                                     </div>
 
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase mb-2 block">
+                                        <label className="text-[10px] font-bold text-gray-400 font-mono tracking-wider sm:tracking-widest uppercase mb-2 block">
                                             Strategic Requirements
                                         </label>
                                         <Textarea
