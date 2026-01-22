@@ -1076,7 +1076,7 @@ export function Dashboard() {
                                     <HoverCardTrigger asChild>
                                       <div
                                         className={cn(
-                                          "group relative px-5 py-2.5 cursor-pointer transition-all duration-200 border-l-2 border-transparent hover:bg-gray-50/50",
+                                          "group relative px-5 py-3 cursor-pointer transition-all duration-200 border-l-2 border-transparent hover:bg-gray-50/50",
                                           isUnread ? "bg-gray-50/30" : "bg-white"
                                         )}
                                         onClick={() => navigate('/recoveries')}>
@@ -1084,31 +1084,29 @@ export function Dashboard() {
                                         {/* Hover Accent Bar */}
                                         <div className="absolute left-[-2px] top-0 bottom-0 w-[2px] bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity" />
 
-                                        {/* Ledger-Style Single Row Layout */}
-                                        <div className="flex items-center justify-between gap-3">
-                                          {/* Left: Status Dot + Label */}
-                                          <div className="flex items-center gap-2 min-w-0 flex-1">
-                                            <div className={cn("h-1.5 w-1.5 rounded-full shrink-0 transition-colors", statusColor)} />
-                                            <p className={cn(
-                                              "text-xs truncate",
-                                              isUnread ? "font-semibold text-gray-900" : "font-medium text-gray-600 group-hover:text-gray-900"
-                                            )}>
-                                              {(() => {
-                                                const { label } = extractAmountFromTitle(enrichNotificationTitle(notification.title));
-                                                return label || enrichNotificationTitle(notification.title);
-                                              })()}
-                                            </p>
-                                          </div>
-
-                                          {/* Right: Amount (green) + Date */}
-                                          <div className="flex items-center gap-4 shrink-0">
+                                        {/* Stacked Ledger Layout - Two Rows */}
+                                        <div className="flex flex-col gap-1">
+                                          {/* Top Row: Status Dot + Full Label + Amount */}
+                                          <div className="flex items-center justify-between gap-2">
+                                            <div className="flex items-center gap-2 min-w-0">
+                                              <div className={cn("h-1.5 w-1.5 rounded-full shrink-0 transition-colors", statusColor)} />
+                                              <p className={cn(
+                                                "text-xs",
+                                                isUnread ? "font-semibold text-gray-900" : "font-medium text-gray-600 group-hover:text-gray-900"
+                                              )}>
+                                                {(() => {
+                                                  const { label } = extractAmountFromTitle(enrichNotificationTitle(notification.title));
+                                                  return label || enrichNotificationTitle(notification.title);
+                                                })()}
+                                              </p>
+                                            </div>
                                             {/* Amount - right-aligned, green for deposits */}
                                             {(() => {
                                               const { amount } = extractAmountFromTitle(enrichNotificationTitle(notification.title));
                                               if (amount) {
                                                 return (
                                                   <span className={cn(
-                                                    "text-xs font-semibold tabular-nums text-right min-w-[70px]",
+                                                    "text-xs font-semibold tabular-nums shrink-0",
                                                     notification.type === 'funds_deposited' || notification.type === 'refund_approved'
                                                       ? "text-emerald-600"
                                                       : "text-gray-700"
@@ -1119,9 +1117,11 @@ export function Dashboard() {
                                               }
                                               return null;
                                             })()}
+                                          </div>
 
-                                            {/* Absolute Date - Jan 12 format */}
-                                            <span className="text-xs text-gray-400 font-mono shrink-0 min-w-[45px] text-right">
+                                          {/* Bottom Row: Date (right-aligned) */}
+                                          <div className="flex justify-end pl-3.5">
+                                            <span className="text-[10px] text-gray-400 font-mono">
                                               {formatLedgerDate(notification.created_at)}
                                             </span>
                                           </div>
