@@ -154,6 +154,32 @@ export function Dashboard() {
     return cleanTitle;
   }, [pendingRecoveryAmount, recoveredCurrency, formatCurrencyWithSelection]);
 
+  // Helper to extract dollar amount from notification title for ledger-style display
+  const extractAmountFromTitle = useCallback((title: string): { label: string; amount: string | null } => {
+    if (!title || typeof title !== 'string') return { label: '', amount: null };
+
+    // Match patterns like "Deposit Confirmed: $843.53" or "$1,234.56"
+    const amountMatch = title.match(/\$[\d,]+\.?\d*/);
+    if (amountMatch) {
+      // Remove the amount from the label
+      const label = title.replace(/:?\s*\$[\d,]+\.?\d*/, '').trim();
+      return { label, amount: amountMatch[0] };
+    }
+
+    return { label: title, amount: null };
+  }, []);
+
+  // Format date for ledger display (Jan 12 format)
+  const formatLedgerDate = useCallback((dateStr: string): string => {
+    try {
+      const date = new Date(dateStr);
+      if (isNaN(date.getTime())) return '';
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    } catch {
+      return '';
+    }
+  }, []);
+
   const [selectedQuickActions, setSelectedQuickActions] = useState<string[]>(() => {
     try {
       const raw = typeof window !== 'undefined' ? localStorage.getItem('clario.quickActions') : null;
@@ -1050,7 +1076,7 @@ export function Dashboard() {
                                     <HoverCardTrigger asChild>
                                       <div
                                         className={cn(
-                                          "group relative px-5 py-3 cursor-pointer transition-all duration-200 border-l-2 border-transparent hover:bg-gray-50/50",
+                                          "group relative px-5 py-2.5 cursor-pointer transition-all duration-200 border-l-2 border-transparent hover:bg-gray-50/50",
                                           isUnread ? "bg-gray-50/30" : "bg-white"
                                         )}
                                         onClick={() => navigate('/recoveries')}>
@@ -1058,34 +1084,47 @@ export function Dashboard() {
                                         {/* Hover Accent Bar */}
                                         <div className="absolute left-[-2px] top-0 bottom-0 w-[2px] bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity" />
 
-                                        <div className="flex items-center justify-between gap-3 mb-0.5">
-                                          <div className="flex items-center gap-2 min-w-0">
+                                        {/* Ledger-Style Single Row Layout */}
+                                        <div className="flex items-center justify-between gap-3">
+                                          {/* Left: Status Dot + Label */}
+                                          <div className="flex items-center gap-2 min-w-0 flex-1">
                                             <div className={cn("h-1.5 w-1.5 rounded-full shrink-0 transition-colors", statusColor)} />
                                             <p className={cn(
                                               "text-xs truncate",
-                                              isUnread ? "font-bold text-gray-900" : "font-medium text-gray-600 group-hover:text-gray-900"
+                                              isUnread ? "font-semibold text-gray-900" : "font-medium text-gray-600 group-hover:text-gray-900"
                                             )}>
-                                              {enrichNotificationTitle(notification.title)}
+                                              {(() => {
+                                                const { label } = extractAmountFromTitle(enrichNotificationTitle(notification.title));
+                                                return label || enrichNotificationTitle(notification.title);
+                                              })()}
                                             </p>
                                           </div>
-                                          <span className="text-xs text-gray-300 font-mono shrink-0 pt-0.5 whitespace-nowrap">
-                                            {timeAgo.replace('about ', '').replace(' ago', '').replace('minutes', 'm').replace('minute', 'm').replace('hours', 'h').replace('hour', 'h').replace('days', 'd').replace('day', 'd')}
-                                          </span>
-                                        </div>
 
-                                        <div className="flex items-baseline justify-between gap-4 ml-3.5">
-                                          <p className="text-xs text-gray-400 font-normal leading-relaxed truncate group-hover:text-gray-500 transition-colors">
-                                            {stripEmojis(notification.message)}
-                                          </p>
-                                          {statusText && (
-                                            <span className={cn(
-                                              "text-xs font-medium shrink-0",
-                                              notification.type === 'funds_deposited' ? "text-emerald-500" :
-                                                notification.type === 'case_filed' ? "text-blue-500" : "text-gray-400"
-                                            )}>
-                                              {statusText}
+                                          {/* Right: Amount (green) + Date */}
+                                          <div className="flex items-center gap-4 shrink-0">
+                                            {/* Amount - right-aligned, green for deposits */}
+                                            {(() => {
+                                              const { amount } = extractAmountFromTitle(enrichNotificationTitle(notification.title));
+                                              if (amount) {
+                                                return (
+                                                  <span className={cn(
+                                                    "text-xs font-semibold tabular-nums text-right min-w-[70px]",
+                                                    notification.type === 'funds_deposited' || notification.type === 'refund_approved'
+                                                      ? "text-emerald-600"
+                                                      : "text-gray-700"
+                                                  )}>
+                                                    + {amount}
+                                                  </span>
+                                                );
+                                              }
+                                              return null;
+                                            })()}
+
+                                            {/* Absolute Date - Jan 12 format */}
+                                            <span className="text-xs text-gray-400 font-mono shrink-0 min-w-[45px] text-right">
+                                              {formatLedgerDate(notification.created_at)}
                                             </span>
-                                          )}
+                                          </div>
                                         </div>
                                       </div>
                                     </HoverCardTrigger>
