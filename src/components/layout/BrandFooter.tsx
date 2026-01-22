@@ -61,39 +61,50 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
               })}
             </div>
           </div>
-          <div className="flex flex-col gap-4 border-t border-gray-200 pt-6 text-xs text-gray-500">
-            {/* Links - vertical on mobile, horizontal on desktop */}
-            <div className="flex flex-col items-center gap-2 text-gray-600 md:flex-row md:flex-wrap md:justify-center md:gap-x-4">
-              <Link to="/privacy" className="transition hover:text-gray-900">
-                Privacy Policy
-              </Link>
-              <Link to="/terms" className="transition hover:text-gray-900">
-                Terms of Service
-              </Link>
-              <Link to="/docs" className="transition hover:text-gray-900">
-                Acceptable Use Policy
-              </Link>
-              <Link to="/refund-policy" className="transition hover:text-gray-900">
-                Refund Policy
-              </Link>
-              {selectedLanguageLabel && (
-                <span className="inline-flex items-center gap-2">
-                  <Globe className="h-3.5 w-3.5" />
-                  {selectedLanguageLabel}
-                </span>
-              )}
-            </div>
-            {/* Copyright - always centered, stacked on mobile */}
-            <div className="flex flex-col items-center gap-1.5 text-center text-gray-600">
-              <p>
-                © {new Date().getFullYear()} Margin. Built for operators.
-              </p>
-              <span className="inline-flex items-center gap-1.5">
-                <svg className="h-4 w-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-                </svg>
-                Verified Amazon SP-API Developer
-              </span>
+          <div className="flex flex-col gap-10 border-t border-gray-100 pt-10">
+            {/* Split layout on mobile: 2x2 grid for links + bottom status block */}
+            <div className="grid grid-cols-2 gap-y-8 gap-x-4 md:flex md:flex-row md:items-center md:justify-between">
+
+              {/* Policy Links Group */}
+              <div className="grid grid-cols-1 gap-2.5 md:flex md:flex-row md:gap-x-6 text-[11px] font-semibold text-gray-500 tracking-tight uppercase">
+                <Link to="/privacy" className="transition hover:text-gray-900">
+                  Privacy Policy
+                </Link>
+                <Link to="/terms" className="transition hover:text-gray-900">
+                  Terms of Service
+                </Link>
+                <Link to="/docs" className="transition hover:text-gray-900">
+                  Acceptable Use Policy
+                </Link>
+                <Link to="/refund-policy" className="transition hover:text-gray-900">
+                  Refund Policy
+                </Link>
+              </div>
+
+              {/* Institutional Validation Badge & Copyright */}
+              <div className="col-span-2 md:col-span-1 flex flex-col items-center md:items-end gap-4 pt-8 md:pt-0 border-t border-gray-50 md:border-none">
+                <div className="flex items-center gap-2.5 px-3 py-1.5 bg-gray-50/50 border border-gray-200/50 rounded-sm grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300">
+                  <svg className="h-4 w-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                  </svg>
+                  <span className="text-[9px] font-bold tracking-[0.15em] text-gray-700 uppercase">
+                    Verified Amazon SP-API Developer
+                  </span>
+                </div>
+
+                <div className="flex flex-col items-center md:items-end gap-1">
+                  <p className="text-[10px] font-mono text-gray-400 uppercase tracking-tighter">
+                    © {new Date().getFullYear()} Margin. Built for operators.
+                  </p>
+                  {selectedLanguageLabel && (
+                    <span className="inline-flex items-center gap-1.5 text-[10px] font-medium text-gray-400">
+                      <Globe className="h-3 w-3" />
+                      {selectedLanguageLabel}
+                    </span>
+                  )}
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
