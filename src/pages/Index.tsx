@@ -696,13 +696,17 @@ const Index = () => {
 
             <section className="bg-white pt-16 pb-8 md:pt-24 md:pb-12 w-full overflow-x-hidden">
               <div className="container mx-auto px-6 max-w-4xl">
-                <div className="text-center mb-20 space-y-6">
-                  <span className="inline-block px-4 py-1.5 rounded-full bg-gray-50 border border-gray-100 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">
-                    frequently asked questions
-                  </span>
-                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-normal tracking-tight text-gray-900 leading-[1.1]">
-                    Everything you wanted to ask <br className="hidden md:block" />
-                    before Margin starts recovering funds.
+                <div className="text-center mb-16 sm:mb-24 space-y-6">
+                  <div className="flex items-center justify-center gap-3 mb-4">
+                    <div className="h-[1px] w-8 bg-gray-200" />
+                    <span className="text-[10px] font-bold text-gray-400 font-mono tracking-[.3em] uppercase">
+                      frequently asked questions
+                    </span>
+                    <div className="h-[1px] w-8 bg-gray-200" />
+                  </div>
+                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-merriweather font-bold tracking-tight text-gray-900 leading-[1.1] md:leading-[1.2] max-w-4xl mx-auto">
+                    Institutional Support <br className="hidden md:block" />
+                    & Fundamental Inquiry
                   </h2>
                 </div>
 
@@ -724,8 +728,8 @@ const Index = () => {
                 </AccordionItem>
                 */}
 
-                    <AccordionItem value="data" className="border border-gray-100 rounded-2xl bg-gray-50/30 px-6 py-1 transition-all hover:bg-gray-50/50 hover:border-gray-200 group">
-                      <AccordionTrigger className="font-montserrat text-left text-lg font-semibold text-gray-900 hover:no-underline py-6">
+                    <AccordionItem value="data" className="border border-blue-100/30 rounded-2xl bg-blue-50/20 backdrop-blur-md px-6 py-1 transition-all hover:bg-blue-50/40 hover:border-blue-200/50 group overflow-hidden">
+                      <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-gray-900 hover:no-underline py-6 tracking-tight">
                         What data do you access? Do you look at my customer info or sales?
                       </AccordionTrigger>
                       <AccordionContent className="font-montserrat pb-6 text-base text-gray-600 leading-relaxed space-y-4">
@@ -738,8 +742,8 @@ const Index = () => {
                       </AccordionContent>
                     </AccordionItem>
 
-                    <AccordionItem value="cost" className="border border-gray-100 rounded-2xl bg-gray-50/30 px-6 py-1 transition-all hover:bg-gray-50/50 hover:border-gray-200 group">
-                      <AccordionTrigger className="font-montserrat text-left text-lg font-semibold text-gray-900 hover:no-underline py-6">
+                    <AccordionItem value="cost" className="border border-blue-100/30 rounded-2xl bg-blue-50/20 backdrop-blur-md px-6 py-1 transition-all hover:bg-blue-50/40 hover:border-blue-200/50 group overflow-hidden">
+                      <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-gray-900 hover:no-underline py-6 tracking-tight">
                         How much does Margin cost?
                       </AccordionTrigger>
                       <AccordionContent className="font-montserrat pb-6 text-base text-gray-600 leading-relaxed space-y-4">
@@ -749,8 +753,8 @@ const Index = () => {
                       </AccordionContent>
                     </AccordionItem>
 
-                    <AccordionItem value="comparison" className="border border-gray-100 rounded-2xl bg-gray-50/30 px-6 py-1 transition-all hover:bg-gray-50/50 hover:border-gray-200 group">
-                      <AccordionTrigger className="font-montserrat text-left text-lg font-semibold text-gray-900 hover:no-underline py-6">
+                    <AccordionItem value="comparison" className="border border-blue-100/30 rounded-2xl bg-blue-50/20 backdrop-blur-md px-6 py-1 transition-all hover:bg-blue-50/40 hover:border-blue-200/50 group overflow-hidden">
+                      <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-gray-900 hover:no-underline py-6 tracking-tight">
                         How is this different from GETIDA, Sellerise, or Helium 10?
                       </AccordionTrigger>
                       <AccordionContent className="font-montserrat pb-6 text-base text-gray-600 leading-relaxed space-y-4">
@@ -765,8 +769,8 @@ const Index = () => {
 
                     {showMoreFAQs && (
                       <>
-                        <AccordionItem value="roi" className="border border-gray-100 rounded-2xl bg-gray-50/30 px-6 py-1 transition-all hover:bg-gray-50/50 hover:border-gray-200 group">
-                          <AccordionTrigger className="font-montserrat text-left text-lg font-semibold text-gray-900 hover:no-underline py-6">
+                        <AccordionItem value="roi" className="border border-blue-100/30 rounded-2xl bg-blue-50/20 backdrop-blur-md px-6 py-1 transition-all hover:bg-blue-50/40 hover:border-blue-200/50 group overflow-hidden">
+                          <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-gray-900 hover:no-underline py-6 tracking-tight">
                             How much money will I actually get back?
                           </AccordionTrigger>
                           <AccordionContent className="font-montserrat pb-6 text-base text-gray-600 leading-relaxed space-y-4">
@@ -778,8 +782,8 @@ const Index = () => {
                             </p>
                           </AccordionContent>
                         </AccordionItem>
-                        <AccordionItem value="onboarding" className="border border-gray-100 rounded-2xl bg-gray-50/30 px-6 py-1 transition-all hover:bg-gray-50/50 hover:border-gray-200 group">
-                          <AccordionTrigger className="font-montserrat text-left text-lg font-semibold text-gray-900 hover:no-underline py-6">
+                        <AccordionItem value="onboarding" className="border border-blue-100/30 rounded-2xl bg-blue-50/20 backdrop-blur-md px-6 py-1 transition-all hover:bg-blue-50/40 hover:border-blue-200/50 group overflow-hidden">
+                          <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-gray-900 hover:no-underline py-6 tracking-tight">
                             What do I have to do to get started?
                           </AccordionTrigger>
                           <AccordionContent className="font-montserrat pb-6 text-base text-gray-600 leading-relaxed space-y-4">
@@ -792,8 +796,8 @@ const Index = () => {
                             <p>That&apos;s it. Margin begins auditing immediately.</p>
                           </AccordionContent>
                         </AccordionItem>
-                        <AccordionItem value="coexist" className="border border-gray-100 rounded-2xl bg-gray-50/30 px-6 py-1 transition-all hover:bg-gray-50/50 hover:border-gray-200 group">
-                          <AccordionTrigger className="font-montserrat text-left text-lg font-semibold text-gray-900 hover:no-underline py-6">
+                        <AccordionItem value="coexist" className="border border-blue-100/30 rounded-2xl bg-blue-50/20 backdrop-blur-md px-6 py-1 transition-all hover:bg-blue-50/40 hover:border-blue-200/50 group overflow-hidden">
+                          <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-gray-900 hover:no-underline py-6 tracking-tight">
                             What if I already use another reimbursement service?
                           </AccordionTrigger>
                           <AccordionContent className="font-montserrat pb-6 text-base text-gray-600 leading-relaxed space-y-4">
@@ -802,8 +806,8 @@ const Index = () => {
                             </p>
                           </AccordionContent>
                         </AccordionItem>
-                        <AccordionItem value="cancel" className="border border-gray-100 rounded-2xl bg-gray-50/30 px-6 py-1 transition-all hover:bg-gray-50/50 hover:border-gray-200 group">
-                          <AccordionTrigger className="font-montserrat text-left text-lg font-semibold text-gray-900 hover:no-underline py-6">
+                        <AccordionItem value="cancel" className="border border-blue-100/30 rounded-2xl bg-blue-50/20 backdrop-blur-md px-6 py-1 transition-all hover:bg-blue-50/40 hover:border-blue-200/50 group overflow-hidden">
+                          <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-gray-900 hover:no-underline py-6 tracking-tight">
                             What if I want to cancel?
                           </AccordionTrigger>
                           <AccordionContent className="font-montserrat pb-6 text-base text-gray-600 leading-relaxed space-y-4">
@@ -820,9 +824,9 @@ const Index = () => {
                     <div className="flex justify-center pt-8">
                       <button
                         onClick={() => setShowMoreFAQs(true)}
-                        className="group flex items-center gap-2 text-sm font-semibold text-gray-400 hover:text-gray-900 transition-colors">
-                        <span>View more questions</span>
+                        className="group flex items-center gap-3 text-[11px] font-bold text-gray-400 font-mono tracking-[.25em] hover:text-gray-900 transition-all uppercase">
                         <Search className="w-3.5 h-3.5 transition-transform group-hover:scale-110" />
+                        <span>Query Extended Database</span>
                       </button>
                     </div>
                   )}
