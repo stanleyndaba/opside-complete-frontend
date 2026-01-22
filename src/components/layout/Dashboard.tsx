@@ -1117,7 +1117,7 @@ export function Dashboard() {
                                               if (amount) {
                                                 return (
                                                   <span className={cn(
-                                                    "text-xs font-semibold tabular-nums shrink-0",
+                                                    "text-xs font-medium tabular-nums shrink-0",
                                                     notification.type === 'funds_deposited' || notification.type === 'refund_approved'
                                                       ? "text-emerald-600"
                                                       : "text-gray-700"
