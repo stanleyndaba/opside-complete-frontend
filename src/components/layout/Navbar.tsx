@@ -330,7 +330,7 @@ export function Navbar({
                         {notes.slice(0, 5).map((note, index) => (
                           <div key={note.id} className="group relative p-4 hover:bg-gray-50/50 transition-colors">
                             <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity" />
-                            <p className="text-sm text-gray-700 font-mono tracking-tight line-clamp-3 leading-relaxed">{note.text}</p>
+                            <p className="text-xs text-gray-700 font-mono tracking-tight line-clamp-3 leading-relaxed">{note.text}</p>
                             <p className="text-xs text-gray-400 mt-2 font-mono flex items-center justify-between">
                               <span>TS.{new Date(note.createdAt).getTime().toString().slice(-8)}</span>
                               <span>{new Date(note.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
