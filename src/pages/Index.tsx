@@ -676,7 +676,7 @@ const Index = () => {
                   <div className="w-full aspect-video rounded-xl overflow-hidden relative bg-[#0a0a0a] border border-white/5 shadow-2xl group cursor-pointer">
                     {/* Placeholder Background Pattern */}
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.05),transparent_70%)]" />
-                    <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3C%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
+                    <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
 
                     {/* Play Button Overlay */}
                     <div className="absolute inset-0 flex flex-col items-center justify-center gap-6">
@@ -718,7 +718,7 @@ const Index = () => {
                         <span className="text-[10px] font-bold text-white font-mono">26 Active</span>
                       </div>
                       <div className="flex items-center gap-2 bg-white/5 px-3 py-1 rounded">
-                        <span className="text-[10px] font-bold text-gray-400 font-mono tracking-tight tracking-wider uppercase">Node_Status: </span>
+                        <span className="text-[10px] font-bold text-gray-400 font-mono tracking-wider uppercase">Node_Status: </span>
                         <span className="text-[10px] font-bold text-emerald-500 font-mono tracking-tight">OPERATIONAL</span>
                       </div>
                     </div>
@@ -726,29 +726,30 @@ const Index = () => {
                 </div>
               </div>
             </div>
+          </div>
 
-            <div className="relative z-10 w-full" style={{ background: 'white' }}>
+          <div className="relative z-10 w-full" style={{ background: 'white' }}>
 
 
-              <section className="bg-white pt-16 pb-8 md:pt-24 md:pb-12 w-full overflow-x-hidden">
-                <div className="container mx-auto px-6 max-w-4xl">
-                  <div className="text-center mb-16 sm:mb-24 space-y-6">
-                    <div className="flex items-center justify-center gap-3 mb-4">
-                      <div className="h-[1px] w-8 bg-gray-200" />
-                      <span className="text-[10px] font-bold text-gray-400 font-mono tracking-[.3em] uppercase">
-                        frequently asked questions
-                      </span>
-                      <div className="h-[1px] w-8 bg-gray-200" />
-                    </div>
-                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-merriweather font-bold tracking-tight text-gray-900 leading-[1.1] md:leading-[1.2] max-w-4xl mx-auto">
-                      Institutional Support <br className="hidden md:block" />
-                      & Fundamental Inquiry
-                    </h2>
+            <section className="bg-white pt-16 pb-8 md:pt-24 md:pb-12 w-full overflow-x-hidden">
+              <div className="container mx-auto px-6 max-w-4xl">
+                <div className="text-center mb-16 sm:mb-24 space-y-6">
+                  <div className="flex items-center justify-center gap-3 mb-4">
+                    <div className="h-[1px] w-8 bg-gray-200" />
+                    <span className="text-[10px] font-bold text-gray-400 font-mono tracking-[.3em] uppercase">
+                      frequently asked questions
+                    </span>
+                    <div className="h-[1px] w-8 bg-gray-200" />
                   </div>
+                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-merriweather font-bold tracking-tight text-gray-900 leading-[1.1] md:leading-[1.2] max-w-4xl mx-auto">
+                    Institutional Support <br className="hidden md:block" />
+                    & Fundamental Inquiry
+                  </h2>
+                </div>
 
-                  <div className="space-y-4">
-                    <Accordion type="single" collapsible className="w-full space-y-4">
-                      {/* Hidden for now
+                <div className="space-y-4">
+                  <Accordion type="single" collapsible className="w-full space-y-4">
+                    {/* Hidden for now
                 <AccordionItem value="safety" className="border border-gray-100 rounded-2xl bg-gray-50/30 px-6 py-1 transition-all hover:bg-gray-50/50 hover:border-gray-200 group">
                   <AccordionTrigger className="font-montserrat text-left text-lg font-semibold text-gray-900 hover:no-underline py-6">
                     Is this safe? Will linking my account get me suspended by Amazon?
@@ -764,127 +765,127 @@ const Index = () => {
                 </AccordionItem>
                 */}
 
-                      <AccordionItem value="data" className="border border-blue-100/30 rounded-2xl bg-blue-50/20 backdrop-blur-md px-6 py-1 transition-all hover:bg-blue-50/40 hover:border-blue-200/50 group overflow-hidden">
-                        <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-gray-900 hover:no-underline py-6 tracking-tight">
-                          What data do you access? Do you look at my customer info or sales?
-                        </AccordionTrigger>
-                        <AccordionContent className="font-montserrat pb-6 text-base text-gray-600 leading-relaxed space-y-4">
-                          <p>
-                            We never look at your customer&apos;s personal information (PII). Our access is limited strictly to the data required for reimbursements: inventory reports, shipment details, and transaction history.
-                          </p>
-                          <p>
-                            Our Evidence Engine can optionally scan your email or Google Drive, but only for invoice PDFs and proof-of-delivery documents. We don&apos;t care about your sales and we will never sell your data.
-                          </p>
-                        </AccordionContent>
-                      </AccordionItem>
+                    <AccordionItem value="data" className="border border-blue-100/30 rounded-2xl bg-blue-50/20 backdrop-blur-md px-6 py-1 transition-all hover:bg-blue-50/40 hover:border-blue-200/50 group overflow-hidden">
+                      <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-gray-900 hover:no-underline py-6 tracking-tight">
+                        What data do you access? Do you look at my customer info or sales?
+                      </AccordionTrigger>
+                      <AccordionContent className="font-montserrat pb-6 text-base text-gray-600 leading-relaxed space-y-4">
+                        <p>
+                          We never look at your customer&apos;s personal information (PII). Our access is limited strictly to the data required for reimbursements: inventory reports, shipment details, and transaction history.
+                        </p>
+                        <p>
+                          Our Evidence Engine can optionally scan your email or Google Drive, but only for invoice PDFs and proof-of-delivery documents. We don&apos;t care about your sales and we will never sell your data.
+                        </p>
+                      </AccordionContent>
+                    </AccordionItem>
 
-                      <AccordionItem value="cost" className="border border-blue-100/30 rounded-2xl bg-blue-50/20 backdrop-blur-md px-6 py-1 transition-all hover:bg-blue-50/40 hover:border-blue-200/50 group overflow-hidden">
-                        <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-gray-900 hover:no-underline py-6 tracking-tight">
-                          How much does Margin cost?
-                        </AccordionTrigger>
-                        <AccordionContent className="font-montserrat pb-6 text-base text-gray-600 leading-relaxed space-y-4">
-                          <p>
-                            It&apos;s simple: We take a 20% commission on successfully recovered funds. There are no monthly fees, no setup fees, and no hidden costs. If you don&apos;t get paid, we don&apos;t get paid.
-                          </p>
-                        </AccordionContent>
-                      </AccordionItem>
+                    <AccordionItem value="cost" className="border border-blue-100/30 rounded-2xl bg-blue-50/20 backdrop-blur-md px-6 py-1 transition-all hover:bg-blue-50/40 hover:border-blue-200/50 group overflow-hidden">
+                      <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-gray-900 hover:no-underline py-6 tracking-tight">
+                        How much does Margin cost?
+                      </AccordionTrigger>
+                      <AccordionContent className="font-montserrat pb-6 text-base text-gray-600 leading-relaxed space-y-4">
+                        <p>
+                          It&apos;s simple: We take a 20% commission on successfully recovered funds. There are no monthly fees, no setup fees, and no hidden costs. If you don&apos;t get paid, we don&apos;t get paid.
+                        </p>
+                      </AccordionContent>
+                    </AccordionItem>
 
-                      <AccordionItem value="comparison" className="border border-blue-100/30 rounded-2xl bg-blue-50/20 backdrop-blur-md px-6 py-1 transition-all hover:bg-blue-50/40 hover:border-blue-200/50 group overflow-hidden">
-                        <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-gray-900 hover:no-underline py-6 tracking-tight">
-                          How is this different from GETIDA, Sellerise, or Helium 10?
-                        </AccordionTrigger>
-                        <AccordionContent className="font-montserrat pb-6 text-base text-gray-600 leading-relaxed space-y-4">
-                          <p>
-                            Those tools are dashboards or agencies. They identify problems, but you or their auditors still have to gather evidence and build the case. Margin is an autonomous AI agent.
-                          </p>
-                          <p>
-                            Our Evidence Engine finds the error, locates the matching invoice from your email, builds the case, and files it for you. It&apos;s zero effort, not just less effort.
-                          </p>
-                        </AccordionContent>
-                      </AccordionItem>
+                    <AccordionItem value="comparison" className="border border-blue-100/30 rounded-2xl bg-blue-50/20 backdrop-blur-md px-6 py-1 transition-all hover:bg-blue-50/40 hover:border-blue-200/50 group overflow-hidden">
+                      <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-gray-900 hover:no-underline py-6 tracking-tight">
+                        How is this different from GETIDA, Sellerise, or Helium 10?
+                      </AccordionTrigger>
+                      <AccordionContent className="font-montserrat pb-6 text-base text-gray-600 leading-relaxed space-y-4">
+                        <p>
+                          Those tools are dashboards or agencies. They identify problems, but you or their auditors still have to gather evidence and build the case. Margin is an autonomous AI agent.
+                        </p>
+                        <p>
+                          Our Evidence Engine finds the error, locates the matching invoice from your email, builds the case, and files it for you. It&apos;s zero effort, not just less effort.
+                        </p>
+                      </AccordionContent>
+                    </AccordionItem>
 
-                      {showMoreFAQs && (
-                        <>
-                          <AccordionItem value="roi" className="border border-blue-100/30 rounded-2xl bg-blue-50/20 backdrop-blur-md px-6 py-1 transition-all hover:bg-blue-50/40 hover:border-blue-200/50 group overflow-hidden">
-                            <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-gray-900 hover:no-underline py-6 tracking-tight">
-                              How much money will I actually get back?
-                            </AccordionTrigger>
-                            <AccordionContent className="font-montserrat pb-6 text-base text-gray-600 leading-relaxed space-y-4">
-                              <p>
-                                On average, FBA sellers lose 1–3% of annual revenue to “small” errors. For a seller doing $1M a year, that&apos;s $10,000 to $30,000 in lost profit.
-                              </p>
-                              <p>
-                                We can&apos;t guarantee an exact amount, but our AI audits 18 months of data to find every dollar Amazon owes you.
-                              </p>
-                            </AccordionContent>
-                          </AccordionItem>
-                          <AccordionItem value="onboarding" className="border border-blue-100/30 rounded-2xl bg-blue-50/20 backdrop-blur-md px-6 py-1 transition-all hover:bg-blue-50/40 hover:border-blue-200/50 group overflow-hidden">
-                            <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-gray-900 hover:no-underline py-6 tracking-tight">
-                              What do I have to do to get started?
-                            </AccordionTrigger>
-                            <AccordionContent className="font-montserrat pb-6 text-base text-gray-600 leading-relaxed space-y-4">
-                              <p>It takes about two minutes:</p>
-                              <ul className="list-disc space-y-2 pl-5 text-gray-600">
-                                <li>Sign up for a Margin account.</li>
-                                <li>Securely connect your Amazon Seller Central account via the SP-API.</li>
-                                <li>(Optional) Grant read-only access to your email or Google Drive so our AI can gather invoices.</li>
-                              </ul>
-                              <p>That&apos;s it. Margin begins auditing immediately.</p>
-                            </AccordionContent>
-                          </AccordionItem>
-                          <AccordionItem value="coexist" className="border border-blue-100/30 rounded-2xl bg-blue-50/20 backdrop-blur-md px-6 py-1 transition-all hover:bg-blue-50/40 hover:border-blue-200/50 group overflow-hidden">
-                            <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-gray-900 hover:no-underline py-6 tracking-tight">
-                              What if I already use another reimbursement service?
-                            </AccordionTrigger>
-                            <AccordionContent className="font-montserrat pb-6 text-base text-gray-600 leading-relaxed space-y-4">
-                              <p>
-                                No problem. Run Margin alongside your current tool. We&apos;re confident our AI Evidence Engine will find dollars that manual audits missed. You only pay us for the new funds we recover.
-                              </p>
-                            </AccordionContent>
-                          </AccordionItem>
-                          <AccordionItem value="cancel" className="border border-blue-100/30 rounded-2xl bg-blue-50/20 backdrop-blur-md px-6 py-1 transition-all hover:bg-blue-50/40 hover:border-blue-200/50 group overflow-hidden">
-                            <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-gray-900 hover:no-underline py-6 tracking-tight">
-                              What if I want to cancel?
-                            </AccordionTrigger>
-                            <AccordionContent className="font-montserrat pb-6 text-base text-gray-600 leading-relaxed space-y-4">
-                              <p>
-                                You can cancel anytime. Disconnect Margin from Seller Central and you&apos;re done—no lock-in contracts. We&apos;ll only invoice the 20% commission on claims that were successfully paid out before you canceled.
-                              </p>
-                            </AccordionContent>
-                          </AccordionItem>
-                        </>
-                      )}
-                    </Accordion>
-
-                    {!showMoreFAQs && (
-                      <div className="flex justify-center pt-8">
-                        <button
-                          onClick={() => setShowMoreFAQs(true)}
-                          className="group flex items-center gap-3 text-[11px] font-bold text-gray-400 font-mono tracking-[.25em] hover:text-gray-900 transition-all uppercase">
-                          <Search className="w-3.5 h-3.5 transition-transform group-hover:scale-110" />
-                          <span>Query Extended Database</span>
-                        </button>
-                      </div>
+                    {showMoreFAQs && (
+                      <>
+                        <AccordionItem value="roi" className="border border-blue-100/30 rounded-2xl bg-blue-50/20 backdrop-blur-md px-6 py-1 transition-all hover:bg-blue-50/40 hover:border-blue-200/50 group overflow-hidden">
+                          <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-gray-900 hover:no-underline py-6 tracking-tight">
+                            How much money will I actually get back?
+                          </AccordionTrigger>
+                          <AccordionContent className="font-montserrat pb-6 text-base text-gray-600 leading-relaxed space-y-4">
+                            <p>
+                              On average, FBA sellers lose 1–3% of annual revenue to “small” errors. For a seller doing $1M a year, that&apos;s $10,000 to $30,000 in lost profit.
+                            </p>
+                            <p>
+                              We can&apos;t guarantee an exact amount, but our AI audits 18 months of data to find every dollar Amazon owes you.
+                            </p>
+                          </AccordionContent>
+                        </AccordionItem>
+                        <AccordionItem value="onboarding" className="border border-blue-100/30 rounded-2xl bg-blue-50/20 backdrop-blur-md px-6 py-1 transition-all hover:bg-blue-50/40 hover:border-blue-200/50 group overflow-hidden">
+                          <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-gray-900 hover:no-underline py-6 tracking-tight">
+                            What do I have to do to get started?
+                          </AccordionTrigger>
+                          <AccordionContent className="font-montserrat pb-6 text-base text-gray-600 leading-relaxed space-y-4">
+                            <p>It takes about two minutes:</p>
+                            <ul className="list-disc space-y-2 pl-5 text-gray-600">
+                              <li>Sign up for a Margin account.</li>
+                              <li>Securely connect your Amazon Seller Central account via the SP-API.</li>
+                              <li>(Optional) Grant read-only access to your email or Google Drive so our AI can gather invoices.</li>
+                            </ul>
+                            <p>That&apos;s it. Margin begins auditing immediately.</p>
+                          </AccordionContent>
+                        </AccordionItem>
+                        <AccordionItem value="coexist" className="border border-blue-100/30 rounded-2xl bg-blue-50/20 backdrop-blur-md px-6 py-1 transition-all hover:bg-blue-50/40 hover:border-blue-200/50 group overflow-hidden">
+                          <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-gray-900 hover:no-underline py-6 tracking-tight">
+                            What if I already use another reimbursement service?
+                          </AccordionTrigger>
+                          <AccordionContent className="font-montserrat pb-6 text-base text-gray-600 leading-relaxed space-y-4">
+                            <p>
+                              No problem. Run Margin alongside your current tool. We&apos;re confident our AI Evidence Engine will find dollars that manual audits missed. You only pay us for the new funds we recover.
+                            </p>
+                          </AccordionContent>
+                        </AccordionItem>
+                        <AccordionItem value="cancel" className="border border-blue-100/30 rounded-2xl bg-blue-50/20 backdrop-blur-md px-6 py-1 transition-all hover:bg-blue-50/40 hover:border-blue-200/50 group overflow-hidden">
+                          <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-gray-900 hover:no-underline py-6 tracking-tight">
+                            What if I want to cancel?
+                          </AccordionTrigger>
+                          <AccordionContent className="font-montserrat pb-6 text-base text-gray-600 leading-relaxed space-y-4">
+                            <p>
+                              You can cancel anytime. Disconnect Margin from Seller Central and you&apos;re done—no lock-in contracts. We&apos;ll only invoice the 20% commission on claims that were successfully paid out before you canceled.
+                            </p>
+                          </AccordionContent>
+                        </AccordionItem>
+                      </>
                     )}
-                  </div>
-                </div>
-              </section>
-            </div>
+                  </Accordion>
 
-            <section className="bg-white pt-12 pb-12 md:pt-16 md:pb-16 flex flex-col items-center text-center px-6">
-              <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-gray-900 mb-10 max-w-4xl">
-                Get started with Margin
-              </h2>
-              <div className="flex flex-col items-center gap-4">
-                <AmazonConnect className="min-w-[240px] h-14 text-lg rounded-full shadow-lg hover:shadow-xl transition-all font-normal" />
-                <p className="text-sm text-gray-500 font-medium">
-                  Audit your last 18 months for free. No credit card required.
-                </p>
+                  {!showMoreFAQs && (
+                    <div className="flex justify-center pt-8">
+                      <button
+                        onClick={() => setShowMoreFAQs(true)}
+                        className="group flex items-center gap-3 text-[11px] font-bold text-gray-400 font-mono tracking-[.25em] hover:text-gray-900 transition-all uppercase">
+                        <Search className="w-3.5 h-3.5 transition-transform group-hover:scale-110" />
+                        <span>Query Extended Database</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </section>
+          </div>
 
-            <BrandFooter />
-            <CookieConsent />
+          <section className="bg-white pt-12 pb-12 md:pt-16 md:pb-16 flex flex-col items-center text-center px-6">
+            <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-gray-900 mb-10 max-w-4xl">
+              Get started with Margin
+            </h2>
+            <div className="flex flex-col items-center gap-4">
+              <AmazonConnect className="min-w-[240px] h-14 text-lg rounded-full shadow-lg hover:shadow-xl transition-all font-normal" />
+              <p className="text-sm text-gray-500 font-medium">
+                Audit your last 18 months for free. No credit card required.
+              </p>
+            </div>
+          </section>
+
+          <BrandFooter />
+          <CookieConsent />
         </main>
       </div>
     </div>
