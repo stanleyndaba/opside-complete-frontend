@@ -69,13 +69,6 @@ export default function Contact() {
                         <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto" />
                         <span className="text-base font-bold text-gray-900 font-montserrat tracking-tight">Margin</span>
                     </Link>
-                    <div className="flex items-center gap-2">
-                        <span className="relative flex h-2 w-2">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                        </span>
-                        <span className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase">Operations Active</span>
-                    </div>
                 </div>
             </header>
 
@@ -189,12 +182,12 @@ export default function Contact() {
                                 <Button
                                     type="submit"
                                     disabled={isSubmitting}
-                                    className="w-full h-14 bg-gray-900 hover:bg-black text-white text-xs font-bold font-mono tracking-widest uppercase rounded-none transition-all shadow-xl">
+                                    className="w-full h-14 bg-black hover:bg-gray-900 text-white text-xs font-bold font-mono tracking-widest uppercase rounded-none transition-all shadow-xl">
                                     {isSubmitting ? (
                                         <>Formatting Transmission...</>
                                     ) : (
                                         <>
-                                            Execute Transmission // Send
+                                            Send
                                             <Send className="h-3.5 w-3.5 ml-3" />
                                         </>
                                     )}
@@ -205,33 +198,18 @@ export default function Contact() {
 
                     {/* Contact Info Sidebar */}
                     <div className="lg:col-span-5 space-y-12">
-                        {/* Status Module */}
-                        <div className="p-8 bg-blue-50/40 rounded-3xl border border-blue-100/50 backdrop-blur-xl relative overflow-hidden group">
-                            <div className="absolute top-0 right-0 p-4 opacity-5">
-                                <Globe className="h-20 w-20 text-blue-900" />
-                            </div>
-                            <h2 className="text-[10px] font-bold text-blue-500 font-mono tracking-widest uppercase mb-6 flex items-center gap-2">
+                        <div className="pt-8 border-t border-gray-100">
+                            <h2 className="text-[10px] font-bold text-blue-500 font-mono tracking-widest uppercase mb-4 flex items-center gap-2">
                                 <div className="h-1.5 w-1.5 rounded-full bg-blue-500" />
                                 Operations Status
                             </h2>
-                            <div className="space-y-6">
-                                <div className="flex items-start gap-4">
-                                    <div className="mt-1 p-2 bg-blue-100/50 rounded-lg text-blue-600">
-                                        <Clock className="h-4 w-4" />
-                                    </div>
-                                    <div>
-                                        <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1">Response Latency</p>
-                                        <p className="text-sm font-bold text-gray-900">LT &lt; 24 Hours</p>
-                                    </div>
+                            <div className="flex items-start gap-4">
+                                <div className="mt-1 p-2 bg-blue-100/50 rounded-lg text-blue-600">
+                                    <Clock className="h-4 w-4" />
                                 </div>
-                                <div className="flex items-start gap-4">
-                                    <div className="mt-1 p-2 bg-blue-100/50 rounded-lg text-blue-600">
-                                        <Globe className="h-4 w-4" />
-                                    </div>
-                                    <div>
-                                        <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1">Communication Hub</p>
-                                        <p className="text-sm font-bold text-gray-900">Durban, ZA // Global Sync</p>
-                                    </div>
+                                <div>
+                                    <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1">Response Latency</p>
+                                    <p className="text-sm font-bold text-gray-900">LT &lt; 24 Hours</p>
                                 </div>
                             </div>
                         </div>
@@ -254,7 +232,7 @@ export default function Contact() {
 
                             <Link
                                 to="/sales"
-                                className="flex items-center gap-4 p-5 rounded-2xl bg-gray-900 border border-gray-900 hover:bg-black transition-all group shadow-lg">
+                                className="flex items-center gap-4 p-5 rounded-2xl bg-black border border-black hover:bg-gray-900 transition-all group shadow-lg">
                                 <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center border border-white/10 transition-all">
                                     <ShieldCheck className="h-5 w-5 text-emerald-400" />
                                 </div>
