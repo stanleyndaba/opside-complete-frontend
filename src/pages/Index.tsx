@@ -650,7 +650,7 @@ const Index = () => {
                 <div className="flex items-center justify-center gap-3 mb-2">
                   <div className="h-[1px] w-8 bg-gray-200" />
                   <span className="text-[10px] font-bold text-gray-400 font-mono tracking-[0.3em] uppercase">
-                    System Visualizer // Audit Node 01
+                    Audit Node 01
                   </span>
                   <div className="h-[1px] w-8 bg-gray-200" />
                 </div>
@@ -872,15 +872,35 @@ const Index = () => {
             </section>
           </div>
 
-          <section className="bg-white pt-12 pb-12 md:pt-16 md:pb-16 flex flex-col items-center text-center px-6">
-            <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-gray-900 mb-10 max-w-4xl">
-              Get started with Margin
-            </h2>
-            <div className="flex flex-col items-center gap-4">
-              <AmazonConnect className="min-w-[240px] h-14 text-lg rounded-full shadow-lg hover:shadow-xl transition-all font-normal" />
-              <p className="text-sm text-gray-500 font-medium">
-                Audit your last 18 months for free. No credit card required.
-              </p>
+          <section className="bg-white pt-24 pb-24 md:pt-32 md:pb-32 flex flex-col items-center text-center px-6 relative overflow-hidden">
+            {/* Background Mesh Accent */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-50/50 rounded-full blur-[120px] pointer-events-none" />
+
+            <div className="relative z-10 space-y-8 max-w-4xl mx-auto">
+              <div className="flex items-center justify-center gap-3 mb-2">
+                <div className="h-[1px] w-8 bg-gray-200" />
+                <span className="text-[10px] font-bold text-gray-400 font-mono tracking-[0.3em] uppercase">
+                  RECOVERY_INIT
+                </span>
+                <div className="h-[1px] w-8 bg-gray-200" />
+              </div>
+
+              <h2 className="text-4xl md:text-6xl lg:text-7xl font-merriweather font-bold tracking-tight text-gray-900 leading-[1.1]">
+                Ready to secure <br className="hidden md:block" />
+                your recovery?
+              </h2>
+
+              <div className="flex flex-col items-center gap-6 pt-4">
+                <AmazonConnect className="min-w-[280px] h-16 text-xl rounded-full shadow-2xl hover:shadow-blue-200/50 transition-all duration-500 font-normal scale-105 active:scale-100" />
+                <div className="flex flex-col items-center gap-2">
+                  <p className="text-[11px] font-bold text-gray-400 font-mono tracking-[0.2em] uppercase">
+                    Verification Phase // Phase 01
+                  </p>
+                  <p className="text-sm text-gray-500 font-medium">
+                    Audit your last 18 months for free. No credit card required.
+                  </p>
+                </div>
+              </div>
             </div>
           </section>
 
