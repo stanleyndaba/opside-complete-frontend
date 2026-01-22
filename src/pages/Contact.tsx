@@ -199,12 +199,12 @@ export default function Contact() {
                     {/* Contact Info Sidebar */}
                     <div className="lg:col-span-5 space-y-12">
                         <div className="pt-8 border-t border-gray-100">
-                            <h2 className="text-[10px] font-bold text-blue-500 font-mono tracking-widest uppercase mb-4 flex items-center gap-2">
-                                <div className="h-1.5 w-1.5 rounded-full bg-blue-500" />
+                            <h2 className="text-[10px] font-bold text-gray-500 font-mono tracking-widest uppercase mb-4 flex items-center gap-2">
+                                <div className="h-1.5 w-1.5 rounded-full bg-gray-400" />
                                 Operations Status
                             </h2>
                             <div className="flex items-start gap-4">
-                                <div className="mt-1 p-2 bg-blue-100/50 rounded-lg text-blue-600">
+                                <div className="mt-1 p-2 bg-gray-100 rounded-lg text-gray-700">
                                     <Clock className="h-4 w-4" />
                                 </div>
                                 <div>
