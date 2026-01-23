@@ -624,12 +624,12 @@ const Index = () => {
                   </div>
                 </div>
 
-                <h1 className="font-merriweather text-4xl md:text-6xl lg:text-8xl font-black tracking-tight text-gray-900 leading-[1.05] selection:bg-emerald-100">
+                <h1 className="font-merriweather text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-gray-900 leading-[1.05] selection:bg-emerald-100">
                   FBA Reimbursements <br className="hidden lg:block" />
                   on <span className="bg-gradient-to-r from-[#1f4037] to-[#10B981] bg-clip-text text-transparent">Autopilot</span>
                 </h1>
 
-                <p className="font-montserrat text-base md:text-xl text-gray-600 font-medium max-w-2xl leading-[1.6] opacity-80">
+                <p className="font-montserrat text-base md:text-lg text-gray-600 font-medium max-w-xl leading-[1.6] opacity-80">
                   Margin provides the sovereign infrastructure for Amazon profit recovery. We link directly to your Seller Central to audit every micro-transaction and automate reimbursements—turning messy data into immediate capital.
                 </p>
 
