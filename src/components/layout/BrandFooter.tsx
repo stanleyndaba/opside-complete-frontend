@@ -45,7 +45,7 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
                     target="_blank"
                     rel="noreferrer"
                     aria-label={social.label}
-                    className="inline-flex h-10 w-10 items-center justify-center border border-gray-100 rounded-full text-gray-500 transition-all hover:border-gray-900 hover:bg-gray-50 hover:text-gray-900 group">
+                    className="inline-flex items-center justify-center text-gray-400 transition-all hover:text-gray-900 group">
                     <div className="transition-transform duration-300 group-hover:scale-110">
                       <Icon />
                     </div>
