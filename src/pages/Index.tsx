@@ -656,8 +656,13 @@ const Index = () => {
             </section>
 
             {/* Interactive Demo Section - Standalone Polished Block */}
-            <div className="w-full relative z-20 mt-24 md:mt-36 mb-24">
-              <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+            <section className="w-full relative z-20 mt-24 md:mt-36 mb-24">
+              <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-20px" }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className="max-w-[1400px] mx-auto px-4 md:px-8">
                 {/* Technical Header */}
                 <div className="text-center space-y-6 max-w-3xl mx-auto mb-16 relative z-10">
                   <div className="flex items-center justify-center gap-3 mb-2">
@@ -738,8 +743,8 @@ const Index = () => {
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              </motion.div>
+            </section>
 
             <div className="relative z-10 w-full" style={{ background: 'white' }}>
 
@@ -892,7 +897,7 @@ const Index = () => {
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
+                viewport={{ once: true, margin: "-20px" }}
                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 className="relative z-10 space-y-8 max-w-4xl mx-auto">
                 <div className="flex items-center justify-center gap-3 mb-2">
