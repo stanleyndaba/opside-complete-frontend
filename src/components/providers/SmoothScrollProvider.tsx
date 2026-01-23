@@ -1,5 +1,6 @@
 import { ReactLenis } from '@studio-freight/react-lenis';
 import { ReactNode } from 'react';
+import { useLocation } from 'react-router-dom';
 
 interface SmoothScrollProviderProps {
     children: ReactNode;
@@ -8,8 +9,17 @@ interface SmoothScrollProviderProps {
 /**
  * SmoothScrollProvider enables premium momentum-based scrolling.
  * Configured to mimic the high-end feel of premium brand sites (Apple, Samsung).
+ * Automatically disables itself for the main platform (/app/*) to maintain standard utility.
  */
 export const SmoothScrollProvider = ({ children }: SmoothScrollProviderProps) => {
+    const location = useLocation();
+    const isPlatformPage = location.pathname.startsWith('/app');
+
+    // Return standard scroll for platform pages to ensure maximum utility and compatibility
+    if (isPlatformPage) {
+        return <>{children}</>;
+    }
+
     return (
         <ReactLenis
             root
