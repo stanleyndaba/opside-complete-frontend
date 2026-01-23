@@ -300,7 +300,7 @@ export function Navbar({
                 <NotificationBell
                   label="Margin Notifications"
                   showLabel={false}
-                  className="h-8 w-8 flex items-center justify-center text-gray-500 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-all"
+                  className="h-8 w-8 flex items-center justify-center text-gray-900 hover:bg-gray-100 rounded-md transition-all"
                   iconClassName="h-4 w-4"
                 />
 
@@ -311,7 +311,7 @@ export function Navbar({
                     onClick={() => setShowNotesModal(true)}
                     onMouseEnter={() => setIsNoteHovered(true)}
                     onMouseLeave={() => setIsNoteHovered(false)}
-                    className="h-8 w-8 flex items-center justify-center text-gray-500 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-all relative"
+                    className="h-8 w-8 flex items-center justify-center text-gray-900 hover:bg-gray-100 rounded-md transition-all relative"
                     aria-label="Notes">
                     <NotebookPen className="h-4 w-4" />
                     {notes.length > 0 && (
@@ -347,7 +347,7 @@ export function Navbar({
                   <HoverCardTrigger asChild>
                     <button
                       onClick={() => setShowReferralPopup(true)}
-                      className="h-8 w-8 flex items-center justify-center text-gray-500 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-all relative"
+                      className="h-8 w-8 flex items-center justify-center text-gray-900 hover:bg-gray-100 rounded-md transition-all relative"
                       aria-label="Referral program">
                       <Gift className="h-4 w-4" />
                       <span className="absolute -top-0.5 -right-0.5 h-2 w-2 bg-emerald-500 rounded-full animate-pulse" />
@@ -380,8 +380,8 @@ export function Navbar({
               <div className="flex items-center border-l border-gray-200/60 pl-4 ml-1">
                 <button
                   onClick={() => navigate('/integrations-hub')}
-                  className="flex items-center gap-1.5 h-8 px-3 text-xs text-gray-600 hover:text-gray-900 bg-gray-50 hover:bg-gray-100 rounded-md transition-all font-medium border border-gray-200/60">
-                  <Link2 className="h-3.5 w-3.5 text-gray-500" />
+                  className="flex items-center gap-1.5 h-8 px-3 text-xs text-gray-900 hover:bg-gray-100 rounded-md transition-all font-medium border border-gray-200/60">
+                  <Link2 className="h-3.5 w-3.5 text-gray-900" />
                   <span className="hidden sm:inline">Connect</span>
                 </button>
               </div>
@@ -392,10 +392,10 @@ export function Navbar({
           <div className="flex items-center border-l border-gray-100 pl-6 ml-6">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-2 h-8 px-3 text-xs text-gray-600 hover:text-gray-900 bg-gray-100/60 hover:bg-gray-100 rounded-md transition-colors group/account">
-                  <User className="h-3.5 w-3.5 text-gray-500 group-hover/account:text-gray-700" />
+                <button className="flex items-center gap-2 h-8 px-3 text-xs text-gray-900 bg-gray-100/60 hover:bg-gray-100 rounded-md transition-colors group/account">
+                  <User className="h-3.5 w-3.5 text-gray-900" />
                   <span className="hidden sm:inline font-medium">Account</span>
-                  <ChevronDown className="h-3 w-3 text-gray-400" />
+                  <ChevronDown className="h-3 w-3 text-gray-900" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48 bg-white border border-gray-200 shadow-lg rounded-sm p-1">
