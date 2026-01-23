@@ -107,7 +107,7 @@
   }
 
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto !important;
     -webkit-overflow-scrolling: touch;
   }
 
@@ -484,4 +484,25 @@ h1.font-merriweather,
 .landing .font-merriweather,
 .landing h1.font-merriweather {
   font-family: 'Merriweather', serif !important;
+}
+/* Lenis Smooth Scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
 }
