@@ -1036,8 +1036,8 @@ export function Dashboard() {
                       <div className="flex items-center gap-3">
                         <h3 className="text-xs font-semibold text-gray-900">Reimbursement Activity</h3>
                         {unreadCount > 0 && (
-                          <div className="flex items-center justify-center bg-gray-900 px-1.5 py-0.5 rounded-none">
-                            <span className="text-xs font-bold text-white tabular-nums">
+                          <div className="flex items-center justify-center bg-white border border-gray-200/60 px-1.5 py-0.5 rounded-none">
+                            <span className="text-[10px] font-medium text-gray-600 tabular-nums">
                               {unreadCount > 50 ? '50+' : unreadCount}
                             </span>
                           </div>
@@ -1048,7 +1048,7 @@ export function Dashboard() {
 
                     {isActivityExpanded && (
                       <>
-                        <div className="flex-1 max-h-[600px] overflow-y-auto scrollbar-hide divide-y divide-gray-50">
+                        <div className="flex-1 max-h-[600px] overflow-y-auto scrollbar-hide divide-y divide-gray-100">
                           {displayNotifications.length === 0 ? (
                             /* Live 'Heartbeat' Feed for Empty State - Minimalist */
                             <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
@@ -1069,12 +1069,8 @@ export function Dashboard() {
                                   ? formatDistanceToNow(notificationDate, { addSuffix: true })
                                   : 'recently';
 
-                                // Status Dot Color - OpenAI style: Subtler colors
-                                let statusColor = 'bg-gray-300';
-                                if (notification.type === 'claim_detected' || notification.type === 'case_filed') statusColor = 'bg-blue-500';
-                                if (notification.type === 'refund_approved' || notification.type === 'funds_deposited') statusColor = 'bg-emerald-500';
-                                if (notification.type === 'amazon_challenge' || notification.type === 'user_action_required') statusColor = 'bg-amber-500';
-                                if (notification.type === 'evidence_found') statusColor = 'bg-purple-500';
+                                // Standardized premium grey dots, white if read
+                                let statusColor = isUnread ? 'bg-slate-300' : 'bg-white';
 
                                 // Textual Status (subtle, not badge)
                                 let statusText = '';
@@ -1100,7 +1096,7 @@ export function Dashboard() {
                                           {/* Top Row: Status Dot + Full Label + Amount */}
                                           <div className="flex items-center justify-between gap-2">
                                             <div className="flex items-center gap-2 min-w-0">
-                                              <div className={cn("h-1.5 w-1.5 rounded-full shrink-0 transition-colors", statusColor)} />
+                                              <div className={cn("h-1 w-1 rounded-full shrink-0 transition-colors", statusColor)} />
                                               <p className={cn(
                                                 "text-xs",
                                                 isUnread ? "font-semibold text-gray-900" : "font-medium text-gray-600 group-hover:text-gray-900"
